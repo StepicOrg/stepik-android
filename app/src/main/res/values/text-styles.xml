@@ -5,8 +5,44 @@
         <item name="font">OpenSans-Semibold.ttf</item>
     </style>
 
+
+    <style name="regular_text">
+        <item name="font">OpenSans-Regular.ttf</item>
+    </style>
+
     <style name="bold_white_text" parent="@style/bold_text">
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+
+    <style name="semibold_text">
+        <item name="font">OpenSans-Semibold.ttf</item>
+    </style>
+
+    <style name="regular_white_text" parent="@style/regular_text">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="custom_activity_title" parent="@style/semibold_text">
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:textColor">@color/new_user_txt</item>
+    </style>
+
+    <style name="downloading_message">
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:background">@color/transparent_download_bg</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="font">OpenSans-Regular.ttf</item>
+    </style>
 </resources>

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="8dp"
+    android:background="@android:color/white">
+
+    <ScrollView
+        android:id="@+id/scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:background="@android:color/white">
+
+        <LinearLayout
+            android:id="@+id/registrationLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp">
+
+            <LinearLayout
+                android:id="@+id/message_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <include layout="@layout/panel_login_message" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/signup_with_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="2dp"
+                android:gravity="left|start"
+                tools:targetApi="17" >
+
+                <com.elpatika.stepic.view.custom.STextView
+                    android:id="@+id/signup_with_title"
+                    style="@style/semibold_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sign_up_with"
+                    android:textColor="@color/light_gray"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <include layout="@layout/panel_signup_social" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="1dp"
+                android:gravity="left|start"
+                tools:targetApi="17" >
+
+                <com.elpatika.stepic.view.custom.STextView
+                    android:id="@+id/or_signup_with_email_title"
+                    style="@style/semibold_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left|start"
+                    android:text="@string/or_sign_up_with_email"
+                    android:textColor="@color/light_gray"
+                    android:textSize="14sp"
+                    tools:targetApi="17" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/required_fields_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="5dp"/>
+
+            <LinearLayout
+                android:id="@+id/field_seperator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center">
+
+                <com.elpatika.stepic.view.custom.STextView
+                    android:id="@+id/optional_field_tv"
+                    style="@style/semibold_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:text="@string/show_optional_fields"
+                    android:textColor="@color/grey_hide_optional_text"
+                    android:textSize="14sp"
+                    tools:targetApi="17" />
+
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="1dp"
+                    android:background="@color/grey_act_background" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/optional_fields_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:id="@+id/createAccount_button_layout"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/bt_signin_active">
+
+                <com.elpatika.stepic.view.custom.STextView
+                    android:id="@+id/create_account_tv"
+                    style="@style/regular_white_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/create_my_account"
+                    android:textAllCaps="false"
+                    android:textSize="16sp" />
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:indeterminateDrawable="@drawable/login_progress"
+                    android:visibility="gone"
+                    tools:targetApi="17" />
+            </RelativeLayout>
+
+            <com.elpatika.stepic.view.custom.STextView
+                android:id="@+id/by_creating_account_tv"
+                style="@style/regular_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="@string/by_creating_you_agree"
+                android:textColor="@color/grey_redirected_txt"
+                android:textSize="11sp" />
+
+            <LinearLayout
+                android:id="@+id/layout_agreement"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+
+            <com.elpatika.stepic.view.custom.STextView
+                android:id="@+id/end_user_agreement_tv"
+                style="@style/regular_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:linksClickable="true"
+                android:text="@string/terms"
+                android:textColor="@color/cyan_text_navigation"
+                android:textSize="11sp"
+                android:layout_marginTop="2dp"
+                android:visibility="gone"/>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/error_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <include layout="@layout/panel_login_error" />
+    </LinearLayout>
+
+
+    <com.elpatika.stepic.view.custom.STextView
+        android:id="@+id/downloadMessage"
+        style="@style/downloading_message"
+        android:text="Downloading"
+        android:layout_marginTop="50dp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/custom_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+        <include layout="@layout/panel_custom_action_bar" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -12,7 +12,7 @@ import roboguice.activity.RoboFragmentActivity;
 /**
  * Created by kirillmakarov on 23.08.15.
  */
-public class BaseFragmentActivity extends RoboFragmentActivity {
+public abstract class BaseFragmentActivity extends RoboFragmentActivity {
 
 
     @Inject

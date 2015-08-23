@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.elpatika.stepic.view.LaunchActivity;
+import com.elpatika.stepic.view.RegisterActivity;
 
 /**
  * Created by kirillmakarov on 23.08.15.
@@ -20,5 +21,11 @@ public class ScreenProvider implements IScreenProvider {
         else
             launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(launchIntent);
+    }
+
+
+    public void showRegistration(Activity sourceActivity) {
+        Intent launchIntent = new Intent(sourceActivity, RegisterActivity.class);
+        sourceActivity.startActivity(launchIntent);
     }
 }

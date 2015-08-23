@@ -5,5 +5,13 @@
     <string name="action_settings">Settings</string>
     <string name="already_have_an_account">Already have an account? Sign in</string>
     <string name="sign_up_and_learn">Sign up</string>
+    <string name="or_sign_up_with_email">or sign up with e-mail</string>
+    <string name="sign_up_with">Sign up with</string>
+    <string name="show_optional_fields">Show optional fields</string>
+    <string name="create_my_account">Create my account</string>
+    <string name="by_creating_you_agree">By creating stepic account, you agree to the</string>
+    <string name="terms">Terms</string>
+    <string name="facebook_name_of_company">Facebook</string>
+    <string name="google_name_of_company">Google</string>
 
 </resources>
