@@ -24,14 +24,17 @@
 
         <com.elpatika.stepic.view.custom.SButton
             android:id="@+id/sign_up_btn"
+            style="@style/bold_white_text"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:background="@drawable/bt_signin_active"
             android:contentDescription="@string/app_name"
             android:layout_gravity="center_vertical"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:padding="5dp"
             android:layout_alignParentTop="true"
+            android:text="@string/sign_up_and_learn"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:layout_marginTop="25dp"/>

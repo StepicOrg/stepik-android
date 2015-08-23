@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="bold_text">
+        <item name="font">OpenSans-Semibold.ttf</item>
+    </style>
+
+    <style name="bold_white_text" parent="@style/bold_text">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+</resources>

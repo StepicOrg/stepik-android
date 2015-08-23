@@ -32,12 +32,11 @@ public class SButton extends Button {
 
         try {
             // check for the font attribute and setup font
-
-            String fontFileName = "OpenSans-Regular.ttf";
+            String fontFileName = a.getString(R.styleable.custom_view_font);
             Typeface font = FontFactory.getInstance().getFont(context,  fontFileName);
             setTypeface(font);
         } catch (Exception ex) {
-
+            //todo: log exception
         } finally {
             a.recycle();
         }

@@ -4,4 +4,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="already_have_an_account">Already have an account? Sign in</string>
+    <string name="sign_up_and_learn">Sign up</string>
+
 </resources>
