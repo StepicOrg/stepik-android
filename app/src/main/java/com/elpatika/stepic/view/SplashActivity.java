@@ -9,13 +9,13 @@ import android.os.Handler;
 
 import com.elpatika.stepic.R;
 import com.elpatika.stepic.base.BaseFragmentActivity;
+import com.google.inject.Inject;
 
 
 public class SplashActivity extends BaseFragmentActivity {
 
     // Splash screen wait time
     private static final int SPLASH_TIME_OUT = 3000;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,20 +26,9 @@ public class SplashActivity extends BaseFragmentActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-
-                showLaunchScreen(SplashActivity.this, false);
+                mShell.getScreenProvider().showLaunchScreen(SplashActivity.this, false);
             }
         }, SPLASH_TIME_OUT);
 
-    }
-
-    public void showLaunchScreen(Context context, boolean overrideAnimation) {
-        Intent launchIntent = new Intent(context, LaunchActivity.class);
-        launchIntent.putExtra(LaunchActivity.OVERRIDE_ANIMATION_FLAG, overrideAnimation);
-        if (context instanceof Activity)
-            launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        else
-            launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(launchIntent);
     }
 }

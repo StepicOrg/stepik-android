@@ -2,6 +2,9 @@ package com.elpatika.stepic.base;
 
 import android.view.WindowManager;
 
+import com.elpatika.stepic.core.IShell;
+import com.google.inject.Inject;
+
 import roboguice.RoboGuice;
 import roboguice.activity.RoboFragmentActivity;
 
@@ -10,9 +13,9 @@ import roboguice.activity.RoboFragmentActivity;
  */
 public class BaseFragmentActivity extends RoboFragmentActivity {
 
-    static {
-        RoboGuice.setUseAnnotationDatabases(false);
-    }
+
+    @Inject
+    protected IShell mShell;
 
     protected void hideSoftKeypad() {
         getWindow().setSoftInputMode(
