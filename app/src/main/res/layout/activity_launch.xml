@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/launch_background"
+    android:splitMotionEvents="false">
+
+    <ImageView
+        android:id="@+id/edx_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/stepic_logo"/>
+
+    <RelativeLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp">
+
+        <com.elpatika.stepic.view.custom.SButton
+            android:id="@+id/sign_up_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:contentDescription="@string/app_name"
+            android:layout_gravity="center_vertical"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:padding="5dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="25dp"/>
+
+        <com.elpatika.stepic.view.custom.STextView
+            android:id="@+id/sign_in_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:linksClickable="true"
+            android:text="@string/already_have_an_account"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:layout_below="@id/sign_up_btn"
+            android:layout_marginTop="25dp"/>
+    </RelativeLayout>
+
+</RelativeLayout>
