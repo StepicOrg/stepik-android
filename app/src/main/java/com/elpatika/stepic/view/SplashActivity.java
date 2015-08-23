@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 import com.elpatika.stepic.R;
 import com.elpatika.stepic.base.BaseFragmentActivity;
@@ -22,14 +23,20 @@ public class SplashActivity extends BaseFragmentActivity {
         setContentView(R.layout.activity_splash);
         overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
 
-        showLaunchScreen(SplashActivity.this, false);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                showLaunchScreen(SplashActivity.this, false);
+            }
+        }, SPLASH_TIME_OUT);
 
     }
 
     public void showLaunchScreen(Context context, boolean overrideAnimation) {
         Intent launchIntent = new Intent(context, LaunchActivity.class);
         launchIntent.putExtra(LaunchActivity.OVERRIDE_ANIMATION_FLAG, overrideAnimation);
-        if ( context instanceof Activity)
+        if (context instanceof Activity)
             launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         else
             launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
