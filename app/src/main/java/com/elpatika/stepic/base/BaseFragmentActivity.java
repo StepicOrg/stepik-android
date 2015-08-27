@@ -9,9 +9,6 @@ import com.google.inject.Inject;
 import roboguice.RoboGuice;
 import roboguice.activity.RoboFragmentActivity;
 
-/**
- * Created by kirillmakarov on 23.08.15.
- */
 public abstract class BaseFragmentActivity extends RoboFragmentActivity {
 
 

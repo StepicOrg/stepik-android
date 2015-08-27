@@ -11,9 +11,6 @@ import com.google.inject.Module;
 
 import roboguice.RoboGuice;
 
-/**
- * Created by kirillmakarov on 23.08.15.
- */
 public class MainApplication extends MultiDexApplication {
 
     protected static MainApplication application;

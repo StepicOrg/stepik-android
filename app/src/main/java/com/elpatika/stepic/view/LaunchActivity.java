@@ -15,9 +15,7 @@ import com.elpatika.stepic.view.custom.STextView;
 
 import roboguice.inject.InjectView;
 
-/**
- * Created by kirillmakarov on 23.08.15.
- */
+
 public class LaunchActivity extends BaseFragmentActivity {
 
     public static final String OVERRIDE_ANIMATION_FLAG = "override_animation_flag";

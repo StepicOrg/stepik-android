@@ -7,9 +7,7 @@ import android.content.Intent;
 import com.elpatika.stepic.view.LaunchActivity;
 import com.elpatika.stepic.view.RegisterActivity;
 
-/**
- * Created by kirillmakarov on 23.08.15.
- */
+
 public class ScreenProvider implements IScreenProvider {
 
     @Override

@@ -1,15 +1,11 @@
 package com.elpatika.stepic.view;
 
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
 import com.elpatika.stepic.R;
 import com.elpatika.stepic.base.BaseFragmentActivity;
-import com.google.inject.Inject;
 
 
 public class SplashActivity extends BaseFragmentActivity {
