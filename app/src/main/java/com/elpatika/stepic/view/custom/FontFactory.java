@@ -5,12 +5,14 @@ import android.graphics.Typeface;
 
 import java.util.HashMap;
 
+//todo: this class has a bad implementation, best practice use @Singleton
 public class FontFactory {
     private static FontFactory instance;
-    private HashMap<String, Typeface> fontMap = new HashMap<String, Typeface>();
+    private HashMap<String, Typeface> fontMap;
 
     private FontFactory() {
         // singleton
+        fontMap = new HashMap<>();
     }
 
     public static FontFactory getInstance() {
@@ -20,13 +22,7 @@ public class FontFactory {
         return instance;
     }
 
-    /**
-     * Returns TypeFace for the given font name. Font file must exist in
-     * assets/fonts folder.
-     *
-     * @param context
-     * @return
-     */
+
     public Typeface getFont(Context context, String font) {
         Typeface typeface = fontMap.get(font);
         if (typeface == null) {
@@ -34,7 +30,7 @@ public class FontFactory {
                 typeface = Typeface.createFromAsset(context.getResources()
                         .getAssets(), "fonts/" + font);
                 fontMap.put(font, typeface);
-            }catch (Exception ex){
+            }catch (Exception ignored){
             }
         }
         return typeface;

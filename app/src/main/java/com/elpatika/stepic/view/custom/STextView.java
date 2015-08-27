@@ -1,12 +1,8 @@
 package com.elpatika.stepic.view.custom;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
-
-import com.elpatika.stepic.R;
-import com.elpatika.stepic.view.custom.FontFactory;
 
 public class STextView extends TextView {
 
@@ -16,15 +12,15 @@ public class STextView extends TextView {
 
     public STextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        processAttrs(context, attrs);
+        processAttrs(context);
     }
 
     public STextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        processAttrs(context, attrs);
+        processAttrs(context);
     }
 
-    private void processAttrs(Context context, AttributeSet attrs) {
+    private void processAttrs(Context context) {
         if(isInEditMode())
             return;
 
@@ -36,9 +32,7 @@ public class STextView extends TextView {
 
             Typeface font = FontFactory.getInstance().getFont(context,fontFileName);
             setTypeface(font);
-        } catch (Exception ex) {
-        } finally {
-            //  a.recycle();
+        } catch (Exception ignored) {
         }
     }
 }

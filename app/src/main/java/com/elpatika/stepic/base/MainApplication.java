@@ -1,13 +1,11 @@
 package com.elpatika.stepic.base;
 
-import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
 import com.elpatika.stepic.core.StepicDefaultModule;
 import com.google.inject.Injector;
-import com.google.inject.Module;
 
 import roboguice.RoboGuice;
 
@@ -15,10 +13,6 @@ public class MainApplication extends MultiDexApplication {
 
     protected static MainApplication application;
     Injector injector;
-
-    public static final MainApplication instance() {
-        return application;
-    }
 
     static {
         RoboGuice.setUseAnnotationDatabases(false);
@@ -38,8 +32,8 @@ public class MainApplication extends MultiDexApplication {
 
         application = this;
 
-        injector = RoboGuice.getOrCreateBaseApplicationInjector((Application) this, RoboGuice.DEFAULT_STAGE,
-                (Module) RoboGuice.newDefaultRoboModule(this), (Module) new StepicDefaultModule());
+        injector = RoboGuice.getOrCreateBaseApplicationInjector(this, RoboGuice.DEFAULT_STAGE,
+                RoboGuice.newDefaultRoboModule(this), new StepicDefaultModule());
     }
 
     protected void attachBaseContext(Context base) {

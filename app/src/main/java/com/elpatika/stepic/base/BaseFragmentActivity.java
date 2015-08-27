@@ -6,7 +6,6 @@ import com.elpatika.stepic.R;
 import com.elpatika.stepic.core.IShell;
 import com.google.inject.Inject;
 
-import roboguice.RoboGuice;
 import roboguice.activity.RoboFragmentActivity;
 
 public abstract class BaseFragmentActivity extends RoboFragmentActivity {
