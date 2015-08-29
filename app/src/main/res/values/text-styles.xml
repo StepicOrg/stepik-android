@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <style name="bold_text">
         <item name="font">OpenSans-Semibold.ttf</item>
@@ -44,5 +45,21 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="font">OpenSans-Regular.ttf</item>
+    </style>
+
+    <!-- EditText theme -->
+    <style name="edit_text_style" parent="@android:style/Widget.DeviceDefault.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:maxWidth">300dp</item>
+        <item name="android:textColor">@color/grey_text</item>
+        <item name="android:background">@drawable/edit_bg_selector</item>
+        <item name="android:gravity" tools:targetApi="17">left|start|center_vertical</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="font">OpenSans-Regular.ttf</item>
+        <item name="android:textColorHint">@color/hint_grey_text</item>
     </style>
 </resources>

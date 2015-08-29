@@ -13,5 +13,10 @@
     <string name="terms">Terms</string>
     <string name="facebook_name_of_company">Facebook</string>
     <string name="google_name_of_company">Google</string>
+    <string name="email_login">e-mail</string>
+    <string name="password_login">password</string>
+    <string name="remind_password">Remind Password</string>
+    <string name="sign_in_btn">Sign in button</string>
+    <string name="sign_in">Sign In</string>
 
 </resources>

@@ -45,6 +45,14 @@ public class LaunchActivity extends BaseFragmentActivity {
                 mShell.getScreenProvider().showRegistration(LaunchActivity.this);
             }
         }));
+
+        mSignInTextView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                mShell.getScreenProvider().showLogin(LaunchActivity.this);
+            }
+        });
     }
 
     @Override

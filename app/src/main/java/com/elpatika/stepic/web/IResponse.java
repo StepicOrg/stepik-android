@@ -1,4 +1,6 @@
 package com.elpatika.stepic.web;
 
-public interface IResponse {
+import java.io.Serializable;
+
+public interface IResponse extends Serializable {
 }
