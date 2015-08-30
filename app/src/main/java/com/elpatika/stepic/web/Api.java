@@ -8,6 +8,8 @@ import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.io.IOException;
+
 @Singleton
 public class Api implements IApi {
 
@@ -27,7 +29,12 @@ public class Api implements IApi {
 
         String url = config.getBaseUrl() + "/oauth2/token/";
 
-        String json = httpManager.post(url, params);
+        String json = null;
+        try {
+            json = httpManager.post(url, params);
+        } catch (IOException i) {
+            //ignore
+        }
 
         //todo: save to store
         Gson gson = new GsonBuilder().create();

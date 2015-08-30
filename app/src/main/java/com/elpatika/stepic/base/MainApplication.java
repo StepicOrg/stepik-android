@@ -29,7 +29,6 @@ public class MainApplication extends MultiDexApplication {
      * all third party integrations and shared components.
      */
     private void init() {
-
         application = this;
 
         injector = RoboGuice.getOrCreateBaseApplicationInjector(this, RoboGuice.DEFAULT_STAGE,

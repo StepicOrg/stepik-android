@@ -1,5 +1,6 @@
 package com.elpatika.stepic.core;
 
+import com.elpatika.stepic.web.IApi;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -9,10 +10,18 @@ import com.google.inject.Singleton;
 public class Shell implements IShell {
 
     @Inject
-    IScreenProvider screenProvider;
+    private IScreenManager mScreenProvider;
+
+    @Inject
+    private IApi mApi;
 
     @Override
-    public IScreenProvider getScreenProvider() {
-        return screenProvider;
+    public IScreenManager getScreenProvider() {
+        return mScreenProvider;
+    }
+
+    @Override
+    public IApi getApi() {
+        return mApi;
     }
 }

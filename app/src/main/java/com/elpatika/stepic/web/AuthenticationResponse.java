@@ -15,4 +15,8 @@ public class AuthenticationResponse implements IResponse {
         return String.format("access_token=%s; access_type=%s; "
                 + "expires_in=%d; scope=%s", access_token, token_type, expires_in, scope);
     }
+
+    public boolean isSuccess() {
+        return (error == null && access_token != null);
+    }
 }

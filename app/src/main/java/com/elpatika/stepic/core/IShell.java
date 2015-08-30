@@ -1,7 +1,10 @@
 package com.elpatika.stepic.core;
 
 
+import com.elpatika.stepic.web.IApi;
+
 public interface IShell {
 
-    IScreenProvider getScreenProvider();
+    IScreenManager getScreenProvider();
+    IApi getApi();
 }

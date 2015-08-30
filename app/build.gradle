@@ -36,6 +36,10 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.google.code.gson:gson:2.2.4'
 
+
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
+
     project.dependencies {
         compile 'org.roboguice:roboguice:3.+'
         provided 'org.roboguice:roboblender:3.+'

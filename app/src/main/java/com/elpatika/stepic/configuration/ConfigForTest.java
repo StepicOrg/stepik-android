@@ -1,5 +1,8 @@
 package com.elpatika.stepic.configuration;
 
+import com.google.inject.Singleton;
+
+@Singleton
 public class ConfigForTest implements IConfig{
 
     @Override
