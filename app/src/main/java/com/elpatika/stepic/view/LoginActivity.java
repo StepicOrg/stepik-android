@@ -74,7 +74,7 @@ public class LoginActivity extends BaseFragmentActivity {
                     if (result != null) {
                         onUserLoginSuccess();
                     } else {
-                        String errorMsg = "Error is occured";
+                        String errorMsg = "Error is occurred";
                         throw new Exception(errorMsg);
                     }
                 } catch(Exception ex) {
