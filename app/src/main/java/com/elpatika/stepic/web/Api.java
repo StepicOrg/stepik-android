@@ -14,7 +14,7 @@ import java.io.IOException;
 public class Api implements IApi {
 
     @Inject
-    IConfig config;
+    IConfig mConfig;
 
     @Inject
     IHttpManager httpManager;
@@ -22,12 +22,11 @@ public class Api implements IApi {
     @Override
     public IResponse authWithLoginPassword(String username, String password) {
         Bundle params = new Bundle();
-        params.putString("grant_type", "password");
-        params.putString("client_id", config.getOAuthClientId());
+        params.putString("grant_type", mConfig.getGrantType());
         params.putString("username", username);
         params.putString("password", password);
 
-        String url = config.getBaseUrl() + "/oauth2/token/";
+        String url = mConfig.getBaseUrl() + "/oauth2/token/";
 
         String json = null;
         try {
@@ -38,8 +37,7 @@ public class Api implements IApi {
 
         //todo: save to store
         Gson gson = new GsonBuilder().create();
-        AuthenticationResponse res = gson.fromJson(json, AuthenticationResponse.class);
 
-        return res;
+        return gson.fromJson(json, AuthenticationResponse.class);
     }
 }

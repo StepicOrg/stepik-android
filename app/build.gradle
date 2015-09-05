@@ -40,6 +40,9 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
 
+
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+
     project.dependencies {
         compile 'org.roboguice:roboguice:3.+'
         provided 'org.roboguice:roboblender:3.+'

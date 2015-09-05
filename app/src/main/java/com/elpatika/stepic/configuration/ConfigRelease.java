@@ -18,6 +18,8 @@ public class ConfigRelease implements IConfig {
 
     private static final String API_HOST_URL = "API_HOST_URL";
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
+    private static final String OAUTH_CLIENT_SECRET = "OAUTH_CLIENT_SECRET";
+    private static final String GRANT_TYPE = "GRANT_TYPE";
 
 
     @Inject
@@ -34,6 +36,7 @@ public class ConfigRelease implements IConfig {
 
 
 
+
     @Override
     public String getOAuthClientId() {
         return getString(OAUTH_CLIENT_ID);
@@ -42,6 +45,16 @@ public class ConfigRelease implements IConfig {
     @Override
     public String getBaseUrl() {
         return getString(API_HOST_URL);
+    }
+
+    @Override
+    public String getOAuthClientSecret() {
+        return getString(OAUTH_CLIENT_SECRET);
+    }
+
+    @Override
+    public String getGrantType() {
+        return getString(GRANT_TYPE);
     }
 
     private String getString(String key) {
