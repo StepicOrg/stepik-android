@@ -6,7 +6,7 @@
     <string name="already_have_an_account">Already have an account? Sign in</string>
     <string name="sign_up_and_learn">Sign up</string>
     <string name="or_sign_up_with_email">or sign up with e-mail</string>
-    <string name="sign_up_with">Sign up with</string>
+    <string name="sign_up">Sign up</string>
     <string name="show_optional_fields">Show optional fields</string>
     <string name="create_my_account">Create my account</string>
     <string name="by_creating_you_agree">By creating stepic account, you agree to the</string>
@@ -19,5 +19,8 @@
     <string name="sign_in_btn">Sign in button</string>
     <string name="sign_in">Sign In</string>
     <string name="describing_error">The following error occurred while logging you in</string>
+    <string name="first_name">first name</string>
+    <string name="second_name">second name</string>
+    <string name="password_hint">password</string>
 
 </resources>
