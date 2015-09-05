@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="The following error occurred while logging you in"
+        android:text="@string/describing_error"
         android:textColor="@color/grey_text_mycourse"
         android:textSize="14sp" />
 

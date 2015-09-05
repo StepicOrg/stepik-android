@@ -18,5 +18,6 @@
     <string name="remind_password">Remind Password</string>
     <string name="sign_in_btn">Sign in button</string>
     <string name="sign_in">Sign In</string>
+    <string name="describing_error">The following error occurred while logging you in</string>
 
 </resources>
