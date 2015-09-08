@@ -3,6 +3,7 @@ package com.elpatika.stepic.view;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.elpatika.stepic.R;
 import com.elpatika.stepic.base.BaseFragmentActivity;
@@ -49,6 +50,8 @@ public class RegisterActivity extends BaseFragmentActivity {
 
     private void createAccount() {
         //todo: create account
+        Toast toast =  Toast.makeText(this, "Sorry, this function is unimplemented", Toast.LENGTH_SHORT);
+        toast.show();
     }
 
 

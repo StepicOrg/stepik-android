@@ -2,17 +2,13 @@ package com.elpatika.stepic.concurrency;
 
 import android.content.Context;
 
-import com.elpatika.stepic.core.IShell;
 import com.elpatika.stepic.web.AuthenticationResponse;
 import com.elpatika.stepic.web.IApi;
-import com.google.inject.Inject;
 
 public class LoginTask extends StepicTask<AuthenticationResponse> {
     String mLogin;
     String mPassword;
 
-    @Inject
-    IShell mShell;
 
 
     public LoginTask(Context context, String login, String password) {

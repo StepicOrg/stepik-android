@@ -40,4 +40,21 @@ public class Api implements IApi {
 
         return gson.fromJson(json, AuthenticationResponse.class);
     }
+
+    @Override
+    public IResponse signUp(String firstName, String secondName, String email, String password) {
+        Bundle params = new Bundle();
+        params.putString("first_name", firstName);
+        params.putString("last_name", secondName);
+        params.putString("email", email);
+        params.putString("password", password);
+
+
+        String url = mConfig.getBaseUrl() + "/accounts/signup/";
+        //todo implement registration
+
+        return null;
+    }
+
+
 }

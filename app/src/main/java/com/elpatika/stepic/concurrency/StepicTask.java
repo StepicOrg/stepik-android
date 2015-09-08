@@ -4,11 +4,16 @@ import android.content.Context;
 import android.os.Handler;
 import android.widget.ProgressBar;
 
+import com.elpatika.stepic.core.IShell;
+import com.google.inject.Inject;
+
 import roboguice.util.RoboAsyncTask;
 
 public abstract class StepicTask<T>  extends RoboAsyncTask<T> {
 
 
+    @Inject
+    IShell mShell;
     private ProgressBar mProgressBar;
     protected final Handler handler = new Handler();
 
