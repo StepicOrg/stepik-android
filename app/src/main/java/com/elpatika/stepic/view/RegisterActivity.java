@@ -27,6 +27,8 @@ public class RegisterActivity extends BaseFragmentActivity {
         setContentView(R.layout.activity_register);
         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition);
 
+        hideSoftKeypad();
+
         mCreateAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
