@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.elpatika.stepic.configuration.IConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -17,10 +18,10 @@ public class Api implements IApi {
     IConfig mConfig;
 
     @Inject
-    IHttpManager httpManager;
+    IHttpManager mHttpManager;
 
     @Override
-    public IResponse authWithLoginPassword(String username, String password) {
+    public IStepicResponse authWithLoginPassword(String username, String password) {
         Bundle params = new Bundle();
         params.putString("grant_type", mConfig.getGrantType());
         params.putString("username", username);
@@ -30,7 +31,7 @@ public class Api implements IApi {
 
         String json = null;
         try {
-            json = httpManager.post(url, params);
+            json = mHttpManager.post(url, params);
         } catch (IOException i) {
             //ignore
         }
@@ -38,21 +39,34 @@ public class Api implements IApi {
         //todo: save to store
         Gson gson = new GsonBuilder().create();
 
-        return gson.fromJson(json, AuthenticationResponse.class);
+        return gson.fromJson(json, AuthenticationStepicResponse.class);
     }
 
     @Override
-    public IResponse signUp(String firstName, String secondName, String email, String password) {
-        Bundle params = new Bundle();
-        params.putString("first_name", firstName);
-        params.putString("last_name", secondName);
-        params.putString("email", email);
-        params.putString("password", password);
+    public IStepicResponse signUp(String firstName, String secondName, String email, String password) {
+
+        JsonObject innerObject = new JsonObject();
+        innerObject.addProperty("first_name", firstName);
+        innerObject.addProperty("last_name", secondName);
+        innerObject.addProperty("email", email);
+        innerObject.addProperty("password", password);
+
+        JsonObject jsonObject= new JsonObject();
+        jsonObject.add("user", innerObject);
 
 
-        String url = mConfig.getBaseUrl() + "/accounts/signup/";
+
+        String url = mConfig.getBaseUrl() + "/api/users/";
         //todo implement registration
 
+        String json = null;
+        try {
+            json = mHttpManager.postJson(url, jsonObject);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int test = 9000;
         return null;
     }
 

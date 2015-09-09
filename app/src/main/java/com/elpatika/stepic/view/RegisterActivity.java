@@ -2,11 +2,15 @@ package com.elpatika.stepic.view;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.elpatika.stepic.R;
 import com.elpatika.stepic.base.BaseFragmentActivity;
+import com.elpatika.stepic.concurrency.RegistrationTask;
+import com.elpatika.stepic.web.SignUpResponse;
 
 import roboguice.inject.InjectView;
 
@@ -18,6 +22,19 @@ public class RegisterActivity extends BaseFragmentActivity {
 
     @InjectView (R.id.actionbar_close_btn)
     View mCloseButton;
+
+    @InjectView (R.id.first_name_reg)
+    TextView mFirstNameView;
+    @InjectView (R.id.second_name_reg)
+    TextView mSecondNameView;
+    @InjectView (R.id.email_reg)
+    TextView mEmailView;
+    @InjectView (R.id.password_reg)
+    TextView mPassword;
+
+    @InjectView (R.id.progress)
+    ProgressBar mProgressBar;
+
 
 
     @Override
@@ -52,10 +69,31 @@ public class RegisterActivity extends BaseFragmentActivity {
 
     private void createAccount() {
         //todo: create account
-        Toast toast =  Toast.makeText(this, "Sorry, this function is unimplemented", Toast.LENGTH_SHORT);
-        toast.show();
-    }
+        String firstName = mFirstNameView.getText().toString();
+        String lastName = mSecondNameView.getText().toString();
+        String email = mEmailView.getText().toString().trim();
+        String password = mPassword.getText().toString().trim(); //todo: substitute to more safe way
+        RegistrationTask registrationTask = new RegistrationTask(this, firstName, lastName, email, password)
+        {
+            @Override
+            public void onSuccess(SignUpResponse result) {
 
+                Toast toast =  Toast.makeText(RegisterActivity.this, "onSuccess", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+
+            @Override
+            public void onException(Exception ex) {
+
+                Toast toast =  Toast.makeText(RegisterActivity.this, "onException", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        };
+
+        registrationTask.setProgressBar(mProgressBar);
+        registrationTask.execute();
+
+    }
 
 
 }

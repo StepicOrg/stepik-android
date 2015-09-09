@@ -1,6 +1,6 @@
 package com.elpatika.stepic.web;
 
-public class AuthenticationResponse implements IResponse {
+public class AuthenticationStepicResponse implements IStepicResponse {
     private String refresh_token;
     private long expires_in;
     private String scope;

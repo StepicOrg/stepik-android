@@ -2,14 +2,12 @@ package com.elpatika.stepic.concurrency;
 
 import android.content.Context;
 
-import com.elpatika.stepic.web.AuthenticationResponse;
+import com.elpatika.stepic.web.AuthenticationStepicResponse;
 import com.elpatika.stepic.web.IApi;
 
-public class LoginTask extends StepicTask<AuthenticationResponse> {
+public class LoginTask extends StepicTask<AuthenticationStepicResponse> {
     String mLogin;
     String mPassword;
-
-
 
     public LoginTask(Context context, String login, String password) {
         super(context);
@@ -19,7 +17,7 @@ public class LoginTask extends StepicTask<AuthenticationResponse> {
 
 
     @Override
-    public AuthenticationResponse call() throws Exception {
+    public AuthenticationStepicResponse call() throws Exception {
         try {
             if(mLogin!=null) {
                 return getAuthResponse(context, mLogin, mPassword);
@@ -31,9 +29,9 @@ public class LoginTask extends StepicTask<AuthenticationResponse> {
     }
 
 
-    public  AuthenticationResponse getAuthResponse(Context context, String username, String password) throws Exception {
+    public AuthenticationStepicResponse getAuthResponse(Context context, String username, String password) throws Exception {
         IApi api = mShell.getApi();
-        AuthenticationResponse response = (AuthenticationResponse) api.authWithLoginPassword(username, password);
+        AuthenticationStepicResponse response = (AuthenticationStepicResponse) api.authWithLoginPassword(username, password);
 
         //todo: if isSuccess(), then get profile and save
         return response;

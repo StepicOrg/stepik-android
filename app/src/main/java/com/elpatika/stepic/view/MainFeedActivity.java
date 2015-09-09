@@ -5,7 +5,7 @@ import android.widget.TextView;
 
 import com.elpatika.stepic.R;
 import com.elpatika.stepic.base.BaseFragmentActivity;
-import com.elpatika.stepic.core.Tempresponse;
+import com.elpatika.stepic.core.TemporaryResponse;
 
 import roboguice.inject.InjectView;
 
@@ -20,6 +20,6 @@ public class MainFeedActivity extends BaseFragmentActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main_feed);
-        mTextView.setText(Tempresponse.get().toString());
+        mTextView.setText(TemporaryResponse.get().toString());
     }
 }

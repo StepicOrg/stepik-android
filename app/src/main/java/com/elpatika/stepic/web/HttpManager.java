@@ -3,6 +3,7 @@ package com.elpatika.stepic.web;
 import android.os.Bundle;
 
 import com.elpatika.stepic.configuration.IConfig;
+import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.squareup.okhttp.Authenticator;
@@ -23,8 +24,10 @@ public class HttpManager implements IHttpManager {
     IConfig mConfig;
 
     OkHttpClient mOkHttpClient = new OkHttpClient();
-    public static final MediaType DEFAULT_MEDIA_TYPE
+    private static final MediaType DEFAULT_MEDIA_TYPE
             = MediaType.parse("application/x-www-form-urlencoded");
+
+    private static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
 
 
     public HttpManager () {
@@ -57,6 +60,27 @@ public class HttpManager implements IHttpManager {
 
         return response.body().string();
     }
+
+    @Override
+    public String postJson(String url, JsonObject jsonObject) throws IOException {
+
+        String credential = Credentials.basic(mConfig.getOAuthClientId(), mConfig.getOAuthClientSecret());
+
+        String jsonStr = jsonObject.toString();
+        RequestBody requestBody = RequestBody.create(JSON_MEDIA_TYPE, jsonStr);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
+
+        Response response = mOkHttpClient.newCall(request).execute();
+
+        String respStr = response.body().toString();
+
+        return "";
+
+    }
+
 
     private String makeQueryFromBundle(Bundle params) {
 

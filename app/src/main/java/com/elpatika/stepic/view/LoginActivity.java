@@ -9,8 +9,8 @@ import android.widget.ProgressBar;
 import com.elpatika.stepic.R;
 import com.elpatika.stepic.base.BaseFragmentActivity;
 import com.elpatika.stepic.concurrency.LoginTask;
-import com.elpatika.stepic.core.Tempresponse;
-import com.elpatika.stepic.web.AuthenticationResponse;
+import com.elpatika.stepic.core.TemporaryResponse;
+import com.elpatika.stepic.web.AuthenticationStepicResponse;
 
 import roboguice.inject.InjectView;
 
@@ -68,8 +68,8 @@ public class LoginActivity extends BaseFragmentActivity {
 
         LoginTask loginTask = new LoginTask(this, login, password) {
             @Override
-            public void onSuccess(AuthenticationResponse result) {
-                Tempresponse.set(result);
+            public void onSuccess(AuthenticationStepicResponse result) {
+                TemporaryResponse.set(result);
                 try {
                     if (result != null) {
                         onUserLoginSuccess();
