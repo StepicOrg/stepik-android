@@ -5,7 +5,8 @@ import android.widget.TextView;
 
 import com.elpatika.stepic.R;
 import com.elpatika.stepic.base.BaseFragmentActivity;
-import com.elpatika.stepic.core.TemporaryResponse;
+import com.elpatika.stepic.util.SharedPreferenceHelper;
+import com.elpatika.stepic.web.AuthenticationStepicResponse;
 
 import roboguice.inject.InjectView;
 
@@ -20,6 +21,8 @@ public class MainFeedActivity extends BaseFragmentActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main_feed);
-        mTextView.setText(TemporaryResponse.get().toString());
+        SharedPreferenceHelper sharedPreferenceHelper = mShell.getSharedPreferenceHelper();
+        AuthenticationStepicResponse resp = sharedPreferenceHelper.getAuthResponseFromStore(MainFeedActivity.this);
+        mTextView.setText(resp.toString());
     }
 }
