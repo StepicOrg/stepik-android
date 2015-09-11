@@ -1,4 +1,4 @@
-package com.elpatika.stepic.view;
+package com.elpatika.stepic.view.activities;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,14 +8,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.elpatika.stepic.R;
-import com.elpatika.stepic.base.BaseFragmentActivity;
+import com.elpatika.stepic.base.StepicBaseFragmentActivity;
 import com.elpatika.stepic.concurrency.RegistrationTask;
 import com.elpatika.stepic.web.SignUpResponse;
 
 import roboguice.inject.InjectView;
 
 
-public class RegisterActivity extends BaseFragmentActivity {
+public class RegisterActivity extends StepicBaseFragmentActivity {
 
     @InjectView(R.id.createAccount_button_layout)
     RelativeLayout mCreateAccountButton;

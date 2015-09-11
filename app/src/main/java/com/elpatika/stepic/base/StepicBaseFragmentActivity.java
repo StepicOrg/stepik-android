@@ -8,7 +8,7 @@ import com.google.inject.Inject;
 
 import roboguice.activity.RoboFragmentActivity;
 
-public abstract class BaseFragmentActivity extends RoboFragmentActivity {
+public abstract class StepicBaseFragmentActivity extends RoboFragmentActivity {
 
 
     @Inject

@@ -1,4 +1,4 @@
-package com.elpatika.stepic.view;
+package com.elpatika.stepic.view.activities;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -7,14 +7,14 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.elpatika.stepic.R;
-import com.elpatika.stepic.base.BaseFragmentActivity;
+import com.elpatika.stepic.base.StepicBaseFragmentActivity;
 import com.elpatika.stepic.concurrency.LoginTask;
 import com.elpatika.stepic.util.SharedPreferenceHelper;
 import com.elpatika.stepic.web.AuthenticationStepicResponse;
 
 import roboguice.inject.InjectView;
 
-public class LoginActivity extends BaseFragmentActivity {
+public class LoginActivity extends StepicBaseFragmentActivity {
 
     @InjectView (R.id.actionbar_close_btn)
     View mCloseButton;

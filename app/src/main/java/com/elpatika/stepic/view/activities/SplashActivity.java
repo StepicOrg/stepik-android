@@ -1,17 +1,17 @@
-package com.elpatika.stepic.view;
+package com.elpatika.stepic.view.activities;
 
 
 import android.os.Bundle;
 import android.os.Handler;
 
 import com.elpatika.stepic.R;
-import com.elpatika.stepic.base.BaseFragmentActivity;
+import com.elpatika.stepic.base.StepicBaseFragmentActivity;
 
 
-public class SplashActivity extends BaseFragmentActivity {
+public class SplashActivity extends StepicBaseFragmentActivity {
 
     // Splash screen wait time
-    private static final int SPLASH_TIME_OUT = 3000;
+    private static final int SPLASH_TIME_OUT = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

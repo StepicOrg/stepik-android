@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.elpatika.stepic.view.LaunchActivity;
-import com.elpatika.stepic.view.LoginActivity;
-import com.elpatika.stepic.view.MainFeedActivity;
-import com.elpatika.stepic.view.RegisterActivity;
+import com.elpatika.stepic.view.activities.LaunchActivity;
+import com.elpatika.stepic.view.activities.LoginActivity;
+import com.elpatika.stepic.view.activities.MainFeedActivity;
+import com.elpatika.stepic.view.activities.RegisterActivity;
 
 
 public class ScreenManager implements IScreenManager {
@@ -40,6 +40,7 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showMainFeed(Context sourceActivity) {
+        //todo finish all activities which exist for login (launch, splash, etc).
         Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
         /*
         Using CLEAR_TOP flag, causes the activity to be re-created every time.

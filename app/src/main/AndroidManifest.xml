@@ -30,7 +30,7 @@
         android:name=".base.MainApplication">
 
         <activity
-            android:name=".view.SplashActivity"
+            android:name=".view.activities.SplashActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,28 +41,28 @@
 
 
         <activity
-            android:name=".view.LaunchActivity"
+            android:name=".view.activities.LaunchActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
 
 
         <activity
-            android:name=".view.RegisterActivity"
+            android:name=".view.activities.RegisterActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
         <activity
-            android:name=".view.LoginActivity"
+            android:name=".view.activities.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
 
         <activity
-            android:name=".view.MainFeedActivity"
-            android:label="@string/app_name"
+            android:name=".view.activities.MainFeedActivity"
+            android:label="@string/my_courses_title"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" />
+            />
 
     </application>
 </manifest>

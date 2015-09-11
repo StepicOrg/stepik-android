@@ -1,4 +1,4 @@
-package com.elpatika.stepic.view;
+package com.elpatika.stepic.view.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.elpatika.stepic.R;
-import com.elpatika.stepic.base.BaseFragmentActivity;
+import com.elpatika.stepic.base.StepicBaseFragmentActivity;
 import com.elpatika.stepic.util.AppConstants;
 import com.elpatika.stepic.view.custom.SButton;
 import com.elpatika.stepic.view.custom.STextView;
@@ -16,7 +16,7 @@ import com.elpatika.stepic.view.custom.STextView;
 import roboguice.inject.InjectView;
 
 
-public class LaunchActivity extends BaseFragmentActivity {
+public class LaunchActivity extends StepicBaseFragmentActivity {
 
     public static final String OVERRIDE_ANIMATION_FLAG = "override_animation_flag";
 

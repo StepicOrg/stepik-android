@@ -22,5 +22,9 @@
     <string name="first_name">first name</string>
     <string name="second_name">second name</string>
     <string name="password_hint">password</string>
+    <string name="my_courses_title">My Courses</string>
+    <string name="best_lessons_title">Best Lessons</string>
+    <string name="drawer_open">open drawer</string>
+    <string name="drawer_closed">close drawer</string>
 
 </resources>
