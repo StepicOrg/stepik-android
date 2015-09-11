@@ -29,9 +29,11 @@ public class SplashActivity extends BaseFragmentActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mShell.getScreenProvider().showLaunchScreen(SplashActivity.this, false);
+                if (!isFinishing()) {
+                    mShell.getScreenProvider().showLaunchScreen(SplashActivity.this, false);
 
-                finish();
+                    finish();
+                }
             }
         }, SPLASH_TIME_OUT);
 
