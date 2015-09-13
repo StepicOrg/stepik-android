@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
-
         <item
             android:id="@+id/first"
-            android:checked="false"
-
             android:title="first" />
 
         <item
             android:id="@+id/second"
-            android:checked="false"
             android:title="second" />
 
-
-    </group>
 </menu>
