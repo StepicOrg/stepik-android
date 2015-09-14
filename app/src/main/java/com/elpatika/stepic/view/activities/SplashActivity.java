@@ -7,6 +7,8 @@ import android.os.Handler;
 import com.elpatika.stepic.R;
 import com.elpatika.stepic.base.StepicBaseFragmentActivity;
 
+import butterknife.ButterKnife;
+
 
 public class SplashActivity extends StepicBaseFragmentActivity {
 
@@ -16,6 +18,7 @@ public class SplashActivity extends StepicBaseFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ButterKnife.bind(this);
 
         //This stops from opening again from the Splash screen when minimized
         if (!isTaskRoot()) {

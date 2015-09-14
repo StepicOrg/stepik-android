@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import com.elpatika.stepic.R;
 import com.elpatika.stepic.base.StepicBaseFragment;
 
+import butterknife.ButterKnife;
+
 public class MyCourses extends StepicBaseFragment {
 
 
@@ -16,6 +18,7 @@ public class MyCourses extends StepicBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_my_courses,container,false);
+        ButterKnife.bind(this, v);
         return v;
     }
 }

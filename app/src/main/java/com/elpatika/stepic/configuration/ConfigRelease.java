@@ -5,11 +5,12 @@ import android.content.Context;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 public class ConfigRelease implements IConfig {
@@ -33,9 +34,6 @@ public class ConfigRelease implements IConfig {
             mProperties = new JsonObject();
         }
     }
-
-
-
 
     @Override
     public String getOAuthClientId() {

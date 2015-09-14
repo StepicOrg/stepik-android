@@ -31,7 +31,8 @@
 
         <activity
             android:name=".view.activities.SplashActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,19 +45,19 @@
             android:name=".view.activities.LaunchActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" />
+            android:theme="@style/AppTheme" />
 
 
         <activity
             android:name=".view.activities.RegisterActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".view.activities.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" />
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name=".view.activities.MainFeedActivity"

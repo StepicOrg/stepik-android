@@ -4,19 +4,14 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
+import com.elpatika.stepic.core.DaggerStepicCoreComponent;
+import com.elpatika.stepic.core.StepicCoreComponent;
 import com.elpatika.stepic.core.StepicDefaultModule;
-import com.google.inject.Injector;
-
-import roboguice.RoboGuice;
 
 public class MainApplication extends MultiDexApplication {
 
     protected static MainApplication application;
-    Injector injector;
-
-    static {
-        RoboGuice.setUseAnnotationDatabases(false);
-    }
+    private StepicCoreComponent component;
 
     @Override
     public void onCreate() {
@@ -24,17 +19,18 @@ public class MainApplication extends MultiDexApplication {
         init();
     }
 
-    /**
-     * Initializes the request manager, image cache,
-     * all third party integrations and shared components.
-     */
     private void init() {
         application = this;
 
-        injector = RoboGuice.getOrCreateBaseApplicationInjector(this, RoboGuice.DEFAULT_STAGE,
-                RoboGuice.newDefaultRoboModule(this), new StepicDefaultModule());
+        component = DaggerStepicCoreComponent.builder().
+                stepicDefaultModule(new StepicDefaultModule(application)).build();
     }
 
+    public static StepicCoreComponent component(Context context) {
+        return ((MainApplication) context.getApplicationContext()).component;
+    }
+
+    @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);

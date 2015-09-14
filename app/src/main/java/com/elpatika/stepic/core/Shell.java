@@ -1,23 +1,33 @@
 package com.elpatika.stepic.core;
 
+import android.content.Context;
+
+import com.elpatika.stepic.base.MainApplication;
 import com.elpatika.stepic.util.SharedPreferenceHelper;
 import com.elpatika.stepic.web.IApi;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 public class Shell implements IShell {
 
-    @Inject
-    private IScreenManager mScreenProvider;
+    Context mContext;
 
     @Inject
-    private IApi mApi;
+    public Shell(Context context) {
+        mContext = context;
+        MainApplication.component(mContext).inject(this);
+    }
 
     @Inject
-    private SharedPreferenceHelper mSharedPreferenceHelper;
+    IScreenManager mScreenProvider;
+
+    @Inject
+    IApi mApi;
+
+    @Inject
+    SharedPreferenceHelper mSharedPreferenceHelper;
 
     @Override
     public IScreenManager getScreenProvider() {

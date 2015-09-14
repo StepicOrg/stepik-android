@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt' //needed for source code generation
 
 android {
 
@@ -24,35 +25,23 @@ android {
     }
 }
 
-project.tasks.withType(JavaCompile) { task ->
-    options.compilerArgs << "-AguiceAnnotationDatabasePackageName=gk.com.roboguice_compile"
-}
-
 dependencies {
-    compile ('com.getbase:floatingactionbutton:1.3.0') {
-        exclude module: 'support-annotations'
-    }
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.google.code.gson:gson:2.2.4'
 
+    //<DI>
+    apt 'com.google.dagger:dagger-compiler:2.0.1' //needed for source code generation
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.google.dagger:dagger:2.0.1' //dagger itself
+    provided 'org.glassfish:javax.annotation:10.0-b28' //needed to resolve compilation errors, thanks to tutplus.org for finding the dependency
+    compile 'com.jakewharton:butterknife:7.0.1'
+    //</DI>
+
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.google.code.gson:gson:2.3'
 
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
 
-
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
-
-    project.dependencies {
-        compile 'org.roboguice:roboguice:3.+'
-        provided 'org.roboguice:roboblender:3.+'
-    }
-    // For the optional Nullable annotation
-    compile 'com.android.support:support-annotations:23.0.0'
-
-
     compile 'de.hdodenhof:circleimageview:1.3.0'
-
 
     compile 'com.android.support:appcompat-v7:23.0.0'
     compile 'com.android.support:design:23.0.0'

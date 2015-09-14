@@ -12,27 +12,28 @@ import com.elpatika.stepic.base.StepicBaseFragmentActivity;
 import com.elpatika.stepic.concurrency.RegistrationTask;
 import com.elpatika.stepic.web.SignUpResponse;
 
-import roboguice.inject.InjectView;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 
 public class RegisterActivity extends StepicBaseFragmentActivity {
 
-    @InjectView(R.id.createAccount_button_layout)
+    @Bind(R.id.createAccount_button_layout)
     RelativeLayout mCreateAccountButton;
 
-    @InjectView (R.id.actionbar_close_btn)
+    @Bind (R.id.actionbar_close_btn)
     View mCloseButton;
 
-    @InjectView (R.id.first_name_reg)
+    @Bind (R.id.first_name_reg)
     TextView mFirstNameView;
-    @InjectView (R.id.second_name_reg)
+    @Bind (R.id.second_name_reg)
     TextView mSecondNameView;
-    @InjectView (R.id.email_reg)
+    @Bind (R.id.email_reg)
     TextView mEmailView;
-    @InjectView (R.id.password_reg)
+    @Bind (R.id.password_reg)
     TextView mPassword;
 
-    @InjectView (R.id.progress)
+    @Bind (R.id.progress)
     ProgressBar mProgressBar;
 
 
@@ -40,8 +41,8 @@ public class RegisterActivity extends StepicBaseFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_register);
+        ButterKnife.bind(this);
         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition);
 
         hideSoftKeypad();
@@ -76,16 +77,8 @@ public class RegisterActivity extends StepicBaseFragmentActivity {
         RegistrationTask registrationTask = new RegistrationTask(this, firstName, lastName, email, password)
         {
             @Override
-            public void onSuccess(SignUpResponse result) {
-
+            protected void onPostExecute(SignUpResponse signUpResponse) {
                 Toast toast =  Toast.makeText(RegisterActivity.this, "onSuccess", Toast.LENGTH_SHORT);
-                toast.show();
-            }
-
-            @Override
-            public void onException(Exception ex) {
-
-                Toast toast =  Toast.makeText(RegisterActivity.this, "onException", Toast.LENGTH_SHORT);
                 toast.show();
             }
         };

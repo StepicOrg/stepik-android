@@ -13,25 +13,27 @@ import com.elpatika.stepic.util.AppConstants;
 import com.elpatika.stepic.view.custom.SButton;
 import com.elpatika.stepic.view.custom.STextView;
 
-import roboguice.inject.InjectView;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 
 public class LaunchActivity extends StepicBaseFragmentActivity {
 
     public static final String OVERRIDE_ANIMATION_FLAG = "override_animation_flag";
 
-    @InjectView(R.id.sign_up_btn)
-    private SButton mSignUpButton;
+    @Bind(R.id.sign_up_btn)
+     SButton mSignUpButton;
 
-    @InjectView(R.id.sign_in_tv)
-    private STextView mSignInTextView;
+    @Bind(R.id.sign_in_tv)
+     STextView mSignInTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_launch);
+        ButterKnife.bind(this);
 
         enableLoginCallback();
-        setContentView(R.layout.activity_launch);
 
         //Activity override animation has to be handled if the Launch Activity
         //is called after user logs out and closes the Sign-in screen.

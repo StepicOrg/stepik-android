@@ -6,13 +6,16 @@ import com.elpatika.stepic.configuration.IConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.inject.Singleton;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+
 @Singleton
 public class Api implements IApi {
+    @Inject
+    public Api () {}
 
     @Inject
     IConfig mConfig;

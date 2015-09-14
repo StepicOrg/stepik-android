@@ -4,8 +4,6 @@ import android.os.Bundle;
 
 import com.elpatika.stepic.configuration.IConfig;
 import com.google.gson.JsonObject;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.MediaType;
@@ -17,8 +15,12 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 import java.net.Proxy;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 @Singleton
 public class HttpManager implements IHttpManager {
+
 
     @Inject
     IConfig mConfig;
@@ -29,8 +31,8 @@ public class HttpManager implements IHttpManager {
 
     private static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
 
-
-    public HttpManager () {
+    @Inject
+    public HttpManager() {
         mOkHttpClient.setAuthenticator(new Authenticator() {
             @Override
             public Request authenticate(Proxy proxy, Response response) throws IOException {
@@ -86,12 +88,12 @@ public class HttpManager implements IHttpManager {
 
         StringBuilder queryMaker = new StringBuilder();
         int i = 0;
-        for(String key : params.keySet()){
+        for (String key : params.keySet()) {
             i++;
             queryMaker.append(key);
             queryMaker.append('=');
             queryMaker.append(params.get(key));
-            if (params.keySet().size() != i){
+            if (params.keySet().size() != i) {
                 //if not last element
                 queryMaker.append('&');
             }

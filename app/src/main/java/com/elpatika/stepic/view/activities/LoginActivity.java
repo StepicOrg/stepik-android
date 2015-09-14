@@ -12,23 +12,24 @@ import com.elpatika.stepic.concurrency.LoginTask;
 import com.elpatika.stepic.util.SharedPreferenceHelper;
 import com.elpatika.stepic.web.AuthenticationStepicResponse;
 
-import roboguice.inject.InjectView;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class LoginActivity extends StepicBaseFragmentActivity {
 
-    @InjectView (R.id.actionbar_close_btn)
+    @Bind(R.id.actionbar_close_btn)
     View mCloseButton;
 
-    @InjectView (R.id.login_button_layout)
+    @Bind (R.id.login_button_layout)
     View mLoginBtn;
 
-    @InjectView (R.id.email_et)
+    @Bind (R.id.email_et)
     EditText mLoginText;
 
-    @InjectView (R.id.password_et)
+    @Bind (R.id.password_et)
     EditText mPasswordText;
 
-    @InjectView (R.id.login_spinner)
+    @Bind (R.id.login_spinner)
     ProgressBar mProgressLoogin;
 
 
@@ -36,8 +37,8 @@ public class LoginActivity extends StepicBaseFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition);
 
         hideSoftKeypad();
@@ -51,6 +52,7 @@ public class LoginActivity extends StepicBaseFragmentActivity {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                onUserLoginSuccess(); // todo: FOR DEBUG ONLY
                 tryLogin();
             }
         });
@@ -68,7 +70,8 @@ public class LoginActivity extends StepicBaseFragmentActivity {
 
         LoginTask loginTask = new LoginTask(this, login, password) {
             @Override
-            public void onSuccess(AuthenticationStepicResponse result) {
+            protected void onPostExecute(AuthenticationStepicResponse result) {
+                super.onPostExecute(result);
                 SharedPreferenceHelper preferenceHelper = mShell.getSharedPreferenceHelper();
                 preferenceHelper.storeAuthInfo(LoginActivity.this, result);
                 try {
@@ -79,13 +82,8 @@ public class LoginActivity extends StepicBaseFragmentActivity {
                         throw new Exception(errorMsg);
                     }
                 } catch(Exception ex) {
-                    handle(ex);
+                    //ignore
                 }
-            }
-
-            @Override
-            public void onException(Exception ex) {
-                onUserLoginFailure(ex);
             }
         };
         loginTask.setProgressBar(mProgressLoogin);

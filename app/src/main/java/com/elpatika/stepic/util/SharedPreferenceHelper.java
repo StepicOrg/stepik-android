@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import com.elpatika.stepic.web.AuthenticationStepicResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.inject.Singleton;
+import javax.inject.Singleton;
 
 @Singleton
 public class SharedPreferenceHelper {

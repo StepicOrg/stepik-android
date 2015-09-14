@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,15 +11,19 @@ import android.widget.Toast;
 
 import com.elpatika.stepic.R;
 import com.elpatika.stepic.base.StepicBaseFragment;
+import com.elpatika.stepic.base.StepicBaseFragmentActivity;
 import com.elpatika.stepic.core.IShell;
-import com.elpatika.stepic.core.Shell;
 import com.elpatika.stepic.util.SharedPreferenceHelper;
 import com.elpatika.stepic.view.fragments.BestLessons;
 import com.elpatika.stepic.view.fragments.MyCourses;
 import com.elpatika.stepic.web.AuthenticationStepicResponse;
 
-public class MainFeedActivity extends AppCompatActivity {
+import javax.inject.Inject;
 
+import butterknife.ButterKnife;
+
+public class MainFeedActivity extends StepicBaseFragmentActivity {
+    @Inject
     IShell mShell;
 
 
@@ -31,9 +34,10 @@ public class MainFeedActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mShell = new Shell(); // todo: remove and use Dagger
         setContentView(R.layout.activity_main_feed);
+        ButterKnife.bind(this);
+
+
         setTitle(R.string.my_courses_title);
 //        SharedPreferenceHelper sharedPreferenceHelper = mShell.getSharedPreferenceHelper();
         SharedPreferenceHelper sharedPreferenceHelper = new SharedPreferenceHelper();

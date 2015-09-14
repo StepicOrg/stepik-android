@@ -5,7 +5,7 @@ import android.content.Context;
 import com.elpatika.stepic.web.IApi;
 import com.elpatika.stepic.web.SignUpResponse;
 
-public class RegistrationTask extends StepicTask<SignUpResponse> {
+public class RegistrationTask extends StepicTask<Void, Void, SignUpResponse> {
 
     private final String mFirstName;
     private final String mLastName;
@@ -21,8 +21,9 @@ public class RegistrationTask extends StepicTask<SignUpResponse> {
     }
 
     @Override
-    public SignUpResponse call() throws Exception {
+    protected SignUpResponse doInBackground(Void... params) {
         IApi api = mShell.getApi();
         return  (SignUpResponse) api.signUp(mFirstName, mLastName, mEmail, mPassword);
+
     }
 }

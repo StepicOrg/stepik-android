@@ -8,9 +8,16 @@ import com.elpatika.stepic.view.activities.LaunchActivity;
 import com.elpatika.stepic.view.activities.LoginActivity;
 import com.elpatika.stepic.view.activities.MainFeedActivity;
 import com.elpatika.stepic.view.activities.RegisterActivity;
+import javax.inject.Singleton;
 
+import javax.inject.Inject;
 
+@Singleton
 public class ScreenManager implements IScreenManager {
+    @Inject
+    public ScreenManager () {
+
+    }
 
     @Override
     public void showLaunchScreen(Context context, boolean overrideAnimation) {
