@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.elpatika.stepic.R;
 import com.elpatika.stepic.base.StepicBaseFragmentActivity;
@@ -20,18 +21,17 @@ public class LoginActivity extends StepicBaseFragmentActivity {
     @Bind(R.id.actionbar_close_btn)
     View mCloseButton;
 
-    @Bind (R.id.login_button_layout)
+    @Bind(R.id.login_button_layout)
     View mLoginBtn;
 
-    @Bind (R.id.email_et)
+    @Bind(R.id.email_et)
     EditText mLoginText;
 
-    @Bind (R.id.password_et)
+    @Bind(R.id.password_et)
     EditText mPasswordText;
 
-    @Bind (R.id.login_spinner)
+    @Bind(R.id.login_spinner)
     ProgressBar mProgressLoogin;
-
 
 
     @Override
@@ -52,7 +52,7 @@ public class LoginActivity extends StepicBaseFragmentActivity {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onUserLoginSuccess(); // todo: FOR DEBUG ONLY
+//                onUserLoginSuccess(); // todo: FOR DEBUG ONLY
                 tryLogin();
             }
         });
@@ -64,14 +64,14 @@ public class LoginActivity extends StepicBaseFragmentActivity {
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom);
     }
 
-    private void tryLogin () {
+    private void tryLogin() {
         String login = mLoginText.getText().toString().trim();
         String password = mPasswordText.getText().toString().trim();
 
         LoginTask loginTask = new LoginTask(this, login, password) {
             @Override
-            protected void onPostExecute(AuthenticationStepicResponse result) {
-                super.onPostExecute(result);
+            protected void onSuccess(AuthenticationStepicResponse result) {
+                super.onSuccess(result);
                 SharedPreferenceHelper preferenceHelper = mShell.getSharedPreferenceHelper();
                 preferenceHelper.storeAuthInfo(LoginActivity.this, result);
                 try {
@@ -81,9 +81,15 @@ public class LoginActivity extends StepicBaseFragmentActivity {
                         String errorMsg = "Error is occurred";
                         throw new Exception(errorMsg);
                     }
-                } catch(Exception ex) {
+                } catch (Exception ex) {
                     //ignore
                 }
+            }
+
+            @Override
+            protected void onException(Exception exception) {
+                super.onException(exception);
+                onUserLoginFailure(exception);
             }
         };
         loginTask.setProgressBar(mProgressLoogin);
@@ -99,6 +105,8 @@ public class LoginActivity extends StepicBaseFragmentActivity {
     private void onUserLoginFailure(Exception ex) {
         //todo: show Error message to user
         Log.i("Error key", "Error in user login");
+        ex.printStackTrace();
+        Toast.makeText(getApplicationContext(), "Fail exception: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
 }

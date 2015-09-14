@@ -5,18 +5,11 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.elpatika.stepic.core.IShell;
 
-import javax.inject.Inject;
-
-
-public abstract class StepicTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
+public abstract class StepicTask<Params, Progress, Result> extends AsyncTask<Params, Progress, AsyncResultWrapper<Result>> {
 
 
-    @Inject
-    IShell mShell;
     private ProgressBar mProgressBar;
-//    protected final Handler handler = new Handler();
     protected Context mContext;
 
     protected StepicTask(Context context) {
@@ -24,15 +17,6 @@ public abstract class StepicTask<Params, Progress, Result> extends AsyncTask<Par
         this.mContext = context;
     }
 
-//
-//    protected void handle(final Exception ex) {
-//        handler.post(new Runnable() {
-//            public void run() {
-//                //todo: clarify exception
-//                onException(ex);
-//            }
-//        });
-//    }
 
     public void setProgressBar(ProgressBar progressBar) {
         this.mProgressBar = progressBar;
@@ -47,10 +31,46 @@ public abstract class StepicTask<Params, Progress, Result> extends AsyncTask<Par
     }
 
     @Override
-    protected void onPostExecute(Result result) {
-        super.onPostExecute(result);
+    protected final AsyncResultWrapper<Result> doInBackground(Params... params) {
+        try{
+            Result result = doInBackgroundBody(params);
+            AsyncResultWrapper asyncResultWrapper = new AsyncResultWrapper(result);
+            return asyncResultWrapper;
+        }
+        catch (Exception exception){
+            AsyncResultWrapper asyncResultWrapper = new AsyncResultWrapper(exception);
+            return asyncResultWrapper;
+        }
+    }
+
+    protected abstract Result doInBackgroundBody (Params... params) throws Exception;
+
+    @Override
+    protected void onPostExecute(AsyncResultWrapper<Result> resultAsyncResultWrapper) {
+        super.onPostExecute(resultAsyncResultWrapper);
+
         if (mProgressBar != null) {
             mProgressBar.setVisibility(View.GONE);
         }
+
+        if (resultAsyncResultWrapper.getException() != null) {
+            onException(resultAsyncResultWrapper.getException());
+        } else {
+            onSuccess(resultAsyncResultWrapper.getResult());
+        }
+    }
+
+    /**
+     * Execute at UI Thread, when task is succeed.
+     * @param result of task
+     */
+    protected void onSuccess(Result result) {
+    }
+
+    /**
+     * Execute at UI Thread, when task is end with Exception
+     * @param exception
+     */
+    protected void onException(Exception exception) {
     }
 }

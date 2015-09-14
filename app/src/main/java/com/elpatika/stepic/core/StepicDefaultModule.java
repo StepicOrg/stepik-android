@@ -30,8 +30,8 @@ public class StepicDefaultModule {
     }
 
     @Provides @Singleton
-    public IShell provideIShell() {
-        return new Shell(mContext);
+    public IShell provideIShell(Context context) {
+        return new Shell(context);
     }
 
     @Provides @Singleton
@@ -41,13 +41,13 @@ public class StepicDefaultModule {
 
 
     @Provides @Singleton
-    public IApi provideIApi() {
-        return new Api();
+    public IApi provideIApi(Context context) {
+        return new Api(context);
     }
 
     @Provides @Singleton
-    public IHttpManager provideIHttpManager() {
-        return new HttpManager();
+    public IHttpManager provideIHttpManager(Context context) {
+        return new HttpManager(context);
     }
 
     @Provides @Singleton

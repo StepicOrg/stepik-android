@@ -77,7 +77,8 @@ public class RegisterActivity extends StepicBaseFragmentActivity {
         RegistrationTask registrationTask = new RegistrationTask(this, firstName, lastName, email, password)
         {
             @Override
-            protected void onPostExecute(SignUpResponse signUpResponse) {
+            protected void onSuccess(SignUpResponse signUpResponse) {
+                super.onSuccess(signUpResponse);
                 Toast toast =  Toast.makeText(RegisterActivity.this, "onSuccess", Toast.LENGTH_SHORT);
                 toast.show();
             }

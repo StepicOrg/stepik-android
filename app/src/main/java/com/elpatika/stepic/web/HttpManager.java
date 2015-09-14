@@ -1,7 +1,9 @@
 package com.elpatika.stepic.web;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import com.elpatika.stepic.base.MainApplication;
 import com.elpatika.stepic.configuration.IConfig;
 import com.google.gson.JsonObject;
 import com.squareup.okhttp.Authenticator;
@@ -32,7 +34,8 @@ public class HttpManager implements IHttpManager {
     private static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
 
     @Inject
-    public HttpManager() {
+    public HttpManager(Context context) {
+        MainApplication.component(context).inject(this);
         mOkHttpClient.setAuthenticator(new Authenticator() {
             @Override
             public Request authenticate(Proxy proxy, Response response) throws IOException {

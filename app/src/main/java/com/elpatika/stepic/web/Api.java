@@ -1,21 +1,25 @@
 package com.elpatika.stepic.web;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import com.elpatika.stepic.base.MainApplication;
 import com.elpatika.stepic.configuration.IConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import javax.inject.Singleton;
 
 import java.io.IOException;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 public class Api implements IApi {
     @Inject
-    public Api () {}
+    public Api (Context context) {
+        MainApplication.component(context).inject(this);
+    }
 
     @Inject
     IConfig mConfig;
@@ -37,9 +41,9 @@ public class Api implements IApi {
             json = mHttpManager.post(url, params);
         } catch (IOException i) {
             //ignore
+            //Too many follow-up requests: 21 when incorrect user/password
         }
 
-        //todo: save to store
         Gson gson = new GsonBuilder().create();
 
         return gson.fromJson(json, AuthenticationStepicResponse.class);
