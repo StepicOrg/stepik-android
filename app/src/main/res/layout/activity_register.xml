@@ -42,7 +42,7 @@
                 tools:targetApi="17"
                 android:orientation="vertical">
 
-                <com.elpatika.stepic.view.custom.SEditTextView
+                <org.stepic.droid.view.custom.SEditTextView
                     android:id="@+id/first_name_reg"
                     style="@style/edit_text_style"
                     android:hint="@string/first_name"
@@ -51,7 +51,7 @@
                     android:layout_margin="@dimen/margin_registration"/>
 
 
-                <com.elpatika.stepic.view.custom.SEditTextView
+                <org.stepic.droid.view.custom.SEditTextView
                     android:id="@+id/second_name_reg"
                     style="@style/edit_text_style"
                     android:hint="@string/second_name"
@@ -59,7 +59,7 @@
                     android:layout_margin="@dimen/margin_registration"/>
 
 
-                <com.elpatika.stepic.view.custom.SEditTextView
+                <org.stepic.droid.view.custom.SEditTextView
                     android:id="@+id/email_reg"
                     style="@style/edit_text_style"
                     android:hint="@string/email_login"
@@ -67,7 +67,7 @@
                     android:layout_margin="@dimen/margin_registration"/>
 
 
-                <com.elpatika.stepic.view.custom.SEditTextView
+                <org.stepic.droid.view.custom.SEditTextView
                     android:id="@+id/password_reg"
                     style="@style/edit_text_style"
                     android:hint="@string/password_hint"
@@ -86,7 +86,7 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bt_signin_active">
 
-                <com.elpatika.stepic.view.custom.STextView
+                <org.stepic.droid.view.custom.STextView
                     android:id="@+id/create_account_tv"
                     style="@style/regular_white_text"
                     android:layout_width="wrap_content"
@@ -120,7 +120,7 @@
     </LinearLayout>
 
 
-    <com.elpatika.stepic.view.custom.STextView
+    <org.stepic.droid.view.custom.STextView
         android:id="@+id/downloadMessage"
         style="@style/downloading_message"
         android:text="Downloading"

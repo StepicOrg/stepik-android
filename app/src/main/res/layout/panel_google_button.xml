@@ -33,7 +33,7 @@
             android:layout_height="40dp"
             android:background="@color/transparent_white_20" />
 
-        <com.elpatika.stepic.view.custom.STextView
+        <org.stepic.droid.view.custom.STextView
             android:id="@+id/google_tv"
             style="@style/regular_white_text"
             android:layout_width="match_parent"

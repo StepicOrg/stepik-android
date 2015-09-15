@@ -22,7 +22,7 @@
         android:layout_marginRight="5dp"
         />
 
-    <com.elpatika.stepic.view.custom.STextView
+    <org.stepic.droid.view.custom.STextView
         android:id="@+id/message_body"
         style="@style/regular_text"
         android:layout_width="match_parent"

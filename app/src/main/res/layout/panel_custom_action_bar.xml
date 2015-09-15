@@ -5,7 +5,7 @@
     android:layout_height="50dp"
     android:background="@android:color/white">
 
-    <com.elpatika.stepic.view.custom.STextView
+    <org.stepic.droid.view.custom.STextView
         android:id="@+id/activity_title"
         style="@style/custom_activity_title"/>
 

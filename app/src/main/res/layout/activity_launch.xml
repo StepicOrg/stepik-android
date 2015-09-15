@@ -22,7 +22,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="40dp">
 
-        <com.elpatika.stepic.view.custom.SButton
+        <org.stepic.droid.view.custom.SButton
             android:id="@+id/sign_up_btn"
             style="@style/bold_white_text"
             android:layout_width="match_parent"
@@ -39,7 +39,7 @@
             android:textColor="@android:color/white"
             android:textSize="16sp" />
 
-        <com.elpatika.stepic.view.custom.STextView
+        <org.stepic.droid.view.custom.STextView
             android:id="@+id/sign_in_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
 
-    <com.elpatika.stepic.view.custom.SButton
+    <org.stepic.droid.view.custom.SButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
