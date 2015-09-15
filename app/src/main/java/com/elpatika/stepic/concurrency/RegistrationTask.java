@@ -32,7 +32,6 @@ public class RegistrationTask extends StepicTask<Void, Void, SignUpResponse> {
 
     @Override
     protected SignUpResponse doInBackgroundBody(Void... params) throws Exception {
-
         IApi api = mShell.getApi();
         return  (SignUpResponse) api.signUp(mFirstName, mLastName, mEmail, mPassword);
     }

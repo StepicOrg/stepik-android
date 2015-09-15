@@ -82,6 +82,13 @@ public class RegisterActivity extends StepicBaseFragmentActivity {
                 Toast toast =  Toast.makeText(RegisterActivity.this, "onSuccess", Toast.LENGTH_SHORT);
                 toast.show();
             }
+
+            @Override
+            protected void onException(Exception exception) {
+                super.onException(exception);
+                Toast toast =  Toast.makeText(RegisterActivity.this, "onException: " + exception.getMessage(), Toast.LENGTH_SHORT);
+                toast.show();
+            }
         };
 
         registrationTask.setProgressBar(mProgressBar);
