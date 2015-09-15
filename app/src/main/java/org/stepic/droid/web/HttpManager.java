@@ -3,8 +3,6 @@ package org.stepic.droid.web;
 import android.content.Context;
 import android.os.Bundle;
 
-import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.configuration.IConfig;
 import com.google.gson.JsonObject;
 import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.Credentials;
@@ -14,14 +12,21 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.configuration.IConfig;
+
 import java.io.IOException;
 import java.net.Proxy;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class HttpManager implements IHttpManager {
+
+    private final static int CONNECTION_TIMEOUT = 5000;
+    private final static int READ_TIMEOUT = 5000;
 
 
     @Inject
@@ -36,6 +41,8 @@ public class HttpManager implements IHttpManager {
     @Inject
     public HttpManager(Context context) {
         MainApplication.component(context).inject(this);
+        mOkHttpClient.setConnectTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS);
+        mOkHttpClient.setReadTimeout(READ_TIMEOUT, TimeUnit.MILLISECONDS);
         mOkHttpClient.setAuthenticator(new Authenticator() {
             @Override
             public Request authenticate(Proxy proxy, Response response) throws IOException {

@@ -9,16 +9,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragment;
 import org.stepic.droid.base.StepicBaseFragmentActivity;
 import org.stepic.droid.core.IShell;
-import org.stepic.droid.util.SharedPreferenceHelper;
+import org.stepic.droid.view.fragments.AvailableCourses;
 import org.stepic.droid.view.fragments.BestLessons;
+import org.stepic.droid.view.fragments.FindLessons;
 import org.stepic.droid.view.fragments.MyCourses;
-import org.stepic.droid.web.AuthenticationStepicResponse;
+import org.stepic.droid.view.fragments.MySettings;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainFeedActivity extends StepicBaseFragmentActivity {
@@ -26,27 +29,27 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
     IShell mShell;
 
 
-    private Toolbar mToolbar;
-    private NavigationView mNavigationView;
-    private DrawerLayout mDrawerLayout;
+    @Bind(R.id.toolbar)
+    Toolbar mToolbar;
+
+    @Bind(R.id.navigation_view)
+    NavigationView mNavigationView;
+
+    @Bind(R.id.drawer)
+    DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(org.stepic.droid.R.layout.activity_main_feed);
+        setContentView(R.layout.activity_main_feed);
         ButterKnife.bind(this);
 
-
-        setTitle(org.stepic.droid.R.string.my_courses_title);
-//        SharedPreferenceHelper sharedPreferenceHelper = mShell.getSharedPreferenceHelper();
-        SharedPreferenceHelper sharedPreferenceHelper = new SharedPreferenceHelper();
-        AuthenticationStepicResponse resp = sharedPreferenceHelper.getAuthResponseFromStore(MainFeedActivity.this);
-
-        mToolbar = (Toolbar) findViewById(org.stepic.droid.R.id.toolbar);
         setSupportActionBar(mToolbar);
+        setTitle(R.string.my_courses_title);
 
-        //Initializing NavigationView
-        mNavigationView = (NavigationView) findViewById(org.stepic.droid.R.id.navigation_view);
+//        SharedPreferenceHelper sharedPreferenceHelper = mShell.getSharedPreferenceHelper();
+//        AuthenticationStepicResponse resp = sharedPreferenceHelper.getAuthResponseFromStore(MainFeedActivity.this);
+
 
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -54,27 +57,28 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
             // This method will trigger on item Click of navigation menu
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-
-
-
-
                 //Closing drawer on item click
                 mDrawerLayout.closeDrawers();
 
                 //Check to see which item was being clicked and perform appropriate action
                 switch (menuItem.getItemId()) {
-
-
-                    //Replacing the main content with ContentFragment Which is our Inbox View;
-                    case org.stepic.droid.R.id.first:
+                    //todo: substiture to getting from provider
+                    case R.id.my_courses:
                         setFragment(new MyCourses());
                         return true;
-
-                    // For rest of the options we just show a toast on click
-
-                    case org.stepic.droid.R.id.second:
+                    case R.id.best_lessons:
                         setFragment(new BestLessons());
                         return true;
+                    case R.id.available_courses:
+                        setFragment(new AvailableCourses());
+                        return true;
+                    case R.id.find_lessons:
+                        setFragment(new FindLessons());
+                        return true;
+                    case R.id.my_settings:
+                        setFragment(new MySettings());
+                        return true;
+
                     default:
                         Toast.makeText(getApplicationContext(), "Somethings Wrong", Toast.LENGTH_SHORT).show();
                         return true;
@@ -83,10 +87,7 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
             }
         });
 
-        // Initializing Drawer Layout and ActionBarToggle
-        mDrawerLayout = (DrawerLayout) findViewById(org.stepic.droid.R.id.drawer);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, org.stepic.droid.R.string.drawer_open, org.stepic.droid.R.string.drawer_closed){
-
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_closed) {
             @Override
             public void onDrawerClosed(View drawerView) {
                 // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
@@ -110,17 +111,10 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
 
     }
 
-
-    private void setFragment (StepicBaseFragment fragment) {
+    private void setFragment(StepicBaseFragment fragment) {
         Toast.makeText(getApplicationContext(), "we change fragment", Toast.LENGTH_SHORT).show();
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(org.stepic.droid.R.id.frame,fragment);
+        fragmentTransaction.replace(R.id.frame, fragment);
         fragmentTransaction.commit();
     }
-//
-//
-//    @Override
-//    public Map<Key<?>, Object> getScopedObjectMap() {
-//        return null;
-//    }
 }

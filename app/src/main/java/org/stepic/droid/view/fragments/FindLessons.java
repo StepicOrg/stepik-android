@@ -11,11 +11,11 @@ import org.stepic.droid.base.StepicBaseFragment;
 
 import butterknife.ButterKnife;
 
-public class BestLessons extends StepicBaseFragment {
+public class FindLessons extends StepicBaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_best_lessons,container,false);
+        View v = inflater.inflate(R.layout.fragment_find_lessons, container, false);
         ButterKnife.bind(this, v);
         return v;
     }

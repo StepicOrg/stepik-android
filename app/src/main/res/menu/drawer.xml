@@ -1,12 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <group
+        android:id="@+id/main_drawer_menu"
+        android:checkableBehavior="single">
         <item
-            android:id="@+id/first"
-            android:title="first" />
+            android:id="@+id/my_courses"
+            android:title="@string/my_courses_title" />
 
         <item
-            android:id="@+id/second"
-            android:title="second" />
+            android:id="@+id/best_lessons"
+            android:title="@string/best_lessons_title" />
+
+        <item
+            android:id="@+id/find_lessons"
+            android:title="@string/find_lessons_title" />
+
+        <item
+            android:id="@+id/available_courses"
+            android:title="@string/available_courses_title" />
+
+    </group>
+
+    <group
+        android:id="@+id/settings_drawer_menu"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/my_settings"
+            android:title="@string/settings_title" />
+
+    </group>
 
 </menu>

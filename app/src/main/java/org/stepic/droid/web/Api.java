@@ -3,11 +3,12 @@ package org.stepic.droid.web;
 import android.content.Context;
 import android.os.Bundle;
 
-import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.configuration.IConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+
+import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.configuration.IConfig;
 
 import java.io.IOException;
 
@@ -40,6 +41,8 @@ public class Api implements IApi {
         try {
             json = mHttpManager.post(url, params);
         } catch (IOException i) {
+
+            int ignore = 123456789;
             //ignore
             //Too many follow-up requests: 21 when incorrect user/password
         }
