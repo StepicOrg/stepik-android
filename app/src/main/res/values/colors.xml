@@ -1,19 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-     Copyright (C) 2011 The Android Open Source Project
-
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
-
-          http://www.apache.org/licenses/LICENSE-2.0
-
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
--->
 
 <resources>
 
@@ -36,8 +21,6 @@
     <color name="pink_2">#e86caa</color>
     <color name="pink_1">#ed9bc7</color>
 
-    <color name="edx_white">#fafafa</color>
-    <color name="edx_black">#191919</color>
 
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
@@ -104,8 +87,6 @@
     <color name="cyan_loader">#99299ED7</color>
     <color name="org_code_txt">#8A8C8F</color>
     <color name="transparent_cc_bg">#661F2124</color>
-    <!-- TODO : we should change color name to be more meaningful, and to match  http://ux.edx.org/elements/colors/  -->
-    <color name="grey_text_course_not_started">#00454951</color>
 
     <!-- social sharing -->
     <color name="group_next_disabled">#aeaeae</color>
@@ -130,11 +111,7 @@
 
 
 
-
-    <color name="edx_grayscale_neutral_black">#101010</color>
-    <color name="edx_grayscale_neutral_dark">#646262</color>
     <color name="button_text_disabled">#A7A4A4</color>
-    <color name="edx_grayscale_neutral_light">#D3D1D1</color>
 
     <color name="stepic_brand_primary">#8DCB5D</color>
 </resources>

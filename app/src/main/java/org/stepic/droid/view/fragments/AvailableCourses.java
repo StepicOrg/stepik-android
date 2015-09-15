@@ -17,6 +17,7 @@ public class AvailableCourses extends StepicBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_available_lessons, container, false);
         ButterKnife.bind(this, v);
+
         return v;
     }
 }

@@ -12,7 +12,7 @@ import butterknife.ButterKnife;
 public class SplashActivity extends StepicBaseFragmentActivity {
 
     // Splash screen wait time
-    private static final int SPLASH_TIME_OUT = 3;
+    private static final int SPLASH_TIME_OUT = 3000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

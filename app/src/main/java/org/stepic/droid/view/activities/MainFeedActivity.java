@@ -62,27 +62,31 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
 
                 //Check to see which item was being clicked and perform appropriate action
                 switch (menuItem.getItemId()) {
-                    //todo: substiture to getting from provider
+                    //todo: substitute to getting from provider
                     case R.id.my_courses:
+                        setTitle(R.string.my_courses_title);
                         setFragment(new MyCourses());
                         return true;
                     case R.id.best_lessons:
+                        setTitle(R.string.best_lessons_title);
                         setFragment(new BestLessons());
                         return true;
                     case R.id.available_courses:
+                        setTitle(R.string.available_courses_title);
                         setFragment(new AvailableCourses());
                         return true;
                     case R.id.find_lessons:
+                        setTitle(R.string.find_lessons_title);
                         setFragment(new FindLessons());
                         return true;
                     case R.id.my_settings:
+                        setTitle(R.string.settings_title);
                         setFragment(new MySettings());
                         return true;
 
                     default:
                         Toast.makeText(getApplicationContext(), "Somethings Wrong", Toast.LENGTH_SHORT).show();
                         return true;
-
                 }
             }
         });
