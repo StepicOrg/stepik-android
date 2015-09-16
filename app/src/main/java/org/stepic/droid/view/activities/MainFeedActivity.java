@@ -54,6 +54,7 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 //Closing drawer on item click
                 mDrawerLayout.closeDrawers();
+                menuItem.setChecked(false);
 
                 //Check to see which item was being clicked and perform appropriate action
                 switch (menuItem.getItemId()) {
