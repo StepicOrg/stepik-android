@@ -1,28 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
-    <org.stepic.droid.view.custom.SButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center"
-        android:background="@color/stepic_brand_primary"
-        android:gravity="center"
-        android:text="@string/my_courses_title" />
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/swipe_refresh_layout_mycourses"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.shppandroid1.app.MainActivity">
 
-    <ProgressBar
-        android:id="@+id/login_spinner"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:indeterminateDrawable="@drawable/login_progress"
-        tools:targetApi="17"
-        android:visibility="gone"/>
-</RelativeLayout>
+        <ListView
+
+            android:id="@+id/list_of_courses"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+</FrameLayout>

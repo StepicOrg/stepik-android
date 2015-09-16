@@ -39,7 +39,7 @@ public class HttpManager implements IHttpManager {
 
     OkHttpClient mOkHttpClient = new OkHttpClient();
     private static final MediaType DEFAULT_MEDIA_TYPE
-            = MediaType.parse("application/x-www-form-urlencoded");
+            = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");
 
     private static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
 
@@ -105,7 +105,7 @@ public class HttpManager implements IHttpManager {
         Response response = mOkHttpClient.newCall(request).execute();
         if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-        return response.body().string();
+       return response.body().string();
     }
 
 

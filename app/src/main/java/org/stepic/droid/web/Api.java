@@ -5,14 +5,18 @@ import android.os.Bundle;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -21,7 +25,7 @@ import javax.inject.Singleton;
 @Singleton
 public class Api implements IApi {
     @Inject
-    public Api (Context context) {
+    public Api(Context context) {
         MainApplication.component(context).inject(this);
     }
 
@@ -64,9 +68,8 @@ public class Api implements IApi {
         innerObject.addProperty("email", email);
         innerObject.addProperty("password", password);
 
-        JsonObject jsonObject= new JsonObject();
+        JsonObject jsonObject = new JsonObject();
         jsonObject.add("user", innerObject);
-
 
 
         String url = mConfig.getBaseUrl() + "/api/users/";
@@ -85,7 +88,6 @@ public class Api implements IApi {
 
     @Override
     public List<Course> getEnrolledCourses() {
-        ArrayList<Course> courses = new ArrayList<>();
 
         Bundle params = new Bundle();
         params.putString("enrolled", "true");
@@ -99,8 +101,17 @@ public class Api implements IApi {
             e.printStackTrace();
         }
 
-        int rly= 1;
-        return null;
+        if (json == null) return null;
+        JsonElement jElement = new JsonParser().parse(json);//bottle neck
+        JsonObject jObject = jElement.getAsJsonObject();
+        JsonArray jsonArray = jObject.getAsJsonArray("courses");
+
+
+        Gson gson = new Gson();
+        Type listType = new TypeToken<List<Course>>() {
+        }.getType();
+
+        return (List<Course>) gson.fromJson(jsonArray.toString(), listType);
 
     }
 
