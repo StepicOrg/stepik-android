@@ -29,5 +29,6 @@
     <string name="find_lessons_title">Find Lessons</string>
     <string name="available_courses_title">Available Courses</string>
     <string name="settings_title">My Settings</string>
+    <string name="logout_title">Logout</string>
 
 </resources>

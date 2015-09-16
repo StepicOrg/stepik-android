@@ -24,10 +24,7 @@ public class ScreenManager implements IScreenManager {
     public void showLaunchScreen(Context context, boolean overrideAnimation) {
         Intent launchIntent = new Intent(context, LaunchActivity.class);
         launchIntent.putExtra(LaunchActivity.OVERRIDE_ANIMATION_FLAG, overrideAnimation);
-        if (context instanceof Activity)
-            launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        else
-            launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(launchIntent);
     }
 
@@ -41,8 +38,6 @@ public class ScreenManager implements IScreenManager {
     @Override
     public void showLogin(Context sourceActivity) {
         Intent loginIntent = new Intent(sourceActivity, LoginActivity.class);
-        if ( !(sourceActivity instanceof  Activity) )
-            loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         sourceActivity.startActivity(loginIntent);
     }
 
@@ -50,12 +45,13 @@ public class ScreenManager implements IScreenManager {
     public void showMainFeed(Context sourceActivity) {
         //todo finish all activities which exist for login (launch, splash, etc).
         Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         /*
         Using CLEAR_TOP flag, causes the activity to be re-created every time.
         This reloads the list of courses. We don't want that.
         Using REORDER_TO_FRONT solves this problem
          */
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         sourceActivity.startActivity(intent);
 
         // let login screens be ended

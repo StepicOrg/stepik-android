@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import org.stepic.droid.base.StepicBaseFragmentActivity;
+import org.stepic.droid.util.SharedPreferenceHelper;
 
 import butterknife.ButterKnife;
 
@@ -12,7 +13,7 @@ import butterknife.ButterKnife;
 public class SplashActivity extends StepicBaseFragmentActivity {
 
     // Splash screen wait time
-    private static final int SPLASH_TIME_OUT = 3000;
+    private static final int SPLASH_TIME_OUT = 1500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +33,16 @@ public class SplashActivity extends StepicBaseFragmentActivity {
             @Override
             public void run() {
                 if (!isFinishing()) {
-                    mShell.getScreenProvider().showLaunchScreen(SplashActivity.this, false);
 
-                    finish();
+                    SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
+                    if (helper.getAuthResponseFromStore(SplashActivity.this) != null) {
+                        mShell.getScreenProvider().showMainFeed(SplashActivity.this);
+                    } else {
+                        mShell.getScreenProvider().showLaunchScreen(SplashActivity.this, false);
+                    }
+
+
+                    finish();//it is obsolete todo: is it clear when use clear top
                 }
             }
         }, SPLASH_TIME_OUT);

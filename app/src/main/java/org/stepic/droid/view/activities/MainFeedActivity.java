@@ -12,23 +12,17 @@ import android.widget.Toast;
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragment;
 import org.stepic.droid.base.StepicBaseFragmentActivity;
-import org.stepic.droid.core.IShell;
+import org.stepic.droid.util.SharedPreferenceHelper;
 import org.stepic.droid.view.fragments.AvailableCourses;
 import org.stepic.droid.view.fragments.BestLessons;
 import org.stepic.droid.view.fragments.FindLessons;
 import org.stepic.droid.view.fragments.MyCourses;
 import org.stepic.droid.view.fragments.MySettings;
 
-import javax.inject.Inject;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainFeedActivity extends StepicBaseFragmentActivity {
-    @Inject
-    IShell mShell;
-
-
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
@@ -52,6 +46,7 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
 
 
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
+
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
             // This method will trigger on item Click of navigation menu
@@ -82,6 +77,12 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
                     case R.id.my_settings:
                         setTitle(R.string.settings_title);
                         setFragment(new MySettings());
+                        return true;
+                    case R.id.logout_item:
+                        //todo: add 'Are you sure?" dialog
+                        SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
+                        helper.deleteAuthInfo(MainFeedActivity.this);
+                        mShell.getScreenProvider().showLaunchScreen(MainFeedActivity.this, false);
                         return true;
 
                     default:

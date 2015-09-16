@@ -16,7 +16,7 @@
             android:id="@+id/find_lessons"
             android:title="@string/find_lessons_title" />
 
-        <item
+        <itemO
             android:id="@+id/available_courses"
             android:title="@string/available_courses_title" />
 
@@ -30,6 +30,8 @@
             android:id="@+id/my_settings"
             android:title="@string/settings_title" />
 
+        <item android:id="@+id/logout_item"
+            android:title="@string/logout_title"/>
     </group>
 
 </menu>
