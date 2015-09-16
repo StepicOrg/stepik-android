@@ -1,6 +1,7 @@
 package org.stepic.droid.core;
 
 import org.stepic.droid.base.StepicBaseFragmentActivity;
+import org.stepic.droid.concurrency.LoadingCoursesTask;
 import org.stepic.droid.concurrency.LoginTask;
 import org.stepic.droid.concurrency.RegistrationTask;
 import org.stepic.droid.web.Api;
@@ -22,4 +23,5 @@ public interface StepicCoreComponent {
     //All Tasks:
     void inject(LoginTask stepicTask);
     void inject(RegistrationTask stepicTask);
+    void inject(LoadingCoursesTask stepicTask);
 }

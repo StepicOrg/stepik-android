@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <org.stepic.droid.view.custom.SButton
@@ -13,4 +14,15 @@
         android:background="@color/stepic_brand_primary"
         android:gravity="center"
         android:text="@string/my_courses_title" />
+
+    <ProgressBar
+        android:id="@+id/login_spinner"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:indeterminateDrawable="@drawable/login_progress"
+        tools:targetApi="17"
+        android:visibility="gone"/>
 </RelativeLayout>

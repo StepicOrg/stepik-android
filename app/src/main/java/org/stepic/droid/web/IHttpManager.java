@@ -11,4 +11,6 @@ public interface IHttpManager {
 
     //todo: change this architecture to universal post
     String postJson(String url, JsonObject jsonObject) throws IOException;
+
+    String get(String url, Bundle params) throws IOException;
 }

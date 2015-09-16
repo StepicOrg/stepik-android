@@ -16,10 +16,11 @@ import org.stepic.droid.util.SharedPreferenceHelper;
 import org.stepic.droid.view.fragments.AvailableCourses;
 import org.stepic.droid.view.fragments.BestLessons;
 import org.stepic.droid.view.fragments.FindLessons;
-import org.stepic.droid.view.fragments.MyCourses;
+import org.stepic.droid.view.fragments.MyCoursesFragment;
 import org.stepic.droid.view.fragments.MySettings;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 public class MainFeedActivity extends StepicBaseFragmentActivity {
@@ -32,6 +33,9 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
     @Bind(R.id.drawer)
     DrawerLayout mDrawerLayout;
 
+    @BindString(R.string.my_courses_title)
+    String mCoursesTitle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +43,7 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
-        setTitle(R.string.my_courses_title);
+        setMyCourses();
 
 //        SharedPreferenceHelper sharedPreferenceHelper = mShell.getSharedPreferenceHelper();
 //        AuthenticationStepicResponse resp = sharedPreferenceHelper.getAuthResponseFromStore(MainFeedActivity.this);
@@ -60,8 +64,7 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
                 switch (menuItem.getItemId()) {
                     //todo: substitute to getting from provider
                     case R.id.my_courses:
-                        setTitle(R.string.my_courses_title);
-                        setFragment(new MyCourses());
+                        setMyCourses();
                         return true;
                     case R.id.best_lessons:
                         setTitle(R.string.best_lessons_title);
@@ -122,5 +125,10 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frame, fragment);
         fragmentTransaction.commit();
+    }
+
+    private void setMyCourses () {
+        setTitle(mCoursesTitle);
+        setFragment(new MyCoursesFragment());
     }
 }

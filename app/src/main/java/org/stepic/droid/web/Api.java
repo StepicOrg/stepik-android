@@ -9,8 +9,11 @@ import com.google.gson.JsonObject;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.model.Course;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -78,6 +81,27 @@ public class Api implements IApi {
 
         int test = 9000;
         return null;
+    }
+
+    @Override
+    public List<Course> getEnrolledCourses() {
+        ArrayList<Course> courses = new ArrayList<>();
+
+        Bundle params = new Bundle();
+        params.putString("enrolled", "true");
+
+        String url = mConfig.getBaseUrl() + "/api/courses/";
+
+        String json = null;
+        try {
+            json = mHttpManager.get(url, params);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int rly= 1;
+        return null;
+
     }
 
 
