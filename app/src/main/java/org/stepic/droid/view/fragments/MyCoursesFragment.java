@@ -43,7 +43,7 @@ public class MyCoursesFragment extends StepicBaseFragment implements SwipeRefres
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mListOfCourses.setAdapter(new ArrayAdapter<>(
-                getContext(), R.layout.course_item_test, new String[]{"Первый курс", "Второй курс", "Третий курс"}));
+                getContext(), R.layout.course_item, R.id.course_name, new String[]{"Первый курс", "Второй курс", "Третий курс"}));
 
     }
 

@@ -18,7 +18,15 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_gravity="center|left"
-            android:layout_toRightOf="@+id/day_or_night"
+            android:layout_weight="8"
+            android:text="Sample text"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center|left"
             android:layout_weight="8"
             android:text="Sample text"
             android:textSize="16sp" />
