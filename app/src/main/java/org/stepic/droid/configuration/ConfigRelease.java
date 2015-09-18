@@ -21,6 +21,7 @@ public class ConfigRelease implements IConfig {
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
     private static final String OAUTH_CLIENT_SECRET = "OAUTH_CLIENT_SECRET";
     private static final String GRANT_TYPE = "GRANT_TYPE";
+    private static final String REFRESH_GRANT_TYPE = "REFRESH_GRANT_TYPE";
 
 
     @Inject
@@ -53,6 +54,11 @@ public class ConfigRelease implements IConfig {
     @Override
     public String getGrantType() {
         return getString(GRANT_TYPE);
+    }
+
+    @Override
+    public String getRefreshGrantType() {
+        return getString(REFRESH_GRANT_TYPE);
     }
 
     private String getString(String key) {

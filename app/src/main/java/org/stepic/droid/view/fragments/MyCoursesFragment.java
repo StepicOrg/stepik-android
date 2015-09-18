@@ -6,7 +6,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.stepic.droid.R;
@@ -14,7 +13,9 @@ import org.stepic.droid.base.StepicBaseFragment;
 import org.stepic.droid.concurrency.AsyncResultWrapper;
 import org.stepic.droid.concurrency.LoadingCoursesTask;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.view.adapters.MyCoursesAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -22,16 +23,19 @@ import butterknife.ButterKnife;
 
 public class MyCoursesFragment extends StepicBaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    @Bind (R.id.swipe_refresh_layout_mycourses)
+    @Bind(R.id.swipe_refresh_layout_mycourses)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Bind(R.id.list_of_courses)
     ListView mListOfCourses;
 
+    private List<Course> mCourses;
+    private MyCoursesAdapter mCoursesAdapter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_my_courses,container,false);
+        View v = inflater.inflate(R.layout.fragment_my_courses, container, false);
         ButterKnife.bind(this, v);
         return v;
     }
@@ -42,8 +46,10 @@ public class MyCoursesFragment extends StepicBaseFragment implements SwipeRefres
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mListOfCourses.setAdapter(new ArrayAdapter<>(
-                getContext(), R.layout.course_item, R.id.course_name, new String[]{"Первый курс", "Второй курс", "Третий курс"}));
+        if (mCourses == null) mCourses = new ArrayList<Course>();
+        mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses);
+        mListOfCourses.setAdapter(mCoursesAdapter);
+
 
     }
 
@@ -59,7 +65,9 @@ public class MyCoursesFragment extends StepicBaseFragment implements SwipeRefres
             @Override
             protected void onSuccess(List<Course> courses) {
                 super.onSuccess(courses);
-                int doNothing = 0;
+                mCourses.clear();
+                mCourses.addAll(courses);
+                mCoursesAdapter.notifyDataSetChanged();
             }
 
             @Override

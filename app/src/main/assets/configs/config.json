@@ -2,5 +2,6 @@
   "API_HOST_URL": "https://stepic.org",
   "OAUTH_CLIENT_ID": "BJS1K4bosMQFkxteFvdIXfwiRBAsX2ZQws3I9cf0",
   "OAUTH_CLIENT_SECRET" : "qcKU6Nf2cAEWuMeA2Tthe9COWVJVRwPk2BxJsODpClqlVDkvbqp2cm2Uheo0ue9LDHFx2A8eorH4hK3LBecOVP5gSpXABEhbwNRrDmtriAAV4uquYOTeEEG86nxc0bP3",
-  "GRANT_TYPE":"password"
+  "GRANT_TYPE":"password",
+  "REFRESH_GRANT_TYPE" : "refresh_token"
 }

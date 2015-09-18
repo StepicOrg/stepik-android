@@ -5,4 +5,5 @@ public interface IConfig {
     String getBaseUrl();
     String getOAuthClientSecret();
     String getGrantType();
+    String getRefreshGrantType();
 }
