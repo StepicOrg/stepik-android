@@ -14,6 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.util.SharedPreferenceHelper;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -24,8 +25,11 @@ import javax.inject.Singleton;
 
 @Singleton
 public class Api implements IApi {
+    Context mContext;
+
     @Inject
     public Api(Context context) {
+        mContext = context;
         MainApplication.component(context).inject(this);
     }
 
@@ -34,6 +38,9 @@ public class Api implements IApi {
 
     @Inject
     IHttpManager mHttpManager;
+
+    @Inject
+    SharedPreferenceHelper mSharedPreferencesHelper;
 
     @Override
     public IStepicResponse authWithLoginPassword(String username, String password) {
@@ -89,6 +96,7 @@ public class Api implements IApi {
     @Override
     public List<Course> getEnrolledCourses() {
 
+        updateToken();
         Bundle params = new Bundle();
         params.putString("enrolled", "true");
 
@@ -112,6 +120,34 @@ public class Api implements IApi {
         }.getType();
 
         return (List<Course>) gson.fromJson(jsonArray.toString(), listType);
+
+    }
+
+
+    private void updateToken() {
+        AuthenticationStepicResponse response = mSharedPreferencesHelper.getAuthResponseFromStore(mContext);
+        Bundle params = new Bundle();
+        params.putString("grant_type", mConfig.getRefreshGrantType());
+        params.putString("refresh_token", response.getRefresh_token());
+
+
+        String url = mConfig.getBaseUrl() + "/oauth2/token/";
+
+        String json = null;
+        try {
+            json = mHttpManager.post(url, params);
+        } catch (IOException i) {
+
+            int ignore = 123456789;
+            //ignore
+            //Too many follow-up requests: 21 when incorrect user/password
+        }
+
+        Gson gson = new GsonBuilder().create();
+
+        AuthenticationStepicResponse newResp = gson.fromJson(json, AuthenticationStepicResponse.class);
+
+        mSharedPreferencesHelper.storeAuthInfo(mContext, newResp);
 
     }
 
