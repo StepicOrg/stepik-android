@@ -10,12 +10,16 @@
         android:id="@+id/swipe_refresh_layout_mycourses"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.shppandroid1.app.MainActivity">
+        >
 
         <ListView
-
+            android:padding="16dp"
+            android:clipToPadding="false"
             android:id="@+id/list_of_courses"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:divider="@color/transparent"
+            android:dividerHeight="@dimen/divider_height_guideline"
+            android:scrollbarStyle="outsideOverlay"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 </FrameLayout>

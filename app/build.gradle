@@ -50,7 +50,7 @@ dependencies {
     compile 'com.android.support:palette-v7:23.0.0'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
-    compile 'com.mcxiaoke.volley:library:1.0.19'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
 
 
