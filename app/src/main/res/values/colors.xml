@@ -114,4 +114,5 @@
     <color name="button_text_disabled">#A7A4A4</color>
 
     <color name="stepic_brand_primary">#8DCB5D</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>

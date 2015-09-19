@@ -3,4 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="margin_registration">10dp</dimen>
+    <dimen name="card_corner_radius_guideline">2dp</dimen>
+    <dimen name="divider_height_guideline">8dp</dimen>
 </resources>
