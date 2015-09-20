@@ -56,8 +56,9 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
             viewHolderItem = (ViewHolderItem) convertView.getTag();
         }
         viewHolderItem.courseName.setText(course.getTitle());
-        viewHolderItem.courseDescription.setText(course.getDescription());
+        viewHolderItem.courseSummary.setText(course.getSummary());
         Picasso.with(mContext).load(mConfig.getBaseUrl() + course.getCover()).into(viewHolderItem.courseIcon);
+        viewHolderItem.courseDateInterval.setText(course.getDateOfCourse());
 
         return view;
     }
@@ -67,11 +68,14 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         @Bind(R.id.course_name)
         TextView courseName;
 
-        @Bind(R.id.course_description)
-        TextView courseDescription;
+        @Bind(R.id.course_summary)
+        TextView courseSummary;
 
         @Bind(R.id.course_icon)
         ImageView courseIcon;
+
+        @Bind(R.id.course_date_interval)
+        TextView courseDateInterval;
 
         public ViewHolderItem(View view) {
             ButterKnife.bind(this, view);

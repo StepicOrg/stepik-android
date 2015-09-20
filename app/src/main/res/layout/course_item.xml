@@ -21,7 +21,8 @@
             android:layout_weight="3"
             android:src="@drawable/sample_course_icon" />
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/course_info_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -35,19 +36,33 @@
                 android:layout_gravity="center|start"
                 android:layout_marginBottom="2dp"
                 android:ellipsize="end"
-                android:maxLines="2"
+                android:maxLines="1"
                 android:text="Course Name"
-                android:textSize="@dimen/header_course" />
+                android:textColor="@color/stepic_regular_text"
+                android:textSize="@dimen/text_header" />
 
             <org.stepic.droid.view.custom.STextView
-                android:id="@+id/course_description"
+                android:id="@+id/course_date_interval"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:text="first date and second date"
+                android:textColor="@color/stepic_weak_text"
+                android:textSize="@dimen/text_height" />
+
+            <org.stepic.droid.view.custom.STextView
+                android:id="@+id/course_summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/course_date_interval"
+                android:layout_below="@id/course_name"
                 android:ellipsize="end"
                 android:maxLines="3"
                 android:text="Long text В курсе будут разобраны основные алгоритмические методы: жадные алгоритмы, «разделяй и властвуй», динамическое программирование. Помимо теоретических основ, будут рассмотрены тонкости реализации рассмотренных алгоритмов на языках C++ и Python. Слушателям будет предложено реализовать большинство разобранных в курсе алгоритмов. Решения будут проверяться тестирующей системой на тщательно подобранных тестах."
-                android:textSize="@dimen/description_of_course" />
-        </LinearLayout>
+                android:textColor="@color/stepic_regular_text"
+                android:textSize="@dimen/text_height" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 

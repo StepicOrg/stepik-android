@@ -110,9 +110,10 @@
     <color name="grey_hide_optional_text">#AFAFB5</color>
 
 
-
     <color name="button_text_disabled">#A7A4A4</color>
 
     <color name="stepic_brand_primary">#8DCB5D</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="stepic_regular_text">#5E5E5E</color>
+    <color name="stepic_weak_text">#A5A5A5</color>
 </resources>

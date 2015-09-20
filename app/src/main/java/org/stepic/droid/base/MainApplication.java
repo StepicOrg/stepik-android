@@ -35,4 +35,9 @@ public class MainApplication extends MultiDexApplication {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
+
+    public static Context getAppContext () {
+        return application.getApplicationContext();
+    }
+
 }

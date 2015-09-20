@@ -30,5 +30,6 @@
     <string name="available_courses_title">Available Courses</string>
     <string name="settings_title">My Settings</string>
     <string name="logout_title">Logout</string>
+    <string name="begin_date">Begin</string>
 
 </resources>

@@ -6,4 +6,6 @@ public interface IConfig {
     String getOAuthClientSecret();
     String getGrantType();
     String getRefreshGrantType();
+    String getDatePattern();
+    String getDatePatternForView();
 }
