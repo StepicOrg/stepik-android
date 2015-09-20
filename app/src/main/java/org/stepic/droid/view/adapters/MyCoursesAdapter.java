@@ -47,6 +47,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
             viewHolderItem = (ViewHolderItem) convertView.getTag();
         }
         viewHolderItem.courseName.setText(course.getTitle());
+        viewHolderItem.courseDescription.setText(course.getDescription());
 
         return view;
     }
@@ -55,6 +56,9 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
     static class ViewHolderItem {
         @Bind(R.id.course_name)
         TextView courseName;
+
+        @Bind(R.id.course_description)
+        TextView courseDescription;
 
         public ViewHolderItem(View view) {
             ButterKnife.bind(this, view);

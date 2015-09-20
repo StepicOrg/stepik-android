@@ -2,9 +2,9 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cv"
-    android:background="@drawable/states"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/height_of_course_card"
+    android:background="@drawable/states"
     app:cardCornerRadius="@dimen/card_corner_radius_guideline">
 
     <LinearLayout
@@ -12,16 +12,11 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:src="@drawable/sample_course_icon" />
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
             android:padding="16dp">
@@ -31,14 +26,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|start"
+                android:layout_marginBottom="2dp"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:text="Course Name"
-                android:textSize="20sp" />
+                android:textSize="@dimen/header_course" />
 
             <org.stepic.droid.view.custom.STextView
-                android:id="@+id/cource_description"
+                android:id="@+id/course_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Long text В курсе будут разобраны основные алгоритмические методы: жадные алгоритмы, «разделяй и властвуй», динамическое программирование. Помимо теоретических основ, будут рассмотрены тонкости реализации рассмотренных алгоритмов на языках C++ и Python. Слушателям будет предложено реализовать большинство разобранных в курсе алгоритмов. Решения будут проверяться тестирующей системой на тщательно подобранных тестах." />
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:text="Long text В курсе будут разобраны основные алгоритмические методы: жадные алгоритмы, «разделяй и властвуй», динамическое программирование. Помимо теоретических основ, будут рассмотрены тонкости реализации рассмотренных алгоритмов на языках C++ и Python. Слушателям будет предложено реализовать большинство разобранных в курсе алгоритмов. Решения будут проверяться тестирующей системой на тщательно подобранных тестах."
+                android:textSize="@dimen/description_of_course" />
         </LinearLayout>
 
     </LinearLayout>
