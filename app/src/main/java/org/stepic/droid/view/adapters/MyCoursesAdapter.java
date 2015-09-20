@@ -57,7 +57,8 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         }
         viewHolderItem.courseName.setText(course.getTitle());
         viewHolderItem.courseSummary.setText(course.getSummary());
-        Picasso.with(mContext).load(mConfig.getBaseUrl() + course.getCover()).into(viewHolderItem.courseIcon);
+        Picasso.with(mContext).load(mConfig.getBaseUrl() + course.getCover()).
+                placeholder(R.drawable.stepic_logo_black_and_white).into(viewHolderItem.courseIcon);
         viewHolderItem.courseDateInterval.setText(course.getDateOfCourse());
 
         return view;
