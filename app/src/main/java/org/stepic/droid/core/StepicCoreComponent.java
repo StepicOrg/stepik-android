@@ -4,6 +4,7 @@ import org.stepic.droid.base.StepicBaseFragmentActivity;
 import org.stepic.droid.concurrency.LoadingCoursesTask;
 import org.stepic.droid.concurrency.LoginTask;
 import org.stepic.droid.concurrency.RegistrationTask;
+import org.stepic.droid.view.adapters.MyCoursesAdapter;
 import org.stepic.droid.web.Api;
 import org.stepic.droid.web.HttpManager;
 
@@ -18,7 +19,7 @@ public interface StepicCoreComponent {
     void inject(Shell injectAllToShell);
     void inject(Api injectToAPI);
     void inject(HttpManager httpManager);
-
+    void inject (MyCoursesAdapter adapter);
 
     //All Tasks:
     void inject(LoginTask stepicTask);

@@ -5,21 +5,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import org.stepic.droid.R;
+import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MyCoursesAdapter extends ArrayAdapter<Course> {
 
+    @Inject
+    IConfig mConfig;
+
     private List<Course> mCourses;
     private Context mContext;
-
     private LayoutInflater mInflater;
 
     public MyCoursesAdapter(Context context, List<Course> courses) {
@@ -27,6 +36,8 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         mCourses = courses;
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        MainApplication.component(mContext).inject(this);
 
     }
 
@@ -41,13 +52,12 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
             view = mInflater.inflate(R.layout.course_item, null);
             viewHolderItem = new ViewHolderItem(view);
             view.setTag(viewHolderItem);
-
-//            view = LayoutInflater.from(getContext()).inflate(R.layout.course_item, parent, false);
         } else {
             viewHolderItem = (ViewHolderItem) convertView.getTag();
         }
         viewHolderItem.courseName.setText(course.getTitle());
         viewHolderItem.courseDescription.setText(course.getDescription());
+        Picasso.with(mContext).load(mConfig.getBaseUrl() + course.getCover()).into(viewHolderItem.courseIcon);
 
         return view;
     }
@@ -59,6 +69,9 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 
         @Bind(R.id.course_description)
         TextView courseDescription;
+
+        @Bind(R.id.course_icon)
+        ImageView courseIcon;
 
         public ViewHolderItem(View view) {
             ButterKnife.bind(this, view);
