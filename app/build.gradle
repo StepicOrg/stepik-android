@@ -51,6 +51,8 @@ dependencies {
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
     compile 'com.squareup.picasso:picasso:2.5.2'
+
+    compile 'joda-time:joda-time:2.7'
 }
 
 

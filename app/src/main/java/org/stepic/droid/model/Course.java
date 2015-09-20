@@ -1,6 +1,7 @@
 package org.stepic.droid.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
@@ -17,6 +18,7 @@ import javax.inject.Inject;
 
 public class Course implements Serializable {
 
+//    private final int mOffsetInMillis;
     @Inject
     IConfig mConfig;
     Context mContext;
@@ -30,8 +32,14 @@ public class Course implements Serializable {
         MainApplication.component(MainApplication.getAppContext()).inject(this);
         mTimeZone = TimeZone.getDefault();
         mFormatFromServer = new SimpleDateFormat(mConfig.getDatePattern());
-        mFormatFromServer.setTimeZone(mTimeZone);
+        mFormatFromServer.setTimeZone(TimeZone.getTimeZone("GMT0"));
         mFormatForView = new SimpleDateFormat(mConfig.getDatePatternForView(), Locale.getDefault());
+        mFormatForView.setTimeZone(mTimeZone);
+        Log.i("timezone", mTimeZone.getDisplayName());
+
+
+//        Calendar cal = GregorianCalendar.getInstance(mTimeZone);
+//        mOffsetInMillis = mTimeZone.getOffset(cal.getTimeInMillis());
 
     }
 
@@ -71,6 +79,7 @@ public class Course implements Serializable {
             Date from;
             try {
                 from = mFormatFromServer.parse(begin_date_source);
+//                from = new Date(from.getTime() + mOffsetInMillis); // +timezone
                 String from_str = mFormatForView.format(from);
                 sb.append(from_str);
             } catch (ParseException e) {
@@ -82,12 +91,14 @@ public class Course implements Serializable {
             Date from = null, to = null;
             try {
                 from = mFormatFromServer.parse(begin_date_source);
-                String from_str = mFormatForView.format(from);
+//                from = new Date(from.getTime() + mOffsetInMillis);
+                String from_str = mFormatForView.format(from); // + timezone
                 sb.append(from_str);
 
                 sb.append(" - ");
 
                 to = mFormatFromServer.parse(last_deadline);
+//                to = new Date(to.getTime() + mOffsetInMillis); // + timezone
                 String to_str = mFormatForView.format(to);
                 sb.append(to_str);
 

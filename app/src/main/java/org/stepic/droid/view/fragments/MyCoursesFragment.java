@@ -66,6 +66,7 @@ public class MyCoursesFragment extends StepicBaseFragment implements SwipeRefres
             protected void onSuccess(List<Course> courses) {
                 super.onSuccess(courses);
                 mCourses.clear();
+                if (courses == null) return;
                 mCourses.addAll(courses);
                 mCoursesAdapter.notifyDataSetChanged();
             }
