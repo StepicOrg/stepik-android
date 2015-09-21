@@ -22,10 +22,12 @@ public class ConfigRelease implements IConfig {
     private static final String OAUTH_CLIENT_SECRET = "OAUTH_CLIENT_SECRET";
     private static final String GRANT_TYPE = "GRANT_TYPE";
     private static final String REFRESH_GRANT_TYPE = "REFRESH_GRANT_TYPE";
+    private static final String DATE_PATTERN = "DATE_PATTERN";
+    private static final String DATE_PATTERN_FOR_VIEW = "DATE_PATTERN_FOR_VIEW";
 
 
     @Inject
-    public ConfigRelease (Context context) {
+    public ConfigRelease(Context context) {
         try {
             InputStream in = context.getAssets().open("configs/config.json");
             JsonParser parser = new JsonParser();
@@ -61,16 +63,25 @@ public class ConfigRelease implements IConfig {
         return getString(REFRESH_GRANT_TYPE);
     }
 
+    @Override
+    public String getDatePattern() {
+        return getString(DATE_PATTERN);
+    }
+
+    @Override
+    public String getDatePatternForView() {
+        return getString(DATE_PATTERN_FOR_VIEW);
+    }
+
     private String getString(String key) {
         return getString(key, null);
     }
 
     private String getString(String key, String defaultValue) {
         JsonElement element = getObject(key);
-        if(element != null) {
+        if (element != null) {
             return element.getAsString();
-        }
-        else {
+        } else {
             return defaultValue;
         }
     }
