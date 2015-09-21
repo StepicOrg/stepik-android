@@ -111,7 +111,7 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
                     case R.id.logout_item:
                         //todo: add 'Are you sure?" dialog
                         SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
-                        helper.deleteAuthInfo(MainFeedActivity.this);
+                        helper.deleteAuthInfo();
                         mShell.getScreenProvider().showLaunchScreen(MainFeedActivity.this, false);
                         return true;
 

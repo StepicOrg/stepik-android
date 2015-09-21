@@ -72,7 +72,7 @@ public class LoginActivity extends StepicBaseFragmentActivity {
             protected void onSuccess(AuthenticationStepicResponse result) {
                 super.onSuccess(result);
                 SharedPreferenceHelper preferenceHelper = mShell.getSharedPreferenceHelper();
-                preferenceHelper.storeAuthInfo(LoginActivity.this, result);
+                preferenceHelper.storeAuthInfo(result);
                 try {
                     if (result != null) {
                         onUserLoginSuccess();

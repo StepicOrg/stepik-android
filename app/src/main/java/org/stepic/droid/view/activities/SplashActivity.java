@@ -35,7 +35,7 @@ public class SplashActivity extends StepicBaseFragmentActivity {
                 if (!isFinishing()) {
 
                     SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
-                    if (helper.getAuthResponseFromStore(SplashActivity.this) != null) {
+                    if (helper.getAuthResponseFromStore() != null) {
                         mShell.getScreenProvider().showMainFeed(SplashActivity.this);
                     } else {
                         mShell.getScreenProvider().showLaunchScreen(SplashActivity.this, false);

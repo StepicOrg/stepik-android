@@ -118,8 +118,7 @@ public class Api implements IApi {
                 if (deadLine == null || deadLine.isAfter(now))
                     filteredCourses.add(courseItem);
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return filteredCourses;
@@ -180,7 +179,7 @@ public class Api implements IApi {
 
 
     private void updateToken() {
-        AuthenticationStepicResponse response = mSharedPreferencesHelper.getAuthResponseFromStore(mContext);
+        AuthenticationStepicResponse response = mSharedPreferencesHelper.getAuthResponseFromStore();
         Bundle params = new Bundle();
         params.putString("grant_type", mConfig.getRefreshGrantType());
         params.putString("refresh_token", response.getRefresh_token());
@@ -198,11 +197,11 @@ public class Api implements IApi {
             //Too many follow-up requests: 21 when incorrect user/password
         }
 
-        Gson gson = new GsonBuilder().create();
-
-        AuthenticationStepicResponse newResp = gson.fromJson(json, AuthenticationStepicResponse.class);
-
-        mSharedPreferencesHelper.storeAuthInfo(mContext, newResp);
+        if (json != null) {
+            Gson gson = new GsonBuilder().create();
+            AuthenticationStepicResponse newResp = gson.fromJson(json, AuthenticationStepicResponse.class);
+            mSharedPreferencesHelper.storeAuthInfo(newResp);
+        }
 
     }
 
