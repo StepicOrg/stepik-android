@@ -1,6 +1,7 @@
 package org.stepic.droid.view.adapters;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +57,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
             viewHolderItem = (ViewHolderItem) convertView.getTag();
         }
         viewHolderItem.courseName.setText(course.getTitle());
-        viewHolderItem.courseSummary.setText(course.getSummary());
+        viewHolderItem.courseSummary.setText(Html.fromHtml(course.getSummary()));
         Picasso.with(mContext).load(mConfig.getBaseUrl() + course.getCover()).
                 placeholder(R.drawable.stepic_logo_black_and_white).into(viewHolderItem.courseIcon);
         viewHolderItem.courseDateInterval.setText(course.getDateOfCourse());
