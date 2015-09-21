@@ -23,10 +23,10 @@ import butterknife.ButterKnife;
 
 public class FindCoursesFragment extends StepicBaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    @Bind(R.id.swipe_refresh_layout_find_courses)
+    @Bind(R.id.swipe_refresh_layout_mycourses)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
-    @Bind(R.id.list_of_find_courses)
+    @Bind(R.id.list_of_courses)
     ListView mListOfCourses;
 
 
@@ -36,7 +36,7 @@ public class FindCoursesFragment extends StepicBaseFragment implements SwipeRefr
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_find_courses, container, false);
+        View v = inflater.inflate(R.layout.fragment_courses, container, false);
         ButterKnife.bind(this, v);
         return v;
     }
