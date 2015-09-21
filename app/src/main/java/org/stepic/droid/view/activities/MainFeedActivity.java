@@ -7,15 +7,21 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragment;
 import org.stepic.droid.base.StepicBaseFragmentActivity;
+import org.stepic.droid.concurrency.LoadingProfileInformation;
+import org.stepic.droid.model.Profile;
 import org.stepic.droid.util.SharedPreferenceHelper;
 import org.stepic.droid.view.fragments.AvailableCourses;
 import org.stepic.droid.view.fragments.BestLessons;
-import org.stepic.droid.view.fragments.FindLessons;
+import org.stepic.droid.view.fragments.FindCoursesFragment;
 import org.stepic.droid.view.fragments.MyCoursesFragment;
 import org.stepic.droid.view.fragments.MySettings;
 
@@ -33,6 +39,13 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
     @Bind(R.id.drawer)
     DrawerLayout mDrawerLayout;
 
+    @Bind(R.id.profile_image)
+    ImageView mProfileImage;
+
+    @Bind(R.id.username)
+    TextView mUserNameTextView;
+
+
     @BindString(R.string.my_courses_title)
     String mCoursesTitle;
 
@@ -44,6 +57,19 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
 
         setSupportActionBar(mToolbar);
         setMyCourses();
+
+        LoadingProfileInformation loadingProfileInformation = new LoadingProfileInformation(this) {
+            @Override
+            protected void onSuccess(Profile profile) {
+                super.onSuccess(profile);
+                //todo: store profile
+                Picasso.with(MainFeedActivity.this).load(profile.getAvatar()).
+                        placeholder(R.drawable.stepic_logo_black_and_white).into(mProfileImage);
+                mUserNameTextView.setText(profile.getFirst_name() + " " + profile.getLast_name());
+            }
+        };
+        loadingProfileInformation.execute();
+
 
 //        SharedPreferenceHelper sharedPreferenceHelper = mShell.getSharedPreferenceHelper();
 //        AuthenticationStepicResponse resp = sharedPreferenceHelper.getAuthResponseFromStore(MainFeedActivity.this);
@@ -75,8 +101,8 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
                         setFragment(new AvailableCourses());
                         return true;
                     case R.id.find_lessons:
-                        setTitle(R.string.find_lessons_title);
-                        setFragment(new FindLessons());
+                        setTitle(R.string.find_courses_title);
+                        setFragment(new FindCoursesFragment());
                         return true;
                     case R.id.my_settings:
                         setTitle(R.string.settings_title);
@@ -127,7 +153,7 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
         fragmentTransaction.commit();
     }
 
-    private void setMyCourses () {
+    private void setMyCourses() {
         setTitle(mCoursesTitle);
         setFragment(new MyCoursesFragment());
     }

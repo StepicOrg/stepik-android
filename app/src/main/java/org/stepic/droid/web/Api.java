@@ -11,13 +11,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import org.joda.time.DateTime;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.Profile;
 import org.stepic.droid.util.SharedPreferenceHelper;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -95,10 +98,63 @@ public class Api implements IApi {
 
     @Override
     public List<Course> getEnrolledCourses() {
-
-        updateToken();
         Bundle params = new Bundle();
         params.putString("enrolled", "true");
+        return getCourses(params);
+    }
+
+    @Override
+    public List<Course> getFeaturedCourses() {
+        Bundle params = new Bundle();
+        params.putString("is_featured", "true");
+        List<Course> courses = getCourses(params);
+        if (courses == null) return null;
+
+        List<Course> filteredCourses = new ArrayList<>();
+        DateTime now = DateTime.now();
+        try {
+            for (Course courseItem : courses) {
+                DateTime deadLine = courseItem.getEndDateTime();
+                if (deadLine == null || deadLine.isAfter(now))
+                    filteredCourses.add(courseItem);
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return filteredCourses;
+    }
+
+    @Override
+    public Profile getUserProfile() {
+        updateToken();
+        String url = mConfig.getBaseUrl() + "/api/stepics/1";
+        Bundle params = new Bundle();
+
+        String json = null;
+        try {
+            json = mHttpManager.get(url, params);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (json == null) return null;
+        JsonElement jElement = new JsonParser().parse(json);//bottle neck
+        JsonObject jObject = jElement.getAsJsonObject();
+        JsonArray jsonArray = jObject.getAsJsonArray("profiles");
+
+        Gson gson = new Gson();
+        Type listType = new TypeToken<List<Profile>>() {
+        }.getType();
+
+        List<Profile> profiles = (List<Profile>) gson.fromJson(jsonArray.toString(), listType);
+        if (profiles == null || profiles.isEmpty()) return null;
+        return profiles.get(0);
+    }
+
+
+    private List<Course> getCourses(Bundle params) {
+        updateToken();
 
         String url = mConfig.getBaseUrl() + "/api/courses/";
 
@@ -120,7 +176,6 @@ public class Api implements IApi {
         }.getType();
 
         return (List<Course>) gson.fromJson(jsonArray.toString(), listType);
-
     }
 
 

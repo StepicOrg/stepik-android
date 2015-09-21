@@ -116,4 +116,8 @@
     <color name="transparent">#00FFFFFF</color>
     <color name="stepic_regular_text">#5E5E5E</color>
     <color name="stepic_weak_text">#A5A5A5</color>
+
+
+    <color name="orange">#FF9900</color>
+    <color name="blue">#000099</color>
 </resources>

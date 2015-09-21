@@ -60,7 +60,7 @@
                         android:id="@+id/password_et"
                         style="@style/edit_text_style"
                         android:layout_marginTop="8dp"
-                        android:hint="@string/password_login"
+                        android:hint="@string/password_hint"
                         android:inputType="textPassword"
                         android:maxLength="100"/>
 
