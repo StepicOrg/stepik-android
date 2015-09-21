@@ -1,7 +1,7 @@
 package org.stepic.droid.model;
 
 import android.content.Context;
-import android.util.Log;
+import android.support.annotation.Nullable;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -12,39 +12,17 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
-
-import org.joda.time.LocalTime;
 
 import javax.inject.Inject;
 
 public class Course implements Serializable {
 
-    //    private final int mOffsetInMillis;
     @Inject
     IConfig mConfig;
+
     Context mContext;
 
-//    private DateTimeFormatter mFormatFromServer;
     private DateTimeFormatter mFormatForView;
-
-    public Course() {
-        mContext = MainApplication.getAppContext();
-        MainApplication.component(MainApplication.getAppContext()).inject(this);
-
-//        mFormatFromServer = DateTimeFormat
-//                .forPattern(mConfig.getDatePattern())
-//                .withZoneUTC();
-        mFormatForView = DateTimeFormat
-                .forPattern(mConfig.getDatePatternForView())
-                .withZone(DateTimeZone.getDefault());
-
-    }
-
 
     private long id;
     private String summary;
@@ -63,14 +41,30 @@ public class Course implements Serializable {
     private int enrollment;
     private boolean is_featured;
     private boolean is_spoc;
+    private boolean is_active;
     private String certificate_link;
     private String title;
     private String begin_date_source;
     private String last_deadline;
 
+    private DateTime mBeginDateTime = null;
+
+    private DateTime mEndDateTime = null;
+
+    private String formatForView = null;
+
+    public Course() {
+        mContext = MainApplication.getAppContext();
+        MainApplication.component(MainApplication.getAppContext()).inject(this);
+
+        mFormatForView = DateTimeFormat
+                .forPattern(mConfig.getDatePatternForView())
+                .withZone(DateTimeZone.getDefault());
+    }
 
     public String getDateOfCourse() {
-        //todo: cache Date interval of course
+        if (formatForView != null) return formatForView;
+
         StringBuilder sb = new StringBuilder();
 
         if (begin_date_source == null && last_deadline == null) {
@@ -80,33 +74,66 @@ public class Course implements Serializable {
             sb.append(": ");
 
             try {
-                sb.append(getPresentOfDate(begin_date_source));
+                sb.append(getPresentOfDate(begin_date_source, mBeginDateTime));
             } catch (Throwable throwable) {
                 return "";
             }
-
         } else if (begin_date_source != null) {
             //both is not null
 
             try {
 
-                sb.append(getPresentOfDate(begin_date_source));
+                sb.append(getPresentOfDate(begin_date_source, mBeginDateTime));
 
                 sb.append(" - ");
 
-                sb.append(getPresentOfDate(last_deadline));
+                sb.append(getPresentOfDate(last_deadline, mEndDateTime));
             } catch (Throwable throwable) {
                 return "";
             }
         }
-
-        return sb.toString();
+        formatForView = sb.toString();
+        return formatForView;
     }
 
-    private String getPresentOfDate (String dateInISOformat) {
-        DateTime dateTime = new DateTime(dateInISOformat);
+    private String getPresentOfDate(String dateInISOformat, DateTime dateTime) {
+        dateTime = new DateTime(dateInISOformat);
         String result = mFormatForView.print(dateTime);
         return result;
+    }
+
+
+    @Nullable
+    public DateTime getEndDateTime() {
+        if (mEndDateTime != null)
+            return mEndDateTime;
+
+        if (last_deadline == null)
+        {
+            mEndDateTime = null; //infinity
+        }
+        else
+        {
+            mEndDateTime = new DateTime(last_deadline);
+        }
+        return mEndDateTime;
+
+    }
+
+    @Nullable
+    public DateTime getBeginDateTime() {
+        if (mBeginDateTime != null)
+            return mBeginDateTime;
+
+        if (begin_date_source == null)
+        {
+            mBeginDateTime = null; //infinity
+        }
+        else
+        {
+            mBeginDateTime = new DateTime(begin_date_source);
+        }
+        return mBeginDateTime;
     }
 
     public long getId() {

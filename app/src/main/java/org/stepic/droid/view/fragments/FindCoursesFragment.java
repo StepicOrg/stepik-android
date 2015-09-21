@@ -46,6 +46,9 @@ public class FindCoursesFragment extends StepicBaseFragment implements SwipeRefr
         super.onActivityCreated(savedInstanceState);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.stepic_brand_primary,
+                R.color.orange,
+                R.color.blue);
 
         if (mCourses == null) mCourses = new ArrayList<Course>();
         mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses);

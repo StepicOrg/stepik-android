@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import org.joda.time.DateTime;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
@@ -18,6 +19,7 @@ import org.stepic.droid.util.SharedPreferenceHelper;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -104,7 +106,22 @@ public class Api implements IApi {
     public List<Course> getFeaturedCourses() {
         Bundle params = new Bundle();
         params.putString("is_featured", "true");
-        return getCourses(params);
+        List<Course> courses = getCourses(params);
+        if (courses == null) return null;
+
+        List<Course> filteredCourses = new ArrayList<>();
+        DateTime now = DateTime.now();
+        try {
+            for (Course courseItem : courses) {
+                DateTime deadLine = courseItem.getEndDateTime();
+                if (deadLine == null || deadLine.isAfter(now))
+                    filteredCourses.add(courseItem);
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return filteredCourses;
     }
 
 
