@@ -11,4 +11,6 @@ public interface IApi {
 
     List<Course> getEnrolledCourses ();
 
+    List<Course> getFeaturedCourses ();
+
 }

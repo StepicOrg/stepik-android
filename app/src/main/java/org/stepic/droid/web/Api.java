@@ -95,10 +95,21 @@ public class Api implements IApi {
 
     @Override
     public List<Course> getEnrolledCourses() {
-
-        updateToken();
         Bundle params = new Bundle();
         params.putString("enrolled", "true");
+        return getCourses(params);
+    }
+
+    @Override
+    public List<Course> getFeaturedCourses() {
+        Bundle params = new Bundle();
+        params.putString("is_featured", "true");
+        return getCourses(params);
+    }
+
+
+    private List<Course> getCourses(Bundle params) {
+        updateToken();
 
         String url = mConfig.getBaseUrl() + "/api/courses/";
 
@@ -120,7 +131,6 @@ public class Api implements IApi {
         }.getType();
 
         return (List<Course>) gson.fromJson(jsonArray.toString(), listType);
-
     }
 
 

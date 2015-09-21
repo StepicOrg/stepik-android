@@ -21,13 +21,14 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MyCoursesFragment extends StepicBaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class FindCoursesFragment extends StepicBaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    @Bind(R.id.swipe_refresh_layout_mycourses)
+    @Bind(R.id.swipe_refresh_layout_find_courses)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
-    @Bind(R.id.list_of_courses)
+    @Bind(R.id.list_of_find_courses)
     ListView mListOfCourses;
+
 
     private List<Course> mCourses;
     private MyCoursesAdapter mCoursesAdapter;
@@ -35,7 +36,7 @@ public class MyCoursesFragment extends StepicBaseFragment implements SwipeRefres
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_my_courses, container, false);
+        View v = inflater.inflate(R.layout.fragment_find_courses, container, false);
         ButterKnife.bind(this, v);
         return v;
     }
@@ -50,12 +51,11 @@ public class MyCoursesFragment extends StepicBaseFragment implements SwipeRefres
         mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses);
         mListOfCourses.setAdapter(mCoursesAdapter);
 
-
     }
 
     @Override
     public void onRefresh() {
-        LoadingCoursesTask task = new LoadingCoursesTask(getActivity(), LoadingCoursesTask.CourseType.enrolled) {
+        LoadingCoursesTask task = new LoadingCoursesTask(getActivity(), LoadingCoursesTask.CourseType.featured) {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();

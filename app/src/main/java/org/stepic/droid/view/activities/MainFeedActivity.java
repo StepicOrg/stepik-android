@@ -15,7 +15,7 @@ import org.stepic.droid.base.StepicBaseFragmentActivity;
 import org.stepic.droid.util.SharedPreferenceHelper;
 import org.stepic.droid.view.fragments.AvailableCourses;
 import org.stepic.droid.view.fragments.BestLessons;
-import org.stepic.droid.view.fragments.FindLessons;
+import org.stepic.droid.view.fragments.FindCoursesFragment;
 import org.stepic.droid.view.fragments.MyCoursesFragment;
 import org.stepic.droid.view.fragments.MySettings;
 
@@ -75,8 +75,8 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
                         setFragment(new AvailableCourses());
                         return true;
                     case R.id.find_lessons:
-                        setTitle(R.string.find_lessons_title);
-                        setFragment(new FindLessons());
+                        setTitle(R.string.find_courses_title);
+                        setFragment(new FindCoursesFragment());
                         return true;
                     case R.id.my_settings:
                         setTitle(R.string.settings_title);
