@@ -15,6 +15,7 @@ import org.joda.time.DateTime;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.Profile;
 import org.stepic.droid.util.SharedPreferenceHelper;
 
 import java.io.IOException;
@@ -122,6 +123,33 @@ public class Api implements IApi {
             ex.printStackTrace();
         }
         return filteredCourses;
+    }
+
+    @Override
+    public Profile getUserProfile() {
+        updateToken();
+        String url = mConfig.getBaseUrl() + "/api/stepics/1";
+        Bundle params = new Bundle();
+
+        String json = null;
+        try {
+            json = mHttpManager.get(url, params);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (json == null) return null;
+        JsonElement jElement = new JsonParser().parse(json);//bottle neck
+        JsonObject jObject = jElement.getAsJsonObject();
+        JsonArray jsonArray = jObject.getAsJsonArray("profiles");
+
+        Gson gson = new Gson();
+        Type listType = new TypeToken<List<Profile>>() {
+        }.getType();
+
+        List<Profile> profiles = (List<Profile>) gson.fromJson(jsonArray.toString(), listType);
+        if (profiles == null || profiles.isEmpty()) return null;
+        return profiles.get(0);
     }
 
 

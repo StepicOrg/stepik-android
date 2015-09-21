@@ -93,9 +93,12 @@ public class HttpManager implements IHttpManager {
         String access_token = resp.getAccess_token();
         String type = resp.getToken_type();
 
-        String url = baseUrl + "?" + makeQueryFromBundle(params);
+        String url;
+        if (!params.keySet().isEmpty())
+             url = baseUrl + "?" + makeQueryFromBundle(params);
+        else
+            url = baseUrl;
         String authValue = type + " " + access_token;
-        //todo: keep in mind expiring of token
         Request request = new Request.Builder()
                 .header("Authorization", authValue)
                 .url(url)
