@@ -1,20 +1,16 @@
 <resources>
-    <string name="app_name">stepic</string>
+    <string name="app_name" translatable="false">stepic</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
     <string name="already_have_an_account">Already have an account? Sign in</string>
-    <string name="sign_up_and_learn">Sign up</string>
     <string name="or_sign_up_with_email">or sign up with e-mail</string>
     <string name="sign_up">Sign up</string>
     <string name="show_optional_fields">Show optional fields</string>
     <string name="create_my_account">Create my account</string>
     <string name="by_creating_you_agree">By creating stepic account, you agree to the</string>
     <string name="terms">Terms</string>
-    <string name="facebook_name_of_company">Facebook</string>
-    <string name="google_name_of_company">Google</string>
-    <string name="email_login">e-mail</string>
-    <string name="password_login">password</string>
+    <string name="facebook_name_of_company" translatable="false">Facebook</string>
+    <string name="google_name_of_company" translatable="false">Google</string>
+    <string name="email_login" translatable="false">e-mail</string>
     <string name="remind_password">Remind Password</string>
     <string name="sign_in_btn">Sign in button</string>
     <string name="sign_in">Sign In</string>
@@ -26,7 +22,7 @@
     <string name="best_lessons_title">Best Lessons</string>
     <string name="drawer_open">open drawer</string>
     <string name="drawer_closed">close drawer</string>
-    <string name="find_lessons_title">Find Lessons</string>
+    <string name="find_courses_title">Find Courses</string>
     <string name="available_courses_title">Available Courses</string>
     <string name="settings_title">My Settings</string>
     <string name="logout_title">Logout</string>

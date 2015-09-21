@@ -16,14 +16,32 @@ public class LoadingCoursesTask extends StepicTask <Void, Void, List<Course>> {
     @Inject
     IShell mShell;
 
-    public LoadingCoursesTask(Context context) {
+    private CourseType mCourseType;
+
+    public enum CourseType {
+        enrolled, featured
+    }
+
+    public LoadingCoursesTask(Context context, CourseType courseType) {
         super(context);
         MainApplication.component(mContext).inject(this);
+
+        mCourseType = courseType;
     }
 
     @Override
     protected List<Course> doInBackgroundBody(Void... params) throws Exception {
         IApi api = mShell.getApi();
-        return api.getEnrolledCourses();
+        List<Course> courseList = null;
+        switch (mCourseType) {
+            case enrolled:
+                courseList = api.getEnrolledCourses();
+                break;
+            case featured:
+                courseList = api.getFeaturedCourses();
+                break;
+        }
+
+        return courseList;
     }
 }

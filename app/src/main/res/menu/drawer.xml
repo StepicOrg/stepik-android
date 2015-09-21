@@ -14,7 +14,7 @@
 
         <item
             android:id="@+id/find_lessons"
-            android:title="@string/find_lessons_title" />
+            android:title="@string/find_courses_title" />
 
         <itemO
             android:id="@+id/available_courses"
