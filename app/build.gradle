@@ -52,7 +52,7 @@ dependencies {
 
     compile 'com.squareup.picasso:picasso:2.5.2'
 
-    compile 'joda-time:joda-time:2.7'
+    compile 'joda-time:joda-time:2.8'
 }
 
 

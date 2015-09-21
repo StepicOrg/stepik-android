@@ -5,5 +5,5 @@
   "GRANT_TYPE":"password",
   "REFRESH_GRANT_TYPE" : "refresh_token",
   "DATE_PATTERN":"yyyy-MM-dd'T'HH:mm:ss",
-  "DATE_PATTERN_FOR_VIEW":"yyyy-MM-dd'T'HH:mm:ss"
+  "DATE_PATTERN_FOR_VIEW":"dd MMMM yyyy"
 }
