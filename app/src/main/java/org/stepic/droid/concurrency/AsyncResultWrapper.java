@@ -2,9 +2,9 @@ package org.stepic.droid.concurrency;
 
 public class AsyncResultWrapper<T> {
     T result;
-    Exception exception;
+    Throwable exception;
 
-    public Exception getException() {
+    public Throwable getException() {
         return exception;
     }
 
@@ -16,7 +16,7 @@ public class AsyncResultWrapper<T> {
         this.result = result;
     }
 
-    public AsyncResultWrapper (Exception exception) {
+    public AsyncResultWrapper (Throwable exception) {
         this.exception = exception;
     }
 }

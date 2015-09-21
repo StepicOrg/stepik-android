@@ -49,7 +49,7 @@ public class MyCoursesFragment extends StepicBaseFragment implements SwipeRefres
                 R.color.orange,
                 R.color.blue);
 
-        if (mCourses == null) mCourses = new ArrayList<Course>();
+        if (mCourses == null) mCourses = new ArrayList<>();
         mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses);
         mListOfCourses.setAdapter(mCoursesAdapter);
 
@@ -75,7 +75,7 @@ public class MyCoursesFragment extends StepicBaseFragment implements SwipeRefres
             }
 
             @Override
-            protected void onException(Exception exception) {
+            protected void onException(Throwable exception) {
                 super.onException(exception);
                 int doNothing = 0;
             }

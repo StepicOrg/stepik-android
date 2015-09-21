@@ -83,7 +83,7 @@ public class RegisterActivity extends StepicBaseFragmentActivity {
             }
 
             @Override
-            protected void onException(Exception exception) {
+            protected void onException(Throwable exception) {
                 super.onException(exception);
                 Toast toast =  Toast.makeText(RegisterActivity.this, "onException: " + exception.getMessage(), Toast.LENGTH_SHORT);
                 toast.show();

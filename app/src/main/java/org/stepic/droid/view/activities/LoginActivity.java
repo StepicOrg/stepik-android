@@ -86,7 +86,7 @@ public class LoginActivity extends StepicBaseFragmentActivity {
             }
 
             @Override
-            protected void onException(Exception exception) {
+            protected void onException(Throwable exception) {
                 super.onException(exception);
                 onUserLoginFailure(exception);
             }
@@ -101,7 +101,7 @@ public class LoginActivity extends StepicBaseFragmentActivity {
         finish();
     }
 
-    private void onUserLoginFailure(Exception ex) {
+    private void onUserLoginFailure(Throwable ex) {
         //todo: show Error message to user
         Log.i("Error key", "Error in user login");
         ex.printStackTrace();
