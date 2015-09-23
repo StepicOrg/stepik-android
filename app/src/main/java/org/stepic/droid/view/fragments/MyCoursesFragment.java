@@ -27,9 +27,12 @@ public class MyCoursesFragment extends CoursesFragmentBase {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         showCachedCourses(DbOperationsCourses.Table.enrolled);
-        mLoadingCoursesTask = initCoursesLoadingTask(LoadingCoursesTask.CourseType.enrolled);
     }
 
+    @Override
+    public void onRefresh() {
+        mLoadingCoursesTask = initCoursesLoadingTask(LoadingCoursesTask.CourseType.enrolled);
+        mLoadingCoursesTask.execute();
+    }
 }

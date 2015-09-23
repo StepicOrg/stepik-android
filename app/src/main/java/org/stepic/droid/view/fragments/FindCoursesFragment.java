@@ -29,6 +29,12 @@ public class FindCoursesFragment extends CoursesFragmentBase {
         super.onActivityCreated(savedInstanceState);
 
         showCachedCourses(DbOperationsCourses.Table.featured);
+    }
+
+    @Override
+    public void onRefresh() {
+
         mLoadingCoursesTask = initCoursesLoadingTask(LoadingCoursesTask.CourseType.featured);
+        mLoadingCoursesTask.execute();
     }
 }

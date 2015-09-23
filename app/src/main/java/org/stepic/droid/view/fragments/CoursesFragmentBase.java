@@ -68,8 +68,6 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
             protected void onSuccess(List<Course> courses) {
                 super.onSuccess(courses);
 
-
-
                 DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(getDbType(type));
                 try {
                     dbOperationCourses.open();
@@ -132,9 +130,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     }
 
     @Override
-    public void onRefresh() {
-        mLoadingCoursesTask.execute();
-    }
+    public abstract void onRefresh();
 
 
     private DbOperationsCourses.Table getDbType (LoadingCoursesTask.CourseType type) {
