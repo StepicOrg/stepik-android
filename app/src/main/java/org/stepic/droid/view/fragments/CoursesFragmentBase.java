@@ -1,5 +1,6 @@
 package org.stepic.droid.view.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -140,7 +141,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     public abstract void onRefresh();
 
 
-    private DbOperationsCourses.Table getDbType (LoadingCoursesTask.CourseType type) {
+    private DbOperationsCourses.Table getDbType(LoadingCoursesTask.CourseType type) {
         DbOperationsCourses.Table dbType = null;
         switch (type) {
             case enrolled:
@@ -152,4 +153,13 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
         return dbType;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mLoadingCoursesTask != null && mLoadingCoursesTask.getStatus() != AsyncTask.Status.FINISHED) {
+            mLoadingCoursesTask.cancel(true);
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+
+    }
 }
