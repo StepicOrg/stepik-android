@@ -46,6 +46,8 @@ public final class DbOperationsCourses extends DbOperationsBase {
         values.put(DBStructureCourses.Column.INTRO_LINK_VIMEO, course.getIntro());
         values.put(DBStructureCourses.Column.TITLE, course.getTitle());
         values.put(DBStructureCourses.Column.LANGUAGE, course.getLanguage());
+        values.put(DBStructureCourses.Column.BEGIN_DATE_SOURCE, course.getBegin_date_source());
+        values.put(DBStructureCourses.Column.LAST_DEADLINE, course.getLast_deadline());
 
         database.insert(mType.getStoreName(), null, values);
     }
