@@ -236,4 +236,128 @@ public class Course implements Serializable {
     public String getTitle() {
         return title;
     }
+
+    public void setmFormatForView(DateTimeFormatter mFormatForView) {
+        this.mFormatForView = mFormatForView;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public void setWorkload(String workload) {
+        this.workload = workload;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public void setIntro(String intro) {
+        this.intro = intro;
+    }
+
+    public void setCourse_format(String course_format) {
+        this.course_format = course_format;
+    }
+
+    public void setTarget_audience(String target_audience) {
+        this.target_audience = target_audience;
+    }
+
+    public void setCertificate_footer(String certificate_footer) {
+        this.certificate_footer = certificate_footer;
+    }
+
+    public void setCertificate_cover_org(String certificate_cover_org) {
+        this.certificate_cover_org = certificate_cover_org;
+    }
+
+    public void setInstructors(long[] instructors) {
+        this.instructors = instructors;
+    }
+
+    public void setCertificate(String certificate) {
+        this.certificate = certificate;
+    }
+
+    public void setRequirements(String requirements) {
+        this.requirements = requirements;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setTotal_units(int total_units) {
+        this.total_units = total_units;
+    }
+
+    public void setEnrollment(int enrollment) {
+        this.enrollment = enrollment;
+    }
+
+    public void setOwner(long owner) {
+        this.owner = owner;
+    }
+
+    public void setIs_contest(boolean is_contest) {
+        this.is_contest = is_contest;
+    }
+
+    public void setIs_featured(boolean is_featured) {
+        this.is_featured = is_featured;
+    }
+
+    public void setIs_spoc(boolean is_spoc) {
+        this.is_spoc = is_spoc;
+    }
+
+    public void setIs_active(boolean is_active) {
+        this.is_active = is_active;
+    }
+
+    public void setCertificate_link(String certificate_link) {
+        this.certificate_link = certificate_link;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setBegin_date_source(String begin_date_source) {
+        this.begin_date_source = begin_date_source;
+    }
+
+    public void setLast_deadline(String last_deadline) {
+        this.last_deadline = last_deadline;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public void setIs_public(boolean is_public) {
+        this.is_public = is_public;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public void setmBeginDateTime(DateTime mBeginDateTime) {
+        this.mBeginDateTime = mBeginDateTime;
+    }
+
+    public void setmEndDateTime(DateTime mEndDateTime) {
+        this.mEndDateTime = mEndDateTime;
+    }
+
+    public void setFormatForView(String formatForView) {
+        this.formatForView = formatForView;
+    }
 }

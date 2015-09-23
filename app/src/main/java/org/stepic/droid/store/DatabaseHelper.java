@@ -30,7 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String sql = "CREATE TABLE " + DBStructureCourses.NAME
                 + " ("
                 + DBStructureCourses.Column.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + DBStructureCourses.Column.COURSE_ID + " INTEGER, "
+                + DBStructureCourses.Column.COURSE_ID + " LONG, "
                 + DBStructureCourses.Column.SUMMARY + " TEXT, "
                 + DBStructureCourses.Column.WORKLOAD + " TEXT, "
                 + DBStructureCourses.Column.COVER_LINK + " TEXT, "
