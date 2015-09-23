@@ -61,7 +61,7 @@ public class MyCoursesFragment extends StepicBaseFragment implements SwipeRefres
     }
 
     private void showCachedCourses() {
-        DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses();
+        DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(DbOperationsCourses.Table.enrolled);
         try {
             dbOperationCourses.open();
         } catch (SQLException e) {
@@ -89,7 +89,7 @@ public class MyCoursesFragment extends StepicBaseFragment implements SwipeRefres
             protected void onSuccess(List<Course> courses) {
                 super.onSuccess(courses);
 
-                DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses();
+                DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(DbOperationsCourses.Table.enrolled);
                 try {
                     dbOperationCourses.open();
                 } catch (SQLException e) {

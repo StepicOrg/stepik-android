@@ -4,7 +4,8 @@ public final class DBStructureCourses extends DBStructureBase {
 
     private static String[] mUsedColumns = null;
 
-    public static final String NAME = "courses";
+    public static final String ENROLLED_COURSES = "courses";
+    public static final String FEATURED_COURSES = "featured_courses";
 
     public static final class Column {
         public static final String ID = "_id";

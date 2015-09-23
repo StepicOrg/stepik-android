@@ -13,8 +13,10 @@ import org.stepic.droid.base.StepicBaseFragment;
 import org.stepic.droid.concurrency.AsyncResultWrapper;
 import org.stepic.droid.concurrency.LoadingCoursesTask;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.store.operations.DbOperationsCourses;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +56,23 @@ public class FindCoursesFragment extends StepicBaseFragment implements SwipeRefr
         mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses);
         mListOfCourses.setAdapter(mCoursesAdapter);
 
+        showCachedCourses();
+    }
+
+    private void showCachedCourses() {
+        DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(DbOperationsCourses.Table.featured);
+        try {
+            dbOperationCourses.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
+        }
+        List<Course> cachedCourses = dbOperationCourses.getAllCourses();
+        dbOperationCourses.close();
+
+        mCourses.clear();
+        mCourses.addAll(cachedCourses);
+        mCoursesAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -68,16 +87,40 @@ public class FindCoursesFragment extends StepicBaseFragment implements SwipeRefr
             @Override
             protected void onSuccess(List<Course> courses) {
                 super.onSuccess(courses);
-                mCourses.clear();
-                if (courses == null) return;
-                mCourses.addAll(courses);
-                mCoursesAdapter.notifyDataSetChanged();
+
+                DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(DbOperationsCourses.Table.featured);
+                try {
+                    dbOperationCourses.open();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+                List<Course> cachedCourses = dbOperationCourses.getAllCourses();
+
+                for (Course courseItem : cachedCourses) {
+                    if (!courses.contains(courseItem)) {
+                        dbOperationCourses.deleteCourse(courseItem);//remove outdated courses from cache
+                        courses.remove(courseItem);
+                    }
+                }
+
+                for (Course newCourse : courses) {
+                    if (!dbOperationCourses.isCourseInDB(newCourse)) {
+                        dbOperationCourses.addCourse(newCourse);//add new to persistent cache
+                    }
+                }
+                dbOperationCourses.close();
+                //all courses are cached now
+
+                showCachedCourses();
             }
 
             @Override
             protected void onException(Throwable exception) {
                 super.onException(exception);
-                int doNothing = 0;
+
+                showCachedCourses();
             }
 
             @Override
