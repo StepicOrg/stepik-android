@@ -1,13 +1,9 @@
-package org.stepic.droid.store;
+package org.stepic.droid.store.structure;
 
-public final class DBCoursesStructure {
+public final class DBStructureCourses extends DBStructureBase {
 
 
     public static final String NAME = "courses";
-    public static final String FILE_NAME = "courses.db";
-
-    public static final int VERSION = 1;
-
 
     public static final class Column {
         public static final String ID = "_id";
@@ -33,5 +29,17 @@ public final class DBCoursesStructure {
         public static final String SLUG = "slug";
         public static final String BEGIN_DATE_SOURCE = "begin_date_source";
         public static final String LAST_DEADLINE = "last_deadline";
+    }
+
+    public static String[] getUsedColumns() {
+        return new String[]{
+                Column.ID,
+                Column.COURSE_ID,
+                Column.SUMMARY,
+                Column.COVER_LINK,
+                Column.INTRO_LINK_VIMEO,
+                Column.TITLE,
+                Column.LANGUAGE
+        };
     }
 }
