@@ -4,6 +4,7 @@ import android.content.Context;
 
 import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.store.operations.DbOperationsCourses;
 import org.stepic.droid.util.SharedPreferenceHelper;
 import org.stepic.droid.web.Api;
 import org.stepic.droid.web.HttpManager;
@@ -56,5 +57,8 @@ public class StepicDefaultModule {
 
     @Provides @Singleton  public Context provideApplicationContext() {
         return mContext;
+    }
+    @Provides @Singleton  public DbOperationsCourses provideDbOperationsCourses(Context context) {
+        return new DbOperationsCourses(context);
     }
 }

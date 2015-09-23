@@ -13,8 +13,10 @@ import org.stepic.droid.base.StepicBaseFragment;
 import org.stepic.droid.concurrency.AsyncResultWrapper;
 import org.stepic.droid.concurrency.LoadingCoursesTask;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.store.operations.DbOperationsCourses;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MyCoursesFragment extends StepicBaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+
 
     @Bind(R.id.swipe_refresh_layout_mycourses)
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -69,7 +72,33 @@ public class MyCoursesFragment extends StepicBaseFragment implements SwipeRefres
             protected void onSuccess(List<Course> courses) {
                 super.onSuccess(courses);
                 mCourses.clear();
-                if (courses == null) return;
+
+                DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses();
+                try {
+                    dbOperationCourses.open();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+                List<Course> cachedCourses = dbOperationCourses.getAllCourses();
+
+                for (Course courseItem : cachedCourses) {
+                    if (!courses.contains(courseItem)) {
+                        dbOperationCourses.deleteCourse(courseItem);//remove outdated courses from cache
+                        courses.remove(courseItem);
+                    }
+                }
+
+                for (Course newCourse : courses) {
+                    if (!dbOperationCourses.isCourseInDB(newCourse)) {
+                        dbOperationCourses.addCourse(newCourse);//add new to persistent cache
+                    }
+                }
+
+                courses = dbOperationCourses.getAllCourses();
+                dbOperationCourses.close();
+
                 mCourses.addAll(courses);
                 mCoursesAdapter.notifyDataSetChanged();
             }
@@ -77,7 +106,19 @@ public class MyCoursesFragment extends StepicBaseFragment implements SwipeRefres
             @Override
             protected void onException(Throwable exception) {
                 super.onException(exception);
-                int doNothing = 0;
+
+                DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses();
+                try {
+                    dbOperationCourses.open();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                List<Course> cachedCourses = dbOperationCourses.getAllCourses();
+                dbOperationCourses.close();
+                mCourses.clear();
+                mCourses.addAll(cachedCourses);
+                mCoursesAdapter.notifyDataSetChanged();
             }
 
             @Override

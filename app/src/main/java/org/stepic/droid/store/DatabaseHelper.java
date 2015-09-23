@@ -31,7 +31,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + " ("
                 + DBStructureCourses.Column.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DBStructureCourses.Column.COURSE_ID + " LONG, "
-                + DBStructureCourses.Column.SUMMARY + " TEXT, "
                 + DBStructureCourses.Column.WORKLOAD + " TEXT, "
                 + DBStructureCourses.Column.COVER_LINK + " TEXT, "
                 + DBStructureCourses.Column.INTRO_LINK_VIMEO + " TEXT, "
@@ -50,6 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DBStructureCourses.Column.IS_PUBLIC + " BOOLEAN, "
                 + DBStructureCourses.Column.TITLE + " TEXT, "
                 + DBStructureCourses.Column.SLUG + " TEXT, "
+                + DBStructureCourses.Column.SUMMARY + " TEXT, "
                 + DBStructureCourses.Column.BEGIN_DATE_SOURCE + " TEXT, "
                 + DBStructureCourses.Column.LAST_DEADLINE + " TEXT "
                 + ")";

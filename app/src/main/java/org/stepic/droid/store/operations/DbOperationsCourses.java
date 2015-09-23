@@ -3,6 +3,7 @@ package org.stepic.droid.store.operations;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.structure.DBStructureCourses;
@@ -10,12 +11,15 @@ import org.stepic.droid.store.structure.DBStructureCourses;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Singleton;
+
+@Singleton
 public final class DbOperationsCourses extends DbOperationsBase {
     public DbOperationsCourses(Context context) {
         super(context);
     }
 
-    public void addCourse (Course course) {
+    public void addCourse(Course course) {
         ContentValues values = new ContentValues();
 
         values.put(DBStructureCourses.Column.COURSE_ID, course.getCourseId());
@@ -28,7 +32,7 @@ public final class DbOperationsCourses extends DbOperationsBase {
         database.insert(DBStructureCourses.NAME, null, values);
     }
 
-    public void deleteCourse (Course course) {
+    public void deleteCourse(Course course) {
         long courseId = course.getCourseId();
         database.delete(DBStructureCourses.NAME,
                 DBStructureCourses.Column.COURSE_ID + " = " + courseId,
@@ -57,9 +61,9 @@ public final class DbOperationsCourses extends DbOperationsBase {
         int columnNumber = 1;
         course.setId(cursor.getLong(columnNumber++));
         course.setSummary(cursor.getString(columnNumber++));
-        course.setCover(cursor.getColumnName(columnNumber++));
-        course.setIntro(cursor.getColumnName(columnNumber++));
-        course.setTitle(cursor.getColumnName(columnNumber++));
+        course.setCover(cursor.getString(columnNumber++));
+        course.setIntro(cursor.getString(columnNumber++));
+        course.setTitle(cursor.getString(columnNumber++));
 
         course.setLanguage(cursor.getColumnName(columnNumber));
 
@@ -70,5 +74,16 @@ public final class DbOperationsCourses extends DbOperationsBase {
     public Cursor getCursor() {
         return database.query(DBStructureCourses.NAME, DBStructureCourses.getUsedColumns(),
                 null, null, null, null, null);
+    }
+
+    public boolean isCourseInDB(Course course) {
+        String Query = "Select * from " + DBStructureCourses.NAME + " where " + DBStructureCourses.Column.COURSE_ID + " = " + course.getCourseId();
+        Cursor cursor = database.rawQuery(Query, null);
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
     }
 }
