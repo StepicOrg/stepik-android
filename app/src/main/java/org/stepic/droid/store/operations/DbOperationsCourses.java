@@ -64,8 +64,9 @@ public final class DbOperationsCourses extends DbOperationsBase {
         course.setCover(cursor.getString(columnNumber++));
         course.setIntro(cursor.getString(columnNumber++));
         course.setTitle(cursor.getString(columnNumber++));
-
-        course.setLanguage(cursor.getColumnName(columnNumber));
+        course.setLanguage(cursor.getString(columnNumber++));
+        course.setBegin_date_source(cursor.getString(columnNumber++));
+        course.setLast_deadline(cursor.getString(columnNumber++));
 
         return course;
     }

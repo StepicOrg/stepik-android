@@ -55,8 +55,25 @@ public class MyCoursesFragment extends StepicBaseFragment implements SwipeRefres
         if (mCourses == null) mCourses = new ArrayList<>();
         mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses);
         mListOfCourses.setAdapter(mCoursesAdapter);
+        showCachedCourses();
 
 
+    }
+
+    private void showCachedCourses() {
+        DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses();
+        try {
+            dbOperationCourses.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
+        }
+        List<Course> cachedCourses = dbOperationCourses.getAllCourses();
+        dbOperationCourses.close();
+
+        mCourses.clear();
+        mCourses.addAll(cachedCourses);
+        mCoursesAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -71,7 +88,6 @@ public class MyCoursesFragment extends StepicBaseFragment implements SwipeRefres
             @Override
             protected void onSuccess(List<Course> courses) {
                 super.onSuccess(courses);
-                mCourses.clear();
 
                 DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses();
                 try {
@@ -95,30 +111,17 @@ public class MyCoursesFragment extends StepicBaseFragment implements SwipeRefres
                         dbOperationCourses.addCourse(newCourse);//add new to persistent cache
                     }
                 }
-
-                courses = dbOperationCourses.getAllCourses();
                 dbOperationCourses.close();
+                //all courses are cached now
 
-                mCourses.addAll(courses);
-                mCoursesAdapter.notifyDataSetChanged();
+                showCachedCourses();
             }
 
             @Override
             protected void onException(Throwable exception) {
                 super.onException(exception);
 
-                DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses();
-                try {
-                    dbOperationCourses.open();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    return;
-                }
-                List<Course> cachedCourses = dbOperationCourses.getAllCourses();
-                dbOperationCourses.close();
-                mCourses.clear();
-                mCourses.addAll(cachedCourses);
-                mCoursesAdapter.notifyDataSetChanged();
+                showCachedCourses();
             }
 
             @Override

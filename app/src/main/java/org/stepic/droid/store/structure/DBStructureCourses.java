@@ -41,7 +41,9 @@ public final class DBStructureCourses extends DBStructureBase {
                     Column.COVER_LINK,
                     Column.INTRO_LINK_VIMEO,
                     Column.TITLE,
-                    Column.LANGUAGE
+                    Column.LANGUAGE,
+                    Column.BEGIN_DATE_SOURCE,
+                    Column.LAST_DEADLINE
             };
         }
         return mUsedColumns;
