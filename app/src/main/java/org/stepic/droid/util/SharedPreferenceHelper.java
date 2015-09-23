@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.model.Profile;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 
 import com.google.gson.Gson;
@@ -34,6 +35,25 @@ public class SharedPreferenceHelper {
         private String getStoreName() {
             return description;
         }
+    }
+
+    public void storeProfile (Profile profile) {
+        //todo save picture of user profile
+        //todo validate profile from the server with cached profile and make restore to cache. make
+        //todo query when nav drawer is occurred?
+        Gson gson = new Gson();
+        String json = gson.toJson(profile);
+        put(PreferenceType.LOGIN, PROFILE_JSON, json);
+    }
+
+    public Profile getProfile() {
+        String json  = getString(PreferenceType.LOGIN, PROFILE_JSON);
+        if (json ==null) {
+            return null;
+        }
+        Gson gson = new GsonBuilder().create();
+        Profile result = gson.fromJson(json, Profile.class);
+        return result;
     }
 
     public void storeAuthInfo(AuthenticationStepicResponse response) {
@@ -77,5 +97,6 @@ public class SharedPreferenceHelper {
 
 
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
+    private final String PROFILE_JSON = "profile_json";
 
 }
