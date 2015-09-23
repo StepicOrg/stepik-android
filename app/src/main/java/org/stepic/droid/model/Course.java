@@ -39,6 +39,8 @@ public class Course implements Serializable {
     private String description;
     private int total_units;
     private int enrollment;
+    private long owner;
+    private boolean is_contest;
     private boolean is_featured;
     private boolean is_spoc;
     private boolean is_active;
@@ -46,6 +48,9 @@ public class Course implements Serializable {
     private String title;
     private String begin_date_source;
     private String last_deadline;
+    private String language;
+    private boolean is_public;
+    private String slug; //link to ../course/#slug#
 
     private DateTime mBeginDateTime = null;
 
@@ -136,7 +141,7 @@ public class Course implements Serializable {
         return mBeginDateTime;
     }
 
-    public long getId() {
+    public long getCourseId() {
         return id;
     }
 
@@ -206,6 +211,26 @@ public class Course implements Serializable {
 
     public String getCertificate_link() {
         return certificate_link;
+    }
+
+    public long getOwner() {
+        return owner;
+    }
+
+    public boolean is_contest() {
+        return is_contest;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public boolean is_public() {
+        return is_public;
+    }
+
+    public String getSlug() {
+        return slug;
     }
 
     public String getTitle() {
