@@ -4,6 +4,7 @@ import android.content.Context;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.exceptions.NullCourseListException;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.web.IApi;
 
@@ -42,6 +43,7 @@ public class LoadingCoursesTask extends StepicTask <Void, Void, List<Course>> {
                 break;
         }
 
+        if (courseList == null) throw new NullCourseListException();
         return courseList;
     }
 }

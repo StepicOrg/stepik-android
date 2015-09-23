@@ -30,16 +30,15 @@ public abstract class StepicTask<Params, Progress, Result> extends AsyncTask<Par
         }
     }
 
+    @SafeVarargs
     @Override
     protected final AsyncResultWrapper<Result> doInBackground(Params... params) {
         try{
             Result result = doInBackgroundBody(params);
-            AsyncResultWrapper asyncResultWrapper = new AsyncResultWrapper(result);
-            return asyncResultWrapper;
+            return new AsyncResultWrapper<>(result);
         }
-        catch (Exception exception){
-            AsyncResultWrapper asyncResultWrapper = new AsyncResultWrapper(exception);
-            return asyncResultWrapper;
+        catch (Throwable exception){
+            return new AsyncResultWrapper<>(exception);
         }
     }
 
@@ -69,8 +68,8 @@ public abstract class StepicTask<Params, Progress, Result> extends AsyncTask<Par
 
     /**
      * Execute at UI Thread, when task is end with Exception
-     * @param exception
+     * @param exception which was occurred
      */
-    protected void onException(Exception exception) {
+    protected void onException(Throwable exception) {
     }
 }

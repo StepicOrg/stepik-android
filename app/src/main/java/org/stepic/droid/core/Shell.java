@@ -3,6 +3,7 @@ package org.stepic.droid.core;
 import android.content.Context;
 
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.store.operations.DbOperationsCourses;
 import org.stepic.droid.util.SharedPreferenceHelper;
 import org.stepic.droid.web.IApi;
 
@@ -29,6 +30,9 @@ public class Shell implements IShell {
     @Inject
     SharedPreferenceHelper mSharedPreferenceHelper;
 
+    @Inject
+    DbOperationsCourses mDbOperationCourses;
+
     @Override
     public IScreenManager getScreenProvider() {
         return mScreenProvider;
@@ -47,6 +51,11 @@ public class Shell implements IShell {
     @Override
     public Context getContext() {
         return mContext;
+    }
+
+    @Override
+    public DbOperationsCourses getDbOperationsCourses() {
+        return mDbOperationCourses;
     }
 
 }

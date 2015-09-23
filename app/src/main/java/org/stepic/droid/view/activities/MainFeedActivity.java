@@ -63,9 +63,17 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
             protected void onSuccess(Profile profile) {
                 super.onSuccess(profile);
                 //todo: store profile
+                mProfileImage.setVisibility(View.VISIBLE);
                 Picasso.with(MainFeedActivity.this).load(profile.getAvatar()).
                         placeholder(R.drawable.stepic_logo_black_and_white).into(mProfileImage);
                 mUserNameTextView.setText(profile.getFirst_name() + " " + profile.getLast_name());
+            }
+
+            @Override
+            protected void onException(Throwable exception) {
+                super.onException(exception);
+                mProfileImage.setVisibility(View.INVISIBLE);
+                mUserNameTextView.setText("");
             }
         };
         loadingProfileInformation.execute();
@@ -111,7 +119,7 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
                     case R.id.logout_item:
                         //todo: add 'Are you sure?" dialog
                         SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
-                        helper.deleteAuthInfo(MainFeedActivity.this);
+                        helper.deleteAuthInfo();
                         mShell.getScreenProvider().showLaunchScreen(MainFeedActivity.this, false);
                         return true;
 

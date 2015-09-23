@@ -113,7 +113,7 @@ public class HttpManager implements IHttpManager {
 
 
     private AuthenticationStepicResponse getAuthInfo() {
-        AuthenticationStepicResponse response = mSharedPreferencesHelper.getAuthResponseFromStore(mContext);
+        AuthenticationStepicResponse response = mSharedPreferencesHelper.getAuthResponseFromStore();
         return response;
     }
 

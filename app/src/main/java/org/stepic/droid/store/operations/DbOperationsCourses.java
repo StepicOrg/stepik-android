@@ -1,0 +1,90 @@
+package org.stepic.droid.store.operations;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import org.stepic.droid.model.Course;
+import org.stepic.droid.store.structure.DBStructureCourses;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Singleton;
+
+@Singleton
+public final class DbOperationsCourses extends DbOperationsBase {
+    public DbOperationsCourses(Context context) {
+        super(context);
+    }
+
+    public void addCourse(Course course) {
+        ContentValues values = new ContentValues();
+
+        values.put(DBStructureCourses.Column.COURSE_ID, course.getCourseId());
+        values.put(DBStructureCourses.Column.SUMMARY, course.getSummary());
+        values.put(DBStructureCourses.Column.COVER_LINK, course.getCover());
+        values.put(DBStructureCourses.Column.INTRO_LINK_VIMEO, course.getIntro());
+        values.put(DBStructureCourses.Column.TITLE, course.getTitle());
+        values.put(DBStructureCourses.Column.LANGUAGE, course.getLanguage());
+
+        database.insert(DBStructureCourses.NAME, null, values);
+    }
+
+    public void deleteCourse(Course course) {
+        long courseId = course.getCourseId();
+        database.delete(DBStructureCourses.NAME,
+                DBStructureCourses.Column.COURSE_ID + " = " + courseId,
+                null);
+    }
+
+    public List<Course> getAllCourses() {
+        List<Course> courses = new ArrayList<>();
+
+        Cursor cursor = getCursor();
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Course course = parseCourse(cursor);
+            courses.add(course);
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+        return courses;
+    }
+
+    private Course parseCourse(Cursor cursor) {
+        Course course = new Course();
+        //ignore id of table
+        int columnNumber = 1;
+        course.setId(cursor.getLong(columnNumber++));
+        course.setSummary(cursor.getString(columnNumber++));
+        course.setCover(cursor.getString(columnNumber++));
+        course.setIntro(cursor.getString(columnNumber++));
+        course.setTitle(cursor.getString(columnNumber++));
+        course.setLanguage(cursor.getString(columnNumber++));
+        course.setBegin_date_source(cursor.getString(columnNumber++));
+        course.setLast_deadline(cursor.getString(columnNumber++));
+
+        return course;
+    }
+
+    @Override
+    public Cursor getCursor() {
+        return database.query(DBStructureCourses.NAME, DBStructureCourses.getUsedColumns(),
+                null, null, null, null, null);
+    }
+
+    public boolean isCourseInDB(Course course) {
+        String Query = "Select * from " + DBStructureCourses.NAME + " where " + DBStructureCourses.Column.COURSE_ID + " = " + course.getCourseId();
+        Cursor cursor = database.rawQuery(Query, null);
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
+}

@@ -2,16 +2,25 @@ package org.stepic.droid.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.web.AuthenticationStepicResponse;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class SharedPreferenceHelper {
+    private Context mContext;
 
-
+    @Inject
+    public SharedPreferenceHelper() {
+        mContext = MainApplication.getAppContext();
+    }
 
     public enum PreferenceType {
         LOGIN("login preference");
@@ -27,19 +36,19 @@ public class SharedPreferenceHelper {
         }
     }
 
-    public void storeAuthInfo(Context context, AuthenticationStepicResponse response) {
+    public void storeAuthInfo(AuthenticationStepicResponse response) {
         Gson gson = new Gson();
         String json = gson.toJson(response);
-        put(PreferenceType.LOGIN, AUTH_RESPONSE_JSON, json, context);
+        put(PreferenceType.LOGIN, AUTH_RESPONSE_JSON, json);
 
     }
 
-    public void deleteAuthInfo(Context context) {
-        clear(PreferenceType.LOGIN, context);
+    public void deleteAuthInfo() {
+        clear(PreferenceType.LOGIN);
     }
 
-    public AuthenticationStepicResponse getAuthResponseFromStore(Context context) {
-        String json = getString(PreferenceType.LOGIN, AUTH_RESPONSE_JSON, context);
+    public AuthenticationStepicResponse getAuthResponseFromStore() {
+        String json = getString(PreferenceType.LOGIN, AUTH_RESPONSE_JSON);
         if (json == null) {
             return null;
         }
@@ -50,19 +59,19 @@ public class SharedPreferenceHelper {
     }
 
 
-    private void put(PreferenceType type, String key, String value, Context context) {
-        SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
+    private void put(PreferenceType type, String key, String value) {
+        SharedPreferences.Editor editor = mContext.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.putString(key, value).apply();
     }
 
-    private void clear(PreferenceType type, Context context) {
-        SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
+    private void clear(PreferenceType type) {
+        SharedPreferences.Editor editor = mContext.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.clear().apply();
     }
 
 
-    private String getString(PreferenceType preferenceType, String key, Context context) {
-        return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
+    private String getString(PreferenceType preferenceType, String key) {
+        return mContext.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
                 .getString(key, null);
     }
 
