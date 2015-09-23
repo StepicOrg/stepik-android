@@ -23,112 +23,12 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class FindCoursesFragment extends StepicBaseFragment implements SwipeRefreshLayout.OnRefreshListener {
-
-    @Bind(R.id.swipe_refresh_layout_mycourses)
-    SwipeRefreshLayout mSwipeRefreshLayout;
-
-    @Bind(R.id.list_of_courses)
-    ListView mListOfCourses;
-
-
-    private List<Course> mCourses;
-    private MyCoursesAdapter mCoursesAdapter;
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_courses, container, false);
-        ButterKnife.bind(this, v);
-        return v;
-    }
-
+public class FindCoursesFragment extends CoursesFragmentBase {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.stepic_brand_primary,
-                R.color.orange,
-                R.color.blue);
-
-        if (mCourses == null) mCourses = new ArrayList<>();
-        mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses);
-        mListOfCourses.setAdapter(mCoursesAdapter);
-
-        showCachedCourses();
-    }
-
-    private void showCachedCourses() {
-        DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(DbOperationsCourses.Table.featured);
-        try {
-            dbOperationCourses.open();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return;
-        }
-        List<Course> cachedCourses = dbOperationCourses.getAllCourses();
-        dbOperationCourses.close();
-
-        mCourses.clear();
-        mCourses.addAll(cachedCourses);
-        mCoursesAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onRefresh() {
-        LoadingCoursesTask task = new LoadingCoursesTask(getActivity(), LoadingCoursesTask.CourseType.featured) {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                mSwipeRefreshLayout.setRefreshing(true);
-            }
-
-            @Override
-            protected void onSuccess(List<Course> courses) {
-                super.onSuccess(courses);
-
-                DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(DbOperationsCourses.Table.featured);
-                try {
-                    dbOperationCourses.open();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    return;
-                }
-
-                List<Course> cachedCourses = dbOperationCourses.getAllCourses();
-
-                for (Course courseItem : cachedCourses) {
-                    if (!courses.contains(courseItem)) {
-                        dbOperationCourses.deleteCourse(courseItem);//remove outdated courses from cache
-                        courses.remove(courseItem);
-                    }
-                }
-
-                for (Course newCourse : courses) {
-                    if (!dbOperationCourses.isCourseInDB(newCourse)) {
-                        dbOperationCourses.addCourse(newCourse);//add new to persistent cache
-                    }
-                }
-                dbOperationCourses.close();
-                //all courses are cached now
-
-                showCachedCourses();
-            }
-
-            @Override
-            protected void onException(Throwable exception) {
-                super.onException(exception);
-
-                showCachedCourses();
-            }
-
-            @Override
-            protected void onPostExecute(AsyncResultWrapper<List<Course>> listAsyncResultWrapper) {
-                super.onPostExecute(listAsyncResultWrapper);
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        };
-        task.execute();
+        showCachedCourses(DbOperationsCourses.Table.featured);
+        mLoadingCoursesTask = initCoursesLoadingTask(LoadingCoursesTask.CourseType.featured);
     }
 }
