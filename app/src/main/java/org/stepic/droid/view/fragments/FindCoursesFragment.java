@@ -27,8 +27,6 @@ public class FindCoursesFragment extends CoursesFragmentBase {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        showCachedCourses(DbOperationsCourses.Table.featured);
     }
 
     @Override

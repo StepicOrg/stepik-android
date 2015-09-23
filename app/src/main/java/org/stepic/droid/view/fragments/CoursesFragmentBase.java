@@ -47,13 +47,20 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
         super.onActivityCreated(savedInstanceState);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.stepic_brand_primary,
-                R.color.orange,
-                R.color.blue);
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.stepic_brand_primary,
+                R.color.stepic_orange_carrot,
+                R.color.stepic_blue_ribbon);
 
         if (mCourses == null) mCourses = new ArrayList<>();
         mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses);
         mListOfCourses.setAdapter(mCoursesAdapter);
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                onRefresh();
+            }
+        });
     }
 
     public final LoadingCoursesTask initCoursesLoadingTask(final LoadingCoursesTask.CourseType type) {
