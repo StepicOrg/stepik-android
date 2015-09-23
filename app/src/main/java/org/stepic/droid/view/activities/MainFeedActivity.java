@@ -165,7 +165,6 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
     }
 
     private void setFragment(StepicBaseFragment fragment) {
-        Toast.makeText(getApplicationContext(), "we change fragment", Toast.LENGTH_SHORT).show();
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frame, fragment);
         fragmentTransaction.commit();
