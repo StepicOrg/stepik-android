@@ -19,6 +19,7 @@ import org.stepic.droid.base.StepicBaseFragmentActivity;
 import org.stepic.droid.concurrency.LoadingProfileInformation;
 import org.stepic.droid.exceptions.NullProfileException;
 import org.stepic.droid.model.Profile;
+import org.stepic.droid.store.operations.DbOperationsCourses;
 import org.stepic.droid.util.SharedPreferenceHelper;
 import org.stepic.droid.view.fragments.AvailableCourses;
 import org.stepic.droid.view.fragments.BestLessons;
@@ -127,6 +128,8 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
                         //todo: add 'Are you sure?" dialog
                         SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
                         helper.deleteAuthInfo();
+                        DbOperationsCourses dbOperationsCourses = mShell.getDbOperationsCourses(null);
+                        dbOperationsCourses.dropDatabase();
                         mShell.getScreenProvider().showLaunchScreen(MainFeedActivity.this, false);
                         return true;
 
