@@ -32,6 +32,7 @@ public class LoadingCoursesTask extends StepicTask <Void, Void, List<Course>> {
 
     @Override
     protected List<Course> doInBackgroundBody(Void... params) throws Exception {
+        Thread.sleep(3000); //todo: delete fake latency for debug
         IApi api = mShell.getApi();
         List<Course> courseList = null;
         switch (mCourseType) {
