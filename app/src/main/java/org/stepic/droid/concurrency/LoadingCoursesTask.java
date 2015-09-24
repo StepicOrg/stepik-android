@@ -23,8 +23,8 @@ public class LoadingCoursesTask extends StepicTask <Void, Void, List<Course>> {
         enrolled, featured
     }
 
-    public LoadingCoursesTask(Context context, CourseType courseType) {
-        super(context);
+    public LoadingCoursesTask(CourseType courseType) {
+        super(MainApplication.getAppContext());
         MainApplication.component(mContext).inject(this);
 
         mCourseType = courseType;

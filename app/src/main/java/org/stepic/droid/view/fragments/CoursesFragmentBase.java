@@ -65,7 +65,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     }
 
     public final LoadingCoursesTask initCoursesLoadingTask(final LoadingCoursesTask.CourseType type) {
-        LoadingCoursesTask task = new LoadingCoursesTask(getActivity(), type) {
+        LoadingCoursesTask task = new LoadingCoursesTask(type) {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -160,6 +160,15 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
             mLoadingCoursesTask.cancel(true);
             mSwipeRefreshLayout.setRefreshing(false);
         }
+        mListOfCourses.setAdapter(null);
 
+    }
+
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ButterKnife.unbind(this);
     }
 }
