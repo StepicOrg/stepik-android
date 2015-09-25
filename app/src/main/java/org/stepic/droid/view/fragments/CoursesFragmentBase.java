@@ -118,5 +118,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     public void onStop() {
         super.onStop();
         ButterKnife.unbind(this);
+        if (mLoadingCoursesTask != null)
+            mLoadingCoursesTask.unbind();
     }
 }
