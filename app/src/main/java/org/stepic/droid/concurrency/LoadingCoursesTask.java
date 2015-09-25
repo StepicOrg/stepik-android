@@ -33,40 +33,52 @@ public class LoadingCoursesTask extends StepicTask<Void, Void, List<Course>> {
     protected List<Course> doInBackgroundBody(Void... params) throws Exception {
         IApi api = mShell.getApi();
         List<Course> courseList = null;
-        switch (mCourseType) {
-            case enrolled:
-                courseList = api.getEnrolledCourses();
-                break;
-            case featured:
-                courseList = api.getFeaturedCourses();
-                break;
-        }
+        try {
+            switch (mCourseType) {
+                case enrolled:
+                    courseList = api.getEnrolledCourses();
+                    break;
+                case featured:
+                    courseList = api.getFeaturedCourses();
+                    break;
+            }
+        } finally {
 
-        if (courseList != null)
-        {
-            List<Course> cachedCourses =getCachedCourses();
+            if (courseList != null) {
+                List<Course> cachedCourses = getCachedCourses();
 
-            DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(getDbType(mCourseType));
-            for (Course courseItem : cachedCourses) {
-                if (!courseList.contains(courseItem)) {
-                    dbOperationCourses.deleteCourse(courseItem);//remove outdated courses from cache
-                    courseList.remove(courseItem);
+                DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(getDbType(mCourseType));
+
+                try {
+                    dbOperationCourses.open();
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
+                try {
+                    for (Course courseItem : cachedCourses) {
+                        if (!courseList.contains(courseItem)) {
+                            dbOperationCourses.deleteCourse(courseItem);//remove outdated courses from cache
+                            courseList.remove(courseItem);
+                        }
+                    }
+
+                    for (Course newCourse : courseList) {
+                        if (!dbOperationCourses.isCourseInDB(newCourse)) {
+                            dbOperationCourses.addCourse(newCourse);//add new to persistent cache
+                        }
+                    }
+                } finally {
+                    dbOperationCourses.close();
+                }
+                //all courses are cached now
             }
 
-            for (Course newCourse : courseList) {
-                if (!dbOperationCourses.isCourseInDB(newCourse)) {
-                    dbOperationCourses.addCourse(newCourse);//add new to persistent cache
-                }
-            }
-            dbOperationCourses.close();
-            //all courses are cached now
+            courseList = getCachedCourses(); //get from cache;
+            return courseList;
         }
-
-        courseList = getCachedCourses(); //get from cache;
-        return courseList;
 
     }
+
     private DbOperationsCourses.Table getDbType(LoadingCoursesTask.CourseType type) {
         DbOperationsCourses.Table dbType = null;
         switch (type) {
