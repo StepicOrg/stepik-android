@@ -75,40 +75,13 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
             @Override
             protected void onSuccess(List<Course> courses) {
                 super.onSuccess(courses);
-
-                DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(getDbType(type));
-                try {
-                    dbOperationCourses.open();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    return;
-                }
-
-                List<Course> cachedCourses = dbOperationCourses.getAllCourses();
-
-                for (Course courseItem : cachedCourses) {
-                    if (!courses.contains(courseItem)) {
-                        dbOperationCourses.deleteCourse(courseItem);//remove outdated courses from cache
-                        courses.remove(courseItem);
-                    }
-                }
-
-                for (Course newCourse : courses) {
-                    if (!dbOperationCourses.isCourseInDB(newCourse)) {
-                        dbOperationCourses.addCourse(newCourse);//add new to persistent cache
-                    }
-                }
-                dbOperationCourses.close();
-                //all courses are cached now
-
-                showCachedCourses(getDbType(type));
+                showCachedCourses(courses);
             }
 
             @Override
             protected void onException(Throwable exception) {
                 super.onException(exception);
-
-                showCachedCourses(getDbType(type));
+                int ignore = 0;
             }
 
             @Override
@@ -121,17 +94,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     }
 
 
-    protected void showCachedCourses(DbOperationsCourses.Table type) {
-        DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(type);
-        try {
-            dbOperationCourses.open();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return;
-        }
-        List<Course> cachedCourses = dbOperationCourses.getAllCourses();
-        dbOperationCourses.close();
-
+    protected void showCachedCourses(List<Course> cachedCourses) {
         mCourses.clear();
         mCourses.addAll(cachedCourses);
         mCoursesAdapter.notifyDataSetChanged();
@@ -139,19 +102,6 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
 
     @Override
     public abstract void onRefresh();
-
-
-    private DbOperationsCourses.Table getDbType(LoadingCoursesTask.CourseType type) {
-        DbOperationsCourses.Table dbType = null;
-        switch (type) {
-            case enrolled:
-                dbType = DbOperationsCourses.Table.enrolled;
-                break;
-            case featured:
-                dbType = DbOperationsCourses.Table.featured;
-        }
-        return dbType;
-    }
 
     @Override
     public void onPause() {
@@ -161,9 +111,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
             mSwipeRefreshLayout.setRefreshing(false);
         }
         mListOfCourses.setAdapter(null);
-
     }
-
 
 
     @Override
