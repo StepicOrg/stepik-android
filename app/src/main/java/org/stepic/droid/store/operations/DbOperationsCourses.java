@@ -3,7 +3,6 @@ package org.stepic.droid.store.operations;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.structure.DBStructureCourses;
@@ -15,9 +14,28 @@ import javax.inject.Singleton;
 
 @Singleton
 public final class DbOperationsCourses extends DbOperationsBase {
-    public DbOperationsCourses(Context context) {
+    public DbOperationsCourses(Context context, Table type) {
         super(context);
+        mType = type;
     }
+
+    public enum Table {
+        enrolled(DBStructureCourses.ENROLLED_COURSES),
+        featured(DBStructureCourses.FEATURED_COURSES);
+
+
+        private String description;
+
+        Table(String description) {
+            this.description = description;
+        }
+
+        private String getStoreName() {
+            return description;
+        }
+    }
+
+    private Table mType;
 
     public void addCourse(Course course) {
         ContentValues values = new ContentValues();
@@ -28,13 +46,15 @@ public final class DbOperationsCourses extends DbOperationsBase {
         values.put(DBStructureCourses.Column.INTRO_LINK_VIMEO, course.getIntro());
         values.put(DBStructureCourses.Column.TITLE, course.getTitle());
         values.put(DBStructureCourses.Column.LANGUAGE, course.getLanguage());
+        values.put(DBStructureCourses.Column.BEGIN_DATE_SOURCE, course.getBegin_date_source());
+        values.put(DBStructureCourses.Column.LAST_DEADLINE, course.getLast_deadline());
 
-        database.insert(DBStructureCourses.NAME, null, values);
+        database.insert(mType.getStoreName(), null, values);
     }
 
     public void deleteCourse(Course course) {
         long courseId = course.getCourseId();
-        database.delete(DBStructureCourses.NAME,
+        database.delete(mType.getStoreName(),
                 DBStructureCourses.Column.COURSE_ID + " = " + courseId,
                 null);
     }
@@ -73,12 +93,12 @@ public final class DbOperationsCourses extends DbOperationsBase {
 
     @Override
     public Cursor getCursor() {
-        return database.query(DBStructureCourses.NAME, DBStructureCourses.getUsedColumns(),
+        return database.query(mType.getStoreName(), DBStructureCourses.getUsedColumns(),
                 null, null, null, null, null);
     }
 
     public boolean isCourseInDB(Course course) {
-        String Query = "Select * from " + DBStructureCourses.NAME + " where " + DBStructureCourses.Column.COURSE_ID + " = " + course.getCourseId();
+        String Query = "Select * from " + mType.getStoreName() + " where " + DBStructureCourses.Column.COURSE_ID + " = " + course.getCourseId();
         Cursor cursor = database.rawQuery(Query, null);
         if (cursor.getCount() <= 0) {
             cursor.close();

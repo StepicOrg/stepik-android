@@ -58,7 +58,7 @@ public class StepicDefaultModule {
     @Provides @Singleton  public Context provideApplicationContext() {
         return mContext;
     }
-    @Provides @Singleton  public DbOperationsCourses provideDbOperationsCourses(Context context) {
-        return new DbOperationsCourses(context);
-    }
+//    @Provides @Singleton  public DbOperationsCourses provideDbOperationsCourses(Context context) {
+//        return new DbOperationsCourses(context);
+//    }
 }

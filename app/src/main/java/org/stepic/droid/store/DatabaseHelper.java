@@ -14,20 +14,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        createCourseTable(db);
-
+        createCourseTable(db, DBStructureCourses.ENROLLED_COURSES);
+        createCourseTable(db, DBStructureCourses.FEATURED_COURSES);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         //todo: remake to incremental db
-        db.execSQL("DROP TABLE IF EXISTS " + DBStructureCourses.NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DBStructureCourses.ENROLLED_COURSES);
+        db.execSQL("DROP TABLE IF EXISTS " + DBStructureCourses.FEATURED_COURSES);
         onCreate(db);
 
     }
 
-    private void createCourseTable(SQLiteDatabase db) {
-        String sql = "CREATE TABLE " + DBStructureCourses.NAME
+    private void createCourseTable(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
                 + " ("
                 + DBStructureCourses.Column.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DBStructureCourses.Column.COURSE_ID + " LONG, "

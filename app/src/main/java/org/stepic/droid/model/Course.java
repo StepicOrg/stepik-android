@@ -360,4 +360,12 @@ public class Course implements Serializable {
     public void setFormatForView(String formatForView) {
         this.formatForView = formatForView;
     }
+
+    public String getBegin_date_source() {
+        return begin_date_source;
+    }
+
+    public String getLast_deadline() {
+        return last_deadline;
+    }
 }

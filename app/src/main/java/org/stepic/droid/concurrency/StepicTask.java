@@ -72,4 +72,9 @@ public abstract class StepicTask<Params, Progress, Result> extends AsyncTask<Par
      */
     protected void onException(Throwable exception) {
     }
+
+    public void unbind() {
+        mProgressBar=null;
+        mContext = null;
+    }
 }

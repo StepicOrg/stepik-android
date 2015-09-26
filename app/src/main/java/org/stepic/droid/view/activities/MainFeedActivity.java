@@ -17,7 +17,9 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragment;
 import org.stepic.droid.base.StepicBaseFragmentActivity;
 import org.stepic.droid.concurrency.LoadingProfileInformation;
+import org.stepic.droid.exceptions.NullProfileException;
 import org.stepic.droid.model.Profile;
+import org.stepic.droid.store.operations.DbOperationsCourses;
 import org.stepic.droid.util.SharedPreferenceHelper;
 import org.stepic.droid.view.fragments.AvailableCourses;
 import org.stepic.droid.view.fragments.BestLessons;
@@ -58,25 +60,31 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
         setSupportActionBar(mToolbar);
         setMyCourses();
 
-        LoadingProfileInformation loadingProfileInformation = new LoadingProfileInformation(this) {
-            @Override
-            protected void onSuccess(Profile profile) {
-                super.onSuccess(profile);
-                //todo: store profile
-                mProfileImage.setVisibility(View.VISIBLE);
-                Picasso.with(MainFeedActivity.this).load(profile.getAvatar()).
-                        placeholder(R.drawable.stepic_logo_black_and_white).into(mProfileImage);
-                mUserNameTextView.setText(profile.getFirst_name() + " " + profile.getLast_name());
-            }
+        final SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
+        Profile cachedProfile = helper.getProfile();
+        if (cachedProfile == null) {
 
-            @Override
-            protected void onException(Throwable exception) {
-                super.onException(exception);
-                mProfileImage.setVisibility(View.INVISIBLE);
-                mUserNameTextView.setText("");
-            }
-        };
-        loadingProfileInformation.execute();
+            LoadingProfileInformation loadingProfileInformation = new LoadingProfileInformation(this) {
+                @Override
+                protected void onSuccess(Profile profile) {
+                    super.onSuccess(profile);
+                    helper.storeProfile(profile);
+                    //todo: store profile
+                    showProfile(profile);
+                }
+
+                @Override
+                protected void onException(Throwable exception) {
+                    super.onException(exception);
+
+                    mProfileImage.setVisibility(View.INVISIBLE);
+                    mUserNameTextView.setText("");
+                }
+            };
+            loadingProfileInformation.execute();
+        } else {
+            showProfile(cachedProfile);
+        }
 
 
 //        SharedPreferenceHelper sharedPreferenceHelper = mShell.getSharedPreferenceHelper();
@@ -120,6 +128,8 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
                         //todo: add 'Are you sure?" dialog
                         SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
                         helper.deleteAuthInfo();
+                        DbOperationsCourses dbOperationsCourses = mShell.getDbOperationsCourses(null);
+                        dbOperationsCourses.dropDatabase();
                         mShell.getScreenProvider().showLaunchScreen(MainFeedActivity.this, false);
                         return true;
 
@@ -155,7 +165,6 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
     }
 
     private void setFragment(StepicBaseFragment fragment) {
-        Toast.makeText(getApplicationContext(), "we change fragment", Toast.LENGTH_SHORT).show();
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frame, fragment);
         fragmentTransaction.commit();
@@ -164,5 +173,12 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
     private void setMyCourses() {
         setTitle(mCoursesTitle);
         setFragment(new MyCoursesFragment());
+    }
+
+    private void showProfile(Profile profile) {
+        mProfileImage.setVisibility(View.VISIBLE);
+        Picasso.with(MainFeedActivity.this).load(profile.getAvatar()).
+                placeholder(R.drawable.stepic_logo_black_and_white).into(mProfileImage);
+        mUserNameTextView.setText(profile.getFirst_name() + " " + profile.getLast_name());
     }
 }

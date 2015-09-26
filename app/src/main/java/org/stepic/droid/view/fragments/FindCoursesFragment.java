@@ -13,79 +13,26 @@ import org.stepic.droid.base.StepicBaseFragment;
 import org.stepic.droid.concurrency.AsyncResultWrapper;
 import org.stepic.droid.concurrency.LoadingCoursesTask;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.store.operations.DbOperationsCourses;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class FindCoursesFragment extends StepicBaseFragment implements SwipeRefreshLayout.OnRefreshListener {
-
-    @Bind(R.id.swipe_refresh_layout_mycourses)
-    SwipeRefreshLayout mSwipeRefreshLayout;
-
-    @Bind(R.id.list_of_courses)
-    ListView mListOfCourses;
-
-
-    private List<Course> mCourses;
-    private MyCoursesAdapter mCoursesAdapter;
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_courses, container, false);
-        ButterKnife.bind(this, v);
-        return v;
-    }
-
+public class FindCoursesFragment extends CoursesFragmentBase {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.stepic_brand_primary,
-                R.color.orange,
-                R.color.blue);
-
-        if (mCourses == null) mCourses = new ArrayList<>();
-        mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses);
-        mListOfCourses.setAdapter(mCoursesAdapter);
-
     }
 
     @Override
     public void onRefresh() {
-        LoadingCoursesTask task = new LoadingCoursesTask(getActivity(), LoadingCoursesTask.CourseType.featured) {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                mSwipeRefreshLayout.setRefreshing(true);
-            }
 
-            @Override
-            protected void onSuccess(List<Course> courses) {
-                super.onSuccess(courses);
-                mCourses.clear();
-                if (courses == null) return;
-                mCourses.addAll(courses);
-                mCoursesAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            protected void onException(Throwable exception) {
-                super.onException(exception);
-                int doNothing = 0;
-            }
-
-            @Override
-            protected void onPostExecute(AsyncResultWrapper<List<Course>> listAsyncResultWrapper) {
-                super.onPostExecute(listAsyncResultWrapper);
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        };
-        task.execute();
+        mLoadingCoursesTask = initCoursesLoadingTask(LoadingCoursesTask.CourseType.featured);
+        mLoadingCoursesTask.execute();
     }
 }

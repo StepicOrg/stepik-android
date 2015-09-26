@@ -30,9 +30,6 @@ public class Shell implements IShell {
     @Inject
     SharedPreferenceHelper mSharedPreferenceHelper;
 
-    @Inject
-    DbOperationsCourses mDbOperationCourses;
-
     @Override
     public IScreenManager getScreenProvider() {
         return mScreenProvider;
@@ -54,8 +51,8 @@ public class Shell implements IShell {
     }
 
     @Override
-    public DbOperationsCourses getDbOperationsCourses() {
-        return mDbOperationCourses;
+    public DbOperationsCourses getDbOperationsCourses(DbOperationsCourses.Table type) {
+        return new DbOperationsCourses(mContext, type); //how much objects here?
     }
 
 }
