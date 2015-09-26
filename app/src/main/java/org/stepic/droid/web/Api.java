@@ -15,6 +15,7 @@ import org.joda.time.DateTime;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.Meta;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.util.SharedPreferenceHelper;
 
@@ -97,19 +98,25 @@ public class Api implements IApi {
     }
 
     @Override
-    public List<Course> getEnrolledCourses() {
+    public CoursesStepicResponse getEnrolledCourses(int page) {
         Bundle params = new Bundle();
         params.putString("enrolled", "true");
-        return getCourses(params);
+        return getCourses(params, page);
     }
 
     @Override
-    public List<Course> getFeaturedCourses() {
+    public CoursesStepicResponse getFeaturedCourses(int page) {
         Bundle params = new Bundle();
         params.putString("is_featured", "true");
-        List<Course> courses = getCourses(params);
+        CoursesStepicResponse stepicResponse = getCourses(params, page);
+        List<Course> courses = stepicResponse.getCourses();
         if (courses == null) return null;
+        filterActiveAndSoonCourses(courses);
+        return stepicResponse;
+    }
 
+    private void filterActiveAndSoonCourses(List<Course> courses) {
+        //todo: optimize this
         List<Course> filteredCourses = new ArrayList<>();
         DateTime now = DateTime.now();
         try {
@@ -121,7 +128,8 @@ public class Api implements IApi {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return filteredCourses;
+        courses.clear();
+        courses.addAll(filteredCourses);
     }
 
     @Override
@@ -152,10 +160,12 @@ public class Api implements IApi {
     }
 
 
-    private List<Course> getCourses(Bundle params) {
+    private CoursesStepicResponse getCourses(Bundle params, int page) {
         updateToken();
 
         String url = mConfig.getBaseUrl() + "/api/courses/";
+
+        params.putInt("page", page);
 
         String json = null;
         try {
@@ -168,13 +178,19 @@ public class Api implements IApi {
         JsonElement jElement = new JsonParser().parse(json);//bottle neck
         JsonObject jObject = jElement.getAsJsonObject();
         JsonArray jsonArray = jObject.getAsJsonArray("courses");
+        JsonObject metaObject = jObject.getAsJsonObject("meta");
 
 
         Gson gson = new Gson();
         Type listType = new TypeToken<List<Course>>() {
         }.getType();
 
-        return (List<Course>) gson.fromJson(jsonArray.toString(), listType);
+        List<Course> courseList = (List<Course>) gson.fromJson(jsonArray.toString(), listType);
+        Meta meta = gson.fromJson(metaObject, Meta.class);
+
+        CoursesStepicResponse stepicResponse = new CoursesStepicResponse(courseList, meta);
+
+        return stepicResponse;
     }
 
 

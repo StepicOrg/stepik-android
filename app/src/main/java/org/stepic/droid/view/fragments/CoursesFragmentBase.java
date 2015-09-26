@@ -14,10 +14,9 @@ import org.stepic.droid.base.StepicBaseFragment;
 import org.stepic.droid.concurrency.AsyncResultWrapper;
 import org.stepic.droid.concurrency.LoadingCoursesTask;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.store.operations.DbOperationsCourses;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
+import org.stepic.droid.web.CoursesStepicResponse;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +64,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     }
 
     public final LoadingCoursesTask initCoursesLoadingTask(final LoadingCoursesTask.CourseType type) {
-        LoadingCoursesTask task = new LoadingCoursesTask(type) {
+        LoadingCoursesTask task = new LoadingCoursesTask(type, 1) {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -73,9 +72,9 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
             }
 
             @Override
-            protected void onSuccess(List<Course> courses) {
-                super.onSuccess(courses);
-                showCachedCourses(courses);
+            protected void onSuccess(CoursesStepicResponse coursesStepicResponse) {
+                super.onSuccess(coursesStepicResponse);
+                showCachedCourses(coursesStepicResponse.getCourses());
             }
 
             @Override
@@ -85,8 +84,8 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
             }
 
             @Override
-            protected void onPostExecute(AsyncResultWrapper<List<Course>> listAsyncResultWrapper) {
-                super.onPostExecute(listAsyncResultWrapper);
+            protected void onPostExecute(AsyncResultWrapper<CoursesStepicResponse> coursesStepicResponseAsyncResultWrapper) {
+                super.onPostExecute(coursesStepicResponseAsyncResultWrapper);
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         };
