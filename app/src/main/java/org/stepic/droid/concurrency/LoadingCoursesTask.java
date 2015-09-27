@@ -33,10 +33,11 @@ public class LoadingCoursesTask extends StepicTask<Void, Void, CoursesStepicResp
     }
 
     @Override
-    protected CoursesStepicResponse doInBackgroundBody(Void... params) throws Exception {
+    protected CoursesStepicResponse doInBackgroundBody(Void... params) {
         IApi api = mShell.getApi();
         List<Course> courseList = null;
         CoursesStepicResponse stepicResponse = null;
+        CoursesStepicResponse resultStepicResponse = null;
         try {
             switch (mCourseType) {
                 case enrolled:
@@ -58,14 +59,20 @@ public class LoadingCoursesTask extends StepicTask<Void, Void, CoursesStepicResp
                     dbOperationCourses.open();
                 } catch (SQLException e) {
                     e.printStackTrace();
+                    //todo: if db is not exist app will crash.
                 }
                 try {
-                    for (Course courseItem : cachedCourses) {
-                        if (!courseList.contains(courseItem)) {
-                            dbOperationCourses.deleteCourse(courseItem);//remove outdated courses from cache
-                            courseList.remove(courseItem);
-                        }
+
+                    if (mPage == 1) {
+                        dbOperationCourses.clearCache();
                     }
+
+//                    for (Course courseItem : cachedCourses) {
+//                        if (!courseList.contains(courseItem)) {
+//                            dbOperationCourses.deleteCourse(courseItem);//remove outdated courses from cache
+//                            courseList.remove(courseItem);
+//                        }
+//                    }
 
                     for (Course newCourse : courseList) {
                         if (!dbOperationCourses.isCourseInDB(newCourse)) {
@@ -79,9 +86,10 @@ public class LoadingCoursesTask extends StepicTask<Void, Void, CoursesStepicResp
             }
 
             courseList = getCachedCourses(); //get from cache;
-            CoursesStepicResponse resultStepicResponse = new CoursesStepicResponse(courseList, stepicResponse.getMeta());
-            return resultStepicResponse;
+            resultStepicResponse = new CoursesStepicResponse(courseList, stepicResponse.getMeta());
+
         }
+        return resultStepicResponse;
 
     }
 

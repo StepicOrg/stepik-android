@@ -1,5 +1,6 @@
 package org.stepic.droid.view.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,7 +31,9 @@ public class FindCoursesFragment extends CoursesFragmentBase {
     }
 
     @Override
-    public void onRefresh() {
+    public void downloadData() {
+        if (mLoadingCoursesTask != null && mLoadingCoursesTask.getStatus() != AsyncTask.Status.FINISHED)
+            return;
 
         mLoadingCoursesTask = initCoursesLoadingTask(LoadingCoursesTask.CourseType.featured);
         mLoadingCoursesTask.execute();

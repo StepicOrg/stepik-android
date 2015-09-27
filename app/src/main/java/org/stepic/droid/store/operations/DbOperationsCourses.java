@@ -75,6 +75,13 @@ public final class DbOperationsCourses extends DbOperationsBase {
         return courses;
     }
 
+    public void clearCache() {
+        List<Course> courses = getAllCourses();
+        for (Course courseItem : courses) {
+            deleteCourse(courseItem);
+        }
+    }
+
     private Course parseCourse(Cursor cursor) {
         Course course = new Course();
         //ignore id of table

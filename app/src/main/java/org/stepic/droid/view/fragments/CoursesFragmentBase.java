@@ -4,9 +4,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
 
 import org.stepic.droid.R;
@@ -41,10 +43,15 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     protected LoadingCoursesTask mLoadingCoursesTask;
     protected List<Course> mCourses;
     protected MyCoursesAdapter mCoursesAdapter;
+    protected int mCurrentPage;
+    protected boolean mHasNextPage;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        mCurrentPage = 1;
+//        mHasNextPage = true;
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(
@@ -55,16 +62,32 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
         if (mCourses == null) mCourses = new ArrayList<>();
         mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses);
         mListOfCourses.setAdapter(mCoursesAdapter);
+        mListOfCourses.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                int CheckPls = 0;
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (mHasNextPage && firstVisibleItem + visibleItemCount >= totalItemCount) {
+                    downloadData();
+                }
+            }
+        });
+
+
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
-                onRefresh();
+                downloadData();
             }
         });
     }
 
     public final LoadingCoursesTask initCoursesLoadingTask(final LoadingCoursesTask.CourseType type) {
-        LoadingCoursesTask task = new LoadingCoursesTask(type, 1) {
+        LoadingCoursesTask task = new LoadingCoursesTask(type, mCurrentPage) {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -75,6 +98,14 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
             protected void onSuccess(CoursesStepicResponse coursesStepicResponse) {
                 super.onSuccess(coursesStepicResponse);
                 showCachedCourses(coursesStepicResponse.getCourses());
+
+                mHasNextPage = coursesStepicResponse.getMeta().isHas_next();
+                if (mHasNextPage) {
+                    mCurrentPage++;
+                    if (mCurrentPage > 2) {
+                        int lol = 10;
+                    }
+                }
             }
 
             @Override
@@ -100,7 +131,13 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     }
 
     @Override
-    public abstract void onRefresh();
+    public final void onRefresh() {
+        mCurrentPage = 1;
+        mHasNextPage = true;
+        downloadData();
+    }
+
+    public abstract void downloadData();
 
     @Override
     public void onPause() {
