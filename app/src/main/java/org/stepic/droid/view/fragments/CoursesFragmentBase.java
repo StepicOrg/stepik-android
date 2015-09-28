@@ -13,7 +13,7 @@ import android.widget.ListView;
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragment;
 import org.stepic.droid.concurrency.AsyncResultWrapper;
-import org.stepic.droid.concurrency.DatabaseCoursesTask;
+import org.stepic.droid.concurrency.DbCoursesTask;
 import org.stepic.droid.concurrency.LoadingCoursesTask;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DbOperationsCourses;
@@ -47,7 +47,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     protected int mCurrentPage;
     protected boolean mHasNextPage;
     protected DbOperationsCourses.Table mTypeOfCourse;
-    protected DatabaseCoursesTask mDatabaseCoursesTask;
+    protected DbCoursesTask mDbCoursesTask;
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -153,7 +153,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     }
 
     public void getDataFromCache() {
-        mDatabaseCoursesTask = new DatabaseCoursesTask(mTypeOfCourse) {
+        mDbCoursesTask = new DbCoursesTask(mTypeOfCourse) {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -172,7 +172,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         };
-        mDatabaseCoursesTask.execute();
+        mDbCoursesTask.execute();
     }
 
     @Override
@@ -183,8 +183,8 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
-        if (mDatabaseCoursesTask != null && mDatabaseCoursesTask.getStatus() != AsyncTask.Status.FINISHED) {
-            mDatabaseCoursesTask.cancel(true);
+        if (mDbCoursesTask != null && mDbCoursesTask.getStatus() != AsyncTask.Status.FINISHED) {
+            mDbCoursesTask.cancel(true);
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
