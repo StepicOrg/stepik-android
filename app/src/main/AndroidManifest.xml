@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
 
     <!-- Required by Google -->
@@ -62,6 +63,12 @@
         <activity
             android:name="org.stepic.droid.view.activities.MainFeedActivity"
             android:label="@string/my_courses_title"
+            android:screenOrientation="portrait"
+            />
+
+        <activity
+            android:name="org.stepic.droid.view.activities.UnrolledCourseDetailActivity"
+            android:label="@string/course_info_title"
             android:screenOrientation="portrait"
             />
 

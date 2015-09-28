@@ -1,6 +1,7 @@
 package org.stepic.droid.view.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -16,6 +17,8 @@ import butterknife.ButterKnife;
 
 
 public class RegisterActivity extends StepicBaseFragmentActivity {
+    private static final String TAG = "register_activity";
+
 
     @Bind(org.stepic.droid.R.id.createAccount_button_layout)
     RelativeLayout mCreateAccountButton;
@@ -40,6 +43,8 @@ public class RegisterActivity extends StepicBaseFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "onCreate");
+
         setContentView(org.stepic.droid.R.layout.activity_register);
         ButterKnife.bind(this);
         overridePendingTransition(org.stepic.droid.R.anim.slide_in_from_bottom, org.stepic.droid.R.anim.no_transition);

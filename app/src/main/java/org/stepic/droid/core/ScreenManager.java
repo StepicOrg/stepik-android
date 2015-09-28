@@ -3,11 +3,15 @@ package org.stepic.droid.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
+import org.jetbrains.annotations.NotNull;
+import org.stepic.droid.model.Course;
 import org.stepic.droid.view.activities.LaunchActivity;
 import org.stepic.droid.view.activities.LoginActivity;
 import org.stepic.droid.view.activities.MainFeedActivity;
 import org.stepic.droid.view.activities.RegisterActivity;
+import org.stepic.droid.view.activities.UnrolledCourseDetailActivity;
 
 import javax.inject.Singleton;
 
@@ -16,7 +20,7 @@ import javax.inject.Inject;
 @Singleton
 public class ScreenManager implements IScreenManager {
     @Inject
-    public ScreenManager () {
+    public ScreenManager() {
 
     }
 
@@ -59,6 +63,15 @@ public class ScreenManager implements IScreenManager {
 //        loginIntent.setAction(AppConstants.USER_LOG_IN);
 //        sourceActivity.sendBroadcast(loginIntent);
 
+    }
+
+    @Override
+    public void showCourse(Context sourceActivity, @NotNull Course course) {
+        Intent intent = new Intent(sourceActivity, UnrolledCourseDetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("course", course);
+        intent.putExtras(bundle);
+        sourceActivity.startActivity(intent);
     }
 
 

@@ -27,5 +27,6 @@
     <string name="settings_title">My Settings</string>
     <string name="logout_title">Logout</string>
     <string name="begin_date">Begin</string>
+    <string name="course_info_title">Course info</string>
 
 </resources>

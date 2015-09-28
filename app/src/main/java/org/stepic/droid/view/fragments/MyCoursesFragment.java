@@ -27,9 +27,8 @@ import butterknife.ButterKnife;
 
 public class MyCoursesFragment extends CoursesFragmentBase {
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
+    public void onStart() {
+        super.onStart();
         mTypeOfCourse = DbOperationsCourses.Table.enrolled;
     }
 }

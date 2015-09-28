@@ -4,10 +4,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import org.stepic.droid.R;
@@ -27,6 +29,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public abstract class CoursesFragmentBase extends StepicBaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+    private static final String TAG = "base_fragment";
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,47 +55,6 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        mCurrentPage = 1;
-//        mHasNextPage = true;
-
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(
-                R.color.stepic_brand_primary,
-                R.color.stepic_orange_carrot,
-                R.color.stepic_blue_ribbon);
-
-        if (mCourses == null) mCourses = new ArrayList<>();
-        mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses);
-        mListOfCourses.setAdapter(mCoursesAdapter);
-        mListOfCourses.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                int CheckPls = 0;
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (mHasNextPage && firstVisibleItem + visibleItemCount >= totalItemCount) {
-                    downloadData();
-                }
-            }
-        });
-
-
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                getDataFromCache();
-            }
-        });
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                downloadData();
-            }
-        });
     }
 
     public final LoadingCoursesTask initCoursesLoadingTask(final DbOperationsCourses.Table type) {
@@ -125,6 +88,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
             @Override
             protected void onPostExecute(AsyncResultWrapper<CoursesStepicResponse> coursesStepicResponseAsyncResultWrapper) {
                 super.onPostExecute(coursesStepicResponseAsyncResultWrapper);
+                Log.i(TAG, "onPostExecute");
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         };
@@ -150,6 +114,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
 
         mLoadingCoursesTask = initCoursesLoadingTask(mTypeOfCourse);
         mLoadingCoursesTask.execute();
+        Log.i(TAG, "mLoadingCoursesTask starts to execute");
     }
 
     public void getDataFromCache() {
@@ -176,8 +141,65 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+        mCurrentPage = 1;
+//        mHasNextPage = true;
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.stepic_brand_primary,
+                R.color.stepic_orange_carrot,
+                R.color.stepic_blue_ribbon);
+
+        if (mCourses == null) mCourses = new ArrayList<>();
+        mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses);
+        mListOfCourses.setAdapter(mCoursesAdapter);
+        mListOfCourses.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (mHasNextPage && firstVisibleItem + visibleItemCount >= totalItemCount) {
+                    downloadData();
+                }
+            }
+        });
+        mListOfCourses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Course courseItem = (Course) mListOfCourses.getItemAtPosition(position);
+                mShell.getScreenProvider().showCourse(CoursesFragmentBase.this.getContext(), courseItem);
+            }
+        });
+
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                getDataFromCache();
+            }
+        });
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                downloadData();
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
+
         if (mLoadingCoursesTask != null && mLoadingCoursesTask.getStatus() != AsyncTask.Status.FINISHED) {
             mLoadingCoursesTask.cancel(true);
             mSwipeRefreshLayout.setRefreshing(false);
@@ -188,14 +210,14 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
-        mListOfCourses.setAdapter(null);
+        if (mListOfCourses != null)
+            mListOfCourses.setAdapter(null);
     }
 
 
     @Override
     public void onStop() {
         super.onStop();
-        ButterKnife.unbind(this);
         if (mLoadingCoursesTask != null)
             mLoadingCoursesTask.unbind();
     }

@@ -25,9 +25,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class FindCoursesFragment extends CoursesFragmentBase {
+
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onStart() {
+        super.onStart();
 
         mTypeOfCourse = DbOperationsCourses.Table.featured;
     }
