@@ -405,7 +405,7 @@ public class Course implements Serializable, Parcelable {
         dest.writeString(this.formatForView);
     }
 
-    protected Course(Parcel in) {
+    public Course(Parcel in) {
         this();
         this.id = in.readLong();
         this.summary = in.readString();

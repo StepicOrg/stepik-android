@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.activities.LaunchActivity;
 import org.stepic.droid.view.activities.LoginActivity;
 import org.stepic.droid.view.activities.MainFeedActivity;
@@ -69,7 +70,7 @@ public class ScreenManager implements IScreenManager {
     public void showCourse(Context sourceActivity, @NotNull Course course) {
         Intent intent = new Intent(sourceActivity, UnrolledCourseDetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("course", course);
+        bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
         intent.putExtras(bundle);
         sourceActivity.startActivity(intent);
     }
