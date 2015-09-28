@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,10 @@ import android.widget.ListView;
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragment;
 import org.stepic.droid.concurrency.AsyncResultWrapper;
+import org.stepic.droid.concurrency.DatabaseCoursesTask;
 import org.stepic.droid.concurrency.LoadingCoursesTask;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.store.operations.DbOperationsCourses;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
 import org.stepic.droid.web.CoursesStepicResponse;
 
@@ -45,8 +46,9 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     protected MyCoursesAdapter mCoursesAdapter;
     protected int mCurrentPage;
     protected boolean mHasNextPage;
+    protected DbOperationsCourses.Table mTypeOfCourse;
+    protected DatabaseCoursesTask mDatabaseCoursesTask;
 
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -81,13 +83,19 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
+                getDataFromCache();
+            }
+        });
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
                 downloadData();
             }
         });
     }
 
-    public final LoadingCoursesTask initCoursesLoadingTask(final LoadingCoursesTask.CourseType type) {
-        LoadingCoursesTask task = new LoadingCoursesTask(type, mCurrentPage) {
+    public final LoadingCoursesTask initCoursesLoadingTask(final DbOperationsCourses.Table type) {
+        return new LoadingCoursesTask(type, mCurrentPage) {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -120,7 +128,6 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         };
-        return task;
     }
 
 
@@ -137,7 +144,36 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
         downloadData();
     }
 
-    public abstract void downloadData();
+    public void downloadData() {
+        if (mLoadingCoursesTask != null && mLoadingCoursesTask.getStatus() != AsyncTask.Status.FINISHED)
+            return;
+
+        mLoadingCoursesTask = initCoursesLoadingTask(mTypeOfCourse);
+        mLoadingCoursesTask.execute();
+    }
+
+    public void getDataFromCache() {
+        mDatabaseCoursesTask = new DatabaseCoursesTask(mTypeOfCourse) {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                mSwipeRefreshLayout.setRefreshing(true);
+            }
+
+            @Override
+            protected void onSuccess(List<Course> courses) {
+                super.onSuccess(courses);
+                showCachedCourses(courses);
+            }
+
+            @Override
+            protected void onPostExecute(AsyncResultWrapper<List<Course>> listAsyncResultWrapper) {
+                super.onPostExecute(listAsyncResultWrapper);
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        };
+        mDatabaseCoursesTask.execute();
+    }
 
     @Override
     public void onPause() {
@@ -146,6 +182,12 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
             mLoadingCoursesTask.cancel(true);
             mSwipeRefreshLayout.setRefreshing(false);
         }
+
+        if (mDatabaseCoursesTask != null && mDatabaseCoursesTask.getStatus() != AsyncTask.Status.FINISHED) {
+            mDatabaseCoursesTask.cancel(true);
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+
         mListOfCourses.setAdapter(null);
     }
 

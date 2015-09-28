@@ -28,14 +28,7 @@ public class FindCoursesFragment extends CoursesFragmentBase {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-    }
 
-    @Override
-    public void downloadData() {
-        if (mLoadingCoursesTask != null && mLoadingCoursesTask.getStatus() != AsyncTask.Status.FINISHED)
-            return;
-
-        mLoadingCoursesTask = initCoursesLoadingTask(LoadingCoursesTask.CourseType.featured);
-        mLoadingCoursesTask.execute();
+        mTypeOfCourse = DbOperationsCourses.Table.featured;
     }
 }

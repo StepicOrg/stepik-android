@@ -109,8 +109,8 @@ public class Api implements IApi {
         Bundle params = new Bundle();
         params.putString("is_featured", "true");
         CoursesStepicResponse stepicResponse = getCourses(params, page);
+        if (stepicResponse == null || stepicResponse.getCourses() == null) return null;
         List<Course> courses = stepicResponse.getCourses();
-        if (courses == null) return null;
         filterActiveAndSoonCourses(courses);
         return stepicResponse;
     }
@@ -154,7 +154,7 @@ public class Api implements IApi {
         Type listType = new TypeToken<List<Profile>>() {
         }.getType();
 
-        List<Profile> profiles = (List<Profile>) gson.fromJson(jsonArray.toString(), listType);
+        List<Profile> profiles = gson.fromJson(jsonArray.toString(), listType);
         if (profiles == null || profiles.isEmpty()) return null;
         return profiles.get(0);
     }
@@ -185,12 +185,10 @@ public class Api implements IApi {
         Type listType = new TypeToken<List<Course>>() {
         }.getType();
 
-        List<Course> courseList = (List<Course>) gson.fromJson(jsonArray.toString(), listType);
+        List<Course> courseList = gson.fromJson(jsonArray.toString(), listType);
         Meta meta = gson.fromJson(metaObject, Meta.class);
 
-        CoursesStepicResponse stepicResponse = new CoursesStepicResponse(courseList, meta);
-
-        return stepicResponse;
+        return new CoursesStepicResponse(courseList, meta);
     }
 
 
@@ -220,6 +218,5 @@ public class Api implements IApi {
         }
 
     }
-
 
 }

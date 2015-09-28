@@ -17,14 +17,11 @@ public class LoadingCoursesTask extends StepicTask<Void, Void, CoursesStepicResp
     @Inject
     IShell mShell;
 
-    private CourseType mCourseType;
+    private DbOperationsCourses.Table mCourseType;
     private int mPage;
 
-    public enum CourseType {
-        enrolled, featured
-    }
 
-    public LoadingCoursesTask(CourseType courseType, int page) {
+    public LoadingCoursesTask(DbOperationsCourses.Table courseType, int page) {
         super(MainApplication.getAppContext());
         mPage = page;
         MainApplication.component(mContext).inject(this);
@@ -37,7 +34,7 @@ public class LoadingCoursesTask extends StepicTask<Void, Void, CoursesStepicResp
         IApi api = mShell.getApi();
         List<Course> courseList = null;
         CoursesStepicResponse stepicResponse = null;
-        CoursesStepicResponse resultStepicResponse = null;
+        CoursesStepicResponse resultStepicResponse;
         try {
             switch (mCourseType) {
                 case enrolled:
@@ -51,9 +48,9 @@ public class LoadingCoursesTask extends StepicTask<Void, Void, CoursesStepicResp
             courseList = stepicResponse.getCourses();
         } finally {
             if (courseList != null) {
-                List<Course> cachedCourses = getCachedCourses();
+//                List<Course> cachedCourses = getCachedCourses();
 
-                DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(getDbType(mCourseType));
+                DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(mCourseType);
 
                 try {
                     dbOperationCourses.open();
@@ -93,21 +90,9 @@ public class LoadingCoursesTask extends StepicTask<Void, Void, CoursesStepicResp
 
     }
 
-    private DbOperationsCourses.Table getDbType(LoadingCoursesTask.CourseType type) {
-        DbOperationsCourses.Table dbType = null;
-        switch (type) {
-            case enrolled:
-                dbType = DbOperationsCourses.Table.enrolled;
-                break;
-            case featured:
-                dbType = DbOperationsCourses.Table.featured;
-        }
-        return dbType;
-    }
-
     private List<Course> getCachedCourses() {
         //todo: change to filter method with void getCachecCourses(List<Course> listForFilter)
-        DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(getDbType(mCourseType));
+        DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(mCourseType);
 
         try {
             dbOperationCourses.open();
