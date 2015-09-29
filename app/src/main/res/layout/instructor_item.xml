@@ -1,0 +1,38 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="vertical">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/course_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sample_course_icon" />
+
+
+    <org.stepic.droid.view.custom.STextView
+
+        android:id="@+id/course_summary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="John Doe"
+        android:textColor="@color/stepic_regular_text"
+        android:textSize="@dimen/text_header" />
+
+    <org.stepic.droid.view.custom.STextView
+        android:id="@+id/course_short_bio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="sshort_bioshort_bioshort_bioshort_biohort_bio short_bioshort_bioshort_bio short_bio short_bio short_bioshort_bioshort_bioshort_bio"
+        android:textColor="@color/stepic_weak_text"
+        android:textSize="@dimen/text_height" />
+
+
+</LinearLayout>
