@@ -52,6 +52,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     protected boolean mHasNextPage;
     protected DbOperationsCourses.Table mTypeOfCourse;
     protected DbCoursesTask mDbCoursesTask;
+    private volatile boolean isPaused;
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -87,6 +88,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
 
             @Override
             protected void onPostExecute(AsyncResultWrapper<CoursesStepicResponse> coursesStepicResponseAsyncResultWrapper) {
+                if (isPaused) return;
                 super.onPostExecute(coursesStepicResponseAsyncResultWrapper);
                 Log.i(TAG, "onPostExecute");
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -133,6 +135,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
 
             @Override
             protected void onPostExecute(AsyncResultWrapper<List<Course>> listAsyncResultWrapper) {
+                if (isPaused) return;
                 super.onPostExecute(listAsyncResultWrapper);
                 mSwipeRefreshLayout.setRefreshing(false);
             }
@@ -143,7 +146,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     @Override
     public void onStart() {
         super.onStart();
-
+        isPaused = false;
         mCurrentPage = 1;
 //        mHasNextPage = true;
 
@@ -212,6 +215,10 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
 
         if (mListOfCourses != null)
             mListOfCourses.setAdapter(null);
+
+        isPaused = true;
+
+        //// FIXME: 28.09.15 : Task may init after onPause() and start to execute.
     }
 
 

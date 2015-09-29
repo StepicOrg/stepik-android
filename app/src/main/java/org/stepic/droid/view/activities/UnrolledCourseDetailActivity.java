@@ -1,11 +1,16 @@
 package org.stepic.droid.view.activities;
 
-import android.nfc.Tag;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.ImageView;
+import android.widget.MediaController;
+import android.widget.VideoView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragmentActivity;
@@ -19,22 +24,24 @@ public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
 
     private static final String TAG = "unrolled_course";
 
-    @Bind (org.stepic.droid.R.id.actionbar_close_btn)
+    @Bind(R.id.actionbar_close_btn)
     View mCloseButton;
+
+    @Bind(R.id.intro_video)
+    ImageView mIntroView;
 
     private Course mCourse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate");
 
         setContentView(R.layout.activity_unrolled_course_detail);
         ButterKnife.bind(this);
         overridePendingTransition(org.stepic.droid.R.anim.slide_in_from_bottom, org.stepic.droid.R.anim.no_transition);
         hideSoftKeypad();
 
-        mCourse = (Course)(getIntent().getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
+        mCourse = (Course) (getIntent().getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
 
         mCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,12 +49,22 @@ public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
                 finish();
             }
         });
+
+
+//        String urltovideo = "https://player.vimeo.com/external/111345189.hd.mp4?s=ea9aab1c15434d7bfd3515afaf70a9de&profile_id=113&oauth2_token_id=3605157";
+//        MediaController mediaController = new MediaController(this);
+//        mediaController.setAnchorView(mIntroView);
+//        mIntroView.setMediaController(mediaController);
+//        mIntroView.setVideoURI(Uri.parse(urltovideo));
+//        mIntroView.start();
+
     }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ButterKnife.unbind(this);
         mCourse = null;
     }
 
