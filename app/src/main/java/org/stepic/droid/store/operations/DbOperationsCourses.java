@@ -48,6 +48,7 @@ public final class DbOperationsCourses extends DbOperationsBase {
         values.put(DBStructureCourses.Column.LANGUAGE, course.getLanguage());
         values.put(DBStructureCourses.Column.BEGIN_DATE_SOURCE, course.getBegin_date_source());
         values.put(DBStructureCourses.Column.LAST_DEADLINE, course.getLast_deadline());
+        values.put(DBStructureCourses.Column.DESCRIPTION, course.getDescription());
 
         database.insert(mType.getStoreName(), null, values);
     }
@@ -94,6 +95,7 @@ public final class DbOperationsCourses extends DbOperationsBase {
         course.setLanguage(cursor.getString(columnNumber++));
         course.setBegin_date_source(cursor.getString(columnNumber++));
         course.setLast_deadline(cursor.getString(columnNumber++));
+        course.setDescription(cursor.getString(columnNumber++));
 
         return course;
     }

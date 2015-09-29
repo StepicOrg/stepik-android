@@ -2,6 +2,7 @@ package org.stepic.droid.view.activities;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -10,12 +11,14 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragmentActivity;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.util.AppConstants;
+import org.w3c.dom.Text;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,6 +32,12 @@ public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
 
     @Bind(R.id.intro_video)
     ImageView mIntroView;
+
+    @Bind(R.id.description)
+    TextView mDescriptionView;
+
+    @Bind(R.id.course_name)
+    TextView mCourseNameView;
 
     private Course mCourse;
 
@@ -58,6 +67,8 @@ public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
 //        mIntroView.setVideoURI(Uri.parse(urltovideo));
 //        mIntroView.start();
 
+        mCourseNameView.setText(mCourse.getTitle());
+        mDescriptionView.setText(Html.fromHtml(mCourse.getDescription()));
     }
 
 

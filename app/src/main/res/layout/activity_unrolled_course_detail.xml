@@ -23,18 +23,47 @@
         android:background="@android:color/white">
 
         <LinearLayout
-            android:id="@+id/detail_course_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/intro_video"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:src="@drawable/vimeo_placeholder"
-                />
+                android:src="@drawable/vimeo_placeholder" />
+
+            <LinearLayout
+                android:id="@+id/detail_course_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+
+                <org.stepic.droid.view.custom.STextView
+                    android:id="@+id/course_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|start"
+                    android:layout_marginBottom="2dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="Course Name"
+                    android:textColor="@color/stepic_regular_text"
+                    android:textSize="@dimen/text_header_detailed" />
+
+                <org.stepic.droid.view.custom.ExpandableTextView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
+
+
     </ScrollView>
 
 

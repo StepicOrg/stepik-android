@@ -6,6 +6,7 @@
     <dimen name="card_corner_radius_guideline">2dp</dimen>
     <dimen name="divider_height_guideline">8dp</dimen>
     <dimen name="text_header">13sp</dimen>
+    <dimen name="text_header_detailed">16sp</dimen>
     <dimen name="text_height">11sp</dimen>
     <dimen name="height_of_course_card">100dp</dimen>
 </resources>
