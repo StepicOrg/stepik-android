@@ -15,7 +15,7 @@
 
 
         <org.stepic.droid.view.custom.SImageView
-            android:id="@+id/course_icon"
+            android:id="@+id/instructor_icon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="3"
@@ -51,7 +51,7 @@
                 android:textSize="@dimen/text_height" />
 
             <org.stepic.droid.view.custom.STextView
-                android:id="@+id/course_summary"
+                android:id="@+id/first_last_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/course_date_interval"

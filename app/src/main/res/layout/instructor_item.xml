@@ -6,7 +6,7 @@
 
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/course_icon"
+        android:id="@+id/instructor_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/sample_course_icon" />
@@ -14,7 +14,7 @@
 
     <org.stepic.droid.view.custom.STextView
 
-        android:id="@+id/course_summary"
+        android:id="@+id/first_last_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

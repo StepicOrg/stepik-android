@@ -6,6 +6,7 @@ public class User {
     private int profile;
     private boolean is_private;
     private String details;
+    private String short_bio;
     private String first_name;
     private String last_name;
     private String avatar;
@@ -110,5 +111,13 @@ public class User {
 
     public void setLeaders(int[] leaders) {
         this.leaders = leaders;
+    }
+
+    public String getShort_bio() {
+        return short_bio;
+    }
+
+    public void setShort_bio(String short_bio) {
+        this.short_bio = short_bio;
     }
 }
