@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.stepic.droid.R;
@@ -42,6 +43,9 @@ public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
 
     @Bind(R.id.instructors_carousel)
     RecyclerView mInstructorsCarousel;
+
+    @Bind(R.id.load_instructors_spinner)
+    ProgressBar mInstructorsProgressBar;
 
     private Course mCourse;
     private LoadingUsersTask mLoadingUsersTask;
@@ -89,7 +93,7 @@ public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
 
         RecyclerView.LayoutManager layoutManager =
                 new WrapContentLinearLayoutManager(this,
-                        LinearLayoutManager.HORIZONTAL,false);//// TODO: 30.09.15 determine right-to-left-mode
+                        LinearLayoutManager.HORIZONTAL, false);//// TODO: 30.09.15 determine right-to-left-mode
         mInstructorsCarousel.setLayoutManager(layoutManager);
 
         mLoadingUsersTask = new LoadingUsersTask(this, new int[]{38675, 1322160, 12}) {
@@ -101,8 +105,7 @@ public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
                 mInstructorAdapter.notifyDataSetChanged();
             }
         };
-        //todo: set progress bar for carousel
-
+        mLoadingUsersTask.setProgressBar(mInstructorsProgressBar);
         mLoadingUsersTask.execute();
     }
 
