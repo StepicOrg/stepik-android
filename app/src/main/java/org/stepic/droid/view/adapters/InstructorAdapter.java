@@ -17,6 +17,7 @@ import org.stepic.droid.model.User;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindDimen;
 import butterknife.BindDrawable;
 import butterknife.ButterKnife;
 
@@ -33,7 +34,7 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
 
     @Override
     public InstructorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.instructor_item, parent, false);
+        View v = LayoutInflater.from(mContext).inflate(R.layout.instructor_item, null);
         return new InstructorViewHolder(v);
     }
 
@@ -44,23 +45,11 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
         String firstLastNameString = instructor.getFirst_name() + " " + instructor.getLast_name();
         holder.firstLastName.setText(firstLastNameString);
         holder.courseShortBio.setText(instructor.getShort_bio());
-        if (position%2 == 0) {
-            Picasso.with(mContext)
-                    .load(instructor.getAvatar())
-                    .placeholder(holder.placeholder)
-                    .error(holder.placeholder)
-                    .into(holder.instructorIcon);
-        }
-        else
-        {
-            Picasso.with(mContext)
-                    .load("INVALID")
-                    .placeholder(holder.placeholder)
-                    .error(holder.placeholder)
-                    .into(holder.instructorIcon);
-        }
-
-
+        Picasso.with(mContext)
+                .load(instructor.getAvatar())
+                .placeholder(holder.placeholder)
+                .error(holder.placeholder)
+                .into(holder.instructorIcon);
     }
 
     @Override
@@ -79,9 +68,8 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
         @Bind(R.id.course_short_bio)
         TextView courseShortBio;
 
-        @BindDrawable(R.drawable.stepic_logo_black_and_white40x40)
+        @BindDrawable(R.drawable.stepic_logo_black_and_white80x80)
         Drawable placeholder;
-
 
         public InstructorViewHolder(View itemView) {
             super(itemView);

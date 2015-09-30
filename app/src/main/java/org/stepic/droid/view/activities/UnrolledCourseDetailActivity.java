@@ -16,7 +16,7 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.model.User;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.adapters.InstructorAdapter;
-import org.stepic.droid.view.layout_managers.MyLinearLayoutManager;
+import org.stepic.droid.view.layout_managers.WrapContentLinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,11 +86,13 @@ public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
         mUserList = new ArrayList<>();
         mInstructorAdapter = new InstructorAdapter(mUserList, this);
         mInstructorsCarousel.setAdapter(mInstructorAdapter);
-        RecyclerView.LayoutManager layoutManager = new MyLinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);//// TODO: 30.09.15 determine right-to-left-mode
-//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+
+        RecyclerView.LayoutManager layoutManager =
+                new WrapContentLinearLayoutManager(this,
+                        LinearLayoutManager.HORIZONTAL,false);//// TODO: 30.09.15 determine right-to-left-mode
         mInstructorsCarousel.setLayoutManager(layoutManager);
 
-        mLoadingUsersTask = new LoadingUsersTask(this, new int[]{38675, 12, 1322160}) {
+        mLoadingUsersTask = new LoadingUsersTask(this, new int[]{38675, 1322160, 12}) {
             @Override
             protected void onSuccess(List<User> users) {
                 super.onSuccess(users);

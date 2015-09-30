@@ -6,9 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class MyLinearLayoutManager extends LinearLayoutManager {
+public class WrapContentLinearLayoutManager extends LinearLayoutManager {
 
-    public MyLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
+    public WrapContentLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
     }
 

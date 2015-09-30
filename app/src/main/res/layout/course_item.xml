@@ -15,7 +15,7 @@
 
 
         <org.stepic.droid.view.custom.SImageView
-            android:id="@+id/instructor_icon"
+            android:id="@+id/course_icon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="3"
