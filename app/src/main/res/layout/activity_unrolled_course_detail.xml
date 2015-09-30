@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -20,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/custom_action_bar"
+        android:layout_marginTop="2dp"
         android:background="@android:color/white">
 
         <LinearLayout
@@ -58,13 +60,31 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/instructors_carousel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:stretchColumns="0">
+
+
+                    </android.support.v7.widget.RecyclerView>
+
+                    <ProgressBar
+                        android:id="@+id/load_instructors_spinner"
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:indeterminateDrawable="@drawable/login_progress"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
             </LinearLayout>
-
-
         </LinearLayout>
-
-
     </ScrollView>
-
-
 </RelativeLayout>

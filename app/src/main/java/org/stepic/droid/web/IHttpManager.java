@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import com.google.gson.JsonObject;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.io.IOException;
 
 public interface IHttpManager {
@@ -12,5 +14,5 @@ public interface IHttpManager {
     //todo: change this architecture to universal post
     String postJson(String url, JsonObject jsonObject) throws IOException;
 
-    String get(String url, Bundle params) throws IOException;
+    String get(String url, @Nullable Bundle params) throws IOException;
 }

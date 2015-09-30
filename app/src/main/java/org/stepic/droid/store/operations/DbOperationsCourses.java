@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import org.stepic.droid.model.Course;
+import org.stepic.droid.store.DbParseHelper;
 import org.stepic.droid.store.structure.DBStructureCourses;
 
 import java.util.ArrayList;
@@ -49,6 +50,10 @@ public final class DbOperationsCourses extends DbOperationsBase {
         values.put(DBStructureCourses.Column.BEGIN_DATE_SOURCE, course.getBegin_date_source());
         values.put(DBStructureCourses.Column.LAST_DEADLINE, course.getLast_deadline());
         values.put(DBStructureCourses.Column.DESCRIPTION, course.getDescription());
+
+        String instructorsParsed = DbParseHelper.parseLongArrayToString(course.getInstructors());
+
+        values.put(DBStructureCourses.Column.INSTRUCTORS, instructorsParsed);
 
         database.insert(mType.getStoreName(), null, values);
     }
@@ -96,6 +101,7 @@ public final class DbOperationsCourses extends DbOperationsBase {
         course.setBegin_date_source(cursor.getString(columnNumber++));
         course.setLast_deadline(cursor.getString(columnNumber++));
         course.setDescription(cursor.getString(columnNumber++));
+        course.setInstructors(DbParseHelper.parseStringToLongArray(cursor.getString(columnNumber++)));
 
         return course;
     }

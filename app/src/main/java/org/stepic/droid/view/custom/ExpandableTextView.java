@@ -13,9 +13,7 @@ import org.stepic.droid.base.MainApplication;
 
 public class ExpandableTextView extends TextView {
     private static final int DEFAULT_TRIM_LENGTH = 200;
-    private final String ELLIPSIS = "<font color=" + MainApplication.getAppContext().getResources().getColor(R.color.default_color_of_link) + ">"
-            + MainApplication.getAppContext().getString(R.string.tap_to_see_more) + "</font>";
-
+    private final String ELLIPSIS;
     private CharSequence originalText;
     private CharSequence trimmedText;
     private BufferType bufferType;
@@ -28,6 +26,14 @@ public class ExpandableTextView extends TextView {
 
     public ExpandableTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        if (isInEditMode()) {
+            ELLIPSIS = "<font color=" + "#CCCCCC" + ">"
+                    + "more..." + "</font>";
+        } else {
+            ELLIPSIS = "<font color=" + MainApplication.getAppContext().getResources().getColor(R.color.default_color_of_link) + ">"
+                    + MainApplication.getAppContext().getString(R.string.tap_to_see_more) + "</font>";
+        }
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ExpandableTextView);
         this.trimLength = typedArray.getInt(R.styleable.ExpandableTextView_trimLength, DEFAULT_TRIM_LENGTH);

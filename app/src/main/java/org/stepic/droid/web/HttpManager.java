@@ -12,6 +12,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.util.SharedPreferenceHelper;
@@ -88,13 +89,13 @@ public class HttpManager implements IHttpManager {
     }
 
     @Override
-    public String get(String baseUrl, Bundle params) throws IOException {
+    public String get(String baseUrl, @Nullable Bundle params) throws IOException {
         AuthenticationStepicResponse resp = getAuthInfo();
         String access_token = resp.getAccess_token();
         String type = resp.getToken_type();
 
         String url;
-        if (!params.keySet().isEmpty())
+        if (params != null && !params.keySet().isEmpty())
              url = baseUrl + "?" + makeQueryFromBundle(params);
         else
             url = baseUrl;

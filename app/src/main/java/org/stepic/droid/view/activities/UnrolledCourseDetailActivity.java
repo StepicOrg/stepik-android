@@ -1,24 +1,26 @@
 package org.stepic.droid.view.activities;
 
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragmentActivity;
+import org.stepic.droid.concurrency.LoadingUsersTask;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.User;
 import org.stepic.droid.util.AppConstants;
-import org.w3c.dom.Text;
+import org.stepic.droid.view.adapters.InstructorAdapter;
+import org.stepic.droid.view.layout_managers.WrapContentLinearLayoutManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -39,7 +41,16 @@ public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
     @Bind(R.id.course_name)
     TextView mCourseNameView;
 
+    @Bind(R.id.instructors_carousel)
+    RecyclerView mInstructorsCarousel;
+
+    @Bind(R.id.load_instructors_spinner)
+    ProgressBar mInstructorsProgressBar;
+
     private Course mCourse;
+    private LoadingUsersTask mLoadingUsersTask;
+    private List<User> mUserList;
+    private InstructorAdapter mInstructorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +62,12 @@ public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
         hideSoftKeypad();
 
         mCourse = (Course) (getIntent().getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         mCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,8 +86,46 @@ public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
 
         mCourseNameView.setText(mCourse.getTitle());
         mDescriptionView.setText(Html.fromHtml(mCourse.getDescription()));
+
+        mUserList = new ArrayList<>();
+        mInstructorAdapter = new InstructorAdapter(mUserList, this);
+        mInstructorsCarousel.setAdapter(mInstructorAdapter);
+
+        RecyclerView.LayoutManager layoutManager =
+                new WrapContentLinearLayoutManager(this,
+                        LinearLayoutManager.HORIZONTAL, false);//// TODO: 30.09.15 determine right-to-left-mode
+        mInstructorsCarousel.setLayoutManager(layoutManager);
+
+        mLoadingUsersTask = new LoadingUsersTask(this, mCourse.getInstructors()) {
+            @Override
+            protected void onSuccess(List<User> users) {
+                super.onSuccess(users);
+                mUserList.clear();
+                mUserList.addAll(users);
+                mInstructorAdapter.notifyDataSetChanged();
+            }
+        };
+        mLoadingUsersTask.setProgressBar(mInstructorsProgressBar);
+        mLoadingUsersTask.execute();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mLoadingUsersTask != null && mLoadingUsersTask.getStatus() != AsyncTask.Status.FINISHED) {
+            mLoadingUsersTask.cancel(true);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (mLoadingUsersTask != null)
+            mLoadingUsersTask.unbind();
+
+        mInstructorAdapter = null;
+    }
 
     @Override
     protected void onDestroy() {
