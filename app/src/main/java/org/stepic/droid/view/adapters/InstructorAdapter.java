@@ -44,10 +44,21 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
         String firstLastNameString = instructor.getFirst_name() + " " + instructor.getLast_name();
         holder.firstLastName.setText(firstLastNameString);
         holder.courseShortBio.setText(instructor.getShort_bio());
-        Picasso.with(mContext)
-                .load(instructor.getAvatar())
-                .placeholder(holder.placeholder)
-                .into(holder.instructorIcon);
+        if (position%2 == 0) {
+            Picasso.with(mContext)
+                    .load(instructor.getAvatar())
+                    .placeholder(holder.placeholder)
+                    .error(holder.placeholder)
+                    .into(holder.instructorIcon);
+        }
+        else
+        {
+            Picasso.with(mContext)
+                    .load("INVALID")
+                    .placeholder(holder.placeholder)
+                    .error(holder.placeholder)
+                    .into(holder.instructorIcon);
+        }
 
 
     }
@@ -68,7 +79,7 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
         @Bind(R.id.course_short_bio)
         TextView courseShortBio;
 
-        @BindDrawable(R.drawable.stepic_logo_black_and_white80x80)
+        @BindDrawable(R.drawable.stepic_logo_black_and_white40x40)
         Drawable placeholder;
 
 

@@ -1,14 +1,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:baselineAligned="false"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="8dp"
+    >
 
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/instructor_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:src="@drawable/sample_course_icon" />
 
 
@@ -29,7 +32,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:maxLines="2"
+        android:gravity="center"
+        android:minLines="3"
+        android:maxLines="3"
         android:text="sshort_bioshort_bioshort_bioshort_biohort_bio short_bioshort_bioshort_bio short_bio short_bio short_bioshort_bioshort_bioshort_bio"
         android:textColor="@color/stepic_weak_text"
         android:textSize="@dimen/text_height" />

@@ -17,6 +17,7 @@ import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Meta;
 import org.stepic.droid.model.Profile;
+import org.stepic.droid.model.User;
 import org.stepic.droid.util.SharedPreferenceHelper;
 
 import java.io.IOException;
@@ -157,6 +158,41 @@ public class Api implements IApi {
         List<Profile> profiles = gson.fromJson(jsonArray.toString(), listType);
         if (profiles == null || profiles.isEmpty()) return null;
         return profiles.get(0);
+    }
+
+    @Override
+    public List<User> getUsers(int[] userIds) {
+        updateToken();
+        String baseUrl = mConfig.getBaseUrl() + "/api/users/";
+
+        List<User> users = new ArrayList<>();
+
+        for (int i = 0; i < userIds.length; i++) {
+            String json = null;
+            String url = baseUrl + userIds[i];
+            try {
+                json = mHttpManager.get(url, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (json == null) continue;
+
+            JsonElement jElement = new JsonParser().parse(json);//bottle neck
+            JsonObject jObject = jElement.getAsJsonObject();
+            JsonArray jsonArray = jObject.getAsJsonArray("users");
+            Type listType = new TypeToken<List<User>>() {
+            }.getType();
+
+            Gson gson = new Gson();
+            List<User> oneUserAtList = gson.fromJson(jsonArray.toString(), listType);
+
+            for (User userItem : oneUserAtList) {
+                users.add(userItem);
+            }
+        }
+
+        return users;
     }
 
 

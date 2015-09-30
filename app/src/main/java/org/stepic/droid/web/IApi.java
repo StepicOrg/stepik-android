@@ -2,6 +2,7 @@ package org.stepic.droid.web;
 
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Profile;
+import org.stepic.droid.model.User;
 
 import java.util.List;
 
@@ -15,5 +16,7 @@ public interface IApi {
     CoursesStepicResponse getFeaturedCourses (int page);
 
     Profile getUserProfile();
+
+    List<User> getUsers (int [] userIds);
 
 }
