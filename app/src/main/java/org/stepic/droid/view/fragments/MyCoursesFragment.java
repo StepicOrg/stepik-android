@@ -1,8 +1,10 @@
 package org.stepic.droid.view.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,13 +27,8 @@ import butterknife.ButterKnife;
 
 public class MyCoursesFragment extends CoursesFragmentBase {
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onRefresh() {
-        mLoadingCoursesTask = initCoursesLoadingTask(LoadingCoursesTask.CourseType.enrolled);
-        mLoadingCoursesTask.execute();
+    public void onStart() {
+        super.onStart();
+        mTypeOfCourse = DbOperationsCourses.Table.enrolled;
     }
 }

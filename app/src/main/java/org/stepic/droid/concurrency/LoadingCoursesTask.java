@@ -4,6 +4,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DbOperationsCourses;
+import org.stepic.droid.web.CoursesStepicResponse;
 import org.stepic.droid.web.IApi;
 
 import java.sql.SQLException;
@@ -11,56 +12,64 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class LoadingCoursesTask extends StepicTask<Void, Void, List<Course>> {
+public class LoadingCoursesTask extends StepicTask<Void, Void, CoursesStepicResponse> {
 
     @Inject
     IShell mShell;
 
-    private CourseType mCourseType;
+    private DbOperationsCourses.Table mCourseType;
+    private int mPage;
 
-    public enum CourseType {
-        enrolled, featured
-    }
 
-    public LoadingCoursesTask(CourseType courseType) {
+    public LoadingCoursesTask(DbOperationsCourses.Table courseType, int page) {
         super(MainApplication.getAppContext());
+        mPage = page;
         MainApplication.component(mContext).inject(this);
 
         mCourseType = courseType;
     }
 
     @Override
-    protected List<Course> doInBackgroundBody(Void... params) throws Exception {
+    protected CoursesStepicResponse doInBackgroundBody(Void... params) {
         IApi api = mShell.getApi();
         List<Course> courseList = null;
+        CoursesStepicResponse stepicResponse = null;
+        CoursesStepicResponse resultStepicResponse;
         try {
             switch (mCourseType) {
                 case enrolled:
-                    courseList = api.getEnrolledCourses();
+                    stepicResponse = api.getEnrolledCourses(mPage);
                     break;
                 case featured:
-                    courseList = api.getFeaturedCourses();
+                    stepicResponse = api.getFeaturedCourses(mPage);
                     break;
             }
+
+            courseList = stepicResponse.getCourses();
         } finally {
-
             if (courseList != null) {
-                List<Course> cachedCourses = getCachedCourses();
+//                List<Course> cachedCourses = getCachedCourses();
 
-                DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(getDbType(mCourseType));
+                DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(mCourseType);
 
                 try {
                     dbOperationCourses.open();
                 } catch (SQLException e) {
                     e.printStackTrace();
+                    //todo: if db is not exist app will crash.
                 }
                 try {
-                    for (Course courseItem : cachedCourses) {
-                        if (!courseList.contains(courseItem)) {
-                            dbOperationCourses.deleteCourse(courseItem);//remove outdated courses from cache
-                            courseList.remove(courseItem);
-                        }
+
+                    if (mPage == 1) {
+                        dbOperationCourses.clearCache();
                     }
+
+//                    for (Course courseItem : cachedCourses) {
+//                        if (!courseList.contains(courseItem)) {
+//                            dbOperationCourses.deleteCourse(courseItem);//remove outdated courses from cache
+//                            courseList.remove(courseItem);
+//                        }
+//                    }
 
                     for (Course newCourse : courseList) {
                         if (!dbOperationCourses.isCourseInDB(newCourse)) {
@@ -74,25 +83,16 @@ public class LoadingCoursesTask extends StepicTask<Void, Void, List<Course>> {
             }
 
             courseList = getCachedCourses(); //get from cache;
-            return courseList;
-        }
+            resultStepicResponse = new CoursesStepicResponse(courseList, stepicResponse.getMeta());
 
-    }
-
-    private DbOperationsCourses.Table getDbType(LoadingCoursesTask.CourseType type) {
-        DbOperationsCourses.Table dbType = null;
-        switch (type) {
-            case enrolled:
-                dbType = DbOperationsCourses.Table.enrolled;
-                break;
-            case featured:
-                dbType = DbOperationsCourses.Table.featured;
         }
-        return dbType;
+        return resultStepicResponse;
+
     }
 
     private List<Course> getCachedCourses() {
-        DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(getDbType(mCourseType));
+        //todo: change to filter method with void getCachecCourses(List<Course> listForFilter)
+        DbOperationsCourses dbOperationCourses = mShell.getDbOperationsCourses(mCourseType);
 
         try {
             dbOperationCourses.open();
@@ -103,10 +103,5 @@ public class LoadingCoursesTask extends StepicTask<Void, Void, List<Course>> {
         dbOperationCourses.close();
 
         return cachedCourses;
-    }
-
-    @Override
-    protected void onPostExecute(AsyncResultWrapper<List<Course>> listAsyncResultWrapper) {
-        super.onPostExecute(listAsyncResultWrapper);
     }
 }

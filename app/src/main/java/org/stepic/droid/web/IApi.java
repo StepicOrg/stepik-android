@@ -10,9 +10,9 @@ public interface IApi {
 
     IStepicResponse signUp (String firstName, String secondName, String email, String password);
 
-    List<Course> getEnrolledCourses ();
+    CoursesStepicResponse getEnrolledCourses (int page);
 
-    List<Course> getFeaturedCourses ();
+    CoursesStepicResponse getFeaturedCourses (int page);
 
     Profile getUserProfile();
 

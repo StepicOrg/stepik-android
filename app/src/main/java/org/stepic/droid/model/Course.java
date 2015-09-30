@@ -1,6 +1,8 @@
 package org.stepic.droid.model;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import org.joda.time.DateTime;
@@ -15,7 +17,7 @@ import java.io.Serializable;
 
 import javax.inject.Inject;
 
-public class Course implements Serializable {
+public class Course implements Serializable, Parcelable {
 
     @Inject
     IConfig mConfig;
@@ -113,12 +115,9 @@ public class Course implements Serializable {
         if (mEndDateTime != null)
             return mEndDateTime;
 
-        if (last_deadline == null)
-        {
+        if (last_deadline == null) {
             mEndDateTime = null; //infinity
-        }
-        else
-        {
+        } else {
             mEndDateTime = new DateTime(last_deadline);
         }
         return mEndDateTime;
@@ -130,12 +129,9 @@ public class Course implements Serializable {
         if (mBeginDateTime != null)
             return mBeginDateTime;
 
-        if (begin_date_source == null)
-        {
+        if (begin_date_source == null) {
             mBeginDateTime = null; //infinity
-        }
-        else
-        {
+        } else {
             mBeginDateTime = new DateTime(begin_date_source);
         }
         return mBeginDateTime;
@@ -368,4 +364,88 @@ public class Course implements Serializable {
     public String getLast_deadline() {
         return last_deadline;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.id);
+        dest.writeString(this.summary);
+        dest.writeString(this.workload);
+        dest.writeString(this.cover);
+        dest.writeString(this.intro);
+        dest.writeString(this.course_format);
+        dest.writeString(this.target_audience);
+        dest.writeString(this.certificate_footer);
+        dest.writeString(this.certificate_cover_org);
+        dest.writeLongArray(this.instructors);
+        dest.writeString(this.certificate);
+        dest.writeString(this.requirements);
+        dest.writeString(this.description);
+        dest.writeInt(this.total_units);
+        dest.writeInt(this.enrollment);
+        dest.writeLong(this.owner);
+        dest.writeByte(is_contest ? (byte) 1 : (byte) 0);
+        dest.writeByte(is_featured ? (byte) 1 : (byte) 0);
+        dest.writeByte(is_spoc ? (byte) 1 : (byte) 0);
+        dest.writeByte(is_active ? (byte) 1 : (byte) 0);
+        dest.writeString(this.certificate_link);
+        dest.writeString(this.title);
+        dest.writeString(this.begin_date_source);
+        dest.writeString(this.last_deadline);
+        dest.writeString(this.language);
+        dest.writeByte(is_public ? (byte) 1 : (byte) 0);
+        dest.writeString(this.slug);
+        dest.writeSerializable(this.mBeginDateTime);
+        dest.writeSerializable(this.mEndDateTime);
+        dest.writeString(this.formatForView);
+    }
+
+    public Course(Parcel in) {
+        this();
+        this.id = in.readLong();
+        this.summary = in.readString();
+        this.workload = in.readString();
+        this.cover = in.readString();
+        this.intro = in.readString();
+        this.course_format = in.readString();
+        this.target_audience = in.readString();
+        this.certificate_footer = in.readString();
+        this.certificate_cover_org = in.readString();
+        this.instructors = in.createLongArray();
+        this.certificate = in.readString();
+        this.requirements = in.readString();
+        this.description = in.readString();
+        this.total_units = in.readInt();
+        this.enrollment = in.readInt();
+        this.owner = in.readLong();
+        this.is_contest = in.readByte() != 0;
+        this.is_featured = in.readByte() != 0;
+        this.is_spoc = in.readByte() != 0;
+        this.is_active = in.readByte() != 0;
+        this.certificate_link = in.readString();
+        this.title = in.readString();
+        this.begin_date_source = in.readString();
+        this.last_deadline = in.readString();
+        this.language = in.readString();
+        this.is_public = in.readByte() != 0;
+        this.slug = in.readString();
+        this.mBeginDateTime = (DateTime) in.readSerializable();
+        this.mEndDateTime = (DateTime) in.readSerializable();
+        this.formatForView = in.readString();
+    }
+
+    public static final Creator<Course> CREATOR = new Creator<Course>() {
+        public Course createFromParcel(Parcel source) {
+            return new Course(source);
+        }
+
+        public Course[] newArray(int size) {
+            return new Course[size];
+        }
+    };
 }

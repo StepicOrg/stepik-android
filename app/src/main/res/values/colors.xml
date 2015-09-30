@@ -124,4 +124,7 @@
     <color name="stepic_orange_carrot">#FF9933</color>
     <color name="stepic_blue_ribbon">#0066FF</color>
     <color name="silver">#CCCCCC</color>
+
+
+    <color name="default_color_of_link">#0077CC</color>
 </resources>
