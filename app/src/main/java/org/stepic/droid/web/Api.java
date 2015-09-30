@@ -161,15 +161,15 @@ public class Api implements IApi {
     }
 
     @Override
-    public List<User> getUsers(int[] userIds) {
+    public List<User> getUsers(long[] userIds) {
         updateToken();
         String baseUrl = mConfig.getBaseUrl() + "/api/users/";
 
         List<User> users = new ArrayList<>();
 
-        for (int i = 0; i < userIds.length; i++) {
+        for (long userId : userIds) {
             String json = null;
-            String url = baseUrl + userIds[i];
+            String url = baseUrl + userId;
             try {
                 json = mHttpManager.get(url, null);
             } catch (IOException e) {

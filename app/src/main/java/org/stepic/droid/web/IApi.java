@@ -17,6 +17,6 @@ public interface IApi {
 
     Profile getUserProfile();
 
-    List<User> getUsers (int [] userIds);
+    List<User> getUsers (long [] userIds);
 
 }

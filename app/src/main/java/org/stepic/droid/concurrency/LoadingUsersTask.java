@@ -20,9 +20,9 @@ public class LoadingUsersTask extends StepicTask<Void, Void, List<User>> {
     @Inject
     IShell mShell;
 
-    private int[] mIdsOfUsers;
+    private long[] mIdsOfUsers;
 
-    public LoadingUsersTask(Context context, int[] idsOfUsers) {
+    public LoadingUsersTask(Context context, long[] idsOfUsers) {
         super(context);
         MainApplication.component(mContext).inject(this);
 

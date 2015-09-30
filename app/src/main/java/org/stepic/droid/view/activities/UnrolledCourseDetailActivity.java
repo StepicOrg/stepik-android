@@ -96,7 +96,7 @@ public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
                         LinearLayoutManager.HORIZONTAL, false);//// TODO: 30.09.15 determine right-to-left-mode
         mInstructorsCarousel.setLayoutManager(layoutManager);
 
-        mLoadingUsersTask = new LoadingUsersTask(this, new int[]{38675, 1322160, 12}) {
+        mLoadingUsersTask = new LoadingUsersTask(this, mCourse.getInstructors()) {
             @Override
             protected void onSuccess(List<User> users) {
                 super.onSuccess(users);
