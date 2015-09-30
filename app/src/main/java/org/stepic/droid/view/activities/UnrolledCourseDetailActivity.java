@@ -2,6 +2,7 @@ package org.stepic.droid.view.activities;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -39,6 +40,9 @@ public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
     @Bind(R.id.course_name)
     TextView mCourseNameView;
 
+    @Bind(R.id.instructors_carousel)
+    RecyclerView mInstructorsCarousel;
+
     private Course mCourse;
 
     @Override
@@ -69,6 +73,8 @@ public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
 
         mCourseNameView.setText(mCourse.getTitle());
         mDescriptionView.setText(Html.fromHtml(mCourse.getDescription()));
+
+
     }
 
 

@@ -58,13 +58,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/instructors_carousel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                </android.support.v7.widget.RecyclerView>
+
             </LinearLayout>
-
-
         </LinearLayout>
-
-
     </ScrollView>
-
-
 </RelativeLayout>
