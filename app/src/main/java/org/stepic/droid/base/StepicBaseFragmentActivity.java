@@ -23,6 +23,7 @@ public abstract class StepicBaseFragmentActivity extends AppCompatActivity {
         MainApplication.component(this).inject(this);
     }
 
+
     protected void hideSoftKeypad() {
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);

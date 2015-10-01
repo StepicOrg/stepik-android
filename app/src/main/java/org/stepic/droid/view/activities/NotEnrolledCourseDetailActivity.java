@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -30,7 +29,7 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
 
     private static final String TAG = "unrolled_course";
 
-    @Bind(R.id.actionbar_close_btn)
+    @Bind(R.id.actionbar_close_btn_layout)
     View mCloseButton;
 
     @Bind(R.id.intro_video)
@@ -63,7 +62,7 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_unrolled_course_detail);
+        setContentView(R.layout.activity_not_enrolled_course_detail);
         ButterKnife.bind(this);
         overridePendingTransition(org.stepic.droid.R.anim.slide_in_from_bottom, org.stepic.droid.R.anim.no_transition);
         hideSoftKeypad();
