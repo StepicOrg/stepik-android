@@ -67,7 +67,13 @@
             />
 
         <activity
-            android:name="org.stepic.droid.view.activities.UnrolledCourseDetailActivity"
+            android:name=".view.activities.NotEnrolledCourseDetailActivity"
+            android:label="@string/course_info_title"
+            android:screenOrientation="portrait"
+            />
+
+        <activity
+            android:name=".view.activities.EnrolledCourseActivity"
             android:label="@string/course_info_title"
             android:screenOrientation="portrait"
             />

@@ -16,6 +16,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.util.HtmlHelper;
 
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
             viewHolderItem = (ViewHolderItem) convertView.getTag();
         }
         viewHolderItem.courseName.setText(course.getTitle());
-        viewHolderItem.courseSummary.setText(Html.fromHtml(course.getSummary()));
+        viewHolderItem.courseSummary.setText(HtmlHelper.fromHtml(course.getSummary()));
         Picasso.with(mContext).load(mConfig.getBaseUrl() + course.getCover()).
                 placeholder(viewHolderItem.placeholder).into(viewHolderItem.courseIcon);
         viewHolderItem.courseDateInterval.setText(course.getDateOfCourse());

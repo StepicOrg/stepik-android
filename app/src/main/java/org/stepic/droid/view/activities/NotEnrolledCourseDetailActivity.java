@@ -16,6 +16,7 @@ import org.stepic.droid.concurrency.LoadingUsersTask;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.User;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.view.adapters.InstructorAdapter;
 import org.stepic.droid.view.layout_managers.WrapContentLinearLayoutManager;
 
@@ -25,7 +26,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
+public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
 
     private static final String TAG = "unrolled_course";
 
@@ -46,6 +47,12 @@ public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
 
     @Bind(R.id.load_instructors_spinner)
     ProgressBar mInstructorsProgressBar;
+
+    @Bind(R.id.summary)
+    TextView mSummaryView;
+
+    @Bind(R.id.requirements)
+    TextView mRequirementsView;
 
     private Course mCourse;
     private LoadingUsersTask mLoadingUsersTask;
@@ -85,7 +92,9 @@ public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
 //        mIntroView.start();
 
         mCourseNameView.setText(mCourse.getTitle());
-        mDescriptionView.setText(Html.fromHtml(mCourse.getDescription()));
+        mDescriptionView.setText(HtmlHelper.fromHtml(mCourse.getDescription()));
+        mSummaryView.setText(HtmlHelper.fromHtml(mCourse.getSummary()));
+        mRequirementsView.setText(HtmlHelper.fromHtml(mCourse.getRequirements()));
 
         mUserList = new ArrayList<>();
         mInstructorAdapter = new InstructorAdapter(mUserList, this);

@@ -52,8 +52,10 @@ public final class DbOperationsCourses extends DbOperationsBase {
         values.put(DBStructureCourses.Column.DESCRIPTION, course.getDescription());
 
         String instructorsParsed = DbParseHelper.parseLongArrayToString(course.getInstructors());
-
         values.put(DBStructureCourses.Column.INSTRUCTORS, instructorsParsed);
+
+        values.put(DBStructureCourses.Column.REQUIREMENTS, course.getRequirements());
+        values.put(DBStructureCourses.Column.ENROLLMENT, course.getEnrollment());
 
         database.insert(mType.getStoreName(), null, values);
     }
@@ -102,6 +104,9 @@ public final class DbOperationsCourses extends DbOperationsBase {
         course.setLast_deadline(cursor.getString(columnNumber++));
         course.setDescription(cursor.getString(columnNumber++));
         course.setInstructors(DbParseHelper.parseStringToLongArray(cursor.getString(columnNumber++)));
+        course.setRequirements(cursor.getString(columnNumber++));
+        course.setEnrollment(cursor.getInt(columnNumber++));
+
 
         return course;
     }
