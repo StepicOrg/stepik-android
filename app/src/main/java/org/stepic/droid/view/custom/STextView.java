@@ -26,13 +26,13 @@ public class STextView extends TextView {
             return;
 //        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.custom_view, 0, 0);
 
-        try {
-            // check for the font attribute and setup font
-            String fontFileName = "OpenSans-Regular.ttf";
-
-            Typeface font = FontFactory.getInstance().getFont(context, fontFileName);
-            setTypeface(font);
-        } catch (Exception ignored) {
-        }
+//        try {
+//            // check for the font attribute and setup font
+//            String fontFileName = "OpenSans-Regular.ttf";
+//
+//            Typeface font = FontFactory.getInstance().getFont(context, fontFileName);
+//            setTypeface(font);
+//        } catch (Exception ignored) {
+//        }
     }
 }

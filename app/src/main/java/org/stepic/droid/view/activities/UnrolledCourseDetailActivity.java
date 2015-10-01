@@ -47,6 +47,12 @@ public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
     @Bind(R.id.load_instructors_spinner)
     ProgressBar mInstructorsProgressBar;
 
+    @Bind(R.id.summary)
+    TextView mSummaryView;
+
+    @Bind(R.id.requirements)
+    TextView mRequirementsView;
+
     private Course mCourse;
     private LoadingUsersTask mLoadingUsersTask;
     private List<User> mUserList;
@@ -86,6 +92,8 @@ public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
 
         mCourseNameView.setText(mCourse.getTitle());
         mDescriptionView.setText(Html.fromHtml(mCourse.getDescription()));
+        mSummaryView.setText(Html.fromHtml(mCourse.getSummary()));
+        mRequirementsView.setText(Html.fromHtml(mCourse.getRequirements()));
 
         mUserList = new ArrayList<>();
         mInstructorAdapter = new InstructorAdapter(mUserList, this);

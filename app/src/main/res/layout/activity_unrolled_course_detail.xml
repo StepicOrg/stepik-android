@@ -7,14 +7,9 @@
     android:orientation="vertical"
     android:paddingBottom="8dp">
 
-    <LinearLayout
+    <include
         android:id="@+id/custom_action_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true">
-
-        <include layout="@layout/panel_custom_action_bar" />
-    </LinearLayout>
+        layout="@layout/panel_custom_action_bar" />
 
     <ScrollView
         android:id="@+id/scrollview"
@@ -43,22 +38,47 @@
                 android:padding="8dp">
 
 
-                <org.stepic.droid.view.custom.STextView
+                <org.stepic.droid.view.custom.SDetailedCourseHeadersTV
                     android:id="@+id/course_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|start"
-                    android:layout_marginBottom="2dp"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:text="Course Name"
-                    android:textColor="@color/stepic_regular_text"
-                    android:textSize="@dimen/text_header_detailed" />
+                    android:text="Course Name" />
+
+
+                <org.stepic.droid.view.custom.SDetailedCourseHeadersTV
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/summary" />
+
+                <org.stepic.droid.view.custom.ExpandableTextView
+                    android:id="@+id/summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <org.stepic.droid.view.custom.SDetailedCourseHeadersTV
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/requirements" />
+
+                <org.stepic.droid.view.custom.ExpandableTextView
+                    android:id="@+id/requirements"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+
+                <org.stepic.droid.view.custom.SDetailedCourseHeadersTV
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/description" />
 
                 <org.stepic.droid.view.custom.ExpandableTextView
                     android:id="@+id/description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -69,10 +89,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:stretchColumns="0">
-
-
-                    </android.support.v7.widget.RecyclerView>
+                        android:stretchColumns="0" />
 
                     <ProgressBar
                         android:id="@+id/load_instructors_spinner"
