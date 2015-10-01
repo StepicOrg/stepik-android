@@ -47,7 +47,8 @@ public final class DBStructureCourses extends DBStructureBase {
                     Column.LAST_DEADLINE,
                     Column.DESCRIPTION,
                     Column.INSTRUCTORS,
-                    Column.REQUIREMENTS
+                    Column.REQUIREMENTS,
+                    Column.ENROLLMENT
             };
         }
         return mUsedColumns;

@@ -13,6 +13,8 @@ public interface IScreenManager {
 
     void showMainFeed(Context sourceActivity);
 
-    void showCourse (Context sourceActivity, @NotNull Course course);
+    void showCourseDescriptionForNotEnrolled(Context sourceActivity, @NotNull Course course);
+
+    void showCourseDescriptionForEnrolled (Context sourceActivity, @NotNull Course course);
 
 }

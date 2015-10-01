@@ -26,7 +26,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class UnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
+public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
 
     private static final String TAG = "unrolled_course";
 

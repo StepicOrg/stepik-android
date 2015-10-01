@@ -8,11 +8,12 @@ import android.os.Bundle;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.view.activities.EnrolledCourseActivity;
 import org.stepic.droid.view.activities.LaunchActivity;
 import org.stepic.droid.view.activities.LoginActivity;
 import org.stepic.droid.view.activities.MainFeedActivity;
+import org.stepic.droid.view.activities.NotEnrolledCourseDetailActivity;
 import org.stepic.droid.view.activities.RegisterActivity;
-import org.stepic.droid.view.activities.UnrolledCourseDetailActivity;
 
 import javax.inject.Singleton;
 
@@ -67,8 +68,17 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
-    public void showCourse(Context sourceActivity, @NotNull Course course) {
-        Intent intent = new Intent(sourceActivity, UnrolledCourseDetailActivity.class);
+    public void showCourseDescriptionForNotEnrolled(Context sourceActivity, @NotNull Course course) {
+        Intent intent = new Intent(sourceActivity, NotEnrolledCourseDetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
+        intent.putExtras(bundle);
+        sourceActivity.startActivity(intent);
+    }
+
+    @Override
+    public void showCourseDescriptionForEnrolled(Context sourceActivity, @NotNull Course course) {
+        Intent intent = new Intent(sourceActivity, EnrolledCourseActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
         intent.putExtras(bundle);

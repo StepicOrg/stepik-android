@@ -176,7 +176,11 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Course courseItem = (Course) mListOfCourses.getItemAtPosition(position);
-                mShell.getScreenProvider().showCourse(CoursesFragmentBase.this.getContext(), courseItem);
+                if (courseItem.getEnrollment() != 0) {
+                    mShell.getScreenProvider().showCourseDescriptionForEnrolled(CoursesFragmentBase.this.getContext(), courseItem);
+                } else {
+                    mShell.getScreenProvider().showCourseDescriptionForNotEnrolled(CoursesFragmentBase.this.getContext(), courseItem);
+                }
             }
         });
 
