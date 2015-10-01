@@ -139,7 +139,6 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
         mCourse = null;
     }
 
