@@ -28,4 +28,5 @@
     <string name="description">Описание</string>
     <string name="course_info_title">Информация о курсе</string>
     <string name="requirements">Требования</string>
+    <string name="join_course">Поступить</string>
 </resources>

@@ -32,5 +32,6 @@
     <string name="summary">About</string>
     <string name="description">Description</string>
     <string name="requirements">Requirements</string>
+    <string name="join_course">Join course</string>
 
 </resources>
