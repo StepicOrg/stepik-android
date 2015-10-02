@@ -56,6 +56,57 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        isPaused = false;
+        mCurrentPage = 1;
+//        mHasNextPage = true;
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.stepic_brand_primary,
+                R.color.stepic_orange_carrot,
+                R.color.stepic_blue_ribbon);
+
+        if (mCourses == null) mCourses = new ArrayList<>();
+        mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses);
+        mListOfCourses.setAdapter(mCoursesAdapter);
+        mListOfCourses.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (mHasNextPage && firstVisibleItem + visibleItemCount >= totalItemCount) {
+                    downloadData();
+                }
+            }
+        });
+        mListOfCourses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Course courseItem = (Course) mListOfCourses.getItemAtPosition(position);
+                if (courseItem.getEnrollment() != 0) {
+                    mShell.getScreenProvider().showCourseDescriptionForEnrolled(CoursesFragmentBase.this.getContext(), courseItem);
+                } else {
+                    mShell.getScreenProvider().showCourseDescriptionForNotEnrolled(CoursesFragmentBase.this.getContext(), courseItem);
+                }
+            }
+        });
+
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                getDataFromCache();
+            }
+        });
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                downloadData();
+            }
+        });
     }
 
     public final LoadingCoursesTask initCoursesLoadingTask(final DbOperationsCourses.Table type) {
@@ -146,56 +197,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     @Override
     public void onStart() {
         super.onStart();
-        isPaused = false;
-        mCurrentPage = 1;
-//        mHasNextPage = true;
 
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(
-                R.color.stepic_brand_primary,
-                R.color.stepic_orange_carrot,
-                R.color.stepic_blue_ribbon);
-
-        if (mCourses == null) mCourses = new ArrayList<>();
-        mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses);
-        mListOfCourses.setAdapter(mCoursesAdapter);
-        mListOfCourses.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (mHasNextPage && firstVisibleItem + visibleItemCount >= totalItemCount) {
-                    downloadData();
-                }
-            }
-        });
-        mListOfCourses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Course courseItem = (Course) mListOfCourses.getItemAtPosition(position);
-                if (courseItem.getEnrollment() != 0) {
-                    mShell.getScreenProvider().showCourseDescriptionForEnrolled(CoursesFragmentBase.this.getContext(), courseItem);
-                } else {
-                    mShell.getScreenProvider().showCourseDescriptionForNotEnrolled(CoursesFragmentBase.this.getContext(), courseItem);
-                }
-            }
-        });
-
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                getDataFromCache();
-            }
-        });
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                downloadData();
-            }
-        });
     }
 
     @Override
@@ -217,9 +219,6 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
-        if (mListOfCourses != null)
-            mListOfCourses.setAdapter(null);
-
         isPaused = true;
 
         //// FIXME: 28.09.15 : Task may init after onPause() and start to execute.
@@ -231,5 +230,14 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
         super.onStop();
         if (mLoadingCoursesTask != null)
             mLoadingCoursesTask.unbind();
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (mListOfCourses != null)
+            mListOfCourses.setAdapter(null);
+        if (mSwipeRefreshLayout != null)
+            mSwipeRefreshLayout.setRefreshing(false);
+        super.onDestroyView();
     }
 }

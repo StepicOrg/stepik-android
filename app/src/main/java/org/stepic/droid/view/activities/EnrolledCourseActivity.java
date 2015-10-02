@@ -48,8 +48,6 @@ public class EnrolledCourseActivity extends StepicBaseFragmentActivity {
         });
 
         mSectionsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
     }
 
     @Override
