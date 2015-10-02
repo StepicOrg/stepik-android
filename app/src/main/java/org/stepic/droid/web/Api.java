@@ -16,6 +16,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Enrollment;
+import org.stepic.droid.model.EnrollmentWrapper;
 import org.stepic.droid.model.Meta;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.User;
@@ -201,7 +202,7 @@ public class Api implements IApi {
         updateToken();
         String baseUrl = mConfig.getBaseUrl() + "/api/enrollments";
 
-        Enrollment enrollment = new Enrollment(course.getCourseId());
+        EnrollmentWrapper enrollment = new EnrollmentWrapper(course.getCourseId());
         Gson gson = new Gson();
         String jsonStr = gson.toJson(enrollment);
 

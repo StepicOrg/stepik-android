@@ -8,9 +8,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragmentActivity;
+import org.stepic.droid.concurrency.AsyncResultWrapper;
+import org.stepic.droid.concurrency.JoinCourseTask;
 import org.stepic.droid.concurrency.LoadingUsersTask;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.User;
@@ -23,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
@@ -53,8 +57,22 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
     @Bind(R.id.requirements)
     TextView mRequirementsView;
 
+    @Bind(R.id.join_course_layout)
+    View mJoinCourseView;
+
+    @Bind(R.id.join_course_spinner)
+    ProgressBar mJoinCourseSpinner;
+
+    @BindString(R.string.join_course_impossible)
+    String joinCourseImpossible;
+
+    @BindString(R.string.join_course_exception)
+    String joinCourseException;
+
+
     private Course mCourse;
     private LoadingUsersTask mLoadingUsersTask;
+    private JoinCourseTask mJoinCourseTask;
     private List<User> mUserList;
     private InstructorAdapter mInstructorAdapter;
 
@@ -94,6 +112,12 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
         mDescriptionView.setText(HtmlHelper.fromHtml(mCourse.getDescription()));
         mSummaryView.setText(HtmlHelper.fromHtml(mCourse.getSummary()));
         mRequirementsView.setText(HtmlHelper.fromHtml(mCourse.getRequirements()));
+        mJoinCourseView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                joinCourse();
+            }
+        });
 
         mUserList = new ArrayList<>();
         mInstructorAdapter = new InstructorAdapter(mUserList, this);
@@ -123,6 +147,10 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
         if (mLoadingUsersTask != null && mLoadingUsersTask.getStatus() != AsyncTask.Status.FINISHED) {
             mLoadingUsersTask.cancel(true);
         }
+
+        if (mJoinCourseTask != null && mJoinCourseTask.getStatus() != AsyncTask.Status.FINISHED) {
+            mJoinCourseTask.cancel(true);
+        }
     }
 
     @Override
@@ -145,5 +173,44 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
     public void finish() {
         super.finish();
         overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.slide_out_to_bottom);
+    }
+
+
+    private void joinCourse() {
+        mJoinCourseTask = new JoinCourseTask(this, mCourse) {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                mJoinCourseView.setEnabled(false);
+            }
+
+            @Override
+            protected void onSuccess(Boolean aBoolean) {
+                super.onSuccess(aBoolean);
+                if (aBoolean) {
+                    mShell.getScreenProvider().showCourseDescriptionForEnrolled(NotEnrolledCourseDetailActivity.this, mCourse);
+                    finish();
+                } else {
+                    Toast.makeText(NotEnrolledCourseDetailActivity.this, joinCourseImpossible,
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            protected void onException(Throwable exception) {
+                super.onException(exception);
+                Toast.makeText(NotEnrolledCourseDetailActivity.this, joinCourseException,
+                        Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            protected void onPostExecute(AsyncResultWrapper<Boolean> booleanAsyncResultWrapper) {
+                super.onPostExecute(booleanAsyncResultWrapper);
+                if (mJoinCourseView != null) mJoinCourseView.setEnabled(true);
+            }
+        };
+        mJoinCourseTask.setProgressBar(mJoinCourseSpinner);
+        mJoinCourseTask.execute();
     }
 }

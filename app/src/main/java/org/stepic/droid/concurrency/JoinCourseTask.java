@@ -17,7 +17,7 @@ public class JoinCourseTask extends StepicTask<Void, Void, Boolean> {
 
     private Course mCourse;
 
-    protected JoinCourseTask(Context context, @NotNull Course course) {
+    public JoinCourseTask(Context context, @NotNull Course course) {
         super(context);
         MainApplication.component(mContext).inject(this);
 

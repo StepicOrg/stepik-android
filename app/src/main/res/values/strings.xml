@@ -33,5 +33,7 @@
     <string name="description">Description</string>
     <string name="requirements">Requirements</string>
     <string name="join_course">Join course</string>
+    <string name="join_course_impossible">You can\'t join this course now.</string>
+    <string name="join_course_exception">Check your Internet Connection.</string>
 
 </resources>

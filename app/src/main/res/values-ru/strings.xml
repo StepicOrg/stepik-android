@@ -29,4 +29,6 @@
     <string name="course_info_title">Информация о курсе</string>
     <string name="requirements">Требования</string>
     <string name="join_course">Поступить</string>
+    <string name="join_course_exception">Проверьте интернет соединение.</string>
+    <string name="join_course_impossible">Сейчас нельзя присоединиться к курсу.</string>
 </resources>

@@ -1,13 +1,13 @@
 package org.stepic.droid.model;
 
 public class Enrollment {
-    private String course_id;
+    private long course_id;
     private boolean has_course;
     private long course; // it is course id!
 
     public Enrollment(long courseId) {
-        course = courseId;
-        course_id = null;
+        course = courseId; //it is real
+        course_id = courseId;
         has_course = false;
     }
 }
