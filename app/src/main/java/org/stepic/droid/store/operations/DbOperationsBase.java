@@ -34,6 +34,6 @@ public abstract class DbOperationsBase implements IDatabaseOperations {
         MainApplication.getAppContext().deleteDatabase(DBStructureBase.FILE_NAME);
     }
 
-
+    public abstract void clearCache();
 
 }

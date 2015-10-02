@@ -20,7 +20,7 @@ public class DbStructureSections extends DBStructureBase {
         public static final String SOFT_DEADLINE = "soft_deadline";
         public static final String HARD_DEADLINE = "hard_deadline";
         public static final String GRADING_POLICY = "grading_policy";
-        public static final String BEGIN_DATA_SOURCE = "begin_data_source";
+        public static final String BEGIN_DATE_SOURCE = "begin_data_source";
         public static final String END_DATE_SOURCE = "end_data_source";
         public static final String SOFT_DEADLINE_SOURCE = "soft_deadline_source";
         public static final String HARD_DEADLINE_SOURCE = "hard_deadline_source";

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import org.stepic.droid.model.Course;
-import org.stepic.droid.store.DbParseHelper;
+import org.stepic.droid.util.DbParseHelper;
 import org.stepic.droid.store.structure.DBStructureCourses;
 
 import java.util.ArrayList;
