@@ -15,6 +15,7 @@ import org.joda.time.DateTime;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.Enrollment;
 import org.stepic.droid.model.Meta;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.User;
@@ -73,7 +74,7 @@ public class Api implements IApi {
 
     @Override
     public IStepicResponse signUp(String firstName, String secondName, String email, String password) {
-
+// FIXME: 02.10.15 Registration doesn't work
         JsonObject innerObject = new JsonObject();
         innerObject.addProperty("first_name", firstName);
         innerObject.addProperty("last_name", secondName);
@@ -89,7 +90,7 @@ public class Api implements IApi {
 
         String json = null;
         try {
-            json = mHttpManager.postJson(url, jsonObject);
+            json = mHttpManager.postJson(url, jsonObject).body().string();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -195,6 +196,23 @@ public class Api implements IApi {
         return users;
     }
 
+    @Override
+    public Boolean tryJoinCourse(Course course) {
+        updateToken();
+        String baseUrl = mConfig.getBaseUrl() + "/api/enrollments";
+
+        Enrollment enrollment = new Enrollment(course.getCourseId());
+        Gson gson = new Gson();
+        String jsonStr = gson.toJson(enrollment);
+
+        try {
+            return mHttpManager.postJson(baseUrl, jsonStr).isSuccessful();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
     private CoursesStepicResponse getCourses(Bundle params, int page) {
         updateToken();
@@ -226,7 +244,6 @@ public class Api implements IApi {
 
         return new CoursesStepicResponse(courseList, meta);
     }
-
 
     private void updateToken() {
         AuthenticationStepicResponse response = mSharedPreferencesHelper.getAuthResponseFromStore();

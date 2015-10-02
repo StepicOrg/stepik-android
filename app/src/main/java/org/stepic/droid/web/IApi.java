@@ -7,16 +7,18 @@ import org.stepic.droid.model.User;
 import java.util.List;
 
 public interface IApi {
-    IStepicResponse authWithLoginPassword (String login, String password);
+    IStepicResponse authWithLoginPassword(String login, String password);
 
-    IStepicResponse signUp (String firstName, String secondName, String email, String password);
+    IStepicResponse signUp(String firstName, String secondName, String email, String password);
 
-    CoursesStepicResponse getEnrolledCourses (int page);
+    CoursesStepicResponse getEnrolledCourses(int page);
 
-    CoursesStepicResponse getFeaturedCourses (int page);
+    CoursesStepicResponse getFeaturedCourses(int page);
 
     Profile getUserProfile();
 
-    List<User> getUsers (long [] userIds);
+    List<User> getUsers(long[] userIds);
+
+    Boolean tryJoinCourse(Course course);
 
 }
