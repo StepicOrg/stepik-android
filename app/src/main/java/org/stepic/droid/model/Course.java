@@ -36,6 +36,7 @@ public class Course implements Serializable, Parcelable {
     private String certificate_footer;
     private String certificate_cover_org;
     private long[] instructors;
+    private long[] sections;
     private String certificate;
     private String requirements;
     private String description;
@@ -448,4 +449,12 @@ public class Course implements Serializable, Parcelable {
             return new Course[size];
         }
     };
+
+    public long[] getSections() {
+        return sections;
+    }
+
+    public void setSections(long[] sections) {
+        this.sections = sections;
+    }
 }
