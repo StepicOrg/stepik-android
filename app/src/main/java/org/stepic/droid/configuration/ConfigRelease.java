@@ -24,6 +24,7 @@ public class ConfigRelease implements IConfig {
     private static final String REFRESH_GRANT_TYPE = "REFRESH_GRANT_TYPE";
     private static final String DATE_PATTERN = "DATE_PATTERN";
     private static final String DATE_PATTERN_FOR_VIEW = "DATE_PATTERN_FOR_VIEW";
+    private static final String ARRAY_IDS_PARAM = "ARRAY_IDS_PARAM";
 
 
     @Inject
@@ -71,6 +72,11 @@ public class ConfigRelease implements IConfig {
     @Override
     public String getDatePatternForView() {
         return getString(DATE_PATTERN_FOR_VIEW);
+    }
+
+    @Override
+    public String getIDSParam() {
+        return getString(ARRAY_IDS_PARAM);
     }
 
     private String getString(String key) {

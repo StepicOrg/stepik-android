@@ -8,4 +8,5 @@ public interface IConfig {
     String getRefreshGrantType();
     String getDatePattern();
     String getDatePatternForView();
+    String getIDSParam();
 }

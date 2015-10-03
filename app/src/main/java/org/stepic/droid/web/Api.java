@@ -19,6 +19,7 @@ import org.stepic.droid.model.Enrollment;
 import org.stepic.droid.model.EnrollmentWrapper;
 import org.stepic.droid.model.Meta;
 import org.stepic.droid.model.Profile;
+import org.stepic.droid.model.Section;
 import org.stepic.droid.model.User;
 import org.stepic.droid.util.SharedPreferenceHelper;
 
@@ -212,6 +213,28 @@ public class Api implements IApi {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public SectionsStepicResponse getSections(long[] sectionsIds) {
+        updateToken();
+        String baseUrl = mConfig.getBaseUrl() + "/api/sections/";
+
+        Bundle params = new Bundle();
+
+        for (long sectionsId : sectionsIds) {
+            params.putLong(mConfig.getIDSParam(), sectionsId);
+        }
+
+        String json = null;
+        try {
+            json = mHttpManager.get(baseUrl, params);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Gson gson = new Gson();
+
+        return gson.fromJson(json, SectionsStepicResponse.class);
     }
 
 

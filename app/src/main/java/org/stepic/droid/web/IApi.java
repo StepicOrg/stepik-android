@@ -21,4 +21,6 @@ public interface IApi {
 
     Boolean tryJoinCourse(Course course);
 
+    SectionsStepicResponse getSections (long [] sectionsIds);
+
 }
