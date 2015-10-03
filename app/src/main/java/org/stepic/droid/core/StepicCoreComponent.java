@@ -3,6 +3,8 @@ package org.stepic.droid.core;
 import org.stepic.droid.base.StepicBaseFragment;
 import org.stepic.droid.base.StepicBaseFragmentActivity;
 import org.stepic.droid.concurrency.DbCoursesTask;
+import org.stepic.droid.concurrency.JoinCourseTask;
+import org.stepic.droid.concurrency.LoadingSectionTask;
 import org.stepic.droid.concurrency.LoadingUsersTask;
 import org.stepic.droid.concurrency.LoadingCoursesTask;
 import org.stepic.droid.concurrency.LoadingProfileInformation;
@@ -37,4 +39,6 @@ public interface StepicCoreComponent {
     void inject(LoadingProfileInformation stepicTask);
     void inject(DbCoursesTask stepicTask);
     void inject(LoadingUsersTask stepicTask);
+    void inject(JoinCourseTask stepicTask);
+    void inject(LoadingSectionTask stepicTask);
 }

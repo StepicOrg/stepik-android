@@ -5,19 +5,15 @@ import org.stepic.droid.model.Meta;
 
 import java.util.List;
 
-public class CoursesStepicResponse implements IStepicResponse {
+public class CoursesStepicResponse extends StepicResponseBase {
     private List<Course> courses;
-    private Meta meta;
 
-    public CoursesStepicResponse (List<Course> courses, Meta meta) {
+    public CoursesStepicResponse(List<Course> courses, Meta meta) {
+        super(meta);
         this.courses = courses;
-        this.meta = meta;
     }
 
     public List<Course> getCourses() {
         return courses;
-    }
-    public Meta getMeta() {
-        return meta;
     }
 }

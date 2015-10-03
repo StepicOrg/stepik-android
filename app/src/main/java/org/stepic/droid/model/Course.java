@@ -36,6 +36,7 @@ public class Course implements Serializable, Parcelable {
     private String certificate_footer;
     private String certificate_cover_org;
     private long[] instructors;
+    private long[] sections;
     private String certificate;
     private String requirements;
     private String description;
@@ -383,6 +384,7 @@ public class Course implements Serializable, Parcelable {
         dest.writeString(this.certificate_footer);
         dest.writeString(this.certificate_cover_org);
         dest.writeLongArray(this.instructors);
+        dest.writeLongArray(this.sections);
         dest.writeString(this.certificate);
         dest.writeString(this.requirements);
         dest.writeString(this.description);
@@ -417,6 +419,7 @@ public class Course implements Serializable, Parcelable {
         this.certificate_footer = in.readString();
         this.certificate_cover_org = in.readString();
         this.instructors = in.createLongArray();
+        this.sections = in.createLongArray();
         this.certificate = in.readString();
         this.requirements = in.readString();
         this.description = in.readString();
@@ -448,4 +451,12 @@ public class Course implements Serializable, Parcelable {
             return new Course[size];
         }
     };
+
+    public long[] getSections() {
+        return sections;
+    }
+
+    public void setSections(long[] sections) {
+        this.sections = sections;
+    }
 }

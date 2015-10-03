@@ -15,8 +15,11 @@ import org.joda.time.DateTime;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.Enrollment;
+import org.stepic.droid.model.EnrollmentWrapper;
 import org.stepic.droid.model.Meta;
 import org.stepic.droid.model.Profile;
+import org.stepic.droid.model.Section;
 import org.stepic.droid.model.User;
 import org.stepic.droid.util.SharedPreferenceHelper;
 
@@ -73,7 +76,7 @@ public class Api implements IApi {
 
     @Override
     public IStepicResponse signUp(String firstName, String secondName, String email, String password) {
-
+// FIXME: 02.10.15 Registration doesn't work
         JsonObject innerObject = new JsonObject();
         innerObject.addProperty("first_name", firstName);
         innerObject.addProperty("last_name", secondName);
@@ -89,7 +92,7 @@ public class Api implements IApi {
 
         String json = null;
         try {
-            json = mHttpManager.postJson(url, jsonObject);
+            json = mHttpManager.postJson(url, jsonObject).body().string();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -195,6 +198,51 @@ public class Api implements IApi {
         return users;
     }
 
+    @Override
+    public Boolean tryJoinCourse(Course course) {
+        updateToken();
+        String baseUrl = mConfig.getBaseUrl() + "/api/enrollments";
+
+        EnrollmentWrapper enrollment = new EnrollmentWrapper(course.getCourseId());
+        Gson gson = new Gson();
+        String jsonStr = gson.toJson(enrollment);
+
+        try {
+            return mHttpManager.postJson(baseUrl, jsonStr).isSuccessful();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public SectionsStepicResponse getSections(long[] sectionsIds) {
+        updateToken();
+        StringBuilder sb = new StringBuilder();
+        sb.append(mConfig.getBaseUrl() + "/api/sections/");
+
+        if (sectionsIds!=null && sectionsIds.length > 0)
+            sb.append("?");
+
+        for (int i = 0; i < sectionsIds.length; i++) {
+            sb.append(mConfig.getIDSParam());
+            sb.append("=");
+            sb.append(sectionsIds[i]);
+            if (sectionsIds.length - 1 != i)
+                sb.append("&");
+        }
+        String baseUrl = sb.toString();
+        String json = null;
+        try {
+            json = mHttpManager.get(baseUrl, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Gson gson = new Gson();
+
+        return gson.fromJson(json, SectionsStepicResponse.class);
+    }
+
 
     private CoursesStepicResponse getCourses(Bundle params, int page) {
         updateToken();
@@ -226,7 +274,6 @@ public class Api implements IApi {
 
         return new CoursesStepicResponse(courseList, meta);
     }
-
 
     private void updateToken() {
         AuthenticationStepicResponse response = mSharedPreferencesHelper.getAuthResponseFromStore();

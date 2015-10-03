@@ -1,4 +1,4 @@
-package org.stepic.droid.store;
+package org.stepic.droid.util;
 
 public class DbParseHelper {
 

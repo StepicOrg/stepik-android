@@ -69,9 +69,9 @@ public class HttpManager implements IHttpManager {
     }
 
     @Override
-    public String postJson(String url, JsonObject jsonObject) throws IOException {
+    public Response postJson(String url, JsonObject jsonObject) throws IOException {
 
-        String credential = Credentials.basic(mConfig.getOAuthClientId(), mConfig.getOAuthClientSecret());//obsolete?
+//        String credential = Credentials.basic(mConfig.getOAuthClientId(), mConfig.getOAuthClientSecret());//obsolete?
 
         String jsonStr = jsonObject.toString();
         RequestBody requestBody = RequestBody.create(JSON_MEDIA_TYPE, jsonStr);
@@ -80,26 +80,34 @@ public class HttpManager implements IHttpManager {
                 .post(requestBody)
                 .build();
 
-        Response response = mOkHttpClient.newCall(request).execute();
-
-        String respStr = response.body().toString();
-
-        return "";
+        return mOkHttpClient.newCall(request).execute();
 
     }
 
     @Override
+    public Response postJson(String url, String jsonStr) throws IOException {
+
+        RequestBody requestBody = RequestBody.create(JSON_MEDIA_TYPE, jsonStr);
+        Request request = new Request.Builder()
+                .header("Authorization", getAuthHeaderValue())
+                .url(url)
+                .post(requestBody)
+                .build();
+
+        return mOkHttpClient.newCall(request).execute();
+    }
+
+    @Override
     public String get(String baseUrl, @Nullable Bundle params) throws IOException {
-        AuthenticationStepicResponse resp = getAuthInfo();
-        String access_token = resp.getAccess_token();
-        String type = resp.getToken_type();
+
 
         String url;
         if (params != null && !params.keySet().isEmpty())
-             url = baseUrl + "?" + makeQueryFromBundle(params);
+            url = baseUrl + "?" + makeQueryFromBundle(params);
         else
             url = baseUrl;
-        String authValue = type + " " + access_token;
+
+        String authValue = getAuthHeaderValue();
         Request request = new Request.Builder()
                 .header("Authorization", authValue)
                 .url(url)
@@ -109,13 +117,19 @@ public class HttpManager implements IHttpManager {
         Response response = mOkHttpClient.newCall(request).execute();
         if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-       return response.body().string();
+        return response.body().string();
     }
 
 
+    private String getAuthHeaderValue() {
+        AuthenticationStepicResponse resp = getAuthInfo();
+        String access_token = resp.getAccess_token();
+        String type = resp.getToken_type();
+        return type + " " + access_token;
+    }
+
     private AuthenticationStepicResponse getAuthInfo() {
-        AuthenticationStepicResponse response = mSharedPreferencesHelper.getAuthResponseFromStore();
-        return response;
+        return mSharedPreferencesHelper.getAuthResponseFromStore();
     }
 
     private String makeQueryFromBundle(Bundle params) {

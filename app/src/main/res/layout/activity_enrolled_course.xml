@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:paddingBottom="8dp">
+
+    <include
+        android:id="@+id/custom_action_bar"
+        layout="@layout/panel_custom_action_bar" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/sections_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:divider="@color/transparent"
+        android:dividerHeight="@dimen/divider_height_guideline"
+        android:layout_below="@+id/custom_action_bar"
+        android:padding="16dp"
+        android:scrollbarStyle="outsideOverlay" />
+
+    <ProgressBar
+        android:id="@+id/load_sections"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:indeterminateDrawable="@drawable/login_progress"
+        android:visibility="gone" />
+
+</RelativeLayout>

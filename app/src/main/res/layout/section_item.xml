@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cv"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="@drawable/states"
+    app:cardCornerRadius="@dimen/card_corner_radius_guideline">
+
+    <RelativeLayout
+        android:id="@+id/course_info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="4dp">
+
+        <org.stepic.droid.view.custom.SDetailedCourseHeadersTV
+            android:id="@+id/section_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|start"
+            android:layout_marginBottom="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="1. SSection Section" />
+
+        <org.stepic.droid.view.custom.STextView
+            android:id="@+id/start_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/soft_deadline"
+            android:text="start date"
+            android:textColor="@color/stepic_weak_text"
+            android:textSize="@dimen/text_height" />
+
+        <org.stepic.droid.view.custom.STextView
+            android:id="@+id/soft_deadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/hard_deadline"
+            android:text="soft deadline date"
+            android:textColor="@color/stepic_weak_text"
+            android:textSize="@dimen/text_height" />
+
+        <org.stepic.droid.view.custom.STextView
+            android:id="@+id/hard_deadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="hard deadline date"
+            android:textColor="@color/stepic_weak_text"
+            android:textSize="@dimen/text_height" />
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

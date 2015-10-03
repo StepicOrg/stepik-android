@@ -9,6 +9,8 @@ import org.stepic.droid.core.IShell;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
+
 public abstract class StepicBaseFragmentActivity extends AppCompatActivity {
 
 
@@ -20,6 +22,7 @@ public abstract class StepicBaseFragmentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         MainApplication.component(this).inject(this);
     }
+
 
     protected void hideSoftKeypad() {
         getWindow().setSoftInputMode(
@@ -38,4 +41,9 @@ public abstract class StepicBaseFragmentActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
+    }
 }
