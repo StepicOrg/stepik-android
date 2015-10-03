@@ -10,25 +10,17 @@
         android:id="@+id/custom_action_bar"
         layout="@layout/panel_custom_action_bar" />
 
-    <ScrollView
-        android:id="@+id/scrollview"
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/sections_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/custom_action_bar"
-        android:layout_marginTop="2dp"
-        android:background="@android:color/white">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/sections_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:divider="@color/transparent"
-            android:dividerHeight="@dimen/divider_height_guideline"
-            android:padding="16dp"
-            android:scrollbarStyle="outsideOverlay" />
-
-    </ScrollView>
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:divider="@color/transparent"
+        android:dividerHeight="@dimen/divider_height_guideline"
+        android:layout_below="@+id/custom_action_bar"
+        android:padding="16dp"
+        android:scrollbarStyle="outsideOverlay" />
 
     <ProgressBar
         android:id="@+id/load_sections"
@@ -37,6 +29,6 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:indeterminateDrawable="@drawable/login_progress"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </RelativeLayout>

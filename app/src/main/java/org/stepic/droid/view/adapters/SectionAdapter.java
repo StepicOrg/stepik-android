@@ -29,7 +29,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
 
     @Override
     public SectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.section_item, null);
+        View v = LayoutInflater.from(mContext).inflate(R.layout.section_item, parent, false);
         return new SectionViewHolder(v);
     }
 
