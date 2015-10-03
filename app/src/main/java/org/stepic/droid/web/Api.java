@@ -31,14 +31,15 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+@Deprecated
 @Singleton
-public class Api implements IApi {
+public class Api {
     Context mContext;
 
     @Inject
     public Api(Context context) {
         mContext = context;
-        MainApplication.component(context).inject(this);
+//        MainApplication.component(context).inject(this);
     }
 
     @Inject
@@ -50,7 +51,7 @@ public class Api implements IApi {
     @Inject
     SharedPreferenceHelper mSharedPreferencesHelper;
 
-    @Override
+
     public IStepicResponse authWithLoginPassword(String username, String password) {
         Bundle params = new Bundle();
         params.putString("grant_type", mConfig.getGrantType());
@@ -74,7 +75,6 @@ public class Api implements IApi {
         return gson.fromJson(json, AuthenticationStepicResponse.class);
     }
 
-    @Override
     public IStepicResponse signUp(String firstName, String secondName, String email, String password) {
 // FIXME: 02.10.15 Registration doesn't work
         JsonObject innerObject = new JsonObject();
@@ -101,14 +101,12 @@ public class Api implements IApi {
         return null;
     }
 
-    @Override
     public CoursesStepicResponse getEnrolledCourses(int page) {
         Bundle params = new Bundle();
         params.putString("enrolled", "true");
         return getCourses(params, page);
     }
 
-    @Override
     public CoursesStepicResponse getFeaturedCourses(int page) {
         Bundle params = new Bundle();
         params.putString("is_featured", "true");
@@ -136,7 +134,6 @@ public class Api implements IApi {
         courses.addAll(filteredCourses);
     }
 
-    @Override
     public Profile getUserProfile() {
         updateToken();
         String url = mConfig.getBaseUrl() + "/api/stepics/1";
@@ -163,7 +160,7 @@ public class Api implements IApi {
         return profiles.get(0);
     }
 
-    @Override
+
     public List<User> getUsers(long[] userIds) {
         updateToken();
         String baseUrl = mConfig.getBaseUrl() + "/api/users/";
@@ -198,7 +195,7 @@ public class Api implements IApi {
         return users;
     }
 
-    @Override
+
     public Boolean tryJoinCourse(Course course) {
         updateToken();
         String baseUrl = mConfig.getBaseUrl() + "/api/enrollments";
@@ -215,13 +212,13 @@ public class Api implements IApi {
         return false;
     }
 
-    @Override
+
     public SectionsStepicResponse getSections(long[] sectionsIds) {
         updateToken();
         StringBuilder sb = new StringBuilder();
         sb.append(mConfig.getBaseUrl() + "/api/sections/");
 
-        if (sectionsIds!=null && sectionsIds.length > 0)
+        if (sectionsIds != null && sectionsIds.length > 0)
             sb.append("?");
 
         for (int i = 0; i < sectionsIds.length; i++) {

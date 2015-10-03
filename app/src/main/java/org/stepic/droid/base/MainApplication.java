@@ -30,13 +30,19 @@ public class MainApplication extends MultiDexApplication {
         return ((MainApplication) context.getApplicationContext()).component;
     }
 
+
+    public static StepicCoreComponent component() {
+        return ((MainApplication) getAppContext()).component;
+    }
+
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
 
-    public static Context getAppContext () {
+    public static Context getAppContext() {
         return application.getApplicationContext();
     }
 
