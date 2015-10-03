@@ -26,9 +26,17 @@
             android:divider="@color/transparent"
             android:dividerHeight="@dimen/divider_height_guideline"
             android:padding="16dp"
-            android:scrollbarStyle="outsideOverlay"/>
+            android:scrollbarStyle="outsideOverlay" />
 
     </ScrollView>
 
+    <ProgressBar
+        android:id="@+id/load_sections"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:indeterminateDrawable="@drawable/login_progress"
+        android:visibility="gone"/>
 
 </RelativeLayout>

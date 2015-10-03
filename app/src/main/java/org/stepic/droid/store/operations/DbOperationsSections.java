@@ -4,14 +4,16 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.store.structure.DBStructureCourses;
 import org.stepic.droid.store.structure.DbStructureSections;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DpOperationsSections extends DbOperationsBase {
-    public DpOperationsSections(Context context) {
+public class DbOperationsSections extends DbOperationsBase {
+    public DbOperationsSections(Context context) {
         super(context);
     }
 
@@ -80,5 +82,16 @@ public class DpOperationsSections extends DbOperationsBase {
     public Cursor getCursor() {
         return database.query(DbStructureSections.SECTIONS, DbStructureSections.getUsedColumns(),
                 null, null, null, null, null);
+    }
+
+    public boolean isSectionInDb(Section section) {
+        String Query = "Select * from " + DbStructureSections.SECTIONS + " where " + DbStructureSections.Column.SECTION_ID+ " = " + section.getId();
+        Cursor cursor = database.rawQuery(Query, null);
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
     }
 }

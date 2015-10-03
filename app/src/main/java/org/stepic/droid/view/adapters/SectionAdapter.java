@@ -5,11 +5,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.model.User;
 
 import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionViewHolder> {
 
@@ -30,7 +35,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
 
     @Override
     public void onBindViewHolder(SectionViewHolder holder, int position) {
+        Section section = sections.get(position);
 
+        String title = section.getTitle();
+        holder.sectionTitle.setText(title);
     }
 
     @Override
@@ -40,8 +48,21 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
 
     public static class SectionViewHolder extends RecyclerView.ViewHolder {
 
+        @Bind(R.id.section_title)
+        TextView sectionTitle;
+
+        @Bind(R.id.start_date)
+        TextView startDate;
+
+        @Bind(R.id.soft_deadline)
+        TextView softDeadline;
+
+        @Bind(R.id.hard_deadline)
+        TextView hardDeadline;
+
         public SectionViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }
