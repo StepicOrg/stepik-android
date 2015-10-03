@@ -218,17 +218,23 @@ public class Api implements IApi {
     @Override
     public SectionsStepicResponse getSections(long[] sectionsIds) {
         updateToken();
-        String baseUrl = mConfig.getBaseUrl() + "/api/sections/";
+        StringBuilder sb = new StringBuilder();
+        sb.append(mConfig.getBaseUrl() + "/api/sections/");
 
-        Bundle params = new Bundle();
+        if (sectionsIds!=null && sectionsIds.length > 0)
+            sb.append("?");
 
-        for (long sectionsId : sectionsIds) {
-            params.putLong(mConfig.getIDSParam(), sectionsId);
+        for (int i = 0; i < sectionsIds.length; i++) {
+            sb.append(mConfig.getIDSParam());
+            sb.append("=");
+            sb.append(sectionsIds[i]);
+            if (sectionsIds.length - 1 != i)
+                sb.append("&");
         }
-
+        String baseUrl = sb.toString();
         String json = null;
         try {
-            json = mHttpManager.get(baseUrl, params);
+            json = mHttpManager.get(baseUrl, null);
         } catch (IOException e) {
             e.printStackTrace();
         }
