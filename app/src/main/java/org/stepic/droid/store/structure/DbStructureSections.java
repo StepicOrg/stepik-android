@@ -12,7 +12,7 @@ public class DbStructureSections extends DBStructureBase {
         public static final String COURSE = "course";
         public static final String UNITS = "units";
         public static final String POSITION = "position";
-        public static final String PROGRESS = "progress";
+        public static final String PROGRESS = "section_progress";
         public static final String TITLE = "title";
         public static final String SLUG = "slug";
         public static final String BEGIN_DATE = "begin_date";

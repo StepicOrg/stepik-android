@@ -69,7 +69,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureSections.Column.UNITS + " TEXT, "
                 + DbStructureSections.Column.PROGRESS + " TEXT, "
                 + DbStructureSections.Column.POSITION + " INTEGER, "
-                + DbStructureSections.Column.PROGRESS + " TEXT, "
                 + DbStructureSections.Column.TITLE + " TEXT, "
                 + DbStructureSections.Column.SLUG + " TEXT, "
                 + DbStructureSections.Column.BEGIN_DATE + " TEXT, "
