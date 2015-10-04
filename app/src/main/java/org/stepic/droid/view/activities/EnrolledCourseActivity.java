@@ -1,6 +1,5 @@
 package org.stepic.droid.view.activities;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,17 +9,21 @@ import android.widget.ProgressBar;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragmentActivity;
-import org.stepic.droid.concurrency.LoadingSectionTask;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.SectionAdapter;
+import org.stepic.droid.web.SectionsStepicResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class EnrolledCourseActivity extends StepicBaseFragmentActivity {
     private static final String TAG = "enrolledActivity";
@@ -35,7 +38,6 @@ public class EnrolledCourseActivity extends StepicBaseFragmentActivity {
     ProgressBar mProgressBar;
 
     private Course mCourse;
-    private LoadingSectionTask mLoadingSectionTask;
     private SectionAdapter mAdapter;
     private List<Section> mSectionList;
 
@@ -70,34 +72,31 @@ public class EnrolledCourseActivity extends StepicBaseFragmentActivity {
 
 
     private void updateSections() {
-        mLoadingSectionTask = new LoadingSectionTask(this, mCourse.getSections()) {
+        ProgressHelper.activate(mProgressBar);
+        mShell.getApi().getSections(mCourse.getSections()).enqueue(new Callback<SectionsStepicResponse>() {
             @Override
-            protected void onSuccess(List<Section> sections) {
-                super.onSuccess(sections);
+            public void onResponse(Response<SectionsStepicResponse> response, Retrofit retrofit) {
+                SectionsStepicResponse stepicResponse = response.body();
+                List<Section> sections = stepicResponse.getSections();
+
                 mSectionList.clear();
                 mSectionList.addAll(sections);
                 mAdapter.notifyDataSetChanged();
+                ProgressHelper.dismiss(mProgressBar);
             }
 
             @Override
-            protected void onException(Throwable exception) {
-                super.onException(exception);
-                int exc;
+            public void onFailure(Throwable t) {
+                ProgressHelper.dismiss(mProgressBar);
             }
-        };
-        mLoadingSectionTask.setProgressBar(mProgressBar);
-        mLoadingSectionTask.execute();
+        });
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         Log.i(TAG, "onPause");
-
-        if (mLoadingSectionTask != null && mLoadingSectionTask.getStatus() != AsyncTask.Status.FINISHED) {
-            mLoadingSectionTask.cancel(true);
-        }
-
+        // FIXME: 04.10.15 USE OTTO for retrofit
     }
 
     @Override

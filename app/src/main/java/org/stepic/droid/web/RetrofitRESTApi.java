@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import retrofit.Call;
+import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 
 @Singleton
@@ -48,6 +49,7 @@ public class RetrofitRESTApi implements IApi {
         setAuthenticatorClientIDAndPassword(okHttpClient);
         Retrofit notLogged = new Retrofit.Builder()
                 .baseUrl(mConfig.getBaseUrl())
+                .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
         mOAuthService = notLogged.create(StepicRestOAuthService.class);
@@ -68,6 +70,7 @@ public class RetrofitRESTApi implements IApi {
         okHttpClient.interceptors().add(interceptor);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mConfig.getBaseUrl())
+                .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
         mLoggedService = retrofit.create(StepicRestLoggedService.class);
@@ -84,11 +87,11 @@ public class RetrofitRESTApi implements IApi {
     }
 
     public Call<CoursesStepicResponse> getEnrolledCourses(int page) {
-        return mLoggedService.getCourses(false, true, page);
+        return mLoggedService.getEnrolledCourses(true, page);
     }
 
     public Call<CoursesStepicResponse> getFeaturedCourses(int page) {
-        return mLoggedService.getCourses(true, false, page);
+        return mLoggedService.getFeaturedCourses(true, page);
     }
 
     @Override
@@ -111,7 +114,6 @@ public class RetrofitRESTApi implements IApi {
     public Call<SectionsStepicResponse> getSections(long[] sectionsIds) {
         return mLoggedService.getSections(sectionsIds);
     }
-
 
     private void setAuthenticatorClientIDAndPassword(OkHttpClient httpClient) {
         httpClient.setAuthenticator(new Authenticator() {

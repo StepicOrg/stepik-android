@@ -1,6 +1,7 @@
 package org.stepic.droid.concurrency;
 
-import org.jetbrains.annotations.NotNull;
+import android.content.Context;
+
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.Course;
@@ -10,31 +11,36 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class DbCoursesTask extends StepicTask<Void, Void, List<Course>> {
+public class ToDbCoursesTask extends StepicTask<Void, Void, Void> {
 
     @Inject
     IShell mShell;
 
+    private List<Course> mCourses;
     private DbOperationsCourses.Table mCourseType;
 
-    public DbCoursesTask(@NotNull DbOperationsCourses.Table courseType) {
+    public ToDbCoursesTask(List<Course> courses, DbOperationsCourses.Table type) {
         super(MainApplication.getAppContext());
+        MainApplication.component().inject(this);
 
-        MainApplication.component(mContext).inject(this);
+        //courses now is not thread safe
 
-        mCourseType = courseType;
+        mCourseType = type;
+        mCourses = courses;
     }
 
     @Override
-    protected List<Course> doInBackgroundBody(Void... params) throws Exception {
+    protected Void doInBackgroundBody(Void... params) throws Exception {
         DbOperationsCourses dbOperationsCourses = mShell.getDbOperationsCourses(mCourseType);
         dbOperationsCourses.open();
-        List<Course> fromCache = null;
         try {
-            fromCache = dbOperationsCourses.getAllCourses();
+            for (Course courseItem : mCourses) {
+                dbOperationsCourses.addCourse(courseItem);
+            }
         } finally {
             dbOperationsCourses.close();
         }
-        return fromCache;
+        return null;
+
     }
 }

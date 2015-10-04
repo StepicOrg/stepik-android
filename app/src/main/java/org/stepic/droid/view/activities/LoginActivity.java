@@ -8,12 +8,16 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.stepic.droid.base.StepicBaseFragmentActivity;
-import org.stepic.droid.concurrency.LoginTask;
+import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.SharedPreferenceHelper;
 import org.stepic.droid.web.AuthenticationStepicResponse;
+import org.stepic.droid.web.IApi;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class LoginActivity extends StepicBaseFragmentActivity {
 
@@ -30,7 +34,7 @@ public class LoginActivity extends StepicBaseFragmentActivity {
     EditText mPasswordText;
 
     @Bind(org.stepic.droid.R.id.login_spinner)
-    ProgressBar mProgressLoogin;
+    ProgressBar mProgressLogin;
 
 
     @Override
@@ -67,32 +71,33 @@ public class LoginActivity extends StepicBaseFragmentActivity {
         String login = mLoginText.getText().toString().trim();
         String password = mPasswordText.getText().toString().trim();
 
-        LoginTask loginTask = new LoginTask(this, login, password) {
+
+        ProgressHelper.activate(mProgressLogin);
+        IApi api = mShell.getApi();
+        api.authWithLoginPassword(login, password).enqueue(new Callback<AuthenticationStepicResponse>() {
             @Override
-            protected void onSuccess(AuthenticationStepicResponse result) {
-                super.onSuccess(result);
+            public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
                 SharedPreferenceHelper preferenceHelper = mShell.getSharedPreferenceHelper();
-                preferenceHelper.storeAuthInfo(result);
-                try {
-                    if (result != null) {
-                        onUserLoginSuccess();
-                    } else {
-                        String errorMsg = "Error is occurred";
-                        throw new Exception(errorMsg);
-                    }
-                } catch (Exception ex) {
-                    //ignore
+                AuthenticationStepicResponse authStepic = response.body();
+                preferenceHelper.storeAuthInfo(authStepic);
+
+                ProgressHelper.dismiss(mProgressLogin);
+
+                if (authStepic != null) {
+                    onUserLoginSuccess();
+                } else {
+                    ProgressHelper.dismiss(mProgressLogin);
+                    String errorMsg = "Error is occurred";
+                    Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            protected void onException(Throwable exception) {
-                super.onException(exception);
-                onUserLoginFailure(exception);
+            public void onFailure(Throwable t) {
+                ////// FIXME: 04.10.15 show right message to user
+                Toast.makeText(LoginActivity.this, "Something wrong", Toast.LENGTH_LONG).show();
             }
-        };
-        loginTask.setProgressBar(mProgressLoogin);
-        loginTask.execute();
+        });
     }
 
 

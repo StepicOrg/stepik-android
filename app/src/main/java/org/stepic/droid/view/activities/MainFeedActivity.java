@@ -16,8 +16,6 @@ import com.squareup.picasso.Picasso;
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragment;
 import org.stepic.droid.base.StepicBaseFragmentActivity;
-import org.stepic.droid.concurrency.LoadingProfileInformation;
-import org.stepic.droid.exceptions.NullProfileException;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.store.operations.DbOperationsCourses;
 import org.stepic.droid.util.SharedPreferenceHelper;
@@ -30,6 +28,9 @@ import org.stepic.droid.view.fragments.MySettings;
 import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class MainFeedActivity extends StepicBaseFragmentActivity {
     @Bind(R.id.toolbar)
@@ -64,24 +65,25 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
         Profile cachedProfile = helper.getProfile();
         if (cachedProfile == null) {
 
-            LoadingProfileInformation loadingProfileInformation = new LoadingProfileInformation(this) {
+            mShell.getApi().getUserProfile().enqueue(new Callback<Profile>() {
                 @Override
-                protected void onSuccess(Profile profile) {
-                    super.onSuccess(profile);
+                public void onResponse(Response<Profile> response, Retrofit retrofit) {
+                    Profile profile = response.body();
+
                     helper.storeProfile(profile);
                     //todo: store profile
                     showProfile(profile);
                 }
 
                 @Override
-                protected void onException(Throwable exception) {
-                    super.onException(exception);
+                public void onFailure(Throwable t) {
+
 
                     mProfileImage.setVisibility(View.INVISIBLE);
                     mUserNameTextView.setText("");
+
                 }
-            };
-            loadingProfileInformation.execute();
+            });
         } else {
             showProfile(cachedProfile);
         }

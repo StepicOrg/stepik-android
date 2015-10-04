@@ -112,7 +112,7 @@
         android:layout_height="44dp"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="8dp"
-        android:background="@drawable/join_course"
+        android:background="@drawable/bt_signin_active"
         android:contentDescription="@string/join_course">
 
         <org.stepic.droid.view.custom.STextView

@@ -27,8 +27,15 @@ public interface StepicRestLoggedService {
     @GET("api/stepics/1")
     Call<Profile> getUserProfile();
 
+    //todo:enrolled always true
     @GET("api/courses")
-    Call<CoursesStepicResponse> getCourses(@Query("is_featured") boolean is_featured,
-                                           @Query("enrolled") boolean enrolled,
-                                           @Query("page") int page);
+    Call<CoursesStepicResponse> getEnrolledCourses(@Query("enrolled") boolean enrolled,
+                                                   @Query("page") int page);
+
+    //todo:is_featured always true
+    @GET("api/courses")
+    Call<CoursesStepicResponse> getFeaturedCourses(@Query("is_featured") boolean is_featured,
+                                                   @Query("page") int page);
+
+
 }
