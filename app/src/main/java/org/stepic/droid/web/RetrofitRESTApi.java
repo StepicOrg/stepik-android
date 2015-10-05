@@ -14,7 +14,6 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.EnrollmentWrapper;
-import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.User;
 import org.stepic.droid.util.SharedPreferenceHelper;
 
@@ -95,7 +94,7 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
-    public Call<Profile> getUserProfile() {
+    public Call<StepicProfileResponse> getUserProfile() {
         return mLoggedService.getUserProfile();
     }
 

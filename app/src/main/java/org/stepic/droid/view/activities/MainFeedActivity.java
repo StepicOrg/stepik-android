@@ -24,6 +24,7 @@ import org.stepic.droid.view.fragments.BestLessons;
 import org.stepic.droid.view.fragments.FindCoursesFragment;
 import org.stepic.droid.view.fragments.MyCoursesFragment;
 import org.stepic.droid.view.fragments.MySettings;
+import org.stepic.droid.web.StepicProfileResponse;
 
 import butterknife.Bind;
 import butterknife.BindString;
@@ -64,11 +65,10 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
         final SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
         Profile cachedProfile = helper.getProfile();
         if (cachedProfile == null) {
-
-            mShell.getApi().getUserProfile().enqueue(new Callback<Profile>() {
+            mShell.getApi().getUserProfile().enqueue(new Callback<StepicProfileResponse>() {
                 @Override
-                public void onResponse(Response<Profile> response, Retrofit retrofit) {
-                    Profile profile = response.body();
+                public void onResponse(Response<StepicProfileResponse> response, Retrofit retrofit) {
+                    Profile profile = response.body().getProfile();
 
                     helper.storeProfile(profile);
                     //todo: store profile

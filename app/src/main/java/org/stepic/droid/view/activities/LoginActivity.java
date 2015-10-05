@@ -56,6 +56,7 @@ public class LoginActivity extends StepicBaseFragmentActivity {
             @Override
             public void onClick(View v) {
 //                onUserLoginSuccess(); // todo: FOR DEBUG ONLY
+                hideSoftKeypad();
                 tryLogin();
             }
         });
@@ -68,6 +69,7 @@ public class LoginActivity extends StepicBaseFragmentActivity {
     }
 
     private void tryLogin() {
+
         String login = mLoginText.getText().toString().trim();
         String password = mPasswordText.getText().toString().trim();
 

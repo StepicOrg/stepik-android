@@ -25,7 +25,7 @@ public interface StepicRestLoggedService {
     Call<List<User>> getUsers(@Query("ids[]") long[] userIds);
 
     @GET("api/stepics/1")
-    Call<Profile> getUserProfile();
+    Call<StepicProfileResponse> getUserProfile();
 
     //todo:enrolled always true
     @GET("api/courses")
