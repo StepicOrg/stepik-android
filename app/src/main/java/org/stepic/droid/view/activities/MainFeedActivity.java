@@ -64,7 +64,7 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
 
         final SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
         Profile cachedProfile = helper.getProfile();
-        if (cachedProfile == null) {
+        if (cachedProfile == null) { //todo always update??
             mShell.getApi().getUserProfile().enqueue(new Callback<StepicProfileResponse>() {
                 @Override
                 public void onResponse(Response<StepicProfileResponse> response, Retrofit retrofit) {

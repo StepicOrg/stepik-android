@@ -12,11 +12,19 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.squareup.otto.Subscribe;
+
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragment;
-import org.stepic.droid.concurrency.AsyncResultWrapper;
 import org.stepic.droid.concurrency.FromDbCoursesTask;
 import org.stepic.droid.concurrency.ToDbCoursesTask;
+import org.stepic.droid.events.FailCoursesDownloadEvent;
+import org.stepic.droid.events.FinishingGetFromDbEvent;
+import org.stepic.droid.events.FinishingSaveToDbEvent;
+import org.stepic.droid.events.GettingFromDbSuccess;
+import org.stepic.droid.events.StartingGetFromDbEvent;
+import org.stepic.droid.events.StartingSaveToDbEvent;
+import org.stepic.droid.events.SuccessCoursesDownloadEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DbOperationsCourses;
 import org.stepic.droid.util.ProgressHelper;
@@ -124,26 +132,15 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
 
 
     public void downloadData() {
-
         retrofit.Callback<CoursesStepicResponse> callback = new retrofit.Callback<CoursesStepicResponse>() {
             @Override
             public void onResponse(Response<CoursesStepicResponse> response, Retrofit retrofit) {
-
-                CoursesStepicResponse coursesStepicResponse = response.body();
-
-                saveDataToCache(coursesStepicResponse.getCourses());
-                getAndShowDataFromCache();
-
-                mHasNextPage = coursesStepicResponse.getMeta().isHas_next();
-                if (mHasNextPage) {
-                    mCurrentPage++;
-                }
+                bus.post(new SuccessCoursesDownloadEvent(response, retrofit));
             }
 
             @Override
             public void onFailure(Throwable t) {
-                ProgressHelper.dismiss(mSwipeRefreshLayout);
-
+                bus.post(new FailCoursesDownloadEvent());
             }
         };
 
@@ -158,20 +155,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     }
 
     public void saveDataToCache(List<Course> courses) {
-        mDbSaveCoursesTask = new ToDbCoursesTask(courses, mTypeOfCourse) {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                ProgressHelper.activate(mSwipeRefreshLayout);
-            }
-
-
-            @Override
-            protected void onPostExecute(AsyncResultWrapper<Void> voidAsyncResultWrapper) {
-                super.onPostExecute(voidAsyncResultWrapper);
-                ProgressHelper.dismiss(mSwipeRefreshLayout);
-            }
-        };
+        mDbSaveCoursesTask = new ToDbCoursesTask(courses, mTypeOfCourse);
         mDbSaveCoursesTask.execute();
     }
 
@@ -179,31 +163,61 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     public void getAndShowDataFromCache() {
         mDbGetCoursesTask = new FromDbCoursesTask(mTypeOfCourse) {
             @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                mSwipeRefreshLayout.setRefreshing(true);
-            }
-
-            @Override
             protected void onSuccess(List<Course> courses) {
                 super.onSuccess(courses);
-                showCourses(courses);
-            }
-
-            @Override
-            protected void onPostExecute(AsyncResultWrapper<List<Course>> listAsyncResultWrapper) {
-                if (isPaused) return;
-                super.onPostExecute(listAsyncResultWrapper);
-                mSwipeRefreshLayout.setRefreshing(false);
+                bus.post(new GettingFromDbSuccess(courses));
             }
         };
         mDbGetCoursesTask.execute();
     }
 
+
+    @Subscribe
+    public void onSuccessDataLoad(SuccessCoursesDownloadEvent e) {
+        CoursesStepicResponse coursesStepicResponse = e.getResponse().body();
+        ProgressHelper.dismiss(mSwipeRefreshLayout);
+        saveDataToCache(coursesStepicResponse.getCourses());
+        getAndShowDataFromCache();
+
+        mHasNextPage = coursesStepicResponse.getMeta().isHas_next();
+        if (mHasNextPage) {
+            mCurrentPage++;
+        }
+    }
+
+    @Subscribe
+    public void onFailureDataLoad(FailCoursesDownloadEvent e) {
+        ProgressHelper.dismiss(mSwipeRefreshLayout);
+    }
+
+    @Subscribe
+    public void onStartingSaveToDb(StartingSaveToDbEvent e) {
+        ProgressHelper.activate(mSwipeRefreshLayout);
+    }
+
+    @Subscribe
+    public void onFinishingSaveToDb(FinishingSaveToDbEvent e) {
+        ProgressHelper.dismiss(mSwipeRefreshLayout);
+    }
+
+    @Subscribe
+    public void onStartingGetFromDb(StartingGetFromDbEvent e) {
+        ProgressHelper.activate(mSwipeRefreshLayout);
+    }
+
+    @Subscribe
+    public void onFinishingGetFromDb(FinishingGetFromDbEvent e) {
+        ProgressHelper.dismiss(mSwipeRefreshLayout);
+    }
+
+    @Subscribe
+    public void onGettingFromDbSuccess(GettingFromDbSuccess e) {
+        showCourses(e.getCourses());
+    }
     @Override
     public void onStart() {
         super.onStart();
-
+        bus.register(this);
     }
 
     @Override
@@ -231,7 +245,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     @Override
     public void onStop() {
         super.onStop();
-
+        bus.unregister(this);
         //todo Use otto for handling errors
     }
 

@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.otto.Bus;
+
 import org.stepic.droid.core.IShell;
 
 import javax.inject.Inject;
@@ -18,6 +20,9 @@ import butterknife.ButterKnife;
 public class StepicBaseFragment extends Fragment {
 
     protected String TAG = "StepicFragment";
+
+    @Inject
+    public Bus bus;
 
     @Inject
     public IShell mShell;

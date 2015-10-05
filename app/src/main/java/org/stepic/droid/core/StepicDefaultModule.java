@@ -2,6 +2,8 @@ package org.stepic.droid.core;
 
 import android.content.Context;
 
+import com.squareup.otto.Bus;
+
 import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.util.SharedPreferenceHelper;
@@ -66,5 +68,11 @@ public class StepicDefaultModule {
     @Singleton
     public Context provideApplicationContext() {
         return mContext;
+    }
+
+    @Provides
+    @Singleton
+    public Bus provideBus() {
+        return new Bus();
     }
 }

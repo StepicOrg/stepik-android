@@ -1,7 +1,11 @@
 package org.stepic.droid.concurrency;
 
+import com.squareup.otto.Bus;
+
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.events.FinishingSaveToDbEvent;
+import org.stepic.droid.events.StartingSaveToDbEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DbOperationsCourses;
 
@@ -13,6 +17,8 @@ public class ToDbCoursesTask extends StepicTask<Void, Void, Void> {
 
     @Inject
     IShell mShell;
+    @Inject
+    Bus bus;
 
     private List<Course> mCourses;
     private DbOperationsCourses.Table mCourseType;
@@ -29,6 +35,12 @@ public class ToDbCoursesTask extends StepicTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackgroundBody(Void... params) throws Exception {
+
+        try {
+            Thread.sleep(3000); // FIXME: 05.10.15 DEBUG
+        } catch (InterruptedException e) {
+            throw new RuntimeException();
+        }
         DbOperationsCourses dbOperationsCourses = mShell.getDbOperationsCourses(mCourseType);
         dbOperationsCourses.open();
         try {
@@ -41,5 +53,17 @@ public class ToDbCoursesTask extends StepicTask<Void, Void, Void> {
         }
         return null;
 
+    }
+
+    @Override
+    protected void onPreExecute() {
+        bus.post(new StartingSaveToDbEvent());
+        super.onPreExecute();
+    }
+
+    @Override
+    protected void onPostExecute(AsyncResultWrapper<Void> voidAsyncResultWrapper) {
+        super.onPostExecute(voidAsyncResultWrapper);
+        bus.post(new FinishingSaveToDbEvent());
     }
 }
