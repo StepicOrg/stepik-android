@@ -6,11 +6,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.stepic.droid.base.StepicBaseFragmentActivity;
-import org.stepic.droid.concurrency.RegistrationTask;
-import org.stepic.droid.web.SignUpResponse;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -78,25 +75,8 @@ public class RegisterActivity extends StepicBaseFragmentActivity {
         String lastName = mSecondNameView.getText().toString();
         String email = mEmailView.getText().toString().trim();
         String password = mPassword.getText().toString().trim(); //todo: substitute to more safe way
-        RegistrationTask registrationTask = new RegistrationTask(this, firstName, lastName, email, password)
-        {
-            @Override
-            protected void onSuccess(SignUpResponse signUpResponse) {
-                super.onSuccess(signUpResponse);
-                Toast toast =  Toast.makeText(RegisterActivity.this, "onSuccess", Toast.LENGTH_SHORT);
-                toast.show();
-            }
 
-            @Override
-            protected void onException(Throwable exception) {
-                super.onException(exception);
-                Toast toast =  Toast.makeText(RegisterActivity.this, "onException: " + exception.getMessage(), Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        };
-
-        registrationTask.setProgressBar(mProgressBar);
-        registrationTask.execute();
+        // FIXME: 04.10.15 Make registration request
 
     }
 

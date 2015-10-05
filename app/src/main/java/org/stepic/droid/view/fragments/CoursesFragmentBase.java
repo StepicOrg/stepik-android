@@ -84,7 +84,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (mHasNextPage && firstVisibleItem + visibleItemCount >= totalItemCount) {
-                    downloadData();
+//                    downloadData();
                 }
             }
         });

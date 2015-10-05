@@ -1,7 +1,5 @@
 package org.stepic.droid.concurrency;
 
-import android.content.Context;
-
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.Course;
@@ -35,7 +33,8 @@ public class ToDbCoursesTask extends StepicTask<Void, Void, Void> {
         dbOperationsCourses.open();
         try {
             for (Course courseItem : mCourses) {
-                dbOperationsCourses.addCourse(courseItem);
+                if (!dbOperationsCourses.isCourseInDB(courseItem))
+                    dbOperationsCourses.addCourse(courseItem);
             }
         } finally {
             dbOperationsCourses.close();

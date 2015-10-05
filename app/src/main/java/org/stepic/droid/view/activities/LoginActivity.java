@@ -95,6 +95,7 @@ public class LoginActivity extends StepicBaseFragmentActivity {
             @Override
             public void onFailure(Throwable t) {
                 ////// FIXME: 04.10.15 show right message to user
+                ProgressHelper.dismiss(mProgressLogin);
                 Toast.makeText(LoginActivity.this, "Something wrong", Toast.LENGTH_LONG).show();
             }
         });
