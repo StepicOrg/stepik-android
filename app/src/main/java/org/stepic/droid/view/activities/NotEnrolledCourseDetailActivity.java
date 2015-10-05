@@ -1,6 +1,5 @@
 package org.stepic.droid.view.activities;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,13 +11,11 @@ import android.widget.Toast;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragmentActivity;
-import org.stepic.droid.concurrency.AsyncResultWrapper;
-import org.stepic.droid.concurrency.JoinCourseTask;
-import org.stepic.droid.concurrency.LoadingUsersTask;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.User;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.HtmlHelper;
+import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.InstructorAdapter;
 import org.stepic.droid.view.layout_managers.WrapContentLinearLayoutManager;
 
@@ -28,6 +25,9 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
 
@@ -71,8 +71,6 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
 
 
     private Course mCourse;
-    private LoadingUsersTask mLoadingUsersTask;
-    private JoinCourseTask mJoinCourseTask;
     private List<User> mUserList;
     private InstructorAdapter mInstructorAdapter;
 
@@ -128,38 +126,35 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
                         LinearLayoutManager.HORIZONTAL, false);//// TODO: 30.09.15 determine right-to-left-mode
         mInstructorsCarousel.setLayoutManager(layoutManager);
 
-        mLoadingUsersTask = new LoadingUsersTask(this, mCourse.getInstructors()) {
+        ProgressHelper.activate(mInstructorsProgressBar);
+
+        mShell.getApi().getUsers(mCourse.getInstructors()).enqueue(new Callback<List<User>>() {
             @Override
-            protected void onSuccess(List<User> users) {
-                super.onSuccess(users);
+            public void onResponse(Response<List<User>> response, Retrofit retrofit) {
+                List<User> users = response.body();
+
                 mUserList.clear();
                 mUserList.addAll(users);
                 mInstructorAdapter.notifyDataSetChanged();
+                ProgressHelper.dismiss(mInstructorsProgressBar);
             }
-        };
-        mLoadingUsersTask.setProgressBar(mInstructorsProgressBar);
-        mLoadingUsersTask.execute();
+
+            @Override
+            public void onFailure(Throwable t) {
+                ProgressHelper.dismiss(mInstructorsProgressBar);
+            }
+        });
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mLoadingUsersTask != null && mLoadingUsersTask.getStatus() != AsyncTask.Status.FINISHED) {
-            mLoadingUsersTask.cancel(true);
-        }
-
-        if (mJoinCourseTask != null && mJoinCourseTask.getStatus() != AsyncTask.Status.FINISHED) {
-            mJoinCourseTask.cancel(true);
-        }
+        ////FIXME OTTO
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
-        if (mLoadingUsersTask != null)
-            mLoadingUsersTask.unbind();
-
         mInstructorAdapter = null;
     }
 
@@ -177,40 +172,24 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
 
 
     private void joinCourse() {
-        mJoinCourseTask = new JoinCourseTask(this, mCourse) {
-
+        mJoinCourseView.setEnabled(false);
+        ProgressHelper.activate(mJoinCourseSpinner);
+        mShell.getApi().tryJoinCourse(mCourse).enqueue(new Callback<Void>() {
             @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                mJoinCourseView.setEnabled(false);
+            public void onResponse(Response<Void> response, Retrofit retrofit) {
+                mShell.getScreenProvider().showCourseDescriptionForEnrolled(NotEnrolledCourseDetailActivity.this, mCourse);
+                finish();
+                ProgressHelper.dismiss(mJoinCourseSpinner);
             }
 
             @Override
-            protected void onSuccess(Boolean aBoolean) {
-                super.onSuccess(aBoolean);
-                if (aBoolean) {
-                    mShell.getScreenProvider().showCourseDescriptionForEnrolled(NotEnrolledCourseDetailActivity.this, mCourse);
-                    finish();
-                } else {
-                    Toast.makeText(NotEnrolledCourseDetailActivity.this, joinCourseImpossible,
-                            Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            protected void onException(Throwable exception) {
-                super.onException(exception);
+            public void onFailure(Throwable t) {
                 Toast.makeText(NotEnrolledCourseDetailActivity.this, joinCourseException,
                         Toast.LENGTH_LONG).show();
-            }
 
-            @Override
-            protected void onPostExecute(AsyncResultWrapper<Boolean> booleanAsyncResultWrapper) {
-                super.onPostExecute(booleanAsyncResultWrapper);
-                if (mJoinCourseView != null) mJoinCourseView.setEnabled(true);
+                ProgressHelper.dismiss(mJoinCourseSpinner);
+                mJoinCourseView.setEnabled(true);
             }
-        };
-        mJoinCourseTask.setProgressBar(mJoinCourseSpinner);
-        mJoinCourseTask.execute();
+        });
     }
 }

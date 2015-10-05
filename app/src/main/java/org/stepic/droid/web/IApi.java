@@ -1,26 +1,27 @@
 package org.stepic.droid.web;
 
 import org.stepic.droid.model.Course;
-import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.User;
 
 import java.util.List;
 
+import retrofit.Call;
+
 public interface IApi {
-    IStepicResponse authWithLoginPassword(String login, String password);
+    Call<AuthenticationStepicResponse> authWithLoginPassword(String login, String password);
 
-    IStepicResponse signUp(String firstName, String secondName, String email, String password);
+    Call<IStepicResponse> signUp(String firstName, String secondName, String email, String password);
 
-    CoursesStepicResponse getEnrolledCourses(int page);
+    Call<CoursesStepicResponse> getEnrolledCourses(int page);
 
-    CoursesStepicResponse getFeaturedCourses(int page);
+    Call<CoursesStepicResponse> getFeaturedCourses(int page);
 
-    Profile getUserProfile();
+    Call<StepicProfileResponse> getUserProfile();
 
-    List<User> getUsers(long[] userIds);
+    Call<List<User>> getUsers(long[] userIds);
 
-    Boolean tryJoinCourse(Course course);
+    Call<Void> tryJoinCourse(Course course);
 
-    SectionsStepicResponse getSections (long [] sectionsIds);
+    Call<SectionsStepicResponse> getSections (long [] sectionsIds);
 
 }

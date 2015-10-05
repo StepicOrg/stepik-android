@@ -2,14 +2,13 @@ package org.stepic.droid.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.web.AuthenticationStepicResponse;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,7 +36,7 @@ public class SharedPreferenceHelper {
         }
     }
 
-    public void storeProfile (Profile profile) {
+    public void storeProfile(Profile profile) {
         //todo save picture of user profile
         //todo validate profile from the server with cached profile and make restore to cache. make
         //todo query when nav drawer is occurred?
@@ -47,8 +46,8 @@ public class SharedPreferenceHelper {
     }
 
     public Profile getProfile() {
-        String json  = getString(PreferenceType.LOGIN, PROFILE_JSON);
-        if (json ==null) {
+        String json = getString(PreferenceType.LOGIN, PROFILE_JSON);
+        if (json == null) {
             return null;
         }
         Gson gson = new GsonBuilder().create();
@@ -65,6 +64,9 @@ public class SharedPreferenceHelper {
 
     public void deleteAuthInfo() {
         clear(PreferenceType.LOGIN);
+        // TODO: 05.10.15 remake to otto event based
+        AppConstants.WAS_SWIPED_TO_REFRESH_FIND_COURSES = false;
+        AppConstants.WAS_SWIPED_TO_REFRESH_MY_COURSES = false;
     }
 
     public AuthenticationStepicResponse getAuthResponseFromStore() {

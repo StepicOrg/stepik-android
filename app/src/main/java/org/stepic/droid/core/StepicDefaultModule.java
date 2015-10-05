@@ -2,14 +2,15 @@ package org.stepic.droid.core;
 
 import android.content.Context;
 
+import com.squareup.otto.Bus;
+
 import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
-import org.stepic.droid.store.operations.DbOperationsCourses;
 import org.stepic.droid.util.SharedPreferenceHelper;
-import org.stepic.droid.web.Api;
 import org.stepic.droid.web.HttpManager;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.IHttpManager;
+import org.stepic.droid.web.RetrofitRESTApi;
 
 import javax.inject.Singleton;
 
@@ -26,39 +27,52 @@ public class StepicDefaultModule {
         this.mContext = context;
     }
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     public IScreenManager provideIScreenManager() {
         return new ScreenManager();
     }
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     public IShell provideIShell(Context context) {
         return new Shell(context);
     }
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     public IConfig provideIConfig(Context context) {
         return new ConfigRelease(context);
     }
 
 
-    @Provides @Singleton
-    public IApi provideIApi(Context context) {
-        return new Api(context);
+    @Provides
+    @Singleton
+    public IApi provideIApi() {
+        return new RetrofitRESTApi();
     }
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     public IHttpManager provideIHttpManager(Context context) {
         return new HttpManager(context);
     }
 
-    @Provides @Singleton
-    public SharedPreferenceHelper provideSharedPreferencesHelper () {return  new SharedPreferenceHelper();}
+    @Provides
+    @Singleton
+    public SharedPreferenceHelper provideSharedPreferencesHelper() {
+        return new SharedPreferenceHelper();
+    }
 
-    @Provides @Singleton  public Context provideApplicationContext() {
+    @Provides
+    @Singleton
+    public Context provideApplicationContext() {
         return mContext;
     }
-//    @Provides @Singleton  public DbOperationsCourses provideDbOperationsCourses(Context context) {
-//        return new DbOperationsCourses(context);
-//    }
+
+    @Provides
+    @Singleton
+    public Bus provideBus() {
+        return new Bus();
+    }
 }

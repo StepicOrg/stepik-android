@@ -1,6 +1,5 @@
 package org.stepic.droid.view.activities;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,19 +7,27 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.squareup.otto.Subscribe;
+
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragmentActivity;
-import org.stepic.droid.concurrency.LoadingSectionTask;
+import org.stepic.droid.events.sections.FailureResponseSectionEvent;
+import org.stepic.droid.events.sections.SuccessResponseSectionsEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.SectionAdapter;
+import org.stepic.droid.web.SectionsStepicResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class EnrolledCourseActivity extends StepicBaseFragmentActivity {
     private static final String TAG = "enrolledActivity";
@@ -35,7 +42,6 @@ public class EnrolledCourseActivity extends StepicBaseFragmentActivity {
     ProgressBar mProgressBar;
 
     private Course mCourse;
-    private LoadingSectionTask mLoadingSectionTask;
     private SectionAdapter mAdapter;
     private List<Section> mSectionList;
 
@@ -53,6 +59,7 @@ public class EnrolledCourseActivity extends StepicBaseFragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
         mCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,34 +77,46 @@ public class EnrolledCourseActivity extends StepicBaseFragmentActivity {
 
 
     private void updateSections() {
-        mLoadingSectionTask = new LoadingSectionTask(this, mCourse.getSections()) {
+        ProgressHelper.activate(mProgressBar);
+        mShell.getApi().getSections(mCourse.getSections()).enqueue(new Callback<SectionsStepicResponse>() {
             @Override
-            protected void onSuccess(List<Section> sections) {
-                super.onSuccess(sections);
-                mSectionList.clear();
-                mSectionList.addAll(sections);
-                mAdapter.notifyDataSetChanged();
+            public void onResponse(Response<SectionsStepicResponse> response, Retrofit retrofit) {
+                bus.post(new SuccessResponseSectionsEvent(mCourse, response, retrofit));
+
             }
 
             @Override
-            protected void onException(Throwable exception) {
-                super.onException(exception);
-                int exc;
+            public void onFailure(Throwable t) {
+                bus.post(new FailureResponseSectionEvent(mCourse));
             }
-        };
-        mLoadingSectionTask.setProgressBar(mProgressBar);
-        mLoadingSectionTask.execute();
+        });
     }
+
+    @Subscribe
+    public void onSuccessDownload(SuccessResponseSectionsEvent e) {
+        if (mCourse.getCourseId() == e.getCourseOfSection().getCourseId()) {
+            SectionsStepicResponse stepicResponse = e.getResponse().body();
+            List<Section> sections = stepicResponse.getSections();
+
+            mSectionList.clear();
+            mSectionList.addAll(sections);
+            mAdapter.notifyDataSetChanged();
+            ProgressHelper.dismiss(mProgressBar);
+        }
+    }
+
+    @Subscribe
+    public void onFailureDownload(FailureResponseSectionEvent e) {
+        if (mCourse.getCourseId() == e.getCourse().getCourseId()) {
+            ProgressHelper.dismiss(mProgressBar);
+        }
+    }
+
 
     @Override
     protected void onPause() {
         super.onPause();
         Log.i(TAG, "onPause");
-
-        if (mLoadingSectionTask != null && mLoadingSectionTask.getStatus() != AsyncTask.Status.FINISHED) {
-            mLoadingSectionTask.cancel(true);
-        }
-
     }
 
     @Override

@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
+import com.squareup.otto.Bus;
+
 import org.stepic.droid.R;
 import org.stepic.droid.core.IShell;
 
@@ -17,6 +19,9 @@ public abstract class StepicBaseFragmentActivity extends AppCompatActivity {
     @Inject
     protected IShell mShell;
 
+    @Inject
+    protected Bus bus;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +31,8 @@ public abstract class StepicBaseFragmentActivity extends AppCompatActivity {
 
     protected void hideSoftKeypad() {
         getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
     }
 
     @Override
@@ -39,6 +45,18 @@ public abstract class StepicBaseFragmentActivity extends AppCompatActivity {
     private void applyTransitionPrev() {
         // apply slide transition animation
         overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        bus.register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        bus.unregister(this);
     }
 
     @Override

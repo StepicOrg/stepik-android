@@ -1,34 +1,103 @@
 package org.stepic.droid.view.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
 
-import org.stepic.droid.R;
-import org.stepic.droid.base.StepicBaseFragment;
-import org.stepic.droid.concurrency.AsyncResultWrapper;
-import org.stepic.droid.concurrency.LoadingCoursesTask;
-import org.stepic.droid.model.Course;
+import com.squareup.otto.Subscribe;
+
+import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
+import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
+import org.stepic.droid.events.courses.FinishingSaveCoursesToDbEvent;
+import org.stepic.droid.events.courses.GettingCoursesFromDbSuccessEvent;
+import org.stepic.droid.events.courses.PreLoadCoursesEvent;
+import org.stepic.droid.events.courses.StartingGetCoursesFromDbEvent;
+import org.stepic.droid.events.courses.StartingSaveCoursesToDbEvent;
+import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.store.operations.DbOperationsCourses;
-import org.stepic.droid.view.adapters.MyCoursesAdapter;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import org.stepic.droid.util.AppConstants;
 
 public class MyCoursesFragment extends CoursesFragmentBase {
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (AppConstants.WAS_SWIPED_TO_REFRESH_MY_COURSES) {
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    getAndShowDataFromCache();
+                }
+            });
+        } else {
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    downloadData();
+                }
+            });
+            AppConstants.WAS_SWIPED_TO_REFRESH_MY_COURSES = true;
+        }
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         mTypeOfCourse = DbOperationsCourses.Table.enrolled;
+    }
+
+
+    @Override
+    @Subscribe
+    public void onFailureDataLoad(FailCoursesDownloadEvent e) {
+        if (e.getType() == mTypeOfCourse)
+            super.onFailureDataLoad(e);
+    }
+
+    @Override
+    @Subscribe
+    public void onStartingSaveToDb(StartingSaveCoursesToDbEvent e) {
+        if (e.getType() == mTypeOfCourse)
+            super.onStartingSaveToDb(e);
+    }
+
+    @Override
+    @Subscribe
+    public void onFinishingSaveToDb(FinishingSaveCoursesToDbEvent e) {
+        if (e.getType() == mTypeOfCourse)
+            super.onFinishingSaveToDb(e);
+    }
+
+    @Override
+    @Subscribe
+    public void onStartingGetFromDb(StartingGetCoursesFromDbEvent e) {
+        if (e.getType() == mTypeOfCourse)
+            super.onStartingGetFromDb(e);
+    }
+
+    @Override
+    @Subscribe
+    public void onFinishingGetFromDb(FinishingGetCoursesFromDbEvent e) {
+        if (e.getType() == mTypeOfCourse)
+            super.onFinishingGetFromDb(e);
+    }
+
+    @Subscribe
+    public void onGettingFromDbSuccess(GettingCoursesFromDbSuccessEvent e) {
+        if (e.getType() == mTypeOfCourse)
+            super.onGettingFromDbSuccess(e);
+    }
+
+    @Subscribe
+    @Override
+    public void onSuccessDataLoad(SuccessCoursesDownloadEvent e) {
+        if (e.getType() == mTypeOfCourse)
+            super.onSuccessDataLoad(e);
+    }
+
+    @Subscribe
+    @Override
+    public void onPreLoad(PreLoadCoursesEvent e) {
+        if (e.getType() == mTypeOfCourse)
+            super.onPreLoad(e);
     }
 }

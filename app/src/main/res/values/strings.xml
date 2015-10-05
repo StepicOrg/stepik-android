@@ -35,5 +35,6 @@
     <string name="join_course">Join course</string>
     <string name="join_course_impossible">You can\'t join this course now.</string>
     <string name="join_course_exception">Check your Internet Connection.</string>
+    <string name="loading">Loading…</string>
 
 </resources>

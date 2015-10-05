@@ -31,4 +31,5 @@
     <string name="join_course">Поступить</string>
     <string name="join_course_exception">Проверьте интернет соединение.</string>
     <string name="join_course_impossible">Сейчас нельзя присоединиться к курсу.</string>
+    <string name="loading">Загрузка…</string>
 </resources>
