@@ -7,8 +7,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.squareup.otto.Subscribe;
+
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragmentActivity;
+import org.stepic.droid.events.sections.FailureResponseSectionEvent;
+import org.stepic.droid.events.sections.SuccessResponseSectionsEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.util.AppConstants;
@@ -55,6 +59,7 @@ public class EnrolledCourseActivity extends StepicBaseFragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
         mCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,27 +81,42 @@ public class EnrolledCourseActivity extends StepicBaseFragmentActivity {
         mShell.getApi().getSections(mCourse.getSections()).enqueue(new Callback<SectionsStepicResponse>() {
             @Override
             public void onResponse(Response<SectionsStepicResponse> response, Retrofit retrofit) {
-                SectionsStepicResponse stepicResponse = response.body();
-                List<Section> sections = stepicResponse.getSections();
+                bus.post(new SuccessResponseSectionsEvent(mCourse, response, retrofit));
 
-                mSectionList.clear();
-                mSectionList.addAll(sections);
-                mAdapter.notifyDataSetChanged();
-                ProgressHelper.dismiss(mProgressBar);
             }
 
             @Override
             public void onFailure(Throwable t) {
-                ProgressHelper.dismiss(mProgressBar);
+                bus.post(new FailureResponseSectionEvent(mCourse));
             }
         });
     }
+
+    @Subscribe
+    public void onSuccessDownload(SuccessResponseSectionsEvent e) {
+        if (mCourse.getCourseId() == e.getCourseOfSection().getCourseId()) {
+            SectionsStepicResponse stepicResponse = e.getResponse().body();
+            List<Section> sections = stepicResponse.getSections();
+
+            mSectionList.clear();
+            mSectionList.addAll(sections);
+            mAdapter.notifyDataSetChanged();
+            ProgressHelper.dismiss(mProgressBar);
+        }
+    }
+
+    @Subscribe
+    public void onFailureDownload(FailureResponseSectionEvent e) {
+        if (mCourse.getCourseId() == e.getCourse().getCourseId()) {
+            ProgressHelper.dismiss(mProgressBar);
+        }
+    }
+
 
     @Override
     protected void onPause() {
         super.onPause();
         Log.i(TAG, "onPause");
-        // FIXME: 04.10.15 USE OTTO for retrofit
     }
 
     @Override
