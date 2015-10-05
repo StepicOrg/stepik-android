@@ -1,9 +1,14 @@
 <resources>
+
+    <style name="Theme.MyApp.ActionBar" parent="style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="elevation">4dp</item>
+    </style>
+
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
+        <item name="actionBarStyle">@style/Theme.MyApp.ActionBar</item>
     </style>
 
 </resources>

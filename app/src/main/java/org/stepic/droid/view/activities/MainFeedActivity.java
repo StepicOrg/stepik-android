@@ -53,6 +53,7 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
     @BindString(R.string.my_courses_title)
     String mCoursesTitle;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

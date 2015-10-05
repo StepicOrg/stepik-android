@@ -10,4 +10,5 @@
     <dimen name="text_height">11sp</dimen>
     <dimen name="height_of_course_card">100dp</dimen>
     <dimen name="instructor_width">100dp</dimen>
+    <dimen name="guideline_elevation_toolbar">4dp</dimen>
 </resources>
