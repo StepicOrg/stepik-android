@@ -17,13 +17,13 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragment;
 import org.stepic.droid.concurrency.FromDbCoursesTask;
 import org.stepic.droid.concurrency.ToDbCoursesTask;
-import org.stepic.droid.events.FailCoursesDownloadEvent;
-import org.stepic.droid.events.FinishingGetCoursesFromDbEvent;
-import org.stepic.droid.events.FinishingSaveCoursesToDbEvent;
-import org.stepic.droid.events.GettingCoursesFromDbSuccessEvent;
-import org.stepic.droid.events.StartingGetCoursesFromDbEvent;
-import org.stepic.droid.events.StartingSaveCoursesToDbEvent;
-import org.stepic.droid.events.SuccessCoursesDownloadEvent;
+import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
+import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
+import org.stepic.droid.events.courses.FinishingSaveCoursesToDbEvent;
+import org.stepic.droid.events.courses.GettingCoursesFromDbSuccessEvent;
+import org.stepic.droid.events.courses.StartingGetCoursesFromDbEvent;
+import org.stepic.droid.events.courses.StartingSaveCoursesToDbEvent;
+import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DbOperationsCourses;
 import org.stepic.droid.util.ProgressHelper;
@@ -104,13 +104,6 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
                 }
             }
         });
-
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                getAndShowDataFromCache();
-            }
-        });
     }
 
 
@@ -132,12 +125,12 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
         retrofit.Callback<CoursesStepicResponse> callback = new retrofit.Callback<CoursesStepicResponse>() {
             @Override
             public void onResponse(Response<CoursesStepicResponse> response, Retrofit retrofit) {
-                bus.post(new SuccessCoursesDownloadEvent(response, retrofit));
+                bus.post(new SuccessCoursesDownloadEvent(mTypeOfCourse, response, retrofit));
             }
 
             @Override
             public void onFailure(Throwable t) {
-                bus.post(new FailCoursesDownloadEvent());
+                bus.post(new FailCoursesDownloadEvent(mTypeOfCourse));
             }
         };
 
@@ -162,12 +155,11 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
             @Override
             protected void onSuccess(List<Course> courses) {
                 super.onSuccess(courses);
-                bus.post(new GettingCoursesFromDbSuccessEvent(courses));
+                bus.post(new GettingCoursesFromDbSuccessEvent(mTypeOfCourse, courses));
             }
         };
         mDbGetCoursesTask.execute();
     }
-
 
     @Subscribe
     public void onSuccessDataLoad(SuccessCoursesDownloadEvent e) {

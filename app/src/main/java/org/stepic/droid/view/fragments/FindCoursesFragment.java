@@ -1,17 +1,42 @@
 package org.stepic.droid.view.fragments;
 
+import android.os.Bundle;
+
 import com.squareup.otto.Subscribe;
 
-import org.stepic.droid.events.FailCoursesDownloadEvent;
-import org.stepic.droid.events.FinishingGetCoursesFromDbEvent;
-import org.stepic.droid.events.FinishingSaveCoursesToDbEvent;
-import org.stepic.droid.events.GettingCoursesFromDbSuccessEvent;
-import org.stepic.droid.events.StartingGetCoursesFromDbEvent;
-import org.stepic.droid.events.StartingSaveCoursesToDbEvent;
-import org.stepic.droid.events.SuccessCoursesDownloadEvent;
+import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
+import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
+import org.stepic.droid.events.courses.FinishingSaveCoursesToDbEvent;
+import org.stepic.droid.events.courses.GettingCoursesFromDbSuccessEvent;
+import org.stepic.droid.events.courses.StartingGetCoursesFromDbEvent;
+import org.stepic.droid.events.courses.StartingSaveCoursesToDbEvent;
+import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.store.operations.DbOperationsCourses;
+import org.stepic.droid.util.AppConstants;
 
 public class FindCoursesFragment extends CoursesFragmentBase {
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (AppConstants.WAS_SWIPED_TO_REFRESH_FIND_COURSES) {
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    getAndShowDataFromCache();
+                }
+            });
+        } else {
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    downloadData();
+                }
+            });
+            AppConstants.WAS_SWIPED_TO_REFRESH_FIND_COURSES = true;
+        }
+
+    }
 
     @Override
     public void onStart() {
@@ -23,41 +48,48 @@ public class FindCoursesFragment extends CoursesFragmentBase {
     @Override
     @Subscribe
     public void onFailureDataLoad(FailCoursesDownloadEvent e) {
-        super.onFailureDataLoad(e);
+        if (e.getType() == mTypeOfCourse)
+            super.onFailureDataLoad(e);
     }
 
     @Override
     @Subscribe
     public void onStartingSaveToDb(StartingSaveCoursesToDbEvent e) {
-        super.onStartingSaveToDb(e);
+        if (e.getType() == mTypeOfCourse)
+            super.onStartingSaveToDb(e);
     }
 
     @Override
     @Subscribe
     public void onFinishingSaveToDb(FinishingSaveCoursesToDbEvent e) {
-        super.onFinishingSaveToDb(e);
+        if (e.getType() == mTypeOfCourse)
+            super.onFinishingSaveToDb(e);
     }
 
     @Override
     @Subscribe
     public void onStartingGetFromDb(StartingGetCoursesFromDbEvent e) {
-        super.onStartingGetFromDb(e);
+        if (e.getType() == mTypeOfCourse)
+            super.onStartingGetFromDb(e);
     }
 
     @Override
     @Subscribe
     public void onFinishingGetFromDb(FinishingGetCoursesFromDbEvent e) {
-        super.onFinishingGetFromDb(e);
+        if (e.getType() == mTypeOfCourse)
+            super.onFinishingGetFromDb(e);
     }
 
     @Subscribe
     public void onGettingFromDbSuccess(GettingCoursesFromDbSuccessEvent e) {
-        super.onGettingFromDbSuccess(e);
+        if (e.getType() == mTypeOfCourse)
+            super.onGettingFromDbSuccess(e);
     }
 
     @Subscribe
     @Override
     public void onSuccessDataLoad(SuccessCoursesDownloadEvent e) {
-        super.onSuccessDataLoad(e);
+        if (e.getType() == mTypeOfCourse)
+            super.onSuccessDataLoad(e);
     }
 }

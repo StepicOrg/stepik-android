@@ -66,7 +66,7 @@ public class RetrofitRESTApi implements IApi {
                 return chain.proceed(newRequest);
             }
         };
-        okHttpClient.interceptors().add(interceptor);
+        okHttpClient.networkInterceptors().add(interceptor);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mConfig.getBaseUrl())
                 .addConverterFactory(GsonConverterFactory.create())
