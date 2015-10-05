@@ -3,11 +3,11 @@ package org.stepic.droid.view.fragments;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.events.FailCoursesDownloadEvent;
-import org.stepic.droid.events.FinishingGetFromDbEvent;
-import org.stepic.droid.events.FinishingSaveToDbEvent;
-import org.stepic.droid.events.GettingFromDbSuccess;
-import org.stepic.droid.events.StartingGetFromDbEvent;
-import org.stepic.droid.events.StartingSaveToDbEvent;
+import org.stepic.droid.events.FinishingGetCoursesFromDbEvent;
+import org.stepic.droid.events.FinishingSaveCoursesToDbEvent;
+import org.stepic.droid.events.GettingCoursesFromDbSuccessEvent;
+import org.stepic.droid.events.StartingGetCoursesFromDbEvent;
+import org.stepic.droid.events.StartingSaveCoursesToDbEvent;
 import org.stepic.droid.events.SuccessCoursesDownloadEvent;
 import org.stepic.droid.store.operations.DbOperationsCourses;
 
@@ -27,30 +27,30 @@ public class MyCoursesFragment extends CoursesFragmentBase {
 
     @Override
     @Subscribe
-    public void onStartingSaveToDb(StartingSaveToDbEvent e) {
+    public void onStartingSaveToDb(StartingSaveCoursesToDbEvent e) {
         super.onStartingSaveToDb(e);
     }
 
     @Override
     @Subscribe
-    public void onFinishingSaveToDb(FinishingSaveToDbEvent e) {
+    public void onFinishingSaveToDb(FinishingSaveCoursesToDbEvent e) {
         super.onFinishingSaveToDb(e);
     }
 
     @Override
     @Subscribe
-    public void onStartingGetFromDb(StartingGetFromDbEvent e) {
+    public void onStartingGetFromDb(StartingGetCoursesFromDbEvent e) {
         super.onStartingGetFromDb(e);
     }
 
     @Override
     @Subscribe
-    public void onFinishingGetFromDb(FinishingGetFromDbEvent e) {
+    public void onFinishingGetFromDb(FinishingGetCoursesFromDbEvent e) {
         super.onFinishingGetFromDb(e);
     }
 
     @Subscribe
-    public void onGettingFromDbSuccess(GettingFromDbSuccess e) {
+    public void onGettingFromDbSuccess(GettingCoursesFromDbSuccessEvent e) {
         super.onGettingFromDbSuccess(e);
     }
 

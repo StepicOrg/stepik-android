@@ -1,6 +1,5 @@
 package org.stepic.droid.view.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,11 +18,11 @@ import org.stepic.droid.base.StepicBaseFragment;
 import org.stepic.droid.concurrency.FromDbCoursesTask;
 import org.stepic.droid.concurrency.ToDbCoursesTask;
 import org.stepic.droid.events.FailCoursesDownloadEvent;
-import org.stepic.droid.events.FinishingGetFromDbEvent;
-import org.stepic.droid.events.FinishingSaveToDbEvent;
-import org.stepic.droid.events.GettingFromDbSuccess;
-import org.stepic.droid.events.StartingGetFromDbEvent;
-import org.stepic.droid.events.StartingSaveToDbEvent;
+import org.stepic.droid.events.FinishingGetCoursesFromDbEvent;
+import org.stepic.droid.events.FinishingSaveCoursesToDbEvent;
+import org.stepic.droid.events.GettingCoursesFromDbSuccessEvent;
+import org.stepic.droid.events.StartingGetCoursesFromDbEvent;
+import org.stepic.droid.events.StartingSaveCoursesToDbEvent;
 import org.stepic.droid.events.SuccessCoursesDownloadEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DbOperationsCourses;
@@ -65,12 +64,10 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     protected DbOperationsCourses.Table mTypeOfCourse;
     protected FromDbCoursesTask mDbGetCoursesTask;
     protected ToDbCoursesTask mDbSaveCoursesTask;
-    private volatile boolean isPaused;
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        isPaused = false;
         mCurrentPage = 1;
 //        mHasNextPage = true;
 
@@ -165,7 +162,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
             @Override
             protected void onSuccess(List<Course> courses) {
                 super.onSuccess(courses);
-                bus.post(new GettingFromDbSuccess(courses));
+                bus.post(new GettingCoursesFromDbSuccessEvent(courses));
             }
         };
         mDbGetCoursesTask.execute();
@@ -191,29 +188,30 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     }
 
     @Subscribe
-    public void onStartingSaveToDb(StartingSaveToDbEvent e) {
+    public void onStartingSaveToDb(StartingSaveCoursesToDbEvent e) {
         ProgressHelper.activate(mSwipeRefreshLayout);
     }
 
     @Subscribe
-    public void onFinishingSaveToDb(FinishingSaveToDbEvent e) {
+    public void onFinishingSaveToDb(FinishingSaveCoursesToDbEvent e) {
         ProgressHelper.dismiss(mSwipeRefreshLayout);
     }
 
     @Subscribe
-    public void onStartingGetFromDb(StartingGetFromDbEvent e) {
+    public void onStartingGetFromDb(StartingGetCoursesFromDbEvent e) {
         ProgressHelper.activate(mSwipeRefreshLayout);
     }
 
     @Subscribe
-    public void onFinishingGetFromDb(FinishingGetFromDbEvent e) {
+    public void onFinishingGetFromDb(FinishingGetCoursesFromDbEvent e) {
         ProgressHelper.dismiss(mSwipeRefreshLayout);
     }
 
     @Subscribe
-    public void onGettingFromDbSuccess(GettingFromDbSuccess e) {
+    public void onGettingFromDbSuccess(GettingCoursesFromDbSuccessEvent e) {
         showCourses(e.getCourses());
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -228,17 +226,6 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     @Override
     public void onPause() {
         super.onPause();
-
-        //todo Use otto for handling errors
-
-        if (mDbGetCoursesTask != null && mDbGetCoursesTask.getStatus() != AsyncTask.Status.FINISHED) {
-            mDbGetCoursesTask.cancel(true);
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
-
-        isPaused = true;
-
-        //// FIXME: 28.09.15 : Task may init after onPause() and start to execute.
     }
 
 

@@ -4,8 +4,8 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IShell;
-import org.stepic.droid.events.FinishingSaveToDbEvent;
-import org.stepic.droid.events.StartingSaveToDbEvent;
+import org.stepic.droid.events.FinishingSaveCoursesToDbEvent;
+import org.stepic.droid.events.StartingSaveCoursesToDbEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DbOperationsCourses;
 
@@ -57,13 +57,13 @@ public class ToDbCoursesTask extends StepicTask<Void, Void, Void> {
 
     @Override
     protected void onPreExecute() {
-        bus.post(new StartingSaveToDbEvent());
+        bus.post(new StartingSaveCoursesToDbEvent());
         super.onPreExecute();
     }
 
     @Override
     protected void onPostExecute(AsyncResultWrapper<Void> voidAsyncResultWrapper) {
         super.onPostExecute(voidAsyncResultWrapper);
-        bus.post(new FinishingSaveToDbEvent());
+        bus.post(new FinishingSaveCoursesToDbEvent());
     }
 }

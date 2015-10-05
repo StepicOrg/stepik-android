@@ -5,8 +5,8 @@ import com.squareup.otto.Bus;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IShell;
-import org.stepic.droid.events.FinishingGetFromDbEvent;
-import org.stepic.droid.events.StartingGetFromDbEvent;
+import org.stepic.droid.events.FinishingGetCoursesFromDbEvent;
+import org.stepic.droid.events.StartingGetCoursesFromDbEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DbOperationsCourses;
 
@@ -47,13 +47,13 @@ public class FromDbCoursesTask extends StepicTask<Void, Void, List<Course>> {
 
     @Override
     protected void onPreExecute() {
-        bus.post(new StartingGetFromDbEvent());
+        bus.post(new StartingGetCoursesFromDbEvent());
         super.onPreExecute();
     }
 
     @Override
     protected void onPostExecute(AsyncResultWrapper<List<Course>> listAsyncResultWrapper) {
         super.onPostExecute(listAsyncResultWrapper);
-        bus.post(new FinishingGetFromDbEvent());
+        bus.post(new FinishingGetCoursesFromDbEvent());
     }
 }
