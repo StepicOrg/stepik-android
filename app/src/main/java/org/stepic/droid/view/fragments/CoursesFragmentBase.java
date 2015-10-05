@@ -1,5 +1,6 @@
 package org.stepic.droid.view.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -21,6 +22,7 @@ import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
 import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
 import org.stepic.droid.events.courses.FinishingSaveCoursesToDbEvent;
 import org.stepic.droid.events.courses.GettingCoursesFromDbSuccessEvent;
+import org.stepic.droid.events.courses.PreLoadCoursesEvent;
 import org.stepic.droid.events.courses.StartingGetCoursesFromDbEvent;
 import org.stepic.droid.events.courses.StartingSaveCoursesToDbEvent;
 import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
@@ -64,10 +66,13 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     protected DbOperationsCourses.Table mTypeOfCourse;
     protected FromDbCoursesTask mDbGetCoursesTask;
     protected ToDbCoursesTask mDbSaveCoursesTask;
+    protected View mFooterDownloadingView;
+    protected volatile boolean isLoading;
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        isLoading = false;
         mCurrentPage = 1;
 //        mHasNextPage = true;
 
@@ -78,6 +83,11 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
                 R.color.stepic_blue_ribbon);
 
         if (mCourses == null) mCourses = new ArrayList<>();
+
+        mFooterDownloadingView = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.loading_view, null, false);
+        mFooterDownloadingView.setVisibility(View.GONE);
+        mListOfCourses.addFooterView(mFooterDownloadingView);
+
         mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses);
         mListOfCourses.setAdapter(mCoursesAdapter);
         mListOfCourses.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -88,8 +98,9 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (mHasNextPage && firstVisibleItem + visibleItemCount >= totalItemCount) {
-//                    downloadData();
+                if (!isLoading && mHasNextPage && firstVisibleItem + visibleItemCount >= totalItemCount) {
+                    isLoading=true;
+                    downloadData();
                 }
             }
         });
@@ -104,6 +115,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
                 }
             }
         });
+
     }
 
 
@@ -135,17 +147,21 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
         };
 
         IApi api = mShell.getApi();
-        ProgressHelper.activate(mSwipeRefreshLayout);
+
+
+        Log.i(TAG, "post pre load");
+        bus.post(new PreLoadCoursesEvent(mTypeOfCourse));
         if (mTypeOfCourse == DbOperationsCourses.Table.featured) {
             api.getFeaturedCourses(mCurrentPage).enqueue(callback);
         } else {
             api.getEnrolledCourses(mCurrentPage).enqueue(callback);
         }
         Log.i(TAG, "mLoadingCoursesTask starts to execute");
+
     }
 
     public void saveDataToCache(List<Course> courses) {
-        mDbSaveCoursesTask = new ToDbCoursesTask(courses, mTypeOfCourse);
+        mDbSaveCoursesTask = new ToDbCoursesTask(courses, mTypeOfCourse, mCurrentPage);
         mDbSaveCoursesTask.execute();
     }
 
@@ -162,6 +178,18 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     }
 
     @Subscribe
+    public void onPreLoad(PreLoadCoursesEvent e) {
+        Log.i(TAG, "preLoad");
+        isLoading = true;
+        if (mCurrentPage == 1) {
+            mFooterDownloadingView.setVisibility(View.GONE);
+        } else {
+            mFooterDownloadingView.setVisibility(View.VISIBLE);
+        }
+        ProgressHelper.activate(mSwipeRefreshLayout);
+    }
+
+    @Subscribe
     public void onSuccessDataLoad(SuccessCoursesDownloadEvent e) {
         CoursesStepicResponse coursesStepicResponse = e.getResponse().body();
         ProgressHelper.dismiss(mSwipeRefreshLayout);
@@ -172,11 +200,14 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
         if (mHasNextPage) {
             mCurrentPage++;
         }
+        isLoading = false;
     }
 
     @Subscribe
     public void onFailureDataLoad(FailCoursesDownloadEvent e) {
         ProgressHelper.dismiss(mSwipeRefreshLayout);
+        mFooterDownloadingView.setVisibility(View.GONE);
+        isLoading = false;
     }
 
     @Subscribe
@@ -197,6 +228,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     @Subscribe
     public void onFinishingGetFromDb(FinishingGetCoursesFromDbEvent e) {
         ProgressHelper.dismiss(mSwipeRefreshLayout);
+        if (mFooterDownloadingView!= null) mFooterDownloadingView.setVisibility(View.GONE);
     }
 
     @Subscribe
@@ -208,6 +240,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     public void onStart() {
         super.onStart();
         bus.register(this);
+        Log.i(TAG, "onStart registered");
     }
 
     @Override
