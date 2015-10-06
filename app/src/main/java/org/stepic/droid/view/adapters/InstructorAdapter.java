@@ -45,7 +45,7 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
         holder.firstLastName.setText(firstLastNameString);
         holder.courseShortBio.setText(instructor.getShort_bio());
         Picasso.with(mContext)
-                .load("sa")
+                .load(instructor.getAvatar())
                 .placeholder(holder.placeholder)
                 .error(holder.placeholder)
                 .into(holder.instructorIcon);
