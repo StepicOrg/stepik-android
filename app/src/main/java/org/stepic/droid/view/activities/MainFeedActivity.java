@@ -1,5 +1,6 @@
 package org.stepic.droid.view.activities;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -27,6 +28,7 @@ import org.stepic.droid.view.fragments.MySettings;
 import org.stepic.droid.web.StepicProfileResponse;
 
 import butterknife.Bind;
+import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 import retrofit.Callback;
@@ -52,6 +54,9 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
 
     @BindString(R.string.my_courses_title)
     String mCoursesTitle;
+
+    @BindDrawable(R.drawable.placeholder_icon)
+    Drawable mUserPlaceholder;
 
 
     @Override
@@ -181,7 +186,7 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
     private void showProfile(Profile profile) {
         mProfileImage.setVisibility(View.VISIBLE);
         Picasso.with(MainFeedActivity.this).load(profile.getAvatar()).
-                placeholder(R.drawable.stepic_logo_black_and_white).into(mProfileImage);
+                placeholder(mUserPlaceholder).error(mUserPlaceholder).into(mProfileImage);
         mUserNameTextView.setText(profile.getFirst_name() + " " + profile.getLast_name());
     }
 }

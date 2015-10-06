@@ -1,9 +1,6 @@
 package org.stepic.droid.web;
 
 import org.stepic.droid.model.Course;
-import org.stepic.droid.model.User;
-
-import java.util.List;
 
 import retrofit.Call;
 
@@ -18,7 +15,7 @@ public interface IApi {
 
     Call<StepicProfileResponse> getUserProfile();
 
-    Call<List<User>> getUsers(long[] userIds);
+    Call<UserStepicResponse> getUsers(long[] userIds);
 
     Call<Void> tryJoinCourse(Course course);
 

@@ -17,7 +17,6 @@ import org.stepic.droid.model.User;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.BindDimen;
 import butterknife.BindDrawable;
 import butterknife.ButterKnife;
 
@@ -46,7 +45,7 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
         holder.firstLastName.setText(firstLastNameString);
         holder.courseShortBio.setText(instructor.getShort_bio());
         Picasso.with(mContext)
-                .load(instructor.getAvatar())
+                .load("sa")
                 .placeholder(holder.placeholder)
                 .error(holder.placeholder)
                 .into(holder.instructorIcon);
@@ -68,7 +67,7 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
         @Bind(R.id.course_short_bio)
         TextView courseShortBio;
 
-        @BindDrawable(R.drawable.stepic_logo_black_and_white80x80)
+        @BindDrawable(R.drawable.placeholder_icon_trnsp)
         Drawable placeholder;
 
         public InstructorViewHolder(View itemView) {
