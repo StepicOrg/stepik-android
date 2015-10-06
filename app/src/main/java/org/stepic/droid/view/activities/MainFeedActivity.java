@@ -83,10 +83,10 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
 
                 @Override
                 public void onFailure(Throwable t) {
-
-
+                    // FIXME: 06.10.15 Sometimes profile is not load, investigate it! (maybe just set for update when create this activity)
                     mProfileImage.setVisibility(View.INVISIBLE);
                     mUserNameTextView.setText("");
+//                    throw new RuntimeException(t.getMessage());
 
                 }
             });

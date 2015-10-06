@@ -74,7 +74,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
 
         isLoading = false;
         mCurrentPage = 1;
-//        mHasNextPage = true;
+        mHasNextPage = true;
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(
@@ -99,7 +99,8 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (!isLoading && mHasNextPage && firstVisibleItem + visibleItemCount >= totalItemCount) {
-                    isLoading=true;
+                    Log.i(TAG, "Go load from scroll");
+                    isLoading = true;
                     downloadData();
                 }
             }
@@ -191,14 +192,19 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
 
     @Subscribe
     public void onSuccessDataLoad(SuccessCoursesDownloadEvent e) {
-        CoursesStepicResponse coursesStepicResponse = e.getResponse().body();
-        ProgressHelper.dismiss(mSwipeRefreshLayout);
-        saveDataToCache(coursesStepicResponse.getCourses());
-        getAndShowDataFromCache();
+        Response<CoursesStepicResponse> response = e.getResponse();
+        if (response.isSuccess()) {
+            CoursesStepicResponse coursesStepicResponse = response.body();
+            ProgressHelper.dismiss(mSwipeRefreshLayout);
+            saveDataToCache(coursesStepicResponse.getCourses());
+            getAndShowDataFromCache();
 
-        mHasNextPage = coursesStepicResponse.getMeta().isHas_next();
-        if (mHasNextPage) {
-            mCurrentPage++;
+            mHasNextPage = coursesStepicResponse.getMeta().isHas_next();
+            if (mHasNextPage) {
+                mCurrentPage++;
+            }
+        } else {
+            mHasNextPage = false;
         }
         isLoading = false;
     }
@@ -228,7 +234,10 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     @Subscribe
     public void onFinishingGetFromDb(FinishingGetCoursesFromDbEvent e) {
         ProgressHelper.dismiss(mSwipeRefreshLayout);
-        if (mFooterDownloadingView!= null) mFooterDownloadingView.setVisibility(View.GONE);
+        if (mFooterDownloadingView != null) mFooterDownloadingView.setVisibility(View.GONE);
+
+        if (e.getResult()!=null && e.getResult().size() == 0)
+            downloadData();
     }
 
     @Subscribe

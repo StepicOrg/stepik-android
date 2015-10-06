@@ -54,6 +54,6 @@ public class FromDbCoursesTask extends StepicTask<Void, Void, List<Course>> {
     @Override
     protected void onPostExecute(AsyncResultWrapper<List<Course>> listAsyncResultWrapper) {
         super.onPostExecute(listAsyncResultWrapper);
-        bus.post(new FinishingGetCoursesFromDbEvent(mCourseType));
+        bus.post(new FinishingGetCoursesFromDbEvent(mCourseType, listAsyncResultWrapper.getResult()));
     }
 }

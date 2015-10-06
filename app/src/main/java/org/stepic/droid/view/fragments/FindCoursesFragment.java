@@ -13,29 +13,18 @@ import org.stepic.droid.events.courses.StartingGetCoursesFromDbEvent;
 import org.stepic.droid.events.courses.StartingSaveCoursesToDbEvent;
 import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.store.operations.DbOperationsCourses;
-import org.stepic.droid.util.AppConstants;
 
 public class FindCoursesFragment extends CoursesFragmentBase {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (AppConstants.WAS_SWIPED_TO_REFRESH_FIND_COURSES) {
-            mSwipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    getAndShowDataFromCache();
-                }
-            });
-        } else {
-            mSwipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    downloadData();
-                }
-            });
-            AppConstants.WAS_SWIPED_TO_REFRESH_FIND_COURSES = true;
-        }
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                getAndShowDataFromCache();
+            }
+        });
 
     }
 
