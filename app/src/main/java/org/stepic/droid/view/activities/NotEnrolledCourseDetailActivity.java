@@ -9,8 +9,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.otto.Subscribe;
+
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragmentActivity;
+import org.stepic.droid.events.instructors.FailureLoadInstrictorsEvent;
+import org.stepic.droid.events.instructors.OnResponseLoadingInstructorsEvent;
+import org.stepic.droid.events.instructors.StartLoadingInstructorsEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.User;
 import org.stepic.droid.util.AppConstants;
@@ -18,6 +23,7 @@ import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.InstructorAdapter;
 import org.stepic.droid.view.layout_managers.WrapContentLinearLayoutManager;
+import org.stepic.droid.web.UserStepicResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,30 +132,53 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
                         LinearLayoutManager.HORIZONTAL, false);//// TODO: 30.09.15 determine right-to-left-mode
         mInstructorsCarousel.setLayoutManager(layoutManager);
 
-        ProgressHelper.activate(mInstructorsProgressBar);
 
-        mShell.getApi().getUsers(mCourse.getInstructors()).enqueue(new Callback<List<User>>() {
+        bus.post(new StartLoadingInstructorsEvent(mCourse));
+
+        mShell.getApi().getUsers(mCourse.getInstructors()).enqueue(new Callback<UserStepicResponse>() {
             @Override
-            public void onResponse(Response<List<User>> response, Retrofit retrofit) {
-                List<User> users = response.body();
-
-                mUserList.clear();
-                mUserList.addAll(users);
-                mInstructorAdapter.notifyDataSetChanged();
-                ProgressHelper.dismiss(mInstructorsProgressBar);
+            public void onResponse(Response<UserStepicResponse> response, Retrofit retrofit) {
+                bus.post(new OnResponseLoadingInstructorsEvent(mCourse, response, retrofit));
             }
 
             @Override
             public void onFailure(Throwable t) {
-                ProgressHelper.dismiss(mInstructorsProgressBar);
+                bus.post(new FailureLoadInstrictorsEvent(mCourse, t));
             }
         });
     }
 
+    @Subscribe
+    public void onStartLoadingInstructors(StartLoadingInstructorsEvent e) {
+        if (e.getCourse() != null && mCourse != null & e.getCourse().getCourseId() == mCourse.getCourseId()) {
+            ProgressHelper.activate(mInstructorsProgressBar);
+        }
+    }
+
+    @Subscribe
+    public void onResponseLoadingInstructors(OnResponseLoadingInstructorsEvent e) {
+        if (e.getCourse() != null && mCourse != null & e.getCourse().getCourseId() == mCourse.getCourseId()) {
+
+            List<User> users = e.getResponse().body().getUsers();
+
+            mUserList.clear();
+            mUserList.addAll(users);
+            mInstructorAdapter.notifyDataSetChanged();
+            ProgressHelper.dismiss(mInstructorsProgressBar);
+        }
+    }
+
+    @Subscribe
+    public void onFinishLoading(FailureLoadInstrictorsEvent e) {
+        if (e.getCourse() != null && mCourse != null & e.getCourse().getCourseId() == mCourse.getCourseId()) {
+            ProgressHelper.dismiss(mInstructorsProgressBar);
+        }
+    }
+
+
     @Override
     protected void onPause() {
         super.onPause();
-        ////FIXME OTTO
     }
 
     @Override

@@ -14,12 +14,10 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.EnrollmentWrapper;
-import org.stepic.droid.model.User;
 import org.stepic.droid.util.SharedPreferenceHelper;
 
 import java.io.IOException;
 import java.net.Proxy;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -99,7 +97,7 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
-    public Call<List<User>> getUsers(long[] userIds) {
+    public Call<UserStepicResponse> getUsers(long[] userIds) {
         return mLoggedService.getUsers(userIds);
     }
 

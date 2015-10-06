@@ -1,10 +1,6 @@
 package org.stepic.droid.web;
 
 import org.stepic.droid.model.EnrollmentWrapper;
-import org.stepic.droid.model.Profile;
-import org.stepic.droid.model.User;
-
-import java.util.List;
 
 import retrofit.Call;
 import retrofit.http.Body;
@@ -22,7 +18,7 @@ public interface StepicRestLoggedService {
     Call<Void> joinCourse(@Body EnrollmentWrapper enrollmentCourse);
 
     @GET("api/users")
-    Call<List<User>> getUsers(@Query("ids[]") long[] userIds);
+    Call<UserStepicResponse> getUsers(@Query("ids[]") long[] userIds);
 
     @GET("api/stepics/1")
     Call<StepicProfileResponse> getUserProfile();
