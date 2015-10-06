@@ -3,17 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cv"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="@dimen/guideline_list_item_height"
     android:background="@drawable/states"
-    app:cardCornerRadius="@dimen/card_corner_radius_guideline">
+    app:cardCornerRadius="@dimen/guideline_list_item_corner">
 
     <RelativeLayout
         android:id="@+id/course_info_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:orientation="vertical"
-        android:padding="4dp">
+        android:paddingBottom="4dp"
+        android:paddingEnd="@dimen/guideline_left_right_padding_list_item"
+        android:paddingLeft="@dimen/guideline_left_right_padding_list_item"
+        android:paddingRight="@dimen/guideline_left_right_padding_list_item"
+        android:paddingStart="@dimen/guideline_left_right_padding_list_item"
+        android:paddingTop="4dp">
 
         <org.stepic.droid.view.custom.SDetailedCourseHeadersTV
             android:id="@+id/section_title"

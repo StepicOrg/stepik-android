@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.model.Section;
-import org.stepic.droid.model.User;
 
 import java.util.List;
 
@@ -17,6 +16,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionViewHolder> {
+private final static String SECTION_TITLE_DELIMETER = ". ";
 
     private List<Section> sections;
     private Context mContext;
@@ -38,6 +38,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         Section section = sections.get(position);
 
         String title = section.getTitle();
+        int positionOfSection = section.getPosition();
+        title = positionOfSection + SECTION_TITLE_DELIMETER + title;
         holder.sectionTitle.setText(title);
     }
 

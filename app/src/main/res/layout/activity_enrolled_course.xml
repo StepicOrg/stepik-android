@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:orientation="vertical"
-    android:paddingBottom="8dp">
+    android:orientation="vertical">
 
     <include
         android:id="@+id/custom_action_bar"
@@ -16,10 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-        android:divider="@color/transparent"
-        android:dividerHeight="@dimen/divider_height_guideline"
         android:layout_below="@+id/custom_action_bar"
-        android:padding="16dp"
         android:scrollbarStyle="outsideOverlay" />
 
     <ProgressBar
