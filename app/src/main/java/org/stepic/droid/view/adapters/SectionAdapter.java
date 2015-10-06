@@ -13,10 +13,11 @@ import org.stepic.droid.model.Section;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionViewHolder> {
-private final static String SECTION_TITLE_DELIMETER = ". ";
+    private final static String SECTION_TITLE_DELIMETER = ". ";
 
     private List<Section> sections;
     private Context mContext;
@@ -41,9 +42,18 @@ private final static String SECTION_TITLE_DELIMETER = ". ";
         int positionOfSection = section.getPosition();
         title = positionOfSection + SECTION_TITLE_DELIMETER + title;
         holder.sectionTitle.setText(title);
-        holder.startDate.setText(section.getFormattedBeginDate());
-        holder.softDeadline.setText(section.getFormattedSoftDeadline());
-        holder.hardDeadline.setText(section.getFormattedHardDeadline());
+
+        String formattedBeginDate = section.getFormattedBeginDate();
+        holder.startDate.setText(formattedBeginDate == "" ? "" :
+                holder.beginDateString + " " + formattedBeginDate);
+
+        String formattedSoftDeadline = section.getFormattedSoftDeadline();
+        holder.softDeadline.setText(formattedSoftDeadline == "" ? "" :
+                holder.softDeadlineString + " " + formattedSoftDeadline);
+
+        String formattedHardDeadline = section.getFormattedHardDeadline();
+        holder.hardDeadline.setText(formattedHardDeadline == "" ? "" :
+                holder.hardDeadlineString + " " + formattedHardDeadline);
     }
 
     @Override
@@ -64,6 +74,14 @@ private final static String SECTION_TITLE_DELIMETER = ". ";
 
         @Bind(R.id.hard_deadline)
         TextView hardDeadline;
+
+        @BindString(R.string.hard_deadline_section)
+        String hardDeadlineString;
+        @BindString(R.string.soft_deadline_section)
+        String softDeadlineString;
+        @BindString(R.string.begin_date_section)
+        String beginDateString;
+
 
         public SectionViewHolder(View itemView) {
             super(itemView);
