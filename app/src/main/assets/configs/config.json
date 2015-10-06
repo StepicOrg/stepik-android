@@ -4,7 +4,7 @@
   "OAUTH_CLIENT_SECRET" : "qcKU6Nf2cAEWuMeA2Tthe9COWVJVRwPk2BxJsODpClqlVDkvbqp2cm2Uheo0ue9LDHFx2A8eorH4hK3LBecOVP5gSpXABEhbwNRrDmtriAAV4uquYOTeEEG86nxc0bP3",
   "GRANT_TYPE":"password",
   "REFRESH_GRANT_TYPE" : "refresh_token",
-  "DATE_PATTERN":"dd MMMM yyyy",
+  "DATE_PATTERN":"dd MMMM yyyy HH:mm",
   "DATE_PATTERN_FOR_VIEW":"dd MMMM yyyy",
   "ARRAY_IDS_PARAM":"ids[]"
 }
