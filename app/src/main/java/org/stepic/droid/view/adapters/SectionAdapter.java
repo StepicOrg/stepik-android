@@ -41,6 +41,9 @@ private final static String SECTION_TITLE_DELIMETER = ". ";
         int positionOfSection = section.getPosition();
         title = positionOfSection + SECTION_TITLE_DELIMETER + title;
         holder.sectionTitle.setText(title);
+        holder.startDate.setText(section.getFormattedBeginDate());
+        holder.softDeadline.setText(section.getFormattedSoftDeadline());
+        holder.hardDeadline.setText(section.getFormattedHardDeadline());
     }
 
     @Override

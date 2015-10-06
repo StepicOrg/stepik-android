@@ -3,14 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cv"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/guideline_list_item_height"
+    android:layout_height="wrap_content"
     android:background="@drawable/states"
     app:cardCornerRadius="@dimen/guideline_list_item_corner">
 
     <RelativeLayout
         android:id="@+id/course_info_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/guideline_list_item_height"
         android:orientation="vertical"
         android:paddingBottom="4dp"
         android:paddingEnd="@dimen/guideline_left_right_padding_list_item"
@@ -29,32 +30,40 @@
             android:maxLines="1"
             android:text="1. SSection Section" />
 
-        <org.stepic.droid.view.custom.STextView
-            android:id="@+id/start_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/soft_deadline"
-            android:text="start date"
-            android:textColor="@color/stepic_weak_text"
-            android:textSize="@dimen/text_height" />
-
-        <org.stepic.droid.view.custom.STextView
-            android:id="@+id/soft_deadline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/hard_deadline"
-            android:text="soft deadline date"
-            android:textColor="@color/stepic_weak_text"
-            android:textSize="@dimen/text_height" />
-
-        <org.stepic.droid.view.custom.STextView
-            android:id="@+id/hard_deadline"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:text="hard deadline date"
-            android:textColor="@color/stepic_weak_text"
-            android:textSize="@dimen/text_height" />
+            android:layout_below="@id/section_title"
+            android:orientation="vertical">
+
+
+            <org.stepic.droid.view.custom.STextView
+                android:id="@+id/start_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="start date"
+                android:textColor="@color/stepic_weak_text"
+                android:textSize="@dimen/text_height" />
+
+            <org.stepic.droid.view.custom.STextView
+                android:id="@+id/soft_deadline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="soft deadline date"
+                android:textColor="@color/stepic_weak_text"
+                android:textSize="@dimen/text_height" />
+
+            <org.stepic.droid.view.custom.STextView
+                android:id="@+id/hard_deadline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="hard deadline date"
+                android:textColor="@color/stepic_weak_text"
+                android:textSize="@dimen/text_height" />
+
+        </LinearLayout>
+
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

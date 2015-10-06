@@ -14,6 +14,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -67,7 +68,8 @@ public class Course implements Serializable, Parcelable {
 
         mFormatForView = DateTimeFormat
                 .forPattern(mConfig.getDatePatternForView())
-                .withZone(DateTimeZone.getDefault());
+                .withZone(DateTimeZone.getDefault())
+                .withLocale(Locale.getDefault());
     }
 
     public String getDateOfCourse() {
@@ -82,7 +84,7 @@ public class Course implements Serializable, Parcelable {
             sb.append(": ");
 
             try {
-                sb.append(getPresentOfDate(begin_date_source, mBeginDateTime));
+                sb.append(getPresentOfDate(begin_date_source));
             } catch (Throwable throwable) {
                 return "";
             }
@@ -91,11 +93,11 @@ public class Course implements Serializable, Parcelable {
 
             try {
 
-                sb.append(getPresentOfDate(begin_date_source, mBeginDateTime));
+                sb.append(getPresentOfDate(begin_date_source));
 
                 sb.append(" - ");
 
-                sb.append(getPresentOfDate(last_deadline, mEndDateTime));
+                sb.append(getPresentOfDate(last_deadline));
             } catch (Throwable throwable) {
                 return "";
             }
@@ -104,8 +106,8 @@ public class Course implements Serializable, Parcelable {
         return formatForView;
     }
 
-    private String getPresentOfDate(String dateInISOformat, DateTime dateTime) {
-        dateTime = new DateTime(dateInISOformat);
+    private String getPresentOfDate(String dateInISOformat) {
+        DateTime dateTime = new DateTime(dateInISOformat);
         String result = mFormatForView.print(dateTime);
         return result;
     }

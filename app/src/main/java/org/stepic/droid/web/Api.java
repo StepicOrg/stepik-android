@@ -12,14 +12,11 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.joda.time.DateTime;
-import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.model.Enrollment;
 import org.stepic.droid.model.EnrollmentWrapper;
 import org.stepic.droid.model.Meta;
 import org.stepic.droid.model.Profile;
-import org.stepic.droid.model.Section;
 import org.stepic.droid.model.User;
 import org.stepic.droid.util.SharedPreferenceHelper;
 
@@ -119,6 +116,7 @@ public class Api {
 
     private void filterActiveAndSoonCourses(List<Course> courses) {
         //todo: optimize this
+        //// FIXME: 06.10.15 this method doesn't work correctly
         List<Course> filteredCourses = new ArrayList<>();
         DateTime now = DateTime.now();
         try {

@@ -1,6 +1,24 @@
 package org.stepic.droid.model;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.util.DateTimeHelper;
+
+import java.util.Locale;
+
+import javax.inject.Inject;
+
 public class Section {
+
+    @Inject
+    IConfig mConfig;
+
+    private DateTimeFormatter mFormatForView;
+
     private int id;
     private int course; // course id
     private long[] units;
@@ -21,6 +39,43 @@ public class Section {
     private boolean is_active;
     private String create_date;
     private String update_date;
+
+
+    private DateTime mBeginDateTime = null;
+    private DateTime mSoftDeadline = null;
+    private DateTime mHardDeadline = null;
+
+    private String formatted_begin_date;
+    private String formatted_soft_deadline;
+    private String formatted_hard_deadline;
+
+    public Section() {
+        MainApplication.component(MainApplication.getAppContext()).inject(this);
+
+        mFormatForView = DateTimeFormat
+                .forPattern(mConfig.getDatePattern())
+                .withZone(DateTimeZone.getDefault())
+                .withLocale(Locale.getDefault());
+    }
+
+    public String getFormattedBeginDate() {
+        if (formatted_begin_date != null) return formatted_begin_date;
+        formatted_begin_date = DateTimeHelper.getPresentOfDate(begin_date, mFormatForView, mBeginDateTime);
+        return formatted_begin_date;
+    }
+
+    public String getFormattedSoftDeadline() {
+        if (formatted_soft_deadline != null) return formatted_soft_deadline;
+        formatted_soft_deadline = DateTimeHelper.getPresentOfDate(soft_deadline, mFormatForView, mSoftDeadline);
+        return formatted_soft_deadline;
+    }
+
+    public String getFormattedHardDeadline() {
+        if (formatted_hard_deadline != null) return formatted_hard_deadline;
+        formatted_hard_deadline = DateTimeHelper.getPresentOfDate(hard_deadline, mFormatForView, mHardDeadline);
+        return formatted_hard_deadline;
+    }
+
 
     public int getId() {
         return id;
