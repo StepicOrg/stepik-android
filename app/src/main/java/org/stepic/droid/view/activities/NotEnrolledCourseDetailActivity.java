@@ -133,19 +133,20 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
         mInstructorsCarousel.setLayoutManager(layoutManager);
 
 
-        bus.post(new StartLoadingInstructorsEvent(mCourse));
+        if (mCourse.getInstructors() != null && mCourse.getInstructors().length != 0) {
+            bus.post(new StartLoadingInstructorsEvent(mCourse));
+            mShell.getApi().getUsers(mCourse.getInstructors()).enqueue(new Callback<UserStepicResponse>() {
+                @Override
+                public void onResponse(Response<UserStepicResponse> response, Retrofit retrofit) {
+                    bus.post(new OnResponseLoadingInstructorsEvent(mCourse, response, retrofit));
+                }
 
-        mShell.getApi().getUsers(mCourse.getInstructors()).enqueue(new Callback<UserStepicResponse>() {
-            @Override
-            public void onResponse(Response<UserStepicResponse> response, Retrofit retrofit) {
-                bus.post(new OnResponseLoadingInstructorsEvent(mCourse, response, retrofit));
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                bus.post(new FailureLoadInstrictorsEvent(mCourse, t));
-            }
-        });
+                @Override
+                public void onFailure(Throwable t) {
+                    bus.post(new FailureLoadInstrictorsEvent(mCourse, t));
+                }
+            });
+        }
     }
 
     @Subscribe
