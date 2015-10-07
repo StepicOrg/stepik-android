@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.squareup.otto.Subscribe;
@@ -102,17 +101,6 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
                     Log.i(TAG, "Go load from scroll");
                     isLoading = true;
                     downloadData();
-                }
-            }
-        });
-        mListOfCourses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Course courseItem = (Course) mListOfCourses.getItemAtPosition(position);
-                if (courseItem.getEnrollment() != 0) {
-                    mShell.getScreenProvider().showCourseDescriptionForEnrolled(CoursesFragmentBase.this.getContext(), courseItem);
-                } else {
-                    mShell.getScreenProvider().showCourseDescriptionForNotEnrolled(CoursesFragmentBase.this.getContext(), courseItem);
                 }
             }
         });
