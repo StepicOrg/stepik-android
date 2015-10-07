@@ -6,16 +6,16 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/custom_action_bar"
-        layout="@layout/panel_custom_action_bar" />
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/sections_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
         android:clipToPadding="false"
-        android:layout_below="@+id/custom_action_bar"
         android:scrollbarStyle="outsideOverlay" />
 
     <ProgressBar

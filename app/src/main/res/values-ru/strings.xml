@@ -35,4 +35,5 @@
     <string name="begin_date_section">Дата начала:</string>
     <string name="hard_deadline_section">Жесткий дедлайн:</string>
     <string name="soft_deadline_section">Мягкий дедлайн:</string>
+    <string name="syllabus_title">Содержание</string>
 </resources>
