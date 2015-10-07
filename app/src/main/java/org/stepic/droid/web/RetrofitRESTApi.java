@@ -112,6 +112,11 @@ public class RetrofitRESTApi implements IApi {
         return mLoggedService.getSections(sectionsIds);
     }
 
+    @Override
+    public Call<UnitStepicResponse> getUnits(long[] units) {
+        return mLoggedService.getUnits(units);
+    }
+
     private void setAuthenticatorClientIDAndPassword(OkHttpClient httpClient) {
         httpClient.setAuthenticator(new Authenticator() {
             @Override
