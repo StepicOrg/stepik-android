@@ -2,7 +2,6 @@ package org.stepic.droid.view.adapters;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,6 +76,12 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
                 }
             }
         });
+//
+//        if (position == getCount() - 1) {
+//            viewHolderItem.divider.setVisibility(View.GONE);
+//        } else {
+//            viewHolderItem.divider.setVisibility(View.VISIBLE);
+//        }
 
         return view;
     }
@@ -96,7 +101,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         TextView courseDateInterval;
 
         @Bind(R.id.cv)
-        CardView cardView;
+        View cardView;
 
         @BindDrawable(R.drawable.stepic_logo_black_and_white)
         Drawable placeholder;

@@ -14,4 +14,6 @@
     <dimen name="guideline_tile_corner">0dp</dimen>
     <dimen name="guideline_list_item_height">72dp</dimen>
     <dimen name="guideline_left_right_padding_list_item">16dp</dimen>
+    <dimen name="tile_divider">2dp</dimen>
+
 </resources>

@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindColor;
 import butterknife.ButterKnife;
 import retrofit.Response;
 import retrofit.Retrofit;
@@ -58,6 +59,9 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
 
     @Bind(R.id.list_of_courses)
     ListView mListOfCourses;
+
+    @BindColor(R.color.transparent)
+    int transparent;
 
     //    protected LoadingCoursesTask mLoadingCoursesTask;
     protected List<Course> mCourses;
@@ -279,11 +283,12 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
 
     @Override
     public void onDestroyView() {
-
         bus.unregister(this);
-
+        if (mListOfCourses != null)
+            mListOfCourses.setBackgroundColor(transparent);
         if (mListOfCourses != null)
             mListOfCourses.setAdapter(null);
+        mListOfCourses = null;
         if (mSwipeRefreshLayout != null)
             mSwipeRefreshLayout.setRefreshing(false);
         super.onDestroyView();
