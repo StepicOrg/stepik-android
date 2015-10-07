@@ -19,7 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="@dimen/guideline_left_right_padding_list_item">
 
 
             <org.stepic.droid.view.custom.SImageView
@@ -35,7 +36,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:padding="4dp">
+                android:paddingLeft="4dp">
 
                 <org.stepic.droid.view.custom.STextView
                     android:id="@+id/course_name"
@@ -65,7 +66,7 @@
                     android:layout_above="@id/course_date_interval"
                     android:layout_below="@id/course_name"
                     android:ellipsize="end"
-                    android:maxLines="3"
+                    android:maxLines="2"
                     android:text="Long text В курсе будут разобраны основные алгоритмические методы: жадные алгоритмы, «разделяй и властвуй», динамическое программирование. Помимо теоретических основ, будут рассмотрены тонкости реализации рассмотренных алгоритмов на языках C++ и Python. Слушателям будет предложено реализовать большинство разобранных в курсе алгоритмов. Решения будут проверяться тестирующей системой на тщательно подобранных тестах."
                     android:textColor="@color/stepic_regular_text"
                     android:textSize="@dimen/text_height" />

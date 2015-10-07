@@ -20,12 +20,7 @@
             android:layout_height="wrap_content"
             android:minHeight="@dimen/guideline_list_item_height"
             android:orientation="vertical"
-            android:paddingBottom="4dp"
-            android:paddingEnd="@dimen/guideline_left_right_padding_list_item"
-            android:paddingLeft="@dimen/guideline_left_right_padding_list_item"
-            android:paddingRight="@dimen/guideline_left_right_padding_list_item"
-            android:paddingStart="@dimen/guideline_left_right_padding_list_item"
-            android:paddingTop="4dp">
+            android:padding="@dimen/guideline_left_right_padding_list_item">
 
             <org.stepic.droid.view.custom.SDetailedCourseHeadersTV
                 android:id="@+id/unit_title"
