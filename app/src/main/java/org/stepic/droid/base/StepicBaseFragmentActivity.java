@@ -35,6 +35,16 @@ public abstract class StepicBaseFragmentActivity extends AppCompatActivity {
         );
     }
 
+    // A method to find height of the status bar
+    protected int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
     @Override
     public void finish() {
         super.finish();
