@@ -7,8 +7,8 @@
     android:background="@drawable/states"
     android:focusable="true"
     android:clickable="true"
-    android:foreground="@drawable/card_foreground"
-    app:cardCornerRadius="@dimen/card_corner_radius_guideline">
+    android:foreground="@drawable/non_radius_foreground"
+    app:cardCornerRadius="@dimen/guideline_tile_corner">
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -12,6 +12,5 @@
         android:clipToPadding="false"
         android:divider="@color/transparent"
         android:dividerHeight="@dimen/divider_height_guideline"
-        android:padding="16dp"
         android:scrollbarStyle="outsideOverlay" />
 </android.support.v4.widget.SwipeRefreshLayout>

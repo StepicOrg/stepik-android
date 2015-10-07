@@ -1,5 +1,6 @@
 package org.stepic.droid.view.activities;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -66,9 +67,9 @@ public class UnitsActivity extends StepicBaseFragmentActivity {
         mUnitList = new ArrayList<>();
         mAdapter = new UnitAdapter(this, mSection, mUnitList);
         mUnitsRecyclerView.setAdapter(mAdapter);
-        mUnitsRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
-
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mUnitsRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+        }
         if (mSection != null && mSection.getUnits() != null && mSection.getUnits().length != 0)
             updateUnits();
 
@@ -102,7 +103,7 @@ public class UnitsActivity extends StepicBaseFragmentActivity {
             return;
 
         UnitStepicResponse unitStepicResponse = e.getResponse().body();
-        List<Unit>  units = unitStepicResponse.getUnits();
+        List<Unit> units = unitStepicResponse.getUnits();
 
         mUnitList.clear();
         mUnitList.addAll(units);
@@ -111,7 +112,7 @@ public class UnitsActivity extends StepicBaseFragmentActivity {
     }
 
     @Subscribe
-    public void onFailLoad (FailureLoadUnitsEvent e) {
+    public void onFailLoad(FailureLoadUnitsEvent e) {
         if (mSection == null || e.getmSection() == null
                 || e.getmSection().getId() != mSection.getId())
             return;

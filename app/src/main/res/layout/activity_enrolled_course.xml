@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
         android:clipToPadding="false"
+        android:divider="@color/transparent"
         android:scrollbarStyle="outsideOverlay" />
 
     <ProgressBar
