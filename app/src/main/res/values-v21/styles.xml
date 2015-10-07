@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/stepic_brand_primary</item>
+        <item name="colorPrimaryDark">@color/stepic_brand_primary_dark</item>
+        <item name="windowNoTitle">true</item>
+        <item name="actionBarStyle">@style/Theme.MyApp.ActionBar</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+</resources>
