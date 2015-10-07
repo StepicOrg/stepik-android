@@ -4,7 +4,6 @@
         <item name="colorPrimaryDark">@color/stepic_brand_primary_dark</item>
         <item name="windowNoTitle">true</item>
         <item name="actionBarStyle">@style/Theme.MyApp.ActionBar</item>
-        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="Theme.MyApp.ActionBar" parent="style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">

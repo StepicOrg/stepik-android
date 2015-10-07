@@ -128,9 +128,14 @@ public class RetrofitRESTApi implements IApi {
     }
 
     private String getAuthHeaderValue() {
-        AuthenticationStepicResponse resp = mSharedPreferenceHelper.getAuthResponseFromStore();
-        String access_token = resp.getAccess_token();
-        String type = resp.getToken_type();
-        return type + " " + access_token;
+        try {
+            AuthenticationStepicResponse resp = mSharedPreferenceHelper.getAuthResponseFromStore();
+            String access_token = resp.getAccess_token();
+            String type = resp.getToken_type();
+            return type + " " + access_token;
+        } catch (Exception ex) {
+            Log.e("retrfitAuth", ex.getMessage());
+            return "";
+        }
     }
 }
