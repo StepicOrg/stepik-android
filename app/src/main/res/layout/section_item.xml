@@ -5,6 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/states"
+    android:focusable="true"
+    android:clickable="true"
+    android:foreground="@drawable/card_foreground"
     app:cardCornerRadius="@dimen/guideline_list_item_corner">
 
     <RelativeLayout
