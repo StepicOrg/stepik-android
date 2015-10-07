@@ -16,6 +16,8 @@ import org.stepic.droid.base.StepicBaseFragmentActivity;
 import org.stepic.droid.events.instructors.FailureLoadInstrictorsEvent;
 import org.stepic.droid.events.instructors.OnResponseLoadingInstructorsEvent;
 import org.stepic.droid.events.instructors.StartLoadingInstructorsEvent;
+import org.stepic.droid.events.joining_course.FailJoinEvent;
+import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.User;
 import org.stepic.droid.util.AppConstants;
@@ -207,19 +209,36 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
         mShell.getApi().tryJoinCourse(mCourse).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Response<Void> response, Retrofit retrofit) {
-                mShell.getScreenProvider().showCourseDescriptionForEnrolled(NotEnrolledCourseDetailActivity.this, mCourse);
-                finish();
-                ProgressHelper.dismiss(mJoinCourseSpinner);
+                if (response.isSuccess()) {
+                    bus.post(new SuccessJoinEvent(mCourse));
+                } else {
+                    bus.post(new FailJoinEvent());
+                }
             }
 
             @Override
             public void onFailure(Throwable t) {
-                Toast.makeText(NotEnrolledCourseDetailActivity.this, joinCourseException,
-                        Toast.LENGTH_LONG).show();
-
-                ProgressHelper.dismiss(mJoinCourseSpinner);
-                mJoinCourseView.setEnabled(true);
+                bus.post(new FailJoinEvent());
             }
         });
     }
+
+    @Subscribe
+    public void onSuccessJoin(SuccessJoinEvent e) {
+        mShell.getScreenProvider().showCourseDescriptionForEnrolled(NotEnrolledCourseDetailActivity.this, mCourse);
+        finish();
+        ProgressHelper.dismiss(mJoinCourseSpinner);
+
+    }
+
+    @Subscribe
+    public void onFailJoin(FailJoinEvent e) {
+        Toast.makeText(NotEnrolledCourseDetailActivity.this, joinCourseException,
+                Toast.LENGTH_LONG).show();
+        ProgressHelper.dismiss(mJoinCourseSpinner);
+        mJoinCourseView.setEnabled(true);
+
+    }
+
+
 }

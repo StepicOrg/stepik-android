@@ -12,6 +12,7 @@ import org.stepic.droid.events.courses.PreLoadCoursesEvent;
 import org.stepic.droid.events.courses.StartingGetCoursesFromDbEvent;
 import org.stepic.droid.events.courses.StartingSaveCoursesToDbEvent;
 import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
+import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.store.operations.DbOperationsCourses;
 
 public class FindCoursesFragment extends CoursesFragmentBase {
@@ -88,5 +89,11 @@ public class FindCoursesFragment extends CoursesFragmentBase {
     public void onPreLoad(PreLoadCoursesEvent e) {
         if (e.getType() == mTypeOfCourse)
             super.onPreLoad(e);
+    }
+
+    @Subscribe
+    @Override
+    public void onSuccessJoin(SuccessJoinEvent e) {
+        super.onSuccessJoin(e);
     }
 }
