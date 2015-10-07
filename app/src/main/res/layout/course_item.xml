@@ -5,6 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/states"
+    android:focusable="true"
+    android:clickable="true"
+    android:foreground="@drawable/card_foreground"
     app:cardCornerRadius="@dimen/card_corner_radius_guideline">
 
     <LinearLayout

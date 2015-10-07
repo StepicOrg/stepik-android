@@ -7,16 +7,17 @@
     android:orientation="vertical"
     android:paddingBottom="8dp">
 
+
     <include
-        android:id="@+id/custom_action_bar"
-        layout="@layout/panel_custom_action_bar" />
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
     <ScrollView
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/join_course_layout"
-        android:layout_below="@id/custom_action_bar"
+        android:layout_below="@id/toolbar"
         android:layout_marginTop="2dp"
         android:background="@android:color/white">
 

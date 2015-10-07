@@ -3,6 +3,8 @@ package org.stepic.droid.view.activities;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -16,6 +18,8 @@ import org.stepic.droid.base.StepicBaseFragmentActivity;
 import org.stepic.droid.events.instructors.FailureLoadInstrictorsEvent;
 import org.stepic.droid.events.instructors.OnResponseLoadingInstructorsEvent;
 import org.stepic.droid.events.instructors.StartLoadingInstructorsEvent;
+import org.stepic.droid.events.joining_course.FailJoinEvent;
+import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.User;
 import org.stepic.droid.util.AppConstants;
@@ -39,8 +43,8 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
 
     private static final String TAG = "unrolled_course";
 
-    @Bind(R.id.actionbar_close_btn_layout)
-    View mCloseButton;
+    @Bind(R.id.toolbar)
+    Toolbar mToolbar;
 
     @Bind(R.id.intro_video)
     ImageView mIntroView;
@@ -86,8 +90,9 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
 
         setContentView(R.layout.activity_not_enrolled_course_detail);
         ButterKnife.bind(this);
-        overridePendingTransition(org.stepic.droid.R.anim.slide_in_from_bottom, org.stepic.droid.R.anim.no_transition);
+        overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         hideSoftKeypad();
+
 
         mCourse = (Course) (getIntent().getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
 
@@ -96,14 +101,8 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
     @Override
     protected void onStart() {
         super.onStart();
-
-        mCloseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 //        String urltovideo = "https://player.vimeo.com/external/111345189.hd.mp4?s=ea9aab1c15434d7bfd3515afaf70a9de&profile_id=113&oauth2_token_id=3605157";
 //        MediaController mediaController = new MediaController(this);
@@ -133,19 +132,31 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
         mInstructorsCarousel.setLayoutManager(layoutManager);
 
 
-        bus.post(new StartLoadingInstructorsEvent(mCourse));
+        if (mCourse.getInstructors() != null && mCourse.getInstructors().length != 0) {
+            bus.post(new StartLoadingInstructorsEvent(mCourse));
+            mShell.getApi().getUsers(mCourse.getInstructors()).enqueue(new Callback<UserStepicResponse>() {
+                @Override
+                public void onResponse(Response<UserStepicResponse> response, Retrofit retrofit) {
+                    bus.post(new OnResponseLoadingInstructorsEvent(mCourse, response, retrofit));
+                }
 
-        mShell.getApi().getUsers(mCourse.getInstructors()).enqueue(new Callback<UserStepicResponse>() {
-            @Override
-            public void onResponse(Response<UserStepicResponse> response, Retrofit retrofit) {
-                bus.post(new OnResponseLoadingInstructorsEvent(mCourse, response, retrofit));
-            }
+                @Override
+                public void onFailure(Throwable t) {
+                    bus.post(new FailureLoadInstrictorsEvent(mCourse, t));
+                }
+            });
+        }
+    }
 
-            @Override
-            public void onFailure(Throwable t) {
-                bus.post(new FailureLoadInstrictorsEvent(mCourse, t));
-            }
-        });
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Subscribe
@@ -196,7 +207,7 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.slide_out_to_bottom);
+        overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
     }
 
 
@@ -206,19 +217,36 @@ public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity 
         mShell.getApi().tryJoinCourse(mCourse).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Response<Void> response, Retrofit retrofit) {
-                mShell.getScreenProvider().showCourseDescriptionForEnrolled(NotEnrolledCourseDetailActivity.this, mCourse);
-                finish();
-                ProgressHelper.dismiss(mJoinCourseSpinner);
+                if (response.isSuccess()) {
+                    bus.post(new SuccessJoinEvent(mCourse));
+                } else {
+                    bus.post(new FailJoinEvent());
+                }
             }
 
             @Override
             public void onFailure(Throwable t) {
-                Toast.makeText(NotEnrolledCourseDetailActivity.this, joinCourseException,
-                        Toast.LENGTH_LONG).show();
-
-                ProgressHelper.dismiss(mJoinCourseSpinner);
-                mJoinCourseView.setEnabled(true);
+                bus.post(new FailJoinEvent());
             }
         });
     }
+
+    @Subscribe
+    public void onSuccessJoin(SuccessJoinEvent e) {
+        mShell.getScreenProvider().showCourseDescriptionForEnrolled(NotEnrolledCourseDetailActivity.this, mCourse);
+        finish();
+        ProgressHelper.dismiss(mJoinCourseSpinner);
+
+    }
+
+    @Subscribe
+    public void onFailJoin(FailJoinEvent e) {
+        Toast.makeText(NotEnrolledCourseDetailActivity.this, joinCourseException,
+                Toast.LENGTH_LONG).show();
+        ProgressHelper.dismiss(mJoinCourseSpinner);
+        mJoinCourseView.setEnabled(true);
+
+    }
+
+
 }

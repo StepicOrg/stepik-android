@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.squareup.otto.Subscribe;
@@ -18,6 +17,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragment;
 import org.stepic.droid.concurrency.FromDbCoursesTask;
 import org.stepic.droid.concurrency.ToDbCoursesTask;
+import org.stepic.droid.concurrency.UpdateCourseTask;
 import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
 import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
 import org.stepic.droid.events.courses.FinishingSaveCoursesToDbEvent;
@@ -26,6 +26,7 @@ import org.stepic.droid.events.courses.PreLoadCoursesEvent;
 import org.stepic.droid.events.courses.StartingGetCoursesFromDbEvent;
 import org.stepic.droid.events.courses.StartingSaveCoursesToDbEvent;
 import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
+import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DbOperationsCourses;
 import org.stepic.droid.util.ProgressHelper;
@@ -105,18 +106,8 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
                 }
             }
         });
-        mListOfCourses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Course courseItem = (Course) mListOfCourses.getItemAtPosition(position);
-                if (courseItem.getEnrollment() != 0) {
-                    mShell.getScreenProvider().showCourseDescriptionForEnrolled(CoursesFragmentBase.this.getContext(), courseItem);
-                } else {
-                    mShell.getScreenProvider().showCourseDescriptionForNotEnrolled(CoursesFragmentBase.this.getContext(), courseItem);
-                }
-            }
-        });
 
+        bus.register(this);
     }
 
 
@@ -236,7 +227,7 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
         ProgressHelper.dismiss(mSwipeRefreshLayout);
         if (mFooterDownloadingView != null) mFooterDownloadingView.setVisibility(View.GONE);
 
-        if (e.getResult()!=null && e.getResult().size() == 0)
+        if (e.getResult() != null && e.getResult().size() == 0)
             downloadData();
     }
 
@@ -245,10 +236,27 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
         showCourses(e.getCourses());
     }
 
+    @Subscribe
+    public void onSuccessJoin(SuccessJoinEvent e) {
+        //We do not upgrade database, because when
+        //Only for find courses event.
+
+        Course courseForUpdate = e.getCourse();
+        for (Course courseItem : mCourses) {
+            if (courseItem.getCourseId() == courseForUpdate.getCourseId()) {
+                courseItem.setEnrollment((int) courseItem.getCourseId());
+                courseForUpdate = courseItem;
+                break;
+            }
+        }
+
+        UpdateCourseTask updateCourseTask = new UpdateCourseTask(mTypeOfCourse, courseForUpdate);
+        updateCourseTask.execute();
+    }
+
     @Override
     public void onStart() {
         super.onStart();
-        bus.register(this);
         Log.i(TAG, "onStart registered");
     }
 
@@ -266,16 +274,19 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     @Override
     public void onStop() {
         super.onStop();
-        bus.unregister(this);
         //todo Use otto for handling errors
     }
 
     @Override
     public void onDestroyView() {
+
+        bus.unregister(this);
+
         if (mListOfCourses != null)
             mListOfCourses.setAdapter(null);
         if (mSwipeRefreshLayout != null)
             mSwipeRefreshLayout.setRefreshing(false);
         super.onDestroyView();
     }
+
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="already_have_an_account">Уже есть аккаунт? Войти</string>
-    <string name="available_courses_title">Доступные Курсы</string>
+    <string name="available_courses_title">Доступные курсы</string>
     <string name="begin_date">Начало</string>
     <string name="best_lessons_title">Лучшие уроки</string>
     <string name="by_creating_you_agree">Создавая аккаунт, я соглашаюсь с </string>
@@ -15,7 +15,7 @@
     <string name="my_courses_title">Мои курсы</string>
     <string name="or_sign_up_with_email">или зарегистрироваться через e-mail</string>
     <string name="password_hint">пароль</string>
-    <string name="remind_password">Вспомнить Пароль</string>
+    <string name="remind_password">Вспомнить пароль</string>
     <string name="second_name">фамилия</string>
     <string name="settings_title">Настройки</string>
     <string name="show_optional_fields">Показать дополнительные поля</string>
@@ -32,4 +32,8 @@
     <string name="join_course_exception">Проверьте интернет соединение.</string>
     <string name="join_course_impossible">Сейчас нельзя присоединиться к курсу.</string>
     <string name="loading">Загрузка…</string>
+    <string name="begin_date_section">Дата начала:</string>
+    <string name="hard_deadline_section">Жесткий дедлайн:</string>
+    <string name="soft_deadline_section">Мягкий дедлайн:</string>
+    <string name="syllabus_title">Содержание</string>
 </resources>

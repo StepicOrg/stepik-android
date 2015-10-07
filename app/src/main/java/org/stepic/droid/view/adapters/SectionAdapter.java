@@ -9,14 +9,15 @@ import android.widget.TextView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.model.Section;
-import org.stepic.droid.model.User;
 
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionViewHolder> {
+    private final static String SECTION_TITLE_DELIMETER = ". ";
 
     private List<Section> sections;
     private Context mContext;
@@ -38,7 +39,21 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         Section section = sections.get(position);
 
         String title = section.getTitle();
+        int positionOfSection = section.getPosition();
+        title = positionOfSection + SECTION_TITLE_DELIMETER + title;
         holder.sectionTitle.setText(title);
+
+        String formattedBeginDate = section.getFormattedBeginDate();
+        holder.startDate.setText(formattedBeginDate == "" ? "" :
+                holder.beginDateString + " " + formattedBeginDate);
+
+        String formattedSoftDeadline = section.getFormattedSoftDeadline();
+        holder.softDeadline.setText(formattedSoftDeadline == "" ? "" :
+                holder.softDeadlineString + " " + formattedSoftDeadline);
+
+        String formattedHardDeadline = section.getFormattedHardDeadline();
+        holder.hardDeadline.setText(formattedHardDeadline == "" ? "" :
+                holder.hardDeadlineString + " " + formattedHardDeadline);
     }
 
     @Override
@@ -59,6 +74,14 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
 
         @Bind(R.id.hard_deadline)
         TextView hardDeadline;
+
+        @BindString(R.string.hard_deadline_section)
+        String hardDeadlineString;
+        @BindString(R.string.soft_deadline_section)
+        String softDeadlineString;
+        @BindString(R.string.begin_date_section)
+        String beginDateString;
+
 
         public SectionViewHolder(View itemView) {
             super(itemView);

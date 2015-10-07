@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:background="@android:color/white">
+    android:layout_height="@dimen/abc_action_bar_default_height_material"
+    android:background="@color/stepic_white">
 
     <org.stepic.droid.view.custom.STextView
         android:id="@+id/activity_title"

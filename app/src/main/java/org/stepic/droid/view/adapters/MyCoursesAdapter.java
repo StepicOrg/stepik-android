@@ -2,7 +2,7 @@ package org.stepic.droid.view.adapters;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.text.Html;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.util.HtmlHelper;
 
@@ -29,15 +30,16 @@ import butterknife.ButterKnife;
 public class MyCoursesAdapter extends ArrayAdapter<Course> {
 
     @Inject
+    IShell mShell;
+
+    @Inject
     IConfig mConfig;
 
-    private List<Course> mCourses;
     private Context mContext;
     private LayoutInflater mInflater;
 
     public MyCoursesAdapter(Context context, List<Course> courses) {
         super(context, 0, courses);
-        mCourses = courses;
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -46,8 +48,8 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        Course course = getItem(position);
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        final Course course = getItem(position);
 
         View view = convertView;
         // Check if an existing view is being reused, otherwise inflate the view
@@ -65,6 +67,17 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
                 placeholder(viewHolderItem.placeholder).into(viewHolderItem.courseIcon);
         viewHolderItem.courseDateInterval.setText(course.getDateOfCourse());
 
+        viewHolderItem.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (course.getEnrollment() != 0) {
+                    mShell.getScreenProvider().showCourseDescriptionForEnrolled(mContext, course);
+                } else {
+                    mShell.getScreenProvider().showCourseDescriptionForNotEnrolled(mContext, course);
+                }
+            }
+        });
+
         return view;
     }
 
@@ -81,6 +94,9 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 
         @Bind(R.id.course_date_interval)
         TextView courseDateInterval;
+
+        @Bind(R.id.cv)
+        CardView cardView;
 
         @BindDrawable(R.drawable.stepic_logo_black_and_white)
         Drawable placeholder;
