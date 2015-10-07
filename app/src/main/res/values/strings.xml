@@ -5,26 +5,26 @@
     <string name="or_sign_up_with_email">or sign up with e-mail</string>
     <string name="sign_up">Sign up</string>
     <string name="show_optional_fields">Show optional fields</string>
-    <string name="create_my_account">Create my account</string>
+    <string name="create_my_account">Create account</string>
     <string name="by_creating_you_agree">By creating stepic account, you agree to the</string>
     <string name="terms">Terms</string>
     <string name="facebook_name_of_company" translatable="false">Facebook</string>
     <string name="google_name_of_company" translatable="false">Google</string>
     <string name="email_login" translatable="false">e-mail</string>
-    <string name="remind_password">Remind Password</string>
+    <string name="remind_password">Remind password</string>
     <string name="sign_in_btn">Sign in button</string>
     <string name="sign_in">Sign In</string>
     <string name="describing_error">The following error occurred while logging you in</string>
     <string name="first_name">first name</string>
     <string name="second_name">second name</string>
     <string name="password_hint">password</string>
-    <string name="my_courses_title">My Courses</string>
-    <string name="best_lessons_title">Best Lessons</string>
+    <string name="my_courses_title">My courses</string>
+    <string name="best_lessons_title">Best lessons</string>
     <string name="drawer_open">open drawer</string>
     <string name="drawer_closed">close drawer</string>
-    <string name="find_courses_title">Find Courses</string>
-    <string name="available_courses_title">Available Courses</string>
-    <string name="settings_title">My Settings</string>
+    <string name="find_courses_title">Find courses</string>
+    <string name="available_courses_title">Available courses</string>
+    <string name="settings_title">Settings</string>
     <string name="logout_title">Logout</string>
     <string name="begin_date">Begin</string>
     <string name="course_info_title">Course info</string>
@@ -34,7 +34,7 @@
     <string name="requirements">Requirements</string>
     <string name="join_course">Join course</string>
     <string name="join_course_impossible">You can\'t join this course now.</string>
-    <string name="join_course_exception">Check your Internet Connection.</string>
+    <string name="join_course_exception">Check your internet connection.</string>
     <string name="loading">Loading…</string>
     <string name="begin_date_section">Start date:</string>
     <string name="soft_deadline_section">Soft deadline:</string>
