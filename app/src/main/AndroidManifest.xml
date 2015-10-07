@@ -67,10 +67,8 @@
 
         <activity
             android:name=".view.activities.NotEnrolledCourseDetailActivity"
-
             android:label="@string/course_info_title"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"/>
 
 
         <activity
@@ -79,6 +77,11 @@
             android:screenOrientation="portrait">
 
         </activity>
+
+        <activity
+            android:name=".view.activities.UnitsActivity"
+            android:label="@string/units_lessons_title"
+            android:screenOrientation="portrait" />
 
     </application>
 </manifest>

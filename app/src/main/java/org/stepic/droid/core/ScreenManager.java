@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.Section;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.activities.EnrolledCourseActivity;
 import org.stepic.droid.view.activities.LaunchActivity;
@@ -14,10 +15,10 @@ import org.stepic.droid.view.activities.LoginActivity;
 import org.stepic.droid.view.activities.MainFeedActivity;
 import org.stepic.droid.view.activities.NotEnrolledCourseDetailActivity;
 import org.stepic.droid.view.activities.RegisterActivity;
-
-import javax.inject.Singleton;
+import org.stepic.droid.view.activities.UnitsActivity;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 public class ScreenManager implements IScreenManager {
@@ -81,6 +82,15 @@ public class ScreenManager implements IScreenManager {
         Intent intent = new Intent(sourceActivity, EnrolledCourseActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
+        intent.putExtras(bundle);
+        sourceActivity.startActivity(intent);
+    }
+
+    @Override
+    public void showUnitsForSection(Context sourceActivity, @NotNull Section section) {
+        Intent intent = new Intent(sourceActivity, UnitsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(AppConstants.KEY_SECTION_BUNDLE, section);
         intent.putExtras(bundle);
         sourceActivity.startActivity(intent);
     }

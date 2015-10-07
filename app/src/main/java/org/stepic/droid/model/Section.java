@@ -1,5 +1,8 @@
 package org.stepic.droid.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -8,11 +11,12 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.util.DateTimeHelper;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 import javax.inject.Inject;
 
-public class Section {
+public class Section implements Serializable, Parcelable {
 
     @Inject
     IConfig mConfig;
@@ -236,4 +240,79 @@ public class Section {
     public void setUpdate_date(String update_date) {
         this.update_date = update_date;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeInt(this.course);
+        dest.writeLongArray(this.units);
+        dest.writeInt(this.position);
+        dest.writeString(this.progress);
+        dest.writeString(this.title);
+        dest.writeString(this.slug);
+        dest.writeString(this.begin_date);
+        dest.writeString(this.end_date);
+        dest.writeString(this.soft_deadline);
+        dest.writeString(this.hard_deadline);
+        dest.writeString(this.grading_policy);
+        dest.writeString(this.begin_date_source);
+        dest.writeString(this.end_date_source);
+        dest.writeString(this.soft_deadline_source);
+        dest.writeString(this.hard_deadline_source);
+        dest.writeString(this.grading_policy_source);
+        dest.writeByte(is_active ? (byte) 1 : (byte) 0);
+        dest.writeString(this.create_date);
+        dest.writeString(this.update_date);
+        dest.writeSerializable(this.mBeginDateTime);
+        dest.writeSerializable(this.mSoftDeadline);
+        dest.writeSerializable(this.mHardDeadline);
+        dest.writeString(this.formatted_begin_date);
+        dest.writeString(this.formatted_soft_deadline);
+        dest.writeString(this.formatted_hard_deadline);
+    }
+
+    private Section(Parcel in) {
+        this.id = in.readInt();
+        this.course = in.readInt();
+        this.units = in.createLongArray();
+        this.position = in.readInt();
+        this.progress = in.readString();
+        this.title = in.readString();
+        this.slug = in.readString();
+        this.begin_date = in.readString();
+        this.end_date = in.readString();
+        this.soft_deadline = in.readString();
+        this.hard_deadline = in.readString();
+        this.grading_policy = in.readString();
+        this.begin_date_source = in.readString();
+        this.end_date_source = in.readString();
+        this.soft_deadline_source = in.readString();
+        this.hard_deadline_source = in.readString();
+        this.grading_policy_source = in.readString();
+        this.is_active = in.readByte() != 0;
+        this.create_date = in.readString();
+        this.update_date = in.readString();
+        this.mBeginDateTime = (DateTime) in.readSerializable();
+        this.mSoftDeadline = (DateTime) in.readSerializable();
+        this.mHardDeadline = (DateTime) in.readSerializable();
+        this.formatted_begin_date = in.readString();
+        this.formatted_soft_deadline = in.readString();
+        this.formatted_hard_deadline = in.readString();
+    }
+
+    public static final Creator<Section> CREATOR = new Creator<Section>() {
+        public Section createFromParcel(Parcel source) {
+            return new Section(source);
+        }
+
+        public Section[] newArray(int size) {
+            return new Section[size];
+        }
+    };
 }
