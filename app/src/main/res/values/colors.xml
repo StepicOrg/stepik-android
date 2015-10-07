@@ -121,6 +121,7 @@
     
     <!-- stepic brand book-->
     <color name="stepic_brand_primary">#66CC66</color>
+    <color name="stepic_brand_primary_dark">#329932</color>
     <color name="stepic_orange_carrot">#FF9933</color>
     <color name="stepic_blue_ribbon">#0066FF</color>
     <color name="silver">#CCCCCC</color>

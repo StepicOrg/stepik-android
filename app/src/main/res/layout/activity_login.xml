@@ -152,14 +152,6 @@
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/error_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
-
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/custom_action_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
