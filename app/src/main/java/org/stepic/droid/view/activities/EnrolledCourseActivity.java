@@ -71,7 +71,9 @@ public class EnrolledCourseActivity extends StepicBaseFragmentActivity {
         mSectionsRecyclerView.setAdapter(mAdapter);
         mSectionsRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
 
-        updateSections();
+        if (mCourse.getSections() != null && mCourse.getSections().length != 0) {
+            updateSections();
+        }
     }
 
     @Override
@@ -95,7 +97,11 @@ public class EnrolledCourseActivity extends StepicBaseFragmentActivity {
         mShell.getApi().getSections(mCourse.getSections()).enqueue(new Callback<SectionsStepicResponse>() {
             @Override
             public void onResponse(Response<SectionsStepicResponse> response, Retrofit retrofit) {
-                bus.post(new SuccessResponseSectionsEvent(mCourse, response, retrofit));
+                if (response.isSuccess()) {
+                    bus.post(new SuccessResponseSectionsEvent(mCourse, response, retrofit));
+                } else {
+                    bus.post(new FailureResponseSectionEvent(mCourse));
+                }
 
             }
 

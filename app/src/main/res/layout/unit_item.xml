@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cv"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/states"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="@drawable/card_foreground"
+    app:cardCornerRadius="@dimen/guideline_list_item_corner">
+
+    <RelativeLayout
+        android:id="@+id/unit_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/guideline_list_item_height"
+        android:orientation="vertical"
+        android:paddingBottom="4dp"
+        android:paddingEnd="@dimen/guideline_left_right_padding_list_item"
+        android:paddingLeft="@dimen/guideline_left_right_padding_list_item"
+        android:paddingRight="@dimen/guideline_left_right_padding_list_item"
+        android:paddingStart="@dimen/guideline_left_right_padding_list_item"
+        android:paddingTop="4dp">
+
+        <org.stepic.droid.view.custom.SDetailedCourseHeadersTV
+            android:id="@+id/unit_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|start"
+            android:layout_marginBottom="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="1.2 Super unit" />
+
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
