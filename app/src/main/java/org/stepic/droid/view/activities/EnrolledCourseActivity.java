@@ -19,7 +19,6 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.SectionAdapter;
-import org.stepic.droid.view.decorators.DividerItemDecoration;
 import org.stepic.droid.web.SectionsStepicResponse;
 
 import java.util.ArrayList;
@@ -69,9 +68,14 @@ public class EnrolledCourseActivity extends StepicBaseFragmentActivity {
         mSectionList = new ArrayList<>();
         mAdapter = new SectionAdapter(mSectionList, this);
         mSectionsRecyclerView.setAdapter(mAdapter);
-        mSectionsRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+        if (mCourse.getSections() != null && mCourse.getSections().length != 0) {
+            updateSections();
+        }
+    }
 
-        updateSections();
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -90,7 +94,11 @@ public class EnrolledCourseActivity extends StepicBaseFragmentActivity {
         mShell.getApi().getSections(mCourse.getSections()).enqueue(new Callback<SectionsStepicResponse>() {
             @Override
             public void onResponse(Response<SectionsStepicResponse> response, Retrofit retrofit) {
-                bus.post(new SuccessResponseSectionsEvent(mCourse, response, retrofit));
+                if (response.isSuccess()) {
+                    bus.post(new SuccessResponseSectionsEvent(mCourse, response, retrofit));
+                } else {
+                    bus.post(new FailureResponseSectionEvent(mCourse));
+                }
 
             }
 

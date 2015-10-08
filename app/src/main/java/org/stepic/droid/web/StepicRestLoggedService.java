@@ -33,5 +33,9 @@ public interface StepicRestLoggedService {
     Call<CoursesStepicResponse> getFeaturedCourses(@Query("is_featured") boolean is_featured,
                                                    @Query("page") int page);
 
+    @GET("api/units")
+    Call<UnitStepicResponse> getUnits(@Query("ids[]") long[] units);
 
+    @GET("api/lessons")
+    Call<LessonStepicResponse> getLessons(@Query("ids[]") long[] lessons);
 }

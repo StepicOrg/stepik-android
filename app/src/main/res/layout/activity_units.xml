@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <include
         android:id="@+id/toolbar"
@@ -11,12 +9,11 @@
 
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/sections_recycler_view"
+        android:id="@+id/units_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
         android:clipToPadding="false"
-        android:divider="@color/transparent"
         android:scrollbarStyle="outsideOverlay" />
 
     <ProgressBar
@@ -27,5 +24,6 @@
         android:layout_centerVertical="true"
         android:indeterminateDrawable="@drawable/login_progress"
         android:visibility="gone" />
+
 
 </RelativeLayout>

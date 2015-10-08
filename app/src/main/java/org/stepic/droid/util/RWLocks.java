@@ -1,0 +1,7 @@
+package org.stepic.droid.util;
+
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+public class RWLocks {
+    public static final ReentrantReadWriteLock AuthLock = new ReentrantReadWriteLock();
+}

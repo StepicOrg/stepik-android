@@ -8,35 +8,60 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.stepic.droid.R;
+import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.model.Section;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
-public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionViewHolder> {
+public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionViewHolder> implements View.OnClickListener {
     private final static String SECTION_TITLE_DELIMETER = ". ";
 
-    private List<Section> sections;
+    @Inject
+    IScreenManager mScreenManager;
+
+    private List<Section> mSections;
     private Context mContext;
+    private RecyclerView mRecyclerView;
 
     public SectionAdapter(List<Section> sections, Context mContext) {
-        this.sections = sections;
+        this.mSections = sections;
         this.mContext = mContext;
+
+        MainApplication.component().inject(this);
     }
 
 
     @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mRecyclerView = recyclerView;
+
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        mRecyclerView = null;
+
+    }
+
+    @Override
     public SectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.section_item, parent, false);
+        v.setOnClickListener(this);
         return new SectionViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(SectionViewHolder holder, int position) {
-        Section section = sections.get(position);
+        Section section = mSections.get(position);
 
         String title = section.getTitle();
         int positionOfSection = section.getPosition();
@@ -58,7 +83,15 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
 
     @Override
     public int getItemCount() {
-        return sections.size();
+        return mSections.size();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int itemPosition = mRecyclerView.indexOfChild(v);
+        if (itemPosition >= 0 && itemPosition < mSections.size()) {
+            mScreenManager.showUnitsForSection(mContext, mSections.get(itemPosition));
+        }
     }
 
     public static class SectionViewHolder extends RecyclerView.ViewHolder {
