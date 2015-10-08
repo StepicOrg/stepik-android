@@ -1,6 +1,5 @@
 package org.stepic.droid.view.activities;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +19,6 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.UnitAdapter;
-import org.stepic.droid.view.decorators.DividerItemDecoration;
 import org.stepic.droid.web.LessonStepicResponse;
 import org.stepic.droid.web.UnitStepicResponse;
 
@@ -72,9 +70,7 @@ public class UnitsActivity extends StepicBaseFragmentActivity {
         mLessonList = new ArrayList<>();
         mAdapter = new UnitAdapter(this, mSection, mUnitList, mLessonList);
         mUnitsRecyclerView.setAdapter(mAdapter);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mUnitsRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
-        }
+
         if (mSection != null && mSection.getUnits() != null && mSection.getUnits().length != 0)
             updateUnits();
 

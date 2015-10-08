@@ -1,6 +1,5 @@
 package org.stepic.droid.view.activities;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +19,6 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.SectionAdapter;
-import org.stepic.droid.view.decorators.DividerItemDecoration;
 import org.stepic.droid.web.SectionsStepicResponse;
 
 import java.util.ArrayList;
@@ -70,10 +68,6 @@ public class EnrolledCourseActivity extends StepicBaseFragmentActivity {
         mSectionList = new ArrayList<>();
         mAdapter = new SectionAdapter(mSectionList, this);
         mSectionsRecyclerView.setAdapter(mAdapter);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mSectionsRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
-        }
-
         if (mCourse.getSections() != null && mCourse.getSections().length != 0) {
             updateSections();
         }
