@@ -35,4 +35,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/units")
     Call<UnitStepicResponse> getUnits(@Query("ids[]") long[] units);
+
+    @GET("api/lessons")
+    Call<LessonStepicResponse> getLessons(@Query("ids[]") long[] lessons);
 }

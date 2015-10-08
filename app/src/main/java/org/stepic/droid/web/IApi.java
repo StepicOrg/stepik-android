@@ -23,4 +23,6 @@ public interface IApi {
 
     Call<UnitStepicResponse> getUnits(long[] units);
 
+    Call<LessonStepicResponse> getLessons(long [] lessons);
+
 }

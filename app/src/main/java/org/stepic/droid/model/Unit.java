@@ -3,7 +3,7 @@ package org.stepic.droid.model;
 public class Unit {
     private long id;
     private int section;
-    private long lessons;
+    private long lesson;
     private long[] assignments;
     private int position;
     private String progress;
@@ -30,7 +30,7 @@ public class Unit {
     }
 
     public long getLessons() {
-        return lessons;
+        return lesson;
     }
 
     public long[] getAssignments() {
