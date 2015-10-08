@@ -14,6 +14,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.EnrollmentWrapper;
+import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.SharedPreferenceHelper;
 
 import java.io.IOException;
@@ -56,12 +57,19 @@ public class RetrofitRESTApi implements IApi {
         Interceptor interceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
-                AuthenticationStepicResponse response = mSharedPreferenceHelper.getAuthResponseFromStore();
-                Log.i("Thread", Looper.myLooper() == Looper.getMainLooper() ? "main" : Thread.currentThread().getName());
-                response = mOAuthService.updateToken(mConfig.getRefreshGrantType(), response.getRefresh_token()).execute().body();//todo: Which Thread is it?
-                mSharedPreferenceHelper.storeAuthInfo(response);
-                Request newRequest = chain.request().newBuilder().addHeader("Authorization", getAuthHeaderValue()).build();
-                return chain.proceed(newRequest);
+                RWLocks.AuthLock.writeLock().lock();
+                try {
+
+                    AuthenticationStepicResponse response = mSharedPreferenceHelper.getAuthResponseFromStore();
+                    Log.i("Thread", Looper.myLooper() == Looper.getMainLooper() ? "main" : Thread.currentThread().getName());
+                    response = mOAuthService.updateToken(mConfig.getRefreshGrantType(), response.getRefresh_token()).execute().body();//todo: Which Thread is it?
+                    mSharedPreferenceHelper.storeAuthInfo(response);
+                    Request newRequest = chain.request().newBuilder().addHeader("Authorization", getAuthHeaderValue()).build();
+                    return chain.proceed(newRequest);
+                } finally {
+                    RWLocks.AuthLock.writeLock().unlock();
+                }
+
             }
         };
         okHttpClient.networkInterceptors().add(interceptor);
