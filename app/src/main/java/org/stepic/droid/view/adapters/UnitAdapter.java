@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 
@@ -23,14 +24,16 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
     private final Context mContext;
     private final Section mParentSection;
+    private final List<Lesson> mLessonList;
     private final List<Unit> mUnitList;
     private RecyclerView mRecyclerView;
 
-    public UnitAdapter(Context context, Section parentSection, List<Unit> unitList) {
+    public UnitAdapter(Context context, Section parentSection, List<Unit> unitList, List<Lesson> lessonList) {
 
         this.mContext = context;
         this.mParentSection = parentSection;
         this.mUnitList = unitList;
+        this.mLessonList = lessonList;
 
         MainApplication.component().inject(this);
     }
@@ -59,13 +62,14 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     @Override
     public void onBindViewHolder(UnitViewHolder holder, int position) {
         Unit unit = mUnitList.get(position);
+        Lesson lesson = mLessonList.get(position);
 
         StringBuilder titleBuilder = new StringBuilder();
         titleBuilder.append(mParentSection.getPosition());
         titleBuilder.append(DELIMITER);
         titleBuilder.append(unit.getPosition());
         titleBuilder.append(" ");
-        titleBuilder.append("Title of lessons in unit context");
+        titleBuilder.append(lesson.getTitle());
 
         holder.unitTitle.setText(titleBuilder.toString());
     }

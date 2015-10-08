@@ -11,14 +11,17 @@ import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepicBaseFragmentActivity;
-import org.stepic.droid.events.units.FailureLoadUnitsEvent;
+import org.stepic.droid.events.lessons.SuccessLoadLessonsEvent;
+import org.stepic.droid.events.units.FailureLoadEvent;
 import org.stepic.droid.events.units.SuccessLoadUnitsEvent;
+import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.UnitAdapter;
 import org.stepic.droid.view.decorators.DividerItemDecoration;
+import org.stepic.droid.web.LessonStepicResponse;
 import org.stepic.droid.web.UnitStepicResponse;
 
 import java.util.ArrayList;
@@ -44,6 +47,7 @@ public class UnitsActivity extends StepicBaseFragmentActivity {
     private Section mSection;
     private UnitAdapter mAdapter;
     private List<Unit> mUnitList;
+    private List<Lesson> mLessonList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +69,8 @@ public class UnitsActivity extends StepicBaseFragmentActivity {
 
         mUnitsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mUnitList = new ArrayList<>();
-        mAdapter = new UnitAdapter(this, mSection, mUnitList);
+        mLessonList = new ArrayList<>();
+        mAdapter = new UnitAdapter(this, mSection, mUnitList, mLessonList);
         mUnitsRecyclerView.setAdapter(mAdapter);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mUnitsRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
@@ -83,13 +88,13 @@ public class UnitsActivity extends StepicBaseFragmentActivity {
                 if (response.isSuccess()) {
                     bus.post(new SuccessLoadUnitsEvent(mSection, response, retrofit));
                 } else {
-                    bus.post(new FailureLoadUnitsEvent(mSection));
+                    bus.post(new FailureLoadEvent(mSection));
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
-                bus.post(new FailureLoadUnitsEvent(mSection));
+                bus.post(new FailureLoadEvent(mSection));
             }
         });
 
@@ -103,22 +108,57 @@ public class UnitsActivity extends StepicBaseFragmentActivity {
             return;
 
         UnitStepicResponse unitStepicResponse = e.getResponse().body();
-        List<Unit> units = unitStepicResponse.getUnits();
+        final List<Unit> units = unitStepicResponse.getUnits();
+
+        long[] lessonsIds = new long[units.size()];
+        for (int i = 0; i < units.size(); i++) {
+            Unit unit = units.get(i);
+            if (unit != null) {
+                lessonsIds[i] = unit.getLesson();
+            }
+        }
+        mShell.getApi().getLessons(lessonsIds).enqueue(new Callback<LessonStepicResponse>() {
+            @Override
+            public void onResponse(Response<LessonStepicResponse> response, Retrofit retrofit) {
+                if (response.isSuccess()) {
+                    bus.post(new SuccessLoadLessonsEvent(mSection, response, retrofit, units));
+                } else {
+                    bus.post(new FailureLoadEvent(mSection));
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                bus.post(new FailureLoadEvent(mSection));
+            }
+        });
+    }
+
+    @Subscribe
+    public void onSuccessLoadLessons(SuccessLoadLessonsEvent e) {
+        if (mSection == null || e.getSection() == null
+                || e.getSection().getId() != mSection.getId())
+            return;
+
+        mLessonList.clear();
+        mLessonList.addAll(e.getResponse().body().getLessons());
 
         mUnitList.clear();
-        mUnitList.addAll(units);
+        mUnitList.addAll(e.getUnits());
         mAdapter.notifyDataSetChanged();
         ProgressHelper.dismiss(mProgressBar);
     }
 
+
     @Subscribe
-    public void onFailLoad(FailureLoadUnitsEvent e) {
+    public void onFailLoad(FailureLoadEvent e) {
         if (mSection == null || e.getmSection() == null
                 || e.getmSection().getId() != mSection.getId())
             return;
 
         ProgressHelper.dismiss(mProgressBar);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -135,5 +175,12 @@ public class UnitsActivity extends StepicBaseFragmentActivity {
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mLessonList = null;
+        mUnitList = null;
     }
 }

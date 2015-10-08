@@ -2,10 +2,10 @@ package org.stepic.droid.events.units;
 
 import org.stepic.droid.model.Section;
 
-public class FailureLoadUnitsEvent {
+public class FailureLoadEvent {
     private Section mSection;
 
-    public FailureLoadUnitsEvent(Section mSection) {
+    public FailureLoadEvent(Section mSection) {
 
         this.mSection = mSection;
     }

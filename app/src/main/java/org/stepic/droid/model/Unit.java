@@ -29,7 +29,7 @@ public class Unit {
         return section;
     }
 
-    public long getLessons() {
+    public long getLesson() {
         return lesson;
     }
 
