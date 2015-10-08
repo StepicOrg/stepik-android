@@ -68,17 +68,37 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         title = positionOfSection + SECTION_TITLE_DELIMETER + title;
         holder.sectionTitle.setText(title);
 
+
         String formattedBeginDate = section.getFormattedBeginDate();
-        holder.startDate.setText(formattedBeginDate == "" ? "" :
-                holder.beginDateString + " " + formattedBeginDate);
+        if (formattedBeginDate == "") {
+            holder.startDate.setText("");
+            holder.startDate.setVisibility(View.GONE);
+        } else {
+            holder.startDate.setText(holder.beginDateString + " " + formattedBeginDate);
+            holder.startDate.setVisibility(View.VISIBLE);
+        }
 
         String formattedSoftDeadline = section.getFormattedSoftDeadline();
-        holder.softDeadline.setText(formattedSoftDeadline == "" ? "" :
-                holder.softDeadlineString + " " + formattedSoftDeadline);
+        if (formattedSoftDeadline == "") {
+            holder.softDeadline.setText("");
+            holder.softDeadline.setVisibility(View.GONE);
+        }
+        else
+        {
+            holder.softDeadline.setText(holder.softDeadlineString + " " + formattedSoftDeadline);
+            holder.softDeadline.setVisibility(View.VISIBLE);
+        }
 
         String formattedHardDeadline = section.getFormattedHardDeadline();
-        holder.hardDeadline.setText(formattedHardDeadline == "" ? "" :
-                holder.hardDeadlineString + " " + formattedHardDeadline);
+        if (formattedHardDeadline == "") {
+            holder.hardDeadline.setText("");
+            holder.hardDeadline.setVisibility(View.GONE);
+        }
+        else
+        {
+            holder.hardDeadline.setText(holder.hardDeadlineString + " " + formattedHardDeadline);
+            holder.hardDeadline.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
