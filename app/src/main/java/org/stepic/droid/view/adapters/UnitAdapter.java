@@ -9,16 +9,23 @@ import android.widget.TextView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements View.OnClickListener {
+
+
+    @Inject
+    IScreenManager mScreenManager;
 
     private final static String DELIMITER = ".";
 
@@ -81,7 +88,10 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
     @Override
     public void onClick(View v) {
-        //do sth
+        int itemPosition = mRecyclerView.indexOfChild(v);
+        if (itemPosition >= 0 && itemPosition < mUnitList.size()) {
+            mScreenManager.showSteps(mContext);
+        }
     }
 
     public static class UnitViewHolder extends RecyclerView.ViewHolder {

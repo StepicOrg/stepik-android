@@ -41,5 +41,6 @@
     <string name="hard_deadline_section">Hard deadline:</string>
     <string name="syllabus_title">Syllabus</string>
     <string name="units_lessons_title">Lessons</string>
+    <string name="steps_title">Lesson</string>
 
 </resources>

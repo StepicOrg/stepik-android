@@ -20,4 +20,6 @@ public interface IScreenManager {
 
     void showUnitsForSection (Context sourceActivity, @NotNull Section section);
 
+    void showSteps(Context sourceActivity);
+
 }
