@@ -7,14 +7,16 @@
     android:fitsSystemWindows="true"
     tools:context=".MainFeedActivity">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
         <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar" />
+            android:id="@+id/appBarLayout"
+            layout="@layout/appbar_only_toolbar"/>
 
         <FrameLayout
             android:id="@+id/frame"

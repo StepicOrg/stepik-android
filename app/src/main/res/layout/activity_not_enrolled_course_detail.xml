@@ -8,16 +8,16 @@
     android:paddingBottom="8dp">
 
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
 
+    <include
+        android:id="@+id/appBarLayout"
+        layout="@layout/appbar_only_toolbar"/>
     <ScrollView
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/join_course_layout"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/appBarLayout"
         android:layout_marginTop="2dp"
         android:background="@android:color/white">
 

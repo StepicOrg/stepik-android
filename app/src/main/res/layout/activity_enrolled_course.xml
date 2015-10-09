@@ -6,15 +6,15 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+        android:id="@+id/appBarLayout"
+        layout="@layout/appbar_only_toolbar"/>
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/sections_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/appBarLayout"
         android:clipToPadding="false"
         android:divider="@color/transparent"
         android:scrollbarStyle="outsideOverlay" />

@@ -5,11 +5,12 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+        android:id="@id/appBarLayout"
+        layout="@layout/appbar_with_tabs" />
 
     <include
         android:id="@+id/viewpager"
         layout="@layout/viewpager_steps" />
+
 
 </LinearLayout>
