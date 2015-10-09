@@ -51,12 +51,13 @@ public class StepsActivity extends FragmentActivityBase {
         mViewPager.setAdapter(mStepAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
 
+//        mTabLayout.setBackgroundColor(getResources().getColor(R.color.stepic_orange_carrot));
+
         for (int i = 0; i < mStepAdapter.getCount(); i++)
         {
             TabLayout.Tab tab = mTabLayout.getTabAt(i);
             tab.setCustomView(mStepAdapter.getTabView(i));
         }
-
 
     }
 

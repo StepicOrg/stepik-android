@@ -133,8 +133,12 @@ public class RetrofitRESTApi implements IApi {
 
     private void setAuthenticatorClientIDAndPassword(OkHttpClient httpClient) {
         httpClient.setAuthenticator(new Authenticator() {
+//            private int mCounter = 0;
             @Override
             public Request authenticate(Proxy proxy, Response response) throws IOException {
+//                if (mCounter++ > 0) {
+//                    throw new AuthException();
+//                }
                 String credential = Credentials.basic(mConfig.getOAuthClientId(), mConfig.getOAuthClientSecret());
                 return response.request().newBuilder().header("Authorization", credential).build();
             }
@@ -153,7 +157,7 @@ public class RetrofitRESTApi implements IApi {
             String type = resp.getToken_type();
             return type + " " + access_token;
         } catch (Exception ex) {
-            Log.e("retrfitAuth", ex.getMessage());
+            Log.e("retrofitAuth", ex.getMessage());
             return "";
         }
     }

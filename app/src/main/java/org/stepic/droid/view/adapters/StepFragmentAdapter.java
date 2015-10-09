@@ -47,20 +47,8 @@ public class StepFragmentAdapter extends FragmentStatePagerAdapter {
 
     public View getTabView(int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.tab_custom, null);
-        ImageView icon = (ImageView) view.findViewById(R.id.icon_for_step);
-
-        icon.setImageDrawable(mResourceHolder.videoIcon);
-        if (position > 6 || position % 3 == 0)
-        {
-            //not viewed
-            view.setBackgroundColor(mResourceHolder.notViewed);
-        }
-        else
-        {
-            //viewed
-            view.setBackgroundColor(mResourceHolder.stepicPrimary);
-        }
-
+        TabHolder tabHolder = new TabHolder(view);
+        tabHolder.stepIcon.setImageDrawable(mResourceHolder.videoIcon);
         return view;
     }
 
@@ -75,14 +63,14 @@ public class StepFragmentAdapter extends FragmentStatePagerAdapter {
         public ResHolder(Context context) {
             videoIcon = ContextCompat.getDrawable(context, R.drawable.ic_video);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 notViewed = context.getColor(R.color.stepic_not_viewed);
             } else {
                 notViewed = context.getResources().getColor(R.color.stepic_not_viewed);
             }
 
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 stepicPrimary = context.getColor(R.color.stepic_brand_primary);
             } else {
                 stepicPrimary = context.getResources().getColor(R.color.stepic_brand_primary);
