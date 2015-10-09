@@ -1,7 +1,7 @@
 package org.stepic.droid.core;
 
-import org.stepic.droid.base.StepicBaseFragment;
-import org.stepic.droid.base.StepicBaseFragmentActivity;
+import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.concurrency.FromDbCoursesTask;
 import org.stepic.droid.concurrency.ToDbCoursesTask;
 import org.stepic.droid.concurrency.UpdateCourseTask;
@@ -20,7 +20,7 @@ import dagger.Component;
 @Singleton
 @Component(modules = {StepicDefaultModule.class})
 public interface StepicCoreComponent {
-    void inject(StepicBaseFragmentActivity someActivity);
+    void inject(FragmentActivityBase someActivity);
 
     void inject(Shell injectAllToShell);
 
@@ -30,7 +30,7 @@ public interface StepicCoreComponent {
 
     void inject(Course adapter);
 
-    void inject(StepicBaseFragment baseFragment);
+    void inject(FragmentBase baseFragment);
 
     void inject(RetrofitRESTApi api);
 

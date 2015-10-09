@@ -7,11 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.StepicBaseFragment;
+import org.stepic.droid.base.FragmentBase;
 
 import butterknife.ButterKnife;
 
-public class MySettings extends StepicBaseFragment {
+public class MySettings extends FragmentBase {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

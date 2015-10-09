@@ -7,7 +7,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import org.stepic.droid.base.StepicBaseFragmentActivity;
+import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.SharedPreferenceHelper;
 import org.stepic.droid.web.AuthenticationStepicResponse;
@@ -19,7 +19,7 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class LoginActivity extends StepicBaseFragmentActivity {
+public class LoginActivity extends FragmentActivityBase {
 
     @Bind(org.stepic.droid.R.id.actionbar_close_btn)
     View mCloseButton;

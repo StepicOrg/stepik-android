@@ -17,7 +17,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
-public class StepicBaseFragment extends Fragment {
+public class FragmentBase extends Fragment {
 
     protected String TAG = "StepicFragment";
 
@@ -27,7 +27,7 @@ public class StepicBaseFragment extends Fragment {
     @Inject
     public IShell mShell;
 
-    public StepicBaseFragment () {
+    public FragmentBase() {
         MainApplication.component(MainApplication.getAppContext()).inject(this);
     }
 

@@ -7,13 +7,13 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.stepic.droid.base.StepicBaseFragmentActivity;
+import org.stepic.droid.base.FragmentActivityBase;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 
-public class RegisterActivity extends StepicBaseFragmentActivity {
+public class RegisterActivity extends FragmentActivityBase {
     private static final String TAG = "register_activity";
 
 

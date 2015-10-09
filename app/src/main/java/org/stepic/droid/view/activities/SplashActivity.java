@@ -4,13 +4,13 @@ package org.stepic.droid.view.activities;
 import android.os.Bundle;
 import android.os.Handler;
 
-import org.stepic.droid.base.StepicBaseFragmentActivity;
+import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.util.SharedPreferenceHelper;
 
 import butterknife.ButterKnife;
 
 
-public class SplashActivity extends StepicBaseFragmentActivity {
+public class SplashActivity extends FragmentActivityBase {
 
     // Splash screen wait time
     private static final int SPLASH_TIME_OUT = 1500;

@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.StepicBaseFragmentActivity;
+import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.events.sections.FailureResponseSectionEvent;
 import org.stepic.droid.events.sections.SuccessResponseSectionsEvent;
 import org.stepic.droid.model.Course;
@@ -30,7 +30,7 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class EnrolledCourseActivity extends StepicBaseFragmentActivity {
+public class EnrolledCourseActivity extends FragmentActivityBase {
     private static final String TAG = "enrolledActivity";
 
     @Bind(R.id.sections_recycler_view)
