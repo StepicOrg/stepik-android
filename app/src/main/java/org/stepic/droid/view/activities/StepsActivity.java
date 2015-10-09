@@ -15,6 +15,8 @@ import butterknife.ButterKnife;
 
 public class StepsActivity extends FragmentActivityBase {
 
+    public static String POSITION = "POSITION";
+
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
@@ -45,9 +47,16 @@ public class StepsActivity extends FragmentActivityBase {
 
         //may be set title == title of lesson?
 
-        mStepAdapter = new StepFragmentAdapter(getSupportFragmentManager());
+        mStepAdapter = new StepFragmentAdapter(getSupportFragmentManager(), this);
         mViewPager.setAdapter(mStepAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
+
+        for (int i = 0; i < mStepAdapter.getCount(); i++)
+        {
+            TabLayout.Tab tab = mTabLayout.getTabAt(i);
+            tab.setCustomView(mStepAdapter.getTabView(i));
+        }
+
 
     }
 

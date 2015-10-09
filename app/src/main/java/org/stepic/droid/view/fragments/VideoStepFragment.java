@@ -2,6 +2,7 @@ package org.stepic.droid.view.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,6 @@ public class VideoStepFragment extends StepFragmentBase {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         testTv.setText(getArguments().getString("test"));
-
+        Log.i("newFragment", "new");
     }
 }

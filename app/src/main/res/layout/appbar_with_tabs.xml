@@ -10,5 +10,5 @@
 
     <include
         android:id="@+id/tabs"
-        layout="@layout/tab_stepic" />
+        layout="@layout/tablayout_steps" />
 </android.support.design.widget.AppBarLayout>
