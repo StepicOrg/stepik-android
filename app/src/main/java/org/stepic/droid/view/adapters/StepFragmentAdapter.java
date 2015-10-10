@@ -48,7 +48,9 @@ public class StepFragmentAdapter extends FragmentStatePagerAdapter {
     public View getTabView(int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.tab_custom, null);
         TabHolder tabHolder = new TabHolder(view);
+
         tabHolder.stepIcon.setImageDrawable(mResourceHolder.videoIcon);
+
         return view;
     }
 
@@ -68,6 +70,7 @@ public class StepFragmentAdapter extends FragmentStatePagerAdapter {
             } else {
                 notViewed = context.getResources().getColor(R.color.stepic_not_viewed);
             }
+
 
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
