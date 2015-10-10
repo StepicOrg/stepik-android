@@ -5,7 +5,9 @@ import android.content.Context;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.model.Unit;
 
 public interface IScreenManager {
     void showLaunchScreen(Context context, boolean overrideAnimation);
@@ -20,6 +22,6 @@ public interface IScreenManager {
 
     void showUnitsForSection (Context sourceActivity, @NotNull Section section);
 
-    void showSteps(Context sourceActivity);
+    void showSteps(Context sourceActivity, Unit unit, Lesson lesson);
 
 }

@@ -1,4 +1,4 @@
-package org.stepic.droid.util;
+package org.stepic.droid.util.resolvers;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -13,13 +13,14 @@ import java.util.Map;
 import javax.inject.Singleton;
 
 @Singleton
-public class StepTypeResolver {
+public class StepTypeResolver implements IStepResolver {
 
     private Map<String, Drawable> mapFromTypeToDrawable;
     private Context mContext;
 
     public StepTypeResolver(Context context) {
 
+        mContext = context;
         mapFromTypeToDrawable = new HashMap<>();
 
 
@@ -39,10 +40,12 @@ public class StepTypeResolver {
         mapFromTypeToDrawable.put("fill-blanks", getDrawable(context, R.drawable.ic_fill_blanks));
         mapFromTypeToDrawable.put("puzzle", getDrawable(context, R.drawable.ic_puzzle));
         mapFromTypeToDrawable.put("pycharm", getDrawable(context, R.drawable.ic_pycharm));
+        mapFromTypeToDrawable.put("code", getDrawable(context, R.drawable.ic_code));
 
     }
 
-    public Drawable getDrawableForType(String type) {
+    public Drawable getDrawableForType(String type, boolean viewed) {
+        //todo:two maps for viewed and not, if viewved 1st map, not viewed second?
         Drawable drawable = mapFromTypeToDrawable.get(type);
         if (drawable != null)
             return drawable;

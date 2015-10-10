@@ -90,7 +90,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     public void onClick(View v) {
         int itemPosition = mRecyclerView.indexOfChild(v);
         if (itemPosition >= 0 && itemPosition < mUnitList.size()) {
-            mScreenManager.showSteps(mContext);
+            mScreenManager.showSteps(mContext, mUnitList.get(itemPosition), mLessonList.get(itemPosition));
         }
     }
 

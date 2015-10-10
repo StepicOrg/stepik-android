@@ -1,6 +1,11 @@
 package org.stepic.droid.model;
 
-public class Unit {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+public class Unit implements Serializable, Parcelable {
     private long id;
     private int section;
     private long lesson;
@@ -96,4 +101,68 @@ public class Unit {
     public String getUpdate_date() {
         return update_date;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.id);
+        dest.writeInt(this.section);
+        dest.writeLong(this.lesson);
+        dest.writeLongArray(this.assignments);
+        dest.writeInt(this.position);
+        dest.writeString(this.progress);
+        dest.writeString(this.begin_date);
+        dest.writeString(this.end_date);
+        dest.writeString(this.soft_deadline);
+        dest.writeString(this.hard_deadline);
+        dest.writeString(this.grading_policy);
+        dest.writeString(this.begin_date_source);
+        dest.writeString(this.end_date_source);
+        dest.writeString(this.soft_deadline_source);
+        dest.writeString(this.hard_deadline_source);
+        dest.writeString(this.grading_policy_source);
+        dest.writeByte(is_active ? (byte) 1 : (byte) 0);
+        dest.writeString(this.create_date);
+        dest.writeString(this.update_date);
+    }
+
+    public Unit() {
+    }
+
+    protected Unit(Parcel in) {
+        this.id = in.readLong();
+        this.section = in.readInt();
+        this.lesson = in.readLong();
+        this.assignments = in.createLongArray();
+        this.position = in.readInt();
+        this.progress = in.readString();
+        this.begin_date = in.readString();
+        this.end_date = in.readString();
+        this.soft_deadline = in.readString();
+        this.hard_deadline = in.readString();
+        this.grading_policy = in.readString();
+        this.begin_date_source = in.readString();
+        this.end_date_source = in.readString();
+        this.soft_deadline_source = in.readString();
+        this.hard_deadline_source = in.readString();
+        this.grading_policy_source = in.readString();
+        this.is_active = in.readByte() != 0;
+        this.create_date = in.readString();
+        this.update_date = in.readString();
+    }
+
+    public static final Creator<Unit> CREATOR = new Creator<Unit>() {
+        public Unit createFromParcel(Parcel source) {
+            return new Unit(source);
+        }
+
+        public Unit[] newArray(int size) {
+            return new Unit[size];
+        }
+    };
 }

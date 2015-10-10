@@ -131,6 +131,11 @@ public class RetrofitRESTApi implements IApi {
         return mLoggedService.getLessons(lessons);
     }
 
+    @Override
+    public Call<StepResponse> getSteps(long[] steps) {
+        return mLoggedService.getSteps(steps);
+    }
+
     private void setAuthenticatorClientIDAndPassword(OkHttpClient httpClient) {
         httpClient.setAuthenticator(new Authenticator() {
 //            private int mCounter = 0;

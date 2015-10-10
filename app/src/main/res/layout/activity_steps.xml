@@ -5,12 +5,27 @@
     android:orientation="vertical">
 
     <include
-        android:id="@id/appBarLayout"
+        android:id="@+id/appBarLayout"
         layout="@layout/appbar_with_tabs" />
 
-    <include
-        android:id="@+id/viewpager"
-        layout="@layout/viewpager_steps" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <include
+            android:id="@+id/viewpager"
+            layout="@layout/viewpager_steps" />
+
+        <ProgressBar
+            android:id="@+id/load_steps"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:indeterminateDrawable="@drawable/login_progress"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
 
 </LinearLayout>

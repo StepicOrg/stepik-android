@@ -1,19 +1,23 @@
 package org.stepic.droid.view.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
 import org.stepic.droid.R;
+import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.model.Step;
+import org.stepic.droid.util.resolvers.IStepResolver;
 import org.stepic.droid.view.fragments.VideoStepFragment;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,13 +25,16 @@ import butterknife.ButterKnife;
 public class StepFragmentAdapter extends FragmentStatePagerAdapter {
 
     private Context mContext;
-    private ResHolder mResourceHolder;
+    @Inject
+    IStepResolver mResolver;
 
-    public StepFragmentAdapter(FragmentManager fm, Context context) {
+    List<Step> mStepList;
+
+    public StepFragmentAdapter(FragmentManager fm, Context context, List<Step> stepList) {
         super(fm);
+        MainApplication.component().inject(this);
         mContext = context;
-        mResourceHolder = new ResHolder(context);
-
+        mStepList = stepList;
     }
 
     @Override
@@ -42,45 +49,18 @@ public class StepFragmentAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 10;
+        return mStepList.size();
     }
 
     public View getTabView(int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.tab_custom, null);
+        Step step = mStepList.get(position);
+
         TabHolder tabHolder = new TabHolder(view);
 
-        tabHolder.stepIcon.setImageDrawable(mResourceHolder.videoIcon);
+        tabHolder.stepIcon.setImageDrawable(mResolver.getDrawableForType(step.getBlock().getName(), false));
 
         return view;
-    }
-
-    public static class ResHolder {
-
-
-        public Drawable videoIcon;
-        public int notViewed;
-        public int stepicPrimary;
-
-
-        public ResHolder(Context context) {
-            videoIcon = ContextCompat.getDrawable(context, R.drawable.ic_video);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                notViewed = context.getColor(R.color.stepic_not_viewed);
-            } else {
-                notViewed = context.getResources().getColor(R.color.stepic_not_viewed);
-            }
-
-
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                stepicPrimary = context.getColor(R.color.stepic_brand_primary);
-            } else {
-                stepicPrimary = context.getResources().getColor(R.color.stepic_brand_primary);
-            }
-        }
-
-
     }
 
     public static class TabHolder {
