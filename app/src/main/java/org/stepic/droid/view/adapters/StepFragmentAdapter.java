@@ -1,11 +1,11 @@
 package org.stepic.droid.view.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -52,15 +52,9 @@ public class StepFragmentAdapter extends FragmentStatePagerAdapter {
         return mStepList.size();
     }
 
-    public View getTabView(int position) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.tab_custom, null);
+    public Drawable getTabDrawable(int position) {
         Step step = mStepList.get(position);
-
-        TabHolder tabHolder = new TabHolder(view);
-
-        tabHolder.stepIcon.setImageDrawable(mResolver.getDrawableForType(step.getBlock().getName(), false));
-
-        return view;
+        return mResolver.getDrawableForType(step.getBlock().getName(), false);
     }
 
     public static class TabHolder {

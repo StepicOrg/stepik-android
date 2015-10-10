@@ -36,6 +36,7 @@ public class StepsActivity extends FragmentActivityBase {
 
     public static String POSITION = "POSITION";
 
+
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
@@ -134,7 +135,7 @@ public class StepsActivity extends FragmentActivityBase {
         mTabLayout.setupWithViewPager(mViewPager);
         for (int i = 0; i < mStepAdapter.getCount(); i++) {
             TabLayout.Tab tab = mTabLayout.getTabAt(i);
-            tab.setCustomView(mStepAdapter.getTabView(i));
+            tab.setIcon(mStepAdapter.getTabDrawable(i));
         }
     }
 
