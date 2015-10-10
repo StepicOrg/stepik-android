@@ -11,6 +11,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
-public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionViewHolder> implements View.OnClickListener {
+public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionViewHolder> implements StepicOnClickItemListener {
     private final static String SECTION_TITLE_DELIMETER = ". ";
 
     @Inject
@@ -28,7 +29,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
 
     private List<Section> mSections;
     private Context mContext;
-    private RecyclerView mRecyclerView;
 
     public SectionAdapter(List<Section> sections, Context mContext) {
         this.mSections = sections;
@@ -37,26 +37,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         MainApplication.component().inject(this);
     }
 
-
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        mRecyclerView = recyclerView;
-
-    }
-
-    @Override
-    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-        mRecyclerView = null;
-
-    }
-
     @Override
     public SectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.section_item, parent, false);
-        v.setOnClickListener(this);
-        return new SectionViewHolder(v);
+        return new SectionViewHolder(v, this);
     }
 
     @Override
@@ -82,9 +66,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         if (formattedSoftDeadline == "") {
             holder.softDeadline.setText("");
             holder.softDeadline.setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             holder.softDeadline.setText(holder.softDeadlineString + " " + formattedSoftDeadline);
             holder.softDeadline.setVisibility(View.VISIBLE);
         }
@@ -93,9 +75,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         if (formattedHardDeadline == "") {
             holder.hardDeadline.setText("");
             holder.hardDeadline.setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             holder.hardDeadline.setText(holder.hardDeadlineString + " " + formattedHardDeadline);
             holder.hardDeadline.setVisibility(View.VISIBLE);
         }
@@ -107,8 +87,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
     }
 
     @Override
-    public void onClick(View v) {
-        int itemPosition = mRecyclerView.indexOfChild(v);
+    public void onClick(int itemPosition) {
         if (itemPosition >= 0 && itemPosition < mSections.size()) {
             mScreenManager.showUnitsForSection(mContext, mSections.get(itemPosition));
         }
@@ -136,9 +115,16 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         String beginDateString;
 
 
-        public SectionViewHolder(View itemView) {
+        public SectionViewHolder(View itemView, final StepicOnClickItemListener listener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    listener.onClick(getAdapterPosition());
+                }
+            });
         }
     }
 }

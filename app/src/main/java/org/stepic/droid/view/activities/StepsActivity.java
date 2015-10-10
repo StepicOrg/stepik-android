@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
@@ -45,6 +47,9 @@ public class StepsActivity extends FragmentActivityBase {
 
     @Bind(R.id.load_steps)
     ProgressBar mProgressBar;
+
+    @BindString(R.string.not_available_lesson)
+    String notAvailable;
 
 
     StepFragmentAdapter mStepAdapter;
@@ -67,6 +72,7 @@ public class StepsActivity extends FragmentActivityBase {
     @Override
     protected void onStart() {
         super.onStart();
+        setTitle(mLesson.getTitle());
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -106,15 +112,20 @@ public class StepsActivity extends FragmentActivityBase {
         StepResponse stepicResponse = e.getResponse().body();
         List<Step> steps = stepicResponse.getSteps();
 
-        mStepList.clear();
-        mStepList.addAll(steps);
-        mStepAdapter.notifyDataSetChanged();
-        updateTabs();
-        ProgressHelper.dismiss(mProgressBar);
+        if (steps.isEmpty()) {
+            bus.post(new FailLoadStepEvent());
+        } else {
+            mStepList.clear();
+            mStepList.addAll(steps);
+            mStepAdapter.notifyDataSetChanged();
+            updateTabs();
+            ProgressHelper.dismiss(mProgressBar);
+        }
     }
 
     @Subscribe
     public void onFailLoad(FailLoadStepEvent e) {
+        Toast.makeText(this, notAvailable, Toast.LENGTH_LONG).show();
         ProgressHelper.dismiss(mProgressBar);
     }
 

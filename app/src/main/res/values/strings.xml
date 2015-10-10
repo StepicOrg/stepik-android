@@ -42,5 +42,6 @@
     <string name="syllabus_title">Syllabus</string>
     <string name="units_lessons_title">Lessons</string>
     <string name="steps_title">Lesson</string>
+    <string name="not_available_lesson">Lesson is not available now</string>
 
 </resources>
