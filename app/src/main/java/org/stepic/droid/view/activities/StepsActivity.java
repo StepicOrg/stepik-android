@@ -5,6 +5,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -120,6 +121,7 @@ public class StepsActivity extends FragmentActivityBase {
             mStepList.addAll(steps);
             mStepAdapter.notifyDataSetChanged();
             updateTabs();
+            mTabLayout.setVisibility(View.VISIBLE);
             ProgressHelper.dismiss(mProgressBar);
         }
     }

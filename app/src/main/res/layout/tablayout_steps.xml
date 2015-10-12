@@ -14,4 +14,5 @@
     app:tabSelectedTextColor="@color/white"
     app:tabTextColor="@color/white70percent"
     android:clipToPadding="false"
-    app:tabMode="scrollable"/>
+    app:tabMode="scrollable"
+    android:visibility="gone"/>
