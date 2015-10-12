@@ -14,6 +14,11 @@
             android:id="@+id/header"
             layout="@layout/step_text_header" />
 
+        <VideoView
+            android:id="@+id/video_view"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
         <TextView
             android:id="@+id/test_tv"
             android:layout_width="wrap_content"
