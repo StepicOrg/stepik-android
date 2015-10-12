@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.ButterKnife;
 import retrofit.Response;
 import retrofit.Retrofit;
@@ -59,8 +58,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     @Bind(R.id.list_of_courses)
     protected ListView mListOfCourses;
 
-    @BindColor(R.color.transparent)
-    int transparent;
+
 
     //    protected LoadingCoursesTask mLoadingCoursesTask;
     protected List<Course> mCourses;

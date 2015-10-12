@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cv"
-    android:background="@android:color/white"
+    android:background="@color/stepic_white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
