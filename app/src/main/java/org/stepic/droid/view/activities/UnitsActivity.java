@@ -9,7 +9,7 @@ import android.widget.ProgressBar;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.StepicBaseFragmentActivity;
+import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.events.lessons.SuccessLoadLessonsEvent;
 import org.stepic.droid.events.units.FailureLoadEvent;
 import org.stepic.droid.events.units.SuccessLoadUnitsEvent;
@@ -31,7 +31,7 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class UnitsActivity extends StepicBaseFragmentActivity {
+public class UnitsActivity extends FragmentActivityBase {
     @Bind(R.id.units_recycler_view)
     RecyclerView mUnitsRecyclerView;
 

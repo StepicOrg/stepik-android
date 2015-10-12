@@ -1,3 +1,4 @@
+
 package org.stepic.droid.core;
 
 import android.app.Activity;
@@ -7,7 +8,9 @@ import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.activities.EnrolledCourseActivity;
 import org.stepic.droid.view.activities.LaunchActivity;
@@ -15,6 +18,7 @@ import org.stepic.droid.view.activities.LoginActivity;
 import org.stepic.droid.view.activities.MainFeedActivity;
 import org.stepic.droid.view.activities.NotEnrolledCourseDetailActivity;
 import org.stepic.droid.view.activities.RegisterActivity;
+import org.stepic.droid.view.activities.StepsActivity;
 import org.stepic.droid.view.activities.UnitsActivity;
 
 import javax.inject.Inject;
@@ -95,5 +99,15 @@ public class ScreenManager implements IScreenManager {
         sourceActivity.startActivity(intent);
     }
 
+    @Override
+    public void showSteps(Context sourceActivity, Unit unit, Lesson lesson) {
+        Intent intent = new Intent(sourceActivity, StepsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(AppConstants.KEY_UNIT_BUNDLE, unit);
+        bundle.putSerializable(AppConstants.KEY_LESSON_BUNDLE, lesson);
+
+        intent.putExtras(bundle);
+        sourceActivity.startActivity(intent);
+    }
 
 }

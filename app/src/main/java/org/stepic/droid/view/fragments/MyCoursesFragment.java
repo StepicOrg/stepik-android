@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.squareup.otto.Subscribe;
 
+import org.stepic.droid.base.CoursesFragmentBase;
 import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
 import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
 import org.stepic.droid.events.courses.FinishingSaveCoursesToDbEvent;

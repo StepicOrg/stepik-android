@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
 
     <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+        android:id="@+id/appBarLayout"
+        layout="@layout/appbar_only_toolbar" />
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/units_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/appBarLayout"
+        android:background="@color/stepic_cover"
         android:clipToPadding="false"
         android:scrollbarStyle="outsideOverlay" />
 

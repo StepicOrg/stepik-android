@@ -7,6 +7,8 @@ import com.squareup.otto.Bus;
 import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.util.SharedPreferenceHelper;
+import org.stepic.droid.util.resolvers.IStepResolver;
+import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.web.HttpManager;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.IHttpManager;
@@ -74,5 +76,11 @@ public class StepicDefaultModule {
     @Singleton
     public Bus provideBus() {
         return new Bus();
+    }
+
+    @Provides
+    @Singleton
+    public IStepResolver provideStepResolver(Context context) {
+        return new StepTypeResolver(context);
     }
 }

@@ -83,5 +83,11 @@
             android:label="@string/units_lessons_title"
             android:screenOrientation="portrait" />
 
+
+        <activity
+            android:name=".view.activities.StepsActivity"
+            android:label="@string/steps_title"
+            android:screenOrientation="portrait" />
+
     </application>
 </manifest>

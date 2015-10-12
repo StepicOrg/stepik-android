@@ -5,13 +5,13 @@ import org.stepic.droid.model.Unit;
 
 import java.util.List;
 
-public class UnitStepicResponse implements IStepicResponse {
-    Meta meta;
+public class UnitStepicResponse extends StepicResponseBase {
     List<Unit> units;
 
-    public Meta getMeta() {
-        return meta;
+    public UnitStepicResponse(Meta meta) {
+        super(meta);
     }
+
 
     public List<Unit> getUnits() {
         return units;

@@ -25,4 +25,6 @@ public interface IApi {
 
     Call<LessonStepicResponse> getLessons(long [] lessons);
 
+    Call<StepResponse> getSteps (long [] steps);
+
 }

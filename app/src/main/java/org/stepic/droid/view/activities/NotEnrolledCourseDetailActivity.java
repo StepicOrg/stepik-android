@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.StepicBaseFragmentActivity;
+import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.events.instructors.FailureLoadInstrictorsEvent;
 import org.stepic.droid.events.instructors.OnResponseLoadingInstructorsEvent;
 import org.stepic.droid.events.instructors.StartLoadingInstructorsEvent;
@@ -39,7 +39,7 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class NotEnrolledCourseDetailActivity extends StepicBaseFragmentActivity {
+public class NotEnrolledCourseDetailActivity extends FragmentActivityBase {
 
     private static final String TAG = "unrolled_course";
 

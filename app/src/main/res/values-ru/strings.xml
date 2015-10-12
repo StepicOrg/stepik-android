@@ -37,4 +37,5 @@
     <string name="soft_deadline_section">Мягкий дедлайн:</string>
     <string name="syllabus_title">Содержание</string>
     <string name="units_lessons_title">Уроки</string>
+    <string name="steps_title">Урок</string>
 </resources>

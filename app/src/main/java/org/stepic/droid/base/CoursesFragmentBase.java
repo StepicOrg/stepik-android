@@ -1,4 +1,4 @@
-package org.stepic.droid.view.fragments;
+package org.stepic.droid.base;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,7 +14,6 @@ import android.widget.ListView;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.StepicBaseFragment;
 import org.stepic.droid.concurrency.FromDbCoursesTask;
 import org.stepic.droid.concurrency.ToDbCoursesTask;
 import org.stepic.droid.concurrency.UpdateCourseTask;
@@ -38,12 +37,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.ButterKnife;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public abstract class CoursesFragmentBase extends StepicBaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public abstract class CoursesFragmentBase extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = "base_fragment";
 
     @Nullable
@@ -55,13 +53,12 @@ public abstract class CoursesFragmentBase extends StepicBaseFragment implements 
     }
 
     @Bind(R.id.swipe_refresh_layout_mycourses)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    protected SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Bind(R.id.list_of_courses)
-    ListView mListOfCourses;
+    protected ListView mListOfCourses;
 
-    @BindColor(R.color.transparent)
-    int transparent;
+
 
     //    protected LoadingCoursesTask mLoadingCoursesTask;
     protected List<Course> mCourses;

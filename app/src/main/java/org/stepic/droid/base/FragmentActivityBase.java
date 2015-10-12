@@ -13,7 +13,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
-public abstract class StepicBaseFragmentActivity extends AppCompatActivity {
+public abstract class FragmentActivityBase extends AppCompatActivity {
 
 
     @Inject

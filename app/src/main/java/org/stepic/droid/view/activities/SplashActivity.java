@@ -4,13 +4,13 @@ package org.stepic.droid.view.activities;
 import android.os.Bundle;
 import android.os.Handler;
 
-import org.stepic.droid.base.StepicBaseFragmentActivity;
+import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.util.SharedPreferenceHelper;
 
 import butterknife.ButterKnife;
 
 
-public class SplashActivity extends StepicBaseFragmentActivity {
+public class SplashActivity extends FragmentActivityBase {
 
     // Splash screen wait time
     private static final int SPLASH_TIME_OUT = 1500;
@@ -18,7 +18,7 @@ public class SplashActivity extends StepicBaseFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.bind(this);
+
 
         //This stops from opening again from the Splash screen when minimized
         if (!isTaskRoot()) {
@@ -28,6 +28,7 @@ public class SplashActivity extends StepicBaseFragmentActivity {
 
         setContentView(org.stepic.droid.R.layout.activity_splash);
         overridePendingTransition(org.stepic.droid.R.anim.slide_in_from_end, org.stepic.droid.R.anim.slide_out_to_start);
+        ButterKnife.bind(this);
 
         new Handler().postDelayed(new Runnable() {
             @Override

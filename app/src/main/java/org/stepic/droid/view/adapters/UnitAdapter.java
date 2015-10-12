@@ -9,16 +9,24 @@ import android.widget.TextView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements View.OnClickListener {
+public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements StepicOnClickItemListener {
+
+
+    @Inject
+    IScreenManager mScreenManager;
 
     private final static String DELIMITER = ".";
 
@@ -55,8 +63,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     @Override
     public UnitViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.unit_item, parent, false);
-        v.setOnClickListener(this);
-        return new UnitViewHolder(v);
+        return new UnitViewHolder(v, this);
     }
 
     @Override
@@ -79,10 +86,14 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         return mUnitList.size();
     }
 
+
     @Override
-    public void onClick(View v) {
-        //do sth
+    public void onClick(int itemPosition) {
+        if (itemPosition >= 0 && itemPosition < mUnitList.size()) {
+            mScreenManager.showSteps(mContext, mUnitList.get(itemPosition), mLessonList.get(itemPosition));
+        }
     }
+
 
     public static class UnitViewHolder extends RecyclerView.ViewHolder {
 
@@ -95,10 +106,17 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         @Bind(R.id.unit_title)
         TextView unitTitle;
 
-
-        public UnitViewHolder(View itemView) {
+        public UnitViewHolder(View itemView, final StepicOnClickItemListener listener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            //mListener = listener;
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onClick(getAdapterPosition());
+                }
+            });
         }
     }
+
 }

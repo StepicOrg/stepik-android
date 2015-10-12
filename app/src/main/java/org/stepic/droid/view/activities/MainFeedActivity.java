@@ -15,8 +15,8 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.StepicBaseFragment;
-import org.stepic.droid.base.StepicBaseFragmentActivity;
+import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.store.operations.DbOperationsCourses;
 import org.stepic.droid.util.SharedPreferenceHelper;
@@ -35,7 +35,7 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class MainFeedActivity extends StepicBaseFragmentActivity {
+public class MainFeedActivity extends FragmentActivityBase {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
@@ -172,7 +172,7 @@ public class MainFeedActivity extends StepicBaseFragmentActivity {
 
     }
 
-    private void setFragment(StepicBaseFragment fragment) {
+    private void setFragment(FragmentBase fragment) {
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frame, fragment);
         fragmentTransaction.commit();
