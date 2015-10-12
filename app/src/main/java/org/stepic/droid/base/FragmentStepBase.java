@@ -12,23 +12,38 @@ import org.stepic.droid.util.HtmlHelper;
 
 import butterknife.Bind;
 
-public class StepFragmentBase extends FragmentBase {
+public abstract class FragmentStepBase extends FragmentBase {
 
     @Bind(R.id.text_header)
     TextView mHeaderTv;
 
+    protected Step mStep;
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Step step = (Step) getArguments().getSerializable(AppConstants.KEY_STEP_BUNDLE);
-        if (step != null &&
-                step.getBlock() != null &&
-                step.getBlock().getText() != null &&
-                step.getBlock().getText() != "") {
-            mHeaderTv.setText(HtmlHelper.fromHtml(step.getBlock().getText()));
+        mStep = (Step) getArguments().getSerializable(AppConstants.KEY_STEP_BUNDLE);
+        if (mStep != null &&
+                mStep.getBlock() != null &&
+                mStep.getBlock().getText() != null &&
+                mStep.getBlock().getText() != "") {
+            mHeaderTv.setText(HtmlHelper.fromHtml(mStep.getBlock().getText()));
             mHeaderTv.setVisibility(View.VISIBLE);
         } else {
             mHeaderTv.setVisibility(View.GONE);
         }
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        bus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        bus.unregister(this);
     }
 }

@@ -15,11 +15,11 @@
             layout="@layout/step_text_header" />
 
         <TextView
-            android:id="@+id/test_tv"
+            android:id="@+id/go_to_stepic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Hey" />
+            android:text="Go to stepic, znat (Unsupported yet)" />
 
     </LinearLayout>
 </ScrollView>

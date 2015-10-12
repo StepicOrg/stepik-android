@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Hey" />
+            android:text="Hey, it is fragment with text" />
 
     </LinearLayout>
 </ScrollView>

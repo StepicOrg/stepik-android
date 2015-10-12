@@ -10,11 +10,11 @@ import android.view.View;
 import android.widget.ImageView;
 
 import org.stepic.droid.R;
+import org.stepic.droid.base.FragmentStepBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.IStepResolver;
-import org.stepic.droid.view.fragments.VideoStepFragment;
 
 import java.util.List;
 
@@ -41,8 +41,7 @@ public class StepFragmentAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Step step = mStepList.get(position);
-
-        VideoStepFragment fragment = new VideoStepFragment();
+        FragmentStepBase fragment = mResolver.getFragment(step);
         Bundle args = new Bundle();
         args.putSerializable(AppConstants.KEY_STEP_BUNDLE, step);
         args.putString("test", position + 1 + "");

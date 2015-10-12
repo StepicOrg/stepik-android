@@ -8,7 +8,7 @@
         android:id="@+id/appBarLayout"
         layout="@layout/appbar_with_tabs" />
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -20,12 +20,11 @@
             android:id="@+id/load_steps"
             android:layout_width="30dp"
             android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_gravity="center"
             android:indeterminateDrawable="@drawable/login_progress"
             android:visibility="gone" />
 
 
-    </RelativeLayout>
+    </FrameLayout>
 
 </LinearLayout>

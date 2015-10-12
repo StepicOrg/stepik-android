@@ -128,6 +128,7 @@
     <color name="stepic_white">#FAFAFA</color>
     <color name="white70percent">#B3FFFFFF</color>
     <color name="stepic_not_viewed">#A5A5A5</color>
+    <color name="stepic_cover">#EEEEEE</color>
 
     <color name="default_color_of_link">#0077CC</color>
 </resources>

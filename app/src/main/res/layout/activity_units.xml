@@ -7,7 +7,7 @@
 
     <include
         android:id="@+id/appBarLayout"
-        layout="@layout/appbar_only_toolbar"/>
+        layout="@layout/appbar_only_toolbar" />
 
 
     <android.support.v7.widget.RecyclerView
@@ -15,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/appBarLayout"
+        android:background="@color/stepic_cover"
         android:clipToPadding="false"
         android:scrollbarStyle="outsideOverlay" />
 
