@@ -1,29 +1,13 @@
 package org.stepic.droid.web;
 
 import android.content.Context;
-import android.os.Bundle;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 
-import org.joda.time.DateTime;
 import org.stepic.droid.configuration.IConfig;
-import org.stepic.droid.model.Course;
-import org.stepic.droid.model.EnrollmentWrapper;
-import org.stepic.droid.model.Meta;
-import org.stepic.droid.model.Profile;
-import org.stepic.droid.model.User;
 import org.stepic.droid.util.SharedPreferenceHelper;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -47,30 +31,6 @@ public class Api {
 
     @Inject
     SharedPreferenceHelper mSharedPreferencesHelper;
-
-
-    public IStepicResponse authWithLoginPassword(String username, String password) {
-        Bundle params = new Bundle();
-        params.putString("grant_type", mConfig.getGrantType());
-        params.putString("username", username);
-        params.putString("password", password);
-
-        String url = mConfig.getBaseUrl() + "/oauth2/token/";
-
-        String json = null;
-        try {
-            json = mHttpManager.post(url, params);
-        } catch (IOException i) {
-
-            int ignore = 123456789;
-            //ignore
-            //Too many follow-up requests: 21 when incorrect user/password
-        }
-
-        Gson gson = new GsonBuilder().create();
-
-        return gson.fromJson(json, AuthenticationStepicResponse.class);
-    }
 
     public IStepicResponse signUp(String firstName, String secondName, String email, String password) {
 // FIXME: 02.10.15 Registration doesn't work
@@ -98,203 +58,5 @@ public class Api {
         return null;
     }
 
-    public CoursesStepicResponse getEnrolledCourses(int page) {
-        Bundle params = new Bundle();
-        params.putString("enrolled", "true");
-        return getCourses(params, page);
-    }
-
-    public CoursesStepicResponse getFeaturedCourses(int page) {
-        Bundle params = new Bundle();
-        params.putString("is_featured", "true");
-        CoursesStepicResponse stepicResponse = getCourses(params, page);
-        if (stepicResponse == null || stepicResponse.getCourses() == null) return null;
-        List<Course> courses = stepicResponse.getCourses();
-        filterActiveAndSoonCourses(courses);
-        return stepicResponse;
-    }
-
-    private void filterActiveAndSoonCourses(List<Course> courses) {
-        //todo: optimize this
-        //// FIXME: 06.10.15 this method doesn't work correctly
-        List<Course> filteredCourses = new ArrayList<>();
-        DateTime now = DateTime.now();
-        try {
-            for (Course courseItem : courses) {
-                DateTime deadLine = courseItem.getEndDateTime();
-                if (deadLine == null || deadLine.isAfter(now))
-                    filteredCourses.add(courseItem);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        courses.clear();
-        courses.addAll(filteredCourses);
-    }
-
-    public Profile getUserProfile() {
-        updateToken();
-        String url = mConfig.getBaseUrl() + "/api/stepics/1";
-        Bundle params = new Bundle();
-
-        String json = null;
-        try {
-            json = mHttpManager.get(url, params);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (json == null) return null;
-        JsonElement jElement = new JsonParser().parse(json);//bottle neck
-        JsonObject jObject = jElement.getAsJsonObject();
-        JsonArray jsonArray = jObject.getAsJsonArray("profiles");
-
-        Gson gson = new Gson();
-        Type listType = new TypeToken<List<Profile>>() {
-        }.getType();
-
-        List<Profile> profiles = gson.fromJson(jsonArray.toString(), listType);
-        if (profiles == null || profiles.isEmpty()) return null;
-        return profiles.get(0);
-    }
-
-
-    public List<User> getUsers(long[] userIds) {
-        updateToken();
-        String baseUrl = mConfig.getBaseUrl() + "/api/users/";
-
-        List<User> users = new ArrayList<>();
-
-        for (long userId : userIds) {
-            String json = null;
-            String url = baseUrl + userId;
-            try {
-                json = mHttpManager.get(url, null);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if (json == null) continue;
-
-            JsonElement jElement = new JsonParser().parse(json);//bottle neck
-            JsonObject jObject = jElement.getAsJsonObject();
-            JsonArray jsonArray = jObject.getAsJsonArray("users");
-            Type listType = new TypeToken<List<User>>() {
-            }.getType();
-
-            Gson gson = new Gson();
-            List<User> oneUserAtList = gson.fromJson(jsonArray.toString(), listType);
-
-            for (User userItem : oneUserAtList) {
-                users.add(userItem);
-            }
-        }
-
-        return users;
-    }
-
-
-    public Boolean tryJoinCourse(Course course) {
-        updateToken();
-        String baseUrl = mConfig.getBaseUrl() + "/api/enrollments";
-
-        EnrollmentWrapper enrollment = new EnrollmentWrapper(course.getCourseId());
-        Gson gson = new Gson();
-        String jsonStr = gson.toJson(enrollment);
-
-        try {
-            return mHttpManager.postJson(baseUrl, jsonStr).isSuccessful();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-
-    public SectionsStepicResponse getSections(long[] sectionsIds) {
-        updateToken();
-        StringBuilder sb = new StringBuilder();
-        sb.append(mConfig.getBaseUrl() + "/api/sections/");
-
-        if (sectionsIds != null && sectionsIds.length > 0)
-            sb.append("?");
-
-        for (int i = 0; i < sectionsIds.length; i++) {
-            sb.append(mConfig.getIDSParam());
-            sb.append("=");
-            sb.append(sectionsIds[i]);
-            if (sectionsIds.length - 1 != i)
-                sb.append("&");
-        }
-        String baseUrl = sb.toString();
-        String json = null;
-        try {
-            json = mHttpManager.get(baseUrl, null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Gson gson = new Gson();
-
-        return gson.fromJson(json, SectionsStepicResponse.class);
-    }
-
-
-    private CoursesStepicResponse getCourses(Bundle params, int page) {
-        updateToken();
-
-        String url = mConfig.getBaseUrl() + "/api/courses/";
-
-        params.putInt("page", page);
-
-        String json = null;
-        try {
-            json = mHttpManager.get(url, params);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (json == null) return null;
-        JsonElement jElement = new JsonParser().parse(json);//bottle neck
-        JsonObject jObject = jElement.getAsJsonObject();
-        JsonArray jsonArray = jObject.getAsJsonArray("courses");
-        JsonObject metaObject = jObject.getAsJsonObject("meta");
-
-
-        Gson gson = new Gson();
-        Type listType = new TypeToken<List<Course>>() {
-        }.getType();
-
-        List<Course> courseList = gson.fromJson(jsonArray.toString(), listType);
-        Meta meta = gson.fromJson(metaObject, Meta.class);
-
-        return new CoursesStepicResponse(courseList, meta);
-    }
-
-    private void updateToken() {
-        AuthenticationStepicResponse response = mSharedPreferencesHelper.getAuthResponseFromStore();
-        Bundle params = new Bundle();
-        params.putString("grant_type", mConfig.getRefreshGrantType());
-        params.putString("refresh_token", response.getRefresh_token());
-
-
-        String url = mConfig.getBaseUrl() + "/oauth2/token/";
-
-        String json = null;
-        try {
-            json = mHttpManager.post(url, params);
-        } catch (IOException i) {
-
-            int ignore = 123456789;
-            //ignore
-            //Too many follow-up requests: 21 when incorrect user/password
-        }
-
-        if (json != null) {
-            Gson gson = new GsonBuilder().create();
-            AuthenticationStepicResponse newResp = gson.fromJson(json, AuthenticationStepicResponse.class);
-            mSharedPreferencesHelper.storeAuthInfo(newResp);
-        }
-
-    }
 
 }

@@ -40,35 +40,14 @@ public class VideoStepFragment extends FragmentStepBase {
         Log.i("newFragment", "new");
 
         String url = "https://03-lvl3-pdl.vimeocdn.com/01/2389/4/111946354/307895202.mp4?expires=1444698357&token=0dabeb9e8375e26668ac7";
-//        String url = "https://player.vimeo.com/video/137358105";
-//        mVideoView.setVideoURI(Uri.parse(url));
-//        mVideoView.start();
-
         Uri uri = Uri.parse(url);
 
-        MediaController mc = new MediaController(getActivity());
-        mVideoView.setMediaController(mc);
+        MediaController mediaController = new MediaController(getActivity());
+        mVideoView.setMediaController(mediaController);
         mVideoView.setVideoURI(uri);
 
 
         mVideoView.requestFocus();
         mVideoView.start();
     }
-
-//MediaController media_Controller;
-//    DisplayMetrics dm;
-//    public void getInit(String url) {
-//
-//        media_Controller = new MediaController(getContext());
-//        dm = new DisplayMetrics();
-//        this.getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-//        int height = dm.heightPixels;
-//        int width = dm.widthPixels;
-//        mVideoView.setMinimumWidth(width);
-//        mVideoView.setMinimumHeight(height);
-//        mVideoView.setMediaController(media_Controller);
-//        mVideoView.setVideoPath(url);
-//        mVideoView.start();
-//    }
-
 }
