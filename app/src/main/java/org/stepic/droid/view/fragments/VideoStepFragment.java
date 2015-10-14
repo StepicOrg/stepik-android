@@ -1,5 +1,6 @@
 package org.stepic.droid.view.fragments;
 
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,11 +14,14 @@ import android.widget.VideoView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentStepBase;
+import org.stepic.droid.model.VideoUrl;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class VideoStepFragment extends FragmentStepBase {
+public class VideoStepFragment extends FragmentStepBase implements MediaPlayer.OnInfoListener, MediaPlayer.OnBufferingUpdateListener {
 
     @Bind(R.id.test_tv)
     TextView testTv;
@@ -39,15 +43,60 @@ public class VideoStepFragment extends FragmentStepBase {
         testTv.setText(getArguments().getString("test"));
         Log.i("newFragment", "new");
 
-        String url = "https://03-lvl3-pdl.vimeocdn.com/01/2389/4/111946354/307895202.mp4?expires=1444698357&token=0dabeb9e8375e26668ac7";
-        Uri uri = Uri.parse(url);
+        //check for Vitamio library
+        if (!io.vov.vitamio.LibsChecker.checkVitamioLibs(getActivity())) {
+            Log.i("Tag2", "NO Vitamio");
+            return;
+        } else {
+            Log.i("Tag2", "Found Vitamio");
+        }
 
-        MediaController mediaController = new MediaController(getActivity());
-        mVideoView.setMediaController(mediaController);
-        mVideoView.setVideoURI(uri);
 
+        String url = null;
+        List<VideoUrl> videoUrlList = mStep.getBlock().getVideo().getUrls();
+        for (VideoUrl videoUrlItem : videoUrlList) {
+            if (videoUrlItem.getQuality().equals("270")) {
+                url = videoUrlItem.getUrl();
+                break;
+            }
+        }
+        Uri vidUri = Uri.parse(url);
 
+        mVideoView.setVideoURI(vidUri);
+        mVideoView.setMediaController(new MediaController(getActivity()));
         mVideoView.requestFocus();
-        mVideoView.start();
+        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+//                mediaPlayer.seekTo(mProgress);
+            }
+        });
+
+//        mVideoView.start();
     }
+
+    @Override
+    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+        switch (what) {
+            case io.vov.vitamio.MediaPlayer.MEDIA_INFO_BUFFERING_START:
+                if (mVideoView.isPlaying()) {
+                    mVideoView.pause();
+                }
+                break;
+            case io.vov.vitamio.MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                mVideoView.start();
+                break;
+            case io.vov.vitamio.MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
+//                            mDownloadRateView.setText("" + extra + "kb/s" + "  ");
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+
+    }
+
+
 }

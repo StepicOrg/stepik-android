@@ -52,4 +52,8 @@ public class Video implements Parcelable, Serializable {
             return new Video[size];
         }
     };
+
+    public List<VideoUrl> getUrls() {
+        return urls;
+    }
 }
