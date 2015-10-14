@@ -21,13 +21,19 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class VideoStepFragment extends FragmentStepBase implements MediaPlayer.OnInfoListener, MediaPlayer.OnBufferingUpdateListener {
+public class VideoStepFragment extends FragmentStepBase {
 
     @Bind(R.id.test_tv)
     TextView testTv;
 
     @Bind(R.id.video_view)
     VideoView mVideoView;
+    @Bind(R.id.video_view2)
+    VideoView mVideoView2;
+    @Bind(R.id.video_view3)
+    VideoView mVideoView3;
+    @Bind(R.id.video_view4)
+    VideoView mVideoView4;
 
     @Nullable
     @Override
@@ -52,51 +58,41 @@ public class VideoStepFragment extends FragmentStepBase implements MediaPlayer.O
         }
 
 
+        VideoView[] videoViews = new VideoView[4];
+        videoViews[0] = mVideoView;
+        videoViews[1]=mVideoView2;
+        videoViews[2]=mVideoView3;
+        videoViews[3]=mVideoView4;
+
+
         String url = null;
         List<VideoUrl> videoUrlList = mStep.getBlock().getVideo().getUrls();
+        int i = 0;
         for (VideoUrl videoUrlItem : videoUrlList) {
-            if (videoUrlItem.getQuality().equals("270")) {
-                url = videoUrlItem.getUrl();
-                break;
-            }
-        }
-        Uri vidUri = Uri.parse(url);
 
-        mVideoView.setVideoURI(vidUri);
-        mVideoView.setMediaController(new MediaController(getActivity()));
-        mVideoView.requestFocus();
-        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
+            Uri vidUri = Uri.parse(videoUrlItem.getUrl());
+            videoViews[i].setVideoURI(vidUri);
+            videoViews[i].setMediaController(new MediaController(getActivity()));
+            videoViews[i].requestFocus();
+            videoViews[i].setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
 //                mediaPlayer.seekTo(mProgress);
-            }
-        });
+                }
+            });
+
+//            if (videoUrlItem.getQuality().equals("720")) {
+//                url = videoUrlItem.getUrl();
+//                break;
+//            }
+            i++;
+        }
+
+
 
 //        mVideoView.start();
     }
 
-    @Override
-    public boolean onInfo(MediaPlayer mp, int what, int extra) {
-        switch (what) {
-            case io.vov.vitamio.MediaPlayer.MEDIA_INFO_BUFFERING_START:
-                if (mVideoView.isPlaying()) {
-                    mVideoView.pause();
-                }
-                break;
-            case io.vov.vitamio.MediaPlayer.MEDIA_INFO_BUFFERING_END:
-                mVideoView.start();
-                break;
-            case io.vov.vitamio.MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
-//                            mDownloadRateView.setText("" + extra + "kb/s" + "  ");
-                break;
-        }
-        return true;
-    }
-
-    @Override
-    public void onBufferingUpdate(MediaPlayer mp, int percent) {
-
-    }
 
 
 }
