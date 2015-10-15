@@ -8,7 +8,9 @@ import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.util.SharedPreferenceHelper;
 import org.stepic.droid.util.resolvers.IStepResolver;
+import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.util.resolvers.StepTypeResolver;
+import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.web.HttpManager;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.IHttpManager;
@@ -82,5 +84,11 @@ public class StepicDefaultModule {
     @Singleton
     public IStepResolver provideStepResolver(Context context) {
         return new StepTypeResolver(context);
+    }
+
+    @Provides
+    @Singleton
+    public IVideoResolver provideVideoResolver(Context context, Bus bus) {
+        return new VideoResolver(context, bus);
     }
 }

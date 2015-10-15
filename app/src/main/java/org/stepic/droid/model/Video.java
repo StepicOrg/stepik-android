@@ -56,4 +56,8 @@ public class Video implements Parcelable, Serializable {
     public List<VideoUrl> getUrls() {
         return urls;
     }
+
+    public int getId() {
+        return id;
+    }
 }

@@ -13,6 +13,7 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.R;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.util.resolvers.IVideoResolver;
 
 import javax.inject.Inject;
 
@@ -30,6 +31,10 @@ public class FragmentBase extends Fragment {
 
     @Inject
     public IShell mShell;
+
+
+    @Inject
+    public IVideoResolver mVideoResolver;
 
     public FragmentBase() {
         MainApplication.component(MainApplication.getAppContext()).inject(this);

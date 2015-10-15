@@ -19,22 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_margin="2dp"/>
-        <VideoView
-            android:id="@+id/video_view2"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_margin="2dp"/>
-        <VideoView
-            android:id="@+id/video_view3"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_margin="2dp"/>
-        <VideoView
-            android:id="@+id/video_view4"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_margin="2dp"/>
-
 
         <TextView
             android:id="@+id/test_tv"
