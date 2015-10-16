@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
@@ -124,7 +125,13 @@ Log.i(TAG, videoUri.getEncodedPath());
         Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
         intent.setDataAndType(videoUri, "video/*");
         //todo change icon to play
-        startActivity(intent);
+        try {
+            startActivity(intent);
+        }
+        catch (Exception ex)
+        {
+            Toast.makeText(getContext(), R.string.not_video_player_error, Toast.LENGTH_LONG).show();
+        }
 
     }
 
