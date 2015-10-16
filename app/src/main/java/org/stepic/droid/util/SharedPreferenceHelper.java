@@ -63,10 +63,15 @@ public class SharedPreferenceHelper {
     }
 
     public void deleteAuthInfo() {
-        clear(PreferenceType.LOGIN);
-        // TODO: 05.10.15 remake to otto event based
-        AppConstants.WAS_SWIPED_TO_REFRESH_FIND_COURSES = false;
-        AppConstants.WAS_SWIPED_TO_REFRESH_MY_COURSES = false;
+        RWLocks.AuthLock.writeLock();
+        try {
+            clear(PreferenceType.LOGIN);
+            // TODO: 05.10.15 remake to otto event based
+            AppConstants.WAS_SWIPED_TO_REFRESH_FIND_COURSES = false;
+            AppConstants.WAS_SWIPED_TO_REFRESH_MY_COURSES = false;
+        } finally {
+            RWLocks.AuthLock.writeLock().unlock();
+        }
     }
 
     public AuthenticationStepicResponse getAuthResponseFromStore() {

@@ -59,11 +59,14 @@ public class RetrofitRESTApi implements IApi {
             public Response intercept(Chain chain) throws IOException {
                 RWLocks.AuthLock.writeLock().lock();
                 try {
+                    Request newRequest = chain.request();
                     AuthenticationStepicResponse response = mSharedPreferenceHelper.getAuthResponseFromStore();
-                    Log.i("Thread", Looper.myLooper() == Looper.getMainLooper() ? "main" : Thread.currentThread().getName());
-                    response = mOAuthService.updateToken(mConfig.getRefreshGrantType(), response.getRefresh_token()).execute().body();//todo: Which Thread is it?
-                    mSharedPreferenceHelper.storeAuthInfo(response);
-                    Request newRequest = chain.request().newBuilder().addHeader("Authorization", getAuthHeaderValue()).build();
+                    if (response != null) {
+                        Log.i("Thread", Looper.myLooper() == Looper.getMainLooper() ? "main" : Thread.currentThread().getName());
+                        response = mOAuthService.updateToken(mConfig.getRefreshGrantType(), response.getRefresh_token()).execute().body();//todo: Which Thread is it?
+                        mSharedPreferenceHelper.storeAuthInfo(response);
+                        newRequest = chain.request().newBuilder().addHeader("Authorization", getAuthHeaderValue()).build();
+                    }
                     return chain.proceed(newRequest);
                 } finally {
                     RWLocks.AuthLock.writeLock().unlock();
@@ -137,7 +140,7 @@ public class RetrofitRESTApi implements IApi {
 
     private void setAuthenticatorClientIDAndPassword(OkHttpClient httpClient) {
         httpClient.setAuthenticator(new Authenticator() {
-//            private int mCounter = 0;
+            //            private int mCounter = 0;
             @Override
             public Request authenticate(Proxy proxy, Response response) throws IOException {
 //                if (mCounter++ > 0) {
