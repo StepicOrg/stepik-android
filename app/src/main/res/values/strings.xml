@@ -15,6 +15,7 @@
     <string name="sign_in_btn">Sign in button</string>
     <string name="sign_in">Sign In</string>
     <string name="describing_error">The following error occurred while logging you in</string>
+    <string name="not_video_player_error">Please, install player for video playing</string>
     <string name="first_name">first name</string>
     <string name="second_name">second name</string>
     <string name="password_hint">password</string>
