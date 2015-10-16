@@ -15,7 +15,7 @@ import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
-import org.stepic.droid.events.instructors.FailureLoadInstrictorsEvent;
+import org.stepic.droid.events.instructors.FailureLoadInstructorsEvent;
 import org.stepic.droid.events.instructors.OnResponseLoadingInstructorsEvent;
 import org.stepic.droid.events.instructors.StartLoadingInstructorsEvent;
 import org.stepic.droid.events.joining_course.FailJoinEvent;
@@ -142,7 +142,7 @@ public class NotEnrolledCourseDetailActivity extends FragmentActivityBase {
 
                 @Override
                 public void onFailure(Throwable t) {
-                    bus.post(new FailureLoadInstrictorsEvent(mCourse, t));
+                    bus.post(new FailureLoadInstructorsEvent(mCourse, t));
                 }
             });
         }
@@ -180,7 +180,7 @@ public class NotEnrolledCourseDetailActivity extends FragmentActivityBase {
     }
 
     @Subscribe
-    public void onFinishLoading(FailureLoadInstrictorsEvent e) {
+    public void onFinishLoading(FailureLoadInstructorsEvent e) {
         if (e.getCourse() != null && mCourse != null & e.getCourse().getCourseId() == mCourse.getCourseId()) {
             ProgressHelper.dismiss(mInstructorsProgressBar);
         }

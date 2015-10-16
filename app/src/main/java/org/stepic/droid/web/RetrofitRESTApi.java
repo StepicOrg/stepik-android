@@ -59,7 +59,6 @@ public class RetrofitRESTApi implements IApi {
             public Response intercept(Chain chain) throws IOException {
                 RWLocks.AuthLock.writeLock().lock();
                 try {
-
                     AuthenticationStepicResponse response = mSharedPreferenceHelper.getAuthResponseFromStore();
                     Log.i("Thread", Looper.myLooper() == Looper.getMainLooper() ? "main" : Thread.currentThread().getName());
                     response = mOAuthService.updateToken(mConfig.getRefreshGrantType(), response.getRefresh_token()).execute().body();//todo: Which Thread is it?

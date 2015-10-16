@@ -59,7 +59,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     protected ListView mListOfCourses;
 
 
-
     //    protected LoadingCoursesTask mLoadingCoursesTask;
     protected List<Course> mCourses;
     protected MyCoursesAdapter mCoursesAdapter;
@@ -71,9 +70,14 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     protected View mFooterDownloadingView;
     protected volatile boolean isLoading;
 
+    boolean userScrolled;
+
+    private boolean isFirstCreating;
+
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        isFirstCreating = true;
         isLoading = false;
         mCurrentPage = 1;
         mHasNextPage = true;
@@ -92,23 +96,29 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
         mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses);
         mListOfCourses.setAdapter(mCoursesAdapter);
+
         mListOfCourses.setOnScrollListener(new AbsListView.OnScrollListener() {
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    userScrolled = true;
+                } else {
+                    userScrolled = false;
+                }
+                Log.i(TAG, "user scrolled " + (userScrolled ? "true" : "false"));
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (!isLoading && mHasNextPage && firstVisibleItem + visibleItemCount >= totalItemCount) {
+                Log.i(TAG, "onScroll is invoked");
+                if (!isLoading && mHasNextPage && firstVisibleItem + visibleItemCount >= totalItemCount && userScrolled) {
                     Log.i(TAG, "Go load from scroll");
                     isLoading = true;
                     downloadData();
                 }
             }
         });
-
-        bus.register(this);
     }
 
 
@@ -130,7 +140,12 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
         retrofit.Callback<CoursesStepicResponse> callback = new retrofit.Callback<CoursesStepicResponse>() {
             @Override
             public void onResponse(Response<CoursesStepicResponse> response, Retrofit retrofit) {
-                bus.post(new SuccessCoursesDownloadEvent(mTypeOfCourse, response, retrofit));
+                if (response.isSuccess()) {
+                    bus.post(new SuccessCoursesDownloadEvent(mTypeOfCourse, response, retrofit));
+                } else {
+
+                    bus.post(new FailCoursesDownloadEvent(mTypeOfCourse));
+                }
             }
 
             @Override
@@ -185,7 +200,9 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     @Subscribe
     public void onSuccessDataLoad(SuccessCoursesDownloadEvent e) {
         Response<CoursesStepicResponse> response = e.getResponse();
-        if (response.isSuccess()) {
+        if (response.body() != null &&
+                response.body().getCourses() != null &&
+                response.body().getCourses().size() != 0) {
             CoursesStepicResponse coursesStepicResponse = response.body();
             ProgressHelper.dismiss(mSwipeRefreshLayout);
             saveDataToCache(coursesStepicResponse.getCourses());
@@ -193,10 +210,12 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
             mHasNextPage = coursesStepicResponse.getMeta().isHas_next();
             if (mHasNextPage) {
-                mCurrentPage++;
+                mCurrentPage = coursesStepicResponse.getMeta().getPage() + 1;
             }
         } else {
             mHasNextPage = false;
+            //// TODO: 17.10.15 explore this case (just when user do not have enrolled courses?)
+            bus.post(new FailCoursesDownloadEvent(mTypeOfCourse));
         }
         isLoading = false;
     }
@@ -258,7 +277,8 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     @Override
     public void onStart() {
         super.onStart();
-        Log.i(TAG, "onStart registered");
+        bus.register(this);
+        Log.i(TAG, "BUS IS REGISTERED");
     }
 
     @Override
@@ -275,14 +295,15 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     @Override
     public void onStop() {
         super.onStop();
-        //todo Use otto for handling errors
+        bus.unregister(this);
     }
 
     @Override
     public void onDestroyView() {
-        bus.unregister(this);
-        if (mListOfCourses != null)
+        if (mListOfCourses != null) {
             mListOfCourses.setBackgroundColor(transparent);
+            mListOfCourses.setOnScrollListener(null);
+        }
         if (mListOfCourses != null)
             mListOfCourses.setAdapter(null);
         mListOfCourses = null;
