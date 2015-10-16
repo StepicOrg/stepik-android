@@ -80,22 +80,13 @@
 
         <activity
             android:name=".view.activities.UnitsActivity"
-            android:label="@string/units_lessons_title"
-            android:screenOrientation="portrait" />
+            android:label="@string/units_lessons_title"/>
 
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".view.activities.StepsActivity"
-            android:label="@string/steps_title"
-            android:screenOrientation="portrait" />
-
-
-        <activity
-            android:name="io.vov.vitamio.activity.InitActivity"
-            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
-            android:launchMode="singleTop"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:label="@string/steps_title" />
 
     </application>
 </manifest>

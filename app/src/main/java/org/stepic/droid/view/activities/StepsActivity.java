@@ -58,6 +58,7 @@ public class StepsActivity extends FragmentActivityBase {
     private List<Step> mStepList;
     private Unit mUnit;
     private Lesson mLesson;
+    private boolean isLoaded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,22 +70,21 @@ public class StepsActivity extends FragmentActivityBase {
 
         mUnit = (Unit) (getIntent().getExtras().get(AppConstants.KEY_UNIT_BUNDLE));
         mLesson = (Lesson) (getIntent().getExtras().get(AppConstants.KEY_LESSON_BUNDLE));
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+
         setTitle(mLesson.getTitle());
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         //may be set title == title of lesson?
 
         mStepList = new ArrayList<>();
         mStepAdapter = new StepFragmentAdapter(getSupportFragmentManager(), this, mStepList);
         mViewPager.setAdapter(mStepAdapter);
+    }
 
-        if (mLesson != null && mLesson.getSteps() != null && mLesson.getSteps().length != 0)
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mLesson != null && mLesson.getSteps() != null && mLesson.getSteps().length != 0 && !isLoaded)
             updateStates();
     }
 
@@ -123,12 +123,14 @@ public class StepsActivity extends FragmentActivityBase {
             updateTabs();
             mTabLayout.setVisibility(View.VISIBLE);
             ProgressHelper.dismiss(mProgressBar);
+            isLoaded = true;
         }
     }
 
     @Subscribe
     public void onFailLoad(FailLoadStepEvent e) {
         Toast.makeText(this, notAvailable, Toast.LENGTH_LONG).show();
+        isLoaded = false;
         ProgressHelper.dismiss(mProgressBar);
     }
 

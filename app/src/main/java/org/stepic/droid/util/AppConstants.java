@@ -11,7 +11,7 @@ public class AppConstants {
     public static final String KEY_STEP_BUNDLE = "step";
     public static boolean WAS_SWIPED_TO_REFRESH_MY_COURSES = false;
     public static boolean WAS_SWIPED_TO_REFRESH_FIND_COURSES = false;
-    public static final String DEFAULT_QUALITY = "720";
+    public static final String DEFAULT_QUALITY = "270";
 
 
     //Types of steps:

@@ -60,4 +60,8 @@ public class Video implements Parcelable, Serializable {
     public int getId() {
         return id;
     }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
 }
