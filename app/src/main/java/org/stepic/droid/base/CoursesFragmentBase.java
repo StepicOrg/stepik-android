@@ -102,9 +102,9 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                    userScrolled = true;
+                    userScrolled = true; // just for 1st creation
                 } else {
-                    userScrolled = false;
+//                    userScrolled = false;
                 }
                 Log.i(TAG, "user scrolled " + (userScrolled ? "true" : "false"));
             }

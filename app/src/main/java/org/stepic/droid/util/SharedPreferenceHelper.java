@@ -63,7 +63,7 @@ public class SharedPreferenceHelper {
     }
 
     public void deleteAuthInfo() {
-        RWLocks.AuthLock.writeLock();
+        RWLocks.AuthLock.writeLock().lock();
         try {
             clear(PreferenceType.LOGIN);
             // TODO: 05.10.15 remake to otto event based
