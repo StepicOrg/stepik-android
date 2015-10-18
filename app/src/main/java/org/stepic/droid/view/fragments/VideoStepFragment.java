@@ -120,16 +120,14 @@ public class VideoStepFragment extends FragmentStepBase {
         if (mStep.getBlock().getVideo().getId() != e.getVideo().getId()) return;
 
         Uri videoUri = Uri.parse(e.getPathToVideo());
-Log.i(TAG, videoUri.getEncodedPath());
+        Log.i(TAG, videoUri.getEncodedPath());
 
         Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
         intent.setDataAndType(videoUri, "video/*");
         //todo change icon to play
         try {
             startActivity(intent);
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             Toast.makeText(getContext(), R.string.not_video_player_error, Toast.LENGTH_LONG).show();
         }
 

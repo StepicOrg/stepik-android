@@ -300,15 +300,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
     @Override
     public void onDestroyView() {
-        if (mListOfCourses != null) {
-            mListOfCourses.setBackgroundColor(transparent);
-            mListOfCourses.setOnScrollListener(null);
-        }
-        if (mListOfCourses != null)
-            mListOfCourses.setAdapter(null);
-        mListOfCourses = null;
-        if (mSwipeRefreshLayout != null)
-            mSwipeRefreshLayout.setRefreshing(false);
         super.onDestroyView();
     }
 
