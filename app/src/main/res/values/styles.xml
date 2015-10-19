@@ -3,9 +3,9 @@
         <item name="colorPrimary">@color/stepic_brand_primary</item>
         <item name="colorPrimaryDark">@color/stepic_brand_primary_dark</item>
         <item name="colorAccent">@color/stepic_blue_ribbon</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:colorBackground">@color/stepic_cover</item>
         <item name="actionBarStyle">@style/Theme.MyApp.ActionBar</item>
+        <item name="android:windowBackground">@color/stepic_cover</item>
+        <item name="android:colorBackground">@color/stepic_cover</item>
 
     </style>
 

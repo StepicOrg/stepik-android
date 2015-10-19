@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
     android:orientation="vertical">
 
     <include
@@ -11,7 +10,6 @@
 
 
     <android.support.v7.widget.RecyclerView
-        android:background="@color/stepic_cover"
         android:id="@+id/sections_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
