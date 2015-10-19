@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">stepic</string>
+    <string name="app_name" translatable="false">Stepic</string>
 
     <string name="already_have_an_account">Already have an account? Sign in</string>
     <string name="or_sign_up_with_email">or sign up with e-mail</string>
