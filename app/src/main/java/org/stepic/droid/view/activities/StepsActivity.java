@@ -79,6 +79,9 @@ public class StepsActivity extends FragmentActivityBase {
         mStepList = new ArrayList<>();
         mStepAdapter = new StepFragmentAdapter(getSupportFragmentManager(), this, mStepList);
         mViewPager.setAdapter(mStepAdapter);
+
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
