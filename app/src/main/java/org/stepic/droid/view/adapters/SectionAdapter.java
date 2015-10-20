@@ -89,6 +89,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
     @Override
     public void onClick(int itemPosition) {
         if (itemPosition >= 0 && itemPosition < mSections.size()) {
+
             mScreenManager.showUnitsForSection(mContext, mSections.get(itemPosition));
         }
     }

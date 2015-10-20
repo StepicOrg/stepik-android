@@ -45,5 +45,6 @@
     <string name="steps_title">Lesson</string>
     <string name="not_available_lesson">Lesson is not available now</string>
     <string name="turn_on_permission">Turn on permission for application to memory</string>
+    <string name="description_download">Caching Stepic\'s video</string>
 
 </resources>

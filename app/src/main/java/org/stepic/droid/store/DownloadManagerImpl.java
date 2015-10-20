@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.squareup.otto.Bus;
 
+import org.stepic.droid.R;
 import org.stepic.droid.events.video.MemoryPermissionDeniedEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
@@ -42,6 +43,7 @@ public class DownloadManagerImpl implements IDownloadManager {
     IVideoResolver mResolver;
     IApi mApi;
 
+
     @Inject
     public DownloadManagerImpl(Context context, UserPreferences preferences, DownloadManager dm, Bus bus, IVideoResolver resolver, IApi api) {
         mUserPrefs = preferences;
@@ -53,8 +55,7 @@ public class DownloadManagerImpl implements IDownloadManager {
     }
 
 
-    @Override
-    public synchronized void addDownload(String url, String fileId) {
+    private synchronized void addDownload(String url, String fileId, String title) {
         if (!isDownloadManagerEnabled() || url == null)
             return;
 
@@ -63,19 +64,24 @@ public class DownloadManagerImpl implements IDownloadManager {
             return;
 
         try {
-            Log.i("downloading", "starting download");
 
             File downloadFolderAndFile = new File(mUserPrefs.getDownloadFolder(), fileId);
             if (downloadFolderAndFile.exists()) {
                 //we do not need download the file, because we already have it.
+                // FIXME: 20.10.15 this simple check doesn't work if file is loading and at this moment adding to Download manager Queue, 
+                // FIXME: 20.10.15 but this is not useless, because, work if file exists on the disk.
+                // FIXME: 20.10.15 For 'singleton' file of Video (or Step) at storage use UI and Broadcasts.
                 return;
             }
+
+            Log.i("downloading", downloadFolderAndFile.toString());
             Uri target = Uri.fromFile(downloadFolderAndFile);
 
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
             request.setDestinationUri(target);
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
+//            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
             request.setVisibleInDownloadsUi(false);
+            request.setTitle(title).setDescription(mContext.getString(R.string.description_download));
 
             if (mUserPrefs.isNetworkMobileAllowed()) {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
@@ -96,10 +102,12 @@ public class DownloadManagerImpl implements IDownloadManager {
 
     }
 
-    public synchronized void addVideoIfNeed(Video video) {
+    public synchronized void addStep(Step step, String title) {
+        Video video = step.getBlock().getVideo();
+        if (video == null) return;
         String uri = mResolver.resolveVideoUrl(video);
         long fileId = video.getId();
-        addDownload(uri, fileId + "");
+        addDownload(uri, fileId + "", title);
     }
 
     @Override
@@ -138,7 +146,7 @@ public class DownloadManagerImpl implements IDownloadManager {
 
 
     @Override
-    public synchronized void addLesson(Lesson lesson) {
+    public synchronized void addLesson(final Lesson lesson) {
         mApi.getSteps(lesson.getSteps()).enqueue(new Callback<StepResponse>() {
             @Override
             public void onResponse(Response<StepResponse> response, Retrofit retrofit) {
@@ -146,7 +154,7 @@ public class DownloadManagerImpl implements IDownloadManager {
                     List<Step> steps = response.body().getSteps();
                     for (Step step : steps) {
                         if (step.getBlock().getVideo() != null) {
-                            addVideoIfNeed(step.getBlock().getVideo());
+                            addStep(step, lesson.getTitle());
                         }
                     }
                 }
@@ -173,7 +181,6 @@ public class DownloadManagerImpl implements IDownloadManager {
         if (state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED ||
                 state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER
                 || state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED) {
-            //download manager is disabled
             return false;
         }
         return true;

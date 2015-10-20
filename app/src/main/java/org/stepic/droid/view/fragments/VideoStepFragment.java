@@ -82,7 +82,6 @@ public class VideoStepFragment extends FragmentStepBase {
             @Override
             public void onClick(View v) {
                 Video video = mStep.getBlock().getVideo();
-                mDownloadManager.addDownload(mVideoResolver.resolveVideoUrl(video), video.getId() + "");
             }
         });
 
