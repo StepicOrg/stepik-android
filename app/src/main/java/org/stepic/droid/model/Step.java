@@ -3,6 +3,8 @@ package org.stepic.droid.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.stepic.droid.base.MainApplication;
+
 import java.io.Serializable;
 
 public class Step implements Parcelable, Serializable {
@@ -83,7 +85,7 @@ public class Step implements Parcelable, Serializable {
         this.id = in.readInt();
         this.lesson = in.readInt();
         this.status = in.readString();
-        this.block = in.readParcelable(Block.class.getClassLoader());
+        this.block = in.readParcelable(MainApplication.getAppContext().getClassLoader());
         this.progress = in.readString();
         this.subscriptions = in.createStringArray();
         this.viewed_by = in.readLong();
