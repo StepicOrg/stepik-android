@@ -2,9 +2,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cv"
-    android:background="@color/stepic_white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/stepic_white"
     android:clickable="true"
     android:focusable="true"
     android:foreground="@drawable/non_radius_foreground">
@@ -14,26 +14,39 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/unit_layout"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:minHeight="@dimen/guideline_list_item_height"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:padding="@dimen/guideline_left_right_padding_list_item">
 
-            <org.stepic.droid.view.custom.SDetailedCourseHeadersTV
-                android:id="@+id/unit_title"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/unit_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center|start"
-                android:layout_marginBottom="2dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="1.2 Super unit" />
+                android:layout_weight="1">
+
+                <org.stepic.droid.view.custom.SDetailedCourseHeadersTV
+                    android:id="@+id/unit_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|start"
+                    android:layout_marginBottom="2dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="1.2 Super unit" />
 
 
-        </RelativeLayout>
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:src="@drawable/ic_cloud_download_grey600_24dp" />
+        </LinearLayout>
 
         <View
             android:id="@+id/grey_bar"
