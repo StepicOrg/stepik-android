@@ -40,7 +40,13 @@ public class DownloadManagerImpl implements IDownloadManager {
         try {
             Log.i("downloading", "starting download");
 
-            Uri target = Uri.fromFile(new File(mUserPrefs.getDownloadFolder(), fileId));
+            File downloadFolderAndFile = new File(mUserPrefs.getDownloadFolder(), fileId);
+            if (downloadFolderAndFile.exists()) {
+                //we do not need download the file, because we already have it.
+                return;
+            }
+            Uri target = Uri.fromFile(downloadFolderAndFile);
+
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
             request.setDestinationUri(target);
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
