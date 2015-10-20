@@ -18,6 +18,7 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.view.adapters.UnitAdapter;
 import org.stepic.droid.web.LessonStepicResponse;
 import org.stepic.droid.web.UnitStepicResponse;
@@ -106,13 +107,7 @@ public class UnitsActivity extends FragmentActivityBase {
         UnitStepicResponse unitStepicResponse = e.getResponse().body();
         final List<Unit> units = unitStepicResponse.getUnits();
 
-        long[] lessonsIds = new long[units.size()];
-        for (int i = 0; i < units.size(); i++) {
-            Unit unit = units.get(i);
-            if (unit != null) {
-                lessonsIds[i] = unit.getLesson();
-            }
-        }
+        long[] lessonsIds = StepicLogicHelper.fromUnitsToLessonIds(units);
         mShell.getApi().getLessons(lessonsIds).enqueue(new Callback<LessonStepicResponse>() {
             @Override
             public void onResponse(Response<LessonStepicResponse> response, Retrofit retrofit) {

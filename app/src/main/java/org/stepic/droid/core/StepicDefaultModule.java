@@ -104,8 +104,13 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public IDownloadManager provideDownloadManger(Context context, UserPreferences userPreferences, DownloadManager dm, Bus bus) {
-        return new DownloadManagerImpl(context, userPreferences, dm, bus);
+    public IDownloadManager provideDownloadManger(Context context,
+                                                  UserPreferences userPreferences,
+                                                  DownloadManager dm,
+                                                  Bus bus,
+                                                  IVideoResolver resolver,
+                                                  IApi api) {
+        return new DownloadManagerImpl(context, userPreferences, dm, bus, resolver, api);
     }
 
     @Provides
