@@ -6,6 +6,9 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.util.Log;
 
+import com.squareup.otto.Bus;
+
+import org.stepic.droid.events.video.MemoryPermissionDeniedEvent;
 import org.stepic.droid.preferences.UserPreferences;
 
 import java.io.File;
@@ -19,12 +22,14 @@ public class DownloadManagerImpl implements IDownloadManager {
     DownloadManager mSystemDownloadManager;
     UserPreferences mUserPrefs;
     Context mContext;
+    Bus mBus;
 
     @Inject
-    public DownloadManagerImpl(Context context, UserPreferences preferences, DownloadManager dm) {
+    public DownloadManagerImpl(Context context, UserPreferences preferences, DownloadManager dm, Bus bus) {
         mUserPrefs = preferences;
         mContext = context;
         mSystemDownloadManager = dm;
+        mBus = bus;
     }
 
 
@@ -60,6 +65,11 @@ public class DownloadManagerImpl implements IDownloadManager {
 
             mSystemDownloadManager.enqueue(request);
 
+
+        } catch (SecurityException ex) {
+            // FIXME: 20.10.15 SHOW DIALOG WITH SUGGESTION OF PERMISSION!
+            mBus.post(new MemoryPermissionDeniedEvent());
+            Log.i("downloading", ex.getMessage());
         } catch (Exception ex) {
             Log.i("downloading", "downloading is failed");
         }

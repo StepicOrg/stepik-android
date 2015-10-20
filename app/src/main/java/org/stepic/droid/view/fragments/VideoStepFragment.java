@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentStepBase;
+import org.stepic.droid.events.video.MemoryPermissionDeniedEvent;
 import org.stepic.droid.events.video.VideoResolvedEvent;
 import org.stepic.droid.model.Video;
 
@@ -146,6 +147,11 @@ public class VideoStepFragment extends FragmentStepBase {
             Toast.makeText(getContext(), R.string.not_video_player_error, Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    @Subscribe
+    public void onPermissionRestricted(MemoryPermissionDeniedEvent e) {
+        Toast.makeText(getContext(), R.string.turn_on_permission, Toast.LENGTH_LONG).show();
     }
 
 }

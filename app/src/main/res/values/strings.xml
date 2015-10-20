@@ -44,5 +44,6 @@
     <string name="units_lessons_title">Lessons</string>
     <string name="steps_title">Lesson</string>
     <string name="not_available_lesson">Lesson is not available now</string>
+    <string name="turn_on_permission">Turn on permission for application to memory</string>
 
 </resources>

@@ -104,8 +104,8 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public IDownloadManager provideDownloadManger(Context context, UserPreferences userPreferences, DownloadManager dm) {
-        return new DownloadManagerImpl(context, userPreferences, dm);
+    public IDownloadManager provideDownloadManger(Context context, UserPreferences userPreferences, DownloadManager dm, Bus bus) {
+        return new DownloadManagerImpl(context, userPreferences, dm, bus);
     }
 
     @Provides
