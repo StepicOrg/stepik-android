@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/stepic_white"
     android:id="@+id/cv"
     android:layout_width="match_parent"
@@ -18,7 +17,6 @@
             android:id="@+id/course_info_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:padding="@dimen/guideline_left_right_padding_list_item">
 
             <org.stepic.droid.view.custom.SDetailedCourseHeadersTV
@@ -34,7 +32,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_below="@id/section_title"
                 android:orientation="vertical">
 
@@ -64,6 +61,7 @@
                     android:textSize="@dimen/text_height" />
 
             </LinearLayout>
+
 
         </RelativeLayout>
 

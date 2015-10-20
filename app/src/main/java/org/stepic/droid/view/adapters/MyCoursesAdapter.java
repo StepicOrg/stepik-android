@@ -91,7 +91,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         @Bind(R.id.course_name)
         TextView courseName;
 
-        @Bind(R.id.first_last_name)
+        @Bind(R.id.course_info)
         TextView courseSummary;
 
         @Bind(R.id.course_icon)

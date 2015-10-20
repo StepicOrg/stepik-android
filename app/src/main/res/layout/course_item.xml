@@ -18,7 +18,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="120dp"
             android:baselineAligned="false"
             android:orientation="horizontal"
             android:padding="@dimen/guideline_left_right_padding_list_item">
@@ -61,7 +61,7 @@
                     android:textSize="@dimen/text_height" />
 
                 <org.stepic.droid.view.custom.STextView
-                    android:id="@+id/first_last_name"
+                    android:id="@+id/course_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_above="@id/course_date_interval"
