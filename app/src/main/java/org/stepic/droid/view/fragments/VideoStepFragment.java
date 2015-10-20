@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
@@ -29,10 +28,6 @@ import butterknife.ButterKnife;
 
 public class VideoStepFragment extends FragmentStepBase {
     private static final String TAG = "video_fragment";
-
-
-    @Bind(R.id.test_tv)
-    TextView testTv;
 
     @Bind(R.id.player_thumbnail)
     ImageView mThumbnail;
@@ -57,11 +52,9 @@ public class VideoStepFragment extends FragmentStepBase {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        testTv.setText(getArguments().getString("test"));
-        Log.i("newFragment", "new");
-
         //// FIXME: 16.10.15 assert not null step, block, video
+        mHeaderTv.setVisibility(View.GONE);
+
         Picasso.with(getContext())
                 .load(mStep.getBlock().getVideo().getThumbnail())
                 .placeholder(mVideoPlaceholder)

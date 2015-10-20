@@ -15,7 +15,7 @@ import butterknife.Bind;
 public abstract class FragmentStepBase extends FragmentBase {
 
     @Bind(R.id.text_header)
-    TextView mHeaderTv;
+    protected TextView mHeaderTv;
 
     protected Step mStep;
 

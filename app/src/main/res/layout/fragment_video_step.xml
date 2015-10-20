@@ -1,37 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scrollbarStyle="outsideOverlay">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/frame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/download_btn"
+        android:layout_gravity="center">
 
-        <include
-            android:id="@+id/header"
-            layout="@layout/step_text_header" />
+        <include layout="@layout/step_text_header" />
 
         <include
             android:id="@+id/player_layout"
             layout="@layout/player_placeholder" />
 
-        <TextView
-            android:id="@+id/test_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="2dp"
-            android:text="Hey" />
+    </FrameLayout>
 
-        <Button
-            android:id="@+id/download_btn"
-            android:padding="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Download"
-            android:textAllCaps="true"/>
+    <Button
+        android:id="@+id/download_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="8dp"
+        android:text="Download"
+        android:textAllCaps="true" />
 
-    </LinearLayout>
-</ScrollView>
+</RelativeLayout>
