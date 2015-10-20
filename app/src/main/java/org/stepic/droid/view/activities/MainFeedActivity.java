@@ -19,7 +19,7 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.store.operations.DbOperationsCourses;
-import org.stepic.droid.util.SharedPreferenceHelper;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.view.fragments.AvailableCourses;
 import org.stepic.droid.view.fragments.BestLessons;
 import org.stepic.droid.view.fragments.FindCoursesFragment;

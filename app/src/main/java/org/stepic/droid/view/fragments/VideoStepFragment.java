@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import com.squareup.picasso.Picasso;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentStepBase;
 import org.stepic.droid.events.video.VideoResolvedEvent;
+import org.stepic.droid.model.Video;
 
 import butterknife.Bind;
 import butterknife.BindDrawable;
@@ -39,6 +41,9 @@ public class VideoStepFragment extends FragmentStepBase {
 
     @Bind(R.id.player_layout)
     View mPlayer;
+
+    @Bind(R.id.download_btn)
+    Button mDownloadButton;
 
     @Nullable
     @Override
@@ -66,7 +71,17 @@ public class VideoStepFragment extends FragmentStepBase {
             @Override
             public void onClick(View v) {
                 // TODO: 16.10.15 change icon to loading
-                mVideoResolver.resolveVideoUrl(mStep.getBlock().getVideo());
+                String url = mVideoResolver.resolveVideoUrl(mStep.getBlock().getVideo());
+                if (url != null)
+                    bus.post(new VideoResolvedEvent(mStep.getBlock().getVideo(), url));
+            }
+        });
+
+        mDownloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Video video = mStep.getBlock().getVideo();
+                mDownloadManager.addDownload(mVideoResolver.resolveVideoUrl(video), video.getId() + "");
             }
         });
 

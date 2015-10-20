@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import org.stepic.droid.base.FragmentActivityBase;
-import org.stepic.droid.util.SharedPreferenceHelper;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
 
 import butterknife.ButterKnife;
 

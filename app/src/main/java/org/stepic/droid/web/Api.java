@@ -5,7 +5,7 @@ import android.content.Context;
 import com.google.gson.JsonObject;
 
 import org.stepic.droid.configuration.IConfig;
-import org.stepic.droid.util.SharedPreferenceHelper;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
 
 import java.io.IOException;
 

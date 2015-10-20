@@ -11,5 +11,5 @@ public interface IVideoResolver {
      *
      * @param video object video from step
      */
-    void resolveVideoUrl(Video video);
+    String resolveVideoUrl(Video video);
 }

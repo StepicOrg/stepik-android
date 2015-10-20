@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 
     <!-- Required by Google -->
@@ -68,7 +70,7 @@
         <activity
             android:name=".view.activities.NotEnrolledCourseDetailActivity"
             android:label="@string/course_info_title"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
 
         <activity
@@ -80,13 +82,13 @@
 
         <activity
             android:name=".view.activities.UnitsActivity"
-            android:label="@string/units_lessons_title"/>
+            android:label="@string/units_lessons_title" />
 
 
         <activity
-            android:screenOrientation="portrait"
             android:name=".view.activities.StepsActivity"
-            android:label="@string/steps_title" />
+            android:label="@string/steps_title"
+            android:screenOrientation="portrait" />
 
     </application>
 </manifest>

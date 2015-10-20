@@ -1,4 +1,4 @@
-package org.stepic.droid.util;
+package org.stepic.droid.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,6 +8,8 @@ import com.google.gson.GsonBuilder;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Profile;
+import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 
 import javax.inject.Inject;

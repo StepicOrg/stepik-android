@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.util.SharedPreferenceHelper;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 import org.stepic.droid.web.IApi;
 

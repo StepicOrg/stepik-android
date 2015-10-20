@@ -1,12 +1,16 @@
 package org.stepic.droid.core;
 
+import android.app.DownloadManager;
 import android.content.Context;
 
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
-import org.stepic.droid.util.SharedPreferenceHelper;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
+import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.store.DownloadManagerImpl;
+import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.util.resolvers.IStepResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.util.resolvers.StepTypeResolver;
@@ -90,5 +94,22 @@ public class StepicDefaultModule {
     @Singleton
     public IVideoResolver provideVideoResolver(Context context, Bus bus) {
         return new VideoResolver(context, bus);
+    }
+
+    @Provides
+    @Singleton
+    public UserPreferences provideUserPrefs(Context context, SharedPreferenceHelper helper) {
+        return new UserPreferences(context, helper);
+    }
+
+    @Provides
+    @Singleton
+    public IDownloadManager provideDownloadManger(Context context, UserPreferences userPreferences, DownloadManager dm) {
+        return new DownloadManagerImpl(context, userPreferences, dm);
+    }
+
+    @Provides
+    public DownloadManager provideSystemDownloadManager(Context context) {
+        return (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
     }
 }

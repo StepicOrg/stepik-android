@@ -15,7 +15,7 @@ import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.EnrollmentWrapper;
 import org.stepic.droid.util.RWLocks;
-import org.stepic.droid.util.SharedPreferenceHelper;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
 
 import java.io.IOException;
 import java.net.Proxy;

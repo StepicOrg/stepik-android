@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.squareup.otto.Bus;
 
-import org.stepic.droid.events.video.VideoResolvedEvent;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.model.VideoUrl;
 import org.stepic.droid.util.AppConstants;
@@ -23,13 +22,13 @@ public class VideoResolver implements IVideoResolver {
     }
 
     @Override
-    public void resolveVideoUrl(final Video video) {
+    public String resolveVideoUrl(final Video video) {
         //// TODO: 15.10.15 check in database by id, check availability of playing on the device, etc
 //// TODO: 15.10.15 log all "return" statements
-        
-        if (video == null) return;
+
+        if (video == null) return null;
         List<VideoUrl> urlList = video.getUrls();
-        if (urlList == null || urlList.size() == 0) return;
+        if (urlList == null || urlList.size() == 0) return null;
 
         String resolvedURL = null;
         for (int i = 0; i < urlList.size(); i++) {
@@ -46,9 +45,8 @@ public class VideoResolver implements IVideoResolver {
         }
 
         if (resolvedURL != null) {
-            mBus.post(new VideoResolvedEvent(video, resolvedURL));
-            return;
+            return resolvedURL;
         } else
-            return;
+            return null;
     }
 }

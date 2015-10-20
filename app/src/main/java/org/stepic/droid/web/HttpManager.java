@@ -15,7 +15,7 @@ import com.squareup.okhttp.Response;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
-import org.stepic.droid.util.SharedPreferenceHelper;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
 
 import java.io.IOException;
 import java.net.Proxy;

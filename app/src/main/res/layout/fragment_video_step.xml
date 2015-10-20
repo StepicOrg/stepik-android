@@ -25,5 +25,13 @@
             android:layout_marginTop="2dp"
             android:text="Hey" />
 
+        <Button
+            android:id="@+id/download_btn"
+            android:padding="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Download"
+            android:textAllCaps="true"/>
+
     </LinearLayout>
 </ScrollView>
