@@ -40,12 +40,8 @@
 
             </RelativeLayout>
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="8dp"
-                android:src="@drawable/ic_cloud_download_grey600_24dp" />
+            <include layout="@layout/load_imageview"/>
+
         </LinearLayout>
 
         <View

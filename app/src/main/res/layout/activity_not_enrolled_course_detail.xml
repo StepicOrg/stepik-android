@@ -29,7 +29,7 @@
                 android:id="@+id/intro_video"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:src="@drawable/vimeo_placeholder" />
+                android:src="@drawable/video_placeholder" />
 
             <LinearLayout
                 android:id="@+id/detail_course_info"
