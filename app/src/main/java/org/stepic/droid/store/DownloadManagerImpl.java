@@ -74,11 +74,10 @@ public class DownloadManagerImpl implements IDownloadManager {
             @Override
             public void onReceive(Context context, Intent intent) {
                 long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-                if (mDmIdToVideoId.keySet().contains(referenceId))
-                {
+                if (mDmIdToVideoId.keySet().contains(referenceId)) {
                     long video_id = mDmIdToVideoId.get(referenceId);
                     mDmIdToVideoId.remove(referenceId);
-                    String path  = mSystemDownloadManager.getUriForDownloadedFile(referenceId).getPath();
+                    String path = mSystemDownloadManager.getUriForDownloadedFile(referenceId).getPath();
                     CachedVideo cachedVideo = new CachedVideo(video_id, path);
                     mDb.addVideo(cachedVideo);
                 }
@@ -102,7 +101,7 @@ public class DownloadManagerImpl implements IDownloadManager {
 
         try {
 
-            File downloadFolderAndFile = new File(mUserPrefs.getDownloadFolder(), fileId+"");
+            File downloadFolderAndFile = new File(mUserPrefs.getDownloadFolder(), fileId + "");
             if (downloadFolderAndFile.exists()) {
                 //we do not need download the file, because we already have it.
                 // FIXME: 20.10.15 this simple check doesn't work if file is loading and at this moment adding to Download manager Queue, 
@@ -118,7 +117,7 @@ public class DownloadManagerImpl implements IDownloadManager {
             request.setDestinationUri(target);
 //            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
             request.setVisibleInDownloadsUi(false);
-            request.setTitle(title).setDescription(mContext.getString(R.string.description_download));
+            request.setTitle(title + "-" + fileId).setDescription(mContext.getString(R.string.description_download));
 
             if (mUserPrefs.isNetworkMobileAllowed()) {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
@@ -128,7 +127,6 @@ public class DownloadManagerImpl implements IDownloadManager {
 
             long downloadId = mSystemDownloadManager.enqueue(request);
             mDmIdToVideoId.put(downloadId, fileId);
-
 
 
         } catch (SecurityException ex) {
