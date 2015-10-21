@@ -16,6 +16,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.util.HtmlHelper;
 
 import java.util.List;
@@ -33,6 +34,9 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 
     @Inject
     IConfig mConfig;
+
+    @Inject
+    IDownloadManager mDownloadManager;
 
     private Context mContext;
     private LayoutInflater mInflater;
@@ -76,6 +80,15 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
                 }
             }
         });
+
+        viewHolderItem.loadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // FIXME: 21.10.15 IMPLEMENTS IN BACKGROUND THREAD
+                // FIXME: 21.10.15 MAKE UI DISABLED IF COURSE IS LOADED.
+                mDownloadManager.addCourse(course);
+            }
+        });
 //
 //        if (position == getCount() - 1) {
 //            viewHolderItem.divider.setVisibility(View.GONE);
@@ -88,6 +101,10 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 
 
     static class ViewHolderItem {
+
+        @Bind(R.id.load_button)
+        View loadButton;
+
         @Bind(R.id.course_name)
         TextView courseName;
 

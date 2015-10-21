@@ -10,6 +10,7 @@ import org.stepic.droid.store.operations.DbOperationsCachedVideo;
 import org.stepic.droid.util.AppConstants;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.List;
 
 public class VideoResolver implements IVideoResolver {
@@ -40,7 +41,16 @@ public class VideoResolver implements IVideoResolver {
         List<VideoUrl> urlList = video.getUrls();
         if (urlList == null || urlList.size() == 0) return null;
 
-        String localPath = mDbOperations.getPathIfExist(video);
+        String localPath = null;
+        try {
+            mDbOperations.open();
+            localPath = mDbOperations.getPathIfExist(video);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            mDbOperations.close();
+        }
+
         if (localPath != null && checkExistingOnDisk(localPath)) {
             return localPath;
         } else {
@@ -75,7 +85,14 @@ public class VideoResolver implements IVideoResolver {
         if (downloadFolderAndFile.exists()) {
             return true;
         } else {
-            mDbOperations.deleteVideoByUrl(path);
+            try {
+                mDbOperations.open();
+                mDbOperations.deleteVideoByUrl(path);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                mDbOperations.close();
+            }
             return false;
         }
 

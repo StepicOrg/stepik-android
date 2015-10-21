@@ -18,7 +18,6 @@ public class DbOperationsCachedVideo extends DbOperationsBase {
     }
 
 
-
     @Override
     public Cursor getCursor() {
         return database.query(DbStructureCachedVideo.CACHED_VIDEO, DbStructureCachedVideo.getUsedColumns(),
@@ -28,8 +27,8 @@ public class DbOperationsCachedVideo extends DbOperationsBase {
     public void addVideo(CachedVideo cachedVideo) {
         ContentValues values = new ContentValues();
 
-        values.put(DbStructureCachedVideo.Column.VIDEO_ID, cachedVideo.getUrl());
-        values.put(DbStructureCachedVideo.Column.VIDEO_ID, cachedVideo.getUrl());
+        values.put(DbStructureCachedVideo.Column.VIDEO_ID, cachedVideo.getVideoId());
+        values.put(DbStructureCachedVideo.Column.URL, cachedVideo.getUrl());
 
         database.insert(DbStructureCachedVideo.CACHED_VIDEO, null, values);
     }
@@ -48,13 +47,13 @@ public class DbOperationsCachedVideo extends DbOperationsBase {
     public void deleteVideo(Video video) {
         long videoId = video.getId();
         database.delete(DbStructureCachedVideo.CACHED_VIDEO,
-                DbStructureCachedVideo.Column.VIDEO_ID + " = " + videoId,
+                "\"" + DbStructureCachedVideo.Column.VIDEO_ID + "\"" + " = " + videoId,
                 null);
     }
 
     public void deleteVideoByUrl(String path) {
         database.delete(DbStructureCachedVideo.CACHED_VIDEO,
-                DbStructureCachedVideo.Column.URL + " = " + path,
+                DbStructureCachedVideo.Column.URL + " = " + "\"" + path + "\"",
                 null);
     }
 
@@ -104,6 +103,7 @@ public class DbOperationsCachedVideo extends DbOperationsBase {
             cursor.close();
             return null;
         }
+        cursor.moveToFirst();
         int columnNumberOfPath = 1;
         String path = cursor.getString(columnNumberOfPath);
         cursor.close();

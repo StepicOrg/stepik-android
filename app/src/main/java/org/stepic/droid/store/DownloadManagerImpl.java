@@ -7,9 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
 import android.util.Log;
 
 import com.squareup.otto.Bus;
@@ -17,6 +14,7 @@ import com.squareup.otto.Bus;
 import org.stepic.droid.R;
 import org.stepic.droid.events.video.MemoryPermissionDeniedEvent;
 import org.stepic.droid.model.CachedVideo;
+import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
@@ -28,10 +26,12 @@ import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.LessonStepicResponse;
+import org.stepic.droid.web.SectionsStepicResponse;
 import org.stepic.droid.web.StepResponse;
 import org.stepic.droid.web.UnitStepicResponse;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -77,17 +77,21 @@ public class DownloadManagerImpl implements IDownloadManager {
                 if (mDmIdToVideoId.keySet().contains(referenceId)) {
                     long video_id = mDmIdToVideoId.get(referenceId);
                     mDmIdToVideoId.remove(referenceId);
-                    String path = mSystemDownloadManager.getUriForDownloadedFile(referenceId).getPath();
+                    File downloadFolderAndFile = new File(mUserPrefs.getDownloadFolder(), video_id + "");
+                    String path = Uri.fromFile(downloadFolderAndFile).getPath();
                     CachedVideo cachedVideo = new CachedVideo(video_id, path);
-                    mDb.addVideo(cachedVideo);
+                    try {
+                        mDb.open();
+                        mDb.addVideo(cachedVideo);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    } finally {
+                        mDb.close();
+                    }
                 }
             }
         };
-        HandlerThread handlerThread = new HandlerThread("ht");
-        handlerThread.start();
-        Looper looper = handlerThread.getLooper();
-        Handler handler = new Handler(looper);
-        context.registerReceiver(mDownloadReceiver, filter, null, handler);
+        context.registerReceiver(mDownloadReceiver, filter);
     }
 
 
@@ -171,6 +175,26 @@ public class DownloadManagerImpl implements IDownloadManager {
 
                         }
                     });
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+    }
+
+    @Override
+    public void addCourse(Course course) {
+        mApi.getSections(course.getSections()).enqueue(new Callback<SectionsStepicResponse>() {
+            @Override
+            public void onResponse(Response<SectionsStepicResponse> response, Retrofit retrofit) {
+                if (response.isSuccess()) {
+                    List<Section> sections = response.body().getSections();
+                    for (Section section : sections) {
+                        addSection(section);
+                    }
                 }
             }
 
