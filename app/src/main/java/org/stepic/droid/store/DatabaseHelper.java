@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.stepic.droid.store.structure.DBStructureCourses;
+import org.stepic.droid.store.structure.DbStructureCachedVideo;
 import org.stepic.droid.store.structure.DbStructureSections;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -18,6 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         createCourseTable(db, DBStructureCourses.ENROLLED_COURSES);
         createCourseTable(db, DBStructureCourses.FEATURED_COURSES);
         createSectionTable(db, DbStructureSections.SECTIONS);
+        createCachedVideoTable(db, DbStructureCachedVideo.CACHED_VIDEO);
     }
 
     @Override
@@ -26,6 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DBStructureCourses.ENROLLED_COURSES);
         db.execSQL("DROP TABLE IF EXISTS " + DBStructureCourses.FEATURED_COURSES);
         db.execSQL("DROP TABLE IF EXISTS " + DbStructureSections.SECTIONS);
+        db.execSQL("DROP TABLE IF EXISTS " + DbStructureCachedVideo.CACHED_VIDEO);
         onCreate(db);
 
     }
@@ -84,6 +87,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureSections.Column.IS_ACTIVE + " BOOLEAN, "
                 + DbStructureSections.Column.CREATE_DATE + " TEXT, "
                 + DbStructureSections.Column.UPDATE_DATE + " TEXT "
+
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createCachedVideoTable(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureCachedVideo.Column.VIDEO_ID + " LONG, "
+                + DbStructureCachedVideo.Column.URL + " TEXT "
 
                 + ")";
         db.execSQL(sql);

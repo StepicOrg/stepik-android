@@ -6,8 +6,10 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.model.Video;
 import org.stepic.droid.model.VideoUrl;
+import org.stepic.droid.store.operations.DbOperationsCachedVideo;
 import org.stepic.droid.util.AppConstants;
 
+import java.io.File;
 import java.util.List;
 
 public class VideoResolver implements IVideoResolver {
@@ -15,12 +17,20 @@ public class VideoResolver implements IVideoResolver {
 
     private Context mContext;
     private Bus mBus;
+    private DbOperationsCachedVideo mDbOperations;
 
-    public VideoResolver(Context context, Bus bus) {
+    public VideoResolver(Context context, Bus bus, DbOperationsCachedVideo dbOperationsCachedVideo) {
         mContext = context;
         mBus = bus;
+        mDbOperations = dbOperationsCachedVideo;
     }
 
+    /**
+     * Don't call in main thread
+     *
+     * @param video object video from step
+     * @return path for video in web or local, null if video is incorrect or can't resolve
+     */
     @Override
     public String resolveVideoUrl(final Video video) {
         //// TODO: 15.10.15 check in database by id, check availability of playing on the device, etc
@@ -30,6 +40,15 @@ public class VideoResolver implements IVideoResolver {
         List<VideoUrl> urlList = video.getUrls();
         if (urlList == null || urlList.size() == 0) return null;
 
+        String localPath = mDbOperations.getPathIfExist(video);
+        if (localPath != null && checkExistingOnDisk(localPath)) {
+            return localPath;
+        } else {
+            return resolveFromWeb(urlList);
+        }
+    }
+
+    private String resolveFromWeb(List<VideoUrl> urlList) {
         String resolvedURL = null;
         for (int i = 0; i < urlList.size(); i++) {
             VideoUrl tempLink = urlList.get(i);
@@ -48,5 +67,18 @@ public class VideoResolver implements IVideoResolver {
             return resolvedURL;
         } else
             return null;
+
     }
+
+    private boolean checkExistingOnDisk(String path) {
+        File downloadFolderAndFile = new File(path);
+        if (downloadFolderAndFile.exists()) {
+            return true;
+        } else {
+            mDbOperations.deleteVideoByUrl(path);
+            return false;
+        }
+
+    }
+
 }

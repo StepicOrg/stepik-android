@@ -11,6 +11,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.DownloadManagerImpl;
 import org.stepic.droid.store.IDownloadManager;
+import org.stepic.droid.store.operations.DbOperationsCachedVideo;
 import org.stepic.droid.util.resolvers.IStepResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.util.resolvers.StepTypeResolver;
@@ -92,8 +93,10 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public IVideoResolver provideVideoResolver(Context context, Bus bus) {
-        return new VideoResolver(context, bus);
+    public IVideoResolver provideVideoResolver(Context context,
+                                               Bus bus,
+                                               DbOperationsCachedVideo dbOperationsCachedVideo) {
+        return new VideoResolver(context, bus, dbOperationsCachedVideo);
     }
 
     @Provides
@@ -109,12 +112,19 @@ public class StepicDefaultModule {
                                                   DownloadManager dm,
                                                   Bus bus,
                                                   IVideoResolver resolver,
-                                                  IApi api) {
-        return new DownloadManagerImpl(context, userPreferences, dm, bus, resolver, api);
+                                                  IApi api,
+                                                  DbOperationsCachedVideo db) {
+        return new DownloadManagerImpl(context, userPreferences, dm, bus, resolver, api, db);
     }
 
     @Provides
     public DownloadManager provideSystemDownloadManager(Context context) {
         return (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+    }
+
+    @Singleton
+    @Provides
+    public DbOperationsCachedVideo provideDbOperationCachedVideo (Context context) {
+        return new DbOperationsCachedVideo(context);
     }
 }

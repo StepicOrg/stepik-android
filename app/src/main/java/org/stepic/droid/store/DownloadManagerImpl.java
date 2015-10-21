@@ -1,21 +1,29 @@
 package org.stepic.droid.store;
 
 import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.util.Log;
 
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.R;
 import org.stepic.droid.events.video.MemoryPermissionDeniedEvent;
+import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.store.operations.DbOperationsCachedVideo;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.web.IApi;
@@ -24,6 +32,7 @@ import org.stepic.droid.web.StepResponse;
 import org.stepic.droid.web.UnitStepicResponse;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -42,20 +51,48 @@ public class DownloadManagerImpl implements IDownloadManager {
     Bus mBus;
     IVideoResolver mResolver;
     IApi mApi;
+    DbOperationsCachedVideo mDb;
+
+    private BroadcastReceiver mDownloadReceiver;
+    private HashMap<Long, Long> mDmIdToVideoId;
 
 
     @Inject
-    public DownloadManagerImpl(Context context, UserPreferences preferences, DownloadManager dm, Bus bus, IVideoResolver resolver, IApi api) {
+    public DownloadManagerImpl(Context context, UserPreferences preferences, DownloadManager dm, Bus bus, IVideoResolver resolver, IApi api, DbOperationsCachedVideo db) {
         mUserPrefs = preferences;
         mContext = context;
         mSystemDownloadManager = dm;
         mBus = bus;
         mResolver = resolver;
         mApi = api;
+        mDb = db;
+
+
+        IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+        mDmIdToVideoId = new HashMap<>();
+        mDownloadReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+                if (mDmIdToVideoId.keySet().contains(referenceId))
+                {
+                    long video_id = mDmIdToVideoId.get(referenceId);
+                    mDmIdToVideoId.remove(referenceId);
+                    String path  = mSystemDownloadManager.getUriForDownloadedFile(referenceId).getPath();
+                    CachedVideo cachedVideo = new CachedVideo(video_id, path);
+                    mDb.addVideo(cachedVideo);
+                }
+            }
+        };
+        HandlerThread handlerThread = new HandlerThread("ht");
+        handlerThread.start();
+        Looper looper = handlerThread.getLooper();
+        Handler handler = new Handler(looper);
+        context.registerReceiver(mDownloadReceiver, filter, null, handler);
     }
 
 
-    private synchronized void addDownload(String url, String fileId, String title) {
+    private synchronized void addDownload(String url, long fileId, String title) {
         if (!isDownloadManagerEnabled() || url == null)
             return;
 
@@ -65,7 +102,7 @@ public class DownloadManagerImpl implements IDownloadManager {
 
         try {
 
-            File downloadFolderAndFile = new File(mUserPrefs.getDownloadFolder(), fileId);
+            File downloadFolderAndFile = new File(mUserPrefs.getDownloadFolder(), fileId+"");
             if (downloadFolderAndFile.exists()) {
                 //we do not need download the file, because we already have it.
                 // FIXME: 20.10.15 this simple check doesn't work if file is loading and at this moment adding to Download manager Queue, 
@@ -89,7 +126,9 @@ public class DownloadManagerImpl implements IDownloadManager {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
             }
 
-            mSystemDownloadManager.enqueue(request);
+            long downloadId = mSystemDownloadManager.enqueue(request);
+            mDmIdToVideoId.put(downloadId, fileId);
+
 
 
         } catch (SecurityException ex) {
@@ -107,7 +146,7 @@ public class DownloadManagerImpl implements IDownloadManager {
         if (video == null) return;
         String uri = mResolver.resolveVideoUrl(video);
         long fileId = video.getId();
-        addDownload(uri, fileId + "", title);
+        addDownload(uri, fileId, title);
     }
 
     @Override
