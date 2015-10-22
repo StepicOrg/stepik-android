@@ -14,7 +14,7 @@ import org.stepic.droid.events.courses.StartingGetCoursesFromDbEvent;
 import org.stepic.droid.events.courses.StartingSaveCoursesToDbEvent;
 import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
-import org.stepic.droid.store.operations.DbOperationsCourses;
+import org.stepic.droid.store.operations.DatabaseManager;
 
 public class FindCoursesFragment extends CoursesFragmentBase {
 
@@ -34,7 +34,7 @@ public class FindCoursesFragment extends CoursesFragmentBase {
     public void onStart() {
         super.onStart();
 
-        mTypeOfCourse = DbOperationsCourses.Table.featured;
+        mTypeOfCourse = DatabaseManager.Table.featured;
     }
 
     @Override

@@ -8,7 +8,7 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.R;
 import org.stepic.droid.core.IShell;
-import org.stepic.droid.store.operations.DbOperationsCachedVideo;
+import org.stepic.droid.store.operations.DatabaseManager;
 
 import javax.inject.Inject;
 
@@ -18,7 +18,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
 
     @Inject
-    protected DbOperationsCachedVideo mDbOperationsCachedVideo;
+    protected DatabaseManager mDbManager;
 
     @Inject
     protected IShell mShell;

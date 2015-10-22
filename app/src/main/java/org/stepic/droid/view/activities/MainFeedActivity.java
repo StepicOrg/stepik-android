@@ -15,11 +15,11 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.FragmentActivityBase;
+import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.model.Profile;
-import org.stepic.droid.store.operations.DbOperationsCourses;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
+import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.view.fragments.AvailableCourses;
 import org.stepic.droid.view.fragments.BestLessons;
 import org.stepic.droid.view.fragments.FindCoursesFragment;
@@ -136,8 +136,7 @@ public class MainFeedActivity extends FragmentActivityBase {
                         //todo: add 'Are you sure?" dialog
                         SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
                         helper.deleteAuthInfo();
-                        DbOperationsCourses dbOperationsCourses = mShell.getDbOperationsCourses(null);
-                        dbOperationsCourses.dropDatabase();
+                        mDbManager.clearCacheCourses(DatabaseManager.Table.enrolled);
                         mShell.getScreenProvider().showLaunchScreen(MainFeedActivity.this, false);
                         return true;
 
@@ -166,7 +165,7 @@ public class MainFeedActivity extends FragmentActivityBase {
         //Setting the actionbarToggle to drawer layout
         mDrawerLayout.setDrawerListener(actionBarDrawerToggle);
 
-        //calling sync state is necessay or else your hamburger icon wont show up
+        //calling sync state is necessary or else your hamburger icon wont show up
         actionBarDrawerToggle.syncState();
 
 

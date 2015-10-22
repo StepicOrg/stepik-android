@@ -1,15 +1,15 @@
 package org.stepic.droid.events.courses;
 
-import org.stepic.droid.store.operations.DbOperationsCourses;
+import org.stepic.droid.store.operations.DatabaseManager;
 
 public abstract class CourseEventBase {
-    DbOperationsCourses.Table mType;
+    DatabaseManager.Table mType;
 
-    CourseEventBase(DbOperationsCourses.Table type) {
+    CourseEventBase(DatabaseManager.Table type) {
         mType = type;
     }
 
-    public final DbOperationsCourses.Table getType() {
+    public final DatabaseManager.Table getType() {
         return mType;
     }
 }

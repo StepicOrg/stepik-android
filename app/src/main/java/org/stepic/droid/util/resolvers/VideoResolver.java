@@ -6,11 +6,10 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.model.Video;
 import org.stepic.droid.model.VideoUrl;
-import org.stepic.droid.store.operations.DbOperationsCachedVideo;
+import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.List;
 
 public class VideoResolver implements IVideoResolver {
@@ -18,9 +17,9 @@ public class VideoResolver implements IVideoResolver {
 
     private Context mContext;
     private Bus mBus;
-    private DbOperationsCachedVideo mDbOperations;
+    private DatabaseManager mDbOperations;
 
-    public VideoResolver(Context context, Bus bus, DbOperationsCachedVideo dbOperationsCachedVideo) {
+    public VideoResolver(Context context, Bus bus, DatabaseManager dbOperationsCachedVideo) {
         mContext = context;
         mBus = bus;
         mDbOperations = dbOperationsCachedVideo;
@@ -42,14 +41,7 @@ public class VideoResolver implements IVideoResolver {
         if (urlList == null || urlList.size() == 0) return null;
 
         String localPath = null;
-        try {
-            mDbOperations.open();
-            localPath = mDbOperations.getPathIfExist(video);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            mDbOperations.close();
-        }
+        localPath = mDbOperations.getPathIfExist(video);
 
         if (localPath != null && checkExistingOnDisk(localPath)) {
             return localPath;
@@ -85,14 +77,7 @@ public class VideoResolver implements IVideoResolver {
         if (downloadFolderAndFile.exists()) {
             return true;
         } else {
-            try {
-                mDbOperations.open();
-                mDbOperations.deleteVideoByUrl(path);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                mDbOperations.close();
-            }
+            mDbOperations.deleteVideoByUrl(path);
             return false;
         }
 

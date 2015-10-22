@@ -1,6 +1,6 @@
 package org.stepic.droid.events.courses;
 
-import org.stepic.droid.store.operations.DbOperationsCourses;
+import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.web.CoursesStepicResponse;
 
 import retrofit.Response;
@@ -12,7 +12,7 @@ public class SuccessCoursesDownloadEvent extends CourseEventBase {
     private final Response<CoursesStepicResponse> response;
     private final Retrofit retrofit;
 
-    public SuccessCoursesDownloadEvent(DbOperationsCourses.Table type, Response<CoursesStepicResponse> response, Retrofit retrofit) {
+    public SuccessCoursesDownloadEvent(DatabaseManager.Table type, Response<CoursesStepicResponse> response, Retrofit retrofit) {
         super(type);
         this.response = response;
         this.retrofit = retrofit;

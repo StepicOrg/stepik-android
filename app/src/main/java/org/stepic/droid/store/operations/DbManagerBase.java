@@ -8,34 +8,30 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.store.DatabaseHelper;
 import org.stepic.droid.store.structure.DBStructureBase;
 
-import java.sql.SQLException;
-
-public abstract class DbOperationsBase implements IDatabaseOperations {
+public abstract class DbManagerBase implements IDatabaseManager {
 
     protected SQLiteDatabase database;
     private DatabaseHelper dbHelper;
+    protected Context mContext;
 
-    public DbOperationsBase(Context context) {
+
+    public DbManagerBase(Context context) {
+        mContext = context;
         dbHelper = new DatabaseHelper(context);
     }
 
-    @Override
-    public synchronized void  open() throws SQLException {
+    protected synchronized void open() {
         Log.i("database", "open " + Thread.currentThread().getName());
         database = dbHelper.getWritableDatabase();
     }
 
-    @Override
-    public synchronized void close() {
-
+    protected synchronized void close() {
         Log.i("database", "close " + Thread.currentThread().getName());
         database.close();
     }
 
-    public void dropDatabase () {
+    @Override
+    public void dropDatabase() {
         MainApplication.getAppContext().deleteDatabase(DBStructureBase.FILE_NAME);
     }
-
-    public abstract void clearCache();
-
 }

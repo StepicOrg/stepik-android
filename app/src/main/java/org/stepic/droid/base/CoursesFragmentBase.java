@@ -27,7 +27,7 @@ import org.stepic.droid.events.courses.StartingSaveCoursesToDbEvent;
 import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.store.operations.DbOperationsCourses;
+import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
 import org.stepic.droid.web.CoursesStepicResponse;
@@ -64,7 +64,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     protected MyCoursesAdapter mCoursesAdapter;
     protected int mCurrentPage;
     protected boolean mHasNextPage;
-    protected DbOperationsCourses.Table mTypeOfCourse;
+    protected DatabaseManager.Table mTypeOfCourse;
     protected FromDbCoursesTask mDbGetCoursesTask;
     protected ToDbCoursesTask mDbSaveCoursesTask;
     protected View mFooterDownloadingView;
@@ -159,7 +159,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
         Log.i(TAG, "post pre load");
         bus.post(new PreLoadCoursesEvent(mTypeOfCourse));
-        if (mTypeOfCourse == DbOperationsCourses.Table.featured) {
+        if (mTypeOfCourse == DatabaseManager.Table.featured) {
             api.getFeaturedCourses(mCurrentPage).enqueue(callback);
         } else {
             api.getEnrolledCourses(mCurrentPage).enqueue(callback);

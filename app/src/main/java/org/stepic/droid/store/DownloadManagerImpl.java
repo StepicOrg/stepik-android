@@ -21,7 +21,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.operations.DbOperationsCachedVideo;
+import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.web.IApi;
@@ -31,7 +31,6 @@ import org.stepic.droid.web.StepResponse;
 import org.stepic.droid.web.UnitStepicResponse;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -51,14 +50,14 @@ public class DownloadManagerImpl implements IDownloadManager {
     Bus mBus;
     IVideoResolver mResolver;
     IApi mApi;
-    DbOperationsCachedVideo mDb;
+    DatabaseManager mDb;
 
     private BroadcastReceiver mDownloadReceiver;
     private HashMap<Long, Long> mDmIdToVideoId;
 
 
     @Inject
-    public DownloadManagerImpl(Context context, UserPreferences preferences, DownloadManager dm, Bus bus, IVideoResolver resolver, IApi api, DbOperationsCachedVideo db) {
+    public DownloadManagerImpl(Context context, UserPreferences preferences, DownloadManager dm, Bus bus, IVideoResolver resolver, IApi api, DatabaseManager db) {
         mUserPrefs = preferences;
         mContext = context;
         mSystemDownloadManager = dm;
@@ -80,14 +79,7 @@ public class DownloadManagerImpl implements IDownloadManager {
                     File downloadFolderAndFile = new File(mUserPrefs.getDownloadFolder(), video_id + "");
                     String path = Uri.fromFile(downloadFolderAndFile).getPath();
                     CachedVideo cachedVideo = new CachedVideo(video_id, path);
-                    try {
-                        mDb.open();
-                        mDb.addVideo(cachedVideo);
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    } finally {
-                        mDb.close();
-                    }
+                    mDb.addVideo(cachedVideo);
                 }
             }
         };
