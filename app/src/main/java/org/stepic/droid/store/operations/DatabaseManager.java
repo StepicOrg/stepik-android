@@ -212,8 +212,10 @@ public class DatabaseManager extends DbManagerBase {
             open();
             List<Unit> units = new ArrayList<>();
 
-            String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureSections.Column.SECTION_ID + " = " + section.getId();
+            String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.SECTION + " = " + section.getId();
             Cursor cursor = database.rawQuery(Query, null);
+
+            cursor.moveToFirst();
 
             while (!cursor.isAfterLast()) {
                 Unit unit = parseUnit(cursor);
@@ -223,6 +225,27 @@ public class DatabaseManager extends DbManagerBase {
 
             cursor.close();
             return units;
+        } finally {
+            close();
+        }
+    }
+
+    public Lesson getLessonOfUnit (Unit unit) {
+        try {
+            open();
+
+            String Query = "Select * from " + DbStructureLesson.LESSONS + " where " + DbStructureLesson.Column.LESSON_ID + " = " + unit.getLesson();
+            Cursor cursor = database.rawQuery(Query, null);
+
+            cursor.moveToFirst();
+
+            Lesson lesson = null;
+            if (!cursor.isAfterLast()) {
+                lesson = parseLesson(cursor);
+            }
+
+            cursor.close();
+            return lesson;
         } finally {
             close();
         }

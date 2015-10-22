@@ -1,17 +1,19 @@
 package org.stepic.droid.view.activities;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
 
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
+import org.stepic.droid.concurrency.FromDbUnitLessonTask;
 import org.stepic.droid.events.lessons.SuccessLoadLessonsEvent;
 import org.stepic.droid.events.units.FailureLoadEvent;
+import org.stepic.droid.events.units.LoadedFromDbUnitsLessonsEvent;
 import org.stepic.droid.events.units.SuccessLoadUnitsEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
@@ -32,12 +34,16 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class UnitsActivity extends FragmentActivityBase {
+public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshLayout.OnRefreshListener {
+
+    @Bind(R.id.swipe_refresh_layout_units)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+
     @Bind(R.id.units_recycler_view)
     RecyclerView mUnitsRecyclerView;
-
-    @Bind(R.id.load_sections)
-    ProgressBar mProgressBar;
+//
+//    @Bind(R.id.load_sections)
+//    ProgressBar mProgressBar;
 
     @Bind(R.id.toolbar)
     android.support.v7.widget.Toolbar mToolbar;
@@ -47,6 +53,8 @@ public class UnitsActivity extends FragmentActivityBase {
     private UnitAdapter mAdapter;
     private List<Unit> mUnitList;
     private List<Lesson> mLessonList;
+
+    private FromDbUnitLessonTask mFromDbTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,17 +77,36 @@ public class UnitsActivity extends FragmentActivityBase {
 
         if (mSection != null && mSection.getUnits() != null && mSection.getUnits().length != 0)
             updateUnits();
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                getAndShowUnitsFromCache();
+            }
+        });
+
+    }
+
+    private void getAndShowUnitsFromCache() {
+        ProgressHelper.activate(mSwipeRefreshLayout);
+        mFromDbTask = new FromDbUnitLessonTask(mSection);
+        mFromDbTask.execute();
+
+//        ProgressHelper.activate(mSwipeRefreshLayout);
+//        mFromDbSectionTask = new FromDbSectionTask(mCourse);
+//        mFromDbSectionTask.execute();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-
     }
 
     private void updateUnits() {
-        ProgressHelper.activate(mProgressBar);
+        ProgressHelper.activate(mSwipeRefreshLayout);
         mShell.getApi().getUnits(mSection.getUnits()).enqueue(new Callback<UnitStepicResponse>() {
             @Override
             public void onResponse(Response<UnitStepicResponse> response, Retrofit retrofit) {
@@ -132,13 +159,17 @@ public class UnitsActivity extends FragmentActivityBase {
                 || e.getSection().getId() != mSection.getId())
             return;
 
+        showUnitsLessons(e.getUnits(), e.getResponse().body().getLessons());
+        ProgressHelper.dismiss(mSwipeRefreshLayout);
+    }
+
+    private void showUnitsLessons(List<Unit> units, List<Lesson> lessons) {
         mLessonList.clear();
-        mLessonList.addAll(e.getResponse().body().getLessons());
+        mLessonList.addAll(lessons);
 
         mUnitList.clear();
-        mUnitList.addAll(e.getUnits());
+        mUnitList.addAll(units);
         mAdapter.notifyDataSetChanged();
-        ProgressHelper.dismiss(mProgressBar);
     }
 
 
@@ -148,7 +179,7 @@ public class UnitsActivity extends FragmentActivityBase {
                 || e.getmSection().getId() != mSection.getId())
             return;
 
-        ProgressHelper.dismiss(mProgressBar);
+        ProgressHelper.dismiss(mSwipeRefreshLayout);
     }
 
 
@@ -174,5 +205,18 @@ public class UnitsActivity extends FragmentActivityBase {
         super.onStop();
         mLessonList = null;
         mUnitList = null;
+    }
+
+
+    @Override
+    public void onRefresh() {
+        updateUnits();
+    }
+
+    @Subscribe
+    public void onSuccessLoadFromDb(LoadedFromDbUnitsLessonsEvent e) {
+        if (mSection == e.getSection()) {
+            showUnitsLessons(e.getUnits(), e.getLessons());
+        }
     }
 }

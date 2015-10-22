@@ -4,6 +4,7 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.concurrency.FromDbCoursesTask;
 import org.stepic.droid.concurrency.FromDbSectionTask;
+import org.stepic.droid.concurrency.FromDbUnitLessonTask;
 import org.stepic.droid.concurrency.ToDbCoursesTask;
 import org.stepic.droid.concurrency.ToDbSectionTask;
 import org.stepic.droid.concurrency.UpdateCourseTask;
@@ -60,4 +61,6 @@ public interface StepicCoreComponent {
     void inject(FromDbSectionTask stepicTask);
 
     void inject(ToDbSectionTask stepicTask);
+
+    void inject(FromDbUnitLessonTask stepicTask);
 }
