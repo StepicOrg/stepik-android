@@ -24,7 +24,7 @@ import org.stepic.droid.view.fragments.AvailableCourses;
 import org.stepic.droid.view.fragments.BestLessons;
 import org.stepic.droid.view.fragments.FindCoursesFragment;
 import org.stepic.droid.view.fragments.MyCoursesFragment;
-import org.stepic.droid.view.fragments.MySettings;
+import org.stepic.droid.view.fragments.SettingsFragment;
 import org.stepic.droid.web.StepicProfileResponse;
 
 import butterknife.Bind;
@@ -130,7 +130,7 @@ public class MainFeedActivity extends FragmentActivityBase {
                         return true;
                     case R.id.my_settings:
                         setTitle(R.string.settings_title);
-                        setFragment(new MySettings());
+                        setFragment(new SettingsFragment());
                         return true;
                     case R.id.logout_item:
                         //todo: add 'Are you sure?" dialog

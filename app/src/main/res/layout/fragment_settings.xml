@@ -44,6 +44,7 @@
     </android.support.v7.widget.CardView>
 
     <Button
+        android:id="@+id/clear_cache_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"

@@ -45,4 +45,8 @@
     <string name="cache_title">Кэш</string>
     <string name="clear_cache_title">Очистить кэш</string>
     <string name="wi_fi_setting">Загружать только по Wi-Fi </string>
+    <string name="clear_cache_dialog_message">Вы уверены, что хотите удалить все сохраненные уроки?</string>
+    <string name="title_clear_cache_dialog">Подтверждение</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
 </resources>

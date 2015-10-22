@@ -49,5 +49,9 @@
     <string name="cache_title">Cache</string>
     <string name="wi_fi_setting">Wi-Fi only download</string>
     <string name="clear_cache_title">Clear cache</string>
+    <string name="clear_cache_dialog_message">Are you sure you want to delete all saved lessons?</string>
+    <string name="title_clear_cache_dialog">Please confirm</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>
