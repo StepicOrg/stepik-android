@@ -42,6 +42,8 @@ public class DbStructureSections extends DBStructureBase {
                     Column.BEGIN_DATE,
                     Column.SOFT_DEADLINE,
                     Column.HARD_DEADLINE,
+                    Column.COURSE,
+                    Column.POSITION
             };
         }
         return mUsedColumns;
