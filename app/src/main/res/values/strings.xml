@@ -46,5 +46,8 @@
     <string name="not_available_lesson">Lesson is not available now</string>
     <string name="turn_on_permission">Turn on permission for application to memory</string>
     <string name="description_download">Caching Stepic\'s video</string>
+    <string name="cache_title">Cache</string>
+    <string name="wi_fi_setting">Wi-Fi only download</string>
+    <string name="clear_cache_title">Clear cache</string>
 
 </resources>

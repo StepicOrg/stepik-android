@@ -42,4 +42,7 @@
     <string name="not_video_player_error">Пожалуйста, установите видеоплеер</string>
     <string name="turn_on_permission">Включите доступ к памяти для приложения в настройках телефона</string>
     <string name="description_download">Кеширование Stepic урока</string>
+    <string name="cache_title">Кэш</string>
+    <string name="clear_cache_title">Очистить кэш</string>
+    <string name="wi_fi_setting">Загружать только по Wi-Fi </string>
 </resources>
