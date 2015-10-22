@@ -6,11 +6,13 @@ import android.database.Cursor;
 
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.store.structure.DBStructureCourses;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
+import org.stepic.droid.store.structure.DbStructureLesson;
 import org.stepic.droid.store.structure.DbStructureSections;
 import org.stepic.droid.store.structure.DbStructureUnit;
 import org.stepic.droid.util.DbParseHelper;
@@ -205,7 +207,7 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
-    public List<Unit> getAllUnitsOfSection (Section section) {
+    public List<Unit> getAllUnitsOfSection(Section section) {
         try {
             open();
             List<Unit> units = new ArrayList<>();
@@ -221,12 +223,10 @@ public class DatabaseManager extends DbManagerBase {
 
             cursor.close();
             return units;
-        }
-        finally {
+        } finally {
             close();
         }
     }
-
 
 
     public boolean isSectionInDb(Section section) {
@@ -277,6 +277,30 @@ public class DatabaseManager extends DbManagerBase {
             open();
             database.delete(DbStructureCachedVideo.CACHED_VIDEO,
                     DbStructureCachedVideo.Column.URL + " = " + "\"" + path + "\"",
+                    null);
+        } finally {
+            close();
+        }
+    }
+
+    public void deleteUnit(Unit unit) {
+        try {
+            open();
+            long unitId = unit.getId();
+            database.delete(DbStructureUnit.UNITS,
+                    "\"" + DbStructureUnit.Column.UNIT_ID + "\"" + " = " + unitId,
+                    null);
+        } finally {
+            close();
+        }
+    }
+
+    public void deleteLesson(Lesson lesson) {
+        try {
+            open();
+            long lessonId = lesson.getId();
+            database.delete(DbStructureLesson.LESSONS,
+                    "\"" + DbStructureLesson.Column.LESSON_ID + "\"" + " = " + lessonId,
                     null);
         } finally {
             close();
@@ -372,10 +396,83 @@ public class DatabaseManager extends DbManagerBase {
 
     }
 
+    public void addLesson(Lesson lesson) {
+        try {
+            open();
+            ContentValues values = new ContentValues();
+
+            values.put(DbStructureLesson.Column.LESSON_ID, lesson.getId());
+            values.put(DbStructureLesson.Column.STEPS, DbParseHelper.parseLongArrayToString(lesson.getSteps()));
+            values.put(DbStructureLesson.Column.IS_FEATURED, lesson.is_featured());
+            values.put(DbStructureLesson.Column.IS_PRIME, lesson.is_prime());
+            values.put(DbStructureLesson.Column.PROGRESS, lesson.getProgress());
+            values.put(DbStructureLesson.Column.OWNER, lesson.getOwner());
+            values.put(DbStructureLesson.Column.SUBSCRIPTIONS, DbParseHelper.parseStringArrayToString(lesson.getSubscriptions()));
+            values.put(DbStructureLesson.Column.VIEWED_BY, lesson.getViewed_by());
+            values.put(DbStructureLesson.Column.PASSED_BY, lesson.getPassed_by());
+            values.put(DbStructureLesson.Column.DEPENDENCIES, DbParseHelper.parseStringArrayToString(lesson.getDependencies()));
+            values.put(DbStructureLesson.Column.IS_PUBLIC, lesson.is_public());
+            values.put(DbStructureLesson.Column.TITLE, lesson.getTitle());
+            values.put(DbStructureLesson.Column.SLUG, lesson.getSlug());
+            values.put(DbStructureLesson.Column.CREATE_DATE, lesson.getCreate_date());
+            values.put(DbStructureLesson.Column.LEARNERS_GROUP, lesson.getLearners_group());
+            values.put(DbStructureLesson.Column.TEACHER_GROUP, lesson.getTeacher_group());
+
+            database.insert(DbStructureLesson.LESSONS, null, values);
+
+        } finally {
+            close();
+        }
+    }
+
+
+    private Cursor getLessonCursor() {
+        return database.query(DbStructureLesson.LESSONS, DbStructureLesson.getUsedColumns(),
+                null, null, null, null, null);
+    }
+
+    private Lesson parseLesson(Cursor cursor) {
+        Lesson lesson = new Lesson();
+        int columnIndexLessonId = cursor.getColumnIndex(DbStructureLesson.Column.LESSON_ID);
+        int columnIndexSteps = cursor.getColumnIndex(DbStructureLesson.Column.STEPS);
+        int columnIndexIsFeatured = cursor.getColumnIndex(DbStructureLesson.Column.IS_FEATURED);
+        int columnIndexIsPrime = cursor.getColumnIndex(DbStructureLesson.Column.IS_PRIME);
+        int columnIndexProgress = cursor.getColumnIndex(DbStructureLesson.Column.PROGRESS);
+        int columnIndexOwner = cursor.getColumnIndex(DbStructureLesson.Column.OWNER);
+        int columnIndexSubscriptions = cursor.getColumnIndex(DbStructureLesson.Column.SUBSCRIPTIONS);
+        int columnIndexViewedBy = cursor.getColumnIndex(DbStructureLesson.Column.VIEWED_BY);
+        int columnIndexPassedBy = cursor.getColumnIndex(DbStructureLesson.Column.PASSED_BY);
+        int columnIndexDependencies = cursor.getColumnIndex(DbStructureLesson.Column.DEPENDENCIES);
+        int columnIndexIsPublic = cursor.getColumnIndex(DbStructureLesson.Column.IS_PUBLIC);
+        int columnIndexTitle = cursor.getColumnIndex(DbStructureLesson.Column.TITLE);
+        int columnIndexSlug = cursor.getColumnIndex(DbStructureLesson.Column.SLUG);
+        int columnIndexCreateDate = cursor.getColumnIndex(DbStructureLesson.Column.CREATE_DATE);
+        int columnIndexLearnersGroup = cursor.getColumnIndex(DbStructureLesson.Column.LEARNERS_GROUP);
+        int columnIndexTeacherGroup = cursor.getColumnIndex(DbStructureLesson.Column.TEACHER_GROUP);
+
+
+        lesson.setId(cursor.getLong(columnIndexLessonId));
+        lesson.setSteps(DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexSteps)));
+        lesson.setIs_featured(cursor.getInt(columnIndexIsFeatured) > 0);
+        lesson.setIs_prime(cursor.getInt(columnIndexIsPrime) > 0);
+        lesson.setProgress(cursor.getString(columnIndexProgress));
+        lesson.setOwner(cursor.getInt(columnIndexOwner));
+        lesson.setSubscriptions(DbParseHelper.parseStringToStringArray(cursor.getString(columnIndexSubscriptions)));
+        lesson.setViewed_by(cursor.getInt(columnIndexViewedBy));
+        lesson.setPassed_by(cursor.getInt(columnIndexPassedBy));
+        lesson.setDependencies(DbParseHelper.parseStringToStringArray(cursor.getString(columnIndexDependencies)));
+        lesson.setIs_public(cursor.getInt(columnIndexIsPublic) > 0);
+        lesson.setTitle(cursor.getString(columnIndexTitle));
+        lesson.setSlug(cursor.getString(columnIndexSlug));
+        lesson.setCreate_date(cursor.getString(columnIndexCreateDate));
+        lesson.setLearners_group(cursor.getString(columnIndexLearnersGroup));
+        lesson.setTeacher_group(cursor.getString(columnIndexTeacherGroup));
+
+        return lesson;
+    }
 
     private Unit parseUnit(Cursor cursor) {
         Unit unit = new Unit();
-
 
         int columnIndexUnitId = cursor.getColumnIndex(DbStructureUnit.Column.UNIT_ID);
         int columnIndexSection = cursor.getColumnIndex(DbStructureUnit.Column.SECTION);
