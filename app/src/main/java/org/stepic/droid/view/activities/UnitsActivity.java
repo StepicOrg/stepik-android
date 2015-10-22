@@ -57,11 +57,6 @@ public class UnitsActivity extends FragmentActivityBase {
         hideSoftKeypad();
 
         mSection = (Section) (getIntent().getExtras().get(AppConstants.KEY_SECTION_BUNDLE));
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -74,6 +69,12 @@ public class UnitsActivity extends FragmentActivityBase {
 
         if (mSection != null && mSection.getUnits() != null && mSection.getUnits().length != 0)
             updateUnits();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
 
     }
 
