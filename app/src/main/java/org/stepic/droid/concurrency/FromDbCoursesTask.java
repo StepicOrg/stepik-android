@@ -20,7 +20,7 @@ public class FromDbCoursesTask extends StepicTask<Void, Void, List<Course>> {
     IShell mShell;
 
     @Inject
-    Bus bus;
+    Bus mBus;
 
     @Inject
     DatabaseManager dbOperationsCourses;
@@ -44,13 +44,13 @@ public class FromDbCoursesTask extends StepicTask<Void, Void, List<Course>> {
 
     @Override
     protected void onPreExecute() {
-        bus.post(new StartingGetCoursesFromDbEvent(mCourseType));
+        mBus.post(new StartingGetCoursesFromDbEvent(mCourseType));
         super.onPreExecute();
     }
 
     @Override
     protected void onPostExecute(AsyncResultWrapper<List<Course>> listAsyncResultWrapper) {
         super.onPostExecute(listAsyncResultWrapper);
-        bus.post(new FinishingGetCoursesFromDbEvent(mCourseType, listAsyncResultWrapper.getResult()));
+        mBus.post(new FinishingGetCoursesFromDbEvent(mCourseType, listAsyncResultWrapper.getResult()));
     }
 }

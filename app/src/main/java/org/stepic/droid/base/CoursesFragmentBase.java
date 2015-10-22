@@ -175,7 +175,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
     }
 
-    public void saveDataToCache(List<Course> courses) {
+    private void saveDataToCache(List<Course> courses) {
         mDbSaveCoursesTask = new ToDbCoursesTask(courses, mTypeOfCourse, mCurrentPage);
         mDbSaveCoursesTask.execute();
     }
@@ -284,6 +284,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     @Override
     public void onStart() {
         super.onStart();
+        mSwipeRefreshLayout.setRefreshing(false);
         bus.register(this);
     }
 

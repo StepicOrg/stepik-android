@@ -74,7 +74,7 @@
 
 
         <activity
-            android:name=".view.activities.SectionCourseActivity"
+            android:name=".view.activities.SectionActivity"
             android:label="@string/syllabus_title"
             android:screenOrientation="portrait">
 
