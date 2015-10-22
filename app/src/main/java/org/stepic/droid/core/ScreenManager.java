@@ -12,7 +12,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.view.activities.EnrolledCourseActivity;
+import org.stepic.droid.view.activities.SectionCourseActivity;
 import org.stepic.droid.view.activities.LaunchActivity;
 import org.stepic.droid.view.activities.LoginActivity;
 import org.stepic.droid.view.activities.MainFeedActivity;
@@ -83,7 +83,7 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showCourseDescriptionForEnrolled(Context sourceActivity, @NotNull Course course) {
-        Intent intent = new Intent(sourceActivity, EnrolledCourseActivity.class);
+        Intent intent = new Intent(sourceActivity, SectionCourseActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
         intent.putExtras(bundle);

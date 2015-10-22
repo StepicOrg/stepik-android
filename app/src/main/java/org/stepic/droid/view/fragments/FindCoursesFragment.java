@@ -21,13 +21,6 @@ public class FindCoursesFragment extends CoursesFragmentBase {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                getAndShowDataFromCache();
-            }
-        });
-
     }
 
     @Override

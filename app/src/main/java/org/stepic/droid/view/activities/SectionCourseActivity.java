@@ -30,7 +30,7 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class EnrolledCourseActivity extends FragmentActivityBase {
+public class SectionCourseActivity extends FragmentActivityBase {
     private static final String TAG = "enrolledActivity";
 
     @Bind(R.id.sections_recycler_view)
@@ -49,7 +49,7 @@ public class EnrolledCourseActivity extends FragmentActivityBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_enrolled_course);
+        setContentView(R.layout.activity_section);
         ButterKnife.bind(this);
         overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         hideSoftKeypad();
