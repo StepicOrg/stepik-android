@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import org.stepic.droid.store.structure.DBStructureCourses;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
 import org.stepic.droid.store.structure.DbStructureSections;
+import org.stepic.droid.store.structure.DbStructureUnit;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -20,6 +21,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         createCourseTable(db, DBStructureCourses.FEATURED_COURSES);
         createSectionTable(db, DbStructureSections.SECTIONS);
         createCachedVideoTable(db, DbStructureCachedVideo.CACHED_VIDEO);
+        createUnitsDb(db, DbStructureUnit.UNITS);
     }
 
     @Override
@@ -29,6 +31,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DBStructureCourses.FEATURED_COURSES);
         db.execSQL("DROP TABLE IF EXISTS " + DbStructureSections.SECTIONS);
         db.execSQL("DROP TABLE IF EXISTS " + DbStructureCachedVideo.CACHED_VIDEO);
+        db.execSQL("DROP TABLE IF EXISTS " + DbStructureUnit.UNITS);
+
         onCreate(db);
 
     }
@@ -97,6 +101,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + " ("
                 + DbStructureCachedVideo.Column.VIDEO_ID + " LONG, "
                 + DbStructureCachedVideo.Column.URL + " TEXT "
+
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createUnitsDb(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureUnit.Column.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + DbStructureUnit.Column.UNIT_ID + " LONG, "
+                + DbStructureUnit.Column.SECTION + " LONG, "
+                + DbStructureUnit.Column.LESSON + " LONG, "
+                + DbStructureUnit.Column.ASSIGNMENTS + " TEXT, "
+                + DbStructureUnit.Column.POSITION + " INTEGER, "
+                + DbStructureUnit.Column.PROGRESS + " TEXT, "
+                + DbStructureUnit.Column.BEGIN_DATE + " TEXT, "
+                + DbStructureUnit.Column.END_DATE + " TEXT, "
+                + DbStructureUnit.Column.SOFT_DEADLINE + " TEXT, "
+                + DbStructureUnit.Column.HARD_DEADLINE + " TEXT, "
+                + DbStructureUnit.Column.GRADING_POLICY + " TEXT, "
+                + DbStructureUnit.Column.BEGIN_DATE_SOURCE + " TEXT, "
+                + DbStructureUnit.Column.END_DATE_SOURCE + " TEXT, "
+                + DbStructureUnit.Column.SOFT_DEADLINE_SOURCE + " TEXT, "
+                + DbStructureUnit.Column.HARD_DEADLINE_SOURCE + " TEXT, "
+                + DbStructureUnit.Column.GRADING_POLICY_SOURCE + " TEXT, "
+                + DbStructureUnit.Column.IS_ACTIVE + " BOOLEAN, "
+                + DbStructureUnit.Column.CREATE_DATE + " TEXT, "
+                + DbStructureUnit.Column.UPDATE_DATE + " TEXT "
 
                 + ")";
         db.execSQL(sql);

@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 public class Unit implements Serializable, Parcelable {
     private long id;
-    private int section;
+    private long section;
     private long lesson;
     private long[] assignments;
     private int position;
@@ -30,7 +30,7 @@ public class Unit implements Serializable, Parcelable {
         return id;
     }
 
-    public int getSection() {
+    public long getSection() {
         return section;
     }
 
@@ -102,6 +102,81 @@ public class Unit implements Serializable, Parcelable {
         return update_date;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setSection(long section) {
+        this.section = section;
+    }
+
+    public void setLesson(long lesson) {
+        this.lesson = lesson;
+    }
+
+    public void setAssignments(long[] assignments) {
+        this.assignments = assignments;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public void setProgress(String progress) {
+        this.progress = progress;
+    }
+
+    public void setBegin_date(String begin_date) {
+        this.begin_date = begin_date;
+    }
+
+    public void setEnd_date(String end_date) {
+        this.end_date = end_date;
+    }
+
+    public void setSoft_deadline(String soft_deadline) {
+        this.soft_deadline = soft_deadline;
+    }
+
+    public void setHard_deadline(String hard_deadline) {
+        this.hard_deadline = hard_deadline;
+    }
+
+    public void setGrading_policy(String grading_policy) {
+        this.grading_policy = grading_policy;
+    }
+
+    public void setBegin_date_source(String begin_date_source) {
+        this.begin_date_source = begin_date_source;
+    }
+
+    public void setEnd_date_source(String end_date_source) {
+        this.end_date_source = end_date_source;
+    }
+
+    public void setSoft_deadline_source(String soft_deadline_source) {
+        this.soft_deadline_source = soft_deadline_source;
+    }
+
+    public void setHard_deadline_source(String hard_deadline_source) {
+        this.hard_deadline_source = hard_deadline_source;
+    }
+
+    public void setGrading_policy_source(String grading_policy_source) {
+        this.grading_policy_source = grading_policy_source;
+    }
+
+    public void setIs_active(boolean is_active) {
+        this.is_active = is_active;
+    }
+
+    public void setCreate_date(String create_date) {
+        this.create_date = create_date;
+    }
+
+    public void setUpdate_date(String update_date) {
+        this.update_date = update_date;
+    }
 
     @Override
     public int describeContents() {
@@ -111,7 +186,7 @@ public class Unit implements Serializable, Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.id);
-        dest.writeInt(this.section);
+        dest.writeLong(this.section);
         dest.writeLong(this.lesson);
         dest.writeLongArray(this.assignments);
         dest.writeInt(this.position);
@@ -136,7 +211,7 @@ public class Unit implements Serializable, Parcelable {
 
     protected Unit(Parcel in) {
         this.id = in.readLong();
-        this.section = in.readInt();
+        this.section = in.readLong();
         this.lesson = in.readLong();
         this.assignments = in.createLongArray();
         this.position = in.readInt();
