@@ -180,29 +180,6 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
-    public List<Section> getAllSectionsOfCourse(Course course) {
-        try {
-            open();
-            List<Section> sections = new ArrayList<>();
-
-            String Query = "Select * from " + DbStructureSections.SECTIONS + " where " + DbStructureSections.Column.COURSE + " = " + course.getCourseId();
-            Cursor cursor = database.rawQuery(Query, null);
-
-            cursor.moveToFirst();
-
-            while (!cursor.isAfterLast()) {
-                Section section = parseSection(cursor);
-                sections.add(section);
-                cursor.moveToNext();
-            }
-
-            cursor.close();
-            return sections;
-        } finally {
-            close();
-        }
-    }
-
     public boolean isSectionInDb(Section section) {
         try {
             open();
@@ -348,29 +325,15 @@ public class DatabaseManager extends DbManagerBase {
     private Section parseSection(Cursor cursor) {
         Section section = new Section();
         //ignore id of table
+        int columnNumber = 1;
 
-        int columnIndexId = cursor.getColumnIndex(DbStructureSections.Column.SECTION_ID);
-        int columnIndexTitle = cursor.getColumnIndex(DbStructureSections.Column.TITLE);
-        int columnIndexSlug = cursor.getColumnIndex(DbStructureSections.Column.SLUG);
-        int columnIndexIsActive = cursor.getColumnIndex(DbStructureSections.Column.IS_ACTIVE);
-        int columnIndexBeginDate = cursor.getColumnIndex(DbStructureSections.Column.BEGIN_DATE);
-        int columnIndexSoftDeadline = cursor.getColumnIndex(DbStructureSections.Column.SOFT_DEADLINE);
-        int columnIndexHardDeadline = cursor.getColumnIndex(DbStructureSections.Column.HARD_DEADLINE);
-        int columnIndexCourseId = cursor.getColumnIndex(DbStructureSections.Column.COURSE);
-        int columnIndexPosition = cursor.getColumnIndex(DbStructureSections.Column.POSITION);
-        int columnIndexUnits = cursor.getColumnIndex(DbStructureSections.Column.UNITS);
-
-
-        section.setId(cursor.getInt(columnIndexId));
-        section.setTitle(cursor.getString(columnIndexTitle));
-        section.setSlug(cursor.getString(columnIndexSlug));
-        section.setIs_active(cursor.getInt(columnIndexIsActive) > 0);
-        section.setBegin_date(cursor.getString(columnIndexBeginDate));
-        section.setSoft_deadline(cursor.getString(columnIndexSoftDeadline));
-        section.setHard_deadline(cursor.getString(columnIndexHardDeadline));
-        section.setCourse(cursor.getLong(columnIndexCourseId));
-        section.setPosition(cursor.getInt(columnIndexPosition));
-        section.setUnits(DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexUnits)));
+        section.setId(cursor.getInt(columnNumber++));
+        section.setTitle(cursor.getString(columnNumber++));
+        section.setSlug(cursor.getString(columnNumber++));
+        section.setIs_active(cursor.getInt(columnNumber++) > 0);
+        section.setBegin_date(cursor.getString(columnNumber++));
+        section.setSoft_deadline(cursor.getString(columnNumber++));
+        section.setHard_deadline(cursor.getString(columnNumber++));
 
         return section;
     }
@@ -393,7 +356,6 @@ public class DatabaseManager extends DbManagerBase {
         course.setRequirements(cursor.getString(columnNumber++));
         course.setEnrollment(cursor.getInt(columnNumber++));
         course.setSections(DbParseHelper.parseStringToLongArray(cursor.getString(columnNumber++)));
-
 
         return course;
     }
