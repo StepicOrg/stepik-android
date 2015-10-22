@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.io.Serializable;
 
 public class Lesson implements Parcelable, Serializable {
-    private int id;
+    private long id;
     private long[] steps;
     //    private String actions;
     private int[] tags;
@@ -29,7 +29,7 @@ public class Lesson implements Parcelable, Serializable {
     private String learners_group;
     private String teacher_group;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -113,6 +113,89 @@ public class Lesson implements Parcelable, Serializable {
         return teacher_group;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setSteps(long[] steps) {
+        this.steps = steps;
+    }
+
+    public void setTags(int[] tags) {
+        this.tags = tags;
+    }
+
+    public void setPlaylists(String[] playlists) {
+        this.playlists = playlists;
+    }
+
+    public void setIs_featured(boolean is_featured) {
+        this.is_featured = is_featured;
+    }
+
+    public void setIs_prime(boolean is_prime) {
+        this.is_prime = is_prime;
+    }
+
+    public void setProgress(String progress) {
+        this.progress = progress;
+    }
+
+    public void setOwner(int owner) {
+        this.owner = owner;
+    }
+
+    public void setSubscriptions(String[] subscriptions) {
+        this.subscriptions = subscriptions;
+    }
+
+    public void setViewed_by(int viewed_by) {
+        this.viewed_by = viewed_by;
+    }
+
+    public void setPassed_by(int passed_by) {
+        this.passed_by = passed_by;
+    }
+
+    public void setDependencies(String[] dependencies) {
+        this.dependencies = dependencies;
+    }
+
+    public void setFollowers(String[] followers) {
+        this.followers = followers;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public void setIs_public(boolean is_public) {
+        this.is_public = is_public;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public void setCreate_date(String create_date) {
+        this.create_date = create_date;
+    }
+
+    public void setUpdate_date(String update_date) {
+        this.update_date = update_date;
+    }
+
+    public void setLearners_group(String learners_group) {
+        this.learners_group = learners_group;
+    }
+
+    public void setTeacher_group(String teacher_group) {
+        this.teacher_group = teacher_group;
+    }
 
     @Override
     public int describeContents() {
@@ -121,7 +204,7 @@ public class Lesson implements Parcelable, Serializable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
+        dest.writeLong(this.id);
         dest.writeLongArray(this.steps);
         dest.writeIntArray(this.tags);
         dest.writeStringArray(this.playlists);
@@ -148,7 +231,7 @@ public class Lesson implements Parcelable, Serializable {
     }
 
     protected Lesson(Parcel in) {
-        this.id = in.readInt();
+        this.id = in.readLong();
         this.steps = in.createLongArray();
         this.tags = in.createIntArray();
         this.playlists = in.createStringArray();

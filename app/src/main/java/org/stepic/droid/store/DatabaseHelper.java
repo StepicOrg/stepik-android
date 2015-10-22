@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import org.stepic.droid.store.structure.DBStructureCourses;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
+import org.stepic.droid.store.structure.DbStructureLesson;
 import org.stepic.droid.store.structure.DbStructureSections;
 import org.stepic.droid.store.structure.DbStructureUnit;
 
@@ -129,6 +130,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureUnit.Column.IS_ACTIVE + " BOOLEAN, "
                 + DbStructureUnit.Column.CREATE_DATE + " TEXT, "
                 + DbStructureUnit.Column.UPDATE_DATE + " TEXT "
+
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createLessonsDb(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureLesson.Column.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + DbStructureLesson.Column.LESSON_ID + " LONG, "
+                + DbStructureLesson.Column.STEPS + " TEXT, "
+                + DbStructureLesson.Column.IS_FEATURED + " BOOLEAN, "
+                + DbStructureLesson.Column.IS_PRIME + " BOOLEAN, "
+                + DbStructureLesson.Column.PROGRESS + " TEXT, "
+                + DbStructureLesson.Column.OWNER + " INTEGER, "
+                + DbStructureLesson.Column.SUBSCRIPTIONS + " TEXT, "
+                + DbStructureLesson.Column.VIEWED_BY + " INTEGER, "
+                + DbStructureLesson.Column.PASSED_BY + " INTEGER, "
+                + DbStructureLesson.Column.DEPENDENCIES + " TEXT, "
+                + DbStructureLesson.Column.IS_PUBLIC + " BOOLEAN, "
+                + DbStructureLesson.Column.TITLE + " TEXT, "
+                + DbStructureLesson.Column.SLUG + " TEXT, "
+                + DbStructureLesson.Column.CREATE_DATE + " TEXT, "
+                + DbStructureLesson.Column.LEARNERS_GROUP + " TEXT, "
+                + DbStructureLesson.Column.TEACHER_GROUP + " TEXT "
 
                 + ")";
         db.execSQL(sql);

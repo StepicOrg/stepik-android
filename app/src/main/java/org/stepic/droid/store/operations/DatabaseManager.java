@@ -227,6 +227,8 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
+
+
     public boolean isSectionInDb(Section section) {
         try {
             open();
