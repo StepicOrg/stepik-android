@@ -199,9 +199,10 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
             //do nothing, because we run update task before in onCreate
         } else {
             showSections(event.getSectionList());
+
+            ProgressHelper.dismiss(mSwipeRefreshLayout);
         }
 
-        ProgressHelper.dismiss(mSwipeRefreshLayout);
 
     }
 

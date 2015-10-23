@@ -142,8 +142,6 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureSections.Column.COURSE, section.getCourse());
             values.put(DbStructureSections.Column.POSITION, section.getPosition());
             values.put(DbStructureSections.Column.UNITS, DbParseHelper.parseLongArrayToString(section.getUnits()));
-
-
             database.insert(DbStructureSections.SECTIONS, null, values);
 
         } finally {

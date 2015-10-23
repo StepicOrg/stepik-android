@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.squareup.otto.Subscribe;
@@ -67,6 +68,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         hideSoftKeypad();
 
+
         mSection = (Section) (getIntent().getExtras().get(AppConstants.KEY_SECTION_BUNDLE));
 
         setSupportActionBar(mToolbar);
@@ -88,12 +90,14 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
                 R.color.stepic_blue_ribbon);
 
 
+        ProgressHelper.activate(mSwipeRefreshLayout);
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
                 getAndShowUnitsFromCache();
             }
         });
+
 
     }
 
@@ -212,8 +216,6 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     @Override
     protected void onStop() {
         super.onStop();
-        mLessonList = null;
-        mUnitList = null;
     }
 
 
