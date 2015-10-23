@@ -140,8 +140,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
             SectionsStepicResponse stepicResponse = e.getResponse().body();
             List<Section> sections = stepicResponse.getSections();
             saveDataToCache(sections);
-            getAndShowSectionsFromCache();
-            ProgressHelper.dismiss(mSwipeRefreshLayout);
         }
     }
 
@@ -196,13 +194,14 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Subscribe
     public void onGettingFromDb(FinishingGetSectionFromDbEvent event) {
         List<Section> sections = event.getSectionList();
-        if (sections == null || sections.size() == 0)
-            updateSections();
-        else {
-            ProgressHelper.dismiss(mSwipeRefreshLayout);
+        if (sections == null || sections.size() == 0) {
+//            updateSections();
+            //do nothing, because we run update task before in onCreate
+        } else {
             showSections(event.getSectionList());
-
         }
+
+        ProgressHelper.dismiss(mSwipeRefreshLayout);
 
     }
 
@@ -219,5 +218,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Subscribe
     public void onFinishSaveToDb(FinishingSaveSectionToDbEvent e) {
 //        ProgressHelper.dismiss(mSwipeRefreshLayout);
+        getAndShowSectionsFromCache();
+        ProgressHelper.dismiss(mSwipeRefreshLayout);
     }
 }

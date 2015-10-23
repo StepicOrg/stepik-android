@@ -11,10 +11,12 @@ import com.squareup.otto.Subscribe;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.concurrency.FromDbUnitLessonTask;
+import org.stepic.droid.concurrency.ToDbUnitLessonTask;
 import org.stepic.droid.events.lessons.SuccessLoadLessonsEvent;
 import org.stepic.droid.events.units.FailureLoadEvent;
 import org.stepic.droid.events.units.LoadedFromDbUnitsLessonsEvent;
 import org.stepic.droid.events.units.SuccessLoadUnitsEvent;
+import org.stepic.droid.events.units.UnitLessonSavedEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
@@ -55,6 +57,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     private List<Lesson> mLessonList;
 
     private FromDbUnitLessonTask mFromDbTask;
+    private ToDbUnitLessonTask mToDbTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +96,6 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         ProgressHelper.activate(mSwipeRefreshLayout);
         mFromDbTask = new FromDbUnitLessonTask(mSection);
         mFromDbTask.execute();
-
-//        ProgressHelper.activate(mSwipeRefreshLayout);
-//        mFromDbSectionTask = new FromDbSectionTask(mCourse);
-//        mFromDbSectionTask.execute();
     }
 
     @Override
@@ -154,13 +153,18 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     }
 
     @Subscribe
-    public void onSuccessLoadLessons(SuccessLoadLessonsEvent e) {
+    public void onFinalSuccessDownloadFromWeb(SuccessLoadLessonsEvent e) {
         if (mSection == null || e.getSection() == null
                 || e.getSection().getId() != mSection.getId())
             return;
+        saveToDb(e.getUnits(), e.getResponse().body().getLessons());
 
-        showUnitsLessons(e.getUnits(), e.getResponse().body().getLessons());
-        ProgressHelper.dismiss(mSwipeRefreshLayout);
+//        showUnitsLessons(e.getUnits(), e.getResponse().body().getLessons());
+    }
+
+    private void saveToDb(List<Unit> unitList, List<Lesson> lessonList) {
+        mToDbTask = new ToDbUnitLessonTask(mSection, unitList, lessonList);
+        mToDbTask.execute();
     }
 
     private void showUnitsLessons(List<Unit> units, List<Lesson> lessons) {
@@ -217,6 +221,15 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     public void onSuccessLoadFromDb(LoadedFromDbUnitsLessonsEvent e) {
         if (mSection == e.getSection()) {
             showUnitsLessons(e.getUnits(), e.getLessons());
+            ProgressHelper.dismiss(mSwipeRefreshLayout);
+        }
+    }
+
+    @Subscribe
+    public void onFinishSaveToDb(UnitLessonSavedEvent e) {
+        if (e.getmSection() == mSection) {
+            getAndShowUnitsFromCache();
+            ProgressHelper.dismiss(mSwipeRefreshLayout);
         }
     }
 }

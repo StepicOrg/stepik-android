@@ -7,6 +7,7 @@ import org.stepic.droid.concurrency.FromDbSectionTask;
 import org.stepic.droid.concurrency.FromDbUnitLessonTask;
 import org.stepic.droid.concurrency.ToDbCoursesTask;
 import org.stepic.droid.concurrency.ToDbSectionTask;
+import org.stepic.droid.concurrency.ToDbUnitLessonTask;
 import org.stepic.droid.concurrency.UpdateCourseTask;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
@@ -63,4 +64,6 @@ public interface StepicCoreComponent {
     void inject(ToDbSectionTask stepicTask);
 
     void inject(FromDbUnitLessonTask stepicTask);
+
+    void inject(ToDbUnitLessonTask stepicTask);
 }
