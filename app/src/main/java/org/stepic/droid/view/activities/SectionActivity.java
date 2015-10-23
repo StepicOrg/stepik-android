@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 
 import com.squareup.otto.Subscribe;
 
@@ -43,8 +43,8 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Bind(R.id.sections_recycler_view)
     RecyclerView mSectionsRecyclerView;
 
-//    @Bind(R.id.load_sections)
-//    ProgressBar mProgressBar;
+    @Bind(R.id.load_progressbar)
+    ProgressBar mProgressBar;
 
     @Bind(R.id.toolbar)
     android.support.v7.widget.Toolbar mToolbar;
@@ -55,6 +55,10 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     private FromDbSectionTask mFromDbSectionTask;
     private ToDbSectionTask mToDbSectionTask;
 
+
+    boolean isScreenEmpty;
+    boolean firstLoad;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +66,8 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         ButterKnife.bind(this);
         overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         hideSoftKeypad();
+        isScreenEmpty = true;
+        firstLoad = true;
 
         mCourse = (Course) (getIntent().getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
 
@@ -79,28 +85,10 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         mSectionList = new ArrayList<>();
         mAdapter = new SectionAdapter(mSectionList, this);
         mSectionsRecyclerView.setAdapter(mAdapter);
-        if (mCourse.getSections() != null && mCourse.getSections().length != 0) {
-            updateSections();
-        }
 
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                getAndShowSectionsFromCache();
-            }
-        });
+        ProgressHelper.activate(mProgressBar);
+        getAndShowSectionsFromCache();
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -115,7 +103,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     }
 
     private void updateSections() {
-        ProgressHelper.activate(mSwipeRefreshLayout);
         mShell.getApi().getSections(mCourse.getSections()).enqueue(new Callback<SectionsStepicResponse>() {
             @Override
             public void onResponse(Response<SectionsStepicResponse> response, Retrofit retrofit) {
@@ -134,44 +121,25 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         });
     }
 
-    @Subscribe
-    public void onSuccessDownload(SuccessResponseSectionsEvent e) {
-        if (mCourse.getCourseId() == e.getCourse().getCourseId()) {
-            SectionsStepicResponse stepicResponse = e.getResponse().body();
-            List<Section> sections = stepicResponse.getSections();
-            saveDataToCache(sections);
-        }
-    }
-
-    @Subscribe
-    public void onFailureDownload(FailureResponseSectionEvent e) {
-        if (mCourse.getCourseId() == e.getCourse().getCourseId()) {
-            ProgressHelper.dismiss(mSwipeRefreshLayout);
-        }
+    private void getAndShowSectionsFromCache() {
+        mFromDbSectionTask = new FromDbSectionTask(mCourse);
+        mFromDbSectionTask.execute();
     }
 
     private void showSections(List<Section> sections) {
         mSectionList.clear();
         mSectionList.addAll(sections);
         mAdapter.notifyDataSetChanged();
+        dismiss();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.i(TAG, "onPause");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i(TAG, "onStop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i(TAG, "onDestroy");
+    private void dismiss() {
+        if (isScreenEmpty) {
+            ProgressHelper.dismiss(mProgressBar);
+            isScreenEmpty = false;
+        } else {
+            ProgressHelper.dismiss(mSwipeRefreshLayout);
+        }
     }
 
     @Override
@@ -185,26 +153,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         updateSections();
     }
 
-    private void getAndShowSectionsFromCache() {
-        ProgressHelper.activate(mSwipeRefreshLayout);
-        mFromDbSectionTask = new FromDbSectionTask(mCourse);
-        mFromDbSectionTask.execute();
-    }
-
-    @Subscribe
-    public void onGettingFromDb(FinishingGetSectionFromDbEvent event) {
-        List<Section> sections = event.getSectionList();
-        if (sections == null || sections.size() == 0) {
-//            updateSections();
-            //do nothing, because we run update task before in onCreate
-        } else {
-            showSections(event.getSectionList());
-
-            ProgressHelper.dismiss(mSwipeRefreshLayout);
-        }
-
-
-    }
 
     private void saveDataToCache(List<Section> sections) {
         mToDbSectionTask = new ToDbSectionTask(sections);
@@ -212,14 +160,52 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     }
 
     @Subscribe
+    public void onFailureDownload(FailureResponseSectionEvent e) {
+        if (mCourse.getCourseId() == e.getCourse().getCourseId()) {
+            ProgressHelper.dismiss(mSwipeRefreshLayout);
+        }
+    }
+
+    @Subscribe
+    public void onGettingFromDb(FinishingGetSectionFromDbEvent event) {
+        if (event.getCourse().getCourseId() != mCourse.getCourseId()) return;
+
+        List<Section> sections = event.getSectionList();
+
+        if (sections != null & sections.size() != 0) {
+            showSections(sections);
+            if (firstLoad) {
+                firstLoad = false;
+                mSwipeRefreshLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ProgressHelper.activate(mSwipeRefreshLayout);
+                        updateSections();
+                    }
+                });
+            }
+        } else {
+            updateSections();
+        }
+
+
+    }
+
+    @Subscribe
+    public void onSuccessDownload(SuccessResponseSectionsEvent e) {
+        if (mCourse.getCourseId() == e.getCourse().getCourseId()) {
+            SectionsStepicResponse stepicResponse = e.getResponse().body();
+            List<Section> sections = stepicResponse.getSections();
+            saveDataToCache(sections);
+        }
+    }
+
+    @Subscribe
     public void onStartSaveToDb(StartingSaveSectionToDbEvent e) {
-//        ProgressHelper.activate(mSwipeRefreshLayout);
     }
 
     @Subscribe
     public void onFinishSaveToDb(FinishingSaveSectionToDbEvent e) {
-//        ProgressHelper.dismiss(mSwipeRefreshLayout);
         getAndShowSectionsFromCache();
-        ProgressHelper.dismiss(mSwipeRefreshLayout);
     }
 }

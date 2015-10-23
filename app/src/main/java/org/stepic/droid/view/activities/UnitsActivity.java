@@ -83,9 +83,6 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         mAdapter = new UnitAdapter(this, mSection, mUnitList, mLessonList);
         mUnitsRecyclerView.setAdapter(mAdapter);
 
-        if (mSection != null && mSection.getUnits() != null && mSection.getUnits().length != 0)
-            updateUnits();
-
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(
                 R.color.stepic_brand_primary,
@@ -101,11 +98,6 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         mFromDbTask.execute();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
 
     private void updateUnits() {
         mShell.getApi().getUnits(mSection.getUnits()).enqueue(new Callback<UnitStepicResponse>() {
@@ -159,6 +151,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         if (mSection == null || e.getSection() == null
                 || e.getSection().getId() != mSection.getId())
             return;
+
         saveToDb(e.getUnits(), e.getResponse().body().getLessons());
     }
 
