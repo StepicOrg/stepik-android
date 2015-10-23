@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">stepic</string>
+    <string name="app_name" translatable="false">Stepic</string>
 
     <string name="already_have_an_account">Already have an account? Sign in</string>
     <string name="or_sign_up_with_email">or sign up with e-mail</string>
@@ -15,6 +15,7 @@
     <string name="sign_in_btn">Sign in button</string>
     <string name="sign_in">Sign In</string>
     <string name="describing_error">The following error occurred while logging you in</string>
+    <string name="not_video_player_error">Please, install player for video playing</string>
     <string name="first_name">first name</string>
     <string name="second_name">second name</string>
     <string name="password_hint">password</string>
@@ -43,5 +44,14 @@
     <string name="units_lessons_title">Lessons</string>
     <string name="steps_title">Lesson</string>
     <string name="not_available_lesson">Lesson is not available now</string>
+    <string name="turn_on_permission">Turn on permission for application to memory</string>
+    <string name="description_download">Caching Stepic\'s video</string>
+    <string name="cache_title">Cache</string>
+    <string name="wi_fi_setting">Wi-Fi only download</string>
+    <string name="clear_cache_title">Clear cache</string>
+    <string name="clear_cache_dialog_message">Are you sure you want to delete all saved lessons?</string>
+    <string name="title_clear_cache_dialog">Please confirm</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>

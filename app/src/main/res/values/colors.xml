@@ -131,4 +131,6 @@
     <color name="stepic_cover">#EEEEEE</color>
 
     <color name="default_color_of_link">#0077CC</color>
+    <color name="windowBackground">#eeeeee</color>
+    <color name="background_material_light">#eeeeee</color>
 </resources>

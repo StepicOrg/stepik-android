@@ -4,10 +4,10 @@
     android:id="@+id/cv"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/stepic_white"
     android:clickable="true"
     android:focusable="true"
     android:foreground="@drawable/non_radius_foreground"
-    android:background="@color/stepic_white"
     android:orientation="vertical"
     app:cardCornerRadius="@dimen/guideline_tile_corner">
 
@@ -18,7 +18,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="120dp"
             android:baselineAligned="false"
             android:orientation="horizontal"
             android:padding="@dimen/guideline_left_right_padding_list_item">
@@ -28,15 +28,14 @@
                 android:id="@+id/course_icon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="3"
+                android:layout_weight="5"
                 android:src="@drawable/sample_course_icon" />
 
             <RelativeLayout
                 android:id="@+id/course_info_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical"
+                android:layout_weight="2"
                 android:paddingLeft="4dp">
 
                 <org.stepic.droid.view.custom.STextView
@@ -56,12 +55,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="first date and second date"
                     android:textColor="@color/stepic_weak_text"
                     android:textSize="@dimen/text_height" />
 
                 <org.stepic.droid.view.custom.STextView
-                    android:id="@+id/first_last_name"
+                    android:id="@+id/course_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_above="@id/course_date_interval"
@@ -75,7 +76,9 @@
 
             </RelativeLayout>
 
+            <include layout="@layout/load_imageview" />
         </LinearLayout>
+
         <View
             android:id="@+id/grey_bar"
             android:layout_width="match_parent"

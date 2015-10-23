@@ -6,10 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.view.View;
-import android.widget.ImageView;
 
-import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentStepBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Step;
@@ -19,9 +16,6 @@ import org.stepic.droid.util.resolvers.IStepResolver;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 public class StepFragmentAdapter extends FragmentStatePagerAdapter {
 
@@ -57,17 +51,5 @@ public class StepFragmentAdapter extends FragmentStatePagerAdapter {
     public Drawable getTabDrawable(int position) {
         Step step = mStepList.get(position);
         return mResolver.getDrawableForType(step.getBlock().getName(), false);
-    }
-
-    public static class TabHolder {
-        //now this class is useless for performance, but in future we will tune this.
-
-        @Bind(R.id.icon_for_step)
-        ImageView stepIcon;
-
-        public TabHolder(View v) {
-            ButterKnife.bind(this, v);
-        }
-
     }
 }

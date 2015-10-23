@@ -1,14 +1,21 @@
 package org.stepic.droid.core;
 
+import android.app.DownloadManager;
 import android.content.Context;
 
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
-import org.stepic.droid.util.SharedPreferenceHelper;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
+import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.store.DownloadManagerImpl;
+import org.stepic.droid.store.IDownloadManager;
+import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.resolvers.IStepResolver;
+import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.util.resolvers.StepTypeResolver;
+import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.web.HttpManager;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.IHttpManager;
@@ -82,5 +89,42 @@ public class StepicDefaultModule {
     @Singleton
     public IStepResolver provideStepResolver(Context context) {
         return new StepTypeResolver(context);
+    }
+
+    @Provides
+    @Singleton
+    public IVideoResolver provideVideoResolver(Context context,
+                                               Bus bus,
+                                               DatabaseManager dbOperationsCachedVideo) {
+        return new VideoResolver(context, bus, dbOperationsCachedVideo);
+    }
+
+    @Provides
+    @Singleton
+    public UserPreferences provideUserPrefs(Context context, SharedPreferenceHelper helper) {
+        return new UserPreferences(context, helper);
+    }
+
+    @Provides
+    @Singleton
+    public IDownloadManager provideDownloadManger(Context context,
+                                                  UserPreferences userPreferences,
+                                                  DownloadManager dm,
+                                                  Bus bus,
+                                                  IVideoResolver resolver,
+                                                  IApi api,
+                                                  DatabaseManager db) {
+        return new DownloadManagerImpl(context, userPreferences, dm, bus, resolver, api, db);
+    }
+
+    @Provides
+    public DownloadManager provideSystemDownloadManager(Context context) {
+        return (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+    }
+
+    @Singleton
+    @Provides
+    public DatabaseManager provideDbOperationCachedVideo(Context context) {
+        return new DatabaseManager(context);
     }
 }

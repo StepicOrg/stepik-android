@@ -11,6 +11,8 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.store.IDownloadManager;
+import org.stepic.droid.view.listeners.OnClickLoadListener;
 import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 
 import java.util.List;
@@ -21,11 +23,13 @@ import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
-public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionViewHolder> implements StepicOnClickItemListener {
+public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionViewHolder> implements StepicOnClickItemListener, OnClickLoadListener {
     private final static String SECTION_TITLE_DELIMETER = ". ";
 
     @Inject
     IScreenManager mScreenManager;
+    @Inject
+    IDownloadManager mDownloadManager;
 
     private List<Section> mSections;
     private Context mContext;
@@ -40,7 +44,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
     @Override
     public SectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.section_item, parent, false);
-        return new SectionViewHolder(v, this);
+        return new SectionViewHolder(v, this, this);
     }
 
     @Override
@@ -89,11 +93,21 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
     @Override
     public void onClick(int itemPosition) {
         if (itemPosition >= 0 && itemPosition < mSections.size()) {
+
             mScreenManager.showUnitsForSection(mContext, mSections.get(itemPosition));
         }
     }
 
+    @Override
+    public void onClickLoad(int itemPosition) {
+        if (itemPosition >= 0 && itemPosition < mSections.size()) {
+            mDownloadManager.addSection(mSections.get(itemPosition));
+        }
+    }
+
     public static class SectionViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.load_button)
+        View mLoadButton;
 
         @Bind(R.id.section_title)
         TextView sectionTitle;
@@ -115,7 +129,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         String beginDateString;
 
 
-        public SectionViewHolder(View itemView, final StepicOnClickItemListener listener) {
+        public SectionViewHolder(View itemView, final StepicOnClickItemListener listener, final OnClickLoadListener loadSectionListener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +137,13 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                 @Override
                 public void onClick(View v) {
                     listener.onClick(getAdapterPosition());
+                }
+            });
+
+            mLoadButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loadSectionListener.onClickLoad(getAdapterPosition());
                 }
             });
         }

@@ -13,7 +13,7 @@ import org.stepic.droid.events.courses.PreLoadCoursesEvent;
 import org.stepic.droid.events.courses.StartingGetCoursesFromDbEvent;
 import org.stepic.droid.events.courses.StartingSaveCoursesToDbEvent;
 import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
-import org.stepic.droid.store.operations.DbOperationsCourses;
+import org.stepic.droid.store.operations.DatabaseManager;
 
 public class MyCoursesFragment extends CoursesFragmentBase {
 
@@ -21,18 +21,12 @@ public class MyCoursesFragment extends CoursesFragmentBase {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                getAndShowDataFromCache();
-            }
-        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mTypeOfCourse = DbOperationsCourses.Table.enrolled;
+        mTypeOfCourse = DatabaseManager.Table.enrolled;
     }
 
 

@@ -5,7 +5,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.stepic.droid.store.structure.DBStructureCourses;
+import org.stepic.droid.store.structure.DbStructureCachedVideo;
+import org.stepic.droid.store.structure.DbStructureLesson;
 import org.stepic.droid.store.structure.DbStructureSections;
+import org.stepic.droid.store.structure.DbStructureUnit;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -18,6 +21,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         createCourseTable(db, DBStructureCourses.ENROLLED_COURSES);
         createCourseTable(db, DBStructureCourses.FEATURED_COURSES);
         createSectionTable(db, DbStructureSections.SECTIONS);
+        createCachedVideoTable(db, DbStructureCachedVideo.CACHED_VIDEO);
+        createUnitsDb(db, DbStructureUnit.UNITS);
+        createLessonsDb(db, DbStructureLesson.LESSONS);
     }
 
     @Override
@@ -26,6 +32,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DBStructureCourses.ENROLLED_COURSES);
         db.execSQL("DROP TABLE IF EXISTS " + DBStructureCourses.FEATURED_COURSES);
         db.execSQL("DROP TABLE IF EXISTS " + DbStructureSections.SECTIONS);
+        db.execSQL("DROP TABLE IF EXISTS " + DbStructureCachedVideo.CACHED_VIDEO);
+        db.execSQL("DROP TABLE IF EXISTS " + DbStructureUnit.UNITS);
+        db.execSQL("DROP TABLE IF EXISTS " + DbStructureLesson.LESSONS);
+
         onCreate(db);
 
     }
@@ -84,6 +94,69 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureSections.Column.IS_ACTIVE + " BOOLEAN, "
                 + DbStructureSections.Column.CREATE_DATE + " TEXT, "
                 + DbStructureSections.Column.UPDATE_DATE + " TEXT "
+
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createCachedVideoTable(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureCachedVideo.Column.VIDEO_ID + " LONG, "
+                + DbStructureCachedVideo.Column.URL + " TEXT "
+
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createUnitsDb(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureUnit.Column.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + DbStructureUnit.Column.UNIT_ID + " LONG, "
+                + DbStructureUnit.Column.SECTION + " LONG, "
+                + DbStructureUnit.Column.LESSON + " LONG, "
+                + DbStructureUnit.Column.ASSIGNMENTS + " TEXT, "
+                + DbStructureUnit.Column.POSITION + " INTEGER, "
+                + DbStructureUnit.Column.PROGRESS + " TEXT, "
+                + DbStructureUnit.Column.BEGIN_DATE + " TEXT, "
+                + DbStructureUnit.Column.END_DATE + " TEXT, "
+                + DbStructureUnit.Column.SOFT_DEADLINE + " TEXT, "
+                + DbStructureUnit.Column.HARD_DEADLINE + " TEXT, "
+                + DbStructureUnit.Column.GRADING_POLICY + " TEXT, "
+                + DbStructureUnit.Column.BEGIN_DATE_SOURCE + " TEXT, "
+                + DbStructureUnit.Column.END_DATE_SOURCE + " TEXT, "
+                + DbStructureUnit.Column.SOFT_DEADLINE_SOURCE + " TEXT, "
+                + DbStructureUnit.Column.HARD_DEADLINE_SOURCE + " TEXT, "
+                + DbStructureUnit.Column.GRADING_POLICY_SOURCE + " TEXT, "
+                + DbStructureUnit.Column.IS_ACTIVE + " BOOLEAN, "
+                + DbStructureUnit.Column.CREATE_DATE + " TEXT, "
+                + DbStructureUnit.Column.UPDATE_DATE + " TEXT "
+
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createLessonsDb(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureLesson.Column.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + DbStructureLesson.Column.LESSON_ID + " LONG, "
+                + DbStructureLesson.Column.STEPS + " TEXT, "
+                + DbStructureLesson.Column.IS_FEATURED + " BOOLEAN, "
+                + DbStructureLesson.Column.IS_PRIME + " BOOLEAN, "
+                + DbStructureLesson.Column.PROGRESS + " TEXT, "
+                + DbStructureLesson.Column.OWNER + " INTEGER, "
+                + DbStructureLesson.Column.SUBSCRIPTIONS + " TEXT, "
+                + DbStructureLesson.Column.VIEWED_BY + " INTEGER, "
+                + DbStructureLesson.Column.PASSED_BY + " INTEGER, "
+                + DbStructureLesson.Column.DEPENDENCIES + " TEXT, "
+                + DbStructureLesson.Column.IS_PUBLIC + " BOOLEAN, "
+                + DbStructureLesson.Column.TITLE + " TEXT, "
+                + DbStructureLesson.Column.SLUG + " TEXT, "
+                + DbStructureLesson.Column.CREATE_DATE + " TEXT, "
+                + DbStructureLesson.Column.LEARNERS_GROUP + " TEXT, "
+                + DbStructureLesson.Column.TEACHER_GROUP + " TEXT "
 
                 + ")";
         db.execSQL(sql);

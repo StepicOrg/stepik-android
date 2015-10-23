@@ -7,7 +7,7 @@ import org.stepic.droid.core.IShell;
 import org.stepic.droid.events.courses.FinishingSaveCoursesToDbEvent;
 import org.stepic.droid.events.courses.StartingSaveCoursesToDbEvent;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.store.operations.DbOperationsCourses;
+import org.stepic.droid.store.operations.DatabaseManager;
 
 import java.util.List;
 
@@ -19,12 +19,14 @@ public class ToDbCoursesTask extends StepicTask<Void, Void, Void> {
     IShell mShell;
     @Inject
     Bus bus;
+    @Inject
+    DatabaseManager mDatabaseManager;
 
     private List<Course> mCourses;
-    private DbOperationsCourses.Table mCourseType;
+    private DatabaseManager.Table mCourseType;
     private int mPage;
 
-    public ToDbCoursesTask(List<Course> courses, DbOperationsCourses.Table type, int page) {
+    public ToDbCoursesTask(List<Course> courses, DatabaseManager.Table type, int page) {
         super(MainApplication.getAppContext());
         MainApplication.component().inject(this);
 
@@ -37,17 +39,11 @@ public class ToDbCoursesTask extends StepicTask<Void, Void, Void> {
     @Override
     protected Void doInBackgroundBody(Void... params) throws Exception {
 
-        DbOperationsCourses dbOperationsCourses = mShell.getDbOperationsCourses(mCourseType);
-        dbOperationsCourses.open();
-        try {
-            if (mPage == 1)
-                dbOperationsCourses.clearCache();
-            for (Course courseItem : mCourses) {
-                if (!dbOperationsCourses.isCourseInDB(courseItem))
-                    dbOperationsCourses.addCourse(courseItem);
-            }
-        } finally {
-            dbOperationsCourses.close();
+        if (mPage == 1)
+            mDatabaseManager.clearCacheCourses(mCourseType);
+        for (Course courseItem : mCourses) {
+            if (!mDatabaseManager.isCourseInDB(courseItem, mCourseType))
+                mDatabaseManager.addCourse(courseItem, mCourseType);
         }
         return null;
 

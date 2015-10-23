@@ -16,15 +16,7 @@
             android:id="@+id/viewpager"
             layout="@layout/viewpager_steps" />
 
-        <ProgressBar
-            android:id="@+id/load_steps"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:indeterminateDrawable="@drawable/login_progress"
-            android:visibility="gone" />
-
-
+        <include layout="@layout/progress_bar_on_empty_screen" />
     </FrameLayout>
 
 </LinearLayout>

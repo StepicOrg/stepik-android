@@ -5,7 +5,7 @@
 //import org.stepic.droid.base.MainApplication;
 //import org.stepic.droid.core.IShell;
 //import org.stepic.droid.model.Section;
-//import org.stepic.droid.store.operations.DbOperationsSections;
+//import org.stepic.droid.store.operations.DbManagerSections;
 //import org.stepic.droid.web.IApi;
 //import org.stepic.droid.web.SectionsStepicResponse;
 //
@@ -39,7 +39,7 @@
 //            sectionList = stepicResponse.getSections();
 //        } finally {
 //            if (sectionList != null) {
-//                DbOperationsSections dbOperationsSections = mShell.getDbOperationsSection();
+//                DbManagerSections dbOperationsSections = mShell.getDbOperationsSection();
 //
 //                try {
 //                    dbOperationsSections.open();
@@ -65,7 +65,7 @@
 //    }
 //
 //    private List<Section> getCachedSectionsForCourse() {
-//        DbOperationsSections dbOperationSections = mShell.getDbOperationsSection();
+//        DbManagerSections dbOperationSections = mShell.getDbOperationsSection();
 //
 //        try {
 //            dbOperationSections.open();

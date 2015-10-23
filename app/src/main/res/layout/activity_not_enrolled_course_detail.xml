@@ -3,15 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
     android:orientation="vertical"
     android:paddingBottom="8dp">
 
 
-
     <include
         android:id="@+id/appBarLayout"
-        layout="@layout/appbar_only_toolbar"/>
+        layout="@layout/appbar_only_toolbar" />
+
     <ScrollView
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
@@ -19,7 +18,7 @@
         android:layout_above="@+id/join_course_layout"
         android:layout_below="@id/appBarLayout"
         android:layout_marginTop="2dp"
-        android:background="@android:color/white">
+        android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,7 +29,7 @@
                 android:id="@+id/intro_video"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:src="@drawable/vimeo_placeholder" />
+                android:src="@drawable/video_placeholder" />
 
             <LinearLayout
                 android:id="@+id/detail_course_info"
@@ -82,7 +81,7 @@
                     android:layout_height="wrap_content" />
 
 
-                <RelativeLayout
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -93,15 +92,8 @@
                         android:layout_marginTop="2dp"
                         android:stretchColumns="0" />
 
-                    <ProgressBar
-                        android:id="@+id/load_instructors_spinner"
-                        android:layout_width="30dp"
-                        android:layout_height="match_parent"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:indeterminateDrawable="@drawable/login_progress"
-                        android:visibility="gone" />
-                </RelativeLayout>
+                    <include layout="@layout/progress_bar_on_empty_screen" />
+                </FrameLayout>
 
             </LinearLayout>
         </LinearLayout>
@@ -112,7 +104,6 @@
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="8dp"
         android:background="@drawable/bt_signin_active"
         android:contentDescription="@string/join_course">
 

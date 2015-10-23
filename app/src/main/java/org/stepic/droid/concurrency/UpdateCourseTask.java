@@ -3,7 +3,7 @@ package org.stepic.droid.concurrency;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.store.operations.DbOperationsCourses;
+import org.stepic.droid.store.operations.DatabaseManager;
 
 import javax.inject.Inject;
 
@@ -11,10 +11,13 @@ public class UpdateCourseTask extends StepicTask<Void, Void, Void> {
     @Inject
     IShell mShell;
 
-    private final DbOperationsCourses.Table mCourseType;
+    @Inject
+    DatabaseManager mDatabaseManager;
+
+    private final DatabaseManager.Table mCourseType;
     private Course mCourse;
 
-    public UpdateCourseTask(DbOperationsCourses.Table mCourseType, Course course) {
+    public UpdateCourseTask(DatabaseManager.Table mCourseType, Course course) {
         super(MainApplication.getAppContext());
         this.mCourseType = mCourseType;
         mCourse = course;
@@ -23,14 +26,7 @@ public class UpdateCourseTask extends StepicTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackgroundBody(Void... params) throws Exception {
-        DbOperationsCourses dbOperationsCourses = mShell.getDbOperationsCourses(mCourseType);
-        dbOperationsCourses.open();
-        try {
-            dbOperationsCourses.deleteCourse(mCourse);
-            dbOperationsCourses.addCourse(mCourse);
-        } finally {
-            dbOperationsCourses.close();
-        }
+        mDatabaseManager.addCourse(mCourse, mCourseType);
         return null;
     }
 }

@@ -8,6 +8,7 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.R;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.store.operations.DatabaseManager;
 
 import javax.inject.Inject;
 
@@ -15,6 +16,9 @@ import butterknife.ButterKnife;
 
 public abstract class FragmentActivityBase extends AppCompatActivity {
 
+
+    @Inject
+    protected DatabaseManager mDbManager;
 
     @Inject
     protected IShell mShell;

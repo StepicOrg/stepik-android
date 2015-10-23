@@ -15,16 +15,16 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.FragmentActivityBase;
+import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.model.Profile;
-import org.stepic.droid.store.operations.DbOperationsCourses;
-import org.stepic.droid.util.SharedPreferenceHelper;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
+import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.view.fragments.AvailableCourses;
 import org.stepic.droid.view.fragments.BestLessons;
 import org.stepic.droid.view.fragments.FindCoursesFragment;
 import org.stepic.droid.view.fragments.MyCoursesFragment;
-import org.stepic.droid.view.fragments.MySettings;
+import org.stepic.droid.view.fragments.SettingsFragment;
 import org.stepic.droid.web.StepicProfileResponse;
 
 import butterknife.Bind;
@@ -77,7 +77,6 @@ public class MainFeedActivity extends FragmentActivityBase {
                     Profile profile = response.body().getProfile();
 
                     helper.storeProfile(profile);
-                    //todo: store profile
                     showProfile(profile);
                 }
 
@@ -86,7 +85,6 @@ public class MainFeedActivity extends FragmentActivityBase {
                     // FIXME: 06.10.15 Sometimes profile is not load, investigate it! (maybe just set for update when create this activity)
                     mProfileImage.setVisibility(View.INVISIBLE);
                     mUserNameTextView.setText("");
-//                    throw new RuntimeException(t.getMessage());
 
                 }
             });
@@ -130,14 +128,13 @@ public class MainFeedActivity extends FragmentActivityBase {
                         return true;
                     case R.id.my_settings:
                         setTitle(R.string.settings_title);
-                        setFragment(new MySettings());
+                        setFragment(new SettingsFragment());
                         return true;
                     case R.id.logout_item:
                         //todo: add 'Are you sure?" dialog
                         SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
                         helper.deleteAuthInfo();
-                        DbOperationsCourses dbOperationsCourses = mShell.getDbOperationsCourses(null);
-                        dbOperationsCourses.dropDatabase();
+                        mDbManager.clearCacheCourses(DatabaseManager.Table.enrolled);
                         mShell.getScreenProvider().showLaunchScreen(MainFeedActivity.this, false);
                         return true;
 
@@ -166,7 +163,7 @@ public class MainFeedActivity extends FragmentActivityBase {
         //Setting the actionbarToggle to drawer layout
         mDrawerLayout.setDrawerListener(actionBarDrawerToggle);
 
-        //calling sync state is necessay or else your hamburger icon wont show up
+        //calling sync state is necessary or else your hamburger icon wont show up
         actionBarDrawerToggle.syncState();
 
 

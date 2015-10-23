@@ -23,8 +23,8 @@ public class Section implements Serializable, Parcelable {
 
     private DateTimeFormatter mFormatForView;
 
-    private int id;
-    private int course; // course id
+    private long id;
+    private long course; // course id
     private long[] units;
     private int position;
     private String progress;
@@ -81,19 +81,19 @@ public class Section implements Serializable, Parcelable {
     }
 
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getCourse() {
+    public long getCourse() {
         return course;
     }
 
-    public void setCourse(int course) {
+    public void setCourse(long course) {
         this.course = course;
     }
 
@@ -249,8 +249,8 @@ public class Section implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
-        dest.writeInt(this.course);
+        dest.writeLong(this.id);
+        dest.writeLong(this.course);
         dest.writeLongArray(this.units);
         dest.writeInt(this.position);
         dest.writeString(this.progress);
@@ -278,8 +278,8 @@ public class Section implements Serializable, Parcelable {
     }
 
     private Section(Parcel in) {
-        this.id = in.readInt();
-        this.course = in.readInt();
+        this.id = in.readLong();
+        this.course = in.readLong();
         this.units = in.createLongArray();
         this.position = in.readInt();
         this.progress = in.readString();

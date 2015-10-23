@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:layout_height="match_parent">
 
 
     <include
         android:id="@+id/appBarLayout"
         layout="@layout/appbar_only_toolbar" />
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/units_recycler_view"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/appBarLayout"
-        android:background="@color/stepic_cover"
-        android:clipToPadding="false"
-        android:scrollbarStyle="outsideOverlay" />
-
-    <ProgressBar
-        android:id="@+id/load_sections"
-        android:layout_width="30dp"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:indeterminateDrawable="@drawable/login_progress"
-        android:visibility="gone" />
+        android:layout_below="@+id/appBarLayout">
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout_units"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/units_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:scrollbarStyle="outsideOverlay" />
+
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <include layout="@layout/progress_bar_on_empty_screen"/>
+    </FrameLayout>
 
 
 </RelativeLayout>

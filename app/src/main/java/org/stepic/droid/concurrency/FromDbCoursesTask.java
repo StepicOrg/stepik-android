@@ -8,7 +8,7 @@ import org.stepic.droid.core.IShell;
 import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
 import org.stepic.droid.events.courses.StartingGetCoursesFromDbEvent;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.store.operations.DbOperationsCourses;
+import org.stepic.droid.store.operations.DatabaseManager;
 
 import java.util.List;
 
@@ -20,11 +20,14 @@ public class FromDbCoursesTask extends StepicTask<Void, Void, List<Course>> {
     IShell mShell;
 
     @Inject
-    Bus bus;
+    Bus mBus;
 
-    private DbOperationsCourses.Table mCourseType;
+    @Inject
+    DatabaseManager dbOperationsCourses;
 
-    public FromDbCoursesTask(@NotNull DbOperationsCourses.Table courseType) {
+    private DatabaseManager.Table mCourseType;
+
+    public FromDbCoursesTask(@NotNull DatabaseManager.Table courseType) {
         super(MainApplication.getAppContext());
 
         MainApplication.component(mContext).inject(this);
@@ -34,26 +37,20 @@ public class FromDbCoursesTask extends StepicTask<Void, Void, List<Course>> {
 
     @Override
     protected List<Course> doInBackgroundBody(Void... params) throws Exception {
-        DbOperationsCourses dbOperationsCourses = mShell.getDbOperationsCourses(mCourseType);
-        dbOperationsCourses.open();
         List<Course> fromCache = null;
-        try {
-            fromCache = dbOperationsCourses.getAllCourses();
-        } finally {
-            dbOperationsCourses.close();
-        }
+        fromCache = dbOperationsCourses.getAllCourses(mCourseType);
         return fromCache;
     }
 
     @Override
     protected void onPreExecute() {
-        bus.post(new StartingGetCoursesFromDbEvent(mCourseType));
+        mBus.post(new StartingGetCoursesFromDbEvent(mCourseType));
         super.onPreExecute();
     }
 
     @Override
     protected void onPostExecute(AsyncResultWrapper<List<Course>> listAsyncResultWrapper) {
         super.onPostExecute(listAsyncResultWrapper);
-        bus.post(new FinishingGetCoursesFromDbEvent(mCourseType, listAsyncResultWrapper.getResult()));
+        mBus.post(new FinishingGetCoursesFromDbEvent(mCourseType, listAsyncResultWrapper.getResult()));
     }
 }

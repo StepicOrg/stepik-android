@@ -3,6 +3,8 @@ package org.stepic.droid.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.stepic.droid.base.MainApplication;
+
 import java.io.Serializable;
 
 public class Block implements Parcelable, Serializable {
@@ -42,7 +44,7 @@ public class Block implements Parcelable, Serializable {
     protected Block(Parcel in) {
         this.name = in.readString();
         this.text = in.readString();
-        this.video = in.readParcelable(Video.class.getClassLoader());
+        this.video = in.readParcelable(MainApplication.getAppContext().getClassLoader());
     }
 
     public static final Creator<Block> CREATOR = new Creator<Block>() {

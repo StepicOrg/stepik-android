@@ -38,4 +38,15 @@
     <string name="syllabus_title">Содержание</string>
     <string name="units_lessons_title">Уроки</string>
     <string name="steps_title">Урок</string>
+    <string name="not_available_lesson">Урок недоступен сейчас</string>
+    <string name="not_video_player_error">Пожалуйста, установите видеоплеер</string>
+    <string name="turn_on_permission">Включите доступ к памяти для приложения в настройках телефона</string>
+    <string name="description_download">Кеширование Stepic урока</string>
+    <string name="cache_title">Кэш</string>
+    <string name="clear_cache_title">Очистить кэш</string>
+    <string name="wi_fi_setting">Загружать только по Wi-Fi </string>
+    <string name="clear_cache_dialog_message">Вы уверены, что хотите удалить все сохраненные уроки?</string>
+    <string name="title_clear_cache_dialog">Подтверждение</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
 </resources>
