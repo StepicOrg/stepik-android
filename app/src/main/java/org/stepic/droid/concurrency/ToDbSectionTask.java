@@ -32,9 +32,7 @@ public class ToDbSectionTask extends StepicTask<Void, Void, Void> {
     @Override
     protected Void doInBackgroundBody(Void... params) throws Exception {
         for (Section sectionItem : mSectionList) {
-            if (!mDatabaseManager.isSectionInDb(sectionItem)) {
                 mDatabaseManager.addSection(sectionItem);
-            }
         }
         return null;
     }

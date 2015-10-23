@@ -23,6 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         createSectionTable(db, DbStructureSections.SECTIONS);
         createCachedVideoTable(db, DbStructureCachedVideo.CACHED_VIDEO);
         createUnitsDb(db, DbStructureUnit.UNITS);
+        createLessonsDb(db, DbStructureLesson.LESSONS);
     }
 
     @Override
@@ -33,6 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DbStructureSections.SECTIONS);
         db.execSQL("DROP TABLE IF EXISTS " + DbStructureCachedVideo.CACHED_VIDEO);
         db.execSQL("DROP TABLE IF EXISTS " + DbStructureUnit.UNITS);
+        db.execSQL("DROP TABLE IF EXISTS " + DbStructureLesson.LESSONS);
 
         onCreate(db);
 

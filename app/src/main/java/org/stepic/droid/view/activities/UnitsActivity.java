@@ -82,6 +82,11 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
             updateUnits();
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.stepic_brand_primary,
+                R.color.stepic_orange_carrot,
+                R.color.stepic_blue_ribbon);
+
 
         mSwipeRefreshLayout.post(new Runnable() {
             @Override

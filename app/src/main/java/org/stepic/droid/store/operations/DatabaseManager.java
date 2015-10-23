@@ -129,6 +129,7 @@ public class DatabaseManager extends DbManagerBase {
     public void addSection(Section section) {
         try {
             open();
+            if (isSectionInDb(section)) return;
             ContentValues values = new ContentValues();
 
             values.put(DbStructureSections.Column.SECTION_ID, section.getId());
@@ -230,7 +231,7 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
-    public Lesson getLessonOfUnit (Unit unit) {
+    public Lesson getLessonOfUnit(Unit unit) {
         try {
             open();
 
@@ -252,21 +253,16 @@ public class DatabaseManager extends DbManagerBase {
     }
 
 
-    public boolean isSectionInDb(Section section) {
-        try {
-            open();
+    private boolean isSectionInDb(Section section) {
 
-            String Query = "Select * from " + DbStructureSections.SECTIONS + " where " + DbStructureSections.Column.SECTION_ID + " = " + section.getId();
-            Cursor cursor = database.rawQuery(Query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
+        String Query = "Select * from " + DbStructureSections.SECTIONS + " where " + DbStructureSections.Column.SECTION_ID + " = " + section.getId();
+        Cursor cursor = database.rawQuery(Query, null);
+        if (cursor.getCount() <= 0) {
             cursor.close();
-            return true;
-        } finally {
-            close();
+            return false;
         }
+        cursor.close();
+        return true;
     }
 
     public void addVideo(CachedVideo cachedVideo) {
@@ -389,6 +385,8 @@ public class DatabaseManager extends DbManagerBase {
     public void addUnit(Unit unit) {
         try {
             open();
+            if (isUnitInDb(unit)) return;
+
             ContentValues values = new ContentValues();
 
             values.put(DbStructureUnit.Column.UNIT_ID, unit.getId());
@@ -422,6 +420,8 @@ public class DatabaseManager extends DbManagerBase {
     public void addLesson(Lesson lesson) {
         try {
             open();
+            if (isLessonInDb(lesson)) return;
+
             ContentValues values = new ContentValues();
 
             values.put(DbStructureLesson.Column.LESSON_ID, lesson.getId());
@@ -549,6 +549,28 @@ public class DatabaseManager extends DbManagerBase {
         return true;
     }
 
+    private boolean isLessonInDb(Lesson lesson) {
+        String Query = "Select * from " + DbStructureLesson.LESSONS + " where " + DbStructureLesson.Column.LESSON_ID + " = " + lesson.getId();
+        Cursor cursor = database.rawQuery(Query, null);
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
+
+    private boolean isUnitInDb(Unit unit) {
+        String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.UNIT_ID + " = " + unit.getId();
+        Cursor cursor = database.rawQuery(Query, null);
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
+
 
     private Cursor getCachedVideosCursor() {
         return database.query(DbStructureCachedVideo.CACHED_VIDEO, DbStructureCachedVideo.getUsedColumns(),
@@ -572,6 +594,7 @@ public class DatabaseManager extends DbManagerBase {
         int columnIndexHardDeadline = cursor.getColumnIndex(DbStructureSections.Column.HARD_DEADLINE);
         int columnIndexCourseId = cursor.getColumnIndex(DbStructureSections.Column.COURSE);
         int columnIndexPosition = cursor.getColumnIndex(DbStructureSections.Column.POSITION);
+        int columnIndexUnits = cursor.getColumnIndex(DbStructureSections.Column.UNITS);
 
         section.setId(cursor.getLong(columnIndexId));
         section.setTitle(cursor.getString(columnIndexTitle));
@@ -582,6 +605,7 @@ public class DatabaseManager extends DbManagerBase {
         section.setHard_deadline(cursor.getString(columnIndexHardDeadline));
         section.setCourse(cursor.getLong(columnIndexCourseId));
         section.setPosition(cursor.getInt(columnIndexPosition));
+        section.setUnits(DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexUnits)));
 
         return section;
     }
