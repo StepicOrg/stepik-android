@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/load_progressbar"
+    android:layout_width="30dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:indeterminateDrawable="@drawable/login_progress"
+    android:visibility="gone" />

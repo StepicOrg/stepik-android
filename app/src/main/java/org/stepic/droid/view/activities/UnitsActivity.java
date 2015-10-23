@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 
 import com.squareup.otto.Subscribe;
 
@@ -44,9 +44,9 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     @Bind(R.id.units_recycler_view)
     RecyclerView mUnitsRecyclerView;
-//
-//    @Bind(R.id.load_sections)
-//    ProgressBar mProgressBar;
+
+    @Bind(R.id.load_progressbar)
+    ProgressBar mProgressBar;
 
     @Bind(R.id.toolbar)
     android.support.v7.widget.Toolbar mToolbar;
@@ -60,6 +60,9 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     private FromDbUnitLessonTask mFromDbTask;
     private ToDbUnitLessonTask mToDbTask;
 
+    boolean isScreenEmpty;
+    boolean firstLoad;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,8 +70,8 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         ButterKnife.bind(this);
         overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         hideSoftKeypad();
-
-
+        isScreenEmpty = true;
+        firstLoad = true;
         mSection = (Section) (getIntent().getExtras().get(AppConstants.KEY_SECTION_BUNDLE));
 
         setSupportActionBar(mToolbar);
@@ -89,20 +92,11 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
                 R.color.stepic_orange_carrot,
                 R.color.stepic_blue_ribbon);
 
-
-        ProgressHelper.activate(mSwipeRefreshLayout);
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                getAndShowUnitsFromCache();
-            }
-        });
-
-
+        ProgressHelper.activate(mProgressBar);
+        getAndShowUnitsFromCache();
     }
 
     private void getAndShowUnitsFromCache() {
-        ProgressHelper.activate(mSwipeRefreshLayout);
         mFromDbTask = new FromDbUnitLessonTask(mSection);
         mFromDbTask.execute();
     }
@@ -114,7 +108,6 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     }
 
     private void updateUnits() {
-        ProgressHelper.activate(mSwipeRefreshLayout);
         mShell.getApi().getUnits(mSection.getUnits()).enqueue(new Callback<UnitStepicResponse>() {
             @Override
             public void onResponse(Response<UnitStepicResponse> response, Retrofit retrofit) {
@@ -135,7 +128,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
 
     @Subscribe
-    public void onSuccessDownload(SuccessLoadUnitsEvent e) {
+    public void onSuccessLoadUnits(SuccessLoadUnitsEvent e) {
         if (mSection == null || e.getmSection() == null
                 || e.getmSection().getId() != mSection.getId())
             return;
@@ -167,8 +160,6 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
                 || e.getSection().getId() != mSection.getId())
             return;
         saveToDb(e.getUnits(), e.getResponse().body().getLessons());
-
-//        showUnitsLessons(e.getUnits(), e.getResponse().body().getLessons());
     }
 
     private void saveToDb(List<Unit> unitList, List<Lesson> lessonList) {
@@ -177,12 +168,15 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     }
 
     private void showUnitsLessons(List<Unit> units, List<Lesson> lessons) {
+
         mLessonList.clear();
         mLessonList.addAll(lessons);
 
         mUnitList.clear();
         mUnitList.addAll(units);
         mAdapter.notifyDataSetChanged();
+
+        dismiss();
     }
 
 
@@ -191,10 +185,17 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         if (mSection == null || e.getmSection() == null
                 || e.getmSection().getId() != mSection.getId())
             return;
-
-        ProgressHelper.dismiss(mSwipeRefreshLayout);
+        dismiss();
     }
 
+    private void dismiss() {
+        if (isScreenEmpty) {
+            ProgressHelper.dismiss(mProgressBar);
+            isScreenEmpty = false;
+        } else {
+            ProgressHelper.dismiss(mSwipeRefreshLayout);
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -221,14 +222,28 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     @Override
     public void onRefresh() {
+        ProgressHelper.activate(mSwipeRefreshLayout);
         updateUnits();
     }
 
     @Subscribe
     public void onSuccessLoadFromDb(LoadedFromDbUnitsLessonsEvent e) {
-        if (mSection == e.getSection()) {
+        if (mSection != e.getSection()) return;
+        if (e.getUnits() != null && e.getLessons() != null && e.getUnits().size() != 0 && e.getLessons().size() != 0) {
             showUnitsLessons(e.getUnits(), e.getLessons());
-            ProgressHelper.dismiss(mSwipeRefreshLayout);
+            if (firstLoad) {
+                firstLoad = false;
+                mSwipeRefreshLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ProgressHelper.activate(mSwipeRefreshLayout);
+                        updateUnits();
+                    }
+                });
+            }
+        } else {
+            //db doesn't have it, load from web with empty screen
+            updateUnits();
         }
     }
 
@@ -236,7 +251,6 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     public void onFinishSaveToDb(UnitLessonSavedEvent e) {
         if (e.getmSection() == mSection) {
             getAndShowUnitsFromCache();
-            ProgressHelper.dismiss(mSwipeRefreshLayout);
         }
     }
 }

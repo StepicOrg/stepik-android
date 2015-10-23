@@ -47,7 +47,7 @@ public class StepsActivity extends FragmentActivityBase {
     @Bind(R.id.tabs)
     TabLayout mTabLayout;
 
-    @Bind(R.id.load_steps)
+    @Bind(R.id.load_progressbar)
     ProgressBar mProgressBar;
 
     @BindString(R.string.not_available_lesson)

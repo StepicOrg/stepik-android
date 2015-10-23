@@ -49,6 +49,6 @@ public class ToDbUnitLessonTask extends StepicTask<Void, Void, Void> {
     @Override
     protected void onSuccess(Void aVoid) {
         super.onSuccess(aVoid);
-        mBus.post(new UnitLessonSavedEvent(mSection));
+        mBus.post(new UnitLessonSavedEvent(mSection, unitList, lessonList));
     }
 }
