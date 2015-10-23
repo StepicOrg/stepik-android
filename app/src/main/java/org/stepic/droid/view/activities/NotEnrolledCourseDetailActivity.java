@@ -58,7 +58,7 @@ public class NotEnrolledCourseDetailActivity extends FragmentActivityBase {
     @Bind(R.id.instructors_carousel)
     RecyclerView mInstructorsCarousel;
 
-    @Bind(R.id.load_instructors_spinner)
+    @Bind(R.id.load_progressbar)
     ProgressBar mInstructorsProgressBar;
 
     @Bind(R.id.summary)

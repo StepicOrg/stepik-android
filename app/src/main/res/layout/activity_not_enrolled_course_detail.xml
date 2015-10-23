@@ -7,18 +7,18 @@
     android:paddingBottom="8dp">
 
 
-
     <include
         android:id="@+id/appBarLayout"
-        layout="@layout/appbar_only_toolbar"/>
+        layout="@layout/appbar_only_toolbar" />
+
     <ScrollView
-        android:clipToPadding="false"
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/join_course_layout"
         android:layout_below="@id/appBarLayout"
-        android:layout_marginTop="2dp">
+        android:layout_marginTop="2dp"
+        android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content" />
 
 
-                <RelativeLayout
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -92,15 +92,8 @@
                         android:layout_marginTop="2dp"
                         android:stretchColumns="0" />
 
-                    <ProgressBar
-                        android:id="@+id/load_instructors_spinner"
-                        android:layout_width="30dp"
-                        android:layout_height="match_parent"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:indeterminateDrawable="@drawable/login_progress"
-                        android:visibility="gone" />
-                </RelativeLayout>
+                    <include layout="@layout/progress_bar_on_empty_screen" />
+                </FrameLayout>
 
             </LinearLayout>
         </LinearLayout>

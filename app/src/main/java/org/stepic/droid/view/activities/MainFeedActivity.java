@@ -77,7 +77,6 @@ public class MainFeedActivity extends FragmentActivityBase {
                     Profile profile = response.body().getProfile();
 
                     helper.storeProfile(profile);
-                    //todo: store profile
                     showProfile(profile);
                 }
 
@@ -86,7 +85,6 @@ public class MainFeedActivity extends FragmentActivityBase {
                     // FIXME: 06.10.15 Sometimes profile is not load, investigate it! (maybe just set for update when create this activity)
                     mProfileImage.setVisibility(View.INVISIBLE);
                     mUserNameTextView.setText("");
-//                    throw new RuntimeException(t.getMessage());
 
                 }
             });
