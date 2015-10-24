@@ -8,9 +8,10 @@ public class CachedVideo {
     public CachedVideo() {}
 
 
-    public CachedVideo (long videoId, String url) {
+    public CachedVideo (long videoId, String url, String thumbnail_url) {
         this.videoId = videoId;
         this.url = url;
+        this.thumbnail = thumbnail_url;
     }
 
     public String getThumbnail() {

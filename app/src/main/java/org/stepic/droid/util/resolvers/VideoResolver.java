@@ -41,7 +41,7 @@ public class VideoResolver implements IVideoResolver {
         if (urlList == null || urlList.size() == 0) return null;
 
         String localPath = null;
-        localPath = mDbOperations.getPathIfExist(video);
+        localPath = mDbOperations.getPathToVideoIfExist(video);
 
         if (localPath != null && checkExistingOnDisk(localPath)) {
             return localPath;
