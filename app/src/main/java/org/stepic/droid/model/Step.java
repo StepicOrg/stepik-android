@@ -8,8 +8,8 @@ import org.stepic.droid.base.MainApplication;
 import java.io.Serializable;
 
 public class Step implements Parcelable, Serializable {
-    private int id;
-    private int lesson;
+    private long id;
+    private long lesson;
     private String status;
     private Block block;
     private String progress;
@@ -19,11 +19,11 @@ public class Step implements Parcelable, Serializable {
     private String create_date;
     private String update_date;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public int getLesson() {
+    public long getLesson() {
         return lesson;
     }
 
@@ -66,8 +66,8 @@ public class Step implements Parcelable, Serializable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
-        dest.writeInt(this.lesson);
+        dest.writeLong(this.id);
+        dest.writeLong(this.lesson);
         dest.writeString(this.status);
         dest.writeParcelable(this.block, flags);
         dest.writeString(this.progress);
@@ -82,8 +82,8 @@ public class Step implements Parcelable, Serializable {
     }
 
     protected Step(Parcel in) {
-        this.id = in.readInt();
-        this.lesson = in.readInt();
+        this.id = in.readLong();
+        this.lesson = in.readLong();
         this.status = in.readString();
         this.block = in.readParcelable(MainApplication.getAppContext().getClassLoader());
         this.progress = in.readString();

@@ -5,9 +5,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.stepic.droid.store.structure.DBStructureCourses;
+import org.stepic.droid.store.structure.DbStructureBlock;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
 import org.stepic.droid.store.structure.DbStructureLesson;
 import org.stepic.droid.store.structure.DbStructureSections;
+import org.stepic.droid.store.structure.DbStructureStep;
 import org.stepic.droid.store.structure.DbStructureUnit;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -24,6 +26,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         createCachedVideoTable(db, DbStructureCachedVideo.CACHED_VIDEO);
         createUnitsDb(db, DbStructureUnit.UNITS);
         createLessonsDb(db, DbStructureLesson.LESSONS);
+        createStepsDb(db, DbStructureStep.STEPS);
+        createBlocksDb(db, DbStructureBlock.BLOCKS);
     }
 
     @Override
@@ -35,6 +39,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DbStructureCachedVideo.CACHED_VIDEO);
         db.execSQL("DROP TABLE IF EXISTS " + DbStructureUnit.UNITS);
         db.execSQL("DROP TABLE IF EXISTS " + DbStructureLesson.LESSONS);
+        db.execSQL("DROP TABLE IF EXISTS " + DbStructureStep.STEPS);
+        db.execSQL("DROP TABLE IF EXISTS " + DbStructureBlock.BLOCKS);
 
         onCreate(db);
 
@@ -103,7 +109,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String sql = "CREATE TABLE " + name
                 + " ("
                 + DbStructureCachedVideo.Column.VIDEO_ID + " LONG, "
-                + DbStructureCachedVideo.Column.URL + " TEXT "
+                + DbStructureCachedVideo.Column.STEP_ID + " LONG, "
+                + DbStructureCachedVideo.Column.URL + " TEXT, "
+                + DbStructureCachedVideo.Column.THUMBNAIL + " TEXT "
 
                 + ")";
         db.execSQL(sql);
@@ -161,4 +169,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ")";
         db.execSQL(sql);
     }
+
+    private void createStepsDb(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureStep.Column.STEP_ID + " LONG, "
+                + DbStructureStep.Column.LESSON_ID + " LONG, "
+                + DbStructureStep.Column.STATUS + " TEXT, "
+                + DbStructureStep.Column.PROGRESS + " TEXT, "
+                + DbStructureStep.Column.SUBSCRIPTIONS + " TEXT, "
+                + DbStructureStep.Column.VIEWED_BY + " LONG, "
+                + DbStructureStep.Column.PASSED_BY + " LONG, "
+                + DbStructureStep.Column.CREATE_DATE + " TEXT, "
+                + DbStructureStep.Column.UPDATE_DATE + " TEXT "
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createBlocksDb(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureBlock.Column.STEP_ID + " LONG, "
+                + DbStructureBlock.Column.NAME + " TEXT, "
+                + DbStructureBlock.Column.TEXT + " TEXT "
+                    + ")";
+        db.execSQL(sql);
+    }
+
+
 }
