@@ -78,7 +78,7 @@ public class DownloadManagerImpl implements IDownloadManager {
                     mDmIdToVideoId.remove(referenceId);
                     File downloadFolderAndFile = new File(mUserPrefs.getDownloadFolder(), video_id + "");
                     String path = Uri.fromFile(downloadFolderAndFile).getPath();
-                    CachedVideo cachedVideo = new CachedVideo(video_id, path);
+                    CachedVideo cachedVideo = new CachedVideo(video_id, path, null);
                     mDb.addVideo(cachedVideo);
                 }
             }

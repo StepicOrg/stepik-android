@@ -270,6 +270,7 @@ public class DatabaseManager extends DbManagerBase {
 
             values.put(DbStructureCachedVideo.Column.VIDEO_ID, cachedVideo.getVideoId());
             values.put(DbStructureCachedVideo.Column.URL, cachedVideo.getUrl());
+            values.put(DbStructureCachedVideo.Column.THUMBNAIL, cachedVideo.getThumbnail());
 
             database.insert(DbStructureCachedVideo.CACHED_VIDEO, null, values);
         } finally {
@@ -352,7 +353,7 @@ public class DatabaseManager extends DbManagerBase {
      * @param video video which we check for contains in db
      * @return null if video not existing in db, otherwise path to disk
      */
-    public String getPathIfExist(Video video) {
+    public String getPathToVideoIfExist(Video video) {
         try {
             open();
             String Query = "Select * from " + DbStructureCachedVideo.CACHED_VIDEO + " where " + DbStructureCachedVideo.Column.VIDEO_ID + " = " + video.getId();
@@ -371,6 +372,8 @@ public class DatabaseManager extends DbManagerBase {
             close();
         }
     }
+
+
 
     public void clearCacheCourses(DatabaseManager.Table type) {
         List<Course> courses = getAllCourses(type);
