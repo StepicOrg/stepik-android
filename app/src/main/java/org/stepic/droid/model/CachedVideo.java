@@ -3,6 +3,7 @@ package org.stepic.droid.model;
 public class CachedVideo {
     private long videoId;
     private String url;
+    private String thumbnail;
 
     public CachedVideo() {}
 
@@ -10,6 +11,14 @@ public class CachedVideo {
     public CachedVideo (long videoId, String url) {
         this.videoId = videoId;
         this.url = url;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public long getVideoId() {
