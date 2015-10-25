@@ -24,6 +24,11 @@ public class FindCoursesFragment extends CoursesFragmentBase {
     }
 
     @Override
+    protected DatabaseManager.Table getCourseType() {
+        return DatabaseManager.Table.featured;
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 

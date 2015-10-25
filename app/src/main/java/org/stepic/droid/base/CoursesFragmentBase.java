@@ -94,7 +94,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
         mFooterDownloadingView.setVisibility(View.GONE);
         mListOfCourses.addFooterView(mFooterDownloadingView);
 
-        mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses);
+        mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses, getCourseType());
         mListOfCourses.setAdapter(mCoursesAdapter);
 
         mListOfCourses.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -134,6 +134,8 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
         mCourses.addAll(cachedCourses);
         mCoursesAdapter.notifyDataSetChanged();
     }
+
+    protected abstract DatabaseManager.Table  getCourseType();
 
     @Override
     public final void onRefresh() {
