@@ -178,7 +178,8 @@ public class DownloadManagerImpl implements IDownloadManager {
     }
 
     @Override
-    public void addCourse(Course course) {
+    public void addCourse(Course course, DatabaseManager.Table type) {
+//        ToDbCoursesTask saveCourse = new StepicTask<Void, Void, Void>()
         mApi.getSections(course.getSections()).enqueue(new Callback<SectionsStepicResponse>() {
             @Override
             public void onResponse(Response<SectionsStepicResponse> response, Retrofit retrofit) {

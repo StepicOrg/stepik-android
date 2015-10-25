@@ -17,6 +17,7 @@ import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.IDownloadManager;
+import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.HtmlHelper;
 
 import java.util.List;
@@ -39,11 +40,13 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
     IDownloadManager mDownloadManager;
 
     private Context mContext;
+    private final DatabaseManager.Table type;
     private LayoutInflater mInflater;
 
-    public MyCoursesAdapter(Context context, List<Course> courses) {
+    public MyCoursesAdapter(Context context, List<Course> courses, DatabaseManager.Table type) {
         super(context, 0, courses);
         mContext = context;
+        this.type = type;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         MainApplication.component(mContext).inject(this);
@@ -86,7 +89,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
             public void onClick(View v) {
                 // FIXME: 21.10.15 IMPLEMENTS IN BACKGROUND THREAD
                 // FIXME: 21.10.15 MAKE UI DISABLED IF COURSE IS LOADED.
-                mDownloadManager.addCourse(course);
+                mDownloadManager.addCourse(course, type);
             }
         });
 //

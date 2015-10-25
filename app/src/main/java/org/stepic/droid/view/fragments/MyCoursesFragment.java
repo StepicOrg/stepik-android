@@ -24,6 +24,11 @@ public class MyCoursesFragment extends CoursesFragmentBase {
     }
 
     @Override
+    protected DatabaseManager.Table getCourseType() {
+        return DatabaseManager.Table.enrolled;
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         mTypeOfCourse = DatabaseManager.Table.enrolled;
