@@ -3,7 +3,7 @@ package org.stepic.droid.store.structure;
 public class DbStructureBlock extends DBStructureBase {
     private static String[] mUsedColumns = null;
 
-    public static final String BLOCKS = "steps";
+    public static final String BLOCKS = "blocks";
 
     public static final class Column {
         public static final String STEP_ID = "step_id";

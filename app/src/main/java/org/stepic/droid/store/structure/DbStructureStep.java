@@ -12,10 +12,10 @@ public class DbStructureStep extends DBStructureBase {
         public static final String STATUS = "status";
         public static final String PROGRESS = "progress";
         public static final String SUBSCRIPTIONS = "subscription";
-        public static final String VIEWED_BY = "step_id";
-        public static final String PASSED_BY = "step_id";
-        public static final String CREATE_DATE = "step_id";
-        public static final String UPDATE_DATE = "step_id";
+        public static final String VIEWED_BY = "viewed_by";
+        public static final String PASSED_BY = "passed_by";
+        public static final String CREATE_DATE = "create_date";
+        public static final String UPDATE_DATE = "update_date";
     }
 
     public static String[] getUsedColumns() {
