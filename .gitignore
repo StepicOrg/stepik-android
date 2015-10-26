@@ -1,9 +1,3 @@
-/.idea/workspace.xml
-/.idea/libraries
-/build
-/captures
-
-
 #built application files
 *.apk
 *.ap_
@@ -33,10 +27,10 @@ Thumbs.db
 
 # Android Studio
 *.iml
+.idea
 #.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
 .gradle
+build/
 
 #NDK
 obj/
-
-.idea
