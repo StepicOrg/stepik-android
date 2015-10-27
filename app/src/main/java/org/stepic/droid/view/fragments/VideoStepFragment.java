@@ -3,6 +3,7 @@ package org.stepic.droid.view.fragments;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -20,7 +21,6 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentStepBase;
 import org.stepic.droid.events.video.MemoryPermissionDeniedEvent;
 import org.stepic.droid.events.video.VideoResolvedEvent;
-import org.stepic.droid.model.Video;
 
 import butterknife.Bind;
 import butterknife.BindDrawable;
@@ -55,26 +55,48 @@ public class VideoStepFragment extends FragmentStepBase {
         //// FIXME: 16.10.15 assert not null step, block, video
         mHeaderTv.setVisibility(View.GONE);
 
-        Picasso.with(getContext())
-                .load(mStep.getBlock().getVideo().getThumbnail())
-                .placeholder(mVideoPlaceholder)
-                .error(mVideoPlaceholder)
-                .into(mThumbnail);
+        String thumbnail = "";
+        if (mStep.getBlock() != null && mStep.getBlock().getVideo() != null && mStep.getBlock().getVideo().getThumbnail() != null) {
+            thumbnail = mStep.getBlock().getVideo().getThumbnail();
+            Picasso.with(getContext())
+                    .load(thumbnail)
+                    .placeholder(mVideoPlaceholder)
+                    .error(mVideoPlaceholder)
+                    .into(mThumbnail);
+        } else {
+            Picasso.with(getContext())
+                    .load(R.drawable.video_placeholder)
+                    .placeholder(mVideoPlaceholder)
+                    .error(mVideoPlaceholder)
+                    .into(mThumbnail);
+        }
+
 
         mPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO: 16.10.15 change icon to loading
-                String url = mVideoResolver.resolveVideoUrl(mStep.getBlock().getVideo());
-                if (url != null)
-                    bus.post(new VideoResolvedEvent(mStep.getBlock().getVideo(), url));
+                AsyncTask<Void, Void, String> resolveTask = new AsyncTask<Void, Void, String>() {
+                    @Override
+                    protected String doInBackground(Void... params) {
+                        return mVideoResolver.resolveVideoUrl(mStep.getBlock().getVideo());
+                    }
+
+                    @Override
+                    protected void onPostExecute(String url) {
+                        super.onPostExecute(url);
+
+                        if (url != null)
+                            bus.post(new VideoResolvedEvent(mStep.getBlock().getVideo(), url));
+                    }
+                };
+                resolveTask.execute();
             }
         });
 
         mDownloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Video video = mStep.getBlock().getVideo();
             }
         });
 

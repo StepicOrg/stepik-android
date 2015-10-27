@@ -7,11 +7,18 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
+import android.util.Pair;
 
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.R;
+import org.stepic.droid.concurrency.ToDbCachedVideo;
+import org.stepic.droid.concurrency.ToDbCoursesTask;
+import org.stepic.droid.concurrency.ToDbSectionTask;
+import org.stepic.droid.concurrency.ToDbStepTask;
+import org.stepic.droid.concurrency.ToDbUnitLessonTask;
 import org.stepic.droid.events.video.MemoryPermissionDeniedEvent;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Course;
@@ -53,7 +60,7 @@ public class DownloadManagerImpl implements IDownloadManager {
     DatabaseManager mDb;
 
     private BroadcastReceiver mDownloadReceiver;
-    private HashMap<Long, Long> mDmIdToVideoId;
+    private HashMap<Long, Pair<Long, Long>> mDmIdToVideoIdAndStepId;
 
 
     @Inject
@@ -68,18 +75,21 @@ public class DownloadManagerImpl implements IDownloadManager {
 
 
         IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-        mDmIdToVideoId = new HashMap<>();
+        mDmIdToVideoIdAndStepId = new HashMap<>();
         mDownloadReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-                if (mDmIdToVideoId.keySet().contains(referenceId)) {
-                    long video_id = mDmIdToVideoId.get(referenceId);
-                    mDmIdToVideoId.remove(referenceId);
+                if (mDmIdToVideoIdAndStepId.keySet().contains(referenceId)) {
+                    long video_id = mDmIdToVideoIdAndStepId.get(referenceId).first;
+                    long step_id = mDmIdToVideoIdAndStepId.get(referenceId).second;
+                    mDmIdToVideoIdAndStepId.remove(referenceId);
                     File downloadFolderAndFile = new File(mUserPrefs.getDownloadFolder(), video_id + "");
                     String path = Uri.fromFile(downloadFolderAndFile).getPath();
-                    CachedVideo cachedVideo = new CachedVideo(video_id, path, null);
-                    mDb.addVideo(cachedVideo);
+                    CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, null);
+
+                    ToDbCachedVideo saveVideoToDb = new ToDbCachedVideo(cachedVideo);
+                    saveVideoToDb.execute();
                 }
             }
         };
@@ -87,7 +97,7 @@ public class DownloadManagerImpl implements IDownloadManager {
     }
 
 
-    private synchronized void addDownload(String url, long fileId, String title) {
+    private synchronized void addDownload(String url, long fileId, String title, Step step) {
         if (!isDownloadManagerEnabled() || url == null)
             return;
 
@@ -122,7 +132,7 @@ public class DownloadManagerImpl implements IDownloadManager {
             }
 
             long downloadId = mSystemDownloadManager.enqueue(request);
-            mDmIdToVideoId.put(downloadId, fileId);
+            mDmIdToVideoIdAndStepId.put(downloadId, new Pair(fileId, step.getId()));
 
 
         } catch (SecurityException ex) {
@@ -136,28 +146,39 @@ public class DownloadManagerImpl implements IDownloadManager {
     }
 
     public synchronized void addStep(Step step, String title) {
-        Video video = step.getBlock().getVideo();
-        if (video == null) return;
-        String uri = mResolver.resolveVideoUrl(video);
-        long fileId = video.getId();
-        addDownload(uri, fileId, title);
+        ToDbStepTask saveStep = new ToDbStepTask(step);
+        saveStep.execute();
+
+        if (step.getBlock().getVideo() != null) {
+            Video video = step.getBlock().getVideo();
+            if (video == null) return;
+            String uri = mResolver.resolveVideoUrl(video);
+            long fileId = video.getId();
+            addDownload(uri, fileId, title, step);
+        }
     }
 
     @Override
     public synchronized void addSection(Section section) {
+        ToDbSectionTask sectionTask = new ToDbSectionTask(section);
+        sectionTask.execute();
+
+
         mApi.getUnits(section.getUnits()).enqueue(new Callback<UnitStepicResponse>() {
             @Override
             public void onResponse(Response<UnitStepicResponse> response, Retrofit retrofit) {
                 if (response.isSuccess()) {
-                    List<Unit> units = response.body().getUnits();
+                    final List<Unit> units = response.body().getUnits();
                     long[] lessonsIds = StepicLogicHelper.fromUnitsToLessonIds(units);
                     mApi.getLessons(lessonsIds).enqueue(new Callback<LessonStepicResponse>() {
                         @Override
                         public void onResponse(Response<LessonStepicResponse> response, Retrofit retrofit) {
                             if (response.isSuccess()) {
                                 List<Lesson> lessons = response.body().getLessons();
+                                int i = 0;
                                 for (Lesson lesson : lessons) {
-                                    addLesson(lesson);
+                                    Unit unit = units.get(i++);
+                                    addUnitLesson(unit, lesson);
                                 }
                             }
                         }
@@ -178,8 +199,9 @@ public class DownloadManagerImpl implements IDownloadManager {
     }
 
     @Override
-    public void addCourse(Course course, DatabaseManager.Table type) {
-//        ToDbCoursesTask saveCourse = new StepicTask<Void, Void, Void>()
+    public void addCourse(final Course course, DatabaseManager.Table type) {
+        ToDbCoursesTask saveTask = new ToDbCoursesTask(course, type);
+        saveTask.execute();
         mApi.getSections(course.getSections()).enqueue(new Callback<SectionsStepicResponse>() {
             @Override
             public void onResponse(Response<SectionsStepicResponse> response, Retrofit retrofit) {
@@ -200,17 +222,27 @@ public class DownloadManagerImpl implements IDownloadManager {
 
 
     @Override
-    public synchronized void addLesson(final Lesson lesson) {
+    public synchronized void addUnitLesson(final Unit unit, final Lesson lesson) {
+        ToDbUnitLessonTask saveTask = new ToDbUnitLessonTask(unit, lesson);
+        saveTask.execute();
+
         mApi.getSteps(lesson.getSteps()).enqueue(new Callback<StepResponse>() {
             @Override
             public void onResponse(Response<StepResponse> response, Retrofit retrofit) {
                 if (response.isSuccess()) {
                     List<Step> steps = response.body().getSteps();
                     for (Step step : steps) {
-                        if (step.getBlock().getVideo() != null) {
-                            addStep(step, lesson.getTitle());
-                        }
+                        final Step localStep = step;
+                        AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... params) {
+                                addStep(localStep, lesson.getTitle());
+                                return null;
+                            }
+                        };
+                        asyncTask.execute();
                     }
+
                 }
             }
 

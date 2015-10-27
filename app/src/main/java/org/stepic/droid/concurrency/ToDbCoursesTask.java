@@ -9,6 +9,7 @@ import org.stepic.droid.events.courses.StartingSaveCoursesToDbEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DatabaseManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -34,6 +35,17 @@ public class ToDbCoursesTask extends StepicTask<Void, Void, Void> {
         mPage = page;
         mCourseType = type;
         mCourses = courses;
+    }
+
+    public ToDbCoursesTask(Course course, DatabaseManager.Table type) {
+        super(MainApplication.getAppContext());
+        MainApplication.component().inject(this);
+
+        //courses now is not thread safe
+        mPage = Integer.MAX_VALUE; //neutral value
+        mCourseType = type;
+        mCourses = new ArrayList<>();
+        mCourses.add(course);
     }
 
     @Override

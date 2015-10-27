@@ -4,16 +4,20 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import org.stepic.droid.model.Block;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.store.structure.DBStructureCourses;
+import org.stepic.droid.store.structure.DbStructureBlock;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
 import org.stepic.droid.store.structure.DbStructureLesson;
 import org.stepic.droid.store.structure.DbStructureSections;
+import org.stepic.droid.store.structure.DbStructureStep;
 import org.stepic.droid.store.structure.DbStructureUnit;
 import org.stepic.droid.util.DbParseHelper;
 
@@ -152,6 +156,41 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
+    public void addStep(Step step) {
+        try {
+            open();
+            if (isStepInDb(step)) return;
+            ContentValues values = new ContentValues();
+
+            values.put(DbStructureStep.Column.STEP_ID, step.getId());
+            values.put(DbStructureStep.Column.LESSON_ID, step.getLesson());
+            values.put(DbStructureStep.Column.STATUS, step.getStatus());
+            values.put(DbStructureStep.Column.PROGRESS, step.getProgress());
+            values.put(DbStructureStep.Column.SUBSCRIPTIONS, DbParseHelper.INSTANCE.parseStringArrayToString(step.getSubscriptions()));
+            values.put(DbStructureStep.Column.VIEWED_BY, step.getViewed_by());
+            values.put(DbStructureStep.Column.PASSED_BY, step.getPassed_by());
+            values.put(DbStructureStep.Column.CREATE_DATE, step.getCreate_date());
+            values.put(DbStructureStep.Column.UPDATE_DATE, step.getUpdate_date());
+
+            database.insert(DbStructureStep.STEPS, null, values);
+
+            addBlock(step);
+        } finally {
+            close();
+        }
+    }
+
+    private void addBlock(Step step) {
+        Block block = step.getBlock();
+        if (block == null) return;
+        ContentValues values = new ContentValues();
+        values.put(DbStructureBlock.Column.STEP_ID, step.getId());
+        values.put(DbStructureBlock.Column.NAME, block.getName());
+        values.put(DbStructureBlock.Column.TEXT, block.getText());
+
+        database.insert(DbStructureBlock.BLOCKS, null, values);
+    }
+
     public void deleteSection(Section section) {
         try {
             open();
@@ -232,6 +271,29 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
+    public List<Step> getStepsOfLesson(Lesson lesson) {
+        try {
+            open();
+            List<Step> steps = new ArrayList<>();
+
+            String Query = "Select * from " + DbStructureStep.STEPS + " where " + DbStructureStep.Column.LESSON_ID + " = " + lesson.getId();
+            Cursor cursor = database.rawQuery(Query, null);
+
+            cursor.moveToFirst();
+
+            while (!cursor.isAfterLast()) {
+                Step step = parseStep(cursor);
+                steps.add(step);
+                cursor.moveToNext();
+            }
+
+            cursor.close();
+            return steps;
+        } finally {
+            close();
+        }
+    }
+
     public Lesson getLessonOfUnit(Unit unit) {
         try {
             open();
@@ -266,12 +328,25 @@ public class DatabaseManager extends DbManagerBase {
         return true;
     }
 
+    private boolean isStepInDb(Step step) {
+
+        String Query = "Select * from " + DbStructureStep.STEPS + " where " + DbStructureStep.Column.STEP_ID + " = " + step.getId();
+        Cursor cursor = database.rawQuery(Query, null);
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
+
     public void addVideo(CachedVideo cachedVideo) {
         try {
             open();
             ContentValues values = new ContentValues();
 
             values.put(DbStructureCachedVideo.Column.VIDEO_ID, cachedVideo.getVideoId());
+            values.put(DbStructureCachedVideo.Column.STEP_ID, cachedVideo.getStepId());
             values.put(DbStructureCachedVideo.Column.URL, cachedVideo.getUrl());
             values.put(DbStructureCachedVideo.Column.THUMBNAIL, cachedVideo.getThumbnail());
 
@@ -366,7 +441,7 @@ public class DatabaseManager extends DbManagerBase {
                 return null;
             }
             cursor.moveToFirst();
-            int columnNumberOfPath = 1;
+            int columnNumberOfPath = cursor.getColumnIndex(DbStructureCachedVideo.Column.URL);
             String path = cursor.getString(columnNumberOfPath);
             cursor.close();
             return path;
@@ -375,7 +450,6 @@ public class DatabaseManager extends DbManagerBase {
             close();
         }
     }
-
 
 
     public void clearCacheCourses(DatabaseManager.Table type) {
@@ -535,9 +609,15 @@ public class DatabaseManager extends DbManagerBase {
 
     private CachedVideo parseCachedVideo(Cursor cursor) {
         CachedVideo cachedVideo = new CachedVideo();
-        int columnNumber = 0;
-        cachedVideo.setVideoId(cursor.getLong(columnNumber++));
-        cachedVideo.setUrl(cursor.getString(columnNumber++));
+        int indexStepId = cursor.getColumnIndex(DbStructureCachedVideo.Column.STEP_ID);
+        int indexVideoId = cursor.getColumnIndex(DbStructureCachedVideo.Column.VIDEO_ID);
+        int indexUrl = cursor.getColumnIndex(DbStructureCachedVideo.Column.URL);
+        int indexThumbnail = cursor.getColumnIndex(DbStructureCachedVideo.Column.THUMBNAIL);
+
+        cachedVideo.setVideoId(cursor.getLong(indexVideoId));
+        cachedVideo.setUrl(cursor.getString(indexUrl));
+        cachedVideo.setThumbnail(cursor.getString(indexThumbnail));
+        cachedVideo.setStepId(cursor.getLong(indexStepId));
         return cachedVideo;
     }
 
@@ -637,9 +717,78 @@ public class DatabaseManager extends DbManagerBase {
         return course;
     }
 
+    private Step parseStep(Cursor cursor) {
+        Step step = new Step();
+
+        int columnIndexCreateDate = cursor.getColumnIndex(DbStructureStep.Column.CREATE_DATE);
+        int columnIndexStepId = cursor.getColumnIndex(DbStructureStep.Column.STEP_ID);
+        int columnIndexLessonId = cursor.getColumnIndex(DbStructureStep.Column.LESSON_ID);
+        int columnIndexStatus = cursor.getColumnIndex(DbStructureStep.Column.STATUS);
+        int columnIndexProgress = cursor.getColumnIndex(DbStructureStep.Column.PROGRESS);
+        int columnIndexViewedBy = cursor.getColumnIndex(DbStructureStep.Column.VIEWED_BY);
+        int columnIndexPassedBy = cursor.getColumnIndex(DbStructureStep.Column.PASSED_BY);
+        int columnIndexUpdateDate = cursor.getColumnIndex(DbStructureStep.Column.UPDATE_DATE);
+        int columnIndexSubscriptions = cursor.getColumnIndex(DbStructureStep.Column.SUBSCRIPTIONS);
+
+        step.setId(cursor.getLong(columnIndexStepId));
+        step.setLesson(cursor.getLong(columnIndexLessonId));
+        step.setCreate_date(cursor.getString(columnIndexCreateDate));
+        step.setCreate_date(cursor.getString(columnIndexStatus));
+        step.setProgress(cursor.getString(columnIndexProgress));
+        step.setViewed_by(cursor.getLong(columnIndexViewedBy));
+        step.setPassed_by(cursor.getLong(columnIndexPassedBy));
+        step.setUpdate_date(cursor.getString(columnIndexUpdateDate));
+        step.setSubscriptions(DbParseHelper.INSTANCE.parseStringToStringArray(cursor.getString(columnIndexSubscriptions)));
+
+
+        String Query = "Select * from " + DbStructureBlock.BLOCKS + " where " + DbStructureBlock.Column.STEP_ID + " = " + step.getId();
+        Cursor blockCursor = database.rawQuery(Query, null);
+        blockCursor.moveToFirst();
+
+        if (!blockCursor.isAfterLast()) {
+            step.setBlock(parseBlock(blockCursor, step));
+        }
+        blockCursor.close();
+        return step;
+    }
+
+    private Block parseBlock(Cursor cursor, Step step) {
+        Block block = new Block();
+
+        int indexName = cursor.getColumnIndex(DbStructureBlock.Column.NAME);
+        int indexText = cursor.getColumnIndex(DbStructureBlock.Column.TEXT);
+
+        block.setName(cursor.getString(indexName));
+        block.setText(cursor.getString(indexText));
+
+
+        String Query = "Select * from " + DbStructureCachedVideo.CACHED_VIDEO + " where " + DbStructureCachedVideo.Column.STEP_ID + " = " + step.getId();
+        Cursor videoCursor = database.rawQuery(Query, null);
+        videoCursor.moveToFirst();
+
+        if (!videoCursor.isAfterLast()) {
+            block.setVideo(parseRealVideo(videoCursor));
+        }
+        videoCursor.close();
+
+
+        return block;
+    }
+
+    private Video parseRealVideo(Cursor cursor) {
+        Video video = new Video();
+
+        int indexVideoId = cursor.getColumnIndex(DbStructureCachedVideo.Column.VIDEO_ID);
+
+        video.setId(cursor.getLong(indexVideoId));
+
+        return video;
+    }
+
 
     private Cursor getCourseCursor(DatabaseManager.Table type) {
         return database.query(type.getStoreName(), DBStructureCourses.getUsedColumns(),
                 null, null, null, null, null);
+
     }
 }

@@ -1,4 +1,5 @@
 <resources>
+
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/stepic_brand_primary</item>
         <item name="colorPrimaryDark">@color/stepic_brand_primary_dark</item>
@@ -6,8 +7,8 @@
         <item name="actionBarStyle">@style/Theme.MyApp.ActionBar</item>
         <item name="android:windowBackground">@color/stepic_cover</item>
         <item name="android:colorBackground">@color/stepic_cover</item>
-
     </style>
+
 
     <style name="Theme.MyApp.ActionBar" parent="style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="elevation">4dp</item>

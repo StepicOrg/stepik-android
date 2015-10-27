@@ -191,6 +191,12 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        ProgressHelper.dismiss(mSwipeRefreshLayout);
+    }
+
     @Subscribe
     public void onSuccessDownload(SuccessResponseSectionsEvent e) {
         if (mCourse.getCourseId() == e.getCourse().getCourseId()) {

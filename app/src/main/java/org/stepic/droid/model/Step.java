@@ -59,6 +59,47 @@ public class Step implements Parcelable, Serializable {
         return update_date;
     }
 
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setLesson(long lesson) {
+        this.lesson = lesson;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setBlock(Block block) {
+        this.block = block;
+    }
+
+    public void setProgress(String progress) {
+        this.progress = progress;
+    }
+
+    public void setSubscriptions(String[] subscriptions) {
+        this.subscriptions = subscriptions;
+    }
+
+    public void setViewed_by(long viewed_by) {
+        this.viewed_by = viewed_by;
+    }
+
+    public void setPassed_by(long passed_by) {
+        this.passed_by = passed_by;
+    }
+
+    public void setCreate_date(String create_date) {
+        this.create_date = create_date;
+    }
+
+    public void setUpdate_date(String update_date) {
+        this.update_date = update_date;
+    }
+
     @Override
     public int describeContents() {
         return 0;

@@ -1,6 +1,7 @@
 package org.stepic.droid.model;
 
 public class CachedVideo {
+    private long stepId;
     private long videoId;
     private String url;
     private String thumbnail;
@@ -8,10 +9,19 @@ public class CachedVideo {
     public CachedVideo() {}
 
 
-    public CachedVideo (long videoId, String url, String thumbnail_url) {
+    public CachedVideo (long stepId, long videoId, String url, String thumbnail_url) {
+        this.stepId = stepId;
         this.videoId = videoId;
         this.url = url;
         this.thumbnail = thumbnail_url;
+    }
+
+    public long getStepId() {
+        return stepId;
+    }
+
+    public void setStepId(long stepId) {
+        this.stepId = stepId;
     }
 
     public String getThumbnail() {
