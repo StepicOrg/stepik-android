@@ -25,6 +25,17 @@ public class Block implements Parcelable, Serializable {
         return video;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setVideo(Video video) {
+        this.video = video;
+    }
 
     @Override
     public int describeContents() {

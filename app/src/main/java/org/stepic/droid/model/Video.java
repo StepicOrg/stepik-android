@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Video implements Parcelable, Serializable {
-    private int id;
+    private long id;
     private String thumbnail;
 
     private List<VideoUrl> urls;
@@ -26,7 +26,7 @@ public class Video implements Parcelable, Serializable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
+        dest.writeLong(this.id);
         dest.writeString(this.thumbnail);
         dest.writeList(this.urls);
         dest.writeString(this.status);
@@ -36,8 +36,28 @@ public class Video implements Parcelable, Serializable {
     public Video() {
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public void setUrls(List<VideoUrl> urls) {
+        this.urls = urls;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setUpload_date(String upload_date) {
+        this.upload_date = upload_date;
+    }
+
     protected Video(Parcel in) {
-        this.id = in.readInt();
+        this.id = in.readLong();
         this.thumbnail = in.readString();
         this.urls = new ArrayList<VideoUrl>();
         in.readList(this.urls, MainApplication.getAppContext().getClassLoader());
@@ -59,7 +79,7 @@ public class Video implements Parcelable, Serializable {
         return urls;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

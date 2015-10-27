@@ -210,6 +210,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     @Override
     protected void onStop() {
         super.onStop();
+        ProgressHelper.dismiss(mSwipeRefreshLayout);
     }
 
 
@@ -246,4 +247,6 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
             getAndShowUnitsFromCache();
         }
     }
+
+
 }

@@ -9,6 +9,7 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.operations.DatabaseManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -31,6 +32,18 @@ public class ToDbUnitLessonTask extends StepicTask<Void, Void, Void> {
         this.lessonList = lessonList;
         MainApplication.component().inject(this);
         mSection = section;
+
+    }
+
+    public ToDbUnitLessonTask(Unit unit, Lesson lesson) {
+        super(MainApplication.getAppContext());
+
+        unitList = new ArrayList<>();
+        unitList.add(unit);
+        lessonList = new ArrayList<>();
+        lessonList.add(lesson);
+        MainApplication.component().inject(this);
+        mSection = null;
 
     }
 

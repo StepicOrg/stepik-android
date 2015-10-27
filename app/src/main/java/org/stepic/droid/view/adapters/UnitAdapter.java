@@ -102,7 +102,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     @Override
     public void onClickLoad(int itemPosition) {
         if (itemPosition >= 0 && itemPosition < mUnitList.size()) {
-            mDownloadManager.addLesson(mLessonList.get(itemPosition));
+            mDownloadManager.addUnitLesson(mUnitList.get(itemPosition), mLessonList.get(itemPosition));
         }
     }
 
@@ -138,7 +138,6 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                     loadListener.onClickLoad(getAdapterPosition());
                 }
             });
-
 
         }
     }

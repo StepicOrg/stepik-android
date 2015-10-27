@@ -36,18 +36,18 @@ public class VideoResolver implements IVideoResolver {
         //// TODO: 15.10.15 check in database by id, check availability of playing on the device, etc
 //// TODO: 15.10.15 log all "return" statements
 
-        if (video == null) return null;
-        List<VideoUrl> urlList = video.getUrls();
-        if (urlList == null || urlList.size() == 0) return null;
-
-        String localPath = null;
-        localPath = mDbOperations.getPathToVideoIfExist(video);
+        String localPath = mDbOperations.getPathToVideoIfExist(video);
 
         if (localPath != null && checkExistingOnDisk(localPath)) {
             return localPath;
         } else {
+
+            if (video == null) return null;
+            List<VideoUrl> urlList = video.getUrls();
+            if (urlList == null || urlList.size() == 0) return null;
             return resolveFromWeb(urlList);
         }
+
     }
 
     private String resolveFromWeb(List<VideoUrl> urlList) {

@@ -13,7 +13,10 @@ import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
+import org.stepic.droid.concurrency.FromDbStepTask;
+import org.stepic.droid.concurrency.ToDbStepTask;
 import org.stepic.droid.events.steps.FailLoadStepEvent;
+import org.stepic.droid.events.steps.FromDbStepEvent;
 import org.stepic.droid.events.steps.SuccessLoadStepEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
@@ -60,6 +63,10 @@ public class StepsActivity extends FragmentActivityBase {
     private Lesson mLesson;
     private boolean isLoaded;
 
+
+    private ToDbStepTask saveStepsTask;
+    private FromDbStepTask getFromDbStepsTask;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +81,6 @@ public class StepsActivity extends FragmentActivityBase {
 
         setTitle(mLesson.getTitle());
         setSupportActionBar(mToolbar);
-        //may be set title == title of lesson?
 
         mStepList = new ArrayList<>();
         mStepAdapter = new StepFragmentAdapter(getSupportFragmentManager(), this, mStepList);
@@ -82,33 +88,44 @@ public class StepsActivity extends FragmentActivityBase {
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
         if (mLesson != null && mLesson.getSteps() != null && mLesson.getSteps().length != 0 && !isLoaded)
-            updateStates();
+            updateSteps();
     }
 
 
-    private void updateStates() {
+    private void updateSteps() {
         ProgressHelper.activate(mProgressBar);
-        mShell.getApi().getSteps(mLesson.getSteps()).enqueue(new Callback<StepResponse>() {
-            @Override
-            public void onResponse(Response<StepResponse> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
-                    bus.post(new SuccessLoadStepEvent(response));
-                } else {
+        getFromDbStepsTask = new FromDbStepTask(mLesson);
+        getFromDbStepsTask.execute();
+    }
+
+    @Subscribe
+    public void onFromDbStepEvent(FromDbStepEvent e) {
+        if (e.getLesson() != null && e.getLesson().getId() != mLesson.getId()) {
+            bus.post(new FailLoadStepEvent());
+            return;
+        }
+
+        if (e.getStepList() != null && e.getStepList().size() != 0) {
+            showSteps(e.getStepList());
+        } else {
+            mShell.getApi().getSteps(mLesson.getSteps()).enqueue(new Callback<StepResponse>() {
+                @Override
+                public void onResponse(Response<StepResponse> response, Retrofit retrofit) {
+                    if (response.isSuccess()) {
+                        bus.post(new SuccessLoadStepEvent(response));
+                    } else {
+                        bus.post(new FailLoadStepEvent());
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
                     bus.post(new FailLoadStepEvent());
                 }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                bus.post(new FailLoadStepEvent());
-            }
-        });
+            });
+        }
     }
 
     @Subscribe
@@ -120,14 +137,18 @@ public class StepsActivity extends FragmentActivityBase {
         if (steps.isEmpty()) {
             bus.post(new FailLoadStepEvent());
         } else {
-            mStepList.clear();
-            mStepList.addAll(steps);
-            mStepAdapter.notifyDataSetChanged();
-            updateTabs();
-            mTabLayout.setVisibility(View.VISIBLE);
-            ProgressHelper.dismiss(mProgressBar);
-            isLoaded = true;
+            showSteps(steps);
         }
+    }
+
+    private void showSteps(List<Step> steps) {
+        mStepList.clear();
+        mStepList.addAll(steps);
+        mStepAdapter.notifyDataSetChanged();
+        updateTabs();
+        mTabLayout.setVisibility(View.VISIBLE);
+        ProgressHelper.dismiss(mProgressBar);
+        isLoaded = true;
     }
 
     @Subscribe
