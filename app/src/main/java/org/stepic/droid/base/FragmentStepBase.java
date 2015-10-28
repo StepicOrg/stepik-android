@@ -3,19 +3,19 @@ package org.stepic.droid.base;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.TextView;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.HtmlHelper;
 
 import butterknife.Bind;
 
 public abstract class FragmentStepBase extends FragmentBase {
 
     @Bind(R.id.text_header)
-    protected TextView mHeaderTv;
+    protected WebView mHeaderWv;
 
     protected Step mStep;
 
@@ -27,10 +27,18 @@ public abstract class FragmentStepBase extends FragmentBase {
                 mStep.getBlock() != null &&
                 mStep.getBlock().getText() != null &&
                 mStep.getBlock().getText() != "") {
-            mHeaderTv.setText(HtmlHelper.fromHtml(mStep.getBlock().getText()));
-            mHeaderTv.setVisibility(View.VISIBLE);
+            WebSettings webSettings = mHeaderWv.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+
+            final String html = AppConstants.PRE_BODY + mStep.getBlock().getText() + AppConstants.POST_BODY;
+
+            final String mimeType = "text/html";
+            final String encoding = "UTF-8";
+            mHeaderWv.loadDataWithBaseURL("", html, mimeType, encoding, "");
+//            mHeaderWv.setText(HtmlHelper.fromHtml(mStep.getBlock().getText()));
+            mHeaderWv.setVisibility(View.VISIBLE);
         } else {
-            mHeaderTv.setVisibility(View.GONE);
+            mHeaderWv.setVisibility(View.GONE);
         }
     }
 

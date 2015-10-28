@@ -79,6 +79,7 @@ public class ConfigRelease implements IConfig {
         return getString(ARRAY_IDS_PARAM);
     }
 
+
     private String getString(String key) {
         return getString(key, null);
     }

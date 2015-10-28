@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="top">
 
-    <TextView
+    <WebView
         android:padding="8dp"
         android:id="@+id/text_header"
         android:layout_width="match_parent"

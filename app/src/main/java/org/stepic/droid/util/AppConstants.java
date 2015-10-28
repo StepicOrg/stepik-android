@@ -12,6 +12,19 @@ public class AppConstants {
     public static boolean WAS_SWIPED_TO_REFRESH_MY_COURSES = false;
     public static boolean WAS_SWIPED_TO_REFRESH_FIND_COURSES = false;
     public static final String DEFAULT_QUALITY = "270";
+    public static final String PRE_BODY = "<html>\n" +
+            "<head>\n" +
+            "<title>MathJax TeX Test Page</title>\n" +
+            "<script type=\"text/x-mathjax-config\">\n" +
+            "  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
+            "</script>\n" +
+            "<script type=\"text/javascript\"\n" +
+            " src=\"http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML\">\n" +
+            "</script>\n" +
+            "</head>\n" +
+            "<body>";
+    public static final String POST_BODY = "</body>\n" +
+            "</html>";
 
 
     //Types of steps:

@@ -53,7 +53,7 @@ public class VideoStepFragment extends FragmentStepBase {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //// FIXME: 16.10.15 assert not null step, block, video
-        mHeaderTv.setVisibility(View.GONE);
+        mHeaderWv.setVisibility(View.GONE);
 
         String thumbnail = "";
         if (mStep.getBlock() != null && mStep.getBlock().getVideo() != null && mStep.getBlock().getVideo().getThumbnail() != null) {
