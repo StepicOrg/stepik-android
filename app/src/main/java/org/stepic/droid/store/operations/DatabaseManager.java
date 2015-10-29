@@ -86,13 +86,13 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DBStructureCourses.Column.LAST_DEADLINE, course.getLast_deadline());
             values.put(DBStructureCourses.Column.DESCRIPTION, course.getDescription());
 
-            String instructorsParsed = DbParseHelper.INSTANCE.parseLongArrayToString(course.getInstructors());
+            String instructorsParsed = DbParseHelper.parseLongArrayToString(course.getInstructors());
             values.put(DBStructureCourses.Column.INSTRUCTORS, instructorsParsed);
 
             values.put(DBStructureCourses.Column.REQUIREMENTS, course.getRequirements());
             values.put(DBStructureCourses.Column.ENROLLMENT, course.getEnrollment());
 
-            String sectionsParsed = DbParseHelper.INSTANCE.parseLongArrayToString(course.getSections());
+            String sectionsParsed = DbParseHelper.parseLongArrayToString(course.getSections());
             values.put(DBStructureCourses.Column.SECTIONS, sectionsParsed);
 
             database.insert(type.getStoreName(), null, values);
@@ -148,7 +148,7 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureSections.Column.HARD_DEADLINE, section.getHard_deadline());
             values.put(DbStructureSections.Column.COURSE, section.getCourse());
             values.put(DbStructureSections.Column.POSITION, section.getPosition());
-            values.put(DbStructureSections.Column.UNITS, DbParseHelper.INSTANCE.parseLongArrayToString(section.getUnits()));
+            values.put(DbStructureSections.Column.UNITS, DbParseHelper.parseLongArrayToString(section.getUnits()));
             database.insert(DbStructureSections.SECTIONS, null, values);
 
         } finally {
@@ -166,7 +166,7 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureStep.Column.LESSON_ID, step.getLesson());
             values.put(DbStructureStep.Column.STATUS, step.getStatus());
             values.put(DbStructureStep.Column.PROGRESS, step.getProgress());
-            values.put(DbStructureStep.Column.SUBSCRIPTIONS, DbParseHelper.INSTANCE.parseStringArrayToString(step.getSubscriptions()));
+            values.put(DbStructureStep.Column.SUBSCRIPTIONS, DbParseHelper.parseStringArrayToString(step.getSubscriptions()));
             values.put(DbStructureStep.Column.VIEWED_BY, step.getViewed_by());
             values.put(DbStructureStep.Column.PASSED_BY, step.getPassed_by());
             values.put(DbStructureStep.Column.CREATE_DATE, step.getCreate_date());
@@ -470,7 +470,7 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureUnit.Column.UNIT_ID, unit.getId());
             values.put(DbStructureUnit.Column.SECTION, unit.getSection());
             values.put(DbStructureUnit.Column.LESSON, unit.getLesson());
-            values.put(DbStructureUnit.Column.ASSIGNMENTS, DbParseHelper.INSTANCE.parseLongArrayToString(unit.getAssignments()));
+            values.put(DbStructureUnit.Column.ASSIGNMENTS, DbParseHelper.parseLongArrayToString(unit.getAssignments()));
             values.put(DbStructureUnit.Column.POSITION, unit.getPosition());
             values.put(DbStructureUnit.Column.PROGRESS, unit.getProgress());
             values.put(DbStructureUnit.Column.BEGIN_DATE, unit.getBegin_date());
@@ -503,15 +503,15 @@ public class DatabaseManager extends DbManagerBase {
             ContentValues values = new ContentValues();
 
             values.put(DbStructureLesson.Column.LESSON_ID, lesson.getId());
-            values.put(DbStructureLesson.Column.STEPS, DbParseHelper.INSTANCE.parseLongArrayToString(lesson.getSteps()));
+            values.put(DbStructureLesson.Column.STEPS, DbParseHelper.parseLongArrayToString(lesson.getSteps()));
             values.put(DbStructureLesson.Column.IS_FEATURED, lesson.is_featured());
             values.put(DbStructureLesson.Column.IS_PRIME, lesson.is_prime());
             values.put(DbStructureLesson.Column.PROGRESS, lesson.getProgress());
             values.put(DbStructureLesson.Column.OWNER, lesson.getOwner());
-            values.put(DbStructureLesson.Column.SUBSCRIPTIONS, DbParseHelper.INSTANCE.parseStringArrayToString(lesson.getSubscriptions()));
+            values.put(DbStructureLesson.Column.SUBSCRIPTIONS, DbParseHelper.parseStringArrayToString(lesson.getSubscriptions()));
             values.put(DbStructureLesson.Column.VIEWED_BY, lesson.getViewed_by());
             values.put(DbStructureLesson.Column.PASSED_BY, lesson.getPassed_by());
-            values.put(DbStructureLesson.Column.DEPENDENCIES, DbParseHelper.INSTANCE.parseStringArrayToString(lesson.getDependencies()));
+            values.put(DbStructureLesson.Column.DEPENDENCIES, DbParseHelper.parseStringArrayToString(lesson.getDependencies()));
             values.put(DbStructureLesson.Column.IS_PUBLIC, lesson.is_public());
             values.put(DbStructureLesson.Column.TITLE, lesson.getTitle());
             values.put(DbStructureLesson.Column.SLUG, lesson.getSlug());
@@ -553,15 +553,15 @@ public class DatabaseManager extends DbManagerBase {
 
 
         lesson.setId(cursor.getLong(columnIndexLessonId));
-        lesson.setSteps(DbParseHelper.INSTANCE.parseStringToLongArray(cursor.getString(columnIndexSteps)));
+        lesson.setSteps(DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexSteps)));
         lesson.setIs_featured(cursor.getInt(columnIndexIsFeatured) > 0);
         lesson.setIs_prime(cursor.getInt(columnIndexIsPrime) > 0);
         lesson.setProgress(cursor.getString(columnIndexProgress));
         lesson.setOwner(cursor.getInt(columnIndexOwner));
-        lesson.setSubscriptions(DbParseHelper.INSTANCE.parseStringToStringArray(cursor.getString(columnIndexSubscriptions)));
+        lesson.setSubscriptions(DbParseHelper.parseStringToStringArray(cursor.getString(columnIndexSubscriptions)));
         lesson.setViewed_by(cursor.getInt(columnIndexViewedBy));
         lesson.setPassed_by(cursor.getInt(columnIndexPassedBy));
-        lesson.setDependencies(DbParseHelper.INSTANCE.parseStringToStringArray(cursor.getString(columnIndexDependencies)));
+        lesson.setDependencies(DbParseHelper.parseStringToStringArray(cursor.getString(columnIndexDependencies)));
         lesson.setIs_public(cursor.getInt(columnIndexIsPublic) > 0);
         lesson.setTitle(cursor.getString(columnIndexTitle));
         lesson.setSlug(cursor.getString(columnIndexSlug));
@@ -591,7 +591,7 @@ public class DatabaseManager extends DbManagerBase {
         unit.setSection(cursor.getLong(columnIndexSection));
         unit.setLesson(cursor.getLong(columnIndexLesson));
         unit.setProgress(cursor.getString(columnIndexProgress));
-        unit.setAssignments(DbParseHelper.INSTANCE.parseStringToLongArray(cursor.getString(columnIndexAssignments)));
+        unit.setAssignments(DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexAssignments)));
         unit.setBegin_date(cursor.getString(columnIndexBeginDate));
         unit.setSoft_deadline(cursor.getString(columnIndexSoftDeadline));
         unit.setHard_deadline(cursor.getString(columnIndexHardDeadline));
@@ -689,7 +689,7 @@ public class DatabaseManager extends DbManagerBase {
         section.setHard_deadline(cursor.getString(columnIndexHardDeadline));
         section.setCourse(cursor.getLong(columnIndexCourseId));
         section.setPosition(cursor.getInt(columnIndexPosition));
-        section.setUnits(DbParseHelper.INSTANCE.parseStringToLongArray(cursor.getString(columnIndexUnits)));
+        section.setUnits(DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexUnits)));
 
         return section;
     }
@@ -708,10 +708,10 @@ public class DatabaseManager extends DbManagerBase {
         course.setBegin_date_source(cursor.getString(columnNumber++));
         course.setLast_deadline(cursor.getString(columnNumber++));
         course.setDescription(cursor.getString(columnNumber++));
-        course.setInstructors(DbParseHelper.INSTANCE.parseStringToLongArray(cursor.getString(columnNumber++)));
+        course.setInstructors(DbParseHelper.parseStringToLongArray(cursor.getString(columnNumber++)));
         course.setRequirements(cursor.getString(columnNumber++));
         course.setEnrollment(cursor.getInt(columnNumber++));
-        course.setSections(DbParseHelper.INSTANCE.parseStringToLongArray(cursor.getString(columnNumber++)));
+        course.setSections(DbParseHelper.parseStringToLongArray(cursor.getString(columnNumber++)));
 
 
         return course;
@@ -738,7 +738,7 @@ public class DatabaseManager extends DbManagerBase {
         step.setViewed_by(cursor.getLong(columnIndexViewedBy));
         step.setPassed_by(cursor.getLong(columnIndexPassedBy));
         step.setUpdate_date(cursor.getString(columnIndexUpdateDate));
-        step.setSubscriptions(DbParseHelper.INSTANCE.parseStringToStringArray(cursor.getString(columnIndexSubscriptions)));
+        step.setSubscriptions(DbParseHelper.parseStringToStringArray(cursor.getString(columnIndexSubscriptions)));
 
 
         String Query = "Select * from " + DbStructureBlock.BLOCKS + " where " + DbStructureBlock.Column.STEP_ID + " = " + step.getId();

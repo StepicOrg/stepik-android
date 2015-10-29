@@ -1,7 +1,7 @@
 package org.stepic.droid.core;
 
-import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.FragmentActivityBase;
+import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.concurrency.FromDbCoursesTask;
 import org.stepic.droid.concurrency.FromDbSectionTask;
 import org.stepic.droid.concurrency.FromDbStepTask;
