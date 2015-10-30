@@ -7,6 +7,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import org.stepic.droid.R;
+import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.util.AppConstants;
 
@@ -18,11 +19,14 @@ public abstract class FragmentStepBase extends FragmentBase {
     protected WebView mHeaderWv;
 
     protected Step mStep;
+    protected Lesson mLesson;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mStep = (Step) getArguments().getSerializable(AppConstants.KEY_STEP_BUNDLE);
+        mLesson = (Lesson) getArguments().getSerializable(AppConstants.KEY_LESSON_BUNDLE);
+
         if (mStep != null &&
                 mStep.getBlock() != null &&
                 mStep.getBlock().getText() != null &&

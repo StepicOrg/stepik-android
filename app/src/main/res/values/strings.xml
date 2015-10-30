@@ -53,5 +53,6 @@
     <string name="title_clear_cache_dialog">Please confirm</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="open_web_to_solve">Open web version to solve</string>
 
 </resources>

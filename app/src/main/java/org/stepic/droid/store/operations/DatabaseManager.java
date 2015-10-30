@@ -171,6 +171,7 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureStep.Column.PASSED_BY, step.getPassed_by());
             values.put(DbStructureStep.Column.CREATE_DATE, step.getCreate_date());
             values.put(DbStructureStep.Column.UPDATE_DATE, step.getUpdate_date());
+            values.put(DbStructureStep.Column.POSITION, step.getPosition());
 
             database.insert(DbStructureStep.STEPS, null, values);
 
@@ -729,6 +730,7 @@ public class DatabaseManager extends DbManagerBase {
         int columnIndexPassedBy = cursor.getColumnIndex(DbStructureStep.Column.PASSED_BY);
         int columnIndexUpdateDate = cursor.getColumnIndex(DbStructureStep.Column.UPDATE_DATE);
         int columnIndexSubscriptions = cursor.getColumnIndex(DbStructureStep.Column.SUBSCRIPTIONS);
+        int columnIndexPosition = cursor.getColumnIndex(DbStructureStep.Column.POSITION);
 
         step.setId(cursor.getLong(columnIndexStepId));
         step.setLesson(cursor.getLong(columnIndexLessonId));
@@ -739,6 +741,7 @@ public class DatabaseManager extends DbManagerBase {
         step.setPassed_by(cursor.getLong(columnIndexPassedBy));
         step.setUpdate_date(cursor.getString(columnIndexUpdateDate));
         step.setSubscriptions(DbParseHelper.parseStringToStringArray(cursor.getString(columnIndexSubscriptions)));
+        step.setPosition(cursor.getLong(columnIndexPosition));
 
 
         String Query = "Select * from " + DbStructureBlock.BLOCKS + " where " + DbStructureBlock.Column.STEP_ID + " = " + step.getId();

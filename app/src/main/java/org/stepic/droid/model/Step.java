@@ -3,13 +3,12 @@ package org.stepic.droid.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.stepic.droid.base.MainApplication;
-
 import java.io.Serializable;
 
 public class Step implements Parcelable, Serializable {
     private long id;
     private long lesson;
+    private long position;
     private String status;
     private Block block;
     private String progress;
@@ -59,6 +58,13 @@ public class Step implements Parcelable, Serializable {
         return update_date;
     }
 
+    public long getPosition() {
+        return position;
+    }
+
+    public void setPosition(long position) {
+        this.position = position;
+    }
 
     public void setId(long id) {
         this.id = id;
@@ -100,6 +106,10 @@ public class Step implements Parcelable, Serializable {
         this.update_date = update_date;
     }
 
+    public Step() {
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -109,8 +119,9 @@ public class Step implements Parcelable, Serializable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.id);
         dest.writeLong(this.lesson);
+        dest.writeLong(this.position);
         dest.writeString(this.status);
-        dest.writeParcelable(this.block, flags);
+        dest.writeParcelable(this.block, 0);
         dest.writeString(this.progress);
         dest.writeStringArray(this.subscriptions);
         dest.writeLong(this.viewed_by);
@@ -119,14 +130,12 @@ public class Step implements Parcelable, Serializable {
         dest.writeString(this.update_date);
     }
 
-    public Step() {
-    }
-
     protected Step(Parcel in) {
         this.id = in.readLong();
         this.lesson = in.readLong();
+        this.position = in.readLong();
         this.status = in.readString();
-        this.block = in.readParcelable(MainApplication.getAppContext().getClassLoader());
+        this.block = in.readParcelable(Block.class.getClassLoader());
         this.progress = in.readString();
         this.subscriptions = in.createStringArray();
         this.viewed_by = in.readLong();

@@ -180,6 +180,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureStep.Column.SUBSCRIPTIONS + " TEXT, "
                 + DbStructureStep.Column.VIEWED_BY + " LONG, "
                 + DbStructureStep.Column.PASSED_BY + " LONG, "
+                + DbStructureStep.Column.POSITION + " LONG, "
                 + DbStructureStep.Column.CREATE_DATE + " TEXT, "
                 + DbStructureStep.Column.UPDATE_DATE + " TEXT "
                 + ")";

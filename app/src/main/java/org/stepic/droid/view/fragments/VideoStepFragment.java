@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -37,9 +36,6 @@ public class VideoStepFragment extends FragmentStepBase {
 
     @Bind(R.id.player_layout)
     View mPlayer;
-
-    @Bind(R.id.download_btn)
-    Button mDownloadButton;
 
     @Nullable
     @Override
@@ -93,13 +89,6 @@ public class VideoStepFragment extends FragmentStepBase {
                 resolveTask.execute();
             }
         });
-
-        mDownloadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
-
     }
 
     @Override

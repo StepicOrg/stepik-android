@@ -78,14 +78,11 @@ public class StepsActivity extends FragmentActivityBase {
         mUnit = (Unit) (getIntent().getExtras().get(AppConstants.KEY_UNIT_BUNDLE));
         mLesson = (Lesson) (getIntent().getExtras().get(AppConstants.KEY_LESSON_BUNDLE));
 
-
-        setTitle(mLesson.getTitle());
-        setSupportActionBar(mToolbar);
-
         mStepList = new ArrayList<>();
-        mStepAdapter = new StepFragmentAdapter(getSupportFragmentManager(), this, mStepList);
+        mStepAdapter = new StepFragmentAdapter(getSupportFragmentManager(), this, mStepList, mLesson, mUnit);
         mViewPager.setAdapter(mStepAdapter);
 
+        setTitle(mLesson.getTitle());
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

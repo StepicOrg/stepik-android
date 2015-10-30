@@ -49,4 +49,5 @@
     <string name="title_clear_cache_dialog">Подтверждение</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+    <string name="open_web_to_solve">пройти задание в web-версии</string>
 </resources>

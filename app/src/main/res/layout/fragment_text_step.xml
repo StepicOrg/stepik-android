@@ -12,13 +12,5 @@
         <include
             android:id="@+id/header"
             layout="@layout/step_text_header" />
-
-        <TextView
-            android:id="@+id/test_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Hey, it is fragment with text" />
-
     </LinearLayout>
 </ScrollView>

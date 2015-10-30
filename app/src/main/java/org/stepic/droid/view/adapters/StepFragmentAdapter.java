@@ -9,7 +9,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import org.stepic.droid.base.FragmentStepBase;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
+import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.IStepResolver;
 
@@ -19,14 +21,18 @@ import javax.inject.Inject;
 
 public class StepFragmentAdapter extends FragmentStatePagerAdapter {
 
+    private final Lesson mLesson;
+    private final Unit mUnit;
     private Context mContext;
     @Inject
     IStepResolver mResolver;
 
     List<Step> mStepList;
 
-    public StepFragmentAdapter(FragmentManager fm, Context context, List<Step> stepList) {
+    public StepFragmentAdapter(FragmentManager fm, Context context, List<Step> stepList, Lesson mLesson, Unit mUnit) {
         super(fm);
+        this.mLesson = mLesson;
+        this.mUnit = mUnit;
         MainApplication.component().inject(this);
         mContext = context;
         mStepList = stepList;
@@ -38,7 +44,7 @@ public class StepFragmentAdapter extends FragmentStatePagerAdapter {
         FragmentStepBase fragment = mResolver.getFragment(step);
         Bundle args = new Bundle();
         args.putSerializable(AppConstants.KEY_STEP_BUNDLE, step);
-        args.putString("test", position + 1 + "");
+        args.putSerializable(AppConstants.KEY_LESSON_BUNDLE, mLesson);
         fragment.setArguments(args);
         return fragment;
     }

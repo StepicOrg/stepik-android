@@ -14,7 +14,7 @@ public class AppConstants {
     public static final String DEFAULT_QUALITY = "270";
     public static final String PRE_BODY = "<html>\n" +
             "<head>\n" +
-            "<title>MathJax TeX Test Page</title>\n" +
+            "<title>Step. Stepic.org</title>\n" +
             "<script type=\"text/x-mathjax-config\">\n" +
             "  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
             "</script>\n" +

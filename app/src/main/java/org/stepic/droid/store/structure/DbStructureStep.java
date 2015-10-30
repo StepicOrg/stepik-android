@@ -16,6 +16,7 @@ public class DbStructureStep extends DBStructureBase {
         public static final String PASSED_BY = "passed_by";
         public static final String CREATE_DATE = "create_date";
         public static final String UPDATE_DATE = "update_date";
+        public static final String POSITION = "position";
     }
 
     public static String[] getUsedColumns() {
@@ -30,6 +31,8 @@ public class DbStructureStep extends DBStructureBase {
                     Column.PASSED_BY,
                     Column.CREATE_DATE,
                     Column.UPDATE_DATE,
+                    Column.POSITION,
+
             };
         }
         return mUsedColumns;

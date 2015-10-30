@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 
 public interface IScreenManager {
@@ -23,5 +24,7 @@ public interface IScreenManager {
     void showUnitsForSection (Context sourceActivity, @NotNull Section section);
 
     void showSteps(Context sourceActivity, Unit unit, Lesson lesson);
+
+    void openStepInWeb(Context context, Step step);
 
 }
