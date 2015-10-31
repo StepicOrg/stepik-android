@@ -18,6 +18,7 @@ import org.stepic.droid.view.adapters.MyCoursesAdapter;
 import org.stepic.droid.view.adapters.SectionAdapter;
 import org.stepic.droid.view.adapters.StepFragmentAdapter;
 import org.stepic.droid.view.adapters.UnitAdapter;
+import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
 import org.stepic.droid.view.dialogs.ClearCacheDialogFragment;
 import org.stepic.droid.web.HttpManager;
 import org.stepic.droid.web.RetrofitRESTApi;
@@ -73,5 +74,8 @@ public interface StepicCoreComponent {
     void inject(ToDbStepTask stepicTask);
 
     void inject(FromDbStepTask stepicTask);
+
     void inject(ToDbCachedVideo stepicTask);
+
+    void inject(AllowMobileDataDialogFragment allowMobileDataDialogFragment);
 }

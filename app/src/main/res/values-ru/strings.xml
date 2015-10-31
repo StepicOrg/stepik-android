@@ -50,4 +50,6 @@
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="open_web_to_solve">пройти задание в web-версии</string>
+    <string name="allow_mobile_download_title">Разрешить загрузку через мобильный интернет</string>
+    <string name="allow_mobile_message">Разрешить телефону загружать видео по мобильному интернету, когда Wi-Fi недоступен?</string>
 </resources>

@@ -54,5 +54,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="open_web_to_solve">Open web version to solve</string>
+    <string name="allow_mobile_download_title">Allow mobile download</string>
+    <string name="allow_mobile_message">Allow your device to download videos over your mobile connection when Wi-Fi is not available?</string>
 
 </resources>
