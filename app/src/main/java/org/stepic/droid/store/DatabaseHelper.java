@@ -9,6 +9,7 @@ import org.stepic.droid.store.structure.DbStructureBlock;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
 import org.stepic.droid.store.structure.DbStructureLesson;
 import org.stepic.droid.store.structure.DbStructureSections;
+import org.stepic.droid.store.structure.DbStructureSharedDownloads;
 import org.stepic.droid.store.structure.DbStructureStep;
 import org.stepic.droid.store.structure.DbStructureUnit;
 
@@ -28,6 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         createLessonsDb(db, DbStructureLesson.LESSONS);
         createStepsDb(db, DbStructureStep.STEPS);
         createBlocksDb(db, DbStructureBlock.BLOCKS);
+        createShareDownloads(db, DbStructureSharedDownloads.SHARED_DOWNLOADS);
     }
 
     @Override
@@ -41,9 +43,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DbStructureLesson.LESSONS);
         db.execSQL("DROP TABLE IF EXISTS " + DbStructureStep.STEPS);
         db.execSQL("DROP TABLE IF EXISTS " + DbStructureBlock.BLOCKS);
-
+        db.execSQL("DROP TABLE IF EXISTS " + DbStructureSharedDownloads.SHARED_DOWNLOADS);
         onCreate(db);
-
     }
 
     private void createCourseTable(SQLiteDatabase db, String name) {
@@ -197,5 +198,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
+    private void createShareDownloads(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureSharedDownloads.Column.DOWNLOAD_ID + " LONG, "
+                + DbStructureSharedDownloads.Column.STEP_ID + " LONG, "
+                + DbStructureSharedDownloads.Column.VIDEO_ID + " LONG "
+                + ")";
+        db.execSQL(sql);
+    }
 
 }

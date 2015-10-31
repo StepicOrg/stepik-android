@@ -3,10 +3,12 @@ package org.stepic.droid.store.operations;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import org.stepic.droid.model.Block;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
@@ -17,6 +19,7 @@ import org.stepic.droid.store.structure.DbStructureBlock;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
 import org.stepic.droid.store.structure.DbStructureLesson;
 import org.stepic.droid.store.structure.DbStructureSections;
+import org.stepic.droid.store.structure.DbStructureSharedDownloads;
 import org.stepic.droid.store.structure.DbStructureStep;
 import org.stepic.droid.store.structure.DbStructureUnit;
 import org.stepic.droid.util.DbParseHelper;
@@ -343,7 +346,11 @@ public class DatabaseManager extends DbManagerBase {
 
     public void addVideo(CachedVideo cachedVideo) {
         try {
+
+            Log.i("downloading", "pre open for video id " + cachedVideo.getVideoId());
+
             open();
+            Log.i("downloading", "after open for video id " + cachedVideo.getVideoId());
             ContentValues values = new ContentValues();
 
             values.put(DbStructureCachedVideo.Column.VIDEO_ID, cachedVideo.getVideoId());
@@ -352,6 +359,17 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureCachedVideo.Column.THUMBNAIL, cachedVideo.getThumbnail());
 
             database.insert(DbStructureCachedVideo.CACHED_VIDEO, null, values);
+        } finally {
+            close();
+        }
+    }
+
+    public void deleteDownloadEntityByDownloadId(long downloadId) {
+        try {
+            open();
+            database.delete(DbStructureSharedDownloads.SHARED_DOWNLOADS,
+                    "\"" + DbStructureSharedDownloads.Column.DOWNLOAD_ID + "\"" + " = " + downloadId,
+                    null);
         } finally {
             close();
         }
@@ -453,6 +471,25 @@ public class DatabaseManager extends DbManagerBase {
     }
 
 
+    public DownloadEntity getDownloadEntityIfExist(Long downloadId) {
+        try {
+            open();
+            String Query = "Select * from " + DbStructureSharedDownloads.SHARED_DOWNLOADS + " where " + DbStructureSharedDownloads.Column.DOWNLOAD_ID + " = " + downloadId;
+            Cursor cursor = database.rawQuery(Query, null);
+            if (cursor.getCount() <= 0) {
+                cursor.close();
+                return null;
+            }
+            cursor.moveToFirst();
+            DownloadEntity downloadEntity = parseDownloadEntity(cursor);
+            cursor.close();
+            return downloadEntity;
+
+        } finally {
+            close();
+        }
+    }
+
     public void clearCacheCourses(DatabaseManager.Table type) {
         List<Course> courses = getAllCourses(type);
 
@@ -495,6 +532,23 @@ public class DatabaseManager extends DbManagerBase {
         }
 
     }
+
+    public void addDownloadEntity(DownloadEntity downloadEntity) {
+        try {
+            open();
+            if (isDownloadEntityInDb(downloadEntity)) return;
+
+            ContentValues values = new ContentValues();
+            values.put(DbStructureSharedDownloads.Column.DOWNLOAD_ID, downloadEntity.getDownloadId());
+            values.put(DbStructureSharedDownloads.Column.VIDEO_ID, downloadEntity.getVideoId());
+            values.put(DbStructureSharedDownloads.Column.STEP_ID, downloadEntity.getStepId());
+            database.insert(DbStructureSharedDownloads.SHARED_DOWNLOADS, null, values);
+
+        } finally {
+            close();
+        }
+    }
+
 
     public void addLesson(Lesson lesson) {
         try {
@@ -603,6 +657,21 @@ public class DatabaseManager extends DbManagerBase {
 
     }
 
+    private DownloadEntity parseDownloadEntity(Cursor cursor) {
+        DownloadEntity downloadEntity = new DownloadEntity();
+
+        int indexDownloadId = cursor.getColumnIndex(DbStructureSharedDownloads.Column.DOWNLOAD_ID);
+        int indexStepId = cursor.getColumnIndex(DbStructureSharedDownloads.Column.STEP_ID);
+        int indexVideoId = cursor.getColumnIndex(DbStructureSharedDownloads.Column.VIDEO_ID);
+
+        downloadEntity.setDownloadId(cursor.getLong(indexDownloadId));
+        downloadEntity.setStepId(cursor.getLong(indexStepId));
+        downloadEntity.setVideoId(cursor.getLong(indexVideoId));
+
+        return downloadEntity;
+    }
+
+
     private Cursor getUnitCursor() {
         return database.query(DbStructureUnit.UNITS, DbStructureUnit.getUsedColumns(),
                 null, null, null, null, null);
@@ -622,6 +691,17 @@ public class DatabaseManager extends DbManagerBase {
         return cachedVideo;
     }
 
+
+    private boolean isDownloadEntityInDb(DownloadEntity downloadEntity) {
+        String Query = "Select * from " + DbStructureSharedDownloads.SHARED_DOWNLOADS + " where " + DbStructureSharedDownloads.Column.DOWNLOAD_ID + " = " + downloadEntity.getDownloadId();
+        Cursor cursor = database.rawQuery(Query, null);
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
 
     private boolean isVideoInDb(Video video) {
         String Query = "Select * from " + DbStructureCachedVideo.CACHED_VIDEO + " where " + DbStructureCachedVideo.Column.VIDEO_ID + " = " + video.getId();

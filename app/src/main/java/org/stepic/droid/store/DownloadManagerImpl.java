@@ -1,27 +1,22 @@
 package org.stepic.droid.store;
 
 import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.util.Pair;
 
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.R;
-import org.stepic.droid.concurrency.ToDbCachedVideo;
 import org.stepic.droid.concurrency.ToDbCoursesTask;
 import org.stepic.droid.concurrency.ToDbSectionTask;
 import org.stepic.droid.concurrency.ToDbStepTask;
 import org.stepic.droid.concurrency.ToDbUnitLessonTask;
 import org.stepic.droid.events.video.MemoryPermissionDeniedEvent;
-import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
@@ -38,7 +33,6 @@ import org.stepic.droid.web.StepResponse;
 import org.stepic.droid.web.UnitStepicResponse;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -59,9 +53,6 @@ public class DownloadManagerImpl implements IDownloadManager {
     IApi mApi;
     DatabaseManager mDb;
 
-    private BroadcastReceiver mDownloadReceiver;
-    private HashMap<Long, Pair<Long, Long>> mDmIdToVideoIdAndStepId;
-
 
     @Inject
     public DownloadManagerImpl(Context context, UserPreferences preferences, DownloadManager dm, Bus bus, IVideoResolver resolver, IApi api, DatabaseManager db) {
@@ -72,28 +63,6 @@ public class DownloadManagerImpl implements IDownloadManager {
         mResolver = resolver;
         mApi = api;
         mDb = db;
-
-
-        IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-        mDmIdToVideoIdAndStepId = new HashMap<>();
-        mDownloadReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-                if (mDmIdToVideoIdAndStepId.keySet().contains(referenceId)) {
-                    long video_id = mDmIdToVideoIdAndStepId.get(referenceId).first;
-                    long step_id = mDmIdToVideoIdAndStepId.get(referenceId).second;
-                    mDmIdToVideoIdAndStepId.remove(referenceId);
-                    File downloadFolderAndFile = new File(mUserPrefs.getDownloadFolder(), video_id + "");
-                    String path = Uri.fromFile(downloadFolderAndFile).getPath();
-                    CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, null);
-
-                    ToDbCachedVideo saveVideoToDb = new ToDbCachedVideo(cachedVideo);
-                    saveVideoToDb.execute();
-                }
-            }
-        };
-        context.registerReceiver(mDownloadReceiver, filter);
     }
 
 
@@ -110,7 +79,7 @@ public class DownloadManagerImpl implements IDownloadManager {
             File downloadFolderAndFile = new File(mUserPrefs.getDownloadFolder(), fileId + "");
             if (downloadFolderAndFile.exists()) {
                 //we do not need download the file, because we already have it.
-                // FIXME: 20.10.15 this simple check doesn't work if file is loading and at this moment adding to Download manager Queue, 
+                // FIXME: 20.10.15 this simple check doesn't work if file is loading and at this moment adding to Download manager Queue,
                 // FIXME: 20.10.15 but this is not useless, because, work if file exists on the disk.
                 // FIXME: 20.10.15 For 'singleton' file of Video (or Step) at storage use UI and Broadcasts.
                 return;
@@ -131,8 +100,16 @@ public class DownloadManagerImpl implements IDownloadManager {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
             }
 
+
             long downloadId = mSystemDownloadManager.enqueue(request);
-            mDmIdToVideoIdAndStepId.put(downloadId, new Pair(fileId, step.getId()));
+            final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId);
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    mDb.addDownloadEntity(newEntity);
+                    return null;
+                }
+            }.execute();
 
 
         } catch (SecurityException ex) {

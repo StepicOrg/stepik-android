@@ -90,5 +90,12 @@
             android:label="@string/steps_title"
             android:screenOrientation="portrait" />
 
+        <receiver android:name="org.stepic.droid.receivers.DownloadCompleteReceiver"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
+
     </application>
 </manifest>
