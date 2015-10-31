@@ -59,8 +59,7 @@ public class UserPreferences {
 
 
     public boolean isNetworkMobileAllowed() {
-        return false;
-        //// FIXME: 20.10.15 save at preferences and change
+        return sharedPreferenceHelper.isMobileInternetAlsoAllowed();
     }
 
 }
