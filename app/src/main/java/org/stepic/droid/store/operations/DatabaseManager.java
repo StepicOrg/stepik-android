@@ -375,6 +375,24 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
+    public boolean isExistDownloadEntityByVideoId (long videoId) {
+        try {
+            open();
+            String Query = "Select * from " + DbStructureSharedDownloads.SHARED_DOWNLOADS + " where " + DbStructureSharedDownloads.Column.VIDEO_ID+ " = " + videoId;
+            Cursor cursor = database.rawQuery(Query, null);
+            if (cursor.getCount() <= 0) {
+                cursor.close();
+                return false;
+            }
+            cursor.close();
+            return true;
+        }
+        finally {
+            close();
+        }
+
+    }
+
     public void deleteVideo(Video video) {
         try {
             open();

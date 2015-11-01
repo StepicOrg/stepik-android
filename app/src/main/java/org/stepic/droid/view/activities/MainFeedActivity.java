@@ -1,6 +1,7 @@
 package org.stepic.droid.view.activities;
 
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -134,7 +135,14 @@ public class MainFeedActivity extends FragmentActivityBase {
                         //todo: add 'Are you sure?" dialog
                         SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
                         helper.deleteAuthInfo();
-                        mDbManager.clearCacheCourses(DatabaseManager.Table.enrolled);
+                        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... params) {
+                                mDbManager.clearCacheCourses(DatabaseManager.Table.enrolled);
+                                return null;
+                            }
+                        };
+                        task.execute();
                         mShell.getScreenProvider().showLaunchScreen(MainFeedActivity.this, false);
                         return true;
 

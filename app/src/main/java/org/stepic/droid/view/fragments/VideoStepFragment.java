@@ -151,10 +151,10 @@ public class VideoStepFragment extends FragmentStepBase {
         }
 
     }
-
-    @Subscribe
-    public void onPermissionRestricted(MemoryPermissionDeniedEvent e) {
-        Toast.makeText(getContext(), R.string.turn_on_permission, Toast.LENGTH_LONG).show();
-    }
+//
+//    @Subscribe
+//    public void onPermissionRestricted(MemoryPermissionDeniedEvent e) {
+//        Toast.makeText(getContext(), R.string.turn_on_permission, Toast.LENGTH_LONG).show();
+//    }
 
 }

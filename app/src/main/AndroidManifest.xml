@@ -97,5 +97,8 @@
             </intent-filter>
         </receiver>
 
+        <service android:name="org.stepic.droid.services.LoadService"
+            android:exported="true"/>
+
     </application>
 </manifest>

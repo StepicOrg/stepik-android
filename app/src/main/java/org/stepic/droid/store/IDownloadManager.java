@@ -9,10 +9,7 @@ import org.stepic.droid.store.operations.DatabaseManager;
 
 public interface IDownloadManager {
 
-
-    boolean isDownloadManagerEnabled();
-
-    void addStep(Step step, String title);
+    void addStep(Step step, Lesson lesson);
 
     void addSection(Section section);
 

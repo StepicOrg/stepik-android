@@ -25,6 +25,8 @@ public class AppConstants {
             "<body>";
     public static final String POST_BODY = "</body>\n" +
             "</html>";
+    public static final String KEY_LOAD_TYPE = "KEY_LOAD_TYPE";
+    public static final String KEY_TABLE_TYPE = "table_type";
 
 
     //Types of steps:
@@ -45,5 +47,6 @@ public class AppConstants {
     public static final String TYPE_PUZZLE = "puzzle";
     public static final String TYPE_PYCHARM = "pycharm";
     public static final String TYPE_CODE = "code";
+
 
 }
