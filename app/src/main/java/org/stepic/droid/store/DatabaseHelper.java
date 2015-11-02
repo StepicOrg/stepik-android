@@ -68,6 +68,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DBStructureCourses.Column.IS_CONTEST + " BOOLEAN, "
                 + DBStructureCourses.Column.LANGUAGE + " TEXT, "
                 + DBStructureCourses.Column.IS_PUBLIC + " BOOLEAN, "
+                + DBStructureCourses.Column.IS_CACHED + " BOOLEAN, "
                 + DBStructureCourses.Column.TITLE + " TEXT, "
                 + DBStructureCourses.Column.SLUG + " TEXT, "
                 + DBStructureCourses.Column.SUMMARY + " TEXT, "
@@ -99,6 +100,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureSections.Column.HARD_DEADLINE_SOURCE + " TEXT, "
                 + DbStructureSections.Column.GRADING_POLICY_SOURCE + " TEXT, "
                 + DbStructureSections.Column.IS_ACTIVE + " BOOLEAN, "
+                + DbStructureSections.Column.IS_CACHED + " BOOLEAN, "
                 + DbStructureSections.Column.CREATE_DATE + " TEXT, "
                 + DbStructureSections.Column.UPDATE_DATE + " TEXT "
 
@@ -140,6 +142,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureUnit.Column.GRADING_POLICY_SOURCE + " TEXT, "
                 + DbStructureUnit.Column.IS_ACTIVE + " BOOLEAN, "
                 + DbStructureUnit.Column.CREATE_DATE + " TEXT, "
+                + DbStructureUnit.Column.IS_CACHED + " BOOLEAN, "
                 + DbStructureUnit.Column.UPDATE_DATE + " TEXT "
 
                 + ")";
@@ -165,6 +168,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureLesson.Column.SLUG + " TEXT, "
                 + DbStructureLesson.Column.CREATE_DATE + " TEXT, "
                 + DbStructureLesson.Column.LEARNERS_GROUP + " TEXT, "
+                + DbStructureLesson.Column.IS_CACHED + " BOOLEAN, "
                 + DbStructureLesson.Column.TEACHER_GROUP + " TEXT "
 
                 + ")";
@@ -183,6 +187,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureStep.Column.PASSED_BY + " LONG, "
                 + DbStructureStep.Column.POSITION + " LONG, "
                 + DbStructureStep.Column.CREATE_DATE + " TEXT, "
+                + DbStructureStep.Column.IS_CACHED + " BOOLEAN, "
                 + DbStructureStep.Column.UPDATE_DATE + " TEXT "
                 + ")";
         db.execSQL(sql);

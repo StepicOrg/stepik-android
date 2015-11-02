@@ -24,6 +24,7 @@ public class DbStructureLesson extends DBStructureBase {
         public static final String UPDATE_DATE = "update_date";
         public static final String LEARNERS_GROUP = "learners_group";
         public static final String TEACHER_GROUP = "teacher_group";
+        public static final String IS_CACHED = "is_cached";
 
     }
 
@@ -47,8 +48,8 @@ public class DbStructureLesson extends DBStructureBase {
                     Column.CREATE_DATE,
                     Column.UPDATE_DATE,
                     Column.LEARNERS_GROUP,
-                    Column.TEACHER_GROUP
-
+                    Column.TEACHER_GROUP,
+                    Column.IS_CACHED,
             };
         }
         return mUsedColumns;

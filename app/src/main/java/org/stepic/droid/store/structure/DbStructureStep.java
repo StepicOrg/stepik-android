@@ -17,6 +17,7 @@ public class DbStructureStep extends DBStructureBase {
         public static final String CREATE_DATE = "create_date";
         public static final String UPDATE_DATE = "update_date";
         public static final String POSITION = "position";
+        public static final String IS_CACHED = "is_cached";
     }
 
     public static String[] getUsedColumns() {
@@ -32,6 +33,7 @@ public class DbStructureStep extends DBStructureBase {
                     Column.CREATE_DATE,
                     Column.UPDATE_DATE,
                     Column.POSITION,
+                    Column.IS_CACHED,
 
             };
         }

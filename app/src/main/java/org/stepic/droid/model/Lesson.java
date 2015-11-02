@@ -28,6 +28,15 @@ public class Lesson implements Parcelable, Serializable {
     private String update_date;
     private String learners_group;
     private String teacher_group;
+    private boolean is_cached;
+
+    public boolean is_cached() {
+        return is_cached;
+    }
+
+    public void setIs_cached(boolean is_cached) {
+        this.is_cached = is_cached;
+    }
 
     public long getId() {
         return id;
@@ -197,6 +206,9 @@ public class Lesson implements Parcelable, Serializable {
         this.teacher_group = teacher_group;
     }
 
+    public Lesson() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -225,9 +237,7 @@ public class Lesson implements Parcelable, Serializable {
         dest.writeString(this.update_date);
         dest.writeString(this.learners_group);
         dest.writeString(this.teacher_group);
-    }
-
-    public Lesson() {
+        dest.writeByte(is_cached ? (byte) 1 : (byte) 0);
     }
 
     protected Lesson(Parcel in) {
@@ -252,9 +262,10 @@ public class Lesson implements Parcelable, Serializable {
         this.update_date = in.readString();
         this.learners_group = in.readString();
         this.teacher_group = in.readString();
+        this.is_cached = in.readByte() != 0;
     }
 
-    public static final Parcelable.Creator<Lesson> CREATOR = new Parcelable.Creator<Lesson>() {
+    public static final Creator<Lesson> CREATOR = new Creator<Lesson>() {
         public Lesson createFromParcel(Parcel source) {
             return new Lesson(source);
         }

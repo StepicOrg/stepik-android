@@ -25,6 +25,15 @@ public class Unit implements Serializable, Parcelable {
     private boolean is_active;
     private String create_date;
     private String update_date;
+    private boolean is_cached;
+
+    public boolean is_cached() {
+        return is_cached;
+    }
+
+    public void setIs_cached(boolean is_cached) {
+        this.is_cached = is_cached;
+    }
 
     public long getId() {
         return id;
@@ -178,6 +187,7 @@ public class Unit implements Serializable, Parcelable {
         this.update_date = update_date;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -204,6 +214,7 @@ public class Unit implements Serializable, Parcelable {
         dest.writeByte(is_active ? (byte) 1 : (byte) 0);
         dest.writeString(this.create_date);
         dest.writeString(this.update_date);
+        dest.writeByte(is_cached ? (byte) 1 : (byte) 0);
     }
 
     public Unit() {
@@ -229,6 +240,7 @@ public class Unit implements Serializable, Parcelable {
         this.is_active = in.readByte() != 0;
         this.create_date = in.readString();
         this.update_date = in.readString();
+        this.is_cached = in.readByte() != 0;
     }
 
     public static final Creator<Unit> CREATOR = new Creator<Unit>() {

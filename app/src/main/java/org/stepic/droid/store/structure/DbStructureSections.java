@@ -28,7 +28,7 @@ public class DbStructureSections extends DBStructureBase {
         public static final String IS_ACTIVE = "is_active";
         public static final String CREATE_DATE = "create_date";
         public static final String UPDATE_DATE = "update_date";
-
+        public static final String IS_CACHED = "is_cached";
     }
 
     public static String[] getUsedColumns() {
@@ -44,7 +44,8 @@ public class DbStructureSections extends DBStructureBase {
                     Column.HARD_DEADLINE,
                     Column.COURSE,
                     Column.POSITION,
-                    Column.UNITS
+                    Column.UNITS,
+                    Column.IS_CACHED,
             };
         }
         return mUsedColumns;
