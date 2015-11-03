@@ -51,7 +51,6 @@ public class DatabaseManager extends DbManagerBase {
         super(context);
     }
 
-
     public List<Course> getAllCourses(DatabaseManager.Table type) {
 
         try {
@@ -97,6 +96,8 @@ public class DatabaseManager extends DbManagerBase {
 
             String sectionsParsed = DbParseHelper.parseLongArrayToString(course.getSections());
             values.put(DBStructureCourses.Column.SECTIONS, sectionsParsed);
+
+            values.put(DBStructureCourses.Column.IS_CACHED, course.is_cached());
 
             database.insert(type.getStoreName(), null, values);
 
@@ -152,6 +153,7 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureSections.Column.COURSE, section.getCourse());
             values.put(DbStructureSections.Column.POSITION, section.getPosition());
             values.put(DbStructureSections.Column.UNITS, DbParseHelper.parseLongArrayToString(section.getUnits()));
+            values.put(DbStructureSections.Column.IS_CACHED, section.is_cached());
             database.insert(DbStructureSections.SECTIONS, null, values);
 
         } finally {
@@ -175,7 +177,7 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureStep.Column.CREATE_DATE, step.getCreate_date());
             values.put(DbStructureStep.Column.UPDATE_DATE, step.getUpdate_date());
             values.put(DbStructureStep.Column.POSITION, step.getPosition());
-
+            values.put(DbStructureStep.Column.IS_CACHED, step.is_cached());
             database.insert(DbStructureStep.STEPS, null, values);
 
             addBlock(step);
@@ -348,7 +350,6 @@ public class DatabaseManager extends DbManagerBase {
         try {
 
             Log.i("downloading", "pre open for video id " + cachedVideo.getVideoId());
-
             open();
             Log.i("downloading", "after open for video id " + cachedVideo.getVideoId());
             ContentValues values = new ContentValues();
@@ -375,10 +376,10 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
-    public boolean isExistDownloadEntityByVideoId (long videoId) {
+    public boolean isExistDownloadEntityByVideoId(long videoId) {
         try {
             open();
-            String Query = "Select * from " + DbStructureSharedDownloads.SHARED_DOWNLOADS + " where " + DbStructureSharedDownloads.Column.VIDEO_ID+ " = " + videoId;
+            String Query = "Select * from " + DbStructureSharedDownloads.SHARED_DOWNLOADS + " where " + DbStructureSharedDownloads.Column.VIDEO_ID + " = " + videoId;
             Cursor cursor = database.rawQuery(Query, null);
             if (cursor.getCount() <= 0) {
                 cursor.close();
@@ -386,8 +387,7 @@ public class DatabaseManager extends DbManagerBase {
             }
             cursor.close();
             return true;
-        }
-        finally {
+        } finally {
             close();
         }
 
@@ -542,6 +542,7 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureUnit.Column.IS_ACTIVE, unit.is_active());
             values.put(DbStructureUnit.Column.CREATE_DATE, unit.getCreate_date());
             values.put(DbStructureUnit.Column.UPDATE_DATE, unit.getUpdate_date());
+            values.put(DbStructureUnit.Column.IS_CACHED, unit.is_cached());
 
             database.insert(DbStructureUnit.UNITS, null, values);
 
@@ -591,6 +592,7 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureLesson.Column.CREATE_DATE, lesson.getCreate_date());
             values.put(DbStructureLesson.Column.LEARNERS_GROUP, lesson.getLearners_group());
             values.put(DbStructureLesson.Column.TEACHER_GROUP, lesson.getTeacher_group());
+            values.put(DbStructureLesson.Column.IS_CACHED, lesson.is_cached());
 
             database.insert(DbStructureLesson.LESSONS, null, values);
 
@@ -623,7 +625,7 @@ public class DatabaseManager extends DbManagerBase {
         int columnIndexCreateDate = cursor.getColumnIndex(DbStructureLesson.Column.CREATE_DATE);
         int columnIndexLearnersGroup = cursor.getColumnIndex(DbStructureLesson.Column.LEARNERS_GROUP);
         int columnIndexTeacherGroup = cursor.getColumnIndex(DbStructureLesson.Column.TEACHER_GROUP);
-
+        int indexIsCached = cursor.getColumnIndex(DbStructureLesson.Column.IS_CACHED);
 
         lesson.setId(cursor.getLong(columnIndexLessonId));
         lesson.setSteps(DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexSteps)));
@@ -641,6 +643,7 @@ public class DatabaseManager extends DbManagerBase {
         lesson.setCreate_date(cursor.getString(columnIndexCreateDate));
         lesson.setLearners_group(cursor.getString(columnIndexLearnersGroup));
         lesson.setTeacher_group(cursor.getString(columnIndexTeacherGroup));
+        lesson.setIs_cached(cursor.getInt(indexIsCached) > 0);
 
         return lesson;
     }
@@ -658,6 +661,7 @@ public class DatabaseManager extends DbManagerBase {
         int columnIndexSoftDeadline = cursor.getColumnIndex(DbStructureUnit.Column.SOFT_DEADLINE);
         int columnIndexHardDeadline = cursor.getColumnIndex(DbStructureUnit.Column.HARD_DEADLINE);
         int columnIndexIsActive = cursor.getColumnIndex(DbStructureUnit.Column.IS_ACTIVE);
+        int indexIsCached = cursor.getColumnIndex(DbStructureUnit.Column.IS_CACHED);
 
 
         unit.setId(cursor.getLong(columnIndexUnitId));
@@ -670,6 +674,7 @@ public class DatabaseManager extends DbManagerBase {
         unit.setHard_deadline(cursor.getString(columnIndexHardDeadline));
         unit.setPosition(cursor.getInt(columnIndexPosition));
         unit.setIs_active(cursor.getInt(columnIndexIsActive) > 0);
+        unit.setIs_cached(cursor.getInt(indexIsCached) > 0);
 
         return unit;
 
@@ -778,6 +783,7 @@ public class DatabaseManager extends DbManagerBase {
         int columnIndexCourseId = cursor.getColumnIndex(DbStructureSections.Column.COURSE);
         int columnIndexPosition = cursor.getColumnIndex(DbStructureSections.Column.POSITION);
         int columnIndexUnits = cursor.getColumnIndex(DbStructureSections.Column.UNITS);
+        int indexIsCached = cursor.getColumnIndex(DbStructureSections.Column.IS_CACHED);
 
         section.setId(cursor.getLong(columnIndexId));
         section.setTitle(cursor.getString(columnIndexTitle));
@@ -788,6 +794,7 @@ public class DatabaseManager extends DbManagerBase {
         section.setHard_deadline(cursor.getString(columnIndexHardDeadline));
         section.setCourse(cursor.getLong(columnIndexCourseId));
         section.setPosition(cursor.getInt(columnIndexPosition));
+        section.setIs_cached(cursor.getInt(indexIsCached) > 0);
         section.setUnits(DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexUnits)));
 
         return section;
@@ -796,22 +803,36 @@ public class DatabaseManager extends DbManagerBase {
 
     private Course parseCourse(Cursor cursor) {
         Course course = new Course();
-        //ignore id of table
-        int columnNumber = 1;
-        course.setId(cursor.getLong(columnNumber++));
-        course.setSummary(cursor.getString(columnNumber++));
-        course.setCover(cursor.getString(columnNumber++));
-        course.setIntro(cursor.getString(columnNumber++));
-        course.setTitle(cursor.getString(columnNumber++));
-        course.setLanguage(cursor.getString(columnNumber++));
-        course.setBegin_date_source(cursor.getString(columnNumber++));
-        course.setLast_deadline(cursor.getString(columnNumber++));
-        course.setDescription(cursor.getString(columnNumber++));
-        course.setInstructors(DbParseHelper.parseStringToLongArray(cursor.getString(columnNumber++)));
-        course.setRequirements(cursor.getString(columnNumber++));
-        course.setEnrollment(cursor.getInt(columnNumber++));
-        course.setSections(DbParseHelper.parseStringToLongArray(cursor.getString(columnNumber++)));
 
+        int indexId = cursor.getColumnIndex(DBStructureCourses.Column.ID);
+        int indexSummary = cursor.getColumnIndex(DBStructureCourses.Column.SUMMARY);
+        int indexCover = cursor.getColumnIndex(DBStructureCourses.Column.COVER_LINK);
+        int indexIntro = cursor.getColumnIndex(DBStructureCourses.Column.INTRO_LINK_VIMEO);
+        int indexTitle = cursor.getColumnIndex(DBStructureCourses.Column.TITLE);
+        int indexLanguage = cursor.getColumnIndex(DBStructureCourses.Column.LANGUAGE);
+        int indexBeginDateSource = cursor.getColumnIndex(DBStructureCourses.Column.BEGIN_DATE_SOURCE);
+        int indexLastDeadline = cursor.getColumnIndex(DBStructureCourses.Column.LAST_DEADLINE);
+        int indexDescription = cursor.getColumnIndex(DBStructureCourses.Column.DESCRIPTION);
+        int indexInstructors = cursor.getColumnIndex(DBStructureCourses.Column.INSTRUCTORS);
+        int indexRequirements = cursor.getColumnIndex(DBStructureCourses.Column.REQUIREMENTS);
+        int indexEnrollment = cursor.getColumnIndex(DBStructureCourses.Column.ENROLLMENT);
+        int indexSection = cursor.getColumnIndex(DBStructureCourses.Column.SECTIONS);
+        int indexIsCached = cursor.getColumnIndex(DBStructureCourses.Column.IS_CACHED);
+
+        course.setId(cursor.getLong(indexId));
+        course.setSummary(cursor.getString(indexSummary));
+        course.setCover(cursor.getString(indexCover));
+        course.setIntro(cursor.getString(indexIntro));
+        course.setTitle(cursor.getString(indexTitle));
+        course.setLanguage(cursor.getString(indexLanguage));
+        course.setBegin_date_source(cursor.getString(indexBeginDateSource));
+        course.setLast_deadline(cursor.getString(indexLastDeadline));
+        course.setDescription(cursor.getString(indexDescription));
+        course.setInstructors(DbParseHelper.parseStringToLongArray(cursor.getString(indexInstructors)));
+        course.setRequirements(cursor.getString(indexRequirements));
+        course.setEnrollment(cursor.getInt(indexEnrollment));
+        course.setIs_cached(cursor.getInt(indexIsCached) > 0);
+        course.setSections(DbParseHelper.parseStringToLongArray(cursor.getString(indexSection)));
 
         return course;
     }
@@ -829,6 +850,7 @@ public class DatabaseManager extends DbManagerBase {
         int columnIndexUpdateDate = cursor.getColumnIndex(DbStructureStep.Column.UPDATE_DATE);
         int columnIndexSubscriptions = cursor.getColumnIndex(DbStructureStep.Column.SUBSCRIPTIONS);
         int columnIndexPosition = cursor.getColumnIndex(DbStructureStep.Column.POSITION);
+        int columnIndexIsCached = cursor.getColumnIndex(DbStructureStep.Column.IS_CACHED);
 
         step.setId(cursor.getLong(columnIndexStepId));
         step.setLesson(cursor.getLong(columnIndexLessonId));
@@ -840,7 +862,7 @@ public class DatabaseManager extends DbManagerBase {
         step.setUpdate_date(cursor.getString(columnIndexUpdateDate));
         step.setSubscriptions(DbParseHelper.parseStringToStringArray(cursor.getString(columnIndexSubscriptions)));
         step.setPosition(cursor.getLong(columnIndexPosition));
-
+        step.setIs_cached(cursor.getInt(columnIndexIsCached) > 0);
 
         String Query = "Select * from " + DbStructureBlock.BLOCKS + " where " + DbStructureBlock.Column.STEP_ID + " = " + step.getId();
         Cursor blockCursor = database.rawQuery(Query, null);
