@@ -44,9 +44,4 @@ public class Shell implements IShell {
     public SharedPreferenceHelper getSharedPreferenceHelper() {
         return mSharedPreferenceHelper;
     }
-
-    @Override
-    public Context getContext() {
-        return mContext;
-    }
 }
