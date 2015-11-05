@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Block;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Course;
@@ -50,6 +52,99 @@ public class DatabaseManager extends DbManagerBase {
     public DatabaseManager(Context context) {
         super(context);
     }
+
+    public boolean existStepInCourse(@NotNull Step step, @NotNull Course course) {
+        try {
+            open();
+            Section section = getSectionOfStep(step);
+            return section != null && section.getCourse() == course.getCourseId();
+        } finally {
+            close();
+        }
+    }
+
+    public boolean existStepInSection(@NotNull Step step, @NotNull Section section) {
+        try {
+            open();
+            Unit unit = getUnitOfStep(step);
+            return unit != null && unit.getSection() == section.getId();
+        } finally {
+            close();
+        }
+    }
+
+    public boolean existStepInUnit(@NotNull Step step, @NotNull Unit unit) {
+
+        try {
+            open();
+            Lesson lesson = getLessonOfStep(step);
+            return lesson != null && lesson.getId() == unit.getLesson();
+        } finally {
+            close();
+        }
+    }
+
+    public boolean existStepIntLesson(@NotNull Step step, @NotNull Lesson lesson) {
+        try {
+            open();
+            if (!isStepInDb(step)) {
+                return false;
+            }
+
+            return step.getLesson() == lesson.getId();
+        } finally {
+            close();
+        }
+    }
+
+    @Nullable
+    private Lesson getLessonOfStep(Step step) {
+        if (!isStepInDb(step)) {
+            return null;
+        }
+        String lessonQuery = "Select * from " + DbStructureLesson.LESSONS + " where " + DbStructureLesson.Column.LESSON_ID + " = " + step.getLesson();
+        Cursor lessonCursor = database.rawQuery(lessonQuery, null);
+        if (lessonCursor.getCount() <= 0) {
+            lessonCursor.close();
+            return null;
+        }
+        Lesson lesson = parseLesson(lessonCursor);
+        lessonCursor.close();
+        return lesson;
+    }
+
+    @Nullable
+    private Unit getUnitOfStep(Step step) {
+        Lesson lesson = getLessonOfStep(step);
+        if (lesson == null) return null;
+
+        String unitQuery = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.LESSON + " = " + lesson.getId();
+        Cursor unitCursor = database.rawQuery(unitQuery, null);
+        if (unitCursor.getCount() <= 0) {
+            unitCursor.close();
+            return null;
+        }
+        Unit unit = parseUnit(unitCursor);
+        unitCursor.close();
+        return unit;
+    }
+
+    @Nullable
+    private Section getSectionOfStep(Step step) {
+        Unit unit = getUnitOfStep(step);
+        if (unit == null) return null;
+
+        String sectionQuery = "Select * from " + DbStructureSections.SECTIONS + " where " + DbStructureSections.Column.SECTION_ID + " = " + unit.getSection();
+        Cursor sectionCursor = database.rawQuery(sectionQuery, null);
+        if (sectionCursor.getCount() <= 0) {
+            sectionCursor.close();
+            return null;
+        }
+        Section section = parseSection(sectionCursor);
+        sectionCursor.close();
+        return section;
+    }
+
 
     public List<Course> getAllCourses(DatabaseManager.Table type) {
 
