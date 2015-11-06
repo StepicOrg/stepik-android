@@ -37,6 +37,9 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
     IConfig mConfig;
 
     @Inject
+    DatabaseManager mDatabase;
+
+    @Inject
     IDownloadManager mDownloadManager;
 
     private Context mContext;
@@ -84,24 +87,39 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
             }
         });
 
-        viewHolderItem.loadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // FIXME: 21.10.15 IMPLEMENTS IN BACKGROUND THREAD
-                // FIXME: 21.10.15 MAKE UI DISABLED IF COURSE IS LOADED.
-                mDownloadManager.addCourse(course, type);
-            }
-        });
-//
-//        if (position == getCount() - 1) {
-//            viewHolderItem.divider.setVisibility(View.GONE);
-//        } else {
-//            viewHolderItem.divider.setVisibility(View.VISIBLE);
-//        }
 
+        if (course.is_cached()) {
+            // FIXME: 05.11.15 Delete course from cache. Set CLICK LISTENER.
+            //cached
+
+            viewHolderItem.preLoadIV.setVisibility(View.GONE);
+            viewHolderItem.whenLoad.setVisibility(View.GONE);
+            viewHolderItem.afterLoad.setVisibility(View.VISIBLE);
+
+
+        } else {
+            boolean isLoading = false;
+
+            if (!isLoading) {
+                //not cached not loading
+
+                viewHolderItem.preLoadIV.setVisibility(View.VISIBLE);
+                viewHolderItem.whenLoad.setVisibility(View.GONE);
+                viewHolderItem.afterLoad.setVisibility(View.GONE);
+
+
+                viewHolderItem.loadButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // FIXME: 21.10.15 IMPLEMENTS IN BACKGROUND THREAD
+                        // FIXME: 21.10.15 MAKE UI DISABLED IF COURSE IS LOADED.
+                        mDownloadManager.addCourse(course, type);
+                    }
+                });
+            }
+        }
         return view;
     }
-
 
     static class ViewHolderItem {
 
@@ -122,6 +140,16 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 
         @Bind(R.id.cv)
         View cardView;
+
+        @Bind(R.id.pre_load_iv)
+        View preLoadIV;
+
+        @Bind(R.id.when_load_view)
+        View whenLoad;
+
+        @Bind(R.id.after_load_iv)
+        View afterLoad;
+
 
         @BindDrawable(R.drawable.stepic_logo_black_and_white)
         Drawable placeholder;

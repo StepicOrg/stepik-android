@@ -1,5 +1,6 @@
 package org.stepic.droid.util.resolvers;
 
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Video;
 
 public interface IVideoResolver {
@@ -11,5 +12,5 @@ public interface IVideoResolver {
      *
      * @param video object video from step
      */
-    String resolveVideoUrl(Video video);
+    String resolveVideoUrl(@Nullable Video video);
 }

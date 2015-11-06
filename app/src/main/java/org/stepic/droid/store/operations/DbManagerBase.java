@@ -25,7 +25,8 @@ public abstract class DbManagerBase implements IDatabaseManager {
     protected  void open() {
         RWLocks.DatabaseLock.writeLock().lock();
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            throw new IllegalStateException("Illegal state: working with database on UI thread");
+//            throw new IllegalStateException("Illegal state: working with database on UI thread");
+//            it is ok
         }
         Log.i("database", "open " + Thread.currentThread().getName());
         database = dbHelper.getWritableDatabase();
@@ -33,7 +34,8 @@ public abstract class DbManagerBase implements IDatabaseManager {
 
     protected  void close() {
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            throw new IllegalStateException("Illegal state: working with database on UI thread");
+//            throw new IllegalStateException("Illegal state: working with database on UI thread");
+            //it is ok.
         }
         Log.i("database", "close " + Thread.currentThread().getName());
         database.close();

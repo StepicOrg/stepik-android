@@ -18,7 +18,6 @@ import com.squareup.picasso.Picasso;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentStepBase;
-import org.stepic.droid.events.video.MemoryPermissionDeniedEvent;
 import org.stepic.droid.events.video.VideoResolvedEvent;
 
 import butterknife.Bind;
@@ -136,7 +135,8 @@ public class VideoStepFragment extends FragmentStepBase {
 
     @Subscribe
     public void onVideoResolved(VideoResolvedEvent e) {
-        if (mStep.getBlock().getVideo().getId() != e.getVideo().getId()) return;
+        if (mStep.getBlock().getVideo() == null || mStep.getBlock().getVideo().getId() != e.getVideo().getId()) return;
+//todo: if video == null, than show message.
 
         Uri videoUri = Uri.parse(e.getPathToVideo());
         Log.i(TAG, videoUri.getEncodedPath());

@@ -49,6 +49,47 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
+    public Step getStepById(long stepId) {
+        try {
+            open();
+
+            String Query = "Select * from " + DbStructureStep.STEPS + " where " + DbStructureStep.Column.STEP_ID + " = " + stepId;
+            Cursor cursor = database.rawQuery(Query, null);
+
+            cursor.moveToFirst();
+
+            if (!cursor.isAfterLast()) {
+                Step step = parseStep(cursor);
+                cursor.close();
+                return step;
+            }
+            cursor.close();
+            return null;
+        } finally {
+            close();
+        }
+    }
+
+    public List<DownloadEntity> getAllDownloadEntities() {
+        try {
+            open();
+            List<DownloadEntity> downloadEntities = new ArrayList<>();
+            Cursor cursor = getDownloadEntitiesCursor();
+
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                DownloadEntity de = parseDownloadEntity(cursor);
+                downloadEntities.add(de);
+                cursor.moveToNext();
+            }
+            cursor.close();
+            return downloadEntities;
+
+        } finally {
+            close();
+        }
+    }
+
     public DatabaseManager(Context context) {
         super(context);
     }
@@ -108,6 +149,7 @@ public class DatabaseManager extends DbManagerBase {
             lessonCursor.close();
             return null;
         }
+        lessonCursor.moveToFirst();
         Lesson lesson = parseLesson(lessonCursor);
         lessonCursor.close();
         return lesson;
@@ -124,6 +166,7 @@ public class DatabaseManager extends DbManagerBase {
             unitCursor.close();
             return null;
         }
+        unitCursor.moveToFirst();
         Unit unit = parseUnit(unitCursor);
         unitCursor.close();
         return unit;
@@ -140,6 +183,7 @@ public class DatabaseManager extends DbManagerBase {
             sectionCursor.close();
             return null;
         }
+        sectionCursor.moveToFirst();
         Section section = parseSection(sectionCursor);
         sectionCursor.close();
         return section;
@@ -563,7 +607,7 @@ public class DatabaseManager extends DbManagerBase {
      * @param video video which we check for contains in db
      * @return null if video not existing in db, otherwise path to disk
      */
-    public String getPathToVideoIfExist(Video video) {
+    public String getPathToVideoIfExist(@NotNull Video video) {
         try {
             open();
             String Query = "Select * from " + DbStructureCachedVideo.CACHED_VIDEO + " where " + DbStructureCachedVideo.Column.VIDEO_ID + " = " + video.getId();
@@ -899,7 +943,7 @@ public class DatabaseManager extends DbManagerBase {
     private Course parseCourse(Cursor cursor) {
         Course course = new Course();
 
-        int indexId = cursor.getColumnIndex(DBStructureCourses.Column.ID);
+        int indexId = cursor.getColumnIndex(DBStructureCourses.Column.COURSE_ID);
         int indexSummary = cursor.getColumnIndex(DBStructureCourses.Column.SUMMARY);
         int indexCover = cursor.getColumnIndex(DBStructureCourses.Column.COVER_LINK);
         int indexIntro = cursor.getColumnIndex(DBStructureCourses.Column.INTRO_LINK_VIMEO);
@@ -1008,5 +1052,10 @@ public class DatabaseManager extends DbManagerBase {
         return database.query(type.getStoreName(), DBStructureCourses.getUsedColumns(),
                 null, null, null, null, null);
 
+    }
+
+    private Cursor getDownloadEntitiesCursor() {
+        return database.query(DbStructureSharedDownloads.SHARED_DOWNLOADS,
+                DbStructureSharedDownloads.getUsedColumns(), null, null, null, null, null);
     }
 }

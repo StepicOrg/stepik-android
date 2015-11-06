@@ -9,8 +9,31 @@
     android:foreground="@drawable/circle_foreground">
 
     <ImageView
+        android:id="@+id/pre_load_iv"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="center"
         android:src="@drawable/ic_cloud_download_grey600_24dp" />
+
+
+
+    <ProgressBar
+        android:id="@+id/when_load_view"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center"
+        android:indeterminateDrawable="@drawable/login_progress"
+        android:visibility="gone" />
+
+
+
+    <ImageView
+        android:id="@+id/after_load_iv"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_admin"
+        android:visibility="gone"/>
+
+
 </FrameLayout>
