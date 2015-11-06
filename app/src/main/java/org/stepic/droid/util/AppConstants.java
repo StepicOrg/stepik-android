@@ -21,6 +21,10 @@ public class AppConstants {
             "<script type=\"text/javascript\"\n" +
             " src=\"http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML\">\n" +
             "</script>\n" +
+
+            "<style>\n" +
+            "\nimg { max-width: 100%; }"+
+            "</style>\n" +
             "</head>\n" +
             "<body>";
     public static final String POST_BODY = "</body>\n" +
