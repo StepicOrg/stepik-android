@@ -32,7 +32,7 @@
             android:layout_marginBottom="40dp">
 
             <org.stepic.droid.view.custom.SButton
-                android:id="@+id/sign_up_btn"
+                android:id="@+id/sign_in_tv"
                 style="@style/bold_white_text"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -44,19 +44,20 @@
                 android:background="@drawable/bt_signin_active"
                 android:contentDescription="@string/app_name"
                 android:padding="5dp"
-                android:text="@string/sign_up"
+                android:text="@string/sign_in"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
 
             <org.stepic.droid.view.custom.STextView
-                android:id="@+id/sign_in_tv"
+                android:id="@+id/sign_up_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/sign_up_btn"
-                android:layout_marginTop="25dp"
+                android:layout_below="@id/sign_in_tv"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
                 android:linksClickable="true"
-                android:text="@string/already_have_an_account"
+                android:padding="5dp"
+                android:text="@string/yet_have_not_account"
                 android:textColor="@android:color/black"
                 android:textSize="15sp" />
         </RelativeLayout>

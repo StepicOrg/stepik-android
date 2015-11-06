@@ -123,4 +123,11 @@ public class ScreenManager implements IScreenManager {
         context.startActivity(intent);
     }
 
+    @Override
+    public void openSignUpInWeb(Context context) {
+        String url = mConfig.getBaseUrl() +"/accounts/signup/";
+        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
+        context.startActivity(intent);
+    }
+
 }

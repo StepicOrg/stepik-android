@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Stepic</string>
 
-    <string name="already_have_an_account">Already have an account? Sign in</string>
+    <string name="yet_have_not_account">Have not an account yet? Sign up</string>
     <string name="or_sign_up_with_email">or sign up with e-mail</string>
     <string name="sign_up">Sign up</string>
     <string name="show_optional_fields">Show optional fields</string>

@@ -10,8 +10,6 @@ import android.view.View;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.view.custom.SButton;
-import org.stepic.droid.view.custom.STextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -22,10 +20,10 @@ public class LaunchActivity extends FragmentActivityBase {
     public static final String OVERRIDE_ANIMATION_FLAG = "override_animation_flag";
 
     @Bind(R.id.sign_up_btn)
-     SButton mSignUpButton;
+    View mSignUpButton;
 
     @Bind(R.id.sign_in_tv)
-     STextView mSignInTextView;
+    View mSignInTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +42,7 @@ public class LaunchActivity extends FragmentActivityBase {
         mSignUpButton.setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mShell.getScreenProvider().showRegistration(LaunchActivity.this);
+                mShell.getScreenProvider().openSignUpInWeb(LaunchActivity.this);
             }
         }));
 

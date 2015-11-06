@@ -27,4 +27,6 @@ public interface IScreenManager {
 
     void openStepInWeb(Context context, Step step);
 
+    void openSignUpInWeb(Context context);
+
 }

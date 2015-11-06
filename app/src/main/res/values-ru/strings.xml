@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="already_have_an_account">Уже есть аккаунт? Войти</string>
+    <string name="yet_have_not_account">Еще нет аккаунта? Создать</string>
     <string name="available_courses_title">Доступные курсы</string>
     <string name="begin_date">Начало</string>
     <string name="best_lessons_title">Лучшие уроки</string>
