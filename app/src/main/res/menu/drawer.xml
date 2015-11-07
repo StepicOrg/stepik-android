@@ -16,10 +16,6 @@
             android:id="@+id/find_lessons"
             android:title="@string/find_courses_title" />
 
-        <itemO
-            android:id="@+id/available_courses"
-            android:title="@string/available_courses_title" />
-
     </group>
 
     <group
