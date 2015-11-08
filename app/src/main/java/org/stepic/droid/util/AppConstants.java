@@ -9,8 +9,6 @@ public class AppConstants {
     public static final String KEY_UNIT_BUNDLE = "unit";
     public static final String KEY_LESSON_BUNDLE = "lesson";
     public static final String KEY_STEP_BUNDLE = "step";
-    public static boolean WAS_SWIPED_TO_REFRESH_MY_COURSES = false;
-    public static boolean WAS_SWIPED_TO_REFRESH_FIND_COURSES = false;
     public static final String DEFAULT_QUALITY = "270";
     public static final String PRE_BODY = "<html>\n" +
             "<head>\n" +

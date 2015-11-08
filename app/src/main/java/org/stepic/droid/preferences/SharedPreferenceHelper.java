@@ -8,7 +8,6 @@ import com.google.gson.GsonBuilder;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Profile;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 
@@ -69,9 +68,6 @@ public class SharedPreferenceHelper {
         RWLocks.AuthLock.writeLock().lock();
         try {
             clear(PreferenceType.LOGIN);
-            // TODO: 05.10.15 remake to otto event based
-            AppConstants.WAS_SWIPED_TO_REFRESH_FIND_COURSES = false;
-            AppConstants.WAS_SWIPED_TO_REFRESH_MY_COURSES = false;
         } finally {
             RWLocks.AuthLock.writeLock().unlock();
         }

@@ -19,6 +19,10 @@ import com.squareup.picasso.Picasso;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentStepBase;
 import org.stepic.droid.events.video.VideoResolvedEvent;
+import org.stepic.droid.model.Step;
+import org.stepic.droid.model.Video;
+
+import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.BindDrawable;
@@ -74,7 +78,23 @@ public class VideoStepFragment extends FragmentStepBase {
                 AsyncTask<Void, Void, String> resolveTask = new AsyncTask<Void, Void, String>() {
                     @Override
                     protected String doInBackground(Void... params) {
-                        return mVideoResolver.resolveVideoUrl(mStep.getBlock().getVideo());
+                        Video video = mStep.getBlock().getVideo();
+                        if (video == null) {
+                            //if in database not valid step (when video is loading, step has null download reference to video)
+                            //try to load from web this step with many references:
+                            long stepId = mStep.getId();
+                            long stepArray[] = new long[]{stepId};
+                            try {
+                                Step stepFromWeb = mShell.getApi().getSteps(stepArray).execute().body().getSteps().get(0);
+                                return mVideoResolver.resolveVideoUrl(stepFromWeb.getBlock().getVideo());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                return null; // can't RESOLVE
+                            }
+
+                        } else {
+                            return mVideoResolver.resolveVideoUrl(mStep.getBlock().getVideo());
+                        }
                     }
 
                     @Override
@@ -135,7 +155,8 @@ public class VideoStepFragment extends FragmentStepBase {
 
     @Subscribe
     public void onVideoResolved(VideoResolvedEvent e) {
-        if (mStep.getBlock().getVideo() == null || mStep.getBlock().getVideo().getId() != e.getVideo().getId()) return;
+        if (mStep.getBlock().getVideo() == null || mStep.getBlock().getVideo().getId() != e.getVideo().getId())
+            return;
 //todo: if video == null, than show message.
 
         Uri videoUri = Uri.parse(e.getPathToVideo());

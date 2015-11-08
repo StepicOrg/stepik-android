@@ -57,10 +57,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DBStructureCourses.Column.INTRO_LINK_VIMEO + " TEXT, "
                 + DBStructureCourses.Column.COURSE_FORMAT + " TEXT, "
                 + DBStructureCourses.Column.TARGET_AUDIENCE + " TEXT, "
-                + DBStructureCourses.Column.INSTRUCTORS + " TEXT, " //todo: remake to other db
+                + DBStructureCourses.Column.INSTRUCTORS + " TEXT, "
                 + DBStructureCourses.Column.REQUIREMENTS + " TEXT, "
                 + DBStructureCourses.Column.DESCRIPTION + " TEXT, "
-                + DBStructureCourses.Column.SECTIONS + " TEXT, " //todo: remake to other db
+                + DBStructureCourses.Column.SECTIONS + " TEXT, "
                 + DBStructureCourses.Column.TOTAL_UNITS + " INTEGER, "
                 + DBStructureCourses.Column.ENROLLMENT + " INTEGER, "
                 + DBStructureCourses.Column.IS_FEATURED + " BOOLEAN, "
