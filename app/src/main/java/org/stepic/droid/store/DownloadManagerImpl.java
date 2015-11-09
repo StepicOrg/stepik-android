@@ -27,7 +27,7 @@ public class DownloadManagerImpl implements IDownloadManager {
 
 
     @Override
-    public synchronized void addStep(Step step, Lesson lesson) {
+    public void addStep(Step step, Lesson lesson) {
         Intent loadIntent = new Intent(MainApplication.getAppContext(), LoadService.class);
 
         loadIntent.putExtra(AppConstants.KEY_LOAD_TYPE, LoadService.LoadTypeKey.Step);
@@ -60,7 +60,7 @@ public class DownloadManagerImpl implements IDownloadManager {
 
 
     @Override
-    public synchronized void addUnitLesson(final Unit unit, final Lesson lesson) {
+    public void addUnitLesson(final Unit unit, final Lesson lesson) {
         Intent loadIntent = new Intent(MainApplication.getAppContext(), LoadService.class);
 
         loadIntent.putExtra(AppConstants.KEY_LOAD_TYPE, LoadService.LoadTypeKey.UnitLesson);

@@ -100,7 +100,6 @@ public class LoadService extends IntentService {
         }
     }
 
-
     private void addDownload(String url, long fileId, String title, Step step) {
         if (!isDownloadManagerEnabled() || url == null)
             return;
@@ -201,7 +200,6 @@ public class LoadService extends IntentService {
             e.printStackTrace();
         }
     }
-
 
     public void addUnitLesson(final Unit unit, final Lesson lesson) {
         mDb.addUnit(unit);
