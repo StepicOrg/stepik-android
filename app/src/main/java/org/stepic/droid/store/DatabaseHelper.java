@@ -69,6 +69,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DBStructureCourses.Column.LANGUAGE + " TEXT, "
                 + DBStructureCourses.Column.IS_PUBLIC + " BOOLEAN, "
                 + DBStructureCourses.Column.IS_CACHED + " BOOLEAN, "
+                + DBStructureCourses.Column.IS_LOADING + " BOOLEAN, "
                 + DBStructureCourses.Column.TITLE + " TEXT, "
                 + DBStructureCourses.Column.SLUG + " TEXT, "
                 + DBStructureCourses.Column.SUMMARY + " TEXT, "
@@ -101,6 +102,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureSections.Column.GRADING_POLICY_SOURCE + " TEXT, "
                 + DbStructureSections.Column.IS_ACTIVE + " BOOLEAN, "
                 + DbStructureSections.Column.IS_CACHED + " BOOLEAN, "
+                + DbStructureSections.Column.IS_LOADING + " BOOLEAN, "
                 + DbStructureSections.Column.CREATE_DATE + " TEXT, "
                 + DbStructureSections.Column.UPDATE_DATE + " TEXT "
 
@@ -143,6 +145,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureUnit.Column.IS_ACTIVE + " BOOLEAN, "
                 + DbStructureUnit.Column.CREATE_DATE + " TEXT, "
                 + DbStructureUnit.Column.IS_CACHED + " BOOLEAN, "
+                + DbStructureUnit.Column.IS_LOADING + " BOOLEAN, "
                 + DbStructureUnit.Column.UPDATE_DATE + " TEXT "
 
                 + ")";
@@ -169,6 +172,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureLesson.Column.CREATE_DATE + " TEXT, "
                 + DbStructureLesson.Column.LEARNERS_GROUP + " TEXT, "
                 + DbStructureLesson.Column.IS_CACHED + " BOOLEAN, "
+                + DbStructureLesson.Column.IS_LOADING + " BOOLEAN, "
                 + DbStructureLesson.Column.TEACHER_GROUP + " TEXT "
 
                 + ")";
@@ -188,6 +192,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureStep.Column.POSITION + " LONG, "
                 + DbStructureStep.Column.CREATE_DATE + " TEXT, "
                 + DbStructureStep.Column.IS_CACHED + " BOOLEAN, "
+                + DbStructureStep.Column.IS_LOADING + " BOOLEAN, "
                 + DbStructureStep.Column.UPDATE_DATE + " TEXT "
                 + ")";
         db.execSQL(sql);
@@ -199,7 +204,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureBlock.Column.STEP_ID + " LONG, "
                 + DbStructureBlock.Column.NAME + " TEXT, "
                 + DbStructureBlock.Column.TEXT + " TEXT "
-                    + ")";
+                + ")";
         db.execSQL(sql);
     }
 

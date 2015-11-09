@@ -32,6 +32,7 @@ public final class DBStructureCourses extends DBStructureBase {
         public static final String BEGIN_DATE_SOURCE = "begin_date_source";
         public static final String LAST_DEADLINE = "last_deadline";
         public static final String IS_CACHED = "is_cached";
+        public static final String IS_LOADING = "is_loading";
     }
 
     public static String[] getUsedColumns() {
@@ -52,6 +53,7 @@ public final class DBStructureCourses extends DBStructureBase {
                     Column.ENROLLMENT,
                     Column.SECTIONS,
                     Column.IS_CACHED,
+                    Column.IS_LOADING,
             };
         }
         return mUsedColumns;

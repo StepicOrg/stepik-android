@@ -1,6 +1,6 @@
 package org.stepic.droid.store.structure;
 
-public class DbStructureStep extends DBStructureBase {
+public final class DbStructureStep extends DBStructureBase {
 
     private static String[] mUsedColumns = null;
 
@@ -18,6 +18,7 @@ public class DbStructureStep extends DBStructureBase {
         public static final String UPDATE_DATE = "update_date";
         public static final String POSITION = "position";
         public static final String IS_CACHED = "is_cached";
+        public static final String IS_LOADING = "is_loading";
     }
 
     public static String[] getUsedColumns() {
@@ -34,7 +35,7 @@ public class DbStructureStep extends DBStructureBase {
                     Column.UPDATE_DATE,
                     Column.POSITION,
                     Column.IS_CACHED,
-
+                    Column.IS_LOADING,
             };
         }
         return mUsedColumns;
