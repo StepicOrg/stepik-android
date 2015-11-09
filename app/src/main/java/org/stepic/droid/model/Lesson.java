@@ -29,6 +29,15 @@ public class Lesson implements Parcelable, Serializable {
     private String learners_group;
     private String teacher_group;
     private boolean is_cached;
+    private boolean is_loading;
+
+    public boolean is_loading() {
+        return is_loading;
+    }
+
+    public void setIs_loading(boolean is_loading) {
+        this.is_loading = is_loading;
+    }
 
     public boolean is_cached() {
         return is_cached;
@@ -209,6 +218,7 @@ public class Lesson implements Parcelable, Serializable {
     public Lesson() {
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -238,6 +248,7 @@ public class Lesson implements Parcelable, Serializable {
         dest.writeString(this.learners_group);
         dest.writeString(this.teacher_group);
         dest.writeByte(is_cached ? (byte) 1 : (byte) 0);
+        dest.writeByte(is_loading ? (byte) 1 : (byte) 0);
     }
 
     protected Lesson(Parcel in) {
@@ -263,6 +274,7 @@ public class Lesson implements Parcelable, Serializable {
         this.learners_group = in.readString();
         this.teacher_group = in.readString();
         this.is_cached = in.readByte() != 0;
+        this.is_loading = in.readByte() != 0;
     }
 
     public static final Creator<Lesson> CREATOR = new Creator<Lesson>() {

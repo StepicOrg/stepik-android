@@ -26,6 +26,18 @@ public class Unit implements Serializable, Parcelable {
     private String create_date;
     private String update_date;
     private boolean is_cached;
+    private boolean is_loading;
+
+    public Unit() {
+    }
+
+    public boolean is_loading() {
+        return is_loading;
+    }
+
+    public void setIs_loading(boolean is_loading) {
+        this.is_loading = is_loading;
+    }
 
     public boolean is_cached() {
         return is_cached;
@@ -187,7 +199,6 @@ public class Unit implements Serializable, Parcelable {
         this.update_date = update_date;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -215,9 +226,7 @@ public class Unit implements Serializable, Parcelable {
         dest.writeString(this.create_date);
         dest.writeString(this.update_date);
         dest.writeByte(is_cached ? (byte) 1 : (byte) 0);
-    }
-
-    public Unit() {
+        dest.writeByte(is_loading ? (byte) 1 : (byte) 0);
     }
 
     protected Unit(Parcel in) {
@@ -241,6 +250,7 @@ public class Unit implements Serializable, Parcelable {
         this.create_date = in.readString();
         this.update_date = in.readString();
         this.is_cached = in.readByte() != 0;
+        this.is_loading = in.readByte() != 0;
     }
 
     public static final Creator<Unit> CREATOR = new Creator<Unit>() {
