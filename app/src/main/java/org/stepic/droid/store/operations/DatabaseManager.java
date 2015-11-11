@@ -671,8 +671,8 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureStep.Column.CREATE_DATE, step.getCreate_date());
             values.put(DbStructureStep.Column.UPDATE_DATE, step.getUpdate_date());
             values.put(DbStructureStep.Column.POSITION, step.getPosition());
-            values.put(DbStructureStep.Column.IS_CACHED, step.is_cached());
-            values.put(DbStructureStep.Column.IS_LOADING, step.is_loading());
+//            values.put(DbStructureStep.Column.IS_CACHED, step.is_cached());
+//            values.put(DbStructureStep.Column.IS_LOADING, step.is_loading());
 
             if (isStepInDb(step)) {
                 database.update(DbStructureStep.STEPS, values, DbStructureStep.Column.STEP_ID + "=" + step.getId(), null);
@@ -848,7 +848,6 @@ public class DatabaseManager extends DbManagerBase {
 
     public void addVideo(CachedVideo cachedVideo) {
         try {
-
             Log.i("downloading", "pre open for video id " + cachedVideo.getVideoId());
             open();
             Log.i("downloading", "after open for video id " + cachedVideo.getVideoId());
@@ -1067,6 +1066,7 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureSharedDownloads.Column.DOWNLOAD_ID, downloadEntity.getDownloadId());
             values.put(DbStructureSharedDownloads.Column.VIDEO_ID, downloadEntity.getVideoId());
             values.put(DbStructureSharedDownloads.Column.STEP_ID, downloadEntity.getStepId());
+            values.put(DbStructureSharedDownloads.Column.THUMBNAIL, downloadEntity.getThumbnail());
             database.insert(DbStructureSharedDownloads.SHARED_DOWNLOADS, null, values);
 
         } finally {
@@ -1200,10 +1200,12 @@ public class DatabaseManager extends DbManagerBase {
         int indexDownloadId = cursor.getColumnIndex(DbStructureSharedDownloads.Column.DOWNLOAD_ID);
         int indexStepId = cursor.getColumnIndex(DbStructureSharedDownloads.Column.STEP_ID);
         int indexVideoId = cursor.getColumnIndex(DbStructureSharedDownloads.Column.VIDEO_ID);
+        int indexThumbnail = cursor.getColumnIndex(DbStructureSharedDownloads.Column.THUMBNAIL);
 
         downloadEntity.setDownloadId(cursor.getLong(indexDownloadId));
         downloadEntity.setStepId(cursor.getLong(indexStepId));
         downloadEntity.setVideoId(cursor.getLong(indexVideoId));
+        downloadEntity.setThumbnail(cursor.getString(indexThumbnail));
 
         return downloadEntity;
     }
@@ -1422,7 +1424,10 @@ public class DatabaseManager extends DbManagerBase {
         Video video = new Video();
 
         int indexVideoId = cursor.getColumnIndex(DbStructureCachedVideo.Column.VIDEO_ID);
-
+        int indexThumbnail = cursor.getColumnIndex(DbStructureCachedVideo.Column.THUMBNAIL);
+        
+        
+        video.setThumbnail(cursor.getString(indexThumbnail));
         video.setId(cursor.getLong(indexVideoId));
 
         return video;

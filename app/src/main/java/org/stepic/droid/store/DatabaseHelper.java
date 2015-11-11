@@ -213,6 +213,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + " ("
                 + DbStructureSharedDownloads.Column.DOWNLOAD_ID + " LONG, "
                 + DbStructureSharedDownloads.Column.STEP_ID + " LONG, "
+                + DbStructureSharedDownloads.Column.THUMBNAIL + " TEXT, "
                 + DbStructureSharedDownloads.Column.VIDEO_ID + " LONG "
                 + ")";
         db.execSQL(sql);

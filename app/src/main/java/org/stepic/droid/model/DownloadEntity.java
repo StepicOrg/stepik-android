@@ -4,14 +4,24 @@ public class DownloadEntity {
     private long downloadId;
     private long stepId;
     private long videoId;
+    private String thumbnail;
 
     public DownloadEntity() {
     }
 
-    public DownloadEntity(long downloadId, long stepId, long videoId) {
+    public DownloadEntity(long downloadId, long stepId, long videoId, String thumbnail) {
         this.downloadId = downloadId;
         this.stepId = stepId;
         this.videoId = videoId;
+        this.thumbnail = thumbnail;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public void setDownloadId(long downloadId) {

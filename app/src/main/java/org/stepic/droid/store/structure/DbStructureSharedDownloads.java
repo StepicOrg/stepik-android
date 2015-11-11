@@ -9,6 +9,8 @@ public class DbStructureSharedDownloads {
         public static final String DOWNLOAD_ID = "download_id";
         public static final String STEP_ID = "step_id";
         public static final String VIDEO_ID = "video_id";
+        public static final String THUMBNAIL = "thumbnail";
+
     }
 
     public static String[] getUsedColumns() {
@@ -16,7 +18,8 @@ public class DbStructureSharedDownloads {
             mUsedColumns = new String[]{
                     Column.DOWNLOAD_ID,
                     Column.STEP_ID,
-                    Column.VIDEO_ID
+                    Column.VIDEO_ID,
+                    Column.THUMBNAIL
             };
         }
         return mUsedColumns;

@@ -47,10 +47,12 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     long video_id = downloadEntity.getVideoId();
                     long step_id = downloadEntity.getStepId();
                     databaseManager.deleteDownloadEntityByDownloadId(referenceId);
+
                     File downloadFolderAndFile = new File(mUserPrefs.getDownloadFolder(), video_id + "");
                     String path = Uri.fromFile(downloadFolderAndFile).getPath();
-                    CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, null);
+                    CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, downloadEntity.getThumbnail());
                     databaseManager.addVideo(cachedVideo);
+
                     Step step = databaseManager.getStepById(step_id);
                     step.setIs_cached(true);
                     step.setIs_loading(false);

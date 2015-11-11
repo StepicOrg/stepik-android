@@ -141,7 +141,7 @@ public class LoadService extends IntentService {
 
             if (!mDb.isExistDownloadEntityByVideoId(fileId) && !downloadFolderAndFile.exists()) {
                 long downloadId = mSystemDownloadManager.enqueue(request);
-                final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId);
+                final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, step.getBlock().getVideo().getThumbnail());
                 mDb.addDownloadEntity(newEntity);
 
             }
