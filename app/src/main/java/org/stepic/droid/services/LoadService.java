@@ -160,9 +160,6 @@ public class LoadService extends IntentService {
         mDb.addStep(step);
 
         if (step.getBlock().getVideo() != null) {
-            step.setIs_cached(false);
-            step.setIs_loading(true);
-            mDb.updateOnlyCachedLoadingStep(step);
 
             Video video = step.getBlock().getVideo();
             String uri = mResolver.resolveVideoUrl(video);
@@ -177,22 +174,20 @@ public class LoadService extends IntentService {
     }
 
     public void addUnitLesson(final Unit unit, final Lesson lesson) {
-        mDb.addUnit(unit);
-        mDb.addLesson(lesson);
 
-        unit.setIs_loading(true);
-        unit.setIs_cached(false);
-        lesson.setIs_loading(true);
-        lesson.setIs_cached(false);
-
-        mDb.updateOnlyCachedLoadingLesson(lesson);
-        mDb.updateOnlyCachedLoadingUnit(unit);
 
         try {
             Response<StepResponse> response = mApi.getSteps(lesson.getSteps()).execute();
             if (response.isSuccess()) {
                 List<Step> steps = response.body().getSteps();
                 if (steps != null && steps.size() != 0) {
+
+                    for (Step step : steps) {
+                        step.setIs_loading(true);
+                        step.setIs_cached(false);
+                        mDb.updateOnlyCachedLoadingStep(step);
+                    }
+
                     for (Step step : steps) {
                         addStep(step, lesson);
                     }
@@ -209,11 +204,6 @@ public class LoadService extends IntentService {
     }
 
     public void addSection(Section section) {
-        mDb.addSection(section);
-
-        section.setIs_cached(false);
-        section.setIs_loading(true);
-        mDb.updateOnlyCachedLoadingSection(section);
 
         try {
             Response<UnitStepicResponse> unitLessonResponse = mApi.getUnits(section.getUnits()).execute();
@@ -226,6 +216,22 @@ public class LoadService extends IntentService {
                     Map<Long, Lesson> idToLessonMap = new HashMap<>();
                     for (Lesson lesson : lessons) {
                         idToLessonMap.put(lesson.getId(), lesson);
+                    }
+
+                    for (Unit unit : units) {
+                        Lesson lesson = idToLessonMap.get(unit.getLesson());
+
+
+                        mDb.addUnit(unit);
+                        mDb.addLesson(lesson);
+
+                        unit.setIs_loading(true);
+                        unit.setIs_cached(false);
+                        lesson.setIs_loading(true);
+                        lesson.setIs_cached(false);
+
+                        mDb.updateOnlyCachedLoadingLesson(lesson);
+                        mDb.updateOnlyCachedLoadingUnit(unit);
                     }
 
                     for (Unit unit : units) {
@@ -251,6 +257,14 @@ public class LoadService extends IntentService {
             response = mApi.getSections(course.getSections()).execute();
             if (response.isSuccess()) {
                 List<Section> sections = response.body().getSections();
+
+                for (Section section : sections) {
+                    mDb.addSection(section);
+                    section.setIs_cached(false);
+                    section.setIs_loading(true);
+                    mDb.updateOnlyCachedLoadingSection(section);
+                }
+
                 for (Section section : sections) {
                     addSection(section);
                 }
