@@ -32,7 +32,9 @@ import org.stepic.droid.web.UnitStepicResponse;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -170,7 +172,7 @@ public class LoadService extends IntentService {
             step.setIs_loading(false);
             step.setIs_cached(true);
             mDb.updateOnlyCachedLoadingStep(step);
-            mStoreStateManager.updateUnitLessonState(step.getId());
+            mStoreStateManager.updateUnitLessonState(step.getLesson());
         }
     }
 
@@ -221,9 +223,13 @@ public class LoadService extends IntentService {
                 Response<LessonStepicResponse> response = mApi.getLessons(lessonsIds).execute();
                 if (response.isSuccess()) {
                     List<Lesson> lessons = response.body().getLessons();
-                    int i = 0;
+                    Map<Long, Lesson> idToLessonMap = new HashMap<>();
                     for (Lesson lesson : lessons) {
-                        Unit unit = units.get(i++);
+                        idToLessonMap.put(lesson.getId(), lesson);
+                    }
+
+                    for (Unit unit : units) {
+                        Lesson lesson = idToLessonMap.get(unit.getLesson());
                         addUnitLesson(unit, lesson);
                     }
                 }
