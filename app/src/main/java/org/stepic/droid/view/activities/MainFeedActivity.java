@@ -24,7 +24,6 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.store.operations.DatabaseManager;
-import org.stepic.droid.view.fragments.BestLessons;
 import org.stepic.droid.view.fragments.FindCoursesFragment;
 import org.stepic.droid.view.fragments.MyCoursesFragment;
 import org.stepic.droid.view.fragments.SettingsFragment;
@@ -118,7 +117,7 @@ public class MainFeedActivity extends FragmentActivityBase
     private void initFragments() {
         mFragments = new ArrayList<>();
         mFragments.add(new MyCoursesFragment());
-        mFragments.add(new BestLessons());
+//        mFragments.add(new BestLessons());
         mFragments.add(new FindCoursesFragment());
         mFragments.add(new SettingsFragment());
 
@@ -139,14 +138,14 @@ public class MainFeedActivity extends FragmentActivityBase
             case R.id.my_courses:
                 mCurrentFragment = mFragments.get(0);
                 break;
-            case R.id.best_lessons:
+//            case R.id.best_lessons:
+//                mCurrentFragment = mFragments.get(1);
+//                break;
+            case R.id.find_lessons:
                 mCurrentFragment = mFragments.get(1);
                 break;
-            case R.id.find_lessons:
-                mCurrentFragment = mFragments.get(2);
-                break;
             case R.id.my_settings:
-                mCurrentFragment = mFragments.get(3);
+                mCurrentFragment = mFragments.get(2);
                 break;
             case R.id.logout_item:
                 //todo: add 'Are you sure?" dialog
