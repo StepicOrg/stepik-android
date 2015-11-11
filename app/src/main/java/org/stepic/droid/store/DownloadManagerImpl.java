@@ -26,8 +26,8 @@ public class DownloadManagerImpl implements IDownloadManager {
     }
 
 
-    @Override
-    public void addStep(Step step, Lesson lesson) {
+
+    private void addStep(Step step, Lesson lesson) {
         Intent loadIntent = new Intent(MainApplication.getAppContext(), LoadService.class);
 
         loadIntent.putExtra(AppConstants.KEY_LOAD_TYPE, LoadService.LoadTypeKey.Step);

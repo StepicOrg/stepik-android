@@ -156,7 +156,7 @@ public class LoadService extends IntentService {
 
     }
 
-    public void addStep(Step step, Lesson lesson) {
+    private void addStep(Step step, Lesson lesson) {
         mDb.addStep(step);
 
         if (step.getBlock().getVideo() != null) {
@@ -173,8 +173,11 @@ public class LoadService extends IntentService {
         }
     }
 
-    public void addUnitLesson(final Unit unit, final Lesson lesson) {
-
+    private void addUnitLesson(Unit unit, Lesson lesson) {
+        //if user click addUnitLesson, it is in db already.
+        //make copies of objects.
+        unit = mDb.getUnitByLessonId(lesson.getId());
+        lesson = mDb.getLessonById(lesson.getId());
 
         try {
             Response<StepResponse> response = mApi.getSteps(lesson.getSteps()).execute();
@@ -203,8 +206,9 @@ public class LoadService extends IntentService {
         }
     }
 
-    public void addSection(Section section) {
-
+    private void addSection(Section section) {
+        //if user click to addSection, then section already in database.
+        section = mDb.getSectionById(section.getId());//make copy of section.
         try {
             Response<UnitStepicResponse> unitLessonResponse = mApi.getUnits(section.getUnits()).execute();
             if (unitLessonResponse.isSuccess()) {
@@ -245,8 +249,9 @@ public class LoadService extends IntentService {
         }
     }
 
-    public void addCourse(final Course course, DatabaseManager.Table type) {
+    private void addCourse(Course course, DatabaseManager.Table type) {
         mDb.addCourse(course, type);
+        course = mDb.getCourseById(course.getCourseId(), type); //make copy of course.
 
         course.setIs_loading(true);
         course.setIs_cached(false);

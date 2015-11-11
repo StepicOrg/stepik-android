@@ -1,5 +1,6 @@
 package org.stepic.droid.view.activities;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,6 +16,7 @@ import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.concurrency.FromDbUnitLessonTask;
 import org.stepic.droid.concurrency.ToDbUnitLessonTask;
 import org.stepic.droid.events.lessons.SuccessLoadLessonsEvent;
+import org.stepic.droid.events.notify_ui.NotifyUIUnitLessonEvent;
 import org.stepic.droid.events.units.FailureLoadEvent;
 import org.stepic.droid.events.units.LoadedFromDbUnitsLessonsEvent;
 import org.stepic.droid.events.units.SuccessLoadUnitsEvent;
@@ -97,14 +99,26 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     }
 
     private void updateState() {
-        if (mUnitList == null || mAdapter == null || mUnitList.size() == 0) {
-            return;
-        }
-        for (Unit unit : mUnitList) {
-            unit.setIs_cached(mDbManager.isUnitCached(unit));
-            unit.setIs_loading(mDbManager.isUnitLoading(unit));
-        }
-        mAdapter.notifyDataSetChanged();
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                if (mUnitList == null || mAdapter == null || mUnitList.size() == 0) {
+                    return null;
+                }
+                for (Unit unit : mUnitList) {
+                    unit.setIs_cached(mDbManager.isUnitCached(unit));
+                    unit.setIs_loading(mDbManager.isUnitLoading(unit));
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                bus.post(new NotifyUIUnitLessonEvent());
+            }
+        };
+        task.execute();
     }
 
     private void getAndShowUnitsFromCache() {
@@ -230,7 +244,6 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
             @Override
             public void run() {
                 updateState();
-                mHandlerStateUpdating.postDelayed(this, AppConstants.UI_UPDATING_TIME);
             }
         };
         mHandlerStateUpdating.post(mUpdatingRunnable);
@@ -276,6 +289,13 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         if (e.getmSection() == mSection) {
             getAndShowUnitsFromCache();
         }
+    }
+
+
+    @Subscribe
+    public void onNotifyUI(NotifyUIUnitLessonEvent event) {
+        mAdapter.notifyDataSetChanged();
+        mHandlerStateUpdating.postDelayed(mUpdatingRunnable, AppConstants.UI_UPDATING_TIME);
     }
 
     @Override

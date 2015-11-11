@@ -9,8 +9,6 @@ import org.stepic.droid.store.operations.DatabaseManager;
 
 public interface IDownloadManager {
 
-    void addStep(Step step, Lesson lesson);
-
     void addSection(Section section);
 
     void addCourse(Course course, DatabaseManager.Table type);

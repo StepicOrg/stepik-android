@@ -1,5 +1,6 @@
 package org.stepic.droid.view.activities;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,6 +15,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.concurrency.FromDbSectionTask;
 import org.stepic.droid.concurrency.ToDbSectionTask;
+import org.stepic.droid.events.notify_ui.NotifyUISectionsEvent;
 import org.stepic.droid.events.sections.FailureResponseSectionEvent;
 import org.stepic.droid.events.sections.FinishingGetSectionFromDbEvent;
 import org.stepic.droid.events.sections.FinishingSaveSectionToDbEvent;
@@ -94,15 +96,33 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     }
 
     public void updateState() {
-        if (mSectionList == null || mAdapter == null || mSectionList.size() == 0) {
-            return;
-        }
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                if (mSectionList == null || mAdapter == null || mSectionList.size() == 0) {
+                    return null;
+                }
 
-        for (Section section : mSectionList) {
-            section.setIs_loading(mDbManager.isSectionLoading(section));
-            section.setIs_cached(mDbManager.isSectionCached(section));
-        }
+                for (Section section : mSectionList) {
+                    section.setIs_loading(mDbManager.isSectionLoading(section));
+                    section.setIs_cached(mDbManager.isSectionCached(section));
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                bus.post(new NotifyUISectionsEvent());
+            }
+        };
+        task.execute();
+    }
+
+    @Subscribe
+    public void onNotifyUI(NotifyUISectionsEvent event) {
         mAdapter.notifyDataSetChanged();
+        mHandlerStateUpdating.postDelayed(mUpdatingRunnable, AppConstants.UI_UPDATING_TIME);
     }
 
     @Override
@@ -214,7 +234,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
             @Override
             public void run() {
                 updateState();
-                mHandlerStateUpdating.postDelayed(this, AppConstants.UI_UPDATING_TIME);
             }
         };
         mHandlerStateUpdating.post(mUpdatingRunnable);

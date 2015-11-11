@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.base.CoursesFragmentBase;
+import org.stepic.droid.events.notify_ui.NotifyUICoursesEvent;
 import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
 import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
 import org.stepic.droid.events.courses.FinishingSaveCoursesToDbEvent;
@@ -88,5 +89,11 @@ public class MyCoursesFragment extends CoursesFragmentBase {
     public void onPreLoad(PreLoadCoursesEvent e) {
         if (e.getType() == mTypeOfCourse)
             super.onPreLoad(e);
+    }
+
+    @Subscribe
+    @Override
+    public void onNotifyUI(NotifyUICoursesEvent e) {
+        super.onNotifyUI(e);
     }
 }

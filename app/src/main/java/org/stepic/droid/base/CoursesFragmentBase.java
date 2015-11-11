@@ -1,6 +1,7 @@
 package org.stepic.droid.base;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.concurrency.FromDbCoursesTask;
 import org.stepic.droid.concurrency.ToDbCoursesTask;
 import org.stepic.droid.concurrency.UpdateCourseTask;
+import org.stepic.droid.events.notify_ui.NotifyUICoursesEvent;
 import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
 import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
 import org.stepic.droid.events.courses.FinishingSaveCoursesToDbEvent;
@@ -133,15 +135,34 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     }
 
     protected void updateState() {
-        if (mCourses == null || mCoursesAdapter == null || mCourses.size() == 0) {
-            return;
-        }
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
 
-        for (Course course : mCourses) {
-            course.setIs_loading(mDatabaseManager.isCourseLoading(course, mTypeOfCourse));
-            course.setIs_cached(mDatabaseManager.isCourseCached(course, mTypeOfCourse));
-        }
+                if (mCourses == null || mCoursesAdapter == null || mCourses.size() == 0) {
+                    return null;
+                }
+
+                for (Course course : mCourses) {
+                    course.setIs_loading(mDatabaseManager.isCourseLoading(course, mTypeOfCourse));
+                    course.setIs_cached(mDatabaseManager.isCourseCached(course, mTypeOfCourse));
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                bus.post(new NotifyUICoursesEvent());
+            }
+        };
+        task.execute();
+    }
+
+    @Subscribe
+    public void onNotifyUI(NotifyUICoursesEvent e) {
         mCoursesAdapter.notifyDataSetChanged();
+        mHandlerStateUpdating.postDelayed(mUpdatingRunnable, AppConstants.UI_UPDATING_TIME);
     }
 
 
@@ -311,7 +332,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
                 @Override
                 public void run() {
                     updateState();
-                    mHandlerStateUpdating.postDelayed(this, AppConstants.UI_UPDATING_TIME);
                 }
             };
 
