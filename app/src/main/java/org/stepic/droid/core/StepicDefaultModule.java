@@ -11,6 +11,8 @@ import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.DownloadManagerImpl;
 import org.stepic.droid.store.IDownloadManager;
+import org.stepic.droid.store.IStoreStateManager;
+import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.resolvers.IStepResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
@@ -120,5 +122,11 @@ public class StepicDefaultModule {
     @Provides
     public DatabaseManager provideDbOperationCachedVideo(Context context) {
         return new DatabaseManager(context);
+    }
+
+    @Singleton
+    @Provides
+    public IStoreStateManager provideStoreManager(DatabaseManager dbManager) {
+        return new StoreStateManager(dbManager);
     }
 }

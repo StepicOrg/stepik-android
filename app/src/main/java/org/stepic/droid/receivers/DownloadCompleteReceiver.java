@@ -11,7 +11,9 @@ import android.util.Log;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
+import org.stepic.droid.model.Step;
 import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseManager;
 
 import java.io.File;
@@ -24,6 +26,8 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     UserPreferences mUserPrefs;
     @Inject
     DatabaseManager databaseManager;
+    @Inject
+    IStoreStateManager mStoreStateManager;
 
     public DownloadCompleteReceiver() {
         MainApplication.component().inject(this);
@@ -35,6 +39,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void[] params) {
+                //critical section:
                 Log.i("downloading", "on receive id" + referenceId);
 
                 DownloadEntity downloadEntity = databaseManager.getDownloadEntityIfExist(referenceId);
@@ -46,8 +51,14 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     String path = Uri.fromFile(downloadFolderAndFile).getPath();
                     CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, null);
                     databaseManager.addVideo(cachedVideo);
+                    Step step = databaseManager.getStepById(step_id);
+                    step.setIs_cached(true);
+                    step.setIs_loading(false);
+                    databaseManager.updateOnlyCachedLoadingStep(step);
+                    mStoreStateManager.updateUnitLessonState(step.getLesson());
                 }
                 return null;
+                //end critical section
             }
         };
         task.execute();

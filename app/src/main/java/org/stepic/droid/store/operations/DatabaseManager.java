@@ -49,6 +49,7 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
+    @Nullable
     public Step getStepById(long stepId) {
         try {
             open();
@@ -62,6 +63,95 @@ public class DatabaseManager extends DbManagerBase {
                 Step step = parseStep(cursor);
                 cursor.close();
                 return step;
+            }
+            cursor.close();
+            return null;
+        } finally {
+            close();
+        }
+    }
+
+    @Nullable
+    public Lesson getLessonById(long lessonId) {
+        try {
+            open();
+
+            String Query = "Select * from " + DbStructureLesson.LESSONS + " where " + DbStructureLesson.Column.LESSON_ID + " = " + lessonId;
+            Cursor cursor = database.rawQuery(Query, null);
+
+            cursor.moveToFirst();
+
+            if (!cursor.isAfterLast()) {
+                Lesson lesson = parseLesson(cursor);
+                cursor.close();
+                return lesson;
+            }
+            cursor.close();
+            return null;
+        } finally {
+            close();
+        }
+    }
+
+    @Nullable
+    public Section getSectionById(long sectionId) {
+        try {
+            open();
+
+            String Query = "Select * from " + DbStructureSections.SECTIONS + " where " + DbStructureSections.Column.SECTION_ID + " = " + sectionId;
+            Cursor cursor = database.rawQuery(Query, null);
+
+            cursor.moveToFirst();
+
+            if (!cursor.isAfterLast()) {
+                Section section = parseSection(cursor);
+                cursor.close();
+                return section;
+            }
+            cursor.close();
+            return null;
+        } finally {
+            close();
+        }
+    }
+
+    @Nullable
+    public Course getCourseById(long courseId, Table type) {
+        try {
+            open();
+
+            String Query = "Select * from " + type.getStoreName() + " where " + DBStructureCourses.Column.COURSE_ID + " = " + courseId;
+            Cursor cursor = database.rawQuery(Query, null);
+
+            cursor.moveToFirst();
+
+            if (!cursor.isAfterLast()) {
+                Course course = parseCourse(cursor);
+                cursor.close();
+                return course;
+            }
+            cursor.close();
+            return null;
+        } finally {
+            close();
+        }
+    }
+
+
+    @Nullable
+    public Unit getUnitByLessonId(long lessonId) {
+        try {
+            open();
+
+            String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.LESSON + " = " + lessonId;
+            Cursor cursor = database.rawQuery(Query, null);
+
+            cursor.moveToFirst();
+
+            if (!cursor.isAfterLast()) {
+                Unit unit = parseUnit(cursor);
+                cursor.close();
+                return unit;
             }
             cursor.close();
             return null;
@@ -255,7 +345,6 @@ public class DatabaseManager extends DbManagerBase {
     }
 
 
-
     public boolean isLessonLoading(Lesson lesson) {
         try {
             open();
@@ -296,7 +385,6 @@ public class DatabaseManager extends DbManagerBase {
     }
 
 
-
     public boolean isStepLoading(Step step) {
         try {
             open();
@@ -334,6 +422,72 @@ public class DatabaseManager extends DbManagerBase {
             close();
         }
     }
+
+    public void updateOnlyCachedLoadingStep(Step step) {
+        try {
+            open();
+            ContentValues cv = new ContentValues();
+            cv.put(DbStructureStep.Column.IS_LOADING, step.is_loading());
+            cv.put(DbStructureStep.Column.IS_CACHED, step.is_cached());
+
+            database.update(DbStructureStep.STEPS, cv, DbStructureStep.Column.STEP_ID + "=" + step.getId(), null);
+        } finally {
+            close();
+        }
+    }
+
+    public void updateOnlyCachedLoadingUnit(Unit unit) {
+        try {
+            open();
+            ContentValues cv = new ContentValues();
+            cv.put(DbStructureUnit.Column.IS_LOADING, unit.is_loading());
+            cv.put(DbStructureUnit.Column.IS_CACHED, unit.is_cached());
+
+            database.update(DbStructureUnit.UNITS, cv, DbStructureUnit.Column.UNIT_ID + "=" + unit.getId(), null);
+        } finally {
+            close();
+        }
+    }
+
+    public void updateOnlyCachedLoadingLesson(Lesson lesson) {
+        try {
+            open();
+            ContentValues cv = new ContentValues();
+            cv.put(DbStructureLesson.Column.IS_LOADING, lesson.is_loading());
+            cv.put(DbStructureLesson.Column.IS_CACHED, lesson.is_cached());
+
+            database.update(DbStructureLesson.LESSONS, cv, DbStructureLesson.Column.LESSON_ID + "=" + lesson.getId(), null);
+        } finally {
+            close();
+        }
+    }
+
+    public void updateOnlyCachedLoadingSection(Section section) {
+        try {
+            open();
+            ContentValues cv = new ContentValues();
+            cv.put(DbStructureSections.Column.IS_LOADING, section.is_loading());
+            cv.put(DbStructureSections.Column.IS_CACHED, section.is_cached());
+
+            database.update(DbStructureSections.SECTIONS, cv, DbStructureSections.Column.SECTION_ID + "=" + section.getId(), null);
+        } finally {
+            close();
+        }
+    }
+
+    public void updateOnlyCachedLoadingCourse(Course course, Table type) {
+        try {
+            open();
+            ContentValues cv = new ContentValues();
+            cv.put(DBStructureCourses.Column.IS_LOADING, course.is_loading());
+            cv.put(DBStructureCourses.Column.IS_CACHED, course.is_cached());
+
+            database.update(type.getStoreName(), cv, DBStructureCourses.Column.COURSE_ID + "=" + course.getCourseId(), null);
+        } finally {
+            close();
+        }
+    }
+
 
     @Nullable
     private Lesson getLessonOfStep(Step step) {
@@ -412,6 +566,7 @@ public class DatabaseManager extends DbManagerBase {
 
         try {
             open();
+            if (isCourseInDB(course, type)) return;
             ContentValues values = new ContentValues();
 
             values.put(DBStructureCourses.Column.COURSE_ID, course.getCourseId());
@@ -457,21 +612,15 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
-    public boolean isCourseInDB(Course course, DatabaseManager.Table type) {
-        try {
-            open();
-            String Query = "Select * from " + type.getStoreName() + " where " + DBStructureCourses.Column.COURSE_ID + " = " + course.getCourseId();
-            Cursor cursor = database.rawQuery(Query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
+    private boolean isCourseInDB(Course course, DatabaseManager.Table type) {
+        String Query = "Select * from " + type.getStoreName() + " where " + DBStructureCourses.Column.COURSE_ID + " = " + course.getCourseId();
+        Cursor cursor = database.rawQuery(Query, null);
+        if (cursor.getCount() <= 0) {
             cursor.close();
-            return true;
-
-        } finally {
-            close();
+            return false;
         }
+        cursor.close();
+        return true;
     }
 
     public void addSection(Section section) {
@@ -595,12 +744,12 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
-    public List<Unit> getAllUnitsOfSection(Section section) {
+    public List<Unit> getAllUnitsOfSection(long sectionId) {
         try {
             open();
             List<Unit> units = new ArrayList<>();
 
-            String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.SECTION + " = " + section.getId();
+            String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.SECTION + " = " + sectionId;
             Cursor cursor = database.rawQuery(Query, null);
 
             cursor.moveToFirst();
@@ -618,12 +767,12 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
-    public List<Step> getStepsOfLesson(Lesson lesson) {
+    public List<Step> getStepsOfLesson(long lessonId) {
         try {
             open();
             List<Step> steps = new ArrayList<>();
 
-            String Query = "Select * from " + DbStructureStep.STEPS + " where " + DbStructureStep.Column.LESSON_ID + " = " + lesson.getId();
+            String Query = "Select * from " + DbStructureStep.STEPS + " where " + DbStructureStep.Column.LESSON_ID + " = " + lessonId;
             Cursor cursor = database.rawQuery(Query, null);
 
             cursor.moveToFirst();

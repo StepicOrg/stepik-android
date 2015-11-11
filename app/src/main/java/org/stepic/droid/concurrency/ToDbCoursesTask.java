@@ -54,8 +54,7 @@ public class ToDbCoursesTask extends StepicTask<Void, Void, Void> {
         if (mPage == 1)
             mDatabaseManager.clearCacheCourses(mCourseType);
         for (Course courseItem : mCourses) {
-            if (!mDatabaseManager.isCourseInDB(courseItem, mCourseType))
-                mDatabaseManager.addCourse(courseItem, mCourseType);
+            mDatabaseManager.addCourse(courseItem, mCourseType);
         }
         return null;
 

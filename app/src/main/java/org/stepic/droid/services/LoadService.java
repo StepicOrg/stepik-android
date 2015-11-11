@@ -19,6 +19,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.StepicLogicHelper;
@@ -51,6 +52,8 @@ public class LoadService extends IntentService {
     IApi mApi;
     @Inject
     DatabaseManager mDb;
+    @Inject
+    IStoreStateManager mStoreStateManager;
 
     public enum LoadTypeKey {
         Course, Section, UnitLesson, Step
@@ -155,15 +158,60 @@ public class LoadService extends IntentService {
         mDb.addStep(step);
 
         if (step.getBlock().getVideo() != null) {
+            step.setIs_cached(false);
+            step.setIs_loading(true);
+            mDb.updateOnlyCachedLoadingStep(step);
+
             Video video = step.getBlock().getVideo();
             String uri = mResolver.resolveVideoUrl(video);
             long fileId = video.getId();
             addDownload(uri, fileId, lesson.getTitle(), step);
+        } else {
+            step.setIs_loading(false);
+            step.setIs_cached(true);
+            mDb.updateOnlyCachedLoadingStep(step);
+            mStoreStateManager.updateUnitLessonState(step.getId());
+        }
+    }
+
+    public void addUnitLesson(final Unit unit, final Lesson lesson) {
+        mDb.addUnit(unit);
+        mDb.addLesson(lesson);
+
+        unit.setIs_loading(true);
+        unit.setIs_cached(false);
+        lesson.setIs_loading(true);
+        lesson.setIs_cached(false);
+
+        mDb.updateOnlyCachedLoadingLesson(lesson);
+        mDb.updateOnlyCachedLoadingUnit(unit);
+
+        try {
+            Response<StepResponse> response = mApi.getSteps(lesson.getSteps()).execute();
+            if (response.isSuccess()) {
+                List<Step> steps = response.body().getSteps();
+                if (steps != null && steps.size() != 0) {
+                    for (Step step : steps) {
+                        addStep(step, lesson);
+                    }
+                } else {
+                    mStoreStateManager.updateUnitLessonState(lesson.getId());
+                }
+            } else {
+                mStoreStateManager.updateUnitLessonState(lesson.getId());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            mStoreStateManager.updateUnitLessonState(lesson.getId());
         }
     }
 
     public void addSection(Section section) {
         mDb.addSection(section);
+
+        section.setIs_cached(false);
+        section.setIs_loading(true);
+        mDb.updateOnlyCachedLoadingSection(section);
 
         try {
             Response<UnitStepicResponse> unitLessonResponse = mApi.getUnits(section.getUnits()).execute();
@@ -187,6 +235,11 @@ public class LoadService extends IntentService {
 
     public void addCourse(final Course course, DatabaseManager.Table type) {
         mDb.addCourse(course, type);
+
+        course.setIs_loading(true);
+        course.setIs_cached(false);
+        mDb.updateOnlyCachedLoadingCourse(course, type);
+
         Response<SectionsStepicResponse> response = null;
         try {
             response = mApi.getSections(course.getSections()).execute();
@@ -201,23 +254,6 @@ public class LoadService extends IntentService {
         }
     }
 
-    public void addUnitLesson(final Unit unit, final Lesson lesson) {
-        mDb.addUnit(unit);
-        mDb.addLesson(lesson);
-
-        try {
-            Response<StepResponse> response = mApi.getSteps(lesson.getSteps()).execute();
-            if (response.isSuccess()) {
-                List<Step> steps = response.body().getSteps();
-                for (Step step : steps) {
-                    addStep(step, lesson);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 
     public boolean isDownloadManagerEnabled() {
         if (MainApplication.getAppContext() == null) {
@@ -234,4 +270,6 @@ public class LoadService extends IntentService {
         }
         return true;
     }
+
+
 }

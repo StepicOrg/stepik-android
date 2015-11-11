@@ -38,7 +38,7 @@ public class FromDbUnitLessonTask extends StepicTask<Void, Void, Pair<List<Unit>
         List<Unit> fromCacheUnits = null;
         List<Lesson> fromCacheLessons = new ArrayList<>();
 
-        fromCacheUnits = mDataBaseManager.getAllUnitsOfSection(mSection);
+        fromCacheUnits = mDataBaseManager.getAllUnitsOfSection(mSection.getId());
         for (Unit unitItem : fromCacheUnits) {
             Lesson lesson = mDataBaseManager.getLessonOfUnit(unitItem);
             if (lesson == null) {
