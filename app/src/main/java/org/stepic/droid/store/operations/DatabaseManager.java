@@ -927,6 +927,18 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
+    public void deleteStep(Step step) {
+        try {
+            open();
+            long stepId = step.getId();
+            database.delete(DbStructureStep.STEPS,
+                    "\"" + DbStructureStep.Column.STEP_ID + "\"" + " = " + stepId,
+                    null);
+        } finally {
+            close();
+        }
+    }
+
     public void deleteLesson(Lesson lesson) {
         try {
             open();
@@ -1425,8 +1437,8 @@ public class DatabaseManager extends DbManagerBase {
 
         int indexVideoId = cursor.getColumnIndex(DbStructureCachedVideo.Column.VIDEO_ID);
         int indexThumbnail = cursor.getColumnIndex(DbStructureCachedVideo.Column.THUMBNAIL);
-        
-        
+
+
         video.setThumbnail(cursor.getString(indexThumbnail));
         video.setId(cursor.getLong(indexVideoId));
 

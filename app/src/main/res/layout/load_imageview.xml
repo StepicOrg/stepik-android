@@ -22,7 +22,7 @@
         android:layout_height="24dp"
         android:layout_gravity="center"
         android:indeterminateDrawable="@drawable/login_progress"
-        android:visibility="gone" />
+        android:visibility="invisible" />
 
 
     <ImageView

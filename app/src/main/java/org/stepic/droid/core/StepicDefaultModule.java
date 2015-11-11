@@ -9,6 +9,7 @@ import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.DownloadManagerImpl;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.IStoreStateManager;
@@ -128,5 +129,11 @@ public class StepicDefaultModule {
     @Provides
     public IStoreStateManager provideStoreManager(DatabaseManager dbManager) {
         return new StoreStateManager(dbManager);
+    }
+
+    @Singleton
+    @Provides
+    public CleanManager provideCleanManager() {
+        return new CleanManager();
     }
 }

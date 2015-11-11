@@ -16,6 +16,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.HtmlHelper;
@@ -41,6 +42,9 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 
     @Inject
     IDownloadManager mDownloadManager;
+
+    @Inject
+    CleanManager mCleaner;
 
     private Context mContext;
     private final DatabaseManager.Table type;
@@ -96,11 +100,21 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
             //true/false = show can with suggestion for delete
             //true/true = impossible
             if (course.is_cached()) {
-                // FIXME: 05.11.15 Delete course from cache. Set CLICK LISTENER.
                 //cached
 
+                viewHolderItem.loadButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCleaner.removeCourse(course, type);
+                        course.setIs_cached(false);
+                        course.setIs_loading(false);
+                        mDatabase.updateOnlyCachedLoadingCourse(course, type);
+                        notifyDataSetChanged();
+                    }
+                });
+
                 viewHolderItem.preLoadIV.setVisibility(View.GONE);
-                viewHolderItem.whenLoad.setVisibility(View.GONE);
+                viewHolderItem.whenLoad.setVisibility(View.INVISIBLE);
                 viewHolderItem.afterLoad.setVisibility(View.VISIBLE); //can
 
             } else {
@@ -114,7 +128,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
                 } else {
                     //not cached not loading
                     viewHolderItem.preLoadIV.setVisibility(View.VISIBLE);
-                    viewHolderItem.whenLoad.setVisibility(View.GONE);
+                    viewHolderItem.whenLoad.setVisibility(View.INVISIBLE);
                     viewHolderItem.afterLoad.setVisibility(View.GONE);
 
 

@@ -215,7 +215,7 @@ public class LoadService extends IntentService {
     }
 
     private void addSection(Section section) {
-        //if user click to addSection, then section already in database.
+        //if user click to removeSection, then section already in database.
         section = mDb.getSectionById(section.getId());//make copy of section.
         try {
             Response<UnitStepicResponse> unitLessonResponse = mApi.getUnits(section.getUnits()).execute();

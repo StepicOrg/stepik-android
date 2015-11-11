@@ -11,6 +11,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.view.listeners.OnClickLoadListener;
@@ -34,6 +35,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
 
     @Inject
     DatabaseManager mDatabaseManager;
+
+    @Inject
+    CleanManager mCleaner;
 
     private List<Section> mSections;
     private Context mContext;
@@ -94,7 +98,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             //cached
 
             holder.preLoadIV.setVisibility(View.GONE);
-            holder.whenLoad.setVisibility(View.GONE);
+            holder.whenLoad.setVisibility(View.INVISIBLE);
             holder.afterLoad.setVisibility(View.VISIBLE); //can
 
         } else {
@@ -108,7 +112,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             } else {
                 //not cached not loading
                 holder.preLoadIV.setVisibility(View.VISIBLE);
-                holder.whenLoad.setVisibility(View.GONE);
+                holder.whenLoad.setVisibility(View.INVISIBLE);
                 holder.afterLoad.setVisibility(View.GONE);
             }
 
@@ -134,7 +138,11 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             Section section = mSections.get(itemPosition);
 
             if (section.is_cached()) {
-                // TODO: 11.11.15 delete section
+                mCleaner.removeSection(section);
+                section.setIs_loading(false);
+                section.setIs_cached(false);
+                mDatabaseManager.updateOnlyCachedLoadingSection(section);
+                notifyDataSetChanged();
             } else {
                 if (section.is_loading()) {
                     // TODO: 11.11.15 cancel downloading

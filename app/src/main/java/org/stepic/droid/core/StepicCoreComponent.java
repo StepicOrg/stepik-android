@@ -15,6 +15,7 @@ import org.stepic.droid.concurrency.UpdateCourseTask;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.receivers.DownloadCompleteReceiver;
+import org.stepic.droid.services.DeleteService;
 import org.stepic.droid.services.LoadService;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
 import org.stepic.droid.view.adapters.SectionAdapter;
@@ -82,6 +83,8 @@ public interface StepicCoreComponent {
     void inject(AllowMobileDataDialogFragment allowMobileDataDialogFragment);
 
     void inject(LoadService loadService);
+
+    void inject(DeleteService loadService);
 
     void inject(DownloadCompleteReceiver downloadCompleteReceiver);
 }
