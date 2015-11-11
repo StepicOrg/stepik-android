@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.squareup.otto.Bus;
 
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.model.VideoUrl;
 import org.stepic.droid.store.operations.DatabaseManager;
@@ -32,17 +33,17 @@ public class VideoResolver implements IVideoResolver {
      * @return path for video in web or local, null if video is incorrect or can't resolve
      */
     @Override
-    public String resolveVideoUrl(final Video video) {
+    public String resolveVideoUrl(@Nullable final Video video) {
         //// TODO: 15.10.15 check in database by id, check availability of playing on the device, etc
 //// TODO: 15.10.15 log all "return" statements
+
+        if (video == null) return null;
 
         String localPath = mDbOperations.getPathToVideoIfExist(video);
 
         if (localPath != null && checkExistingOnDisk(localPath)) {
             return localPath;
         } else {
-
-            if (video == null) return null;
             List<VideoUrl> urlList = video.getUrls();
             if (urlList == null || urlList.size() == 0) return null;
             return resolveFromWeb(urlList);

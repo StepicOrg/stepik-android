@@ -1,11 +1,15 @@
 package org.stepic.droid.view.activities;
 
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,12 +24,13 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.store.operations.DatabaseManager;
-import org.stepic.droid.view.fragments.AvailableCourses;
-import org.stepic.droid.view.fragments.BestLessons;
 import org.stepic.droid.view.fragments.FindCoursesFragment;
 import org.stepic.droid.view.fragments.MyCoursesFragment;
 import org.stepic.droid.view.fragments.SettingsFragment;
 import org.stepic.droid.web.StepicProfileResponse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.BindDrawable;
@@ -35,7 +40,8 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class MainFeedActivity extends FragmentActivityBase {
+public class MainFeedActivity extends FragmentActivityBase
+        implements NavigationView.OnNavigationItemSelectedListener {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
@@ -59,14 +65,19 @@ public class MainFeedActivity extends FragmentActivityBase {
     Drawable mUserPlaceholder;
 
 
+    private List<FragmentBase> mFragments;
+    private FragmentBase mCurrentFragment;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_feed);
         ButterKnife.bind(this);
 
-        setSupportActionBar(mToolbar);
-        setMyCourses();
+        setUpToolbar();
+        setUpDrawerLayout();
+        initFragments();
 
         final SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
         Profile cachedProfile = helper.getProfile();
@@ -91,60 +102,86 @@ public class MainFeedActivity extends FragmentActivityBase {
         } else {
             showProfile(cachedProfile);
         }
-
-
 //        SharedPreferenceHelper sharedPreferenceHelper = mShell.getSharedPreferenceHelper();
 //        AuthenticationStepicResponse resp = sharedPreferenceHelper.getAuthResponseFromStore(MainFeedActivity.this);
 
+    }
 
-        //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
+    private void setUpToolbar() {
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
-        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+    private void initFragments() {
+        mFragments = new ArrayList<>();
+        mFragments.add(new MyCoursesFragment());
+//        mFragments.add(new BestLessons());
+        mFragments.add(new FindCoursesFragment());
+        mFragments.add(new SettingsFragment());
 
-            // This method will trigger on item Click of navigation menu
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                //Closing drawer on item click
-                mDrawerLayout.closeDrawers();
-                menuItem.setChecked(false);
+        mCurrentFragment = mFragments.get(0);
+        setFragment();
+        Menu menu = mNavigationView.getMenu();
+        MenuItem menuItem = menu.getItem(0);
+        menuItem.setChecked(false);
+        setTitle(menuItem.getTitle());
+    }
 
-                //Check to see which item was being clicked and perform appropriate action
-                switch (menuItem.getItemId()) {
-                    //todo: substitute to getting from provider
-                    case R.id.my_courses:
-                        setMyCourses();
-                        return true;
-                    case R.id.best_lessons:
-                        setTitle(R.string.best_lessons_title);
-                        setFragment(new BestLessons());
-                        return true;
-                    case R.id.available_courses:
-                        setTitle(R.string.available_courses_title);
-                        setFragment(new AvailableCourses());
-                        return true;
-                    case R.id.find_lessons:
-                        setTitle(R.string.find_courses_title);
-                        setFragment(new FindCoursesFragment());
-                        return true;
-                    case R.id.my_settings:
-                        setTitle(R.string.settings_title);
-                        setFragment(new SettingsFragment());
-                        return true;
-                    case R.id.logout_item:
-                        //todo: add 'Are you sure?" dialog
-                        SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
-                        helper.deleteAuthInfo();
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+
+        //Check to see which item was being clicked and perform appropriate action
+        switch (menuItem.getItemId()) {
+            //todo: substitute to getting from provider
+            case R.id.my_courses:
+                mCurrentFragment = mFragments.get(0);
+                break;
+//            case R.id.best_lessons:
+//                mCurrentFragment = mFragments.get(1);
+//                break;
+            case R.id.find_lessons:
+                mCurrentFragment = mFragments.get(1);
+                break;
+            case R.id.my_settings:
+                mCurrentFragment = mFragments.get(2);
+                break;
+            case R.id.logout_item:
+                //todo: add 'Are you sure?" dialog
+                SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
+                helper.deleteAuthInfo();
+                AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... params) {
                         mDbManager.clearCacheCourses(DatabaseManager.Table.enrolled);
-                        mShell.getScreenProvider().showLaunchScreen(MainFeedActivity.this, false);
-                        return true;
+                        return null;
+                    }
+                };
+                task.execute();
+                mShell.getScreenProvider().showLaunchScreen(MainFeedActivity.this, false);
+                break;
 
-                    default:
-                        Toast.makeText(getApplicationContext(), "Somethings Wrong", Toast.LENGTH_SHORT).show();
-                        return true;
-                }
+            default:
+                Toast.makeText(getApplicationContext(), "Somethings Wrong", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        menuItem.setChecked(false);
+        setTitle(menuItem.getTitle());
+        setFragment();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mDrawerLayout.closeDrawers();
             }
-        });
+        }, 0);
+        return true;
+    }
 
+    private void setUpDrawerLayout() {
+
+        mNavigationView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_closed) {
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -165,19 +202,23 @@ public class MainFeedActivity extends FragmentActivityBase {
 
         //calling sync state is necessary or else your hamburger icon wont show up
         actionBarDrawerToggle.syncState();
-
-
     }
 
-    private void setFragment(FragmentBase fragment) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void setFragment() {
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.frame, fragment);
+        fragmentTransaction.replace(R.id.frame, mCurrentFragment);
         fragmentTransaction.commit();
-    }
-
-    private void setMyCourses() {
-        setTitle(mCoursesTitle);
-        setFragment(new MyCoursesFragment());
     }
 
     private void showProfile(Profile profile) {

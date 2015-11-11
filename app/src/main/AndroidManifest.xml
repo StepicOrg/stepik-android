@@ -90,5 +90,20 @@
             android:label="@string/steps_title"
             android:screenOrientation="portrait" />
 
+        <receiver
+            android:name="org.stepic.droid.receivers.DownloadCompleteReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="org.stepic.droid.services.LoadService"
+            android:exported="true" />
+        <service
+            android:name="org.stepic.droid.services.DeleteService"
+            android:exported="true" />
+
     </application>
 </manifest>

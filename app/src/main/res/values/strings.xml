@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Stepic</string>
 
-    <string name="already_have_an_account">Already have an account? Sign in</string>
+    <string name="yet_have_not_account">Have not an account yet? Sign up</string>
     <string name="or_sign_up_with_email">or sign up with e-mail</string>
     <string name="sign_up">Sign up</string>
     <string name="show_optional_fields">Show optional fields</string>
@@ -53,5 +53,8 @@
     <string name="title_clear_cache_dialog">Please confirm</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="open_web_to_solve">Open web version to solve</string>
+    <string name="allow_mobile_download_title">Allow mobile download</string>
+    <string name="allow_mobile_message">Allow your device to download videos over your mobile connection when Wi-Fi is not available?</string>
 
 </resources>

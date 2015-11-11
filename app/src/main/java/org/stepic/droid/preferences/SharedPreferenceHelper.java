@@ -8,7 +8,6 @@ import com.google.gson.GsonBuilder;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Profile;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 
@@ -25,7 +24,8 @@ public class SharedPreferenceHelper {
     }
 
     public enum PreferenceType {
-        LOGIN("login preference");
+        LOGIN("login preference"),
+        WIFI("wifi_preference");
 
         private String description;
 
@@ -68,9 +68,6 @@ public class SharedPreferenceHelper {
         RWLocks.AuthLock.writeLock().lock();
         try {
             clear(PreferenceType.LOGIN);
-            // TODO: 05.10.15 remake to otto event based
-            AppConstants.WAS_SWIPED_TO_REFRESH_FIND_COURSES = false;
-            AppConstants.WAS_SWIPED_TO_REFRESH_MY_COURSES = false;
         } finally {
             RWLocks.AuthLock.writeLock().unlock();
         }
@@ -88,9 +85,22 @@ public class SharedPreferenceHelper {
     }
 
 
+    public boolean isMobileInternetAlsoAllowed() {
+        return getBoolean(PreferenceType.WIFI, WIFI_KEY);
+    }
+
+    public void setMobileInternetAndWifiAllowed(boolean isOnlyWifi) {
+        put(PreferenceType.WIFI, WIFI_KEY, isOnlyWifi);
+    }
+
     private void put(PreferenceType type, String key, String value) {
         SharedPreferences.Editor editor = mContext.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.putString(key, value).apply();
+    }
+
+    private void put(PreferenceType type, String key, Boolean value) {
+        SharedPreferences.Editor editor = mContext.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
+        editor.putBoolean(key, value).apply();
     }
 
     private void clear(PreferenceType type) {
@@ -104,8 +114,14 @@ public class SharedPreferenceHelper {
                 .getString(key, null);
     }
 
+    private boolean getBoolean(PreferenceType preferenceType, String key) {
+        return mContext.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
+                .getBoolean(key, false);
+    }
+
 
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
     private final String PROFILE_JSON = "profile_json";
+    private final String WIFI_KEY = "wifi_key";
 
 }

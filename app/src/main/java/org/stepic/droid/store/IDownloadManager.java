@@ -9,11 +9,6 @@ import org.stepic.droid.store.operations.DatabaseManager;
 
 public interface IDownloadManager {
 
-
-    boolean isDownloadManagerEnabled();
-
-    void addStep(Step step, String title);
-
     void addSection(Section section);
 
     void addCourse(Course course, DatabaseManager.Table type);

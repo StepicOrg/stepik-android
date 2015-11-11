@@ -9,9 +9,27 @@ public class AppConstants {
     public static final String KEY_UNIT_BUNDLE = "unit";
     public static final String KEY_LESSON_BUNDLE = "lesson";
     public static final String KEY_STEP_BUNDLE = "step";
-    public static boolean WAS_SWIPED_TO_REFRESH_MY_COURSES = false;
-    public static boolean WAS_SWIPED_TO_REFRESH_FIND_COURSES = false;
     public static final String DEFAULT_QUALITY = "270";
+    public static final String PRE_BODY = "<html>\n" +
+            "<head>\n" +
+            "<title>Step. Stepic.org</title>\n" +
+            "<script type=\"text/x-mathjax-config\">\n" +
+            "  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
+            "</script>\n" +
+            "<script type=\"text/javascript\"\n" +
+            " src=\"http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML\">\n" +
+            "</script>\n" +
+
+            "<style>\n" +
+            "\nimg { max-width: 100%; }" +
+            "</style>\n" +
+            "</head>\n" +
+            "<body>";
+    public static final String POST_BODY = "</body>\n" +
+            "</html>";
+    public static final String KEY_LOAD_TYPE = "KEY_LOAD_TYPE";
+    public static final String KEY_TABLE_TYPE = "table_type";
+    public static final int UI_UPDATING_TIME = 1000;
 
 
     //Types of steps:
@@ -32,5 +50,6 @@ public class AppConstants {
     public static final String TYPE_PUZZLE = "puzzle";
     public static final String TYPE_PYCHARM = "pycharm";
     public static final String TYPE_CODE = "code";
+
 
 }

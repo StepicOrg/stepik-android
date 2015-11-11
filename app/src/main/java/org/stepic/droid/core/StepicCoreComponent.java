@@ -1,7 +1,7 @@
 package org.stepic.droid.core;
 
-import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.FragmentActivityBase;
+import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.concurrency.FromDbCoursesTask;
 import org.stepic.droid.concurrency.FromDbSectionTask;
 import org.stepic.droid.concurrency.FromDbStepTask;
@@ -14,10 +14,14 @@ import org.stepic.droid.concurrency.ToDbUnitLessonTask;
 import org.stepic.droid.concurrency.UpdateCourseTask;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.receivers.DownloadCompleteReceiver;
+import org.stepic.droid.services.DeleteService;
+import org.stepic.droid.services.LoadService;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
 import org.stepic.droid.view.adapters.SectionAdapter;
 import org.stepic.droid.view.adapters.StepFragmentAdapter;
 import org.stepic.droid.view.adapters.UnitAdapter;
+import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
 import org.stepic.droid.view.dialogs.ClearCacheDialogFragment;
 import org.stepic.droid.web.HttpManager;
 import org.stepic.droid.web.RetrofitRESTApi;
@@ -73,5 +77,14 @@ public interface StepicCoreComponent {
     void inject(ToDbStepTask stepicTask);
 
     void inject(FromDbStepTask stepicTask);
+
     void inject(ToDbCachedVideo stepicTask);
+
+    void inject(AllowMobileDataDialogFragment allowMobileDataDialogFragment);
+
+    void inject(LoadService loadService);
+
+    void inject(DeleteService loadService);
+
+    void inject(DownloadCompleteReceiver downloadCompleteReceiver);
 }

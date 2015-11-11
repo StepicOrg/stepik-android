@@ -9,8 +9,11 @@ import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.DownloadManagerImpl;
 import org.stepic.droid.store.IDownloadManager;
+import org.stepic.droid.store.IStoreStateManager;
+import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.resolvers.IStepResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
@@ -38,8 +41,8 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public IScreenManager provideIScreenManager() {
-        return new ScreenManager();
+    public IScreenManager provideIScreenManager(IConfig config) {
+        return new ScreenManager(config);
     }
 
     @Provides
@@ -107,14 +110,8 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public IDownloadManager provideDownloadManger(Context context,
-                                                  UserPreferences userPreferences,
-                                                  DownloadManager dm,
-                                                  Bus bus,
-                                                  IVideoResolver resolver,
-                                                  IApi api,
-                                                  DatabaseManager db) {
-        return new DownloadManagerImpl(context, userPreferences, dm, bus, resolver, api, db);
+    public IDownloadManager provideDownloadManger() {
+        return new DownloadManagerImpl();
     }
 
     @Provides
@@ -126,5 +123,17 @@ public class StepicDefaultModule {
     @Provides
     public DatabaseManager provideDbOperationCachedVideo(Context context) {
         return new DatabaseManager(context);
+    }
+
+    @Singleton
+    @Provides
+    public IStoreStateManager provideStoreManager(DatabaseManager dbManager) {
+        return new StoreStateManager(dbManager);
+    }
+
+    @Singleton
+    @Provides
+    public CleanManager provideCleanManager() {
+        return new CleanManager();
     }
 }

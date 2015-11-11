@@ -7,7 +7,6 @@
         android:id="@+id/frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/download_btn"
         android:layout_gravity="center">
 
         <include layout="@layout/step_text_header" />
@@ -17,14 +16,4 @@
             layout="@layout/player_placeholder" />
 
     </FrameLayout>
-
-    <Button
-        android:id="@+id/download_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="8dp"
-        android:text="Download"
-        android:textAllCaps="true" />
-
 </RelativeLayout>

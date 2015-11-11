@@ -3,13 +3,12 @@ package org.stepic.droid.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.stepic.droid.base.MainApplication;
-
 import java.io.Serializable;
 
 public class Step implements Parcelable, Serializable {
     private long id;
     private long lesson;
+    private long position;
     private String status;
     private Block block;
     private String progress;
@@ -18,6 +17,24 @@ public class Step implements Parcelable, Serializable {
     private long passed_by;
     private String create_date;
     private String update_date;
+    private boolean is_cached;
+    private boolean is_loading;
+
+    public boolean is_loading() {
+        return is_loading;
+    }
+
+    public synchronized void setIs_loading(boolean is_loading) {
+        this.is_loading = is_loading;
+    }
+
+    public boolean is_cached() {
+        return is_cached;
+    }
+
+    public synchronized void setIs_cached(boolean is_cached) {
+        this.is_cached = is_cached;
+    }
 
     public long getId() {
         return id;
@@ -59,6 +76,13 @@ public class Step implements Parcelable, Serializable {
         return update_date;
     }
 
+    public long getPosition() {
+        return position;
+    }
+
+    public void setPosition(long position) {
+        this.position = position;
+    }
 
     public void setId(long id) {
         this.id = id;
@@ -100,6 +124,9 @@ public class Step implements Parcelable, Serializable {
         this.update_date = update_date;
     }
 
+    public Step() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -109,30 +136,33 @@ public class Step implements Parcelable, Serializable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.id);
         dest.writeLong(this.lesson);
+        dest.writeLong(this.position);
         dest.writeString(this.status);
-        dest.writeParcelable(this.block, flags);
+        dest.writeParcelable(this.block, 0);
         dest.writeString(this.progress);
         dest.writeStringArray(this.subscriptions);
         dest.writeLong(this.viewed_by);
         dest.writeLong(this.passed_by);
         dest.writeString(this.create_date);
         dest.writeString(this.update_date);
-    }
-
-    public Step() {
+        dest.writeByte(is_cached ? (byte) 1 : (byte) 0);
+        dest.writeByte(is_loading ? (byte) 1 : (byte) 0);
     }
 
     protected Step(Parcel in) {
         this.id = in.readLong();
         this.lesson = in.readLong();
+        this.position = in.readLong();
         this.status = in.readString();
-        this.block = in.readParcelable(MainApplication.getAppContext().getClassLoader());
+        this.block = in.readParcelable(Block.class.getClassLoader());
         this.progress = in.readString();
         this.subscriptions = in.createStringArray();
         this.viewed_by = in.readLong();
         this.passed_by = in.readLong();
         this.create_date = in.readString();
         this.update_date = in.readString();
+        this.is_cached = in.readByte() != 0;
+        this.is_loading = in.readByte() != 0;
     }
 
     public static final Creator<Step> CREATOR = new Creator<Step>() {

@@ -13,6 +13,7 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.R;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.resolvers.IVideoResolver;
@@ -36,12 +37,18 @@ public class FragmentBase extends Fragment {
     @Inject
     public IShell mShell;
 
+
     @Inject
     public IDownloadManager mDownloadManager;
 
 
     @Inject
     public IVideoResolver mVideoResolver;
+
+
+    @Inject
+    public SharedPreferenceHelper mSharedPreferenceHelper;
+
 
     public FragmentBase() {
         MainApplication.component(MainApplication.getAppContext()).inject(this);

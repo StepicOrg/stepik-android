@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentStepBase;
@@ -14,9 +15,8 @@ import butterknife.ButterKnife;
 
 public class NotSupportedYetStepFragment extends FragmentStepBase{
 
-    @Bind(R.id.go_to_stepic)
-    View mGoToStepic;
-
+    @Bind(R.id.open_web)
+    Button mOpenWebBtn;
 
     @Nullable
     @Override
@@ -29,6 +29,11 @@ public class NotSupportedYetStepFragment extends FragmentStepBase{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        mOpenWebBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mShell.getScreenProvider().openStepInWeb(getContext(), mStep);
+            }
+        });
     }
 }

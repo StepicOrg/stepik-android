@@ -9,6 +9,7 @@ import org.stepic.droid.web.IApi;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+@Deprecated
 @Singleton
 public class Shell implements IShell {
 
@@ -42,10 +43,5 @@ public class Shell implements IShell {
     @Override
     public SharedPreferenceHelper getSharedPreferenceHelper() {
         return mSharedPreferenceHelper;
-    }
-
-    @Override
-    public Context getContext() {
-        return mContext;
     }
 }

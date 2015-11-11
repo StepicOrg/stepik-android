@@ -55,6 +55,24 @@ public class Course implements Serializable, Parcelable {
     private String language;
     private boolean is_public;
     private String slug; //link to ../course/#slug#
+    private boolean is_cached;
+    private boolean is_loading;
+
+    public boolean is_loading() {
+        return is_loading;
+    }
+
+    public synchronized void setIs_loading(boolean is_loading) {
+        this.is_loading = is_loading;
+    }
+
+    public boolean is_cached() {
+        return is_cached;
+    }
+
+    public synchronized void setIs_cached(boolean is_cached) {
+        this.is_cached = is_cached;
+    }
 
     private DateTime mBeginDateTime = null;
 
@@ -108,8 +126,7 @@ public class Course implements Serializable, Parcelable {
 
     private String getPresentOfDate(String dateInISOformat) {
         DateTime dateTime = new DateTime(dateInISOformat);
-        String result = mFormatForView.print(dateTime);
-        return result;
+        return mFormatForView.print(dateTime);
     }
 
 
@@ -369,6 +386,15 @@ public class Course implements Serializable, Parcelable {
     }
 
 
+    public long[] getSections() {
+        return sections;
+    }
+
+    public void setSections(long[] sections) {
+        this.sections = sections;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -404,13 +430,14 @@ public class Course implements Serializable, Parcelable {
         dest.writeString(this.language);
         dest.writeByte(is_public ? (byte) 1 : (byte) 0);
         dest.writeString(this.slug);
+        dest.writeByte(is_cached ? (byte) 1 : (byte) 0);
+        dest.writeByte(is_loading ? (byte) 1 : (byte) 0);
         dest.writeSerializable(this.mBeginDateTime);
         dest.writeSerializable(this.mEndDateTime);
         dest.writeString(this.formatForView);
     }
 
-    public Course(Parcel in) {
-        this();
+    protected Course(Parcel in) {
         this.id = in.readLong();
         this.summary = in.readString();
         this.workload = in.readString();
@@ -439,6 +466,8 @@ public class Course implements Serializable, Parcelable {
         this.language = in.readString();
         this.is_public = in.readByte() != 0;
         this.slug = in.readString();
+        this.is_cached = in.readByte() != 0;
+        this.is_loading = in.readByte() != 0;
         this.mBeginDateTime = (DateTime) in.readSerializable();
         this.mEndDateTime = (DateTime) in.readSerializable();
         this.formatForView = in.readString();
@@ -453,12 +482,4 @@ public class Course implements Serializable, Parcelable {
             return new Course[size];
         }
     };
-
-    public long[] getSections() {
-        return sections;
-    }
-
-    public void setSections(long[] sections) {
-        this.sections = sections;
-    }
 }

@@ -4,20 +4,23 @@ package org.stepic.droid.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
+import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.view.activities.SectionActivity;
 import org.stepic.droid.view.activities.LaunchActivity;
 import org.stepic.droid.view.activities.LoginActivity;
 import org.stepic.droid.view.activities.MainFeedActivity;
 import org.stepic.droid.view.activities.NotEnrolledCourseDetailActivity;
 import org.stepic.droid.view.activities.RegisterActivity;
+import org.stepic.droid.view.activities.SectionActivity;
 import org.stepic.droid.view.activities.StepsActivity;
 import org.stepic.droid.view.activities.UnitsActivity;
 
@@ -26,9 +29,12 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ScreenManager implements IScreenManager {
-    @Inject
-    public ScreenManager() {
+    private IConfig mConfig;
 
+    @Inject
+    public ScreenManager(IConfig config) {
+
+        this.mConfig = config;
     }
 
     @Override
@@ -108,6 +114,20 @@ public class ScreenManager implements IScreenManager {
 
         intent.putExtras(bundle);
         sourceActivity.startActivity(intent);
+    }
+
+    @Override
+    public void openStepInWeb(Context context, Step step) {
+        String url = mConfig.getBaseUrl() + "/lesson/" + step.getLesson() + "/step/" + step.getPosition();
+        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void openSignUpInWeb(Context context) {
+        String url = mConfig.getBaseUrl() +"/accounts/signup/";
+        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
+        context.startActivity(intent);
     }
 
 }

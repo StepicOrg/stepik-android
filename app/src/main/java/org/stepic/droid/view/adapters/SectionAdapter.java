@@ -11,7 +11,9 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
+import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.view.listeners.OnClickLoadListener;
 import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 
@@ -30,6 +32,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
     IScreenManager mScreenManager;
     @Inject
     IDownloadManager mDownloadManager;
+
+    @Inject
+    DatabaseManager mDatabaseManager;
+
+    @Inject
+    CleanManager mCleaner;
 
     private List<Section> mSections;
     private Context mContext;
@@ -83,6 +91,32 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             holder.hardDeadline.setText(holder.hardDeadlineString + " " + formattedHardDeadline);
             holder.hardDeadline.setVisibility(View.VISIBLE);
         }
+
+        if (section.is_cached()) {
+
+            // FIXME: 05.11.15 Delete course from cache. Set CLICK LISTENER.
+            //cached
+
+            holder.preLoadIV.setVisibility(View.GONE);
+            holder.whenLoad.setVisibility(View.INVISIBLE);
+            holder.afterLoad.setVisibility(View.VISIBLE); //can
+
+        } else {
+            if (section.is_loading()) {
+
+                holder.preLoadIV.setVisibility(View.GONE);
+                holder.whenLoad.setVisibility(View.VISIBLE);
+                holder.afterLoad.setVisibility(View.GONE);
+
+                //todo: add cancel of downloading
+            } else {
+                //not cached not loading
+                holder.preLoadIV.setVisibility(View.VISIBLE);
+                holder.whenLoad.setVisibility(View.INVISIBLE);
+                holder.afterLoad.setVisibility(View.GONE);
+            }
+
+        }
     }
 
     @Override
@@ -101,13 +135,29 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
     @Override
     public void onClickLoad(int itemPosition) {
         if (itemPosition >= 0 && itemPosition < mSections.size()) {
-            mDownloadManager.addSection(mSections.get(itemPosition));
+            Section section = mSections.get(itemPosition);
+
+            if (section.is_cached()) {
+                mCleaner.removeSection(section);
+                section.setIs_loading(false);
+                section.setIs_cached(false);
+                mDatabaseManager.updateOnlyCachedLoadingSection(section);
+                notifyDataSetChanged();
+            } else {
+                if (section.is_loading()) {
+                    // TODO: 11.11.15 cancel downloading
+                } else {
+                    mDownloadManager.addSection(section);
+                    section.setIs_cached(false);
+                    section.setIs_loading(true);
+                    mDatabaseManager.updateOnlyCachedLoadingSection(section);
+                    notifyDataSetChanged();
+                }
+            }
         }
     }
 
     public static class SectionViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.load_button)
-        View mLoadButton;
 
         @Bind(R.id.section_title)
         TextView sectionTitle;
@@ -127,6 +177,18 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         String softDeadlineString;
         @BindString(R.string.begin_date_section)
         String beginDateString;
+
+        @Bind(R.id.pre_load_iv)
+        View preLoadIV;
+
+        @Bind(R.id.when_load_view)
+        View whenLoad;
+
+        @Bind(R.id.after_load_iv)
+        View afterLoad;
+
+        @Bind(R.id.load_button)
+        View mLoadButton;
 
 
         public SectionViewHolder(View itemView, final StepicOnClickItemListener listener, final OnClickLoadListener loadSectionListener) {

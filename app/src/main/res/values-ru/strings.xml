@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="already_have_an_account">Уже есть аккаунт? Войти</string>
+    <string name="yet_have_not_account">Еще нет аккаунта? Создать</string>
     <string name="available_courses_title">Доступные курсы</string>
     <string name="begin_date">Начало</string>
     <string name="best_lessons_title">Лучшие уроки</string>
@@ -49,4 +49,7 @@
     <string name="title_clear_cache_dialog">Подтверждение</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+    <string name="open_web_to_solve">пройти задание в web-версии</string>
+    <string name="allow_mobile_download_title">Разрешить загрузку через мобильный интернет</string>
+    <string name="allow_mobile_message">Разрешить телефону загружать видео по мобильному интернету, когда Wi-Fi недоступен?</string>
 </resources>

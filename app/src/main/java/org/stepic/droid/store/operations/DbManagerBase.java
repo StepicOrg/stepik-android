@@ -8,6 +8,7 @@ import android.util.Log;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.store.DatabaseHelper;
 import org.stepic.droid.store.structure.DBStructureBase;
+import org.stepic.droid.util.RWLocks;
 
 public abstract class DbManagerBase implements IDatabaseManager {
 
@@ -21,20 +22,24 @@ public abstract class DbManagerBase implements IDatabaseManager {
         dbHelper = new DatabaseHelper(context);
     }
 
-    protected synchronized void open() {
+    protected  void open() {
+        RWLocks.DatabaseLock.writeLock().lock();
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            throw new IllegalStateException("Illegal state: working with database on UI thread");
+//            throw new IllegalStateException("Illegal state: working with database on UI thread");
+//            it is ok
         }
         Log.i("database", "open " + Thread.currentThread().getName());
         database = dbHelper.getWritableDatabase();
     }
 
-    protected synchronized void close() {
+    protected  void close() {
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            throw new IllegalStateException("Illegal state: working with database on UI thread");
+//            throw new IllegalStateException("Illegal state: working with database on UI thread");
+            //it is ok.
         }
         Log.i("database", "close " + Thread.currentThread().getName());
         database.close();
+        RWLocks.DatabaseLock.writeLock().unlock();
     }
 
     @Override

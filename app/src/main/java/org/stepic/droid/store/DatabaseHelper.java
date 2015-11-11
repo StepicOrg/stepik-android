@@ -9,6 +9,7 @@ import org.stepic.droid.store.structure.DbStructureBlock;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
 import org.stepic.droid.store.structure.DbStructureLesson;
 import org.stepic.droid.store.structure.DbStructureSections;
+import org.stepic.droid.store.structure.DbStructureSharedDownloads;
 import org.stepic.droid.store.structure.DbStructureStep;
 import org.stepic.droid.store.structure.DbStructureUnit;
 
@@ -28,6 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         createLessonsDb(db, DbStructureLesson.LESSONS);
         createStepsDb(db, DbStructureStep.STEPS);
         createBlocksDb(db, DbStructureBlock.BLOCKS);
+        createShareDownloads(db, DbStructureSharedDownloads.SHARED_DOWNLOADS);
     }
 
     @Override
@@ -41,9 +43,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DbStructureLesson.LESSONS);
         db.execSQL("DROP TABLE IF EXISTS " + DbStructureStep.STEPS);
         db.execSQL("DROP TABLE IF EXISTS " + DbStructureBlock.BLOCKS);
-
+        db.execSQL("DROP TABLE IF EXISTS " + DbStructureSharedDownloads.SHARED_DOWNLOADS);
         onCreate(db);
-
     }
 
     private void createCourseTable(SQLiteDatabase db, String name) {
@@ -56,10 +57,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DBStructureCourses.Column.INTRO_LINK_VIMEO + " TEXT, "
                 + DBStructureCourses.Column.COURSE_FORMAT + " TEXT, "
                 + DBStructureCourses.Column.TARGET_AUDIENCE + " TEXT, "
-                + DBStructureCourses.Column.INSTRUCTORS + " TEXT, " //todo: remake to other db
+                + DBStructureCourses.Column.INSTRUCTORS + " TEXT, "
                 + DBStructureCourses.Column.REQUIREMENTS + " TEXT, "
                 + DBStructureCourses.Column.DESCRIPTION + " TEXT, "
-                + DBStructureCourses.Column.SECTIONS + " TEXT, " //todo: remake to other db
+                + DBStructureCourses.Column.SECTIONS + " TEXT, "
                 + DBStructureCourses.Column.TOTAL_UNITS + " INTEGER, "
                 + DBStructureCourses.Column.ENROLLMENT + " INTEGER, "
                 + DBStructureCourses.Column.IS_FEATURED + " BOOLEAN, "
@@ -67,6 +68,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DBStructureCourses.Column.IS_CONTEST + " BOOLEAN, "
                 + DBStructureCourses.Column.LANGUAGE + " TEXT, "
                 + DBStructureCourses.Column.IS_PUBLIC + " BOOLEAN, "
+                + DBStructureCourses.Column.IS_CACHED + " BOOLEAN, "
+                + DBStructureCourses.Column.IS_LOADING + " BOOLEAN, "
                 + DBStructureCourses.Column.TITLE + " TEXT, "
                 + DBStructureCourses.Column.SLUG + " TEXT, "
                 + DBStructureCourses.Column.SUMMARY + " TEXT, "
@@ -98,6 +101,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureSections.Column.HARD_DEADLINE_SOURCE + " TEXT, "
                 + DbStructureSections.Column.GRADING_POLICY_SOURCE + " TEXT, "
                 + DbStructureSections.Column.IS_ACTIVE + " BOOLEAN, "
+                + DbStructureSections.Column.IS_CACHED + " BOOLEAN, "
+                + DbStructureSections.Column.IS_LOADING + " BOOLEAN, "
                 + DbStructureSections.Column.CREATE_DATE + " TEXT, "
                 + DbStructureSections.Column.UPDATE_DATE + " TEXT "
 
@@ -139,6 +144,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureUnit.Column.GRADING_POLICY_SOURCE + " TEXT, "
                 + DbStructureUnit.Column.IS_ACTIVE + " BOOLEAN, "
                 + DbStructureUnit.Column.CREATE_DATE + " TEXT, "
+                + DbStructureUnit.Column.IS_CACHED + " BOOLEAN, "
+                + DbStructureUnit.Column.IS_LOADING + " BOOLEAN, "
                 + DbStructureUnit.Column.UPDATE_DATE + " TEXT "
 
                 + ")";
@@ -164,6 +171,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureLesson.Column.SLUG + " TEXT, "
                 + DbStructureLesson.Column.CREATE_DATE + " TEXT, "
                 + DbStructureLesson.Column.LEARNERS_GROUP + " TEXT, "
+                + DbStructureLesson.Column.IS_CACHED + " BOOLEAN, "
+                + DbStructureLesson.Column.IS_LOADING + " BOOLEAN, "
                 + DbStructureLesson.Column.TEACHER_GROUP + " TEXT "
 
                 + ")";
@@ -180,7 +189,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureStep.Column.SUBSCRIPTIONS + " TEXT, "
                 + DbStructureStep.Column.VIEWED_BY + " LONG, "
                 + DbStructureStep.Column.PASSED_BY + " LONG, "
+                + DbStructureStep.Column.POSITION + " LONG, "
                 + DbStructureStep.Column.CREATE_DATE + " TEXT, "
+                + DbStructureStep.Column.IS_CACHED + " BOOLEAN, "
+                + DbStructureStep.Column.IS_LOADING + " BOOLEAN, "
                 + DbStructureStep.Column.UPDATE_DATE + " TEXT "
                 + ")";
         db.execSQL(sql);
@@ -192,9 +204,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureBlock.Column.STEP_ID + " LONG, "
                 + DbStructureBlock.Column.NAME + " TEXT, "
                 + DbStructureBlock.Column.TEXT + " TEXT "
-                    + ")";
+                + ")";
         db.execSQL(sql);
     }
 
+    private void createShareDownloads(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureSharedDownloads.Column.DOWNLOAD_ID + " LONG, "
+                + DbStructureSharedDownloads.Column.STEP_ID + " LONG, "
+                + DbStructureSharedDownloads.Column.THUMBNAIL + " TEXT, "
+                + DbStructureSharedDownloads.Column.VIDEO_ID + " LONG "
+                + ")";
+        db.execSQL(sql);
+    }
 
 }
