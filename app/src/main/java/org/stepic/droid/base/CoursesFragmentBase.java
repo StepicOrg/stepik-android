@@ -168,8 +168,16 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
 
     protected void showCourses(List<Course> cachedCourses) {
+
         mCourses.clear();
-        mCourses.addAll(cachedCourses);
+        if (getCourseType() == DatabaseManager.Table.enrolled) {
+            for (Course course : cachedCourses) {
+                if (course.getEnrollment() != 0)
+                    mCourses.add(course);
+            }
+        } else {
+            mCourses.addAll(cachedCourses);
+        }
         mCoursesAdapter.notifyDataSetChanged();
     }
 
@@ -216,7 +224,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     }
 
     private void saveDataToCache(List<Course> courses) {
-        mDbSaveCoursesTask = new ToDbCoursesTask(courses, mTypeOfCourse);
+        mDbSaveCoursesTask = new ToDbCoursesTask(courses, mTypeOfCourse, mCurrentPage);
         mDbSaveCoursesTask.execute();
     }
 
