@@ -94,16 +94,6 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
         ProgressHelper.activate(mProgressBar);
         getAndShowUnitsFromCache();
-
-        mHandlerStateUpdating = new Handler();
-        mUpdatingRunnable = new Runnable() {
-            @Override
-            public void run() {
-                updateState();
-                mHandlerStateUpdating.postDelayed(this, AppConstants.UI_UPDATING_TIME);
-            }
-        };
-        mHandlerStateUpdating.post(mUpdatingRunnable);
     }
 
     private void updateState() {
@@ -232,9 +222,25 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        mHandlerStateUpdating = new Handler();
+        mUpdatingRunnable = new Runnable() {
+            @Override
+            public void run() {
+                updateState();
+                mHandlerStateUpdating.postDelayed(this, AppConstants.UI_UPDATING_TIME);
+            }
+        };
+        mHandlerStateUpdating.post(mUpdatingRunnable);
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         ProgressHelper.dismiss(mSwipeRefreshLayout);
+        mHandlerStateUpdating.removeCallbacks(mUpdatingRunnable);
     }
 
 
@@ -274,7 +280,6 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     @Override
     protected void onDestroy() {
-        mHandlerStateUpdating.removeCallbacks(mUpdatingRunnable);
         super.onDestroy();
     }
 }

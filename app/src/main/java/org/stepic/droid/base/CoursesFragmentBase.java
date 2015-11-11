@@ -130,19 +130,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
                 getAndShowDataFromCache();
             }
         });
-
-        if (getCourseType() == DatabaseManager.Table.enrolled) {
-            mHandlerStateUpdating = new Handler();
-            mUpdatingRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    updateState();
-                    mHandlerStateUpdating.postDelayed(this, AppConstants.UI_UPDATING_TIME);
-                }
-            };
-
-            mHandlerStateUpdating.post(mUpdatingRunnable);
-        }
     }
 
     protected void updateState() {
@@ -317,6 +304,19 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
         super.onStart();
         mSwipeRefreshLayout.setRefreshing(false);
         bus.register(this);
+
+        if (getCourseType() == DatabaseManager.Table.enrolled) {
+            mHandlerStateUpdating = new Handler();
+            mUpdatingRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    updateState();
+                    mHandlerStateUpdating.postDelayed(this, AppConstants.UI_UPDATING_TIME);
+                }
+            };
+
+            mHandlerStateUpdating.post(mUpdatingRunnable);
+        }
     }
 
     @Override
@@ -334,13 +334,13 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     public void onStop() {
         super.onStop();
         bus.unregister(this);
+        if (getCourseType() == DatabaseManager.Table.enrolled) {
+            mHandlerStateUpdating.removeCallbacks(mUpdatingRunnable);
+        }
     }
 
     @Override
     public void onDestroyView() {
-        if (getCourseType() == DatabaseManager.Table.enrolled) {
-            mHandlerStateUpdating.removeCallbacks(mUpdatingRunnable);
-        }
         super.onDestroyView();
     }
 
