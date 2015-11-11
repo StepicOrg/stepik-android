@@ -1,6 +1,7 @@
 package org.stepic.droid.view.activities;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,6 +55,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     private List<Section> mSectionList;
     private FromDbSectionTask mFromDbSectionTask;
     private ToDbSectionTask mToDbSectionTask;
+    private Handler mHandlerStateUpdating;
 
 
     boolean isScreenEmpty;
@@ -88,7 +90,28 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
         ProgressHelper.activate(mProgressBar);
         getAndShowSectionsFromCache();
+        mHandlerStateUpdating = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                updateState();
+                mHandlerStateUpdating.postDelayed(this, AppConstants.UI_UPDATING_TIME);
+            }
+        };
+        mHandlerStateUpdating.post(runnable);
 
+    }
+
+    public void updateState() {
+        if (mSectionList == null || mAdapter == null || mSectionList.size() == 0) {
+            return;
+        }
+
+        for (Section section : mSectionList) {
+            section.setIs_loading(mDbManager.isSectionLoading(section));
+            section.setIs_cached(mDbManager.isSectionCached(section));
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

@@ -138,11 +138,11 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
                 mHandlerStateUpdating.postDelayed(this, AppConstants.UI_UPDATING_TIME);
             }
         };
-        mHandlerStateUpdating.postDelayed(runnable, AppConstants.UI_UPDATING_TIME);
+        mHandlerStateUpdating.post(runnable);
     }
 
     protected void updateState() {
-        if (mCourses == null || mCoursesAdapter == null) {
+        if (mCourses == null || mCoursesAdapter == null || mCourses.size() == 0) {
             return;
         }
 
