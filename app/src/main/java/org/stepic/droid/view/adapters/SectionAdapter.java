@@ -12,6 +12,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.store.IDownloadManager;
+import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.view.listeners.OnClickLoadListener;
 import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 
@@ -30,6 +31,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
     IScreenManager mScreenManager;
     @Inject
     IDownloadManager mDownloadManager;
+
+    @Inject
+    DatabaseManager mDatabaseManager;
 
     private List<Section> mSections;
     private Context mContext;
@@ -136,6 +140,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                     // TODO: 11.11.15 cancel downloading
                 } else {
                     mDownloadManager.addSection(section);
+                    section.setIs_cached(false);
+                    section.setIs_loading(true);
+                    mDatabaseManager.updateOnlyCachedLoadingSection(section);
+                    notifyDataSetChanged();
                 }
             }
         }

@@ -630,7 +630,6 @@ public class DatabaseManager extends DbManagerBase {
     public void addSection(Section section) {
         try {
             open();
-            if (isSectionInDb(section)) return;
             ContentValues values = new ContentValues();
 
             values.put(DbStructureSections.Column.SECTION_ID, section.getId());
@@ -646,8 +645,11 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureSections.Column.IS_CACHED, section.is_cached());
             values.put(DbStructureSections.Column.IS_LOADING, section.is_loading());
 
-            database.insert(DbStructureSections.SECTIONS, null, values);
-
+            if (isSectionInDb(section)) {
+                database.update(DbStructureSections.SECTIONS, values, DbStructureSections.Column.SECTION_ID + "=" + section.getId(), null);
+            } else {
+                database.insert(DbStructureSections.SECTIONS, null, values);
+            }
         } finally {
             close();
         }
@@ -656,7 +658,7 @@ public class DatabaseManager extends DbManagerBase {
     public void addStep(Step step) {
         try {
             open();
-            if (isStepInDb(step)) return;
+
             ContentValues values = new ContentValues();
 
             values.put(DbStructureStep.Column.STEP_ID, step.getId());
@@ -672,7 +674,11 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureStep.Column.IS_CACHED, step.is_cached());
             values.put(DbStructureStep.Column.IS_LOADING, step.is_loading());
 
-            database.insert(DbStructureStep.STEPS, null, values);
+            if (isStepInDb(step)) {
+                database.update(DbStructureStep.STEPS, values, DbStructureStep.Column.STEP_ID + "=" + step.getId(), null);
+            } else {
+                database.insert(DbStructureStep.STEPS, null, values);
+            }
 
             addBlock(step);
         } finally {
@@ -1013,7 +1019,6 @@ public class DatabaseManager extends DbManagerBase {
     public void addUnit(Unit unit) {
         try {
             open();
-            if (isUnitInDb(unit)) return;
 
             ContentValues values = new ContentValues();
 
@@ -1036,10 +1041,16 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureUnit.Column.IS_ACTIVE, unit.is_active());
             values.put(DbStructureUnit.Column.CREATE_DATE, unit.getCreate_date());
             values.put(DbStructureUnit.Column.UPDATE_DATE, unit.getUpdate_date());
-            values.put(DbStructureUnit.Column.IS_CACHED, unit.is_cached());
-            values.put(DbStructureUnit.Column.IS_LOADING, unit.is_loading());
+//            values.put(DbStructureUnit.Column.IS_CACHED, unit.is_cached());
+//            values.put(DbStructureUnit.Column.IS_LOADING, unit.is_loading());
 
-            database.insert(DbStructureUnit.UNITS, null, values);
+
+            if (isUnitInDb(unit)) {
+                database.update(DbStructureUnit.UNITS, values, DbStructureUnit.Column.UNIT_ID + "=" + unit.getId(), null);
+            } else {
+                database.insert(DbStructureUnit.UNITS, null, values);
+            }
+
 
         } finally {
             close();
@@ -1067,7 +1078,6 @@ public class DatabaseManager extends DbManagerBase {
     public void addLesson(Lesson lesson) {
         try {
             open();
-            if (isLessonInDb(lesson)) return;
 
             ContentValues values = new ContentValues();
 
@@ -1087,11 +1097,15 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureLesson.Column.CREATE_DATE, lesson.getCreate_date());
             values.put(DbStructureLesson.Column.LEARNERS_GROUP, lesson.getLearners_group());
             values.put(DbStructureLesson.Column.TEACHER_GROUP, lesson.getTeacher_group());
-            values.put(DbStructureLesson.Column.IS_CACHED, lesson.is_cached());
-            values.put(DbStructureLesson.Column.IS_LOADING, lesson.is_loading());
+//            values.put(DbStructureLesson.Column.IS_CACHED, lesson.is_cached());
+//            values.put(DbStructureLesson.Column.IS_LOADING, lesson.is_loading());
 
-            database.insert(DbStructureLesson.LESSONS, null, values);
+            if (isLessonInDb(lesson)) {
+                database.update(DbStructureLesson.LESSONS, values, DbStructureLesson.Column.LESSON_ID + "=" + lesson.getId(), null);
 
+            } else {
+                database.insert(DbStructureLesson.LESSONS, null, values);
+            }
         } finally {
             close();
         }

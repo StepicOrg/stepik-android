@@ -124,6 +124,10 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
                             // FIXME: 21.10.15 IMPLEMENTS IN BACKGROUND THREAD
                             // FIXME: 21.10.15 MAKE UI DISABLED IF COURSE IS LOADED.
                             mDownloadManager.addCourse(course, type);
+                            course.setIs_loading(true);
+                            course.setIs_cached(false);
+                            mDatabase.updateOnlyCachedLoadingCourse(course, type);
+                            notifyDataSetChanged();
                         }
                     });
                 }
@@ -138,7 +142,6 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
     }
 
     static class ViewHolderItem {
-
 
 
         @Bind(R.id.course_name)

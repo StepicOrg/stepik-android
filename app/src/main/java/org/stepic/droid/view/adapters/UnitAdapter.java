@@ -14,6 +14,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.IDownloadManager;
+import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.view.listeners.OnClickLoadListener;
 import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 
@@ -32,6 +33,9 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
     @Inject
     IDownloadManager mDownloadManager;
+
+    @Inject
+    DatabaseManager mDbManager;
 
     private final static String DELIMITER = ".";
 
@@ -137,6 +141,13 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                     // TODO: 11.11.15 cancel downloading
                 } else {
                     mDownloadManager.addUnitLesson(unit, lesson);
+                    unit.setIs_cached(false);
+                    lesson.setIs_cached(false);
+                    unit.setIs_loading(true);
+                    lesson.setIs_loading(true);
+                    mDbManager.updateOnlyCachedLoadingLesson(lesson);
+                    mDbManager.updateOnlyCachedLoadingUnit(unit);
+                    notifyDataSetChanged();
                 }
             }
         }
