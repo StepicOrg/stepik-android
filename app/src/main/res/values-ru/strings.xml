@@ -57,4 +57,5 @@
     <string name="you_dropped">Вы покинули</string>
     <string name="try_in_web_drop">Попробуйте отписаться в web-версии</string>
     <string name="you_not_enrolled">Вы не записаны на данный курс</string>
+    <string name="cancel">Отмена</string>
 </resources>
