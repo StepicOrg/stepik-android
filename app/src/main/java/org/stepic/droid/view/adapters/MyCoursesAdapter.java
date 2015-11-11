@@ -139,8 +139,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 
     static class ViewHolderItem {
 
-        @Bind(R.id.load_button)
-        View loadButton;
+
 
         @Bind(R.id.course_name)
         TextView courseName;
@@ -165,6 +164,9 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 
         @Bind(R.id.after_load_iv)
         View afterLoad;
+
+        @Bind(R.id.load_button)
+        View loadButton;
 
         @BindDrawable(R.drawable.stepic_logo_black_and_white)
         Drawable placeholder;

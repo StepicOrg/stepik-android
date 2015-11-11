@@ -84,6 +84,31 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         titleBuilder.append(lesson.getTitle());
 
         holder.unitTitle.setText(titleBuilder.toString());
+        if (unit.is_cached()) {
+
+            // FIXME: 05.11.15 Delete course from cache. Set CLICK LISTENER.
+            //cached
+
+            holder.preLoadIV.setVisibility(View.GONE);
+            holder.whenLoad.setVisibility(View.GONE);
+            holder.afterLoad.setVisibility(View.VISIBLE); //can
+
+        } else {
+            if (unit.is_loading()) {
+
+                holder.preLoadIV.setVisibility(View.GONE);
+                holder.whenLoad.setVisibility(View.VISIBLE);
+                holder.afterLoad.setVisibility(View.GONE);
+
+                //todo: add cancel of downloading
+            } else {
+                //not cached not loading
+                holder.preLoadIV.setVisibility(View.VISIBLE);
+                holder.whenLoad.setVisibility(View.GONE);
+                holder.afterLoad.setVisibility(View.GONE);
+            }
+
+        }
     }
 
     @Override
@@ -102,15 +127,23 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     @Override
     public void onClickLoad(int itemPosition) {
         if (itemPosition >= 0 && itemPosition < mUnitList.size()) {
-            mDownloadManager.addUnitLesson(mUnitList.get(itemPosition), mLessonList.get(itemPosition));
+            Unit unit = mUnitList.get(itemPosition);
+            Lesson lesson = mLessonList.get(itemPosition);
+
+            if (unit.is_cached()) {
+                // TODO: 11.11.15 delete unit and lesson
+            } else {
+                if (unit.is_loading()) {
+                    // TODO: 11.11.15 cancel downloading
+                } else {
+                    mDownloadManager.addUnitLesson(unit, lesson);
+                }
+            }
         }
     }
 
 
     public static class UnitViewHolder extends RecyclerView.ViewHolder {
-
-        @Bind(R.id.load_button)
-        View loadButton;
 
         @Bind(R.id.cv)
         View cv;
@@ -120,6 +153,19 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         @Bind(R.id.unit_title)
         TextView unitTitle;
+
+
+        @Bind(R.id.pre_load_iv)
+        View preLoadIV;
+
+        @Bind(R.id.when_load_view)
+        View whenLoad;
+
+        @Bind(R.id.after_load_iv)
+        View afterLoad;
+
+        @Bind(R.id.load_button)
+        View loadButton;
 
         public UnitViewHolder(View itemView, final StepicOnClickItemListener listener, final OnClickLoadListener loadListener) {
             super(itemView);
