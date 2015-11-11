@@ -126,6 +126,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
                             mDownloadManager.addCourse(course, type);
                             course.setIs_loading(true);
                             course.setIs_cached(false);
+                            mDatabase.updateOnlyCachedLoadingCourse(course, type);
                             notifyDataSetChanged();
                         }
                     });

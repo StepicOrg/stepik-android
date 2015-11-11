@@ -145,6 +145,8 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                     lesson.setIs_cached(false);
                     unit.setIs_loading(true);
                     lesson.setIs_loading(true);
+                    mDbManager.updateOnlyCachedLoadingLesson(lesson);
+                    mDbManager.updateOnlyCachedLoadingUnit(unit);
                     notifyDataSetChanged();
                 }
             }
