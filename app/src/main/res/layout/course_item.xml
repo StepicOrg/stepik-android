@@ -76,7 +76,8 @@
 
             </RelativeLayout>
 
-            <include layout="@layout/load_imageview" />
+            <include
+                layout="@layout/load_imageview" />
         </LinearLayout>
 
         <View

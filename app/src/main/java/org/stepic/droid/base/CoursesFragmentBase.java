@@ -131,15 +131,18 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
             }
         });
 
-        mHandlerStateUpdating = new Handler();
-        mUpdatingRunnable = new Runnable() {
-            @Override
-            public void run() {
-                updateState();
-                mHandlerStateUpdating.postDelayed(this, AppConstants.UI_UPDATING_TIME);
-            }
-        };
-        mHandlerStateUpdating.post(mUpdatingRunnable);
+        if (getCourseType() == DatabaseManager.Table.enrolled) {
+            mHandlerStateUpdating = new Handler();
+            mUpdatingRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    updateState();
+                    mHandlerStateUpdating.postDelayed(this, AppConstants.UI_UPDATING_TIME);
+                }
+            };
+
+            mHandlerStateUpdating.post(mUpdatingRunnable);
+        }
     }
 
     protected void updateState() {
@@ -335,7 +338,9 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
     @Override
     public void onDestroyView() {
-        mHandlerStateUpdating.removeCallbacks(mUpdatingRunnable);
+        if (getCourseType() == DatabaseManager.Table.enrolled) {
+            mHandlerStateUpdating.removeCallbacks(mUpdatingRunnable);
+        }
         super.onDestroyView();
     }
 
