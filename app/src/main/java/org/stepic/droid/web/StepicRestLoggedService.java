@@ -4,9 +4,11 @@ import org.stepic.droid.model.EnrollmentWrapper;
 
 import retrofit.Call;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.Headers;
 import retrofit.http.POST;
+import retrofit.http.Path;
 import retrofit.http.Query;
 
 public interface StepicRestLoggedService {
@@ -41,4 +43,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/steps")
     Call<StepResponse> getSteps(@Query("ids[]") long[] steps);
+
+    @DELETE("api/enrollments/{id}")
+    Call<Void> dropCourse(@Path("id") long courseId);
 }

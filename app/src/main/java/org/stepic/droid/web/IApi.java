@@ -27,4 +27,6 @@ public interface IApi {
 
     Call<StepResponse> getSteps (long [] steps);
 
+    Call<Void> dropCourse (long courseId);
+
 }

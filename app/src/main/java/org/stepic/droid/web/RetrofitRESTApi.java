@@ -129,13 +129,17 @@ public class RetrofitRESTApi implements IApi {
 
     @Override
     public Call<LessonStepicResponse> getLessons(long[] lessons) {
-
         return mLoggedService.getLessons(lessons);
     }
 
     @Override
     public Call<StepResponse> getSteps(long[] steps) {
         return mLoggedService.getSteps(steps);
+    }
+
+    @Override
+    public Call<Void> dropCourse(long courseId) {
+        return mLoggedService.dropCourse(courseId);
     }
 
     private void setAuthenticatorClientIDAndPassword(OkHttpClient httpClient) {

@@ -52,4 +52,10 @@
     <string name="open_web_to_solve">пройти задание в web-версии</string>
     <string name="allow_mobile_download_title">Разрешить загрузку через мобильный интернет</string>
     <string name="allow_mobile_message">Разрешить телефону загружать видео по мобильному интернету, когда Wi-Fi недоступен?</string>
+    <string name="drop_course">Покинуть курс</string>
+    <string name="about_course">О курсе</string>
+    <string name="you_dropped">Вы покинули</string>
+    <string name="try_in_web_drop">Попробуйте отписаться в web-версии</string>
+    <string name="you_not_enrolled">Вы не записаны на данный курс</string>
+    <string name="cancel">Отмена</string>
 </resources>

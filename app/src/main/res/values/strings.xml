@@ -56,5 +56,10 @@
     <string name="open_web_to_solve">Open web version to solve</string>
     <string name="allow_mobile_download_title">Allow mobile download</string>
     <string name="allow_mobile_message">Allow your device to download videos over your mobile connection when Wi-Fi is not available?</string>
-
+    <string name="drop_course">Drop course</string>
+    <string name="about_course">About course</string>
+    <string name="you_dropped">"You dropped"</string>
+    <string name="try_in_web_drop">Try drop course in web version</string>
+    <string name="you_not_enrolled">You are not enrolled</string>
+    <string name="cancel">Cancel</string>
 </resources>

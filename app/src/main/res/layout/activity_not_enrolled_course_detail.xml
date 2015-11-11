@@ -22,14 +22,13 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <ImageView
+            <WebView
                 android:id="@+id/intro_video"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:src="@drawable/video_placeholder" />
+                android:layout_height="200dp" />
 
             <LinearLayout
                 android:id="@+id/detail_course_info"

@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +49,7 @@ public class NotEnrolledCourseDetailActivity extends FragmentActivityBase {
     Toolbar mToolbar;
 
     @Bind(R.id.intro_video)
-    ImageView mIntroView;
+    WebView mIntroView;
 
     @Bind(R.id.description)
     TextView mDescriptionView;
@@ -104,6 +106,26 @@ public class NotEnrolledCourseDetailActivity extends FragmentActivityBase {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        String urlToVideo = mCourse.getIntro();
+        Log.i("vimeo", urlToVideo);
+        if (urlToVideo == null || urlToVideo.equals("")) {
+            mIntroView.setVisibility(View.GONE);
+        } else {
+            WebSettings webSettings = mIntroView.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+            webSettings.setAppCacheEnabled(true);
+            webSettings.setDomStorageEnabled(true);
+
+
+            final String mimeType = "text/html";
+            final String encoding = "UTF-8";
+            mIntroView.loadUrl(urlToVideo);
+//            mIntroView.loadDataWithBaseURL("", html, mimeType, encoding, "");
+//            mHeaderWv.setText(HtmlHelper.fromHtml(mStep.getBlock().getText()));
+            mIntroView.setVisibility(View.VISIBLE);
+        }
+
+
 //        String urltovideo = "https://player.vimeo.com/external/111345189.hd.mp4?s=ea9aab1c15434d7bfd3515afaf70a9de&profile_id=113&oauth2_token_id=3605157";
 //        MediaController mediaController = new MediaController(this);
 //        mediaController.setAnchorView(mIntroView);
@@ -115,12 +137,17 @@ public class NotEnrolledCourseDetailActivity extends FragmentActivityBase {
         mDescriptionView.setText(HtmlHelper.fromHtml(mCourse.getDescription()));
         mSummaryView.setText(HtmlHelper.fromHtml(mCourse.getSummary()));
         mRequirementsView.setText(HtmlHelper.fromHtml(mCourse.getRequirements()));
-        mJoinCourseView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                joinCourse();
-            }
-        });
+        if (mCourse.getEnrollment() != 0) {
+            mJoinCourseView.setVisibility(View.GONE);
+        } else {
+            mJoinCourseView.setVisibility(View.VISIBLE);
+            mJoinCourseView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    joinCourse();
+                }
+            });
+        }
 
         mUserList = new ArrayList<>();
         mInstructorAdapter = new InstructorAdapter(mUserList, this);
@@ -190,6 +217,8 @@ public class NotEnrolledCourseDetailActivity extends FragmentActivityBase {
     @Override
     protected void onPause() {
         super.onPause();
+        mIntroView.onPause();
+        Log.i("vimeo", "stop video");
     }
 
     @Override

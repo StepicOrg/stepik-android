@@ -1,5 +1,6 @@
 package org.stepic.droid.view.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -46,17 +47,17 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
     @Inject
     CleanManager mCleaner;
 
-    private Context mContext;
+    private Activity mActivity;
     private final DatabaseManager.Table type;
     private LayoutInflater mInflater;
 
-    public MyCoursesAdapter(Context context, List<Course> courses, DatabaseManager.Table type) {
+    public MyCoursesAdapter(Activity context, List<Course> courses, DatabaseManager.Table type) {
         super(context, 0, courses);
-        mContext = context;
+        mActivity = context;
         this.type = type;
-        mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        MainApplication.component(mContext).inject(this);
+        MainApplication.component().inject(this);
 
     }
 
@@ -76,7 +77,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         }
         viewHolderItem.courseName.setText(course.getTitle());
         viewHolderItem.courseSummary.setText(HtmlHelper.fromHtml(course.getSummary()));
-        Picasso.with(mContext).load(mConfig.getBaseUrl() + course.getCover()).
+        Picasso.with(mActivity).load(mConfig.getBaseUrl() + course.getCover()).
                 placeholder(viewHolderItem.placeholder).into(viewHolderItem.courseIcon);
         viewHolderItem.courseDateInterval.setText(course.getDateOfCourse());
 
@@ -84,13 +85,12 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
             @Override
             public void onClick(View v) {
                 if (course.getEnrollment() != 0) {
-                    mShell.getScreenProvider().showCourseDescriptionForEnrolled(mContext, course);
+                    mShell.getScreenProvider().showCourseDescriptionForEnrolled(mActivity, course);
                 } else {
-                    mShell.getScreenProvider().showCourseDescriptionForNotEnrolled(mContext, course);
+                    mShell.getScreenProvider().showCourseDescriptionForNotEnrolled(mActivity, course);
                 }
             }
         });
-
 
         if (type == DatabaseManager.Table.enrolled) {
             viewHolderItem.loadButton.setVisibility(View.VISIBLE);
