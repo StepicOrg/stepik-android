@@ -642,8 +642,8 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureSections.Column.COURSE, section.getCourse());
             values.put(DbStructureSections.Column.POSITION, section.getPosition());
             values.put(DbStructureSections.Column.UNITS, DbParseHelper.parseLongArrayToString(section.getUnits()));
-            values.put(DbStructureSections.Column.IS_CACHED, section.is_cached());
-            values.put(DbStructureSections.Column.IS_LOADING, section.is_loading());
+//            values.put(DbStructureSections.Column.IS_CACHED, section.is_cached());
+//            values.put(DbStructureSections.Column.IS_LOADING, section.is_loading());
 
             if (isSectionInDb(section)) {
                 database.update(DbStructureSections.SECTIONS, values, DbStructureSections.Column.SECTION_ID + "=" + section.getId(), null);
