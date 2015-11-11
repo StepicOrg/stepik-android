@@ -137,12 +137,17 @@ public class NotEnrolledCourseDetailActivity extends FragmentActivityBase {
         mDescriptionView.setText(HtmlHelper.fromHtml(mCourse.getDescription()));
         mSummaryView.setText(HtmlHelper.fromHtml(mCourse.getSummary()));
         mRequirementsView.setText(HtmlHelper.fromHtml(mCourse.getRequirements()));
-        mJoinCourseView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                joinCourse();
-            }
-        });
+        if (mCourse.getEnrollment() != 0) {
+            mJoinCourseView.setVisibility(View.GONE);
+        } else {
+            mJoinCourseView.setVisibility(View.VISIBLE);
+            mJoinCourseView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    joinCourse();
+                }
+            });
+        }
 
         mUserList = new ArrayList<>();
         mInstructorAdapter = new InstructorAdapter(mUserList, this);

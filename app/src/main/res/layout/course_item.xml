@@ -7,6 +7,8 @@
     android:background="@color/stepic_white"
     android:clickable="true"
     android:focusable="true"
+    android:longClickable="true"
+    android:descendantFocusability="blocksDescendants"
     android:foreground="@drawable/non_radius_foreground"
     android:orientation="vertical"
     app:cardCornerRadius="@dimen/guideline_tile_corner">

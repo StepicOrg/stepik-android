@@ -7,11 +7,16 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
@@ -19,6 +24,8 @@ import org.stepic.droid.R;
 import org.stepic.droid.concurrency.FromDbCoursesTask;
 import org.stepic.droid.concurrency.ToDbCoursesTask;
 import org.stepic.droid.concurrency.UpdateCourseTask;
+import org.stepic.droid.events.courses.FailDropCourseEvent;
+import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.notify_ui.NotifyUICoursesEvent;
 import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
 import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
@@ -42,6 +49,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
@@ -100,7 +108,9 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
         mFooterDownloadingView.setVisibility(View.GONE);
         mListOfCourses.addFooterView(mFooterDownloadingView);
 
-        mCoursesAdapter = new MyCoursesAdapter(getContext(), mCourses, getCourseType());
+        registerForContextMenu(mListOfCourses);
+
+        mCoursesAdapter = new MyCoursesAdapter(getActivity(), mCourses, getCourseType());
         mListOfCourses.setAdapter(mCoursesAdapter);
 
         mListOfCourses.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -372,5 +382,64 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     public void onDestroyView() {
         super.onDestroyView();
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.course_context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int position = info.position;
+        switch (item.getItemId()) {
+            case R.id.menu_item_info:
+                showInfo(info.position);
+                return true;
+            case R.id.menu_item_unroll:
+                dropCourse(info.position);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    private void dropCourse(int position) {
+        final Course course = mCourses.get(position);
+        if (course.getEnrollment() == 0) {
+            Toast.makeText(getContext(), R.string.you_not_enrolled, Toast.LENGTH_LONG).show();
+            return;
+        }
+        mShell.getApi().dropCourse(course.getCourseId()).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Response<Void> response, Retrofit retrofit) {
+                bus.post(new SuccessDropCourseEvent(getCourseType(), course));
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                bus.post(new FailDropCourseEvent(getCourseType(), course));
+            }
+        });
+    }
+
+    @Subscribe
+    public void onSuccessDrop(SuccessDropCourseEvent e) {
+        Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + e.getCourse().getTitle(), Toast.LENGTH_LONG).show();
+        mCourses.remove(e.getCourse()); //// TODO: 11.11.15 delete cached info of course.
+    }
+
+    @Subscribe
+    public void onFailDrop(FailDropCourseEvent e) {
+        Toast.makeText(getContext(), R.string.try_in_web_drop, Toast.LENGTH_LONG).show();
+    }
+
+    private void showInfo(int position) {
+        Course course = mCourses.get(position);
+        mShell.getScreenProvider().showCourseDescriptionForNotEnrolled(getActivity(), course);
+    }
+
 
 }
