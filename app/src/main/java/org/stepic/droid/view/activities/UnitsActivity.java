@@ -98,15 +98,12 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         getAndShowUnitsFromCache();
     }
 
-    ArrayList<Unit> localCopy;
-
     private void updateState() {
-        if (localCopy == null) {
-            localCopy = new ArrayList<>(mUnitList);
-        }
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
+
+                ArrayList<Unit> localCopy = new ArrayList<>(mUnitList);
                 if (localCopy == null || mAdapter == null || localCopy.size() == 0) {
                     return null;
                 }

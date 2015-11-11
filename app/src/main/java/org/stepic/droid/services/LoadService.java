@@ -164,7 +164,6 @@ public class LoadService extends IntentService {
     }
 
     private void addStep(Step step, Lesson lesson) {
-        mDb.addStep(step);
 
         if (step.getBlock().getVideo() != null) {
 
@@ -191,7 +190,9 @@ public class LoadService extends IntentService {
             if (response.isSuccess()) {
                 List<Step> steps = response.body().getSteps();
                 if (steps != null && steps.size() != 0) {
-
+                    for (Step step : steps) {
+                        mDb.addStep(step);
+                    }
                     for (Step step : steps) {
                         step.setIs_loading(true);
                         step.setIs_cached(false);
