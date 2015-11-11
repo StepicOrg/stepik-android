@@ -1,6 +1,7 @@
 package org.stepic.droid.view.activities;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -59,6 +60,8 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     private FromDbUnitLessonTask mFromDbTask;
     private ToDbUnitLessonTask mToDbTask;
+    private Handler mHandlerStateUpdating;
+    private Runnable mUpdatingRunnable;
 
     boolean isScreenEmpty;
     boolean firstLoad;
@@ -91,6 +94,27 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
         ProgressHelper.activate(mProgressBar);
         getAndShowUnitsFromCache();
+
+        mHandlerStateUpdating = new Handler();
+        mUpdatingRunnable = new Runnable() {
+            @Override
+            public void run() {
+                updateState();
+                mHandlerStateUpdating.postDelayed(this, AppConstants.UI_UPDATING_TIME);
+            }
+        };
+        mHandlerStateUpdating.post(mUpdatingRunnable);
+    }
+
+    private void updateState() {
+        if (mUnitList == null || mAdapter == null || mUnitList.size() == 0) {
+            return;
+        }
+        for (Unit unit : mUnitList) {
+            unit.setIs_cached(mDbManager.isUnitCached(unit));
+            unit.setIs_loading(mDbManager.isUnitLoading(unit));
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
     private void getAndShowUnitsFromCache() {
@@ -248,5 +272,9 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        mHandlerStateUpdating.removeCallbacks(mUpdatingRunnable);
+        super.onDestroy();
+    }
 }

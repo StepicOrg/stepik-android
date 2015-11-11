@@ -56,6 +56,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     private FromDbSectionTask mFromDbSectionTask;
     private ToDbSectionTask mToDbSectionTask;
     private Handler mHandlerStateUpdating;
+    private Runnable mUpdatingRunnable;
 
 
     boolean isScreenEmpty;
@@ -91,14 +92,14 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         ProgressHelper.activate(mProgressBar);
         getAndShowSectionsFromCache();
         mHandlerStateUpdating = new Handler();
-        Runnable runnable = new Runnable() {
+        mUpdatingRunnable = new Runnable() {
             @Override
             public void run() {
                 updateState();
                 mHandlerStateUpdating.postDelayed(this, AppConstants.UI_UPDATING_TIME);
             }
         };
-        mHandlerStateUpdating.post(runnable);
+        mHandlerStateUpdating.post(mUpdatingRunnable);
 
     }
 
@@ -195,7 +196,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
         List<Section> sections = event.getSectionList();
 
-        if (sections != null & sections.size() != 0) {
+        if (sections != null && sections.size() != 0) {
             showSections(sections);
             if (firstLoad) {
                 firstLoad = false;
@@ -236,5 +237,11 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Subscribe
     public void onFinishSaveToDb(FinishingSaveSectionToDbEvent e) {
         getAndShowSectionsFromCache();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mHandlerStateUpdating.removeCallbacks(mUpdatingRunnable);
+        super.onDestroy();
     }
 }

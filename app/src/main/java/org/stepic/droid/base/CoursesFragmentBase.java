@@ -72,6 +72,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     protected View mFooterDownloadingView;
     protected volatile boolean isLoading;
     protected Handler mHandlerStateUpdating;
+    protected Runnable mUpdatingRunnable;
 
     boolean userScrolled;
 
@@ -131,14 +132,14 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
         });
 
         mHandlerStateUpdating = new Handler();
-        Runnable runnable = new Runnable() {
+        mUpdatingRunnable = new Runnable() {
             @Override
             public void run() {
                 updateState();
                 mHandlerStateUpdating.postDelayed(this, AppConstants.UI_UPDATING_TIME);
             }
         };
-        mHandlerStateUpdating.post(runnable);
+        mHandlerStateUpdating.post(mUpdatingRunnable);
     }
 
     protected void updateState() {
@@ -334,6 +335,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
     @Override
     public void onDestroyView() {
+        mHandlerStateUpdating.removeCallbacks(mUpdatingRunnable);
         super.onDestroyView();
     }
 
