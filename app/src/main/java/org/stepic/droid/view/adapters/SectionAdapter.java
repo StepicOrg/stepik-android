@@ -142,7 +142,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                     mDownloadManager.addSection(section);
                     section.setIs_cached(false);
                     section.setIs_loading(true);
-                    mDatabaseManager.updateOnlyCachedLoadingSection(section);
                     notifyDataSetChanged();
                 }
             }
