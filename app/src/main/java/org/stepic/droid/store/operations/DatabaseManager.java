@@ -566,7 +566,6 @@ public class DatabaseManager extends DbManagerBase {
 
         try {
             open();
-            if (isCourseInDB(course, type)) return;
             ContentValues values = new ContentValues();
 
             values.put(DBStructureCourses.Column.COURSE_ID, course.getCourseId());
@@ -588,10 +587,15 @@ public class DatabaseManager extends DbManagerBase {
             String sectionsParsed = DbParseHelper.parseLongArrayToString(course.getSections());
             values.put(DBStructureCourses.Column.SECTIONS, sectionsParsed);
 
-            values.put(DBStructureCourses.Column.IS_CACHED, course.is_cached());
-            values.put(DBStructureCourses.Column.IS_LOADING, course.is_loading());
+//            values.put(DBStructureCourses.Column.IS_CACHED, course.is_cached());
+//            values.put(DBStructureCourses.Column.IS_LOADING, course.is_loading());
 
-            database.insert(type.getStoreName(), null, values);
+
+            if (isCourseInDB(course, type)) {
+                database.update(type.getStoreName(), values, DBStructureCourses.Column.COURSE_ID + "=" + course.getCourseId(), null);
+            } else {
+                database.insert(type.getStoreName(), null, values);
+            }
 
         } finally {
             close();

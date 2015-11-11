@@ -25,14 +25,12 @@ public class ToDbCoursesTask extends StepicTask<Void, Void, Void> {
 
     private List<Course> mCourses;
     private DatabaseManager.Table mCourseType;
-    private int mPage;
 
-    public ToDbCoursesTask(List<Course> courses, DatabaseManager.Table type, int page) {
+    public ToDbCoursesTask(List<Course> courses, DatabaseManager.Table type) {
         super(MainApplication.getAppContext());
         MainApplication.component().inject(this);
 
         //courses now is not thread safe
-        mPage = page;
         mCourseType = type;
         mCourses = courses;
     }
@@ -42,7 +40,6 @@ public class ToDbCoursesTask extends StepicTask<Void, Void, Void> {
         MainApplication.component().inject(this);
 
         //courses now is not thread safe
-        mPage = Integer.MAX_VALUE; //neutral value
         mCourseType = type;
         mCourses = new ArrayList<>();
         mCourses.add(course);
@@ -51,8 +48,6 @@ public class ToDbCoursesTask extends StepicTask<Void, Void, Void> {
     @Override
     protected Void doInBackgroundBody(Void... params) throws Exception {
 
-        if (mPage == 1)
-            mDatabaseManager.clearCacheCourses(mCourseType);
         for (Course courseItem : mCourses) {
             mDatabaseManager.addCourse(courseItem, mCourseType);
         }
