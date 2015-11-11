@@ -82,26 +82,33 @@ public class LoadService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         LoadTypeKey type = (LoadTypeKey) intent.getSerializableExtra(AppConstants.KEY_LOAD_TYPE);
         Log.i("downloading", "Service: " + Thread.currentThread().getName());
-        switch (type) {
-            case Course:
-                Course course = (Course) intent.getSerializableExtra(AppConstants.KEY_COURSE_BUNDLE);
-                DatabaseManager.Table tableType = (DatabaseManager.Table) intent.getSerializableExtra(AppConstants.KEY_TABLE_TYPE);
-                addCourse(course, tableType);
-                break;
-            case Section:
-                Section section = (Section) intent.getSerializableExtra(AppConstants.KEY_SECTION_BUNDLE);
-                addSection(section);
-                break;
-            case UnitLesson:
-                Unit unit = (Unit) intent.getSerializableExtra(AppConstants.KEY_UNIT_BUNDLE);
-                Lesson lesson = (Lesson) intent.getSerializableExtra(AppConstants.KEY_LESSON_BUNDLE);
-                addUnitLesson(unit, lesson);
-                break;
-            case Step:
-                Step step = (Step) intent.getSerializableExtra(AppConstants.KEY_STEP_BUNDLE);
-                Lesson lessonForStep = (Lesson) intent.getSerializableExtra(AppConstants.KEY_LESSON_BUNDLE);
-                addStep(step, lessonForStep);
-                break;
+        try {
+            switch (type) {
+                case Course:
+                    Course course = (Course) intent.getSerializableExtra(AppConstants.KEY_COURSE_BUNDLE);
+                    DatabaseManager.Table tableType = (DatabaseManager.Table) intent.getSerializableExtra(AppConstants.KEY_TABLE_TYPE);
+                    addCourse(course, tableType);
+                    break;
+                case Section:
+                    Section section = (Section) intent.getSerializableExtra(AppConstants.KEY_SECTION_BUNDLE);
+                    addSection(section);
+                    break;
+                case UnitLesson:
+                    Unit unit = (Unit) intent.getSerializableExtra(AppConstants.KEY_UNIT_BUNDLE);
+                    Lesson lesson = (Lesson) intent.getSerializableExtra(AppConstants.KEY_LESSON_BUNDLE);
+                    addUnitLesson(unit, lesson);
+                    break;
+                case Step:
+                    Step step = (Step) intent.getSerializableExtra(AppConstants.KEY_STEP_BUNDLE);
+                    Lesson lessonForStep = (Lesson) intent.getSerializableExtra(AppConstants.KEY_LESSON_BUNDLE);
+                    addStep(step, lessonForStep);
+                    break;
+            }
+        } catch (NullPointerException ex) {
+            //possibly user click clear cache;
+//            throw ex;
+
+            mDb.dropDatabase();
         }
     }
 

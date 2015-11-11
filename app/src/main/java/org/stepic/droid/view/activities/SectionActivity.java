@@ -95,15 +95,20 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         getAndShowSectionsFromCache();
     }
 
+    private ArrayList<Section> localCopy;
+
     public void updateState() {
+        if (localCopy == null) {
+            localCopy = new ArrayList<>(mSectionList);
+        }
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                if (mSectionList == null || mAdapter == null || mSectionList.size() == 0) {
+                if (localCopy == null || mAdapter == null || localCopy.size() == 0) {
                     return null;
                 }
 
-                for (Section section : mSectionList) {
+                for (Section section : localCopy) {
                     section.setIs_loading(mDbManager.isSectionLoading(section));
                     section.setIs_cached(mDbManager.isSectionCached(section));
                 }

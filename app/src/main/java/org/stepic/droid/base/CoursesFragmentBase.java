@@ -134,16 +134,23 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
         });
     }
 
+
+    private ArrayList<Course> localCopy;
+
     protected void updateState() {
+        if (localCopy == null) {
+            localCopy = new ArrayList<>(mCourses);
+        }
+
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
 
-                if (mCourses == null || mCoursesAdapter == null || mCourses.size() == 0) {
+                if (localCopy == null || mCoursesAdapter == null || localCopy.size() == 0) {
                     return null;
                 }
 
-                for (Course course : mCourses) {
+                for (Course course : localCopy) {
                     course.setIs_loading(mDatabaseManager.isCourseLoading(course, mTypeOfCourse));
                     course.setIs_cached(mDatabaseManager.isCourseCached(course, mTypeOfCourse));
                 }
