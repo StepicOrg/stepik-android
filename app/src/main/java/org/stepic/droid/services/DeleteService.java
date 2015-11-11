@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.squareup.otto.Bus;
+import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Course;
@@ -84,6 +85,7 @@ public class DeleteService extends IntentService {
         } catch (NullPointerException ex) {
             //possibly user click clear cache;
 //            throw ex;
+            YandexMetrica.reportError("DeleteService nullptr", ex);
 
             mDb.dropDatabase();
         }

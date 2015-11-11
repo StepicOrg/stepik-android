@@ -5,6 +5,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
+import com.yandex.metrica.YandexMetrica;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -21,11 +23,11 @@ import javax.inject.Inject;
 public class Course implements Serializable, Parcelable {
 
     @Inject
-    IConfig mConfig;
+    transient IConfig mConfig;
 
-    Context mContext;
+    transient Context mContext;
 
-    private DateTimeFormatter mFormatForView;
+    private transient DateTimeFormatter mFormatForView;
 
     private long id;
     private String summary;
@@ -74,9 +76,9 @@ public class Course implements Serializable, Parcelable {
         this.is_cached = is_cached;
     }
 
-    private DateTime mBeginDateTime = null;
+    private transient DateTime mBeginDateTime = null;
 
-    private DateTime mEndDateTime = null;
+    private transient DateTime mEndDateTime = null;
 
     private String formatForView = null;
 
@@ -104,6 +106,7 @@ public class Course implements Serializable, Parcelable {
             try {
                 sb.append(getPresentOfDate(begin_date_source));
             } catch (Throwable throwable) {
+                YandexMetrica.reportError("present_date_course_begin", throwable);
                 return "";
             }
         } else if (begin_date_source != null) {
@@ -117,6 +120,7 @@ public class Course implements Serializable, Parcelable {
 
                 sb.append(getPresentOfDate(last_deadline));
             } catch (Throwable throwable) {
+                YandexMetrica.reportError("present_date_course_last", throwable);
                 return "";
             }
         }

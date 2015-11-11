@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.yandex.metrica.YandexMetrica;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -35,6 +36,7 @@ public class ConfigRelease implements IConfig {
             JsonElement config = parser.parse(new InputStreamReader(in));
             mProperties = config.getAsJsonObject();
         } catch (Exception e) {
+            YandexMetrica.reportError("configRelease, config.json problem", e);
             mProperties = new JsonObject();
         }
     }

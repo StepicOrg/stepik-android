@@ -51,5 +51,14 @@ public class AppConstants {
     public static final String TYPE_PYCHARM = "pycharm";
     public static final String TYPE_CODE = "code";
 
+    //App Metrica:
+    public static final String METRICA_CLICK_SIGN_IN = "click sign in on launch screen";
+    public static final String METRICA_CLICK_SIGN_UP = "click sign up";
+    public static final String METRICA_CLICK_SIGN_IN_ON_SIGN_IN_SCREEN = "click sign in on sign in on sign-in screen";
+    public static final String METRICA_FAIL_LOGIN = "fail login";
+    public static final String METRICA_SUCCESS_LOGIN = "success login";
+    public static final String METRICA_DROP_COURSE = "drop course";
+    public static final String METRICA_LOAD_SERVICE = "Load Service";
+
 
 }
