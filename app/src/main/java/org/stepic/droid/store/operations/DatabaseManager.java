@@ -147,11 +147,30 @@ public class DatabaseManager extends DbManagerBase {
                 cursor.close();
                 return false;
             }
-
+            cursor.moveToFirst();
             int indexIsLoading = cursor.getColumnIndex(DBStructureCourses.Column.IS_LOADING);
             boolean isLoading = cursor.getInt(indexIsLoading) > 0;
             cursor.close();
             return isLoading;
+        } finally {
+            close();
+        }
+    }
+
+    public boolean isCourseCached(Course course, DatabaseManager.Table type) {
+        try {
+            open();
+            String Query = "Select * from " + type.getStoreName() + " where " + DBStructureCourses.Column.COURSE_ID + " = " + course.getCourseId();
+            Cursor cursor = database.rawQuery(Query, null);
+            if (cursor.getCount() <= 0) {
+                cursor.close();
+                return false;
+            }
+            cursor.moveToFirst();
+            int indexIsCached = cursor.getColumnIndex(DBStructureCourses.Column.IS_CACHED);
+            boolean isCached = cursor.getInt(indexIsCached) > 0;
+            cursor.close();
+            return isCached;
         } finally {
             close();
         }
@@ -166,7 +185,7 @@ public class DatabaseManager extends DbManagerBase {
                 cursor.close();
                 return false;
             }
-
+            cursor.moveToFirst();
             int indexIsLoading = cursor.getColumnIndex(DbStructureSections.Column.IS_LOADING);
             boolean isLoading = cursor.getInt(indexIsLoading) > 0;
             cursor.close();
@@ -175,6 +194,26 @@ public class DatabaseManager extends DbManagerBase {
             close();
         }
     }
+
+    public boolean isSectionCached(Section section) {
+        try {
+            open();
+            String Query = "Select * from " + DbStructureSections.SECTIONS + " where " + DbStructureSections.Column.SECTION_ID + " = " + section.getId();
+            Cursor cursor = database.rawQuery(Query, null);
+            if (cursor.getCount() <= 0) {
+                cursor.close();
+                return false;
+            }
+            cursor.moveToFirst();
+            int indexIsCached = cursor.getColumnIndex(DbStructureSections.Column.IS_CACHED);
+            boolean isCached = cursor.getInt(indexIsCached) > 0;
+            cursor.close();
+            return isCached;
+        } finally {
+            close();
+        }
+    }
+
 
     public boolean isUnitLoading(Unit unit) {
         try {
@@ -185,7 +224,7 @@ public class DatabaseManager extends DbManagerBase {
                 cursor.close();
                 return false;
             }
-
+            cursor.moveToFirst();
             int indexIsLoading = cursor.getColumnIndex(DbStructureUnit.Column.IS_LOADING);
             boolean isLoading = cursor.getInt(indexIsLoading) > 0;
             cursor.close();
@@ -194,6 +233,27 @@ public class DatabaseManager extends DbManagerBase {
             close();
         }
     }
+
+    public boolean isUnitCached(Unit unit) {
+        try {
+            open();
+            String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.UNIT_ID + " = " + unit.getId();
+            Cursor cursor = database.rawQuery(Query, null);
+            if (cursor.getCount() <= 0) {
+                cursor.close();
+                return false;
+            }
+            cursor.moveToFirst();
+
+            int indexIsCached = cursor.getColumnIndex(DbStructureUnit.Column.IS_CACHED);
+            boolean isCached = cursor.getInt(indexIsCached) > 0;
+            cursor.close();
+            return isCached;
+        } finally {
+            close();
+        }
+    }
+
 
 
     public boolean isLessonLoading(Lesson lesson) {
@@ -205,7 +265,7 @@ public class DatabaseManager extends DbManagerBase {
                 cursor.close();
                 return false;
             }
-
+            cursor.moveToFirst();
             int indexIsLoading = cursor.getColumnIndex(DbStructureLesson.Column.IS_LOADING);
             boolean isLoading = cursor.getInt(indexIsLoading) > 0;
             cursor.close();
@@ -214,6 +274,28 @@ public class DatabaseManager extends DbManagerBase {
             close();
         }
     }
+
+    public boolean isLessonCached(Lesson lesson) {
+        try {
+            open();
+            String Query = "Select * from " + DbStructureLesson.LESSONS + " where " + DbStructureLesson.Column.LESSON_ID + " = " + lesson.getId();
+            Cursor cursor = database.rawQuery(Query, null);
+            if (cursor.getCount() <= 0) {
+                cursor.close();
+                return false;
+            }
+            cursor.moveToFirst();
+
+            int indexIsCached = cursor.getColumnIndex(DbStructureLesson.Column.IS_CACHED);
+            boolean isCached = cursor.getInt(indexIsCached) > 0;
+            cursor.close();
+            return isCached;
+        } finally {
+            close();
+        }
+    }
+
+
 
     public boolean isStepLoading(Step step) {
         try {
@@ -224,11 +306,30 @@ public class DatabaseManager extends DbManagerBase {
                 cursor.close();
                 return false;
             }
-
+            cursor.moveToFirst();
             int indexIsLoading = cursor.getColumnIndex(DbStructureStep.Column.IS_LOADING);
             boolean isLoading = cursor.getInt(indexIsLoading) > 0;
             cursor.close();
             return isLoading;
+        } finally {
+            close();
+        }
+    }
+
+    public boolean isStepCached(Step step) {
+        try {
+            open();
+            String Query = "Select * from " + DbStructureStep.STEPS + " where " + DbStructureStep.Column.STEP_ID + " = " + step.getId();
+            Cursor cursor = database.rawQuery(Query, null);
+            if (cursor.getCount() <= 0) {
+                cursor.close();
+                return false;
+            }
+            cursor.moveToFirst();
+            int indexIsCached = cursor.getColumnIndex(DbStructureStep.Column.IS_CACHED);
+            boolean isCached = cursor.getInt(indexIsCached) > 0;
+            cursor.close();
+            return isCached;
         } finally {
             close();
         }

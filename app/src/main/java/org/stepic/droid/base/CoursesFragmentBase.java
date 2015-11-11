@@ -2,6 +2,7 @@ package org.stepic.droid.base;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -28,6 +29,7 @@ import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
 import org.stepic.droid.web.CoursesStepicResponse;
@@ -69,6 +71,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     protected ToDbCoursesTask mDbSaveCoursesTask;
     protected View mFooterDownloadingView;
     protected volatile boolean isLoading;
+    protected Handler mHandlerStateUpdating;
 
     boolean userScrolled;
 
@@ -126,6 +129,28 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
                 getAndShowDataFromCache();
             }
         });
+
+        mHandlerStateUpdating = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                updateState();
+                mHandlerStateUpdating.postDelayed(this, AppConstants.UI_UPDATING_TIME);
+            }
+        };
+        mHandlerStateUpdating.postDelayed(runnable, AppConstants.UI_UPDATING_TIME);
+    }
+
+    protected void updateState() {
+        if (mCourses == null || mCoursesAdapter == null) {
+            return;
+        }
+
+        for (Course course : mCourses) {
+            course.setIs_loading(mDatabaseManager.isCourseLoading(course, mTypeOfCourse));
+            course.setIs_cached(mDatabaseManager.isCourseCached(course, mTypeOfCourse));
+        }
+        mCoursesAdapter.notifyDataSetChanged();
     }
 
 
@@ -135,7 +160,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
         mCoursesAdapter.notifyDataSetChanged();
     }
 
-    protected abstract DatabaseManager.Table  getCourseType();
+    protected abstract DatabaseManager.Table getCourseType();
 
     @Override
     public final void onRefresh() {

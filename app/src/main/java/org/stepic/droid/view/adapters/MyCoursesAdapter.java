@@ -88,21 +88,29 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         });
 
 
+        //cached/loading
+        //false/false = show sky with suggestion for cache
+        //false/true = show progress
+        //true/false = show can with suggestion for delete
+        //true/true = impossible
         if (course.is_cached()) {
             // FIXME: 05.11.15 Delete course from cache. Set CLICK LISTENER.
             //cached
 
             viewHolderItem.preLoadIV.setVisibility(View.GONE);
             viewHolderItem.whenLoad.setVisibility(View.GONE);
-            viewHolderItem.afterLoad.setVisibility(View.VISIBLE);
-
+            viewHolderItem.afterLoad.setVisibility(View.VISIBLE); //can
 
         } else {
-            boolean isLoading = false;
+            if (course.is_loading()) {
 
-            if (!isLoading) {
+                viewHolderItem.preLoadIV.setVisibility(View.GONE);
+                viewHolderItem.whenLoad.setVisibility(View.VISIBLE);
+                viewHolderItem.afterLoad.setVisibility(View.GONE);
+
+                //todo: add cancel of downloading
+            } else {
                 //not cached not loading
-
                 viewHolderItem.preLoadIV.setVisibility(View.VISIBLE);
                 viewHolderItem.whenLoad.setVisibility(View.GONE);
                 viewHolderItem.afterLoad.setVisibility(View.GONE);

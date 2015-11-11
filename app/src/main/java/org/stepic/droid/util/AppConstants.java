@@ -21,7 +21,7 @@ public class AppConstants {
             "</script>\n" +
 
             "<style>\n" +
-            "\nimg { max-width: 100%; }"+
+            "\nimg { max-width: 100%; }" +
             "</style>\n" +
             "</head>\n" +
             "<body>";
@@ -29,6 +29,7 @@ public class AppConstants {
             "</html>";
     public static final String KEY_LOAD_TYPE = "KEY_LOAD_TYPE";
     public static final String KEY_TABLE_TYPE = "table_type";
+    public static final int UI_UPDATING_TIME = 1000;
 
 
     //Types of steps:
