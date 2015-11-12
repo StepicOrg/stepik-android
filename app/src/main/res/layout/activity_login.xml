@@ -35,8 +35,8 @@
 
                     <ImageView
                         android:id="@+id/login_logo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
                         android:layout_centerInParent="true"
                         android:contentDescription="@string/app_name"
                         android:src="@drawable/stepic_logo" />
