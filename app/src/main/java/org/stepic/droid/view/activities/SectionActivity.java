@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.widget.ProgressBar;
 
 import com.squareup.otto.Subscribe;
+import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
@@ -187,6 +188,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Override
     public void onRefresh() {
+        YandexMetrica.reportEvent(AppConstants.METRICA_REFRESH_SECTION);
         updateSections();
     }
 

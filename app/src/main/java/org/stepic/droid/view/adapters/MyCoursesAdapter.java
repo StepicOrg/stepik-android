@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
@@ -20,7 +21,9 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.HtmlHelper;
+import org.stepic.droid.util.JsonHelper;
 
 import java.util.List;
 
@@ -105,6 +108,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
                 viewHolderItem.loadButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_DELETE_COURSE, JsonHelper.toJson(course));
                         mCleaner.removeCourse(course, type);
                         course.setIs_cached(false);
                         course.setIs_loading(false);
@@ -136,7 +140,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
                         @Override
                         public void onClick(View v) {
                             // FIXME: 21.10.15 IMPLEMENTS IN BACKGROUND THREAD
-                            // FIXME: 21.10.15 MAKE UI DISABLED IF COURSE IS LOADED.
+                            YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CACHE_COURSE, JsonHelper.toJson(course));
                             mDownloadManager.addCourse(course, type);
                             course.setIs_loading(true);
                             course.setIs_cached(false);

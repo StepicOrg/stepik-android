@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.yandex.metrica.YandexMetrica;
+
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IScreenManager;
@@ -16,6 +18,8 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.view.listeners.OnClickLoadListener;
 import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 
@@ -141,7 +145,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             Lesson lesson = mLessonList.get(itemPosition);
 
             if (unit.is_cached()) {
-
+                YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_DELETE_UNIT, JsonHelper.toJson(unit));
                 mCleaner.removeUnitLesson(unit, lesson);
                 unit.setIs_loading(false);
                 unit.setIs_cached(false);
@@ -154,6 +158,8 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 if (unit.is_loading()) {
                     // TODO: 11.11.15 cancel downloading
                 } else {
+
+                    YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CACHE_UNIT, JsonHelper.toJson(unit));
                     mDownloadManager.addUnitLesson(unit, lesson);
                     unit.setIs_cached(false);
                     lesson.setIs_cached(false);

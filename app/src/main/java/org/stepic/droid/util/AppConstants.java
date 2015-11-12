@@ -61,7 +61,14 @@ public class AppConstants {
     public static final String METRICA_LOAD_SERVICE = "Load Service";
     public static final String METRICA_REFRESH_COURSE = "Pull from top to refresh course";
     public static final String METRICA_REFRESH_SECTION = "Pull from top to refresh section";
-    public static final String METRICA_REFRESH_UNIT = "Pull from top to refresh section UNIT";
+    public static final String METRICA_REFRESH_UNIT = "Pull from top to refresh section unit";
     public static final String METRICA_LONG_TAP_COURSE = "Long tap on course";
     public static final java.lang.String SHOW_DETAILED_INFO_CLICK = "Show detailed info click from context menu of course";
+    public static final java.lang.String METRICA_CLICK_CACHE_COURSE = "Click cache course";
+
+    public static final java.lang.String METRICA_CLICK_DELETE_COURSE = "Click delete course from cache";
+    public static final java.lang.String METRICA_CLICK_DELETE_SECTION = "Click delete section from cache";
+    public static final java.lang.String METRICA_CLICK_CACHE_SECTION = "Click cache section";
+    public static final java.lang.String METRICA_CLICK_CACHE_UNIT = "Click cache unit";
+    public static final java.lang.String METRICA_CLICK_DELETE_UNIT = "Click delete unit from cache";
 }

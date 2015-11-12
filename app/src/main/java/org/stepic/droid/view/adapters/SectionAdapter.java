@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.yandex.metrica.YandexMetrica;
+
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IScreenManager;
@@ -14,6 +16,8 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.view.listeners.OnClickLoadListener;
 import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 
@@ -138,6 +142,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             Section section = mSections.get(itemPosition);
 
             if (section.is_cached()) {
+                YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_DELETE_SECTION, JsonHelper.toJson(section));
                 mCleaner.removeSection(section);
                 section.setIs_loading(false);
                 section.setIs_cached(false);
@@ -147,6 +152,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                 if (section.is_loading()) {
                     // TODO: 11.11.15 cancel downloading
                 } else {
+                    YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CACHE_SECTION, JsonHelper.toJson(section));
                     mDownloadManager.addSection(section);
                     section.setIs_cached(false);
                     section.setIs_loading(true);

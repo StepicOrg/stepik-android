@@ -197,6 +197,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
     @Override
     public final void onRefresh() {
+        YandexMetrica.reportEvent(AppConstants.METRICA_REFRESH_COURSE);
         mCurrentPage = 1;
         mHasNextPage = true;
         downloadData();

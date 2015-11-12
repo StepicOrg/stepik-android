@@ -1,7 +1,6 @@
 package org.stepic.droid.view.activities;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -10,9 +9,9 @@ import android.widget.Toast;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.base.FragmentActivityBase;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 import org.stepic.droid.web.IApi;
 
@@ -58,7 +57,6 @@ public class LoginActivity extends FragmentActivityBase {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                onUserLoginSuccess(); // todo: FOR DEBUG ONLY
                 hideSoftKeypad();
                 YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_SIGN_IN_ON_SIGN_IN_SCREEN);
                 tryLogin();
@@ -114,13 +112,6 @@ public class LoginActivity extends FragmentActivityBase {
     private void onUserLoginSuccess() {
         mShell.getScreenProvider().showMainFeed(this);
         finish();
-    }
-
-    private void onUserLoginFailure(Throwable ex) {
-        //todo: show Error message to user
-        Log.i("Error key", "Error in user login");
-        ex.printStackTrace();
-        Toast.makeText(getApplicationContext(), "Fail exception: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
 }
