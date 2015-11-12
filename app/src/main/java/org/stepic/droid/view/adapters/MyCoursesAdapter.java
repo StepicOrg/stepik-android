@@ -85,9 +85,9 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
             @Override
             public void onClick(View v) {
                 if (course.getEnrollment() != 0) {
-                    mShell.getScreenProvider().showCourseDescriptionForEnrolled(mActivity, course);
+                    mShell.getScreenProvider().showSections(mActivity, course);
                 } else {
-                    mShell.getScreenProvider().showCourseDescriptionForNotEnrolled(mActivity, course);
+                    mShell.getScreenProvider().showCourseDescription(mActivity, course);
                 }
             }
         });

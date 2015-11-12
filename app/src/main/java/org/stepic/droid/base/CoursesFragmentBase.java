@@ -394,6 +394,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        YandexMetrica.reportEvent(AppConstants.METRICA_LONG_TAP_COURSE);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int position = info.position;
         switch (item.getItemId()) {
@@ -429,18 +430,21 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
     @Subscribe
     public void onSuccessDrop(SuccessDropCourseEvent e) {
+        YandexMetrica.reportEvent(AppConstants.METRICA_DROP_COURSE + " successful", JsonHelper.toJson(e.getCourse()));
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + e.getCourse().getTitle(), Toast.LENGTH_LONG).show();
         mCourses.remove(e.getCourse()); //// TODO: 11.11.15 delete cached info of course.
     }
 
     @Subscribe
     public void onFailDrop(FailDropCourseEvent e) {
+        YandexMetrica.reportEvent(AppConstants.METRICA_DROP_COURSE + " fail", JsonHelper.toJson(e.getCourse()));
         Toast.makeText(getContext(), R.string.try_in_web_drop, Toast.LENGTH_LONG).show();
     }
 
     private void showInfo(int position) {
+        YandexMetrica.reportEvent(AppConstants.SHOW_DETAILED_INFO_CLICK);
         Course course = mCourses.get(position);
-        mShell.getScreenProvider().showCourseDescriptionForNotEnrolled(getActivity(), course);
+        mShell.getScreenProvider().showCourseDescription(getActivity(), course);
     }
 
 

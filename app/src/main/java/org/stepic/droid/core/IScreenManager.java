@@ -17,9 +17,9 @@ public interface IScreenManager {
 
     void showMainFeed(Context sourceActivity);
 
-    void showCourseDescriptionForNotEnrolled(Context sourceActivity, @NotNull Course course);
+    void showCourseDescription(Context sourceActivity, @NotNull Course course);
 
-    void showCourseDescriptionForEnrolled (Context sourceActivity, @NotNull Course course);
+    void showSections(Context sourceActivity, @NotNull Course course);
 
     void showUnitsForSection (Context sourceActivity, @NotNull Section section);
 

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 public class JsonHelper {
     public static String toJson(Object obj) {
+        if (obj == null) return "";
         Gson gson = new Gson();
 
         // convert java object to JSON format,

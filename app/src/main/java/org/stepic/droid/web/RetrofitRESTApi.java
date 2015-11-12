@@ -15,6 +15,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.EnrollmentWrapper;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -151,7 +152,7 @@ public class RetrofitRESTApi implements IApi {
 
     @Override
     public Call<Void> dropCourse(long courseId) {
-        YandexMetrica.reportEvent("Api:drop course", JsonHelper.toJson(courseId));
+        YandexMetrica.reportEvent("Api: " + AppConstants.METRICA_DROP_COURSE, JsonHelper.toJson(courseId));
         return mLoggedService.dropCourse(courseId);
     }
 

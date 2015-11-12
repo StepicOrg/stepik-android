@@ -59,6 +59,9 @@ public class AppConstants {
     public static final String METRICA_SUCCESS_LOGIN = "success login";
     public static final String METRICA_DROP_COURSE = "drop course";
     public static final String METRICA_LOAD_SERVICE = "Load Service";
-
-
+    public static final String METRICA_REFRESH_COURSE = "Pull from top to refresh course";
+    public static final String METRICA_REFRESH_SECTION = "Pull from top to refresh section";
+    public static final String METRICA_REFRESH_UNIT = "Pull from top to refresh section UNIT";
+    public static final String METRICA_LONG_TAP_COURSE = "Long tap on course";
+    public static final java.lang.String SHOW_DETAILED_INFO_CLICK = "Show detailed info click from context menu of course";
 }
