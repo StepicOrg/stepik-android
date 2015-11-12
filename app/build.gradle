@@ -19,7 +19,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro'
         }
@@ -32,7 +32,8 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.1' //needed for source code generation
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.dagger:dagger:2.0.1' //dagger itself
-    provided 'org.glassfish:javax.annotation:10.0-b28' //needed to resolve compilation errors, thanks to tutplus.org for finding the dependency
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+    //needed to resolve compilation errors, thanks to tutplus.org for finding the dependency
     compile 'com.jakewharton:butterknife:7.0.1'
     //</DI>
 
@@ -64,10 +65,10 @@ dependencies {
 
     compile 'org.jetbrains:annotations:13.0'
 
-
     // AppMetrica from maven central. Protobuf will be included as dependency.
     compile 'com.yandex.android:mobmetricalib:2.21@aar'
 }
+
 repositories {
     mavenCentral()
 }

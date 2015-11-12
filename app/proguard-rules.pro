@@ -1,3 +1,4 @@
+-keepnames class * { @butterknife.BindDrawable *;}
 -keep class butterknife.** { *; }
 -dontwarn butterknife.internal.**
 -keep class **$$ViewBinder { *; }
@@ -53,6 +54,8 @@
     @com.squareup.otto.Produce public *;
 }
 
+# Picaso
+-dontwarn com.squareup.okhttp.**
 
 #Model classes
 -keep class org.stepic.droid.model.* { *; }

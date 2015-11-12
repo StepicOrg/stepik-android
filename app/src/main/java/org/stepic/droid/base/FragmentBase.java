@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 import com.squareup.otto.Bus;
 
-import org.stepic.droid.R;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.store.IDownloadManager;
@@ -20,12 +19,9 @@ import org.stepic.droid.util.resolvers.IVideoResolver;
 
 import javax.inject.Inject;
 
-import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 public class FragmentBase extends Fragment {
-    @BindColor(R.color.transparent)
-    public int transparent;
 
     protected String TAG = "StepicFragment";
     @Inject
