@@ -12,7 +12,7 @@
 
     <!-- Required by app to detect phone calls and manage playback accordingly -->
     <!-- Required by telephony service to get mobile network information -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--<uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
 
     <application
         android:name="org.stepic.droid.base.MainApplication"
