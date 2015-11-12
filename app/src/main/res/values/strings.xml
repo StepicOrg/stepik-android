@@ -63,4 +63,5 @@
     <string name="you_not_enrolled">You are not enrolled</string>
     <string name="cancel">Cancel</string>
     <string name="failLogin">Login/password was incorrect or Internet connection was lost</string>
+    <string name="are_you_sure">Are you sure?</string>
 </resources>

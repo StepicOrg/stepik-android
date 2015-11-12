@@ -59,4 +59,5 @@
     <string name="you_not_enrolled">Вы не записаны на данный курс</string>
     <string name="cancel">Отмена</string>
     <string name="failLogin">E-mail адрес/пароль не верны или отсутствует подключение к Интернет</string>
+    <string name="are_you_sure" translatable="false">Вы уверены?</string>
 </resources>

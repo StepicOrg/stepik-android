@@ -74,4 +74,5 @@ public class AppConstants {
     public static final java.lang.String METRICA_CLICK_LOGOUT = "Click logout";
     public static final java.lang.String METRICA_CLICK_CLEAR_CACHE = "Click clear cache button";
     public static final java.lang.String METRICA_CLICK_YES_CLEAR_CACHE = "Click Accept clear cache";
+    public static final java.lang.String METRICA_CLICK_YES_LOGOUT = "Click accept logout";
 }

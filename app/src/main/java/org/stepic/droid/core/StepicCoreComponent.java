@@ -22,6 +22,7 @@ import org.stepic.droid.view.adapters.SectionAdapter;
 import org.stepic.droid.view.adapters.StepFragmentAdapter;
 import org.stepic.droid.view.adapters.UnitAdapter;
 import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
+import org.stepic.droid.view.dialogs.AreYouSureDialog;
 import org.stepic.droid.view.dialogs.ClearCacheDialogFragment;
 import org.stepic.droid.web.HttpManager;
 import org.stepic.droid.web.RetrofitRESTApi;
@@ -56,6 +57,8 @@ public interface StepicCoreComponent {
     void inject(StepFragmentAdapter adapter);
 
     void inject(ClearCacheDialogFragment dialogFragment);
+
+    void inject(AreYouSureDialog dialogFragment);
 
 
     //All Tasks:

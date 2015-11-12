@@ -26,6 +26,7 @@ import org.stepic.droid.model.Profile;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.view.dialogs.AreYouSureDialog;
 import org.stepic.droid.view.fragments.FindCoursesFragment;
 import org.stepic.droid.view.fragments.MyCoursesFragment;
 import org.stepic.droid.view.fragments.SettingsFragment;
@@ -152,17 +153,9 @@ public class MainFeedActivity extends FragmentActivityBase
             case R.id.logout_item:
                 //todo: add 'Are you sure?" dialog
                 YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_LOGOUT);
-                SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
-                helper.deleteAuthInfo();
-                AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        mDbManager.clearCacheCourses(DatabaseManager.Table.enrolled);
-                        return null;
-                    }
-                };
-                task.execute();
-                mShell.getScreenProvider().showLaunchScreen(MainFeedActivity.this, false);
+
+                AreYouSureDialog dialog = new AreYouSureDialog();
+                dialog.show(getSupportFragmentManager(), null);
                 break;
 
             default:
