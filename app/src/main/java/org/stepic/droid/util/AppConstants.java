@@ -71,4 +71,5 @@ public class AppConstants {
     public static final java.lang.String METRICA_CLICK_CACHE_SECTION = "Click cache section";
     public static final java.lang.String METRICA_CLICK_CACHE_UNIT = "Click cache unit";
     public static final java.lang.String METRICA_CLICK_DELETE_UNIT = "Click delete unit from cache";
+    public static final java.lang.String METRICA_CLICK_LOGOUT = "Click logout";
 }

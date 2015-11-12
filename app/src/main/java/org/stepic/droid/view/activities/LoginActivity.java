@@ -94,13 +94,14 @@ public class LoginActivity extends FragmentActivityBase {
                 } else {
                     YandexMetrica.reportEvent(AppConstants.METRICA_FAIL_LOGIN);
                     ProgressHelper.dismiss(mProgressLogin);
-                    String errorMsg = "Error is occurred";
-                    Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+//                    String errorMsg = "Error is occurred";
+//                    Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
+                YandexMetrica.reportEvent(AppConstants.METRICA_FAIL_LOGIN);
                 YandexMetrica.reportError(AppConstants.METRICA_FAIL_LOGIN, t);
                 ProgressHelper.dismiss(mProgressLogin);
                 Toast.makeText(LoginActivity.this, R.string.failLogin, Toast.LENGTH_LONG).show();
