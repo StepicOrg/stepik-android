@@ -118,6 +118,8 @@ public class DeleteService extends IntentService {
         mDb.updateOnlyCachedLoadingLesson(lesson);
         mDb.updateOnlyCachedLoadingUnit(unit);
 
+        mStoreStateManager.updateUnitLessonAfterDeleting(unit);
+
 //        mDb.deleteLesson(lesson);
 //        mDb.deleteUnit(unit);
     }
@@ -132,9 +134,8 @@ public class DeleteService extends IntentService {
         for (int i = 0; i < units.size(); i++) {
             removeFromDisk(units.get(i), lessons.get(i));
         }
-        section.setIs_cached(false);
-        section.setIs_loading(false);
-        mDb.updateOnlyCachedLoadingSection(section);
+
+
 //        mDb.deleteSection(section);
     }
 
@@ -143,10 +144,6 @@ public class DeleteService extends IntentService {
         for (Section section : sections) {
             removeFromDisk(section);
         }
-
-        course.setIs_cached(false);
-        course.setIs_loading(false);
-        mDb.updateOnlyCachedLoadingCourse(course, tableType);
 //        mDb.deleteCourse(course, tableType);
     }
 }

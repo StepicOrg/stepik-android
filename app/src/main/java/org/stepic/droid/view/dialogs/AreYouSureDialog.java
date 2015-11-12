@@ -34,7 +34,7 @@ public class AreYouSureDialog extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
         builder.setTitle(R.string.title_clear_cache_dialog)
-                .setMessage(R.string.clear_cache_dialog_message)
+                .setMessage(R.string.are_you_sure)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
