@@ -174,8 +174,10 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
     @Subscribe
     public void onNotifyUI(NotifyUICoursesEvent e) {
-        mCoursesAdapter.notifyDataSetChanged();
-        mHandlerStateUpdating.postDelayed(mUpdatingRunnable, AppConstants.UI_UPDATING_TIME);
+        if (getCourseType() == DatabaseManager.Table.enrolled) {
+            mCoursesAdapter.notifyDataSetChanged();
+            mHandlerStateUpdating.postDelayed(mUpdatingRunnable, AppConstants.UI_UPDATING_TIME);
+        }
     }
 
 
@@ -346,8 +348,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     public void onStart() {
         super.onStart();
         mSwipeRefreshLayout.setRefreshing(false);
-        bus.register(this);
-
         if (getCourseType() == DatabaseManager.Table.enrolled) {
             mHandlerStateUpdating = new Handler();
             mUpdatingRunnable = new Runnable() {
@@ -359,6 +359,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
             mHandlerStateUpdating.post(mUpdatingRunnable);
         }
+        bus.register(this);
     }
 
     @Override
