@@ -86,7 +86,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         mUnitsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mUnitList = new ArrayList<>();
         mLessonList = new ArrayList<>();
-        mAdapter = new UnitAdapter(this, mSection, mUnitList, mLessonList);
+        mAdapter = new UnitAdapter(this, mSection, mUnitList, mLessonList, this);
         mUnitsRecyclerView.setAdapter(mAdapter);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);

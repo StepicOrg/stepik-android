@@ -60,4 +60,8 @@
     <string name="cancel">Отмена</string>
     <string name="failLogin">E-mail адрес/пароль не верны или отсутствует подключение к Интернет</string>
     <string name="are_you_sure" translatable="false">Вы уверены?</string>
+    <string name="deny">Отклонить</string>
+    <string name="allow">Разрешить</string>
+    <string name="allow_question">Разрешить?</string>
+    <string name="explain_permission">Для сохранения и просмотра видео в режиме оффлайн Stepic должен иметь права записи файлов в память телефона.</string>
 </resources>

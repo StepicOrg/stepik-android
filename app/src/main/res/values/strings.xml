@@ -52,6 +52,8 @@
     <string name="clear_cache_dialog_message">Are you sure you want to delete all saved lessons?</string>
     <string name="title_clear_cache_dialog">Please confirm</string>
     <string name="yes">Yes</string>
+    <string name="allow">Allow</string>
+    <string name="deny">Deny</string>
     <string name="no">No</string>
     <string name="open_web_to_solve">Open web version to solve</string>
     <string name="allow_mobile_download_title">Allow mobile download</string>
@@ -64,4 +66,6 @@
     <string name="cancel">Cancel</string>
     <string name="failLogin">Login/password was incorrect or Internet connection was lost</string>
     <string name="are_you_sure">Are you sure?</string>
+    <string name="explain_permission">For cache course and watch video offline Stepic need permission to storage of phone.</string>
+    <string name="allow_question">Allow?</string>
 </resources>

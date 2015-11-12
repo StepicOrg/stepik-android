@@ -1,8 +1,12 @@
 package org.stepic.droid.view.adapters;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +28,7 @@ import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.JsonHelper;
+import org.stepic.droid.view.dialogs.ExplainPermissionDialog;
 
 import java.util.List;
 
@@ -104,16 +109,17 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
             //true/true = impossible
             if (course.is_cached()) {
                 //cached
-
                 viewHolderItem.loadButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_DELETE_COURSE, JsonHelper.toJson(course));
-                        mCleaner.removeCourse(course, type);
-                        course.setIs_cached(false);
-                        course.setIs_loading(false);
-                        mDatabase.updateOnlyCachedLoadingCourse(course, type);
-                        notifyDataSetChanged();
+                        int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+                        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                            removeCourse(course);
+                        } else {
+
+                        }
                     }
                 });
 
@@ -139,13 +145,36 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
                     viewHolderItem.loadButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            // FIXME: 21.10.15 IMPLEMENTS IN BACKGROUND THREAD
-                            YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CACHE_COURSE, JsonHelper.toJson(course));
-                            mDownloadManager.addCourse(course, type);
-                            course.setIs_loading(true);
-                            course.setIs_cached(false);
-                            mDatabase.updateOnlyCachedLoadingCourse(course, type);
-                            notifyDataSetChanged();
+                            int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+                            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                                cacheCourse(course);
+                            } else {
+                                if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                                    // Show an expanation to the user *asynchronously* -- don't block
+                                    // this thread waiting for the user's response! After the user
+                                    // sees the explanation, try again to request the permission.
+
+                                    ExplainPermissionDialog dialog = new ExplainPermissionDialog();
+                                    dialog.show(mActivity.getFragmentManager(), null);
+
+                                } else {
+
+                                    // No explanation needed, we can request the permission.
+
+                                    ActivityCompat.requestPermissions(mActivity,
+                                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                            AppConstants.REQUEST_WIFI);
+
+                                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                                    // app-defined int constant. The callback method gets the
+                                    // result of the request.
+                                }
+
+                            }
                         }
                     });
                 }
@@ -157,6 +186,26 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
             viewHolderItem.loadButton.setVisibility(View.GONE);
         }
         return view;
+    }
+
+    private void removeCourse(Course course) {
+
+        YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_DELETE_COURSE, JsonHelper.toJson(course));
+        mCleaner.removeCourse(course, type);
+        course.setIs_cached(false);
+        course.setIs_loading(false);
+        mDatabase.updateOnlyCachedLoadingCourse(course, type);
+        notifyDataSetChanged();
+    }
+
+    private void cacheCourse(Course course) {
+        // FIXME: 21.10.15 IMPLEMENTS IN BACKGROUND THREAD
+        YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CACHE_COURSE, JsonHelper.toJson(course));
+        mDownloadManager.addCourse(course, type);
+        course.setIs_loading(true);
+        course.setIs_cached(false);
+        mDatabase.updateOnlyCachedLoadingCourse(course, type);
+        notifyDataSetChanged();
     }
 
     static class ViewHolderItem {

@@ -89,7 +89,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
         mSectionsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mSectionList = new ArrayList<>();
-        mAdapter = new SectionAdapter(mSectionList, this);
+        mAdapter = new SectionAdapter(mSectionList, this, this);
         mSectionsRecyclerView.setAdapter(mAdapter);
 
         ProgressHelper.activate(mProgressBar);
