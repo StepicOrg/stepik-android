@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.squareup.otto.Bus;
+import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
@@ -108,6 +109,7 @@ public class LoadService extends IntentService {
             //possibly user click clear cache;
 //            throw ex;
 
+            YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, ex);
             mDb.dropDatabase();
         }
     }
@@ -156,8 +158,12 @@ public class LoadService extends IntentService {
             // FIXME: 20.10.15 SHOW DIALOG WITH SUGGESTION OF PERMISSION!
 //            mBus.post(new MemoryPermissionDeniedEvent());
             //it is not main thread
+
+            YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, ex);
             Log.i("downloading", ex.getMessage());
         } catch (Exception ex) {
+
+            YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, ex);
             Log.i("downloading", "downloading is failed");
         }
 
@@ -209,6 +215,7 @@ public class LoadService extends IntentService {
                 mStoreStateManager.updateUnitLessonState(lesson.getId());
             }
         } catch (IOException e) {
+            YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, e);
             e.printStackTrace();
             mStoreStateManager.updateUnitLessonState(lesson.getId());
         }
@@ -253,6 +260,7 @@ public class LoadService extends IntentService {
                 }
             }
         } catch (IOException e) {
+            YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, e);
             e.printStackTrace();
         }
     }
@@ -283,6 +291,7 @@ public class LoadService extends IntentService {
                 }
             }
         } catch (IOException e) {
+            YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, e);
             e.printStackTrace();
         }
     }

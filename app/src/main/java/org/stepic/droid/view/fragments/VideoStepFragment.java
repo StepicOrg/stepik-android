@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
+import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentStepBase;
@@ -88,6 +89,8 @@ public class VideoStepFragment extends FragmentStepBase {
                                 Step stepFromWeb = mShell.getApi().getSteps(stepArray).execute().body().getSteps().get(0);
                                 return mVideoResolver.resolveVideoUrl(stepFromWeb.getBlock().getVideo());
                             } catch (IOException e) {
+
+                                YandexMetrica.reportError("can't Resolve video", e);
                                 e.printStackTrace();
                                 return null; // can't RESOLVE
                             }
@@ -168,6 +171,7 @@ public class VideoStepFragment extends FragmentStepBase {
         try {
             startActivity(intent);
         } catch (Exception ex) {
+            YandexMetrica.reportError("NotPlayer", ex);
             Toast.makeText(getContext(), R.string.not_video_player_error, Toast.LENGTH_LONG).show();
         }
 

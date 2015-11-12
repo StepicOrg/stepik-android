@@ -6,6 +6,8 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
+import com.yandex.metrica.YandexMetrica;
+
 
 public class SEditTextView extends EditText {
     public SEditTextView(Context context) {
@@ -31,6 +33,8 @@ public class SEditTextView extends EditText {
                     fontFileName);
             setTypeface(font);
         } catch (Exception ignored) {
+
+            YandexMetrica.reportError("customEditText", ignored);
 
         } finally {
             a.recycle();

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.widget.ProgressBar;
 
 import com.squareup.otto.Subscribe;
+import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
@@ -85,7 +86,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         mUnitsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mUnitList = new ArrayList<>();
         mLessonList = new ArrayList<>();
-        mAdapter = new UnitAdapter(this, mSection, mUnitList, mLessonList);
+        mAdapter = new UnitAdapter(this, mSection, mUnitList, mLessonList, this);
         mUnitsRecyclerView.setAdapter(mAdapter);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -261,6 +262,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     @Override
     public void onRefresh() {
+        YandexMetrica.reportEvent(AppConstants.METRICA_REFRESH_UNIT);
         ProgressHelper.activate(mSwipeRefreshLayout);
         updateUnits();
     }

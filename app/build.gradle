@@ -11,8 +11,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "0.2"
 
         // Enabling multidex support.
         multiDexEnabled true
@@ -32,7 +32,8 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.1' //needed for source code generation
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.dagger:dagger:2.0.1' //dagger itself
-    provided 'org.glassfish:javax.annotation:10.0-b28' //needed to resolve compilation errors, thanks to tutplus.org for finding the dependency
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+    //needed to resolve compilation errors, thanks to tutplus.org for finding the dependency
     compile 'com.jakewharton:butterknife:7.0.1'
     //</DI>
 
@@ -63,8 +64,11 @@ dependencies {
     compile 'com.squareup:otto:1.3.8'
 
     compile 'org.jetbrains:annotations:13.0'
-    compile 'org.jetbrains:annotations:13.0'
+
+    // AppMetrica from maven central. Protobuf will be included as dependency.
+    compile 'com.yandex.android:mobmetricalib:2.21@aar'
 }
+
 repositories {
     mavenCentral()
 }

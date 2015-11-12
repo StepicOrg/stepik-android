@@ -7,6 +7,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 
+import com.yandex.metrica.YandexMetrica;
+
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.util.AppConstants;
@@ -42,6 +44,7 @@ public class LaunchActivity extends FragmentActivityBase {
         mSignUpButton.setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_SIGN_UP);
                 mShell.getScreenProvider().openSignUpInWeb(LaunchActivity.this);
             }
         }));
@@ -50,6 +53,7 @@ public class LaunchActivity extends FragmentActivityBase {
 
             @Override
             public void onClick(View v) {
+                YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_SIGN_IN);
                 mShell.getScreenProvider().showLogin(LaunchActivity.this);
             }
         });

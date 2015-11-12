@@ -11,10 +11,12 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 
 import com.squareup.otto.Subscribe;
+import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.events.wifi_settings.WifiLoadIsChangedEvent;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
 import org.stepic.droid.view.dialogs.ClearCacheDialogFragment;
 
@@ -47,6 +49,7 @@ public class SettingsFragment extends FragmentBase {
         mClearCacheButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CLEAR_CACHE);
                 mClearCacheDialogFragment.show(getFragmentManager(), null);
             }
         });

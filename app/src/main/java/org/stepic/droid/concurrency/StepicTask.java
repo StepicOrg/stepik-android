@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.yandex.metrica.YandexMetrica;
+
 
 public abstract class StepicTask<Params, Progress, Result> extends AsyncTask<Params, Progress, AsyncResultWrapper<Result>> {
 
@@ -38,6 +40,7 @@ public abstract class StepicTask<Params, Progress, Result> extends AsyncTask<Par
             return new AsyncResultWrapper<>(result);
         }
         catch (Throwable exception){
+            YandexMetrica.reportError("catch in StepicTask", exception);
             return new AsyncResultWrapper<>(exception);
         }
     }

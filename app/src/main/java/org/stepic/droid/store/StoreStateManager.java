@@ -43,6 +43,34 @@ public class StoreStateManager implements IStoreStateManager {
         updateSectionState(unit.getSection());
     }
 
+    @Override
+    public void updateUnitLessonAfterDeleting(Unit unit) {
+        //now unit lesson and all steps are deleting
+        //cached = false, loading false
+        //just make for parents
+
+
+        Section section = mDatabaseManager.getSectionById(unit.getSection());
+        updateSectionAfterDeleting(section);
+
+    }
+
+    private void updateSectionAfterDeleting(Section section) {
+        section.setIs_cached(false);
+        section.setIs_loading(false);
+        mDatabaseManager.updateOnlyCachedLoadingSection(section);
+
+        Course course = mDatabaseManager.getCourseById(section.getCourse(), DatabaseManager.Table.enrolled);
+        updateCourseAfterDeleting(course);
+
+    }
+
+    private void updateCourseAfterDeleting(Course course) {
+        course.setIs_cached(false);
+        course.setIs_loading(false);
+        mDatabaseManager.updateOnlyCachedLoadingCourse(course, DatabaseManager.Table.enrolled);
+    }
+
     private void updateSectionState(long sectionId) {
         List<Unit> units = mDatabaseManager.getAllUnitsOfSection(sectionId);
         for (Unit unit : units) {

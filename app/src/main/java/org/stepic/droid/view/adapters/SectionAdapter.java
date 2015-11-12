@@ -1,11 +1,18 @@
 package org.stepic.droid.view.adapters;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
@@ -14,6 +21,9 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.JsonHelper;
+import org.stepic.droid.view.dialogs.ExplainPermissionDialog;
 import org.stepic.droid.view.listeners.OnClickLoadListener;
 import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 
@@ -41,10 +51,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
 
     private List<Section> mSections;
     private Context mContext;
+    private Activity mActivity;
 
-    public SectionAdapter(List<Section> sections, Context mContext) {
+    public SectionAdapter(List<Section> sections, Context mContext, Activity activity) {
         this.mSections = sections;
         this.mContext = mContext;
+        mActivity = activity;
 
         MainApplication.component().inject(this);
     }
@@ -137,7 +149,37 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         if (itemPosition >= 0 && itemPosition < mSections.size()) {
             Section section = mSections.get(itemPosition);
 
+            int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                    // Show an expanation to the user *asynchronously* -- don't block
+                    // this thread waiting for the user's response! After the user
+                    // sees the explanation, try again to request the permission.
+
+                    ExplainPermissionDialog dialog = new ExplainPermissionDialog();
+                    dialog.show(mActivity.getFragmentManager(), null);
+
+                } else {
+
+                    // No explanation needed, we can request the permission.
+
+                    ActivityCompat.requestPermissions(mActivity,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            AppConstants.REQUEST_WIFI);
+
+                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                    // app-defined int constant. The callback method gets the
+                    // result of the request.
+                }
+                return;
+            }
+
             if (section.is_cached()) {
+                YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_DELETE_SECTION, JsonHelper.toJson(section));
                 mCleaner.removeSection(section);
                 section.setIs_loading(false);
                 section.setIs_cached(false);
@@ -147,6 +189,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                 if (section.is_loading()) {
                     // TODO: 11.11.15 cancel downloading
                 } else {
+                    YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CACHE_SECTION, JsonHelper.toJson(section));
                     mDownloadManager.addSection(section);
                     section.setIs_cached(false);
                     section.setIs_loading(true);

@@ -3,6 +3,8 @@ package org.stepic.droid.preferences;
 import android.content.Context;
 import android.os.Environment;
 
+import com.yandex.metrica.YandexMetrica;
+
 import org.stepic.droid.model.Profile;
 
 import java.io.File;
@@ -43,6 +45,7 @@ public class UserPreferences {
             noMediaFile.createNewFile();
         } catch (IOException ioException) {
             // FIXME: 20.10.15 handle exception
+            YandexMetrica.reportError("can't create .nomedia", ioException);
         }
 
         return userStepicIdDir;

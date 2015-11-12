@@ -51,5 +51,29 @@ public class AppConstants {
     public static final String TYPE_PYCHARM = "pycharm";
     public static final String TYPE_CODE = "code";
 
+    //App Metrica:
+    public static final String METRICA_CLICK_SIGN_IN = "click sign in on launch screen";
+    public static final String METRICA_CLICK_SIGN_UP = "click sign up";
+    public static final String METRICA_CLICK_SIGN_IN_ON_SIGN_IN_SCREEN = "click sign in on sign in on sign-in screen";
+    public static final String METRICA_FAIL_LOGIN = "fail login";
+    public static final String METRICA_SUCCESS_LOGIN = "success login";
+    public static final String METRICA_DROP_COURSE = "drop course";
+    public static final String METRICA_LOAD_SERVICE = "Load Service";
+    public static final String METRICA_REFRESH_COURSE = "Pull from top to refresh course";
+    public static final String METRICA_REFRESH_SECTION = "Pull from top to refresh section";
+    public static final String METRICA_REFRESH_UNIT = "Pull from top to refresh section unit";
+    public static final String METRICA_LONG_TAP_COURSE = "Long tap on course";
+    public static final java.lang.String SHOW_DETAILED_INFO_CLICK = "Show detailed info click from context menu of course";
+    public static final java.lang.String METRICA_CLICK_CACHE_COURSE = "Click cache course";
 
+    public static final java.lang.String METRICA_CLICK_DELETE_COURSE = "Click delete course from cache";
+    public static final java.lang.String METRICA_CLICK_DELETE_SECTION = "Click delete section from cache";
+    public static final java.lang.String METRICA_CLICK_CACHE_SECTION = "Click cache section";
+    public static final java.lang.String METRICA_CLICK_CACHE_UNIT = "Click cache unit";
+    public static final java.lang.String METRICA_CLICK_DELETE_UNIT = "Click delete unit from cache";
+    public static final java.lang.String METRICA_CLICK_LOGOUT = "Click logout";
+    public static final java.lang.String METRICA_CLICK_CLEAR_CACHE = "Click clear cache button";
+    public static final java.lang.String METRICA_CLICK_YES_CLEAR_CACHE = "Click Accept clear cache";
+    public static final java.lang.String METRICA_CLICK_YES_LOGOUT = "Click accept logout";
+    public static final int REQUEST_WIFI = 1;
 }

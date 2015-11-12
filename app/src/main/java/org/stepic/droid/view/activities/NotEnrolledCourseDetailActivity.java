@@ -262,7 +262,7 @@ public class NotEnrolledCourseDetailActivity extends FragmentActivityBase {
 
     @Subscribe
     public void onSuccessJoin(SuccessJoinEvent e) {
-        mShell.getScreenProvider().showCourseDescriptionForEnrolled(NotEnrolledCourseDetailActivity.this, mCourse);
+        mShell.getScreenProvider().showSections(NotEnrolledCourseDetailActivity.this, mCourse);
         finish();
         ProgressHelper.dismiss(mJoinCourseSpinner);
 

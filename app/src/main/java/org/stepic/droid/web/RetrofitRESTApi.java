@@ -9,11 +9,14 @@ import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.EnrollmentWrapper;
+import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 
@@ -85,6 +88,7 @@ public class RetrofitRESTApi implements IApi {
 
     @Override
     public Call<AuthenticationStepicResponse> authWithLoginPassword(String login, String password) {
+        YandexMetrica.reportEvent("Api:auth with login password");
         return mOAuthService.authWithLoginPassword(mConfig.getGrantType(), login, password);
     }
 
@@ -94,51 +98,61 @@ public class RetrofitRESTApi implements IApi {
     }
 
     public Call<CoursesStepicResponse> getEnrolledCourses(int page) {
+        YandexMetrica.reportEvent("Api: get enrolled courses");
         return mLoggedService.getEnrolledCourses(true, page);
     }
 
     public Call<CoursesStepicResponse> getFeaturedCourses(int page) {
+        YandexMetrica.reportEvent("Api:get featured courses)");
         return mLoggedService.getFeaturedCourses(true, page);
     }
 
     @Override
     public Call<StepicProfileResponse> getUserProfile() {
+        YandexMetrica.reportEvent("Api:get user profile");
         return mLoggedService.getUserProfile();
     }
 
     @Override
     public Call<UserStepicResponse> getUsers(long[] userIds) {
+        YandexMetrica.reportEvent("Api:get users");
         return mLoggedService.getUsers(userIds);
     }
 
     @Override
     public Call<Void> tryJoinCourse(Course course) {
+        YandexMetrica.reportEvent("Api:try join to course", JsonHelper.toJson(course));
         EnrollmentWrapper enrollmentWrapper = new EnrollmentWrapper(course.getCourseId());
         return mLoggedService.joinCourse(enrollmentWrapper);
     }
 
     @Override
     public Call<SectionsStepicResponse> getSections(long[] sectionsIds) {
+        YandexMetrica.reportEvent("Api:get sections", JsonHelper.toJson(sectionsIds));
         return mLoggedService.getSections(sectionsIds);
     }
 
     @Override
     public Call<UnitStepicResponse> getUnits(long[] units) {
+        YandexMetrica.reportEvent("Api:get units", JsonHelper.toJson(units));
         return mLoggedService.getUnits(units);
     }
 
     @Override
     public Call<LessonStepicResponse> getLessons(long[] lessons) {
+        YandexMetrica.reportEvent("Api:get lessons", JsonHelper.toJson(lessons));
         return mLoggedService.getLessons(lessons);
     }
 
     @Override
     public Call<StepResponse> getSteps(long[] steps) {
+        YandexMetrica.reportEvent("Api:get steps", JsonHelper.toJson(steps));
         return mLoggedService.getSteps(steps);
     }
 
     @Override
     public Call<Void> dropCourse(long courseId) {
+        YandexMetrica.reportEvent("Api: " + AppConstants.METRICA_DROP_COURSE, JsonHelper.toJson(courseId));
         return mLoggedService.dropCourse(courseId);
     }
 
@@ -168,6 +182,7 @@ public class RetrofitRESTApi implements IApi {
             String type = resp.getToken_type();
             return type + " " + access_token;
         } catch (Exception ex) {
+            YandexMetrica.reportError("retrofitAuth", ex);
             Log.e("retrofitAuth", ex.getMessage());
             return "";
         }
