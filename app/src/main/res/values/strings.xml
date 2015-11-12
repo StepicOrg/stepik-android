@@ -62,4 +62,5 @@
     <string name="try_in_web_drop">Try drop course in web version</string>
     <string name="you_not_enrolled">You are not enrolled</string>
     <string name="cancel">Cancel</string>
+    <string name="failLogin">Login/password was incorrect or Internet connection was lost</string>
 </resources>

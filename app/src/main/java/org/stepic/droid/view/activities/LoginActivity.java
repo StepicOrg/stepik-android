@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.yandex.metrica.YandexMetrica;
 
+import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.util.AppConstants;
@@ -100,10 +101,9 @@ public class LoginActivity extends FragmentActivityBase {
 
             @Override
             public void onFailure(Throwable t) {
-                ////// FIXME: 04.10.15 show right message to user
                 YandexMetrica.reportError(AppConstants.METRICA_FAIL_LOGIN, t);
                 ProgressHelper.dismiss(mProgressLogin);
-                Toast.makeText(LoginActivity.this, "Something wrong", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, R.string.failLogin, Toast.LENGTH_LONG).show();
             }
         });
     }
