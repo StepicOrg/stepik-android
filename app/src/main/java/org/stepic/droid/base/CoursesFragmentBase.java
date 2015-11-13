@@ -78,7 +78,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     protected MyCoursesAdapter mCoursesAdapter;
     protected int mCurrentPage;
     protected boolean mHasNextPage;
-    protected DatabaseManager.Table mTypeOfCourse;
     protected FromDbCoursesTask mDbGetCoursesTask;
     protected ToDbCoursesTask mDbSaveCoursesTask;
     protected View mFooterDownloadingView;
@@ -157,8 +156,8 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
                 }
 
                 for (Course course : localCopy) {
-                    course.setIs_loading(mDatabaseManager.isCourseLoading(course, mTypeOfCourse));
-                    course.setIs_cached(mDatabaseManager.isCourseCached(course, mTypeOfCourse));
+                    course.setIs_loading(mDatabaseManager.isCourseLoading(course, getCourseType()));
+                    course.setIs_cached(mDatabaseManager.isCourseCached(course, getCourseType()));
                 }
                 return null;
             }
@@ -211,16 +210,16 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
             @Override
             public void onResponse(Response<CoursesStepicResponse> response, Retrofit retrofit) {
                 if (response.isSuccess()) {
-                    bus.post(new SuccessCoursesDownloadEvent(mTypeOfCourse, response, retrofit));
+                    bus.post(new SuccessCoursesDownloadEvent(getCourseType(), response, retrofit));
                 } else {
 
-                    bus.post(new FailCoursesDownloadEvent(mTypeOfCourse));
+                    bus.post(new FailCoursesDownloadEvent(getCourseType()));
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
-                bus.post(new FailCoursesDownloadEvent(mTypeOfCourse));
+                bus.post(new FailCoursesDownloadEvent(getCourseType()));
             }
         };
 
@@ -228,8 +227,8 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
 
         Log.i(TAG, "post pre load");
-        bus.post(new PreLoadCoursesEvent(mTypeOfCourse));
-        if (mTypeOfCourse == DatabaseManager.Table.featured) {
+        bus.post(new PreLoadCoursesEvent(getCourseType()));
+        if (getCourseType() == DatabaseManager.Table.featured) {
             api.getFeaturedCourses(mCurrentPage).enqueue(callback);
         } else {
             api.getEnrolledCourses(mCurrentPage).enqueue(callback);
@@ -239,17 +238,17 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     }
 
     private void saveDataToCache(List<Course> courses) {
-        mDbSaveCoursesTask = new ToDbCoursesTask(courses, mTypeOfCourse, mCurrentPage);
+        mDbSaveCoursesTask = new ToDbCoursesTask(courses, getCourseType(), mCurrentPage);
         mDbSaveCoursesTask.execute();
     }
 
 
     public void getAndShowDataFromCache() {
-        mDbGetCoursesTask = new FromDbCoursesTask(mTypeOfCourse) {
+        mDbGetCoursesTask = new FromDbCoursesTask(getCourseType()) {
             @Override
             protected void onSuccess(List<Course> courses) {
                 super.onSuccess(courses);
-                bus.post(new GettingCoursesFromDbSuccessEvent(mTypeOfCourse, courses));
+                bus.post(new GettingCoursesFromDbSuccessEvent(getCourseType(), courses));
             }
         };
         mDbGetCoursesTask.execute();
@@ -285,7 +284,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
         } else {
             mHasNextPage = false;
             //// TODO: 17.10.15 explore this case (just when user do not have enrolled courses?)
-            bus.post(new FailCoursesDownloadEvent(mTypeOfCourse));
+            bus.post(new FailCoursesDownloadEvent(getCourseType()));
         }
         isLoading = false;
     }
@@ -340,7 +339,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
             }
         }
 
-        UpdateCourseTask updateCourseTask = new UpdateCourseTask(mTypeOfCourse, courseForUpdate);
+        UpdateCourseTask updateCourseTask = new UpdateCourseTask(getCourseType(), courseForUpdate);
         updateCourseTask.execute();
     }
 
