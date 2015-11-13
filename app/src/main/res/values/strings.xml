@@ -11,7 +11,7 @@
     <string name="facebook_name_of_company" translatable="false">Facebook</string>
     <string name="google_name_of_company" translatable="false">Google</string>
     <string name="email_login" translatable="false">e-mail</string>
-    <string name="remind_password">Remind password</string>
+    <string name="remind_password">Forgot password?</string>
     <string name="sign_in_btn">Sign in button</string>
     <string name="sign_in">Sign In</string>
     <string name="describing_error">The following error occurred while logging you in</string>

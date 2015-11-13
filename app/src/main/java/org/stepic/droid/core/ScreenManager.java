@@ -142,4 +142,12 @@ public class ScreenManager implements IScreenManager {
         context.startActivity(intent);
     }
 
+    @Override
+    public void openRemindPassword(Context context) {
+        YandexMetrica.reportEvent("Screen manager: remind password");
+        String url = mConfig.getBaseUrl() + "/accounts/password/reset/";
+        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
+        context.startActivity(intent);
+    }
+
 }

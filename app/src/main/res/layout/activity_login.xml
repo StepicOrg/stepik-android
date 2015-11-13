@@ -64,18 +64,17 @@
                         android:inputType="textPassword"
                         android:maxLength="100" />
 
-                    <org.stepic.droid.view.custom.STextView
+                    <TextView
                         android:id="@+id/forgot_password_tv"
                         style="@style/semibold_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="8dp"
                         android:gravity="center"
+                        android:padding="12dp"
                         android:text="@string/remind_password"
                         android:textColor="@color/cyan_text_navigation"
-                        android:textSize="12sp"
-                        android:visibility="gone" />
+                        android:textSize="12sp" />
 
                     <RelativeLayout
                         android:id="@+id/login_button_layout"

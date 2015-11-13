@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yandex.metrica.YandexMetrica;
@@ -41,6 +42,9 @@ public class LoginActivity extends FragmentActivityBase {
     @Bind(org.stepic.droid.R.id.login_spinner)
     ProgressBar mProgressLogin;
 
+    @Bind(R.id.forgot_password_tv)
+    TextView mForgotPassword;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,13 @@ public class LoginActivity extends FragmentActivityBase {
                 hideSoftKeypad();
                 YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_SIGN_IN_ON_SIGN_IN_SCREEN);
                 tryLogin();
+            }
+        });
+
+        mForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mShell.getScreenProvider().openRemindPassword(LoginActivity.this);
             }
         });
     }
@@ -115,6 +126,14 @@ public class LoginActivity extends FragmentActivityBase {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        mCloseButton.setOnClickListener(null);
+        mLoginBtn.setOnClickListener(null);
+        mForgotPassword.setOnClickListener(null);
+        super.onDestroy();
+
+    }
 
     private void onUserLoginSuccess() {
         mShell.getScreenProvider().showMainFeed(this);
