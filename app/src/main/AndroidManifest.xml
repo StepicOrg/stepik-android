@@ -28,7 +28,6 @@
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -39,7 +38,6 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-
 
         <activity
             android:name="org.stepic.droid.view.activities.RegisterActivity"
@@ -54,19 +52,16 @@
 
         <activity
             android:name="org.stepic.droid.view.activities.MainFeedActivity"
-            android:label="@string/my_courses_title"
-            android:screenOrientation="portrait" />
+            android:label="@string/my_courses_title" />
 
         <activity
             android:name=".view.activities.NotEnrolledCourseDetailActivity"
-            android:label="@string/course_info_title"
-            android:screenOrientation="portrait" />
+            android:label="@string/course_info_title" />
 
 
         <activity
             android:name=".view.activities.SectionActivity"
-            android:label="@string/syllabus_title"
-            android:screenOrientation="portrait">
+            android:label="@string/syllabus_title">
 
         </activity>
 
@@ -77,8 +72,7 @@
 
         <activity
             android:name=".view.activities.StepsActivity"
-            android:label="@string/steps_title"
-            android:screenOrientation="portrait" />
+            android:label="@string/steps_title" />
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadCompleteReceiver"

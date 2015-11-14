@@ -30,15 +30,15 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <android.support.v7.widget.SwitchCompat
+            <org.stepic.droid.view.custom.BetterSwitch
                 android:id="@+id/fragment_settings_wifi_enable_switch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/non_radius_foreground"
-                android:checked="true"
                 android:padding="16dp"
                 android:text="@string/wi_fi_setting"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

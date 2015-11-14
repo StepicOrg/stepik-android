@@ -37,7 +37,7 @@
     <string name="soft_deadline_section">Мягкий дедлайн:</string>
     <string name="syllabus_title">Содержание</string>
     <string name="units_lessons_title">Уроки</string>
-    <string name="steps_title">Урок</string>
+    <string name="steps_title">Шаги</string>
     <string name="not_available_lesson">Урок недоступен сейчас</string>
     <string name="not_video_player_error">Пожалуйста, установите видеоплеер</string>
     <string name="turn_on_permission">Включите доступ к памяти для приложения в настройках телефона</string>

@@ -55,6 +55,7 @@ public class AreYouSureDialog extends DialogFragment {
                     }
                 })
                 .setNegativeButton(R.string.no, null);
+        setCancelable(false);
 
         return builder.create();
     }
