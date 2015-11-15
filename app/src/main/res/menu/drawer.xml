@@ -15,7 +15,7 @@
             android:id="@+id/find_lessons"
             android:title="@string/find_courses_title" />
 
-    </group>
+    </group>a
 
     <group
         android:id="@+id/settings_drawer_menu"
@@ -23,11 +23,13 @@
 
         <item
             android:id="@+id/my_settings"
-            android:title="@string/settings_title" />
+            android:title="@string/settings_title"
+            android:icon="@drawable/ic_settings_black_24dp"/>
 
         <item
             android:id="@+id/logout_item"
-            android:title="@string/logout_title" />
+            android:title="@string/logout_title"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"/>
     </group>
 
 </menu>
