@@ -18,6 +18,7 @@ import org.stepic.droid.concurrency.ToDbStepTask;
 import org.stepic.droid.events.steps.FailLoadStepEvent;
 import org.stepic.droid.events.steps.FromDbStepEvent;
 import org.stepic.droid.events.steps.SuccessLoadStepEvent;
+import org.stepic.droid.events.steps.SuccessToDbStepEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
@@ -38,7 +39,8 @@ import retrofit.Retrofit;
 
 public class StepsActivity extends FragmentActivityBase {
 
-    public static String POSITION = "POSITION";
+//    public final static String KEY_INDEX_CURRENT_FRAGMENT = "key_index";
+    public final static String KEY_COUNT_CURRENT_FRAGMENT = "key_count";
 
 
     @Bind(R.id.toolbar)
@@ -67,10 +69,20 @@ public class StepsActivity extends FragmentActivityBase {
     private ToDbStepTask saveStepsTask;
     private FromDbStepTask getFromDbStepsTask;
 
+//    private int lastSavedPosition;
+    private int mCount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_steps);
+        if (savedInstanceState == null) {
+//            lastSavedPosition = -1;
+            mCount = -1;
+        }
+        else {
+            mCount = savedInstanceState.getInt(KEY_COUNT_CURRENT_FRAGMENT);
+        }
         overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
 
         ButterKnife.bind(this);
@@ -79,7 +91,7 @@ public class StepsActivity extends FragmentActivityBase {
         mLesson = (Lesson) (getIntent().getExtras().get(AppConstants.KEY_LESSON_BUNDLE));
 
         mStepList = new ArrayList<>();
-        mStepAdapter = new StepFragmentAdapter(getSupportFragmentManager(), this, mStepList, mLesson, mUnit);
+        mStepAdapter = new StepFragmentAdapter(getSupportFragmentManager(), this, mStepList, mLesson, mUnit, mCount);
         mViewPager.setAdapter(mStepAdapter);
 
         setTitle(mLesson.getTitle());
@@ -134,9 +146,20 @@ public class StepsActivity extends FragmentActivityBase {
         if (steps.isEmpty()) {
             bus.post(new FailLoadStepEvent());
         } else {
-            showSteps(steps);
+            ToDbStepTask task = new ToDbStepTask(mLesson, steps);
+            task.execute();
+//            showSteps(steps);
         }
     }
+
+    @Subscribe
+    public void onSuccessSaveToDb(SuccessToDbStepEvent e) {
+        if (e.getmLesson().getId() != mLesson.getId()) return;
+
+        FromDbStepTask stepTask = new FromDbStepTask(mLesson);
+        stepTask.execute();
+    }
+
 
     private void showSteps(List<Step> steps) {
         mStepList.clear();
@@ -146,6 +169,10 @@ public class StepsActivity extends FragmentActivityBase {
         mTabLayout.setVisibility(View.VISIBLE);
         ProgressHelper.dismiss(mProgressBar);
         isLoaded = true;
+//        if (lastSavedPosition >= 0) {
+//            mViewPager.setCurrentItem(lastSavedPosition, false);
+//        }
+
     }
 
     @Subscribe
@@ -155,7 +182,6 @@ public class StepsActivity extends FragmentActivityBase {
         ProgressHelper.dismiss(mProgressBar);
     }
 
-
     private void updateTabs() {
         mTabLayout.setupWithViewPager(mViewPager);
         for (int i = 0; i < mStepAdapter.getCount(); i++) {
@@ -163,6 +189,21 @@ public class StepsActivity extends FragmentActivityBase {
             tab.setIcon(mStepAdapter.getTabDrawable(i));
         }
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+//        outState.putInt(KEY_INDEX_CURRENT_FRAGMENT, mViewPager.getCurrentItem());
+        outState.putInt(KEY_COUNT_CURRENT_FRAGMENT, mStepList.size());
+    }
+
+//    @Override
+//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+////        if (savedInstanceState != null) {
+////            lastSavedPosition = savedInstanceState.getInt(KEY_INDEX_CURRENT_FRAGMENT);
+////        }
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

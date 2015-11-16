@@ -3,6 +3,7 @@ package org.stepic.droid.concurrency;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.events.steps.SuccessToDbStepEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.store.operations.DatabaseManager;
@@ -47,4 +48,9 @@ public class ToDbStepTask extends StepicTask<Void, Void, Void> {
         return null;
     }
 
+    @Override
+    protected void onPostExecute(AsyncResultWrapper<Void> voidAsyncResultWrapper) {
+        super.onPostExecute(voidAsyncResultWrapper);
+        mBus.post(new SuccessToDbStepEvent(mLesson));
+    }
 }
