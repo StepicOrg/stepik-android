@@ -34,62 +34,60 @@ public class FindCoursesFragment extends CoursesFragmentBase {
     @Override
     public void onStart() {
         super.onStart();
-
-        mTypeOfCourse = DatabaseManager.Table.featured;
     }
 
     @Override
     @Subscribe
     public void onFailureDataLoad(FailCoursesDownloadEvent e) {
-        if (e.getType() == mTypeOfCourse)
+        if (e.getType() == DatabaseManager.Table.featured)
             super.onFailureDataLoad(e);
     }
 
     @Override
     @Subscribe
     public void onStartingSaveToDb(StartingSaveCoursesToDbEvent e) {
-        if (e.getType() == mTypeOfCourse)
+        if (e.getType() == DatabaseManager.Table.featured)
             super.onStartingSaveToDb(e);
     }
 
     @Override
     @Subscribe
     public void onFinishingSaveToDb(FinishingSaveCoursesToDbEvent e) {
-        if (e.getType() == mTypeOfCourse)
+        if (e.getType() == DatabaseManager.Table.featured)
             super.onFinishingSaveToDb(e);
     }
 
     @Override
     @Subscribe
     public void onStartingGetFromDb(StartingGetCoursesFromDbEvent e) {
-        if (e.getType() == mTypeOfCourse)
+        if (e.getType() == DatabaseManager.Table.featured)
             super.onStartingGetFromDb(e);
     }
 
     @Override
     @Subscribe
     public void onFinishingGetFromDb(FinishingGetCoursesFromDbEvent e) {
-        if (e.getType() == mTypeOfCourse)
+        if (e.getType() == DatabaseManager.Table.featured)
             super.onFinishingGetFromDb(e);
     }
 
     @Subscribe
     public void onGettingFromDbSuccess(GettingCoursesFromDbSuccessEvent e) {
-        if (e.getType() == mTypeOfCourse)
+        if (e.getType() == DatabaseManager.Table.featured)
             super.onGettingFromDbSuccess(e);
     }
 
     @Subscribe
     @Override
     public void onSuccessDataLoad(SuccessCoursesDownloadEvent e) {
-        if (e.getType() == mTypeOfCourse)
+        if (e.getType() == DatabaseManager.Table.featured)
             super.onSuccessDataLoad(e);
     }
 
     @Subscribe
     @Override
     public void onPreLoad(PreLoadCoursesEvent e) {
-        if (e.getType() == mTypeOfCourse)
+        if (e.getType() == DatabaseManager.Table.featured)
             super.onPreLoad(e);
     }
 

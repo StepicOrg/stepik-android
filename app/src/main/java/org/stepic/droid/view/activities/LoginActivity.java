@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yandex.metrica.YandexMetrica;
@@ -15,6 +16,8 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 import org.stepic.droid.web.IApi;
+
+import java.net.ProtocolException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -39,6 +42,9 @@ public class LoginActivity extends FragmentActivityBase {
     @Bind(org.stepic.droid.R.id.login_spinner)
     ProgressBar mProgressLogin;
 
+    @Bind(R.id.forgot_password_tv)
+    TextView mForgotPassword;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +67,13 @@ public class LoginActivity extends FragmentActivityBase {
                 hideSoftKeypad();
                 YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_SIGN_IN_ON_SIGN_IN_SCREEN);
                 tryLogin();
+            }
+        });
+
+        mForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mShell.getScreenProvider().openRemindPassword(LoginActivity.this);
             }
         });
     }
@@ -94,8 +107,6 @@ public class LoginActivity extends FragmentActivityBase {
                 } else {
                     YandexMetrica.reportEvent(AppConstants.METRICA_FAIL_LOGIN);
                     ProgressHelper.dismiss(mProgressLogin);
-//                    String errorMsg = "Error is occurred";
-//                    Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -104,11 +115,25 @@ public class LoginActivity extends FragmentActivityBase {
                 YandexMetrica.reportEvent(AppConstants.METRICA_FAIL_LOGIN);
                 YandexMetrica.reportError(AppConstants.METRICA_FAIL_LOGIN, t);
                 ProgressHelper.dismiss(mProgressLogin);
-                Toast.makeText(LoginActivity.this, R.string.failLogin, Toast.LENGTH_LONG).show();
+                if (t != null) {
+                    if (t instanceof ProtocolException) {
+                        Toast.makeText(LoginActivity.this, R.string.failLogin, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(LoginActivity.this, R.string.failLoginConnectionProblems, Toast.LENGTH_LONG).show();
+                    }
+                }
             }
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        mCloseButton.setOnClickListener(null);
+        mLoginBtn.setOnClickListener(null);
+        mForgotPassword.setOnClickListener(null);
+        super.onDestroy();
+
+    }
 
     private void onUserLoginSuccess() {
         mShell.getScreenProvider().showMainFeed(this);

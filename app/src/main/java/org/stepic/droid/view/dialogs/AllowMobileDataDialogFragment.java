@@ -15,7 +15,7 @@ import org.stepic.droid.events.wifi_settings.WifiLoadIsChangedEvent;
 
 import javax.inject.Inject;
 
-public  class AllowMobileDataDialogFragment extends DialogFragment {
+public class AllowMobileDataDialogFragment extends DialogFragment {
     @Inject
     Bus mBus;
 
@@ -41,6 +41,7 @@ public  class AllowMobileDataDialogFragment extends DialogFragment {
                         mBus.post(new WifiLoadIsChangedEvent(false));
                     }
                 });
+        setCancelable(false);
 
         return builder.create();
     }

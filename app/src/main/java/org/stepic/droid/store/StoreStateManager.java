@@ -88,6 +88,10 @@ public class StoreStateManager implements IStoreStateManager {
 
     private void updateCourseState(long courseId) {
         Course course = mDatabaseManager.getCourseById(courseId, DatabaseManager.Table.enrolled);
+        if (course == null) {
+            course = mDatabaseManager.getCourseById(courseId, DatabaseManager.Table.featured);
+            mDatabaseManager.addCourse(course, DatabaseManager.Table.enrolled);
+        }
         List<Section> sections = mDatabaseManager.getAllSectionsOfCourse(course);
         for (Section section : sections) {
             if (!section.is_cached()) return;

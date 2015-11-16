@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Stepic</string>
 
-    <string name="yet_have_not_account">Have not an account yet? Sign up</string>
+    <string name="yet_have_not_account">"Don\'t have an account yet? Sign up"</string>
     <string name="or_sign_up_with_email">or sign up with e-mail</string>
     <string name="sign_up">Sign up</string>
     <string name="show_optional_fields">Show optional fields</string>
@@ -11,7 +11,7 @@
     <string name="facebook_name_of_company" translatable="false">Facebook</string>
     <string name="google_name_of_company" translatable="false">Google</string>
     <string name="email_login" translatable="false">e-mail</string>
-    <string name="remind_password">Remind password</string>
+    <string name="remind_password">Forgot password?</string>
     <string name="sign_in_btn">Sign in button</string>
     <string name="sign_in">Sign In</string>
     <string name="describing_error">The following error occurred while logging you in</string>
@@ -42,11 +42,11 @@
     <string name="hard_deadline_section">Hard deadline:</string>
     <string name="syllabus_title">Syllabus</string>
     <string name="units_lessons_title">Lessons</string>
-    <string name="steps_title">Lesson</string>
+    <string name="steps_title">Steps</string>
     <string name="not_available_lesson">Lesson is not available now</string>
     <string name="turn_on_permission">Turn on permission for application to memory</string>
     <string name="description_download">Caching Stepic\'s video</string>
-    <string name="cache_title">Cache</string>
+    <string name="video_title">Video</string>
     <string name="wi_fi_setting">Wi-Fi only download</string>
     <string name="clear_cache_title">Clear cache</string>
     <string name="clear_cache_dialog_message">Are you sure you want to delete all saved lessons?</string>
@@ -64,8 +64,13 @@
     <string name="try_in_web_drop">Try drop course in web version</string>
     <string name="you_not_enrolled">You are not enrolled</string>
     <string name="cancel">Cancel</string>
-    <string name="failLogin">Login/password was incorrect or Internet connection was lost</string>
+    <string name="failLogin">Login/password was incorrect</string>
+    <string name="failLoginConnectionProblems">Internet connection was lost</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="explain_permission">For cache course and watch video offline Stepic need permission to storage of phone.</string>
     <string name="allow_question">Allow?</string>
+    <string name="video_quality">Video quality</string>
+    <string name="ok">Ok</string>
+    <string name="choose_video_quality">Choose video quality</string>
+
 </resources>

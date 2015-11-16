@@ -29,4 +29,6 @@ public interface IScreenManager {
 
     void openSignUpInWeb(Context context);
 
+    void openRemindPassword(Context context);
+
 }

@@ -17,13 +17,13 @@ import javax.inject.Singleton;
 public class UserPreferences {
 
     Context mContext;
-    SharedPreferenceHelper sharedPreferenceHelper;
+    SharedPreferenceHelper mSharedPreferenceHelper;
 
 
     @Inject
     public UserPreferences(Context context, SharedPreferenceHelper helper) {
         mContext = context;
-        sharedPreferenceHelper = helper;
+        mSharedPreferenceHelper = helper;
     }
 
     /**
@@ -52,7 +52,7 @@ public class UserPreferences {
     }
 
     private long getUserId() {
-        Profile userProfile = sharedPreferenceHelper.getProfile();
+        Profile userProfile = mSharedPreferenceHelper.getProfile();
         long userId = -1; // default anonymous user id
         if (userProfile != null) {
             userId = userProfile.getId();
@@ -62,7 +62,15 @@ public class UserPreferences {
 
 
     public boolean isNetworkMobileAllowed() {
-        return sharedPreferenceHelper.isMobileInternetAlsoAllowed();
+        return mSharedPreferenceHelper.isMobileInternetAlsoAllowed();
+    }
+
+    public String getQualityVideo() {
+        return mSharedPreferenceHelper.getVideoQuality();
+    }
+
+    public void storeQualityVideo(String videoQuality) {
+        mSharedPreferenceHelper.storeVideoQuality(videoQuality);
     }
 
 }

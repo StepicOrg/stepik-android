@@ -23,16 +23,18 @@ public class StepFragmentAdapter extends FragmentStatePagerAdapter {
 
     private final Lesson mLesson;
     private final Unit mUnit;
+    private final int mCount;
     private Context mContext;
     @Inject
     IStepResolver mResolver;
 
     List<Step> mStepList;
 
-    public StepFragmentAdapter(FragmentManager fm, Context context, List<Step> stepList, Lesson mLesson, Unit mUnit) {
+    public StepFragmentAdapter(FragmentManager fm, Context context, List<Step> stepList, Lesson mLesson, Unit mUnit, int mCount) {
         super(fm);
         this.mLesson = mLesson;
         this.mUnit = mUnit;
+        this.mCount = mCount;
         MainApplication.component().inject(this);
         mContext = context;
         mStepList = stepList;
@@ -51,7 +53,11 @@ public class StepFragmentAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return mStepList.size();
+        if (mCount > 0) {
+            return mCount;
+        } else {
+            return mStepList.size();
+        }
     }
 
     public Drawable getTabDrawable(int position) {

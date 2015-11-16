@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Profile;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 
@@ -25,7 +27,8 @@ public class SharedPreferenceHelper {
 
     public enum PreferenceType {
         LOGIN("login preference"),
-        WIFI("wifi_preference");
+        WIFI("wifi_preference"),
+        VIDEO_QUALITY("video_quality_preference");
 
         private String description;
 
@@ -55,6 +58,20 @@ public class SharedPreferenceHelper {
         Gson gson = new GsonBuilder().create();
         Profile result = gson.fromJson(json, Profile.class);
         return result;
+    }
+
+    public void storeVideoQuality(String videoQuality) {
+        put(PreferenceType.VIDEO_QUALITY, VIDEO_QUALITY_KEY, videoQuality);
+    }
+
+    @NotNull
+    public String getVideoQuality() {
+        String str = getString(PreferenceType.VIDEO_QUALITY, VIDEO_QUALITY_KEY);
+        if (str == null) {
+            return AppConstants.DEFAULT_QUALITY;
+        } else {
+            return str;
+        }
     }
 
     public void storeAuthInfo(AuthenticationStepicResponse response) {
@@ -123,5 +140,6 @@ public class SharedPreferenceHelper {
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
     private final String PROFILE_JSON = "profile_json";
     private final String WIFI_KEY = "wifi_key";
+    private final String VIDEO_QUALITY_KEY = "video_quality_key";
 
 }

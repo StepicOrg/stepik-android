@@ -21,6 +21,7 @@ public abstract class FragmentStepBase extends FragmentBase {
     protected Step mStep;
     protected Lesson mLesson;
 
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

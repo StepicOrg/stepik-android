@@ -37,12 +37,12 @@
     <string name="soft_deadline_section">Мягкий дедлайн:</string>
     <string name="syllabus_title">Содержание</string>
     <string name="units_lessons_title">Уроки</string>
-    <string name="steps_title">Урок</string>
+    <string name="steps_title">Шаги</string>
     <string name="not_available_lesson">Урок недоступен сейчас</string>
     <string name="not_video_player_error">Пожалуйста, установите видеоплеер</string>
     <string name="turn_on_permission">Включите доступ к памяти для приложения в настройках телефона</string>
     <string name="description_download">Кеширование Stepic урока</string>
-    <string name="cache_title">Кэш</string>
+    <string name="video_title">Видео</string>
     <string name="clear_cache_title">Очистить кэш</string>
     <string name="wi_fi_setting">Загружать только по Wi-Fi </string>
     <string name="clear_cache_dialog_message">Вы уверены, что хотите удалить все сохраненные уроки?</string>
@@ -58,11 +58,15 @@
     <string name="try_in_web_drop">Попробуйте отписаться в web-версии</string>
     <string name="you_not_enrolled">Вы не записаны на данный курс</string>
     <string name="cancel">Отмена</string>
-    <string name="failLogin">E-mail адрес/пароль не верны или отсутствует подключение к Интернет</string>
+    <string name="failLogin">E-mail адрес/пароль не верны</string>
     <string name="are_you_sure">Вы уверены?</string>
     <string name="deny">Отклонить</string>
     <string name="allow">Разрешить</string>
     <string name="allow_question">Разрешить?</string>
     <string name="explain_permission">Для сохранения и просмотра видео в режиме оффлайн Stepic должен иметь права записи файлов в память телефона.</string>
+    <string name="failLoginConnectionProblems">Отсутствует подключение к Интернету</string>
+    <string name="video_quality">Качество видео</string>
+    <string name="ok">Ок</string>
+    <string name="choose_video_quality">Выберите качество видео</string>
 
 </resources>

@@ -1,7 +1,6 @@
 package org.stepic.droid.view.activities;
 
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -24,7 +23,6 @@ import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
-import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.dialogs.AreYouSureDialog;
 import org.stepic.droid.view.fragments.FindCoursesFragment;
@@ -45,6 +43,8 @@ import retrofit.Retrofit;
 
 public class MainFeedActivity extends FragmentActivityBase
         implements NavigationView.OnNavigationItemSelectedListener {
+    public static final String KEY_CURRENT_INDEX = "Current_index";
+
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
@@ -70,6 +70,7 @@ public class MainFeedActivity extends FragmentActivityBase
 
     private List<FragmentBase> mFragments;
     private FragmentBase mCurrentFragment;
+    private int mCurrentIndex;
 
 
     @Override
@@ -124,10 +125,15 @@ public class MainFeedActivity extends FragmentActivityBase
         mFragments.add(new FindCoursesFragment());
         mFragments.add(new SettingsFragment());
 
-        mCurrentFragment = mFragments.get(0);
+        mCurrentIndex = 0;
+        showCurrentFragment();
+    }
+
+    private void showCurrentFragment() {
+        mCurrentFragment = mFragments.get(mCurrentIndex);
         setFragment();
         Menu menu = mNavigationView.getMenu();
-        MenuItem menuItem = menu.getItem(0);
+        MenuItem menuItem = menu.getItem(mCurrentIndex);
         menuItem.setChecked(false);
         setTitle(menuItem.getTitle());
     }
@@ -139,16 +145,13 @@ public class MainFeedActivity extends FragmentActivityBase
         switch (menuItem.getItemId()) {
             //todo: substitute to getting from provider
             case R.id.my_courses:
-                mCurrentFragment = mFragments.get(0);
+                mCurrentIndex = 0;
                 break;
-//            case R.id.best_lessons:
-//                mCurrentFragment = mFragments.get(1);
-//                break;
             case R.id.find_lessons:
-                mCurrentFragment = mFragments.get(1);
+                mCurrentIndex = 1;
                 break;
             case R.id.my_settings:
-                mCurrentFragment = mFragments.get(2);
+                mCurrentIndex = 2;
                 break;
             case R.id.logout_item:
                 //todo: add 'Are you sure?" dialog
@@ -156,12 +159,22 @@ public class MainFeedActivity extends FragmentActivityBase
 
                 AreYouSureDialog dialog = new AreYouSureDialog();
                 dialog.show(getSupportFragmentManager(), null);
-                break;
+
+                menuItem.setChecked(false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDrawerLayout.closeDrawers();
+                    }
+                }, 0);
+                return true;
 
             default:
                 Toast.makeText(getApplicationContext(), "Somethings Wrong", Toast.LENGTH_SHORT).show();
                 break;
         }
+
+        mCurrentFragment = mFragments.get(mCurrentIndex);
 
         menuItem.setChecked(false);
         setTitle(menuItem.getTitle());
@@ -222,5 +235,18 @@ public class MainFeedActivity extends FragmentActivityBase
         Picasso.with(MainFeedActivity.this).load(profile.getAvatar()).
                 placeholder(mUserPlaceholder).error(mUserPlaceholder).into(mProfileImage);
         mUserNameTextView.setText(profile.getFirst_name() + " " + profile.getLast_name());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(KEY_CURRENT_INDEX, mCurrentIndex);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mCurrentIndex = savedInstanceState.getInt(KEY_CURRENT_INDEX);
+        showCurrentFragment();
     }
 }

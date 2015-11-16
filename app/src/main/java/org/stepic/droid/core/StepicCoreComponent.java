@@ -24,6 +24,7 @@ import org.stepic.droid.view.adapters.UnitAdapter;
 import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
 import org.stepic.droid.view.dialogs.AreYouSureDialog;
 import org.stepic.droid.view.dialogs.ClearCacheDialogFragment;
+import org.stepic.droid.view.dialogs.VideoQualityDialog;
 import org.stepic.droid.web.HttpManager;
 import org.stepic.droid.web.RetrofitRESTApi;
 
@@ -59,6 +60,8 @@ public interface StepicCoreComponent {
     void inject(ClearCacheDialogFragment dialogFragment);
 
     void inject(AreYouSureDialog dialogFragment);
+
+    void inject(VideoQualityDialog dialogFragment);
 
 
     //All Tasks:

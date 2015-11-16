@@ -7,6 +7,7 @@
         <item name="actionBarStyle">@style/Theme.MyApp.ActionBar</item>
         <item name="android:windowBackground">@color/stepic_cover</item>
         <item name="android:colorBackground">@color/stepic_cover</item>
+        <item name="android:textColor">@color/stepic_regular_text</item>
     </style>
 
 
