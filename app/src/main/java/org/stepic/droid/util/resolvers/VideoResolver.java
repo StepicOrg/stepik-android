@@ -7,8 +7,8 @@ import com.squareup.otto.Bus;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.model.VideoUrl;
+import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseManager;
-import org.stepic.droid.util.AppConstants;
 
 import java.io.File;
 import java.util.List;
@@ -19,11 +19,13 @@ public class VideoResolver implements IVideoResolver {
     private Context mContext;
     private Bus mBus;
     private DatabaseManager mDbOperations;
+    private UserPreferences mUserPreferences;
 
-    public VideoResolver(Context context, Bus bus, DatabaseManager dbOperationsCachedVideo) {
+    public VideoResolver(Context context, Bus bus, DatabaseManager dbOperationsCachedVideo, UserPreferences userPreferences) {
         mContext = context;
         mBus = bus;
         mDbOperations = dbOperationsCachedVideo;
+        mUserPreferences = userPreferences;
     }
 
     /**
@@ -58,7 +60,7 @@ public class VideoResolver implements IVideoResolver {
             if (tempLink != null) {
                 String quality = tempLink.getQuality();
                 if (quality != null &&
-                        (quality.equals(AppConstants.DEFAULT_QUALITY) || i == urlList.size() - 1)) {
+                        (quality.equals(mUserPreferences.getQualityVideo()) || i == urlList.size() - 1)) {
                     //// TODO: 15.10.15 determine video which is available for the phone. Not default
                     resolvedURL = tempLink.getUrl();
                     break;

@@ -19,6 +19,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.custom.BetterSwitch;
 import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
 import org.stepic.droid.view.dialogs.ClearCacheDialogFragment;
+import org.stepic.droid.view.dialogs.VideoQualityDialog;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,6 +30,9 @@ public class SettingsFragment extends FragmentBase {
 
     @Bind(R.id.fragment_settings_wifi_enable_switch)
     BetterSwitch mWifiLoadSwitch;
+
+    @Bind(R.id.video_quality_view)
+    View mVideoQuality;
 
     private DialogFragment mClearCacheDialogFragment;
 
@@ -72,6 +76,15 @@ public class SettingsFragment extends FragmentBase {
                     }
 
                 }
+            }
+        });
+
+
+        final DialogFragment videoDialog = new VideoQualityDialog();
+        mVideoQuality.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                videoDialog.show(getFragmentManager(), null);
             }
         });
     }

@@ -98,8 +98,9 @@ public class StepicDefaultModule {
     @Singleton
     public IVideoResolver provideVideoResolver(Context context,
                                                Bus bus,
-                                               DatabaseManager dbOperationsCachedVideo) {
-        return new VideoResolver(context, bus, dbOperationsCachedVideo);
+                                               DatabaseManager dbOperationsCachedVideo,
+                                               UserPreferences userPreferences) {
+        return new VideoResolver(context, bus, dbOperationsCachedVideo, userPreferences);
     }
 
     @Provides

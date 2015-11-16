@@ -46,7 +46,7 @@
     <string name="not_available_lesson">Lesson is not available now</string>
     <string name="turn_on_permission">Turn on permission for application to memory</string>
     <string name="description_download">Caching Stepic\'s video</string>
-    <string name="cache_title">Cache</string>
+    <string name="video_title">Video</string>
     <string name="wi_fi_setting">Wi-Fi only download</string>
     <string name="clear_cache_title">Clear cache</string>
     <string name="clear_cache_dialog_message">Are you sure you want to delete all saved lessons?</string>
@@ -69,4 +69,8 @@
     <string name="are_you_sure">Are you sure?</string>
     <string name="explain_permission">For cache course and watch video offline Stepic need permission to storage of phone.</string>
     <string name="allow_question">Allow?</string>
+    <string name="video_quality">Video quality</string>
+    <string name="ok">Ok</string>
+    <string name="choose_video_quality">Choose video quality</string>
+
 </resources>
