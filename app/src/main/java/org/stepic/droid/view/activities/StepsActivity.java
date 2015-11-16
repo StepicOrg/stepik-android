@@ -18,7 +18,6 @@ import org.stepic.droid.concurrency.ToDbStepTask;
 import org.stepic.droid.events.steps.FailLoadStepEvent;
 import org.stepic.droid.events.steps.FromDbStepEvent;
 import org.stepic.droid.events.steps.SuccessLoadStepEvent;
-import org.stepic.droid.events.steps.SuccessToDbStepEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
@@ -146,20 +145,20 @@ public class StepsActivity extends FragmentActivityBase {
         if (steps.isEmpty()) {
             bus.post(new FailLoadStepEvent());
         } else {
-            ToDbStepTask task = new ToDbStepTask(mLesson, steps);
-            task.execute();
-//            showSteps(steps);
+//            ToDbStepTask task = new ToDbStepTask(mLesson, steps);
+//            task.execute();
+            showSteps(steps);
         }
     }
 
-    @Subscribe
-    public void onSuccessSaveToDb(SuccessToDbStepEvent e) {
-        if (e.getmLesson().getId() != mLesson.getId()) return;
-
-        FromDbStepTask stepTask = new FromDbStepTask(mLesson);
-        stepTask.execute();
-    }
-
+//    @Subscribe
+//    public void onSuccessSaveToDb(SuccessToDbStepEvent e) {
+//        if (e.getmLesson().getId() != mLesson.getId()) return;
+//
+//        FromDbStepTask stepTask = new FromDbStepTask(mLesson);
+//        stepTask.execute();
+//    }
+//
 
     private void showSteps(List<Step> steps) {
         mStepList.clear();
