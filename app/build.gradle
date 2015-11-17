@@ -38,7 +38,7 @@ dependencies {
     //</DI>
 
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.google.code.gson:gson:2.4'
 
 
     compile 'com.squareup.okhttp:okhttp:2.3.0'
