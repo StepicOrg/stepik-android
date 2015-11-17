@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
 
 import com.squareup.otto.Subscribe;
@@ -52,6 +53,9 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Bind(R.id.toolbar)
     android.support.v7.widget.Toolbar mToolbar;
+
+    @Bind(R.id.report_problem)
+    protected View mReportConnectionProblem;
 
     private Course mCourse;
     private SectionAdapter mAdapter;
@@ -125,6 +129,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Subscribe
     public void onNotifyUI(NotifyUISectionsEvent event) {
+        dismissReportView();
         mAdapter.notifyDataSetChanged();
         mHandlerStateUpdating.postDelayed(mUpdatingRunnable, AppConstants.UI_UPDATING_TIME);
     }
@@ -165,8 +170,10 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     }
 
     private void showSections(List<Section> sections) {
+
         mSectionList.clear();
         mSectionList.addAll(sections);
+        dismissReportView();
         mAdapter.notifyDataSetChanged();
         dismiss();
     }
@@ -177,6 +184,12 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
             isScreenEmpty = false;
         } else {
             ProgressHelper.dismiss(mSwipeRefreshLayout);
+        }
+    }
+
+    private void dismissReportView () {
+        if (mSectionList != null && mSectionList.size() != 0) {
+            mReportConnectionProblem.setVisibility(View.GONE);
         }
     }
 
@@ -201,7 +214,8 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Subscribe
     public void onFailureDownload(FailureResponseSectionEvent e) {
         if (mCourse.getCourseId() == e.getCourse().getCourseId()) {
-            ProgressHelper.dismiss(mSwipeRefreshLayout);
+            mReportConnectionProblem.setVisibility(View.VISIBLE);
+            dismiss();
         }
     }
 

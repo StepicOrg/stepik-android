@@ -213,9 +213,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
             mCourses.addAll(cachedCourses);
         }
 
-        if (mCourses.size() == 0) {
-            mEmptyCoursesView.setVisibility(View.VISIBLE);
-        }
         mCoursesAdapter.notifyDataSetChanged();
     }
 
@@ -469,6 +466,10 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
         YandexMetrica.reportEvent(AppConstants.METRICA_DROP_COURSE + " successful", JsonHelper.toJson(e.getCourse()));
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + e.getCourse().getTitle(), Toast.LENGTH_LONG).show();
         mCourses.remove(e.getCourse()); //// TODO: 11.11.15 delete cached info of course.
+
+        if (mCourses.size() == 0) {
+            mEmptyCoursesView.setVisibility(View.VISIBLE);
+        }
         new Handler().post(new Runnable() {
             @Override
             public void run() {

@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
 
 import com.squareup.otto.Subscribe;
@@ -54,6 +55,10 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     @Bind(R.id.toolbar)
     android.support.v7.widget.Toolbar mToolbar;
+
+
+    @Bind(R.id.report_problem)
+    protected View mReportConnectionProblem;
 
 
     private Section mSection;
@@ -198,6 +203,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
         mUnitList.clear();
         mUnitList.addAll(units);
+        dismissReport();
         mAdapter.notifyDataSetChanged();
 
         dismiss();
@@ -209,6 +215,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         if (mSection == null || e.getmSection() == null
                 || e.getmSection().getId() != mSection.getId())
             return;
+        mReportConnectionProblem.setVisibility(View.VISIBLE);
         dismiss();
     }
 
@@ -267,6 +274,12 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         updateUnits();
     }
 
+    private void dismissReport() {
+        if (mLessonList != null && mUnitList != null && mLessonList.size() != 0 && mUnitList.size() != 0) {
+            mReportConnectionProblem.setVisibility(View.GONE);
+        }
+    }
+
     @Subscribe
     public void onSuccessLoadFromDb(LoadedFromDbUnitsLessonsEvent e) {
         if (mSection != e.getSection()) return;
@@ -298,6 +311,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     @Subscribe
     public void onNotifyUI(NotifyUIUnitLessonEvent event) {
+        dismissReport();
         mAdapter.notifyDataSetChanged();
         mHandlerStateUpdating.postDelayed(mUpdatingRunnable, AppConstants.UI_UPDATING_TIME);
     }

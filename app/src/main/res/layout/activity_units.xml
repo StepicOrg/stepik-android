@@ -13,6 +13,8 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/appBarLayout">
 
+        <include layout="@layout/report_problem_layout" />
+
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout_units"
             android:layout_width="match_parent"
@@ -29,7 +31,7 @@
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
-        <include layout="@layout/progress_bar_on_empty_screen"/>
+        <include layout="@layout/progress_bar_on_empty_screen" />
     </FrameLayout>
 
 
