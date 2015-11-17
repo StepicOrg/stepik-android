@@ -69,5 +69,6 @@
     <string name="ok">Ок</string>
     <string name="choose_video_quality">Выберите качество видео</string>
     <string name="sync_problem">Возникли проблемы с синхронизацией данных, пожалуйста, повторите попытку позже.</string>
+    <string name="empty_courses">Похоже, что Вы не зарегистированы ни на один курс. Кликните, чтобы найти курсы!</string>
 
 </resources>

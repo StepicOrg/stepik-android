@@ -42,6 +42,7 @@ import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.view.activities.MainFeedActivity;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
 import org.stepic.droid.web.CoursesStepicResponse;
 import org.stepic.droid.web.IApi;
@@ -74,6 +75,9 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
     @Bind(R.id.report_problem)
     protected View mReportConnectionProblem;
+
+    @Bind(R.id.empty_courses)
+    protected View mEmptyCoursesView;
 
 
     //    protected LoadingCoursesTask mLoadingCoursesTask;
@@ -140,6 +144,16 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
             }
         });
 
+        mEmptyCoursesView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainFeedActivity parent = (MainFeedActivity) getActivity();
+                if (parent == null || parent instanceof MainFeedActivity == false) return;
+
+                parent.showFindLesson();
+            }
+        });
+
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -184,7 +198,8 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
 
     protected void showCourses(List<Course> cachedCourses) {
-        if (cachedCourses != null || cachedCourses.size()!=0) {
+        if (cachedCourses != null || cachedCourses.size() != 0) {
+            mEmptyCoursesView.setVisibility(View.GONE);
             mReportConnectionProblem.setVisibility(View.GONE);
         }
 
@@ -196,6 +211,10 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
             }
         } else {
             mCourses.addAll(cachedCourses);
+        }
+
+        if (mCourses.size() == 0) {
+            mEmptyCoursesView.setVisibility(View.VISIBLE);
         }
         mCoursesAdapter.notifyDataSetChanged();
     }
@@ -281,7 +300,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
             CoursesStepicResponse coursesStepicResponse = response.body();
             ProgressHelper.dismiss(mSwipeRefreshLayout);
             saveDataToCache(coursesStepicResponse.getCourses());
-            getAndShowDataFromCache();
 
             mHasNextPage = coursesStepicResponse.getMeta().isHas_next();
             if (mHasNextPage) {
@@ -289,8 +307,11 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
             }
         } else {
             mHasNextPage = false;
-            //// TODO: 17.10.15 explore this case (just when user do not have enrolled courses?)
-            bus.post(new FailCoursesDownloadEvent(getCourseType()));
+            mReportConnectionProblem.setVisibility(View.GONE);
+            mEmptyCoursesView.setVisibility(View.VISIBLE);
+
+            mFooterDownloadingView.setVisibility(View.GONE);
+            ProgressHelper.dismiss(mSwipeRefreshLayout);
         }
         isLoading = false;
     }
@@ -303,10 +324,10 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
         if (mCourses == null || mCourses.size() == 0) {
             //screen is clear due to error connection
+            mEmptyCoursesView.setVisibility(View.GONE);
             mReportConnectionProblem.setVisibility(View.VISIBLE);
         }
     }
-
 
 
     @Subscribe
@@ -317,6 +338,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     @Subscribe
     public void onFinishingSaveToDb(FinishingSaveCoursesToDbEvent e) {
         ProgressHelper.dismiss(mSwipeRefreshLayout);
+        getAndShowDataFromCache();
     }
 
     @Subscribe
@@ -443,10 +465,16 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     }
 
     @Subscribe
-    public void onSuccessDrop(SuccessDropCourseEvent e) {
+    public void onSuccessDrop(final SuccessDropCourseEvent e) {
         YandexMetrica.reportEvent(AppConstants.METRICA_DROP_COURSE + " successful", JsonHelper.toJson(e.getCourse()));
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + e.getCourse().getTitle(), Toast.LENGTH_LONG).show();
         mCourses.remove(e.getCourse()); //// TODO: 11.11.15 delete cached info of course.
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                mDatabaseManager.deleteCourse(e.getCourse(), DatabaseManager.Table.enrolled);
+            }
+        });
     }
 
     @Subscribe

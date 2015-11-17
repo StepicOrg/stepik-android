@@ -6,6 +6,8 @@
     <include
         layout="@layout/report_problem_layout" />
 
+
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout_mycourses"
         android:layout_width="match_parent"
@@ -19,5 +21,7 @@
             android:divider="@null"
             android:scrollbarStyle="outsideOverlay" />
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <include layout="@layout/empty_courses"/>
 
 </FrameLayout>

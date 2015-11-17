@@ -249,4 +249,9 @@ public class MainFeedActivity extends FragmentActivityBase
         mCurrentIndex = savedInstanceState.getInt(KEY_CURRENT_INDEX);
         showCurrentFragment();
     }
+
+    public void showFindLesson () {
+        mCurrentIndex = 1;
+        showCurrentFragment();
+    }
 }
