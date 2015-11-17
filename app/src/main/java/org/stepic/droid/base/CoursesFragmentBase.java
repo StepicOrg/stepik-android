@@ -72,6 +72,9 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     @Bind(R.id.list_of_courses)
     protected ListView mListOfCourses;
 
+    @Bind(R.id.report_problem)
+    protected View mReportConnectionProblem;
+
 
     //    protected LoadingCoursesTask mLoadingCoursesTask;
     protected List<Course> mCourses;
@@ -181,6 +184,9 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
 
     protected void showCourses(List<Course> cachedCourses) {
+        if (cachedCourses != null || cachedCourses.size()!=0) {
+            mReportConnectionProblem.setVisibility(View.GONE);
+        }
 
         mCourses.clear();
         if (getCourseType() == DatabaseManager.Table.enrolled) {
@@ -294,7 +300,14 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
         ProgressHelper.dismiss(mSwipeRefreshLayout);
         mFooterDownloadingView.setVisibility(View.GONE);
         isLoading = false;
+
+        if (mCourses == null || mCourses.size() == 0) {
+            //screen is clear due to error connection
+            mReportConnectionProblem.setVisibility(View.VISIBLE);
+        }
     }
+
+
 
     @Subscribe
     public void onStartingSaveToDb(StartingSaveCoursesToDbEvent e) {

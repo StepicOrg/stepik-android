@@ -72,5 +72,6 @@
     <string name="video_quality">Video quality</string>
     <string name="ok">Ok</string>
     <string name="choose_video_quality">Choose video quality</string>
+    <string name="sync_problem">There was a problem syncing the data, please try again later.</string>
 
 </resources>
