@@ -1,37 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_header"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
-    android:background="@drawable/stepic_bg_small"
-    android:orientation="vertical">
+    android:layout_height="150dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background_header" />
 
 
-    <TextView
-        android:id="@+id/username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/profile_image"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/profile_image"
-        android:gravity="start"
-        android:paddingBottom="4dp"
-        android:text="Kirill Makarov"
-        android:textColor="#FFF"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+    <RelativeLayout
+        android:id="@+id/drawer_header"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
 
-    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/profile_image"
-        android:layout_width="76dp"
-        android:layout_height="76dp"
-        android:layout_above="@id/username"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/placeholder_icon"
-        app:border_color="#FF000000" />
-</RelativeLayout>
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/profile_image"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/profile_image"
+            android:gravity="start"
+            android:paddingBottom="4dp"
+            android:text="Kirill Makarov"
+            android:textColor="#FFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:layout_above="@id/username"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/placeholder_icon"
+            app:border_color="#FF000000" />
+    </RelativeLayout>
+</FrameLayout>
