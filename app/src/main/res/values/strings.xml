@@ -74,5 +74,6 @@
     <string name="choose_video_quality">Choose video quality</string>
     <string name="sync_problem">There was a problem syncing the data, please try again later.</string>
     <string name="empty_courses">Looks like you haven\'t enrolled in any courses yet. Tap to find courses!</string>
+    <string name="cache_cleared">Cache is cleared successfully!</string>
 
 </resources>

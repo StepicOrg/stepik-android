@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.widget.Toast;
 
 import com.yandex.metrica.YandexMetrica;
 
@@ -52,6 +53,8 @@ public class ClearCacheDialogFragment extends DialogFragment {
                         CleanerUtil.CleanDirectory(userPreferences.getDownloadFolder());
 
                         mDatabaseManager.dropDatabase();
+
+                        Toast.makeText(getContext(), R.string.cache_cleared, Toast.LENGTH_LONG).show();
                     }
                 })
                 .setNegativeButton(R.string.no, null);
