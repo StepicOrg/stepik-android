@@ -229,6 +229,7 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public boolean isCourseLoading(Course course, DatabaseManager.Table type) {
+        if (course == null) return false;//// FIXME: 18.11.15 investiagate why null
         try {
             open();
             String Query = "Select * from " + type.getStoreName() + " where " + DBStructureCourses.Column.COURSE_ID + " = " + course.getCourseId();
