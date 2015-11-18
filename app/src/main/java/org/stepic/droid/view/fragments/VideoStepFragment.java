@@ -158,7 +158,7 @@ public class VideoStepFragment extends FragmentStepBase {
 
     @Subscribe
     public void onVideoResolved(VideoResolvedEvent e) {
-        if (mStep.getBlock().getVideo() == null || mStep.getBlock().getVideo().getId() != e.getVideo().getId())
+        if (mStep.getBlock().getVideo() == null || e.getVideo() == null || mStep.getBlock().getVideo().getId() != e.getVideo().getId())
             return;
 //todo: if video == null, than show message.
 
