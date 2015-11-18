@@ -1,7 +1,6 @@
 package org.stepic.droid.base;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -36,7 +35,6 @@ import org.stepic.droid.events.courses.StartingSaveCoursesToDbEvent;
 import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
-import org.stepic.droid.events.notify_ui.NotifyUICoursesEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
@@ -89,8 +87,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     protected ToDbCoursesTask mDbSaveCoursesTask;
     protected View mFooterDownloadingView;
     protected volatile boolean isLoading;
-    protected Handler mHandlerStateUpdating;
-    protected Runnable mUpdatingRunnable;
 
     boolean userScrolled;
 
@@ -161,42 +157,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
             }
         });
     }
-
-
-    protected void updateState() {
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                ArrayList<Course> localCopy = new ArrayList<>(mCourses);
-                if (localCopy == null || mCoursesAdapter == null || localCopy.size() == 0) {
-                    return null;
-                }
-
-                for (Course course : localCopy) {
-                    course.setIs_loading(mDatabaseManager.isCourseLoading(course, getCourseType()));
-                    course.setIs_cached(mDatabaseManager.isCourseCached(course, getCourseType()));
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                bus.post(new NotifyUICoursesEvent());
-            }
-        };
-        task.execute();
-    }
-
-    @Subscribe
-    public void onNotifyUI(NotifyUICoursesEvent e) {
-        if (getCourseType() == DatabaseManager.Table.enrolled) {
-            mCoursesAdapter.notifyDataSetChanged();
-            mHandlerStateUpdating.postDelayed(mUpdatingRunnable, AppConstants.UI_UPDATING_TIME);
-        }
-    }
-
-
     protected void showCourses(List<Course> cachedCourses) {
         if (cachedCourses != null || cachedCourses.size() != 0) {
             mEmptyCoursesView.setVisibility(View.GONE);
@@ -379,17 +339,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     public void onStart() {
         super.onStart();
         mSwipeRefreshLayout.setRefreshing(false);
-        if (getCourseType() == DatabaseManager.Table.enrolled) {
-            mHandlerStateUpdating = new Handler();
-            mUpdatingRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    updateState();
-                }
-            };
-
-            mHandlerStateUpdating.post(mUpdatingRunnable);
-        }
         bus.register(this);
     }
 
@@ -408,9 +357,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     public void onStop() {
         super.onStop();
         bus.unregister(this);
-        if (getCourseType() == DatabaseManager.Table.enrolled) {
-            mHandlerStateUpdating.removeCallbacks(mUpdatingRunnable);
-        }
     }
 
     @Override

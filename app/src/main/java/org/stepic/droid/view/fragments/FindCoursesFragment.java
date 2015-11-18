@@ -5,10 +5,8 @@ import android.os.Bundle;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.base.CoursesFragmentBase;
-import org.stepic.droid.events.courses.FailDropCourseEvent;
-import org.stepic.droid.events.courses.SuccessDropCourseEvent;
-import org.stepic.droid.events.notify_ui.NotifyUICoursesEvent;
 import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
+import org.stepic.droid.events.courses.FailDropCourseEvent;
 import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
 import org.stepic.droid.events.courses.FinishingSaveCoursesToDbEvent;
 import org.stepic.droid.events.courses.GettingCoursesFromDbSuccessEvent;
@@ -16,6 +14,7 @@ import org.stepic.droid.events.courses.PreLoadCoursesEvent;
 import org.stepic.droid.events.courses.StartingGetCoursesFromDbEvent;
 import org.stepic.droid.events.courses.StartingSaveCoursesToDbEvent;
 import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
+import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.store.operations.DatabaseManager;
 
@@ -95,12 +94,6 @@ public class FindCoursesFragment extends CoursesFragmentBase {
     @Override
     public void onSuccessJoin(SuccessJoinEvent e) {
         super.onSuccessJoin(e);
-    }
-
-    @Subscribe
-    @Override
-    public void onNotifyUI(NotifyUICoursesEvent e) {
-        super.onNotifyUI(e);
     }
 
     @Subscribe
