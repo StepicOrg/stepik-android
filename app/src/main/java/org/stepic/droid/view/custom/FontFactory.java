@@ -3,8 +3,6 @@ package org.stepic.droid.view.custom;
 import android.content.Context;
 import android.graphics.Typeface;
 
-import com.yandex.metrica.YandexMetrica;
-
 import java.util.HashMap;
 
 //todo: this class has a bad implementation, best practice use @Singleton
@@ -28,12 +26,12 @@ public class FontFactory {
     public Typeface getFont(Context context, String font) {
         Typeface typeface = fontMap.get(font);
         if (typeface == null) {
-            try{
+            try {
                 typeface = Typeface.createFromAsset(context.getResources()
                         .getAssets(), "fonts/" + font);
                 fontMap.put(font, typeface);
-            }catch (Exception ignored){
-                YandexMetrica.reportError("FontFactory", ignored);
+            } catch (Exception ignored) {
+//                YandexMetrica.reportError("FontFactory", ignored);
             }
         }
         return typeface;

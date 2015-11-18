@@ -33,9 +33,7 @@ public class SEditTextView extends EditText {
                     fontFileName);
             setTypeface(font);
         } catch (Exception ignored) {
-
             YandexMetrica.reportError("customEditText", ignored);
-
         } finally {
             a.recycle();
         }
