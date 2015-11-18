@@ -231,6 +231,10 @@ public class MainFeedActivity extends FragmentActivityBase
     }
 
     private void showProfile(Profile profile) {
+        if (profile == null) {
+            YandexMetrica.reportError(AppConstants.NULL_SHOW_PROFILE, new NullPointerException());
+            return;
+        }
         mProfileImage.setVisibility(View.VISIBLE);
         Picasso.with(MainFeedActivity.this).load(profile.getAvatar()).
                 placeholder(mUserPlaceholder).error(mUserPlaceholder).into(mProfileImage);
