@@ -23,6 +23,7 @@ import org.stepic.droid.events.video.VideoResolvedEvent;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Video;
 
+import java.io.File;
 import java.io.IOException;
 
 import butterknife.Bind;
@@ -58,8 +59,15 @@ public class VideoStepFragment extends FragmentStepBase {
         String thumbnail = "";
         if (mStep.getBlock() != null && mStep.getBlock().getVideo() != null && mStep.getBlock().getVideo().getThumbnail() != null) {
             thumbnail = mStep.getBlock().getVideo().getThumbnail();
+            Uri uri;
+            if (thumbnail.startsWith("http")) {
+                uri = Uri.parse(thumbnail);
+            }
+            else {
+                uri = Uri.fromFile(new File(thumbnail));
+            }
             Picasso.with(getContext())
-                    .load(thumbnail)
+                    .load(uri)
                     .placeholder(mVideoPlaceholder)
                     .error(mVideoPlaceholder)
                     .into(mThumbnail);

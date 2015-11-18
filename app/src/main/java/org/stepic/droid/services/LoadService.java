@@ -23,6 +23,7 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.web.IApi;
@@ -150,15 +151,12 @@ public class LoadService extends IntentService {
 
             if (!mDb.isExistDownloadEntityByVideoId(fileId) && !downloadFolderAndFile.exists()) {
                 long downloadId = mSystemDownloadManager.enqueue(request);
-                final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, step.getBlock().getVideo().getThumbnail());
+                String local_thumbnail = fileId + ".png";
+                String thumbnailsPath =  FileUtil.saveImageToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getDownloadFolder());
+                final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath);
                 mDb.addDownloadEntity(newEntity);
-
             }
         } catch (SecurityException ex) {
-            // FIXME: 20.10.15 SHOW DIALOG WITH SUGGESTION OF PERMISSION!
-//            mBus.post(new MemoryPermissionDeniedEvent());
-            //it is not main thread
-
             YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, ex);
             Log.i("downloading", ex.getMessage());
         } catch (Exception ex) {
@@ -172,7 +170,6 @@ public class LoadService extends IntentService {
     private void addStep(Step step, Lesson lesson) {
 
         if (step.getBlock().getVideo() != null) {
-
             Video video = step.getBlock().getVideo();
             String uri = mResolver.resolveVideoUrl(video);
             long fileId = video.getId();

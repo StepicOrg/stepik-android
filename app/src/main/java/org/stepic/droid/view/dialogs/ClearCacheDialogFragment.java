@@ -17,7 +17,7 @@ import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.CleanerUtil;
+import org.stepic.droid.util.FileUtil;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ public class ClearCacheDialogFragment extends DialogFragment {
                             mSystemDownloadManager.remove(de.getDownloadId());
                         }
 
-                        CleanerUtil.CleanDirectory(userPreferences.getDownloadFolder());
+                        FileUtil.cleanDirectory(userPreferences.getDownloadFolder());
 
                         mDatabaseManager.dropDatabase();
 

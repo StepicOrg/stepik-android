@@ -17,6 +17,7 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.receivers.DownloadCompleteReceiver;
 import org.stepic.droid.services.DeleteService;
 import org.stepic.droid.services.LoadService;
+import org.stepic.droid.util.ImageOnDisk;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
 import org.stepic.droid.view.adapters.SectionAdapter;
 import org.stepic.droid.view.adapters.StepFragmentAdapter;
@@ -93,4 +94,6 @@ public interface StepicCoreComponent {
     void inject(DeleteService loadService);
 
     void inject(DownloadCompleteReceiver downloadCompleteReceiver);
+
+    void inject(ImageOnDisk imageOnDisk);
 }
