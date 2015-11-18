@@ -187,7 +187,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         }
     }
 
-    private void dismissReportView () {
+    private void dismissReportView() {
         if (mSectionList != null && mSectionList.size() != 0) {
             mReportConnectionProblem.setVisibility(View.GONE);
         }
@@ -214,7 +214,9 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Subscribe
     public void onFailureDownload(FailureResponseSectionEvent e) {
         if (mCourse.getCourseId() == e.getCourse().getCourseId()) {
-            mReportConnectionProblem.setVisibility(View.VISIBLE);
+            if (mSectionList != null && mSectionList.size() == 0) {
+                mReportConnectionProblem.setVisibility(View.VISIBLE);
+            }
             dismiss();
         }
     }

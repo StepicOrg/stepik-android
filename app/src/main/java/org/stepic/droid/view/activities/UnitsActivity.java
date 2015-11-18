@@ -215,7 +215,10 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         if (mSection == null || e.getmSection() == null
                 || e.getmSection().getId() != mSection.getId())
             return;
-        mReportConnectionProblem.setVisibility(View.VISIBLE);
+
+        if (mUnitList != null && mUnitList.size() == 0) {
+            mReportConnectionProblem.setVisibility(View.VISIBLE);
+        }
         dismiss();
     }
 
