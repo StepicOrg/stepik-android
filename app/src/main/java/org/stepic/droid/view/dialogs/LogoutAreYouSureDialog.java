@@ -19,7 +19,7 @@ import org.stepic.droid.util.AppConstants;
 
 import javax.inject.Inject;
 
-public class AreYouSureDialog extends DialogFragment {
+public class LogoutAreYouSureDialog extends DialogFragment {
 
     @Inject
     IShell mShell;

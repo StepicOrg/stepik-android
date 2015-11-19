@@ -1,5 +1,6 @@
 package org.stepic.droid.web;
 
+import android.os.AsyncTask;
 import android.os.Looper;
 import android.util.Log;
 
@@ -13,12 +14,14 @@ import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.EnrollmentWrapper;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
+import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.RWLocks;
-import org.stepic.droid.preferences.SharedPreferenceHelper;
 
 import java.io.IOException;
 import java.net.Proxy;
@@ -32,10 +35,12 @@ import retrofit.Retrofit;
 
 @Singleton
 public class RetrofitRESTApi implements IApi {
-
     @Inject
-    SharedPreferenceHelper mSharedPreferenceHelper;
-
+    SharedPreferenceHelper mSharedPreference;
+    @Inject
+    ScreenManager screenManager;
+    @Inject
+    DatabaseManager mDbManager;
     @Inject
     IConfig mConfig;
 
@@ -63,11 +68,11 @@ public class RetrofitRESTApi implements IApi {
                 RWLocks.AuthLock.writeLock().lock();
                 try {
                     Request newRequest = chain.request();
-                    AuthenticationStepicResponse response = mSharedPreferenceHelper.getAuthResponseFromStore();
+                    AuthenticationStepicResponse response = mSharedPreference.getAuthResponseFromStore();
                     if (response != null) {
                         Log.i("Thread", Looper.myLooper() == Looper.getMainLooper() ? "main" : Thread.currentThread().getName());
                         response = mOAuthService.updateToken(mConfig.getRefreshGrantType(), response.getRefresh_token()).execute().body();//todo: Which Thread is it?
-                        mSharedPreferenceHelper.storeAuthInfo(response);
+                        mSharedPreference.storeAuthInfo(response);
                         newRequest = chain.request().newBuilder().addHeader("Authorization", getAuthHeaderValue()).build();
                     }
                     return chain.proceed(newRequest);
@@ -177,13 +182,26 @@ public class RetrofitRESTApi implements IApi {
 
     private String getAuthHeaderValue() {
         try {
-            AuthenticationStepicResponse resp = mSharedPreferenceHelper.getAuthResponseFromStore();
+            AuthenticationStepicResponse resp = mSharedPreference.getAuthResponseFromStore();
             String access_token = resp.getAccess_token();
             String type = resp.getToken_type();
             return type + " " + access_token;
         } catch (Exception ex) {
             YandexMetrica.reportError("retrofitAuth", ex);
             Log.e("retrofitAuth", ex.getMessage());
+            // FIXME: 19.11.15 It not should happen
+
+            mSharedPreference.deleteAuthInfo();
+            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    mDbManager.clearCacheCourses(DatabaseManager.Table.enrolled);
+                    return null;
+                }
+            };
+            task.execute();
+            screenManager.showLaunchScreen(MainApplication.getAppContext(), false);
+            // FIXME: 19.11.15 ^^^^^^
             return "";
         }
     }
