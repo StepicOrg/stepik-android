@@ -369,8 +369,15 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+
         MenuInflater inflater = getActivity().getMenuInflater();
-        inflater.inflate(R.menu.course_context_menu, menu);
+        if (mCourses.get(info.position).getEnrollment() != 0) {
+            inflater.inflate(R.menu.course_context_menu, menu);
+        } else {
+            inflater.inflate(R.menu.course_context_not_enrolled_menu, menu);
+        }
     }
 
     @Override
