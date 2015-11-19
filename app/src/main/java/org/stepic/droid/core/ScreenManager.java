@@ -18,10 +18,10 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
+import org.stepic.droid.view.activities.CourseDetailActivity;
 import org.stepic.droid.view.activities.LaunchActivity;
 import org.stepic.droid.view.activities.LoginActivity;
 import org.stepic.droid.view.activities.MainFeedActivity;
-import org.stepic.droid.view.activities.NotEnrolledCourseDetailActivity;
 import org.stepic.droid.view.activities.RegisterActivity;
 import org.stepic.droid.view.activities.SectionActivity;
 import org.stepic.droid.view.activities.StepsActivity;
@@ -87,7 +87,7 @@ public class ScreenManager implements IScreenManager {
     @Override
     public void showCourseDescription(Context sourceActivity, @NotNull Course course) {
         YandexMetrica.reportEvent("Screen manager: show course description");
-        Intent intent = new Intent(sourceActivity, NotEnrolledCourseDetailActivity.class);
+        Intent intent = new Intent(sourceActivity, CourseDetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
         intent.putExtras(bundle);

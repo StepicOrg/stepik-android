@@ -23,7 +23,6 @@ import com.yandex.metrica.YandexMetrica;
 import org.stepic.droid.R;
 import org.stepic.droid.concurrency.FromDbCoursesTask;
 import org.stepic.droid.concurrency.ToDbCoursesTask;
-import org.stepic.droid.concurrency.UpdateCourseTask;
 import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
 import org.stepic.droid.events.courses.FailDropCourseEvent;
 import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
@@ -157,6 +156,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
             }
         });
     }
+
     protected void showCourses(List<Course> cachedCourses) {
         if (cachedCourses != null || cachedCourses.size() != 0) {
             mEmptyCoursesView.setVisibility(View.GONE);
@@ -323,16 +323,18 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
         //Only for find courses event.
 
         Course courseForUpdate = e.getCourse();
+        boolean inList = false;
         for (Course courseItem : mCourses) {
             if (courseItem.getCourseId() == courseForUpdate.getCourseId()) {
                 courseItem.setEnrollment((int) courseItem.getCourseId());
                 courseForUpdate = courseItem;
+                inList = true;
                 break;
             }
         }
-
-        UpdateCourseTask updateCourseTask = new UpdateCourseTask(getCourseType(), courseForUpdate);
-        updateCourseTask.execute();
+        if (!inList) {
+            mCourses.add(courseForUpdate);
+        }
     }
 
     @Override
@@ -395,14 +397,27 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
             return;
         }
         mShell.getApi().dropCourse(course.getCourseId()).enqueue(new Callback<Void>() {
+
+            Course localRef = course;
+
             @Override
             public void onResponse(Response<Void> response, Retrofit retrofit) {
-                bus.post(new SuccessDropCourseEvent(getCourseType(), course));
+
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDatabaseManager.deleteCourse(localRef, DatabaseManager.Table.enrolled);
+                        localRef.setEnrollment(0);
+                        mDatabaseManager.addCourse(localRef, DatabaseManager.Table.featured);
+                    }
+                });
+
+                bus.post(new SuccessDropCourseEvent(getCourseType(), localRef));
             }
 
             @Override
             public void onFailure(Throwable t) {
-                bus.post(new FailDropCourseEvent(getCourseType(), course));
+                bus.post(new FailDropCourseEvent(getCourseType(), localRef));
             }
         });
     }
@@ -411,17 +426,14 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     public void onSuccessDrop(final SuccessDropCourseEvent e) {
         YandexMetrica.reportEvent(AppConstants.METRICA_DROP_COURSE + " successful", JsonHelper.toJson(e.getCourse()));
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + e.getCourse().getTitle(), Toast.LENGTH_LONG).show();
-        mCourses.remove(e.getCourse()); //// TODO: 11.11.15 delete cached info of course.
+        if (e.getType() == DatabaseManager.Table.enrolled) {
+            mCourses.remove(e.getCourse());
+            mCoursesAdapter.notifyDataSetChanged();
+        }
 
         if (mCourses.size() == 0) {
             mEmptyCoursesView.setVisibility(View.VISIBLE);
         }
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                mDatabaseManager.deleteCourse(e.getCourse(), DatabaseManager.Table.enrolled);
-            }
-        });
     }
 
     @Subscribe

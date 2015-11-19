@@ -55,7 +55,7 @@
             android:label="@string/my_courses_title" />
 
         <activity
-            android:name=".view.activities.NotEnrolledCourseDetailActivity"
+            android:name=".view.activities.CourseDetailActivity"
             android:label="@string/course_info_title" />
 
 
