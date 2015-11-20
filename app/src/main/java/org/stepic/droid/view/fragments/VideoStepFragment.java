@@ -20,6 +20,7 @@ import com.yandex.metrica.YandexMetrica;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentStepBase;
 import org.stepic.droid.events.video.VideoResolvedEvent;
+import org.stepic.droid.events.video.VideoLoadedEvent;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Video;
 
@@ -59,24 +60,49 @@ public class VideoStepFragment extends FragmentStepBase {
         String thumbnail = "";
         if (mStep.getBlock() != null && mStep.getBlock().getVideo() != null && mStep.getBlock().getVideo().getThumbnail() != null) {
             thumbnail = mStep.getBlock().getVideo().getThumbnail();
-            Uri uri;
-            if (thumbnail.startsWith("http")) {
-                uri = Uri.parse(thumbnail);
-            }
-            else {
-                uri = Uri.fromFile(new File(thumbnail));
-            }
-            Picasso.with(getContext())
-                    .load(uri)
-                    .placeholder(mVideoPlaceholder)
-                    .error(mVideoPlaceholder)
-                    .into(mThumbnail);
+            setmThumbnail(thumbnail);
+
         } else {
             Picasso.with(getContext())
                     .load(R.drawable.video_placeholder)
                     .placeholder(mVideoPlaceholder)
                     .error(mVideoPlaceholder)
                     .into(mThumbnail);
+        }
+
+        if (mStep.getBlock().getVideo() == null) {
+            AsyncTask<Void, Void, VideoLoadedEvent> resolveTask = new AsyncTask<Void, Void, VideoLoadedEvent>() {
+                @Override
+                protected VideoLoadedEvent doInBackground(Void... params) {
+                    //if in database not valid step (when video is loading, step has null download reference to video)
+                    //try to load from web this step with many references:
+                    long stepId = mStep.getId();
+                    long stepArray[] = new long[]{stepId};
+                    try {
+                        Step stepFromWeb = mShell.getApi().getSteps(stepArray).execute().body().getSteps().get(0);
+                        Video video = stepFromWeb.getBlock().getVideo();
+                        if (video != null) {
+                            return new VideoLoadedEvent(stepFromWeb.getBlock().getVideo().getThumbnail(), stepFromWeb.getId(), mVideoResolver.resolveVideoUrl(video));
+                        }
+                        return null;
+                    } catch (IOException e) {
+
+                        YandexMetrica.reportError("can't Resolve video", e);
+                        e.printStackTrace();
+                        return null; // can't RESOLVE
+                    }
+                }
+
+                @Override
+                protected void onPostExecute(VideoLoadedEvent event) {
+                    super.onPostExecute(event);
+                    if (event != null) {
+                        bus.post(event);
+                    }
+                }
+            };
+            resolveTask.execute();
+
         }
 
 
@@ -89,20 +115,7 @@ public class VideoStepFragment extends FragmentStepBase {
                     protected String doInBackground(Void... params) {
                         Video video = mStep.getBlock().getVideo();
                         if (video == null) {
-                            //if in database not valid step (when video is loading, step has null download reference to video)
-                            //try to load from web this step with many references:
-                            long stepId = mStep.getId();
-                            long stepArray[] = new long[]{stepId};
-                            try {
-                                Step stepFromWeb = mShell.getApi().getSteps(stepArray).execute().body().getSteps().get(0);
-                                return mVideoResolver.resolveVideoUrl(stepFromWeb.getBlock().getVideo());
-                            } catch (IOException e) {
-
-                                YandexMetrica.reportError("can't Resolve video", e);
-                                e.printStackTrace();
-                                return null; // can't RESOLVE
-                            }
-
+                            return tempVideoUrl;
                         } else {
                             return mVideoResolver.resolveVideoUrl(mStep.getBlock().getVideo());
                         }
@@ -112,13 +125,39 @@ public class VideoStepFragment extends FragmentStepBase {
                     protected void onPostExecute(String url) {
                         super.onPostExecute(url);
 
-                        if (url != null)
+                        if (url != null) {
                             bus.post(new VideoResolvedEvent(mStep.getBlock().getVideo(), url));
+                            Log.i("Video", "postvideoresolved");
+                        }
                     }
                 };
                 resolveTask.execute();
             }
         });
+    }
+
+    private String tempVideoUrl = null;
+
+    @Subscribe
+    public void onVideoLoaded(VideoLoadedEvent e) {
+        if (e.getStepId() != mStep.getId()) return;
+
+        setmThumbnail(e.getThumbnail());
+        tempVideoUrl = e.getVideoUrl();
+    }
+
+    private void setmThumbnail(String thumbnail) {
+        Uri uri;
+        if (thumbnail.startsWith("http")) {
+            uri = Uri.parse(thumbnail);
+        } else {
+            uri = Uri.fromFile(new File(thumbnail));
+        }
+        Picasso.with(getContext())
+                .load(uri)
+                .placeholder(mVideoPlaceholder)
+                .error(mVideoPlaceholder)
+                .into(mThumbnail);
     }
 
     @Override
@@ -166,10 +205,6 @@ public class VideoStepFragment extends FragmentStepBase {
 
     @Subscribe
     public void onVideoResolved(VideoResolvedEvent e) {
-        if (mStep.getBlock().getVideo() == null || e.getVideo() == null || mStep.getBlock().getVideo().getId() != e.getVideo().getId())
-            return;
-//todo: if video == null, than show message.
-
         Uri videoUri = Uri.parse(e.getPathToVideo());
         Log.i(TAG, videoUri.getEncodedPath());
 
@@ -184,10 +219,5 @@ public class VideoStepFragment extends FragmentStepBase {
         }
 
     }
-//
-//    @Subscribe
-//    public void onPermissionRestricted(MemoryPermissionDeniedEvent e) {
-//        Toast.makeText(getContext(), R.string.turn_on_permission, Toast.LENGTH_LONG).show();
-//    }
 
 }

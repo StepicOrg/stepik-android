@@ -11,9 +11,9 @@ public class VideoResolvedEvent {
         mPathToVideo = pathToVideo;
     }
 
-    public Video getVideo() {
-        return mVideo;
-    }
+//    public Video getVideo() {
+//        return mVideo;
+//    }
 
     public String getPathToVideo() {
         return mPathToVideo;
