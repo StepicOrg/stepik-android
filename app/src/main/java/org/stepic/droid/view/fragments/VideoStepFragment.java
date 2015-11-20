@@ -107,17 +107,18 @@ public class VideoStepFragment extends FragmentStepBase {
 
 
         mPlayer.setOnClickListener(new View.OnClickListener() {
+            Step localStep = mStep;
             @Override
             public void onClick(View v) {
                 // TODO: 16.10.15 change icon to loading
                 AsyncTask<Void, Void, String> resolveTask = new AsyncTask<Void, Void, String>() {
                     @Override
                     protected String doInBackground(Void... params) {
-                        Video video = mStep.getBlock().getVideo();
+                        Video video = localStep.getBlock().getVideo();
                         if (video == null) {
                             return tempVideoUrl;
                         } else {
-                            return mVideoResolver.resolveVideoUrl(mStep.getBlock().getVideo());
+                            return mVideoResolver.resolveVideoUrl(localStep.getBlock().getVideo());
                         }
                     }
 
@@ -126,7 +127,7 @@ public class VideoStepFragment extends FragmentStepBase {
                         super.onPostExecute(url);
 
                         if (url != null) {
-                            bus.post(new VideoResolvedEvent(mStep.getBlock().getVideo(), url));
+                            bus.post(new VideoResolvedEvent(localStep.getBlock().getVideo(), url, localStep.getId()));
                             Log.i("Video", "postvideoresolved");
                         }
                     }
@@ -205,6 +206,7 @@ public class VideoStepFragment extends FragmentStepBase {
 
     @Subscribe
     public void onVideoResolved(VideoResolvedEvent e) {
+        if (e.getStepId() != mStep.getId()) return;
         Uri videoUri = Uri.parse(e.getPathToVideo());
         Log.i(TAG, videoUri.getEncodedPath());
 
