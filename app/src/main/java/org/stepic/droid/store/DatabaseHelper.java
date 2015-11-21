@@ -34,17 +34,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //todo: remake to incremental db
-        db.execSQL("DROP TABLE IF EXISTS " + DBStructureCourses.ENROLLED_COURSES);
-        db.execSQL("DROP TABLE IF EXISTS " + DBStructureCourses.FEATURED_COURSES);
-        db.execSQL("DROP TABLE IF EXISTS " + DbStructureSections.SECTIONS);
-        db.execSQL("DROP TABLE IF EXISTS " + DbStructureCachedVideo.CACHED_VIDEO);
-        db.execSQL("DROP TABLE IF EXISTS " + DbStructureUnit.UNITS);
-        db.execSQL("DROP TABLE IF EXISTS " + DbStructureLesson.LESSONS);
-        db.execSQL("DROP TABLE IF EXISTS " + DbStructureStep.STEPS);
-        db.execSQL("DROP TABLE IF EXISTS " + DbStructureBlock.BLOCKS);
-        db.execSQL("DROP TABLE IF EXISTS " + DbStructureSharedDownloads.SHARED_DOWNLOADS);
-        onCreate(db);
+        if (oldVersion < 2) {
+            //update from 1 to 2
+        }
+
+        if (oldVersion < 3) {
+            //update from 2 to 3
+        }
     }
 
     private void createCourseTable(SQLiteDatabase db, String name) {
