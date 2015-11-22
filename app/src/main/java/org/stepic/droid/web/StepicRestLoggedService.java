@@ -46,4 +46,7 @@ public interface StepicRestLoggedService {
 
     @DELETE("api/enrollments/{id}")
     Call<Void> dropCourse(@Path("id") long courseId);
+
+    @GET("api/progresses")
+    Call<ProgressesResponse> getProgresses(@Query("ids[]") String[] progresses);
 }

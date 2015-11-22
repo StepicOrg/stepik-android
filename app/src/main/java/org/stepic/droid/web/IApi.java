@@ -29,4 +29,6 @@ public interface IApi {
 
     Call<Void> dropCourse (long courseId);
 
+    Call<ProgressesResponse> getProgresses (String [] progresses);
+
 }
