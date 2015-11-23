@@ -38,7 +38,7 @@ import retrofit.Retrofit;
 
 public class StepsActivity extends FragmentActivityBase {
 
-//    public final static String KEY_INDEX_CURRENT_FRAGMENT = "key_index";
+    //    public final static String KEY_INDEX_CURRENT_FRAGMENT = "key_index";
     public final static String KEY_COUNT_CURRENT_FRAGMENT = "key_count";
 
 
@@ -68,7 +68,7 @@ public class StepsActivity extends FragmentActivityBase {
     private ToDbStepTask saveStepsTask;
     private FromDbStepTask getFromDbStepsTask;
 
-//    private int lastSavedPosition;
+    //    private int lastSavedPosition;
     private int mCount;
 
     @Override
@@ -78,8 +78,7 @@ public class StepsActivity extends FragmentActivityBase {
         if (savedInstanceState == null) {
 //            lastSavedPosition = -1;
             mCount = -1;
-        }
-        else {
+        } else {
             mCount = savedInstanceState.getInt(KEY_COUNT_CURRENT_FRAGMENT);
         }
         overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
@@ -96,6 +95,27 @@ public class StepsActivity extends FragmentActivityBase {
         setTitle(mLesson.getTitle());
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Step step = mStepList.get(position);
+                if (mStepResolver.isViewiedStatePost(step)){
+                    //try to push viewed state to the server
+
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         if (mLesson != null && mLesson.getSteps() != null && mLesson.getSteps().length != 0 && !isLoaded)
             updateSteps();

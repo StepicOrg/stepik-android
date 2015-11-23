@@ -7,5 +7,8 @@ import org.stepic.droid.model.Step;
 
 public interface IStepResolver {
     Drawable getDrawableForType(String type, boolean viewed);
-    FragmentStepBase getFragment (Step step);
+
+    FragmentStepBase getFragment(Step step);
+
+    boolean isViewiedStatePost(Step step);
 }

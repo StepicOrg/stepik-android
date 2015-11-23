@@ -11,6 +11,7 @@ import com.squareup.otto.Bus;
 import org.stepic.droid.R;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.util.resolvers.IStepResolver;
 
 import javax.inject.Inject;
 
@@ -27,6 +28,9 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     @Inject
     protected Bus bus;
+
+    @Inject
+    protected IStepResolver mStepResolver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

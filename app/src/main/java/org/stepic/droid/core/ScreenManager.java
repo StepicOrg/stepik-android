@@ -10,12 +10,14 @@ import android.os.Bundle;
 import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.NotNull;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.services.DeleteService;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.view.activities.CourseDetailActivity;
@@ -26,6 +28,7 @@ import org.stepic.droid.view.activities.RegisterActivity;
 import org.stepic.droid.view.activities.SectionActivity;
 import org.stepic.droid.view.activities.StepsActivity;
 import org.stepic.droid.view.activities.UnitsActivity;
+import org.stepic.droid.web.ViewAssignmentWrapper;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -148,6 +151,16 @@ public class ScreenManager implements IScreenManager {
         String url = mConfig.getBaseUrl() + "/accounts/password/reset/";
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
         context.startActivity(intent);
+    }
+
+    @Override
+    public void pushToViewedQueue(ViewAssignmentWrapper viewAssignmentWrapper) {
+
+        Intent loadIntent = new Intent(MainApplication.getAppContext(), DeleteService.class);
+
+        loadIntent.putExtra(AppConstants.KEY_STEP_BUNDLE, viewAssignmentWrapper.getStep());
+        loadIntent.putExtra(AppConstants.KEY_ASSIGNMENT_BUNDLE, viewAssignmentWrapper.getAssignment());
+        MainApplication.getAppContext().startService(loadIntent);
     }
 
 }

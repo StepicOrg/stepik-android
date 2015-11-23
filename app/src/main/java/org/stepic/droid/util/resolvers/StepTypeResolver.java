@@ -87,4 +87,22 @@ public class StepTypeResolver implements IStepResolver {
         }
     }
 
+    public boolean isViewiedStatePost(Step step) {
+        if (step == null
+                || step.getBlock() == null
+                || step.getBlock().getName() == null
+                || step.getBlock().getName() == "")
+            return false;
+
+        String type = step.getBlock().getName();
+        switch (type) {
+            case AppConstants.TYPE_VIDEO:
+                return true;
+            case AppConstants.TYPE_TEXT:
+                return true;
+            default:
+                return false;
+        }
+    }
+
 }

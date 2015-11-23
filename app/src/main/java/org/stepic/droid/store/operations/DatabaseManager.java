@@ -24,7 +24,9 @@ import org.stepic.droid.store.structure.DbStructureSections;
 import org.stepic.droid.store.structure.DbStructureSharedDownloads;
 import org.stepic.droid.store.structure.DbStructureStep;
 import org.stepic.droid.store.structure.DbStructureUnit;
+import org.stepic.droid.store.structure.DbStructureViewQueue;
 import org.stepic.droid.util.DbParseHelper;
+import org.stepic.droid.web.ViewAssignmentWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1456,5 +1458,56 @@ public class DatabaseManager extends DbManagerBase {
     private Cursor getDownloadEntitiesCursor() {
         return database.query(DbStructureSharedDownloads.SHARED_DOWNLOADS,
                 DbStructureSharedDownloads.getUsedColumns(), null, null, null, null, null);
+    }
+
+    public void addToQueueViewedState(ViewAssignmentWrapper viewState) {
+        try {
+            open();
+            ContentValues values = new ContentValues();
+
+            values.put(DbStructureViewQueue.Column.ASSIGNMENT_ID, viewState.getAssignment());
+            values.put(DbStructureViewQueue.Column.STEP_ID, viewState.getStep());
+
+            database.insert(DbStructureViewQueue.VIEW_QUEUE, null, values);
+        } finally {
+            close();
+        }
+    }
+
+    private ViewAssignmentWrapper parseViewAssignmentWrapper(Cursor cursor) {
+        int indexStepId = cursor.getColumnIndex(DbStructureViewQueue.Column.STEP_ID);
+        int indexAssignmentId = cursor.getColumnIndex(DbStructureViewQueue.Column.ASSIGNMENT_ID);
+
+
+        long stepId = cursor.getLong(indexStepId);
+        long assignmentId = cursor.getLong(indexAssignmentId);
+
+        return new ViewAssignmentWrapper(assignmentId, stepId);
+    }
+
+    public List<ViewAssignmentWrapper> getAllInQueue() {
+        try {
+            open();
+            List<ViewAssignmentWrapper> queue = new ArrayList<>();
+            Cursor cursor = getQueue();
+
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                ViewAssignmentWrapper viewState = parseViewAssignmentWrapper(cursor);
+                queue.add(viewState);
+                cursor.moveToNext();
+            }
+            cursor.close();
+            return queue;
+
+        } finally {
+            close();
+        }
+    }
+
+
+    private Cursor getQueue() {
+        return database.query(DbStructureViewQueue.VIEW_QUEUE,
+                DbStructureViewQueue.getUsedColumns(), null, null, null, null, null);
     }
 }
