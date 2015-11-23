@@ -80,4 +80,5 @@ public class AppConstants {
     public static final String NULL_SHOW_PROFILE = "Null profile is tried to show";
     public static final String IMAGE_ON_DISK = "Image on disk";
     public static final String METRICA_GET_PROGRESSES = "Get progresses";
+    public static final String METRICA_GET_ASSIGNMENTS = "Get assignments";
 }

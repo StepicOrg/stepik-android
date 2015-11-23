@@ -167,6 +167,12 @@ public class RetrofitRESTApi implements IApi {
         return mLoggedService.getProgresses(progresses);
     }
 
+    @Override
+    public Call<AssignmentResponse> getAssignments(long[] assignmentsIds) {
+        YandexMetrica.reportEvent("Api: " + AppConstants.METRICA_GET_ASSIGNMENTS);
+        return mLoggedService.getAssignments(assignmentsIds);
+    }
+
     private void setAuthenticatorClientIDAndPassword(OkHttpClient httpClient) {
         httpClient.setAuthenticator(new Authenticator() {
             //            private int mCounter = 0;

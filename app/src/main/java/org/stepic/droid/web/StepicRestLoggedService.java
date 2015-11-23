@@ -49,4 +49,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/progresses")
     Call<ProgressesResponse> getProgresses(@Query("ids[]") String[] progresses);
+
+    @GET("api/assignments")
+    Call<AssignmentResponse> getAssignments(@Query("ids[]") long[] assignmentsIds);
 }

@@ -31,4 +31,6 @@ public interface IApi {
 
     Call<ProgressesResponse> getProgresses (String [] progresses);
 
+    Call<AssignmentResponse> getAssignments (long[] assignmentsIds);
+
 }
