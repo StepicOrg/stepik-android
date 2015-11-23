@@ -66,21 +66,21 @@ public class ViewPusher extends IntentService {
 
         try {
             Response<Void> response = mApi.postViewed(new ViewAssignmentWrapper(assignmentId, stepId)).execute();
-            if (response.isSuccess())
-            {
-
-            }
-            else
-            {
+            if (!response.isSuccess()) {
                 throw new IOException("response is not success");
             }
         } catch (IOException e) {
             e.printStackTrace();
 
             //if we not push:
-            // FIXME: 23.11.15 
-
+            // FIXME: 23.11.15
+            mDb.addToQueueViewedState(new ViewAssignmentWrapper(stepId, assignmentId));
         }
+
+        //anyway check in db as viewed:
+
+
+
 
     }
 }
