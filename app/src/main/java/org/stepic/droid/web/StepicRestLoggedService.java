@@ -52,4 +52,10 @@ public interface StepicRestLoggedService {
 
     @GET("api/assignments")
     Call<AssignmentResponse> getAssignments(@Query("ids[]") long[] assignmentsIds);
+
+
+    @Headers({"Content-Type : application/json"})
+    @POST("api/views")
+    Call<Void> postViewed (@Body ViewAssignmentWrapper stepAssignment);
+
 }

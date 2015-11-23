@@ -173,6 +173,11 @@ public class RetrofitRESTApi implements IApi {
         return mLoggedService.getAssignments(assignmentsIds);
     }
 
+    @Override
+    public Call<Void> postViewed(ViewAssignmentWrapper stepAssignment) {
+        return mLoggedService.postViewed(stepAssignment);
+    }
+
     private void setAuthenticatorClientIDAndPassword(OkHttpClient httpClient) {
         httpClient.setAuthenticator(new Authenticator() {
             //            private int mCounter = 0;
