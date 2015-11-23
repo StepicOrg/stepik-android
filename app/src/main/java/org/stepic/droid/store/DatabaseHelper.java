@@ -10,6 +10,7 @@ import org.stepic.droid.store.structure.DbStructureAssignment;
 import org.stepic.droid.store.structure.DbStructureBlock;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
 import org.stepic.droid.store.structure.DbStructureLesson;
+import org.stepic.droid.store.structure.DbStructureProgress;
 import org.stepic.droid.store.structure.DbStructureSections;
 import org.stepic.droid.store.structure.DbStructureSharedDownloads;
 import org.stepic.droid.store.structure.DbStructureStep;
@@ -32,6 +33,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         createStepsDb(db, DbStructureStep.STEPS);
         createBlocksDb(db, DbStructureBlock.BLOCKS);
         createShareDownloads(db, DbStructureSharedDownloads.SHARED_DOWNLOADS);
+
+        //from version 2:
+        createAssignment(db, DbStructureAssignment.ASSIGNMENTS);
+        createProgress(db, DbStructureProgress.PROGRESS);
     }
 
     @Override
@@ -39,6 +44,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 2) {
             //update from 1 to 2
             createAssignment(db, DbStructureAssignment.ASSIGNMENTS);
+            createProgress(db, DbStructureProgress.PROGRESS);
         }
 
         if (oldVersion < 3) {
@@ -227,6 +233,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureAssignment.Column.PROGRESS + " TEXT, "
                 + DbStructureAssignment.Column.CREATE_DATE + " TEXT, "
                 + DbStructureAssignment.Column.UPDATE_DATE + " TEXT "
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createProgress(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureProgress.Column.IS_PASSED + " BOOLEAN, "
+                + DbStructureProgress.Column.ID + " TEXT, "
+                + DbStructureProgress.Column.LAST_VIEWED + " TEXT, "
+                + DbStructureProgress.Column.SCORE + " INTEGER, "
+                + DbStructureProgress.Column.COST + " INTEGER, "
+                + DbStructureProgress.Column.N_STEPS + " INTEGER, "
+                + DbStructureProgress.Column.N_STEPS_PASSED + " INTEGER "
                 + ")";
         db.execSQL(sql);
     }
