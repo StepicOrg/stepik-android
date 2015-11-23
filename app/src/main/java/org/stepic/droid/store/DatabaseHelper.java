@@ -15,6 +15,7 @@ import org.stepic.droid.store.structure.DbStructureSections;
 import org.stepic.droid.store.structure.DbStructureSharedDownloads;
 import org.stepic.droid.store.structure.DbStructureStep;
 import org.stepic.droid.store.structure.DbStructureUnit;
+import org.stepic.droid.store.structure.DbStructureViewQueue;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -37,6 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //from version 2:
         createAssignment(db, DbStructureAssignment.ASSIGNMENTS);
         createProgress(db, DbStructureProgress.PROGRESS);
+        createViewQueue(db, DbStructureViewQueue.VIEW_QUEUE);
     }
 
     @Override
@@ -45,6 +47,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             //update from 1 to 2
             createAssignment(db, DbStructureAssignment.ASSIGNMENTS);
             createProgress(db, DbStructureProgress.PROGRESS);
+            createViewQueue(db, DbStructureViewQueue.VIEW_QUEUE);
         }
 
         if (oldVersion < 3) {
@@ -247,6 +250,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureProgress.Column.COST + " INTEGER, "
                 + DbStructureProgress.Column.N_STEPS + " INTEGER, "
                 + DbStructureProgress.Column.N_STEPS_PASSED + " INTEGER "
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createViewQueue(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureViewQueue.Column.STEP_ID + " LONG, "
+                + DbStructureViewQueue.Column.ASSIGNMENT_ID + " LONG "
                 + ")";
         db.execSQL(sql);
     }
