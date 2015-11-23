@@ -1,7 +1,9 @@
 package org.stepic.droid.view.activities;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -55,6 +57,31 @@ public class LoginActivity extends FragmentActivityBase {
 
         hideSoftKeypad();
 
+        mLoginText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    mPasswordText.requestFocus();
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+
+        mPasswordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    tryLogin();
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+
+
         mCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +91,6 @@ public class LoginActivity extends FragmentActivityBase {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideSoftKeypad();
                 YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_SIGN_IN_ON_SIGN_IN_SCREEN);
                 tryLogin();
             }
@@ -85,6 +111,7 @@ public class LoginActivity extends FragmentActivityBase {
     }
 
     private void tryLogin() {
+        hideSoftKeypad();
 
         String login = mLoginText.getText().toString().trim();
         String password = mPasswordText.getText().toString().trim();
