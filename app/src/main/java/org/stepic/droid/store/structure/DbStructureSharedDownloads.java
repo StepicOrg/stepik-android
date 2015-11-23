@@ -1,6 +1,6 @@
 package org.stepic.droid.store.structure;
 
-public class DbStructureSharedDownloads {
+public final class DbStructureSharedDownloads {
     private static String[] mUsedColumns = null;
 
     public static final String SHARED_DOWNLOADS = "shared_downloads";

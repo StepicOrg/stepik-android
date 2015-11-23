@@ -4,7 +4,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.stepic.droid.store.structure.DBStructureBase;
 import org.stepic.droid.store.structure.DBStructureCourses;
+import org.stepic.droid.store.structure.DbStructureAssignment;
 import org.stepic.droid.store.structure.DbStructureBlock;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
 import org.stepic.droid.store.structure.DbStructureLesson;
@@ -16,7 +18,7 @@ import org.stepic.droid.store.structure.DbStructureUnit;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public DatabaseHelper(Context context) {
-        super(context, DBStructureCourses.FILE_NAME, null, DBStructureCourses.VERSION);
+        super(context, DBStructureBase.FILE_NAME, null, DBStructureBase.VERSION);
     }
 
     @Override
@@ -36,6 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 2) {
             //update from 1 to 2
+            createAssignment(db, DbStructureAssignment.ASSIGNMENTS);
         }
 
         if (oldVersion < 3) {
@@ -211,6 +214,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureSharedDownloads.Column.STEP_ID + " LONG, "
                 + DbStructureSharedDownloads.Column.THUMBNAIL + " TEXT, "
                 + DbStructureSharedDownloads.Column.VIDEO_ID + " LONG "
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createAssignment(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureAssignment.Column.ASSIGNMENT_ID + " LONG, "
+                + DbStructureAssignment.Column.UNIT_ID + " LONG, "
+                + DbStructureAssignment.Column.STEP_ID + " LONG, "
+                + DbStructureAssignment.Column.PROGRESS + " TEXT, "
+                + DbStructureAssignment.Column.CREATE_DATE + " TEXT, "
+                + DbStructureAssignment.Column.UPDATE_DATE + " TEXT "
                 + ")";
         db.execSQL(sql);
     }

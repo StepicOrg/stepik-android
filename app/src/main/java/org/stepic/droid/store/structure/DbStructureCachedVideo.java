@@ -1,6 +1,6 @@
 package org.stepic.droid.store.structure;
 
-public class DbStructureCachedVideo extends DBStructureBase {
+public final class DbStructureCachedVideo extends DBStructureBase {
 
     private static String[] mUsedColumns = null;
 
