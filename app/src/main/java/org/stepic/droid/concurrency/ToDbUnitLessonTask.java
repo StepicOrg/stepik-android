@@ -4,6 +4,7 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.units.UnitLessonSavedEvent;
+import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.IProgressable;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;
@@ -61,7 +62,13 @@ public class ToDbUnitLessonTask extends StepicTask<Void, Void, Void> {
             mDatabaseManager.addProgress(item);
         }
 
+
         for (Unit unitItem : unitList) {
+
+            List<Assignment> assignments = mApi.getAssignments(unitItem.getAssignments()).execute().body().getAssignments();
+            for (Assignment item : assignments) {
+                mDatabaseManager.addAssignment(item);
+            }
             mDatabaseManager.addUnit(unitItem);
         }
         for (Lesson lessonItem : lessonList) {

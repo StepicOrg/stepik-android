@@ -12,6 +12,7 @@ import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
@@ -233,6 +234,7 @@ public class LoadService extends IntentService {
                     mDb.addProgress(item);
                 }
 
+
                 Response<LessonStepicResponse> response = mApi.getLessons(lessonsIds).execute();
                 if (response.isSuccess()) {
                     List<Lesson> lessons = response.body().getLessons();
@@ -243,7 +245,10 @@ public class LoadService extends IntentService {
 
                     for (Unit unit : units) {
                         Lesson lesson = idToLessonMap.get(unit.getLesson());
-
+                        List<Assignment> assignments = mApi.getAssignments(unit.getAssignments()).execute().body().getAssignments();
+                        for (Assignment item : assignments) {
+                            mDb.addAssignment(item);
+                        }
 
                         mDb.addUnit(unit);
                         mDb.addLesson(lesson);

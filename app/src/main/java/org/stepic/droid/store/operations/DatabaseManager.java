@@ -40,6 +40,30 @@ import javax.inject.Singleton;
 @Singleton
 public class DatabaseManager extends DbManagerBase {
 
+    public void addAssignment(Assignment assignment) {
+        try {
+            open();
+            ContentValues values = new ContentValues();
+
+            values.put(DbStructureAssignment.Column.ASSIGNMENT_ID, assignment.getId());
+            values.put(DbStructureAssignment.Column.CREATE_DATE, assignment.getCreate_date());
+            values.put(DbStructureAssignment.Column.PROGRESS, assignment.getProgress());
+            values.put(DbStructureAssignment.Column.STEP_ID, assignment.getStep());
+            values.put(DbStructureAssignment.Column.UNIT_ID, assignment.getUnit());
+            values.put(DbStructureAssignment.Column.UPDATE_DATE, assignment.getUpdate_date());
+
+
+            if (isAssignmentInDb(assignment.getId())) {
+                database.update(DbStructureAssignment.ASSIGNMENTS, values, DbStructureAssignment.Column.ASSIGNMENT_ID + "=" + assignment.getId(), null);
+            } else {
+                database.insert(DbStructureAssignment.ASSIGNMENTS, null, values);
+            }
+
+        } finally {
+            close();
+        }
+    }
+
     public enum Table {
         enrolled(DBStructureCourses.ENROLLED_COURSES),
         featured(DBStructureCourses.FEATURED_COURSES);
@@ -1595,7 +1619,7 @@ public class DatabaseManager extends DbManagerBase {
 
 
             if (isProgressInDb(progress.getId())) {
-                database.update(DbStructureProgress.PROGRESS, values, DbStructureProgress.Column.ID + "=" + progress.getId(), null);
+                database.update(DbStructureProgress.PROGRESS, values, DbStructureProgress.Column.ID + "=?", new String[]{progress.getId()});
             } else {
                 database.insert(DbStructureProgress.PROGRESS, null, values);
             }
@@ -1608,6 +1632,17 @@ public class DatabaseManager extends DbManagerBase {
     private boolean isProgressInDb(String progressId) {
         String Query = "Select * from " + DbStructureProgress.PROGRESS + " where " + DbStructureProgress.Column.ID + " =?";
         Cursor cursor = database.rawQuery(Query, new String[]{progressId});
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
+
+    private boolean isAssignmentInDb(long assignmentId) {
+        String Query = "Select * from " + DbStructureAssignment.ASSIGNMENTS + " where " + DbStructureAssignment.Column.ASSIGNMENT_ID + " =?";
+        Cursor cursor = database.rawQuery(Query, new String[]{assignmentId+""});
         if (cursor.getCount() <= 0) {
             cursor.close();
             return false;
