@@ -88,6 +88,10 @@
         <service
             android:name="org.stepic.droid.services.DeleteService"
             android:exported="true" />
+        <service
+            android:name="org.stepic.droid.services.ViewPusher"
+            android:exported="true" />
+
 
     </application>
 </manifest>

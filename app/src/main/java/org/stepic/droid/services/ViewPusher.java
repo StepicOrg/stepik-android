@@ -73,15 +73,11 @@ public class ViewPusher extends IntentService {
             e.printStackTrace();
 
             //if we not push:
-            // FIXME: 23.11.15
             mDb.addToQueueViewedState(new ViewAssignmentWrapper(stepId, assignmentId));
         }
 
         //anyway check in db as viewed:
-
-
-
-
+        mDb.markProgressAsPassed(assignmentId);
     }
 }
 
