@@ -15,6 +15,7 @@ import org.stepic.droid.concurrency.UpdateCourseTask;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.receivers.DownloadCompleteReceiver;
+import org.stepic.droid.receivers.InternetConnectionEnabledReceiver;
 import org.stepic.droid.services.DeleteService;
 import org.stepic.droid.services.LoadService;
 import org.stepic.droid.services.ViewPusher;
@@ -99,4 +100,6 @@ public interface StepicCoreComponent {
     void inject(ImageOnDisk imageOnDisk);
 
     void inject(ViewPusher viewPusher);
+
+    void inject(InternetConnectionEnabledReceiver internetConnectionEnabledReceiver);
 }

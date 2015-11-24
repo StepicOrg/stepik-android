@@ -82,6 +82,14 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name=".receivers.InternetConnectionEnabledReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name="org.stepic.droid.services.LoadService"
             android:exported="true" />

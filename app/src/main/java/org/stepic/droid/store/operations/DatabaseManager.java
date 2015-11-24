@@ -1509,6 +1509,20 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
+    public void removeFromQueue (ViewAssignmentWrapper viewAssignmentWrapper) {
+        try {
+            open();
+
+            long assignmentId = viewAssignmentWrapper.getAssignment();
+            database.delete(DbStructureViewQueue.VIEW_QUEUE,
+                    DbStructureViewQueue.Column.ASSIGNMENT_ID+ " = " + assignmentId,
+                    null);
+
+        } finally {
+            close();
+        }
+    }
+
 
     private Cursor getQueue() {
         return database.query(DbStructureViewQueue.VIEW_QUEUE,
