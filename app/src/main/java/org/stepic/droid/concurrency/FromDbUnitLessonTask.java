@@ -41,7 +41,7 @@ public class FromDbUnitLessonTask extends StepicTask<Void, Void, Pair<List<Unit>
         fromCacheUnits = mDataBaseManager.getAllUnitsOfSection(mSection.getId());
         for (Unit unit :fromCacheUnits) {
             String progressId = unit.getProgress();
-            unit.setIs_viewed_custom(mDataBaseManager.isViewed(progressId));
+            unit.setIs_viewed_custom(mDataBaseManager.isViewedPublicWrapper(progressId));
         }
 
 

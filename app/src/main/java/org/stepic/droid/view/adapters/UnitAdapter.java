@@ -107,8 +107,6 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         holder.unitTitle.setText(titleBuilder.toString());
 
-        String progressId = unit.getProgress();
-        boolean isViewed = mDbManager.isViewed(progressId);
 
         if (unit.is_viewed_custom()) {
             holder.viewedItem.setVisibility(View.INVISIBLE);

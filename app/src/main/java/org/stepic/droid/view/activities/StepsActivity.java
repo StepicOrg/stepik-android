@@ -21,10 +21,12 @@ import org.stepic.droid.events.steps.SuccessLoadStepEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.StepFragmentAdapter;
 import org.stepic.droid.web.StepResponse;
+import org.stepic.droid.web.ViewAssignmentWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,6 +109,7 @@ public class StepsActivity extends FragmentActivityBase {
                 Step step = mStepList.get(position);
                 if (mStepResolver.isViewiedStatePost(step)){
                     //try to push viewed state to the server
+//                    mShell.getScreenProvider().pushToViewedQueue(new ViewAssignmentWrapper());
 
                 }
             }

@@ -1209,6 +1209,9 @@ public class DatabaseManager extends DbManagerBase {
         unit.setIs_cached(cursor.getInt(indexIsCached) > 0);
         unit.setIs_loading(cursor.getInt(indexIsLoading) > 0);
 
+        boolean is_viewed = progressIsViewed(unit.getProgress());
+        unit.setIs_viewed_custom(is_viewed);
+
         return unit;
 
     }
@@ -1509,7 +1512,7 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
-    public void removeFromQueue (ViewAssignmentWrapper viewAssignmentWrapper) {
+    public void removeFromQueue(ViewAssignmentWrapper viewAssignmentWrapper) {
         try {
             open();
 
@@ -1603,8 +1606,8 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     private boolean isProgressInDb(String progressId) {
-        String Query = "Select * from " + DbStructureProgress.PROGRESS + " where " + DbStructureProgress.Column.ID + " = " + progressId;
-        Cursor cursor = database.rawQuery(Query, null);
+        String Query = "Select * from " + DbStructureProgress.PROGRESS + " where " + DbStructureProgress.Column.ID + " =?";
+        Cursor cursor = database.rawQuery(Query, new String[]{progressId});
         if (cursor.getCount() <= 0) {
             cursor.close();
             return false;
@@ -1613,29 +1616,28 @@ public class DatabaseManager extends DbManagerBase {
         return true;
     }
 
-    public boolean isViewed(String progressId) {
+    public boolean isViewedPublicWrapper(String progressId) {
         try {
             open();
-
-            String Query = "Select * from " + DbStructureProgress.PROGRESS+ " where " + DbStructureProgress.Column.ID + " = " + progressId;
-            Cursor cursor = database.rawQuery(Query, null);
-
-            cursor.moveToFirst();
-
-            if (!cursor.isAfterLast()) {
-                boolean progress = progressIsViewed(cursor);
-                cursor.close();
-                return progress;
-            }
-            cursor.close();
-            return false;
+            return progressIsViewed(progressId);
         } finally {
             close();
         }
     }
 
-    private boolean progressIsViewed(Cursor cursor) {
-        return cursor.getInt(cursor.getColumnIndex(DbStructureProgress.Column.IS_PASSED)) > 0;
+    private boolean progressIsViewed(String progressId) {
+        String Query = "Select * from " + DbStructureProgress.PROGRESS + " where " + DbStructureProgress.Column.ID + " =?";
+        Cursor cursor = database.rawQuery(Query, new String[]{progressId});
+
+        cursor.moveToFirst();
+
+        if (!cursor.isAfterLast()) {
+            boolean progress = cursor.getInt(cursor.getColumnIndex(DbStructureProgress.Column.IS_PASSED)) > 0;
+            cursor.close();
+            return progress;
+        }
+        cursor.close();
+        return false;
     }
 
 }
