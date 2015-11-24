@@ -13,7 +13,7 @@ import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.web.IApi;
-import org.stepic.droid.web.ViewAssignmentWrapper;
+import org.stepic.droid.web.ViewAssignment;
 
 import java.io.IOException;
 
@@ -65,7 +65,7 @@ public class ViewPusher extends IntentService {
         if (stepId == -1 || assignmentId == -1) return;
 
         try {
-            Response<Void> response = mApi.postViewed(new ViewAssignmentWrapper(assignmentId, stepId)).execute();
+            Response<Void> response = mApi.postViewed(new ViewAssignment(assignmentId, stepId)).execute();
             if (!response.isSuccess()) {
                 throw new IOException("response is not success");
             }
@@ -73,7 +73,7 @@ public class ViewPusher extends IntentService {
             e.printStackTrace();
 
             //if we not push:
-            mDb.addToQueueViewedState(new ViewAssignmentWrapper(stepId, assignmentId));
+            mDb.addToQueueViewedState(new ViewAssignment(assignmentId, stepId));
         }
 
         //anyway check in db as viewed:

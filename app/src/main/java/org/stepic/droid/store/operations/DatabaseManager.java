@@ -30,7 +30,7 @@ import org.stepic.droid.store.structure.DbStructureStep;
 import org.stepic.droid.store.structure.DbStructureUnit;
 import org.stepic.droid.store.structure.DbStructureViewQueue;
 import org.stepic.droid.util.DbParseHelper;
-import org.stepic.droid.web.ViewAssignmentWrapper;
+import org.stepic.droid.web.ViewAssignment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +62,28 @@ public class DatabaseManager extends DbManagerBase {
         } finally {
             close();
         }
+    }
+
+
+    public long getAssignmentIdByStepId(long stepId) {
+        try {
+            open();
+            String Query = "Select * from " + DbStructureAssignment.ASSIGNMENTS + " where " + DbStructureAssignment.Column.STEP_ID + " =?";
+            Cursor cursor = database.rawQuery(Query, new String[]{stepId + ""});
+
+            cursor.moveToFirst();
+
+            if (!cursor.isAfterLast()) {
+                long assignmentId = cursor.getLong(cursor.getColumnIndex(DbStructureAssignment.Column.ASSIGNMENT_ID));
+                cursor.close();
+                return assignmentId;
+            }
+            cursor.close();
+            return -1;
+        } finally {
+            close();
+        }
+
     }
 
     public enum Table {
@@ -1491,21 +1513,22 @@ public class DatabaseManager extends DbManagerBase {
                 DbStructureSharedDownloads.getUsedColumns(), null, null, null, null, null);
     }
 
-    public void addToQueueViewedState(ViewAssignmentWrapper viewState) {
+    public void addToQueueViewedState(ViewAssignment viewState) {
         try {
             open();
             ContentValues values = new ContentValues();
 
             values.put(DbStructureViewQueue.Column.ASSIGNMENT_ID, viewState.getAssignment());
             values.put(DbStructureViewQueue.Column.STEP_ID, viewState.getStep());
-
-            database.insert(DbStructureViewQueue.VIEW_QUEUE, null, values);
+            if (!isViewStateInDb(viewState.getAssignment())) {
+                database.insert(DbStructureViewQueue.VIEW_QUEUE, null, values);
+            }
         } finally {
             close();
         }
     }
 
-    private ViewAssignmentWrapper parseViewAssignmentWrapper(Cursor cursor) {
+    private ViewAssignment parseViewAssignmentWrapper(Cursor cursor) {
         int indexStepId = cursor.getColumnIndex(DbStructureViewQueue.Column.STEP_ID);
         int indexAssignmentId = cursor.getColumnIndex(DbStructureViewQueue.Column.ASSIGNMENT_ID);
 
@@ -1513,18 +1536,18 @@ public class DatabaseManager extends DbManagerBase {
         long stepId = cursor.getLong(indexStepId);
         long assignmentId = cursor.getLong(indexAssignmentId);
 
-        return new ViewAssignmentWrapper(assignmentId, stepId);
+        return new ViewAssignment(assignmentId, stepId);
     }
 
-    public List<ViewAssignmentWrapper> getAllInQueue() {
+    public List<ViewAssignment> getAllInQueue() {
         try {
             open();
-            List<ViewAssignmentWrapper> queue = new ArrayList<>();
+            List<ViewAssignment> queue = new ArrayList<>();
             Cursor cursor = getQueue();
 
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                ViewAssignmentWrapper viewState = parseViewAssignmentWrapper(cursor);
+                ViewAssignment viewState = parseViewAssignmentWrapper(cursor);
                 queue.add(viewState);
                 cursor.moveToNext();
             }
@@ -1536,7 +1559,7 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
-    public void removeFromQueue(ViewAssignmentWrapper viewAssignmentWrapper) {
+    public void removeFromQueue(ViewAssignment viewAssignmentWrapper) {
         try {
             open();
 
@@ -1642,7 +1665,18 @@ public class DatabaseManager extends DbManagerBase {
 
     private boolean isAssignmentInDb(long assignmentId) {
         String Query = "Select * from " + DbStructureAssignment.ASSIGNMENTS + " where " + DbStructureAssignment.Column.ASSIGNMENT_ID + " =?";
-        Cursor cursor = database.rawQuery(Query, new String[]{assignmentId+""});
+        Cursor cursor = database.rawQuery(Query, new String[]{assignmentId + ""});
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
+
+    private boolean isViewStateInDb(long assignmentId) {
+        String Query = "Select * from " + DbStructureViewQueue.VIEW_QUEUE + " where " + DbStructureViewQueue.Column.ASSIGNMENT_ID + " =?";
+        Cursor cursor = database.rawQuery(Query, new String[]{assignmentId + ""});
         if (cursor.getCount() <= 0) {
             cursor.close();
             return false;

@@ -1,5 +1,6 @@
 package org.stepic.droid.view.activities;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -21,12 +22,11 @@ import org.stepic.droid.events.steps.SuccessLoadStepEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.StepFragmentAdapter;
 import org.stepic.droid.web.StepResponse;
-import org.stepic.droid.web.ViewAssignmentWrapper;
+import org.stepic.droid.web.ViewAssignment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,10 +106,21 @@ public class StepsActivity extends FragmentActivityBase {
 
             @Override
             public void onPageSelected(int position) {
-                Step step = mStepList.get(position);
-                if (mStepResolver.isViewiedStatePost(step)){
+                if (mStepList.size() <= position) return;
+                final Step step = mStepList.get(position);
+
+                if (mStepResolver.isViewiedStatePost(step)) {
                     //try to push viewed state to the server
-//                    mShell.getScreenProvider().pushToViewedQueue(new ViewAssignmentWrapper());
+                    AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                        long stepId = step.getId();
+
+                        protected Void doInBackground(Void... params) {
+                            long assignmentID = mDbManager.getAssignmentIdByStepId(stepId);
+                            mShell.getScreenProvider().pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
+                            return null;
+                        }
+                    };
+                    task.execute();
 
                 }
             }

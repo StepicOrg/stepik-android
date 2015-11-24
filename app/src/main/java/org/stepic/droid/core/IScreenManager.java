@@ -9,7 +9,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.web.ViewAssignmentWrapper;
+import org.stepic.droid.web.ViewAssignment;
 
 public interface IScreenManager {
     void showLaunchScreen(Context context, boolean overrideAnimation);
@@ -34,6 +34,6 @@ public interface IScreenManager {
 
     void openRemindPassword(Context context);
 
-    void pushToViewedQueue(ViewAssignmentWrapper viewAssignmentWrapper);
+    void pushToViewedQueue(ViewAssignment viewAssignmentWrapper);
 
 }

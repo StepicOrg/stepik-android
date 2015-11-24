@@ -33,6 +33,6 @@ public interface IApi {
 
     Call<AssignmentResponse> getAssignments (long[] assignmentsIds);
 
-    Call<Void> postViewed (ViewAssignmentWrapper stepAssignment);
+    Call<Void> postViewed (ViewAssignment stepAssignment);
 
 }

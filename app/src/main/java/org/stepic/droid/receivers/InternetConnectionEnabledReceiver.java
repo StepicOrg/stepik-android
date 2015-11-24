@@ -5,17 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Handler;
 
-import com.squareup.okhttp.Response;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.web.IApi;
-import org.stepic.droid.web.ViewAssignmentWrapper;
+import org.stepic.droid.web.ViewAssignment;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,12 +43,11 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
         if (!isOnline(MainApplication.getAppContext()) || inWork) return;
         inWork = true;
 
-        Handler handler = new Handler();
-        handler.post(new Runnable() {
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
-            public void run() {
-                List<ViewAssignmentWrapper> list = databaseManager.getAllInQueue();
-                for (ViewAssignmentWrapper item : list) {
+            protected Void doInBackground(Void... params) {
+                List<ViewAssignment> list = databaseManager.getAllInQueue();
+                for (ViewAssignment item : list) {
                     try {
                         retrofit.Response<Void> response = mApi.postViewed(item).execute();
                         if (response.isSuccess()) {
@@ -61,8 +59,11 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
                     }
                 }
                 inWork = false;
+
+                return null;
             }
-        });
+        };
+task.execute();
 
     }
 

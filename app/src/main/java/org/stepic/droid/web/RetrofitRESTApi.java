@@ -174,8 +174,8 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
-    public Call<Void> postViewed(ViewAssignmentWrapper stepAssignment) {
-        return mLoggedService.postViewed(stepAssignment);
+    public Call<Void> postViewed(ViewAssignment stepAssignment) {
+        return mLoggedService.postViewed(new ViewAssignmentWrapper(stepAssignment.getAssignment(), stepAssignment.getStep()));
     }
 
     private void setAuthenticatorClientIDAndPassword(OkHttpClient httpClient) {

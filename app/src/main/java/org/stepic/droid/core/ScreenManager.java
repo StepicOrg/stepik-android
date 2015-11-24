@@ -17,7 +17,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.services.DeleteService;
+import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.view.activities.CourseDetailActivity;
@@ -28,7 +28,7 @@ import org.stepic.droid.view.activities.RegisterActivity;
 import org.stepic.droid.view.activities.SectionActivity;
 import org.stepic.droid.view.activities.StepsActivity;
 import org.stepic.droid.view.activities.UnitsActivity;
-import org.stepic.droid.web.ViewAssignmentWrapper;
+import org.stepic.droid.web.ViewAssignment;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -154,9 +154,9 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
-    public void pushToViewedQueue(ViewAssignmentWrapper viewAssignmentWrapper) {
+    public void pushToViewedQueue(ViewAssignment viewAssignmentWrapper) {
 
-        Intent loadIntent = new Intent(MainApplication.getAppContext(), DeleteService.class);
+        Intent loadIntent = new Intent(MainApplication.getAppContext(), ViewPusher.class);
 
         loadIntent.putExtra(AppConstants.KEY_STEP_BUNDLE, viewAssignmentWrapper.getStep());
         loadIntent.putExtra(AppConstants.KEY_ASSIGNMENT_BUNDLE, viewAssignmentWrapper.getAssignment());

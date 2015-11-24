@@ -1,19 +1,17 @@
 package org.stepic.droid.web;
 
 public class ViewAssignmentWrapper {
-    long assignment;
-    long step;
+    ViewAssignment view;
 
-    public ViewAssignmentWrapper(long assignment, long stepId) {
-        this.assignment = assignment;
-        this.step = stepId;
+    public ViewAssignmentWrapper(long assignmentId, long stepId) {
+        view = new ViewAssignment(assignmentId, stepId);
     }
 
     public long getAssignment() {
-        return assignment;
+        return view.getAssignment();
     }
 
     public long getStep() {
-        return step;
+        return view.getStep();
     }
 }
