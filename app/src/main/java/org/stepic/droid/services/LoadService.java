@@ -15,6 +15,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
@@ -24,6 +25,7 @@ import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.FileUtil;
+import org.stepic.droid.util.ProgressUtil;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.web.IApi;
@@ -152,7 +154,7 @@ public class LoadService extends IntentService {
             if (!mDb.isExistDownloadEntityByVideoId(fileId) && !downloadFolderAndFile.exists()) {
                 long downloadId = mSystemDownloadManager.enqueue(request);
                 String local_thumbnail = fileId + ".png";
-                String thumbnailsPath =  FileUtil.saveImageToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getDownloadFolder());
+                String thumbnailsPath = FileUtil.saveImageToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getDownloadFolder());
                 final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath);
                 mDb.addDownloadEntity(newEntity);
             }
@@ -226,6 +228,11 @@ public class LoadService extends IntentService {
             if (unitLessonResponse.isSuccess()) {
                 final List<Unit> units = unitLessonResponse.body().getUnits();
                 long[] lessonsIds = StepicLogicHelper.fromUnitsToLessonIds(units);
+                List<Progress> progresses = mApi.getProgresses(ProgressUtil.getAllProgresses(units)).execute().body().getProgresses();
+                for (Progress item : progresses) {
+                    mDb.addProgress(item);
+                }
+
                 Response<LessonStepicResponse> response = mApi.getLessons(lessonsIds).execute();
                 if (response.isSuccess()) {
                     List<Lesson> lessons = response.body().getLessons();

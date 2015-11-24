@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import java.io.Serializable;
 
-public class Unit implements Serializable, Parcelable {
+public class Unit implements Serializable, Parcelable, IProgressable {
     private long id;
     private long section;
     private long lesson;

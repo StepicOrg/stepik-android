@@ -4,10 +4,14 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.units.UnitLessonSavedEvent;
+import org.stepic.droid.model.IProgressable;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.util.ProgressUtil;
+import org.stepic.droid.web.IApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +27,9 @@ public class ToDbUnitLessonTask extends StepicTask<Void, Void, Void> {
 
     @Inject
     Bus mBus;
+
+    @Inject
+    IApi mApi;
 
     Section mSection;
 
@@ -49,6 +56,11 @@ public class ToDbUnitLessonTask extends StepicTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackgroundBody(Void... params) throws Exception {
+        List<Progress> progresses = mApi.getProgresses(ProgressUtil.getAllProgresses(unitList)).execute().body().getProgresses();
+        for (Progress item : progresses) {
+            mDatabaseManager.addProgress(item);
+        }
+
         for (Unit unitItem : unitList) {
             mDatabaseManager.addUnit(unitItem);
         }
