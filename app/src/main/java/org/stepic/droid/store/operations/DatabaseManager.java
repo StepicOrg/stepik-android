@@ -1515,7 +1515,7 @@ public class DatabaseManager extends DbManagerBase {
 
             long assignmentId = viewAssignmentWrapper.getAssignment();
             database.delete(DbStructureViewQueue.VIEW_QUEUE,
-                    DbStructureViewQueue.Column.ASSIGNMENT_ID+ " = " + assignmentId,
+                    DbStructureViewQueue.Column.ASSIGNMENT_ID + " = " + assignmentId,
                     null);
 
         } finally {
@@ -1612,4 +1612,30 @@ public class DatabaseManager extends DbManagerBase {
         cursor.close();
         return true;
     }
+
+    public boolean isViewed(String progressId) {
+        try {
+            open();
+
+            String Query = "Select * from " + DbStructureProgress.PROGRESS+ " where " + DbStructureProgress.Column.ID + " = " + progressId;
+            Cursor cursor = database.rawQuery(Query, null);
+
+            cursor.moveToFirst();
+
+            if (!cursor.isAfterLast()) {
+                boolean progress = progressIsViewed(cursor);
+                cursor.close();
+                return progress;
+            }
+            cursor.close();
+            return false;
+        } finally {
+            close();
+        }
+    }
+
+    private boolean progressIsViewed(Cursor cursor) {
+        return cursor.getInt(cursor.getColumnIndex(DbStructureProgress.Column.IS_PASSED)) > 0;
+    }
+
 }

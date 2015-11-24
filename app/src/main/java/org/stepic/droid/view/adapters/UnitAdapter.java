@@ -106,6 +106,16 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         titleBuilder.append(lesson.getTitle());
 
         holder.unitTitle.setText(titleBuilder.toString());
+
+        String progressId = unit.getProgress();
+        boolean isViewed = mDbManager.isViewed(progressId);
+
+        if (unit.is_viewed_custom()) {
+            holder.viewedItem.setVisibility(View.INVISIBLE);
+        } else {
+            holder.viewedItem.setVisibility(View.VISIBLE);
+        }
+
         if (unit.is_cached()) {
 
             // FIXME: 05.11.15 Delete course from cache. Set CLICK LISTENER.
@@ -235,6 +245,9 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         @Bind(R.id.load_button)
         View loadButton;
+
+        @Bind(R.id.viewed_item)
+        View viewedItem;
 
         public UnitViewHolder(View itemView, final StepicOnClickItemListener listener, final OnClickLoadListener loadListener) {
             super(itemView);

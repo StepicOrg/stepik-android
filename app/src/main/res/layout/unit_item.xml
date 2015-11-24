@@ -21,24 +21,37 @@
             android:orientation="horizontal"
             android:padding="@dimen/guideline_left_right_padding_list_item">
 
-            <RelativeLayout
+            <LinearLayout
+                android:padding="2dp"
+                android:layout_gravity="center_vertical"
                 android:id="@+id/unit_layout"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
+                <ImageView
+                    android:id="@+id/viewed_item"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_circle_green"
+                    android:padding="3dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginEnd="4dp"/>
+
                 <org.stepic.droid.view.custom.SDetailedCourseHeadersTV
+                    android:layout_gravity="center_vertical"
                     android:id="@+id/unit_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center|start"
                     android:layout_marginBottom="2dp"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="1.2 Super unit" />
 
 
-            </RelativeLayout>
+            </LinearLayout>
 
             <include layout="@layout/load_imageview"/>
 
