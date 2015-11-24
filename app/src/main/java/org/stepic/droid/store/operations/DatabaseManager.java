@@ -1516,11 +1516,11 @@ public class DatabaseManager extends DbManagerBase {
     }
 
 
-    public void updateProgressOfAssignment(long assignmentId) {
+    public void markProgressAsPassed(long assignmentId) {
         try {
             open();
 
-            String Query = "Select * from " + DbStructureAssignment.ASSIGNMENTS+ " where " + DbStructureAssignment.Column.ASSIGNMENT_ID + " = " + assignmentId;
+            String Query = "Select * from " + DbStructureAssignment.ASSIGNMENTS + " where " + DbStructureAssignment.Column.ASSIGNMENT_ID + " = " + assignmentId;
             Cursor cursor = database.rawQuery(Query, null);
 
             cursor.moveToFirst();
@@ -1529,8 +1529,12 @@ public class DatabaseManager extends DbManagerBase {
                 Assignment assignment = parseAssignment(cursor);
                 cursor.close();
                 String progressId = assignment.getProgress();
-                
-                //// FIXME: 11/23/2015 update progress to viewed
+
+                if (isProgressInDb(progressId)) {
+                    ContentValues values = new ContentValues();
+                    values.put(DbStructureProgress.Column.IS_PASSED, true);
+                    database.update(DbStructureProgress.PROGRESS, values, DbStructureProgress.Column.ID + "=" + progressId, null);
+                }
 
             }
             cursor.close();
@@ -1539,12 +1543,13 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
-    private Assignment parseAssignment (Cursor cursor) {
+
+    private Assignment parseAssignment(Cursor cursor) {
         Assignment assignment = new Assignment();
 
         int columnIndexAssignmentId = cursor.getColumnIndex(DbStructureAssignment.Column.ASSIGNMENT_ID);
         int columnIndexCreateDate = cursor.getColumnIndex(DbStructureAssignment.Column.CREATE_DATE);
-        int columnIndexProgress= cursor.getColumnIndex(DbStructureAssignment.Column.PROGRESS);
+        int columnIndexProgress = cursor.getColumnIndex(DbStructureAssignment.Column.PROGRESS);
         int columnIndexStepId = cursor.getColumnIndex(DbStructureAssignment.Column.STEP_ID);
         int columnIndexUnitId = cursor.getColumnIndex(DbStructureAssignment.Column.UNIT_ID);
         int columnIndexUpdateDate = cursor.getColumnIndex(DbStructureAssignment.Column.UPDATE_DATE);
@@ -1572,7 +1577,7 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureProgress.Column.N_STEPS_PASSED, progress.getLast_viewed());
 
 
-            if (isProgressnDb(progress.getId())) {
+            if (isProgressInDb(progress.getId())) {
                 database.update(DbStructureProgress.PROGRESS, values, DbStructureProgress.Column.ID + "=" + progress.getId(), null);
             } else {
                 database.insert(DbStructureProgress.PROGRESS, null, values);
@@ -1583,7 +1588,7 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
-    private boolean isProgressnDb(String progressId) {
+    private boolean isProgressInDb(String progressId) {
         String Query = "Select * from " + DbStructureProgress.PROGRESS + " where " + DbStructureProgress.Column.ID + " = " + progressId;
         Cursor cursor = database.rawQuery(Query, null);
         if (cursor.getCount() <= 0) {
