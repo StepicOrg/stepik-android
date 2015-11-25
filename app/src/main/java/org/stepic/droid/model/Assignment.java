@@ -1,6 +1,6 @@
 package org.stepic.droid.model;
 
-public class Assignment {
+public class Assignment implements IProgressable {
     private long id;
     private long step;
     private long unit;

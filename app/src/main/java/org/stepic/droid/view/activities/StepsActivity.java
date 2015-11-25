@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -18,15 +19,20 @@ import org.stepic.droid.concurrency.FromDbStepTask;
 import org.stepic.droid.concurrency.ToDbStepTask;
 import org.stepic.droid.events.steps.FailLoadStepEvent;
 import org.stepic.droid.events.steps.FromDbStepEvent;
+import org.stepic.droid.events.steps.UpdateStepEvent;
+import org.stepic.droid.events.steps.UpdateStepsState;
 import org.stepic.droid.events.steps.SuccessLoadStepEvent;
 import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.ProgressUtil;
 import org.stepic.droid.view.adapters.StepFragmentAdapter;
 import org.stepic.droid.web.AssignmentResponse;
+import org.stepic.droid.web.ProgressesResponse;
 import org.stepic.droid.web.StepResponse;
 import org.stepic.droid.web.ViewAssignment;
 
@@ -69,6 +75,10 @@ public class StepsActivity extends FragmentActivityBase {
     private boolean isLoaded;
 
 
+    private volatile boolean isAssignmentsUpdated = false;
+    private volatile boolean isProgressUpdated = false;
+
+
     private ToDbStepTask saveStepsTask;
     private FromDbStepTask getFromDbStepsTask;
 
@@ -92,32 +102,6 @@ public class StepsActivity extends FragmentActivityBase {
         mUnit = (Unit) (getIntent().getExtras().get(AppConstants.KEY_UNIT_BUNDLE));
         mLesson = (Lesson) (getIntent().getExtras().get(AppConstants.KEY_LESSON_BUNDLE));
 
-        mShell.getApi().getAssignments(mUnit.getAssignments()).enqueue(new Callback<AssignmentResponse>() {
-            @Override
-            public void onResponse(Response<AssignmentResponse> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
-                    final List<Assignment> assignments = response.body().getAssignments();
-                    Thread thread = new Thread(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                            for (Assignment item : assignments) {
-                                mDbManager.addAssignment(item);
-                            }
-                        }
-                    });
-                    thread.start();
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-
-            }
-        });
-
-
 
         mStepList = new ArrayList<>();
         mStepAdapter = new StepFragmentAdapter(getSupportFragmentManager(), this, mStepList, mLesson, mUnit, mCount);
@@ -138,7 +122,7 @@ public class StepsActivity extends FragmentActivityBase {
                 if (mStepList.size() <= position) return;
                 final Step step = mStepList.get(position);
 
-                if (mStepResolver.isViewiedStatePost(step)) {
+                if (mStepResolver.isViewedStatePost(step) && !step.is_custom_passed()) {
                     //try to push viewed state to the server
                     AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                         long stepId = step.getId();
@@ -203,14 +187,127 @@ public class StepsActivity extends FragmentActivityBase {
     public void onSuccessLoad(SuccessLoadStepEvent e) {
         //// FIXME: 10.10.15 check right lesson ?? is it need?
         StepResponse stepicResponse = e.getResponse().body();
-        List<Step> steps = stepicResponse.getSteps();
+        final List<Step> steps = stepicResponse.getSteps();
 
         if (steps.isEmpty()) {
             bus.post(new FailLoadStepEvent());
         } else {
 //            ToDbStepTask task = new ToDbStepTask(mLesson, steps);
 //            task.execute();
-            showSteps(steps);
+
+            mShell.getApi().getAssignments(mUnit.getAssignments()).enqueue(new Callback<AssignmentResponse>() {
+                @Override
+                public void onResponse(Response<AssignmentResponse> response, Retrofit retrofit) {
+                    if (response.isSuccess()) {
+                        final List<Assignment> assignments = response.body().getAssignments();
+                        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... params) {
+                                for (Assignment item : assignments) {
+                                    mDbManager.addAssignment(item);
+                                }
+                                return null;
+                            }
+                        };
+                        task.execute();
+
+                        final String[] progressIds = ProgressUtil.getAllProgresses(assignments);
+                        mShell.getApi().getProgresses(progressIds).enqueue(new Callback<ProgressesResponse>() {
+                            Unit localUnit = mUnit;
+
+                            @Override
+                            public void onResponse(final Response<ProgressesResponse> response, Retrofit retrofit) {
+                                if (response.isSuccess()) {
+                                    AsyncTask<Void, Void, Void> task1 = new AsyncTask<Void, Void, Void>() {
+                                        List<Progress> progresses;
+
+                                        @Override
+                                        protected Void doInBackground(Void... params) {
+                                            progresses = response.body().getProgresses();
+                                            for (Progress item : progresses) {
+                                                mDbManager.addProgress(item);
+                                            }
+                                            return null;
+                                        }
+
+                                        @Override
+                                        protected void onPostExecute(Void aVoid) {
+                                            super.onPostExecute(aVoid);
+                                            bus.post(new UpdateStepsState(localUnit, steps));
+                                        }
+                                    };
+                                    task1.execute();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+
+                            }
+                        });
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+
+                }
+            });
+
+
+        }
+    }
+
+
+
+    @Subscribe
+    public void onUpdateStepsState(final UpdateStepsState e) {
+        if (e.getUnit().getId() != mUnit.getId()) return;
+
+        final List<Step> localSteps = e.getSteps();
+
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                for (Step item : localSteps) {
+                    item.setIs_custom_passed(mDbManager.isStepPassed(item.getId()));
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                if (mStepList != null && mStepAdapter != null && mTabLayout != null) {
+                    Log.i("update", "update ui");
+                    showSteps(localSteps);
+                }
+            }
+        };
+        task.execute();
+    }
+
+    @Subscribe
+    public void onUpdateOneStep (UpdateStepEvent e) {
+        long stepId = e.getStepId();
+        Step step = null;
+        if (mStepList != null){
+            for (Step item : mStepList){
+                if (item.getId() == stepId) {
+                    step = item;
+                }
+            }
+        }
+
+        if (step!=null) {
+            step.setIs_custom_passed(true);
+            int pos = mViewPager.getCurrentItem();
+
+            mStepAdapter.notifyDataSetChanged();
+            updateTabs();
+            mTabLayout.setVisibility(View.VISIBLE);
+            mViewPager.setCurrentItem(pos, false);
         }
     }
 

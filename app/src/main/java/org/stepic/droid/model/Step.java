@@ -19,6 +19,15 @@ public class Step implements Parcelable, Serializable {
     private String update_date;
     private boolean is_cached;
     private boolean is_loading;
+    private boolean is_custom_passed;
+
+    public boolean is_custom_passed() {
+        return is_custom_passed;
+    }
+
+    public void setIs_custom_passed(boolean is_custom_passed) {
+        this.is_custom_passed = is_custom_passed;
+    }
 
     public boolean is_loading() {
         return is_loading;
@@ -147,6 +156,7 @@ public class Step implements Parcelable, Serializable {
         dest.writeString(this.update_date);
         dest.writeByte(is_cached ? (byte) 1 : (byte) 0);
         dest.writeByte(is_loading ? (byte) 1 : (byte) 0);
+        dest.writeByte(is_custom_passed ? (byte) 1 : (byte) 0);
     }
 
     protected Step(Parcel in) {
@@ -163,6 +173,7 @@ public class Step implements Parcelable, Serializable {
         this.update_date = in.readString();
         this.is_cached = in.readByte() != 0;
         this.is_loading = in.readByte() != 0;
+        this.is_custom_passed = in.readByte() != 0;
     }
 
     public static final Creator<Step> CREATOR = new Creator<Step>() {

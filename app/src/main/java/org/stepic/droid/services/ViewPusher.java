@@ -3,10 +3,12 @@ package org.stepic.droid.services;
 import android.app.DownloadManager;
 import android.app.IntentService;
 import android.content.Intent;
+import android.os.Handler;
 
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseManager;
@@ -37,10 +39,6 @@ public class ViewPusher extends IntentService {
     @Inject
     IStoreStateManager mStoreStateManager;
 
-    public enum LoadTypeKey {
-        Course, Section, UnitLesson, Step
-    }
-
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -60,7 +58,7 @@ public class ViewPusher extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        long stepId = intent.getLongExtra(AppConstants.KEY_STEP_BUNDLE, -1);
+        final long stepId = intent.getLongExtra(AppConstants.KEY_STEP_BUNDLE, -1);
         long assignmentId = intent.getLongExtra(AppConstants.KEY_ASSIGNMENT_BUNDLE, -1);
         if (stepId == -1 || assignmentId == -1) return;
 
@@ -78,6 +76,14 @@ public class ViewPusher extends IntentService {
 
         //anyway check in db as viewed:
         mDb.markProgressAsPassed(assignmentId);
+        // Get a handler that can be used to post to the main thread
+        Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
+
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {mBus.post(new UpdateStepEvent(stepId));} // This is your code
+        };
+        mainHandler.post(myRunnable);
     }
 }
 

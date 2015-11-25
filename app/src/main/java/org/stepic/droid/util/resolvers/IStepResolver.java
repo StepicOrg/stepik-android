@@ -10,5 +10,5 @@ public interface IStepResolver {
 
     FragmentStepBase getFragment(Step step);
 
-    boolean isViewiedStatePost(Step step);
+    boolean isViewedStatePost(Step step);
 }

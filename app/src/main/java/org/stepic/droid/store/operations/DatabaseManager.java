@@ -1453,6 +1453,7 @@ public class DatabaseManager extends DbManagerBase {
         step.setPosition(cursor.getLong(columnIndexPosition));
         step.setIs_cached(cursor.getInt(columnIndexIsCached) > 0);
         step.setIs_loading(cursor.getInt(columnIndexIsLoading) > 0);
+        step.setIs_custom_passed(isAssignmentByStepViewed(step.getId()));
 
         String Query = "Select * from " + DbStructureBlock.BLOCKS + " where " + DbStructureBlock.Column.STEP_ID + " = " + step.getId();
         Cursor blockCursor = database.rawQuery(Query, null);
@@ -1707,6 +1708,31 @@ public class DatabaseManager extends DbManagerBase {
         }
         cursor.close();
         return false;
+    }
+
+    private boolean isAssignmentByStepViewed(long stepId) {
+        String Query = "Select * from " + DbStructureAssignment.ASSIGNMENTS + " where " + DbStructureAssignment.Column.STEP_ID + " =?";
+        Cursor cursor = database.rawQuery(Query, new String[]{stepId + ""});
+
+        cursor.moveToFirst();
+
+        if (!cursor.isAfterLast()) {
+            String progressId = cursor.getString(cursor.getColumnIndex(DbStructureAssignment.Column.PROGRESS));
+            cursor.close();
+            return progressIsViewed(progressId);
+        }
+        cursor.close();
+        return false;
+    }
+
+    public boolean isStepPassed(long stepId) {
+        try{
+            open();
+            return isAssignmentByStepViewed(stepId);
+        }
+        finally {
+            close();
+        }
     }
 
 }
