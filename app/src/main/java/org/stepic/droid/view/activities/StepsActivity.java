@@ -19,12 +19,14 @@ import org.stepic.droid.concurrency.ToDbStepTask;
 import org.stepic.droid.events.steps.FailLoadStepEvent;
 import org.stepic.droid.events.steps.FromDbStepEvent;
 import org.stepic.droid.events.steps.SuccessLoadStepEvent;
+import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.StepFragmentAdapter;
+import org.stepic.droid.web.AssignmentResponse;
 import org.stepic.droid.web.StepResponse;
 import org.stepic.droid.web.ViewAssignment;
 
@@ -89,6 +91,33 @@ public class StepsActivity extends FragmentActivityBase {
 
         mUnit = (Unit) (getIntent().getExtras().get(AppConstants.KEY_UNIT_BUNDLE));
         mLesson = (Lesson) (getIntent().getExtras().get(AppConstants.KEY_LESSON_BUNDLE));
+
+        mShell.getApi().getAssignments(mUnit.getAssignments()).enqueue(new Callback<AssignmentResponse>() {
+            @Override
+            public void onResponse(Response<AssignmentResponse> response, Retrofit retrofit) {
+                if (response.isSuccess()) {
+                    final List<Assignment> assignments = response.body().getAssignments();
+                    Thread thread = new Thread(new Runnable() {
+
+                        @Override
+                        public void run() {
+
+                            for (Assignment item : assignments) {
+                                mDbManager.addAssignment(item);
+                            }
+                        }
+                    });
+                    thread.start();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+
+
 
         mStepList = new ArrayList<>();
         mStepAdapter = new StepFragmentAdapter(getSupportFragmentManager(), this, mStepList, mLesson, mUnit, mCount);

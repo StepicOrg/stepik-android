@@ -1,5 +1,7 @@
 package org.stepic.droid.concurrency;
 
+import android.util.Log;
+
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.base.MainApplication;
@@ -23,21 +25,20 @@ public class ToDbUnitLessonTask extends StepicTask<Void, Void, Void> {
 
     private final List<Unit> unitList;
     private final List<Lesson> lessonList;
+    private List<Progress> progresses;
     @Inject
     DatabaseManager mDatabaseManager;
 
     @Inject
     Bus mBus;
 
-    @Inject
-    IApi mApi;
-
     Section mSection;
 
-    public ToDbUnitLessonTask(Section section, List<Unit> unitList, List<Lesson> lessonList) {
+    public ToDbUnitLessonTask(Section section, List<Unit> unitList, List<Lesson> lessonList, List<Progress> progresses) {
         super(MainApplication.getAppContext());
         this.unitList = unitList;
         this.lessonList = lessonList;
+        this.progresses = progresses;
         MainApplication.component().inject(this);
         mSection = section;
 
@@ -57,18 +58,12 @@ public class ToDbUnitLessonTask extends StepicTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackgroundBody(Void... params) throws Exception {
-        List<Progress> progresses = mApi.getProgresses(ProgressUtil.getAllProgresses(unitList)).execute().body().getProgresses();
+        Log.i("downloading", "save unit to db");
         for (Progress item : progresses) {
             mDatabaseManager.addProgress(item);
         }
-
-
+        
         for (Unit unitItem : unitList) {
-
-            List<Assignment> assignments = mApi.getAssignments(unitItem.getAssignments()).execute().body().getAssignments();
-            for (Assignment item : assignments) {
-                mDatabaseManager.addAssignment(item);
-            }
             mDatabaseManager.addUnit(unitItem);
         }
         for (Lesson lessonItem : lessonList) {
