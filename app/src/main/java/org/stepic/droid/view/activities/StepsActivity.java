@@ -119,23 +119,7 @@ public class StepsActivity extends FragmentActivityBase {
 
             @Override
             public void onPageSelected(int position) {
-                if (mStepList.size() <= position) return;
-                final Step step = mStepList.get(position);
-
-                if (mStepResolver.isViewedStatePost(step) && !step.is_custom_passed()) {
-                    //try to push viewed state to the server
-                    AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                        long stepId = step.getId();
-
-                        protected Void doInBackground(Void... params) {
-                            long assignmentID = mDbManager.getAssignmentIdByStepId(stepId);
-                            mShell.getScreenProvider().pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
-                            return null;
-                        }
-                    };
-                    task.execute();
-
-                }
+               pushState(position);
             }
 
             @Override
@@ -146,6 +130,29 @@ public class StepsActivity extends FragmentActivityBase {
 
         if (mLesson != null && mLesson.getSteps() != null && mLesson.getSteps().length != 0 && !isLoaded)
             updateSteps();
+    }
+
+    private void pushState(int position) {
+        if (mStepList.size() <= position) return;
+        final Step step = mStepList.get(position);
+
+        final int local = position;
+        if (mStepResolver.isViewedStatePost(step) && !step.is_custom_passed()) {
+            //try to push viewed state to the server
+            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                long stepId = step.getId();
+
+                protected Void doInBackground(Void... params) {
+                    long assignmentID = mDbManager.getAssignmentIdByStepId(stepId);
+
+                    Log.i("push", "push " + local);
+                    mShell.getScreenProvider().pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
+                    return null;
+                }
+            };
+            task.execute();
+
+        }
     }
 
 
@@ -260,7 +267,6 @@ public class StepsActivity extends FragmentActivityBase {
     }
 
 
-
     @Subscribe
     public void onUpdateStepsState(final UpdateStepsState e) {
         if (e.getUnit().getId() != mUnit.getId()) return;
@@ -289,25 +295,25 @@ public class StepsActivity extends FragmentActivityBase {
     }
 
     @Subscribe
-    public void onUpdateOneStep (UpdateStepEvent e) {
+    public void onUpdateOneStep(UpdateStepEvent e) {
         long stepId = e.getStepId();
         Step step = null;
-        if (mStepList != null){
-            for (Step item : mStepList){
+        if (mStepList != null) {
+            for (Step item : mStepList) {
                 if (item.getId() == stepId) {
                     step = item;
                 }
             }
         }
 
-        if (step!=null) {
+        if (step != null) {
             step.setIs_custom_passed(true);
             int pos = mViewPager.getCurrentItem();
 
-            mStepAdapter.notifyDataSetChanged();
-            updateTabs();
-            mTabLayout.setVisibility(View.VISIBLE);
-            mViewPager.setCurrentItem(pos, false);
+            for (int i = 0; i < mStepAdapter.getCount(); i++) {
+                TabLayout.Tab tab = mTabLayout.getTabAt(i);
+                tab.setIcon(mStepAdapter.getTabDrawable(i));
+            }
         }
     }
 
@@ -328,6 +334,7 @@ public class StepsActivity extends FragmentActivityBase {
         mTabLayout.setVisibility(View.VISIBLE);
         ProgressHelper.dismiss(mProgressBar);
         isLoaded = true;
+        pushState(mViewPager.getCurrentItem());
 //        if (lastSavedPosition >= 0) {
 //            mViewPager.setCurrentItem(lastSavedPosition, false);
 //        }
