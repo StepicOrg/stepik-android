@@ -192,6 +192,17 @@ public class LoadService extends IntentService {
         lesson = mDb.getLessonById(lesson.getId());
 
         try {
+            List<Assignment> assignments = mApi.getAssignments(unit.getAssignments()).execute().body().getAssignments();
+            for (Assignment item : assignments) {
+                mDb.addAssignment(item);
+
+            }
+
+            String [] ids = ProgressUtil.getAllProgresses(assignments);
+            List<Progress> progresses = mApi.getProgresses(ids).execute().body().getProgresses();
+            for (Progress item : progresses) {
+                mDb.addProgress(item);
+            }
             Response<StepResponse> response = mApi.getSteps(lesson.getSteps()).execute();
             if (response.isSuccess()) {
                 List<Step> steps = response.body().getSteps();
@@ -245,10 +256,7 @@ public class LoadService extends IntentService {
 
                     for (Unit unit : units) {
                         Lesson lesson = idToLessonMap.get(unit.getLesson());
-                        List<Assignment> assignments = mApi.getAssignments(unit.getAssignments()).execute().body().getAssignments();
-                        for (Assignment item : assignments) {
-                            mDb.addAssignment(item);
-                        }
+
 
                         mDb.addUnit(unit);
                         mDb.addLesson(lesson);
