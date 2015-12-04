@@ -1,12 +1,15 @@
 package org.stepic.droid.util.resolvers;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentStepBase;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.fragments.NotSupportedYetStepFragment;
@@ -75,12 +78,19 @@ public class StepTypeResolver implements IStepResolver {
         //todo:two maps for viewed and not, if viewed 1st map, not viewed the second?
         if (viewed) {
             Drawable drawable = mapFromTypeToDrawable.get(type);
-            if (drawable != null)
-                return drawable;
-            else
-                return mapFromTypeToDrawable.get(AppConstants.TYPE_TEXT);
-        }
-        else {
+            if (drawable == null)
+                drawable = mapFromTypeToDrawable.get(AppConstants.TYPE_TEXT);
+
+            int COLOR2 = 0;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                COLOR2 = MainApplication.getAppContext().getColor(R.color.stepic_viewed_steps);
+            } else {
+                COLOR2 = MainApplication.getAppContext().getResources().getColor(R.color.stepic_viewed_steps);
+            }
+            PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
+            drawable.setColorFilter(COLOR2, mMode);
+            return drawable;
+        } else {
             Drawable drawable = mapFromTypeToDrawableNotViewed.get(type);
             if (drawable != null)
                 return drawable;
