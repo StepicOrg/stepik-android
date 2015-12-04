@@ -86,6 +86,9 @@ public class CourseDetailActivity extends FragmentActivityBase {
     @BindString(R.string.join_course_exception)
     String joinCourseException;
 
+    @BindString(R.string.join_course_web_exception)
+    String joinCourseWebException;
+
 
     private Course mCourse;
     private List<User> mUserList;
@@ -272,7 +275,7 @@ public class CourseDetailActivity extends FragmentActivityBase {
                     bus.post(new SuccessJoinEvent(localCopy));
 
                 } else {
-                    bus.post(new FailJoinEvent());
+                    bus.post(new FailJoinEvent(response));
                 }
             }
 
@@ -293,8 +296,14 @@ public class CourseDetailActivity extends FragmentActivityBase {
 
     @Subscribe
     public void onFailJoin(FailJoinEvent e) {
-        Toast.makeText(CourseDetailActivity.this, joinCourseException,
-                Toast.LENGTH_LONG).show();
+        if (e.getResponse() != null && e.getResponse().code() == 403) {
+            Toast.makeText(CourseDetailActivity.this, joinCourseWebException, Toast.LENGTH_LONG).show();
+
+        } else {
+            Toast.makeText(CourseDetailActivity.this, joinCourseException,
+                    Toast.LENGTH_LONG).show();
+
+        }
         ProgressHelper.dismiss(mJoinCourseSpinner);
         mJoinCourseView.setEnabled(true);
 

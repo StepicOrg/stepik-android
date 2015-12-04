@@ -71,5 +71,6 @@
     <string name="sync_problem">Возникли проблемы с синхронизацией данных, пожалуйста, повторите попытку позже.</string>
     <string name="empty_courses">Похоже, что Вы не зарегистированы ни на один курс. Кликните, чтобы найти курсы!</string>
     <string name="cache_cleared">Кэш успешно очищен!</string>
+    <string name="join_course_web_exception">Попробуйте записаться на курс в веб версии</string>
 
 </resources>
