@@ -1,6 +1,7 @@
 package org.stepic.droid.base;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -113,7 +114,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
         registerForContextMenu(mListOfCourses);
 
-        mCoursesAdapter = new MyCoursesAdapter(getActivity(), mCourses, getCourseType());
+        mCoursesAdapter = new MyCoursesAdapter(this, mCourses, getCourseType());
         mListOfCourses.setAdapter(mCoursesAdapter);
 
         mListOfCourses.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -322,7 +323,11 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
         //We do not upgrade database, because when
         //Only for find courses event.
 
-        Course courseForUpdate = e.getCourse();
+        updateEnrollment(e.getCourse(), e.getCourse().getEnrollment());
+    }
+
+    private void updateEnrollment(Course courseForUpdate, long enrollment) {
+
         boolean inList = false;
         for (Course courseItem : mCourses) {
             if (courseItem.getCourseId() == courseForUpdate.getCourseId()) {
@@ -335,6 +340,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
         if (!inList) {
             mCourses.add(courseForUpdate);
         }
+
     }
 
     @Override
@@ -452,8 +458,23 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     private void showInfo(int position) {
         YandexMetrica.reportEvent(AppConstants.SHOW_DETAILED_INFO_CLICK);
         Course course = mCourses.get(position);
-        mShell.getScreenProvider().showCourseDescription(getActivity(), course);
+        mShell.getScreenProvider().showCourseDescription(this, course);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("result", "onActivityResult: ");
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK) {
+            if (requestCode == AppConstants.REQUEST_CODE_DETAIL) {
+                Log.i("result", "reaction in courses fragment base");
+                Course course = data.getParcelableExtra(AppConstants.COURSE_ID_KEY);
+                int enrollment = data.getIntExtra(AppConstants.ENROLLMENT_KEY, 0);
+                if (course != null && enrollment != 0) {
+                    updateEnrollment(course, enrollment);
+                }
 
+            }
+        }
+    }
 }

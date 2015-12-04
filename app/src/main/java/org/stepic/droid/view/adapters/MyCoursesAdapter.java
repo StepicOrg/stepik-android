@@ -1,8 +1,8 @@
 package org.stepic.droid.view.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,15 +50,15 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
     @Inject
     CleanManager mCleaner;
 
-    private Activity mActivity;
+    private Fragment mFragment;
     private final DatabaseManager.Table type;
     private LayoutInflater mInflater;
 
-    public MyCoursesAdapter(Activity context, List<Course> courses, DatabaseManager.Table type) {
-        super(context, 0, courses);
-        mActivity = context;
+    public MyCoursesAdapter(Fragment fragment, List<Course> courses, DatabaseManager.Table type) {
+        super(fragment.getActivity(), 0, courses);
+        mFragment = fragment;
         this.type = type;
-        mInflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = (LayoutInflater) mFragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         MainApplication.component().inject(this);
 
@@ -80,7 +80,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         }
         viewHolderItem.courseName.setText(course.getTitle());
         viewHolderItem.courseSummary.setText(HtmlHelper.fromHtml(course.getSummary()));
-        Picasso.with(mActivity).load(mConfig.getBaseUrl() + course.getCover()).
+        Picasso.with(mFragment.getActivity()).load(mConfig.getBaseUrl() + course.getCover()).
                 placeholder(viewHolderItem.placeholder).into(viewHolderItem.courseIcon);
         viewHolderItem.courseDateInterval.setText(course.getDateOfCourse());
 
@@ -88,9 +88,9 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
             @Override
             public void onClick(View v) {
                 if (course.getEnrollment() != 0) {
-                    mShell.getScreenProvider().showSections(mActivity, course);
+                    mShell.getScreenProvider().showSections(mFragment.getActivity(), course);
                 } else {
-                    mShell.getScreenProvider().showCourseDescription(mActivity, course);
+                    mShell.getScreenProvider().showCourseDescription(mFragment, course);
                 }
             }
         });
@@ -146,7 +146,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 //                            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
 //                                cacheCourse(course);
 //                            } else {
-//                                if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
+//                                if (ActivityCompat.shouldShowRequestPermissionRationale(mFragment,
 //                                        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 //
 //                                    // Show an expanation to the user *asynchronously* -- don't block
@@ -154,13 +154,13 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 //                                    // sees the explanation, try again to request the permission.
 //
 //                                    ExplainPermissionDialog dialog = new ExplainPermissionDialog();
-//                                    dialog.show(mActivity.getFragmentManager(), null);
+//                                    dialog.show(mFragment.getFragmentManager(), null);
 //
 //                                } else {
 //
 //                                    // No explanation needed, we can request the permission.
 //
-//                                    ActivityCompat.requestPermissions(mActivity,
+//                                    ActivityCompat.requestPermissions(mFragment,
 //                                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 //                                            AppConstants.REQUEST_WIFI);
 //

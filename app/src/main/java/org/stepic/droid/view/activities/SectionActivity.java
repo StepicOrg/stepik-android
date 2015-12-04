@@ -40,7 +40,6 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class SectionActivity extends FragmentActivityBase implements SwipeRefreshLayout.OnRefreshListener {
-    private static final String TAG = "enrolledActivity";
 
     @Bind(R.id.swipe_refresh_layout_units)
     SwipeRefreshLayout mSwipeRefreshLayout;

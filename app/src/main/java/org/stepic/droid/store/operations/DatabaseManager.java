@@ -1702,6 +1702,7 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     private boolean progressIsViewed(String progressId) {
+        if (progressId == null) return false;
         String Query = "Select * from " + DbStructureProgress.PROGRESS + " where " + DbStructureProgress.Column.ID + " =?";
         Cursor cursor = database.rawQuery(Query, new String[]{progressId});
 

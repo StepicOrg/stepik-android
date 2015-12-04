@@ -2,6 +2,7 @@ package org.stepic.droid.core;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.app.Fragment;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.model.Course;
@@ -20,7 +21,7 @@ public interface IScreenManager {
 
     void showMainFeed(Context sourceActivity);
 
-    void showCourseDescription(Context sourceActivity, @NotNull Course course);
+    void showCourseDescription(Fragment sourceActivity, @NotNull Course course);
 
     void showSections(Context sourceActivity, @NotNull Course course);
 

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -104,29 +105,65 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             holder.hardDeadline.setVisibility(View.VISIBLE);
         }
 
-        if (section.is_cached()) {
+        if (section.is_active()) {
 
-            // FIXME: 05.11.15 Delete course from cache. Set CLICK LISTENER.
-            //cached
+            int strong_text_color;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                strong_text_color = MainApplication.getAppContext().getResources().getColor(R.color.stepic_regular_text, MainApplication.getAppContext().getTheme());
+            } else {
+                strong_text_color = MainApplication.getAppContext().getResources().getColor(R.color.stepic_regular_text);
+            }
 
-            holder.preLoadIV.setVisibility(View.GONE);
-            holder.whenLoad.setVisibility(View.INVISIBLE);
-            holder.afterLoad.setVisibility(View.VISIBLE); //can
+            holder.sectionTitle.setTextColor(strong_text_color);
+            holder.cv.setFocusable(false);
+            holder.cv.setClickable(true);
+            holder.cv.setFocusableInTouchMode(false);
 
-        } else {
-            if (section.is_loading()) {
+            holder.mLoadButton.setVisibility(View.VISIBLE);
+            if (section.is_cached()) {
+
+                // FIXME: 05.11.15 Delete course from cache. Set CLICK LISTENER.
+                //cached
 
                 holder.preLoadIV.setVisibility(View.GONE);
-                holder.whenLoad.setVisibility(View.VISIBLE);
-                holder.afterLoad.setVisibility(View.GONE);
-
-                //todo: add cancel of downloading
-            } else {
-                //not cached not loading
-                holder.preLoadIV.setVisibility(View.VISIBLE);
                 holder.whenLoad.setVisibility(View.INVISIBLE);
-                holder.afterLoad.setVisibility(View.GONE);
+                holder.afterLoad.setVisibility(View.VISIBLE); //can
+
+            } else {
+                if (section.is_loading()) {
+
+                    holder.preLoadIV.setVisibility(View.GONE);
+                    holder.whenLoad.setVisibility(View.VISIBLE);
+                    holder.afterLoad.setVisibility(View.GONE);
+
+                    //todo: add cancel of downloading
+                } else {
+                    //not cached not loading
+                    holder.preLoadIV.setVisibility(View.VISIBLE);
+                    holder.whenLoad.setVisibility(View.INVISIBLE);
+                    holder.afterLoad.setVisibility(View.GONE);
+                }
+
             }
+        } else {
+            //Not active section
+
+            holder.mLoadButton.setVisibility(View.GONE);
+            holder.preLoadIV.setVisibility(View.GONE);
+            holder.whenLoad.setVisibility(View.INVISIBLE);
+            holder.afterLoad.setVisibility(View.GONE);
+
+            int weak_text_color;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                weak_text_color = MainApplication.getAppContext().getColor(R.color.stepic_weak_text);
+            } else {
+                weak_text_color = MainApplication.getAppContext().getResources().getColor(R.color.stepic_weak_text);
+            }
+            holder.sectionTitle.setTextColor(weak_text_color);
+            holder.cv.setFocusable(false);
+            holder.cv.setClickable(false);
+            holder.cv.setFocusableInTouchMode(false);
+
 
         }
     }
@@ -201,6 +238,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
     }
 
     public static class SectionViewHolder extends RecyclerView.ViewHolder {
+
+        @Bind(R.id.cv)
+        View cv;
 
         @Bind(R.id.section_title)
         TextView sectionTitle;
