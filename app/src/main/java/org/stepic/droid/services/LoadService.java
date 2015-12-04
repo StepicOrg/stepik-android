@@ -231,7 +231,6 @@ public class LoadService extends IntentService {
             mStoreStateManager.updateUnitLessonState(lesson.getId());
         }
     }
-
     private void addSection(Section section) {
         //if user click to removeSection, then section already in database.
         section = mDb.getSectionById(section.getId());//make copy of section.
@@ -282,6 +281,7 @@ public class LoadService extends IntentService {
         }
     }
 
+    @Deprecated
     private void addCourse(Course course, DatabaseManager.Table type) {
         mDb.addCourse(course, type);
         course = mDb.getCourseById(course.getCourseId(), type); //make copy of course.

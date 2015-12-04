@@ -170,7 +170,7 @@ public class StepsActivity extends FragmentActivityBase {
         }
 
         if (e.getStepList() != null && e.getStepList().size() != 0) {
-            showSteps(e.getStepList());
+            bus.post(new UpdateStepsState(mUnit, e.getStepList()));
         } else {
             mShell.getApi().getSteps(mLesson.getSteps()).enqueue(new Callback<StepResponse>() {
                 @Override
@@ -302,6 +302,7 @@ public class StepsActivity extends FragmentActivityBase {
             for (Step item : mStepList) {
                 if (item.getId() == stepId) {
                     step = item;
+                    break;
                 }
             }
         }

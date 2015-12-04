@@ -27,6 +27,7 @@ public class DownloadManagerImpl implements IDownloadManager {
 
 
 
+    @Deprecated
     private void addStep(Step step, Lesson lesson) {
         Intent loadIntent = new Intent(MainApplication.getAppContext(), LoadService.class);
 
@@ -47,6 +48,7 @@ public class DownloadManagerImpl implements IDownloadManager {
         MainApplication.getAppContext().startService(loadIntent);
     }
 
+    @Deprecated
     @Override
     public void addCourse(final Course course, DatabaseManager.Table type) {
         Intent loadIntent = new Intent(MainApplication.getAppContext(), LoadService.class);

@@ -888,8 +888,11 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     private boolean isStepInDb(Step step) {
+        return isStepInDb(step.getId());
+    }
 
-        String Query = "Select * from " + DbStructureStep.STEPS + " where " + DbStructureStep.Column.STEP_ID + " = " + step.getId();
+    private boolean isStepInDb(long stepId) {
+        String Query = "Select * from " + DbStructureStep.STEPS + " where " + DbStructureStep.Column.STEP_ID + " = " + stepId;
         Cursor cursor = database.rawQuery(Query, null);
         if (cursor.getCount() <= 0) {
             cursor.close();
@@ -1440,6 +1443,7 @@ public class DatabaseManager extends DbManagerBase {
         int columnIndexPosition = cursor.getColumnIndex(DbStructureStep.Column.POSITION);
         int columnIndexIsCached = cursor.getColumnIndex(DbStructureStep.Column.IS_CACHED);
         int columnIndexIsLoading = cursor.getColumnIndex(DbStructureStep.Column.IS_LOADING);
+//        int columnIndexIsCustomViewed = cursor.getColumnIndex(DbStructureStep.Column.IS_CUSTOM_VIEWED);
 
         step.setId(cursor.getLong(columnIndexStepId));
         step.setLesson(cursor.getLong(columnIndexLessonId));
@@ -1453,7 +1457,9 @@ public class DatabaseManager extends DbManagerBase {
         step.setPosition(cursor.getLong(columnIndexPosition));
         step.setIs_cached(cursor.getInt(columnIndexIsCached) > 0);
         step.setIs_loading(cursor.getInt(columnIndexIsLoading) > 0);
+//        step.setIs_custom_passed(cursor.getInt(columnIndexIsCustomViewed) > 0);
         step.setIs_custom_passed(isAssignmentByStepViewed(step.getId()));
+
 
         String Query = "Select * from " + DbStructureBlock.BLOCKS + " where " + DbStructureBlock.Column.STEP_ID + " = " + step.getId();
         Cursor blockCursor = database.rawQuery(Query, null);
@@ -1598,7 +1604,7 @@ public class DatabaseManager extends DbManagerBase {
                 if (isProgressInDb(progressId)) {
                     ContentValues values = new ContentValues();
                     values.put(DbStructureProgress.Column.IS_PASSED, true);
-                    database.update(DbStructureProgress.PROGRESS, values, DbStructureProgress.Column.ID + "=" + progressId, null);
+                    database.update(DbStructureProgress.PROGRESS, values, DbStructureProgress.Column.ID + "=?", new String[]{progressId});
                 }
 
             }
@@ -1726,13 +1732,11 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public boolean isStepPassed(long stepId) {
-        try{
+        try {
             open();
             return isAssignmentByStepViewed(stepId);
-        }
-        finally {
+        } finally {
             close();
         }
     }
-
 }
