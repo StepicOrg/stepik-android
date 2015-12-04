@@ -4,19 +4,23 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.stepic.droid.store.structure.DBStructureBase;
 import org.stepic.droid.store.structure.DBStructureCourses;
+import org.stepic.droid.store.structure.DbStructureAssignment;
 import org.stepic.droid.store.structure.DbStructureBlock;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
 import org.stepic.droid.store.structure.DbStructureLesson;
+import org.stepic.droid.store.structure.DbStructureProgress;
 import org.stepic.droid.store.structure.DbStructureSections;
 import org.stepic.droid.store.structure.DbStructureSharedDownloads;
 import org.stepic.droid.store.structure.DbStructureStep;
 import org.stepic.droid.store.structure.DbStructureUnit;
+import org.stepic.droid.store.structure.DbStructureViewQueue;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public DatabaseHelper(Context context) {
-        super(context, DBStructureCourses.FILE_NAME, null, DBStructureCourses.VERSION);
+        super(context, DBStructureBase.FILE_NAME, null, DBStructureBase.VERSION);
     }
 
     @Override
@@ -30,21 +34,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         createStepsDb(db, DbStructureStep.STEPS);
         createBlocksDb(db, DbStructureBlock.BLOCKS);
         createShareDownloads(db, DbStructureSharedDownloads.SHARED_DOWNLOADS);
+
+        //from version 2:
+        createAssignment(db, DbStructureAssignment.ASSIGNMENTS);
+        createProgress(db, DbStructureProgress.PROGRESS);
+        createViewQueue(db, DbStructureViewQueue.VIEW_QUEUE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //todo: remake to incremental db
-        db.execSQL("DROP TABLE IF EXISTS " + DBStructureCourses.ENROLLED_COURSES);
-        db.execSQL("DROP TABLE IF EXISTS " + DBStructureCourses.FEATURED_COURSES);
-        db.execSQL("DROP TABLE IF EXISTS " + DbStructureSections.SECTIONS);
-        db.execSQL("DROP TABLE IF EXISTS " + DbStructureCachedVideo.CACHED_VIDEO);
-        db.execSQL("DROP TABLE IF EXISTS " + DbStructureUnit.UNITS);
-        db.execSQL("DROP TABLE IF EXISTS " + DbStructureLesson.LESSONS);
-        db.execSQL("DROP TABLE IF EXISTS " + DbStructureStep.STEPS);
-        db.execSQL("DROP TABLE IF EXISTS " + DbStructureBlock.BLOCKS);
-        db.execSQL("DROP TABLE IF EXISTS " + DbStructureSharedDownloads.SHARED_DOWNLOADS);
-        onCreate(db);
+        if (oldVersion < 2) {
+            //update from 1 to 2
+            createAssignment(db, DbStructureAssignment.ASSIGNMENTS);
+            createProgress(db, DbStructureProgress.PROGRESS);
+            createViewQueue(db, DbStructureViewQueue.VIEW_QUEUE);
+        }
+
+        if (oldVersion < 3) {
+            //update from 2 to 3
+        }
     }
 
     private void createCourseTable(SQLiteDatabase db, String name) {
@@ -215,6 +223,42 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureSharedDownloads.Column.STEP_ID + " LONG, "
                 + DbStructureSharedDownloads.Column.THUMBNAIL + " TEXT, "
                 + DbStructureSharedDownloads.Column.VIDEO_ID + " LONG "
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createAssignment(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureAssignment.Column.ASSIGNMENT_ID + " LONG, "
+                + DbStructureAssignment.Column.UNIT_ID + " LONG, "
+                + DbStructureAssignment.Column.STEP_ID + " LONG, "
+                + DbStructureAssignment.Column.PROGRESS + " TEXT, "
+                + DbStructureAssignment.Column.CREATE_DATE + " TEXT, "
+                + DbStructureAssignment.Column.UPDATE_DATE + " TEXT "
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createProgress(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureProgress.Column.IS_PASSED + " BOOLEAN, "
+                + DbStructureProgress.Column.ID + " TEXT, "
+                + DbStructureProgress.Column.LAST_VIEWED + " TEXT, "
+                + DbStructureProgress.Column.SCORE + " INTEGER, "
+                + DbStructureProgress.Column.COST + " INTEGER, "
+                + DbStructureProgress.Column.N_STEPS + " INTEGER, "
+                + DbStructureProgress.Column.N_STEPS_PASSED + " INTEGER "
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createViewQueue(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureViewQueue.Column.STEP_ID + " LONG, "
+                + DbStructureViewQueue.Column.ASSIGNMENT_ID + " LONG "
                 + ")";
         db.execSQL(sql);
     }

@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
 
 import com.squareup.otto.Subscribe;
@@ -23,13 +24,16 @@ import org.stepic.droid.events.units.LoadedFromDbUnitsLessonsEvent;
 import org.stepic.droid.events.units.SuccessLoadUnitsEvent;
 import org.stepic.droid.events.units.UnitLessonSavedEvent;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.ProgressUtil;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.view.adapters.UnitAdapter;
 import org.stepic.droid.web.LessonStepicResponse;
+import org.stepic.droid.web.ProgressesResponse;
 import org.stepic.droid.web.UnitStepicResponse;
 
 import java.util.ArrayList;
@@ -54,6 +58,10 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     @Bind(R.id.toolbar)
     android.support.v7.widget.Toolbar mToolbar;
+
+
+    @Bind(R.id.report_problem)
+    protected View mReportConnectionProblem;
 
 
     private Section mSection;
@@ -178,16 +186,33 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     }
 
     @Subscribe
-    public void onFinalSuccessDownloadFromWeb(SuccessLoadLessonsEvent e) {
+    public void onFinalSuccessDownloadFromWeb(final SuccessLoadLessonsEvent e) {
         if (mSection == null || e.getSection() == null
                 || e.getSection().getId() != mSection.getId())
             return;
 
-        saveToDb(e.getUnits(), e.getResponse().body().getLessons());
+        String[] progressIds = ProgressUtil.getAllProgresses(e.getUnits());
+
+        mShell.getApi().getProgresses(progressIds).enqueue(new Callback<ProgressesResponse>() {
+            List<Unit> units = e.getUnits();
+            List<Lesson> lessons = e.getResponse().body().getLessons();
+
+            public void onResponse(Response<ProgressesResponse> response, Retrofit retrofit) {
+
+                if (response.isSuccess()) {
+                    saveToDb(units, lessons, response.body().getProgresses());
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
     }
 
-    private void saveToDb(List<Unit> unitList, List<Lesson> lessonList) {
-        mToDbTask = new ToDbUnitLessonTask(mSection, unitList, lessonList);
+    private void saveToDb(List<Unit> unitList, List<Lesson> lessonList, List<Progress> progresses) {
+        mToDbTask = new ToDbUnitLessonTask(mSection, unitList, lessonList, progresses);
         mToDbTask.execute();
     }
 
@@ -198,6 +223,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
         mUnitList.clear();
         mUnitList.addAll(units);
+        dismissReport();
         mAdapter.notifyDataSetChanged();
 
         dismiss();
@@ -209,6 +235,10 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         if (mSection == null || e.getmSection() == null
                 || e.getmSection().getId() != mSection.getId())
             return;
+
+        if (mUnitList != null && mUnitList.size() == 0) {
+            mReportConnectionProblem.setVisibility(View.VISIBLE);
+        }
         dismiss();
     }
 
@@ -267,6 +297,12 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         updateUnits();
     }
 
+    private void dismissReport() {
+        if (mLessonList != null && mUnitList != null && mLessonList.size() != 0 && mUnitList.size() != 0) {
+            mReportConnectionProblem.setVisibility(View.GONE);
+        }
+    }
+
     @Subscribe
     public void onSuccessLoadFromDb(LoadedFromDbUnitsLessonsEvent e) {
         if (mSection != e.getSection()) return;
@@ -298,6 +334,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     @Subscribe
     public void onNotifyUI(NotifyUIUnitLessonEvent event) {
+        dismissReport();
         mAdapter.notifyDataSetChanged();
         mHandlerStateUpdating.postDelayed(mUpdatingRunnable, AppConstants.UI_UPDATING_TIME);
     }

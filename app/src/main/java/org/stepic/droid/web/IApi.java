@@ -29,4 +29,10 @@ public interface IApi {
 
     Call<Void> dropCourse (long courseId);
 
+    Call<ProgressesResponse> getProgresses (String [] progresses);
+
+    Call<AssignmentResponse> getAssignments (long[] assignmentsIds);
+
+    Call<Void> postViewed (ViewAssignment stepAssignment);
+
 }

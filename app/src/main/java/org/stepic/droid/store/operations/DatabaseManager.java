@@ -7,24 +7,30 @@ import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.Block;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.store.structure.DBStructureCourses;
+import org.stepic.droid.store.structure.DbStructureAssignment;
 import org.stepic.droid.store.structure.DbStructureBlock;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
 import org.stepic.droid.store.structure.DbStructureLesson;
+import org.stepic.droid.store.structure.DbStructureProgress;
 import org.stepic.droid.store.structure.DbStructureSections;
 import org.stepic.droid.store.structure.DbStructureSharedDownloads;
 import org.stepic.droid.store.structure.DbStructureStep;
 import org.stepic.droid.store.structure.DbStructureUnit;
+import org.stepic.droid.store.structure.DbStructureViewQueue;
 import org.stepic.droid.util.DbParseHelper;
+import org.stepic.droid.web.ViewAssignment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +39,52 @@ import javax.inject.Singleton;
 
 @Singleton
 public class DatabaseManager extends DbManagerBase {
+
+    public void addAssignment(Assignment assignment) {
+        try {
+            open();
+            ContentValues values = new ContentValues();
+
+            values.put(DbStructureAssignment.Column.ASSIGNMENT_ID, assignment.getId());
+            values.put(DbStructureAssignment.Column.CREATE_DATE, assignment.getCreate_date());
+            values.put(DbStructureAssignment.Column.PROGRESS, assignment.getProgress());
+            values.put(DbStructureAssignment.Column.STEP_ID, assignment.getStep());
+            values.put(DbStructureAssignment.Column.UNIT_ID, assignment.getUnit());
+            values.put(DbStructureAssignment.Column.UPDATE_DATE, assignment.getUpdate_date());
+
+
+            if (isAssignmentInDb(assignment.getId())) {
+                database.update(DbStructureAssignment.ASSIGNMENTS, values, DbStructureAssignment.Column.ASSIGNMENT_ID + "=" + assignment.getId(), null);
+            } else {
+                database.insert(DbStructureAssignment.ASSIGNMENTS, null, values);
+            }
+
+        } finally {
+            close();
+        }
+    }
+
+
+    public long getAssignmentIdByStepId(long stepId) {
+        try {
+            open();
+            String Query = "Select * from " + DbStructureAssignment.ASSIGNMENTS + " where " + DbStructureAssignment.Column.STEP_ID + " =?";
+            Cursor cursor = database.rawQuery(Query, new String[]{stepId + ""});
+
+            cursor.moveToFirst();
+
+            if (!cursor.isAfterLast()) {
+                long assignmentId = cursor.getLong(cursor.getColumnIndex(DbStructureAssignment.Column.ASSIGNMENT_ID));
+                cursor.close();
+                return assignmentId;
+            }
+            cursor.close();
+            return -1;
+        } finally {
+            close();
+        }
+
+    }
 
     public enum Table {
         enrolled(DBStructureCourses.ENROLLED_COURSES),
@@ -229,6 +281,7 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public boolean isCourseLoading(Course course, DatabaseManager.Table type) {
+        if (course == null) return false;//// FIXME: 18.11.15 investiagate why null
         try {
             open();
             String Query = "Select * from " + type.getStoreName() + " where " + DBStructureCourses.Column.COURSE_ID + " = " + course.getCourseId();
@@ -835,8 +888,11 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     private boolean isStepInDb(Step step) {
+        return isStepInDb(step.getId());
+    }
 
-        String Query = "Select * from " + DbStructureStep.STEPS + " where " + DbStructureStep.Column.STEP_ID + " = " + step.getId();
+    private boolean isStepInDb(long stepId) {
+        String Query = "Select * from " + DbStructureStep.STEPS + " where " + DbStructureStep.Column.STEP_ID + " = " + stepId;
         Cursor cursor = database.rawQuery(Query, null);
         if (cursor.getCount() <= 0) {
             cursor.close();
@@ -1202,6 +1258,9 @@ public class DatabaseManager extends DbManagerBase {
         unit.setIs_cached(cursor.getInt(indexIsCached) > 0);
         unit.setIs_loading(cursor.getInt(indexIsLoading) > 0);
 
+        boolean is_viewed = progressIsViewed(unit.getProgress());
+        unit.setIs_viewed_custom(is_viewed);
+
         return unit;
 
     }
@@ -1384,6 +1443,7 @@ public class DatabaseManager extends DbManagerBase {
         int columnIndexPosition = cursor.getColumnIndex(DbStructureStep.Column.POSITION);
         int columnIndexIsCached = cursor.getColumnIndex(DbStructureStep.Column.IS_CACHED);
         int columnIndexIsLoading = cursor.getColumnIndex(DbStructureStep.Column.IS_LOADING);
+//        int columnIndexIsCustomViewed = cursor.getColumnIndex(DbStructureStep.Column.IS_CUSTOM_VIEWED);
 
         step.setId(cursor.getLong(columnIndexStepId));
         step.setLesson(cursor.getLong(columnIndexLessonId));
@@ -1397,6 +1457,9 @@ public class DatabaseManager extends DbManagerBase {
         step.setPosition(cursor.getLong(columnIndexPosition));
         step.setIs_cached(cursor.getInt(columnIndexIsCached) > 0);
         step.setIs_loading(cursor.getInt(columnIndexIsLoading) > 0);
+//        step.setIs_custom_passed(cursor.getInt(columnIndexIsCustomViewed) > 0);
+        step.setIs_custom_passed(isAssignmentByStepViewed(step.getId()));
+
 
         String Query = "Select * from " + DbStructureBlock.BLOCKS + " where " + DbStructureBlock.Column.STEP_ID + " = " + step.getId();
         Cursor blockCursor = database.rawQuery(Query, null);
@@ -1455,5 +1518,225 @@ public class DatabaseManager extends DbManagerBase {
     private Cursor getDownloadEntitiesCursor() {
         return database.query(DbStructureSharedDownloads.SHARED_DOWNLOADS,
                 DbStructureSharedDownloads.getUsedColumns(), null, null, null, null, null);
+    }
+
+    public void addToQueueViewedState(ViewAssignment viewState) {
+        try {
+            open();
+            ContentValues values = new ContentValues();
+
+            values.put(DbStructureViewQueue.Column.ASSIGNMENT_ID, viewState.getAssignment());
+            values.put(DbStructureViewQueue.Column.STEP_ID, viewState.getStep());
+            if (!isViewStateInDb(viewState.getAssignment())) {
+                database.insert(DbStructureViewQueue.VIEW_QUEUE, null, values);
+            }
+        } finally {
+            close();
+        }
+    }
+
+    private ViewAssignment parseViewAssignmentWrapper(Cursor cursor) {
+        int indexStepId = cursor.getColumnIndex(DbStructureViewQueue.Column.STEP_ID);
+        int indexAssignmentId = cursor.getColumnIndex(DbStructureViewQueue.Column.ASSIGNMENT_ID);
+
+
+        long stepId = cursor.getLong(indexStepId);
+        long assignmentId = cursor.getLong(indexAssignmentId);
+
+        return new ViewAssignment(assignmentId, stepId);
+    }
+
+    public List<ViewAssignment> getAllInQueue() {
+        try {
+            open();
+            List<ViewAssignment> queue = new ArrayList<>();
+            Cursor cursor = getQueue();
+
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                ViewAssignment viewState = parseViewAssignmentWrapper(cursor);
+                queue.add(viewState);
+                cursor.moveToNext();
+            }
+            cursor.close();
+            return queue;
+
+        } finally {
+            close();
+        }
+    }
+
+    public void removeFromQueue(ViewAssignment viewAssignmentWrapper) {
+        try {
+            open();
+
+            long assignmentId = viewAssignmentWrapper.getAssignment();
+            database.delete(DbStructureViewQueue.VIEW_QUEUE,
+                    DbStructureViewQueue.Column.ASSIGNMENT_ID + " = " + assignmentId,
+                    null);
+
+        } finally {
+            close();
+        }
+    }
+
+
+    private Cursor getQueue() {
+        return database.query(DbStructureViewQueue.VIEW_QUEUE,
+                DbStructureViewQueue.getUsedColumns(), null, null, null, null, null);
+    }
+
+
+    public void markProgressAsPassed(long assignmentId) {
+        try {
+            open();
+
+            String Query = "Select * from " + DbStructureAssignment.ASSIGNMENTS + " where " + DbStructureAssignment.Column.ASSIGNMENT_ID + " = " + assignmentId;
+            Cursor cursor = database.rawQuery(Query, null);
+
+            cursor.moveToFirst();
+
+            if (!cursor.isAfterLast()) {
+                Assignment assignment = parseAssignment(cursor);
+                cursor.close();
+                String progressId = assignment.getProgress();
+
+                if (isProgressInDb(progressId)) {
+                    ContentValues values = new ContentValues();
+                    values.put(DbStructureProgress.Column.IS_PASSED, true);
+                    database.update(DbStructureProgress.PROGRESS, values, DbStructureProgress.Column.ID + "=?", new String[]{progressId});
+                }
+
+            }
+            cursor.close();
+        } finally {
+            close();
+        }
+    }
+
+
+    private Assignment parseAssignment(Cursor cursor) {
+        Assignment assignment = new Assignment();
+
+        int columnIndexAssignmentId = cursor.getColumnIndex(DbStructureAssignment.Column.ASSIGNMENT_ID);
+        int columnIndexCreateDate = cursor.getColumnIndex(DbStructureAssignment.Column.CREATE_DATE);
+        int columnIndexProgress = cursor.getColumnIndex(DbStructureAssignment.Column.PROGRESS);
+        int columnIndexStepId = cursor.getColumnIndex(DbStructureAssignment.Column.STEP_ID);
+        int columnIndexUnitId = cursor.getColumnIndex(DbStructureAssignment.Column.UNIT_ID);
+        int columnIndexUpdateDate = cursor.getColumnIndex(DbStructureAssignment.Column.UPDATE_DATE);
+
+        assignment.setCreate_date(cursor.getString(columnIndexCreateDate));
+        assignment.setId(cursor.getLong(columnIndexAssignmentId));
+        assignment.setProgress(cursor.getString(columnIndexProgress));
+        assignment.setStep(cursor.getLong(columnIndexStepId));
+        assignment.setUnit(cursor.getLong(columnIndexUnitId));
+        assignment.setUpdate_date(cursor.getString(columnIndexUpdateDate));
+        return assignment;
+    }
+
+    public void addProgress(Progress progress) {
+        try {
+            open();
+            ContentValues values = new ContentValues();
+
+            values.put(DbStructureProgress.Column.ID, progress.getId());
+            values.put(DbStructureProgress.Column.COST, progress.getCost());
+            values.put(DbStructureProgress.Column.SCORE, progress.getScore());
+            values.put(DbStructureProgress.Column.IS_PASSED, progress.is_passed());
+            values.put(DbStructureProgress.Column.LAST_VIEWED, progress.getLast_viewed());
+            values.put(DbStructureProgress.Column.N_STEPS, progress.getN_steps());
+            values.put(DbStructureProgress.Column.N_STEPS_PASSED, progress.getLast_viewed());
+
+
+            if (isProgressInDb(progress.getId())) {
+                database.update(DbStructureProgress.PROGRESS, values, DbStructureProgress.Column.ID + "=?", new String[]{progress.getId()});
+            } else {
+                database.insert(DbStructureProgress.PROGRESS, null, values);
+            }
+
+        } finally {
+            close();
+        }
+    }
+
+    private boolean isProgressInDb(String progressId) {
+        String Query = "Select * from " + DbStructureProgress.PROGRESS + " where " + DbStructureProgress.Column.ID + " =?";
+        Cursor cursor = database.rawQuery(Query, new String[]{progressId});
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
+
+    private boolean isAssignmentInDb(long assignmentId) {
+        String Query = "Select * from " + DbStructureAssignment.ASSIGNMENTS + " where " + DbStructureAssignment.Column.ASSIGNMENT_ID + " =?";
+        Cursor cursor = database.rawQuery(Query, new String[]{assignmentId + ""});
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
+
+    private boolean isViewStateInDb(long assignmentId) {
+        String Query = "Select * from " + DbStructureViewQueue.VIEW_QUEUE + " where " + DbStructureViewQueue.Column.ASSIGNMENT_ID + " =?";
+        Cursor cursor = database.rawQuery(Query, new String[]{assignmentId + ""});
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
+
+    public boolean isViewedPublicWrapper(String progressId) {
+        try {
+            open();
+            return progressIsViewed(progressId);
+        } finally {
+            close();
+        }
+    }
+
+    private boolean progressIsViewed(String progressId) {
+        String Query = "Select * from " + DbStructureProgress.PROGRESS + " where " + DbStructureProgress.Column.ID + " =?";
+        Cursor cursor = database.rawQuery(Query, new String[]{progressId});
+
+        cursor.moveToFirst();
+
+        if (!cursor.isAfterLast()) {
+            boolean progress = cursor.getInt(cursor.getColumnIndex(DbStructureProgress.Column.IS_PASSED)) > 0;
+            cursor.close();
+            return progress;
+        }
+        cursor.close();
+        return false;
+    }
+
+    private boolean isAssignmentByStepViewed(long stepId) {
+        String Query = "Select * from " + DbStructureAssignment.ASSIGNMENTS + " where " + DbStructureAssignment.Column.STEP_ID + " =?";
+        Cursor cursor = database.rawQuery(Query, new String[]{stepId + ""});
+
+        cursor.moveToFirst();
+
+        if (!cursor.isAfterLast()) {
+            String progressId = cursor.getString(cursor.getColumnIndex(DbStructureAssignment.Column.PROGRESS));
+            cursor.close();
+            return progressIsViewed(progressId);
+        }
+        cursor.close();
+        return false;
+    }
+
+    public boolean isStepPassed(long stepId) {
+        try {
+            open();
+            return isAssignmentByStepViewed(stepId);
+        } finally {
+            close();
+        }
     }
 }

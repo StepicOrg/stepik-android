@@ -1,6 +1,6 @@
 package org.stepic.droid.store.structure;
 
-public class DbStructureBlock extends DBStructureBase {
+public final class DbStructureBlock extends DBStructureBase {
     private static String[] mUsedColumns = null;
 
     public static final String BLOCKS = "blocks";

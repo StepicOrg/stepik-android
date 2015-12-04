@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:background="@color/stepic_white"
     android:clickable="true"
-    android:focusable="true"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
     android:foreground="@drawable/non_radius_foreground">
 
     <LinearLayout

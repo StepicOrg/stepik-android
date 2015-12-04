@@ -24,7 +24,7 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.view.dialogs.AreYouSureDialog;
+import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.fragments.FindCoursesFragment;
 import org.stepic.droid.view.fragments.MyCoursesFragment;
 import org.stepic.droid.view.fragments.SettingsFragment;
@@ -157,7 +157,7 @@ public class MainFeedActivity extends FragmentActivityBase
                 //todo: add 'Are you sure?" dialog
                 YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_LOGOUT);
 
-                AreYouSureDialog dialog = new AreYouSureDialog();
+                LogoutAreYouSureDialog dialog = new LogoutAreYouSureDialog();
                 dialog.show(getSupportFragmentManager(), null);
 
                 menuItem.setChecked(false);
@@ -231,6 +231,10 @@ public class MainFeedActivity extends FragmentActivityBase
     }
 
     private void showProfile(Profile profile) {
+        if (profile == null) {
+            YandexMetrica.reportError(AppConstants.NULL_SHOW_PROFILE, new NullPointerException());
+            return;
+        }
         mProfileImage.setVisibility(View.VISIBLE);
         Picasso.with(MainFeedActivity.this).load(profile.getAvatar()).
                 placeholder(mUserPlaceholder).error(mUserPlaceholder).into(mProfileImage);
@@ -247,6 +251,11 @@ public class MainFeedActivity extends FragmentActivityBase
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mCurrentIndex = savedInstanceState.getInt(KEY_CURRENT_INDEX);
+        showCurrentFragment();
+    }
+
+    public void showFindLesson () {
+        mCurrentIndex = 1;
         showCurrentFragment();
     }
 }

@@ -55,7 +55,7 @@
             android:label="@string/my_courses_title" />
 
         <activity
-            android:name=".view.activities.NotEnrolledCourseDetailActivity"
+            android:name=".view.activities.CourseDetailActivity"
             android:label="@string/course_info_title" />
 
 
@@ -82,12 +82,24 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name=".receivers.InternetConnectionEnabledReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name="org.stepic.droid.services.LoadService"
             android:exported="true" />
         <service
             android:name="org.stepic.droid.services.DeleteService"
             android:exported="true" />
+        <service
+            android:name="org.stepic.droid.services.ViewPusher"
+            android:exported="true" />
+
 
     </application>
 </manifest>

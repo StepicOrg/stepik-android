@@ -6,10 +6,11 @@
     android:layout_height="match_parent"
     android:background="@color/stepic_white"
     android:clickable="true"
-    android:focusable="true"
-    android:longClickable="true"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
     android:descendantFocusability="blocksDescendants"
     android:foreground="@drawable/non_radius_foreground"
+    android:longClickable="true"
     android:orientation="vertical"
     app:cardCornerRadius="@dimen/guideline_tile_corner">
 
@@ -20,8 +21,9 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="wrap_content"
             android:baselineAligned="false"
+            android:minHeight="120dp"
             android:orientation="horizontal"
             android:padding="@dimen/guideline_left_right_padding_list_item">
 
@@ -29,7 +31,8 @@
             <org.stepic.droid.view.custom.SImageView
                 android:id="@+id/course_icon"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
                 android:layout_weight="5"
                 android:src="@drawable/sample_course_icon" />
 
@@ -40,22 +43,44 @@
                 android:layout_weight="2"
                 android:paddingLeft="4dp">
 
-                <org.stepic.droid.view.custom.STextView
-                    android:id="@+id/course_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|start"
-                    android:layout_marginBottom="2dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="Course Name"
-                    android:textColor="@color/stepic_regular_text"
-                    android:textSize="@dimen/text_header" />
+
+                    <LinearLayout
+                        android:id="@+id/linear"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipChildren="false"
+                        android:orientation="vertical"
+                        android:paddingBottom="1dp">
+
+                        <org.stepic.droid.view.custom.STextView
+                            android:id="@+id/course_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|start"
+                            android:layout_marginBottom="2dp"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="Course Name"
+                            android:textColor="@color/stepic_regular_text"
+                            android:textSize="@dimen/text_header" />
+
+                        <org.stepic.droid.view.custom.STextView
+                            android:id="@+id/course_info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="fill"
+                            android:baselineAligned="false"
+                            android:maxLines="4"
+                            android:text="Long text В курсе будут разобраны осно text В курсong text В курсе будут разобраны осно text В курсong text В курсе будут разобраны осно text В курсong text В курсе будут разобраны осно text В курсong text В курсе будут разобраны осно text В курсong text В курсе будут разобраны осно text В курсong text В курсе будут разобраны осно text В курсong text В курсе будут разобраны осно text В курсong text В курсе будут разобраны осно text В курсong text В курсе будут разобраны осно text В курсong text В курсе будут разобраны осно text В курсong text В курсе будут разобраны осно text В курсong text В курсе будут разобраны осно text В курсong text В курсе будут разобраны осно text В курсong text В курсе будут разобраны осно text В курсе будут разобраны осно text В кtext В курсе будут разобраны осно text В курсе будут разобраны осно text В кtext В курсе будут разобраны осно text В курсе будут разобраны осно text В кtext В курсе будут разобраны осно text В курсе будут разобраны осно text В кtext В курсе будут разобраны осно text В курсе будут разобраны осно text В курсе будут разобраны осно text В курсе будут разобраны осно text В курсе будут разобраны осно text В курсе будут разобраны осно text В курсе будут разобраны осно text В курсе будут разобраны осно  text В курсе будут разобраны осно text В курсе будут разобраны осно text В курсе будут разобраны основные алгоритмические методы: жадные алгоритмы, «разделяй и властвуй», динамическое программирование. Помимо теоретических основ, будут рассмотрены тонкости реализации рассмотренных алгоритмов на языках C++ и Python. Слушателям будет предложено реализовать большинство разобранных в курсе алгоритмов. Решения будут проверяться тестирующей системой на тщательно подобранных тестах."
+                            android:textColor="@color/stepic_regular_text"
+                            android:textSize="@dimen/text_height" />
+                    </LinearLayout>
 
                 <org.stepic.droid.view.custom.STextView
                     android:id="@+id/course_date_interval"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_above="@+id/linear"
                     android:layout_alignParentBottom="true"
                     android:ellipsize="end"
                     android:maxLines="1"
@@ -63,23 +88,7 @@
                     android:textColor="@color/stepic_weak_text"
                     android:textSize="@dimen/text_height" />
 
-                <org.stepic.droid.view.custom.STextView
-                    android:id="@+id/course_info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@id/course_date_interval"
-                    android:layout_below="@id/course_name"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:text="Long text В курсе будут разобраны основные алгоритмические методы: жадные алгоритмы, «разделяй и властвуй», динамическое программирование. Помимо теоретических основ, будут рассмотрены тонкости реализации рассмотренных алгоритмов на языках C++ и Python. Слушателям будет предложено реализовать большинство разобранных в курсе алгоритмов. Решения будут проверяться тестирующей системой на тщательно подобранных тестах."
-                    android:textColor="@color/stepic_regular_text"
-                    android:textSize="@dimen/text_height" />
-
-
             </RelativeLayout>
-
-            <include
-                layout="@layout/load_imageview" />
         </LinearLayout>
 
         <View

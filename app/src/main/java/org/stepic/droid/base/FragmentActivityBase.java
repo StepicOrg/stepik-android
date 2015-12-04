@@ -1,14 +1,17 @@
 package org.stepic.droid.base;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.WindowManager;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.R;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.util.resolvers.IStepResolver;
 
 import javax.inject.Inject;
 
@@ -26,6 +29,9 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     @Inject
     protected Bus bus;
 
+    @Inject
+    protected IStepResolver mStepResolver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,9 +40,11 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
 
     protected void hideSoftKeypad() {
-        getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
-        );
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     // A method to find height of the status bar

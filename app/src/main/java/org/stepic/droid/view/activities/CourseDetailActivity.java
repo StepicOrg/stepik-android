@@ -17,6 +17,7 @@ import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
+import org.stepic.droid.concurrency.UpdateCourseTask;
 import org.stepic.droid.events.instructors.FailureLoadInstructorsEvent;
 import org.stepic.droid.events.instructors.OnResponseLoadingInstructorsEvent;
 import org.stepic.droid.events.instructors.StartLoadingInstructorsEvent;
@@ -24,6 +25,7 @@ import org.stepic.droid.events.joining_course.FailJoinEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.User;
+import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
@@ -41,7 +43,7 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class NotEnrolledCourseDetailActivity extends FragmentActivityBase {
+public class CourseDetailActivity extends FragmentActivityBase {
 
     private static final String TAG = "unrolled_course";
 
@@ -244,10 +246,23 @@ public class NotEnrolledCourseDetailActivity extends FragmentActivityBase {
         mJoinCourseView.setEnabled(false);
         ProgressHelper.activate(mJoinCourseSpinner);
         mShell.getApi().tryJoinCourse(mCourse).enqueue(new Callback<Void>() {
+
+            private final Course localCopy = mCourse;
+
             @Override
             public void onResponse(Response<Void> response, Retrofit retrofit) {
                 if (response.isSuccess()) {
-                    bus.post(new SuccessJoinEvent(mCourse));
+
+                    localCopy.setEnrollment((int) localCopy.getCourseId());
+
+                    UpdateCourseTask updateCourseTask = new UpdateCourseTask(DatabaseManager.Table.enrolled, localCopy);
+                    updateCourseTask.execute();
+
+                    UpdateCourseTask updateCourseFeaturedTask = new UpdateCourseTask(DatabaseManager.Table.featured, localCopy);
+                    updateCourseFeaturedTask.execute();
+
+                    bus.post(new SuccessJoinEvent(localCopy));
+
                 } else {
                     bus.post(new FailJoinEvent());
                 }
@@ -262,15 +277,14 @@ public class NotEnrolledCourseDetailActivity extends FragmentActivityBase {
 
     @Subscribe
     public void onSuccessJoin(SuccessJoinEvent e) {
-        mShell.getScreenProvider().showSections(NotEnrolledCourseDetailActivity.this, mCourse);
+        mShell.getScreenProvider().showSections(CourseDetailActivity.this, mCourse);
         finish();
         ProgressHelper.dismiss(mJoinCourseSpinner);
-
     }
 
     @Subscribe
     public void onFailJoin(FailJoinEvent e) {
-        Toast.makeText(NotEnrolledCourseDetailActivity.this, joinCourseException,
+        Toast.makeText(CourseDetailActivity.this, joinCourseException,
                 Toast.LENGTH_LONG).show();
         ProgressHelper.dismiss(mJoinCourseSpinner);
         mJoinCourseView.setEnabled(true);

@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import java.io.Serializable;
 
-public class Unit implements Serializable, Parcelable {
+public class Unit implements Serializable, Parcelable, IProgressable {
     private long id;
     private long section;
     private long lesson;
@@ -27,6 +27,7 @@ public class Unit implements Serializable, Parcelable {
     private String update_date;
     private boolean is_cached;
     private boolean is_loading;
+    private boolean is_viewed_custom;
 
     public Unit() {
     }
@@ -199,6 +200,15 @@ public class Unit implements Serializable, Parcelable {
         this.update_date = update_date;
     }
 
+    public boolean is_viewed_custom() {
+        return is_viewed_custom;
+    }
+
+    public void setIs_viewed_custom(boolean is_viewed_custom) {
+        this.is_viewed_custom = is_viewed_custom;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -227,6 +237,7 @@ public class Unit implements Serializable, Parcelable {
         dest.writeString(this.update_date);
         dest.writeByte(is_cached ? (byte) 1 : (byte) 0);
         dest.writeByte(is_loading ? (byte) 1 : (byte) 0);
+        dest.writeByte(is_viewed_custom ? (byte) 1 : (byte) 0);
     }
 
     protected Unit(Parcel in) {
@@ -251,6 +262,7 @@ public class Unit implements Serializable, Parcelable {
         this.update_date = in.readString();
         this.is_cached = in.readByte() != 0;
         this.is_loading = in.readByte() != 0;
+        this.is_viewed_custom = in.readByte() != 0;
     }
 
     public static final Creator<Unit> CREATOR = new Creator<Unit>() {

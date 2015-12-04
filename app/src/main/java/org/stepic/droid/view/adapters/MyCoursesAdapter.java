@@ -1,12 +1,8 @@
 package org.stepic.droid.view.adapters;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +24,6 @@ import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.JsonHelper;
-import org.stepic.droid.view.dialogs.ExplainPermissionDialog;
 
 import java.util.List;
 
@@ -100,91 +95,91 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
             }
         });
 
-        if (type == DatabaseManager.Table.enrolled) {
-            viewHolderItem.loadButton.setVisibility(View.VISIBLE);
-            //cached/loading
-            //false/false = show sky with suggestion for cache
-            //false/true = show progress
-            //true/false = show can with suggestion for delete
-            //true/true = impossible
-            if (course.is_cached()) {
-                //cached
-                viewHolderItem.loadButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-                        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                            removeCourse(course);
-                        } else {
-
-                        }
-                    }
-                });
-
-                viewHolderItem.preLoadIV.setVisibility(View.GONE);
-                viewHolderItem.whenLoad.setVisibility(View.INVISIBLE);
-                viewHolderItem.afterLoad.setVisibility(View.VISIBLE); //can
-
-            } else {
-                if (course.is_loading()) {
-
-                    viewHolderItem.preLoadIV.setVisibility(View.GONE);
-                    viewHolderItem.whenLoad.setVisibility(View.VISIBLE);
-                    viewHolderItem.afterLoad.setVisibility(View.GONE);
-
-                    //todo: add cancel of downloading
-                } else {
-                    //not cached not loading
-                    viewHolderItem.preLoadIV.setVisibility(View.VISIBLE);
-                    viewHolderItem.whenLoad.setVisibility(View.INVISIBLE);
-                    viewHolderItem.afterLoad.setVisibility(View.GONE);
-
-
-                    viewHolderItem.loadButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
-                                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-                            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                                cacheCourse(course);
-                            } else {
-                                if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
-                                        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-                                    // Show an expanation to the user *asynchronously* -- don't block
-                                    // this thread waiting for the user's response! After the user
-                                    // sees the explanation, try again to request the permission.
-
-                                    ExplainPermissionDialog dialog = new ExplainPermissionDialog();
-                                    dialog.show(mActivity.getFragmentManager(), null);
-
-                                } else {
-
-                                    // No explanation needed, we can request the permission.
-
-                                    ActivityCompat.requestPermissions(mActivity,
-                                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                            AppConstants.REQUEST_WIFI);
-
-                                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                                    // app-defined int constant. The callback method gets the
-                                    // result of the request.
-                                }
-
-                            }
-                        }
-                    });
-                }
-            }
-        } else {
-            viewHolderItem.preLoadIV.setVisibility(View.GONE);
-            viewHolderItem.whenLoad.setVisibility(View.GONE);
-            viewHolderItem.afterLoad.setVisibility(View.GONE);
-            viewHolderItem.loadButton.setVisibility(View.GONE);
-        }
+//        if (type == DatabaseManager.Table.enrolled) {
+//            viewHolderItem.loadButton.setVisibility(View.VISIBLE);
+//            //cached/loading
+//            //false/false = show sky with suggestion for cache
+//            //false/true = show progress
+//            //true/false = show can with suggestion for delete
+//            //true/true = impossible
+//            if (course.is_cached()) {
+//                //cached
+//                viewHolderItem.loadButton.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
+//                                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//
+//                        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+//                            removeCourse(course);
+//                        } else {
+//
+//                        }
+//                    }
+//                });
+//
+//                viewHolderItem.preLoadIV.setVisibility(View.GONE);
+//                viewHolderItem.whenLoad.setVisibility(View.INVISIBLE);
+//                viewHolderItem.afterLoad.setVisibility(View.VISIBLE); //can
+//
+//            } else {
+//                if (course.is_loading()) {
+//
+//                    viewHolderItem.preLoadIV.setVisibility(View.GONE);
+//                    viewHolderItem.whenLoad.setVisibility(View.VISIBLE);
+//                    viewHolderItem.afterLoad.setVisibility(View.GONE);
+//
+//                    //todo: add cancel of downloading
+//                } else {
+//                    //not cached not loading
+//                    viewHolderItem.preLoadIV.setVisibility(View.VISIBLE);
+//                    viewHolderItem.whenLoad.setVisibility(View.INVISIBLE);
+//                    viewHolderItem.afterLoad.setVisibility(View.GONE);
+//
+//
+//                    viewHolderItem.loadButton.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
+//                                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//
+//                            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+//                                cacheCourse(course);
+//                            } else {
+//                                if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
+//                                        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+//
+//                                    // Show an expanation to the user *asynchronously* -- don't block
+//                                    // this thread waiting for the user's response! After the user
+//                                    // sees the explanation, try again to request the permission.
+//
+//                                    ExplainPermissionDialog dialog = new ExplainPermissionDialog();
+//                                    dialog.show(mActivity.getFragmentManager(), null);
+//
+//                                } else {
+//
+//                                    // No explanation needed, we can request the permission.
+//
+//                                    ActivityCompat.requestPermissions(mActivity,
+//                                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                                            AppConstants.REQUEST_WIFI);
+//
+//                                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+//                                    // app-defined int constant. The callback method gets the
+//                                    // result of the request.
+//                                }
+//
+//                            }
+//                        }
+//                    });
+//                }
+//            }
+//        } else {
+//            viewHolderItem.preLoadIV.setVisibility(View.GONE);
+//            viewHolderItem.whenLoad.setVisibility(View.GONE);
+//            viewHolderItem.afterLoad.setVisibility(View.GONE);
+//            viewHolderItem.loadButton.setVisibility(View.GONE);
+//        }
         return view;
     }
 
@@ -225,18 +220,18 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 
         @Bind(R.id.cv)
         View cardView;
-
-        @Bind(R.id.pre_load_iv)
-        View preLoadIV;
-
-        @Bind(R.id.when_load_view)
-        View whenLoad;
-
-        @Bind(R.id.after_load_iv)
-        View afterLoad;
-
-        @Bind(R.id.load_button)
-        View loadButton;
+//
+//        @Bind(R.id.pre_load_iv)
+//        View preLoadIV;
+//
+//        @Bind(R.id.when_load_view)
+//        View whenLoad;
+//
+//        @Bind(R.id.after_load_iv)
+//        View afterLoad;
+//
+//        @Bind(R.id.load_button)
+//        View loadButton;
 
         @BindDrawable(R.drawable.stepic_logo_black_and_white)
         Drawable placeholder;

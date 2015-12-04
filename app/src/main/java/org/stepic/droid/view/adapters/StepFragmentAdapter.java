@@ -62,6 +62,6 @@ public class StepFragmentAdapter extends FragmentStatePagerAdapter {
 
     public Drawable getTabDrawable(int position) {
         Step step = mStepList.get(position);
-        return mResolver.getDrawableForType(step.getBlock().getName(), false);
+        return mResolver.getDrawableForType(step.getBlock().getName(), step.is_custom_passed());
     }
 }

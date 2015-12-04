@@ -11,7 +11,6 @@ public abstract class StepicResponseBase implements IStepicResponse{
         this.meta = meta;
     }
 
-
     public Meta getMeta() {
         return meta;
     }

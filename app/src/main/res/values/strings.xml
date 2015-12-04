@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Stepic</string>
+    <string name="app_name" translatable="false">Stepic.org</string>
 
     <string name="yet_have_not_account">"Don\'t have an account yet? Sign up"</string>
     <string name="or_sign_up_with_email">or sign up with e-mail</string>
@@ -72,5 +72,8 @@
     <string name="video_quality">Video quality</string>
     <string name="ok">Ok</string>
     <string name="choose_video_quality">Choose video quality</string>
+    <string name="sync_problem">There was a problem syncing the data, please try again later.</string>
+    <string name="empty_courses">Looks like you haven\'t enrolled in any courses yet. Tap to find courses!</string>
+    <string name="cache_cleared">Cache is cleared successfully!</string>
 
 </resources>

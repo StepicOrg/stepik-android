@@ -6,16 +6,18 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/my_courses"
-            android:title="@string/my_courses_title" />
+            android:title="@string/my_courses_title"
+            android:icon="@drawable/ic_my_courses"/>
         <!--<item-->
         <!--android:id="@+id/best_lessons"-->
         <!--android:title="@string/best_lessons_title" />-->
 
         <item
             android:id="@+id/find_lessons"
-            android:title="@string/find_courses_title" />
+            android:title="@string/find_courses_title"
+            android:icon="@drawable/ic_search_courses"/>
 
-    </group>a
+    </group>
 
     <group
         android:id="@+id/settings_drawer_menu"

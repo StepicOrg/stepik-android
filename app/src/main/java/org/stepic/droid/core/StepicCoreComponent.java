@@ -15,14 +15,17 @@ import org.stepic.droid.concurrency.UpdateCourseTask;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.receivers.DownloadCompleteReceiver;
+import org.stepic.droid.receivers.InternetConnectionEnabledReceiver;
 import org.stepic.droid.services.DeleteService;
 import org.stepic.droid.services.LoadService;
+import org.stepic.droid.services.ViewPusher;
+import org.stepic.droid.util.ImageOnDisk;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
 import org.stepic.droid.view.adapters.SectionAdapter;
 import org.stepic.droid.view.adapters.StepFragmentAdapter;
 import org.stepic.droid.view.adapters.UnitAdapter;
 import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
-import org.stepic.droid.view.dialogs.AreYouSureDialog;
+import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.dialogs.ClearCacheDialogFragment;
 import org.stepic.droid.view.dialogs.VideoQualityDialog;
 import org.stepic.droid.web.HttpManager;
@@ -59,7 +62,7 @@ public interface StepicCoreComponent {
 
     void inject(ClearCacheDialogFragment dialogFragment);
 
-    void inject(AreYouSureDialog dialogFragment);
+    void inject(LogoutAreYouSureDialog dialogFragment);
 
     void inject(VideoQualityDialog dialogFragment);
 
@@ -93,4 +96,10 @@ public interface StepicCoreComponent {
     void inject(DeleteService loadService);
 
     void inject(DownloadCompleteReceiver downloadCompleteReceiver);
+
+    void inject(ImageOnDisk imageOnDisk);
+
+    void inject(ViewPusher viewPusher);
+
+    void inject(InternetConnectionEnabledReceiver internetConnectionEnabledReceiver);
 }

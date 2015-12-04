@@ -10,22 +10,25 @@ import android.os.Bundle;
 import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.NotNull;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
+import org.stepic.droid.view.activities.CourseDetailActivity;
 import org.stepic.droid.view.activities.LaunchActivity;
 import org.stepic.droid.view.activities.LoginActivity;
 import org.stepic.droid.view.activities.MainFeedActivity;
-import org.stepic.droid.view.activities.NotEnrolledCourseDetailActivity;
 import org.stepic.droid.view.activities.RegisterActivity;
 import org.stepic.droid.view.activities.SectionActivity;
 import org.stepic.droid.view.activities.StepsActivity;
 import org.stepic.droid.view.activities.UnitsActivity;
+import org.stepic.droid.web.ViewAssignment;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -87,7 +90,7 @@ public class ScreenManager implements IScreenManager {
     @Override
     public void showCourseDescription(Context sourceActivity, @NotNull Course course) {
         YandexMetrica.reportEvent("Screen manager: show course description");
-        Intent intent = new Intent(sourceActivity, NotEnrolledCourseDetailActivity.class);
+        Intent intent = new Intent(sourceActivity, CourseDetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
         intent.putExtras(bundle);
@@ -148,6 +151,16 @@ public class ScreenManager implements IScreenManager {
         String url = mConfig.getBaseUrl() + "/accounts/password/reset/";
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
         context.startActivity(intent);
+    }
+
+    @Override
+    public void pushToViewedQueue(ViewAssignment viewAssignmentWrapper) {
+
+        Intent loadIntent = new Intent(MainApplication.getAppContext(), ViewPusher.class);
+
+        loadIntent.putExtra(AppConstants.KEY_STEP_BUNDLE, viewAssignmentWrapper.getStep());
+        loadIntent.putExtra(AppConstants.KEY_ASSIGNMENT_BUNDLE, viewAssignmentWrapper.getAssignment());
+        MainApplication.getAppContext().startService(loadIntent);
     }
 
 }

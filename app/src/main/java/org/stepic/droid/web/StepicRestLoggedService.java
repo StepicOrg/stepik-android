@@ -46,4 +46,16 @@ public interface StepicRestLoggedService {
 
     @DELETE("api/enrollments/{id}")
     Call<Void> dropCourse(@Path("id") long courseId);
+
+    @GET("api/progresses")
+    Call<ProgressesResponse> getProgresses(@Query("ids[]") String[] progresses);
+
+    @GET("api/assignments")
+    Call<AssignmentResponse> getAssignments(@Query("ids[]") long[] assignmentsIds);
+
+
+    @Headers({"Content-Type : application/json"})
+    @POST("api/views")
+    Call<Void> postViewed (@Body ViewAssignmentWrapper stepAssignment);
+
 }

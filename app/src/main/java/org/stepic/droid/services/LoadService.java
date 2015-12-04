@@ -12,9 +12,11 @@ import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
@@ -23,6 +25,8 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.FileUtil;
+import org.stepic.droid.util.ProgressUtil;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.web.IApi;
@@ -150,15 +154,12 @@ public class LoadService extends IntentService {
 
             if (!mDb.isExistDownloadEntityByVideoId(fileId) && !downloadFolderAndFile.exists()) {
                 long downloadId = mSystemDownloadManager.enqueue(request);
-                final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, step.getBlock().getVideo().getThumbnail());
+                String local_thumbnail = fileId + ".png";
+                String thumbnailsPath = FileUtil.saveImageToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getDownloadFolder());
+                final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath);
                 mDb.addDownloadEntity(newEntity);
-
             }
         } catch (SecurityException ex) {
-            // FIXME: 20.10.15 SHOW DIALOG WITH SUGGESTION OF PERMISSION!
-//            mBus.post(new MemoryPermissionDeniedEvent());
-            //it is not main thread
-
             YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, ex);
             Log.i("downloading", ex.getMessage());
         } catch (Exception ex) {
@@ -172,7 +173,6 @@ public class LoadService extends IntentService {
     private void addStep(Step step, Lesson lesson) {
 
         if (step.getBlock().getVideo() != null) {
-
             Video video = step.getBlock().getVideo();
             String uri = mResolver.resolveVideoUrl(video);
             long fileId = video.getId();
@@ -192,6 +192,17 @@ public class LoadService extends IntentService {
         lesson = mDb.getLessonById(lesson.getId());
 
         try {
+            List<Assignment> assignments = mApi.getAssignments(unit.getAssignments()).execute().body().getAssignments();
+            for (Assignment item : assignments) {
+                mDb.addAssignment(item);
+
+            }
+
+            String [] ids = ProgressUtil.getAllProgresses(assignments);
+            List<Progress> progresses = mApi.getProgresses(ids).execute().body().getProgresses();
+            for (Progress item : progresses) {
+                mDb.addProgress(item);
+            }
             Response<StepResponse> response = mApi.getSteps(lesson.getSteps()).execute();
             if (response.isSuccess()) {
                 List<Step> steps = response.body().getSteps();
@@ -220,7 +231,6 @@ public class LoadService extends IntentService {
             mStoreStateManager.updateUnitLessonState(lesson.getId());
         }
     }
-
     private void addSection(Section section) {
         //if user click to removeSection, then section already in database.
         section = mDb.getSectionById(section.getId());//make copy of section.
@@ -229,6 +239,12 @@ public class LoadService extends IntentService {
             if (unitLessonResponse.isSuccess()) {
                 final List<Unit> units = unitLessonResponse.body().getUnits();
                 long[] lessonsIds = StepicLogicHelper.fromUnitsToLessonIds(units);
+                List<Progress> progresses = mApi.getProgresses(ProgressUtil.getAllProgresses(units)).execute().body().getProgresses();
+                for (Progress item : progresses) {
+                    mDb.addProgress(item);
+                }
+
+
                 Response<LessonStepicResponse> response = mApi.getLessons(lessonsIds).execute();
                 if (response.isSuccess()) {
                     List<Lesson> lessons = response.body().getLessons();
@@ -265,6 +281,7 @@ public class LoadService extends IntentService {
         }
     }
 
+    @Deprecated
     private void addCourse(Course course, DatabaseManager.Table type) {
         mDb.addCourse(course, type);
         course = mDb.getCourseById(course.getCourseId(), type); //make copy of course.

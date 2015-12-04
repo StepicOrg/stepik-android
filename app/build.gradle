@@ -11,8 +11,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 7
-        versionName "0.4.1"
+        versionCode 8
+        versionName "0.4.2"
 
         // Enabling multidex support.
         multiDexEnabled true
@@ -38,7 +38,7 @@ dependencies {
     //</DI>
 
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.google.code.gson:gson:2.4'
 
 
     compile 'com.squareup.okhttp:okhttp:2.3.0'

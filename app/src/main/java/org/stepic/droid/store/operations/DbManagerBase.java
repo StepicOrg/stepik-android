@@ -2,8 +2,6 @@ package org.stepic.droid.store.operations;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Looper;
-import android.util.Log;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.store.DatabaseHelper;
@@ -22,22 +20,22 @@ public abstract class DbManagerBase implements IDatabaseManager {
         dbHelper = new DatabaseHelper(context);
     }
 
-    protected  void open() {
+    protected void open() {
         RWLocks.DatabaseLock.writeLock().lock();
-        if (Looper.myLooper() == Looper.getMainLooper()) {
+//        if (Looper.myLooper() == Looper.getMainLooper()) {
 //            throw new IllegalStateException("Illegal state: working with database on UI thread");
 //            it is ok
-        }
-        Log.i("database", "open " + Thread.currentThread().getName());
+//        }
+//        Log.i("database", "open " + Thread.currentThread().getName());
         database = dbHelper.getWritableDatabase();
     }
 
-    protected  void close() {
-        if (Looper.myLooper() == Looper.getMainLooper()) {
+    protected void close() {
+//        if (Looper.myLooper() == Looper.getMainLooper()) {
 //            throw new IllegalStateException("Illegal state: working with database on UI thread");
-            //it is ok.
-        }
-        Log.i("database", "close " + Thread.currentThread().getName());
+        //it is ok.
+//        }
+//        Log.i("database", "close " + Thread.currentThread().getName());
         database.close();
         RWLocks.DatabaseLock.writeLock().unlock();
     }
