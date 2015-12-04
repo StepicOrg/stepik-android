@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 import com.yandex.metrica.YandexMetrica;
 
@@ -88,13 +89,13 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
-    public void showCourseDescription(Context sourceActivity, @NotNull Course course) {
+    public void showCourseDescription(Fragment sourceFragment, @NotNull Course course) {
         YandexMetrica.reportEvent("Screen manager: show course description");
-        Intent intent = new Intent(sourceActivity, CourseDetailActivity.class);
+        Intent intent = new Intent(sourceFragment.getActivity(), CourseDetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
         intent.putExtras(bundle);
-        sourceActivity.startActivity(intent);
+        sourceFragment.startActivityForResult(intent, AppConstants.REQUEST_CODE_DETAIL);
     }
 
     @Override

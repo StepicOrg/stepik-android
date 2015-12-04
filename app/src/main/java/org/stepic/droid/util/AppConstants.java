@@ -82,4 +82,8 @@ public class AppConstants {
     public static final String METRICA_GET_PROGRESSES = "Get progresses";
     public static final String METRICA_GET_ASSIGNMENTS = "Get assignments";
     public static final String KEY_ASSIGNMENT_BUNDLE = "key_assignment";
+    public static final String COURSE_ID_KEY = "course_id";
+    public static final String ENROLLMENT_KEY = "is_enrolled";
+
+    public static final int REQUEST_CODE_DETAIL = 1;
 }

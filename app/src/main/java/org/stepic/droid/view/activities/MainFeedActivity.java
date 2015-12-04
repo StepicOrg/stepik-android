@@ -254,7 +254,7 @@ public class MainFeedActivity extends FragmentActivityBase
         showCurrentFragment();
     }
 
-    public void showFindLesson () {
+    public void showFindLesson() {
         mCurrentIndex = 1;
         showCurrentFragment();
     }

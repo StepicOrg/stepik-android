@@ -1,6 +1,8 @@
 package org.stepic.droid.view.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -44,6 +46,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class CourseDetailActivity extends FragmentActivityBase {
+
 
     private static final String TAG = "unrolled_course";
 
@@ -220,7 +223,6 @@ public class CourseDetailActivity extends FragmentActivityBase {
     protected void onPause() {
         super.onPause();
         mIntroView.onPause();
-        Log.i("vimeo", "stop video");
     }
 
     @Override
@@ -237,6 +239,11 @@ public class CourseDetailActivity extends FragmentActivityBase {
 
     @Override
     public void finish() {
+        Log.i("result", "finish course activity");
+        Intent intent = new Intent();
+        intent.putExtra(AppConstants.COURSE_ID_KEY, (Parcelable) mCourse);
+        intent.putExtra(AppConstants.ENROLLMENT_KEY, mCourse.getEnrollment());
+        setResult(RESULT_OK, intent);
         super.finish();
         overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
     }
@@ -261,6 +268,7 @@ public class CourseDetailActivity extends FragmentActivityBase {
                     UpdateCourseTask updateCourseFeaturedTask = new UpdateCourseTask(DatabaseManager.Table.featured, localCopy);
                     updateCourseFeaturedTask.execute();
 
+
                     bus.post(new SuccessJoinEvent(localCopy));
 
                 } else {
@@ -277,6 +285,7 @@ public class CourseDetailActivity extends FragmentActivityBase {
 
     @Subscribe
     public void onSuccessJoin(SuccessJoinEvent e) {
+        e.getCourse().setEnrollment((int) e.getCourse().getCourseId());
         mShell.getScreenProvider().showSections(CourseDetailActivity.this, mCourse);
         finish();
         ProgressHelper.dismiss(mJoinCourseSpinner);
