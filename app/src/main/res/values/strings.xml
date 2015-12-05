@@ -76,5 +76,6 @@
     <string name="empty_courses">Looks like you haven\'t enrolled in any courses yet. Tap to find courses!</string>
     <string name="cache_cleared">Cache is cleared successfully!</string>
     <string name="join_course_web_exception">Try to join course in web</string>
+    <string name="downloads">Downloads</string>
 
 </resources>
