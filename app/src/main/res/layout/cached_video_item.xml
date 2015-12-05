@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cv"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/stepic_white"
+    android:clickable="true"
+    android:descendantFocusability="blocksDescendants"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:foreground="@drawable/non_radius_foreground"
+    android:longClickable="true"
+    android:orientation="vertical"
+    app:cardCornerRadius="@dimen/guideline_tile_corner">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:minHeight="100dp"
+            android:orientation="horizontal"
+            android:padding="@dimen/guideline_left_right_padding_list_item">
+
+
+            <org.stepic.droid.view.custom.SImageView
+                android:id="@+id/course_icon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="3"
+                android:scaleType="centerCrop"
+                android:src="@drawable/video_placeholder" />
+
+            <RelativeLayout
+                android:id="@+id/course_info_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:paddingLeft="4dp">
+
+
+                <TextView
+                    android:id="@+id/video_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|start"
+                    android:layout_marginBottom="2dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Long and long header of video, really long"
+                    android:textColor="@color/stepic_regular_text"
+                    android:textSize="@dimen/text_header" />
+
+
+                <TextView
+                    android:id="@+id/size_of_cached_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="size"
+                    android:textColor="@color/stepic_weak_text"
+                    android:textSize="@dimen/text_height" />
+
+                <TextView
+                    android:id="@+id/current_quality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="270dp"
+                    android:textColor="@color/stepic_weak_text"
+                    android:textSize="@dimen/text_height" />
+
+            </RelativeLayout>
+
+            <include layout="@layout/load_imageview" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/grey_bar"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/silver" />
+    </LinearLayout>
+</FrameLayout>
