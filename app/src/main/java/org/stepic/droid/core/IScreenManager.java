@@ -37,4 +37,5 @@ public interface IScreenManager {
 
     void pushToViewedQueue(ViewAssignment viewAssignmentWrapper);
 
+    void showSocialLogin();
 }

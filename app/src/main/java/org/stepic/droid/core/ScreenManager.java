@@ -164,4 +164,12 @@ public class ScreenManager implements IScreenManager {
         MainApplication.getAppContext().startService(loadIntent);
     }
 
+    @Override
+    public void showSocialLogin() {
+        Context context = MainApplication.getAppContext();
+        String url = mConfig.getBaseUrl() + "/oauth2/authorize/?client_id=P3svssuGYOJ8g8rrJSJtVbqnyE0QinTfncbfFr9p";
+        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
+        context.startActivity(intent);
+    }
+
 }

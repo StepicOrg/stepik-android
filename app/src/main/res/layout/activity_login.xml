@@ -4,7 +4,8 @@
     android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:splitMotionEvents="false">
+    android:splitMotionEvents="false"
+    android:focusableInTouchMode="true">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -100,6 +101,36 @@
 
                         <ProgressBar
                             android:id="@+id/login_spinner"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:indeterminateDrawable="@drawable/login_progress"
+                            android:visibility="gone"
+                            tools:targetApi="17" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/login_social_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/bt_signin_active"
+                        android:contentDescription="@string/sign_in_btn">
+
+                        <org.stepic.droid.view.custom.STextView
+                            android:id="@+id/login_social_text"
+                            style="@style/regular_white_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="@string/sign_in_social"
+                            android:textAllCaps="true"
+                            android:textSize="16sp" />
+
+                        <ProgressBar
+                            android:id="@+id/login_social_spinner"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:layout_alignParentEnd="true"

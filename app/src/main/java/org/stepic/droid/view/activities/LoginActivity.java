@@ -47,6 +47,12 @@ public class LoginActivity extends FragmentActivityBase {
     @Bind(R.id.forgot_password_tv)
     TextView mForgotPassword;
 
+    @Bind(R.id.root_view)
+    View mRootView;
+
+    @Bind(R.id.login_social_layout)
+    View mLoginSocial;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +108,17 @@ public class LoginActivity extends FragmentActivityBase {
                 mShell.getScreenProvider().openRemindPassword(LoginActivity.this);
             }
         });
+
+
+        mLoginSocial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mShell.getScreenProvider().showSocialLogin();
+            }
+        });
+
+
+        mRootView.requestFocus();
     }
 
     @Override
