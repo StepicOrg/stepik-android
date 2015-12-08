@@ -1,5 +1,8 @@
 package org.stepic.droid.web;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Looper;
 import android.util.Log;
@@ -189,6 +192,15 @@ public class RetrofitRESTApi implements IApi {
     @Override
     public Call<Void> postViewed(ViewAssignment stepAssignment) {
         return mLoggedService.postViewed(new ViewAssignmentWrapper(stepAssignment.getAssignment(), stepAssignment.getStep()));
+    }
+
+    @Override
+    public void loginWithGoogle(Context context) {
+
+        String url = mConfig.getBaseUrl() + "/accounts/google/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + mConfig.getOAuthClientId(TokenType.social) + "&response_type=code");
+        Uri uri = Uri.parse(url);
+        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
+        context.startActivity(intent);
     }
 
     private void setAuthenticatorClientIDAndPassword(OkHttpClient httpClient, final String client_id, final String client_password) {

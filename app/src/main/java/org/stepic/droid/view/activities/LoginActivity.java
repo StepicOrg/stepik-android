@@ -113,7 +113,8 @@ public class LoginActivity extends FragmentActivityBase {
         mLoginSocial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mShell.getScreenProvider().showSocialLogin(LoginActivity.this);
+                mShell.getApi().loginWithGoogle(LoginActivity.this);
+//                mShell.getScreenProvider().showSocialLogin(LoginActivity.this);
             }
         });
 

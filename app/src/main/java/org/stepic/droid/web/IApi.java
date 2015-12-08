@@ -1,5 +1,7 @@
 package org.stepic.droid.web;
 
+import android.content.Context;
+
 import org.stepic.droid.model.Course;
 
 import retrofit.Call;
@@ -40,5 +42,7 @@ public interface IApi {
     Call<AssignmentResponse> getAssignments (long[] assignmentsIds);
 
     Call<Void> postViewed (ViewAssignment stepAssignment);
+
+    void loginWithGoogle(Context context);
 
 }
