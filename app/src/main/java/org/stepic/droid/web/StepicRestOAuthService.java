@@ -14,4 +14,10 @@ public interface StepicRestOAuthService {
                                                              @Query("username") String username,
                                                              @Query("password") String password);
 
+
+    @POST("/oauth2/token/")
+    Call<AuthenticationStepicResponse> getTokenByCode(@Query("grant_type") String grant_type,
+                                                      @Query("code") String code,
+                                                      @Query("redirect_uri") String redirect_uri);
+
 }

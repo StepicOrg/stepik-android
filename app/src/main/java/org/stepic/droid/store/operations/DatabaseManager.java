@@ -1029,6 +1029,28 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
+
+    public List<CachedVideo> getAllCachedVideo () {
+        try {
+            open();
+            List<CachedVideo> cachedVideos = new ArrayList<>();
+
+            Cursor cursor = getCachedVideosCursor();
+            cursor.moveToFirst();
+
+            while (!cursor.isAfterLast()) {
+                CachedVideo cachedVideo = parseCachedVideo(cursor);
+                cachedVideos.add(cachedVideo);
+                cursor.moveToNext();
+            }
+
+            cursor.close();
+            return cachedVideos;
+        } finally {
+            close();
+        }
+    }
+
     /**
      * getPath of cached video
      *

@@ -1,10 +1,14 @@
 {
   "API_HOST_URL": "https://stepic.org",
   "OAUTH_CLIENT_ID": "BJS1K4bosMQFkxteFvdIXfwiRBAsX2ZQws3I9cf0",
-  "OAUTH_CLIENT_SECRET" : "qcKU6Nf2cAEWuMeA2Tthe9COWVJVRwPk2BxJsODpClqlVDkvbqp2cm2Uheo0ue9LDHFx2A8eorH4hK3LBecOVP5gSpXABEhbwNRrDmtriAAV4uquYOTeEEG86nxc0bP3",
-  "GRANT_TYPE":"password",
-  "REFRESH_GRANT_TYPE" : "refresh_token",
-  "DATE_PATTERN":"dd MMMM yyyy HH:mm",
-  "DATE_PATTERN_FOR_VIEW":"dd MMMM yyyy",
-  "ARRAY_IDS_PARAM":"ids[]"
+  "OAUTH_CLIENT_SECRET": "qcKU6Nf2cAEWuMeA2Tthe9COWVJVRwPk2BxJsODpClqlVDkvbqp2cm2Uheo0ue9LDHFx2A8eorH4hK3LBecOVP5gSpXABEhbwNRrDmtriAAV4uquYOTeEEG86nxc0bP3",
+  "OAUTH_CLIENT_ID_SOCIAL": "P3svssuGYOJ8g8rrJSJtVbqnyE0QinTfncbfFr9p",
+  "OAUTH_CLIENT_SECRET_SOCIAL": "hrghB2U7TxN8E9LRqkeXXtzDK6gzmEX7Ml12OYJtYypM2PGPqqQsbVFrvgwJGYu5nIZc7mbmxUkLuYdEWs0eRTY6yBKRj6cJXiRDxtfwQlspxzkeIagmWEfxK9LGWrLO",
+  "GRANT_TYPE": "password",
+  "GRANT_TYPE_SOCIAL": "authorization_code",
+  "REFRESH_GRANT_TYPE": "refresh_token",
+  "DATE_PATTERN": "dd MMMM yyyy HH:mm",
+  "DATE_PATTERN_FOR_VIEW": "dd MMMM yyyy",
+  "REDIRECT_URI": "https://stepic.org/mobile",
+  "ARRAY_IDS_PARAM": "ids[]"
 }

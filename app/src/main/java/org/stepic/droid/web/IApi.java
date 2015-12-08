@@ -5,7 +5,13 @@ import org.stepic.droid.model.Course;
 import retrofit.Call;
 
 public interface IApi {
+    enum TokenType {
+        social, loginPassword
+    }
+
     Call<AuthenticationStepicResponse> authWithLoginPassword(String login, String password);
+
+    Call<AuthenticationStepicResponse> authWithCode(String code);
 
     Call<IStepicResponse> signUp(String firstName, String secondName, String email, String password);
 

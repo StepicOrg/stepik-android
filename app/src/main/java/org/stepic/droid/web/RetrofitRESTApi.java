@@ -51,17 +51,10 @@ public class RetrofitRESTApi implements IApi {
     public RetrofitRESTApi() {
         MainApplication.component().inject(this);
 
+        makeOauthServiceWithNewAuthHeader(mSharedPreference.isLastTokenSocial() ? TokenType.social : TokenType.loginPassword);
+
+
         OkHttpClient okHttpClient = new OkHttpClient();
-        setAuthenticatorClientIDAndPassword(okHttpClient);
-        Retrofit notLogged = new Retrofit.Builder()
-                .baseUrl(mConfig.getBaseUrl())
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-        mOAuthService = notLogged.create(StepicRestOAuthService.class);
-
-
-        okHttpClient = new OkHttpClient();
         Interceptor interceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
@@ -94,7 +87,27 @@ public class RetrofitRESTApi implements IApi {
     @Override
     public Call<AuthenticationStepicResponse> authWithLoginPassword(String login, String password) {
         YandexMetrica.reportEvent("Api:auth with login password");
-        return mOAuthService.authWithLoginPassword(mConfig.getGrantType(), login, password);
+        makeOauthServiceWithNewAuthHeader(TokenType.loginPassword);
+        return mOAuthService.authWithLoginPassword(mConfig.getGrantType(TokenType.loginPassword), login, password);
+    }
+
+    @Override
+    public Call<AuthenticationStepicResponse> authWithCode(String code) {
+        YandexMetrica.reportEvent("Api:auth with social account");
+        makeOauthServiceWithNewAuthHeader(TokenType.social);
+        return mOAuthService.getTokenByCode(mConfig.getGrantType(TokenType.social), code, mConfig.getRedirectUri());
+    }
+
+    private void makeOauthServiceWithNewAuthHeader(TokenType type) {
+        mSharedPreference.storeLastTokenType(type == TokenType.social ? true : false);
+        OkHttpClient okHttpClient = new OkHttpClient();
+        setAuthenticatorClientIDAndPassword(okHttpClient, mConfig.getOAuthClientId(type), mConfig.getOAuthClientSecret(type));
+        Retrofit notLogged = new Retrofit.Builder()
+                .baseUrl(mConfig.getBaseUrl())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build();
+        mOAuthService = notLogged.create(StepicRestOAuthService.class);
     }
 
     @Override
@@ -178,7 +191,7 @@ public class RetrofitRESTApi implements IApi {
         return mLoggedService.postViewed(new ViewAssignmentWrapper(stepAssignment.getAssignment(), stepAssignment.getStep()));
     }
 
-    private void setAuthenticatorClientIDAndPassword(OkHttpClient httpClient) {
+    private void setAuthenticatorClientIDAndPassword(OkHttpClient httpClient, final String client_id, final String client_password) {
         httpClient.setAuthenticator(new Authenticator() {
             //            private int mCounter = 0;
             @Override
@@ -186,7 +199,7 @@ public class RetrofitRESTApi implements IApi {
 //                if (mCounter++ > 0) {
 //                    throw new AuthException();
 //                }
-                String credential = Credentials.basic(mConfig.getOAuthClientId(), mConfig.getOAuthClientSecret());
+                String credential = Credentials.basic(client_id, client_password);
                 return response.request().newBuilder().header("Authorization", credential).build();
             }
 
@@ -196,6 +209,7 @@ public class RetrofitRESTApi implements IApi {
             }
         });
     }
+
 
     private String getAuthHeaderValue() {
         try {
