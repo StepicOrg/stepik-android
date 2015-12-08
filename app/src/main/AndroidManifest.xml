@@ -55,6 +55,21 @@
             android:label="@string/my_courses_title" />
 
         <activity
+            android:name="org.stepic.droid.view.activities.LoginSocialRedirectActivity"
+            android:label="@string/success">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"></action>
+                <category android:name="android.intent.category.DEFAULT"></category>
+                <category android:name="android.intent.category.BROWSABLE"></category>
+
+                <data
+                    android:host="stepic.org"
+                    android:pathPattern="/mobile"
+                    android:scheme="https"></data>
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".view.activities.CourseDetailActivity"
             android:label="@string/course_info_title" />
 

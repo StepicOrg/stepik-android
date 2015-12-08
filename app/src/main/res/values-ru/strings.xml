@@ -74,5 +74,6 @@
     <string name="join_course_web_exception">Попробуйте записаться на курс в веб версии</string>
     <string name="downloads">Загрузки</string>
     <string name="sign_in_social">Через соц. сети.</string>
+    <string name="success">Успех</string>
 
 </resources>

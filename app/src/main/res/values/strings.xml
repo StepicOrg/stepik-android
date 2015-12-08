@@ -78,5 +78,6 @@
     <string name="join_course_web_exception">Try to join course in web</string>
     <string name="downloads">Downloads</string>
     <string name="sign_in_social">with social</string>
+    <string name="success">Success</string>
 
 </resources>
