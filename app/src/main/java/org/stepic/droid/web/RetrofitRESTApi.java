@@ -196,8 +196,13 @@ public class RetrofitRESTApi implements IApi {
 
     @Override
     public void loginWithGoogle(Context context) {
+        loginWithSocial(context, AppConstants.GOOGLE_SOCIAL_IDENTIFIER);
+    }
 
-        String url = mConfig.getBaseUrl() + "/accounts/google/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + mConfig.getOAuthClientId(TokenType.social) + "&response_type=code");
+
+    private void loginWithSocial(Context context, String socialIdentifier) {
+
+        String url = mConfig.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + mConfig.getOAuthClientId(TokenType.social) + "&response_type=code");
         Uri uri = Uri.parse(url);
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
         context.startActivity(intent);
