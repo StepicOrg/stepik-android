@@ -65,8 +65,8 @@
 
                 <data
                     android:host="stepic.org"
-                    android:pathPattern="/mobile"
-                    android:scheme="https"></data>
+                    android:pathPattern="/oauth"
+                    android:scheme="stepic"></data>
             </intent-filter>
         </activity>
 

@@ -9,6 +9,6 @@
   "REFRESH_GRANT_TYPE": "refresh_token",
   "DATE_PATTERN": "dd MMMM yyyy HH:mm",
   "DATE_PATTERN_FOR_VIEW": "dd MMMM yyyy",
-  "REDIRECT_URI": "https://stepic.org/mobile",
+  "REDIRECT_URI": "stepic://stepic.org/oauth",
   "ARRAY_IDS_PARAM": "ids[]"
 }
