@@ -86,5 +86,11 @@ public class AppConstants {
     public static final String ENROLLMENT_KEY = "is_enrolled";
 
     public static final int REQUEST_CODE_DETAIL = 1;
+    
     public static final String GOOGLE_SOCIAL_IDENTIFIER = "google";
+    public static final String FACEBOOK_SOCIAL_IDENTIFIER = "facebook";
+    public static final String MAILRU_SOCIAL_IDENTIFIER = "itmailru";
+    public static final String TWITTER_SOCIAL_IDENTIFIER = "twitter";
+    public static final String GITHUB_SOCIAL_IDENTIFIER = "github";
+    public static final String VK_SOCIAL_IDENTIFIER = "vk";
 }

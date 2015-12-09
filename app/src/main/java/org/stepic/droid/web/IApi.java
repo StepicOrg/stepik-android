@@ -27,22 +27,31 @@ public interface IApi {
 
     Call<Void> tryJoinCourse(Course course);
 
-    Call<SectionsStepicResponse> getSections (long [] sectionsIds);
+    Call<SectionsStepicResponse> getSections(long[] sectionsIds);
 
     Call<UnitStepicResponse> getUnits(long[] units);
 
-    Call<LessonStepicResponse> getLessons(long [] lessons);
+    Call<LessonStepicResponse> getLessons(long[] lessons);
 
-    Call<StepResponse> getSteps (long [] steps);
+    Call<StepResponse> getSteps(long[] steps);
 
-    Call<Void> dropCourse (long courseId);
+    Call<Void> dropCourse(long courseId);
 
-    Call<ProgressesResponse> getProgresses (String [] progresses);
+    Call<ProgressesResponse> getProgresses(String[] progresses);
 
-    Call<AssignmentResponse> getAssignments (long[] assignmentsIds);
+    Call<AssignmentResponse> getAssignments(long[] assignmentsIds);
 
-    Call<Void> postViewed (ViewAssignment stepAssignment);
+    Call<Void> postViewed(ViewAssignment stepAssignment);
 
     void loginWithGoogle(Context context);
 
+    void loginWithFacebook(Context context);
+
+    void loginWithItMailRu(Context context);
+
+    void loginTwitter(Context context);
+
+    void loginWithGitHub(Context context);
+
+    void loginWithVk(Context context);
 }

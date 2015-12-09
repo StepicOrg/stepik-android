@@ -199,6 +199,31 @@ public class RetrofitRESTApi implements IApi {
         loginWithSocial(context, AppConstants.GOOGLE_SOCIAL_IDENTIFIER);
     }
 
+    @Override
+    public void loginWithFacebook(Context context) {
+        loginWithSocial(context, AppConstants.FACEBOOK_SOCIAL_IDENTIFIER);
+    }
+
+    @Override
+    public void loginWithItMailRu(Context context) {
+        loginWithSocial(context, AppConstants.MAILRU_SOCIAL_IDENTIFIER);
+    }
+
+    @Override
+    public void loginTwitter(Context context) {
+        loginWithSocial(context, AppConstants.TWITTER_SOCIAL_IDENTIFIER);
+    }
+
+    @Override
+    public void loginWithGitHub(Context context) {
+        loginWithSocial(context, AppConstants.GITHUB_SOCIAL_IDENTIFIER);
+    }
+
+    @Override
+    public void loginWithVk(Context context) {
+        loginWithSocial(context, AppConstants.VK_SOCIAL_IDENTIFIER);
+    }
+
 
     private void loginWithSocial(Context context, String socialIdentifier) {
 
