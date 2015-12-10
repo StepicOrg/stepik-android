@@ -75,5 +75,6 @@
     <string name="downloads">Загрузки</string>
     <string name="sign_in_social">Через соц. сети.</string>
     <string name="success">Успех</string>
+    <string name="or_sign_in_social">Или войдите с помощью</string>
 
 </resources>

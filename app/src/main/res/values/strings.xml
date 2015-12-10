@@ -79,5 +79,6 @@
     <string name="downloads">Downloads</string>
     <string name="sign_in_social">with social</string>
     <string name="success">Success</string>
+    <string name="or_sign_in_social">Or sign in with</string>
 
 </resources>
