@@ -33,7 +33,7 @@ import retrofit.Retrofit;
 
 public class LoginActivity extends FragmentActivityBase {
 
-    @Bind(org.stepic.droid.R.id.actionbar_close_btn)
+    @Bind(R.id.actionbar_close_btn_layout)
     View mCloseButton;
 
     @Bind(org.stepic.droid.R.id.login_button_layout)
