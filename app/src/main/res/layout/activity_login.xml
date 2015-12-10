@@ -44,7 +44,11 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+
+                    android:minWidth="@dimen/min_max_width_for_tablets"
+                    android:maxWidth="@dimen/min_max_width_for_tablets"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:paddingLeft="44dp"
@@ -98,6 +102,7 @@
 
 
                     <org.stepic.droid.view.custom.STextView
+                        android:maxWidth="@dimen/min_max_width_for_tablets"
                         android:id="@+id/by_signing_up_tv"
                         style="@style/regular_text"
                         android:layout_width="match_parent"
