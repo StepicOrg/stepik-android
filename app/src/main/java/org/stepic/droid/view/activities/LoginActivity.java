@@ -1,6 +1,7 @@
 package org.stepic.droid.view.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -126,6 +127,32 @@ public class LoginActivity extends FragmentActivityBase {
 
 
         mRootView.requestFocus();
+
+        //if we redirect from social:
+
+        Intent intent = getIntent();
+        if (intent.getData() != null) {
+            try {
+                String code = intent.getData().getQueryParameter("code");
+
+                hideSoftKeypad();
+                ProgressHelper.activate(mProgressLogin);
+                mShell.getApi().authWithCode(code).enqueue(new Callback<AuthenticationStepicResponse>() {
+                    @Override
+                    public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
+                        successLogin(response, retrofit);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        failLogin(t);
+                    }
+                });
+            } catch (Throwable t) {
+                YandexMetrica.reportError("callback_from_social_login", t);
+            }
+        }
+
     }
 
     @Override
@@ -146,35 +173,44 @@ public class LoginActivity extends FragmentActivityBase {
         api.authWithLoginPassword(login, password).enqueue(new Callback<AuthenticationStepicResponse>() {
             @Override
             public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
-                SharedPreferenceHelper preferenceHelper = mShell.getSharedPreferenceHelper();
-                AuthenticationStepicResponse authStepic = response.body();
-                preferenceHelper.storeAuthInfo(authStepic);
-
-                ProgressHelper.dismiss(mProgressLogin);
-
-                if (authStepic != null) {
-                    YandexMetrica.reportEvent(AppConstants.METRICA_SUCCESS_LOGIN);
-                    onUserLoginSuccess();
-                } else {
-                    YandexMetrica.reportEvent(AppConstants.METRICA_FAIL_LOGIN);
-                    ProgressHelper.dismiss(mProgressLogin);
-                }
+                successLogin(response, retrofit);
             }
 
             @Override
             public void onFailure(Throwable t) {
-                YandexMetrica.reportEvent(AppConstants.METRICA_FAIL_LOGIN);
-                YandexMetrica.reportError(AppConstants.METRICA_FAIL_LOGIN, t);
-                ProgressHelper.dismiss(mProgressLogin);
-                if (t != null) {
-                    if (t instanceof ProtocolException) {
-                        Toast.makeText(LoginActivity.this, R.string.failLogin, Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(LoginActivity.this, R.string.failLoginConnectionProblems, Toast.LENGTH_LONG).show();
-                    }
-                }
+                failLogin(t);
             }
         });
+    }
+
+
+    private void successLogin(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
+        SharedPreferenceHelper preferenceHelper = mShell.getSharedPreferenceHelper();
+        AuthenticationStepicResponse authStepic = response.body();
+        preferenceHelper.storeAuthInfo(authStepic);
+
+        ProgressHelper.dismiss(mProgressLogin);
+
+        if (authStepic != null) {
+            YandexMetrica.reportEvent(AppConstants.METRICA_SUCCESS_LOGIN);
+            onUserLoginSuccess();
+        } else {
+            YandexMetrica.reportEvent(AppConstants.METRICA_FAIL_LOGIN);
+            ProgressHelper.dismiss(mProgressLogin);
+        }
+    }
+
+    private void failLogin(Throwable t) {
+        YandexMetrica.reportEvent(AppConstants.METRICA_FAIL_LOGIN);
+        YandexMetrica.reportError(AppConstants.METRICA_FAIL_LOGIN, t);
+        ProgressHelper.dismiss(mProgressLogin);
+        if (t != null) {
+            if (t instanceof ProtocolException) {
+                Toast.makeText(LoginActivity.this, R.string.failLogin, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(LoginActivity.this, R.string.failLoginConnectionProblems, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override

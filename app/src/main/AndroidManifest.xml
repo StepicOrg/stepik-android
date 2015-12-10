@@ -49,17 +49,11 @@
             android:name="org.stepic.droid.view.activities.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme">
 
-        <activity
-            android:name="org.stepic.droid.view.activities.MainFeedActivity"
-            android:label="@string/my_courses_title" />
-
-        <activity
-            android:name="org.stepic.droid.view.activities.LoginSocialRedirectActivity"
-            android:label="@string/success">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"></action>
+
                 <category android:name="android.intent.category.DEFAULT"></category>
                 <category android:name="android.intent.category.BROWSABLE"></category>
 
@@ -69,6 +63,10 @@
                     android:scheme="stepic"></data>
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="org.stepic.droid.view.activities.MainFeedActivity"
+            android:label="@string/my_courses_title" />
 
         <activity
             android:name=".view.activities.CourseDetailActivity"
