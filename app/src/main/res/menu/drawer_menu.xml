@@ -17,10 +17,10 @@
             android:title="@string/find_courses_title"
             android:icon="@drawable/ic_search_courses"/>
 
-        <item android:id ="@+id/cached_videos"
-            android:title="@string/downloads"
-            android:icon="@drawable/ic_local_movies_black_24dp"
-            />
+        <!--<item android:id ="@+id/cached_videos"-->
+            <!--android:title="@string/downloads"-->
+            <!--android:icon="@drawable/ic_local_movies_black_24dp"-->
+            <!--/>-->
 
     </group>
 

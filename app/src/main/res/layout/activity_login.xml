@@ -125,17 +125,16 @@
 
                 </LinearLayout>
 
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/social_list"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/height_of_social"
-                    android:layout_marginTop="15dp"
-                    android:stretchColumns="0">
-
-                </android.support.v7.widget.RecyclerView>
+                    <android.support.v7.widget.RecyclerView
+                        android:scrollbarStyle="outsideOverlay"
+                        android:id="@+id/social_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/height_of_social"
+                        android:layout_marginTop="15dp"
+                        android:stretchColumns="0" />
 
             </LinearLayout>
+
         </RelativeLayout>
     </ScrollView>
 

@@ -2,9 +2,11 @@ package org.stepic.droid.view.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -17,7 +19,9 @@ import com.yandex.metrica.YandexMetrica;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
+import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.SocialAuthAdapter;
 import org.stepic.droid.view.decorators.SpacesItemDecorationHorizontal;
@@ -67,8 +71,23 @@ public class LoginActivity extends FragmentActivityBase {
 
         hideSoftKeypad();
 
-        mSocialRecyclerView.addItemDecoration(new SpacesItemDecorationHorizontal(30));
+        float pixelForPadding = DpPixelsHelper.convertDpToPixel(4f, this);//pixelForPadding * (count+1)
+        float widthOfItem = getResources().getDimension(R.dimen.height_of_social);//width == height
+        int count = SocialManager.SocialType.values().length;
+        float widthOfAllItems = widthOfItem * count + pixelForPadding * (count + 1);
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int widthOfScreen = size.x;
+
+
+        mSocialRecyclerView.addItemDecoration(new SpacesItemDecorationHorizontal((int) pixelForPadding));//30 is ok
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        if (widthOfScreen > widthOfAllItems) {
+            int padding = (int) (widthOfScreen - widthOfAllItems) / 2;
+            mSocialRecyclerView.setPadding(padding, 0, 0, 0);
+        }
 
         mSocialRecyclerView.setLayoutManager(layoutManager);
         mSocialRecyclerView.setAdapter(new SocialAuthAdapter(this));
