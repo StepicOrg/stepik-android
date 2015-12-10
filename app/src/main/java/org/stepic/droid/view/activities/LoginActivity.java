@@ -1,5 +1,6 @@
 package org.stepic.droid.view.activities;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -7,7 +8,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,9 +45,6 @@ public class LoginActivity extends FragmentActivityBase {
     @Bind(org.stepic.droid.R.id.password_et)
     EditText mPasswordText;
 
-    @Bind(org.stepic.droid.R.id.login_spinner)
-    ProgressBar mProgressLogin;
-
     @Bind(R.id.forgot_password_tv)
     TextView mForgotPassword;
 
@@ -56,6 +53,8 @@ public class LoginActivity extends FragmentActivityBase {
 
     @Bind(R.id.social_list)
     RecyclerView mSocialRecyclerView;
+
+    ProgressDialog mProgressLogin;
 
 
     @Override
@@ -72,6 +71,11 @@ public class LoginActivity extends FragmentActivityBase {
 
         mSocialRecyclerView.setLayoutManager(layoutManager);
         mSocialRecyclerView.setAdapter(new SocialAuthAdapter(this));
+
+        mProgressLogin = new ProgressDialog(this);
+        mProgressLogin.setTitle(getString(R.string.loading));
+        mProgressLogin.setMessage(getString(R.string.loading_message));
+        mProgressLogin.setCancelable(false);
 
 
         mLoginText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
