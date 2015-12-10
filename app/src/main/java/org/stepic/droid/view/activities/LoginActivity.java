@@ -71,7 +71,7 @@ public class LoginActivity extends FragmentActivityBase {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
         mSocialRecyclerView.setLayoutManager(layoutManager);
-        mSocialRecyclerView.setAdapter(new SocialAuthAdapter(getApplicationContext()));
+        mSocialRecyclerView.setAdapter(new SocialAuthAdapter(this));
 
 
         mLoginText.setOnEditorActionListener(new TextView.OnEditorActionListener() {

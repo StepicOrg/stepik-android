@@ -3,6 +3,7 @@ package org.stepic.droid.web;
 import android.content.Context;
 
 import org.stepic.droid.model.Course;
+import org.stepic.droid.social.SocialManager;
 
 import retrofit.Call;
 
@@ -43,15 +44,5 @@ public interface IApi {
 
     Call<Void> postViewed(ViewAssignment stepAssignment);
 
-    void loginWithGoogle(Context context);
-
-    void loginWithFacebook(Context context);
-
-    void loginWithItMailRu(Context context);
-
-    void loginTwitter(Context context);
-
-    void loginWithGitHub(Context context);
-
-    void loginWithVk(Context context);
+    void loginWithSocial(Context context, SocialManager.SocialType type);
 }

@@ -195,38 +195,7 @@ public class RetrofitRESTApi implements IApi {
         return mLoggedService.postViewed(new ViewAssignmentWrapper(stepAssignment.getAssignment(), stepAssignment.getStep()));
     }
 
-    @Override
-    public void loginWithGoogle(Context context) {
-        loginWithSocial(context, SocialManager.SocialType.google);
-    }
-
-    @Override
-    public void loginWithFacebook(Context context) {
-        loginWithSocial(context, SocialManager.SocialType.facebook);
-    }
-
-    @Override
-    public void loginWithItMailRu(Context context) {
-        loginWithSocial(context, SocialManager.SocialType.mailru);
-    }
-
-    @Override
-    public void loginTwitter(Context context) {
-        loginWithSocial(context, SocialManager.SocialType.twitter);
-    }
-
-    @Override
-    public void loginWithGitHub(Context context) {
-        loginWithSocial(context, SocialManager.SocialType.github);
-    }
-
-    @Override
-    public void loginWithVk(Context context) {
-        loginWithSocial(context, SocialManager.SocialType.vk);
-    }
-
-
-    private void loginWithSocial(Context context, SocialManager.SocialType type) {
+    public void loginWithSocial(Context context, SocialManager.SocialType type) {
 
         String socialIdentifier = type.getIdentifier();
         String url = mConfig.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + mConfig.getOAuthClientId(TokenType.social) + "&response_type=code");
