@@ -140,10 +140,9 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/social_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/height_of_social"
                     android:layout_marginTop="20dp"
-                    android:scrollbarStyle="outsideOverlay"
                     android:stretchColumns="0">
 
                 </android.support.v7.widget.RecyclerView>

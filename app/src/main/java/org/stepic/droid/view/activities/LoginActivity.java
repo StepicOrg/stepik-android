@@ -19,7 +19,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.SocialAuthAdapter;
-import org.stepic.droid.view.layout_managers.WrapContentLinearLayoutManager;
+import org.stepic.droid.view.decorators.SpacesItemDecorationHorizontal;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 import org.stepic.droid.web.IApi;
 
@@ -67,10 +67,9 @@ public class LoginActivity extends FragmentActivityBase {
 
         hideSoftKeypad();
 
+        mSocialRecyclerView.addItemDecoration(new SpacesItemDecorationHorizontal(30));
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
-        RecyclerView.LayoutManager layoutManager =
-                new WrapContentLinearLayoutManager(this,
-                        LinearLayoutManager.HORIZONTAL, false);
         mSocialRecyclerView.setLayoutManager(layoutManager);
         mSocialRecyclerView.setAdapter(new SocialAuthAdapter(getApplicationContext()));
 
@@ -120,7 +119,6 @@ public class LoginActivity extends FragmentActivityBase {
                 mShell.getScreenProvider().openRemindPassword(LoginActivity.this);
             }
         });
-
 
 
         mRootView.requestFocus();

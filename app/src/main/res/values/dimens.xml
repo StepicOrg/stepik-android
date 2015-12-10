@@ -18,5 +18,6 @@
     <dimen name="guideline_tab_indicator_height">2dp</dimen>
     <dimen name="padding_tab_bar">12dp</dimen>
     <dimen name="margin_for_social">0dp</dimen>
+    <dimen name="height_of_social">75dp</dimen>
 
 </resources>
