@@ -19,12 +19,12 @@ public class SocialManager {
     private static final String VK_SOCIAL_IDENTIFIER = "vk";
 
     public enum SocialType {
-        google(GOOGLE_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.google_plus_new_icon_logo)),
-        facebook(FACEBOOK_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.facebook_circle_color_512)),
+        google(GOOGLE_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_google_plus_new_icon_logo)),
+        facebook(FACEBOOK_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_facebook)),
         mailru(MAILRU_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_it)),
-        twitter(TWITTER_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.twitter_logo)),
-        vk(VK_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.vk_512)),
-        github(GITHUB_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.github_icon));
+        twitter(TWITTER_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_twitter)),
+        vk(VK_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_vk)),
+        github(GITHUB_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_github));
 
 
         private String identifier;
