@@ -1,0 +1,23 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginStart="@dimen/margin_for_social"
+    android:layout_marginLeft="@dimen/margin_for_social"
+    android:layout_marginEnd="@dimen/margin_for_social"
+    android:layout_marginRight="@dimen/margin_for_social"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/social_item"
+        android:scaleType="centerCrop"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_gravity="center"
+        android:src="@drawable/sample_course_icon"
+        android:padding="8dp"/>
+
+
+</FrameLayout>

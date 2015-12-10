@@ -22,6 +22,7 @@ import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.util.ImageOnDisk;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
 import org.stepic.droid.view.adapters.SectionAdapter;
+import org.stepic.droid.view.adapters.SocialAuthAdapter;
 import org.stepic.droid.view.adapters.StepFragmentAdapter;
 import org.stepic.droid.view.adapters.UnitAdapter;
 import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
@@ -102,4 +103,6 @@ public interface StepicCoreComponent {
     void inject(ViewPusher viewPusher);
 
     void inject(InternetConnectionEnabledReceiver internetConnectionEnabledReceiver);
+
+    void inject(SocialAuthAdapter socialAuthAdapter);
 }

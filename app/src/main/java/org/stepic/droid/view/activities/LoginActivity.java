@@ -1,6 +1,8 @@
 package org.stepic.droid.view.activities;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -16,6 +18,8 @@ import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.view.adapters.SocialAuthAdapter;
+import org.stepic.droid.view.layout_managers.WrapContentLinearLayoutManager;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 import org.stepic.droid.web.IApi;
 
@@ -50,8 +54,8 @@ public class LoginActivity extends FragmentActivityBase {
     @Bind(R.id.root_view)
     View mRootView;
 
-    @Bind(R.id.login_social_layout)
-    View mLoginSocial;
+    @Bind(R.id.social_list)
+    RecyclerView mSocialRecyclerView;
 
 
     @Override
@@ -62,6 +66,14 @@ public class LoginActivity extends FragmentActivityBase {
         overridePendingTransition(org.stepic.droid.R.anim.slide_in_from_bottom, org.stepic.droid.R.anim.no_transition);
 
         hideSoftKeypad();
+
+
+        RecyclerView.LayoutManager layoutManager =
+                new WrapContentLinearLayoutManager(this,
+                        LinearLayoutManager.HORIZONTAL, false);
+        mSocialRecyclerView.setLayoutManager(layoutManager);
+        mSocialRecyclerView.setAdapter(new SocialAuthAdapter(getApplicationContext()));
+
 
         mLoginText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -109,14 +121,6 @@ public class LoginActivity extends FragmentActivityBase {
             }
         });
 
-
-        mLoginSocial.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mShell.getApi().loginWithGoogle(LoginActivity.this);
-//                mShell.getScreenProvider().showSocialLogin(LoginActivity.this);
-            }
-        });
 
 
         mRootView.requestFocus();

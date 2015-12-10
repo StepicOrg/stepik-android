@@ -21,6 +21,7 @@ import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.EnrollmentWrapper;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
+import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
@@ -196,37 +197,38 @@ public class RetrofitRESTApi implements IApi {
 
     @Override
     public void loginWithGoogle(Context context) {
-        loginWithSocial(context, AppConstants.GOOGLE_SOCIAL_IDENTIFIER);
+        loginWithSocial(context, SocialManager.SocialType.google);
     }
 
     @Override
     public void loginWithFacebook(Context context) {
-        loginWithSocial(context, AppConstants.FACEBOOK_SOCIAL_IDENTIFIER);
+        loginWithSocial(context, SocialManager.SocialType.facebook);
     }
 
     @Override
     public void loginWithItMailRu(Context context) {
-        loginWithSocial(context, AppConstants.MAILRU_SOCIAL_IDENTIFIER);
+        loginWithSocial(context, SocialManager.SocialType.mailru);
     }
 
     @Override
     public void loginTwitter(Context context) {
-        loginWithSocial(context, AppConstants.TWITTER_SOCIAL_IDENTIFIER);
+        loginWithSocial(context, SocialManager.SocialType.twitter);
     }
 
     @Override
     public void loginWithGitHub(Context context) {
-        loginWithSocial(context, AppConstants.GITHUB_SOCIAL_IDENTIFIER);
+        loginWithSocial(context, SocialManager.SocialType.github);
     }
 
     @Override
     public void loginWithVk(Context context) {
-        loginWithSocial(context, AppConstants.VK_SOCIAL_IDENTIFIER);
+        loginWithSocial(context, SocialManager.SocialType.vk);
     }
 
 
-    private void loginWithSocial(Context context, String socialIdentifier) {
+    private void loginWithSocial(Context context, SocialManager.SocialType type) {
 
+        String socialIdentifier = type.getIdentifier();
         String url = mConfig.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + mConfig.getOAuthClientId(TokenType.social) + "&response_type=code");
         Uri uri = Uri.parse(url);
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
