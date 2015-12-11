@@ -971,6 +971,7 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureCachedVideo.Column.STEP_ID, cachedVideo.getStepId());
             values.put(DbStructureCachedVideo.Column.URL, cachedVideo.getUrl());
             values.put(DbStructureCachedVideo.Column.THUMBNAIL, cachedVideo.getThumbnail());
+            values.put(DbStructureCachedVideo.Column.QUALITY, cachedVideo.getQuality());
 
             database.insert(DbStructureCachedVideo.CACHED_VIDEO, null, values);
         } finally {
@@ -1215,6 +1216,7 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureSharedDownloads.Column.VIDEO_ID, downloadEntity.getVideoId());
             values.put(DbStructureSharedDownloads.Column.STEP_ID, downloadEntity.getStepId());
             values.put(DbStructureSharedDownloads.Column.THUMBNAIL, downloadEntity.getThumbnail());
+            values.put(DbStructureSharedDownloads.Column.QUALITY, downloadEntity.getQuality());
             database.insert(DbStructureSharedDownloads.SHARED_DOWNLOADS, null, values);
 
         } finally {
@@ -1352,11 +1354,13 @@ public class DatabaseManager extends DbManagerBase {
         int indexStepId = cursor.getColumnIndex(DbStructureSharedDownloads.Column.STEP_ID);
         int indexVideoId = cursor.getColumnIndex(DbStructureSharedDownloads.Column.VIDEO_ID);
         int indexThumbnail = cursor.getColumnIndex(DbStructureSharedDownloads.Column.THUMBNAIL);
+        int indexQuality= cursor.getColumnIndex(DbStructureSharedDownloads.Column.QUALITY);
 
         downloadEntity.setDownloadId(cursor.getLong(indexDownloadId));
         downloadEntity.setStepId(cursor.getLong(indexStepId));
         downloadEntity.setVideoId(cursor.getLong(indexVideoId));
         downloadEntity.setThumbnail(cursor.getString(indexThumbnail));
+        downloadEntity.setQuality(cursor.getString(indexQuality));
 
         return downloadEntity;
     }
@@ -1373,11 +1377,13 @@ public class DatabaseManager extends DbManagerBase {
         int indexVideoId = cursor.getColumnIndex(DbStructureCachedVideo.Column.VIDEO_ID);
         int indexUrl = cursor.getColumnIndex(DbStructureCachedVideo.Column.URL);
         int indexThumbnail = cursor.getColumnIndex(DbStructureCachedVideo.Column.THUMBNAIL);
+        int indexQuality = cursor.getColumnIndex(DbStructureCachedVideo.Column.QUALITY);
 
         cachedVideo.setVideoId(cursor.getLong(indexVideoId));
         cachedVideo.setUrl(cursor.getString(indexUrl));
         cachedVideo.setThumbnail(cursor.getString(indexThumbnail));
         cachedVideo.setStepId(cursor.getLong(indexStepId));
+        cachedVideo.setQuality(cursor.getString(indexQuality));
         return cachedVideo;
     }
 

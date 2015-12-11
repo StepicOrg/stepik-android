@@ -5,15 +5,25 @@ public class DownloadEntity {
     private long stepId;
     private long videoId;
     private String thumbnail;
+    private String quality;
 
     public DownloadEntity() {
     }
 
-    public DownloadEntity(long downloadId, long stepId, long videoId, String thumbnail) {
+    public DownloadEntity(long downloadId, long stepId, long videoId, String thumbnail, String quality) {
         this.downloadId = downloadId;
         this.stepId = stepId;
         this.videoId = videoId;
         this.thumbnail = thumbnail;
+        this.quality = quality;
+    }
+
+    public String getQuality() {
+        return quality;
+    }
+
+    public void setQuality(String quality) {
+        this.quality = quality;
     }
 
     public String getThumbnail() {

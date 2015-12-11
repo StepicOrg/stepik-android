@@ -82,7 +82,6 @@ public class DownloadsFragment extends FragmentBase {
 
                 Map<Long, Lesson> map = mDatabaseManager.getMapFromStepIdToTheirLesson(stepIds);
 
-
                 return new VideosAndMapToLesson(videos, map);
             }
 

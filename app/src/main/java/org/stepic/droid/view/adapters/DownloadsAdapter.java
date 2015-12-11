@@ -67,8 +67,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         if (relatedLesson != null) {
             String header = relatedLesson.getTitle();
             holder.mVideoHeader.setText(header);
-        }
-        else {
+        } else {
             holder.mVideoHeader.setText("");
         }
         File file = new File(cachedVideo.getUrl()); // predict: heavy operation
@@ -76,13 +75,19 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         String sizeString;
         if (size < 1024) {
             sizeString = size + " " + holder.kb;
-        }
-        else
-        {
+        } else {
             size /= 1024;
             sizeString = size + " " + holder.mb;
         }
         holder.mSize.setText(sizeString);
+
+        String quality = cachedVideo.getQuality();
+        if (quality == null || quality.length() == 0) {
+            holder.mCurrentQuality.setText("");
+        } else {
+            quality += "p";
+            holder.mCurrentQuality.setText(quality);
+        }
 
     }
 
@@ -92,6 +97,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
     }
 
     public static class DownloadsViewHolder extends RecyclerView.ViewHolder {
+
+        @Bind(R.id.current_quality)
+        TextView mCurrentQuality;
 
         @Bind(R.id.size_of_cached_video)
         TextView mSize;

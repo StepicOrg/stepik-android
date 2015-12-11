@@ -156,7 +156,7 @@ public class LoadService extends IntentService {
                 long downloadId = mSystemDownloadManager.enqueue(request);
                 String local_thumbnail = fileId + ".png";
                 String thumbnailsPath = FileUtil.saveImageToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getDownloadFolder());
-                final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath);
+                final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, mUserPrefs.getQualityVideo());
                 mDb.addDownloadEntity(newEntity);
             }
         } catch (SecurityException ex) {
