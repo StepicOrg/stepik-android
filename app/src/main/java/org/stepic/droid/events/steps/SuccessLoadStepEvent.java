@@ -1,18 +1,17 @@
 package org.stepic.droid.events.steps;
 
-import org.stepic.droid.web.StepResponse;
+import org.stepic.droid.model.Step;
 
-import retrofit.Response;
+import java.util.List;
 
 public class SuccessLoadStepEvent {
-    private Response<StepResponse> response;
+    private final List<Step> steps;
 
-    public SuccessLoadStepEvent(Response<StepResponse> response) {
-
-        this.response = response;
+    public SuccessLoadStepEvent(List<Step> steps) {
+        this.steps = steps;
     }
 
-    public Response<StepResponse> getResponse() {
-        return response;
+    public List<Step> getSteps() {
+        return steps;
     }
 }

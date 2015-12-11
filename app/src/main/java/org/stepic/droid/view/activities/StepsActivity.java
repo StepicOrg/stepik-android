@@ -119,7 +119,7 @@ public class StepsActivity extends FragmentActivityBase {
 
             @Override
             public void onPageSelected(int position) {
-               pushState(position);
+                pushState(position);
             }
 
             @Override
@@ -170,13 +170,13 @@ public class StepsActivity extends FragmentActivityBase {
         }
 
         if (e.getStepList() != null && e.getStepList().size() != 0) {
-            bus.post(new UpdateStepsState(mUnit, e.getStepList()));
+            bus.post(new SuccessLoadStepEvent(e.getStepList()));
         } else {
             mShell.getApi().getSteps(mLesson.getSteps()).enqueue(new Callback<StepResponse>() {
                 @Override
                 public void onResponse(Response<StepResponse> response, Retrofit retrofit) {
                     if (response.isSuccess()) {
-                        bus.post(new SuccessLoadStepEvent(response));
+                        bus.post(new SuccessLoadStepEvent(response.body().getSteps()));
                     } else {
                         bus.post(new FailLoadStepEvent());
                     }
@@ -193,8 +193,7 @@ public class StepsActivity extends FragmentActivityBase {
     @Subscribe
     public void onSuccessLoad(SuccessLoadStepEvent e) {
         //// FIXME: 10.10.15 check right lesson ?? is it need?
-        StepResponse stepicResponse = e.getResponse().body();
-        final List<Step> steps = stepicResponse.getSteps();
+        final List<Step> steps = e.getSteps();
 
         if (steps.isEmpty()) {
             bus.post(new FailLoadStepEvent());
@@ -249,7 +248,8 @@ public class StepsActivity extends FragmentActivityBase {
 
                             @Override
                             public void onFailure(Throwable t) {
-
+                                if (steps != null && mUnit != null)
+                                    bus.post(new UpdateStepsState(mUnit, steps));
                             }
                         });
 
@@ -258,7 +258,8 @@ public class StepsActivity extends FragmentActivityBase {
 
                 @Override
                 public void onFailure(Throwable t) {
-
+                    if (steps != null && mUnit != null)
+                        bus.post(new UpdateStepsState(mUnit, steps));
                 }
             });
 
