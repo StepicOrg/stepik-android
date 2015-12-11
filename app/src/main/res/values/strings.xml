@@ -81,5 +81,7 @@
     <string name="success">Success</string>
     <string name="or_sign_in_social">Or sign in with</string>
     <string name="loading_message">Please wait…</string>
+    <string name="kb">KB</string>
+    <string name="mb">MB</string>
 
 </resources>

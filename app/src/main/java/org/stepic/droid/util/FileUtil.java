@@ -64,4 +64,22 @@ public class FileUtil {
 
         return filepath;
     }
+
+    public static long getFileOrFolderSizeInKb(File f) {
+        return getFileSize(f)/1024;
+    }
+
+    private static long getFileSize(File f) {
+
+        long size = 0;
+        if (f.isDirectory()) {
+            for (File file : f.listFiles()) {
+                size += getFileSize(file);
+            }
+        } else {
+            size = f.length();
+        }
+        return size;
+
+    }
 }

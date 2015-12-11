@@ -77,5 +77,7 @@
     <string name="success">Успех</string>
     <string name="or_sign_in_social">Или войдите с помощью</string>
     <string name="loading_message">Пожалуйста, подождите…</string>
+    <string name="kb">КБ</string>
+    <string name="mb">МБ</string>
 
 </resources>

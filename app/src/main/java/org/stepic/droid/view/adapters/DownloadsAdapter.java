@@ -16,13 +16,16 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ThumbnailParser;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.BindDrawable;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.DownloadsViewHolder> {
@@ -68,6 +71,19 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         else {
             holder.mVideoHeader.setText("");
         }
+        File file = new File(cachedVideo.getUrl()); // predict: heavy operation
+        long size = FileUtil.getFileOrFolderSizeInKb(file);
+        String sizeString;
+        if (size < 1024) {
+            sizeString = size + " " + holder.kb;
+        }
+        else
+        {
+            size /= 1024;
+            sizeString = size + " " + holder.mb;
+        }
+        holder.mSize.setText(sizeString);
+
     }
 
     @Override
@@ -76,6 +92,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
     }
 
     public static class DownloadsViewHolder extends RecyclerView.ViewHolder {
+
+        @Bind(R.id.size_of_cached_video)
+        TextView mSize;
 
         @Bind(R.id.video_icon)
         ImageView mVideoIcon;
@@ -94,6 +113,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
 
         @Bind(R.id.after_load_iv)
         ImageView deleteIcon;
+
+        @BindString(R.string.kb)
+        String kb;
+
+        @BindString(R.string.mb)
+        String mb;
 
 
         public DownloadsViewHolder(View itemView) {
