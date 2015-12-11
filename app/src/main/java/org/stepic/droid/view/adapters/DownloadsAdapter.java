@@ -1,6 +1,7 @@
 package org.stepic.droid.view.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -9,8 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
@@ -18,6 +21,7 @@ import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ThumbnailParser;
+import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 
 import java.io.File;
 import java.util.List;
@@ -28,7 +32,7 @@ import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
-public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.DownloadsViewHolder> {
+public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.DownloadsViewHolder> implements StepicOnClickItemListener {
 
     private List<CachedVideo> mCachedVideoList;
     private Context mContext;
@@ -43,7 +47,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
     @Override
     public DownloadsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.cached_video_item, null);
-        return new DownloadsViewHolder(v);
+        return new DownloadsViewHolder(v, this);
     }
 
 
@@ -96,6 +100,23 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         return mCachedVideoList.size();
     }
 
+    @Override
+    public void onClick(int position) {
+        if (position >= 0 && position < mCachedVideoList.size()) {
+            CachedVideo video = mCachedVideoList.get(position);
+            Uri videoUri = Uri.parse(video.getUrl());
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
+            intent.setDataAndType(videoUri, "video/*");
+            try {
+                mContext.startActivity(intent);
+            } catch (Exception ex) {
+                YandexMetrica.reportError("NotPlayer", ex);
+                Toast.makeText(mContext, R.string.not_video_player_error, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     public static class DownloadsViewHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.current_quality)
@@ -129,9 +150,16 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         String mb;
 
 
-        public DownloadsViewHolder(View itemView) {
+        public DownloadsViewHolder(View itemView, final StepicOnClickItemListener click) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    click.onClick(getAdapterPosition());
+                }
+            });
         }
     }
 }
