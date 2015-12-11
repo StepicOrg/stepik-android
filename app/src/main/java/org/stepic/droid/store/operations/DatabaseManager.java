@@ -33,7 +33,11 @@ import org.stepic.droid.util.DbParseHelper;
 import org.stepic.droid.web.ViewAssignment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Singleton;
 
@@ -84,6 +88,60 @@ public class DatabaseManager extends DbManagerBase {
             close();
         }
 
+    }
+
+    public Map<Long, Lesson> getMapFromStepIdToTheirLesson(long[] stepIds) {
+        try {
+            open();
+            HashMap<Long, Lesson> result = new HashMap<>();
+
+
+            String stepIdsCommaSeparated = DbParseHelper.parseLongArrayToString(stepIds, ",");
+            String Query = "Select * from " + DbStructureStep.STEPS + " where " + DbStructureStep.Column.STEP_ID + " IN (" + stepIdsCommaSeparated + ")";
+            Cursor cursor = database.rawQuery(Query, null);
+            cursor.moveToFirst();
+            List<Step> steps = new ArrayList<>();
+            while (!cursor.isAfterLast()) {
+                Step step = parseStep(cursor);
+                steps.add(step);
+                cursor.moveToNext();
+            }
+            cursor.close();
+
+            Set<Long> lessonSet = new HashSet<>(steps.size());
+            for (Step step : steps) {
+                lessonSet.add(step.getLesson());
+            }
+
+            Long[] lessonIds = lessonSet.toArray(new Long[0]);
+            String lessonIdsCommaSeparated = DbParseHelper.parseLongArrayToString(lessonIds, ",");
+            Query = "Select * from " + DbStructureLesson.LESSONS + " where " + DbStructureLesson.Column.LESSON_ID + " IN (" + lessonIdsCommaSeparated + ")";
+            cursor = database.rawQuery(Query, null);
+            cursor.moveToFirst();
+            List<Lesson> lessonArrayList = new ArrayList<>();
+            while (!cursor.isAfterLast()) {
+                Lesson lesson = parseLesson(cursor);
+                lessonArrayList.add(lesson);
+                cursor.moveToNext();
+            }
+            cursor.close();
+
+            for (Step stepItem : steps) {
+                for (Lesson lesson : lessonArrayList) {
+                    if (lesson.getId() == stepItem.getLesson()) {
+                        result.put(stepItem.getId(), lesson);
+                        break;
+                    }
+                }
+            }
+
+
+            return result;
+
+
+        } finally {
+            close();
+        }
     }
 
     public enum Table {
@@ -1030,7 +1088,7 @@ public class DatabaseManager extends DbManagerBase {
     }
 
 
-    public List<CachedVideo> getAllCachedVideo () {
+    public List<CachedVideo> getAllCachedVideo() {
         try {
             open();
             List<CachedVideo> cachedVideos = new ArrayList<>();

@@ -15,9 +15,11 @@ import com.squareup.picasso.Picasso;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.CachedVideo;
+import org.stepic.droid.model.Lesson;
 import org.stepic.droid.util.ThumbnailParser;
 
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.BindDrawable;
@@ -25,12 +27,14 @@ import butterknife.ButterKnife;
 
 public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.DownloadsViewHolder> {
 
-    List<CachedVideo> mCachedVideoList;
-    Context mContext;
+    private List<CachedVideo> mCachedVideoList;
+    private Context mContext;
+    private Map<Long, Lesson> mStepIdToLessonMap;
 
-    public DownloadsAdapter(List<CachedVideo> cachedVideos, Context context) {
+    public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Context context) {
         mCachedVideoList = cachedVideos;
         mContext = context;
+        mStepIdToLessonMap = videoIdToStepMap;
     }
 
     @Override
@@ -48,13 +52,22 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         holder.loadActionIcon.setVisibility(View.GONE);
         holder.progressIcon.setVisibility(View.GONE);
         holder.deleteIcon.setVisibility(View.VISIBLE);
+
         Uri uriForThumbnail = ThumbnailParser.getUriForThumbnail(cachedVideo.getThumbnail());
-        holder.mVideoHeader.setText("LALALAALAL");
         Picasso.with(MainApplication.getAppContext())
                 .load(uriForThumbnail)
                 .placeholder(holder.placeholder)
                 .error(holder.placeholder)
                 .into(holder.mVideoIcon);
+
+        Lesson relatedLesson = mStepIdToLessonMap.get(cachedVideo.getStepId());
+        if (relatedLesson != null) {
+            String header = relatedLesson.getTitle();
+            holder.mVideoHeader.setText(header);
+        }
+        else {
+            holder.mVideoHeader.setText("");
+        }
     }
 
     @Override

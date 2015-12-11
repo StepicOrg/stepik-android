@@ -15,10 +15,15 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.events.video.FinishDownloadCachedVideosEvent;
 import org.stepic.droid.model.CachedVideo;
+import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.VideosAndMapToLesson;
+import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.view.adapters.DownloadsAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,6 +36,7 @@ public class DownloadsFragment extends FragmentBase {
 
     private DownloadsAdapter mDownloadAdapter;
     private List<CachedVideo> mCachedVideoList;
+    private Map<Long, Lesson> mStepIdToLesson;
 
 
     @Nullable
@@ -45,7 +51,8 @@ public class DownloadsFragment extends FragmentBase {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mCachedVideoList = new ArrayList<>();
-        mDownloadAdapter = new DownloadsAdapter(mCachedVideoList, getContext());
+        mStepIdToLesson = new HashMap<>();
+        mDownloadAdapter = new DownloadsAdapter(mCachedVideoList, mStepIdToLesson, getContext());
         mDownloadsView.setAdapter(mDownloadAdapter);
 
         mDownloadsView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -66,16 +73,23 @@ public class DownloadsFragment extends FragmentBase {
     }
 
     private void updateCachedAsync() {
-        AsyncTask<Void, Void, List<CachedVideo>> task = new AsyncTask<Void, Void, List<CachedVideo>>() {
+        AsyncTask<Void, Void, VideosAndMapToLesson> task = new AsyncTask<Void, Void, VideosAndMapToLesson>() {
             @Override
-            protected List<CachedVideo> doInBackground(Void... params) {
-                return mDatabaseManager.getAllCachedVideo();
+            protected VideosAndMapToLesson doInBackground(Void... params) {
+//                return mDatabaseManager.getAllCachedVideo();
+                List<CachedVideo> videos = mDatabaseManager.getAllCachedVideo();
+                long[] stepIds = StepicLogicHelper.fromVideosToStepIds(videos);
+
+                Map<Long, Lesson> map = mDatabaseManager.getMapFromStepIdToTheirLesson(stepIds);
+
+
+                return new VideosAndMapToLesson(videos, map);
             }
 
             @Override
-            protected void onPostExecute(List<CachedVideo> cachedVideos) {
-                super.onPostExecute(cachedVideos);
-                bus.post(new FinishDownloadCachedVideosEvent(cachedVideos));
+            protected void onPostExecute(VideosAndMapToLesson videoAndMap) {
+                super.onPostExecute(videoAndMap);
+                bus.post(new FinishDownloadCachedVideosEvent(videoAndMap.getCachedVideoList(), videoAndMap.getmStepIdToLesson()));
             }
         };
         task.execute();
@@ -87,11 +101,19 @@ public class DownloadsFragment extends FragmentBase {
         if (list == null || list.size() == 0) {
             return;
         }
-        showCachedVideos(list);
+
+        Map<Long, Lesson> map = event.getMap();
+        if (map == null) {
+            return;
+        }
+
+        showCachedVideos(list, map);
 
     }
 
-    private void showCachedVideos(List<CachedVideo> videosForShowing) {
+    private void showCachedVideos(List<CachedVideo> videosForShowing, Map<Long, Lesson> map) {
+        mStepIdToLesson.clear();
+        mStepIdToLesson.putAll(map);
         mCachedVideoList.clear();
         mCachedVideoList.addAll(videosForShowing);
         mDownloadAdapter.notifyDataSetChanged();
