@@ -25,6 +25,7 @@ import org.stepic.droid.model.Profile;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
+import org.stepic.droid.view.fragments.DownloadsFragment;
 import org.stepic.droid.view.fragments.FindCoursesFragment;
 import org.stepic.droid.view.fragments.MyCoursesFragment;
 import org.stepic.droid.view.fragments.SettingsFragment;
@@ -124,6 +125,7 @@ public class MainFeedActivity extends FragmentActivityBase
 //        mFragments.add(new BestLessons());
         mFragments.add(new FindCoursesFragment());
         mFragments.add(new SettingsFragment());
+        mFragments.add(new DownloadsFragment());
 
         mCurrentIndex = 0;
         showCurrentFragment();
@@ -153,6 +155,9 @@ public class MainFeedActivity extends FragmentActivityBase
             case R.id.my_settings:
                 mCurrentIndex = 2;
                 break;
+//            case R.id.cached_videos:
+//                mCurrentIndex = 3;
+//                break;
             case R.id.logout_item:
                 //todo: add 'Are you sure?" dialog
                 YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_LOGOUT);

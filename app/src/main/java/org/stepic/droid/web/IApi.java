@@ -1,11 +1,20 @@
 package org.stepic.droid.web;
 
+import android.content.Context;
+
 import org.stepic.droid.model.Course;
+import org.stepic.droid.social.SocialManager;
 
 import retrofit.Call;
 
 public interface IApi {
+    enum TokenType {
+        social, loginPassword
+    }
+
     Call<AuthenticationStepicResponse> authWithLoginPassword(String login, String password);
+
+    Call<AuthenticationStepicResponse> authWithCode(String code);
 
     Call<IStepicResponse> signUp(String firstName, String secondName, String email, String password);
 
@@ -19,20 +28,21 @@ public interface IApi {
 
     Call<Void> tryJoinCourse(Course course);
 
-    Call<SectionsStepicResponse> getSections (long [] sectionsIds);
+    Call<SectionsStepicResponse> getSections(long[] sectionsIds);
 
     Call<UnitStepicResponse> getUnits(long[] units);
 
-    Call<LessonStepicResponse> getLessons(long [] lessons);
+    Call<LessonStepicResponse> getLessons(long[] lessons);
 
-    Call<StepResponse> getSteps (long [] steps);
+    Call<StepResponse> getSteps(long[] steps);
 
-    Call<Void> dropCourse (long courseId);
+    Call<Void> dropCourse(long courseId);
 
-    Call<ProgressesResponse> getProgresses (String [] progresses);
+    Call<ProgressesResponse> getProgresses(String[] progresses);
 
-    Call<AssignmentResponse> getAssignments (long[] assignmentsIds);
+    Call<AssignmentResponse> getAssignments(long[] assignmentsIds);
 
-    Call<Void> postViewed (ViewAssignment stepAssignment);
+    Call<Void> postViewed(ViewAssignment stepAssignment);
 
+    void loginWithSocial(Context context, SocialManager.SocialType type);
 }

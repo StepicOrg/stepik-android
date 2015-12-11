@@ -4,6 +4,7 @@
     android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
     android:splitMotionEvents="false">
 
     <ScrollView
@@ -43,7 +44,11 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+
+                    android:minWidth="@dimen/min_max_width_for_tablets"
+                    android:maxWidth="@dimen/min_max_width_for_tablets"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:paddingLeft="44dp"
@@ -80,43 +85,24 @@
                         android:textColor="@color/cyan_text_navigation"
                         android:textSize="12sp" />
 
-                    <RelativeLayout
+                    <org.stepic.droid.view.custom.SButton
                         android:id="@+id/login_button_layout"
+                        style="@style/bold_white_text"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginBottom="20dp"
                         android:layout_marginTop="15dp"
                         android:background="@drawable/bt_signin_active"
-                        android:contentDescription="@string/sign_in_btn">
+                        android:contentDescription="@string/app_name"
+                        android:padding="5dp"
+                        android:text="@string/sign_in"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
 
-                        <org.stepic.droid.view.custom.STextView
-                            android:id="@+id/login_btn_tv"
-                            style="@style/regular_white_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="@string/sign_in"
-                            android:textAllCaps="true"
-                            android:textSize="16sp" />
-
-                        <ProgressBar
-                            android:id="@+id/login_spinner"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:indeterminateDrawable="@drawable/login_progress"
-                            android:visibility="gone"
-                            tools:targetApi="17" />
-                    </RelativeLayout>
-
-                    <LinearLayout
-                        android:id="@+id/panel_login_social"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"></LinearLayout>
 
                     <org.stepic.droid.view.custom.STextView
+                        android:maxWidth="@dimen/min_max_width_for_tablets"
                         android:id="@+id/by_signing_up_tv"
                         style="@style/regular_text"
                         android:layout_width="match_parent"
@@ -140,8 +126,20 @@
                         android:textSize="11sp"
                         android:visibility="gone" />
 
+                    <include layout="@layout/sign_in_title" />
+
                 </LinearLayout>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:scrollbarStyle="outsideOverlay"
+                        android:id="@+id/social_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/height_of_social"
+                        android:layout_marginTop="15dp"
+                        android:stretchColumns="0" />
+
             </LinearLayout>
+
         </RelativeLayout>
     </ScrollView>
 

@@ -212,7 +212,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         @Bind(R.id.course_info)
         TextView courseSummary;
 
-        @Bind(R.id.course_icon)
+        @Bind(R.id.video_icon)
         ImageView courseIcon;
 
         @Bind(R.id.course_date_interval)

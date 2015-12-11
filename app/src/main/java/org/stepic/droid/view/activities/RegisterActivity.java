@@ -7,6 +7,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 
 import butterknife.Bind;
@@ -20,7 +21,7 @@ public class RegisterActivity extends FragmentActivityBase {
     @Bind(org.stepic.droid.R.id.createAccount_button_layout)
     RelativeLayout mCreateAccountButton;
 
-    @Bind (org.stepic.droid.R.id.actionbar_close_btn)
+    @Bind (R.id.actionbar_close_btn_layout)
     View mCloseButton;
 
     @Bind (org.stepic.droid.R.id.first_name_reg)

@@ -19,12 +19,12 @@ import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentStepBase;
-import org.stepic.droid.events.video.VideoResolvedEvent;
 import org.stepic.droid.events.video.VideoLoadedEvent;
+import org.stepic.droid.events.video.VideoResolvedEvent;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Video;
+import org.stepic.droid.util.ThumbnailParser;
 
-import java.io.File;
 import java.io.IOException;
 
 import butterknife.Bind;
@@ -108,6 +108,7 @@ public class VideoStepFragment extends FragmentStepBase {
 
         mPlayer.setOnClickListener(new View.OnClickListener() {
             Step localStep = mStep;
+
             @Override
             public void onClick(View v) {
                 // TODO: 16.10.15 change icon to loading
@@ -148,12 +149,7 @@ public class VideoStepFragment extends FragmentStepBase {
     }
 
     private void setmThumbnail(String thumbnail) {
-        Uri uri;
-        if (thumbnail.startsWith("http")) {
-            uri = Uri.parse(thumbnail);
-        } else {
-            uri = Uri.fromFile(new File(thumbnail));
-        }
+        Uri uri = ThumbnailParser.getUriForThumbnail(thumbnail);
         Picasso.with(getContext())
                 .load(uri)
                 .placeholder(mVideoPlaceholder)

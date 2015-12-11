@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
+@Deprecated
 public interface IHttpManager {
     String post(String url, Bundle params) throws IOException;
 

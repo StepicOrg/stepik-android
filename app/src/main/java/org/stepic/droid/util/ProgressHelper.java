@@ -1,5 +1,6 @@
 package org.stepic.droid.util;
 
+import android.app.ProgressDialog;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -25,5 +26,15 @@ public class ProgressHelper {
     public static void activate(SwipeRefreshLayout swipeRefreshLayout) {
         if (swipeRefreshLayout != null)
             swipeRefreshLayout.setRefreshing(true);
+    }
+
+    public static void activate(ProgressDialog progressDialog) {
+        if (progressDialog != null)
+            progressDialog.show();
+    }
+
+    public static void dismiss(ProgressDialog progressDialog) {
+        if (progressDialog != null)
+            progressDialog.dismiss();
     }
 }

@@ -9,6 +9,7 @@ import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.DownloadManagerImpl;
 import org.stepic.droid.store.IDownloadManager;
@@ -137,4 +138,11 @@ public class StepicDefaultModule {
     public CleanManager provideCleanManager() {
         return new CleanManager();
     }
+
+    @Singleton
+    @Provides
+    public SocialManager provideSocialManager(){
+        return new SocialManager();
+    }
+
 }

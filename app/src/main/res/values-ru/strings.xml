@@ -31,7 +31,7 @@
     <string name="join_course">Поступить</string>
     <string name="join_course_exception">Проверьте интернет соединение.</string>
     <string name="join_course_impossible">Сейчас нельзя присоединиться к курсу.</string>
-    <string name="loading">Загрузка…</string>
+    <string name="loading">Загрузка</string>
     <string name="begin_date_section">Дата начала:</string>
     <string name="hard_deadline_section">Жесткий дедлайн:</string>
     <string name="soft_deadline_section">Мягкий дедлайн:</string>
@@ -72,5 +72,10 @@
     <string name="empty_courses">Похоже, что Вы не зарегистированы ни на один курс. Кликните, чтобы найти курсы!</string>
     <string name="cache_cleared">Кэш успешно очищен!</string>
     <string name="join_course_web_exception">Попробуйте записаться на курс в веб версии</string>
+    <string name="downloads">Загрузки</string>
+    <string name="sign_in_social">Через соц. сети.</string>
+    <string name="success">Успех</string>
+    <string name="or_sign_in_social">Или войдите с помощью</string>
+    <string name="loading_message">Пожалуйста, подождите…</string>
 
 </resources>

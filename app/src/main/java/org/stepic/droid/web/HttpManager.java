@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+@Deprecated
 @Singleton
 public class HttpManager implements IHttpManager {
 
@@ -153,7 +154,7 @@ public class HttpManager implements IHttpManager {
         mOkHttpClient.setAuthenticator(new Authenticator() {
             @Override
             public Request authenticate(Proxy proxy, Response response) throws IOException {
-                String credential = Credentials.basic(mConfig.getOAuthClientId(), mConfig.getOAuthClientSecret());
+                String credential = Credentials.basic(mConfig.getOAuthClientId(IApi.TokenType.loginPassword), mConfig.getOAuthClientSecret(IApi.TokenType.loginPassword));
                 return response.request().newBuilder().header("Authorization", credential).build();
             }
 

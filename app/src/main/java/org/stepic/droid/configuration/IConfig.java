@@ -1,12 +1,16 @@
 package org.stepic.droid.configuration;
 
+import org.stepic.droid.web.IApi;
+
 public interface IConfig {
-    String getOAuthClientId();
+    String getOAuthClientId(IApi.TokenType type);
     String getBaseUrl();
-    String getOAuthClientSecret();
-    String getGrantType();
+    String getOAuthClientSecret(IApi.TokenType type);
+    String getGrantType(IApi.TokenType type);
     String getRefreshGrantType();
     String getDatePattern();
     String getDatePatternForView();
     String getIDSParam();
+
+    String getRedirectUri();
 }

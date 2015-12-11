@@ -80,21 +80,22 @@
                     android:layout_height="wrap_content" />
 
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/instructors_carousel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:stretchColumns="0" />
-
-                    <include layout="@layout/progress_bar_on_empty_screen" />
-                </FrameLayout>
 
             </LinearLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/instructors_carousel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:stretchColumns="0" />
+
+                <include layout="@layout/progress_bar_on_empty_screen" />
+            </FrameLayout>
         </LinearLayout>
     </ScrollView>
 

@@ -81,6 +81,14 @@ public class SharedPreferenceHelper {
 
     }
 
+    public void storeLastTokenType(boolean isSocial) {
+        put(PreferenceType.LOGIN, IS_SOCIAL, isSocial);
+    }
+
+    public boolean isLastTokenSocial() {
+        return getBoolean(PreferenceType.LOGIN, IS_SOCIAL);
+    }
+
     public void deleteAuthInfo() {
         RWLocks.AuthLock.writeLock().lock();
         try {
@@ -140,6 +148,7 @@ public class SharedPreferenceHelper {
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
     private final String PROFILE_JSON = "profile_json";
     private final String WIFI_KEY = "wifi_key";
+    private final String IS_SOCIAL = "is_social_key";
     private final String VIDEO_QUALITY_KEY = "video_quality_key";
 
 }

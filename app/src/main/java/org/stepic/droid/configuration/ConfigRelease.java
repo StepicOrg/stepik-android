@@ -7,6 +7,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.yandex.metrica.YandexMetrica;
 
+import org.stepic.droid.web.IApi;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -22,10 +24,14 @@ public class ConfigRelease implements IConfig {
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
     private static final String OAUTH_CLIENT_SECRET = "OAUTH_CLIENT_SECRET";
     private static final String GRANT_TYPE = "GRANT_TYPE";
+    private static final String OAUTH_CLIENT_ID_SOCIAL = "OAUTH_CLIENT_ID_SOCIAL";
+    private static final String OAUTH_CLIENT_SECRET_SOCIAL = "OAUTH_CLIENT_SECRET_SOCIAL";
+    private static final String GRANT_TYPE_SOCIAL = "GRANT_TYPE_SOCIAL";
     private static final String REFRESH_GRANT_TYPE = "REFRESH_GRANT_TYPE";
     private static final String DATE_PATTERN = "DATE_PATTERN";
     private static final String DATE_PATTERN_FOR_VIEW = "DATE_PATTERN_FOR_VIEW";
     private static final String ARRAY_IDS_PARAM = "ARRAY_IDS_PARAM";
+    private static final String REDIRECT_URI = "REDIRECT_URI";
 
 
     @Inject
@@ -42,8 +48,15 @@ public class ConfigRelease implements IConfig {
     }
 
     @Override
-    public String getOAuthClientId() {
-        return getString(OAUTH_CLIENT_ID);
+    public String getOAuthClientId(IApi.TokenType type) {
+        switch (type) {
+            case social:
+                return getString(OAUTH_CLIENT_ID_SOCIAL);
+            case loginPassword:
+                return getString(OAUTH_CLIENT_ID);
+            default:
+                return null;
+        }
     }
 
     @Override
@@ -52,13 +65,27 @@ public class ConfigRelease implements IConfig {
     }
 
     @Override
-    public String getOAuthClientSecret() {
-        return getString(OAUTH_CLIENT_SECRET);
+    public String getOAuthClientSecret(IApi.TokenType type) {
+        switch (type) {
+            case social:
+                return getString(OAUTH_CLIENT_SECRET_SOCIAL);
+            case loginPassword:
+                return getString(OAUTH_CLIENT_SECRET);
+            default:
+                return null;
+        }
     }
 
     @Override
-    public String getGrantType() {
-        return getString(GRANT_TYPE);
+    public String getGrantType(IApi.TokenType type) {
+        switch (type) {
+            case social:
+                return getString(GRANT_TYPE_SOCIAL);
+            case loginPassword:
+                return getString(GRANT_TYPE);
+            default:
+                return null;
+        }
     }
 
     @Override
@@ -79,6 +106,11 @@ public class ConfigRelease implements IConfig {
     @Override
     public String getIDSParam() {
         return getString(ARRAY_IDS_PARAM);
+    }
+
+    @Override
+    public String getRedirectUri() {
+        return getString(REDIRECT_URI);
     }
 
 
