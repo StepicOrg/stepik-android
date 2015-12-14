@@ -48,11 +48,29 @@ public class StoreStateManager implements IStoreStateManager {
         //now unit lesson and all steps are deleting
         //cached = false, loading false
         //just make for parents
+        //// FIXME: 14.12.15 it is not true, see related commit. Now we can delete one step.
 
 
         Section section = mDatabaseManager.getSectionById(unit.getSection());
         updateSectionAfterDeleting(section);
 
+    }
+
+    @Override
+    public void updateStepAfterDeleting(Step step) {
+        long lessonId = step.getLesson();
+
+        Lesson lesson = mDatabaseManager.getLessonById(lessonId);
+        lesson.setIs_loading(false);
+        lesson.setIs_cached(false);
+        mDatabaseManager.updateOnlyCachedLoadingLesson(lesson);
+
+        Unit unit = mDatabaseManager.getUnitByLessonId(lessonId);
+        unit.setIs_loading(false);
+        unit.setIs_cached(false);
+        mDatabaseManager.updateOnlyCachedLoadingUnit(unit);
+
+        updateUnitLessonAfterDeleting(unit);
     }
 
     private void updateSectionAfterDeleting(Section section) {

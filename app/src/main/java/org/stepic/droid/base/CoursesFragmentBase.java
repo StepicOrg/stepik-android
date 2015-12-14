@@ -131,7 +131,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                Log.i(TAG, "onScroll is invoked");
                 if (!isLoading && mHasNextPage && firstVisibleItem + visibleItemCount >= totalItemCount && userScrolled) {
                     Log.i(TAG, "Go load from scroll");
                     isLoading = true;

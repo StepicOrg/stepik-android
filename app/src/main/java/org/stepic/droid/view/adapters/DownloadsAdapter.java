@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,26 +20,39 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.Step;
+import org.stepic.droid.store.CleanManager;
+import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ThumbnailParser;
+import org.stepic.droid.view.listeners.OnClickLoadListener;
 import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
-public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.DownloadsViewHolder> implements StepicOnClickItemListener {
+public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.DownloadsViewHolder> implements StepicOnClickItemListener, OnClickLoadListener {
 
     private List<CachedVideo> mCachedVideoList;
     private Context mContext;
     private Map<Long, Lesson> mStepIdToLessonMap;
 
+    @Inject
+    CleanManager mCleanManager;
+
+    @Inject
+    DatabaseManager mDatabaseManager;
+
     public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Context context) {
+        MainApplication.component().inject(this);
         mCachedVideoList = cachedVideos;
         mContext = context;
         mStepIdToLessonMap = videoIdToStepMap;
@@ -47,7 +61,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
     @Override
     public DownloadsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.cached_video_item, null);
-        return new DownloadsViewHolder(v, this);
+        return new DownloadsViewHolder(v, this, this);
     }
 
 
@@ -117,6 +131,30 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         }
     }
 
+    @Override
+    public void onClickLoad(int position) {
+        if (position >= 0 && position < mCachedVideoList.size()) {
+            CachedVideo video = mCachedVideoList.get(position);
+            mCachedVideoList.remove(position);
+            final long stepId = video.getStepId();
+
+            AsyncTask<Void, Void, Step> task = new AsyncTask<Void, Void, Step>() {
+                @Override
+                protected Step doInBackground(Void... params) {
+                    return mDatabaseManager.getStepById(stepId);
+                }
+
+                @Override
+                protected void onPostExecute(Step step) {
+                    super.onPostExecute(step);
+                    mCleanManager.removeStep(step);
+                }
+            };
+            task.execute();
+            notifyDataSetChanged();
+        }
+    }
+
     public static class DownloadsViewHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.current_quality)
@@ -149,8 +187,10 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         @BindString(R.string.mb)
         String mb;
 
+        @Bind(R.id.load_button)
+        View mLoadRoot;
 
-        public DownloadsViewHolder(View itemView, final StepicOnClickItemListener click) {
+        public DownloadsViewHolder(View itemView, final StepicOnClickItemListener click, final OnClickLoadListener loadListener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -160,6 +200,15 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
                     click.onClick(getAdapterPosition());
                 }
             });
+
+            mLoadRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loadListener.onClickLoad(getAdapterPosition());
+                }
+            });
+
+
         }
     }
 }

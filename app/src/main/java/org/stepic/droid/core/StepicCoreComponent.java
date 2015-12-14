@@ -20,6 +20,7 @@ import org.stepic.droid.services.DeleteService;
 import org.stepic.droid.services.LoadService;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.util.ImageOnDisk;
+import org.stepic.droid.view.adapters.DownloadsAdapter;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
 import org.stepic.droid.view.adapters.SectionAdapter;
 import org.stepic.droid.view.adapters.SocialAuthAdapter;
@@ -105,4 +106,6 @@ public interface StepicCoreComponent {
     void inject(InternetConnectionEnabledReceiver internetConnectionEnabledReceiver);
 
     void inject(SocialAuthAdapter socialAuthAdapter);
+
+    void inject(DownloadsAdapter downloadsAdapter);
 }

@@ -209,15 +209,20 @@ public class LoadService extends IntentService {
                 if (steps != null && steps.size() != 0) {
                     for (Step step : steps) {
                         mDb.addStep(step);
+                        boolean cached = mDb.isStepCached(step);
+                        step.setIs_cached(cached);
                     }
                     for (Step step : steps) {
+                        if (!step.is_cached()){
                         step.setIs_loading(true);
                         step.setIs_cached(false);
-                        mDb.updateOnlyCachedLoadingStep(step);
+                        mDb.updateOnlyCachedLoadingStep(step);}
                     }
 
                     for (Step step : steps) {
-                        addStep(step, lesson);
+                        if (!step.is_cached()) {
+                            addStep(step, lesson);
+                        }
                     }
                 } else {
                     mStoreStateManager.updateUnitLessonState(lesson.getId());

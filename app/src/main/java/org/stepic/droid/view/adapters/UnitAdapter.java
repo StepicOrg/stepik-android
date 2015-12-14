@@ -155,10 +155,10 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     }
 
     @Override
-    public void onClickLoad(int itemPosition) {
-        if (itemPosition >= 0 && itemPosition < mUnitList.size()) {
-            Unit unit = mUnitList.get(itemPosition);
-            Lesson lesson = mLessonList.get(itemPosition);
+    public void onClickLoad(int position) {
+        if (position >= 0 && position < mUnitList.size()) {
+            Unit unit = mUnitList.get(position);
+            Lesson lesson = mLessonList.get(position);
 
             int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -206,13 +206,13 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 } else {
 
                     YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CACHE_UNIT, JsonHelper.toJson(unit));
-                    mDownloadManager.addUnitLesson(unit, lesson);
                     unit.setIs_cached(false);
                     lesson.setIs_cached(false);
                     unit.setIs_loading(true);
                     lesson.setIs_loading(true);
                     mDbManager.updateOnlyCachedLoadingLesson(lesson);
                     mDbManager.updateOnlyCachedLoadingUnit(unit);
+                    mDownloadManager.addUnitLesson(unit, lesson);
                     notifyDataSetChanged();
                 }
             }

@@ -3,6 +3,7 @@ package org.stepic.droid.view.fragments;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -56,6 +57,7 @@ public class DownloadsFragment extends FragmentBase {
         mDownloadsView.setAdapter(mDownloadAdapter);
 
         mDownloadsView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mDownloadsView.setItemAnimator(new DefaultItemAnimator());
 
     }
 
@@ -76,7 +78,6 @@ public class DownloadsFragment extends FragmentBase {
         AsyncTask<Void, Void, VideosAndMapToLesson> task = new AsyncTask<Void, Void, VideosAndMapToLesson>() {
             @Override
             protected VideosAndMapToLesson doInBackground(Void... params) {
-//                return mDatabaseManager.getAllCachedVideo();
                 List<CachedVideo> videos = mDatabaseManager.getAllCachedVideo();
                 long[] stepIds = StepicLogicHelper.fromVideosToStepIds(videos);
 
@@ -107,7 +108,6 @@ public class DownloadsFragment extends FragmentBase {
         }
 
         showCachedVideos(list, map);
-
     }
 
     private void showCachedVideos(List<CachedVideo> videosForShowing, Map<Long, Lesson> map) {
