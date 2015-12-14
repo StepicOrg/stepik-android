@@ -53,6 +53,8 @@ public class DownloadsFragment extends FragmentBase {
 
     public static final String KEY_STRING_IDS = "step_ids";
 
+    @Bind(R.id.empty_downloading)
+    View mEmptyDownloadView;
 
     @Bind(R.id.list_of_downloads)
     RecyclerView mDownloadsView;
@@ -76,7 +78,7 @@ public class DownloadsFragment extends FragmentBase {
         super.onActivityCreated(savedInstanceState);
         mCachedVideoList = new ArrayList<>();
         mStepIdToLesson = new HashMap<>();
-        mDownloadAdapter = new DownloadsAdapter(mCachedVideoList, mStepIdToLesson, getContext());
+        mDownloadAdapter = new DownloadsAdapter(mCachedVideoList, mStepIdToLesson, getContext(), this);
         mDownloadsView.setAdapter(mDownloadAdapter);
 
         mDownloadsView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -129,7 +131,7 @@ public class DownloadsFragment extends FragmentBase {
     @Subscribe
     public void onFinishLoadCachedVideos(FinishDownloadCachedVideosEvent event) {
         List<CachedVideo> list = event.getCachedVideos();
-        if (list == null || list.size() == 0) {
+        if (list == null) {
             return;
         }
 
@@ -146,6 +148,7 @@ public class DownloadsFragment extends FragmentBase {
         mStepIdToLesson.putAll(map);
         mCachedVideoList.clear();
         mCachedVideoList.addAll(videosForShowing);
+        checkForEmpty();
         mDownloadAdapter.notifyDataSetChanged();
     }
 
@@ -226,6 +229,7 @@ public class DownloadsFragment extends FragmentBase {
         for (long stepId : stepIds) {
             removeByStepId(stepId);
         }
+        checkForEmpty();
         mDownloadAdapter.notifyDataSetChanged();
     }
 
@@ -237,6 +241,7 @@ public class DownloadsFragment extends FragmentBase {
         int position = removeByStepId(stepId);
 
         if (position >= 0) {
+            checkForEmpty();
             mDownloadAdapter.notifyItemRemoved(position);
         }
     }
@@ -256,7 +261,19 @@ public class DownloadsFragment extends FragmentBase {
         int position = mCachedVideoList.indexOf(videoForDeleteFromList);
         mCachedVideoList.remove(videoForDeleteFromList);
         mStepIdToLesson.remove(videoForDeleteFromList.getStepId());
+        if (mCachedVideoList.size() == 0){
+
+        }
         return position;
+    }
+
+    public void checkForEmpty () {
+        //// FIXME: 14.12.15 add to notify methods
+        if (mCachedVideoList.size() != 0) {
+            mEmptyDownloadView.setVisibility(View.GONE);
+        } else {
+            mEmptyDownloadView.setVisibility(View.VISIBLE);
+        }
     }
 
 }

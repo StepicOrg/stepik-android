@@ -25,6 +25,7 @@ import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ThumbnailParser;
+import org.stepic.droid.view.fragments.DownloadsFragment;
 import org.stepic.droid.view.listeners.OnClickLoadListener;
 import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 
@@ -50,8 +51,10 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
 
     @Inject
     DatabaseManager mDatabaseManager;
+    private DownloadsFragment downloadsFragment;
 
-    public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Context context) {
+    public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Context context, DownloadsFragment downloadsFragment) {
+        this.downloadsFragment = downloadsFragment;
         MainApplication.component().inject(this);
         mCachedVideoList = cachedVideos;
         mContext = context;
@@ -152,6 +155,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
                 }
             };
             task.execute();
+            downloadsFragment.checkForEmpty();
             notifyItemRemoved(position);
         }
     }
