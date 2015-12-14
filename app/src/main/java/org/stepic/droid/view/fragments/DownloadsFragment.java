@@ -83,7 +83,7 @@ public class DownloadsFragment extends FragmentBase {
 
         mDownloadsView.setLayoutManager(new LinearLayoutManager(getContext()));
         mDownloadsView.setItemAnimator(new SlideInRightAnimator());
-        mDownloadsView.getItemAnimator().setRemoveDuration(100);
+        mDownloadsView.getItemAnimator().setRemoveDuration(10);
 
         bus.register(this);
     }
