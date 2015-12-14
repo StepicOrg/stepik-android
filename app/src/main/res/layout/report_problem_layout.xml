@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_report_problem_black_48dp" />
+        android:src="@drawable/ic_report_problem_silver" />
 
     <TextView
         android:layout_width="240dp"
