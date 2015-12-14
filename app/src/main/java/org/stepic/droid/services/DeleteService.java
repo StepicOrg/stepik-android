@@ -3,12 +3,14 @@ package org.stepic.droid.services;
 import android.app.DownloadManager;
 import android.app.IntentService;
 import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
 
 import com.squareup.otto.Bus;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.events.steps.StepRemovedEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
@@ -90,7 +92,7 @@ public class DeleteService extends IntentService {
         }
     }
 
-    private void removeFromDisk(Step step) {
+    private void removeFromDisk(final Step step) {
         if (step.getBlock().getVideo() != null) {
             String path = mDb.getPathToVideoIfExist(step.getBlock().getVideo());
             File file = new File(path);
@@ -103,6 +105,13 @@ public class DeleteService extends IntentService {
 
         mDb.deleteStep(step); // remove steps
         mStoreStateManager.updateStepAfterDeleting(step);
+        Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
+
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {mBus.post(new StepRemovedEvent(step.getId()));} // This is your code
+        };
+        mainHandler.post(myRunnable);
     }
 
     private void removeFromDisk(Unit unit, Lesson lesson) {

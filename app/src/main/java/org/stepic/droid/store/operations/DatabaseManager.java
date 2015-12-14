@@ -1043,9 +1043,13 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public void deleteStep(Step step) {
+        long stepId = step.getId();
+        deleteStepById(stepId);
+    }
+
+    public void deleteStepById(long stepId) {
         try {
             open();
-            long stepId = step.getId();
             database.delete(DbStructureStep.STEPS,
                     "\"" + DbStructureStep.Column.STEP_ID + "\"" + " = " + stepId,
                     null);
@@ -1354,7 +1358,7 @@ public class DatabaseManager extends DbManagerBase {
         int indexStepId = cursor.getColumnIndex(DbStructureSharedDownloads.Column.STEP_ID);
         int indexVideoId = cursor.getColumnIndex(DbStructureSharedDownloads.Column.VIDEO_ID);
         int indexThumbnail = cursor.getColumnIndex(DbStructureSharedDownloads.Column.THUMBNAIL);
-        int indexQuality= cursor.getColumnIndex(DbStructureSharedDownloads.Column.QUALITY);
+        int indexQuality = cursor.getColumnIndex(DbStructureSharedDownloads.Column.QUALITY);
 
         downloadEntity.setDownloadId(cursor.getLong(indexDownloadId));
         downloadEntity.setStepId(cursor.getLong(indexStepId));

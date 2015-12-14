@@ -86,4 +86,5 @@ public class AppConstants {
     public static final String ENROLLMENT_KEY = "is_enrolled";
 
     public static final int REQUEST_CODE_DETAIL = 1;
+    public static final java.lang.String METRICA_YES_CLEAR_VIDEOS = "clear videos from downloads";
 }

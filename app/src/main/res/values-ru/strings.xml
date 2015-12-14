@@ -79,5 +79,7 @@
     <string name="loading_message">Пожалуйста, подождите…</string>
     <string name="kb">КБ</string>
     <string name="mb">МБ</string>
+    <string name="clear">Очистить</string>
+    <string name="clear_videos">Вы уверены, что хотите удалить все закешированные видео?</string>
 
 </resources>

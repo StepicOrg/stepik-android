@@ -136,6 +136,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         if (position >= 0 && position < mCachedVideoList.size()) {
             CachedVideo video = mCachedVideoList.get(position);
             mCachedVideoList.remove(position);
+            mStepIdToLessonMap.remove(video.getStepId());
             final long stepId = video.getStepId();
 
             AsyncTask<Void, Void, Step> task = new AsyncTask<Void, Void, Step>() {
@@ -151,7 +152,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
                 }
             };
             task.execute();
-            notifyDataSetChanged();
+            notifyItemRemoved(position);
         }
     }
 

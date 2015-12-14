@@ -67,6 +67,9 @@ dependencies {
 
     // AppMetrica from maven central. Protobuf will be included as dependency.
     compile 'com.yandex.android:mobmetricalib:2.21@aar'
+
+    compile 'jp.wasabeef:recyclerview-animators:1.3.0'
+
 }
 
 repositories {
