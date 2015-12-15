@@ -439,6 +439,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
         YandexMetrica.reportEvent(AppConstants.METRICA_DROP_COURSE + " successful", JsonHelper.toJson(e.getCourse()));
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + e.getCourse().getTitle(), Toast.LENGTH_LONG).show();
         if (e.getType() == DatabaseManager.Table.enrolled) {
+
             mCourses.remove(e.getCourse());
             mCoursesAdapter.notifyDataSetChanged();
         }
