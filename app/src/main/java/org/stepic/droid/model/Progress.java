@@ -3,7 +3,7 @@ package org.stepic.droid.model;
 public class Progress {
     String id;
     String last_viewed;
-    int score;
+    String score;
     int cost;
     int n_steps;
     int n_steps_passed;
@@ -25,11 +25,11 @@ public class Progress {
         this.last_viewed = last_viewed;
     }
 
-    public int getScore() {
+    public String getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(String score) {
         this.score = score;
     }
 

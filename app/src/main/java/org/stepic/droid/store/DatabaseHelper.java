@@ -60,6 +60,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             upgradeToV3 = "ALTER TABLE "    + DbStructureSharedDownloads.SHARED_DOWNLOADS + " ADD COLUMN "
                     + DbStructureSharedDownloads.Column.QUALITY + " TEXT ";
             db.execSQL(upgradeToV3);
+
+            upgradeToV3 = "ALTER TABLE " + DbStructureProgress.PROGRESS + " ALTER COLUMN "
+                    + DbStructureProgress.Column.SCORE + " TEXT ";
+            db.execSQL(upgradeToV3);
         }
     }
 
@@ -256,7 +260,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureProgress.Column.IS_PASSED + " BOOLEAN, "
                 + DbStructureProgress.Column.ID + " TEXT, "
                 + DbStructureProgress.Column.LAST_VIEWED + " TEXT, "
-                + DbStructureProgress.Column.SCORE + " INTEGER, "
+                + DbStructureProgress.Column.SCORE + " TEXT, "
                 + DbStructureProgress.Column.COST + " INTEGER, "
                 + DbStructureProgress.Column.N_STEPS + " INTEGER, "
                 + DbStructureProgress.Column.N_STEPS_PASSED + " INTEGER "
