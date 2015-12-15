@@ -10,6 +10,8 @@ public final class DbStructureSharedDownloads {
         public static final String STEP_ID = "step_id";
         public static final String VIDEO_ID = "video_id";
         public static final String THUMBNAIL = "thumbnail";
+        public static final String QUALITY = "quality";
+
 
     }
 
@@ -19,7 +21,8 @@ public final class DbStructureSharedDownloads {
                     Column.DOWNLOAD_ID,
                     Column.STEP_ID,
                     Column.VIDEO_ID,
-                    Column.THUMBNAIL
+                    Column.THUMBNAIL,
+                    Column.QUALITY
             };
         }
         return mUsedColumns;

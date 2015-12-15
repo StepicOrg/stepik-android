@@ -12,7 +12,7 @@ public final class DbStructureCachedVideo extends DBStructureBase {
         public static final String VIDEO_ID = "_id";
         public static final String THUMBNAIL = "thumbnail_store_url";
         public static final String URL = "store_url";
-
+        public static final String QUALITY = "quality";
     }
 
     public static String[] getUsedColumns() {
@@ -21,7 +21,8 @@ public final class DbStructureCachedVideo extends DBStructureBase {
                     Column.VIDEO_ID,
                     Column.URL,
                     Column.STEP_ID,
-                    Column.THUMBNAIL
+                    Column.THUMBNAIL,
+                    Column.QUALITY
             };
         }
         return mUsedColumns;

@@ -20,15 +20,17 @@ import org.stepic.droid.services.DeleteService;
 import org.stepic.droid.services.LoadService;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.util.ImageOnDisk;
+import org.stepic.droid.view.adapters.DownloadsAdapter;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
 import org.stepic.droid.view.adapters.SectionAdapter;
 import org.stepic.droid.view.adapters.SocialAuthAdapter;
 import org.stepic.droid.view.adapters.StepFragmentAdapter;
 import org.stepic.droid.view.adapters.UnitAdapter;
 import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
-import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.dialogs.ClearCacheDialogFragment;
+import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.dialogs.VideoQualityDialog;
+import org.stepic.droid.view.fragments.DownloadsFragment;
 import org.stepic.droid.web.HttpManager;
 import org.stepic.droid.web.RetrofitRESTApi;
 
@@ -105,4 +107,8 @@ public interface StepicCoreComponent {
     void inject(InternetConnectionEnabledReceiver internetConnectionEnabledReceiver);
 
     void inject(SocialAuthAdapter socialAuthAdapter);
+
+    void inject(DownloadsAdapter downloadsAdapter);
+
+    void inject(DownloadsFragment.ClearVideosDialog clearVideosDialog);
 }

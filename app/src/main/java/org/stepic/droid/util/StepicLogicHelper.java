@@ -1,5 +1,6 @@
 package org.stepic.droid.util;
 
+import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Unit;
 
 import java.util.List;
@@ -15,4 +16,16 @@ public class StepicLogicHelper {
         }
         return lessonsIds;
     }
+
+    public static long[] fromVideosToStepIds(List<CachedVideo> cachedVideos) {
+        long[] stepIds = new long[cachedVideos.size()];
+        for (int i = 0; i < cachedVideos.size(); i++) {
+            CachedVideo video = cachedVideos.get(i);
+            if (video != null) {
+                stepIds[i] = video.getStepId();
+            }
+        }
+        return stepIds;
+    }
+
 }

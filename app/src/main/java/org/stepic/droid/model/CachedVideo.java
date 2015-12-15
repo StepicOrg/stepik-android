@@ -5,15 +5,24 @@ public class CachedVideo {
     private long videoId;
     private String url;
     private String thumbnail;
+    private String quality;
 
     public CachedVideo() {}
-
 
     public CachedVideo (long stepId, long videoId, String url, String thumbnail_url) {
         this.stepId = stepId;
         this.videoId = videoId;
         this.url = url;
         this.thumbnail = thumbnail_url;
+    }
+
+
+    public String getQuality() {
+        return quality;
+    }
+
+    public void setQuality(String quality) {
+        this.quality = quality;
     }
 
     public long getStepId() {

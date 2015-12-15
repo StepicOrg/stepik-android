@@ -52,6 +52,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 3) {
             //update from 2 to 3
+            String upgradeToV3 =
+                    "ALTER TABLE "    + DbStructureCachedVideo.CACHED_VIDEO + " ADD COLUMN "
+                            + DbStructureCachedVideo.Column.QUALITY + " TEXT ";
+            db.execSQL(upgradeToV3);
+
+            upgradeToV3 = "ALTER TABLE "    + DbStructureSharedDownloads.SHARED_DOWNLOADS + " ADD COLUMN "
+                    + DbStructureSharedDownloads.Column.QUALITY + " TEXT ";
+            db.execSQL(upgradeToV3);
+
+            upgradeToV3 = "ALTER TABLE " + DbStructureProgress.PROGRESS + " ALTER COLUMN "
+                    + DbStructureProgress.Column.SCORE + " TEXT ";
+            db.execSQL(upgradeToV3);
         }
     }
 
@@ -124,6 +136,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureCachedVideo.Column.VIDEO_ID + " LONG, "
                 + DbStructureCachedVideo.Column.STEP_ID + " LONG, "
                 + DbStructureCachedVideo.Column.URL + " TEXT, "
+                + DbStructureCachedVideo.Column.QUALITY + " TEXT, "
                 + DbStructureCachedVideo.Column.THUMBNAIL + " TEXT "
 
                 + ")";
@@ -222,6 +235,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureSharedDownloads.Column.DOWNLOAD_ID + " LONG, "
                 + DbStructureSharedDownloads.Column.STEP_ID + " LONG, "
                 + DbStructureSharedDownloads.Column.THUMBNAIL + " TEXT, "
+                + DbStructureSharedDownloads.Column.QUALITY + " TEXT, "
                 + DbStructureSharedDownloads.Column.VIDEO_ID + " LONG "
                 + ")";
         db.execSQL(sql);
@@ -246,7 +260,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureProgress.Column.IS_PASSED + " BOOLEAN, "
                 + DbStructureProgress.Column.ID + " TEXT, "
                 + DbStructureProgress.Column.LAST_VIEWED + " TEXT, "
-                + DbStructureProgress.Column.SCORE + " INTEGER, "
+                + DbStructureProgress.Column.SCORE + " TEXT, "
                 + DbStructureProgress.Column.COST + " INTEGER, "
                 + DbStructureProgress.Column.N_STEPS + " INTEGER, "
                 + DbStructureProgress.Column.N_STEPS_PASSED + " INTEGER "

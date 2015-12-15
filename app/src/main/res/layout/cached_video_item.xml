@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:baselineAligned="false"
-            android:minHeight="100dp"
+            android:minHeight="72dp"
             android:orientation="horizontal"
             android:padding="@dimen/guideline_left_right_padding_list_item">
 

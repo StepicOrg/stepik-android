@@ -33,7 +33,11 @@ import org.stepic.droid.util.DbParseHelper;
 import org.stepic.droid.web.ViewAssignment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Singleton;
 
@@ -84,6 +88,60 @@ public class DatabaseManager extends DbManagerBase {
             close();
         }
 
+    }
+
+    public Map<Long, Lesson> getMapFromStepIdToTheirLesson(long[] stepIds) {
+        try {
+            open();
+            HashMap<Long, Lesson> result = new HashMap<>();
+
+
+            String stepIdsCommaSeparated = DbParseHelper.parseLongArrayToString(stepIds, ",");
+            String Query = "Select * from " + DbStructureStep.STEPS + " where " + DbStructureStep.Column.STEP_ID + " IN (" + stepIdsCommaSeparated + ")";
+            Cursor cursor = database.rawQuery(Query, null);
+            cursor.moveToFirst();
+            List<Step> steps = new ArrayList<>();
+            while (!cursor.isAfterLast()) {
+                Step step = parseStep(cursor);
+                steps.add(step);
+                cursor.moveToNext();
+            }
+            cursor.close();
+
+            Set<Long> lessonSet = new HashSet<>(steps.size());
+            for (Step step : steps) {
+                lessonSet.add(step.getLesson());
+            }
+
+            Long[] lessonIds = lessonSet.toArray(new Long[0]);
+            String lessonIdsCommaSeparated = DbParseHelper.parseLongArrayToString(lessonIds, ",");
+            Query = "Select * from " + DbStructureLesson.LESSONS + " where " + DbStructureLesson.Column.LESSON_ID + " IN (" + lessonIdsCommaSeparated + ")";
+            cursor = database.rawQuery(Query, null);
+            cursor.moveToFirst();
+            List<Lesson> lessonArrayList = new ArrayList<>();
+            while (!cursor.isAfterLast()) {
+                Lesson lesson = parseLesson(cursor);
+                lessonArrayList.add(lesson);
+                cursor.moveToNext();
+            }
+            cursor.close();
+
+            for (Step stepItem : steps) {
+                for (Lesson lesson : lessonArrayList) {
+                    if (lesson.getId() == stepItem.getLesson()) {
+                        result.put(stepItem.getId(), lesson);
+                        break;
+                    }
+                }
+            }
+
+
+            return result;
+
+
+        } finally {
+            close();
+        }
     }
 
     public enum Table {
@@ -913,6 +971,7 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureCachedVideo.Column.STEP_ID, cachedVideo.getStepId());
             values.put(DbStructureCachedVideo.Column.URL, cachedVideo.getUrl());
             values.put(DbStructureCachedVideo.Column.THUMBNAIL, cachedVideo.getThumbnail());
+            values.put(DbStructureCachedVideo.Column.QUALITY, cachedVideo.getQuality());
 
             database.insert(DbStructureCachedVideo.CACHED_VIDEO, null, values);
         } finally {
@@ -984,9 +1043,13 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public void deleteStep(Step step) {
+        long stepId = step.getId();
+        deleteStepById(stepId);
+    }
+
+    public void deleteStepById(long stepId) {
         try {
             open();
-            long stepId = step.getId();
             database.delete(DbStructureStep.STEPS,
                     "\"" + DbStructureStep.Column.STEP_ID + "\"" + " = " + stepId,
                     null);
@@ -1030,7 +1093,7 @@ public class DatabaseManager extends DbManagerBase {
     }
 
 
-    public List<CachedVideo> getAllCachedVideo () {
+    public List<CachedVideo> getAllCachedVideo() {
         try {
             open();
             List<CachedVideo> cachedVideos = new ArrayList<>();
@@ -1157,6 +1220,7 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureSharedDownloads.Column.VIDEO_ID, downloadEntity.getVideoId());
             values.put(DbStructureSharedDownloads.Column.STEP_ID, downloadEntity.getStepId());
             values.put(DbStructureSharedDownloads.Column.THUMBNAIL, downloadEntity.getThumbnail());
+            values.put(DbStructureSharedDownloads.Column.QUALITY, downloadEntity.getQuality());
             database.insert(DbStructureSharedDownloads.SHARED_DOWNLOADS, null, values);
 
         } finally {
@@ -1294,11 +1358,13 @@ public class DatabaseManager extends DbManagerBase {
         int indexStepId = cursor.getColumnIndex(DbStructureSharedDownloads.Column.STEP_ID);
         int indexVideoId = cursor.getColumnIndex(DbStructureSharedDownloads.Column.VIDEO_ID);
         int indexThumbnail = cursor.getColumnIndex(DbStructureSharedDownloads.Column.THUMBNAIL);
+        int indexQuality = cursor.getColumnIndex(DbStructureSharedDownloads.Column.QUALITY);
 
         downloadEntity.setDownloadId(cursor.getLong(indexDownloadId));
         downloadEntity.setStepId(cursor.getLong(indexStepId));
         downloadEntity.setVideoId(cursor.getLong(indexVideoId));
         downloadEntity.setThumbnail(cursor.getString(indexThumbnail));
+        downloadEntity.setQuality(cursor.getString(indexQuality));
 
         return downloadEntity;
     }
@@ -1315,11 +1381,13 @@ public class DatabaseManager extends DbManagerBase {
         int indexVideoId = cursor.getColumnIndex(DbStructureCachedVideo.Column.VIDEO_ID);
         int indexUrl = cursor.getColumnIndex(DbStructureCachedVideo.Column.URL);
         int indexThumbnail = cursor.getColumnIndex(DbStructureCachedVideo.Column.THUMBNAIL);
+        int indexQuality = cursor.getColumnIndex(DbStructureCachedVideo.Column.QUALITY);
 
         cachedVideo.setVideoId(cursor.getLong(indexVideoId));
         cachedVideo.setUrl(cursor.getString(indexUrl));
         cachedVideo.setThumbnail(cursor.getString(indexThumbnail));
         cachedVideo.setStepId(cursor.getLong(indexStepId));
+        cachedVideo.setQuality(cursor.getString(indexQuality));
         return cachedVideo;
     }
 

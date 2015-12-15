@@ -155,9 +155,9 @@ public class MainFeedActivity extends FragmentActivityBase
             case R.id.my_settings:
                 mCurrentIndex = 2;
                 break;
-//            case R.id.cached_videos:
-//                mCurrentIndex = 3;
-//                break;
+            case R.id.cached_videos:
+                mCurrentIndex = 3;
+                break;
             case R.id.logout_item:
                 //todo: add 'Are you sure?" dialog
                 YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_LOGOUT);
@@ -251,6 +251,19 @@ public class MainFeedActivity extends FragmentActivityBase
         outState.putInt(KEY_CURRENT_INDEX, mCurrentIndex);
         super.onSaveInstanceState(outState);
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        bus.register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        bus.unregister(this);
+    }
+
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {

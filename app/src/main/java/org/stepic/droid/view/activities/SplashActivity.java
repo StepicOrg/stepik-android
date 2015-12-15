@@ -49,4 +49,17 @@ public class SplashActivity extends FragmentActivityBase {
         }, SPLASH_TIME_OUT);
 
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        bus.register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        bus.unregister(this);
+    }
+
 }

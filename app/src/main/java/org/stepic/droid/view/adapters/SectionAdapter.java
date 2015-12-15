@@ -182,9 +182,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
     }
 
     @Override
-    public void onClickLoad(int itemPosition) {
-        if (itemPosition >= 0 && itemPosition < mSections.size()) {
-            Section section = mSections.get(itemPosition);
+    public void onClickLoad(int position) {
+        if (position >= 0 && position < mSections.size()) {
+            Section section = mSections.get(position);
 
             int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -193,7 +193,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                 if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
-                    // Show an expanation to the user *asynchronously* -- don't block
+                    // Show an explanation to the user *asynchronously* -- don't block
                     // this thread waiting for the user's response! After the user
                     // sees the explanation, try again to request the permission.
 
@@ -221,17 +221,17 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                 section.setIs_loading(false);
                 section.setIs_cached(false);
                 mDatabaseManager.updateOnlyCachedLoadingSection(section);
-                notifyDataSetChanged();
+                notifyItemChanged(position);
             } else {
                 if (section.is_loading()) {
                     // TODO: 11.11.15 cancel downloading
                 } else {
                     YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CACHE_SECTION, JsonHelper.toJson(section));
-                    mDownloadManager.addSection(section);
                     section.setIs_cached(false);
                     section.setIs_loading(true);
                     mDatabaseManager.updateOnlyCachedLoadingSection(section);
-                    notifyDataSetChanged();
+                    mDownloadManager.addSection(section);
+                    notifyItemChanged(position);
                 }
             }
         }

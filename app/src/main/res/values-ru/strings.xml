@@ -77,5 +77,10 @@
     <string name="success">Успех</string>
     <string name="or_sign_in_social">Или войдите с помощью</string>
     <string name="loading_message">Пожалуйста, подождите…</string>
+    <string name="kb">КБ</string>
+    <string name="mb">МБ</string>
+    <string name="clear">Очистить</string>
+    <string name="clear_videos">Вы уверены, что хотите удалить все закешированные видео?</string>
+    <string name="empty_downloading">Нет загруженных видео</string>
 
 </resources>

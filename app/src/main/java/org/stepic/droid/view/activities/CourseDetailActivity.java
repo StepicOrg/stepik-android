@@ -181,6 +181,7 @@ public class CourseDetailActivity extends FragmentActivityBase {
                 }
             });
         }
+        bus.register(this);
     }
 
     @Override
@@ -193,6 +194,7 @@ public class CourseDetailActivity extends FragmentActivityBase {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     @Subscribe
     public void onStartLoadingInstructors(StartLoadingInstructorsEvent e) {
@@ -231,6 +233,7 @@ public class CourseDetailActivity extends FragmentActivityBase {
     @Override
     protected void onStop() {
         super.onStop();
+        bus.unregister(this);
         mInstructorAdapter = null;
     }
 

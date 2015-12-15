@@ -81,5 +81,10 @@
     <string name="success">Success</string>
     <string name="or_sign_in_social">Or sign in with</string>
     <string name="loading_message">Please wait…</string>
+    <string name="kb">KB</string>
+    <string name="mb">MB</string>
+    <string name="clear">Clear</string>
+    <string name="clear_videos">Are you sure that want to delete all cached videos?</string>
+    <string name="empty_downloading">No downloaded videos</string>
 
 </resources>

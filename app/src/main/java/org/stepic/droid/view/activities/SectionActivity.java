@@ -1,8 +1,6 @@
 package org.stepic.droid.view.activities;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +19,8 @@ import org.stepic.droid.events.notify_ui.NotifyUISectionsEvent;
 import org.stepic.droid.events.sections.FailureResponseSectionEvent;
 import org.stepic.droid.events.sections.FinishingGetSectionFromDbEvent;
 import org.stepic.droid.events.sections.FinishingSaveSectionToDbEvent;
+import org.stepic.droid.events.sections.NotCachedSectionEvent;
+import org.stepic.droid.events.sections.SectionCachedEvent;
 import org.stepic.droid.events.sections.StartingSaveSectionToDbEvent;
 import org.stepic.droid.events.sections.SuccessResponseSectionsEvent;
 import org.stepic.droid.model.Course;
@@ -61,9 +61,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     private List<Section> mSectionList;
     private FromDbSectionTask mFromDbSectionTask;
     private ToDbSectionTask mToDbSectionTask;
-    private Handler mHandlerStateUpdating;
-    private Runnable mUpdatingRunnable;
-
 
     boolean isScreenEmpty;
     boolean firstLoad;
@@ -96,41 +93,14 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         mSectionsRecyclerView.setAdapter(mAdapter);
 
         ProgressHelper.activate(mProgressBar);
+        bus.register(this);
         getAndShowSectionsFromCache();
-    }
-
-    public void updateState() {
-
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-
-                ArrayList<Section> localCopy = new ArrayList<>(mSectionList);
-                if (localCopy == null || mAdapter == null || localCopy.size() == 0) {
-                    return null;
-                }
-
-                for (Section section : localCopy) {
-                    section.setIs_loading(mDbManager.isSectionLoading(section));
-                    section.setIs_cached(mDbManager.isSectionCached(section));
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                bus.post(new NotifyUISectionsEvent());
-            }
-        };
-        task.execute();
     }
 
     @Subscribe
     public void onNotifyUI(NotifyUISectionsEvent event) {
         dismissReportView();
         mAdapter.notifyDataSetChanged();
-        mHandlerStateUpdating.postDelayed(mUpdatingRunnable, AppConstants.UI_UPDATING_TIME);
     }
 
     @Override
@@ -169,7 +139,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     }
 
     private void showSections(List<Section> sections) {
-
         mSectionList.clear();
         mSectionList.addAll(sections);
         dismissReportView();
@@ -242,30 +211,19 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
             updateSections();
         }
 
-
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        mHandlerStateUpdating = new Handler();
-        mUpdatingRunnable = new Runnable() {
-            @Override
-            public void run() {
-                updateState();
-            }
-        };
-        mHandlerStateUpdating.post(mUpdatingRunnable);
-
-
-    }
 
     @Override
     protected void onStop() {
         super.onStop();
         ProgressHelper.dismiss(mSwipeRefreshLayout);
-        mHandlerStateUpdating.removeCallbacks(mUpdatingRunnable);
+    }
+
+    @Override
+    protected void onDestroy() {
+        bus.unregister(this);
+        super.onDestroy();
     }
 
     @Subscribe
@@ -284,6 +242,38 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Subscribe
     public void onFinishSaveToDb(FinishingSaveSectionToDbEvent e) {
         getAndShowSectionsFromCache();
+    }
+
+
+    @Subscribe
+    public void onSectionCached(SectionCachedEvent e) {
+        long sectionId = e.getSectionId();
+        updateState(sectionId, true, false);
+    }
+
+    @Subscribe
+    public void onNotCachedSection(NotCachedSectionEvent e) {
+        long sectionId = e.getSectionId();
+        updateState(sectionId, false, false);
+    }
+
+
+    private void updateState(long sectionId, boolean isCached, boolean isLoading) {
+        int position = -1;
+        Section section = null;
+        for (int i = 0; i < mSectionList.size(); i++) {
+            if (mSectionList.get(i).getId() == sectionId) {
+                position = i;
+                section = mSectionList.get(i);
+                break;
+            }
+        }
+        if (section == null || position == -1 || position >= mSectionList.size()) return;
+
+        //now we have not null section and correct position at list
+        section.setIs_cached(isCached);
+        section.setIs_loading(isLoading);
+        mAdapter.notifyItemChanged(position);
     }
 
 }

@@ -156,7 +156,7 @@ public class LoadService extends IntentService {
                 long downloadId = mSystemDownloadManager.enqueue(request);
                 String local_thumbnail = fileId + ".png";
                 String thumbnailsPath = FileUtil.saveImageToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getDownloadFolder());
-                final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath);
+                final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, mUserPrefs.getQualityVideo());
                 mDb.addDownloadEntity(newEntity);
             }
         } catch (SecurityException ex) {
@@ -190,47 +190,58 @@ public class LoadService extends IntentService {
         //make copies of objects.
         unit = mDb.getUnitByLessonId(lesson.getId());
         lesson = mDb.getLessonById(lesson.getId());
+        if (!unit.is_cached() && !lesson.is_cached() && unit.is_loading() && lesson.is_loading()) {
 
-        try {
-            List<Assignment> assignments = mApi.getAssignments(unit.getAssignments()).execute().body().getAssignments();
-            for (Assignment item : assignments) {
-                mDb.addAssignment(item);
+            try {
+                List<Assignment> assignments = mApi.getAssignments(unit.getAssignments()).execute().body().getAssignments();
+                for (Assignment item : assignments) {
+                    mDb.addAssignment(item);
 
-            }
+                }
 
-            String [] ids = ProgressUtil.getAllProgresses(assignments);
-            List<Progress> progresses = mApi.getProgresses(ids).execute().body().getProgresses();
-            for (Progress item : progresses) {
-                mDb.addProgress(item);
-            }
-            Response<StepResponse> response = mApi.getSteps(lesson.getSteps()).execute();
-            if (response.isSuccess()) {
-                List<Step> steps = response.body().getSteps();
-                if (steps != null && steps.size() != 0) {
-                    for (Step step : steps) {
-                        mDb.addStep(step);
-                    }
-                    for (Step step : steps) {
-                        step.setIs_loading(true);
-                        step.setIs_cached(false);
-                        mDb.updateOnlyCachedLoadingStep(step);
-                    }
+                String[] ids = ProgressUtil.getAllProgresses(assignments);
+                List<Progress> progresses = mApi.getProgresses(ids).execute().body().getProgresses();
+                for (Progress item : progresses) {
+                    mDb.addProgress(item);
+                }
+                Response<StepResponse> response = mApi.getSteps(lesson.getSteps()).execute();
+                if (response.isSuccess()) {
+                    List<Step> steps = response.body().getSteps();
+                    if (steps != null && steps.size() != 0) {
+                        for (Step step : steps) {
+                            mDb.addStep(step);
+                            boolean cached = mDb.isStepCached(step);
+                            step.setIs_cached(cached);
+                        }
+                        for (Step step : steps) {
+                            if (!step.is_cached()) {
+                                step.setIs_loading(true);
+                                step.setIs_cached(false);
+                                mDb.updateOnlyCachedLoadingStep(step);
+                            }
+                        }
 
-                    for (Step step : steps) {
-                        addStep(step, lesson);
+                        for (Step step : steps) {
+                            if (!step.is_cached()) {
+                                addStep(step, lesson);
+                            }
+                        }
+                    } else {
+                        mStoreStateManager.updateUnitLessonState(lesson.getId());
                     }
                 } else {
                     mStoreStateManager.updateUnitLessonState(lesson.getId());
                 }
-            } else {
+            } catch (IOException e) {
+                YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, e);
+                e.printStackTrace();
                 mStoreStateManager.updateUnitLessonState(lesson.getId());
             }
-        } catch (IOException e) {
-            YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, e);
-            e.printStackTrace();
+        } else {
             mStoreStateManager.updateUnitLessonState(lesson.getId());
         }
     }
+
     private void addSection(Section section) {
         //if user click to removeSection, then section already in database.
         section = mDb.getSectionById(section.getId());//make copy of section.
@@ -260,13 +271,17 @@ public class LoadService extends IntentService {
                         mDb.addUnit(unit);
                         mDb.addLesson(lesson);
 
-                        unit.setIs_loading(true);
-                        unit.setIs_cached(false);
-                        lesson.setIs_loading(true);
-                        lesson.setIs_cached(false);
+                        if (!mDb.isUnitCached(unit) && !mDb.isLessonCached(lesson)) {
+                            //need to be load
 
-                        mDb.updateOnlyCachedLoadingLesson(lesson);
-                        mDb.updateOnlyCachedLoadingUnit(unit);
+                            unit.setIs_loading(true);
+                            unit.setIs_cached(false);
+                            lesson.setIs_loading(true);
+                            lesson.setIs_cached(false);
+
+                            mDb.updateOnlyCachedLoadingLesson(lesson);
+                            mDb.updateOnlyCachedLoadingUnit(unit);
+                        }
                     }
 
                     for (Unit unit : units) {
