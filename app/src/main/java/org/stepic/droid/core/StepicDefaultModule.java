@@ -129,8 +129,8 @@ public class StepicDefaultModule {
 
     @Singleton
     @Provides
-    public IStoreStateManager provideStoreManager(DatabaseManager dbManager) {
-        return new StoreStateManager(dbManager);
+    public IStoreStateManager provideStoreManager(DatabaseManager dbManager, Bus bus) {
+        return new StoreStateManager(dbManager, bus);
     }
 
     @Singleton

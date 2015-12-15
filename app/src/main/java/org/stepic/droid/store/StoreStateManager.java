@@ -1,5 +1,11 @@
 package org.stepic.droid.store;
 
+import android.os.Handler;
+
+import com.squareup.otto.Bus;
+
+import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.events.units.UnitCachedEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
@@ -16,10 +22,12 @@ import javax.inject.Singleton;
 public class StoreStateManager implements IStoreStateManager {
 
     private DatabaseManager mDatabaseManager;
+    private Bus bus;
 
     @Inject
-    public StoreStateManager(DatabaseManager dbManager) {
+    public StoreStateManager(DatabaseManager dbManager, Bus bus) {
         mDatabaseManager = dbManager;
+        this.bus = bus;
     }
 
     @Override
@@ -35,10 +43,21 @@ public class StoreStateManager implements IStoreStateManager {
         lesson.setIs_cached(true);
         mDatabaseManager.updateOnlyCachedLoadingLesson(lesson);
 
-        Unit unit = mDatabaseManager.getUnitByLessonId(lessonId);
+        final Unit unit = mDatabaseManager.getUnitByLessonId(lessonId);
         unit.setIs_loading(false);
         unit.setIs_cached(true);
         mDatabaseManager.updateOnlyCachedLoadingUnit(unit);
+
+
+        Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
+        //Say to ui that ui is cached now
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                bus.post(new UnitCachedEvent(unit.getId()));
+            }
+        };
+        mainHandler.post(myRunnable);
 
         updateSectionState(unit.getSection());
     }
