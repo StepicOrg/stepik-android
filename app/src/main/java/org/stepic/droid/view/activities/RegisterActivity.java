@@ -81,5 +81,17 @@ public class RegisterActivity extends FragmentActivityBase {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        bus.register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        bus.unregister(this);
+    }
+
 
 }

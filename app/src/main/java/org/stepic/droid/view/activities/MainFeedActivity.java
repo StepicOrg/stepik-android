@@ -253,6 +253,19 @@ public class MainFeedActivity extends FragmentActivityBase
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        bus.register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        bus.unregister(this);
+    }
+
+
+    @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mCurrentIndex = savedInstanceState.getInt(KEY_CURRENT_INDEX);

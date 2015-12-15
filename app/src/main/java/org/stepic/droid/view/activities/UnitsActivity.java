@@ -280,11 +280,13 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
             }
         };
         mHandlerStateUpdating.post(mUpdatingRunnable);
+        bus.register(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        bus.unregister(this);
         ProgressHelper.dismiss(mSwipeRefreshLayout);
         mHandlerStateUpdating.removeCallbacks(mUpdatingRunnable);
     }
@@ -343,4 +345,6 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     protected void onDestroy() {
         super.onDestroy();
     }
+
+
 }

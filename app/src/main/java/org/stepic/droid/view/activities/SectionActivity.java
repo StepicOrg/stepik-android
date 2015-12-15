@@ -257,6 +257,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
             }
         };
         mHandlerStateUpdating.post(mUpdatingRunnable);
+        bus.register(this);
 
 
     }
@@ -264,6 +265,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Override
     protected void onStop() {
         super.onStop();
+        bus.unregister(this);
         ProgressHelper.dismiss(mSwipeRefreshLayout);
         mHandlerStateUpdating.removeCallbacks(mUpdatingRunnable);
     }
@@ -285,5 +287,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     public void onFinishSaveToDb(FinishingSaveSectionToDbEvent e) {
         getAndShowSectionsFromCache();
     }
+
 
 }

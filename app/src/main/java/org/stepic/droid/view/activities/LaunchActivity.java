@@ -60,6 +60,19 @@ public class LaunchActivity extends FragmentActivityBase {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        bus.register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        bus.unregister(this);
+    }
+
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         disableLoginCallback();
