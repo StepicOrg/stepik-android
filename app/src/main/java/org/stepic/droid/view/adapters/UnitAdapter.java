@@ -199,7 +199,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 lesson.setIs_cached(false);
                 mDbManager.updateOnlyCachedLoadingLesson(lesson);
                 mDbManager.updateOnlyCachedLoadingUnit(unit);
-                notifyDataSetChanged();
+                notifyItemChanged(position);
             } else {
                 if (unit.is_loading()) {
                     // TODO: 11.11.15 cancel downloading
@@ -213,7 +213,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                     mDbManager.updateOnlyCachedLoadingLesson(lesson);
                     mDbManager.updateOnlyCachedLoadingUnit(unit);
                     mDownloadManager.addUnitLesson(unit, lesson);
-                    notifyDataSetChanged();
+                    notifyItemChanged(position);
                 }
             }
         }

@@ -193,7 +193,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                 if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
-                    // Show an expanation to the user *asynchronously* -- don't block
+                    // Show an explanation to the user *asynchronously* -- don't block
                     // this thread waiting for the user's response! After the user
                     // sees the explanation, try again to request the permission.
 
@@ -221,7 +221,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                 section.setIs_loading(false);
                 section.setIs_cached(false);
                 mDatabaseManager.updateOnlyCachedLoadingSection(section);
-                notifyDataSetChanged();
+                notifyItemChanged(position);
             } else {
                 if (section.is_loading()) {
                     // TODO: 11.11.15 cancel downloading
@@ -231,7 +231,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                     section.setIs_loading(true);
                     mDatabaseManager.updateOnlyCachedLoadingSection(section);
                     mDownloadManager.addSection(section);
-                    notifyDataSetChanged();
+                    notifyItemChanged(position);
                 }
             }
         }

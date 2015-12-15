@@ -9,7 +9,7 @@ public class AppConstants {
     public static final String KEY_UNIT_BUNDLE = "unit";
     public static final String KEY_LESSON_BUNDLE = "lesson";
     public static final String KEY_STEP_BUNDLE = "step";
-    public static final String DEFAULT_QUALITY = "360";
+    public static final String DEFAULT_QUALITY = "270";
     public static final String PRE_BODY = "<html>\n" +
             "<head>\n" +
             "<title>Step. Stepic.org</title>\n" +
