@@ -5,6 +5,7 @@ import android.os.Handler;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.events.sections.SectionCachedEvent;
 import org.stepic.droid.events.units.UnitCachedEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
@@ -115,10 +116,21 @@ public class StoreStateManager implements IStoreStateManager {
         }
 
         //all units, lessons, steps of sections are cached
-        Section section = mDatabaseManager.getSectionById(sectionId);
+        final Section section = mDatabaseManager.getSectionById(sectionId);
         section.setIs_cached(true);
         section.setIs_loading(false);
         mDatabaseManager.updateOnlyCachedLoadingSection(section);
+
+
+        Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
+        //Say to ui that ui is cached now
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                bus.post(new SectionCachedEvent(section.getId()));
+            }
+        };
+        mainHandler.post(myRunnable);
 
         updateCourseState(section.getCourse());
     }

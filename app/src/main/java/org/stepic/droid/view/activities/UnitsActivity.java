@@ -1,6 +1,5 @@
 package org.stepic.droid.view.activities;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -105,31 +104,6 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
         bus.register(this);
         getAndShowUnitsFromCache();
-    }
-
-    private void updateState() {
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-
-                ArrayList<Unit> localCopy = new ArrayList<>(mUnitList);
-                if (localCopy == null || mAdapter == null || localCopy.size() == 0) {
-                    return null;
-                }
-                for (Unit unit : localCopy) {
-                    unit.setIs_cached(mDbManager.isUnitCached(unit));
-                    unit.setIs_loading(mDbManager.isUnitLoading(unit));
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                bus.post(new NotifyUIUnitLessonEvent());
-            }
-        };
-        task.execute();
     }
 
     private void getAndShowUnitsFromCache() {

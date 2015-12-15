@@ -5,7 +5,8 @@ import org.stepic.droid.model.Unit;
 
 public interface IStoreStateManager {
     void updateUnitLessonState(long lessonId);
-    void updateUnitLessonAfterDeleting (Unit unit);
+
+    void updateUnitLessonAfterDeleting(Unit unit);
 
     void updateStepAfterDeleting(Step step);
 }
