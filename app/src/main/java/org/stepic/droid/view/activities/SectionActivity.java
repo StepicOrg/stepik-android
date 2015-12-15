@@ -19,6 +19,7 @@ import org.stepic.droid.events.notify_ui.NotifyUISectionsEvent;
 import org.stepic.droid.events.sections.FailureResponseSectionEvent;
 import org.stepic.droid.events.sections.FinishingGetSectionFromDbEvent;
 import org.stepic.droid.events.sections.FinishingSaveSectionToDbEvent;
+import org.stepic.droid.events.sections.NotCachedSectionEvent;
 import org.stepic.droid.events.sections.SectionCachedEvent;
 import org.stepic.droid.events.sections.StartingSaveSectionToDbEvent;
 import org.stepic.droid.events.sections.SuccessResponseSectionsEvent;
@@ -247,7 +248,17 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Subscribe
     public void onSectionCached(SectionCachedEvent e) {
         long sectionId = e.getSectionId();
+        updateState(sectionId, true, false);
+    }
 
+    @Subscribe
+    public void onNotCachedSection(NotCachedSectionEvent e) {
+        long sectionId = e.getSectionId();
+        updateState(sectionId, false, false);
+    }
+
+
+    private void updateState(long sectionId, boolean isCached, boolean isLoading) {
         int position = -1;
         Section section = null;
         for (int i = 0; i < mSectionList.size(); i++) {
@@ -260,8 +271,8 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         if (section == null || position == -1 || position >= mSectionList.size()) return;
 
         //now we have not null section and correct position at list
-        section.setIs_cached(true);
-        section.setIs_loading(false);
+        section.setIs_cached(isCached);
+        section.setIs_loading(isLoading);
         mAdapter.notifyItemChanged(position);
     }
 

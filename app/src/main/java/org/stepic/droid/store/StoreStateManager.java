@@ -5,7 +5,9 @@ import android.os.Handler;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.events.sections.NotCachedSectionEvent;
 import org.stepic.droid.events.sections.SectionCachedEvent;
+import org.stepic.droid.events.units.NotCachedUnitEvent;
 import org.stepic.droid.events.units.UnitCachedEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
@@ -63,8 +65,7 @@ public class StoreStateManager implements IStoreStateManager {
         updateSectionState(unit.getSection());
     }
 
-    @Override
-    public void updateUnitLessonAfterDeleting(Unit unit) {
+    private void updateUnitLessonAfterDeleting(Unit unit) {
         //now unit lesson and all steps are deleting
         //cached = false, loading false
         //just make for parents
@@ -81,22 +82,49 @@ public class StoreStateManager implements IStoreStateManager {
         long lessonId = step.getLesson();
 
         Lesson lesson = mDatabaseManager.getLessonById(lessonId);
-        lesson.setIs_loading(false);
-        lesson.setIs_cached(false);
-        mDatabaseManager.updateOnlyCachedLoadingLesson(lesson);
+        final Unit unit = mDatabaseManager.getUnitByLessonId(lessonId);
 
-        Unit unit = mDatabaseManager.getUnitByLessonId(lessonId);
-        unit.setIs_loading(false);
-        unit.setIs_cached(false);
-        mDatabaseManager.updateOnlyCachedLoadingUnit(unit);
+        if (lesson.is_cached() || lesson.is_loading()) {
+            lesson.setIs_loading(false);
+            lesson.setIs_cached(false);
+            mDatabaseManager.updateOnlyCachedLoadingLesson(lesson);
+        }
+
+
+        if (unit.is_cached() || unit.is_loading()) {
+            unit.setIs_loading(false);
+            unit.setIs_cached(false);
+            mDatabaseManager.updateOnlyCachedLoadingUnit(unit);
+
+            Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
+            //Say to ui that ui is cached now
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    bus.post(new NotCachedUnitEvent(unit.getId()));
+                }
+            };
+            mainHandler.post(myRunnable);
+        }
+
 
         updateUnitLessonAfterDeleting(unit);
     }
 
-    private void updateSectionAfterDeleting(Section section) {
+    private void updateSectionAfterDeleting(final Section section) {
         section.setIs_cached(false);
         section.setIs_loading(false);
         mDatabaseManager.updateOnlyCachedLoadingSection(section);
+        Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
+        //Say to ui that ui is cached now
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                bus.post(new NotCachedSectionEvent(section.getId()));
+            }
+        };
+        mainHandler.post(myRunnable);
+
 
         Course course = mDatabaseManager.getCourseById(section.getCourse(), DatabaseManager.Table.enrolled);
         updateCourseAfterDeleting(course);
@@ -109,7 +137,8 @@ public class StoreStateManager implements IStoreStateManager {
         mDatabaseManager.updateOnlyCachedLoadingCourse(course, DatabaseManager.Table.enrolled);
     }
 
-    private void updateSectionState(long sectionId) {
+    @Override
+    public void updateSectionState(long sectionId) {
         List<Unit> units = mDatabaseManager.getAllUnitsOfSection(sectionId);
         for (Unit unit : units) {
             if (!unit.is_cached()) return;
