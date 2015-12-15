@@ -53,11 +53,12 @@ public class StepFragmentAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        if (mCount > 0) {
-            return mCount;
-        } else {
-            return mStepList.size();
-        }
+        return mStepList.size();
+//        if (mCount > 0) {
+//            return mCount;
+//        } else {
+//            return mStepList.size();
+//        }
     }
 
     public Drawable getTabDrawable(int position) {

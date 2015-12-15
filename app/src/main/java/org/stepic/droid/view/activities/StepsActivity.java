@@ -50,6 +50,7 @@ public class StepsActivity extends FragmentActivityBase {
 
     //    public final static String KEY_INDEX_CURRENT_FRAGMENT = "key_index";
     public final static String KEY_COUNT_CURRENT_FRAGMENT = "key_count";
+    public final static String KEY_INDEX_CURRENT_FRAGMENT = "key_current";
 
 
     @Bind(R.id.toolbar)
@@ -84,6 +85,7 @@ public class StepsActivity extends FragmentActivityBase {
 
     //    private int lastSavedPosition;
     private int mCount;
+    private int mCurrent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,13 @@ public class StepsActivity extends FragmentActivityBase {
         } else {
             mCount = savedInstanceState.getInt(KEY_COUNT_CURRENT_FRAGMENT);
         }
+        if (savedInstanceState == null) {
+//            lastSavedPosition = -1;
+            mCurrent = -1;
+        } else {
+            mCurrent = savedInstanceState.getInt(KEY_INDEX_CURRENT_FRAGMENT);
+        }
+
         overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
 
         ButterKnife.bind(this);
@@ -331,15 +340,18 @@ public class StepsActivity extends FragmentActivityBase {
     private void showSteps(List<Step> steps) {
         mStepList.clear();
         mStepList.addAll(steps);
+
         mStepAdapter.notifyDataSetChanged();
         updateTabs();
         mTabLayout.setVisibility(View.VISIBLE);
         ProgressHelper.dismiss(mProgressBar);
+        if (mCurrent >= 0) {
+            mViewPager.setCurrentItem(mCurrent, false);
+//            TabLayout.Tab tab = mTabLayout.getTabAt(mCurrent);
+//            tab.select();
+        }
         isLoaded = true;
         pushState(mViewPager.getCurrentItem());
-//        if (lastSavedPosition >= 0) {
-//            mViewPager.setCurrentItem(lastSavedPosition, false);
-//        }
 
     }
 
@@ -361,7 +373,7 @@ public class StepsActivity extends FragmentActivityBase {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-//        outState.putInt(KEY_INDEX_CURRENT_FRAGMENT, mViewPager.getCurrentItem());
+        outState.putInt(KEY_INDEX_CURRENT_FRAGMENT, mViewPager.getCurrentItem());
         outState.putInt(KEY_COUNT_CURRENT_FRAGMENT, mStepList.size());
     }
 
