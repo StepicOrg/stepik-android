@@ -38,12 +38,12 @@ public class VideoQualityDialog extends DialogFragment {
     private static Map<Integer, String> mPositionToQualityMap = new HashMap<>();
 
     static {
-        mQualityToPositionMap.put("240", 0);
+        mQualityToPositionMap.put("270", 0);
         mQualityToPositionMap.put("360", 1);
         mQualityToPositionMap.put("720", 2);
         mQualityToPositionMap.put("1080", 3);
 
-        mPositionToQualityMap.put(0, "240");
+        mPositionToQualityMap.put(0, "270");
         mPositionToQualityMap.put(1, "360");
         mPositionToQualityMap.put(2, "720");
         mPositionToQualityMap.put(3, "1080");

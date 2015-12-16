@@ -11,8 +11,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 10
-        versionName "0.7"
+        versionCode 13
+        versionName "0.7.1"
 
         // Enabling multidex support.
         multiDexEnabled true

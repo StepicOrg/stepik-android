@@ -3,6 +3,7 @@ package org.stepic.droid.store;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import org.stepic.droid.store.structure.DBStructureBase;
 import org.stepic.droid.store.structure.DBStructureCourses;
@@ -44,7 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 2) {
-            //update from 1 to 2
+//            update from 1 to 2
             createAssignment(db, DbStructureAssignment.ASSIGNMENTS);
             createProgress(db, DbStructureProgress.PROGRESS);
             createViewQueue(db, DbStructureViewQueue.VIEW_QUEUE);
@@ -53,17 +54,48 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 3) {
             //update from 2 to 3
             String upgradeToV3 =
-                    "ALTER TABLE "    + DbStructureCachedVideo.CACHED_VIDEO + " ADD COLUMN "
+                    "ALTER TABLE " + DbStructureCachedVideo.CACHED_VIDEO + " ADD COLUMN "
                             + DbStructureCachedVideo.Column.QUALITY + " TEXT ";
             db.execSQL(upgradeToV3);
 
-            upgradeToV3 = "ALTER TABLE "    + DbStructureSharedDownloads.SHARED_DOWNLOADS + " ADD COLUMN "
+            upgradeToV3 = "ALTER TABLE " + DbStructureSharedDownloads.SHARED_DOWNLOADS + " ADD COLUMN "
                     + DbStructureSharedDownloads.Column.QUALITY + " TEXT ";
             db.execSQL(upgradeToV3);
 
-            upgradeToV3 = "ALTER TABLE " + DbStructureProgress.PROGRESS + " ALTER COLUMN "
-                    + DbStructureProgress.Column.SCORE + " TEXT ";
-            db.execSQL(upgradeToV3);
+
+            //in release 0.6 we create progress table with score type = Text, but in database it was Integer, now rename it:
+            //http://stackoverflow.com/questions/21199398/sqlite-alter-a-tables-column-type
+
+            String tempTableName = "tmp2to3";
+            String renameTableQuery = "ALTER TABLE " + DbStructureProgress.PROGRESS + " RENAME TO "
+                    + tempTableName;
+            db.execSQL(renameTableQuery);
+
+            createProgress(db, DbStructureProgress.PROGRESS);
+
+            String[] allFields = DbStructureProgress.getUsedColumns();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < allFields.length; i++) {
+                sb.append(allFields[i]);
+                if (i != allFields.length - 1) {
+                    sb.append(", ");
+                }
+            }
+            String fields_correct = sb.toString();
+            Log.e("stepic", fields_correct);
+            String insertValues = "INSERT INTO " + DbStructureProgress.PROGRESS + "("
+                    + fields_correct +
+                    ")" +
+                    "   SELECT " +
+                    fields_correct +
+                    "   FROM " + tempTableName;
+
+            Log.e("stepic", insertValues);
+            db.execSQL(insertValues);
+
+            String drop = "DROP TABLE " + tempTableName;
+            Log.e("stepic", drop);
+            db.execSQL(drop);
         }
     }
 
