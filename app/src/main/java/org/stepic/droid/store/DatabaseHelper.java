@@ -292,7 +292,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureProgress.Column.IS_PASSED + " BOOLEAN, "
                 + DbStructureProgress.Column.ID + " TEXT, "
                 + DbStructureProgress.Column.LAST_VIEWED + " TEXT, "
-                + DbStructureProgress.Column.SCORE + " INTEGER, "
+                + DbStructureProgress.Column.SCORE + " TEXT, "
                 + DbStructureProgress.Column.COST + " INTEGER, "
                 + DbStructureProgress.Column.N_STEPS + " INTEGER, "
                 + DbStructureProgress.Column.N_STEPS_PASSED + " INTEGER "
