@@ -87,4 +87,6 @@ public class AppConstants {
 
     public static final int REQUEST_CODE_DETAIL = 1;
     public static final java.lang.String METRICA_YES_CLEAR_VIDEOS = "clear videos from downloads";
+    public static final String NULL_SECTION = "Null section is not expected";
+    public static final String NULL_COURSE = "Null course is not expected";
 }

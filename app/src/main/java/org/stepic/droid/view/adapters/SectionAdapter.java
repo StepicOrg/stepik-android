@@ -148,6 +148,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         } else {
             //Not active section
 
+
             holder.mLoadButton.setVisibility(View.GONE);
             holder.preLoadIV.setVisibility(View.GONE);
             holder.whenLoad.setVisibility(View.INVISIBLE);
@@ -163,8 +164,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             holder.cv.setFocusable(false);
             holder.cv.setClickable(false);
             holder.cv.setFocusableInTouchMode(false);
-
-
         }
     }
 
