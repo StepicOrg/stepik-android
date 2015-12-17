@@ -69,7 +69,8 @@ public class StoreStateManager implements IStoreStateManager {
         updateSectionState(unit.getSection());
     }
 
-    private void updateUnitLessonAfterDeleting(long lessonId) {
+    @Override
+    public void updateUnitLessonAfterDeleting(long lessonId) {
         //now unit lesson and all steps are deleting
         //cached = false, loading false
         //just make for parents
@@ -101,7 +102,7 @@ public class StoreStateManager implements IStoreStateManager {
             mainHandler.post(myRunnable);
         }
 
-        updateSectionAfterDeleting(unit);
+        updateSectionAfterDeleting(unit.getSection());
     }
 
     @Override
@@ -112,8 +113,9 @@ public class StoreStateManager implements IStoreStateManager {
         updateUnitLessonAfterDeleting(lessonId);
     }
 
-    private void updateSectionAfterDeleting(final Unit unitChild) {
-        final Section section = mDatabaseManager.getSectionById(unitChild.getSection());
+    @Override
+    public void updateSectionAfterDeleting(long sectionId) {
+        final Section section = mDatabaseManager.getSectionById(sectionId);
         if (section == null) {
             YandexMetrica.reportError(AppConstants.NULL_SECTION, new Exception("update Section after deleting"));
             return;

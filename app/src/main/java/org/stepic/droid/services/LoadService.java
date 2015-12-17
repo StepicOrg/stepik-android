@@ -37,6 +37,7 @@ import org.stepic.droid.web.UnitStepicResponse;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -232,6 +233,9 @@ public class LoadService extends IntentService {
                 } else {
                     mStoreStateManager.updateUnitLessonState(lesson.getId());
                 }
+            } catch (UnknownHostException e) {
+                //not internet
+                mStoreStateManager.updateUnitLessonAfterDeleting(lesson.getId());
             } catch (IOException e) {
                 YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, e);
                 e.printStackTrace();
@@ -290,6 +294,10 @@ public class LoadService extends IntentService {
                     }
                 }
             }
+        } catch (UnknownHostException e) {
+            //not internet
+            mStoreStateManager.updateSectionAfterDeleting(section.getId());
+
         } catch (IOException e) {
             YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, e);
             e.printStackTrace();
