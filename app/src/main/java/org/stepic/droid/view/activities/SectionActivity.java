@@ -5,6 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -107,8 +108,12 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
+            case R.id.action_info:
+                mShell.getScreenProvider().showCourseDescription(this, mCourse);
+                return true;
+
             case android.R.id.home:
+                // Respond to the action bar's Up/Home button
                 finish();
                 return true;
         }
@@ -280,4 +285,10 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         mAdapter.notifyItemChanged(position);
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.section_unit_menu, menu);
+        return true;
+    }
 }
