@@ -5,26 +5,21 @@
 
     <include layout="@layout/report_problem_layout" />
 
+    <include layout="@layout/empty_courses" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout_mycourses"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
+        <ListView
+            android:id="@+id/list_of_courses"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:divider="@null"
+            android:scrollbarStyle="outsideOverlay" />
 
-            <ListView
-                android:id="@+id/list_of_courses"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:divider="@null"
-                android:scrollbarStyle="outsideOverlay" />
-
-            <include layout="@layout/empty_courses" />
-        </FrameLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 

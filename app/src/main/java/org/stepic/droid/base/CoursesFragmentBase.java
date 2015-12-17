@@ -159,7 +159,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
     protected void showCourses(List<Course> cachedCourses) {
         if (cachedCourses != null || cachedCourses.size() != 0) {
-            mEmptyCoursesView.setVisibility(View.GONE);
+            showEmptyScreen(false);
             mReportConnectionProblem.setVisibility(View.GONE);
         }
 
@@ -265,7 +265,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
         } else {
             mHasNextPage = false;
             mReportConnectionProblem.setVisibility(View.GONE);
-            mEmptyCoursesView.setVisibility(View.VISIBLE);
+            showEmptyScreen(true);
 
             mFooterDownloadingView.setVisibility(View.GONE);
             ProgressHelper.dismiss(mSwipeRefreshLayout);
@@ -281,7 +281,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
         if (mCourses == null || mCourses.size() == 0) {
             //screen is clear due to error connection
-            mEmptyCoursesView.setVisibility(View.GONE);
+            showEmptyScreen(false);
             mReportConnectionProblem.setVisibility(View.VISIBLE);
         }
     }
@@ -445,7 +445,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
         }
 
         if (mCourses.size() == 0) {
-            mEmptyCoursesView.setVisibility(View.VISIBLE);
+            showEmptyScreen(true);
         }
     }
 
@@ -475,6 +475,17 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
                 }
 
             }
+        }
+    }
+
+    void showEmptyScreen(boolean isShowed) {
+        if (isShowed) {
+            mEmptyCoursesView.setVisibility(View.VISIBLE);
+            mSwipeRefreshLayout.setVisibility(View.GONE);
+        } else {
+            mEmptyCoursesView.setVisibility(View.GONE);
+            mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+
         }
     }
 }
