@@ -43,6 +43,7 @@ public class VideoStepFragment extends FragmentStepBase {
     @Bind(R.id.player_layout)
     View mPlayer;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -104,8 +105,6 @@ public class VideoStepFragment extends FragmentStepBase {
             resolveTask.execute();
 
         }
-
-
         mPlayer.setOnClickListener(new View.OnClickListener() {
             Step localStep = mStep;
 
@@ -139,6 +138,7 @@ public class VideoStepFragment extends FragmentStepBase {
     }
 
     private String tempVideoUrl = null;
+
 
     @Subscribe
     public void onVideoLoaded(VideoLoadedEvent e) {

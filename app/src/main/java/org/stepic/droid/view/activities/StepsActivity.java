@@ -6,6 +6,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -19,10 +21,12 @@ import org.stepic.droid.concurrency.FromDbStepTask;
 import org.stepic.droid.concurrency.ToDbStepTask;
 import org.stepic.droid.events.steps.FailLoadStepEvent;
 import org.stepic.droid.events.steps.FromDbStepEvent;
+import org.stepic.droid.events.steps.SuccessLoadStepEvent;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.events.steps.UpdateStepsState;
-import org.stepic.droid.events.steps.SuccessLoadStepEvent;
+import org.stepic.droid.events.video.VideoQualityEvent;
 import org.stepic.droid.model.Assignment;
+import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Step;
@@ -129,6 +133,7 @@ public class StepsActivity extends FragmentActivityBase {
             @Override
             public void onPageSelected(int position) {
                 pushState(position);
+                checkOptionsMenu(position);
             }
 
             @Override
@@ -139,6 +144,36 @@ public class StepsActivity extends FragmentActivityBase {
 
         if (mLesson != null && mLesson.getSteps() != null && mLesson.getSteps().length != 0 && !isLoaded)
             updateSteps();
+    }
+
+    private void checkOptionsMenu(int position) {
+        if (mStepList.size() <= position) return;
+        final Step step = mStepList.get(position);
+
+        if (step.getBlock() == null || step.getBlock().getVideo() == null) {
+            bus.post(new VideoQualityEvent(null, step.getId()));
+        } else {
+            AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
+                @Override
+                protected String doInBackground(Void... params) {
+                    CachedVideo video = mDbManager.getCachedVideoById(step.getBlock().getVideo().getId());
+                    return video.getQuality();
+                }
+
+                @Override
+                protected void onPostExecute(String s) {
+                    super.onPostExecute(s);
+                    if (s == null) {
+                        bus.post(new VideoQualityEvent(s, step.getId()));
+                    } else {
+                        bus.post(new VideoQualityEvent(s + "p", step.getId()));
+                    }
+                }
+            };
+            task.execute();
+        }
+
+
     }
 
     private void pushState(int position) {
@@ -412,6 +447,34 @@ public class StepsActivity extends FragmentActivityBase {
     protected void onStop() {
         super.onStop();
         bus.unregister(this);
+    }
+
+    private String qualityForView;
+
+    @Subscribe
+    public void onQualityDetermined(VideoQualityEvent e) {
+        int currentPosition = mViewPager.getCurrentItem();
+        if (currentPosition < 0 || currentPosition >= mStepList.size()) return;
+        long stepId = mStepList.get(currentPosition).getId();
+        if (e.getStepId() != stepId) return;
+        qualityForView = e.getQuality();
+        invalidateOptionsMenu();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.video_step_menu, menu);
+        MenuItem quality = menu.findItem(R.id.action_quality);
+        if (qualityForView != null) {
+            quality.setTitle(qualityForView);
+        } else {
+            quality.setTitle("");
+
+        }
+        return true;
     }
 
 }
