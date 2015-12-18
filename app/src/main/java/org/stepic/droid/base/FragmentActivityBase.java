@@ -10,6 +10,7 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.R;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.resolvers.IStepResolver;
 
@@ -30,6 +31,8 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     @Inject
     protected Bus bus;
 
+    @Inject
+    protected UserPreferences mUserPreferences;
     @Inject
     protected IStepResolver mStepResolver;
 

@@ -157,7 +157,13 @@ public class StepsActivity extends FragmentActivityBase {
                 @Override
                 protected String doInBackground(Void... params) {
                     CachedVideo video = mDbManager.getCachedVideoById(step.getBlock().getVideo().getId());
-                    return video.getQuality();
+                    String quality;
+                    if (video == null) {
+                        quality = mUserPreferences.getQualityVideo();
+                    } else {
+                        quality = video.getQuality();
+                    }
+                    return quality;
                 }
 
                 @Override
@@ -387,6 +393,7 @@ public class StepsActivity extends FragmentActivityBase {
         }
         isLoaded = true;
         pushState(mViewPager.getCurrentItem());
+        checkOptionsMenu(mViewPager.getCurrentItem());
 
     }
 
