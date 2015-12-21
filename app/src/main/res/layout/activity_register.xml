@@ -32,34 +32,39 @@
                 tools:targetApi="17"
                 android:orientation="vertical">
 
-                <org.stepic.droid.view.custom.SEditTextView
+                <android.support.v7.widget.AppCompatEditText
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
                     android:id="@+id/first_name_reg"
-                    style="@style/edit_text_style"
+
                     android:hint="@string/first_name"
                     android:inputType="textPersonName"
                     android:maxLength="100"
                     android:layout_margin="@dimen/margin_registration"/>
 
-
-                <org.stepic.droid.view.custom.SEditTextView
+                <android.support.v7.widget.AppCompatEditText
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
                     android:id="@+id/second_name_reg"
-                    style="@style/edit_text_style"
+
                     android:hint="@string/second_name"
                     android:inputType="textPersonName"
                     android:layout_margin="@dimen/margin_registration"/>
 
+                <android.support.v7.widget.AppCompatEditText
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
 
-                <org.stepic.droid.view.custom.SEditTextView
                     android:id="@+id/email_reg"
-                    style="@style/edit_text_style"
                     android:hint="@string/email_login"
                     android:inputType="textEmailAddress"
                     android:layout_margin="@dimen/margin_registration"/>
 
 
-                <org.stepic.droid.view.custom.SEditTextView
+                <android.support.v7.widget.AppCompatEditText
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
                     android:id="@+id/password_reg"
-                    style="@style/edit_text_style"
                     android:hint="@string/password_hint"
                     android:inputType="textPassword"
                     android:layout_margin="@dimen/margin_registration"/>
@@ -100,12 +105,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <org.stepic.droid.view.custom.STextView
-        android:id="@+id/downloadMessage"
-        style="@style/downloading_message"
-        android:text="Downloading"
-        android:layout_marginTop="50dp"
-        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/custom_action_bar"

@@ -14,7 +14,7 @@
             layout="@layout/step_text_header" />
 
 
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/open_web"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

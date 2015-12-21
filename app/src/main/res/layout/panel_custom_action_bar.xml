@@ -5,10 +5,6 @@
     android:layout_height="@dimen/abc_action_bar_default_height_material"
     android:background="@color/stepic_white">
 
-    <org.stepic.droid.view.custom.STextView
-        android:id="@+id/activity_title"
-        style="@style/custom_activity_title" />
-
     <RelativeLayout
         android:id="@+id/actionbar_close_btn_layout"
         android:layout_width="48dp"

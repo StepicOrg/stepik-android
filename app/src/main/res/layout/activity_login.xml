@@ -77,7 +77,7 @@
 
                     <TextView
                         android:id="@+id/forgot_password_tv"
-                        style="@style/semibold_text"
+                        style="@style/bold_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -87,7 +87,7 @@
                         android:textColor="@color/cyan_text_navigation"
                         android:textSize="12sp" />
 
-                    <org.stepic.droid.view.custom.SButton
+                    <android.support.v7.widget.AppCompatButton
                         android:id="@+id/login_button_layout"
                         style="@style/bold_white_text"
                         android:layout_width="match_parent"
