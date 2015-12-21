@@ -48,6 +48,8 @@ public class MainFeedActivity extends FragmentActivityBase
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String KEY_CURRENT_INDEX = "Current_index";
 
+    private final boolean isNeedCheck = true;
+
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
@@ -84,7 +86,7 @@ public class MainFeedActivity extends FragmentActivityBase
 
         setUpToolbar();
         setUpDrawerLayout();
-        initFragments();
+        initFragments(savedInstanceState);
 
         bus.register(this);
 
@@ -123,25 +125,34 @@ public class MainFeedActivity extends FragmentActivityBase
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void initFragments() {
+    private void initFragments(Bundle savedInstance) {
+        //// TODO: 22.12.15 optimize it, remove dependence on indices
         mFragments = new ArrayList<>();
         mFragments.add(new MyCoursesFragment());
 //        mFragments.add(new BestLessons());
         mFragments.add(new FindCoursesFragment());
-        mFragments.add(new SettingsFragment());
         mFragments.add(new DownloadsFragment());
+        mFragments.add(new SettingsFragment());
 
-        mCurrentIndex = 0;
+        if (savedInstance == null) {
+            mCurrentIndex = 0;
+        } else {
+            mCurrentIndex = savedInstance.getInt(KEY_CURRENT_INDEX);
+        }
         showCurrentFragment();
     }
 
     private void showCurrentFragment() {
-        mCurrentFragment = mFragments.get(mCurrentIndex);
-        setFragment();
         Menu menu = mNavigationView.getMenu();
         MenuItem menuItem = menu.getItem(mCurrentIndex);
-        menuItem.setChecked(false);
+        showCurrentFragment(menuItem);
+    }
+
+    private void showCurrentFragment(MenuItem menuItem) {
+        mCurrentFragment = mFragments.get(mCurrentIndex);
+        menuItem.setChecked(isNeedCheck);
         setTitle(menuItem.getTitle());
+        setFragment();
     }
 
     @Override
@@ -157,19 +168,24 @@ public class MainFeedActivity extends FragmentActivityBase
                 mCurrentIndex = 1;
                 break;
             case R.id.my_settings:
-                mCurrentIndex = 2;
-                break;
-            case R.id.cached_videos:
                 mCurrentIndex = 3;
                 break;
+            case R.id.cached_videos:
+                mCurrentIndex = 2;
+                break;
             case R.id.logout_item:
-                //todo: add 'Are you sure?" dialog
                 YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_LOGOUT);
 
                 LogoutAreYouSureDialog dialog = new LogoutAreYouSureDialog();
                 dialog.show(getSupportFragmentManager(), null);
 
-                menuItem.setChecked(false);
+                if (isNeedCheck) {
+                    Menu menu = mNavigationView.getMenu();
+                    MenuItem oldItem = menu.getItem(mCurrentIndex);
+                    oldItem.setChecked(isNeedCheck);
+                }
+
+                menuItem.setChecked(false);//never select logout
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -182,12 +198,7 @@ public class MainFeedActivity extends FragmentActivityBase
                 Toast.makeText(getApplicationContext(), "Somethings Wrong", Toast.LENGTH_SHORT).show();
                 break;
         }
-
-        mCurrentFragment = mFragments.get(mCurrentIndex);
-
-        menuItem.setChecked(false);
-        setTitle(menuItem.getTitle());
-        setFragment();
+        showCurrentFragment(menuItem);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -262,13 +273,6 @@ public class MainFeedActivity extends FragmentActivityBase
     protected void onDestroy() {
         bus.unregister(this);
         super.onDestroy();
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        mCurrentIndex = savedInstanceState.getInt(KEY_CURRENT_INDEX);
-        showCurrentFragment();
     }
 
     public void showFindLesson() {
