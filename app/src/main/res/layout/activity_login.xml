@@ -56,16 +56,18 @@
 
                     <EditText
                         android:id="@+id/email_et"
-                        style="@style/edit_text_style"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
                         android:hint="@string/email_login"
                         android:imeOptions="actionNext"
                         android:inputType="textEmailAddress"
                         android:maxLength="100"
                         android:singleLine="true" />
 
-                    <EditText
+                    <android.support.v7.widget.AppCompatEditText
                         android:id="@+id/password_et"
-                        style="@style/edit_text_style"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_marginTop="8dp"
                         android:hint="@string/password_hint"
                         android:imeOptions="actionSend"
