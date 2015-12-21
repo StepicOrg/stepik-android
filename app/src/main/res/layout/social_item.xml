@@ -14,8 +14,7 @@
         android:layout_width="@dimen/height_of_social"
         android:layout_height="@dimen/height_of_social"
         android:layout_gravity="center"
-        android:scaleType="centerCrop"
-        android:src="@drawable/sample_course_icon" />
+        android:scaleType="centerCrop" />
 
 
 </FrameLayout>

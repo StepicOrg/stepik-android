@@ -12,8 +12,7 @@
         android:id="@+id/instructor_icon"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:src="@drawable/sample_course_icon" />
+        android:layout_gravity="center" />
 
 
     <org.stepic.droid.view.custom.STextView

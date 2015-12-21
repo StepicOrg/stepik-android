@@ -23,16 +23,6 @@
             android:layout_marginRight="20dp">
 
             <LinearLayout
-                android:id="@+id/message_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
-
-                <include layout="@layout/panel_login_message" />
-            </LinearLayout>
-
-
-            <LinearLayout
                 android:id="@+id/signup_with_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

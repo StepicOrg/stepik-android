@@ -33,8 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
                 android:layout_gravity="center"
-                android:layout_weight="5"
-                android:src="@drawable/sample_course_icon" />
+                android:layout_weight="5" />
 
             <RelativeLayout
                 android:id="@+id/course_info_layout"
