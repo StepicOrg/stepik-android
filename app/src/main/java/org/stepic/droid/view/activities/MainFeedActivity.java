@@ -15,12 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.events.profile.ProfileCanBeShownEvent;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.util.AppConstants;
@@ -84,6 +86,8 @@ public class MainFeedActivity extends FragmentActivityBase
         setUpDrawerLayout();
         initFragments();
 
+        bus.register(this);
+
         final SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
         Profile cachedProfile = helper.getProfile();
         if (cachedProfile == null) { //todo always update??
@@ -93,7 +97,7 @@ public class MainFeedActivity extends FragmentActivityBase
                     Profile profile = response.body().getProfile();
 
                     helper.storeProfile(profile);
-                    showProfile(profile);
+                    bus.post(new ProfileCanBeShownEvent(profile));
                 }
 
                 @Override
@@ -105,7 +109,7 @@ public class MainFeedActivity extends FragmentActivityBase
                 }
             });
         } else {
-            showProfile(cachedProfile);
+            bus.post(new ProfileCanBeShownEvent(cachedProfile));
         }
 //        SharedPreferenceHelper sharedPreferenceHelper = mShell.getSharedPreferenceHelper();
 //        AuthenticationStepicResponse resp = sharedPreferenceHelper.getAuthResponseFromStore(MainFeedActivity.this);
@@ -235,7 +239,9 @@ public class MainFeedActivity extends FragmentActivityBase
         fragmentTransaction.commit();
     }
 
-    private void showProfile(Profile profile) {
+    @Subscribe
+    public void showProfile(ProfileCanBeShownEvent e) {
+        Profile profile = e.getProfile();
         if (profile == null) {
             YandexMetrica.reportError(AppConstants.NULL_SHOW_PROFILE, new NullPointerException());
             return;
@@ -253,17 +259,10 @@ public class MainFeedActivity extends FragmentActivityBase
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        bus.register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
         bus.unregister(this);
+        super.onDestroy();
     }
-
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
