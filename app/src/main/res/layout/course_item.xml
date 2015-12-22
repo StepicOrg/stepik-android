@@ -22,25 +22,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:baselineAligned="false"
             android:minHeight="120dp"
             android:orientation="horizontal"
             android:padding="@dimen/guideline_left_right_padding_list_item">
 
 
-            <org.stepic.droid.view.custom.SImageView
+            <ImageView
                 android:id="@+id/video_icon"
-                android:layout_width="match_parent"
+                android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:layout_gravity="center"
-                android:layout_weight="5"
-                android:src="@drawable/sample_course_icon" />
+                android:layout_gravity="start"
+                android:layout_marginRight="4dp"
+                android:layout_marginEnd="4dp" />
 
             <RelativeLayout
                 android:id="@+id/course_info_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
                 android:paddingLeft="4dp">
 
 

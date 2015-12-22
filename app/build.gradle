@@ -11,8 +11,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 13
-        versionName "0.7.1"
+        versionCode 15
+        versionName "0.8"
 
         // Enabling multidex support.
         multiDexEnabled true
@@ -69,6 +69,8 @@ dependencies {
     compile 'com.yandex.android:mobmetricalib:2.21@aar'
 
     compile 'jp.wasabeef:recyclerview-animators:1.3.0'
+
+    compile 'uk.co.chrisjenx:calligraphy:2.1.0'
 
 }
 

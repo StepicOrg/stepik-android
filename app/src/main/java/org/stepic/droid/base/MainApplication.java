@@ -6,9 +6,12 @@ import android.support.multidex.MultiDexApplication;
 
 import com.yandex.metrica.YandexMetrica;
 
+import org.stepic.droid.R;
 import org.stepic.droid.core.DaggerStepicCoreComponent;
 import org.stepic.droid.core.StepicCoreComponent;
 import org.stepic.droid.core.StepicDefaultModule;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class MainApplication extends MultiDexApplication {
 
@@ -23,6 +26,12 @@ public class MainApplication extends MultiDexApplication {
 
     private void init() {
         application = this;
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                        .setDefaultFontPath("fonts/NotoSans-Regular.ttf")
+                        .setFontAttrId(R.attr.fontPath)
+                        .build()
+        );
 
         component = DaggerStepicCoreComponent.builder().
                 stepicDefaultModule(new StepicDefaultModule(application)).build();

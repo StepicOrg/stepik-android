@@ -34,19 +34,10 @@ public class VideoQualityDialog extends DialogFragment {
     @Inject
     UserPreferences mUserPreferences;
 
-    private static Map<String, Integer> mQualityToPositionMap = new HashMap<>();
-    private static Map<Integer, String> mPositionToQualityMap = new HashMap<>();
+    private Map<String, Integer> mQualityToPositionMap = null;
+    private Map<Integer, String> mPositionToQualityMap = null;
 
     static {
-        mQualityToPositionMap.put("270", 0);
-        mQualityToPositionMap.put("360", 1);
-        mQualityToPositionMap.put("720", 2);
-        mQualityToPositionMap.put("1080", 3);
-
-        mPositionToQualityMap.put(0, "270");
-        mPositionToQualityMap.put(1, "360");
-        mPositionToQualityMap.put(2, "720");
-        mPositionToQualityMap.put(3, "1080");
     }
 
 
@@ -54,6 +45,9 @@ public class VideoQualityDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         MainApplication.component().inject(this);
+        if (mQualityToPositionMap == null || mPositionToQualityMap == null) {
+            initMaps();
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
         builder.setTitle(R.string.video_quality)
@@ -77,9 +71,29 @@ public class VideoQualityDialog extends DialogFragment {
                                 };
                                 task.execute();
                                 dialog.dismiss();
+                                dialog.dismiss();
                             }
                         });
 
         return builder.create();
+    }
+
+    private void initMaps() {
+
+        if (mQualityToPositionMap == null) {
+            mQualityToPositionMap = new HashMap<>();
+            mQualityToPositionMap.put("270", 0);
+            mQualityToPositionMap.put("360", 1);
+            mQualityToPositionMap.put("720", 2);
+            mQualityToPositionMap.put("1080", 3);
+        }
+
+        if (mPositionToQualityMap == null) {
+            mPositionToQualityMap = new HashMap<>();
+            mPositionToQualityMap.put(0, "270");
+            mPositionToQualityMap.put(1, "360");
+            mPositionToQualityMap.put(2, "720");
+            mPositionToQualityMap.put(3, "1080");
+        }
     }
 }

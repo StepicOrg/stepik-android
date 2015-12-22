@@ -3,6 +3,7 @@ package org.stepic.droid.store;
 import android.os.Handler;
 
 import com.squareup.otto.Bus;
+import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.sections.NotCachedSectionEvent;
@@ -15,6 +16,7 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.util.AppConstants;
 
 import java.util.List;
 
@@ -47,39 +49,32 @@ public class StoreStateManager implements IStoreStateManager {
         mDatabaseManager.updateOnlyCachedLoadingLesson(lesson);
 
         final Unit unit = mDatabaseManager.getUnitByLessonId(lessonId);
-        unit.setIs_loading(false);
-        unit.setIs_cached(true);
-        mDatabaseManager.updateOnlyCachedLoadingUnit(unit);
+        if (unit.is_loading() || !unit.is_cached()) {
+            unit.setIs_loading(false);
+            unit.setIs_cached(true);
+            mDatabaseManager.updateOnlyCachedLoadingUnit(unit);
 
+            Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
+            //Say to ui that ui is cached now
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    bus.post(new UnitCachedEvent(unit.getId()));
+                }
+            };
+            mainHandler.post(myRunnable);
+        }
 
-        Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
-        //Say to ui that ui is cached now
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                bus.post(new UnitCachedEvent(unit.getId()));
-            }
-        };
-        mainHandler.post(myRunnable);
 
         updateSectionState(unit.getSection());
     }
 
-    private void updateUnitLessonAfterDeleting(Unit unit) {
+    @Override
+    public void updateUnitLessonAfterDeleting(long lessonId) {
         //now unit lesson and all steps are deleting
         //cached = false, loading false
         //just make for parents
         //// FIXME: 14.12.15 it is not true, see related commit. Now we can delete one step.
-
-
-        Section section = mDatabaseManager.getSectionById(unit.getSection());
-        updateSectionAfterDeleting(section);
-
-    }
-
-    @Override
-    public void updateStepAfterDeleting(Step step) {
-        long lessonId = step.getLesson();
 
         Lesson lesson = mDatabaseManager.getLessonById(lessonId);
         final Unit unit = mDatabaseManager.getUnitByLessonId(lessonId);
@@ -107,34 +102,54 @@ public class StoreStateManager implements IStoreStateManager {
             mainHandler.post(myRunnable);
         }
 
-
-        updateUnitLessonAfterDeleting(unit);
+        updateSectionAfterDeleting(unit.getSection());
     }
 
-    private void updateSectionAfterDeleting(final Section section) {
-        section.setIs_cached(false);
-        section.setIs_loading(false);
-        mDatabaseManager.updateOnlyCachedLoadingSection(section);
-        Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
-        //Say to ui that ui is cached now
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                bus.post(new NotCachedSectionEvent(section.getId()));
-            }
-        };
-        mainHandler.post(myRunnable);
+    @Override
+    public void updateStepAfterDeleting(Step step) {
+        //// TODO: 17.12.15 transfer to this method all update state? it is not good for UI
 
-
-        Course course = mDatabaseManager.getCourseById(section.getCourse(), DatabaseManager.Table.enrolled);
-        updateCourseAfterDeleting(course);
-
+        long lessonId = step.getLesson();
+        updateUnitLessonAfterDeleting(lessonId);
     }
 
-    private void updateCourseAfterDeleting(Course course) {
-        course.setIs_cached(false);
-        course.setIs_loading(false);
-        mDatabaseManager.updateOnlyCachedLoadingCourse(course, DatabaseManager.Table.enrolled);
+    @Override
+    public void updateSectionAfterDeleting(long sectionId) {
+        final Section section = mDatabaseManager.getSectionById(sectionId);
+        if (section == null) {
+            YandexMetrica.reportError(AppConstants.NULL_SECTION, new Exception("update Section after deleting"));
+            return;
+        }
+        if (section.is_cached() || section.is_loading()) {
+            section.setIs_cached(false);
+            section.setIs_loading(false);
+            mDatabaseManager.updateOnlyCachedLoadingSection(section);
+            Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
+            //Say to ui that ui is cached now
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    bus.post(new NotCachedSectionEvent(section.getId()));
+                }
+            };
+            mainHandler.post(myRunnable);
+        }
+
+        updateCourseAfterDeleting(section.getCourse());
+    }
+
+    private void updateCourseAfterDeleting(long courseId) {
+
+        Course course = mDatabaseManager.getCourseById(courseId, DatabaseManager.Table.enrolled);
+        if (course == null) {
+            YandexMetrica.reportError(AppConstants.NULL_COURSE, new Exception("update Course after deleting"));
+            return;
+        }
+        if (course.is_cached() || course.is_loading()) {
+            course.setIs_cached(false);
+            course.setIs_loading(false);
+            mDatabaseManager.updateOnlyCachedLoadingCourse(course, DatabaseManager.Table.enrolled);
+        }
     }
 
     @Override
@@ -146,20 +161,24 @@ public class StoreStateManager implements IStoreStateManager {
 
         //all units, lessons, steps of sections are cached
         final Section section = mDatabaseManager.getSectionById(sectionId);
-        section.setIs_cached(true);
-        section.setIs_loading(false);
-        mDatabaseManager.updateOnlyCachedLoadingSection(section);
-
-
-        Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
-        //Say to ui that ui is cached now
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                bus.post(new SectionCachedEvent(section.getId()));
-            }
-        };
-        mainHandler.post(myRunnable);
+        if (section == null) {
+            YandexMetrica.reportError(AppConstants.NULL_SECTION, new Exception("update section state"));
+            return;
+        }
+        if (!section.is_cached() || section.is_loading()) {
+            section.setIs_cached(true);
+            section.setIs_loading(false);
+            mDatabaseManager.updateOnlyCachedLoadingSection(section);
+            Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
+            //Say to ui that ui is cached now
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    bus.post(new SectionCachedEvent(section.getId()));
+                }
+            };
+            mainHandler.post(myRunnable);
+        }
 
         updateCourseState(section.getCourse());
     }
@@ -173,6 +192,11 @@ public class StoreStateManager implements IStoreStateManager {
         List<Section> sections = mDatabaseManager.getAllSectionsOfCourse(course);
         for (Section section : sections) {
             if (!section.is_cached()) return;
+        }
+
+        if (course == null) {
+            YandexMetrica.reportError(AppConstants.NULL_COURSE, new Exception("null course in update course state"));
+            return;
         }
 
         course.setIs_loading(false);

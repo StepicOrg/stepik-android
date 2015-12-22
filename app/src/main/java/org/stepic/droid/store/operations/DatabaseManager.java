@@ -253,8 +253,8 @@ public class DatabaseManager extends DbManagerBase {
         try {
             open();
 
-            String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.LESSON + " = " + lessonId;
-            Cursor cursor = database.rawQuery(Query, null);
+            String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.LESSON + " =?";
+            Cursor cursor = database.rawQuery(Query, new String[]{lessonId + ""});
 
             cursor.moveToFirst();
 
@@ -1092,6 +1092,26 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
+
+    @Nullable
+    public CachedVideo getCachedVideoById(long videoId) {
+        try {
+            open();
+            String Query = "Select * from " + DbStructureCachedVideo.CACHED_VIDEO + " where " + DbStructureCachedVideo.Column.VIDEO_ID + " = " + videoId;
+            Cursor cursor = database.rawQuery(Query, null);
+            if (cursor.getCount() <= 0) {
+                cursor.close();
+                return null;
+            }
+            cursor.moveToFirst();
+            CachedVideo video = parseCachedVideo(cursor);
+            cursor.close();
+            return video;
+
+        } finally {
+            close();
+        }
+    }
 
     public List<CachedVideo> getAllCachedVideo() {
         try {

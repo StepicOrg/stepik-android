@@ -15,12 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.events.profile.ProfileCanBeShownEvent;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.util.AppConstants;
@@ -45,6 +47,8 @@ import retrofit.Retrofit;
 public class MainFeedActivity extends FragmentActivityBase
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String KEY_CURRENT_INDEX = "Current_index";
+
+    private final boolean isNeedCheck = true;
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
@@ -82,7 +86,9 @@ public class MainFeedActivity extends FragmentActivityBase
 
         setUpToolbar();
         setUpDrawerLayout();
-        initFragments();
+        initFragments(savedInstanceState);
+
+        bus.register(this);
 
         final SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
         Profile cachedProfile = helper.getProfile();
@@ -93,7 +99,7 @@ public class MainFeedActivity extends FragmentActivityBase
                     Profile profile = response.body().getProfile();
 
                     helper.storeProfile(profile);
-                    showProfile(profile);
+                    bus.post(new ProfileCanBeShownEvent(profile));
                 }
 
                 @Override
@@ -105,7 +111,7 @@ public class MainFeedActivity extends FragmentActivityBase
                 }
             });
         } else {
-            showProfile(cachedProfile);
+            bus.post(new ProfileCanBeShownEvent(cachedProfile));
         }
 //        SharedPreferenceHelper sharedPreferenceHelper = mShell.getSharedPreferenceHelper();
 //        AuthenticationStepicResponse resp = sharedPreferenceHelper.getAuthResponseFromStore(MainFeedActivity.this);
@@ -119,25 +125,34 @@ public class MainFeedActivity extends FragmentActivityBase
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void initFragments() {
+    private void initFragments(Bundle savedInstance) {
+        //// TODO: 22.12.15 optimize it, remove dependence on indices
         mFragments = new ArrayList<>();
         mFragments.add(new MyCoursesFragment());
 //        mFragments.add(new BestLessons());
         mFragments.add(new FindCoursesFragment());
-        mFragments.add(new SettingsFragment());
         mFragments.add(new DownloadsFragment());
+        mFragments.add(new SettingsFragment());
 
-        mCurrentIndex = 0;
+        if (savedInstance == null) {
+            mCurrentIndex = 0;
+        } else {
+            mCurrentIndex = savedInstance.getInt(KEY_CURRENT_INDEX);
+        }
         showCurrentFragment();
     }
 
     private void showCurrentFragment() {
-        mCurrentFragment = mFragments.get(mCurrentIndex);
-        setFragment();
         Menu menu = mNavigationView.getMenu();
         MenuItem menuItem = menu.getItem(mCurrentIndex);
-        menuItem.setChecked(false);
+        showCurrentFragment(menuItem);
+    }
+
+    private void showCurrentFragment(MenuItem menuItem) {
+        mCurrentFragment = mFragments.get(mCurrentIndex);
+        menuItem.setChecked(isNeedCheck);
         setTitle(menuItem.getTitle());
+        setFragment();
     }
 
     @Override
@@ -153,19 +168,24 @@ public class MainFeedActivity extends FragmentActivityBase
                 mCurrentIndex = 1;
                 break;
             case R.id.my_settings:
-                mCurrentIndex = 2;
-                break;
-            case R.id.cached_videos:
                 mCurrentIndex = 3;
                 break;
+            case R.id.cached_videos:
+                mCurrentIndex = 2;
+                break;
             case R.id.logout_item:
-                //todo: add 'Are you sure?" dialog
                 YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_LOGOUT);
 
                 LogoutAreYouSureDialog dialog = new LogoutAreYouSureDialog();
                 dialog.show(getSupportFragmentManager(), null);
 
-                menuItem.setChecked(false);
+                if (isNeedCheck) {
+                    Menu menu = mNavigationView.getMenu();
+                    MenuItem oldItem = menu.getItem(mCurrentIndex);
+                    oldItem.setChecked(isNeedCheck);
+                }
+
+                menuItem.setChecked(false);//never select logout
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -178,12 +198,7 @@ public class MainFeedActivity extends FragmentActivityBase
                 Toast.makeText(getApplicationContext(), "Somethings Wrong", Toast.LENGTH_SHORT).show();
                 break;
         }
-
-        mCurrentFragment = mFragments.get(mCurrentIndex);
-
-        menuItem.setChecked(false);
-        setTitle(menuItem.getTitle());
-        setFragment();
+        showCurrentFragment(menuItem);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -235,7 +250,9 @@ public class MainFeedActivity extends FragmentActivityBase
         fragmentTransaction.commit();
     }
 
-    private void showProfile(Profile profile) {
+    @Subscribe
+    public void showProfile(ProfileCanBeShownEvent e) {
+        Profile profile = e.getProfile();
         if (profile == null) {
             YandexMetrica.reportError(AppConstants.NULL_SHOW_PROFILE, new NullPointerException());
             return;
@@ -253,23 +270,9 @@ public class MainFeedActivity extends FragmentActivityBase
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        bus.register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
         bus.unregister(this);
-    }
-
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        mCurrentIndex = savedInstanceState.getInt(KEY_CURRENT_INDEX);
-        showCurrentFragment();
+        super.onDestroy();
     }
 
     public void showFindLesson() {

@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -106,8 +108,12 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
+            case R.id.action_info:
+                mShell.getScreenProvider().showCourseDescription(this, mCourse);
+                return true;
+
             case android.R.id.home:
+                // Respond to the action bar's Up/Home button
                 finish();
                 return true;
         }
@@ -247,18 +253,21 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Subscribe
     public void onSectionCached(SectionCachedEvent e) {
+        Log.e("stepic", "update state cached");
         long sectionId = e.getSectionId();
         updateState(sectionId, true, false);
     }
 
     @Subscribe
     public void onNotCachedSection(NotCachedSectionEvent e) {
+        Log.e("stepic", "update state not cached");
         long sectionId = e.getSectionId();
         updateState(sectionId, false, false);
     }
 
 
     private void updateState(long sectionId, boolean isCached, boolean isLoading) {
+
         int position = -1;
         Section section = null;
         for (int i = 0; i < mSectionList.size(); i++) {
@@ -276,4 +285,10 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         mAdapter.notifyItemChanged(position);
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.section_unit_menu, menu);
+        return true;
+    }
 }

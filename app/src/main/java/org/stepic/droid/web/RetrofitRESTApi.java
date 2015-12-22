@@ -21,13 +21,16 @@ import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.EnrollmentWrapper;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
+import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.RWLocks;
 
 import java.io.IOException;
+import java.net.ProtocolException;
 import java.net.Proxy;
 
 import javax.inject.Inject;
@@ -47,6 +50,8 @@ public class RetrofitRESTApi implements IApi {
     DatabaseManager mDbManager;
     @Inject
     IConfig mConfig;
+    @Inject
+    UserPreferences userPreferences;
 
     private StepicRestLoggedService mLoggedService;
     private StepicRestOAuthService mOAuthService;
@@ -73,6 +78,23 @@ public class RetrofitRESTApi implements IApi {
                         newRequest = chain.request().newBuilder().addHeader("Authorization", getAuthHeaderValue()).build();
                     }
                     return chain.proceed(newRequest);
+                } catch (ProtocolException t) {
+                    // FIXME: 17.12.15 IT IS NOT NORMAL BEHAVIOUR, NEED TO REPAIR CODE.
+                    YandexMetrica.reportError(AppConstants.NOT_VALID_ACCESS_AND_REFRESH, t);
+                    mSharedPreference.deleteAuthInfo();
+                    AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... params) {
+
+                            FileUtil.cleanDirectory(userPreferences.getDownloadFolder());
+                            mDbManager.dropDatabase();
+                            return null;
+                        }
+                    };
+                    task.execute();
+                    screenManager.showLaunchScreen(MainApplication.getAppContext(), false);
+
+                    throw t;
                 } finally {
                     RWLocks.AuthLock.writeLock().unlock();
                 }

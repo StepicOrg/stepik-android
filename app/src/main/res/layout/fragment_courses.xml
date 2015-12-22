@@ -3,8 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        layout="@layout/report_problem_layout" />
+    <include layout="@layout/report_problem_layout" />
+
+    <include layout="@layout/empty_courses" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout_mycourses"
@@ -18,8 +19,8 @@
             android:clipToPadding="false"
             android:divider="@null"
             android:scrollbarStyle="outsideOverlay" />
+
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/empty_courses"/>
 
 </FrameLayout>

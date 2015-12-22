@@ -39,4 +39,6 @@ public interface IScreenManager {
 
     @Deprecated
     void showSocialLogin(Context context);
+
+    void showCourseDescription(Activity sourceActivity, @NotNull Course course);
 }

@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/empty_downloading"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="50dp"
+    android:layout_marginTop="50dp"
     android:visibility="gone">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <ImageView
-            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@drawable/ic_nocourses_2" />
+            android:layout_weight="2"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_empty_downloads" />
 
         <TextView
-            android:layout_width="240dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="6dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:padding="2dp"
             android:text="@string/empty_downloading"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
     </LinearLayout>
 </FrameLayout>

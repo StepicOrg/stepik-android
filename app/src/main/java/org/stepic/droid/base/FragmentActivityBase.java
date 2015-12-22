@@ -10,12 +10,14 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.R;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.resolvers.IStepResolver;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class FragmentActivityBase extends AppCompatActivity {
 
@@ -30,6 +32,8 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected Bus bus;
 
     @Inject
+    protected UserPreferences mUserPreferences;
+    @Inject
     protected IStepResolver mStepResolver;
 
     @Override
@@ -38,6 +42,10 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
         MainApplication.component(this).inject(this);
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     protected void hideSoftKeypad() {
         View view = this.getCurrentFocus();

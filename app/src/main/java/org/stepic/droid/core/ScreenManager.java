@@ -99,6 +99,16 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
+    public void showCourseDescription(Activity sourceActivity, @NotNull Course course) {
+        YandexMetrica.reportEvent("Screen manager: show course description");
+        Intent intent = new Intent(sourceActivity, CourseDetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
+        intent.putExtras(bundle);
+        sourceActivity.startActivity(intent);
+    }
+
+    @Override
     public void showSections(Context sourceActivity, @NotNull Course course) {
         YandexMetrica.reportEvent("Screen manager: show section", JsonHelper.toJson(course));
         Intent intent = new Intent(sourceActivity, SectionActivity.class);
