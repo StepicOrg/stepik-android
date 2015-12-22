@@ -253,8 +253,8 @@ public class DatabaseManager extends DbManagerBase {
         try {
             open();
 
-            String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.LESSON + " = " + lessonId;
-            Cursor cursor = database.rawQuery(Query, null);
+            String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.LESSON + " =?";
+            Cursor cursor = database.rawQuery(Query, new String[]{lessonId + ""});
 
             cursor.moveToFirst();
 
