@@ -153,7 +153,8 @@
                     android:layout_height="@dimen/height_of_social"
                     android:layout_marginTop="15dp"
                     android:scrollbarStyle="outsideOverlay"
-                    android:stretchColumns="0" />
+                    android:stretchColumns="0"
+                    android:layout_marginBottom="50dp" />
 
             </LinearLayout>
 
