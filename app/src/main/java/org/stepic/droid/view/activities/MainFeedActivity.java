@@ -85,7 +85,7 @@ public class MainFeedActivity extends FragmentActivityBase
         setContentView(R.layout.activity_main_feed);
         ButterKnife.bind(this);
 
-        View headerLayout = mNavigationView.inflateHeaderView(R.layout.drawer_header);
+        View headerLayout = mNavigationView.getHeaderView(0);
         mProfileImage = ButterKnife.findById(headerLayout, R.id.profile_image);
         mUserNameTextView = ButterKnife.findById(headerLayout, R.id.username);
 

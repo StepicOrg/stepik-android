@@ -1,12 +1,14 @@
 package org.stepic.droid.view.activities;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -100,6 +102,14 @@ public class CourseDetailActivity extends FragmentActivityBase {
 
         setContentView(R.layout.activity_not_enrolled_course_detail);
         ButterKnife.bind(this);
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        mIntroView.getLayoutParams().width = width;
+        mIntroView.getLayoutParams().height = (9 * width) / 16;
+
         overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         hideSoftKeypad();
 
