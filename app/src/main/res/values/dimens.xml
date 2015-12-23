@@ -22,5 +22,8 @@
     <dimen name="space_for_text">8dp</dimen>
     <dimen name="min_max_width_for_tablets">600dp</dimen>
     <dimen name="half_padding_between_textinput">8dp</dimen>
+    <dimen name="padding_text_in_cv">16dp</dimen>
+    <dimen name="padding_bottop_cv">24dp</dimen>
+    <dimen name="text_size_title">24sp</dimen>
 
 </resources>

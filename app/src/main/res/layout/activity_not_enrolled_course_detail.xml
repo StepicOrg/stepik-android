@@ -41,45 +41,113 @@
 
                 <TextView
                     android:id="@+id/course_name"
-                    android:layout_width="wrap_content"
+                    style="@style/cv_text_title"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|start"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:text="Course Name" />
+                    android:paddingLeft="8dp"
+                    android:text="Course Name"
+                    android:gravity="center_horizontal" />
 
-
-                <TextView
+                <android.support.v7.widget.CardView
+                    android:id="@+id/about_root"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/summary" />
+                    android:elevation="2dp"
+                    app:cardCornerRadius="2dp"
+                    app:cardPreventCornerOverlap="true"
+                    app:cardUseCompatPadding="true"
+                    app:contentPaddingBottom="@dimen/padding_bottop_cv"
+                    app:contentPaddingLeft="@dimen/padding_text_in_cv"
+                    app:contentPaddingRight="@dimen/padding_text_in_cv"
+                    app:contentPaddingTop="@dimen/padding_bottop_cv">
 
-                <org.stepic.droid.view.custom.ExpandableTextView
-                    android:id="@+id/summary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                <TextView
+                        <TextView
+                            style="@style/cv_text_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="@dimen/padding_text_in_cv"
+                            android:text="@string/summary" />
+
+                        <org.stepic.droid.view.custom.ExpandableTextView
+                            android:id="@+id/summary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="text, text" />
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/requirements_root"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/requirements" />
+                    android:elevation="2dp"
+                    app:cardCornerRadius="2dp"
+                    app:cardPreventCornerOverlap="true"
+                    app:cardUseCompatPadding="true"
+                    app:contentPaddingBottom="@dimen/padding_bottop_cv"
+                    app:contentPaddingLeft="@dimen/padding_text_in_cv"
+                    app:contentPaddingRight="@dimen/padding_text_in_cv"
+                    app:contentPaddingTop="@dimen/padding_bottop_cv">
 
-                <org.stepic.droid.view.custom.ExpandableTextView
-                    android:id="@+id/requirements"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                <TextView
+                        <TextView
+                            style="@style/cv_text_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="@dimen/padding_text_in_cv"
+                            android:text="@string/requirements" />
+
+                        <org.stepic.droid.view.custom.ExpandableTextView
+                            android:id="@+id/requirements"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/description_root"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/description" />
+                    android:elevation="2dp"
+                    app:cardCornerRadius="2dp"
+                    app:cardPreventCornerOverlap="true"
+                    app:cardUseCompatPadding="true"
+                    app:contentPaddingBottom="@dimen/padding_bottop_cv"
+                    app:contentPaddingLeft="@dimen/padding_text_in_cv"
+                    app:contentPaddingRight="@dimen/padding_text_in_cv"
+                    app:contentPaddingTop="@dimen/padding_bottop_cv">
 
-                <org.stepic.droid.view.custom.ExpandableTextView
-                    android:id="@+id/description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
+                        <TextView
+                            style="@style/cv_text_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="@dimen/padding_text_in_cv"
+                            android:text="@string/description" />
+
+                        <org.stepic.droid.view.custom.ExpandableTextView
+                            android:id="@+id/description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
 
             </LinearLayout>
 

@@ -27,4 +27,8 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="cv_text_title" parent="regular_text">
+        <item name="android:textSize">@dimen/text_size_title</item>
+    </style>
+
 </resources>
