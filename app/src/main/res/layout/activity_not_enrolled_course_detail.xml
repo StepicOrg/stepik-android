@@ -17,7 +17,6 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/join_course_layout"
         android:layout_below="@id/appBarLayout"
-        android:layout_marginTop="2dp"
         android:clipToPadding="false">
 
         <LinearLayout
@@ -28,7 +27,7 @@
             <WebView
                 android:id="@+id/intro_video"
                 android:layout_width="match_parent"
-                android:layout_height="200dp" />
+                android:layout_height="350dp" />
 
             <LinearLayout
                 android:id="@+id/detail_course_info"
@@ -38,7 +37,7 @@
                 android:padding="8dp">
 
 
-                <org.stepic.droid.view.custom.SDetailedCourseHeadersTV
+                <TextView
                     android:id="@+id/course_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -48,7 +47,7 @@
                     android:text="Course Name" />
 
 
-                <org.stepic.droid.view.custom.SDetailedCourseHeadersTV
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/summary" />
@@ -58,7 +57,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <org.stepic.droid.view.custom.SDetailedCourseHeadersTV
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/requirements" />
@@ -69,7 +68,7 @@
                     android:layout_height="wrap_content" />
 
 
-                <org.stepic.droid.view.custom.SDetailedCourseHeadersTV
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/description" />
@@ -78,7 +77,6 @@
                     android:id="@+id/description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-
 
 
 
@@ -96,6 +94,7 @@
 
                 <include layout="@layout/progress_bar_on_empty_screen" />
             </FrameLayout>
+
         </LinearLayout>
     </ScrollView>
 

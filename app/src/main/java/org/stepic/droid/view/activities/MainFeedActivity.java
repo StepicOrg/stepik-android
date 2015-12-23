@@ -59,10 +59,11 @@ public class MainFeedActivity extends FragmentActivityBase
     @Bind(R.id.drawer)
     DrawerLayout mDrawerLayout;
 
-    @Bind(R.id.profile_image)
+
+    //    @Bind(R.id.profile_image)
     ImageView mProfileImage;
 
-    @Bind(R.id.username)
+    //    @Bind(R.id.username)
     TextView mUserNameTextView;
 
 
@@ -83,6 +84,11 @@ public class MainFeedActivity extends FragmentActivityBase
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_feed);
         ButterKnife.bind(this);
+
+        View headerLayout = mNavigationView.inflateHeaderView(R.layout.drawer_header);
+        mProfileImage = ButterKnife.findById(headerLayout, R.id.profile_image);
+        mUserNameTextView = ButterKnife.findById(headerLayout, R.id.username);
+
 
         setUpToolbar();
         setUpDrawerLayout();

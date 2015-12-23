@@ -54,7 +54,7 @@
                     android:paddingLeft="44dp"
                     android:paddingRight="44dp">
 
-                    <EditText
+                    <android.support.v7.widget.AppCompatEditText
                         android:id="@+id/email_et"
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"
