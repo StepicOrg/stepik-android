@@ -108,7 +108,6 @@ public class CourseDetailActivity extends FragmentActivityBase {
 
         mCourse = (Course) (getIntent().getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
         mCoursePropertyList = mCoursePropertyResolver.getSortedPropertyList(mCourse);
-        mCoursePropertyListView.setAdapter(new CoursePropertyAdapter(this, mCoursePropertyList));
 
         View footer = ((LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.activity_course_detailed_footer, null, false);
         mCoursePropertyListView.addFooterView(footer);
@@ -119,6 +118,9 @@ public class CourseDetailActivity extends FragmentActivityBase {
         mCoursePropertyListView.addHeaderView(header);
         mIntroView = ButterKnife.findById(header, R.id.intro_video);
         mCourseNameView = ButterKnife.findById(header, R.id.course_name);
+
+
+        mCoursePropertyListView.setAdapter(new CoursePropertyAdapter(this, mCoursePropertyList));
 
         if (mCourse.getTitle() != null && !mCourse.getTitle().equals("")) {
             mCourseNameView.setText(mCourse.getTitle());
