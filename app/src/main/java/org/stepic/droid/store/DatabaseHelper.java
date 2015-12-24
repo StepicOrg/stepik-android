@@ -19,6 +19,7 @@ import org.stepic.droid.store.structure.DbStructureUnit;
 import org.stepic.droid.store.structure.DbStructureViewQueue;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+    private static final String TEXT_TYPE = "TEXT";
 
     public DatabaseHelper(Context context) {
         super(context, DBStructureBase.FILE_NAME, null, DBStructureBase.VERSION);
@@ -40,6 +41,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         createAssignment(db, DbStructureAssignment.ASSIGNMENTS);
         createProgress(db, DbStructureProgress.PROGRESS);
         createViewQueue(db, DbStructureViewQueue.VIEW_QUEUE);
+
+
+//Use new manner for upgrade, it is more safety and maintainability (but may be less effective in onCreate) :
+        upgradeFrom3To4(db);
     }
 
     @Override
@@ -97,6 +102,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Log.e("stepic", drop);
             db.execSQL(drop);
         }
+        if (oldVersion < 4) {
+            upgradeFrom3To4(db);
+        }
+    }
+
+    private void upgradeFrom3To4(SQLiteDatabase db) {
+        alterColumn(db, DBStructureCourses.ENROLLED_COURSES, DBStructureCourses.Column.CERTIFICATE, TEXT_TYPE);
+        alterColumn(db, DBStructureCourses.FEATURED_COURSES, DBStructureCourses.Column.CERTIFICATE, TEXT_TYPE);
+    }
+
+    private void alterColumn(SQLiteDatabase db, String dbName, String column, String type) {
+        String upgrade = "ALTER TABLE " + dbName + " ADD COLUMN "
+                + column + " " + type + " ";
+        db.execSQL(upgrade);
     }
 
     private void createCourseTable(SQLiteDatabase db, String name) {

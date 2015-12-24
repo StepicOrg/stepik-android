@@ -701,6 +701,7 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DBStructureCourses.Column.WORKLOAD, course.getWorkload());
             values.put(DBStructureCourses.Column.COURSE_FORMAT, course.getCourse_format());
             values.put(DBStructureCourses.Column.TARGET_AUDIENCE, course.getTarget_audience());
+            values.put(DBStructureCourses.Column.CERTIFICATE, course.getCertificate());
 
 //            values.put(DBStructureCourses.Column.IS_CACHED, course.is_cached());
 //            values.put(DBStructureCourses.Column.IS_LOADING, course.is_loading());
@@ -1525,7 +1526,9 @@ public class DatabaseManager extends DbManagerBase {
         int indexWorkload = cursor.getColumnIndex(DBStructureCourses.Column.WORKLOAD);
         int indexCourseFormat = cursor.getColumnIndex(DBStructureCourses.Column.COURSE_FORMAT);
         int indexTargetAudience = cursor.getColumnIndex(DBStructureCourses.Column.TARGET_AUDIENCE);
+        int indexCertificate = cursor.getColumnIndex(DBStructureCourses.Column.CERTIFICATE);
 
+        course.setCertificate(cursor.getString(indexCertificate));
         course.setWorkload(cursor.getString(indexWorkload));
         course.setCourse_format(cursor.getString(indexCourseFormat));
         course.setTarget_audience(cursor.getString(indexTargetAudience));
