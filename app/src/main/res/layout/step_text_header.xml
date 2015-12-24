@@ -5,10 +5,11 @@
     android:layout_gravity="top">
 
     <WebView
-        android:padding="8dp"
         android:id="@+id/text_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:padding="16dp"
+        android:scrollbarStyle="outsideOverlay"
+        android:visibility="gone" />
 
 </FrameLayout>
