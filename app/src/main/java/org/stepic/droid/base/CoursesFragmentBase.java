@@ -149,6 +149,8 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
             }
         });
 
+        bus.register(this);
+
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -346,7 +348,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     public void onStart() {
         super.onStart();
         mSwipeRefreshLayout.setRefreshing(false);
-        bus.register(this);
     }
 
     @Override
@@ -363,11 +364,11 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     @Override
     public void onStop() {
         super.onStop();
-        bus.unregister(this);
     }
 
     @Override
     public void onDestroyView() {
+        bus.unregister(this);
         super.onDestroyView();
     }
 
