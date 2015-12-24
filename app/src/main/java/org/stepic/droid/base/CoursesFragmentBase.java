@@ -139,6 +139,17 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
             }
         });
 
+        mListOfCourses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Course course = mCourses.get(position);
+                if (course.getEnrollment() != 0) {
+                    mShell.getScreenProvider().showSections(getActivity(), course);
+                } else {
+                    mShell.getScreenProvider().showCourseDescription(CoursesFragmentBase.this, course);
+                }
+            }
+        });
         mEmptyCoursesView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

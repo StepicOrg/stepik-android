@@ -84,16 +84,16 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
                 placeholder(viewHolderItem.placeholder).into(viewHolderItem.courseIcon);
         viewHolderItem.courseDateInterval.setText(course.getDateOfCourse());
 
-        viewHolderItem.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (course.getEnrollment() != 0) {
-                    mShell.getScreenProvider().showSections(mFragment.getActivity(), course);
-                } else {
-                    mShell.getScreenProvider().showCourseDescription(mFragment, course);
-                }
-            }
-        });
+//        viewHolderItem.cardView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (course.getEnrollment() != 0) {
+//                    mShell.getScreenProvider().showSections(mFragment.getActivity(), course);
+//                } else {
+//                    mShell.getScreenProvider().showCourseDescription(mFragment, course);
+//                }
+//            }
+//        });
 
 //        if (type == DatabaseManager.Table.enrolled) {
 //            viewHolderItem.loadButton.setVisibility(View.VISIBLE);
