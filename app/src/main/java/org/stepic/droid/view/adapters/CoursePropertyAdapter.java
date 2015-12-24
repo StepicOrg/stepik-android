@@ -39,8 +39,9 @@ public class CoursePropertyAdapter extends ArrayAdapter<CourseProperty> {
         } else {
             viewHolderItem = (ViewHolderItem) convertView.getTag();
         }
-        viewHolderItem.coursePropertyTitle.setText(HtmlHelper.fromHtml(courseProperty.getTitle()));
-        viewHolderItem.getCoursePropertyValue.setText(HtmlHelper.fromHtml(courseProperty.getText()));
+
+        viewHolderItem.coursePropertyTitle.setText(HtmlHelper.fromHtml(courseProperty.getTitle()).toString());
+        viewHolderItem.getCoursePropertyValue.setText(HtmlHelper.fromHtml(courseProperty.getText()).toString());
 
         return view;
     }
