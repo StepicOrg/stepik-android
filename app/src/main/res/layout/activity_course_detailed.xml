@@ -20,8 +20,9 @@
         android:clipToPadding="false"
         android:divider="@color/transparent"
         android:dividerHeight="@null"
-        android:padding="16dp"
-        android:scrollbarStyle="outsideOverlay" />
+        android:scrollbarStyle="outsideOverlay"
+        android:soundEffectsEnabled="true"
+        android:listSelector="@android:color/transparent" />
 
 
     <RelativeLayout
@@ -30,7 +31,8 @@
         android:layout_height="44dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/bt_signin_active"
-        android:contentDescription="@string/join_course">
+        android:contentDescription="@string/join_course"
+        android:hapticFeedbackEnabled="true">
 
         <org.stepic.droid.view.custom.STextView
             android:id="@+id/login_btn_tv"

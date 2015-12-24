@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 
+import org.stepic.droid.base.MainApplication;
+
 public class DpPixelsHelper {
     /**
      * This method converts dp unit to equivalent pixels, depending on device density.
@@ -18,6 +20,11 @@ public class DpPixelsHelper {
         float px = dp * (metrics.densityDpi / 160f);
         return px;
     }
+
+    public static float convertDpToPixel(float dp) {
+        return convertDpToPixel(dp, MainApplication.getAppContext());
+    }
+
 
     /**
      * This method converts device specific pixels to density independent pixels.
