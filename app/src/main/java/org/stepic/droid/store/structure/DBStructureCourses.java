@@ -54,6 +54,9 @@ public final class DBStructureCourses extends DBStructureBase {
                     Column.SECTIONS,
                     Column.IS_CACHED,
                     Column.IS_LOADING,
+                    Column.WORKLOAD,
+                    Column.COURSE_FORMAT,
+                    Column.TARGET_AUDIENCE,
             };
         }
         return mUsedColumns;
