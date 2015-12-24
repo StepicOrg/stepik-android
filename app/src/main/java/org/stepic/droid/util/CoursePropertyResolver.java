@@ -21,6 +21,10 @@ public class CoursePropertyResolver {
         if (course == null) return result;
 
         addIfNotEmpty(result, course.getSummary(), R.string.about_course);
+        addIfNotEmpty(result, course.getWorkload(), R.string.workload);
+        addIfNotEmpty(result, course.getCertificate(), R.string.certificate);
+        addIfNotEmpty(result, course.getCourse_format(), R.string.course_format);
+        addIfNotEmpty(result, course.getTarget_audience(), R.string.target_audience);
         addIfNotEmpty(result, course.getRequirements(), R.string.requirements);
         addIfNotEmpty(result, course.getDescription(), R.string.description);
 

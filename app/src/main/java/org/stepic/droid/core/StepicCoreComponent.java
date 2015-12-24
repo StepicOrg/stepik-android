@@ -20,6 +20,7 @@ import org.stepic.droid.services.DeleteService;
 import org.stepic.droid.services.LoadService;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.util.ImageOnDisk;
+import org.stepic.droid.view.adapters.CoursePropertyAdapter;
 import org.stepic.droid.view.adapters.DownloadsAdapter;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
 import org.stepic.droid.view.adapters.SectionAdapter;
@@ -111,4 +112,6 @@ public interface StepicCoreComponent {
     void inject(DownloadsAdapter downloadsAdapter);
 
     void inject(DownloadsFragment.ClearVideosDialog clearVideosDialog);
+
+    void inject(CoursePropertyAdapter coursePropertyAdapter);
 }

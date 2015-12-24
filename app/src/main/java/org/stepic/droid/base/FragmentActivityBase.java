@@ -12,6 +12,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.util.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.IStepResolver;
 
 import javax.inject.Inject;
@@ -21,6 +22,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class FragmentActivityBase extends AppCompatActivity {
 
+    @Inject
+    protected CoursePropertyResolver mCoursePropertyResolver;
 
     @Inject
     protected DatabaseManager mDbManager;
@@ -50,7 +53,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected void hideSoftKeypad() {
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }

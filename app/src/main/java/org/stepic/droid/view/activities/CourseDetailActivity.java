@@ -1,5 +1,6 @@
 package org.stepic.droid.view.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -9,10 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,11 +31,12 @@ import org.stepic.droid.events.instructors.StartLoadingInstructorsEvent;
 import org.stepic.droid.events.joining_course.FailJoinEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.CourseProperty;
 import org.stepic.droid.model.User;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.view.adapters.CoursePropertyAdapter;
 import org.stepic.droid.view.adapters.InstructorAdapter;
 import org.stepic.droid.view.layout_managers.WrapContentLinearLayoutManager;
 import org.stepic.droid.web.UserStepicResponse;
@@ -55,26 +59,21 @@ public class CourseDetailActivity extends FragmentActivityBase {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
-    @Bind(R.id.intro_video)
+    //    @Bind(R.id.intro_video)
     WebView mIntroView;
 
-    @Bind(R.id.description)
-    TextView mDescriptionView;
-
-    @Bind(R.id.course_name)
+    //    @Bind(R.id.description)
+//    TextView mDescriptionView;
+//
+//    @Bind(R.id.course_name)
     TextView mCourseNameView;
 
-    @Bind(R.id.instructors_carousel)
+    //    @Bind(R.id.instructors_carousel)
     RecyclerView mInstructorsCarousel;
 
-    @Bind(R.id.load_progressbar)
+    //    @Bind(R.id.load_progressbar)
     ProgressBar mInstructorsProgressBar;
 
-    @Bind(R.id.summary)
-    TextView mSummaryView;
-
-    @Bind(R.id.requirements)
-    TextView mRequirementsView;
 
     @Bind(R.id.join_course_layout)
     View mJoinCourseView;
@@ -91,7 +90,11 @@ public class CourseDetailActivity extends FragmentActivityBase {
     @BindString(R.string.join_course_web_exception)
     String joinCourseWebException;
 
+    @Bind(R.id.list_of_course_property)
+    ListView mCoursePropertyListView;
 
+
+    private List<CourseProperty> mCoursePropertyList;
     private Course mCourse;
     private List<User> mUserList;
     private InstructorAdapter mInstructorAdapter;
@@ -100,8 +103,28 @@ public class CourseDetailActivity extends FragmentActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_not_enrolled_course_detail);
+        setContentView(R.layout.activity_course_detailed);
         ButterKnife.bind(this);
+
+        mCourse = (Course) (getIntent().getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
+        mCoursePropertyList = mCoursePropertyResolver.getSortedPropertyList(mCourse);
+        mCoursePropertyListView.setAdapter(new CoursePropertyAdapter(this, mCoursePropertyList));
+
+        View footer = ((LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.activity_course_detailed_footer, null, false);
+        mCoursePropertyListView.addFooterView(footer);
+        mInstructorsCarousel = ButterKnife.findById(footer, R.id.instructors_carousel);
+        mInstructorsProgressBar = ButterKnife.findById(footer, R.id.load_progressbar);
+
+        View header = ((LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.activity_course_detailed_header, null, false);
+        mCoursePropertyListView.addHeaderView(header);
+        mIntroView = ButterKnife.findById(header, R.id.intro_video);
+        mCourseNameView = ButterKnife.findById(header, R.id.course_name);
+
+        if (mCourse.getTitle() != null && !mCourse.getTitle().equals("")) {
+            mCourseNameView.setText(mCourse.getTitle());
+        } else {
+            mCourseNameView.setVisibility(View.GONE);
+        }
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -112,10 +135,6 @@ public class CourseDetailActivity extends FragmentActivityBase {
 
         overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         hideSoftKeypad();
-
-
-        mCourse = (Course) (getIntent().getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
-
     }
 
     @Override
@@ -151,10 +170,7 @@ public class CourseDetailActivity extends FragmentActivityBase {
 //        mIntroView.setVideoURI(Uri.parse(urltovideo));
 //        mIntroView.start();
 
-        mCourseNameView.setText(mCourse.getTitle());
-        mDescriptionView.setText(HtmlHelper.fromHtml(mCourse.getDescription()));
-        mSummaryView.setText(HtmlHelper.fromHtml(mCourse.getSummary()));
-        mRequirementsView.setText(HtmlHelper.fromHtml(mCourse.getRequirements()));
+
         if (mCourse.getEnrollment() != 0) {
             mJoinCourseView.setVisibility(View.GONE);
         } else {
