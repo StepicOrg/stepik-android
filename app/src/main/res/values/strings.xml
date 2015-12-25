@@ -90,5 +90,6 @@
     <string name="course_format">Course format</string>
     <string name="target_audience">Target audience</string>
     <string name="certificate">Certificate</string>
+    <string name="version">Version</string>
 
 </resources>
