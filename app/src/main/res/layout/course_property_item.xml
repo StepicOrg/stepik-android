@@ -21,10 +21,10 @@
 
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true"
-        app:contentPaddingBottom="@dimen/padding_bottop_cv"
+        app:contentPaddingBottom="@dimen/padding_bot_top_cv"
         app:contentPaddingLeft="@dimen/padding_text_in_cv"
         app:contentPaddingRight="@dimen/padding_text_in_cv"
-        app:contentPaddingTop="@dimen/padding_bottop_cv">
+        app:contentPaddingTop="@dimen/padding_bot_top_cv">
 
         <LinearLayout
             android:layout_width="match_parent"
