@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.util.AppConstants;
@@ -98,6 +99,7 @@ public class SharedPreferenceHelper {
         }
     }
 
+    @Nullable
     public AuthenticationStepicResponse getAuthResponseFromStore() {
         String json = getString(PreferenceType.LOGIN, AUTH_RESPONSE_JSON);
         if (json == null) {

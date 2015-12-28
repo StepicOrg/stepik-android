@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
@@ -24,13 +23,10 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.RWLocks;
 
 import java.io.IOException;
-import java.net.ProtocolException;
-import java.net.Proxy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -60,46 +56,59 @@ public class RetrofitRESTApi implements IApi {
         MainApplication.component().inject(this);
 
         makeOauthServiceWithNewAuthHeader(mSharedPreference.isLastTokenSocial() ? TokenType.social : TokenType.loginPassword);
+        makeLoggedService();
 
+    }
+
+    private void makeLoggedService() {
         OkHttpClient okHttpClient = new OkHttpClient();
         Interceptor interceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
+                Request newRequest = chain.request();
                 try {
-                    Request newRequest = chain.request();
+                    RWLocks.AuthLock.writeLock().lock();
                     AuthenticationStepicResponse response = mSharedPreference.getAuthResponseFromStore();
                     if (response != null) {
-                        newRequest = chain.request().newBuilder().addHeader("Authorization", getAuthHeaderValue()).build();
+                        response = mOAuthService.updateToken(mConfig.getRefreshGrantType(), response.getRefresh_token()).execute().body();
+                        mSharedPreference.storeAuthInfo(response);
+                        newRequest = chain.request().newBuilder().addHeader("Authorization", getAuthHeaderValueForLogged()).build();
+                        return chain.proceed(newRequest);
                     }
-                    return chain.proceed(newRequest);
-                } catch (ProtocolException t) {
-                    // FIXME: 17.12.15 IT IS NOT NORMAL BEHAVIOUR, NEED TO REPAIR CODE.
-                    YandexMetrica.reportError(AppConstants.NOT_VALID_ACCESS_AND_REFRESH, t);
-                    mSharedPreference.deleteAuthInfo();
-                    AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... params) {
-
-                            FileUtil.cleanDirectory(userPreferences.getDownloadFolder());
-                            mDbManager.dropDatabase();
-                            return null;
-                        }
-                    };
-                    task.execute();
-                    screenManager.showLaunchScreen(MainApplication.getAppContext(), false);
-
-                    throw t;
+                } finally {
+                    RWLocks.AuthLock.writeLock().unlock();
                 }
+                return chain.proceed(newRequest);
             }
         };
         okHttpClient.networkInterceptors().add(interceptor);
-        setAuthForLoggedService(okHttpClient);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mConfig.getBaseUrl())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
         mLoggedService = retrofit.create(StepicRestLoggedService.class);
+    }
+
+    private void makeOauthServiceWithNewAuthHeader(final TokenType type) {
+        mSharedPreference.storeLastTokenType(type == TokenType.social ? true : false);
+        Interceptor interceptor = new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request newRequest = chain.request();
+                String credential = Credentials.basic(mConfig.getOAuthClientId(type), mConfig.getOAuthClientSecret(type));
+                newRequest = newRequest.newBuilder().addHeader("Authorization", credential).build();
+                return chain.proceed(newRequest);
+            }
+        };
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.networkInterceptors().add(interceptor);
+        Retrofit notLogged = new Retrofit.Builder()
+                .baseUrl(mConfig.getBaseUrl())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build();
+        mOAuthService = notLogged.create(StepicRestOAuthService.class);
     }
 
     @Override
@@ -114,49 +123,6 @@ public class RetrofitRESTApi implements IApi {
         YandexMetrica.reportEvent("Api:auth with social account");
         makeOauthServiceWithNewAuthHeader(TokenType.social);
         return mOAuthService.getTokenByCode(mConfig.getGrantType(TokenType.social), code, mConfig.getRedirectUri());
-    }
-
-    private void makeOauthServiceWithNewAuthHeader(final TokenType type) {
-        mSharedPreference.storeLastTokenType(type == TokenType.social ? true : false);
-
-        Interceptor interceptor = new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                try {
-                    Request newRequest = chain.request();
-                    String credential = Credentials.basic(mConfig.getOAuthClientId(type), mConfig.getOAuthClientSecret(type));
-                    newRequest = chain.request().newBuilder().addHeader("Authorization", credential).build();
-                    return chain.proceed(newRequest);
-                } catch (ProtocolException t) {
-                    // FIXME: 17.12.15 IT IS NOT NORMAL BEHAVIOUR, NEED TO REPAIR CODE.
-                    YandexMetrica.reportError(AppConstants.NOT_VALID_ACCESS_AND_REFRESH, t);
-                    mSharedPreference.deleteAuthInfo();
-                    AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... params) {
-
-                            FileUtil.cleanDirectory(userPreferences.getDownloadFolder());
-                            mDbManager.dropDatabase();
-                            return null;
-                        }
-                    };
-                    task.execute();
-                    screenManager.showLaunchScreen(MainApplication.getAppContext(), false);
-
-                    throw t;
-                }
-
-            }
-        };
-        OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.networkInterceptors().add(interceptor);
-        setAuthenticatorClientIDAndPassword(okHttpClient, mConfig.getOAuthClientId(type), mConfig.getOAuthClientSecret(type)); // just insurance.
-        Retrofit notLogged = new Retrofit.Builder()
-                .baseUrl(mConfig.getBaseUrl())
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-        mOAuthService = notLogged.create(StepicRestOAuthService.class);
     }
 
     @Override
@@ -249,72 +215,69 @@ public class RetrofitRESTApi implements IApi {
         context.startActivity(intent);
     }
 
-    private void setAuthenticatorClientIDAndPassword(OkHttpClient httpClient, final String client_id, final String client_password) {
-        httpClient.setAuthenticator(new Authenticator() {
-            @Override
-            public Request authenticate(Proxy proxy, Response response) throws IOException {
-//                if (mCounter++ > 0) {
-//                    throw new AuthException();
+//    private void setAuthenticatorClientIDAndPassword(OkHttpClient httpClient, final String client_id, final String client_password) {
+//        httpClient.setAuthenticator(new Authenticator() {
+//            @Override
+//            public Request authenticate(Proxy proxy, Response response) throws IOException {
+//                YandexMetrica.reportEvent("Never invoked auth");
+//                // FIXME: 28.12.15 IT IS NEVER INVOKED. REMOVE
+//                String credential = Credentials.basic(client_id, client_password);
+//                return response.request().newBuilder().header("Authorization", credential).build();
+//            }
+//
+//            @Override
+//            public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
+//                return null;
+//            }
+//        });
+//    }
+
+//    private void setAuthForLoggedService(OkHttpClient httpClient) {
+//        httpClient.setAuthenticator(new Authenticator() {
+//            @Override
+//            public Request authenticate(Proxy proxy, Response response) throws IOException {
+//                //IT WILL BE INVOKED WHEN Access token will expire (should, but server doesn't handle 401.)
+//                //it is not be invoked on get courses for example.
+//                RWLocks.AuthLock.writeLock().lock();
+//                try {
+//                    AuthenticationStepicResponse authData = mSharedPreference.getAuthResponseFromStore();
+//                    if (response != null) {
+//                        authData = mOAuthService.updateToken(mConfig.getRefreshGrantType(), authData.getRefresh_token()).execute().body();
+//                        mSharedPreference.storeAuthInfo(authData);
+//                        return response.request().newBuilder().addHeader("Authorization", getAuthHeaderValueForLogged()).build();
+//                    }
+//                } catch (ProtocolException t) {
+//                    // FIXME: 17.12.15 IT IS NOT NORMAL BEHAVIOUR, NEED TO REPAIR CODE.
+//                    YandexMetrica.reportError(AppConstants.NOT_VALID_ACCESS_AND_REFRESH, t);
+//                    mSharedPreference.deleteAuthInfo();
+//                    AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+//                        @Override
+//                        protected Void doInBackground(Void... params) {
+//
+//                            FileUtil.cleanDirectory(userPreferences.getDownloadFolder());
+//                            mDbManager.dropDatabase();
+//                            return null;
+//                        }
+//                    };
+//                    task.execute();
+//                    screenManager.showLaunchScreen(MainApplication.getAppContext(), false);
+//
+//                    throw t;
+//                } finally {
+//                    RWLocks.AuthLock.writeLock().unlock();
 //                }
-                YandexMetrica.reportEvent("Never invoked auth");
-                // FIXME: 28.12.15 IT IS NEVER INVOKED. REMOVE
-                String credential = Credentials.basic(client_id, client_password);
-                return response.request().newBuilder().header("Authorization", credential).build();
-            }
+//                return null;
+//
+//            }
+//
+//            @Override
+//            public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
+//                return null;
+//            }
+//        });
+//    }
 
-            @Override
-            public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
-                return null;
-            }
-        });
-    }
-
-    private void setAuthForLoggedService(OkHttpClient httpClient) {
-        httpClient.setAuthenticator(new Authenticator() {
-            @Override
-            public Request authenticate(Proxy proxy, Response response) throws IOException {
-                //IT WILL BE INVOKED WHEN Access token will expire (should, but server doesn't handle 401.)
-                //it is not be invoked on get courses for example.
-                RWLocks.AuthLock.writeLock().lock();
-                try {
-                    AuthenticationStepicResponse authData = mSharedPreference.getAuthResponseFromStore();
-                    if (response != null) {
-                        authData = mOAuthService.updateToken(mConfig.getRefreshGrantType(), authData.getRefresh_token()).execute().body();
-                        mSharedPreference.storeAuthInfo(authData);
-                        return response.request().newBuilder().addHeader("Authorization", getAuthHeaderValue()).build();
-                    }
-                } catch (ProtocolException t) {
-                    // FIXME: 17.12.15 IT IS NOT NORMAL BEHAVIOUR, NEED TO REPAIR CODE.
-                    YandexMetrica.reportError(AppConstants.NOT_VALID_ACCESS_AND_REFRESH, t);
-                    mSharedPreference.deleteAuthInfo();
-                    AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... params) {
-
-                            FileUtil.cleanDirectory(userPreferences.getDownloadFolder());
-                            mDbManager.dropDatabase();
-                            return null;
-                        }
-                    };
-                    task.execute();
-                    screenManager.showLaunchScreen(MainApplication.getAppContext(), false);
-
-                    throw t;
-                } finally {
-                    RWLocks.AuthLock.writeLock().unlock();
-                }
-                return null;
-
-            }
-
-            @Override
-            public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
-                return null;
-            }
-        });
-    }
-
-    private String getAuthHeaderValue() {
+    private String getAuthHeaderValueForLogged() {
         try {
             AuthenticationStepicResponse resp = mSharedPreference.getAuthResponseFromStore();
             String access_token = resp.getAccess_token();
