@@ -59,9 +59,11 @@ public class FindCoursesFragment extends CoursesFragmentBase {
 
     }
 
-    private void collapseAndHide() {
-        if (mSearchView != null && mMenuItem != null) {
+    @Override
+    protected void collapseAndHide() {
+        if (mSearchView != null && mMenuItem != null && mSearchView.hasFocus()) {
             Log.e(TAG, "COLLAPSE");
+            hideSoftKeypad();//in collapse action view keypad going to invisible after animation
             MenuItemCompat.collapseActionView(mMenuItem);
         }
     }
@@ -148,7 +150,6 @@ public class FindCoursesFragment extends CoursesFragmentBase {
     public void onFailDrop(FailDropCourseEvent e) {
         super.onFailDrop(e);
     }
-
 
     String TAG = "searchView";
 

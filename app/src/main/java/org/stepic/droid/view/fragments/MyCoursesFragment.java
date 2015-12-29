@@ -104,6 +104,11 @@ public class MyCoursesFragment extends CoursesFragmentBase {
         super.onFailDrop(e);
     }
 
+    @Override
+    protected void collapseAndHide() {
+        //do nothing
+    }
+
     @Subscribe
     @Override
     public void onSuccessJoin(SuccessJoinEvent e) {
