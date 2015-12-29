@@ -91,5 +91,7 @@
     <string name="target_audience">Target audience</string>
     <string name="certificate">Certificate</string>
     <string name="version">Version</string>
+    <string name="find_courses_hint">Search courses</string>
+    <string name="search_title">Search</string>
 
 </resources>

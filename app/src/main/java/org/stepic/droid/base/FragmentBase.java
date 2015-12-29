@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.squareup.otto.Bus;
 
@@ -54,6 +55,15 @@ public class FragmentBase extends Fragment {
         MainApplication.component(MainApplication.getAppContext()).inject(this);
     }
 
+    protected void hideSoftKeypad() {
+        View view = this.getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) (getActivity().getSystemService(Context.INPUT_METHOD_SERVICE));
+            if (imm.isAcceptingText()) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        }
+    }
 
     @Override
     public void onAttach(Context context) {

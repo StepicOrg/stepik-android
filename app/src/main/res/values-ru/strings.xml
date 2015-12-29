@@ -87,5 +87,7 @@
     <string name="course_format">Формат курса</string>
     <string name="target_audience">Целевая аудитория</string>
     <string name="version">Версия</string>
+    <string name="find_courses_hint">Поиск курсов</string>
+    <string name="search_title">Поиск</string>
 
 </resources>
