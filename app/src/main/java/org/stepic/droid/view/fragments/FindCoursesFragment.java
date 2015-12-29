@@ -62,7 +62,6 @@ public class FindCoursesFragment extends CoursesFragmentBase {
     private void collapseAndHide() {
         if (mSearchView != null && mMenuItem != null) {
             Log.e(TAG, "COLLAPSE");
-            hideSoftKeypad();
             MenuItemCompat.collapseActionView(mMenuItem);
         }
     }
@@ -167,28 +166,6 @@ public class FindCoursesFragment extends CoursesFragmentBase {
         ComponentName componentName = getActivity().getComponentName();
         SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
         mSearchView.setSearchableInfo(searchableInfo);
-
-        mSearchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                Log.e(TAG, "onFocusChangeQuery");
-                if (!hasFocus) {
-                    hideSoftKeypad();
-                }
-            }
-        });
-
-        mSearchView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                Log.e(TAG, "onFocusChange");
-                if (!hasFocus) {
-                    hideSoftKeypad();
-                }
-            }
-        });
-
 
     }
 
