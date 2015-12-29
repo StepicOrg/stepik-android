@@ -56,6 +56,10 @@ public interface StepicRestLoggedService {
 
     @Headers({"Content-Type : application/json"})
     @POST("api/views")
-    Call<Void> postViewed (@Body ViewAssignmentWrapper stepAssignment);
+    Call<Void> postViewed(@Body ViewAssignmentWrapper stepAssignment);
+
+    @GET("api/search-results")
+    Call<SearchResultResponse> getSearchResults(@Query("page") int page,
+                                                @Query("query") String encodedQuery, @Query("type") String type);
 
 }

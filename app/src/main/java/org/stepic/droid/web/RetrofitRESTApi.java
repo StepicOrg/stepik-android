@@ -215,6 +215,13 @@ public class RetrofitRESTApi implements IApi {
         context.startActivity(intent);
     }
 
+    @Override
+    public Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery) {
+        String encodedQuery = Uri.encode(rawQuery);
+        String type = "course";
+        return mLoggedService.getSearchResults(page, encodedQuery, type);
+    }
+
 //    private void setAuthenticatorClientIDAndPassword(OkHttpClient httpClient, final String client_id, final String client_password) {
 //        httpClient.setAuthenticator(new Authenticator() {
 //            @Override
