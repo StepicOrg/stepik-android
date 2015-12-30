@@ -175,10 +175,10 @@ public class FindCoursesFragment extends CoursesFragmentBase {
         mMenuItem = menu.findItem(R.id.action_search);
         mSearchView = (SearchView) mMenuItem.getActionView();
 
-
         ComponentName componentName = getActivity().getComponentName();
         SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
         mSearchView.setSearchableInfo(searchableInfo);
+        mSearchView.setMaxWidth(20000);//it is dirty hack for expand in landscape
     }
 
 }
