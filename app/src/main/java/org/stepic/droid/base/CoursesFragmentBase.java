@@ -156,6 +156,13 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
                 }
             }
         });
+        mListOfCourses.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                collapseAndHide();
+                return false;
+            }
+        });
         mEmptyCoursesView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -408,7 +415,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     public boolean onContextItemSelected(MenuItem item) {
         YandexMetrica.reportEvent(AppConstants.METRICA_LONG_TAP_COURSE);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        collapseAndHide();
         int position = info.position;
         switch (item.getItemId()) {
             case R.id.menu_item_info:
