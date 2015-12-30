@@ -181,5 +181,4 @@ public class FindCoursesFragment extends CoursesFragmentBase {
         mSearchView.setSearchableInfo(searchableInfo);
     }
 
-
 }
