@@ -179,6 +179,18 @@ public class FindCoursesFragment extends CoursesFragmentBase {
         SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
         mSearchView.setSearchableInfo(searchableInfo);
         mSearchView.setMaxWidth(20000);//it is dirty hack for expand in landscape
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                collapseAndHide(false);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
 }
