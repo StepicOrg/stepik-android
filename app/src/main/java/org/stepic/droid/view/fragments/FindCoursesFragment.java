@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,11 +31,13 @@ import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.view.listeners.OnRootTouchedListener;
 
 public class FindCoursesFragment extends CoursesFragmentBase {
 
     SearchView mSearchView = null;
     MenuItem mMenuItem = null;
+    private boolean handledByRoot = false;
 
     @Nullable
     @Override
@@ -48,21 +49,32 @@ public class FindCoursesFragment extends CoursesFragmentBase {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        mRootView.setParentTouchEvent(new OnRootTouchedListener() {
+            @Override
+            public void makeBeforeChildren() {
+                collapseAndHide(true);
+            }
+        });
+
         mListOfCourses.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    collapseAndHide();
+                    if (!handledByRoot) {
+                        collapseAndHide(false);
+                    }
+                    handledByRoot = false;
                 }
             }
         });
 
     }
 
-    @Override
-    protected void collapseAndHide() {
-        if (mSearchView != null && mMenuItem != null && mSearchView.hasFocus()) {
-            Log.e(TAG, "COLLAPSE");
+
+    private void collapseAndHide(boolean rootHandle) {
+        if (mSearchView != null && mMenuItem != null && mMenuItem.isActionViewExpanded()) {
+            if (rootHandle) handledByRoot = true;
             hideSoftKeypad();//in collapse action view keypad going to invisible after animation
             MenuItemCompat.collapseActionView(mMenuItem);
         }
@@ -167,7 +179,6 @@ public class FindCoursesFragment extends CoursesFragmentBase {
         ComponentName componentName = getActivity().getComponentName();
         SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
         mSearchView.setSearchableInfo(searchableInfo);
-
     }
 
 

@@ -42,6 +42,7 @@ import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.activities.MainFeedActivity;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
+import org.stepic.droid.view.custom.TouchDispatchableFrameLayout;
 import org.stepic.droid.web.CoursesStepicResponse;
 import org.stepic.droid.web.IApi;
 
@@ -78,7 +79,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     protected View mEmptyCoursesView;
 
     @Bind(R.id.root_fragment_view)
-    protected View mRootView;
+    protected TouchDispatchableFrameLayout mRootView;
 
     //    protected LoadingCoursesTask mLoadingCoursesTask;
     protected List<Course> mCourses;
@@ -124,7 +125,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                    collapseAndHide();
                     userScrolled = true; // just for 1st creation
                 } else {
 //                    userScrolled = false;
@@ -134,7 +134,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//                collapseAndHide();
                 if (!isLoading && mHasNextPage && firstVisibleItem + visibleItemCount >= totalItemCount && userScrolled) {
                     Log.i(TAG, "Go load from scroll");
                     isLoading = true;
@@ -146,7 +145,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
         mListOfCourses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                collapseAndHide();
                 if (position >= mCourses.size() || position < 0) return;
                 Course course = mCourses.get(position);
                 if (course.getEnrollment() != 0) {
@@ -156,13 +154,7 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
                 }
             }
         });
-        mListOfCourses.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                collapseAndHide();
-                return false;
-            }
-        });
+
         mEmptyCoursesView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -207,7 +199,6 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
     @Override
     public final void onRefresh() {
         YandexMetrica.reportEvent(AppConstants.METRICA_REFRESH_COURSE);
-        collapseAndHide();
         mCurrentPage = 1;
         mHasNextPage = true;
         downloadData();
@@ -514,6 +505,4 @@ public abstract class CoursesFragmentBase extends FragmentBase implements SwipeR
 
         }
     }
-
-    protected abstract void collapseAndHide();
 }
