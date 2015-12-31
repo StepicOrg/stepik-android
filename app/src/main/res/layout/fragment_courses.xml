@@ -4,9 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include layout="@layout/progress_bar_on_empty_screen" />
+
     <include layout="@layout/report_problem_layout" />
 
     <include layout="@layout/empty_courses" />
+
+    <include layout="@layout/empty_search" />
+
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout_mycourses"

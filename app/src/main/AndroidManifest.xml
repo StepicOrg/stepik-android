@@ -69,7 +69,7 @@
 
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".view.activities.SearchCourseResultActivity" />
+                android:value=".view.activities.CourseSearchResultActivity" />
         </activity>
         >
 
@@ -119,7 +119,7 @@
             android:name="org.stepic.droid.services.ViewPusher"
             android:exported="true" />
 
-        <activity android:name=".view.activities.SearchCourseResultActivity">
+        <activity android:name=".view.activities.CourseSearchResultActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>

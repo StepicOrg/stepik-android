@@ -93,5 +93,6 @@
     <string name="version">Version</string>
     <string name="find_courses_hint">Search courses</string>
     <string name="search_title">Search</string>
+    <string name="empty_search">Courses not found</string>
 
 </resources>

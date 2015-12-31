@@ -8,12 +8,13 @@ import android.support.v7.widget.Toolbar;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
-import org.stepic.droid.view.fragments.FindCoursesFragment;
+import org.stepic.droid.view.fragments.CourseSearchFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class SearchCourseResultActivity extends FragmentActivityBase {
+public class CourseSearchResultActivity extends FragmentActivityBase {
+
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
@@ -21,27 +22,23 @@ public class SearchCourseResultActivity extends FragmentActivityBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_courses);
+        setContentView(R.layout.activity_search_courses);
         ButterKnife.bind(this);
-
-        initActivity();
 
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            doSearch(query);
+            initActivity(query);
         }
     }
 
-    private void doSearch(String query) {
-
-    }
-
-    private void initActivity() {
-        Fragment fragment = new FindCoursesFragment();
+    private void initActivity(String query) {
+        Fragment fragment = new CourseSearchFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(CourseSearchFragment.QUERY_KEY, query);
+        fragment.setArguments(bundle);
         setFragment(R.id.frame, fragment);
-
         bus.register(this);
     }
 

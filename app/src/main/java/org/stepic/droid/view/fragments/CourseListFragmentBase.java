@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.yandex.metrica.YandexMetrica;
 
@@ -53,6 +54,12 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     @Bind(R.id.root_fragment_view)
     protected TouchDispatchableFrameLayout mRootView;
 
+    @Bind(R.id.load_progressbar)
+    protected ProgressBar mProgressBarOnEmptyScreen;
+
+    @Bind(R.id.empty_search)
+    protected ViewGroup mEmptySearch;
+
     protected List<Course> mCourses;
     protected MyCoursesAdapter mCoursesAdapter;
 
@@ -77,6 +84,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mProgressBarOnEmptyScreen.setVisibility(View.GONE);
 
         isFirstCreating = true;
         isLoading = false;
