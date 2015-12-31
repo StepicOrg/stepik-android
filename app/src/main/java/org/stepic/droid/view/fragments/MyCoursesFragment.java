@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.squareup.otto.Subscribe;
 
-import org.stepic.droid.base.CoursesFragmentBase;
+import org.stepic.droid.base.CoursesDatabaseFragmentBase;
 import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
 import org.stepic.droid.events.courses.FailDropCourseEvent;
 import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
@@ -18,7 +18,7 @@ import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.store.operations.DatabaseManager;
 
-public class MyCoursesFragment extends CoursesFragmentBase {
+public class MyCoursesFragment extends CoursesDatabaseFragmentBase {
 
 
     @Override

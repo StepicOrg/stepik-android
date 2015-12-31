@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.CoursesFragmentBase;
+import org.stepic.droid.base.CoursesDatabaseFragmentBase;
 import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
 import org.stepic.droid.events.courses.FailDropCourseEvent;
 import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
@@ -33,7 +33,7 @@ import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.view.listeners.OnRootTouchedListener;
 
-public class FindCoursesFragment extends CoursesFragmentBase {
+public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
 
     SearchView mSearchView = null;
     MenuItem mMenuItem = null;

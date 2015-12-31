@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.yandex.metrica.YandexMetrica;
 
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
@@ -21,9 +21,7 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseManager;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.HtmlHelper;
-import org.stepic.droid.util.JsonHelper;
 
 import java.util.List;
 
@@ -51,10 +49,11 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
     CleanManager mCleaner;
 
     private Fragment mFragment;
+    @Nullable
     private final DatabaseManager.Table type;
     private LayoutInflater mInflater;
 
-    public MyCoursesAdapter(Fragment fragment, List<Course> courses, DatabaseManager.Table type) {
+    public MyCoursesAdapter(Fragment fragment, List<Course> courses, @Nullable DatabaseManager.Table type) {
         super(fragment.getActivity(), 0, courses);
         mFragment = fragment;
         this.type = type;
@@ -62,6 +61,10 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 
         MainApplication.component().inject(this);
 
+    }
+
+    public MyCoursesAdapter(Fragment fragment, List<Course> courses) {
+        this(fragment, courses, null);
     }
 
     @Override
@@ -183,25 +186,25 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         return view;
     }
 
-    private void removeCourse(Course course) {
+//    private void removeCourse(Course course) {
+//
+//        YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_DELETE_COURSE, JsonHelper.toJson(course));
+//        mCleaner.removeCourse(course, type);
+//        course.setIs_cached(false);
+//        course.setIs_loading(false);
+//        mDatabase.updateOnlyCachedLoadingCourse(course, type);
+//        notifyDataSetChanged();
+//    }
 
-        YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_DELETE_COURSE, JsonHelper.toJson(course));
-        mCleaner.removeCourse(course, type);
-        course.setIs_cached(false);
-        course.setIs_loading(false);
-        mDatabase.updateOnlyCachedLoadingCourse(course, type);
-        notifyDataSetChanged();
-    }
-
-    private void cacheCourse(Course course) {
-        // FIXME: 21.10.15 IMPLEMENTS IN BACKGROUND THREAD
-        YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CACHE_COURSE, JsonHelper.toJson(course));
-        mDownloadManager.addCourse(course, type);
-        course.setIs_loading(true);
-        course.setIs_cached(false);
-        mDatabase.updateOnlyCachedLoadingCourse(course, type);
-        notifyDataSetChanged();
-    }
+//    private void cacheCourse(Course course) {
+//        // FIXME: 21.10.15 IMPLEMENTS IN BACKGROUND THREAD
+//        YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CACHE_COURSE, JsonHelper.toJson(course));
+//        mDownloadManager.addCourse(course, type);
+//        course.setIs_loading(true);
+//        course.setIs_cached(false);
+//        mDatabase.updateOnlyCachedLoadingCourse(course, type);
+//        notifyDataSetChanged();
+//    }
 
     static class ViewHolderItem {
 

@@ -243,9 +243,7 @@ public class MainFeedActivity extends FragmentActivityBase
     }
 
     private void setFragment() {
-        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.frame, mCurrentFragment);
-        fragmentTransaction.commit();
+        setFragment(R.id.frame, mCurrentFragment);
     }
 
     @Subscribe
