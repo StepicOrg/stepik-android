@@ -119,7 +119,9 @@
             android:name="org.stepic.droid.services.ViewPusher"
             android:exported="true" />
 
-        <activity android:name=".view.activities.CourseSearchResultActivity">
+        <activity
+            android:name=".view.activities.CourseSearchResultActivity"
+            android:label="@string/search_title">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>

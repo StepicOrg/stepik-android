@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
@@ -24,6 +26,9 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_courses);
         ButterKnife.bind(this);
+        
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
@@ -46,5 +51,32 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
     protected void onDestroy() {
         bus.unregister(this);
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+
+                return true;
+
+            case android.R.id.home:
+                // Respond to the action bar's Up/Home button
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+        return true;
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
     }
 }
