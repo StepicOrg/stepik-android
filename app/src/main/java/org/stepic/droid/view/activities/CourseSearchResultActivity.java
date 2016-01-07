@@ -1,12 +1,17 @@
 package org.stepic.droid.view.activities;
 
 import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
@@ -21,19 +26,28 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
+    @Bind(R.id.frame)
+    View mRootFrame;
+
+    private MenuItem mMenuItem;
+    private SearchView mSearchView;
+    private String query;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_courses);
         ButterKnife.bind(this);
-        
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        hideSoftKeypad();
+
 
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
+            query = intent.getStringExtra(SearchManager.QUERY);
             initActivity(query);
         }
     }
@@ -71,10 +85,21 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        mMenuItem = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) mMenuItem.getActionView();
+
+        ComponentName componentName = getComponentName();
+        SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
+        mSearchView.setSearchableInfo(searchableInfo);
+        mSearchView.setMaxWidth(20000);//it is dirty hack for expand in landscape
+        mMenuItem.expandActionView();
+        if (query != null) {
+            mSearchView.setQuery(query, false);
+        }
         return true;
     }
 
-    @Override
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);

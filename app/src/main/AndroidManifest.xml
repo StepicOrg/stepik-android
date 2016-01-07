@@ -120,6 +120,7 @@
             android:exported="true" />
 
         <activity
+            android:launchMode="singleTop"
             android:name=".view.activities.CourseSearchResultActivity"
             android:label="@string/search_title">
             <intent-filter>
