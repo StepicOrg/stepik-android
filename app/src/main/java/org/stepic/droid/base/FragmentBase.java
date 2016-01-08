@@ -17,6 +17,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.util.resolvers.ISearchResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 
 import javax.inject.Inject;
@@ -26,6 +27,10 @@ import butterknife.ButterKnife;
 public class FragmentBase extends Fragment {
 
     protected String TAG = "StepicFragment";
+
+    @Inject
+    public ISearchResolver mSearchResolver;
+
     @Inject
     public DatabaseManager mDatabaseManager;
 
