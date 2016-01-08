@@ -13,6 +13,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.yandex.metrica.YandexMetrica;
 
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.ScreenManager;
@@ -220,6 +221,14 @@ public class RetrofitRESTApi implements IApi {
         String encodedQuery = Uri.encode(rawQuery);
         String type = "course";
         return mLoggedService.getSearchResults(page, encodedQuery, type);
+    }
+
+    @Override
+    public Call<CoursesStepicResponse> getCourses(int page, @Nullable long[] ids) {
+        if (ids == null || ids.length == 0) {
+            ids = new long[]{0};
+        }
+        return mLoggedService.getCourses(page, ids);
     }
 
 //    private void setAuthenticatorClientIDAndPassword(OkHttpClient httpClient, final String client_id, final String client_password) {
