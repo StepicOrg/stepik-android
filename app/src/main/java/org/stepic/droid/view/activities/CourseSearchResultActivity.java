@@ -58,8 +58,6 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
         bundle.putString(CourseSearchFragment.QUERY_KEY, query);
         fragment.setArguments(bundle);
         setFragment(R.id.frame, fragment);
-        hideSoftKeypad();
-        mRootFrame.requestFocus();
         bus.register(this);
     }
 
@@ -99,11 +97,12 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
         if (query != null) {
             mSearchView.setQuery(query, false);
         }
+        mSearchView.clearFocus();
 
         MenuItemCompat.setOnActionExpandListener(mMenuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                return false;
+                return true;
             }
 
             @Override
