@@ -1,4 +1,4 @@
-package org.stepic.droid.util;
+package org.stepic.droid.util.resolvers;
 
 import android.support.annotation.StringRes;
 
