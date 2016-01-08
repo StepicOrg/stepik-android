@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -41,7 +42,6 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        hideSoftKeypad();
 
 
         // Get the intent, verify the action and get the query
@@ -58,6 +58,8 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
         bundle.putString(CourseSearchFragment.QUERY_KEY, query);
         fragment.setArguments(bundle);
         setFragment(R.id.frame, fragment);
+        hideSoftKeypad();
+        mRootFrame.requestFocus();
         bus.register(this);
     }
 
@@ -97,6 +99,19 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
         if (query != null) {
             mSearchView.setQuery(query, false);
         }
+
+        MenuItemCompat.setOnActionExpandListener(mMenuItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return false;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                finish();
+                return true;
+            }
+        });
         return true;
     }
 
