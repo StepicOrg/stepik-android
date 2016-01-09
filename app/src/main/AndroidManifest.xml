@@ -71,7 +71,6 @@
                 android:name="android.app.default_searchable"
                 android:value=".view.activities.CourseSearchResultActivity" />
         </activity>
-        >
 
         <activity
             android:name=".view.activities.CourseDetailActivity"

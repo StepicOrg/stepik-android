@@ -9,6 +9,8 @@
         layout="@layout/appbar_only_toolbar" />
 
     <FrameLayout
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
         android:id="@+id/frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
