@@ -8,11 +8,17 @@ import android.view.ViewGroup;
 
 import com.squareup.otto.Subscribe;
 
+import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.events.search.FailSearchEvent;
 import org.stepic.droid.events.search.SuccessSearchEvent;
+import org.stepic.droid.model.Course;
+import org.stepic.droid.model.SearchResult;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.web.CoursesStepicResponse;
 import org.stepic.droid.web.SearchResultResponse;
+
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.Response;
@@ -22,6 +28,7 @@ public class CourseSearchFragment extends CourseListFragmentBase {
     public final static String QUERY_KEY = "query_key";
 
     private String mSearchQuery;
+    private long[] mCourseIdsForSearch;
 
     @Nullable
     @Override
@@ -33,6 +40,8 @@ public class CourseSearchFragment extends CourseListFragmentBase {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mEmptySearch.setClickable(false);
+        mEmptySearch.setFocusable(false);
         mProgressBarOnEmptyScreen.setVisibility(View.VISIBLE);
         bus.register(this);
         fetchSearchResults();
@@ -44,7 +53,7 @@ public class CourseSearchFragment extends CourseListFragmentBase {
             @Override
             public void onResponse(Response<SearchResultResponse> response, Retrofit retrofit) {
                 if (response.isSuccess()) {
-                    bus.post(new SuccessSearchEvent(mSearchQuery));
+                    bus.post(new SuccessSearchEvent(mSearchQuery, response));
                 } else {
                     bus.post(new FailSearchEvent(mSearchQuery));
                 }
@@ -72,9 +81,30 @@ public class CourseSearchFragment extends CourseListFragmentBase {
         if (!e.getQuery().equals(mSearchQuery)) return;
 
         ProgressHelper.dismiss(mProgressBarOnEmptyScreen);
-        // TODO: 31.12.15 RESOLVE RESPONSE -> Courses id
+
+        List<SearchResult> searchResultList = e.getResponse().body().getSearchResultList();
+        mCourseIdsForSearch = mSearchResolver.getCourseIdsFromSearchResults(searchResultList);
+
         // TODO: 31.12.15 has next page should be new for search results
-//        downloadData();
+        downloadData();
+    }
+
+    @Override
+    public void downloadData() {
+        if (mCourseIdsForSearch == null) return;
+        mShell.getApi().getCourses(1, mCourseIdsForSearch).enqueue(new Callback<CoursesStepicResponse>() {
+            @Override
+            public void onResponse(Response<CoursesStepicResponse> response, Retrofit retrofit) {
+                if (response.isSuccess()) {
+                    bus.post(new SuccessCoursesDownloadEvent(null, response, retrofit));
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
 
     }
 
@@ -98,5 +128,44 @@ public class CourseSearchFragment extends CourseListFragmentBase {
             mSwipeRefreshLayout.setVisibility(View.VISIBLE);
 
         }
+    }
+
+    @Subscribe
+    public void onSuccessDataLoad(SuccessCoursesDownloadEvent e) {
+        if (e.getType() != null) return;
+
+        Response<CoursesStepicResponse> response = e.getResponse();
+        if (response.body() != null &&
+                response.body().getCourses() != null &&
+                response.body().getCourses().size() != 0) {
+            CoursesStepicResponse coursesStepicResponse = response.body();
+            ProgressHelper.dismiss(mSwipeRefreshLayout);
+
+            showCourses(coursesStepicResponse.getCourses());
+
+            mHasNextPage = coursesStepicResponse.getMeta().isHas_next();
+            if (mHasNextPage) {
+                mCurrentPage = coursesStepicResponse.getMeta().getPage() + 1;
+            }
+        } else {
+            mHasNextPage = false;
+            mReportConnectionProblem.setVisibility(View.GONE);
+            showEmptyScreen(true);
+
+            mFooterDownloadingView.setVisibility(View.GONE);
+            ProgressHelper.dismiss(mSwipeRefreshLayout);
+        }
+        isLoading = false;
+    }
+
+    protected void showCourses(List<Course> cachedCourses) {
+        if (cachedCourses != null || cachedCourses.size() != 0) {
+            showEmptyScreen(false);
+            mReportConnectionProblem.setVisibility(View.GONE);
+        }
+
+        mCourses.clear();
+        mCourses.addAll(cachedCourses);
+        mCoursesAdapter.notifyDataSetChanged();
     }
 }
