@@ -218,7 +218,8 @@ public class RetrofitRESTApi implements IApi {
 
     @Override
     public Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery) {
-        String encodedQuery = Uri.encode(rawQuery);
+//        String encodedQuery = Uri.encode(rawQuery);
+        String encodedQuery = rawQuery;
         String type = "course";
         return mLoggedService.getSearchResults(page, encodedQuery, type);
     }
