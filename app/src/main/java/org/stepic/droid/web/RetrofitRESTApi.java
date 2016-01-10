@@ -232,68 +232,6 @@ public class RetrofitRESTApi implements IApi {
         return mLoggedService.getCourses(page, ids);
     }
 
-//    private void setAuthenticatorClientIDAndPassword(OkHttpClient httpClient, final String client_id, final String client_password) {
-//        httpClient.setAuthenticator(new Authenticator() {
-//            @Override
-//            public Request authenticate(Proxy proxy, Response response) throws IOException {
-//                YandexMetrica.reportEvent("Never invoked auth");
-//                // FIXME: 28.12.15 IT IS NEVER INVOKED. REMOVE
-//                String credential = Credentials.basic(client_id, client_password);
-//                return response.request().newBuilder().header("Authorization", credential).build();
-//            }
-//
-//            @Override
-//            public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
-//                return null;
-//            }
-//        });
-//    }
-
-//    private void setAuthForLoggedService(OkHttpClient httpClient) {
-//        httpClient.setAuthenticator(new Authenticator() {
-//            @Override
-//            public Request authenticate(Proxy proxy, Response response) throws IOException {
-//                //IT WILL BE INVOKED WHEN Access token will expire (should, but server doesn't handle 401.)
-//                //it is not be invoked on get courses for example.
-//                RWLocks.AuthLock.writeLock().lock();
-//                try {
-//                    AuthenticationStepicResponse authData = mSharedPreference.getAuthResponseFromStore();
-//                    if (response != null) {
-//                        authData = mOAuthService.updateToken(mConfig.getRefreshGrantType(), authData.getRefresh_token()).execute().body();
-//                        mSharedPreference.storeAuthInfo(authData);
-//                        return response.request().newBuilder().addHeader("Authorization", getAuthHeaderValueForLogged()).build();
-//                    }
-//                } catch (ProtocolException t) {
-//                    // FIXME: 17.12.15 IT IS NOT NORMAL BEHAVIOUR, NEED TO REPAIR CODE.
-//                    YandexMetrica.reportError(AppConstants.NOT_VALID_ACCESS_AND_REFRESH, t);
-//                    mSharedPreference.deleteAuthInfo();
-//                    AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-//                        @Override
-//                        protected Void doInBackground(Void... params) {
-//
-//                            FileUtil.cleanDirectory(userPreferences.getDownloadFolder());
-//                            mDbManager.dropDatabase();
-//                            return null;
-//                        }
-//                    };
-//                    task.execute();
-//                    screenManager.showLaunchScreen(MainApplication.getAppContext(), false);
-//
-//                    throw t;
-//                } finally {
-//                    RWLocks.AuthLock.writeLock().unlock();
-//                }
-//                return null;
-//
-//            }
-//
-//            @Override
-//            public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
-//                return null;
-//            }
-//        });
-//    }
-
     private String getAuthHeaderValueForLogged() {
         try {
             AuthenticationStepicResponse resp = mSharedPreference.getAuthResponseFromStore();
