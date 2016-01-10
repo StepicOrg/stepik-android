@@ -67,7 +67,8 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     }
 
     protected void showCourses(List<Course> cachedCourses) {
-        if (cachedCourses != null || cachedCourses.size() != 0) {
+        if (cachedCourses == null) return;
+        if (cachedCourses != null && !cachedCourses.isEmpty()) {
             showEmptyScreen(false);
             mReportConnectionProblem.setVisibility(View.GONE);
         }
@@ -141,15 +142,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Subscribe
     public void onFailureDataLoad(FailCoursesDownloadEvent e) {
-        ProgressHelper.dismiss(mSwipeRefreshLayout);
-        mFooterDownloadingView.setVisibility(View.GONE);
-        isLoading = false;
-
-        if (mCourses == null || mCourses.size() == 0) {
-            //screen is clear due to error connection
-            showEmptyScreen(false);
-            mReportConnectionProblem.setVisibility(View.VISIBLE);
-        }
+        super.onFailureDataLoad(e);
     }
 
 
@@ -343,7 +336,8 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         }
     }
 
-    void showEmptyScreen(boolean isShowed) {
+    @Override
+    public void showEmptyScreen(boolean isShowed) {
         if (isShowed) {
             mEmptyCoursesView.setVisibility(View.VISIBLE);
             mSwipeRefreshLayout.setVisibility(View.GONE);

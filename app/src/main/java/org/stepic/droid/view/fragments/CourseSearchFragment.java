@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 
 import com.squareup.otto.Subscribe;
 
+import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
 import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
-import org.stepic.droid.events.search.FailSearchEvent;
 import org.stepic.droid.events.search.SuccessSearchEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.SearchResult;
@@ -18,6 +18,7 @@ import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.web.CoursesStepicResponse;
 import org.stepic.droid.web.SearchResultResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
@@ -42,50 +43,58 @@ public class CourseSearchFragment extends CourseListFragmentBase {
         super.onActivityCreated(savedInstanceState);
         mEmptySearch.setClickable(false);
         mEmptySearch.setFocusable(false);
-        mProgressBarOnEmptyScreen.setVisibility(View.VISIBLE);
+//        mProgressBarOnEmptyScreen.setVisibility(View.VISIBLE);
         bus.register(this);
-        downloadData();
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                downloadData();
+            }
+        });
+
     }
 
     @Override
     public void downloadData() {
-        ProgressHelper.activate(mProgressBarOnEmptyScreen);
+        ProgressHelper.activate(mSwipeRefreshLayout);
+        isLoading = true;
         mShell.getApi().getSearchResultsCourses(mCurrentPage, mSearchQuery).enqueue(new Callback<SearchResultResponse>() {
             @Override
             public void onResponse(Response<SearchResultResponse> response, Retrofit retrofit) {
                 if (response.isSuccess()) {
                     bus.post(new SuccessSearchEvent(mSearchQuery, response));
                 } else {
-                    bus.post(new FailSearchEvent(mSearchQuery));
+                    bus.post(new FailCoursesDownloadEvent(null));
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
-                bus.post(new FailSearchEvent(mSearchQuery));
+                bus.post(new FailCoursesDownloadEvent(null));
             }
         });
     }
-
-    @Subscribe
-    public void onFailSearch(FailSearchEvent e) {
-        if (!e.getQuery().equals(mSearchQuery)) return;
-
-        ProgressHelper.dismiss(mProgressBarOnEmptyScreen);
-        mEmptySearch.setVisibility(View.GONE);
-        mSwipeRefreshLayout.setVisibility(View.GONE);
-        mReportConnectionProblem.setVisibility(View.VISIBLE);
-    }
+//
+//    @Subscribe
+//    public void onFailSearch(FailSearchEvent e) {
+//        if (!e.getQuery().equals(mSearchQuery)) return;
+//
+//        ProgressHelper.dismiss(mProgressBarOnEmptyScreen);
+//        mEmptySearch.setVisibility(View.GONE);
+//        mSwipeRefreshLayout.setVisibility(View.GONE);
+//        mReportConnectionProblem.setVisibility(View.VISIBLE);
+//    }
 
     @Subscribe
     public void onSuccessSearchResult(SuccessSearchEvent e) {
         if (!e.getQuery().equals(mSearchQuery)) return;
-        isLoading = false;
-
-        ProgressHelper.dismiss(mProgressBarOnEmptyScreen);
 
         List<SearchResult> searchResultList = e.getResponse().body().getSearchResultList();
         long[] courseIdsForSearch = mSearchResolver.getCourseIdsFromSearchResults(searchResultList);
+
+        if (mCurrentPage == 1) {
+            mCourses.clear();
+        }
         mHasNextPage = e.getResponse().body().getMeta().isHas_next();
         mCurrentPage++;
 
@@ -94,19 +103,23 @@ public class CourseSearchFragment extends CourseListFragmentBase {
     }
 
 
-    public void downloadCoursesById(long[] mCourseIdsForSearch) {
-        if (mCourseIdsForSearch == null) return;
+    public void downloadCoursesById(final long[] mCourseIdsForSearch) {
+        if (mCourseIdsForSearch == null)
+            bus.post(new FailCoursesDownloadEvent(null));
         mShell.getApi().getCourses(1, mCourseIdsForSearch).enqueue(new Callback<CoursesStepicResponse>() {
             @Override
             public void onResponse(Response<CoursesStepicResponse> response, Retrofit retrofit) {
                 if (response.isSuccess()) {
-                    bus.post(new SuccessCoursesDownloadEvent(null, response, retrofit));
+
+                    bus.post(new SuccessCoursesDownloadEvent(null, response, retrofit, mCourseIdsForSearch));
+                } else {
+                    bus.post(new FailCoursesDownloadEvent(null));
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
-
+                bus.post(new FailCoursesDownloadEvent(null));
             }
         });
 
@@ -123,7 +136,8 @@ public class CourseSearchFragment extends CourseListFragmentBase {
         return null;
     }
 
-    void showEmptyScreen(boolean isShowed) {
+    @Override
+    public void showEmptyScreen(boolean isShowed) {
         if (isShowed) {
             mEmptySearch.setVisibility(View.VISIBLE);
             mSwipeRefreshLayout.setVisibility(View.GONE);
@@ -138,6 +152,7 @@ public class CourseSearchFragment extends CourseListFragmentBase {
     public void onSuccessDataLoad(SuccessCoursesDownloadEvent e) {
         if (e.getType() != null) return;
 
+
         Response<CoursesStepicResponse> response = e.getResponse();
         if (response.body() != null &&
                 response.body().getCourses() != null &&
@@ -145,7 +160,26 @@ public class CourseSearchFragment extends CourseListFragmentBase {
             CoursesStepicResponse coursesStepicResponse = response.body();
             ProgressHelper.dismiss(mSwipeRefreshLayout);
 
-            showCourses(coursesStepicResponse.getCourses());
+            List<Course> cachedCourses = coursesStepicResponse.getCourses();
+            List<Course> sortedCopy = new ArrayList<>();
+            long[] searchIds = e.getSearchIds();
+            if (searchIds != null) {
+                //// FIXME: 10.01.16 use other data structure
+                Course forInsert = null;
+                for (int i = 0; i < searchIds.length; i++) {
+                    for (Course cachedCourse : cachedCourses) {
+                        if (cachedCourse.getCourseId() == searchIds[i]) {
+                            forInsert = cachedCourse;
+                            break;
+                        }
+                    }
+                    if (forInsert != null) {
+                        sortedCopy.add(forInsert);
+                    }
+                    forInsert = null;
+                }
+            }
+            showCourses(sortedCopy);
         } else {
             mReportConnectionProblem.setVisibility(View.GONE);
             showEmptyScreen(true);
@@ -161,12 +195,33 @@ public class CourseSearchFragment extends CourseListFragmentBase {
             showEmptyScreen(false);
             mReportConnectionProblem.setVisibility(View.GONE);
 
+            //todo optimize it with other data structure
 
-            if (mCurrentPage == 2) {
-                mCourses.clear();
+            boolean needAdd = true;
+            for (Course newLoadedCourse : cachedCourses) {
+                for (int i = 0; i < mCourses.size(); i++) {
+                    if (mCourses.get(i).getCourseId() == newLoadedCourse.getCourseId()) {
+                        needAdd = false;
+                        break;
+                    }
+                }
+                if (needAdd) {
+                    mCourses.add(newLoadedCourse);
+                }
+                needAdd = true;
             }
-            mCourses.addAll(cachedCourses);
             mCoursesAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Subscribe
+    @Override
+    public void onFailureDataLoad(FailCoursesDownloadEvent e) {
+        super.onFailureDataLoad(e);
+    }
+
+    @Override
+    public void onRefresh() {
+        super.onRefresh();
     }
 }

@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.squareup.otto.Subscribe;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
@@ -23,6 +24,7 @@ import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.activities.MainFeedActivity;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
 import org.stepic.droid.view.custom.TouchDispatchableFrameLayout;
@@ -196,4 +198,21 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         mHasNextPage = true;
         downloadData();
     }
+
+    @Subscribe
+    public void onFailureDataLoad(FailCoursesDownloadEvent e) {
+        ProgressHelper.dismiss(mProgressBarOnEmptyScreen);
+        ProgressHelper.dismiss(mSwipeRefreshLayout);
+        mFooterDownloadingView.setVisibility(View.GONE);
+        isLoading = false;
+
+        if (mCourses == null || mCourses.isEmpty()) {
+            //screen is clear due to error connection
+            showEmptyScreen(false);
+            mReportConnectionProblem.setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    public abstract void showEmptyScreen(boolean isShow);
 }
