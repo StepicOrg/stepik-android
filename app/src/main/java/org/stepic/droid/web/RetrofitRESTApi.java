@@ -28,6 +28,7 @@ import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.RWLocks;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,6 +39,8 @@ import retrofit.Retrofit;
 
 @Singleton
 public class RetrofitRESTApi implements IApi {
+    private final int TIMEOUT_IN_SECONDS = 10;
+
     @Inject
     SharedPreferenceHelper mSharedPreference;
     @Inject
@@ -83,6 +86,7 @@ public class RetrofitRESTApi implements IApi {
             }
         };
         okHttpClient.networkInterceptors().add(interceptor);
+        setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mConfig.getBaseUrl())
                 .addConverterFactory(GsonConverterFactory.create())
@@ -103,6 +107,7 @@ public class RetrofitRESTApi implements IApi {
             }
         };
         OkHttpClient okHttpClient = new OkHttpClient();
+        setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
         okHttpClient.networkInterceptors().add(interceptor);
         Retrofit notLogged = new Retrofit.Builder()
                 .baseUrl(mConfig.getBaseUrl())
@@ -110,6 +115,11 @@ public class RetrofitRESTApi implements IApi {
                 .client(okHttpClient)
                 .build();
         mOAuthService = notLogged.create(StepicRestOAuthService.class);
+    }
+
+    private void setTimeout(OkHttpClient okHttpClient, int seconds) {
+        okHttpClient.setConnectTimeout(seconds, TimeUnit.SECONDS);
+        okHttpClient.setReadTimeout(seconds, TimeUnit.SECONDS);
     }
 
     @Override
