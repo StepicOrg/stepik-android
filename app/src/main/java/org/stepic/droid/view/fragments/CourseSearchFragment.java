@@ -28,7 +28,7 @@ public class CourseSearchFragment extends CourseListFragmentBase {
     public final static String QUERY_KEY = "query_key";
 
     private String mSearchQuery;
-    private long[] mCourseIdsForSearch;
+
 
     @Nullable
     @Override
@@ -44,10 +44,11 @@ public class CourseSearchFragment extends CourseListFragmentBase {
         mEmptySearch.setFocusable(false);
         mProgressBarOnEmptyScreen.setVisibility(View.VISIBLE);
         bus.register(this);
-        fetchSearchResults();
+        downloadData();
     }
 
-    private void fetchSearchResults() {
+    @Override
+    public void downloadData() {
         ProgressHelper.activate(mProgressBarOnEmptyScreen);
         mShell.getApi().getSearchResultsCourses(mCurrentPage, mSearchQuery).enqueue(new Callback<SearchResultResponse>() {
             @Override
@@ -79,18 +80,21 @@ public class CourseSearchFragment extends CourseListFragmentBase {
     @Subscribe
     public void onSuccessSearchResult(SuccessSearchEvent e) {
         if (!e.getQuery().equals(mSearchQuery)) return;
+        isLoading = false;
 
         ProgressHelper.dismiss(mProgressBarOnEmptyScreen);
 
         List<SearchResult> searchResultList = e.getResponse().body().getSearchResultList();
-        mCourseIdsForSearch = mSearchResolver.getCourseIdsFromSearchResults(searchResultList);
+        long[] courseIdsForSearch = mSearchResolver.getCourseIdsFromSearchResults(searchResultList);
+        mHasNextPage = e.getResponse().body().getMeta().isHas_next();
+        mCurrentPage++;
 
         // TODO: 31.12.15 has next page should be new for search results
-        downloadData();
+        downloadCoursesById(courseIdsForSearch);
     }
 
-    @Override
-    public void downloadData() {
+
+    public void downloadCoursesById(long[] mCourseIdsForSearch) {
         if (mCourseIdsForSearch == null) return;
         mShell.getApi().getCourses(1, mCourseIdsForSearch).enqueue(new Callback<CoursesStepicResponse>() {
             @Override
@@ -142,13 +146,7 @@ public class CourseSearchFragment extends CourseListFragmentBase {
             ProgressHelper.dismiss(mSwipeRefreshLayout);
 
             showCourses(coursesStepicResponse.getCourses());
-
-            mHasNextPage = coursesStepicResponse.getMeta().isHas_next();
-            if (mHasNextPage) {
-                mCurrentPage = coursesStepicResponse.getMeta().getPage() + 1;
-            }
         } else {
-            mHasNextPage = false;
             mReportConnectionProblem.setVisibility(View.GONE);
             showEmptyScreen(true);
 
@@ -159,13 +157,16 @@ public class CourseSearchFragment extends CourseListFragmentBase {
     }
 
     protected void showCourses(List<Course> cachedCourses) {
-        if (cachedCourses != null || cachedCourses.size() != 0) {
+        if (!cachedCourses.isEmpty()) {
             showEmptyScreen(false);
             mReportConnectionProblem.setVisibility(View.GONE);
-        }
 
-        mCourses.clear();
-        mCourses.addAll(cachedCourses);
-        mCoursesAdapter.notifyDataSetChanged();
+
+            if (mCurrentPage == 2) {
+                mCourses.clear();
+            }
+            mCourses.addAll(cachedCourses);
+            mCoursesAdapter.notifyDataSetChanged();
+        }
     }
 }
