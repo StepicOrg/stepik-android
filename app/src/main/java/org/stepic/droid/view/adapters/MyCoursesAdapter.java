@@ -83,8 +83,13 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         }
         viewHolderItem.courseName.setText(course.getTitle());
         viewHolderItem.courseSummary.setText(HtmlHelper.fromHtml(course.getSummary()));
-        Picasso.with(mFragment.getActivity()).load(mConfig.getBaseUrl() + course.getCover()).
-                placeholder(viewHolderItem.placeholder).into(viewHolderItem.courseIcon);
+        if (course.getCover() != null) {
+            Picasso.with(mFragment.getActivity()).load(mConfig.getBaseUrl() + course.getCover()).
+                    placeholder(viewHolderItem.placeholder).into(viewHolderItem.courseIcon);
+        } else {
+            Picasso.with(mFragment.getActivity()).load(R.drawable.stepic_logo_black_and_white).
+                    placeholder(viewHolderItem.placeholder).into(viewHolderItem.courseIcon);
+        }
         viewHolderItem.courseDateInterval.setText(course.getDateOfCourse());
 
 //        viewHolderItem.cardView.setOnClickListener(new View.OnClickListener() {
