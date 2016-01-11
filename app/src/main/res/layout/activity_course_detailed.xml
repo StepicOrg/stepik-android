@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/appBarLayout"
+        layout="@layout/appbar_only_toolbar" />
+
+
+    <ListView
+        android:id="@+id/list_of_course_property"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/join_course_layout"
+        android:layout_below="@+id/appBarLayout"
+        android:clipToPadding="false"
+        android:divider="@color/transparent"
+        android:dividerHeight="@null"
+        android:listSelector="@android:color/transparent"
+        android:scrollbarStyle="outsideOverlay"
+        android:soundEffectsEnabled="true" />
+
+
+    <Button
+        android:id="@+id/join_course_layout"
+        style="@style/regular_white_text"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/min_ux_touchable_size"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bt_signin_active"
+        android:contentDescription="@string/app_name"
+        android:padding="5dp"
+        android:text="@string/join_course"
+        android:textSize="16sp" />
+</RelativeLayout>

@@ -82,5 +82,13 @@
     <string name="clear">Очистить</string>
     <string name="clear_videos">Вы уверены, что хотите удалить все закешированные видео?</string>
     <string name="empty_downloading">Нет загруженных видео</string>
+    <string name="workload">Нагрузка</string>
+    <string name="certificate">Сертификат</string>
+    <string name="course_format">Формат курса</string>
+    <string name="target_audience">Целевая аудитория</string>
+    <string name="version">Версия</string>
+    <string name="find_courses_hint">Поиск курсов</string>
+    <string name="search_title">Поиск</string>
+    <string name="empty_search">Курсы не найдены</string>
 
 </resources>

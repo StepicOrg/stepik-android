@@ -219,7 +219,7 @@ public class StepsActivity extends FragmentActivityBase {
             return;
         }
 
-        if (e.getStepList() != null && e.getStepList().size() != 0) {
+        if (e.getStepList() != null && e.getStepList().size() != 0 && e.getStepList().size() == mLesson.getSteps().length) {
             bus.post(new SuccessLoadStepEvent(e.getStepList()));
         } else {
             mShell.getApi().getSteps(mLesson.getSteps()).enqueue(new Callback<StepResponse>() {

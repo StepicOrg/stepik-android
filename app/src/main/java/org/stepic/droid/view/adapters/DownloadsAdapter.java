@@ -77,12 +77,21 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         holder.progressIcon.setVisibility(View.GONE);
         holder.deleteIcon.setVisibility(View.VISIBLE);
 
-        Uri uriForThumbnail = ThumbnailParser.getUriForThumbnail(cachedVideo.getThumbnail());
-        Picasso.with(MainApplication.getAppContext())
-                .load(uriForThumbnail)
-                .placeholder(holder.placeholder)
-                .error(holder.placeholder)
-                .into(holder.mVideoIcon);
+        String thumbnail = cachedVideo.getThumbnail();
+        if (thumbnail != null) {
+            Uri uriForThumbnail = ThumbnailParser.getUriForThumbnail(thumbnail);
+            Picasso.with(MainApplication.getAppContext())
+                    .load(uriForThumbnail)
+                    .placeholder(holder.placeholder)
+                    .error(holder.placeholder)
+                    .into(holder.mVideoIcon);
+        } else {
+            Picasso.with(MainApplication.getAppContext())
+                    .load(R.drawable.video_placeholder)
+                    .placeholder(holder.placeholder)
+                    .error(holder.placeholder)
+                    .into(holder.mVideoIcon);
+        }
 
         Lesson relatedLesson = mStepIdToLessonMap.get(cachedVideo.getStepId());
         if (relatedLesson != null) {

@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Looper;
 import android.util.Log;
 
-import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
@@ -15,6 +13,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.yandex.metrica.YandexMetrica;
 
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.ScreenManager;
@@ -25,13 +24,11 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.RWLocks;
 
 import java.io.IOException;
-import java.net.ProtocolException;
-import java.net.Proxy;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,6 +39,8 @@ import retrofit.Retrofit;
 
 @Singleton
 public class RetrofitRESTApi implements IApi {
+    private final int TIMEOUT_IN_SECONDS = 10;
+
     @Inject
     SharedPreferenceHelper mSharedPreference;
     @Inject
@@ -61,53 +60,66 @@ public class RetrofitRESTApi implements IApi {
         MainApplication.component().inject(this);
 
         makeOauthServiceWithNewAuthHeader(mSharedPreference.isLastTokenSocial() ? TokenType.social : TokenType.loginPassword);
+        makeLoggedService();
 
+    }
 
+    private void makeLoggedService() {
         OkHttpClient okHttpClient = new OkHttpClient();
         Interceptor interceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
-                RWLocks.AuthLock.writeLock().lock();
+                Request newRequest = chain.request();
                 try {
-                    Request newRequest = chain.request();
+                    RWLocks.AuthLock.writeLock().lock();
                     AuthenticationStepicResponse response = mSharedPreference.getAuthResponseFromStore();
                     if (response != null) {
-                        Log.i("Thread", Looper.myLooper() == Looper.getMainLooper() ? "main" : Thread.currentThread().getName());
-                        response = mOAuthService.updateToken(mConfig.getRefreshGrantType(), response.getRefresh_token()).execute().body();//todo: Which Thread is it?
+                        response = mOAuthService.updateToken(mConfig.getRefreshGrantType(), response.getRefresh_token()).execute().body();
                         mSharedPreference.storeAuthInfo(response);
-                        newRequest = chain.request().newBuilder().addHeader("Authorization", getAuthHeaderValue()).build();
+                        newRequest = chain.request().newBuilder().addHeader("Authorization", getAuthHeaderValueForLogged()).build();
+                        return chain.proceed(newRequest);
                     }
-                    return chain.proceed(newRequest);
-                } catch (ProtocolException t) {
-                    // FIXME: 17.12.15 IT IS NOT NORMAL BEHAVIOUR, NEED TO REPAIR CODE.
-                    YandexMetrica.reportError(AppConstants.NOT_VALID_ACCESS_AND_REFRESH, t);
-                    mSharedPreference.deleteAuthInfo();
-                    AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... params) {
-
-                            FileUtil.cleanDirectory(userPreferences.getDownloadFolder());
-                            mDbManager.dropDatabase();
-                            return null;
-                        }
-                    };
-                    task.execute();
-                    screenManager.showLaunchScreen(MainApplication.getAppContext(), false);
-
-                    throw t;
                 } finally {
                     RWLocks.AuthLock.writeLock().unlock();
                 }
-
+                return chain.proceed(newRequest);
             }
         };
         okHttpClient.networkInterceptors().add(interceptor);
+        setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mConfig.getBaseUrl())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
         mLoggedService = retrofit.create(StepicRestLoggedService.class);
+    }
+
+    private void makeOauthServiceWithNewAuthHeader(final TokenType type) {
+        mSharedPreference.storeLastTokenType(type == TokenType.social ? true : false);
+        Interceptor interceptor = new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request newRequest = chain.request();
+                String credential = Credentials.basic(mConfig.getOAuthClientId(type), mConfig.getOAuthClientSecret(type));
+                newRequest = newRequest.newBuilder().addHeader("Authorization", credential).build();
+                return chain.proceed(newRequest);
+            }
+        };
+        OkHttpClient okHttpClient = new OkHttpClient();
+        setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
+        okHttpClient.networkInterceptors().add(interceptor);
+        Retrofit notLogged = new Retrofit.Builder()
+                .baseUrl(mConfig.getBaseUrl())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build();
+        mOAuthService = notLogged.create(StepicRestOAuthService.class);
+    }
+
+    private void setTimeout(OkHttpClient okHttpClient, int seconds) {
+        okHttpClient.setConnectTimeout(seconds, TimeUnit.SECONDS);
+        okHttpClient.setReadTimeout(seconds, TimeUnit.SECONDS);
     }
 
     @Override
@@ -122,18 +134,6 @@ public class RetrofitRESTApi implements IApi {
         YandexMetrica.reportEvent("Api:auth with social account");
         makeOauthServiceWithNewAuthHeader(TokenType.social);
         return mOAuthService.getTokenByCode(mConfig.getGrantType(TokenType.social), code, mConfig.getRedirectUri());
-    }
-
-    private void makeOauthServiceWithNewAuthHeader(TokenType type) {
-        mSharedPreference.storeLastTokenType(type == TokenType.social ? true : false);
-        OkHttpClient okHttpClient = new OkHttpClient();
-        setAuthenticatorClientIDAndPassword(okHttpClient, mConfig.getOAuthClientId(type), mConfig.getOAuthClientSecret(type));
-        Retrofit notLogged = new Retrofit.Builder()
-                .baseUrl(mConfig.getBaseUrl())
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-        mOAuthService = notLogged.create(StepicRestOAuthService.class);
     }
 
     @Override
@@ -226,27 +226,23 @@ public class RetrofitRESTApi implements IApi {
         context.startActivity(intent);
     }
 
-    private void setAuthenticatorClientIDAndPassword(OkHttpClient httpClient, final String client_id, final String client_password) {
-        httpClient.setAuthenticator(new Authenticator() {
-            //            private int mCounter = 0;
-            @Override
-            public Request authenticate(Proxy proxy, Response response) throws IOException {
-//                if (mCounter++ > 0) {
-//                    throw new AuthException();
-//                }
-                String credential = Credentials.basic(client_id, client_password);
-                return response.request().newBuilder().header("Authorization", credential).build();
-            }
-
-            @Override
-            public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
-                return null;
-            }
-        });
+    @Override
+    public Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery) {
+//        String encodedQuery = Uri.encode(rawQuery);
+        String encodedQuery = rawQuery;
+        String type = "course";
+        return mLoggedService.getSearchResults(page, encodedQuery, type);
     }
 
+    @Override
+    public Call<CoursesStepicResponse> getCourses(int page, @Nullable long[] ids) {
+        if (ids == null || ids.length == 0) {
+            ids = new long[]{0};
+        }
+        return mLoggedService.getCourses(page, ids);
+    }
 
-    private String getAuthHeaderValue() {
+    private String getAuthHeaderValueForLogged() {
         try {
             AuthenticationStepicResponse resp = mSharedPreference.getAuthResponseFromStore();
             String access_token = resp.getAccess_token();

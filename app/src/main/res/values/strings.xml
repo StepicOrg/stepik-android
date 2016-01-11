@@ -86,5 +86,13 @@
     <string name="clear">Clear</string>
     <string name="clear_videos">Are you sure that want to delete all cached videos?</string>
     <string name="empty_downloading">No downloaded videos</string>
+    <string name="workload">Workload</string>
+    <string name="course_format">Course format</string>
+    <string name="target_audience">Target audience</string>
+    <string name="certificate">Certificate</string>
+    <string name="version">Version</string>
+    <string name="find_courses_hint">Search courses</string>
+    <string name="search_title">Search</string>
+    <string name="empty_search">Courses not found</string>
 
 </resources>

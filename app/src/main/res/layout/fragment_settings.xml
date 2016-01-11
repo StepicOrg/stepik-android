@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.CardView
+        android:id="@+id/top_settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
@@ -34,8 +34,8 @@
                 android:id="@+id/fragment_settings_wifi_enable_switch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:foreground="@drawable/non_radius_foreground"
                 android:contentDescription="@+id/fragment_settings_wifi_enable_switch"
+                android:foreground="@drawable/non_radius_foreground"
                 android:padding="16dp"
                 android:text="@string/wi_fi_setting"
                 android:textColor="@color/stepic_regular_text"
@@ -43,10 +43,10 @@
 
             <FrameLayout
                 android:id="@+id/video_quality_view"
-                android:focusable="true"
-                android:clickable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
                 android:foreground="@drawable/non_radius_foreground"
                 android:padding="16dp">
 
@@ -77,10 +77,22 @@
         android:id="@+id/clear_cache_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/top_settings"
         android:layout_margin="5dp"
         android:background="@color/stepic_brand_primary"
         android:text="@string/clear_cache_title"
         android:textAllCaps="true"
         android:textColor="@color/stepic_white" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/version_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_horizontal"
+        android:text="Version is great"
+        android:textColor="@color/stepic_weak_text"
+        android:textSize="@dimen/text_height" />
+
+</RelativeLayout>

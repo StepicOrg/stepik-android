@@ -1,10 +1,24 @@
 package org.stepic.droid.view.fragments;
 
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.ComponentName;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.squareup.otto.Subscribe;
 
-import org.stepic.droid.base.CoursesFragmentBase;
+import org.stepic.droid.R;
+import org.stepic.droid.base.CoursesDatabaseFragmentBase;
 import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
 import org.stepic.droid.events.courses.FailDropCourseEvent;
 import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
@@ -17,12 +31,53 @@ import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.view.listeners.OnRootTouchedListener;
 
-public class FindCoursesFragment extends CoursesFragmentBase {
+public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
+
+    SearchView mSearchView = null;
+    MenuItem mMenuItem = null;
+    private boolean handledByRoot = false;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        mRootView.setParentTouchEvent(new OnRootTouchedListener() {
+            @Override
+            public void makeBeforeChildren() {
+                collapseAndHide(true);
+            }
+        });
+
+        mListOfCourses.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    if (!handledByRoot) {
+                        collapseAndHide(false);
+                    }
+                    handledByRoot = false;
+                }
+            }
+        });
+
+    }
+
+
+    private void collapseAndHide(boolean rootHandle) {
+        if (mSearchView != null && mMenuItem != null && mMenuItem.isActionViewExpanded()) {
+            if (rootHandle) handledByRoot = true;
+            hideSoftKeypad();//in collapse action view keypad going to invisible after animation
+            MenuItemCompat.collapseActionView(mMenuItem);
+        }
     }
 
     @Override
@@ -107,4 +162,35 @@ public class FindCoursesFragment extends CoursesFragmentBase {
     public void onFailDrop(FailDropCourseEvent e) {
         super.onFailDrop(e);
     }
+
+    String TAG = "searchView";
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.search_menu, menu);
+
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        mMenuItem = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) mMenuItem.getActionView();
+
+        ComponentName componentName = getActivity().getComponentName();
+        SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
+        mSearchView.setSearchableInfo(searchableInfo);
+        mSearchView.setMaxWidth(20000);//it is dirty hack for expand in landscape
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                collapseAndHide(false);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+    }
+
 }

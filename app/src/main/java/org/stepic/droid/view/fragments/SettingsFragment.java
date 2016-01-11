@@ -1,5 +1,7 @@
 package org.stepic.droid.view.fragments;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -8,12 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.wifi_settings.WifiLoadIsChangedEvent;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.custom.BetterSwitch;
@@ -22,6 +26,7 @@ import org.stepic.droid.view.dialogs.ClearCacheDialogFragment;
 import org.stepic.droid.view.dialogs.VideoQualityDialog;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 public class SettingsFragment extends FragmentBase {
@@ -33,6 +38,12 @@ public class SettingsFragment extends FragmentBase {
 
     @Bind(R.id.video_quality_view)
     View mVideoQuality;
+
+    @Bind(R.id.version_tv)
+    TextView mVersionTv;
+
+    @BindString(R.string.version)
+    String versionPrefix;
 
     private DialogFragment mClearCacheDialogFragment;
 
@@ -47,6 +58,8 @@ public class SettingsFragment extends FragmentBase {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        showVersionName();
 
         mClearCacheDialogFragment = new ClearCacheDialogFragment();
 
@@ -121,5 +134,21 @@ public class SettingsFragment extends FragmentBase {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    private void showVersionName() {
+        try {
+            Context mainAppContext = MainApplication.getAppContext();
+            String versionName = mainAppContext.getPackageManager().getPackageInfo(mainAppContext.getPackageName(), 0).versionName;
+            String textForVersionView = versionPrefix + ": " + versionName;
+            mVersionTv.setText(textForVersionView);
+        } catch (PackageManager.NameNotFoundException e) {
+            YandexMetrica.reportError(AppConstants.NOT_FOUND_VERSION, e);
+            e.printStackTrace();
+            mVersionTv.setVisibility(View.GONE);
+        } catch (Exception e) {
+            YandexMetrica.reportError(AppConstants.NOT_SIGNIFICANT_ERROR, e);
+            mVersionTv.setVisibility(View.GONE);
+        }
     }
 }

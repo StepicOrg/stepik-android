@@ -48,8 +48,6 @@ public class MainFeedActivity extends FragmentActivityBase
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String KEY_CURRENT_INDEX = "Current_index";
 
-    private final boolean isNeedCheck = true;
-
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
@@ -59,10 +57,11 @@ public class MainFeedActivity extends FragmentActivityBase
     @Bind(R.id.drawer)
     DrawerLayout mDrawerLayout;
 
-    @Bind(R.id.profile_image)
+
+    //    @Bind(R.id.profile_image)
     ImageView mProfileImage;
 
-    @Bind(R.id.username)
+    //    @Bind(R.id.username)
     TextView mUserNameTextView;
 
 
@@ -83,6 +82,11 @@ public class MainFeedActivity extends FragmentActivityBase
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_feed);
         ButterKnife.bind(this);
+
+        View headerLayout = mNavigationView.getHeaderView(0);
+        mProfileImage = ButterKnife.findById(headerLayout, R.id.profile_image);
+        mUserNameTextView = ButterKnife.findById(headerLayout, R.id.username);
+
 
         setUpToolbar();
         setUpDrawerLayout();
@@ -139,18 +143,19 @@ public class MainFeedActivity extends FragmentActivityBase
         } else {
             mCurrentIndex = savedInstance.getInt(KEY_CURRENT_INDEX);
         }
+
         showCurrentFragment();
     }
 
     private void showCurrentFragment() {
         Menu menu = mNavigationView.getMenu();
         MenuItem menuItem = menu.getItem(mCurrentIndex);
+        menuItem.setChecked(true); //when we do not choose in menu
         showCurrentFragment(menuItem);
     }
 
     private void showCurrentFragment(MenuItem menuItem) {
         mCurrentFragment = mFragments.get(mCurrentIndex);
-        menuItem.setChecked(isNeedCheck);
         setTitle(menuItem.getTitle());
         setFragment();
     }
@@ -179,13 +184,6 @@ public class MainFeedActivity extends FragmentActivityBase
                 LogoutAreYouSureDialog dialog = new LogoutAreYouSureDialog();
                 dialog.show(getSupportFragmentManager(), null);
 
-                if (isNeedCheck) {
-                    Menu menu = mNavigationView.getMenu();
-                    MenuItem oldItem = menu.getItem(mCurrentIndex);
-                    oldItem.setChecked(isNeedCheck);
-                }
-
-                menuItem.setChecked(false);//never select logout
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -245,9 +243,7 @@ public class MainFeedActivity extends FragmentActivityBase
     }
 
     private void setFragment() {
-        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.frame, mCurrentFragment);
-        fragmentTransaction.commit();
+        setFragment(R.id.frame, mCurrentFragment);
     }
 
     @Subscribe

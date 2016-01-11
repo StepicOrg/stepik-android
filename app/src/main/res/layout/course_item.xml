@@ -2,16 +2,14 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cv"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/stepic_white"
-    android:clickable="true"
     android:focusable="false"
     android:focusableInTouchMode="false"
+    android:clickable="false"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
-    android:foreground="@drawable/non_radius_foreground"
-    android:longClickable="true"
     android:orientation="vertical"
+    android:background="@color/stepic_white"
     app:cardCornerRadius="@dimen/guideline_tile_corner">
 
     <LinearLayout

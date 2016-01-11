@@ -26,6 +26,7 @@ import org.stepic.droid.model.Video;
 import org.stepic.droid.util.ThumbnailParser;
 
 import java.io.IOException;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.BindDrawable;
@@ -80,6 +81,8 @@ public class VideoStepFragment extends FragmentStepBase {
                     long stepId = mStep.getId();
                     long stepArray[] = new long[]{stepId};
                     try {
+                        List<Step> steps = mShell.getApi().getSteps(stepArray).execute().body().getSteps();
+                        if (steps == null || steps.size() == 0) return null;
                         Step stepFromWeb = mShell.getApi().getSteps(stepArray).execute().body().getSteps().get(0);
                         Video video = stepFromWeb.getBlock().getVideo();
                         if (video != null) {

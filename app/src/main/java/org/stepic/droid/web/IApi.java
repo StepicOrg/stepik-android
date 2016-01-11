@@ -45,4 +45,8 @@ public interface IApi {
     Call<Void> postViewed(ViewAssignment stepAssignment);
 
     void loginWithSocial(Context context, SocialManager.SocialType type);
+
+    Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery);
+
+    Call<CoursesStepicResponse> getCourses(int page, long[] ids);
 }

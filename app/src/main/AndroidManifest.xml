@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.stepic.droid">
+    package="org.stepic.droid"
+    android:installLocation="auto">
 
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -64,7 +65,12 @@
 
         <activity
             android:name="org.stepic.droid.view.activities.MainFeedActivity"
-            android:label="@string/my_courses_title" />
+            android:label="@string/my_courses_title">
+
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".view.activities.CourseSearchResultActivity" />
+        </activity>
 
         <activity
             android:name=".view.activities.CourseDetailActivity"
@@ -111,6 +117,18 @@
         <service
             android:name="org.stepic.droid.services.ViewPusher"
             android:exported="true" />
+
+        <activity
+            android:launchMode="singleTop"
+            android:name=".view.activities.CourseSearchResultActivity"
+            android:label="@string/search_title">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
 
 
     </application>

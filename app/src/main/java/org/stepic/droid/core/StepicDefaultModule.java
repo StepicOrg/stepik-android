@@ -16,8 +16,11 @@ import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.util.resolvers.CoursePropertyResolver;
+import org.stepic.droid.util.resolvers.ISearchResolver;
 import org.stepic.droid.util.resolvers.IStepResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
+import org.stepic.droid.util.resolvers.SearchResolver;
 import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.web.HttpManager;
@@ -141,8 +144,19 @@ public class StepicDefaultModule {
 
     @Singleton
     @Provides
-    public SocialManager provideSocialManager(){
+    public SocialManager provideSocialManager() {
         return new SocialManager();
     }
 
+    @Singleton
+    @Provides
+    public CoursePropertyResolver provideCoursePropertyResolver() {
+        return new CoursePropertyResolver();
+    }
+
+    @Singleton
+    @Provides
+    public ISearchResolver provideSearchResolver() {
+        return new SearchResolver();
+    }
 }
