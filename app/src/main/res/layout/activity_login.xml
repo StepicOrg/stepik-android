@@ -102,7 +102,7 @@
                         android:textColor="@color/cyan_text_navigation"
                         android:textSize="12sp" />
 
-                    <android.support.v7.widget.AppCompatButton
+                    <Button
                         android:id="@+id/login_button_layout"
                         style="@style/bold_white_text"
                         android:layout_width="match_parent"

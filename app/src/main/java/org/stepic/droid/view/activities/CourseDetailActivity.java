@@ -1,5 +1,6 @@
 package org.stepic.droid.view.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -78,8 +79,7 @@ public class CourseDetailActivity extends FragmentActivityBase {
     @Bind(R.id.join_course_layout)
     View mJoinCourseView;
 
-    @Bind(R.id.join_course_spinner)
-    ProgressBar mJoinCourseSpinner;
+    ProgressDialog mJoinCourseSpinner;
 
     @BindString(R.string.join_course_impossible)
     String joinCourseImpossible;
@@ -105,6 +105,12 @@ public class CourseDetailActivity extends FragmentActivityBase {
 
         setContentView(R.layout.activity_course_detailed);
         ButterKnife.bind(this);
+
+
+        mJoinCourseSpinner = new ProgressDialog(this);
+        mJoinCourseSpinner.setTitle(getString(R.string.loading));
+        mJoinCourseSpinner.setMessage(getString(R.string.loading_message));
+        mJoinCourseSpinner.setCancelable(false);
 
         mCourse = (Course) (getIntent().getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
         mCoursePropertyList = mCoursePropertyResolver.getSortedPropertyList(mCourse);

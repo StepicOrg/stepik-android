@@ -31,7 +31,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="40dp">
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/sign_in_tv"
                 style="@style/bold_white_text"
                 android:layout_width="wrap_content"
