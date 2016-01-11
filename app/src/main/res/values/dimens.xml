@@ -26,5 +26,6 @@
     <dimen name="padding_bot_top_cv">24dp</dimen>
     <dimen name="text_size_title">24sp</dimen>
     <dimen name="guide_top_bot_padding">4dp</dimen>
+    <dimen name="min_ux_touchable_size">48dp</dimen>
 
 </resources>

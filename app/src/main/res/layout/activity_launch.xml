@@ -35,7 +35,7 @@
                 android:id="@+id/sign_in_tv"
                 style="@style/bold_white_text"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/min_ux_touchable_size"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_vertical"
