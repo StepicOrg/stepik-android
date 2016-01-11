@@ -46,7 +46,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     private static final String TAG = "base_fragment";
 
 
-
     //    protected LoadingCoursesTask mLoadingCoursesTask;
 
     protected FromDbCoursesTask mDbGetCoursesTask;
@@ -186,17 +185,19 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     private void updateEnrollment(Course courseForUpdate, long enrollment) {
 
-        boolean inList = false;
-        for (Course courseItem : mCourses) {
-            if (courseItem.getCourseId() == courseForUpdate.getCourseId()) {
-                courseItem.setEnrollment((int) courseItem.getCourseId());
-                courseForUpdate = courseItem;
-                inList = true;
-                break;
+        if (getCourseType() == DatabaseManager.Table.enrolled) {
+            boolean inList = false;
+            for (Course courseItem : mCourses) {
+                if (courseItem.getCourseId() == courseForUpdate.getCourseId()) {
+                    courseItem.setEnrollment((int) courseItem.getCourseId());
+                    courseForUpdate = courseItem;
+                    inList = true;
+                    break;
+                }
             }
-        }
-        if (!inList) {
-            mCourses.add(courseForUpdate);
+            if (!inList) {
+                mCourses.add(courseForUpdate);
+            }
         }
 
     }
@@ -277,8 +278,14 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                     @Override
                     public void run() {
                         mDatabaseManager.deleteCourse(localRef, DatabaseManager.Table.enrolled);
-                        localRef.setEnrollment(0);
-                        mDatabaseManager.addCourse(localRef, DatabaseManager.Table.featured);
+
+//                        if (!course.is_featured()){
+//                            localRef.setEnrollment(0);
+//                            mDatabaseManager.addCourse(localRef, DatabaseManager.Table.featured);}
+//                        else{
+//                            mDatabaseManager.deleteCourse(localRef, DatabaseManager.Table.featured);
+//                        }
+
                     }
                 });
 
@@ -297,7 +304,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         YandexMetrica.reportEvent(AppConstants.METRICA_DROP_COURSE + " successful", JsonHelper.toJson(e.getCourse()));
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + e.getCourse().getTitle(), Toast.LENGTH_LONG).show();
         if (e.getType() == DatabaseManager.Table.enrolled) {
-
             mCourses.remove(e.getCourse());
             mCoursesAdapter.notifyDataSetChanged();
         }
