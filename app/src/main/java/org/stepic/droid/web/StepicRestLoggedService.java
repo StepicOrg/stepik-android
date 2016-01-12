@@ -65,4 +65,7 @@ public interface StepicRestLoggedService {
     @GET("api/courses")
     Call<CoursesStepicResponse> getCourses(@Query("page") int page, @Query("ids[]") long[] courseIds);
 
+    @POST("api/attempts")
+    Call<AttemptResponse> getNewAttempt(@Body AttemptRequest attemptRequest);
+
 }

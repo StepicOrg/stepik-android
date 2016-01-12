@@ -242,6 +242,12 @@ public class RetrofitRESTApi implements IApi {
         return mLoggedService.getCourses(page, ids);
     }
 
+    @Override
+    public Call<AttemptResponse> getNewAttempt(long stepId) {
+        AttemptRequest attemptRequest = new AttemptRequest(stepId);
+        return mLoggedService.getNewAttempt(attemptRequest);
+    }
+
     private String getAuthHeaderValueForLogged() {
         try {
             AuthenticationStepicResponse resp = mSharedPreference.getAuthResponseFromStore();

@@ -49,4 +49,6 @@ public interface IApi {
     Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery);
 
     Call<CoursesStepicResponse> getCourses(int page, long[] ids);
+
+    Call<AttemptResponse> getNewAttempt(long stepId);
 }
