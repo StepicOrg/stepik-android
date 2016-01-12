@@ -134,10 +134,11 @@ public class StoreStateManager implements IStoreStateManager {
             };
             mainHandler.post(myRunnable);
         }
-
-        updateCourseAfterDeleting(section.getCourse());
+//Don't need suppot course state
+//        updateCourseAfterDeleting(section.getCourse());
     }
 
+    @Deprecated
     private void updateCourseAfterDeleting(long courseId) {
 
         Course course = mDatabaseManager.getCourseById(courseId, DatabaseManager.Table.enrolled);
@@ -179,10 +180,11 @@ public class StoreStateManager implements IStoreStateManager {
             };
             mainHandler.post(myRunnable);
         }
-
-        updateCourseState(section.getCourse());
+//do not update course state
+//        updateCourseState(section.getCourse());
     }
 
+    @Deprecated
     private void updateCourseState(long courseId) {
         Course course = mDatabaseManager.getCourseById(courseId, DatabaseManager.Table.enrolled);
         if (course == null) {

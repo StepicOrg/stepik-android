@@ -586,6 +586,7 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
+    @Deprecated
     public void updateOnlyCachedLoadingCourse(Course course, Table type) {
         try {
             open();
