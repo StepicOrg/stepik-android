@@ -19,6 +19,7 @@ import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.EnrollmentWrapper;
+import org.stepic.droid.model.Reply;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialManager;
@@ -243,9 +244,15 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
-    public Call<AttemptResponse> getNewAttempt(long stepId) {
+    public Call<AttemptResponse> createNewAttempt(long stepId) {
         AttemptRequest attemptRequest = new AttemptRequest(stepId);
-        return mLoggedService.getNewAttempt(attemptRequest);
+        return mLoggedService.createNewAttempt(attemptRequest);
+    }
+
+    @Override
+    public Call<SubmissionResponse> createNewSubmission(Reply reply, long attemptId) {
+        SubmissionRequest submissionRequest = new SubmissionRequest(reply, attemptId);
+        return mLoggedService.createNewSubmission(submissionRequest);
     }
 
     private String getAuthHeaderValueForLogged() {

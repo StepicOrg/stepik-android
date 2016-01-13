@@ -1,0 +1,47 @@
+package org.stepic.droid.model;
+
+import com.google.gson.annotations.SerializedName;
+
+import org.jetbrains.annotations.Nullable;
+
+public class Submission {
+
+    public enum Status {
+
+        @SerializedName("correct")
+        CORRECT("correct"),
+
+        @SerializedName("wrong")
+        WRONG("wrong"),
+
+        @SerializedName("evaluation")
+        EVALUATION("evaluation");
+
+        private final String scope;
+
+        public String getScope() {
+            return scope;
+        }
+
+        Status(String value) {
+            this.scope = value;
+        }
+
+    }
+
+    private long id;
+    @Nullable
+    private Status status;
+    private String score;
+    private String hint;
+    private String time;
+    private Reply reply;
+    private long attempt;
+    private String session;
+    private String eta;
+
+    public Submission(Reply reply, long attempt) {
+        this.reply = reply;
+        this.attempt = attempt;
+    }
+}

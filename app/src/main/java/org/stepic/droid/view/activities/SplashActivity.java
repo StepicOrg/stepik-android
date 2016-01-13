@@ -19,7 +19,6 @@ public class SplashActivity extends FragmentActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         //This stops from opening again from the Splash screen when minimized
         if (!isTaskRoot()) {
             finish();

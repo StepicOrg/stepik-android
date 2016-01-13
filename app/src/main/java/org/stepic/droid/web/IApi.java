@@ -3,6 +3,7 @@ package org.stepic.droid.web;
 import android.content.Context;
 
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.Reply;
 import org.stepic.droid.social.SocialManager;
 
 import retrofit.Call;
@@ -50,5 +51,7 @@ public interface IApi {
 
     Call<CoursesStepicResponse> getCourses(int page, long[] ids);
 
-    Call<AttemptResponse> getNewAttempt(long stepId);
+    Call<AttemptResponse> createNewAttempt(long stepId);
+
+    Call<SubmissionResponse> createNewSubmission(Reply reply, long attemptId);
 }
