@@ -90,5 +90,6 @@
     <string name="find_courses_hint">Поиск курсов</string>
     <string name="search_title">Поиск</string>
     <string name="empty_search">Курсы не найдены</string>
+    <string name="submit">Отправить</string>
 
 </resources>

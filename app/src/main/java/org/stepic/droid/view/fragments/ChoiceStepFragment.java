@@ -8,7 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 import com.yandex.metrica.YandexMetrica;
@@ -40,6 +42,9 @@ public class ChoiceStepFragment extends StepBaseFragment {
     @Bind(R.id.choice_container)
     ViewGroup mChoiceContainer;
 
+    @Bind(R.id.submit_button)
+    Button mSubmitButton;
+
     private Attempt mAttempt = null; // TODO: 13.01.16 save when orientation is changed, not load from web
 
 
@@ -55,6 +60,12 @@ public class ChoiceStepFragment extends StepBaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getExistingAttempts();
+        mSubmitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "hello", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void getExistingAttempts() {

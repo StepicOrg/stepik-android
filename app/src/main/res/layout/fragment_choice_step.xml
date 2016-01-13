@@ -24,5 +24,16 @@
 
         </RadioGroup>
 
+        <Button
+            android:id="@+id/submit_button"
+            style="@style/regular_white_text"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/min_ux_touchable_size"
+            android:background="@color/stepic_brand_primary"
+            android:padding="5dp"
+            android:text="@string/submit"
+            android:textSize="16sp"
+            android:layout_marginBottom="50dp" />
+
     </LinearLayout>
 </ScrollView>
