@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatRadioButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import com.squareup.otto.Subscribe;
+import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepBaseFragment;
@@ -18,6 +20,7 @@ import org.stepic.droid.events.attemptions.SuccessAttemptEvent;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Dataset;
 import org.stepic.droid.model.Step;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.web.AttemptResponse;
@@ -32,8 +35,12 @@ import retrofit.Retrofit;
 
 public class ChoiceStepFragment extends StepBaseFragment {
 
+    private final String TAG = "ChoiceStepFragment";
+
     @Bind(R.id.choice_container)
     ViewGroup mChoiceContainer;
+
+    private Attempt mAttempt = null; // TODO: 13.01.16 save when orientation is changed, not load from web
 
 
     @Nullable
@@ -47,6 +54,46 @@ public class ChoiceStepFragment extends StepBaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        getExistingAttempts();
+    }
+
+    private void getExistingAttempts() {
+        mShell.getApi().getExistingAttempts(mStep.getId()).enqueue(new Callback<AttemptResponse>() {
+            Step localStep = mStep;
+
+            @Override
+            public void onResponse(Response<AttemptResponse> response, Retrofit retrofit) {
+                if (response.isSuccess()) {
+
+                    AttemptResponse body = response.body();
+                    if (body == null) {
+                        createNewAttempt();
+                        return;
+                    }
+
+                    List<Attempt> attemptList = body.getAttempts();
+                    if (attemptList == null || attemptList.isEmpty() || !attemptList.get(0).getStatus().equals("active")) {
+                        createNewAttempt();
+                    } else {
+                        Log.d(TAG, AppConstants.GET_OLD_ATTEMPT);
+                        YandexMetrica.reportEvent(AppConstants.GET_OLD_ATTEMPT);
+                        Attempt attempt = attemptList.get(0);
+                        bus.post(new SuccessAttemptEvent(localStep.getId(), attempt));
+                    }
+                } else {
+                    createNewAttempt();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                createNewAttempt();
+            }
+        });
+    }
+
+    private void createNewAttempt() {
+        if (mStep == null) return;
         mShell.getApi().createNewAttempt(mStep.getId()).enqueue(new Callback<AttemptResponse>() {
             Step localStep = mStep;
 
@@ -90,7 +137,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
             } else {
                 optionViewItem = new AppCompatRadioButton(getActivity());
             }
-            builtChoiceItem(optionViewItem, option);
+            buildChoiceItem(optionViewItem, option);
         }
     }
 
@@ -101,7 +148,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
 
     }
 
-    private void builtChoiceItem(CompoundButton item, String rawText) {
+    private void buildChoiceItem(CompoundButton item, String rawText) {
         int dp4 = (int) DpPixelsHelper.convertDpToPixel(4);
         item.setPadding(0, dp4, 0, dp4);
         String text = HtmlHelper.fromHtml(rawText).toString();

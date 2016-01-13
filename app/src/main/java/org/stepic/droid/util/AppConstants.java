@@ -92,4 +92,5 @@ public class AppConstants {
     public static final String NOT_VALID_ACCESS_AND_REFRESH = "Not valid access, why?";
     public static final String NOT_FOUND_VERSION = "Not found version of app";
     public static final String NOT_SIGNIFICANT_ERROR = "Not significant error, app will continue to work";
+    public static final java.lang.String GET_OLD_ATTEMPT = "get attempt from server db, new is not creating";
 }
