@@ -7,11 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.FragmentStepBase;
+import org.stepic.droid.base.StepBaseFragment;
 
 import butterknife.ButterKnife;
 
-public class TextStepFragment extends FragmentStepBase {
+public class TextStepFragment extends StepBaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

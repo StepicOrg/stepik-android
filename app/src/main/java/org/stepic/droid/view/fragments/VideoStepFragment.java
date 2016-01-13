@@ -18,7 +18,7 @@ import com.squareup.picasso.Picasso;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.FragmentStepBase;
+import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.events.video.VideoLoadedEvent;
 import org.stepic.droid.events.video.VideoResolvedEvent;
 import org.stepic.droid.model.Step;
@@ -32,7 +32,7 @@ import butterknife.Bind;
 import butterknife.BindDrawable;
 import butterknife.ButterKnife;
 
-public class VideoStepFragment extends FragmentStepBase {
+public class VideoStepFragment extends StepBaseFragment {
     private static final String TAG = "video_fragment";
 
     @Bind(R.id.player_thumbnail)

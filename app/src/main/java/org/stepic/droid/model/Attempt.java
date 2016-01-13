@@ -2,7 +2,7 @@ package org.stepic.droid.model;
 
 public class Attempt {
     private long id;
-    private DatasetBase dataset;
+    private Dataset dataset;
     private String dataset_url;
     private String time;
     private String status;
@@ -25,11 +25,11 @@ public class Attempt {
         this.id = id;
     }
 
-    public DatasetBase getDataset() {
+    public Dataset getDataset() {
         return dataset;
     }
 
-    public void setDataset(DatasetBase dataset) {
+    public void setDataset(Dataset dataset) {
         this.dataset = dataset;
     }
 

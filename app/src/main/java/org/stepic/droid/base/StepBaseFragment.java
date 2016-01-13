@@ -13,7 +13,7 @@ import org.stepic.droid.util.AppConstants;
 
 import butterknife.Bind;
 
-public abstract class FragmentStepBase extends FragmentBase {
+public abstract class StepBaseFragment extends FragmentBase {
 
     @Bind(R.id.text_header)
     protected WebView mHeaderWv;
@@ -45,18 +45,12 @@ public abstract class FragmentStepBase extends FragmentBase {
         } else {
             mHeaderWv.setVisibility(View.GONE);
         }
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
         bus.register(this);
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroyView() {
         bus.unregister(this);
+        super.onDestroyView();
     }
 }

@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.FragmentStepBase;
+import org.stepic.droid.base.StepBaseFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class NotSupportedYetStepFragment extends FragmentStepBase{
+public class NotSupportedYetStepFragment extends StepBaseFragment {
 
     @Bind(R.id.open_web)
     Button mOpenWebBtn;
