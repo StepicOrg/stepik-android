@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scrollbarStyle="outsideOverlay">
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarStyle="outsideOverlay">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,29 +12,59 @@
 
         <include
             android:id="@+id/header"
-            layout="@layout/step_text_header" />
+            layout="@layout/step_text_header"/>
 
         <RadioGroup
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
+            tools:layout_height="300dp"
+            tools:background="@color/correct_answer_background"
             android:id="@+id/choice_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="bottom"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp">
 
         </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/result_line"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:visibility="gone"
+            tools:background="@color/correct_answer_background"
+            tools:visibility="visible"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:src="@drawable/ic_correct"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:textSize="16sp"
+                tools:text="Correct!"/>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/submit_button"
             style="@style/regular_white_text"
             android:layout_width="match_parent"
             android:layout_height="@dimen/min_ux_touchable_size"
+            android:layout_marginBottom="50dp"
             android:background="@color/stepic_brand_primary"
             android:padding="5dp"
             android:text="@string/submit"
-            android:textSize="16sp"
-            android:layout_marginBottom="50dp" />
+            android:textSize="16sp"/>
 
     </LinearLayout>
 </ScrollView>
