@@ -1,5 +1,6 @@
 package org.stepic.droid.view.fragments;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -11,8 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 import com.yandex.metrica.YandexMetrica;
@@ -40,6 +42,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindDrawable;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
@@ -55,6 +59,28 @@ public class ChoiceStepFragment extends StepBaseFragment {
 
     @Bind(R.id.submit_button)
     Button mSubmitButton;
+
+    @Bind(R.id.result_line)
+    View mResultLine;
+
+    @Bind(R.id.answer_status_icon)
+    ImageView mStatusIcon;
+
+    @Bind(R.id.answer_status_text)
+    TextView mStatusTextView;
+
+    @BindDrawable(R.drawable.ic_correct)
+    Drawable mCorrectIcon;
+
+    @BindDrawable(R.drawable.ic_error)
+    Drawable mWrongIcon;
+
+    @BindString(R.string.correct)
+    String mCorrectString;
+
+    @BindString(R.string.wrong)
+    String mWrongString;
+
 
     Handler mHandler;
 
@@ -278,16 +304,6 @@ public class ChoiceStepFragment extends StepBaseFragment {
     public void onSuccessGEttingSubmissionResilt(SuccessGettingLastSubmissionEvent e) {
         if (e.getAttemptId() != mAttemptId) return;
         if (e.getSubmission() == null || e.getSubmission().getStatus() == null) return;
-        // TODO: 14.01.16 do something for show user about mistake or correct
-        String result = null;
-        try {
-
-            result = e.getSubmission().getStatus().getScope();
-        } catch (NullPointerException ex) {
-            result = "server is down";
-        }
-
-        Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
 
         switch (e.getSubmission().getStatus()) {
             case CORRECT:
@@ -299,11 +315,24 @@ public class ChoiceStepFragment extends StepBaseFragment {
         }
     }
 
+
+    // todo make 3 methods: add 1 generic
     private void onWrongSubmission() {
-        // TODO: 14.01.16 make body
+        mChoiceContainer.setBackgroundResource(R.color.wrong_answer_background);
+        mStatusIcon.setImageDrawable(mWrongIcon);
+        mStatusTextView.setText(mWrongString);
+        mResultLine.setBackgroundResource(R.color.wrong_answer_background);
+        mResultLine.setVisibility(View.VISIBLE);
+
+        //// TODO: 14.01.16 add/chahnge to 'try again' button
     }
 
     private void onCorrectSubmission() {
-        // TODO: 14.01.16 make body
+        mChoiceContainer.setBackgroundResource(R.color.correct_answer_background);
+        mStatusIcon.setImageDrawable(mCorrectIcon);
+        mStatusTextView.setText(mCorrectString);
+        mResultLine.setBackgroundResource(R.color.correct_answer_background);
+        mResultLine.setVisibility(View.VISIBLE);
+        mSubmitButton.setVisibility(View.GONE);
     }
 }

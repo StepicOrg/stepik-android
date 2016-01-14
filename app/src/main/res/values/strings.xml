@@ -95,5 +95,7 @@
     <string name="search_title">Search</string>
     <string name="empty_search">Courses not found</string>
     <string name="submit">Submit</string>
+    <string name="correct">Correct!</string>
+    <string name="wrong">Wrong. Please, try again.</string>
 
 </resources>

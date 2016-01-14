@@ -91,5 +91,7 @@
     <string name="search_title">Поиск</string>
     <string name="empty_search">Курсы не найдены</string>
     <string name="submit">Отправить</string>
+    <string name="wrong">Неправильно. Пожалуйста, попробуйте еще раз.</string>
+    <string name="correct">Верно!</string>
 
 </resources>
