@@ -56,4 +56,6 @@ public interface IApi {
     Call<SubmissionResponse> createNewSubmission(Reply reply, long attemptId);
 
     Call<AttemptResponse> getExistingAttempts(long stepId);
+
+    Call<SubmissionResponse> getSubmissions(long attemptId);
 }

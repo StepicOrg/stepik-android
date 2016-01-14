@@ -1,4 +1,4 @@
-package org.stepic.droid.events.attemptions;
+package org.stepic.droid.events.attempts;
 
 import org.stepic.droid.model.Attempt;
 

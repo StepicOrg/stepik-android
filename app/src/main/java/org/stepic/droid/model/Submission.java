@@ -44,4 +44,41 @@ public class Submission {
         this.reply = reply;
         this.attempt = attempt;
     }
+
+    public long getId() {
+        return id;
+    }
+
+    @Nullable
+    public Status getStatus() {
+        return status;
+    }
+
+    public String getScore() {
+        return score;
+    }
+
+    public String getHint() {
+        return hint;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public Reply getReply() {
+        return reply;
+    }
+
+    public long getAttempt() {
+        return attempt;
+    }
+
+    public String getSession() {
+        return session;
+    }
+
+    public String getEta() {
+        return eta;
+    }
 }
