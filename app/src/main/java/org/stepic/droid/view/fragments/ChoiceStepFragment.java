@@ -202,6 +202,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
 
     private void buildChoiceItem(CompoundButton item, String rawText) {
         int dp4 = (int) DpPixelsHelper.convertDpToPixel(4);
+        item.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         item.setPadding(0, dp4, 0, dp4);
         String text = HtmlHelper.fromHtml(rawText).toString();
         item.setText(text);
