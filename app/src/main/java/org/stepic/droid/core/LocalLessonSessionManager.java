@@ -50,4 +50,10 @@ public class LocalLessonSessionManager implements ILessonSessionManager {
         mStepIdToAttemptMap.put(stepId, attempt);
         mStepIdToSubmissionMap.put(stepId, submission);
     }
+
+    @Override
+    public void reset() {
+        mStepIdToAttemptMap.clear();
+        mStepIdToSubmissionMap.clear();
+    }
 }

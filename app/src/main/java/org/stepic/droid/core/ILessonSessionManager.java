@@ -12,4 +12,6 @@ public interface ILessonSessionManager {
     Attempt restoreAttemptForStep(long stepId);
 
     void saveSession(long stepId, @Nullable Attempt attempt, @Nullable Submission submission);
+
+    void reset();
 }
