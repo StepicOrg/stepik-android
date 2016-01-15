@@ -58,7 +58,6 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     @Bind(R.id.toolbar)
     android.support.v7.widget.Toolbar mToolbar;
 
-
     @Bind(R.id.report_problem)
     protected View mReportConnectionProblem;
 
@@ -320,6 +319,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     @Override
     protected void onDestroy() {
         bus.unregister(this);
+        mLessonManager.reset();
         super.onDestroy();
     }
 

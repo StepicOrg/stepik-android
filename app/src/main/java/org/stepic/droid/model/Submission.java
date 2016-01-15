@@ -15,7 +15,11 @@ public class Submission {
         WRONG("wrong"),
 
         @SerializedName("evaluation")
-        EVALUATION("evaluation");
+        EVALUATION("evaluation"),
+
+        @SerializedName("local")
+        LOCAL("local");
+
 
         private final String scope;
 
@@ -43,6 +47,11 @@ public class Submission {
     public Submission(Reply reply, long attempt) {
         this.reply = reply;
         this.attempt = attempt;
+    }
+
+    public Submission(Reply reply, long attempt, Status status) {
+        this(reply, attempt);
+        this.status = status;
     }
 
     public long getId() {

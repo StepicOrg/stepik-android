@@ -8,4 +8,8 @@ public class Reply {
     public Reply(List<Boolean> choices) {
         this.choices = choices;
     }
+
+    public List<Boolean> getChoices() {
+        return choices;
+    }
 }

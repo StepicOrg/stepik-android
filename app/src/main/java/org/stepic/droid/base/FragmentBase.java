@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.squareup.otto.Bus;
 
+import org.stepic.droid.core.ILessonSessionManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
@@ -27,6 +28,9 @@ import butterknife.ButterKnife;
 public class FragmentBase extends Fragment {
 
     protected String TAG = "StepicFragment";
+
+    @Inject
+    public ILessonSessionManager mLessonManager;
 
     @Inject
     public ISearchResolver mSearchResolver;

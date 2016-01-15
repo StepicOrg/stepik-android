@@ -85,6 +85,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
     Handler mHandler;
 
     private Attempt mAttempt = null; // TODO: 13.01.16 save when orientation is changed, not load from web
+    private Submission mSubmission = null;
     private long mAttemptId; //Todo: config changes
 
     @Nullable
@@ -99,13 +100,28 @@ public class ChoiceStepFragment extends StepBaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mHandler = new Handler();
-        getExistingAttempts();
+        if (!tryRestoreState()) {
+            getExistingAttempts();
+        }
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 makeSubmission();
             }
         });
+    }
+
+    /**
+     * @return false if restore was failed;
+     */
+    private boolean tryRestoreState() {
+        mAttempt = mLessonManager.restoreAttemptForStep(mStep.getId());
+        mSubmission = mLessonManager.restoreSubmissionForStep(mStep.getId());
+        if (mSubmission == null || mAttempt == null) return false;
+
+        showAttempt(mAttempt);
+        fillSubmission(mSubmission);
+        return true;
     }
 
     private void getExistingAttempts() {
@@ -175,7 +191,13 @@ public class ChoiceStepFragment extends StepBaseFragment {
     public void onSuccessLoadAttempt(SuccessAttemptEvent e) {
         if (mStep == null || e.getStepId() != mStep.getId() || e.getAttempt() == null) return;
 
-        Dataset dataset = e.getAttempt().getDataset();
+        showAttempt(e.getAttempt());
+        mAttempt = e.getAttempt();
+        mAttemptId = e.getAttempt().getId();
+    }
+
+    private void showAttempt(Attempt attempt) {
+        Dataset dataset = attempt.getDataset();
         if (dataset == null) return;
 
         List<String> options = dataset.getOptions();
@@ -190,7 +212,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
             }
             buildChoiceItem(optionViewItem, option);
         }
-        mAttemptId = e.getAttempt().getId();
+
     }
 
     @Subscribe
@@ -302,17 +324,38 @@ public class ChoiceStepFragment extends StepBaseFragment {
     }
 
     @Subscribe
-    public void onSuccessGEttingSubmissionResilt(SuccessGettingLastSubmissionEvent e) {
+    public void onSuccessGettingSubmissionResilt(SuccessGettingLastSubmissionEvent e) {
         if (e.getAttemptId() != mAttemptId) return;
         if (e.getSubmission() == null || e.getSubmission().getStatus() == null) return;
 
-        switch (e.getSubmission().getStatus()) {
+        mSubmission = e.getSubmission();
+        fillSubmission(mSubmission);
+    }
+
+    private void fillSubmission(Submission submission) {
+        if (submission == null || submission.getStatus() == null) return;
+        switch (submission.getStatus()) {
             case CORRECT:
                 onCorrectSubmission();
                 break;
             case WRONG:
                 onWrongSubmission();
                 break;
+            case LOCAL:
+                onLocalRestoreSubmission();
+        }
+    }
+
+    private void onLocalRestoreSubmission() {
+        Reply reply = mSubmission.getReply();
+        if (reply == null) return;
+
+        List<Boolean> choices = reply.getChoices();
+        if (choices == null) return;
+
+        for (int i = 0; i < mChoiceContainer.getChildCount(); i++) {
+            CompoundButton view = (CompoundButton) mChoiceContainer.getChildAt(i);
+            view.setChecked(choices.get(i));
         }
     }
 
@@ -335,5 +378,23 @@ public class ChoiceStepFragment extends StepBaseFragment {
         mResultLine.setBackgroundResource(R.color.correct_answer_background);
         mResultLine.setVisibility(View.VISIBLE);
         mSubmitButton.setVisibility(View.GONE);
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        saveSession();
+        super.onDestroyView();
+    }
+
+    private void saveSession() {
+        if (mAttempt == null) return;
+
+        if (mSubmission == null) {
+            Reply reply = generateReplyFromSelected();
+            mSubmission = new Submission(reply, mAttempt.getId(), Submission.Status.LOCAL);
+        }
+
+        mLessonManager.saveSession(mStep.getId(), mAttempt, mSubmission);
     }
 }
