@@ -159,4 +159,10 @@ public class StepicDefaultModule {
     public ISearchResolver provideSearchResolver() {
         return new SearchResolver();
     }
+
+    @Singleton
+    @Provides
+    public ILessonSessionManager provideLessonSessionManager() {
+        return new LocalLessonSessionManager();
+    }
 }
