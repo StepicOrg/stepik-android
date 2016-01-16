@@ -41,6 +41,7 @@ import java.util.Set;
 
 import javax.inject.Singleton;
 
+// TODO: 16.01.16 split to DAOs, make more generic
 @Singleton
 public class DatabaseManager extends DbManagerBase {
 
