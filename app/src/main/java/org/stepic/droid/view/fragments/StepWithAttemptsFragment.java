@@ -6,12 +6,14 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import com.squareup.otto.Subscribe;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepBaseFragment;
+import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.attempts.FailAttemptEvent;
 import org.stepic.droid.events.attempts.SuccessAttemptEvent;
 import org.stepic.droid.events.submissions.FailGettingLastSubmissionEvent;
@@ -28,6 +30,7 @@ import org.stepic.droid.web.SubmissionResponse;
 
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import retrofit.Callback;
@@ -37,6 +40,8 @@ import retrofit.Retrofit;
 public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     protected final int FIRST_DELAY = 1000;
 
+    @Bind(R.id.submit_button)
+    Button mActionButton;
 
     @BindString(R.string.correct)
     String mCorrectString;
@@ -67,6 +72,10 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mHandler = new Handler();
+        init();
+    }
+
+    private void init() {
         showLoadState(true);
         showAnswerField(false);
         if (!tryRestoreState()) {
@@ -233,7 +242,8 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
                     @Override
                     public void onFailure(Throwable t) {
-                        bus.post(new FailGettingLastSubmissionEvent(localAttemptId, numberOfTry));
+                        //it is dirty swap of events:
+                        bus.post(new FailSubmissionCreatedEvent(localAttemptId));
                     }
                 });
             }
@@ -274,6 +284,12 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         fillSubmission(mSubmission);
     }
 
+    @Subscribe
+    public void onInternetEnabled(InternetIsEnabledEvent enabledEvent) {
+        enableInternetMessage(false);
+        init();
+    }
+
     protected final void fillSubmission(Submission submission) {
         if (submission == null || submission.getStatus() == null) {
             return;
@@ -307,6 +323,18 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         mLessonManager.saveSession(mStep.getId(), mAttempt, mSubmission);
     }
 
+    protected final void showOnlyInternetProblem(boolean isNeedShow) {
+        showLoadState(!isNeedShow);
+        if (isNeedShow) {
+            //// FIXME: 17.01.16 it is bad way, because this class don't know about the button
+            mActionButton.setVisibility(View.GONE);
+        } else {
+            mActionButton.setVisibility(View.VISIBLE);
+        }
+        showAnswerField(!isNeedShow);
+        enableInternetMessage(isNeedShow);
+    }
+
     protected abstract void onWrongSubmission();
 
     protected abstract void onCorrectSubmission();
@@ -328,6 +356,8 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     protected abstract void onRestoreSubmission();
 
     protected abstract void showAnswerField(boolean needShow);
+
+    protected abstract void enableInternetMessage(boolean needShow);
 
     @Subscribe
     public abstract void onSuccessLoadAttempt(SuccessAttemptEvent e);

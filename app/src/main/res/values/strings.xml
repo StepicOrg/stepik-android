@@ -98,5 +98,6 @@
     <string name="correct">Correct!</string>
     <string name="wrong">Wrong. Please, try again.</string>
     <string name="try_again">Try again</string>
+    <string name="step_only_online">Steps are available only online. Turn on the Internet and start to solve tasks.</string>
 
 </resources>

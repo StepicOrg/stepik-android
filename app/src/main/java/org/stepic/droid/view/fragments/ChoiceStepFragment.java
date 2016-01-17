@@ -8,7 +8,6 @@ import android.support.v7.widget.AppCompatRadioButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
+import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.attempts.FailAttemptEvent;
 import org.stepic.droid.events.attempts.SuccessAttemptEvent;
 import org.stepic.droid.events.submissions.FailGettingLastSubmissionEvent;
@@ -46,9 +46,6 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
     @Bind(R.id.choice_container)
     RadioGroup mChoiceContainer;
 
-    @Bind(R.id.submit_button)
-    Button mActionButton;
-
     @Bind(R.id.result_line)
     View mResultLine;
 
@@ -60,6 +57,9 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
 
     @Bind(R.id.progress_bar)
     ProgressBar mProgressBar;
+
+    @Bind(R.id.report_problem)
+    View connectionProblem;
 
     @Nullable
     @Override
@@ -121,12 +121,6 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
         }
     }
 
-    @Subscribe
-    @Override
-    public void onFailCreateAttemptEvent(FailAttemptEvent event) {
-        if (mStep == null || event.getStepId() != mStep.getId()) return;
-        // TODO: 13.01.16 cancel progress bars
-    }
 
     @Override
     protected void blockUIBeforeSubmit(boolean needBlock) {
@@ -169,18 +163,30 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
     }
 
     @Override
+    @Subscribe
+    public void onGettingSubmission(SuccessGettingLastSubmissionEvent e) {
+        super.onGettingSubmission(e);
+    }
+
+    @Subscribe
+    @Override
+    public void onFailCreateAttemptEvent(FailAttemptEvent event) {
+        if (mStep == null || event.getStepId() != mStep.getId()) return;
+
+        showOnlyInternetProblem(true);
+    }
+
+    @Subscribe
+    @Override
     public void onFailCreateSubmission(FailSubmissionCreatedEvent event) {
+        if (mAttempt == null || event.getAttemptId() != mAttempt.getId()) return;
+
+        showOnlyInternetProblem(true);
     }
 
     @Subscribe
     public void onFailGettingSubmission(FailGettingLastSubmissionEvent e) {
         super.onFailGettingSubmission(e);
-    }
-
-    @Override
-    @Subscribe
-    public void onGettingSubmission(SuccessGettingLastSubmissionEvent e) {
-        super.onGettingSubmission(e);
     }
 
     @Override
@@ -235,6 +241,21 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
         } else {
             mChoiceContainer.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    protected void enableInternetMessage(boolean needShow) {
+        if (needShow) {
+            connectionProblem.setVisibility(View.VISIBLE);
+        } else {
+            connectionProblem.setVisibility(View.GONE);
+        }
+    }
+
+    @Subscribe
+    @Override
+    public void onInternetEnabled(InternetIsEnabledEvent enabledEvent) {
+        super.onInternetEnabled(enabledEvent);
     }
 
     private void buildChoiceItem(CompoundButton item, String rawText) {

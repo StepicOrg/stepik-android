@@ -24,6 +24,6 @@
         android:layout_marginTop="6dp"
         android:gravity="center"
         android:padding="2dp"
-        android:text="@string/sync_problem"
-        android:textSize="24sp"/>
+        android:text="@string/step_only_online"
+        android:textSize="18sp"/>
 </LinearLayout>

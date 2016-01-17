@@ -94,5 +94,6 @@
     <string name="wrong">Неправильно. Пожалуйста, попробуйте еще раз.</string>
     <string name="correct">Верно!</string>
     <string name="try_again">Попробовать снова</string>
+    <string name="step_only_online">Шаги можно проходить только онлайн. Чтобы начать решать включите интернет соединение.</string>
 
 </resources>
