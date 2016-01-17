@@ -116,6 +116,8 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
 
         if (mLessonManager.restoreSubmissionForStep(mStep.getId()) == null) {
             getStatusOfSubmission(attempt.getId());//fill last server submission if exist
+        } else {
+            showLoadState(false);
         }
     }
 
@@ -147,7 +149,6 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
         mSubmission = null;
 
         mResultLine.setVisibility(View.GONE);
-        showLoadState(false);
         mActionButton.setText(mSubmitText);
     }
 
@@ -222,8 +223,18 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
         } else {
             ProgressHelper.dismiss(mProgressBar);
             mActionButton.setVisibility(View.VISIBLE);
+            showAnswerField(true);
         }
 
+    }
+
+    @Override
+    protected void showAnswerField(boolean needShow) {
+        if (needShow) {
+            mChoiceContainer.setVisibility(View.VISIBLE);
+        } else {
+            mChoiceContainer.setVisibility(View.GONE);
+        }
     }
 
     private void buildChoiceItem(CompoundButton item, String rawText) {

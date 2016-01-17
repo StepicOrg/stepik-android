@@ -67,6 +67,8 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mHandler = new Handler();
+        showLoadState(true);
+        showAnswerField(false);
         if (!tryRestoreState()) {
             getExistingAttempts();
         }
@@ -210,6 +212,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
                             List<Submission> submissionList = response.body().getSubmissions();
                             if (submissionList == null || submissionList.isEmpty()) {
 //                                bus.post(new FailGettingLastSubmissionEvent(localAttemptId, numberOfTry));
+                                bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId, null));
                                 return;
                             }
 
@@ -262,6 +265,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     public void onGettingSubmission(SuccessGettingLastSubmissionEvent e) {
         if (mAttempt == null || e.getAttemptId() != mAttempt.getId()) return;
         if (e.getSubmission() == null || e.getSubmission().getStatus() == null) {
+            showLoadState(false);
             return;
         }
 
@@ -322,6 +326,8 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     protected abstract void blockUIBeforeSubmit(boolean needBlock);
 
     protected abstract void onRestoreSubmission();
+
+    protected abstract void showAnswerField(boolean needShow);
 
     @Subscribe
     public abstract void onSuccessLoadAttempt(SuccessAttemptEvent e);
