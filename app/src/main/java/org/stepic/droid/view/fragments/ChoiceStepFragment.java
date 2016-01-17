@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -35,6 +36,7 @@ import org.stepic.droid.model.Submission;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.HtmlHelper;
+import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.web.AttemptResponse;
 import org.stepic.droid.web.SubmissionResponse;
 
@@ -68,6 +70,9 @@ public class ChoiceStepFragment extends StepBaseFragment {
 
     @Bind(R.id.answer_status_text)
     TextView mStatusTextView;
+
+    @Bind(R.id.progress_bar)
+    ProgressBar mProgressBar;
 
     @BindDrawable(R.drawable.ic_correct)
     Drawable mCorrectIcon;
@@ -106,6 +111,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showLoadState(true);
                 makeSubmission();
             }
         });
@@ -232,6 +238,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
 
     private void makeSubmission() {
         if (mAttempt == null || mAttempt.getId() <= 0) return;
+
         final long attemptId = mAttempt.getId();
         final Reply reply = generateReplyFromSelected();
         mShell.getApi().createNewSubmission(reply, attemptId).enqueue(new Callback<SubmissionResponse>() {
@@ -344,6 +351,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
             case LOCAL:
                 onLocalRestoreSubmission();
         }
+        showLoadState(false);
     }
 
     private void onLocalRestoreSubmission() {
@@ -396,5 +404,16 @@ public class ChoiceStepFragment extends StepBaseFragment {
         }
 
         mLessonManager.saveSession(mStep.getId(), mAttempt, mSubmission);
+    }
+
+    private void showLoadState(boolean isLoading) {
+        if (isLoading) {
+            mSubmitButton.setVisibility(View.GONE);
+            ProgressHelper.activate(mProgressBar);
+        } else {
+            ProgressHelper.dismiss(mProgressBar);
+            mSubmitButton.setVisibility(View.VISIBLE);
+        }
+
     }
 }

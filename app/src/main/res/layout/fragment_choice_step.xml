@@ -15,15 +15,15 @@
             layout="@layout/step_text_header"/>
 
         <RadioGroup
-            tools:layout_height="300dp"
-            tools:background="@color/correct_answer_background"
             android:id="@+id/choice_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="bottom"
             android:orientation="vertical"
             android:paddingBottom="8dp"
-            android:paddingTop="8dp">
+            android:paddingTop="8dp"
+            tools:background="@color/correct_answer_background"
+            tools:layout_height="300dp">
 
         </RadioGroup>
 
@@ -40,10 +40,10 @@
             >
 
             <ImageView
-                android:layout_gravity="center_vertical"
                 android:id="@+id/answer_status_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 tools:src="@drawable/ic_correct"
                 />
 
@@ -58,6 +58,11 @@
 
         </LinearLayout>
 
+
+        <include
+            android:id="@+id/progress_bar"
+            layout="@layout/progress_bar_on_empty_screen"/>
+
         <Button
             android:id="@+id/submit_button"
             style="@style/regular_white_text"
@@ -68,6 +73,8 @@
             android:padding="5dp"
             android:text="@string/submit"
             android:textSize="16sp"/>
+
+        <include layout="@layout/progress_bar_on_empty_screen"/>
 
     </LinearLayout>
 </ScrollView>
