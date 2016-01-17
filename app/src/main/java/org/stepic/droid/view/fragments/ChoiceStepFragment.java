@@ -242,6 +242,8 @@ public class ChoiceStepFragment extends StepBaseFragment {
             buildChoiceItem(optionViewItem, option);
         }
 
+        getStatusOfSubmission(attempt.getId());//fill last server submission if exist
+
     }
 
     @Subscribe
@@ -332,7 +334,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
                         if (response.isSuccess()) {
                             List<Submission> submissionList = response.body().getSubmissions();
                             if (submissionList == null || submissionList.isEmpty()) {
-                                bus.post(new FailGettingLastSubmissionEvent(localAttemptId, numberOfTry));
+//                                bus.post(new FailGettingLastSubmissionEvent(localAttemptId, numberOfTry));
                                 return;
                             }
 
