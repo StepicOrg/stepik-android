@@ -242,7 +242,9 @@ public class ChoiceStepFragment extends StepBaseFragment {
             buildChoiceItem(optionViewItem, option);
         }
 
-        getStatusOfSubmission(attempt.getId());//fill last server submission if exist
+        if (mLessonManager.restoreSubmissionForStep(mStep.getId()) == null) {
+            getStatusOfSubmission(attempt.getId());//fill last server submission if exist
+        }
 
     }
 
@@ -386,6 +388,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
 
     private void fillSubmission(Submission submission) {
         if (submission == null || submission.getStatus() == null) return;
+        saveSession();
         switch (submission.getStatus()) {
             case CORRECT:
                 onCorrectSubmission();
