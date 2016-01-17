@@ -1,6 +1,7 @@
 package org.stepic.droid.view.fragments;
 
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -37,6 +38,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.RadioGroupHelper;
 import org.stepic.droid.web.AttemptResponse;
 import org.stepic.droid.web.SubmissionResponse;
 
@@ -56,11 +58,14 @@ public class ChoiceStepFragment extends StepBaseFragment {
     private final int FIRST_DELAY = 1000;
     private final String TAG = "ChoiceStepFragment";
 
+    @Bind(R.id.root_view)
+    ViewGroup mRootView;
+
     @Bind(R.id.choice_container)
     RadioGroup mChoiceContainer;
 
     @Bind(R.id.submit_button)
-    Button mSubmitButton;
+    Button mActionButton;
 
     @Bind(R.id.result_line)
     View mResultLine;
@@ -86,6 +91,12 @@ public class ChoiceStepFragment extends StepBaseFragment {
     @BindString(R.string.wrong)
     String mWrongString;
 
+    @BindString(R.string.submit)
+    String mSubmitText;
+
+    @BindString(R.string.try_again)
+    String mTryAgainText;
+
 
     Handler mHandler;
 
@@ -108,11 +119,22 @@ public class ChoiceStepFragment extends StepBaseFragment {
         if (!tryRestoreState()) {
             getExistingAttempts();
         }
-        mSubmitButton.setOnClickListener(new View.OnClickListener() {
+
+        if (mSubmission == null || mSubmission.getStatus() == Submission.Status.LOCAL) {
+            mActionButton.setText(mSubmitText);
+        } else {
+            mActionButton.setText(mTryAgainText);
+        }
+
+        mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showLoadState(true);
-                makeSubmission();
+                if (mSubmission == null || mSubmission.getStatus() == Submission.Status.LOCAL) {
+                    makeSubmission();
+                } else {
+                    tryAgain();
+                }
             }
         });
     }
@@ -239,6 +261,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
     private void makeSubmission() {
         if (mAttempt == null || mAttempt.getId() <= 0) return;
 
+        RadioGroupHelper.setEnabled(mChoiceContainer, false);
         final long attemptId = mAttempt.getId();
         final Reply reply = generateReplyFromSelected();
         mShell.getApi().createNewSubmission(reply, attemptId).enqueue(new Callback<SubmissionResponse>() {
@@ -257,6 +280,21 @@ public class ChoiceStepFragment extends StepBaseFragment {
             }
         });
 
+    }
+
+    private void tryAgain() {
+        RadioGroupHelper.setEnabled(mChoiceContainer, true);
+
+        // FIXME: 17.01.16 refactor
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            mChoiceContainer.setBackground(mRootView.getBackground());
+        } else {
+            mChoiceContainer.setBackgroundDrawable(mRootView.getBackground());
+        }
+
+        mResultLine.setVisibility(View.GONE);
+        showLoadState(false);
+        mActionButton.setText(mSubmitText);
     }
 
     private Reply generateReplyFromSelected() {
@@ -344,9 +382,11 @@ public class ChoiceStepFragment extends StepBaseFragment {
         switch (submission.getStatus()) {
             case CORRECT:
                 onCorrectSubmission();
+                mActionButton.setText(mTryAgainText);
                 break;
             case WRONG:
                 onWrongSubmission();
+                mActionButton.setText(mTryAgainText);
                 break;
             case LOCAL:
                 onLocalRestoreSubmission();
@@ -385,7 +425,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
         mStatusTextView.setText(mCorrectString);
         mResultLine.setBackgroundResource(R.color.correct_answer_background);
         mResultLine.setVisibility(View.VISIBLE);
-        mSubmitButton.setVisibility(View.GONE);
+        mActionButton.setVisibility(View.GONE);
     }
 
 
@@ -408,11 +448,11 @@ public class ChoiceStepFragment extends StepBaseFragment {
 
     private void showLoadState(boolean isLoading) {
         if (isLoading) {
-            mSubmitButton.setVisibility(View.GONE);
+            mActionButton.setVisibility(View.GONE);
             ProgressHelper.activate(mProgressBar);
         } else {
             ProgressHelper.dismiss(mProgressBar);
-            mSubmitButton.setVisibility(View.VISIBLE);
+            mActionButton.setVisibility(View.VISIBLE);
         }
 
     }

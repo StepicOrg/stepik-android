@@ -93,5 +93,6 @@
     <string name="submit">Отправить</string>
     <string name="wrong">Неправильно. Пожалуйста, попробуйте еще раз.</string>
     <string name="correct">Верно!</string>
+    <string name="try_again">Попробовать снова</string>
 
 </resources>
