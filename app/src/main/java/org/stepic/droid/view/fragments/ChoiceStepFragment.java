@@ -22,7 +22,6 @@ import com.squareup.otto.Subscribe;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.events.attempts.FailAttemptEvent;
 import org.stepic.droid.events.attempts.SuccessAttemptEvent;
 import org.stepic.droid.events.submissions.FailGettingLastSubmissionEvent;
@@ -53,9 +52,9 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class ChoiceStepFragment extends StepBaseFragment {
+public class ChoiceStepFragment extends StepWithAttemptsFragment {
 
-    private final int FIRST_DELAY = 1000;
+    protected final int FIRST_DELAY = 1000;
     private final String TAG = "ChoiceStepFragment";
 
     @Bind(R.id.root_view)
@@ -91,18 +90,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
     @BindString(R.string.wrong)
     String mWrongString;
 
-    @BindString(R.string.submit)
-    String mSubmitText;
-
-    @BindString(R.string.try_again)
-    String mTryAgainText;
-
-
-    Handler mHandler;
-
-    private Attempt mAttempt = null; // TODO: 13.01.16 save when orientation is changed, not load from web
-    private Submission mSubmission = null;
-//    private long mAttemptId; //Todo: config changes
+    protected Handler mHandler;
 
     @Nullable
     @Override
@@ -115,34 +103,22 @@ public class ChoiceStepFragment extends StepBaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mHandler = new Handler();
-        if (!tryRestoreState()) {
-            getExistingAttempts();
-        }
+    }
 
-        if (mSubmission == null || mSubmission.getStatus() == Submission.Status.LOCAL) {
-            mActionButton.setText(mSubmitText);
-        } else {
-            mActionButton.setText(mTryAgainText);
-        }
+    @Override
+    protected void setTextToActionButton(String text) {
+        mActionButton.setText(text);
+    }
 
-        mActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showLoadState(true);
-                if (mSubmission == null || mSubmission.getStatus() == Submission.Status.LOCAL) {
-                    makeSubmission();
-                } else {
-                    tryAgain();
-                }
-            }
-        });
+    @Override
+    protected void setListenerToActionButton(View.OnClickListener l) {
+        mActionButton.setOnClickListener(l);
     }
 
     /**
      * @return false if restore was failed;
      */
-    private boolean tryRestoreState() {
+    protected boolean tryRestoreState() {
         mAttempt = mLessonManager.restoreAttemptForStep(mStep.getId());
         mSubmission = mLessonManager.restoreSubmissionForStep(mStep.getId());
         if (mSubmission == null || mAttempt == null) return false;
@@ -152,7 +128,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
         return true;
     }
 
-    private void getExistingAttempts() {
+    protected void getExistingAttempts() {
         mShell.getApi().getExistingAttempts(mStep.getId()).enqueue(new Callback<AttemptResponse>() {
             Step localStep = mStep;
 
@@ -252,7 +228,6 @@ public class ChoiceStepFragment extends StepBaseFragment {
     public void onFailLoadAttempt(FailAttemptEvent e) {
         if (mStep == null || e.getStepId() != mStep.getId()) return;
         // TODO: 13.01.16 cancel progress bars
-
     }
 
     private void buildChoiceItem(CompoundButton item, String rawText) {
@@ -264,7 +239,8 @@ public class ChoiceStepFragment extends StepBaseFragment {
         mChoiceContainer.addView(item);
     }
 
-    private void makeSubmission() {
+    @Override
+    protected void makeSubmission() {
         if (mAttempt == null || mAttempt.getId() <= 0) return;
 
         RadioGroupHelper.setEnabled(mChoiceContainer, false);
@@ -288,7 +264,8 @@ public class ChoiceStepFragment extends StepBaseFragment {
 
     }
 
-    private void tryAgain() {
+    @Override
+    protected void tryAgain() {
         RadioGroupHelper.setEnabled(mChoiceContainer, true);
 
         // FIXME: 17.01.16 refactor
@@ -380,14 +357,18 @@ public class ChoiceStepFragment extends StepBaseFragment {
     @Subscribe
     public void onSuccessGettingSubmissionResilt(SuccessGettingLastSubmissionEvent e) {
         if (mAttempt == null || e.getAttemptId() != mAttempt.getId()) return;
-        if (e.getSubmission() == null || e.getSubmission().getStatus() == null) return;
+        if (e.getSubmission() == null || e.getSubmission().getStatus() == null) {
+            return;
+        }
 
         mSubmission = e.getSubmission();
         fillSubmission(mSubmission);
     }
 
     private void fillSubmission(Submission submission) {
-        if (submission == null || submission.getStatus() == null) return;
+        if (submission == null || submission.getStatus() == null) {
+            return;
+        }
         saveSession();
         switch (submission.getStatus()) {
             case CORRECT:
@@ -457,7 +438,8 @@ public class ChoiceStepFragment extends StepBaseFragment {
         mLessonManager.saveSession(mStep.getId(), mAttempt, mSubmission);
     }
 
-    private void showLoadState(boolean isLoading) {
+    @Override
+    protected void showLoadState(boolean isLoading) {
         if (isLoading) {
             mActionButton.setVisibility(View.GONE);
             ProgressHelper.activate(mProgressBar);
