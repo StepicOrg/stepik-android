@@ -86,7 +86,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
 
     private Attempt mAttempt = null; // TODO: 13.01.16 save when orientation is changed, not load from web
     private Submission mSubmission = null;
-    private long mAttemptId; //Todo: config changes
+//    private long mAttemptId; //Todo: config changes
 
     @Nullable
     @Override
@@ -193,7 +193,6 @@ public class ChoiceStepFragment extends StepBaseFragment {
 
         showAttempt(e.getAttempt());
         mAttempt = e.getAttempt();
-        mAttemptId = e.getAttempt().getId();
     }
 
     private void showAttempt(Attempt attempt) {
@@ -232,21 +231,22 @@ public class ChoiceStepFragment extends StepBaseFragment {
     }
 
     private void makeSubmission() {
-        if (mAttemptId <= 0) return;
-        Reply reply = generateReplyFromSelected();
-        mShell.getApi().createNewSubmission(reply, mAttemptId).enqueue(new Callback<SubmissionResponse>() {
+        if (mAttempt == null || mAttempt.getId() <= 0) return;
+        final long attemptId = mAttempt.getId();
+        final Reply reply = generateReplyFromSelected();
+        mShell.getApi().createNewSubmission(reply, attemptId).enqueue(new Callback<SubmissionResponse>() {
             @Override
             public void onResponse(Response<SubmissionResponse> response, Retrofit retrofit) {
                 if (response.isSuccess()) {
-                    bus.post(new SubmissionCreatedEvent(mAttemptId, response.body()));
+                    bus.post(new SubmissionCreatedEvent(attemptId, response.body()));
                 } else {
-                    bus.post(new FailSubmissionCreatedEvent(mAttemptId));
+                    bus.post(new FailSubmissionCreatedEvent(attemptId));
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
-                bus.post(new FailSubmissionCreatedEvent(mAttemptId));
+                bus.post(new FailSubmissionCreatedEvent(attemptId));
             }
         });
 
@@ -263,8 +263,8 @@ public class ChoiceStepFragment extends StepBaseFragment {
 
     @Subscribe
     public void onSuccessCreateSubmission(SubmissionCreatedEvent e) {
-        if (e.getAttemptId() != mAttemptId) return;
-        getStatusOfSubmission(mAttemptId);
+        if (mAttempt == null || e.getAttemptId() != mAttempt.getId()) return;
+        getStatusOfSubmission(mAttempt.getId());
 
         // TODO: 14.01.16 view progress bar
     }
@@ -316,7 +316,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
 
     @Subscribe
     public void onFailGettingSubmission(FailGettingLastSubmissionEvent e) {
-        if (e.getAttemptId() != mAttemptId) return;
+        if (mAttempt == null || e.getAttemptId() != mAttempt.getId()) return;
 
         int nextTry = e.getTryNumber() + 1;
 
@@ -325,7 +325,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
 
     @Subscribe
     public void onSuccessGettingSubmissionResilt(SuccessGettingLastSubmissionEvent e) {
-        if (e.getAttemptId() != mAttemptId) return;
+        if (mAttempt == null || e.getAttemptId() != mAttempt.getId()) return;
         if (e.getSubmission() == null || e.getSubmission().getStatus() == null) return;
 
         mSubmission = e.getSubmission();
