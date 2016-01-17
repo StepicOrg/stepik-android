@@ -1,13 +1,10 @@
 package org.stepic.droid.view.fragments;
 
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatRadioButton;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +16,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
-import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.events.attempts.FailAttemptEvent;
@@ -31,31 +27,18 @@ import org.stepic.droid.events.submissions.SuccessGettingLastSubmissionEvent;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Dataset;
 import org.stepic.droid.model.Reply;
-import org.stepic.droid.model.Step;
-import org.stepic.droid.model.Submission;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.RadioGroupHelper;
-import org.stepic.droid.web.AttemptResponse;
-import org.stepic.droid.web.SubmissionResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.BindDrawable;
-import butterknife.BindString;
 import butterknife.ButterKnife;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
 
 public class ChoiceStepFragment extends StepWithAttemptsFragment {
-
-    protected final int FIRST_DELAY = 1000;
-    private final String TAG = "ChoiceStepFragment";
 
     @Bind(R.id.root_view)
     ViewGroup mRootView;
@@ -78,31 +61,12 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
     @Bind(R.id.progress_bar)
     ProgressBar mProgressBar;
 
-    @BindDrawable(R.drawable.ic_correct)
-    Drawable mCorrectIcon;
-
-    @BindDrawable(R.drawable.ic_error)
-    Drawable mWrongIcon;
-
-    @BindString(R.string.correct)
-    String mCorrectString;
-
-    @BindString(R.string.wrong)
-    String mWrongString;
-
-    protected Handler mHandler;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_choice_step, container, false);
         ButterKnife.bind(this, v);
         return v;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -115,82 +79,7 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
         mActionButton.setOnClickListener(l);
     }
 
-    /**
-     * @return false if restore was failed;
-     */
-    protected boolean tryRestoreState() {
-        mAttempt = mLessonManager.restoreAttemptForStep(mStep.getId());
-        mSubmission = mLessonManager.restoreSubmissionForStep(mStep.getId());
-        if (mSubmission == null || mAttempt == null) return false;
-
-        showAttempt(mAttempt);
-        fillSubmission(mSubmission);
-        return true;
-    }
-
-    protected void getExistingAttempts() {
-        mShell.getApi().getExistingAttempts(mStep.getId()).enqueue(new Callback<AttemptResponse>() {
-            Step localStep = mStep;
-
-            @Override
-            public void onResponse(Response<AttemptResponse> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
-
-                    AttemptResponse body = response.body();
-                    if (body == null) {
-                        createNewAttempt();
-                        return;
-                    }
-
-                    List<Attempt> attemptList = body.getAttempts();
-                    if (attemptList == null || attemptList.isEmpty() || !attemptList.get(0).getStatus().equals("active")) {
-                        createNewAttempt();
-                    } else {
-                        Log.d(TAG, AppConstants.GET_OLD_ATTEMPT);
-                        YandexMetrica.reportEvent(AppConstants.GET_OLD_ATTEMPT);
-                        Attempt attempt = attemptList.get(0);
-                        bus.post(new SuccessAttemptEvent(localStep.getId(), attempt));
-                    }
-                } else {
-                    createNewAttempt();
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                createNewAttempt();
-            }
-        });
-    }
-
-    private void createNewAttempt() {
-        if (mStep == null) return;
-        mShell.getApi().createNewAttempt(mStep.getId()).enqueue(new Callback<AttemptResponse>() {
-            Step localStep = mStep;
-
-            @Override
-            public void onResponse(Response<AttemptResponse> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
-                    List<Attempt> attemptList = response.body().getAttempts();
-                    if (attemptList != null && !attemptList.isEmpty()) {
-                        Attempt attempt = attemptList.get(0);
-                        bus.post(new SuccessAttemptEvent(localStep.getId(), attempt));
-                    } else {
-                        bus.post(new FailAttemptEvent(localStep.getId()));
-                    }
-
-                } else {
-                    bus.post(new FailAttemptEvent(localStep.getId()));
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                bus.post(new FailAttemptEvent(localStep.getId()));
-            }
-        });
-    }
-
+    @Override
     @Subscribe
     public void onSuccessLoadAttempt(SuccessAttemptEvent e) {
         if (mStep == null || e.getStepId() != mStep.getId() || e.getAttempt() == null) return;
@@ -199,7 +88,14 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
         mAttempt = e.getAttempt();
     }
 
-    private void showAttempt(Attempt attempt) {
+
+    /**
+     * it is unique for each attempt type
+     *
+     * @param attempt data of task
+     */
+    @Override
+    protected void showAttempt(Attempt attempt) {
         Dataset dataset = attempt.getDataset();
         if (dataset == null) return;
 
@@ -221,52 +117,24 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
         if (mLessonManager.restoreSubmissionForStep(mStep.getId()) == null) {
             getStatusOfSubmission(attempt.getId());//fill last server submission if exist
         }
-
     }
 
     @Subscribe
-    public void onFailLoadAttempt(FailAttemptEvent e) {
-        if (mStep == null || e.getStepId() != mStep.getId()) return;
+    @Override
+    public void onFailCreateAttemptEvent(FailAttemptEvent event) {
+        if (mStep == null || event.getStepId() != mStep.getId()) return;
         // TODO: 13.01.16 cancel progress bars
     }
 
-    private void buildChoiceItem(CompoundButton item, String rawText) {
-        int dp4 = (int) DpPixelsHelper.convertDpToPixel(4);
-        item.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        item.setPadding(0, dp4, 0, dp4);
-        String text = HtmlHelper.fromHtml(rawText).toString();
-        item.setText(text);
-        mChoiceContainer.addView(item);
-    }
-
     @Override
-    protected void makeSubmission() {
-        if (mAttempt == null || mAttempt.getId() <= 0) return;
-
-        RadioGroupHelper.setEnabled(mChoiceContainer, false);
-        final long attemptId = mAttempt.getId();
-        final Reply reply = generateReplyFromSelected();
-        mShell.getApi().createNewSubmission(reply, attemptId).enqueue(new Callback<SubmissionResponse>() {
-            @Override
-            public void onResponse(Response<SubmissionResponse> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
-                    bus.post(new SubmissionCreatedEvent(attemptId, response.body()));
-                } else {
-                    bus.post(new FailSubmissionCreatedEvent(attemptId));
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                bus.post(new FailSubmissionCreatedEvent(attemptId));
-            }
-        });
-
+    protected void blockUIBeforeSubmit(boolean needBlock) {
+        RadioGroupHelper.setEnabled(mChoiceContainer, !needBlock);
     }
+
 
     @Override
     protected void tryAgain() {
-        RadioGroupHelper.setEnabled(mChoiceContainer, true);
+        blockUIBeforeSubmit(false);
 
         // FIXME: 17.01.16 refactor
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -283,7 +151,8 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
         mActionButton.setText(mSubmitText);
     }
 
-    private Reply generateReplyFromSelected() {
+    @Override
+    protected Reply generateReply() {
         List<Boolean> options = new ArrayList<>();
         for (int i = 0; i < mChoiceContainer.getChildCount(); i++) {
             CompoundButton view = (CompoundButton) mChoiceContainer.getChildAt(i);
@@ -292,101 +161,29 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
         return new Reply(options);
     }
 
+    @Override
     @Subscribe
     public void onSuccessCreateSubmission(SubmissionCreatedEvent e) {
-        if (mAttempt == null || e.getAttemptId() != mAttempt.getId()) return;
-        getStatusOfSubmission(mAttempt.getId());
-
-        // TODO: 14.01.16 view progress bar
+        super.onSuccessCreateSubmission(e);
     }
 
-    private void getStatusOfSubmission(final long attemptId, final int numberOfTry) {
-        if (mHandler == null) return;
-        mHandler.postDelayed(new Runnable() {
-            long localAttemptId = attemptId;
-
-            @Override
-            public void run() {
-                mShell.getApi().getSubmissions(localAttemptId).enqueue(new Callback<SubmissionResponse>() {
-                    @Override
-                    public void onResponse(Response<SubmissionResponse> response, Retrofit retrofit) {
-                        if (response.isSuccess()) {
-                            List<Submission> submissionList = response.body().getSubmissions();
-                            if (submissionList == null || submissionList.isEmpty()) {
-//                                bus.post(new FailGettingLastSubmissionEvent(localAttemptId, numberOfTry));
-                                return;
-                            }
-
-                            Submission submission = submissionList.get(0);
-
-                            if (submission.getStatus() == Submission.Status.EVALUATION) {
-                                bus.post(new FailGettingLastSubmissionEvent(localAttemptId, numberOfTry));
-                                return;
-                            }
-
-                            bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId, submission));
-
-
-                        } else {
-                            bus.post(new FailGettingLastSubmissionEvent(localAttemptId, numberOfTry));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        bus.post(new FailGettingLastSubmissionEvent(localAttemptId, numberOfTry));
-                    }
-                });
-            }
-        }, numberOfTry * FIRST_DELAY);
-    }
-
-    private void getStatusOfSubmission(long attemptId) {
-        getStatusOfSubmission(attemptId, 0);
+    @Override
+    public void onFailCreateSubmission(FailSubmissionCreatedEvent event) {
     }
 
     @Subscribe
     public void onFailGettingSubmission(FailGettingLastSubmissionEvent e) {
-        if (mAttempt == null || e.getAttemptId() != mAttempt.getId()) return;
-
-        int nextTry = e.getTryNumber() + 1;
-
-        getStatusOfSubmission(e.getAttemptId(), nextTry);
+        super.onFailGettingSubmission(e);
     }
 
+    @Override
     @Subscribe
-    public void onSuccessGettingSubmissionResilt(SuccessGettingLastSubmissionEvent e) {
-        if (mAttempt == null || e.getAttemptId() != mAttempt.getId()) return;
-        if (e.getSubmission() == null || e.getSubmission().getStatus() == null) {
-            return;
-        }
-
-        mSubmission = e.getSubmission();
-        fillSubmission(mSubmission);
+    public void onGettingSubmission(SuccessGettingLastSubmissionEvent e) {
+        super.onGettingSubmission(e);
     }
 
-    private void fillSubmission(Submission submission) {
-        if (submission == null || submission.getStatus() == null) {
-            return;
-        }
-        saveSession();
-        switch (submission.getStatus()) {
-            case CORRECT:
-                onCorrectSubmission();
-                mActionButton.setText(mTryAgainText);
-                RadioGroupHelper.setEnabled(mChoiceContainer, false);
-                break;
-            case WRONG:
-                onWrongSubmission();
-                mActionButton.setText(mTryAgainText);
-                RadioGroupHelper.setEnabled(mChoiceContainer, false);
-                break;
-        }
-        onRestoreSubmission();
-        showLoadState(false);
-    }
-
-    private void onRestoreSubmission() {
+    @Override
+    protected void onRestoreSubmission() {
         Reply reply = mSubmission.getReply();
         if (reply == null) return;
 
@@ -399,43 +196,22 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
         }
     }
 
-
-    // todo make 3 methods: add 1 generic
-    private void onWrongSubmission() {
+    @Override
+    protected void onWrongSubmission() {
         mChoiceContainer.setBackgroundResource(R.color.wrong_answer_background);
         mStatusIcon.setImageDrawable(mWrongIcon);
         mStatusTextView.setText(mWrongString);
         mResultLine.setBackgroundResource(R.color.wrong_answer_background);
         mResultLine.setVisibility(View.VISIBLE);
-
-        //// TODO: 14.01.16 add/chahnge to 'try again' button
     }
 
-    private void onCorrectSubmission() {
+    @Override
+    protected void onCorrectSubmission() {
         mChoiceContainer.setBackgroundResource(R.color.correct_answer_background);
         mStatusIcon.setImageDrawable(mCorrectIcon);
         mStatusTextView.setText(mCorrectString);
         mResultLine.setBackgroundResource(R.color.correct_answer_background);
         mResultLine.setVisibility(View.VISIBLE);
-        mActionButton.setVisibility(View.GONE);
-    }
-
-
-    @Override
-    public void onDestroyView() {
-        saveSession();
-        super.onDestroyView();
-    }
-
-    private void saveSession() {
-        if (mAttempt == null) return;
-
-        if (mSubmission == null) {
-            Reply reply = generateReplyFromSelected();
-            mSubmission = new Submission(reply, mAttempt.getId(), Submission.Status.LOCAL);
-        }
-
-        mLessonManager.saveSession(mStep.getId(), mAttempt, mSubmission);
     }
 
     @Override
@@ -448,5 +224,14 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
             mActionButton.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    private void buildChoiceItem(CompoundButton item, String rawText) {
+        int dp4 = (int) DpPixelsHelper.convertDpToPixel(4);
+        item.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        item.setPadding(0, dp4, 0, dp4);
+        String text = HtmlHelper.fromHtml(rawText).toString();
+        item.setText(text);
+        mChoiceContainer.addView(item);
     }
 }
