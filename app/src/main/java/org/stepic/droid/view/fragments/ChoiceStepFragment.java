@@ -241,7 +241,6 @@ public class ChoiceStepFragment extends StepBaseFragment {
             }
             buildChoiceItem(optionViewItem, option);
         }
-        mSubmission = null;
 
     }
 
@@ -296,6 +295,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
         }
 
         createNewAttempt();
+        mSubmission = null;
 
         mResultLine.setVisibility(View.GONE);
         showLoadState(false);
@@ -388,18 +388,19 @@ public class ChoiceStepFragment extends StepBaseFragment {
             case CORRECT:
                 onCorrectSubmission();
                 mActionButton.setText(mTryAgainText);
+                RadioGroupHelper.setEnabled(mChoiceContainer, false);
                 break;
             case WRONG:
                 onWrongSubmission();
                 mActionButton.setText(mTryAgainText);
+                RadioGroupHelper.setEnabled(mChoiceContainer, false);
                 break;
-            case LOCAL:
-                onLocalRestoreSubmission();
         }
+        onRestoreSubmission();
         showLoadState(false);
     }
 
-    private void onLocalRestoreSubmission() {
+    private void onRestoreSubmission() {
         Reply reply = mSubmission.getReply();
         if (reply == null) return;
 
