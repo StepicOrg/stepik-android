@@ -72,6 +72,8 @@ dependencies {
 
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
 
+    compile 'me.zhanghai.android.materialprogressbar:library:1.1.4'
+
 }
 
 repositories {
