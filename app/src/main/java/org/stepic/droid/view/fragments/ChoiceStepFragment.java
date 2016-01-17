@@ -230,6 +230,8 @@ public class ChoiceStepFragment extends StepBaseFragment {
         List<String> options = dataset.getOptions();
         if (options == null || options.isEmpty()) return;
 
+        mChoiceContainer.removeAllViews();
+
         for (String option : options) {
             CompoundButton optionViewItem;
             if (dataset.is_multiple_choice()) {
@@ -239,6 +241,7 @@ public class ChoiceStepFragment extends StepBaseFragment {
             }
             buildChoiceItem(optionViewItem, option);
         }
+        mSubmission = null;
 
     }
 
@@ -291,6 +294,8 @@ public class ChoiceStepFragment extends StepBaseFragment {
         } else {
             mChoiceContainer.setBackgroundDrawable(mRootView.getBackground());
         }
+
+        createNewAttempt();
 
         mResultLine.setVisibility(View.GONE);
         showLoadState(false);
