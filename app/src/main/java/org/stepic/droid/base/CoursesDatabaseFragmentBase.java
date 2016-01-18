@@ -185,19 +185,18 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     private void updateEnrollment(Course courseForUpdate, long enrollment) {
 
-        if (getCourseType() == DatabaseManager.Table.enrolled) {
-            boolean inList = false;
-            for (Course courseItem : mCourses) {
-                if (courseItem.getCourseId() == courseForUpdate.getCourseId()) {
-                    courseItem.setEnrollment((int) courseItem.getCourseId());
-                    courseForUpdate = courseItem;
-                    inList = true;
-                    break;
-                }
+
+        boolean inList = false;
+        for (Course courseItem : mCourses) {
+            if (courseItem.getCourseId() == courseForUpdate.getCourseId()) {
+                courseItem.setEnrollment((int) courseItem.getCourseId());
+                courseForUpdate = courseItem;
+                inList = true;
+                break;
             }
-            if (!inList) {
-                mCourses.add(courseForUpdate);
-            }
+        }
+        if (getCourseType() == DatabaseManager.Table.enrolled && !inList) {
+            mCourses.add(courseForUpdate);
         }
 
     }
