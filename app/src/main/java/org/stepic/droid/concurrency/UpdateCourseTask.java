@@ -26,7 +26,11 @@ public class UpdateCourseTask extends StepicTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackgroundBody(Void... params) throws Exception {
-        mDatabaseManager.addCourse(mCourse, mCourseType);
+        //it is hack how to right update info without is_featured knowledge
+        if (mCourseType == DatabaseManager.Table.enrolled ||
+                (mCourseType == DatabaseManager.Table.featured && mDatabaseManager.getCourseById(mCourse.getCourseId(), DatabaseManager.Table.featured) != null)) {
+            mDatabaseManager.addCourse(mCourse, mCourseType);
+        }
         return null;
     }
 }

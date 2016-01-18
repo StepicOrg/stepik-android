@@ -278,6 +278,11 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                     public void run() {
                         mDatabaseManager.deleteCourse(localRef, DatabaseManager.Table.enrolled);
 
+                        if (mDatabaseManager.getCourseById(course.getCourseId(), DatabaseManager.Table.featured) != null) {
+                            localRef.setEnrollment(0);
+                            mDatabaseManager.addCourse(localRef, DatabaseManager.Table.featured);
+                        }
+
 //                        if (!course.is_featured()){
 //                            localRef.setEnrollment(0);
 //                            mDatabaseManager.addCourse(localRef, DatabaseManager.Table.featured);}

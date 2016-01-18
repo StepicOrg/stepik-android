@@ -305,10 +305,8 @@ public class CourseDetailActivity extends FragmentActivityBase {
                     UpdateCourseTask updateCourseTask = new UpdateCourseTask(DatabaseManager.Table.enrolled, localCopy);
                     updateCourseTask.execute();
 
-                    if (localCopy.is_featured()) {
-                        UpdateCourseTask updateCourseFeaturedTask = new UpdateCourseTask(DatabaseManager.Table.featured, localCopy);
-                        updateCourseFeaturedTask.execute();
-                    }
+                    UpdateCourseTask updateCourseFeaturedTask = new UpdateCourseTask(DatabaseManager.Table.featured, localCopy);
+                    updateCourseFeaturedTask.execute();
 
 
                     bus.post(new SuccessJoinEvent(localCopy));
