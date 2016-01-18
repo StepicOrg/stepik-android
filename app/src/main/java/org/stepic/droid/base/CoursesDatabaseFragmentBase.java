@@ -179,25 +179,25 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     public void onSuccessJoin(SuccessJoinEvent e) {
         //We do not upgrade database, because when
         //Only for find courses event.
-
+        Log.d("courses database", "update after join");
         updateEnrollment(e.getCourse(), e.getCourse().getEnrollment());
     }
 
     private void updateEnrollment(Course courseForUpdate, long enrollment) {
 
-        if (getCourseType() == DatabaseManager.Table.enrolled) {
-            boolean inList = false;
-            for (Course courseItem : mCourses) {
-                if (courseItem.getCourseId() == courseForUpdate.getCourseId()) {
-                    courseItem.setEnrollment((int) courseItem.getCourseId());
-                    courseForUpdate = courseItem;
-                    inList = true;
-                    break;
-                }
+
+        boolean inList = false;
+        for (Course courseItem : mCourses) {
+            if (courseItem.getCourseId() == courseForUpdate.getCourseId()) {
+                courseItem.setEnrollment((int) courseItem.getCourseId());
+                courseForUpdate = courseItem;
+                inList = true;
+                break;
             }
-            if (!inList) {
+        }
+
+        if (getCourseType() == DatabaseManager.Table.enrolled && !inList) {
                 mCourses.add(courseForUpdate);
-            }
         }
 
     }
