@@ -1,6 +1,7 @@
 package org.stepic.droid.view.fragments;
 
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.attempts.FailAttemptEvent;
 import org.stepic.droid.events.attempts.SuccessAttemptEvent;
+import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.events.submissions.FailGettingLastSubmissionEvent;
 import org.stepic.droid.events.submissions.FailSubmissionCreatedEvent;
 import org.stepic.droid.events.submissions.SubmissionCreatedEvent;
@@ -333,6 +335,20 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         }
         showAnswerField(!isNeedShow);
         enableInternetMessage(isNeedShow);
+    }
+
+    protected final void markLocalProgressAsViewed() {
+        bus.post(new UpdateStepEvent(mStep.getId()));
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            long stepId = mStep.getId();
+
+            protected Void doInBackground(Void... params) {
+                long assignmentId = mDatabaseManager.getAssignmentIdByStepId(stepId);
+                mDatabaseManager.markProgressAsPassed(assignmentId);
+                return null;
+            }
+        };
+        task.execute();
     }
 
     protected abstract void onWrongSubmission();

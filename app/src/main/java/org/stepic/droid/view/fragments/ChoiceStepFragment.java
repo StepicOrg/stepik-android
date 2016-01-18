@@ -214,6 +214,7 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
 
     @Override
     protected void onCorrectSubmission() {
+        markLocalProgressAsViewed();
         mChoiceContainer.setBackgroundResource(R.color.correct_answer_background);
         mStatusIcon.setImageDrawable(mCorrectIcon);
         mStatusTextView.setText(mCorrectString);
