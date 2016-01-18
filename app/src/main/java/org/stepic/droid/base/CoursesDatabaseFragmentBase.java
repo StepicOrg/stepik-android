@@ -195,9 +195,8 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                 break;
             }
         }
-
         if (getCourseType() == DatabaseManager.Table.enrolled && !inList) {
-                mCourses.add(courseForUpdate);
+            mCourses.add(courseForUpdate);
         }
 
     }
@@ -278,6 +277,11 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                     @Override
                     public void run() {
                         mDatabaseManager.deleteCourse(localRef, DatabaseManager.Table.enrolled);
+
+                        if (mDatabaseManager.getCourseById(course.getCourseId(), DatabaseManager.Table.featured) != null) {
+                            localRef.setEnrollment(0);
+                            mDatabaseManager.addCourse(localRef, DatabaseManager.Table.featured);
+                        }
 
 //                        if (!course.is_featured()){
 //                            localRef.setEnrollment(0);

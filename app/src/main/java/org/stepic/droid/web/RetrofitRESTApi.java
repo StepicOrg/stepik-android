@@ -231,6 +231,7 @@ public class RetrofitRESTApi implements IApi {
     public Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery) {
 //        String encodedQuery = Uri.encode(rawQuery);
         String encodedQuery = rawQuery;
+        YandexMetrica.reportEvent(AppConstants.SEARCH, encodedQuery);
         String type = "course";
         return mLoggedService.getSearchResults(page, encodedQuery, type);
     }
