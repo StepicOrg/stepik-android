@@ -100,5 +100,6 @@
     <string name="try_again">Try again</string>
     <string name="step_only_online">Steps are available only online. Turn on the Internet and start to solve tasks.</string>
     <string name="correct_free_response">Your answer was saved.</string>
+    <string name="hint_for_type_answer">Type your answer here…</string>
 
 </resources>
