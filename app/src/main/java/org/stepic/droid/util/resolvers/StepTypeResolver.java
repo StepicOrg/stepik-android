@@ -7,8 +7,8 @@ import android.os.Build;
 import android.support.annotation.DrawableRes;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.fragments.ChoiceStepFragment;
@@ -116,6 +116,8 @@ public class StepTypeResolver implements IStepResolver {
                 return new TextStepFragment();
             case AppConstants.TYPE_CHOICE:
                 return new ChoiceStepFragment();
+//            case AppConstants.TYPE_FREE_ANSWER:
+//                return new FreeResponseStepFragment();
             default:
                 return new NotSupportedYetStepFragment();
         }

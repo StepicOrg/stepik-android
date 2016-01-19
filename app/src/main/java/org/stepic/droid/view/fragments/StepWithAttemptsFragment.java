@@ -148,7 +148,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         mSubmission = mLessonManager.restoreSubmissionForStep(mStep.getId());
         if (mSubmission == null || mAttempt == null) return false;
 
-        showAttempt(mAttempt);
+        showAttemptAbstractWrapMethod(mAttempt);
         fillSubmission(mSubmission);
         return true;
     }
@@ -428,6 +428,15 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     }
 
+    private void showAttemptAbstractWrapMethod(Attempt attempt) {
+        showAttempt(attempt);
+        if (mLessonManager.restoreSubmissionForStep(mStep.getId()) == null) {
+            getStatusOfSubmission(attempt.getId());//fill last server submission if exist
+        } else {
+            showLoadState(false);
+        }
+    }
+
     @Subscribe
     public void onSuccessCreateSubmission(SubmissionCreatedEvent e) {
         if (mAttempt == null || e.getAttemptId() != mAttempt.getId()) return;
@@ -466,7 +475,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     public void onSuccessLoadAttempt(SuccessAttemptEvent e) {
         if (mStep == null || e.getStepId() != mStep.getId() || e.getAttempt() == null) return;
 
-        showAttempt(e.getAttempt());
+        showAttemptAbstractWrapMethod(e.getAttempt());
         mAttempt = e.getAttempt();
     }
 

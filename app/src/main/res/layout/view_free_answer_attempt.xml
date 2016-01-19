@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EditText
+    android:id="@+id/answer_edit_text"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="@string/hint_for_type_answer"
+    android:inputType="textAutoCorrect"
+    android:lines="5"
+    android:padding="8dp">
+
+</EditText>
