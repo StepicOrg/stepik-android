@@ -74,6 +74,9 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     @Bind(R.id.submit_button)
     Button mActionButton;
 
+    @BindString(R.string.correct)
+    String mCorrectString;
+
     @BindString(R.string.wrong)
     protected String mWrongString;
 
@@ -487,6 +490,8 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     protected abstract void onRestoreSubmission();
 
-    protected abstract String getCorrectString();
+    protected String getCorrectString() {
+        return mCorrectString;
+    }
 
 }

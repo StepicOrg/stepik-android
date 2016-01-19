@@ -31,14 +31,9 @@ import org.stepic.droid.util.RadioGroupHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindString;
-
 public class ChoiceStepFragment extends StepWithAttemptsFragment {
 
     RadioGroup mChoiceContainer;
-
-    @BindString(R.string.correct)
-    String mCorrectString;
 
     @Nullable
     @Override
@@ -113,12 +108,6 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
             view.setChecked(choices.get(i));
         }
     }
-
-    @Override
-    protected String getCorrectString() {
-        return mCorrectString;
-    }
-
 
     private void buildChoiceItem(CompoundButton item, String rawText) {
         int dp4 = (int) DpPixelsHelper.convertDpToPixel(4);
