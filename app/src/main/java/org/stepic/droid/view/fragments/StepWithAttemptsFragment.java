@@ -74,9 +74,6 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     @Bind(R.id.submit_button)
     Button mActionButton;
 
-    @BindString(R.string.correct)
-    String mCorrectString;
-
     @BindString(R.string.wrong)
     protected String mWrongString;
 
@@ -355,7 +352,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         markLocalProgressAsViewed();
         mAttemptContainer.setBackgroundResource(R.color.correct_answer_background);
         mStatusIcon.setImageDrawable(mCorrectIcon);
-        mStatusTextView.setText(mCorrectString);
+        mStatusTextView.setText(getCorrectString());
         mResultLine.setBackgroundResource(R.color.correct_answer_background);
         mResultLine.setVisibility(View.VISIBLE);
     }
@@ -489,5 +486,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     protected abstract void blockUIBeforeSubmit(boolean needBlock);
 
     protected abstract void onRestoreSubmission();
+
+    protected abstract String getCorrectString();
 
 }

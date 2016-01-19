@@ -31,15 +31,20 @@ import org.stepic.droid.util.RadioGroupHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindString;
+
 public class ChoiceStepFragment extends StepWithAttemptsFragment {
 
     RadioGroup mChoiceContainer;
+
+    @BindString(R.string.correct)
+    String mCorrectString;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        mChoiceContainer = (RadioGroup) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_choice_attempt, null, false);
+        mChoiceContainer = (RadioGroup) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_choice_attempt, mChoiceContainer, false);
         mAttemptContainer.addView(mChoiceContainer);
         return v;
     }
@@ -107,6 +112,11 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
             CompoundButton view = (CompoundButton) mChoiceContainer.getChildAt(i);
             view.setChecked(choices.get(i));
         }
+    }
+
+    @Override
+    protected String getCorrectString() {
+        return mCorrectString;
     }
 
 
