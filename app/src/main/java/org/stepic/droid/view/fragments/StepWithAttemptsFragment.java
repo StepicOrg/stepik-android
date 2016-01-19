@@ -2,12 +2,18 @@ package org.stepic.droid.view.fragments;
 
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 import com.yandex.metrica.YandexMetrica;
@@ -27,6 +33,7 @@ import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Submission;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.web.AttemptResponse;
 import org.stepic.droid.web.SubmissionResponse;
 
@@ -35,12 +42,34 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.BindDrawable;
 import butterknife.BindString;
+import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
 public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     protected final int FIRST_DELAY = 1000;
+
+    @Bind(R.id.root_view)
+    ViewGroup mRootView;
+
+    @Bind(R.id.result_line)
+    View mResultLine;
+
+    @Bind(R.id.answer_status_icon)
+    ImageView mStatusIcon;
+
+    @Bind(R.id.answer_status_text)
+    TextView mStatusTextView;
+
+    @Bind(R.id.progress_bar)
+    ProgressBar mProgressBar;
+
+    @Bind(R.id.report_problem)
+    View connectionProblem;
+
+    @Bind(R.id.attempt_container)
+    ViewGroup mAttemptContainer;
 
     @Bind(R.id.submit_button)
     Button mActionButton;
@@ -49,7 +78,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     String mCorrectString;
 
     @BindString(R.string.wrong)
-    String mWrongString;
+    protected String mWrongString;
 
     @BindString(R.string.submit)
     protected String mSubmitText;
@@ -62,12 +91,19 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     protected Handler mHandler;
 
-
     @BindDrawable(R.drawable.ic_correct)
     protected Drawable mCorrectIcon;
 
     @BindDrawable(R.drawable.ic_error)
     protected Drawable mWrongIcon;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_with_solution_base, container, false);
+        ButterKnife.bind(this, v);
+        return v;
+    }
 
 
     @Override
@@ -258,40 +294,6 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         super.onDestroyView();
     }
 
-    @Subscribe
-    public void onSuccessCreateSubmission(SubmissionCreatedEvent e) {
-        if (mAttempt == null || e.getAttemptId() != mAttempt.getId()) return;
-        getStatusOfSubmission(mAttempt.getId());
-    }
-
-    @Subscribe
-    public void onFailGettingSubmission(FailGettingLastSubmissionEvent e) {
-        if (mAttempt == null || e.getAttemptId() != mAttempt.getId()) return;
-
-        int nextTry = e.getTryNumber() + 1;
-
-        getStatusOfSubmission(e.getAttemptId(), nextTry);
-    }
-
-    @Subscribe
-    public void onGettingSubmission(SuccessGettingLastSubmissionEvent e) {
-        if (mAttempt == null || e.getAttemptId() != mAttempt.getId()) return;
-        if (e.getSubmission() == null || e.getSubmission().getStatus() == null) {
-            showLoadState(false);
-            return;
-        }
-
-        mSubmission = e.getSubmission();
-        saveSession();
-        fillSubmission(mSubmission);
-    }
-
-    @Subscribe
-    public void onInternetEnabled(InternetIsEnabledEvent enabledEvent) {
-        enableInternetMessage(false);
-        init();
-    }
-
     protected final void fillSubmission(Submission submission) {
         if (submission == null || submission.getStatus() == null) {
             return;
@@ -337,6 +339,51 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         enableInternetMessage(isNeedShow);
     }
 
+    private void setTextToActionButton(String text) {
+        mActionButton.setText(text);
+    }
+
+    protected final void onWrongSubmission() {
+        mAttemptContainer.setBackgroundResource(R.color.wrong_answer_background);
+        mStatusIcon.setImageDrawable(mWrongIcon);
+        mStatusTextView.setText(mWrongString);
+        mResultLine.setBackgroundResource(R.color.wrong_answer_background);
+        mResultLine.setVisibility(View.VISIBLE);
+    }
+
+    protected final void onCorrectSubmission() {
+        markLocalProgressAsViewed();
+        mAttemptContainer.setBackgroundResource(R.color.correct_answer_background);
+        mStatusIcon.setImageDrawable(mCorrectIcon);
+        mStatusTextView.setText(mCorrectString);
+        mResultLine.setBackgroundResource(R.color.correct_answer_background);
+        mResultLine.setVisibility(View.VISIBLE);
+    }
+
+
+    protected final void tryAgain() {
+        blockUIBeforeSubmit(false);
+
+        // FIXME: 17.01.16 refactor
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            mAttemptContainer.setBackground(mRootView.getBackground());
+        } else {
+            mAttemptContainer.setBackgroundDrawable(mRootView.getBackground());
+        }
+
+        createNewAttempt();
+        mSubmission = null;
+
+        mResultLine.setVisibility(View.GONE);
+        mActionButton.setText(mSubmitText);
+    }
+
+
+    private void setListenerToActionButton(View.OnClickListener l) {
+        mActionButton.setOnClickListener(l);
+    }
+
+
     protected final void markLocalProgressAsViewed() {
         bus.post(new UpdateStepEvent(mStep.getId()));
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
@@ -351,38 +398,96 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         task.execute();
     }
 
-    protected abstract void onWrongSubmission();
+    protected final void enableInternetMessage(boolean needShow) {
+        if (needShow) {
+            connectionProblem.setVisibility(View.VISIBLE);
+        } else {
+            connectionProblem.setVisibility(View.GONE);
+        }
+    }
 
-    protected abstract void onCorrectSubmission();
 
-    protected abstract void tryAgain();
+    protected final void showAnswerField(boolean needShow) {
+        if (needShow) {
+            mAttemptContainer.setVisibility(View.VISIBLE);
+        } else {
+            mAttemptContainer.setVisibility(View.GONE);
+        }
+    }
+
+
+    protected void showLoadState(boolean isLoading) {
+        if (isLoading) {
+            mActionButton.setVisibility(View.GONE);
+            ProgressHelper.activate(mProgressBar);
+        } else {
+            ProgressHelper.dismiss(mProgressBar);
+            mActionButton.setVisibility(View.VISIBLE);
+            showAnswerField(true);
+        }
+
+    }
+
+    @Subscribe
+    public void onSuccessCreateSubmission(SubmissionCreatedEvent e) {
+        if (mAttempt == null || e.getAttemptId() != mAttempt.getId()) return;
+        getStatusOfSubmission(mAttempt.getId());
+    }
+
+    @Subscribe
+    public void onFailGettingSubmission(FailGettingLastSubmissionEvent e) {
+        if (mAttempt == null || e.getAttemptId() != mAttempt.getId()) return;
+
+        int nextTry = e.getTryNumber() + 1;
+
+        getStatusOfSubmission(e.getAttemptId(), nextTry);
+    }
+
+    @Subscribe
+    public void onGettingSubmission(SuccessGettingLastSubmissionEvent e) {
+        if (mAttempt == null || e.getAttemptId() != mAttempt.getId()) return;
+        if (e.getSubmission() == null || e.getSubmission().getStatus() == null) {
+            showLoadState(false);
+            return;
+        }
+
+        mSubmission = e.getSubmission();
+        saveSession();
+        fillSubmission(mSubmission);
+    }
+
+    @Subscribe
+    public void onInternetEnabled(InternetIsEnabledEvent enabledEvent) {
+        enableInternetMessage(false);
+        init();
+    }
+
+    @Subscribe
+    public void onSuccessLoadAttempt(SuccessAttemptEvent e) {
+        if (mStep == null || e.getStepId() != mStep.getId() || e.getAttempt() == null) return;
+
+        showAttempt(e.getAttempt());
+        mAttempt = e.getAttempt();
+    }
+
+    @Subscribe
+    public void onFailCreateAttemptEvent(FailAttemptEvent event) {
+        if (mStep == null || event.getStepId() != mStep.getId()) return;
+        showOnlyInternetProblem(true);
+    }
+
+    @Subscribe
+    public void onFailCreateSubmission(FailSubmissionCreatedEvent event) {
+        if (mAttempt == null || event.getAttemptId() != mAttempt.getId()) return;
+        showOnlyInternetProblem(true);
+    }
 
     protected abstract void showAttempt(Attempt attempt);
-
-    protected abstract void setTextToActionButton(String text);
-
-    protected abstract void setListenerToActionButton(View.OnClickListener l);
-
-    protected abstract void showLoadState(boolean isLoading);
 
     protected abstract Reply generateReply();
 
     protected abstract void blockUIBeforeSubmit(boolean needBlock);
 
     protected abstract void onRestoreSubmission();
-
-    protected abstract void showAnswerField(boolean needShow);
-
-    protected abstract void enableInternetMessage(boolean needShow);
-
-    @Subscribe
-    public abstract void onSuccessLoadAttempt(SuccessAttemptEvent e);
-
-    @Subscribe
-    public abstract void onFailCreateSubmission(FailSubmissionCreatedEvent event);
-
-    @Subscribe
-    public abstract void onFailCreateAttemptEvent(FailAttemptEvent event);
-
 
 }

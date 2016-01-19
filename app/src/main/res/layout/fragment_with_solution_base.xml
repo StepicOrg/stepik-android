@@ -15,18 +15,10 @@
             android:id="@+id/header"
             layout="@layout/step_text_header"/>
 
-        <RadioGroup
-            android:id="@+id/choice_container"
+        <FrameLayout
+            android:id="@+id/attempt_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="bottom"
-            android:orientation="vertical"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp"
-            tools:background="@color/correct_answer_background"
-            tools:layout_height="300dp">
-
-        </RadioGroup>
+            android:layout_height="wrap_content"/>
 
         <LinearLayout
             android:id="@+id/result_line"
@@ -72,8 +64,8 @@
             android:layout_marginBottom="50dp"
             android:background="@color/stepic_brand_primary"
             android:padding="5dp"
-            tools:text="@string/submit"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            tools:text="@string/submit"/>
 
         <include layout="@layout/progress_bar_on_empty_screen"/>
 

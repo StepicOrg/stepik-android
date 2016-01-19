@@ -1,6 +1,6 @@
 package org.stepic.droid.view.fragments;
 
-import android.os.Build;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -9,10 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
@@ -29,65 +26,23 @@ import org.stepic.droid.model.Dataset;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.HtmlHelper;
-import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.RadioGroupHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
 public class ChoiceStepFragment extends StepWithAttemptsFragment {
 
-    @Bind(R.id.root_view)
-    ViewGroup mRootView;
-
-    @Bind(R.id.choice_container)
     RadioGroup mChoiceContainer;
-
-    @Bind(R.id.result_line)
-    View mResultLine;
-
-    @Bind(R.id.answer_status_icon)
-    ImageView mStatusIcon;
-
-    @Bind(R.id.answer_status_text)
-    TextView mStatusTextView;
-
-    @Bind(R.id.progress_bar)
-    ProgressBar mProgressBar;
-
-    @Bind(R.id.report_problem)
-    View connectionProblem;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_choice_step, container, false);
-        ButterKnife.bind(this, v);
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        mChoiceContainer = (RadioGroup) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_choice_attempt, null, false);
+        mAttemptContainer.addView(mChoiceContainer);
         return v;
     }
-
-    @Override
-    protected void setTextToActionButton(String text) {
-        mActionButton.setText(text);
-    }
-
-    @Override
-    protected void setListenerToActionButton(View.OnClickListener l) {
-        mActionButton.setOnClickListener(l);
-    }
-
-    @Override
-    @Subscribe
-    public void onSuccessLoadAttempt(SuccessAttemptEvent e) {
-        if (mStep == null || e.getStepId() != mStep.getId() || e.getAttempt() == null) return;
-
-        showAttempt(e.getAttempt());
-        mAttempt = e.getAttempt();
-    }
-
 
     /**
      * it is unique for each attempt type
@@ -122,30 +77,13 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
     }
 
 
+    //it is unique for each type
     @Override
     protected void blockUIBeforeSubmit(boolean needBlock) {
         RadioGroupHelper.setEnabled(mChoiceContainer, !needBlock);
     }
 
-
-    @Override
-    protected void tryAgain() {
-        blockUIBeforeSubmit(false);
-
-        // FIXME: 17.01.16 refactor
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            mChoiceContainer.setBackground(mRootView.getBackground());
-        } else {
-            mChoiceContainer.setBackgroundDrawable(mRootView.getBackground());
-        }
-
-        createNewAttempt();
-        mSubmission = null;
-
-        mResultLine.setVisibility(View.GONE);
-        mActionButton.setText(mSubmitText);
-    }
-
+    //it is unique for each type of replay
     @Override
     protected Reply generateReply() {
         List<Boolean> options = new ArrayList<>();
@@ -154,6 +92,43 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
             options.add(view.isChecked());
         }
         return new Reply(options);
+    }
+
+
+    @Override
+    protected void onRestoreSubmission() {
+        Reply reply = mSubmission.getReply();
+        if (reply == null) return;
+
+        List<Boolean> choices = reply.getChoices();
+        if (choices == null) return;
+
+        for (int i = 0; i < mChoiceContainer.getChildCount(); i++) {
+            CompoundButton view = (CompoundButton) mChoiceContainer.getChildAt(i);
+            view.setChecked(choices.get(i));
+        }
+    }
+
+
+    private void buildChoiceItem(CompoundButton item, String rawText) {
+        int dp4 = (int) DpPixelsHelper.convertDpToPixel(4);
+        item.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        item.setPadding(0, dp4, 0, dp4);
+        String text = HtmlHelper.fromHtml(rawText).toString();
+        item.setText(text);
+        mChoiceContainer.addView(item);
+    }
+
+    @Subscribe
+    @Override
+    public void onInternetEnabled(InternetIsEnabledEvent enabledEvent) {
+        super.onInternetEnabled(enabledEvent);
+    }
+
+    @Override
+    @Subscribe
+    public void onSuccessLoadAttempt(SuccessAttemptEvent e) {
+        super.onSuccessLoadAttempt(e);
     }
 
     @Override
@@ -171,100 +146,17 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
     @Subscribe
     @Override
     public void onFailCreateAttemptEvent(FailAttemptEvent event) {
-        if (mStep == null || event.getStepId() != mStep.getId()) return;
-
-        showOnlyInternetProblem(true);
+        super.onFailCreateAttemptEvent(event);
     }
 
     @Subscribe
     @Override
     public void onFailCreateSubmission(FailSubmissionCreatedEvent event) {
-        if (mAttempt == null || event.getAttemptId() != mAttempt.getId()) return;
-
-        showOnlyInternetProblem(true);
+        super.onFailCreateSubmission(event);
     }
 
     @Subscribe
     public void onFailGettingSubmission(FailGettingLastSubmissionEvent e) {
         super.onFailGettingSubmission(e);
-    }
-
-    @Override
-    protected void onRestoreSubmission() {
-        Reply reply = mSubmission.getReply();
-        if (reply == null) return;
-
-        List<Boolean> choices = reply.getChoices();
-        if (choices == null) return;
-
-        for (int i = 0; i < mChoiceContainer.getChildCount(); i++) {
-            CompoundButton view = (CompoundButton) mChoiceContainer.getChildAt(i);
-            view.setChecked(choices.get(i));
-        }
-    }
-
-    @Override
-    protected void onWrongSubmission() {
-        mChoiceContainer.setBackgroundResource(R.color.wrong_answer_background);
-        mStatusIcon.setImageDrawable(mWrongIcon);
-        mStatusTextView.setText(mWrongString);
-        mResultLine.setBackgroundResource(R.color.wrong_answer_background);
-        mResultLine.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    protected void onCorrectSubmission() {
-        markLocalProgressAsViewed();
-        mChoiceContainer.setBackgroundResource(R.color.correct_answer_background);
-        mStatusIcon.setImageDrawable(mCorrectIcon);
-        mStatusTextView.setText(mCorrectString);
-        mResultLine.setBackgroundResource(R.color.correct_answer_background);
-        mResultLine.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    protected void showLoadState(boolean isLoading) {
-        if (isLoading) {
-            mActionButton.setVisibility(View.GONE);
-            ProgressHelper.activate(mProgressBar);
-        } else {
-            ProgressHelper.dismiss(mProgressBar);
-            mActionButton.setVisibility(View.VISIBLE);
-            showAnswerField(true);
-        }
-
-    }
-
-    @Override
-    protected void showAnswerField(boolean needShow) {
-        if (needShow) {
-            mChoiceContainer.setVisibility(View.VISIBLE);
-        } else {
-            mChoiceContainer.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    protected void enableInternetMessage(boolean needShow) {
-        if (needShow) {
-            connectionProblem.setVisibility(View.VISIBLE);
-        } else {
-            connectionProblem.setVisibility(View.GONE);
-        }
-    }
-
-    @Subscribe
-    @Override
-    public void onInternetEnabled(InternetIsEnabledEvent enabledEvent) {
-        super.onInternetEnabled(enabledEvent);
-    }
-
-    private void buildChoiceItem(CompoundButton item, String rawText) {
-        int dp4 = (int) DpPixelsHelper.convertDpToPixel(4);
-        item.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        item.setPadding(0, dp4, 0, dp4);
-        String text = HtmlHelper.fromHtml(rawText).toString();
-        item.setText(text);
-        mChoiceContainer.addView(item);
     }
 }
