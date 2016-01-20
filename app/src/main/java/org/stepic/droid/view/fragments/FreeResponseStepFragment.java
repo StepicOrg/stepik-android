@@ -42,6 +42,7 @@ public class FreeResponseStepFragment extends StepWithAttemptsFragment {
     @Override
     protected void showAttempt(Attempt attempt) {
         //do nothing, because this attempt doesn't have any specific.
+        mAnswerField.getText().clear();
     }
 
     @Override
