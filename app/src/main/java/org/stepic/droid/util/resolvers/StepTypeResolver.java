@@ -14,6 +14,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.fragments.ChoiceStepFragment;
 import org.stepic.droid.view.fragments.FreeResponseStepFragment;
 import org.stepic.droid.view.fragments.NotSupportedYetStepFragment;
+import org.stepic.droid.view.fragments.StringStepFragment;
 import org.stepic.droid.view.fragments.TextStepFragment;
 import org.stepic.droid.view.fragments.VideoStepFragment;
 
@@ -119,6 +120,8 @@ public class StepTypeResolver implements IStepResolver {
                 return new ChoiceStepFragment();
             case AppConstants.TYPE_FREE_ANSWER:
                 return new FreeResponseStepFragment();
+            case AppConstants.TYPE_STRING:
+                return new StringStepFragment();
             default:
                 return new NotSupportedYetStepFragment();
         }
