@@ -362,7 +362,7 @@ public class StepsActivity extends FragmentActivityBase {
             step.setIs_custom_passed(true);
             int pos = mViewPager.getCurrentItem();
 
-            for (int i = 0; i < mStepAdapter.getCount(); i++) {
+            for (int i = 0; i < mTabLayout.getTabCount(); i++) {
                 TabLayout.Tab tab = mTabLayout.getTabAt(i);
                 tab.setIcon(mStepAdapter.getTabDrawable(i));
             }
