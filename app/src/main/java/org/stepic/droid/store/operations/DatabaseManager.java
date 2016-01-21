@@ -329,11 +329,8 @@ public class DatabaseManager extends DbManagerBase {
     public boolean existStepIntLesson(@NotNull Step step, @NotNull Lesson lesson) {
         try {
             open();
-            if (!isStepInDb(step)) {
-                return false;
-            }
+            return isStepInDb(step) && step.getLesson() == lesson.getId();
 
-            return step.getLesson() == lesson.getId();
         } finally {
             close();
         }
