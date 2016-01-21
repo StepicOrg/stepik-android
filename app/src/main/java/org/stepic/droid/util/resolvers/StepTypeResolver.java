@@ -13,6 +13,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.fragments.ChoiceStepFragment;
 import org.stepic.droid.view.fragments.FreeResponseStepFragment;
+import org.stepic.droid.view.fragments.MathStepFragment;
 import org.stepic.droid.view.fragments.NotSupportedYetStepFragment;
 import org.stepic.droid.view.fragments.StringStepFragment;
 import org.stepic.droid.view.fragments.TextStepFragment;
@@ -41,7 +42,7 @@ public class StepTypeResolver implements IStepResolver {
         mapFromTypeToDrawable.put(AppConstants.TYPE_VIDEO, getDrawable(context, R.drawable.ic_video1));
         mapFromTypeToDrawable.put(AppConstants.TYPE_MATCHING, getDrawable(context, R.drawable.ic_matching1));
         mapFromTypeToDrawable.put(AppConstants.TYPE_SORTING, getDrawable(context, R.drawable.ic_sorting1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_MATCH, getDrawable(context, R.drawable.ic_math1));
+        mapFromTypeToDrawable.put(AppConstants.TYPE_MATH, getDrawable(context, R.drawable.ic_math1));
         mapFromTypeToDrawable.put(AppConstants.TYPE_FREE_ANSWER, getDrawable(context, R.drawable.ic_free_answer1));
         mapFromTypeToDrawable.put(AppConstants.TYPE_TABLE, getDrawable(context, R.drawable.ic_table1));
         mapFromTypeToDrawable.put(AppConstants.TYPE_STRING, getDrawable(context, R.drawable.ic_string1));
@@ -60,7 +61,7 @@ public class StepTypeResolver implements IStepResolver {
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_VIDEO, getDrawable(context, R.drawable.ic_video));
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_MATCHING, getDrawable(context, R.drawable.ic_matching));
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_SORTING, getDrawable(context, R.drawable.ic_sorting));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_MATCH, getDrawable(context, R.drawable.ic_math));
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_MATH, getDrawable(context, R.drawable.ic_math));
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_FREE_ANSWER, getDrawable(context, R.drawable.ic_free_answer));
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_TABLE, getDrawable(context, R.drawable.ic_table));
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_STRING, getDrawable(context, R.drawable.ic_string));
@@ -122,6 +123,8 @@ public class StepTypeResolver implements IStepResolver {
                 return new FreeResponseStepFragment();
             case AppConstants.TYPE_STRING:
                 return new StringStepFragment();
+            case AppConstants.TYPE_MATH:
+                return new MathStepFragment();
             default:
                 return new NotSupportedYetStepFragment();
         }
