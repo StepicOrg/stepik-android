@@ -18,8 +18,11 @@ import org.stepic.droid.events.submissions.FailGettingLastSubmissionEvent;
 import org.stepic.droid.events.submissions.FailSubmissionCreatedEvent;
 import org.stepic.droid.events.submissions.SubmissionCreatedEvent;
 import org.stepic.droid.events.submissions.SuccessGettingLastSubmissionEvent;
+import org.stepic.droid.model.Attachment;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Reply;
+
+import java.util.ArrayList;
 
 import butterknife.BindString;
 
@@ -47,7 +50,10 @@ public class FreeResponseStepFragment extends StepWithAttemptsFragment {
 
     @Override
     protected Reply generateReply() {
-        return new Reply(mAnswerField.getText().toString());
+        return new Reply.Builder()
+                .setText(mAnswerField.getText().toString())
+                .setAttachments(new ArrayList<Attachment>())
+                .build();
     }
 
     @Override

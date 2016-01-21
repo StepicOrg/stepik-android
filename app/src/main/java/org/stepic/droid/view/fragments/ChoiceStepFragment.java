@@ -85,7 +85,9 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
             CompoundButton view = (CompoundButton) mChoiceContainer.getChildAt(i);
             options.add(view.isChecked());
         }
-        return new Reply(options);
+        return new Reply.Builder()
+                .setChoices(options)
+                .build();
     }
 
 

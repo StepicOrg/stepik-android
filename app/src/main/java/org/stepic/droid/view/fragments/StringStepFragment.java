@@ -56,7 +56,9 @@ public class StringStepFragment extends StepWithAttemptsFragment {
 
     @Override
     protected Reply generateReply() {
-        return new Reply(mAnswerField.getText().toString());
+        return new Reply.Builder()
+                .setText(mAnswerField.getText().toString())
+                .build();
     }
 
     @Override
