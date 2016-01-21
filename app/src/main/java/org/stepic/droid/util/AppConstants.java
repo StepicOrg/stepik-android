@@ -36,7 +36,7 @@ public class AppConstants {
     public static final String TYPE_VIDEO = "video";
     public static final String TYPE_MATCHING = "matching";
     public static final String TYPE_SORTING = "sorting";
-    public static final String TYPE_MATCH = "match";
+    public static final String TYPE_MATH = "math";
     public static final String TYPE_FREE_ANSWER = "free-answer";
     public static final String TYPE_TABLE = "table";
     public static final String TYPE_STRING = "string";
