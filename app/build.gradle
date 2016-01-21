@@ -74,6 +74,7 @@ dependencies {
 
     compile 'me.zhanghai.android.materialprogressbar:library:1.1.4'
 
+    compile 'com.makeramen:dragsortadapter:1.3.0'
 }
 
 repositories {
