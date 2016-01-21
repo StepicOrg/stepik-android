@@ -107,7 +107,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public final void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mHandler = new Handler();
         init();

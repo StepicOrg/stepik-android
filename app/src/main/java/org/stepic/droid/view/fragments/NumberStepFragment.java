@@ -1,5 +1,12 @@
 package org.stepic.droid.view.fragments;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.text.InputType;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.events.InternetIsEnabledEvent;
@@ -11,12 +18,20 @@ import org.stepic.droid.events.submissions.SubmissionCreatedEvent;
 import org.stepic.droid.events.submissions.SuccessGettingLastSubmissionEvent;
 import org.stepic.droid.model.Reply;
 
-public class MathStepFragment extends SingleLineSendStepFragment {
+public class NumberStepFragment extends SingleLineSendStepFragment {
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        mAnswerField.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+        return v;
+    }
 
     @Override
     protected Reply generateReply() {
         return new Reply.Builder()
-                .setFormula(mAnswerField.getText().toString())
+                .setNumber(mAnswerField.getText().toString())
                 .build();
     }
 
@@ -25,7 +40,7 @@ public class MathStepFragment extends SingleLineSendStepFragment {
         Reply reply = mSubmission.getReply();
         if (reply == null) return;
 
-        String text = reply.getFormula();
+        String text = reply.getNumber();
         mAnswerField.setText(text);
     }
 

@@ -11,7 +11,7 @@ import org.stepic.droid.events.submissions.SubmissionCreatedEvent;
 import org.stepic.droid.events.submissions.SuccessGettingLastSubmissionEvent;
 import org.stepic.droid.model.Reply;
 
-public class StringStepFragment extends OneLineWithSendStepFragment {
+public class StringStepFragment extends SingleLineSendStepFragment {
     @Override
     protected Reply generateReply() {
         return new Reply.Builder()

@@ -14,15 +14,15 @@ import android.widget.TextView;
 import org.stepic.droid.R;
 import org.stepic.droid.model.Attempt;
 
-public abstract class OneLineWithSendStepFragment extends StepWithAttemptsFragment {
+public abstract class SingleLineSendStepFragment extends StepWithAttemptsFragment {
 
     protected EditText mAnswerField;
 
     @Nullable
     @Override
-    public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        mAnswerField = (EditText) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_string_attempt, mAttemptContainer, false);
+        mAnswerField = (EditText) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_single_line_attempt, mAttemptContainer, false);
         mAttemptContainer.addView(mAnswerField);
         mAnswerField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
