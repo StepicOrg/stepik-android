@@ -1,11 +1,5 @@
 package org.stepic.droid.view.fragments;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.events.InternetIsEnabledEvent;
@@ -15,35 +9,24 @@ import org.stepic.droid.events.submissions.FailGettingLastSubmissionEvent;
 import org.stepic.droid.events.submissions.FailSubmissionCreatedEvent;
 import org.stepic.droid.events.submissions.SubmissionCreatedEvent;
 import org.stepic.droid.events.submissions.SuccessGettingLastSubmissionEvent;
-import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Reply;
 
-public class MathStepFragment extends StepWithAttemptsFragment {
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    protected void showAttempt(Attempt attempt) {
-
-    }
+public class MathStepFragment extends OneLineWithSendStepFragment {
 
     @Override
     protected Reply generateReply() {
-        return null;
-    }
-
-    @Override
-    protected void blockUIBeforeSubmit(boolean needBlock) {
-
+        return new Reply.Builder()
+                .setFormula(mAnswerField.getText().toString())
+                .build();
     }
 
     @Override
     protected void onRestoreSubmission() {
+        Reply reply = mSubmission.getReply();
+        if (reply == null) return;
 
+        String text = reply.getFormula();
+        mAnswerField.setText(text);
     }
 
     @Subscribe
