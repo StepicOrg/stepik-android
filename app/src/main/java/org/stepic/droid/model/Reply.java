@@ -7,6 +7,7 @@ public class Reply {
     private final String text;
     private final List<Attachment> attachments;
     private final String formula;
+    private final String number;
 
     public static class Builder {
 
@@ -14,6 +15,7 @@ public class Reply {
         private String text;
         private List<Attachment> attachments;
         private String formula;
+        private String number;
 
         public Builder() {
         }
@@ -38,6 +40,11 @@ public class Reply {
             return this;
         }
 
+        public Builder setNumber(String number) {
+            this.number = number;
+            return this;
+        }
+
         public Reply build() {
             return new Reply(this);
         }
@@ -49,8 +56,12 @@ public class Reply {
         text = builder.text;
         attachments = builder.attachments;
         formula = builder.formula;
+        number = builder.number;
     }
 
+    public String getNumber() {
+        return number;
+    }
 
     public String getText() {
         return text;
