@@ -133,7 +133,6 @@ public class MainFeedActivity extends FragmentActivityBase
         //// TODO: 22.12.15 optimize it, remove dependence on indices
         mFragments = new ArrayList<>();
         mFragments.add(new MyCoursesFragment());
-//        mFragments.add(new BestLessons());
         mFragments.add(new FindCoursesFragment());
         mFragments.add(new DownloadsFragment());
         mFragments.add(new SettingsFragment());
@@ -209,20 +208,7 @@ public class MainFeedActivity extends FragmentActivityBase
     private void setUpDrawerLayout() {
 
         mNavigationView.setNavigationItemSelectedListener(this);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_closed) {
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
-                super.onDrawerClosed(drawerView);
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
-
-                super.onDrawerOpened(drawerView);
-            }
-        };
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_closed);
 
         //Setting the actionbarToggle to drawer layout
         mDrawerLayout.setDrawerListener(actionBarDrawerToggle);

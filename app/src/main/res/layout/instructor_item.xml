@@ -1,11 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:baselineAligned="false"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="8dp">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_gravity="center"
+              android:baselineAligned="false"
+              android:gravity="center"
+              android:orientation="vertical"
+              android:padding="8dp">
 
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -15,7 +16,7 @@
         android:layout_gravity="center" />
 
 
-    <org.stepic.droid.view.custom.STextView
+    <TextView
 
         android:id="@+id/first_last_name"
         android:layout_width="wrap_content"
@@ -23,11 +24,11 @@
         android:layout_gravity="center"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="John Doe"
+        tools:text="John Doe"
         android:textColor="@color/stepic_regular_text"
         android:textSize="@dimen/text_header" />
 
-    <org.stepic.droid.view.custom.STextView
+    <TextView
         android:id="@+id/course_short_bio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,7 +36,7 @@
         android:gravity="center"
         android:maxLines="3"
         android:minLines="3"
-        android:text="sshort_bioshort_bioshort_bioshort_biohort_bio short_bioshort_bioshort_bio short_bio short_bio short_bioshort_bioshort_bioshort_bio"
+        tools:text="sshort_bioshort_bioshort_bioshort_biohort_bio short_bioshort_bioshort_bio short_bio short_bio short_bioshort_bioshort_bioshort_bio"
         android:textColor="@color/stepic_weak_text"
         android:textSize="@dimen/text_height" />
 

@@ -1,7 +1,5 @@
 package org.stepic.droid.web;
 
-import com.google.gson.annotations.SerializedName;
-
 public class ViewAssignment {
     long assignment;
     long step;

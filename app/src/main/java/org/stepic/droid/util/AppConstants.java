@@ -29,7 +29,6 @@ public class AppConstants {
             "</html>";
     public static final String KEY_LOAD_TYPE = "KEY_LOAD_TYPE";
     public static final String KEY_TABLE_TYPE = "table_type";
-    public static final int UI_UPDATING_TIME = 1000;
 
 
     //Types of steps:
@@ -64,9 +63,7 @@ public class AppConstants {
     public static final String METRICA_REFRESH_UNIT = "Pull from top to refresh section unit";
     public static final String METRICA_LONG_TAP_COURSE = "Long tap on course";
     public static final java.lang.String SHOW_DETAILED_INFO_CLICK = "Show detailed info click from context menu of course";
-    public static final java.lang.String METRICA_CLICK_CACHE_COURSE = "Click cache course";
 
-    public static final java.lang.String METRICA_CLICK_DELETE_COURSE = "Click delete course from cache";
     public static final java.lang.String METRICA_CLICK_DELETE_SECTION = "Click delete section from cache";
     public static final java.lang.String METRICA_CLICK_CACHE_SECTION = "Click cache section";
     public static final java.lang.String METRICA_CLICK_CACHE_UNIT = "Click cache unit";

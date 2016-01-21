@@ -55,26 +55,16 @@ import retrofit.Retrofit;
 public class CourseDetailActivity extends FragmentActivityBase {
 
 
-    private static final String TAG = "unrolled_course";
-
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
-    //    @Bind(R.id.intro_video)
-    WebView mIntroView;
+    private WebView mIntroView;
 
-    //    @Bind(R.id.description)
-//    TextView mDescriptionView;
-//
-//    @Bind(R.id.course_name)
-    TextView mCourseNameView;
+    private TextView mCourseNameView;
 
-    //    @Bind(R.id.instructors_carousel)
-    RecyclerView mInstructorsCarousel;
+    private RecyclerView mInstructorsCarousel;
 
-    //    @Bind(R.id.load_progressbar)
-    ProgressBar mInstructorsProgressBar;
-
+    private ProgressBar mInstructorsProgressBar;
 
     @Bind(R.id.join_course_layout)
     View mJoinCourseView;

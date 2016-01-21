@@ -27,7 +27,7 @@ public class FileUtil {
             URLConnection connection = url.openConnection();
             connection.connect();
 
-            // this will be useful so that you can show a tipical 0-100%
+            // this will be useful so that you can show a typical 0-100%
             // progress bar
             int lenghtOfFile = connection.getContentLength();
 

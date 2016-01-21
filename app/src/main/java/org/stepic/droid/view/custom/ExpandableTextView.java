@@ -2,7 +2,6 @@ package org.stepic.droid.view.custom;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
 import android.view.View;

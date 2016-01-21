@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cv"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -27,7 +28,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
-                <org.stepic.droid.view.custom.SDetailedCourseHeadersTV
+                <TextView
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:textSize="14sp"
                     android:id="@+id/section_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -35,7 +39,7 @@
                     android:layout_marginBottom="2dp"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="1. Section Section" />
+                    tools:text="1. Section Section"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -44,27 +48,27 @@
                     android:orientation="vertical">
 
 
-                    <org.stepic.droid.view.custom.STextView
+                    <TextView
                         android:id="@+id/start_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="start date"
+                        tools:text="start date"
                         android:textColor="@color/stepic_weak_text"
                         android:textSize="@dimen/text_height" />
 
-                    <org.stepic.droid.view.custom.STextView
+                    <TextView
                         android:id="@+id/soft_deadline"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="soft deadline date"
+                        tools:text="soft deadline date"
                         android:textColor="@color/stepic_weak_text"
                         android:textSize="@dimen/text_height" />
 
-                    <org.stepic.droid.view.custom.STextView
+                    <TextView
                         android:id="@+id/hard_deadline"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="hard deadline date"
+                        tools:text="hard deadline date"
                         android:textColor="@color/stepic_weak_text"
                         android:textSize="@dimen/text_height" />
 

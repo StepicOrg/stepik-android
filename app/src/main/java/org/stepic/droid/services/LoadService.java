@@ -313,7 +313,7 @@ public class LoadService extends IntentService {
         course.setIs_cached(false);
         mDb.updateOnlyCachedLoadingCourse(course, type);
 
-        Response<SectionsStepicResponse> response = null;
+        Response<SectionsStepicResponse> response;
         try {
             response = mApi.getSections(course.getSections()).execute();
             if (response.isSuccess()) {

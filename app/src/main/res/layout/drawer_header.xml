@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="170dp">
+             android:layout_width="match_parent"
+             android:layout_height="170dp"
+             xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
         android:layout_width="match_parent"
@@ -26,7 +27,7 @@
             android:layout_alignStart="@+id/profile_image"
             android:gravity="start"
             android:paddingBottom="4dp"
-            android:text="Kirill Makarov"
+            tools:text="Kirill Makarov"
             android:textColor="#FFF"
             android:textSize="14sp"
             android:textStyle="bold" />

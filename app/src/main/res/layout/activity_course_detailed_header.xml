@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical">
 
     <WebView
         android:focusableInTouchMode="false"
@@ -20,8 +21,7 @@
         android:layout_gravity="center|start"
         android:ellipsize="end"
         android:gravity="center_horizontal"
-        android:maxLines="2"
         android:paddingLeft="8dp"
-        android:text="Course Name" />
+        tools:text="Course Name lalaCourse Name lalaCourse Name lala"/>
 
 </LinearLayout>

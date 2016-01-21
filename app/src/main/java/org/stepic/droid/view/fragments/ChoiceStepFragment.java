@@ -33,7 +33,7 @@ import java.util.List;
 
 public class ChoiceStepFragment extends StepWithAttemptsFragment {
 
-    RadioGroup mChoiceContainer;
+    private RadioGroup mChoiceContainer;
 
     @Nullable
     @Override

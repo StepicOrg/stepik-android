@@ -25,7 +25,7 @@ public class Course implements Serializable, Parcelable {
     @Inject
     transient IConfig mConfig;
 
-    transient Context mContext;
+    private transient Context mContext;
 
     private transient DateTimeFormatter mFormatForView;
 

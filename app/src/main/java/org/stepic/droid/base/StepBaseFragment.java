@@ -31,7 +31,7 @@ public abstract class StepBaseFragment extends FragmentBase {
         if (mStep != null &&
                 mStep.getBlock() != null &&
                 mStep.getBlock().getText() != null &&
-                mStep.getBlock().getText() != "") {
+                !mStep.getBlock().getText().equals("")) {
             WebSettings webSettings = mHeaderWv.getSettings();
             webSettings.setJavaScriptEnabled(true);
 

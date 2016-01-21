@@ -4,17 +4,12 @@
     <string name="yet_have_not_account">"Don\'t have an account yet? Sign up"</string>
     <string name="or_sign_up_with_email">or sign up with e-mail</string>
     <string name="sign_up">Sign up</string>
-    <string name="show_optional_fields">Show optional fields</string>
     <string name="create_my_account">Create account</string>
     <string name="by_creating_you_agree">By creating stepic account, you agree to the</string>
     <string name="terms">Terms</string>
-    <string name="facebook_name_of_company" translatable="false">Facebook</string>
-    <string name="google_name_of_company" translatable="false">Google</string>
     <string name="email_login" translatable="false">e-mail</string>
     <string name="remind_password">Forgot password?</string>
-    <string name="sign_in_btn">Sign in button</string>
     <string name="sign_in">Sign In</string>
-    <string name="describing_error">The following error occurred while logging you in</string>
     <string name="not_video_player_error">Please, install player for video playing</string>
     <string name="first_name">first name</string>
     <string name="second_name">second name</string>
@@ -44,12 +39,10 @@
     <string name="units_lessons_title">Lessons</string>
     <string name="steps_title">Steps</string>
     <string name="not_available_lesson">Lesson is not available now</string>
-    <string name="turn_on_permission">Turn on permission for application to memory</string>
     <string name="description_download">Caching Stepic\'s video</string>
     <string name="video_title">Video</string>
     <string name="wi_fi_setting">Wi-Fi only download</string>
     <string name="clear_cache_title">Clear cache</string>
-    <string name="clear_cache_dialog_message">Are you sure you want to delete all saved lessons?</string>
     <string name="title_clear_cache_dialog">Please confirm</string>
     <string name="yes">Yes</string>
     <string name="allow">Allow</string>
@@ -70,15 +63,11 @@
     <string name="explain_permission">For cache course and watch video offline Stepic need permission to storage of phone.</string>
     <string name="allow_question">Allow?</string>
     <string name="video_quality">Video quality</string>
-    <string name="ok">Ok</string>
-    <string name="choose_video_quality">Choose video quality</string>
     <string name="sync_problem">There was a problem syncing the data, please try again later.</string>
     <string name="empty_courses">Looks like you haven\'t enrolled in any courses yet. Tap to find courses!</string>
     <string name="cache_cleared">Cache is cleared successfully!</string>
     <string name="join_course_web_exception">Try to join course in web</string>
     <string name="downloads">Downloads</string>
-    <string name="sign_in_social">with social</string>
-    <string name="success">Success</string>
     <string name="or_sign_in_social">Or sign in with</string>
     <string name="loading_message">Please wait…</string>
     <string name="kb">KB</string>

@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/abc_action_bar_default_height_material"
-    android:background="@color/stepic_white">
+                android:layout_height="@dimen/abc_action_bar_default_height_material">
 
     <RelativeLayout
         android:id="@+id/actionbar_close_btn_layout"

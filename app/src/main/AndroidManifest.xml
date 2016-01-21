@@ -51,15 +51,15 @@
             android:theme="@style/AppTheme">
 
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"></action>
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT"></category>
-                <category android:name="android.intent.category.BROWSABLE"></category>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
                 <data
                     android:host="stepic.org"
                     android:pathPattern="/oauth"
-                    android:scheme="stepic"></data>
+                    android:scheme="stepic"/>
             </intent-filter>
         </activity>
 

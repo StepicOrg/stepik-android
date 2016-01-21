@@ -166,9 +166,9 @@ public class CourseSearchFragment extends CourseListFragmentBase {
             if (searchIds != null) {
                 //// FIXME: 10.01.16 use other data structure
                 Course forInsert = null;
-                for (int i = 0; i < searchIds.length; i++) {
+                for (long searchId : searchIds) {
                     for (Course cachedCourse : cachedCourses) {
-                        if (cachedCourse.getCourseId() == searchIds[i]) {
+                        if (cachedCourse.getCourseId() == searchId) {
                             forInsert = cachedCourse;
                             break;
                         }
@@ -220,8 +220,4 @@ public class CourseSearchFragment extends CourseListFragmentBase {
         super.onFailureDataLoad(e);
     }
 
-    @Override
-    public void onRefresh() {
-        super.onRefresh();
-    }
 }

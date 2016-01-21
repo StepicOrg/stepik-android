@@ -30,9 +30,7 @@ public class FromDbStepTask extends StepicTask<Void, Void, List<Step>> {
 
     @Override
     protected List<Step> doInBackgroundBody(Void... params) throws Exception {
-        List<Step> fromCache = null;
-        fromCache = mDatabaseManager.getStepsOfLesson(mLesson.getId());
-        return fromCache;
+        return mDatabaseManager.getStepsOfLesson(mLesson.getId());
     }
 
     @Override

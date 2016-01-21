@@ -1,8 +1,6 @@
 package org.stepic.droid.util;
 
 import org.stepic.droid.model.IProgressable;
-import org.stepic.droid.model.Progress;
-import org.stepic.droid.model.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +12,6 @@ public class ProgressUtil {
         for (IProgressable item : objects) {
             progressesId.add(item.getProgress());
         }
-        return progressesId.toArray(new String[0]);
+        return progressesId.toArray(new String[progressesId.size()]);
     }
 }

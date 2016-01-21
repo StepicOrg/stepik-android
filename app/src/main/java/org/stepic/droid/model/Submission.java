@@ -49,7 +49,7 @@ public class Submission {
         this.attempt = attempt;
     }
 
-    public Submission(Reply reply, long attempt, Status status) {
+    public Submission(Reply reply, long attempt, @Nullable Status status) {
         this(reply, attempt);
         this.status = status;
     }

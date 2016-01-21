@@ -1,7 +1,5 @@
 package org.stepic.droid.view.fragments;
 
-import android.os.Bundle;
-
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.base.CoursesDatabaseFragmentBase;
@@ -20,22 +18,10 @@ import org.stepic.droid.store.operations.DatabaseManager;
 
 public class MyCoursesFragment extends CoursesDatabaseFragmentBase {
 
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
     @Override
     protected DatabaseManager.Table getCourseType() {
         return DatabaseManager.Table.enrolled;
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
 
     @Override
     @Subscribe

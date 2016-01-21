@@ -107,7 +107,7 @@ public class StepTypeResolver implements IStepResolver {
         if (step == null
                 || step.getBlock() == null
                 || step.getBlock().getName() == null
-                || step.getBlock().getName() == "")
+                || step.getBlock().getName().equals(""))
             return errorStep;
 
         String type = step.getBlock().getName();
@@ -139,7 +139,7 @@ public class StepTypeResolver implements IStepResolver {
         if (step == null
                 || step.getBlock() == null
                 || step.getBlock().getName() == null
-                || step.getBlock().getName() == "")
+                || step.getBlock().getName().equals(""))
             return false;
 
         String type = step.getBlock().getName();

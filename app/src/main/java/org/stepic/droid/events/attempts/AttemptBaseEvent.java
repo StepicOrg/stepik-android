@@ -4,9 +4,8 @@ import org.stepic.droid.model.Attempt;
 
 public class AttemptBaseEvent {
 
-    long stepId;
-
-    Attempt mAttempt;
+    private long stepId;
+    private Attempt mAttempt;
 
     public AttemptBaseEvent(long stepId, Attempt attempt) {
 

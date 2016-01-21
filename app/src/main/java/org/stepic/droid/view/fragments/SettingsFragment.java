@@ -131,11 +131,6 @@ public class SettingsFragment extends FragmentBase {
         mSharedPreferenceHelper.setMobileInternetAndWifiAllowed(isMobileAllowed);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     private void showVersionName() {
         try {
             Context mainAppContext = MainApplication.getAppContext();

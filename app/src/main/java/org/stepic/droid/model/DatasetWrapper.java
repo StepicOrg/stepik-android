@@ -1,7 +1,7 @@
 package org.stepic.droid.model;
 
 public class DatasetWrapper {
-    Dataset dataset;
+    private Dataset dataset;
 
     public DatasetWrapper() {
         dataset = null;

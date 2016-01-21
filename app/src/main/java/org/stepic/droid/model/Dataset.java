@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Dataset {
     private boolean is_multiple_choice;
-    List<String> options;
+    private List<String> options;
     private String someStringValueFromServer;
 
     public Dataset() {
