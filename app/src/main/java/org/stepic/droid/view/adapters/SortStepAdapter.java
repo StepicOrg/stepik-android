@@ -9,11 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.makeramen.dragsortadapter.DragSortAdapter;
-import com.makeramen.dragsortadapter.NoForegroundShadowBuilder;
-
 import org.stepic.droid.R;
 import org.stepic.droid.model.Option;
+import org.stepic.droid.view.custom.dragsortadapter.DragSortAdapter;
+import org.stepic.droid.view.custom.dragsortadapter.NoForegroundShadowBuilder;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +33,14 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
         for (Option option : data) {
             mItemIdOptionMap.put(option.getPositionId(), option);
         }
+    }
+
+    public List<Option> getData() {
+        return data;
+    }
+
+    public Map<Integer, Option> getItemIdOptionMap() {
+        return mItemIdOptionMap;
     }
 
     @Override
@@ -68,11 +75,15 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
 
     @Override
     public int getPositionForId(long id) {
-        return data.indexOf(mItemIdOptionMap.get(id));
+        int id_int = (int) id;
+        Option option = mItemIdOptionMap.get(id_int);
+        return data.indexOf(option);
     }
 
     @Override
     public boolean move(int fromPosition, int toPosition) {
+        if (fromPosition < 0 || toPosition < 0 || fromPosition >= data.size() || toPosition > data.size())
+            return false;
         data.add(toPosition, data.remove(fromPosition));
         return true;
     }
@@ -90,11 +101,18 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
         public OptionViewHolder(DragSortAdapter adapter, View itemView) {
             super(adapter, itemView);
             ButterKnife.bind(this, itemView);
+//            mSortImageView.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View v, MotionEvent event) {
+//                    startDrag();
+//                    return true;
+//                }
+//            });
         }
 
         @Override
         public void onClick(@NonNull View v) {
-            // TODO: 21.01.16 startDrag()
+//            startDrag();
         }
 
         @Override
@@ -107,5 +125,11 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
         public View.DragShadowBuilder getShadowBuilder(View itemView, Point touchPoint) {
             return new NoForegroundShadowBuilder(itemView, touchPoint);
         }
+
+//        @Override
+//        public boolean onTouch(View v, MotionEvent event) {
+//            startDrag();
+//            return true;
+//        }
     }
 }

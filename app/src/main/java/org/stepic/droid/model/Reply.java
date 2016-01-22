@@ -8,6 +8,7 @@ public class Reply {
     private final List<Attachment> attachments;
     private final String formula;
     private final String number;
+    private final List<Integer> ordering;
 
     public static class Builder {
 
@@ -16,6 +17,7 @@ public class Reply {
         private List<Attachment> attachments;
         private String formula;
         private String number;
+        private List<Integer> ordering;
 
         public Builder() {
         }
@@ -45,6 +47,11 @@ public class Reply {
             return this;
         }
 
+        public Builder setOrdering(List<Integer> ordering) {
+            this.ordering = ordering;
+            return this;
+        }
+
         public Reply build() {
             return new Reply(this);
         }
@@ -57,6 +64,7 @@ public class Reply {
         attachments = builder.attachments;
         formula = builder.formula;
         number = builder.number;
+        ordering = builder.ordering;
     }
 
     public String getNumber() {
@@ -77,5 +85,9 @@ public class Reply {
 
     public List<Attachment> getAttachments() {
         return attachments;
+    }
+
+    public List<Integer> getOrdering() {
+        return ordering;
     }
 }
