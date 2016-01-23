@@ -287,7 +287,6 @@ public class RetrofitRESTApi implements IApi {
             return type + " " + access_token;
         } catch (Exception ex) {
             YandexMetrica.reportError("retrofitAuth", ex);
-            Log.e("retrofitAuth", ex.getMessage());
             // FIXME: 19.11.15 It not should happen
 
             mSharedPreference.deleteAuthInfo();
