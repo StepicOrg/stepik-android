@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -242,7 +241,7 @@ public class RetrofitRESTApi implements IApi {
     public Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery) {
 //        String encodedQuery = Uri.encode(rawQuery);
         String encodedQuery = rawQuery;
-        YandexMetrica.reportEvent(AppConstants.SEARCH, encodedQuery);
+        YandexMetrica.reportEvent(AppConstants.SEARCH, JsonHelper.toJson(encodedQuery));
         String type = "course";
         return mLoggedService.getSearchResults(page, encodedQuery, type);
     }
