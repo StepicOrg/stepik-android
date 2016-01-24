@@ -47,28 +47,12 @@ public class SortingStepFragment extends StepWithAttemptsFragment {
         mRecyclerView = ButterKnife.findById(view, R.id.recycler);
 
         mRecyclerView.setNestedScrollingEnabled(false);
-//        mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         LinearLayoutManager layoutManager = new WrapContentLinearLayoutManager(getActivity());
         layoutManager.setSmoothScrollbarEnabled(true);
 
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-//        mRootScrollView.setOnTouchListener(new View.OnTouchListener() {
-//            public boolean onTouch(View v, MotionEvent event) {
-//                mRecyclerView.getParent()
-//                        .requestDisallowInterceptTouchEvent(false);
-//                return false;
-//            }
-//        });
-//
-//        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
-//
-//            public boolean onTouch(View v, MotionEvent event) {
-//                v.getParent().requestDisallowInterceptTouchEvent(true);
-//                return false;
-//            }
-//        });
 
         return v;
     }

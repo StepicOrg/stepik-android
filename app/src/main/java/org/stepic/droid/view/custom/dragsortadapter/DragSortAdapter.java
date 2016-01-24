@@ -89,6 +89,13 @@ public abstract class DragSortAdapter<VH extends DragSortAdapter.ViewHolder>
     }
 
     /**
+     * Called after a drop event, override to handle exit draggable item out of recycler view.
+     */
+    public void onDragExit() {
+
+    }
+
+    /**
      * You probably want to use this to set the currently dragging item to blank while it's being
      * dragged
      *

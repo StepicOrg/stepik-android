@@ -22,7 +22,7 @@
             android:id="@+id/option_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="90"
+            android:layout_weight="80"
             android:gravity="center"
             tools:text="option "/>
 
@@ -31,7 +31,11 @@
             android:layout_width="0dp"
             android:layout_height="24dp"
             android:layout_gravity="center_vertical"
-            android:layout_weight="10"
+            android:layout_weight="20"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
             android:src="@drawable/ic_draggable"/>
     </LinearLayout>
 
