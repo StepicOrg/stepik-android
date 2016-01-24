@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
@@ -67,6 +68,9 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     @Bind(R.id.report_problem)
     View connectionProblem;
+
+    @Bind(R.id.root_scroll_view)
+    protected ScrollView mRootScrollView;
 
     @Bind(R.id.attempt_container)
     ViewGroup mAttemptContainer;

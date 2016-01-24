@@ -159,10 +159,14 @@ public abstract class DragSortAdapter<VH extends DragSortAdapter.ViewHolder>
             Point shadowTouchPoint = new Point();
             dragShadowBuilder.onProvideShadowMetrics(shadowSize, shadowTouchPoint);
 
-            itemView.startDrag(null, dragShadowBuilder,
-                    new DragInfo(getItemId(), shadowSize, shadowTouchPoint, adapter.getLastTouchPoint()), 0);
+            if (!((shadowSize.x < 0) || (shadowSize.y < 0) ||
+                    (shadowTouchPoint.x < 0) || (shadowTouchPoint.y < 0))) {
+                itemView.startDrag(null, dragShadowBuilder,
+                        new DragInfo(getItemId(), shadowSize, shadowTouchPoint, adapter.getLastTouchPoint()), 0);
 
-            adapter.notifyItemChanged(getAdapterPosition());
+                adapter.notifyItemChanged(getAdapterPosition());
+            }
+
         }
     }
 }

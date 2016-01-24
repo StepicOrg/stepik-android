@@ -45,8 +45,31 @@ public class SortingStepFragment extends StepWithAttemptsFragment {
         View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_sorting, mAttemptContainer, false);
         mAttemptContainer.addView(view);
         mRecyclerView = ButterKnife.findById(view, R.id.recycler);
-        mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+
+        mRecyclerView.setNestedScrollingEnabled(false);
+//        mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        LinearLayoutManager layoutManager = new WrapContentLinearLayoutManager(getActivity());
+        layoutManager.setSmoothScrollbarEnabled(true);
+
+        mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+//        mRootScrollView.setOnTouchListener(new View.OnTouchListener() {
+//            public boolean onTouch(View v, MotionEvent event) {
+//                mRecyclerView.getParent()
+//                        .requestDisallowInterceptTouchEvent(false);
+//                return false;
+//            }
+//        });
+//
+//        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+//
+//            public boolean onTouch(View v, MotionEvent event) {
+//                v.getParent().requestDisallowInterceptTouchEvent(true);
+//                return false;
+//            }
+//        });
+
         return v;
     }
 
@@ -78,6 +101,7 @@ public class SortingStepFragment extends StepWithAttemptsFragment {
     @Override
     protected void blockUIBeforeSubmit(boolean needBlock) {
         mRecyclerView.setEnabled(!needBlock);
+
     }
 
     @Override
