@@ -10,6 +10,7 @@ import org.stepic.droid.events.submissions.FailSubmissionCreatedEvent;
 import org.stepic.droid.events.submissions.SubmissionCreatedEvent;
 import org.stepic.droid.events.submissions.SuccessGettingLastSubmissionEvent;
 import org.stepic.droid.model.Reply;
+import org.stepic.droid.util.HtmlHelper;
 
 public class StringStepFragment extends SingleLineSendStepFragment {
     @Override
@@ -25,7 +26,7 @@ public class StringStepFragment extends SingleLineSendStepFragment {
         if (reply == null) return;
 
         String text = reply.getText();
-        mAnswerField.setText(text);
+        mAnswerField.setText(HtmlHelper.fromHtml(text));
     }
 
     @Subscribe

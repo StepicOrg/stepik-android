@@ -21,6 +21,7 @@ import org.stepic.droid.events.submissions.SuccessGettingLastSubmissionEvent;
 import org.stepic.droid.model.Attachment;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Reply;
+import org.stepic.droid.util.HtmlHelper;
 
 import java.util.ArrayList;
 
@@ -67,7 +68,7 @@ public class FreeResponseStepFragment extends StepWithAttemptsFragment {
         if (reply == null) return;
 
         String text = reply.getText();
-        mAnswerField.setText(text);
+        mAnswerField.setText(HtmlHelper.fromHtml(text));
     }
 
     @Override
