@@ -1,0 +1,187 @@
+package org.stepic.droid.view.fragments;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.squareup.otto.Subscribe;
+
+import org.stepic.droid.R;
+import org.stepic.droid.events.InternetIsEnabledEvent;
+import org.stepic.droid.events.attempts.FailAttemptEvent;
+import org.stepic.droid.events.attempts.SuccessAttemptEvent;
+import org.stepic.droid.events.submissions.FailGettingLastSubmissionEvent;
+import org.stepic.droid.events.submissions.FailSubmissionCreatedEvent;
+import org.stepic.droid.events.submissions.SubmissionCreatedEvent;
+import org.stepic.droid.events.submissions.SuccessGettingLastSubmissionEvent;
+import org.stepic.droid.model.Attempt;
+import org.stepic.droid.model.Option;
+import org.stepic.droid.model.Pair;
+import org.stepic.droid.model.Reply;
+import org.stepic.droid.view.adapters.SortStepAdapter;
+import org.stepic.droid.view.layout_managers.WrapContentLinearLayoutManager;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import butterknife.ButterKnife;
+
+public class MatchingStepFragment extends StepWithAttemptsFragment {
+
+    RecyclerView mRecyclerView;
+    LinearLayout mLeftLinearLayout;
+
+    private List<Option> mOptionList;
+    private List<String> mFirstList;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_matching, mAttemptContainer, false);
+        mAttemptContainer.addView(view);
+        mRecyclerView = ButterKnife.findById(view, R.id.recycler);
+        mLeftLinearLayout = ButterKnife.findById(view, R.id.leftColumn);
+
+        mRecyclerView.setNestedScrollingEnabled(false);
+        mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        LinearLayoutManager layoutManager = new WrapContentLinearLayoutManager(getActivity());
+        layoutManager.setSmoothScrollbarEnabled(true);
+
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        return v;
+    }
+
+    @Override
+    protected void showAttempt(Attempt attempt) {
+        List<Pair> options = attempt.getDataset().getPairs();
+        if (options == null) return;
+        mOptionList = new ArrayList<>(options.size());
+        mFirstList = new ArrayList<>(options.size());
+        for (int i = 0; i < options.size(); i++) {
+            mOptionList.add(new Option(options.get(i).getSecond(), i));
+            mFirstList.add(options.get(i).getFirst());
+        }
+        buildFirstColumn(mFirstList);
+        mRecyclerView.setAdapter(new SortStepAdapter(mRecyclerView, mOptionList));
+        mRecyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    // TODO: 25.01.16 refactor
+    @Override
+    protected Reply generateReply() {
+        if (mOptionList == null) return new Reply.Builder().build();
+
+        List<Integer> ordering = new ArrayList<>(mOptionList.size());
+        for (int i = 0; i < mOptionList.size(); i++) {
+            ordering.add(i, mOptionList.get(i).getPositionId());
+        }
+
+        return new Reply.Builder()
+                .setOrdering(ordering)
+                .build();
+    }
+
+    // TODO: 25.01.16 refactor
+    @Override
+    protected void blockUIBeforeSubmit(boolean needBlock) {
+//        mAttemptContainer.setEnabled(!needBlock);
+        mRecyclerView.setEnabled(!needBlock);
+    }
+
+    @Override
+    protected void onRestoreSubmission() {
+        Reply reply = mSubmission.getReply();
+        if (reply == null) return;
+
+        List<Integer> ordering = reply.getOrdering();
+        if (ordering == null) return;
+
+        SortStepAdapter adapter;
+        try {
+            adapter = (SortStepAdapter) mRecyclerView.getAdapter();
+        } catch (Exception e) {
+            return;
+        }
+
+        if (mFirstList == null || mFirstList.isEmpty()) return;
+        buildFirstColumn(mFirstList);
+
+
+        mOptionList = adapter.getData();
+        mOptionList.clear();
+        Map<Integer, Option> itemIdToOption = adapter.getItemIdOptionMap();
+        int i = 0;
+        for (Integer itemId : ordering) {
+            mOptionList.add(i, itemIdToOption.get(itemId));
+            i++;
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    private void buildFirstColumn(List<String> firstList) {
+        if (firstList == null || firstList.isEmpty()) return;
+        mLeftLinearLayout.removeAllViews();
+        for (String value : firstList) {
+            View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_matching_first_option, mLeftLinearLayout, false);
+            TextView header = ButterKnife.findById(view, R.id.option_text);
+            Log.d("set matching value", value);
+            header.setText(value);
+            mLeftLinearLayout.addView(view);
+        }
+    }
+
+
+    @Subscribe
+    @Override
+    public void onInternetEnabled(InternetIsEnabledEvent enabledEvent) {
+        super.onInternetEnabled(enabledEvent);
+    }
+
+    @Override
+    @Subscribe
+    public void onSuccessLoadAttempt(SuccessAttemptEvent e) {
+        super.onSuccessLoadAttempt(e);
+    }
+
+    @Override
+    @Subscribe
+    public void onSuccessCreateSubmission(SubmissionCreatedEvent e) {
+        super.onSuccessCreateSubmission(e);
+    }
+
+    @Override
+    @Subscribe
+    public void onGettingSubmission(SuccessGettingLastSubmissionEvent e) {
+        super.onGettingSubmission(e);
+    }
+
+    @Subscribe
+    @Override
+    public void onFailCreateAttemptEvent(FailAttemptEvent event) {
+        super.onFailCreateAttemptEvent(event);
+    }
+
+    @Subscribe
+    @Override
+    public void onFailCreateSubmission(FailSubmissionCreatedEvent event) {
+        super.onFailCreateSubmission(event);
+    }
+
+    @Subscribe
+    public void onFailGettingSubmission(FailGettingLastSubmissionEvent e) {
+        super.onFailGettingSubmission(e);
+    }
+}

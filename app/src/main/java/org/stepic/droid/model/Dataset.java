@@ -8,6 +8,7 @@ public class Dataset {
     private boolean is_multiple_choice;
     private List<String> options;
     private String someStringValueFromServer;
+    private List<Pair> pairs;
 
     public Dataset() {
     }
@@ -27,5 +28,10 @@ public class Dataset {
     @Nullable
     public String getSomeStringValueFromServer() {
         return someStringValueFromServer;
+    }
+
+    @Nullable
+    public List<Pair> getPairs() {
+        return pairs;
     }
 }

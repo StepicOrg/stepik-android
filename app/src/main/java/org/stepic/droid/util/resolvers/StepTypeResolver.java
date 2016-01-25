@@ -13,6 +13,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.fragments.ChoiceStepFragment;
 import org.stepic.droid.view.fragments.FreeResponseStepFragment;
+import org.stepic.droid.view.fragments.MatchingStepFragment;
 import org.stepic.droid.view.fragments.MathStepFragment;
 import org.stepic.droid.view.fragments.NotSupportedYetStepFragment;
 import org.stepic.droid.view.fragments.NumberStepFragment;
@@ -134,6 +135,8 @@ public class StepTypeResolver implements IStepResolver {
                 return new PyCharmStepFragment();
             case AppConstants.TYPE_SORTING:
                 return new SortingStepFragment();
+            case AppConstants.TYPE_MATCHING:
+                return new MatchingStepFragment();
             default:
                 return new NotSupportedYetStepFragment();
         }
