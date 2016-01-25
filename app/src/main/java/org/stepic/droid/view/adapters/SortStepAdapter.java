@@ -1,16 +1,20 @@
 package org.stepic.droid.view.adapters;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.stepic.droid.R;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Option;
 import org.stepic.droid.view.custom.dragsortadapter.DragSortAdapter;
 import org.stepic.droid.view.custom.dragsortadapter.NoForegroundShadowBuilder;
@@ -25,15 +29,29 @@ import butterknife.ButterKnife;
 public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewHolder> {
 
     private final List<Option> data;
+    private final int mWidth;
+    private final int halfScreen;
     private final Map<Integer, Option> mItemIdOptionMap;
 
-    public SortStepAdapter(RecyclerView recyclerView, List<Option> data) {
+    public SortStepAdapter(RecyclerView recyclerView, List<Option> data, int width) {
         super(recyclerView);
         this.data = data;
+        mWidth = width;
         mItemIdOptionMap = new HashMap<>();
         for (Option option : data) {
             mItemIdOptionMap.put(option.getPositionId(), option);
         }
+
+        WindowManager wm = (WindowManager) MainApplication.getAppContext().getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int screenWidth = size.x;
+        halfScreen = screenWidth / 2;
+    }
+
+    public SortStepAdapter(RecyclerView recyclerView, List<Option> data) {
+        this(recyclerView, data, 0);
     }
 
     public List<Option> getData() {
@@ -58,7 +76,9 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
     @Override
     public void onBindViewHolder(OptionViewHolder holder, int position) {
         int itemId = data.get(position).getPositionId();
-
+        if (mWidth > 0) {
+            holder.mOptionText.setLines((mWidth / halfScreen) + 1);
+        }
         holder.mOptionText.setText(mItemIdOptionMap.get(itemId).getValue());
         // NOTE: check for getDraggingId() match to set an "invisible space" while dragging
         holder.mContainer.setVisibility(getDraggingId() == itemId ? View.INVISIBLE : View.VISIBLE);

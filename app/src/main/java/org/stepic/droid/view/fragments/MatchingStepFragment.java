@@ -1,21 +1,25 @@
 package org.stepic.droid.view.fragments;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.attempts.FailAttemptEvent;
 import org.stepic.droid.events.attempts.SuccessAttemptEvent;
@@ -43,6 +47,8 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
 
     private List<Option> mOptionList;
     private List<String> mFirstList;
+    private int maxWidth;
+    private int halfScreen;
 
     @Nullable
     @Override
@@ -61,6 +67,13 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        WindowManager wm = (WindowManager) MainApplication.getAppContext().getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int screenWidth = size.x;
+        halfScreen = screenWidth / 2;
+
         return v;
     }
 
@@ -74,8 +87,10 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
             mOptionList.add(new Option(options.get(i).getSecond(), i));
             mFirstList.add(options.get(i).getFirst());
         }
+        maxWidth = getMaxWidthOfLines();
+
         buildFirstColumn(mFirstList);
-        mRecyclerView.setAdapter(new SortStepAdapter(mRecyclerView, mOptionList));
+        mRecyclerView.setAdapter(new SortStepAdapter(mRecyclerView, mOptionList, maxWidth));
         mRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
@@ -116,8 +131,8 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
             return;
         }
 
-        if (mFirstList == null || mFirstList.isEmpty()) return;
-        buildFirstColumn(mFirstList);
+//        if (mFirstList == null || mFirstList.isEmpty()) return;
+//        buildFirstColumn(mFirstList);
 
 
         mOptionList = adapter.getData();
@@ -132,15 +147,44 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
     }
 
     private void buildFirstColumn(List<String> firstList) {
-        if (firstList == null || firstList.isEmpty()) return;
+        if (firstList == null || firstList.isEmpty() || maxWidth <= 0) return;
         mLeftLinearLayout.removeAllViews();
         for (String value : firstList) {
             View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_matching_first_option, mLeftLinearLayout, false);
             TextView header = ButterKnife.findById(view, R.id.option_text);
             Log.d("set matching value", value);
             header.setText(value);
+            header.setLines((maxWidth / halfScreen) + 1);
             mLeftLinearLayout.addView(view);
         }
+    }
+
+
+    private int getMaxWidthOfLines() {
+        // TODO: 25.01.16 dirty hack, try to find less dirty
+        View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_sorting_option, mLeftLinearLayout, false);
+        final TextView header = ButterKnife.findById(view, R.id.option_text);
+
+
+        int maxWidth = 0;
+        List<String> allTextList = new ArrayList<>(mFirstList);
+        for (Option option : mOptionList) {
+            allTextList.add(option.getValue());
+        }
+        for (String text : allTextList) {
+            header.setText(text);
+            header.setVisibility(View.INVISIBLE);
+            mLeftLinearLayout.addView(view);
+
+            view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            int measuredWidth = view.getMeasuredWidth();
+            if (measuredWidth > maxWidth) {
+                maxWidth = measuredWidth;
+            }
+            mLeftLinearLayout.removeView(view);
+        }
+
+        return maxWidth;
     }
 
 
