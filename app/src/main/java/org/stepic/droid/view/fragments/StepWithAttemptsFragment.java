@@ -396,6 +396,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
             protected Void doInBackground(Void... params) {
                 long assignmentId = mDatabaseManager.getAssignmentIdByStepId(stepId);
                 mDatabaseManager.markProgressAsPassed(assignmentId);
+                mLocalProgressManager.checkUnitAsPassed(stepId);
                 return null;
             }
         };

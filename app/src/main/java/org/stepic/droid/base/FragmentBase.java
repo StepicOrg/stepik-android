@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.core.ILessonSessionManager;
+import org.stepic.droid.core.ILocalProgressManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
@@ -41,6 +42,9 @@ public class FragmentBase extends Fragment {
 
     @Inject
     public IShell mShell;
+
+    @Inject
+    public ILocalProgressManager mLocalProgressManager;
 
 
     @Inject

@@ -8,6 +8,7 @@ import android.os.Handler;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.core.ILocalProgressManager;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.IStoreStateManager;
@@ -38,6 +39,9 @@ public class ViewPusher extends IntentService {
     DatabaseManager mDb;
     @Inject
     IStoreStateManager mStoreStateManager;
+
+    @Inject
+    ILocalProgressManager mUnitProgressManager;
 
 
     /**
@@ -76,12 +80,15 @@ public class ViewPusher extends IntentService {
 
         //anyway check in db as viewed:
         mDb.markProgressAsPassed(assignmentId);
+        mUnitProgressManager.checkUnitAsPassed(stepId);
         // Get a handler that can be used to post to the main thread
         Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
 
         Runnable myRunnable = new Runnable() {
             @Override
-            public void run() {mBus.post(new UpdateStepEvent(stepId));} // This is your code
+            public void run() {
+                mBus.post(new UpdateStepEvent(stepId));
+            } // This is your code
         };
         mainHandler.post(myRunnable);
     }

@@ -165,4 +165,10 @@ public class StepicDefaultModule {
     public ILessonSessionManager provideLessonSessionManager() {
         return new LocalLessonSessionManager();
     }
+
+    @Singleton
+    @Provides
+    public ILocalProgressManager provideProgressManager(DatabaseManager databaseManager, Bus bus) {
+        return new LocalProgressOfUnitManager(databaseManager, bus);
+    }
 }
