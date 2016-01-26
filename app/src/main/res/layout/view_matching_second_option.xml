@@ -31,6 +31,18 @@
             android:layout_gravity="center_vertical"
             tools:text="option "/>
 
+        <ImageView
+            android:id="@+id/sort_icon"
+            android:layout_width="0dp"
+            android:minHeight="24dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="20"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:src="@drawable/ic_draggable"/>
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

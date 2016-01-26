@@ -10,7 +10,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.stepic.droid.R;
@@ -32,8 +31,9 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
     private final int mWidth;
     private final int halfScreen;
     private final Map<Integer, Option> mItemIdOptionMap;
+    private final boolean isMatching;
 
-    public SortStepAdapter(RecyclerView recyclerView, List<Option> data, int width) {
+    public SortStepAdapter(RecyclerView recyclerView, List<Option> data, int width, boolean isMatching) {
         super(recyclerView);
         this.data = data;
         mWidth = width;
@@ -48,6 +48,12 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
         display.getSize(size);
         int screenWidth = size.x;
         halfScreen = screenWidth / 2;
+        this.isMatching = isMatching;
+    }
+
+
+    public SortStepAdapter(RecyclerView recyclerView, List<Option> data, int width) {
+        this(recyclerView, data, width, false);
     }
 
     public SortStepAdapter(RecyclerView recyclerView, List<Option> data) {
@@ -65,11 +71,16 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
     @Override
     public OptionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.view_sorting_option, parent, false);
-        OptionViewHolder holder = new OptionViewHolder(this, view);
+        View view;
+        if (isMatching) {
+            view = inflater.inflate(R.layout.view_matching_second_option, parent, false);
+        } else {
+            view = inflater.inflate(R.layout.view_sorting_option, parent, false);
+        }
+        OptionViewHolder holder = new OptionViewHolder(this, view, isMatching);
         view.setOnClickListener(holder);
         view.setOnLongClickListener(holder);
-//        view.setOnTouchListener(holder);
+        view.setOnTouchListener(holder);
         return holder;
     }
 
@@ -77,7 +88,11 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
     public void onBindViewHolder(OptionViewHolder holder, int position) {
         int itemId = data.get(position).getPositionId();
         if (mWidth > 0) {
-            holder.mOptionText.setLines((mWidth / halfScreen) + 1);
+            int lines = (mWidth / halfScreen) + 1;
+            int height = (int) MainApplication.getAppContext().getResources().getDimension(R.dimen.option_height);
+            height = lines * height;
+            holder.mContainer.getLayoutParams().height = height;
+//            holder.mOptionText.setLines((mWidth / halfScreen) + 1);
         }
         holder.mOptionText.setText(mItemIdOptionMap.get(itemId).getValue());
         // NOTE: check for getDraggingId() match to set an "invisible space" while dragging
@@ -111,17 +126,19 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
     }
 
     public static class OptionViewHolder extends DragSortAdapter.ViewHolder implements
-            View.OnClickListener, View.OnLongClickListener {
+            View.OnClickListener, View.OnLongClickListener, View.OnTouchListener {
 
+        private final boolean mIsMatching;
         @Bind(R.id.container)
         ViewGroup mContainer;
         @Bind(R.id.option_text)
         TextView mOptionText;
         @Bind(R.id.sort_icon)
-        ImageView mSortImageView;
+        View mSortImageView;
 
-        public OptionViewHolder(DragSortAdapter adapter, View itemView) {
+        public OptionViewHolder(DragSortAdapter adapter, View itemView, boolean isMatching) {
             super(adapter, itemView);
+            mIsMatching = isMatching;
             ButterKnife.bind(this, itemView);
             mSortImageView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -130,12 +147,16 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
                     return true;
                 }
             });
+
         }
 
 
         @Override
         public void onClick(@NonNull View v) {
 //            startDrag();
+            if (mIsMatching) {
+                startDrag();
+            }
         }
 
         @Override
@@ -147,6 +168,12 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
         @Override
         public View.DragShadowBuilder getShadowBuilder(View itemView, Point touchPoint) {
             return new NoForegroundShadowBuilder(itemView, touchPoint);
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            return false;
         }
     }
 }

@@ -47,7 +47,7 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
 
     private List<Option> mOptionList;
     private List<String> mFirstList;
-    private int maxWidth;
+    private int mMaxWidth;
     private int halfScreen;
 
     @Nullable
@@ -87,10 +87,10 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
             mOptionList.add(new Option(options.get(i).getSecond(), i));
             mFirstList.add(options.get(i).getFirst());
         }
-        maxWidth = getMaxWidthOfLines();
+        mMaxWidth = getMaxWidthOfLines();
 
         buildFirstColumn(mFirstList);
-        mRecyclerView.setAdapter(new SortStepAdapter(mRecyclerView, mOptionList, maxWidth));
+        mRecyclerView.setAdapter(new SortStepAdapter(mRecyclerView, mOptionList, mMaxWidth, true));
         mRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
@@ -147,14 +147,17 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
     }
 
     private void buildFirstColumn(List<String> firstList) {
-        if (firstList == null || firstList.isEmpty() || maxWidth <= 0) return;
+        if (firstList == null || firstList.isEmpty() || mMaxWidth <= 0) return;
         mLeftLinearLayout.removeAllViews();
         for (String value : firstList) {
             View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_matching_first_option, mLeftLinearLayout, false);
             TextView header = ButterKnife.findById(view, R.id.option_text);
             Log.d("set matching value", value);
             header.setText(value);
-            header.setLines((maxWidth / halfScreen) + 1);
+            int lines = (mMaxWidth / halfScreen) + 1;
+            int height = (int) MainApplication.getAppContext().getResources().getDimension(R.dimen.option_height);
+            height = lines * height;
+            view.getLayoutParams().height = height;
             mLeftLinearLayout.addView(view);
         }
     }
@@ -162,7 +165,7 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
 
     private int getMaxWidthOfLines() {
         // TODO: 25.01.16 dirty hack, try to find less dirty
-        View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_sorting_option, mLeftLinearLayout, false);
+        View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_matching_second_option, mLeftLinearLayout, false);
         final TextView header = ButterKnife.findById(view, R.id.option_text);
 
 

@@ -22,5 +22,6 @@
     <dimen name="text_size_title">24sp</dimen>
     <dimen name="guide_top_bot_padding">4dp</dimen>
     <dimen name="min_ux_touchable_size">48dp</dimen>
+    <dimen name="option_height">50dp</dimen>
 
 </resources>
