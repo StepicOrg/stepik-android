@@ -259,6 +259,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     }
 
     private void dropCourse(int position) {
+        if (position >= mCourses.size() || position <= 0) return;
         final Course course = mCourses.get(position);
         if (course.getEnrollment() == 0) {
             Toast.makeText(getContext(), R.string.you_not_enrolled, Toast.LENGTH_LONG).show();
