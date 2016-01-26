@@ -131,7 +131,8 @@ public class VideoStepFragment extends StepBaseFragment {
 
                         if (url != null) {
                             bus.post(new VideoResolvedEvent(localStep.getBlock().getVideo(), url, localStep.getId()));
-                            Log.i("Video", "postvideoresolved");
+                        } else {
+                            Toast.makeText(getActivity(), R.string.sync_problem, Toast.LENGTH_SHORT).show();
                         }
                     }
                 };
