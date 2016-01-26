@@ -79,7 +79,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
 
 
         String formattedBeginDate = section.getFormattedBeginDate();
-        if (formattedBeginDate == "") {
+        if (formattedBeginDate.equals("")) {
             holder.startDate.setText("");
             holder.startDate.setVisibility(View.GONE);
         } else {
@@ -88,7 +88,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         }
 
         String formattedSoftDeadline = section.getFormattedSoftDeadline();
-        if (formattedSoftDeadline == "") {
+        if (formattedSoftDeadline.equals("")) {
             holder.softDeadline.setText("");
             holder.softDeadline.setVisibility(View.GONE);
         } else {
@@ -97,7 +97,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         }
 
         String formattedHardDeadline = section.getFormattedHardDeadline();
-        if (formattedHardDeadline == "") {
+        if (formattedHardDeadline.equals("")) {
             holder.hardDeadline.setText("");
             holder.hardDeadline.setVisibility(View.GONE);
         } else {

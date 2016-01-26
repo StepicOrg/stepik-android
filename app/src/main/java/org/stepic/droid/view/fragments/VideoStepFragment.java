@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import com.squareup.picasso.Picasso;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.FragmentStepBase;
+import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.events.video.VideoLoadedEvent;
 import org.stepic.droid.events.video.VideoResolvedEvent;
 import org.stepic.droid.model.Step;
@@ -32,7 +31,7 @@ import butterknife.Bind;
 import butterknife.BindDrawable;
 import butterknife.ButterKnife;
 
-public class VideoStepFragment extends FragmentStepBase {
+public class VideoStepFragment extends StepBaseFragment {
     private static final String TAG = "video_fragment";
 
     @Bind(R.id.player_thumbnail)
@@ -131,7 +130,8 @@ public class VideoStepFragment extends FragmentStepBase {
 
                         if (url != null) {
                             bus.post(new VideoResolvedEvent(localStep.getBlock().getVideo(), url, localStep.getId()));
-                            Log.i("Video", "postvideoresolved");
+                        } else {
+                            Toast.makeText(getActivity(), R.string.sync_problem, Toast.LENGTH_SHORT).show();
                         }
                     }
                 };
@@ -160,47 +160,10 @@ public class VideoStepFragment extends FragmentStepBase {
                 .into(mThumbnail);
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     @Subscribe
     public void onVideoResolved(VideoResolvedEvent e) {
         if (e.getStepId() != mStep.getId()) return;
         Uri videoUri = Uri.parse(e.getPathToVideo());
-        Log.i(TAG, videoUri.getEncodedPath());
 
         Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
         intent.setDataAndType(videoUri, "video/*");

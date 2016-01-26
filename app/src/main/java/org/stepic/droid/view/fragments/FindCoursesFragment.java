@@ -86,11 +86,6 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
     @Subscribe
     public void onFailureDataLoad(FailCoursesDownloadEvent e) {
         if (e.getType() == DatabaseManager.Table.featured)

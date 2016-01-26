@@ -101,12 +101,6 @@ public class DownloadsFragment extends FragmentBase {
         updateCachedAsync();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-//        bus.unregister(this);
-    }
-
     private void updateCachedAsync() {
         AsyncTask<Void, Void, VideosAndMapToLesson> task = new AsyncTask<Void, Void, VideosAndMapToLesson>() {
             @Override
@@ -246,7 +240,6 @@ public class DownloadsFragment extends FragmentBase {
         }
     }
 
-    @Nullable
     private int removeByStepId(long stepId) {
         if (!mStepIdToLesson.containsKey(stepId)) return -1;
         CachedVideo videoForDeleteFromList = null;

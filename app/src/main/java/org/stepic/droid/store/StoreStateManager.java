@@ -44,11 +44,19 @@ public class StoreStateManager implements IStoreStateManager {
 
         //all steps of lesson is cached
         Lesson lesson = mDatabaseManager.getLessonById(lessonId);
+        if (lesson == null) {
+            YandexMetrica.reportEvent(AppConstants.METRICA_LESSON_IN_STORE_STATE_NULL);
+            return;
+        }
         lesson.setIs_loading(false);
         lesson.setIs_cached(true);
         mDatabaseManager.updateOnlyCachedLoadingLesson(lesson);
 
         final Unit unit = mDatabaseManager.getUnitByLessonId(lessonId);
+        if (unit == null) {
+            YandexMetrica.reportEvent(AppConstants.METRICA_UNIT_IN_STORE_STATE_NULL);
+            return;
+        }
         if (unit.is_loading() || !unit.is_cached()) {
             unit.setIs_loading(false);
             unit.setIs_cached(true);
@@ -134,10 +142,11 @@ public class StoreStateManager implements IStoreStateManager {
             };
             mainHandler.post(myRunnable);
         }
-
-        updateCourseAfterDeleting(section.getCourse());
+//Don't need suppot course state
+//        updateCourseAfterDeleting(section.getCourse());
     }
 
+    @Deprecated
     private void updateCourseAfterDeleting(long courseId) {
 
         Course course = mDatabaseManager.getCourseById(courseId, DatabaseManager.Table.enrolled);
@@ -179,10 +188,11 @@ public class StoreStateManager implements IStoreStateManager {
             };
             mainHandler.post(myRunnable);
         }
-
-        updateCourseState(section.getCourse());
+//do not update course state
+//        updateCourseState(section.getCourse());
     }
 
+    @Deprecated
     private void updateCourseState(long courseId) {
         Course course = mDatabaseManager.getCourseById(courseId, DatabaseManager.Table.enrolled);
         if (course == null) {

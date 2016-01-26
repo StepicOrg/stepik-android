@@ -6,7 +6,6 @@
     <string name="best_lessons_title">Лучшие уроки</string>
     <string name="by_creating_you_agree">Создавая аккаунт, я соглашаюсь с </string>
     <string name="create_my_account">Создать аккаунт</string>
-    <string name="describing_error">Произошла ошибка при попытке входа</string>
     <string name="drawer_closed">закрыть меню</string>
     <string name="drawer_open">открыть меню</string>
     <string name="find_courses_title">Найти курсы</string>
@@ -18,9 +17,7 @@
     <string name="remind_password">Вспомнить пароль</string>
     <string name="second_name">фамилия</string>
     <string name="settings_title">Настройки</string>
-    <string name="show_optional_fields">Показать дополнительные поля</string>
     <string name="sign_in">Вход</string>
-    <string name="sign_in_btn">Кнопка входа</string>
     <string name="sign_up">Регистрация</string>
     <string name="terms">Правилами</string>
     <string name="tap_to_see_more">развернуть…</string>
@@ -40,12 +37,10 @@
     <string name="steps_title">Шаги</string>
     <string name="not_available_lesson">Урок недоступен сейчас</string>
     <string name="not_video_player_error">Пожалуйста, установите видеоплеер</string>
-    <string name="turn_on_permission">Включите доступ к памяти для приложения в настройках телефона</string>
     <string name="description_download">Кеширование Stepic урока</string>
     <string name="video_title">Видео</string>
     <string name="clear_cache_title">Очистить кэш</string>
     <string name="wi_fi_setting">Загружать только по Wi-Fi </string>
-    <string name="clear_cache_dialog_message">Вы уверены, что хотите удалить все сохраненные уроки?</string>
     <string name="title_clear_cache_dialog">Подтверждение</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
@@ -66,15 +61,11 @@
     <string name="explain_permission">Для сохранения и просмотра видео в режиме оффлайн Stepic должен иметь права записи файлов в память телефона.</string>
     <string name="failLoginConnectionProblems">Отсутствует подключение к Интернету</string>
     <string name="video_quality">Качество видео</string>
-    <string name="ok">Ок</string>
-    <string name="choose_video_quality">Выберите качество видео</string>
     <string name="sync_problem">Возникли проблемы с синхронизацией данных, пожалуйста, повторите попытку позже.</string>
     <string name="empty_courses">Похоже, что Вы не записаны ни на один курс. Кликните, чтобы найти свой первый курс!</string>
     <string name="cache_cleared">Кэш успешно очищен!</string>
     <string name="join_course_web_exception">Попробуйте записаться на курс в веб версии</string>
     <string name="downloads">Загрузки</string>
-    <string name="sign_in_social">Через соц. сети.</string>
-    <string name="success">Успех</string>
     <string name="or_sign_in_social">Или войдите с помощью</string>
     <string name="loading_message">Пожалуйста, подождите…</string>
     <string name="kb">КБ</string>
@@ -90,5 +81,13 @@
     <string name="find_courses_hint">Поиск курсов</string>
     <string name="search_title">Поиск</string>
     <string name="empty_search">Курсы не найдены</string>
+    <string name="submit">Отправить</string>
+    <string name="wrong">Неправильно. Пожалуйста, попробуйте еще раз.</string>
+    <string name="correct">Верно!</string>
+    <string name="try_again">Попробовать снова</string>
+    <string name="step_only_online">Шаги можно проходить только онлайн. Чтобы начать решать, включите интернет соединение.</string>
+    <string name="correct_free_response">Ваше решение сохранено.</string>
+    <string name="hint_for_type_answer">Введите ответ здесь…</string>
+    <string name="py_message"><![CDATA[Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>]]></string>
 
 </resources>

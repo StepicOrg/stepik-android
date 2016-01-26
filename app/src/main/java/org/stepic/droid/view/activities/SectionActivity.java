@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -253,14 +252,12 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Subscribe
     public void onSectionCached(SectionCachedEvent e) {
-        Log.e("stepic", "update state cached");
         long sectionId = e.getSectionId();
         updateState(sectionId, true, false);
     }
 
     @Subscribe
     public void onNotCachedSection(NotCachedSectionEvent e) {
-        Log.e("stepic", "update state not cached");
         long sectionId = e.getSectionId();
         updateState(sectionId, false, false);
     }

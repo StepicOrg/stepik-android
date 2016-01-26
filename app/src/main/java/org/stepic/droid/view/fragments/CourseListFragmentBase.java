@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,13 +118,11 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
                 } else {
 //                    userScrolled = false;
                 }
-                Log.i(TAG, "user scrolled " + (userScrolled ? "true" : "false"));
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (!isLoading && mHasNextPage && firstVisibleItem + visibleItemCount >= totalItemCount && userScrolled) {
-                    Log.i(TAG, "Go load from scroll");
                     isLoading = true;
                     downloadData();
                 }
@@ -179,16 +176,12 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
         IApi api = mShell.getApi();
 
-
-        Log.i(TAG, "post pre load");
         bus.post(new PreLoadCoursesEvent(getCourseType()));
         if (getCourseType() == DatabaseManager.Table.featured) {
             api.getFeaturedCourses(mCurrentPage).enqueue(callback);
         } else {
             api.getEnrolledCourses(mCurrentPage).enqueue(callback);
         }
-        Log.i(TAG, "mLoadingCoursesTask starts to execute");
-
     }
 
     @Override

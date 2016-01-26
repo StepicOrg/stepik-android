@@ -25,7 +25,7 @@ public class Course implements Serializable, Parcelable {
     @Inject
     transient IConfig mConfig;
 
-    transient Context mContext;
+    private transient Context mContext;
 
     private transient DateTimeFormatter mFormatForView;
 
@@ -60,18 +60,22 @@ public class Course implements Serializable, Parcelable {
     private boolean is_cached;
     private boolean is_loading;
 
+    @Deprecated
     public boolean is_loading() {
         return is_loading;
     }
 
+    @Deprecated
     public synchronized void setIs_loading(boolean is_loading) {
         this.is_loading = is_loading;
     }
 
+    @Deprecated
     public boolean is_cached() {
         return is_cached;
     }
 
+    @Deprecated
     public synchronized void setIs_cached(boolean is_cached) {
         this.is_cached = is_cached;
     }

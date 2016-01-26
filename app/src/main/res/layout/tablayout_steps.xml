@@ -4,7 +4,6 @@
     android:id="@+id/tabLayout"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:background="?attr/colorPrimary"
     android:paddingLeft="@dimen/padding_tab_bar"
     android:paddingStart="@dimen/padding_tab_bar"
     android:paddingRight="@dimen/padding_tab_bar"

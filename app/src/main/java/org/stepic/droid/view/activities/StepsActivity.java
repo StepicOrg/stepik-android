@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -195,7 +194,6 @@ public class StepsActivity extends FragmentActivityBase {
                 protected Void doInBackground(Void... params) {
                     long assignmentID = mDbManager.getAssignmentIdByStepId(stepId);
 
-                    Log.i("push", "push " + local);
                     mShell.getScreenProvider().pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
                     return null;
                 }
@@ -214,8 +212,7 @@ public class StepsActivity extends FragmentActivityBase {
 
     @Subscribe
     public void onFromDbStepEvent(FromDbStepEvent e) {
-        if (e.getLesson() != null && e.getLesson().getId() != mLesson.getId()) {
-            bus.post(new FailLoadStepEvent());
+        if (e.getLesson() == null || e.getLesson().getId() != mLesson.getId()) {
             return;
         }
 
@@ -329,6 +326,7 @@ public class StepsActivity extends FragmentActivityBase {
             protected Void doInBackground(Void... params) {
                 for (Step item : localSteps) {
                     item.setIs_custom_passed(mDbManager.isStepPassed(item.getId()));
+                    mDbManager.addStep(item); // FIXME: 26.01.16 WARNING, this line is dangerous
                 }
                 return null;
             }
@@ -337,7 +335,6 @@ public class StepsActivity extends FragmentActivityBase {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 if (mStepList != null && mStepAdapter != null && mTabLayout != null) {
-                    Log.i("update", "update ui");
                     showSteps(localSteps);
                 }
             }
@@ -362,7 +359,7 @@ public class StepsActivity extends FragmentActivityBase {
             step.setIs_custom_passed(true);
             int pos = mViewPager.getCurrentItem();
 
-            for (int i = 0; i < mStepAdapter.getCount(); i++) {
+            for (int i = 0; i < mTabLayout.getTabCount(); i++) {
                 TabLayout.Tab tab = mTabLayout.getTabAt(i);
                 tab.setIcon(mStepAdapter.getTabDrawable(i));
             }

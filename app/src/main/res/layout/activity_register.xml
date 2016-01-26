@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="8dp"
-    android:background="@android:color/white">
+                android:paddingBottom="8dp">
 
     <ScrollView
         android:id="@+id/scrollview"
@@ -81,7 +80,7 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bt_signin_active">
 
-                <org.stepic.droid.view.custom.STextView
+                <TextView
                     android:id="@+id/create_account_tv"
                     style="@style/regular_white_text"
                     android:layout_width="wrap_content"

@@ -4,8 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
@@ -17,8 +18,11 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.ScreenManager;
+import org.stepic.droid.deserializers.DatasetDeserializer;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.DatasetWrapper;
 import org.stepic.droid.model.EnrollmentWrapper;
+import org.stepic.droid.model.Reply;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialManager;
@@ -35,6 +39,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import retrofit.Call;
+import retrofit.Converter;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 
@@ -90,7 +95,7 @@ public class RetrofitRESTApi implements IApi {
         setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mConfig.getBaseUrl())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(generateGsonFactory())
                 .client(okHttpClient)
                 .build();
         mLoggedService = retrofit.create(StepicRestLoggedService.class);
@@ -112,10 +117,16 @@ public class RetrofitRESTApi implements IApi {
         okHttpClient.networkInterceptors().add(interceptor);
         Retrofit notLogged = new Retrofit.Builder()
                 .baseUrl(mConfig.getBaseUrl())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(generateGsonFactory())
                 .client(okHttpClient)
                 .build();
         mOAuthService = notLogged.create(StepicRestOAuthService.class);
+    }
+
+    private Converter.Factory generateGsonFactory() {
+        Gson gson = new GsonBuilder().registerTypeAdapter(DatasetWrapper.class, new DatasetDeserializer())
+                .create();
+        return GsonConverterFactory.create(gson);
     }
 
     private void setTimeout(OkHttpClient okHttpClient, int seconds) {
@@ -231,9 +242,9 @@ public class RetrofitRESTApi implements IApi {
 
     @Override
     public Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery) {
-//        String encodedQuery = Uri.encode(rawQuery);
-        String encodedQuery = rawQuery;
-        YandexMetrica.reportEvent(AppConstants.SEARCH, encodedQuery);
+        String encodedQuery = URLEncoder.encode(rawQuery);
+//        String encodedQuery = rawQuery;
+        YandexMetrica.reportEvent(AppConstants.SEARCH, JsonHelper.toJson(rawQuery));
         String type = "course";
         return mLoggedService.getSearchResults(page, encodedQuery, type);
     }
@@ -246,6 +257,30 @@ public class RetrofitRESTApi implements IApi {
         return mLoggedService.getCourses(page, ids);
     }
 
+    @Override
+    public Call<AttemptResponse> createNewAttempt(long stepId) {
+        AttemptRequest attemptRequest = new AttemptRequest(stepId);
+        return mLoggedService.createNewAttempt(attemptRequest);
+    }
+
+    @Override
+    public Call<SubmissionResponse> createNewSubmission(Reply reply, long attemptId) {
+        SubmissionRequest submissionRequest = new SubmissionRequest(reply, attemptId);
+        return mLoggedService.createNewSubmission(submissionRequest);
+    }
+
+    @Override
+    public Call<AttemptResponse> getExistingAttempts(long stepId) {
+        return mLoggedService.getExistingAttempts(stepId);
+    }
+
+    @Override
+    public Call<SubmissionResponse> getSubmissions(long attemptId) {
+        String order = "desc";
+
+        return mLoggedService.getExistingSubmissions(attemptId, order);
+    }
+
     private String getAuthHeaderValueForLogged() {
         try {
             AuthenticationStepicResponse resp = mSharedPreference.getAuthResponseFromStore();
@@ -254,7 +289,6 @@ public class RetrofitRESTApi implements IApi {
             return type + " " + access_token;
         } catch (Exception ex) {
             YandexMetrica.reportError("retrofitAuth", ex);
-            Log.e("retrofitAuth", ex.getMessage());
             // FIXME: 19.11.15 It not should happen
 
             mSharedPreference.deleteAuthInfo();

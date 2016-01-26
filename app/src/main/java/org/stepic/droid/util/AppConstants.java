@@ -29,7 +29,6 @@ public class AppConstants {
             "</html>";
     public static final String KEY_LOAD_TYPE = "KEY_LOAD_TYPE";
     public static final String KEY_TABLE_TYPE = "table_type";
-    public static final int UI_UPDATING_TIME = 1000;
 
 
     //Types of steps:
@@ -37,7 +36,7 @@ public class AppConstants {
     public static final String TYPE_VIDEO = "video";
     public static final String TYPE_MATCHING = "matching";
     public static final String TYPE_SORTING = "sorting";
-    public static final String TYPE_MATCH = "match";
+    public static final String TYPE_MATH = "math";
     public static final String TYPE_FREE_ANSWER = "free-answer";
     public static final String TYPE_TABLE = "table";
     public static final String TYPE_STRING = "string";
@@ -64,9 +63,7 @@ public class AppConstants {
     public static final String METRICA_REFRESH_UNIT = "Pull from top to refresh section unit";
     public static final String METRICA_LONG_TAP_COURSE = "Long tap on course";
     public static final java.lang.String SHOW_DETAILED_INFO_CLICK = "Show detailed info click from context menu of course";
-    public static final java.lang.String METRICA_CLICK_CACHE_COURSE = "Click cache course";
 
-    public static final java.lang.String METRICA_CLICK_DELETE_COURSE = "Click delete course from cache";
     public static final java.lang.String METRICA_CLICK_DELETE_SECTION = "Click delete section from cache";
     public static final java.lang.String METRICA_CLICK_CACHE_SECTION = "Click cache section";
     public static final java.lang.String METRICA_CLICK_CACHE_UNIT = "Click cache unit";
@@ -92,5 +89,9 @@ public class AppConstants {
     public static final String NOT_VALID_ACCESS_AND_REFRESH = "Not valid access, why?";
     public static final String NOT_FOUND_VERSION = "Not found version of app";
     public static final String NOT_SIGNIFICANT_ERROR = "Not significant error, app will continue to work";
+    public static final java.lang.String GET_OLD_ATTEMPT = "get attempt from server db, new is not creating";
+    public static final java.lang.String SAVE_SESSION_FAIL = "save session was failed because of null attempt or submission";
     public static final java.lang.String SEARCH = "search courses";
+    public static final java.lang.String METRICA_LESSON_IN_STORE_STATE_NULL = "lesson was null in store state manager";
+    public static final java.lang.String METRICA_UNIT_IN_STORE_STATE_NULL = "unit was null in store state manager";
 }

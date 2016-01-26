@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import org.stepic.droid.base.FragmentStepBase;
+import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
@@ -43,7 +43,7 @@ public class StepFragmentAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Step step = mStepList.get(position);
-        FragmentStepBase fragment = mResolver.getFragment(step);
+        StepBaseFragment fragment = mResolver.getFragment(step);
         Bundle args = new Bundle();
         args.putSerializable(AppConstants.KEY_STEP_BUNDLE, step);
         args.putSerializable(AppConstants.KEY_LESSON_BUNDLE, mLesson);

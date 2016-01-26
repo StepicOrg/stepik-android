@@ -87,7 +87,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
             }
             String fields_correct = sb.toString();
-            Log.e("stepic", fields_correct);
             String insertValues = "INSERT INTO " + DbStructureProgress.PROGRESS + "("
                     + fields_correct +
                     ")" +
@@ -95,11 +94,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     fields_correct +
                     "   FROM " + tempTableName;
 
-            Log.e("stepic", insertValues);
             db.execSQL(insertValues);
 
             String drop = "DROP TABLE " + tempTableName;
-            Log.e("stepic", drop);
             db.execSQL(drop);
         }
         if (oldVersion < 4) {

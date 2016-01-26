@@ -1,6 +1,7 @@
 package org.stepic.droid.view.activities;
 
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.widget.ProgressBar;
 import com.squareup.otto.Subscribe;
 import com.yandex.metrica.YandexMetrica;
 
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.concurrency.FromDbUnitLessonTask;
@@ -22,6 +24,7 @@ import org.stepic.droid.events.units.LoadedFromDbUnitsLessonsEvent;
 import org.stepic.droid.events.units.SuccessLoadUnitsEvent;
 import org.stepic.droid.events.units.UnitCachedEvent;
 import org.stepic.droid.events.units.UnitLessonSavedEvent;
+import org.stepic.droid.events.units.UnitProgressUpdateEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
@@ -57,7 +60,6 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     @Bind(R.id.toolbar)
     android.support.v7.widget.Toolbar mToolbar;
-
 
     @Bind(R.id.report_problem)
     protected View mReportConnectionProblem;
@@ -300,6 +302,32 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     public void onUnitCachedEvent(UnitCachedEvent e) {
         long unitId = e.getUnitId();
 
+        Pair<Unit, Integer> unitPairPosition = getUnitOnScreenAndPositionById(unitId);
+        if (unitPairPosition == null) return;
+        Unit unit = unitPairPosition.first;
+        int position = unitPairPosition.second;
+
+        //now we have not null unit and correct position at list
+        unit.setIs_cached(true);
+        unit.setIs_loading(false);
+        mAdapter.notifyItemChanged(position);
+    }
+
+    @Subscribe
+    public void onUnitProgressStateChanged(UnitProgressUpdateEvent event) {
+        long unitId = event.getUnitId();
+
+        Pair<Unit, Integer> unitPairPosition = getUnitOnScreenAndPositionById(unitId);
+        if (unitPairPosition == null) return;
+        Unit unit = unitPairPosition.first;
+        int position = unitPairPosition.second;
+
+        unit.setIs_viewed_custom(true);
+        mAdapter.notifyItemChanged(position);
+    }
+
+    @Nullable
+    private Pair<Unit, Integer> getUnitOnScreenAndPositionById(long unitId) {
         int position = -1;
         Unit unit = null;
         for (int i = 0; i < mUnitList.size(); i++) {
@@ -309,17 +337,14 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
                 break;
             }
         }
-        if (unit == null || position == -1 || position >= mUnitList.size()) return;
-
-        //now we have not null unit and correct position at list
-        unit.setIs_cached(true);
-        unit.setIs_loading(false);
-        mAdapter.notifyItemChanged(position);
+        if (unit == null || position == -1 || position >= mUnitList.size()) return null;
+        return new Pair<>(unit, position);
     }
 
     @Override
     protected void onDestroy() {
         bus.unregister(this);
+        mLessonManager.reset();
         super.onDestroy();
     }
 

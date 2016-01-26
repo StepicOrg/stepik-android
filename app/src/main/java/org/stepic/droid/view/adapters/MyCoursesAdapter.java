@@ -92,7 +92,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         }
         viewHolderItem.courseDateInterval.setText(course.getDateOfCourse());
 
-//        viewHolderItem.cardView.setOnClickListener(new View.OnClickListener() {
+//        viewHolderItem.cardView.setListenerToActionButton(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
 //                if (course.getEnrollment() != 0) {
@@ -112,7 +112,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 //            //true/true = impossible
 //            if (course.is_cached()) {
 //                //cached
-//                viewHolderItem.loadButton.setOnClickListener(new View.OnClickListener() {
+//                viewHolderItem.loadButton.setListenerToActionButton(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
 //                        int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
@@ -145,7 +145,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 //                    viewHolderItem.afterLoad.setVisibility(View.GONE);
 //
 //
-//                    viewHolderItem.loadButton.setOnClickListener(new View.OnClickListener() {
+//                    viewHolderItem.loadButton.setListenerToActionButton(new View.OnClickListener() {
 //                        @Override
 //                        public void onClick(View v) {
 //                            int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),

@@ -35,10 +35,10 @@ public class FromDbUnitLessonTask extends StepicTask<Void, Void, Pair<List<Unit>
 
     @Override
     protected Pair<List<Unit>, List<Lesson>> doInBackgroundBody(Void... params) throws Exception {
-        List<Unit> fromCacheUnits = null;
+
+        List<Unit> fromCacheUnits = mDataBaseManager.getAllUnitsOfSection(mSection.getId());
         List<Lesson> fromCacheLessons = new ArrayList<>();
 
-        fromCacheUnits = mDataBaseManager.getAllUnitsOfSection(mSection.getId());
         for (Unit unit :fromCacheUnits) {
             String progressId = unit.getProgress();
             unit.setIs_viewed_custom(mDataBaseManager.isViewedPublicWrapper(progressId));

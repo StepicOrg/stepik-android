@@ -5,14 +5,14 @@ apply plugin: 'com.neenbedankt.android-apt' //needed for source code generation
 android {
 
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "org.stepic.droid"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 21
-        versionName "1.1.1"
+        versionCode 22
+        versionName "1.2"
 
         // Enabling multidex support.
         multiDexEnabled true
@@ -72,6 +72,7 @@ dependencies {
 
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
 
+    compile 'me.zhanghai.android.materialprogressbar:library:1.1.4'
 }
 
 repositories {

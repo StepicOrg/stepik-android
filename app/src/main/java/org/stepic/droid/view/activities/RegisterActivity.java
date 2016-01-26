@@ -1,7 +1,6 @@
 package org.stepic.droid.view.activities;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -41,7 +40,6 @@ public class RegisterActivity extends FragmentActivityBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate");
 
         setContentView(org.stepic.droid.R.layout.activity_register);
         ButterKnife.bind(this);

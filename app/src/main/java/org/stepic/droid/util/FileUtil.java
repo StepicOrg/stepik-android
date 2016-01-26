@@ -1,7 +1,5 @@
 package org.stepic.droid.util;
 
-import android.util.Log;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,7 +25,7 @@ public class FileUtil {
             URLConnection connection = url.openConnection();
             connection.connect();
 
-            // this will be useful so that you can show a tipical 0-100%
+            // this will be useful so that you can show a typical 0-100%
             // progress bar
             int lenghtOfFile = connection.getContentLength();
 
@@ -58,7 +56,6 @@ public class FileUtil {
             input.close();
 
         } catch (Exception e) {
-            Log.e("Error: ", e.getMessage());
             filepath = null;
         }
 

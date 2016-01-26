@@ -8,9 +8,11 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Handler;
 
+import com.squareup.otto.Bus;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.web.IApi;
@@ -31,6 +33,9 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
     @Inject
     IStoreStateManager mStoreStateManager;
 
+    @Inject
+    Bus bus;
+
     private volatile boolean inWork;
 
 
@@ -42,6 +47,15 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (!isOnline(MainApplication.getAppContext()) || inWork) return;
         inWork = true;
+
+        Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                bus.post(new InternetIsEnabledEvent());
+            }
+        };
+        mainHandler.post(myRunnable);
 
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
@@ -63,7 +77,7 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
                 return null;
             }
         };
-task.execute();
+        task.execute();
 
     }
 

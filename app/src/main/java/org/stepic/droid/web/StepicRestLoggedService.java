@@ -60,9 +60,20 @@ public interface StepicRestLoggedService {
 
     @GET("api/search-results")
     Call<SearchResultResponse> getSearchResults(@Query("page") int page,
-                                                @Query("query") String encodedQuery, @Query("type") String type);
+                                                @Query(value = "query", encoded = true) String encodedQuery, @Query("type") String type);
 
     @GET("api/courses")
     Call<CoursesStepicResponse> getCourses(@Query("page") int page, @Query("ids[]") long[] courseIds);
 
+    @POST("api/attempts")
+    Call<AttemptResponse> createNewAttempt(@Body AttemptRequest attemptRequest);
+
+    @POST("api/submissions")
+    Call<SubmissionResponse> createNewSubmission(@Body SubmissionRequest submissionRequest);
+
+    @GET("api/attempts")
+    Call<AttemptResponse> getExistingAttempts(@Query("step") long stepId);
+
+    @GET("api/submissions")
+    Call<SubmissionResponse> getExistingSubmissions(@Query("attempt") long attemptId, @Query("order") String desc);
 }

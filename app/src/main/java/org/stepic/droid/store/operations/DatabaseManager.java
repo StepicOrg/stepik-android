@@ -3,7 +3,6 @@ package org.stepic.droid.store.operations;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,6 +40,7 @@ import java.util.Set;
 
 import javax.inject.Singleton;
 
+// TODO: 16.01.16 split to DAOs, make more generic
 @Singleton
 public class DatabaseManager extends DbManagerBase {
 
@@ -328,11 +328,8 @@ public class DatabaseManager extends DbManagerBase {
     public boolean existStepIntLesson(@NotNull Step step, @NotNull Lesson lesson) {
         try {
             open();
-            if (!isStepInDb(step)) {
-                return false;
-            }
+            return isStepInDb(step) && step.getLesson() == lesson.getId();
 
-            return step.getLesson() == lesson.getId();
         } finally {
             close();
         }
@@ -586,6 +583,7 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
+    @Deprecated
     public void updateOnlyCachedLoadingCourse(Course course, Table type) {
         try {
             open();
@@ -967,9 +965,7 @@ public class DatabaseManager extends DbManagerBase {
 
     public void addVideo(CachedVideo cachedVideo) {
         try {
-            Log.i("downloading", "pre open for video id " + cachedVideo.getVideoId());
             open();
-            Log.i("downloading", "after open for video id " + cachedVideo.getVideoId());
             ContentValues values = new ContentValues();
 
             values.put(DbStructureCachedVideo.Column.VIDEO_ID, cachedVideo.getVideoId());
@@ -1737,6 +1733,23 @@ public class DatabaseManager extends DbManagerBase {
             close();
         }
     }
+
+
+    public void markProgressAsPassedIfInDb(String progressId) {
+        try{
+            open();
+        if (isProgressInDb(progressId)) {
+            ContentValues values = new ContentValues();
+            values.put(DbStructureProgress.Column.IS_PASSED, true);
+            database.update(DbStructureProgress.PROGRESS, values, DbStructureProgress.Column.ID + "=?", new String[]{progressId});
+        }
+
+        }
+        finally {
+            close();
+        }
+    }
+
 
 
     private Assignment parseAssignment(Cursor cursor) {

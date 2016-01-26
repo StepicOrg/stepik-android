@@ -9,7 +9,6 @@ import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -55,26 +54,16 @@ import retrofit.Retrofit;
 public class CourseDetailActivity extends FragmentActivityBase {
 
 
-    private static final String TAG = "unrolled_course";
-
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
-    //    @Bind(R.id.intro_video)
-    WebView mIntroView;
+    private WebView mIntroView;
 
-    //    @Bind(R.id.description)
-//    TextView mDescriptionView;
-//
-//    @Bind(R.id.course_name)
-    TextView mCourseNameView;
+    private TextView mCourseNameView;
 
-    //    @Bind(R.id.instructors_carousel)
-    RecyclerView mInstructorsCarousel;
+    private RecyclerView mInstructorsCarousel;
 
-    //    @Bind(R.id.load_progressbar)
-    ProgressBar mInstructorsProgressBar;
-
+    private ProgressBar mInstructorsProgressBar;
 
     @Bind(R.id.join_course_layout)
     View mJoinCourseView;
@@ -152,7 +141,6 @@ public class CourseDetailActivity extends FragmentActivityBase {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String urlToVideo = mCourse.getIntro();
-        Log.i("vimeo", urlToVideo);
         if (urlToVideo == null || urlToVideo.equals("")) {
             mIntroView.setVisibility(View.GONE);
         } else {
@@ -279,7 +267,6 @@ public class CourseDetailActivity extends FragmentActivityBase {
 
     @Override
     public void finish() {
-        Log.i("result", "finish course activity");
         Intent intent = new Intent();
         intent.putExtra(AppConstants.COURSE_ID_KEY, (Parcelable) mCourse);
         intent.putExtra(AppConstants.ENROLLMENT_KEY, mCourse.getEnrollment());

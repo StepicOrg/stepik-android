@@ -1,18 +1,25 @@
 package org.stepic.droid.util.resolvers;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.FragmentStepBase;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.view.fragments.ChoiceStepFragment;
+import org.stepic.droid.view.fragments.FreeResponseStepFragment;
+import org.stepic.droid.view.fragments.MatchingStepFragment;
+import org.stepic.droid.view.fragments.MathStepFragment;
 import org.stepic.droid.view.fragments.NotSupportedYetStepFragment;
+import org.stepic.droid.view.fragments.NumberStepFragment;
+import org.stepic.droid.view.fragments.PyCharmStepFragment;
+import org.stepic.droid.view.fragments.SortingStepFragment;
+import org.stepic.droid.view.fragments.StringStepFragment;
 import org.stepic.droid.view.fragments.TextStepFragment;
 import org.stepic.droid.view.fragments.VideoStepFragment;
 
@@ -39,7 +46,7 @@ public class StepTypeResolver implements IStepResolver {
         mapFromTypeToDrawable.put(AppConstants.TYPE_VIDEO, getDrawable(context, R.drawable.ic_video1));
         mapFromTypeToDrawable.put(AppConstants.TYPE_MATCHING, getDrawable(context, R.drawable.ic_matching1));
         mapFromTypeToDrawable.put(AppConstants.TYPE_SORTING, getDrawable(context, R.drawable.ic_sorting1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_MATCH, getDrawable(context, R.drawable.ic_math1));
+        mapFromTypeToDrawable.put(AppConstants.TYPE_MATH, getDrawable(context, R.drawable.ic_math1));
         mapFromTypeToDrawable.put(AppConstants.TYPE_FREE_ANSWER, getDrawable(context, R.drawable.ic_free_answer1));
         mapFromTypeToDrawable.put(AppConstants.TYPE_TABLE, getDrawable(context, R.drawable.ic_table1));
         mapFromTypeToDrawable.put(AppConstants.TYPE_STRING, getDrawable(context, R.drawable.ic_string1));
@@ -58,7 +65,7 @@ public class StepTypeResolver implements IStepResolver {
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_VIDEO, getDrawable(context, R.drawable.ic_video));
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_MATCHING, getDrawable(context, R.drawable.ic_matching));
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_SORTING, getDrawable(context, R.drawable.ic_sorting));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_MATCH, getDrawable(context, R.drawable.ic_math));
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_MATH, getDrawable(context, R.drawable.ic_math));
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_FREE_ANSWER, getDrawable(context, R.drawable.ic_free_answer));
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_TABLE, getDrawable(context, R.drawable.ic_table));
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_STRING, getDrawable(context, R.drawable.ic_string));
@@ -100,12 +107,12 @@ public class StepTypeResolver implements IStepResolver {
     }
 
     @Override
-    public FragmentStepBase getFragment(Step step) {
-        FragmentStepBase errorStep = new NotSupportedYetStepFragment();//todo: error and update?
+    public StepBaseFragment getFragment(Step step) {
+        StepBaseFragment errorStep = new NotSupportedYetStepFragment();//todo: error and update?
         if (step == null
                 || step.getBlock() == null
                 || step.getBlock().getName() == null
-                || step.getBlock().getName() == "")
+                || step.getBlock().getName().equals(""))
             return errorStep;
 
         String type = step.getBlock().getName();
@@ -114,6 +121,22 @@ public class StepTypeResolver implements IStepResolver {
                 return new VideoStepFragment();
             case AppConstants.TYPE_TEXT:
                 return new TextStepFragment();
+            case AppConstants.TYPE_CHOICE:
+                return new ChoiceStepFragment();
+            case AppConstants.TYPE_FREE_ANSWER:
+                return new FreeResponseStepFragment();
+            case AppConstants.TYPE_STRING:
+                return new StringStepFragment();
+            case AppConstants.TYPE_MATH:
+                return new MathStepFragment();
+            case AppConstants.TYPE_NUMBER:
+                return new NumberStepFragment();
+            case AppConstants.TYPE_PYCHARM:
+                return new PyCharmStepFragment();
+            case AppConstants.TYPE_SORTING:
+                return new SortingStepFragment();
+            case AppConstants.TYPE_MATCHING:
+                return new MatchingStepFragment();
             default:
                 return new NotSupportedYetStepFragment();
         }
@@ -131,7 +154,7 @@ public class StepTypeResolver implements IStepResolver {
         if (step == null
                 || step.getBlock() == null
                 || step.getBlock().getName() == null
-                || step.getBlock().getName() == "")
+                || step.getBlock().getName().equals(""))
             return false;
 
         String type = step.getBlock().getName();

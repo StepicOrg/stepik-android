@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.CachedVideo;
@@ -40,7 +39,6 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
             @Override
             protected Void doInBackground(Void[] params) {
                 //critical section:
-                Log.i("downloading", "on receive id" + referenceId);
 
                 DownloadEntity downloadEntity = databaseManager.getDownloadEntityIfExist(referenceId);
                 if (downloadEntity != null) {

@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.R;
+import org.stepic.droid.core.ILessonSessionManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseManager;
@@ -23,6 +24,9 @@ import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class FragmentActivityBase extends AppCompatActivity {
+
+    @Inject
+    protected ILessonSessionManager mLessonManager;
 
     @Inject
     protected CoursePropertyResolver mCoursePropertyResolver;
