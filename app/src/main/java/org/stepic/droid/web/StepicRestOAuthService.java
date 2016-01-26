@@ -11,8 +11,8 @@ public interface StepicRestOAuthService {
 
     @POST("/oauth2/token/")
     Call<AuthenticationStepicResponse> authWithLoginPassword(@Query("grant_type") String grant_type,
-                                                             @Query("username") String username,
-                                                             @Query("password") String password);
+                                                             @Query(value = "username", encoded = true) String username,
+                                                             @Query(value = "password", encoded = true) String password);
 
 
     @POST("/oauth2/token/")
