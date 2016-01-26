@@ -39,8 +39,9 @@ public class LocalProgressOfUnitManager implements ILocalProgressManager {
         Unit unit = mDatabaseManager.getUnitByLessonId(step.getLesson());
         if (unit == null) return;
 
-        unit.setIs_viewed_custom(true);
-        mDatabaseManager.addUnit(unit);
+//        unit.setIs_viewed_custom(true);
+//        mDatabaseManager.addUnit(unit); //// TODO: 26.01.16 progress is not saved
+        mDatabaseManager.markProgressAsPassedIfInDb(unit.getProgress());
 
         final long unitId = unit.getId();
         Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());

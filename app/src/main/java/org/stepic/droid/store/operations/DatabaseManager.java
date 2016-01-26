@@ -1738,6 +1738,23 @@ public class DatabaseManager extends DbManagerBase {
     }
 
 
+    public void markProgressAsPassedIfInDb(String progressId) {
+        try{
+            open();
+        if (isProgressInDb(progressId)) {
+            ContentValues values = new ContentValues();
+            values.put(DbStructureProgress.Column.IS_PASSED, true);
+            database.update(DbStructureProgress.PROGRESS, values, DbStructureProgress.Column.ID + "=?", new String[]{progressId});
+        }
+
+        }
+        finally {
+            close();
+        }
+    }
+
+
+
     private Assignment parseAssignment(Cursor cursor) {
         Assignment assignment = new Assignment();
 

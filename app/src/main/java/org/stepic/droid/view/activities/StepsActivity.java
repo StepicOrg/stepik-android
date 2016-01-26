@@ -214,8 +214,7 @@ public class StepsActivity extends FragmentActivityBase {
 
     @Subscribe
     public void onFromDbStepEvent(FromDbStepEvent e) {
-        if (e.getLesson() != null && e.getLesson().getId() != mLesson.getId()) {
-            bus.post(new FailLoadStepEvent());
+        if (e.getLesson() == null || e.getLesson().getId() != mLesson.getId()) {
             return;
         }
 
@@ -329,6 +328,7 @@ public class StepsActivity extends FragmentActivityBase {
             protected Void doInBackground(Void... params) {
                 for (Step item : localSteps) {
                     item.setIs_custom_passed(mDbManager.isStepPassed(item.getId()));
+                    mDbManager.addStep(item); // FIXME: 26.01.16 WARNING, this line is dangerous
                 }
                 return null;
             }
