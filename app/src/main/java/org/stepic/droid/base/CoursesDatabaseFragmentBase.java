@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -105,7 +104,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Subscribe
     public void onPreLoad(PreLoadCoursesEvent e) {
-        Log.i(TAG, "preLoad");
         isLoading = true;
         if (mCurrentPage == 1) {
             mFooterDownloadingView.setVisibility(View.GONE);
@@ -180,7 +178,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     public void onSuccessJoin(SuccessJoinEvent e) {
         //We do not upgrade database, because when
         //Only for find courses event.
-        Log.d("courses database", "update after join");
         updateEnrollment(e.getCourse(), e.getCourse().getEnrollment());
     }
 
@@ -332,11 +329,9 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("result", "onActivityResult: ");
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == FragmentActivity.RESULT_OK) {
             if (requestCode == AppConstants.REQUEST_CODE_DETAIL) {
-                Log.i("result", "reaction in courses fragment base");
                 Course course = data.getParcelableExtra(AppConstants.COURSE_ID_KEY);
                 int enrollment = data.getIntExtra(AppConstants.ENROLLMENT_KEY, 0);
                 if (course != null && enrollment != 0) {

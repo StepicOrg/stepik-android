@@ -9,7 +9,6 @@ import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -142,7 +141,6 @@ public class CourseDetailActivity extends FragmentActivityBase {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String urlToVideo = mCourse.getIntro();
-        Log.i("vimeo", urlToVideo);
         if (urlToVideo == null || urlToVideo.equals("")) {
             mIntroView.setVisibility(View.GONE);
         } else {
@@ -269,7 +267,6 @@ public class CourseDetailActivity extends FragmentActivityBase {
 
     @Override
     public void finish() {
-        Log.i("result", "finish course activity");
         Intent intent = new Intent();
         intent.putExtra(AppConstants.COURSE_ID_KEY, (Parcelable) mCourse);
         intent.putExtra(AppConstants.ENROLLMENT_KEY, mCourse.getEnrollment());

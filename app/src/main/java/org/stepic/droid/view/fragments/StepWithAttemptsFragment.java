@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -175,7 +174,6 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
                     if (attemptList == null || attemptList.isEmpty() || !attemptList.get(0).getStatus().equals("active")) {
                         createNewAttempt();
                     } else {
-                        Log.d(TAG, AppConstants.GET_OLD_ATTEMPT);
                         YandexMetrica.reportEvent(AppConstants.GET_OLD_ATTEMPT);
                         Attempt attempt = attemptList.get(0);
                         bus.post(new SuccessAttemptEvent(localStep.getId(), attempt));

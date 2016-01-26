@@ -19,7 +19,6 @@ package org.stepic.droid.view.custom.dragsortadapter;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 
 public class DragSortShadowBuilder extends View.DragShadowBuilder {
@@ -40,7 +39,7 @@ public class DragSortShadowBuilder extends View.DragShadowBuilder {
             shadowSize.set(view.getWidth(), view.getHeight());
             shadowTouchPoint.set(touchPoint.x, touchPoint.y);
         } else {
-            Log.e(TAG, "Asked for drag thumb metrics but no view");
+//            Log.d(TAG, "Asked for drag thumb metrics but no view");
         }
     }
 

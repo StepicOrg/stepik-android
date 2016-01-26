@@ -1,7 +1,6 @@
 package org.stepic.droid.core;
 
 import android.os.Handler;
-import android.util.Log;
 
 import com.squareup.otto.Bus;
 
@@ -30,7 +29,6 @@ public class LocalProgressOfUnitManager implements ILocalProgressManager {
     public void checkUnitAsPassed(final long stepId) {
         Step step = mDatabaseManager.getStepById(stepId);
         if (step == null) return;
-        Log.d("prmanager", "in");
         List<Step> stepList = mDatabaseManager.getStepsOfLesson(step.getLesson());
         for (Step stepItem : stepList) {
             if (!stepItem.is_custom_passed()) return;
@@ -46,7 +44,6 @@ public class LocalProgressOfUnitManager implements ILocalProgressManager {
         final long unitId = unit.getId();
         Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
         //Say to ui that ui is cached now
-        Log.d("prmanager", "post");
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {

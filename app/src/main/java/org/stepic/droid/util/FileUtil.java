@@ -1,7 +1,5 @@
 package org.stepic.droid.util;
 
-import android.util.Log;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -58,7 +56,6 @@ public class FileUtil {
             input.close();
 
         } catch (Exception e) {
-            Log.e("Error: ", e.getMessage());
             filepath = null;
         }
 

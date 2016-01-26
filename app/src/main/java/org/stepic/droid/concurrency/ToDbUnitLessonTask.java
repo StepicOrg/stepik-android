@@ -1,7 +1,5 @@
 package org.stepic.droid.concurrency;
 
-import android.util.Log;
-
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.base.MainApplication;
@@ -54,7 +52,6 @@ public class ToDbUnitLessonTask extends StepicTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackgroundBody(Void... params) throws Exception {
-        Log.i("downloading", "save unit to db");
         for (Progress item : progresses) {
             mDatabaseManager.addProgress(item);
         }

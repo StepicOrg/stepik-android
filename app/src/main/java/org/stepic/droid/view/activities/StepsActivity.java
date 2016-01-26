@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -195,7 +194,6 @@ public class StepsActivity extends FragmentActivityBase {
                 protected Void doInBackground(Void... params) {
                     long assignmentID = mDbManager.getAssignmentIdByStepId(stepId);
 
-                    Log.i("push", "push " + local);
                     mShell.getScreenProvider().pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
                     return null;
                 }
@@ -337,7 +335,6 @@ public class StepsActivity extends FragmentActivityBase {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 if (mStepList != null && mStepAdapter != null && mTabLayout != null) {
-                    Log.i("update", "update ui");
                     showSteps(localSteps);
                 }
             }

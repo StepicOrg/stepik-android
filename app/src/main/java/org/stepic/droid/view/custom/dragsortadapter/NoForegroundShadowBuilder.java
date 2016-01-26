@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -39,7 +38,7 @@ public class NoForegroundShadowBuilder extends DragSortShadowBuilder {
             }
 
         } else {
-            Log.e(TAG, "Asked to draw drag shadow but no view");
+//            Log.d(TAG, "Asked to draw drag shadow but no view");
         }
     }
 }

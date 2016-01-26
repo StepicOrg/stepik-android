@@ -1,7 +1,6 @@
 package org.stepic.droid.concurrency;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.CachedVideo;
@@ -28,7 +27,6 @@ public class ToDbCachedVideo extends StepicTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackgroundBody(Void... params) throws Exception {
-        Log.i("downloading", "start task for video id " + cachedVideo.getVideoId());
         databaseManager.addVideo(cachedVideo);
         return null;
     }

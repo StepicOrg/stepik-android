@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -165,7 +164,6 @@ public class VideoStepFragment extends StepBaseFragment {
     public void onVideoResolved(VideoResolvedEvent e) {
         if (e.getStepId() != mStep.getId()) return;
         Uri videoUri = Uri.parse(e.getPathToVideo());
-        Log.i(TAG, videoUri.getEncodedPath());
 
         Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
         intent.setDataAndType(videoUri, "video/*");

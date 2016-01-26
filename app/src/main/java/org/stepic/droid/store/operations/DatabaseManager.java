@@ -3,7 +3,6 @@ package org.stepic.droid.store.operations;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -966,9 +965,7 @@ public class DatabaseManager extends DbManagerBase {
 
     public void addVideo(CachedVideo cachedVideo) {
         try {
-            Log.i("downloading", "pre open for video id " + cachedVideo.getVideoId());
             open();
-            Log.i("downloading", "after open for video id " + cachedVideo.getVideoId());
             ContentValues values = new ContentValues();
 
             values.put(DbStructureCachedVideo.Column.VIDEO_ID, cachedVideo.getVideoId());

@@ -5,7 +5,6 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.util.Log;
 
 import com.squareup.otto.Bus;
 import com.yandex.metrica.YandexMetrica;
@@ -87,7 +86,6 @@ public class LoadService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         LoadTypeKey type = (LoadTypeKey) intent.getSerializableExtra(AppConstants.KEY_LOAD_TYPE);
-        Log.i("downloading", "Service: " + Thread.currentThread().getName());
         try {
             switch (type) {
                 case Course:
@@ -138,7 +136,6 @@ public class LoadService extends IntentService {
                 return;
             }
 
-            Log.i("downloading", downloadFolderAndFile.toString());
             Uri target = Uri.fromFile(downloadFolderAndFile);
 
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
@@ -162,11 +159,8 @@ public class LoadService extends IntentService {
             }
         } catch (SecurityException ex) {
             YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, ex);
-            Log.i("downloading", ex.getMessage());
         } catch (Exception ex) {
-
             YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, ex);
-            Log.i("downloading", "downloading is failed");
         }
 
     }

@@ -3,7 +3,6 @@ package org.stepic.droid.view.custom.dragsortadapter;
 import android.graphics.PointF;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
 
@@ -36,7 +35,6 @@ final class DragManager implements View.OnDragListener {
 
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
-                Log.d("DragManager", "ACTION_DRAG_STARTED");
                 draggingId = itemId;
 //                adapter.notifyItemChanged(recyclerView.findViewHolderForItemId(itemId).getAdapterPosition());
                 RecyclerView.ViewHolder holder = recyclerView.findViewHolderForItemId(itemId);
@@ -47,7 +45,6 @@ final class DragManager implements View.OnDragListener {
                 break;
 
             case DragEvent.ACTION_DRAG_LOCATION:
-                Log.d("DragManager", "ACTION_DRAG_LOCATION");
                 float x = event.getX();
                 float y = event.getY();
 
@@ -110,7 +107,6 @@ final class DragManager implements View.OnDragListener {
                 break;
 
             case DragEvent.ACTION_DRAG_ENDED:
-                Log.d("DragManager", "ACTION_DRAG_ENDED");
                 draggingId = RecyclerView.NO_ID;
                 lastDragInfo = null;
 
@@ -145,16 +141,13 @@ final class DragManager implements View.OnDragListener {
                 break;
 
             case DragEvent.ACTION_DROP:
-                Log.d("DragManager", "ACTION_DROP");
                 adapter.onDrop();
                 break;
 
             case DragEvent.ACTION_DRAG_ENTERED:
-                Log.d("DragManager", "ACTION_DRAG_ENTERED");
                 // probably not used?
                 break;
             case DragEvent.ACTION_DRAG_EXITED:
-                Log.d("DragManager", "ACTION_DRAG_EXITED");
                 adapter.onDragExit();
                 // TODO edge scrolling
                 break;

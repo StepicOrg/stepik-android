@@ -4,7 +4,6 @@ import android.app.DownloadManager;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Handler;
-import android.util.Log;
 
 import com.squareup.otto.Bus;
 import com.yandex.metrica.YandexMetrica;
@@ -61,7 +60,6 @@ public class DeleteService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         LoadService.LoadTypeKey type = (LoadService.LoadTypeKey) intent.getSerializableExtra(AppConstants.KEY_LOAD_TYPE);
-        Log.i("downloading", "Service: " + Thread.currentThread().getName());
         try {
             switch (type) {
                 case Course:
