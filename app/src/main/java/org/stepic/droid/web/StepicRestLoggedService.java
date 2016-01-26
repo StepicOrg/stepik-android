@@ -60,7 +60,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/search-results")
     Call<SearchResultResponse> getSearchResults(@Query("page") int page,
-                                                @Query("query") String encodedQuery, @Query("type") String type);
+                                                @Query(value = "query", encoded = true) String encodedQuery, @Query("type") String type);
 
     @GET("api/courses")
     Call<CoursesStepicResponse> getCourses(@Query("page") int page, @Query("ids[]") long[] courseIds);
