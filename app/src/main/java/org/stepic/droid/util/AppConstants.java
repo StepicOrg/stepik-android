@@ -92,4 +92,6 @@ public class AppConstants {
     public static final java.lang.String GET_OLD_ATTEMPT = "get attempt from server db, new is not creating";
     public static final java.lang.String SAVE_SESSION_FAIL = "save session was failed because of null attempt or submission";
     public static final java.lang.String SEARCH = "search courses";
+    public static final java.lang.String METRICA_LESSON_IN_STORE_STATE_NULL = "lesson was null in store state manager";
+    public static final java.lang.String METRICA_UNIT_IN_STORE_STATE_NULL = "unit was null in store state manager";
 }
