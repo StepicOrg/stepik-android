@@ -28,6 +28,7 @@ import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.RWLocks;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -126,7 +127,9 @@ public class RetrofitRESTApi implements IApi {
     public Call<AuthenticationStepicResponse> authWithLoginPassword(String login, String password) {
         YandexMetrica.reportEvent("Api:auth with login password");
         makeOauthServiceWithNewAuthHeader(TokenType.loginPassword);
-        return mOAuthService.authWithLoginPassword(mConfig.getGrantType(TokenType.loginPassword), login, password);
+        String encodedPassword = URLEncoder.encode(password);
+        String encodedLogin = URLEncoder.encode(login);
+        return mOAuthService.authWithLoginPassword(mConfig.getGrantType(TokenType.loginPassword), encodedLogin, encodedPassword);
     }
 
     @Override
