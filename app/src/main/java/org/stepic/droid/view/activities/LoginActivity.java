@@ -22,6 +22,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DpPixelsHelper;
+import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.SocialAuthAdapter;
 import org.stepic.droid.view.decorators.SpacesItemDecorationHorizontal;
@@ -205,7 +206,11 @@ public class LoginActivity extends FragmentActivityBase {
         api.authWithLoginPassword(login, password).enqueue(new Callback<AuthenticationStepicResponse>() {
             @Override
             public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
-                successLogin(response, retrofit);
+                if (response.isSuccess()) {
+                    successLogin(response, retrofit);
+                } else {
+                    failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())));
+                }
             }
 
             @Override
@@ -227,8 +232,7 @@ public class LoginActivity extends FragmentActivityBase {
             YandexMetrica.reportEvent(AppConstants.METRICA_SUCCESS_LOGIN);
             onUserLoginSuccess();
         } else {
-            YandexMetrica.reportEvent(AppConstants.METRICA_FAIL_LOGIN);
-            ProgressHelper.dismiss(mProgressLogin);
+            failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())));
         }
     }
 
