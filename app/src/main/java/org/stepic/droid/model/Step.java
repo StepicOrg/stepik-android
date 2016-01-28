@@ -20,6 +20,11 @@ public class Step implements Parcelable, Serializable {
     private boolean is_cached;
     private boolean is_loading;
     private boolean is_custom_passed;
+    private ActionsContainer actions;
+
+    public ActionsContainer getActions() {
+        return actions;
+    }
 
     public boolean is_custom_passed() {
         return is_custom_passed;
@@ -136,6 +141,7 @@ public class Step implements Parcelable, Serializable {
     public Step() {
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -157,6 +163,7 @@ public class Step implements Parcelable, Serializable {
         dest.writeByte(is_cached ? (byte) 1 : (byte) 0);
         dest.writeByte(is_loading ? (byte) 1 : (byte) 0);
         dest.writeByte(is_custom_passed ? (byte) 1 : (byte) 0);
+        dest.writeParcelable(this.actions, flags);
     }
 
     protected Step(Parcel in) {
@@ -174,6 +181,7 @@ public class Step implements Parcelable, Serializable {
         this.is_cached = in.readByte() != 0;
         this.is_loading = in.readByte() != 0;
         this.is_custom_passed = in.readByte() != 0;
+        this.actions = in.readParcelable(ActionsContainer.class.getClassLoader());
     }
 
     public static final Creator<Step> CREATOR = new Creator<Step>() {
