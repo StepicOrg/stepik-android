@@ -52,6 +52,27 @@
 
         </LinearLayout>
 
+        <FrameLayout
+            android:id="@+id/peer_review_warning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/warning_light_yellow"
+            android:visibility="gone"
+            android:foreground="@drawable/non_radius_foreground"
+            android:minHeight="@dimen/min_ux_touchable_size"
+            tools:visibility="visible"
+            android:clickable="true">
+
+            <TextView
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/review_warning"/>
+
+        </FrameLayout>
+
         <include
             android:id="@+id/progress_bar"
             layout="@layout/progress_bar_on_empty_screen"/>
