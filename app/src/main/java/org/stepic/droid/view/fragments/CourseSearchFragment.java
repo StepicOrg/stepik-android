@@ -10,6 +10,7 @@ import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
 import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
+import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.events.search.SuccessSearchEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.SearchResult;
@@ -218,6 +219,12 @@ public class CourseSearchFragment extends CourseListFragmentBase {
     @Override
     public void onFailureDataLoad(FailCoursesDownloadEvent e) {
         super.onFailureDataLoad(e);
+    }
+
+    @Subscribe
+    @Override
+    public void onSuccessJoin(SuccessJoinEvent e) {
+        super.onSuccessJoin(e);
     }
 
 }

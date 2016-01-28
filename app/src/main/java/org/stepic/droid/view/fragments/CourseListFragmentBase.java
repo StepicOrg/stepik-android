@@ -20,6 +20,7 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
 import org.stepic.droid.events.courses.PreLoadCoursesEvent;
 import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
+import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
@@ -206,6 +207,26 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         }
     }
 
+    public final void updateEnrollment(Course courseForUpdate, long enrollment) {
+        boolean inList = false;
+        for (Course courseItem : mCourses) {
+            if (courseItem.getCourseId() == courseForUpdate.getCourseId()) {
+                courseItem.setEnrollment((int) courseItem.getCourseId());
+                courseForUpdate = courseItem;
+                inList = true;
+                break;
+            }
+        }
+        if (getCourseType() == DatabaseManager.Table.enrolled && !inList) {
+            mCourses.add(courseForUpdate);
+        }
+
+    }
+
+    @Subscribe
+    public void onSuccessJoin(SuccessJoinEvent e) {
+        updateEnrollment(e.getCourse(), e.getCourse().getEnrollment());
+    }
 
     public abstract void showEmptyScreen(boolean isShow);
 }
