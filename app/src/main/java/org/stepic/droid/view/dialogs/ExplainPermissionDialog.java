@@ -32,8 +32,6 @@ public class ExplainPermissionDialog extends DialogFragment {
                     }
                 })
                 .setNegativeButton(R.string.deny, null);
-
-        //setCancelable(false);
         return builder.create();
     }
 }

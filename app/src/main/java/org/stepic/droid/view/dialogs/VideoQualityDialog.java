@@ -70,7 +70,7 @@ public class VideoQualityDialog extends DialogFragment {
                                     }
                                 };
                                 task.execute();
-                                dialog.dismiss();
+//                                dialog.dismiss();
                                 dialog.dismiss();
                             }
                         });

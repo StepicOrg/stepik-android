@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import com.squareup.otto.Bus;
 
@@ -41,8 +42,14 @@ public class AllowMobileDataDialogFragment extends DialogFragment {
                         mBus.post(new WifiLoadIsChangedEvent(false));
                     }
                 });
-        setCancelable(false);
 
         return builder.create();
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        super.onCancel(dialog);
+        Log.d("AllowMobile", "onCancel");
+        mBus.post(new WifiLoadIsChangedEvent(false));
     }
 }
