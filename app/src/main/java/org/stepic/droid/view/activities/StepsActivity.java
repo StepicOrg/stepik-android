@@ -216,8 +216,25 @@ public class StepsActivity extends FragmentActivityBase {
             return;
         }
 
-        if (e.getStepList() != null && e.getStepList().size() != 0 && e.getStepList().size() == mLesson.getSteps().length) {
-            bus.post(new SuccessLoadStepEvent(e.getStepList()));
+        if (e.getStepList() != null && !e.getStepList().isEmpty() && e.getStepList().size() == mLesson.getSteps().length) {
+//            bus.post(new SuccessLoadStepEvent(e.getStepList()));
+
+            final List<Step> stepsFromDB = e.getStepList();
+            mShell.getApi().getSteps(mLesson.getSteps()).enqueue(new Callback<StepResponse>() {
+                @Override
+                public void onResponse(Response<StepResponse> response, Retrofit retrofit) {
+                    if (response.isSuccess()) {
+                        bus.post(new SuccessLoadStepEvent(response.body().getSteps()));//update if we can
+                    } else {
+                        bus.post(new SuccessLoadStepEvent(stepsFromDB)); //if fail -> get from db
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    bus.post(new SuccessLoadStepEvent(stepsFromDB));//if fail -> get from db
+                }
+            });
         } else {
             mShell.getApi().getSteps(mLesson.getSteps()).enqueue(new Callback<StepResponse>() {
                 @Override
