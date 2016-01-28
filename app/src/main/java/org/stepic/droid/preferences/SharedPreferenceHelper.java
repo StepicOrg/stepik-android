@@ -29,7 +29,8 @@ public class SharedPreferenceHelper {
     public enum PreferenceType {
         LOGIN("login preference"),
         WIFI("wifi_preference"),
-        VIDEO_QUALITY("video_quality_preference");
+        VIDEO_QUALITY("video_quality_preference"),
+        TEMP("temporary");
 
         private String description;
 
@@ -63,6 +64,14 @@ public class SharedPreferenceHelper {
 
     public void storeVideoQuality(String videoQuality) {
         put(PreferenceType.VIDEO_QUALITY, VIDEO_QUALITY_KEY, videoQuality);
+    }
+
+    public void storeTempPosition(int position) {
+        put(PreferenceType.TEMP, TEMP_POSITION_KEY, position);
+    }
+
+    public int getTempPosition() {
+        return getInt(PreferenceType.TEMP, TEMP_POSITION_KEY);
     }
 
     @NotNull
@@ -125,6 +134,11 @@ public class SharedPreferenceHelper {
         editor.putString(key, value).apply();
     }
 
+    private void put(PreferenceType type, String key, int value) {
+        SharedPreferences.Editor editor = mContext.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
+        editor.putInt(key, value).apply();
+    }
+
     private void put(PreferenceType type, String key, Boolean value) {
         SharedPreferences.Editor editor = mContext.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.putBoolean(key, value).apply();
@@ -135,6 +149,10 @@ public class SharedPreferenceHelper {
         editor.clear().apply();
     }
 
+    private int getInt(PreferenceType preferenceType, String key) {
+        return mContext.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
+                .getInt(key, -1);
+    }
 
     private String getString(PreferenceType preferenceType, String key) {
         return mContext.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
@@ -152,5 +170,6 @@ public class SharedPreferenceHelper {
     private final String WIFI_KEY = "wifi_key";
     private final String IS_SOCIAL = "is_social_key";
     private final String VIDEO_QUALITY_KEY = "video_quality_key";
+    private final String TEMP_POSITION_KEY = "temp_position_key";
 
 }

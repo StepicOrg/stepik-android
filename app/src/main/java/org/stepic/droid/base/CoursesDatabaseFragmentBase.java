@@ -174,30 +174,31 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         showCourses(e.getCourses());
     }
 
+    @Override
     @Subscribe
     public void onSuccessJoin(SuccessJoinEvent e) {
         //We do not upgrade database, because when
         //Only for find courses event.
-        updateEnrollment(e.getCourse(), e.getCourse().getEnrollment());
+        super.onSuccessJoin(e);
     }
 
-    private void updateEnrollment(Course courseForUpdate, long enrollment) {
-
-
-        boolean inList = false;
-        for (Course courseItem : mCourses) {
-            if (courseItem.getCourseId() == courseForUpdate.getCourseId()) {
-                courseItem.setEnrollment((int) courseItem.getCourseId());
-                courseForUpdate = courseItem;
-                inList = true;
-                break;
-            }
-        }
-        if (getCourseType() == DatabaseManager.Table.enrolled && !inList) {
-            mCourses.add(courseForUpdate);
-        }
-
-    }
+//    private void updateEnrollment(Course courseForUpdate, long enrollment) {
+//
+//
+//        boolean inList = false;
+//        for (Course courseItem : mCourses) {
+//            if (courseItem.getCourseId() == courseForUpdate.getCourseId()) {
+//                courseItem.setEnrollment((int) courseItem.getCourseId());
+//                courseForUpdate = courseItem;
+//                inList = true;
+//                break;
+//            }
+//        }
+//        if (getCourseType() == DatabaseManager.Table.enrolled && !inList) {
+//            mCourses.add(courseForUpdate);
+//        }
+//
+//    }
 
     @Override
     public void onStart() {
@@ -259,7 +260,10 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     }
 
     private void dropCourse(int position) {
-        if (position >= mCourses.size() || position <= 0) return;
+        if (position >= mCourses.size() || position < 0) {
+            Toast.makeText(getContext(), R.string.try_in_web_drop, Toast.LENGTH_LONG).show();
+            return;
+        }
         final Course course = mCourses.get(position);
         if (course.getEnrollment() == 0) {
             Toast.makeText(getContext(), R.string.you_not_enrolled, Toast.LENGTH_LONG).show();

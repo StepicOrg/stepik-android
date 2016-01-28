@@ -28,12 +28,10 @@ public class ExplainPermissionDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         ActivityCompat.requestPermissions(getActivity(),
                                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                AppConstants.REQUEST_WIFI);
+                                AppConstants.REQUEST_EXTERNAL_STORAGE);
                     }
                 })
                 .setNegativeButton(R.string.deny, null);
-
-        //setCancelable(false);
         return builder.create();
     }
 }

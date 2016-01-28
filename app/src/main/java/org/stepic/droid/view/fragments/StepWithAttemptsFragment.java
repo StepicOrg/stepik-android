@@ -77,6 +77,9 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     @Bind(R.id.submit_button)
     Button mActionButton;
 
+    @Bind(R.id.peer_review_warning)
+    View mPeerReviewIndicator;
+
     @BindString(R.string.correct)
     String mCorrectString;
 
@@ -127,6 +130,16 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
             setTextToActionButton(mSubmitText);
         } else {
             setTextToActionButton(mTryAgainText);
+        }
+
+        if (mStep.getActions() != null && mStep.getActions().getDo_review() != null) {
+            mPeerReviewIndicator.setVisibility(View.VISIBLE);
+            mPeerReviewIndicator.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mShell.getScreenProvider().openStepInWeb(getContext(), mStep);
+                }
+            });
         }
 
         setListenerToActionButton(new View.OnClickListener() {

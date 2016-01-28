@@ -55,7 +55,6 @@ public class LogoutAreYouSureDialog extends DialogFragment {
                     }
                 })
                 .setNegativeButton(R.string.no, null);
-        setCancelable(false);
 
         return builder.create();
     }
