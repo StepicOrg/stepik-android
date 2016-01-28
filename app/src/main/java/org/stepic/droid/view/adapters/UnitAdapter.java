@@ -17,6 +17,7 @@ import com.yandex.metrica.YandexMetrica;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IScreenManager;
+import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
@@ -48,6 +49,8 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     @Inject
     DatabaseManager mDbManager;
 
+    @Inject
+    IShell mShell;
 
     @Inject
     CleanManager mCleaner;
@@ -164,6 +167,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                mShell.getSharedPreferenceHelper().storeTempPosition(position);
                 if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
@@ -180,11 +184,8 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
                     ActivityCompat.requestPermissions(mActivity,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            AppConstants.REQUEST_WIFI);
+                            AppConstants.REQUEST_EXTERNAL_STORAGE);
 
-                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                    // app-defined int constant. The callback method gets the
-                    // result of the request.
                 }
                 return;
             }
@@ -217,6 +218,11 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 }
             }
         }
+    }
+
+
+    public void requestClickLoad(int position) {
+        onClickLoad(position);
     }
 
 

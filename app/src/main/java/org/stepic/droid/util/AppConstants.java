@@ -73,6 +73,7 @@ public class AppConstants {
     public static final java.lang.String METRICA_CLICK_YES_CLEAR_CACHE = "Click Accept clear cache";
     public static final java.lang.String METRICA_CLICK_YES_LOGOUT = "Click accept logout";
     public static final int REQUEST_WIFI = 1;
+    public static final int REQUEST_EXTERNAL_STORAGE = 13;
     public static final java.lang.String METRICA_CANCEL_VIDEO_QUALITY = "Cancel video quality dialog";
     public static final String NULL_SHOW_PROFILE = "Null profile is tried to show";
     public static final String IMAGE_ON_DISK = "Image on disk";

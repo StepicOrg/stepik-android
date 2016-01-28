@@ -1,6 +1,9 @@
 package org.stepic.droid.view.activities;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -346,6 +349,24 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         bus.unregister(this);
         mLessonManager.reset();
         super.onDestroy();
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == AppConstants.REQUEST_EXTERNAL_STORAGE) {
+            String permissionExternalStorage = permissions[0];
+            if (permissionExternalStorage == null) return;
+
+            if (permissionExternalStorage.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                int position = mShell.getSharedPreferenceHelper().getTempPosition();
+                if (mAdapter != null) {
+                    mAdapter.requestClickLoad(position);
+                }
+            }
+        }
     }
 
 }

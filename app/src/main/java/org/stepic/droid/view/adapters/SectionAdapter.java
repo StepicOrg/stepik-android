@@ -18,6 +18,7 @@ import com.yandex.metrica.YandexMetrica;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IScreenManager;
+import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
@@ -46,6 +47,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
 
     @Inject
     DatabaseManager mDatabaseManager;
+
+    @Inject
+    IShell mShell;
 
     @Inject
     CleanManager mCleaner;
@@ -189,6 +193,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                mShell.getSharedPreferenceHelper().storeTempPosition(position);
                 if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
@@ -200,16 +205,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                     dialog.show(mActivity.getFragmentManager(), null);
 
                 } else {
-
                     // No explanation needed, we can request the permission.
 
                     ActivityCompat.requestPermissions(mActivity,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            AppConstants.REQUEST_WIFI);
+                            AppConstants.REQUEST_EXTERNAL_STORAGE);
 
-                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                    // app-defined int constant. The callback method gets the
-                    // result of the request.
                 }
                 return;
             }
@@ -234,6 +235,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                 }
             }
         }
+    }
+
+    public void requestClickLoad(int position) {
+        onClickLoad(position);
     }
 
     public static class SectionViewHolder extends RecyclerView.ViewHolder {
