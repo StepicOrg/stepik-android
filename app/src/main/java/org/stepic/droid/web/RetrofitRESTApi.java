@@ -25,7 +25,7 @@ import org.stepic.droid.model.EnrollmentWrapper;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.social.SocialManager;
+import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
@@ -231,7 +231,7 @@ public class RetrofitRESTApi implements IApi {
         return mLoggedService.postViewed(new ViewAssignmentWrapper(stepAssignment.getAssignment(), stepAssignment.getStep()));
     }
 
-    public void loginWithSocial(Context context, SocialManager.SocialType type) {
+    public void loginWithSocial(Context context, ISocialType type) {
 
         String socialIdentifier = type.getIdentifier();
         String url = mConfig.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + mConfig.getOAuthClientId(TokenType.social) + "&response_type=code");

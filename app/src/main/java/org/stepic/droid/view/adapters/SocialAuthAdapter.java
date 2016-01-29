@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 import org.stepic.droid.web.IApi;
@@ -29,7 +30,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
     IApi mApi;
 
 
-    List<SocialManager.SocialType> mSocialList;
+    List<? extends ISocialType> mSocialList;
     private Activity mContext;
 
     public SocialAuthAdapter(Activity context) {
@@ -47,7 +48,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
 
     @Override
     public void onBindViewHolder(SocialViewHolder holder, int position) {
-        SocialManager.SocialType socialType = mSocialList.get(position);
+        ISocialType socialType = mSocialList.get(position);
 
         holder.imageView.setImageDrawable(socialType.getIcon());
     }
@@ -59,7 +60,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
 
     @Override
     public void onClick(int position) {
-        SocialManager.SocialType type = mSocialList.get(position);
+        ISocialType type = mSocialList.get(position);
         mApi.loginWithSocial(mContext, type);
     }
 

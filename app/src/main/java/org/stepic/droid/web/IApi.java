@@ -4,7 +4,7 @@ import android.content.Context;
 
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Reply;
-import org.stepic.droid.social.SocialManager;
+import org.stepic.droid.social.ISocialType;
 
 import retrofit.Call;
 
@@ -45,7 +45,7 @@ public interface IApi {
 
     Call<Void> postViewed(ViewAssignment stepAssignment);
 
-    void loginWithSocial(Context context, SocialManager.SocialType type);
+    void loginWithSocial(Context context, ISocialType type);
 
     Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery);
 

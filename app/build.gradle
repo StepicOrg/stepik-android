@@ -24,6 +24,15 @@ android {
                     'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        sb {
+            applicationId "org.stepic.droid.sb"
+        }
+        classic {
+            applicationId "org.stepic.droid"
+        }
+    }
 }
 
 dependencies {
