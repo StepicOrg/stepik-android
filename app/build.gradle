@@ -13,7 +13,7 @@ android {
         targetSdkVersion 23
         versionCode 25
         versionName "1.3dev"
-
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // Enabling multidex support.
         multiDexEnabled true
     }
@@ -22,6 +22,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro'
+        }
+        debug {
+            testCoverageEnabled = true
         }
     }
 
@@ -82,6 +85,19 @@ dependencies {
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
 
     compile 'me.zhanghai.android.materialprogressbar:library:1.1.4'
+
+    // Required -- JUnit 4 framework
+    testCompile 'junit:junit:4.12'
+    // Optional -- Mockito framework
+    testCompile 'org.mockito:mockito-core:1.10.19'
+
+    androidTestCompile 'com.android.support:support-annotations:23.1.1'
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
+    androidTestCompile 'com.android.support.test:rules:0.4.1'
+    // Optional -- Hamcrest library
+    androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
+    // Optional -- UI testing with Espresso
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
 }
 
 repositories {
