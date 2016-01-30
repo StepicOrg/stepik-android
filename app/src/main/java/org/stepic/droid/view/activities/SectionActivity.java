@@ -208,13 +208,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
             showSections(sections);
             if (firstLoad) {
                 firstLoad = false;
-                mSwipeRefreshLayout.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ProgressHelper.activate(mSwipeRefreshLayout);
-                        updateSections();
-                    }
-                });
+                updateSections();
             }
         } else {
             updateSections();

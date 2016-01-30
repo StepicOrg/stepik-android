@@ -274,13 +274,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
             showUnitsLessons(e.getUnits(), e.getLessons());
             if (firstLoad) {
                 firstLoad = false;
-                mSwipeRefreshLayout.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ProgressHelper.activate(mSwipeRefreshLayout);
-                        updateUnits();
-                    }
-                });
+                updateUnits();
             }
         } else {
             //db doesn't have it, load from web with empty screen
