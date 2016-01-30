@@ -1,96 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/root_scroll_view"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbarStyle="outsideOverlay">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@id/root_view"
+    <ScrollView
+        android:id="@+id/root_scroll_view"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <include
-            android:id="@+id/header"
-            layout="@layout/step_text_header"/>
-
-        <FrameLayout
-            android:id="@+id/attempt_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:scrollbarStyle="outsideOverlay">
 
         <LinearLayout
-            android:id="@+id/result_line"
+            android:id="@id/root_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="start"
-            android:orientation="horizontal"
-            android:padding="8dp"
-            android:visibility="gone"
-            tools:background="@color/correct_answer_background"
-            tools:visibility="visible"
-            >
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/answer_status_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                tools:src="@drawable/ic_correct"
-                />
+            <include
+                android:id="@+id/header"
+                layout="@layout/step_text_header"/>
 
-            <TextView
-                android:id="@+id/answer_status_text"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:id="@+id/attempt_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:id="@+id/result_line"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
+                android:gravity="start"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:visibility="gone"
+                tools:background="@color/correct_answer_background"
+                tools:visibility="visible"
+                >
+
+                <ImageView
+                    android:id="@+id/answer_status_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    tools:src="@drawable/ic_correct"
+                    />
+
+                <TextView
+                    android:id="@+id/answer_status_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="16sp"
+                    tools:text="Correct!"/>
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/peer_review_warning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/warning_light_yellow"
+                android:clickable="true"
+                android:foreground="@drawable/non_radius_foreground"
+                android:minHeight="@dimen/min_ux_touchable_size"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="@string/review_warning"/>
+
+            </FrameLayout>
+
+            <include
+                android:id="@+id/progress_bar"
+                layout="@layout/progress_bar_on_empty_screen"/>
+
+            <Button
+                android:id="@+id/submit_button"
+                style="@style/regular_white_text"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/min_ux_touchable_size"
+                android:layout_margin="5dp"
+                android:layout_marginBottom="50dp"
+                android:background="@color/stepic_brand_primary"
+                android:padding="5dp"
                 android:textSize="16sp"
-                tools:text="Correct!"/>
+                tools:text="@string/submit"/>
+
+            <include layout="@layout/progress_bar_on_empty_screen"/>
+
+            <include layout="@layout/steps_only_online"/>
 
         </LinearLayout>
+    </ScrollView>
 
-        <FrameLayout
-            android:id="@+id/peer_review_warning"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/warning_light_yellow"
-            android:visibility="gone"
-            android:foreground="@drawable/non_radius_foreground"
-            android:minHeight="@dimen/min_ux_touchable_size"
-            tools:visibility="visible"
-            android:clickable="true">
-
-            <TextView
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:padding="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/review_warning"/>
-
-        </FrameLayout>
-
-        <include
-            android:id="@+id/progress_bar"
-            layout="@layout/progress_bar_on_empty_screen"/>
-
-        <Button
-            android:id="@+id/submit_button"
-            style="@style/regular_white_text"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/min_ux_touchable_size"
-            android:layout_marginBottom="50dp"
-            android:background="@color/stepic_brand_primary"
-            android:padding="5dp"
-            android:textSize="16sp"
-            tools:text="@string/submit"/>
-
-        <include layout="@layout/progress_bar_on_empty_screen"/>
-
-        <include layout="@layout/steps_only_online"/>
-
-    </LinearLayout>
-</ScrollView>
+    <include layout="@layout/drop_shadow_view"/>
+</FrameLayout>

@@ -1,28 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scrollbarStyle="outsideOverlay">
+    android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbarStyle="outsideOverlay">
 
-        <include
-            android:id="@+id/header"
-            layout="@layout/step_text_header" />
-
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/open_web"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@color/stepic_brand_primary"
-            android:text="@string/open_web_to_solve"
-            android:textAllCaps="true"
-            android:textColor="@color/stepic_white" />
+            android:orientation="vertical">
 
-    </LinearLayout>
-</ScrollView>
+            <include
+                android:id="@+id/header"
+                layout="@layout/step_text_header"/>
+
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/open_web"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/min_ux_touchable_size"
+                android:layout_margin="5dp"
+                android:background="@color/stepic_brand_primary"
+                android:text="@string/open_web_to_solve"
+                android:textAllCaps="true"
+                android:textColor="@color/stepic_white"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <include
+        layout="@layout/drop_shadow_view"/>
+</FrameLayout>

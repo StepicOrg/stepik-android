@@ -4,16 +4,10 @@
         <item name="colorPrimary">@color/stepic_brand_primary</item>
         <item name="colorPrimaryDark">@color/stepic_brand_primary_dark</item>
         <item name="colorAccent">@color/stepic_blue_ribbon</item>
-        <item name="actionBarStyle">@style/Theme.MyApp.ActionBar</item>
         <item name="android:windowBackground">@color/stepic_cover</item>
         <item name="android:colorBackground">@color/stepic_cover</item>
         <item name="android:textColor">@color/stepic_regular_text</item>
         <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
-    </style>
-
-
-    <style name="Theme.MyApp.ActionBar" parent="style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="elevation">4dp</item>
     </style>
 
     <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">

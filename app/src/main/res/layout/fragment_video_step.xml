@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    android:id="@+id/frame"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_gravity="center">
 
-    <FrameLayout
-        android:id="@+id/frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center">
+    <include layout="@layout/step_text_header"/>
 
-        <include layout="@layout/step_text_header" />
+    <include
+        android:id="@+id/player_layout"
+        layout="@layout/player_placeholder"/>
 
-        <include
-            android:id="@+id/player_layout"
-            layout="@layout/player_placeholder" />
+    <include
+        layout="@layout/drop_shadow_view"/>
 
-    </FrameLayout>
-</RelativeLayout>
+</FrameLayout>
