@@ -33,7 +33,7 @@ public class Submission {
 
     }
 
-    private long id;
+    private Long id;
     @Nullable
     private Status status;
     private String score;

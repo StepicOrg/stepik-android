@@ -164,7 +164,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         mSubmission = mLessonManager.restoreSubmissionForStep(mStep.getId());
         if (mSubmission == null || mAttempt == null) return false;
 
-        showAttemptAbstractWrapMethod(mAttempt);
+        showAttemptAbstractWrapMethod(mAttempt, true);
         fillSubmission(mSubmission);
         return true;
     }
@@ -185,11 +185,11 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
                     List<Attempt> attemptList = body.getAttempts();
                     if (attemptList == null || attemptList.isEmpty() || !attemptList.get(0).getStatus().equals("active")) {
-                        createNewAttempt();
+                        createNewAttempt(); //fixme it is ok way, but 'active' can be not active
                     } else {
                         YandexMetrica.reportEvent(AppConstants.GET_OLD_ATTEMPT);
                         Attempt attempt = attemptList.get(0);
-                        bus.post(new SuccessAttemptEvent(localStep.getId(), attempt));
+                        bus.post(new SuccessAttemptEvent(localStep.getId(), attempt, false));
                     }
                 } else {
                     createNewAttempt();
@@ -215,7 +215,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
                     List<Attempt> attemptList = response.body().getAttempts();
                     if (attemptList != null && !attemptList.isEmpty()) {
                         Attempt attempt = attemptList.get(0);
-                        bus.post(new SuccessAttemptEvent(localStep.getId(), attempt));
+                        bus.post(new SuccessAttemptEvent(localStep.getId(), attempt, true));
                     } else {
                         bus.post(new FailAttemptEvent(localStep.getId()));
                     }
@@ -255,7 +255,6 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     }
 
-
     protected final void getStatusOfSubmission(long attemptId) {
         getStatusOfSubmission(attemptId, 0);
     }
@@ -273,8 +272,9 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
                         if (response.isSuccess()) {
                             List<Submission> submissionList = response.body().getSubmissions();
                             if (submissionList == null || submissionList.isEmpty()) {
-//                                bus.post(new FailGettingLastSubmissionEvent(localAttemptId, numberOfTry));
-                                bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId, null));
+//                              bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId, null));//fixme it is normal way, but old attempts are broken
+                                //it should run when we not post our submission, just getting submission of last attempt
+                                createNewAttempt();//fixme make new working attempt, it generates some number extra queries
                                 return;
                             }
 
@@ -444,9 +444,9 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     }
 
-    private void showAttemptAbstractWrapMethod(Attempt attempt) {
+    private void showAttemptAbstractWrapMethod(Attempt attempt, boolean isCreatedAttempt) {
         showAttempt(attempt);
-        if (mLessonManager.restoreSubmissionForStep(mStep.getId()) == null) {
+        if (mLessonManager.restoreSubmissionForStep(mStep.getId()) == null && !isCreatedAttempt) {
             getStatusOfSubmission(attempt.getId());//fill last server submission if exist
         } else {
             showLoadState(false);
@@ -491,7 +491,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     public void onSuccessLoadAttempt(SuccessAttemptEvent e) {
         if (mStep == null || e.getStepId() != mStep.getId() || e.getAttempt() == null) return;
 
-        showAttemptAbstractWrapMethod(e.getAttempt());
+        showAttemptAbstractWrapMethod(e.getAttempt(), e.isJustCreated());
         mAttempt = e.getAttempt();
     }
 
