@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/stepic_brand_primary</item>
         <item name="colorPrimaryDark">@color/stepic_brand_primary_dark</item>
         <item name="colorAccent">@color/stepic_blue_ribbon</item>
@@ -8,6 +8,11 @@
         <item name="android:colorBackground">@color/stepic_cover</item>
         <item name="android:textColor">@color/stepic_regular_text</item>
         <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
+        <item name="android:actionBarStyle">@style/StepicActionBar</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -18,4 +23,6 @@
     <style name="AppTheme.Widget.TextView" parent="android:Widget.Holo.Light.TextView">
         <item name="fontPath">fonts/NotoSans-Regular.ttf</item>
     </style>
+
+
 </resources>
