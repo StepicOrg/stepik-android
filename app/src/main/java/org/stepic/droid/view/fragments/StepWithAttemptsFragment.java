@@ -116,10 +116,31 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     public final void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mHandler = new Handler();
-        init();
+        setListenerToActionButton(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLoadState(true);
+                if (mSubmission == null || mSubmission.getStatus() == Submission.Status.LOCAL) {
+                    makeSubmission();
+                } else {
+                    tryAgain();
+                }
+            }
+        });
+
+        connectionProblem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startWork();
+            }
+        });
+
+
+        startWork();
     }
 
-    private void init() {
+    private void startWork() {
+        connectionProblem.setVisibility(View.GONE);
         showLoadState(true);
         showAnswerField(false);
         if (!tryRestoreState()) {
@@ -141,18 +162,6 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
                 }
             });
         }
-
-        setListenerToActionButton(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showLoadState(true);
-                if (mSubmission == null || mSubmission.getStatus() == Submission.Status.LOCAL) {
-                    makeSubmission();
-                } else {
-                    tryAgain();
-                }
-            }
-        });
     }
 
 
@@ -483,8 +492,10 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     @Subscribe
     public void onInternetEnabled(InternetIsEnabledEvent enabledEvent) {
-        enableInternetMessage(false);
-        init();
+        if (connectionProblem.getVisibility() == View.VISIBLE) {
+            enableInternetMessage(false);
+            startWork();
+        }
     }
 
     @Subscribe
