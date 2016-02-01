@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
@@ -18,6 +20,8 @@ public class MainApplication extends MultiDexApplication {
     protected static MainApplication application;
     private StepicCoreComponent component;
 
+    private RefWatcher refWatcher;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -25,6 +29,7 @@ public class MainApplication extends MultiDexApplication {
     }
 
     private void init() {
+        refWatcher = LeakCanary.install(this);
         application = this;
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
@@ -40,6 +45,11 @@ public class MainApplication extends MultiDexApplication {
         YandexMetrica.activate(getApplicationContext(), "fd479031-bdf4-419e-8d8f-6895aab23502");
         // Отслеживание активности пользователей
         YandexMetrica.enableActivityAutoTracking(this);
+    }
+
+    public static RefWatcher getRefWatcher(Context context) {
+        MainApplication application = (MainApplication) context.getApplicationContext();
+        return application.refWatcher;
     }
 
     public static StepicCoreComponent component(Context context) {
