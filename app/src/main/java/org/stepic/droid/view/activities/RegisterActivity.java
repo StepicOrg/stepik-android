@@ -1,41 +1,47 @@
 package org.stepic.droid.view.activities;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
+import org.stepic.droid.util.ProgressHelper;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 
 public class RegisterActivity extends FragmentActivityBase {
-    private static final String TAG = "register_activity";
 
+    @Bind(R.id.root_view)
+    View mRootView;
 
-    @Bind(org.stepic.droid.R.id.createAccount_button_layout)
-    RelativeLayout mCreateAccountButton;
+    @Bind(R.id.sign_up_btn)
+    Button mCreateAccountButton;
 
-    @Bind (R.id.actionbar_close_btn_layout)
+    @Bind(R.id.actionbar_close_btn_layout)
     View mCloseButton;
 
-    @Bind (org.stepic.droid.R.id.first_name_reg)
+    @Bind(R.id.first_name_reg)
     TextView mFirstNameView;
-    @Bind (org.stepic.droid.R.id.second_name_reg)
+
+    @Bind(R.id.second_name_reg)
     TextView mSecondNameView;
-    @Bind (org.stepic.droid.R.id.email_reg)
+
+    @Bind(R.id.email_reg)
     TextView mEmailView;
-    @Bind (org.stepic.droid.R.id.password_reg)
+
+    @Bind(R.id.password_reg)
     TextView mPassword;
 
-    @Bind (org.stepic.droid.R.id.progress)
-    ProgressBar mProgressBar;
-
-
+    ProgressDialog mProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,23 +66,43 @@ public class RegisterActivity extends FragmentActivityBase {
                 finish();
             }
         });
+
+        mProgress = new ProgressDialog(this);
+        mProgress.setTitle(getString(R.string.loading));
+        mProgress.setMessage(getString(R.string.loading_message));
+        mProgress.setCancelable(false);
+
+        mRootView.requestFocus();
     }
 
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.slide_out_to_bottom);
-    }
 
     private void createAccount() {
         //todo: create account
-        String firstName = mFirstNameView.getText().toString();
-        String lastName = mSecondNameView.getText().toString();
+        String firstName = mFirstNameView.getText().toString().trim();
+        String lastName = mSecondNameView.getText().toString().trim();
         String email = mEmailView.getText().toString().trim();
         String password = mPassword.getText().toString().trim(); //todo: substitute to more safe way
 
-        // FIXME: 04.10.15 Make registration request
+        ProgressHelper.activate(mProgress);
 
+        mShell.getApi().signUp(firstName, lastName, email, password).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Response<Void> response, Retrofit retrofit) {
+                ProgressHelper.dismiss(mProgress);
+                if (response.isSuccess()) {
+                    Toast.makeText(RegisterActivity.this, "Success " + response.code(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(RegisterActivity.this, "Failure " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                ProgressHelper.dismiss(mProgress);
+                Toast.makeText(RegisterActivity.this, "exception", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -89,6 +115,12 @@ public class RegisterActivity extends FragmentActivityBase {
     protected void onStop() {
         super.onStop();
         bus.unregister(this);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.slide_out_to_bottom);
     }
 
 

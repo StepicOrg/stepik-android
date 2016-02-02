@@ -60,7 +60,7 @@ public class LoginActivity extends FragmentActivityBase {
     @Bind(R.id.social_list)
     RecyclerView mSocialRecyclerView;
 
-    ProgressDialog mProgressLogin;
+    private ProgressDialog mProgressLogin;
 
 
     @Override

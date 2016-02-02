@@ -17,7 +17,7 @@ public interface IApi {
 
     Call<AuthenticationStepicResponse> authWithCode(String code);
 
-    Call<IStepicResponse> signUp(String firstName, String secondName, String email, String password);
+    Call<Void> signUp(String firstName, String secondName, String email, String password);
 
     Call<CoursesStepicResponse> getEnrolledCourses(int page);
 
