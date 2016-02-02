@@ -80,10 +80,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/top_settings"
         android:layout_margin="5dp"
-        android:background="@color/stepic_brand_primary"
-        android:text="@string/clear_cache_title"
-        android:textAllCaps="true"
-        android:textColor="@color/stepic_white" />
+        android:text="@string/clear_cache_title" />
 
     <TextView
         android:id="@+id/version_tv"

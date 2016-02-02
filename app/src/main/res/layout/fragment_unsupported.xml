@@ -24,10 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/min_ux_touchable_size"
                 android:layout_margin="5dp"
-                android:background="@color/stepic_brand_primary"
-                android:text="@string/open_web_to_solve"
-                android:textAllCaps="true"
-                android:textColor="@color/stepic_white"/>
+                android:text="@string/open_web_to_solve"/>
 
         </LinearLayout>
     </ScrollView>
