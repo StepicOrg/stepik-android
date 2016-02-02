@@ -13,7 +13,7 @@
         <item name="android:actionMenuTextColor">@color/white</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:buttonStyle">@style/StepicButton</item>
+        <item name="buttonStyle">@style/StepicButton</item>
     </style>
 
     <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
