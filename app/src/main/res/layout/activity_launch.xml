@@ -33,7 +33,6 @@
 
             <Button
                 android:id="@+id/sign_in_tv"
-                style="@style/bold_white_text"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/min_ux_touchable_size"
                 android:layout_alignParentTop="true"
@@ -42,14 +41,10 @@
                 android:layout_marginLeft="50dp"
                 android:layout_marginRight="50dp"
                 android:layout_marginTop="25dp"
-                android:background="@color/stepic_brand_primary"
                 android:contentDescription="@string/app_name"
                 android:maxWidth="@dimen/min_max_width_for_tablets"
                 android:minWidth="@dimen/min_max_width_for_tablets"
-                android:padding="5dp"
-                android:text="@string/sign_in"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
+                android:text="@string/sign_in" />
 
             <TextView
                 android:id="@+id/sign_up_btn"

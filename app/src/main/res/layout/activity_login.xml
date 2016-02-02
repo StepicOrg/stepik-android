@@ -7,9 +7,9 @@
     android:splitMotionEvents="false">
 
     <ScrollView
+        android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
         android:background="@android:color/white"
         android:fillViewport="true">
 
@@ -103,18 +103,13 @@
 
                     <Button
                         android:id="@+id/login_button_layout"
-                        style="@style/bold_white_text"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/min_ux_touchable_size"
                         android:layout_gravity="center_vertical"
                         android:layout_marginBottom="20dp"
                         android:layout_marginTop="15dp"
-                        android:background="@drawable/bt_signin_active"
                         android:contentDescription="@string/app_name"
-                        android:padding="5dp"
-                        android:text="@string/sign_in"
-                        android:textColor="@android:color/white"
-                        android:textSize="16sp" />
+                        android:text="@string/sign_in" />
 
 
                     <TextView
@@ -160,13 +155,8 @@
         </RelativeLayout>
     </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/custom_action_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true">
-
-        <include layout="@layout/panel_custom_action_bar" />
-    </LinearLayout>
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/panel_custom_action_bar" />
 
 </RelativeLayout>
