@@ -7,13 +7,13 @@
     <string name="create_my_account">Create account</string>
     <string name="by_creating_you_agree">By creating stepic account, you agree to the</string>
     <string name="terms">Terms</string>
-    <string name="email_login" translatable="false">e-mail</string>
+    <string name="email_login" translatable="false">E-mail</string>
     <string name="remind_password">Forgot password?</string>
     <string name="sign_in">Sign In</string>
     <string name="not_video_player_error">Please, install player for video playing</string>
-    <string name="first_name">first name</string>
-    <string name="second_name">second name</string>
-    <string name="password_hint">password</string>
+    <string name="first_name">First name</string>
+    <string name="second_name">Second name</string>
+    <string name="password_hint">Password</string>
     <string name="my_courses_title">My courses</string>
     <string name="best_lessons_title">Best lessons</string>
     <string name="drawer_open">open drawer</string>
