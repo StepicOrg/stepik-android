@@ -7,9 +7,9 @@
     android:splitMotionEvents="false">
 
     <ScrollView
+        android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
         android:background="@android:color/white"
         android:fillViewport="true">
 
@@ -160,13 +160,8 @@
         </RelativeLayout>
     </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/custom_action_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true">
-
-        <include layout="@layout/panel_custom_action_bar" />
-    </LinearLayout>
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/panel_custom_action_bar" />
 
 </RelativeLayout>
