@@ -12,6 +12,7 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.R;
 import org.stepic.droid.core.ILessonSessionManager;
+import org.stepic.droid.core.ILoginManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseManager;
@@ -44,6 +45,9 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected UserPreferences mUserPreferences;
     @Inject
     protected IStepResolver mStepResolver;
+
+    @Inject
+    protected ILoginManager mLoginManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

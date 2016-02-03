@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
+import org.stepic.droid.core.ActivityFinisher;
+import org.stepic.droid.core.ProgressHandler;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.web.RegistrationResponse;
 
@@ -78,11 +80,10 @@ public class RegisterActivity extends FragmentActivityBase {
 
 
     private void createAccount() {
-        //todo: create account
         String firstName = mFirstNameView.getText().toString().trim();
         String lastName = mSecondNameView.getText().toString().trim();
-        String email = mEmailView.getText().toString().trim();
-        String password = mPassword.getText().toString().trim(); //todo: substitute to more safe way
+        final String email = mEmailView.getText().toString().trim();
+        final String password = mPassword.getText().toString().trim();
 
         ProgressHelper.activate(mProgress);
 
@@ -91,7 +92,23 @@ public class RegisterActivity extends FragmentActivityBase {
             public void onResponse(Response<RegistrationResponse> response, Retrofit retrofit) {
                 ProgressHelper.dismiss(mProgress);
                 if (response.isSuccess()) {
-                    Toast.makeText(RegisterActivity.this, "Success " + response.code(), Toast.LENGTH_SHORT).show();
+                    mLoginManager.login(email, password, new ProgressHandler() {
+                        @Override
+                        public void activate() {
+                            hideSoftKeypad();
+                            ProgressHelper.activate(mProgress);
+                        }
+
+                        @Override
+                        public void dismiss() {
+                            ProgressHelper.dismiss(mProgress);
+                        }
+                    }, new ActivityFinisher() {
+                        @Override
+                        public void onFinish() {
+                            finish();
+                        }
+                    });
                 } else {
                     Toast.makeText(RegisterActivity.this, "Failure " + response.code(), Toast.LENGTH_SHORT).show();
                 }

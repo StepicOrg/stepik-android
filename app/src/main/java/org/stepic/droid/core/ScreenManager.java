@@ -70,7 +70,7 @@ public class ScreenManager implements IScreenManager {
     @Override
     public void showMainFeed(Context sourceActivity) {
         YandexMetrica.reportEvent("Screen manager: show main feed");
-        //todo finish all activities which exist for login (launch, splash, etc).
+        //todo onFinish all activities which exist for login (launch, splash, etc).
         Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         /*

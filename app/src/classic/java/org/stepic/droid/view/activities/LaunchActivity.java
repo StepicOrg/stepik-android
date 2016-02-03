@@ -78,7 +78,7 @@ public class LaunchActivity extends FragmentActivityBase {
         disableLoginCallback();
     }
 
-    //Broadcast Receiver to notify all activities to finish if user logs out
+    //Broadcast Receiver to notify all activities to onFinish if user logs out
     private BroadcastReceiver loginReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
