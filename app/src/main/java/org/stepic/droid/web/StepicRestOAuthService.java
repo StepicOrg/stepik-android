@@ -22,6 +22,6 @@ public interface StepicRestOAuthService {
                                                       @Query("redirect_uri") String redirect_uri);
 
     @POST("/api/users")
-    Call<Void> createAccount(@Body UserRegistrationRequest user);
+    Call<RegistrationResponse> createAccount(@Body UserRegistrationRequest user);
 
 }

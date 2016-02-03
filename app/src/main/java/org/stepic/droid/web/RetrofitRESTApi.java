@@ -168,7 +168,7 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
-    public Call<Void> signUp(String firstName, String lastName, String email, String password) {
+    public Call<RegistrationResponse> signUp(String firstName, String lastName, String email, String password) {
         YandexMetrica.reportEvent("Api: try register");
 
         OkHttpClient okHttpClient = new OkHttpClient();

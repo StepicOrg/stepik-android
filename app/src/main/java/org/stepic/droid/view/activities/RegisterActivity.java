@@ -10,6 +10,7 @@ import android.widget.Toast;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.web.RegistrationResponse;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -85,9 +86,9 @@ public class RegisterActivity extends FragmentActivityBase {
 
         ProgressHelper.activate(mProgress);
 
-        mShell.getApi().signUp(firstName, lastName, email, password).enqueue(new Callback<Void>() {
+        mShell.getApi().signUp(firstName, lastName, email, password).enqueue(new Callback<RegistrationResponse>() {
             @Override
-            public void onResponse(Response<Void> response, Retrofit retrofit) {
+            public void onResponse(Response<RegistrationResponse> response, Retrofit retrofit) {
                 ProgressHelper.dismiss(mProgress);
                 if (response.isSuccess()) {
                     Toast.makeText(RegisterActivity.this, "Success " + response.code(), Toast.LENGTH_SHORT).show();
