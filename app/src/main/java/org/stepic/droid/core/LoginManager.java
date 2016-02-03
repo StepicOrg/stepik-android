@@ -38,10 +38,9 @@ public class LoginManager implements ILoginManager {
         progressHandler.activate();
 
         String login = rawLogin.trim();
-        String password = rawPassword.trim();
 
         IApi api = mShell.getApi();
-        api.authWithLoginPassword(login, password).enqueue(new Callback<AuthenticationStepicResponse>() {
+        api.authWithLoginPassword(login, rawPassword).enqueue(new Callback<AuthenticationStepicResponse>() {
             @Override
             public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
                 progressHandler.dismiss();

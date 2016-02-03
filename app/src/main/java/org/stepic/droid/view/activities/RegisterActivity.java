@@ -97,9 +97,7 @@ public class RegisterActivity extends FragmentActivityBase {
         String firstName = mFirstNameView.getText().toString().trim();
         String lastName = mSecondNameView.getText().toString().trim();
         final String email = mEmailView.getText().toString().trim();
-        final String password = mPassword.getText().toString().trim();
-
-        ProgressHelper.activate(mProgress);
+        final String password = mPassword.getText().toString();
 
         mShell.getApi().signUp(firstName, lastName, email, password).enqueue(new Callback<RegistrationResponse>() {
             @Override
