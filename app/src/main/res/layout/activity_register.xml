@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/first_name"
                     android:imeOptions="actionNext"
-                    android:inputType="textPersonName"
+                    android:inputType="textPersonName|textAutoCorrect|textCapWords"
                     android:maxLength="100"
                     android:singleLine="true"/>
 
@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/second_name"
                     android:imeOptions="actionNext"
-                    android:inputType="textPersonName"
+                    android:inputType="textPersonName|textAutoCorrect|textCapWords"
                     android:maxLength="100"
                     android:singleLine="true"/>
 
@@ -77,7 +77,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/email_login"
                     android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress"
+                    android:inputType="textEmailAddress|textWebEmailAddress"
                     android:maxLength="100"
                     android:singleLine="true"/>
 

@@ -62,7 +62,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/email_login"
                             android:imeOptions="actionNext"
-                            android:inputType="textEmailAddress"
+                            android:inputType="textEmailAddress|textWebEmailAddress"
                             android:maxLength="100"
                             android:singleLine="true" />
 
