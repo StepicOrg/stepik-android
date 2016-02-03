@@ -71,13 +71,13 @@
                 android:paddingBottom="@dimen/half_padding_between_textinput"
                 android:paddingTop="@dimen/half_padding_between_textinput">
 
-                <EditText
+                <AutoCompleteTextView
                     android:id="@+id/email_reg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/email_login"
                     android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress|textWebEmailAddress"
+                    android:inputType="textEmailAddress"
                     android:maxLength="100"
                     android:singleLine="true"/>
 
@@ -96,7 +96,7 @@
                     android:hint="@string/password_hint"
                     android:imeOptions="actionSend"
                     android:inputType="textPassword"
-                    android:maxLength="100"
+                    android:maxLength="@integer/max_length_of_password"
                     android:singleLine="true"/>
 
             </android.support.design.widget.TextInputLayout>
