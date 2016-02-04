@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.okhttp.ResponseBody;
+
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.core.ActivityFinisher;
@@ -20,15 +23,22 @@ import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.ValidatorUtil;
 import org.stepic.droid.web.RegistrationResponse;
 
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+
 import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
+import butterknife.OnFocusChange;
 import retrofit.Callback;
+import retrofit.Converter;
 import retrofit.Response;
 import retrofit.Retrofit;
 
 
 public class RegisterActivity extends FragmentActivityBase {
+
+    public static final String ERROR_DELIMITER = " ";
 
     @Bind(R.id.root_view)
     View mRootView;
@@ -176,7 +186,15 @@ public class RegisterActivity extends FragmentActivityBase {
                             }
                         });
                     } else {
-                        Toast.makeText(RegisterActivity.this, "Failure " + response.code(), Toast.LENGTH_SHORT).show();
+                        Converter<ResponseBody, RegistrationResponse> errorConverter =
+                                retrofit.responseConverter(RegistrationResponse.class, new Annotation[0]);
+                        RegistrationResponse error = null;
+                        try {
+                            error = errorConverter.convert(response.errorBody());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        handleErrorRegistrationResponse(error);
                     }
 
                 }
@@ -184,7 +202,7 @@ public class RegisterActivity extends FragmentActivityBase {
                 @Override
                 public void onFailure(Throwable t) {
                     ProgressHelper.dismiss(mProgress);
-                    Toast.makeText(RegisterActivity.this, "exception", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, R.string.failLoginConnectionProblems, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -226,6 +244,43 @@ public class RegisterActivity extends FragmentActivityBase {
         if (textInputLayout != null) {
             textInputLayout.setErrorEnabled(true);
             textInputLayout.setError(errorText);
+        }
+    }
+
+    private void handleErrorRegistrationResponse(@Nullable RegistrationResponse registrationResponse) {
+        if (registrationResponse == null) return;
+        showError(mEmailViewWrapper, getErrorString(registrationResponse.getEmail()));
+        showError(mFirstNameViewWrapper, getErrorString(registrationResponse.getFirst_name()));
+        showError(mSecondNameViewWrapper, getErrorString(registrationResponse.getLast_name()));
+        showError(mPasswordWrapper, getErrorString(registrationResponse.getPassword()));
+    }
+
+    @Nullable
+    private String getErrorString(String[] values) {
+        if (values == null || values.length == 0) return null;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < values.length; i++) {
+            sb.append(values[i]);
+            if (i != values.length - 1) {
+                sb.append(ERROR_DELIMITER);
+            }
+        }
+        return sb.toString();
+    }
+
+    @OnFocusChange({R.id.email_reg, R.id.first_name_reg, R.id.second_name_reg})
+    public void setClearErrorOnFocus(View view, boolean hasFocus) {
+        if (hasFocus) {
+            if (view.getId() == R.id.email_reg) {
+                hideError(mEmailViewWrapper);
+            }
+
+            if (view.getId() == R.id.first_name_reg) {
+                hideError(mFirstNameViewWrapper);
+            }
+            if (view.getId() == R.id.second_name_reg) {
+                hideError(mSecondNameViewWrapper);
+            }
         }
     }
 
