@@ -93,5 +93,7 @@
     <string name="py_message"><![CDATA[Please open this problem in your <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>]]></string>
     <string name="review_warning">This task with review. Tap to open in web for points.</string>
     <string name="password_too_short">Password must be a minimum of 6 characters.</string>
+    <string name="reset_password">Reset password</string>
+    <string name="send">send</string>
 
 </resources>

@@ -58,4 +58,6 @@ public interface IApi {
     Call<AttemptResponse> getExistingAttempts(long stepId);
 
     Call<SubmissionResponse> getSubmissions(long attemptId);
+
+    Call<Void> remindPassword(String email);
 }

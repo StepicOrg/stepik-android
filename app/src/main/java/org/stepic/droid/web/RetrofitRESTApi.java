@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -176,19 +177,10 @@ public class RetrofitRESTApi implements IApi {
             @Override
             public Response intercept(Chain chain) throws IOException {
                 Request newRequest = chain.request();
-                retrofit.Response ob = mStepicEmptyAuthService.getStepicForFun().execute();
-                Headers headers = ob.headers();
-                List<String> cookiesValues = headers.values("Set-Cookie");
-                CookieManager cookieManager = new CookieManager();
-                URI myUri = null;
-                try {
-                    myUri = new URI(mConfig.getBaseUrl());
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
+
+                List<HttpCookie> cookies = getCookiesForBaseUrl();
+                if (cookies == null)
                     return chain.proceed(newRequest);
-                }
-                cookieManager.put(myUri, headers.toMultimap());
-                List<HttpCookie> cookies = cookieManager.getCookieStore().get(myUri);
                 String csrftoken = null;
                 String sessionId = null;
                 for (HttpCookie item : cookies) {
@@ -201,7 +193,7 @@ public class RetrofitRESTApi implements IApi {
                     }
                 }
 
-                String cookieResult = "csrftoken="+csrftoken+"; "+"sessionid="+sessionId;
+                String cookieResult = "csrftoken=" + csrftoken + "; " + "sessionid=" + sessionId;
 
                 Request.Builder requestBuilder = chain
                         .request()
@@ -347,6 +339,74 @@ public class RetrofitRESTApi implements IApi {
         String order = "desc";
 
         return mLoggedService.getExistingSubmissions(attemptId, order);
+    }
+
+    @Override
+    public Call<Void> remindPassword(String email) {
+        String encodedEmail = URLEncoder.encode(email);
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Interceptor interceptor = new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request newRequest = chain.request();
+
+                List<HttpCookie> cookies = getCookiesForBaseUrl();
+                if (cookies == null)
+                    return chain.proceed(newRequest);
+                String csrftoken = null;
+                String sessionId = null;
+                for (HttpCookie item : cookies) {
+                    if (item.getName() != null && item.getName().equals("csrftoken")) {
+                        csrftoken = item.getValue();
+                        continue;
+                    }
+                    if (item.getName() != null && item.getName().equals("sessionid")) {
+                        sessionId = item.getValue();
+                    }
+                }
+
+                String cookieResult = "csrftoken=" + csrftoken + "; " + "sessionid=" + sessionId;
+                if (csrftoken == null) return chain.proceed(newRequest);
+                HttpUrl url = newRequest
+                        .httpUrl()
+                        .newBuilder()
+                        .addQueryParameter("csrfmiddlewaretoken", csrftoken)
+                        .addQueryParameter("csrfmiddlewaretoken", csrftoken)
+                        .build();
+                newRequest = newRequest.newBuilder()
+                        .addHeader("referer", mConfig.getBaseUrl())
+                        .addHeader("X-CSRFToken", csrftoken)
+                        .addHeader("Cookie", cookieResult)
+                        .url(url)
+                        .build();
+                return chain.proceed(newRequest);
+            }
+        };
+        okHttpClient.networkInterceptors().add(interceptor);
+        Retrofit notLogged = new Retrofit.Builder()
+                .baseUrl(mConfig.getBaseUrl())
+                .addConverterFactory(generateGsonFactory())
+                .client(okHttpClient)
+                .build();
+        StepicEmptyAuthService tempService = notLogged.create(StepicEmptyAuthService.class);
+        return tempService.remindPassword(encodedEmail);
+
+    }
+
+    @Nullable
+    private List<HttpCookie> getCookiesForBaseUrl() throws IOException {
+        retrofit.Response ob = mStepicEmptyAuthService.getStepicForFun().execute();
+        Headers headers = ob.headers();
+        CookieManager cookieManager = new CookieManager();
+        URI myUri = null;
+        try {
+            myUri = new URI(mConfig.getBaseUrl());
+        } catch (URISyntaxException e) {
+            return null;
+        }
+        cookieManager.put(myUri, headers.toMultimap());
+        return cookieManager.getCookieStore().get(myUri);
     }
 
     private String getAuthHeaderValueForLogged() {

@@ -3,6 +3,7 @@ package org.stepic.droid.core;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.model.Course;
@@ -33,7 +34,7 @@ public interface IScreenManager {
 
     void openSignUpInWeb(Context context);
 
-    void openRemindPassword(Context context);
+    void openRemindPassword(AppCompatActivity context);
 
     void pushToViewedQueue(ViewAssignment viewAssignmentWrapper);
 

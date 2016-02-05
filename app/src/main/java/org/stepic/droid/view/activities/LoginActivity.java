@@ -28,6 +28,7 @@ import org.stepic.droid.view.decorators.SpacesItemDecorationHorizontal;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class LoginActivity extends FragmentActivityBase {
 
@@ -130,14 +131,6 @@ public class LoginActivity extends FragmentActivityBase {
             }
         });
 
-        mForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mShell.getScreenProvider().openRemindPassword(LoginActivity.this);
-            }
-        });
-
-
         mRootView.requestFocus();
 
         //if we redirect from social:
@@ -224,9 +217,12 @@ public class LoginActivity extends FragmentActivityBase {
     protected void onDestroy() {
         mCloseButton.setOnClickListener(null);
         mLoginBtn.setOnClickListener(null);
-        mForgotPassword.setOnClickListener(null);
         super.onDestroy();
+    }
 
+    @OnClick(R.id.forgot_password_tv)
+    public void OnClickForgotPassword() {
+        mShell.getScreenProvider().openRemindPassword(LoginActivity.this);
     }
 
 }
