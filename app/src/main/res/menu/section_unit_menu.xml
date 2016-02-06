@@ -5,5 +5,5 @@
         android:id="@+id/action_info"
         android:icon="@drawable/ic_info_outline_white_48dp"
         android:title="@string/about_course"
-        app:showAsAction="ifRoom|withText" />
+        app:showAsAction="ifRoom" />
 </menu>

@@ -8,10 +8,6 @@
             android:id="@+id/my_courses"
             android:title="@string/my_courses_title"
             android:icon="@drawable/ic_my_courses"/>
-        <!--<item-->
-        <!--android:id="@+id/best_lessons"-->
-        <!--android:title="@string/best_lessons_title" />-->
-
         <item
             android:id="@+id/find_lessons"
             android:title="@string/find_courses_title"
