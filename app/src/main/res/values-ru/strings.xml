@@ -93,5 +93,7 @@
     <string name="password_too_short">Минимальное количество символов в пароле: 6. </string>
     <string name="reset_password">Сбросить пароль</string>
     <string name="send">отправить</string>
+    <string name="email_sent">Мы отправили вам письмо.</string>
+    <string name="email_wrong">Нет пользователя с таким e-mail.</string>
 
 </resources>
