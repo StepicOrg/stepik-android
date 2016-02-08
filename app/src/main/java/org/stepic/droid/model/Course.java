@@ -59,6 +59,7 @@ public class Course implements Serializable, Parcelable {
     private String slug; //link to ../course/#slug#
     private boolean is_cached;
     private boolean is_loading;
+    private Video intro_video;
 
     @Deprecated
     public boolean is_loading() {
@@ -402,6 +403,9 @@ public class Course implements Serializable, Parcelable {
         this.sections = sections;
     }
 
+    public Video getIntro_video() {
+        return intro_video;
+    }
 
     @Override
     public int describeContents() {
@@ -440,6 +444,7 @@ public class Course implements Serializable, Parcelable {
         dest.writeString(this.slug);
         dest.writeByte(is_cached ? (byte) 1 : (byte) 0);
         dest.writeByte(is_loading ? (byte) 1 : (byte) 0);
+        dest.writeParcelable(this.intro_video, 0);
         dest.writeSerializable(this.mBeginDateTime);
         dest.writeSerializable(this.mEndDateTime);
         dest.writeString(this.formatForView);
@@ -476,6 +481,7 @@ public class Course implements Serializable, Parcelable {
         this.slug = in.readString();
         this.is_cached = in.readByte() != 0;
         this.is_loading = in.readByte() != 0;
+        this.intro_video = in.readParcelable(Video.class.getClassLoader());
         this.mBeginDateTime = (DateTime) in.readSerializable();
         this.mEndDateTime = (DateTime) in.readSerializable();
         this.formatForView = in.readString();
