@@ -34,6 +34,7 @@ public final class DBStructureCourses extends DBStructureBase {
         public static final String IS_CACHED = "is_cached";
         public static final String IS_LOADING = "is_loading";
         public static final String CERTIFICATE = "certificate";
+        public static final String INTRO_VIDEO_ID = "intro_video_id";
     }
 
     public static String[] getUsedColumns() {
@@ -58,7 +59,8 @@ public final class DBStructureCourses extends DBStructureBase {
                     Column.WORKLOAD,
                     Column.COURSE_FORMAT,
                     Column.TARGET_AUDIENCE,
-                    Column.CERTIFICATE
+                    Column.CERTIFICATE,
+                    Column.INTRO_VIDEO_ID
             };
         }
         return mUsedColumns;

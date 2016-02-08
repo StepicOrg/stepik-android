@@ -3,7 +3,6 @@ package org.stepic.droid.store;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import org.stepic.droid.store.structure.DBStructureBase;
 import org.stepic.droid.store.structure.DBStructureCourses;
@@ -20,6 +19,7 @@ import org.stepic.droid.store.structure.DbStructureViewQueue;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TEXT_TYPE = "TEXT";
+    private static final String LONG_TYPE = "LONG";
 
     public DatabaseHelper(Context context) {
         super(context, DBStructureBase.FILE_NAME, null, DBStructureBase.VERSION);
@@ -45,6 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 //Use new manner for upgrade, it is more safety and maintainability (but may be less effective in onCreate) :
         upgradeFrom3To4(db);
+        upgradeFrom4To5(db);
     }
 
     @Override
@@ -102,6 +103,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 4) {
             upgradeFrom3To4(db);
         }
+
+        if (oldVersion < 5) {
+            upgradeFrom4To5(db);
+        }
     }
 
     private void upgradeFrom3To4(SQLiteDatabase db) {
@@ -109,6 +114,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         alterColumn(db, DBStructureCourses.FEATURED_COURSES, DBStructureCourses.Column.CERTIFICATE, TEXT_TYPE);
     }
 
+    private void upgradeFrom4To5(SQLiteDatabase db) {
+        alterColumn(db, DBStructureCourses.ENROLLED_COURSES, DBStructureCourses.Column.INTRO_VIDEO_ID, LONG_TYPE);
+        alterColumn(db, DBStructureCourses.FEATURED_COURSES, DBStructureCourses.Column.INTRO_VIDEO_ID, LONG_TYPE);
+    }
     private void alterColumn(SQLiteDatabase db, String dbName, String column, String type) {
         String upgrade = "ALTER TABLE " + dbName + " ADD COLUMN "
                 + column + " " + type + " ";

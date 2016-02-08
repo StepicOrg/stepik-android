@@ -17,6 +17,7 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
+import org.stepic.droid.model.VideoUrl;
 import org.stepic.droid.store.structure.DBStructureCourses;
 import org.stepic.droid.store.structure.DbStructureAssignment;
 import org.stepic.droid.store.structure.DbStructureBlock;
@@ -701,6 +702,21 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DBStructureCourses.Column.TARGET_AUDIENCE, course.getTarget_audience());
             values.put(DBStructureCourses.Column.CERTIFICATE, course.getCertificate());
 
+            Video video = course.getIntro_video();
+            if (video != null) {
+                CachedVideo storedVideo = new CachedVideo();//it is cached, but not stored video.
+                storedVideo.setVideoId(video.getId());
+                storedVideo.setStepId(-1);
+                storedVideo.setThumbnail(video.getThumbnail());
+                if (video.getUrls() != null && !video.getUrls().isEmpty()) {
+                    VideoUrl videoUrl = video.getUrls().get(0);
+                    storedVideo.setQuality(videoUrl.getQuality());
+                    storedVideo.setUrl(videoUrl.getUrl());
+                }
+                addVideoPrivate(storedVideo);
+                values.put(DBStructureCourses.Column.INTRO_VIDEO_ID, storedVideo.getVideoId());
+            }
+
 //            values.put(DBStructureCourses.Column.IS_CACHED, course.is_cached());
 //            values.put(DBStructureCourses.Column.IS_LOADING, course.is_loading());
 
@@ -966,17 +982,25 @@ public class DatabaseManager extends DbManagerBase {
     public void addVideo(CachedVideo cachedVideo) {
         try {
             open();
-            ContentValues values = new ContentValues();
-
-            values.put(DbStructureCachedVideo.Column.VIDEO_ID, cachedVideo.getVideoId());
-            values.put(DbStructureCachedVideo.Column.STEP_ID, cachedVideo.getStepId());
-            values.put(DbStructureCachedVideo.Column.URL, cachedVideo.getUrl());
-            values.put(DbStructureCachedVideo.Column.THUMBNAIL, cachedVideo.getThumbnail());
-            values.put(DbStructureCachedVideo.Column.QUALITY, cachedVideo.getQuality());
-
-            database.insert(DbStructureCachedVideo.CACHED_VIDEO, null, values);
+            addVideoPrivate(cachedVideo);
         } finally {
             close();
+        }
+    }
+
+    private void addVideoPrivate(CachedVideo cachedVideo) {
+        ContentValues values = new ContentValues();
+
+        values.put(DbStructureCachedVideo.Column.VIDEO_ID, cachedVideo.getVideoId());
+        values.put(DbStructureCachedVideo.Column.STEP_ID, cachedVideo.getStepId());
+        values.put(DbStructureCachedVideo.Column.URL, cachedVideo.getUrl());
+        values.put(DbStructureCachedVideo.Column.THUMBNAIL, cachedVideo.getThumbnail());
+        values.put(DbStructureCachedVideo.Column.QUALITY, cachedVideo.getQuality());
+
+        if (isVideoInDb(cachedVideo.getVideoId())) {
+            database.insert(DbStructureCachedVideo.CACHED_VIDEO, null, values);
+        } else {
+            database.update(DbStructureCachedVideo.CACHED_VIDEO, values, DbStructureCachedVideo.Column.VIDEO_ID + "=" + cachedVideo.getVideoId(), null);
         }
     }
 
@@ -1098,20 +1122,23 @@ public class DatabaseManager extends DbManagerBase {
     public CachedVideo getCachedVideoById(long videoId) {
         try {
             open();
-            String Query = "Select * from " + DbStructureCachedVideo.CACHED_VIDEO + " where " + DbStructureCachedVideo.Column.VIDEO_ID + " = " + videoId;
-            Cursor cursor = database.rawQuery(Query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return null;
-            }
-            cursor.moveToFirst();
-            CachedVideo video = parseCachedVideo(cursor);
-            cursor.close();
-            return video;
-
+            return getCachedVideoByIdPrivate(videoId);
         } finally {
             close();
         }
+    }
+
+    private CachedVideo getCachedVideoByIdPrivate(long videoId) {
+        String Query = "Select * from " + DbStructureCachedVideo.CACHED_VIDEO + " where " + DbStructureCachedVideo.Column.VIDEO_ID + " = " + videoId;
+        Cursor cursor = database.rawQuery(Query, null);
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return null;
+        }
+        cursor.moveToFirst();
+        CachedVideo video = parseCachedVideo(cursor);
+        cursor.close();
+        return video;
     }
 
     public List<CachedVideo> getAllCachedVideo() {
@@ -1124,7 +1151,9 @@ public class DatabaseManager extends DbManagerBase {
 
             while (!cursor.isAfterLast()) {
                 CachedVideo cachedVideo = parseCachedVideo(cursor);
-                cachedVideos.add(cachedVideo);
+                if (cachedVideo.getStepId() != -1) {
+                    cachedVideos.add(cachedVideo);
+                }
                 cursor.moveToNext();
             }
 
@@ -1435,6 +1464,18 @@ public class DatabaseManager extends DbManagerBase {
         return true;
     }
 
+
+    private boolean isVideoInDb(long videoId) {
+        String Query = "Select * from " + DbStructureCachedVideo.CACHED_VIDEO + " where " + DbStructureCachedVideo.Column.VIDEO_ID + " = " + videoId;
+        Cursor cursor = database.rawQuery(Query, null);
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
+
     private boolean isLessonInDb(Lesson lesson) {
         String Query = "Select * from " + DbStructureLesson.LESSONS + " where " + DbStructureLesson.Column.LESSON_ID + " = " + lesson.getId();
         Cursor cursor = database.rawQuery(Query, null);
@@ -1523,6 +1564,7 @@ public class DatabaseManager extends DbManagerBase {
         int indexCourseFormat = cursor.getColumnIndex(DBStructureCourses.Column.COURSE_FORMAT);
         int indexTargetAudience = cursor.getColumnIndex(DBStructureCourses.Column.TARGET_AUDIENCE);
         int indexCertificate = cursor.getColumnIndex(DBStructureCourses.Column.CERTIFICATE);
+        int indexIntroVideoId = cursor.getColumnIndex(DBStructureCourses.Column.INTRO_VIDEO_ID);
 
         course.setCertificate(cursor.getString(indexCertificate));
         course.setWorkload(cursor.getString(indexWorkload));
@@ -1544,7 +1586,24 @@ public class DatabaseManager extends DbManagerBase {
         course.setIs_cached(cursor.getInt(indexIsCached) > 0);
         course.setIs_loading(cursor.getInt(indexIsLoading) > 0);
         course.setSections(DbParseHelper.parseStringToLongArray(cursor.getString(indexSection)));
+        course.setIntro_video_id(cursor.getLong(indexIntroVideoId));
 
+        CachedVideo video = getCachedVideoByIdPrivate(course.getIntro_video_id());
+        if (video != null) {
+            Video realVideo = new Video();
+
+            realVideo.setId(video.getVideoId());
+            realVideo.setThumbnail(video.getThumbnail());
+            VideoUrl videoUrl = new VideoUrl();
+            videoUrl.setQuality(video.getQuality());
+            videoUrl.setUrl(video.getUrl());
+
+            List<VideoUrl> list = new ArrayList<>();
+            list.add(videoUrl);
+            realVideo.setUrls(list);
+
+            course.setIntro_video(realVideo);
+        }
         return course;
     }
 
@@ -1620,7 +1679,15 @@ public class DatabaseManager extends DbManagerBase {
 
         int indexVideoId = cursor.getColumnIndex(DbStructureCachedVideo.Column.VIDEO_ID);
         int indexThumbnail = cursor.getColumnIndex(DbStructureCachedVideo.Column.THUMBNAIL);
+//        int indexUrl = cursor.getColumnIndex(DbStructureCachedVideo.Column.URL);
+//        int indexQuality = cursor.getColumnIndex(DbStructureCachedVideo.Column.QUALITY);
 
+//        List<VideoUrl> urls = new ArrayList<>();
+//        VideoUrl videoUrl = new VideoUrl();
+//        videoUrl.setQuality(cursor.getString(indexQuality));
+//        videoUrl.setUrl(cursor.getString(indexUrl));
+//        urls.add(videoUrl);
+//        video.setUrls(urls);
 
         video.setThumbnail(cursor.getString(indexThumbnail));
         video.setId(cursor.getLong(indexVideoId));
@@ -1736,20 +1803,18 @@ public class DatabaseManager extends DbManagerBase {
 
 
     public void markProgressAsPassedIfInDb(String progressId) {
-        try{
+        try {
             open();
-        if (isProgressInDb(progressId)) {
-            ContentValues values = new ContentValues();
-            values.put(DbStructureProgress.Column.IS_PASSED, true);
-            database.update(DbStructureProgress.PROGRESS, values, DbStructureProgress.Column.ID + "=?", new String[]{progressId});
-        }
+            if (isProgressInDb(progressId)) {
+                ContentValues values = new ContentValues();
+                values.put(DbStructureProgress.Column.IS_PASSED, true);
+                database.update(DbStructureProgress.PROGRESS, values, DbStructureProgress.Column.ID + "=?", new String[]{progressId});
+            }
 
-        }
-        finally {
+        } finally {
             close();
         }
     }
-
 
 
     private Assignment parseAssignment(Cursor cursor) {

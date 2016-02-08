@@ -17,6 +17,13 @@ public class VideoUrl implements Parcelable, Serializable {
         return quality;
     }
 
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setQuality(String quality) {
+        this.quality = quality;
+    }
 
     @Override
     public int describeContents() {
