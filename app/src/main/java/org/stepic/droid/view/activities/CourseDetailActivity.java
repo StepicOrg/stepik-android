@@ -33,6 +33,7 @@ import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepic.droid.model.User;
+import org.stepic.droid.model.Video;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
@@ -140,7 +141,14 @@ public class CourseDetailActivity extends FragmentActivityBase {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String urlToVideo = mCourse.getIntro();
+        String urlToVideo = null;
+
+        Video newTypeVideo = mCourse.getIntro_video();
+        if (newTypeVideo != null && newTypeVideo.getUrls()!= null && !newTypeVideo.getUrls().isEmpty()) {
+            urlToVideo = newTypeVideo.getUrls().get(0).getUrl();
+        } else {
+            urlToVideo = mCourse.getIntro();
+        }
         if (urlToVideo == null || urlToVideo.equals("")) {
             mIntroView.setVisibility(View.GONE);
         } else {
