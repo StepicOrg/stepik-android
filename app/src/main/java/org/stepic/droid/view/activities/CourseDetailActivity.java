@@ -13,6 +13,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ListView;
@@ -33,7 +34,6 @@ import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepic.droid.model.User;
-import org.stepic.droid.model.Video;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
@@ -54,6 +54,8 @@ import retrofit.Retrofit;
 
 public class CourseDetailActivity extends FragmentActivityBase {
 
+    @Bind(R.id.root_view)
+    View mRootView;
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
@@ -133,6 +135,7 @@ public class CourseDetailActivity extends FragmentActivityBase {
 
         overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         hideSoftKeypad();
+        setUpIntroVideo();
     }
 
     @Override
@@ -141,30 +144,7 @@ public class CourseDetailActivity extends FragmentActivityBase {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String urlToVideo = null;
 
-        Video newTypeVideo = mCourse.getIntro_video();
-        if (newTypeVideo != null && newTypeVideo.getUrls()!= null && !newTypeVideo.getUrls().isEmpty()) {
-            urlToVideo = newTypeVideo.getUrls().get(0).getUrl();
-        } else {
-            urlToVideo = mCourse.getIntro();
-        }
-        if (urlToVideo == null || urlToVideo.equals("")) {
-            mIntroView.setVisibility(View.GONE);
-        } else {
-            WebSettings webSettings = mIntroView.getSettings();
-            webSettings.setJavaScriptEnabled(true);
-            webSettings.setAppCacheEnabled(true);
-            webSettings.setDomStorageEnabled(true);
-
-
-            final String mimeType = "text/html";
-            final String encoding = "UTF-8";
-            mIntroView.loadUrl(urlToVideo);
-//            mIntroView.loadDataWithBaseURL("", html, mimeType, encoding, "");
-//            mHeaderWv.setText(HtmlHelper.fromHtml(mStep.getBlock().getText()));
-            mIntroView.setVisibility(View.VISIBLE);
-        }
 
 
 //        String urltovideo = "https://player.vimeo.com/external/111345189.hd.mp4?s=ea9aab1c15434d7bfd3515afaf70a9de&profile_id=113&oauth2_token_id=3605157";
@@ -212,6 +192,39 @@ public class CourseDetailActivity extends FragmentActivityBase {
             });
         }
         bus.register(this);
+    }
+
+    private void setUpIntroVideo(){
+        String urlToVideo = null;
+
+//        Video newTypeVideo = mCourse.getIntro_video();
+//        if (newTypeVideo != null && newTypeVideo.getUrls()!= null && !newTypeVideo.getUrls().isEmpty()) {
+//            urlToVideo = newTypeVideo.getUrls().get(0).getUrl();
+//        } else {
+//            urlToVideo = mCourse.getIntro();
+//        }
+        urlToVideo =mCourse.getIntro();
+        if (urlToVideo == null || urlToVideo.equals("")) {
+            mIntroView.setVisibility(View.GONE);
+        } else {
+            WebSettings webSettings = mIntroView.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+            webSettings.setAppCacheEnabled(true);
+            webSettings.setDomStorageEnabled(true);
+
+            webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+            webSettings.setPluginState(WebSettings.PluginState.ON);
+            mIntroView.setWebChromeClient(new WebChromeClient());
+            mIntroView.clearFocus();
+            mRootView.requestFocus();
+
+            final String mimeType = "text/html";
+            final String encoding = "UTF-8";
+            mIntroView.loadUrl(urlToVideo);
+//            mIntroView.loadDataWithBaseURL("", html, mimeType, encoding, "");
+//            mHeaderWv.setText(HtmlHelper.fromHtml(mStep.getBlock().getText()));
+            mIntroView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
