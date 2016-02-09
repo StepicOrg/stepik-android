@@ -34,6 +34,10 @@ import butterknife.ButterKnife;
 
 public class SettingsFragment extends FragmentBase {
 
+    public  static SettingsFragment newInstance(){
+        return new SettingsFragment();
+    }
+
     private static final int REQUEST_CLEAR_CACHE = 0;
 
     @Bind(R.id.clear_cache_button)

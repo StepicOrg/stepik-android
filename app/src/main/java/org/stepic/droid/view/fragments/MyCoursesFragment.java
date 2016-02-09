@@ -18,6 +18,10 @@ import org.stepic.droid.store.operations.DatabaseManager;
 
 public class MyCoursesFragment extends CoursesDatabaseFragmentBase {
 
+    public  static MyCoursesFragment newInstance(){
+        return new MyCoursesFragment();
+    }
+
     @Override
     protected DatabaseManager.Table getCourseType() {
         return DatabaseManager.Table.enrolled;

@@ -51,6 +51,10 @@ import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 
 public class DownloadsFragment extends FragmentBase {
 
+    public  static DownloadsFragment newInstance(){
+        return new DownloadsFragment();
+    }
+
     public static final String KEY_STRING_IDS = "step_ids";
 
     @Bind(R.id.empty_downloading)
