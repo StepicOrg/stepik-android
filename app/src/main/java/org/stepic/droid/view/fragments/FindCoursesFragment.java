@@ -192,4 +192,11 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
         });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mSearchView != null){
+            mSearchView.setOnQueryTextListener(null);
+        }
+    }
 }
