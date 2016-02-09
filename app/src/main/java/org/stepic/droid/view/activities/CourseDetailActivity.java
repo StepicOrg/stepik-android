@@ -282,6 +282,8 @@ public class CourseDetailActivity extends FragmentActivityBase {
 
     @Override
     protected void onDestroy() {
+        mIntroView.destroy();
+        mIntroView = null;
         super.onDestroy();
         mCourse = null;
     }
