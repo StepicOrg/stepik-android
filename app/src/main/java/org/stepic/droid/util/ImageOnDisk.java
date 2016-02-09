@@ -33,7 +33,7 @@ public class ImageOnDisk implements Target {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                File downloadFolderAndFile = new File(mUserPreferences.getDownloadFolder(), nameOnDisk);
+                File downloadFolderAndFile = new File(mUserPreferences.getUserDownloadFolder(), nameOnDisk);
 
                 try {
                     downloadFolderAndFile.createNewFile();

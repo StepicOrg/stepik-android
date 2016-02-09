@@ -127,7 +127,7 @@ public class LoadService extends IntentService {
 
         try {
 
-            File downloadFolderAndFile = new File(mUserPrefs.getDownloadFolder(), fileId + "");
+            File downloadFolderAndFile = new File(mUserPrefs.getUserDownloadFolder(), fileId + "");
             if (downloadFolderAndFile.exists()) {
                 //we do not need download the file, because we already have it.
                 // FIXME: 20.10.15 this simple check doesn't work if file is loading and at this moment adding to Download manager Queue,
@@ -153,7 +153,7 @@ public class LoadService extends IntentService {
             if (!mDb.isExistDownloadEntityByVideoId(fileId) && !downloadFolderAndFile.exists()) {
                 long downloadId = mSystemDownloadManager.enqueue(request);
                 String local_thumbnail = fileId + ".png";
-                String thumbnailsPath = FileUtil.saveImageToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getDownloadFolder());
+                String thumbnailsPath = FileUtil.saveImageToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getUserDownloadFolder());
                 final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, mUserPrefs.getQualityVideo());
                 mDb.addDownloadEntity(newEntity);
             }

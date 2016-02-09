@@ -1,8 +1,10 @@
 package org.stepic.droid.view.dialogs;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -50,15 +52,24 @@ public class ClearCacheDialogFragment extends DialogFragment {
                             mSystemDownloadManager.remove(de.getDownloadId());
                         }
 
-                        FileUtil.cleanDirectory(userPreferences.getDownloadFolder());
+                        FileUtil.cleanDirectory(userPreferences.getUserDownloadFolder());
 
                         mDatabaseManager.dropDatabase();
-
+                        sendResult(Activity.RESULT_OK);
                         Toast.makeText(getContext(), R.string.cache_cleared, Toast.LENGTH_LONG).show();
                     }
                 })
                 .setNegativeButton(R.string.no, null);
 
         return builder.create();
+    }
+
+    private void sendResult(int resultCode) {
+        if (getTargetFragment() == null) {
+            return;
+        }
+        Intent intent = new Intent();
+        getTargetFragment()
+                .onActivityResult(getTargetRequestCode(), resultCode, intent);
     }
 }
