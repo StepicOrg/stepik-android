@@ -70,4 +70,5 @@
     <color name="background_material_light">#eeeeee</color>
     <color name="correct_answer_background">#E9F9E9</color>
     <color name="wrong_answer_background">#F5EBF2</color>
+    <color name="disabled_button_color">#808080</color>
 </resources>
