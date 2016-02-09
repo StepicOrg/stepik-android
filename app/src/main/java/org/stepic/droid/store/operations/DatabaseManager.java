@@ -997,7 +997,7 @@ public class DatabaseManager extends DbManagerBase {
         values.put(DbStructureCachedVideo.Column.THUMBNAIL, cachedVideo.getThumbnail());
         values.put(DbStructureCachedVideo.Column.QUALITY, cachedVideo.getQuality());
 
-        if (isVideoInDb(cachedVideo.getVideoId())) {
+        if (!isVideoInDb(cachedVideo.getVideoId())) {
             database.insert(DbStructureCachedVideo.CACHED_VIDEO, null, values);
         } else {
             database.update(DbStructureCachedVideo.CACHED_VIDEO, values, DbStructureCachedVideo.Column.VIDEO_ID + "=" + cachedVideo.getVideoId(), null);

@@ -98,6 +98,13 @@ public class DeleteService extends IntentService {
                 file.delete();
             }
 
+            //delete png thumbnail
+            file = new File(path+AppConstants.THUMBNAIL_POSTFIX_EXTENSION);
+            if (file.exists()){
+                file.delete();
+            }
+
+
             mDb.deleteVideo(step.getBlock().getVideo());
         }
 

@@ -154,7 +154,9 @@ public class DownloadsFragment extends FragmentBase {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        inflater.inflate(R.menu.delete_menu, menu);
+        if (mEmptyDownloadView.getVisibility() != View.VISIBLE ) {
+            inflater.inflate(R.menu.delete_menu, menu);
+        }
     }
 
     @Override
@@ -266,11 +268,12 @@ public class DownloadsFragment extends FragmentBase {
 
     public void checkForEmpty () {
         //// FIXME: 14.12.15 add to notify methods
-        if (mCachedVideoList.size() != 0) {
+        if (!mCachedVideoList.isEmpty()) {
             mEmptyDownloadView.setVisibility(View.GONE);
         } else {
             mEmptyDownloadView.setVisibility(View.VISIBLE);
         }
+        getActivity().invalidateOptionsMenu();
     }
 
 }
