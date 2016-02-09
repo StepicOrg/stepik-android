@@ -14,7 +14,9 @@ public class AppConstants {
             "<head>\n" +
             "<title>Step. Stepic.org</title>\n" +
             "<script type=\"text/x-mathjax-config\">\n" +
-            "  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
+            "  MathJax.Hub.Config({" +
+            "messageStyle: \"none\", " +
+            "tex2jax: {preview: \"none\", inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
             "</script>\n" +
             "<script type=\"text/javascript\"\n" +
             " src=\"http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML\">\n" +
