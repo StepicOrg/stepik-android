@@ -28,6 +28,7 @@ import org.stepic.droid.events.units.SuccessLoadUnitsEvent;
 import org.stepic.droid.events.units.UnitCachedEvent;
 import org.stepic.droid.events.units.UnitLessonSavedEvent;
 import org.stepic.droid.events.units.UnitProgressUpdateEvent;
+import org.stepic.droid.events.units.UnitScoreUpdateEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
@@ -328,6 +329,21 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         int position = unitPairPosition.second;
 
         unit.setIs_viewed_custom(true);
+        mAdapter.notifyItemChanged(position);
+    }
+
+    @Subscribe
+    public void onUnitScoreChanged (UnitScoreUpdateEvent event) {
+        long unitId = event.getUnitId();
+
+        Pair<Unit, Integer> unitPairPosition = getUnitOnScreenAndPositionById(unitId);
+        if (unitPairPosition == null) return;
+        Unit unit = unitPairPosition.first;
+        int position = unitPairPosition.second;
+
+        Progress progress =  mUnitProgressMap.get(unitId);
+        progress.setScore(event.getNewScore() + "");
+
         mAdapter.notifyItemChanged(position);
     }
 

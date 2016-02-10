@@ -270,6 +270,28 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
+    @Nullable
+    public Assignment getAssignmentById(long assignmentId) {
+        try {
+            open();
+
+            String Query = "Select * from " + DbStructureAssignment.ASSIGNMENTS + " where " + DbStructureAssignment.Column.ASSIGNMENT_ID + " =?";
+            Cursor cursor = database.rawQuery(Query, new String[]{assignmentId + ""});
+
+            cursor.moveToFirst();
+
+            if (!cursor.isAfterLast()) {
+                Assignment assignment = parseAssignment(cursor);
+                cursor.close();
+                return assignment;
+            }
+            cursor.close();
+            return null;
+        } finally {
+            close();
+        }
+    }
+
 
     @Nullable
     public Unit getUnitByLessonId(long lessonId) {

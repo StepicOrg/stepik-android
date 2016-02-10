@@ -6,9 +6,13 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.units.UnitProgressUpdateEvent;
+import org.stepic.droid.events.units.UnitScoreUpdateEvent;
+import org.stepic.droid.model.Assignment;
+import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.util.StringUtil;
 
 import java.util.List;
 
@@ -52,5 +56,55 @@ public class LocalProgressOfUnitManager implements ILocalProgressManager {
         };
         mainHandler.post(myRunnable);
 
+    }
+
+    @Override
+    public void updateStepProgress(long stepId, String scoreStr) {
+        long assignmentId = mDatabaseManager.getAssignmentIdByStepId(stepId);
+        Assignment assignment = mDatabaseManager.getAssignmentById(assignmentId);
+        if (assignment == null) {
+            return;
+        }
+
+        String progressId = assignment.getProgress();
+        Progress progress= mDatabaseManager.getProgressById(progressId);
+        Double oldDoubleScore = getScoreOfProgressFromDb(progress);
+        if (oldDoubleScore == null) return;
+
+        Double score = StringUtil.safetyParseString(scoreStr);
+        if (score == null) return;
+        if (oldDoubleScore < score) {
+            progress.setScore(score + "");
+            mDatabaseManager.addProgress(progress);
+            Step step = mDatabaseManager.getStepById(stepId);
+            if (step == null) return;
+            final Unit unit =  mDatabaseManager.getUnitByLessonId(step.getLesson());
+            if (unit == null) return;
+
+            Progress unitProgress = mDatabaseManager.getProgressById(unit.getProgress());
+            Double scoreInUnit = getScoreOfProgressFromDb(unitProgress);
+            if (scoreInUnit == null) return;
+            scoreInUnit = scoreInUnit + score - oldDoubleScore;
+            unitProgress.setScore(scoreInUnit + "");
+            mDatabaseManager.addProgress(unitProgress);
+
+            Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
+            final Double finalScoreInUnit = scoreInUnit;
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    mBus.post(new UnitScoreUpdateEvent(unit.getId(), finalScoreInUnit));
+                }
+            };
+            mainHandler.post(myRunnable);
+
+        }
+    }
+
+    private Double getScoreOfProgressFromDb(Progress progress) {
+
+        if (progress == null) return null;
+        String oldScore = progress.getScore();
+        return StringUtil.safetyParseString(oldScore);
     }
 }

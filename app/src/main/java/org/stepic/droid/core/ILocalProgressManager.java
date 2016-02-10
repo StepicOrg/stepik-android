@@ -7,4 +7,6 @@ public interface ILocalProgressManager {
      * @param stepId of unit
      */
     void checkUnitAsPassed(long stepId);
+
+    void updateStepProgress (long stepId, String score);
 }
