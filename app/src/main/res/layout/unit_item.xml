@@ -1,71 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout
     android:id="@+id/cv"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+
     android:background="@color/stepic_white"
     android:clickable="true"
     android:focusable="false"
     android:focusableInTouchMode="false"
     android:foreground="@drawable/non_radius_foreground">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <View
+        android:id="@+id/viewed_item"
+        android:layout_width="5dp"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:background="@color/stepic_brand_primary"/>
 
-        <LinearLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp"
+        android:minHeight="@dimen/guideline_list_item_height"
+        android:orientation="horizontal"
+        android:padding="@dimen/guideline_left_right_padding_list_item">
+
+
+        <ImageView
+            android:id="@+id/lesson_icon"
+            android:layout_width="@dimen/guideline_list_item_height"
+            android:layout_height="@dimen/guideline_list_item_height"
+            android:layout_centerVertical="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/background_header"/>
+
+
+        <TextView
+            android:id="@+id/unit_title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:minHeight="@dimen/guideline_list_item_height"
-            android:orientation="horizontal"
-            android:padding="@dimen/guideline_left_right_padding_list_item">
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="top"
+            android:layout_marginBottom="2dp"
+            android:layout_marginLeft="@dimen/margin_from_image_in_items"
+            android:layout_marginStart="@dimen/margin_from_image_in_items"
+            android:layout_toLeftOf="@+id/load_button"
+            android:layout_toRightOf="@id/lesson_icon"
+            android:ellipsize="end"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:textSize="16sp"
+            tools:text="1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit"/>
 
-            <LinearLayout
-                android:padding="2dp"
-                android:layout_gravity="center_vertical"
-                android:id="@+id/unit_layout"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
+        <RelativeLayout
+            android:id="@+id/student_progress_lesson_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/unit_title"
+            android:layout_marginLeft="@dimen/margin_from_image_in_items"
+            android:layout_marginStart="@dimen/margin_from_image_in_items"
+            android:layout_toEndOf="@+id/lesson_icon"
+            android:layout_toLeftOf="@+id/load_button"
+            android:layout_toRightOf="@+id/lesson_icon"
+            android:layout_toStartOf="@+id/load_button"
+            android:gravity="center_vertical">
+
+            <View
+                android:id="@+id/student_progress_score_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_toLeftOf="@+id/text_score"
+                android:background="@color/stepic_blue_ribbon"/>
+
+            <TextView
+                android:id="@+id/text_score"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="@dimen/margin_from_image_in_items"
+                android:layout_marginStart="@dimen/margin_from_image_in_items"
+                android:text="10/12"
+                android:textSize="12sp"
+                />
 
-                <ImageView
-                    android:id="@+id/viewed_item"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_circle_green"
-                    android:padding="3dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_marginEnd="4dp"/>
+        </RelativeLayout>
 
-                <TextView
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp"
-                    android:textSize="14sp"
-                    android:layout_gravity="center_vertical"
-                    android:id="@+id/unit_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    tools:text="1.2 Super unit"/>
+        <FrameLayout
+            android:id="@+id/load_button"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="@drawable/circle_foreground">
+
+            <ImageView
+                android:id="@+id/pre_load_iv"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_cloud_download_grey600_24dp"/>
 
 
-            </LinearLayout>
+            <ProgressBar
+                android:id="@+id/when_load_view"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:indeterminateDrawable="@drawable/login_progress"
+                android:visibility="invisible"/>
 
-            <include layout="@layout/load_imageview"/>
 
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/after_load_iv"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_delete"
+                android:visibility="gone"/>
 
-        <View
-            android:id="@+id/grey_bar"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/silver" />
-    </LinearLayout>
+        </FrameLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/grey_bar"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="@color/silver"/>
 
 </FrameLayout>

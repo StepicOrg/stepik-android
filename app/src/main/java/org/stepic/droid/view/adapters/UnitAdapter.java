@@ -112,9 +112,9 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
 
         if (unit.is_viewed_custom()) {
-            holder.viewedItem.setVisibility(View.INVISIBLE);
-        } else {
             holder.viewedItem.setVisibility(View.VISIBLE);
+        } else {
+            holder.viewedItem.setVisibility(View.INVISIBLE);
         }
 
         if (unit.is_cached()) {
@@ -230,9 +230,6 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         @Bind(R.id.cv)
         View cv;
-
-        @Bind(R.id.unit_layout)
-        View layout;
 
         @Bind(R.id.unit_title)
         TextView unitTitle;
