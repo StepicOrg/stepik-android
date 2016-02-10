@@ -27,6 +27,8 @@ public class Unit implements Serializable, Parcelable, IProgressable {
     private String update_date;
     private boolean is_cached;
     private boolean is_loading;
+
+    @Deprecated
     private boolean is_viewed_custom;
 
     public Unit() {
@@ -200,10 +202,12 @@ public class Unit implements Serializable, Parcelable, IProgressable {
         this.update_date = update_date;
     }
 
+    @Deprecated
     public boolean is_viewed_custom() {
         return is_viewed_custom;
     }
 
+    @Deprecated
     public void setIs_viewed_custom(boolean is_viewed_custom) {
         this.is_viewed_custom = is_viewed_custom;
     }

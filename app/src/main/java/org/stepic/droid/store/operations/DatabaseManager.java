@@ -248,6 +248,28 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
+    @Nullable
+    public Progress getProgressById(String progressId) {
+        try {
+            open();
+
+            String Query = "Select * from " + DbStructureProgress.PROGRESS + " where " + DbStructureProgress.Column.ID + " =?";
+            Cursor cursor = database.rawQuery(Query, new String[]{progressId});
+
+            cursor.moveToFirst();
+
+            if (!cursor.isAfterLast()) {
+                Progress progress = parseProgress(cursor);
+                cursor.close();
+                return progress;
+            }
+            cursor.close();
+            return null;
+        } finally {
+            close();
+        }
+    }
+
 
     @Nullable
     public Unit getUnitByLessonId(long lessonId) {
@@ -1917,6 +1939,29 @@ public class DatabaseManager extends DbManagerBase {
         }
         cursor.close();
         return false;
+    }
+
+    private Progress parseProgress (Cursor cursor) {
+        Progress progress = new Progress();
+
+
+        int indexId = cursor.getColumnIndex(DbStructureProgress.Column.ID);
+        int indexCost = cursor.getColumnIndex(DbStructureProgress.Column.COST);
+        int indexScore = cursor.getColumnIndex(DbStructureProgress.Column.SCORE);
+        int indexIs_Passed = cursor.getColumnIndex(DbStructureProgress.Column.IS_PASSED );
+        int indexLastViewed = cursor.getColumnIndex(DbStructureProgress.Column.LAST_VIEWED);
+        int indexSteps = cursor.getColumnIndex(DbStructureProgress.Column.N_STEPS);
+        int indexN_steps_passed = cursor.getColumnIndex(DbStructureProgress.Column.N_STEPS_PASSED);
+
+        progress.setId(cursor.getString(indexId));
+        progress.setCost(cursor.getInt(indexCost));
+        progress.setScore(cursor.getString(indexScore));
+        progress.setIs_passed(cursor.getInt(indexIs_Passed) > 0);
+        progress.setLast_viewed(cursor.getString(indexLastViewed));
+        progress.setN_steps(cursor.getInt(indexSteps));
+        progress.setN_steps_passed(cursor.getInt(indexN_steps_passed));
+
+        return progress;
     }
 
     private boolean isAssignmentByStepViewed(long stepId) {

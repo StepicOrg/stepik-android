@@ -19,6 +19,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.CleanManager;
@@ -31,6 +32,7 @@ import org.stepic.droid.view.listeners.OnClickLoadListener;
 import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -64,15 +66,16 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     private Activity mActivity;
     private final List<Unit> mUnitList;
     private RecyclerView mRecyclerView;
+    private final Map<Long, Progress> mUnitProgressMap;
 
-    public UnitAdapter(Context context, Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Activity activity) {
+    public UnitAdapter(Context context, Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, Activity activity) {
 
         this.mContext = context;
         this.mParentSection = parentSection;
         this.mUnitList = unitList;
         this.mLessonList = lessonList;
         mActivity = activity;
-
+        mUnitProgressMap = unitProgressMap;
         MainApplication.component().inject(this);
     }
 
@@ -109,6 +112,36 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         titleBuilder.append(lesson.getTitle());
 
         holder.unitTitle.setText(titleBuilder.toString());
+
+        Progress progress = mUnitProgressMap.get(unit.getId());
+        int cost = 0;
+        double doubleScore;
+        String scoreString = "";
+        if (progress != null) {
+            cost = progress.getCost();
+            scoreString = progress.getScore();
+            try {
+                doubleScore = Double.parseDouble(scoreString);
+                if ((doubleScore == Math.floor(doubleScore)) && !Double.isInfinite(doubleScore)) {
+                    scoreString = (int) doubleScore + "";
+                }
+
+            } catch (Exception ignored) {
+            }
+        }
+
+        if (cost != 0) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(scoreString);
+            sb.append(AppConstants.DELIMITER_TEXT_SCORE);
+            sb.append(cost);
+            holder.mTextScore.setVisibility(View.VISIBLE);
+            holder.mProgressScore.setVisibility(View.VISIBLE);
+            holder.mTextScore.setText(sb.toString());
+        } else {
+            holder.mTextScore.setVisibility(View.GONE);
+            holder.mProgressScore.setVisibility(View.GONE);
+        }
 
 
         if (unit.is_viewed_custom()) {
@@ -249,6 +282,12 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         @Bind(R.id.viewed_item)
         View viewedItem;
+
+        @Bind(R.id.text_score)
+        TextView mTextScore;
+
+        @Bind(R.id.student_progress_score_bar)
+        View mProgressScore;
 
         public UnitViewHolder(View itemView, final StepicOnClickItemListener listener, final OnClickLoadListener loadListener) {
             super(itemView);

@@ -42,7 +42,9 @@ import org.stepic.droid.web.ProgressesResponse;
 import org.stepic.droid.web.UnitStepicResponse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -72,6 +74,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     private UnitAdapter mAdapter;
     private List<Unit> mUnitList;
     private List<Lesson> mLessonList;
+    private Map<Long, Progress> mUnitProgressMap;
 
     private FromDbUnitLessonTask mFromDbTask;
     private ToDbUnitLessonTask mToDbTask;
@@ -96,7 +99,8 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         mUnitsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mUnitList = new ArrayList<>();
         mLessonList = new ArrayList<>();
-        mAdapter = new UnitAdapter(this, mSection, mUnitList, mLessonList, this);
+        mUnitProgressMap = new HashMap<>();
+        mAdapter = new UnitAdapter(this, mSection, mUnitList, mLessonList, mUnitProgressMap, this);
         mUnitsRecyclerView.setAdapter(mAdapter);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -195,13 +199,17 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         mToDbTask.execute();
     }
 
-    private void showUnitsLessons(List<Unit> units, List<Lesson> lessons) {
+    private void showUnitsLessons(List<Unit> units, List<Lesson> lessons, Map<Long, Progress> longProgressMap) {
 
         mLessonList.clear();
         mLessonList.addAll(lessons);
 
         mUnitList.clear();
         mUnitList.addAll(units);
+
+        mUnitProgressMap.clear();
+        mUnitProgressMap.putAll(longProgressMap);
+
         dismissReport();
         mAdapter.notifyDataSetChanged();
 
@@ -271,7 +279,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     public void onSuccessLoadFromDb(LoadedFromDbUnitsLessonsEvent e) {
         if (mSection != e.getSection()) return;
         if (e.getUnits() != null && e.getLessons() != null && e.getUnits().size() != 0 && e.getLessons().size() != 0) {
-            showUnitsLessons(e.getUnits(), e.getLessons());
+            showUnitsLessons(e.getUnits(), e.getLessons(), e.getProgressMap());
             if (firstLoad) {
                 firstLoad = false;
                 updateUnits();

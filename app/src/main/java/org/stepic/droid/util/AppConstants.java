@@ -98,5 +98,7 @@ public class AppConstants {
     public static final java.lang.String METRICA_LESSON_IN_STORE_STATE_NULL = "lesson was null in store state manager";
     public static final java.lang.String METRICA_UNIT_IN_STORE_STATE_NULL = "unit was null in store state manager";
     public static final java.lang.String THUMBNAIL_POSTFIX_EXTENSION= ".png";
+    public static final java.lang.String DELIMITER_TEXT_SCORE= "/";
+
 
 }
