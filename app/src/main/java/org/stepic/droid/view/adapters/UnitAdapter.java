@@ -4,15 +4,18 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
@@ -38,6 +41,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import butterknife.BindDrawable;
 import butterknife.ButterKnife;
 
 public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements StepicOnClickItemListener, OnClickLoadListener {
@@ -130,6 +134,12 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             } catch (Exception ignored) {
             }
         }
+
+        Picasso.with(MainApplication.getAppContext())
+                .load(lesson.getCover_url())
+                .placeholder(holder.mLessonPlaceholderDrawable)
+                .error(holder.mLessonPlaceholderDrawable)
+                .into(holder.mLessonIcon);
 
         if (cost != 0) {
             StringBuilder sb = new StringBuilder();
@@ -291,6 +301,12 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         @Bind(R.id.student_progress_score_bar)
         ProgressBar mProgressScore;
+
+        @Bind(R.id.lesson_icon)
+        ImageView mLessonIcon;
+
+        @BindDrawable(R.drawable.ic_lesson_cover)
+        Drawable mLessonPlaceholderDrawable;
 
         public UnitViewHolder(View itemView, final StepicOnClickItemListener listener, final OnClickLoadListener loadListener) {
             super(itemView);
