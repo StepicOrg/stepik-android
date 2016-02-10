@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.yandex.metrica.YandexMetrica;
@@ -115,7 +116,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         Progress progress = mUnitProgressMap.get(unit.getId());
         int cost = 0;
-        double doubleScore;
+        double doubleScore = 0;
         String scoreString = "";
         if (progress != null) {
             cost = progress.getCost();
@@ -137,6 +138,8 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             sb.append(cost);
             holder.mTextScore.setVisibility(View.VISIBLE);
             holder.mProgressScore.setVisibility(View.VISIBLE);
+            holder.mProgressScore.setMax(cost);
+            holder.mProgressScore.setProgress((int)doubleScore);
             holder.mTextScore.setText(sb.toString());
         } else {
             holder.mTextScore.setVisibility(View.GONE);
@@ -287,7 +290,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         TextView mTextScore;
 
         @Bind(R.id.student_progress_score_bar)
-        View mProgressScore;
+        ProgressBar mProgressScore;
 
         public UnitViewHolder(View itemView, final StepicOnClickItemListener listener, final OnClickLoadListener loadListener) {
             super(itemView);
