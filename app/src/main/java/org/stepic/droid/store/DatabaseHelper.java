@@ -46,6 +46,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 //Use new manner for upgrade, it is more safety and maintainability (but may be less effective in onCreate) :
         upgradeFrom3To4(db);
         upgradeFrom4To5(db);
+        upgradeFrom5To6(db);
     }
 
     @Override
@@ -107,6 +108,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 5) {
             upgradeFrom4To5(db);
         }
+
+        if (oldVersion < 6) {
+            upgradeFrom5To6(db);
+        }
     }
 
     private void upgradeFrom3To4(SQLiteDatabase db) {
@@ -117,6 +122,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private void upgradeFrom4To5(SQLiteDatabase db) {
         alterColumn(db, DBStructureCourses.ENROLLED_COURSES, DBStructureCourses.Column.INTRO_VIDEO_ID, LONG_TYPE);
         alterColumn(db, DBStructureCourses.FEATURED_COURSES, DBStructureCourses.Column.INTRO_VIDEO_ID, LONG_TYPE);
+    }
+
+    private void upgradeFrom5To6(SQLiteDatabase db) {
+        alterColumn(db, DbStructureLesson.LESSONS, DbStructureLesson.Column.COVER_URL, TEXT_TYPE);
     }
     private void alterColumn(SQLiteDatabase db, String dbName, String column, String type) {
         String upgrade = "ALTER TABLE " + dbName + " ADD COLUMN "

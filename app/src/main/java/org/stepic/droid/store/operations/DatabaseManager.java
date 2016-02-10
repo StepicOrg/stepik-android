@@ -1325,10 +1325,10 @@ public class DatabaseManager extends DbManagerBase {
             values.put(DbStructureLesson.Column.TEACHER_GROUP, lesson.getTeacher_group());
 //            values.put(DbStructureLesson.Column.IS_CACHED, lesson.is_cached());
 //            values.put(DbStructureLesson.Column.IS_LOADING, lesson.is_loading());
+            values.put(DbStructureLesson.Column.COVER_URL, lesson.getCover_url());
 
             if (isLessonInDb(lesson)) {
                 database.update(DbStructureLesson.LESSONS, values, DbStructureLesson.Column.LESSON_ID + "=" + lesson.getId(), null);
-
             } else {
                 database.insert(DbStructureLesson.LESSONS, null, values);
             }
@@ -1363,6 +1363,7 @@ public class DatabaseManager extends DbManagerBase {
         int columnIndexTeacherGroup = cursor.getColumnIndex(DbStructureLesson.Column.TEACHER_GROUP);
         int indexIsCached = cursor.getColumnIndex(DbStructureLesson.Column.IS_CACHED);
         int indexIsLoading = cursor.getColumnIndex(DbStructureLesson.Column.IS_LOADING);
+        int indexCoverURL = cursor.getColumnIndex(DbStructureLesson.Column.COVER_URL);
 
         lesson.setId(cursor.getLong(columnIndexLessonId));
         lesson.setSteps(DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexSteps)));
@@ -1382,6 +1383,7 @@ public class DatabaseManager extends DbManagerBase {
         lesson.setTeacher_group(cursor.getString(columnIndexTeacherGroup));
         lesson.setIs_cached(cursor.getInt(indexIsCached) > 0);
         lesson.setIs_loading(cursor.getInt(indexIsLoading) > 0);
+        lesson.setCover_url(cursor.getString(indexCoverURL));
 
         return lesson;
     }

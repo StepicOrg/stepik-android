@@ -26,6 +26,8 @@ public final class DbStructureLesson extends DBStructureBase {
         public static final String TEACHER_GROUP = "teacher_group";
         public static final String IS_CACHED = "is_cached";
         public static final String IS_LOADING = "is_loading";
+        public static final String COVER_URL = "cover_url";
+
     }
 
     public static String[] getUsedColumns() {
@@ -50,6 +52,7 @@ public final class DbStructureLesson extends DBStructureBase {
                     Column.LEARNERS_GROUP,
                     Column.TEACHER_GROUP,
                     Column.IS_CACHED,
+                    Column.COVER_URL,
                     Column.IS_LOADING,
             };
         }
