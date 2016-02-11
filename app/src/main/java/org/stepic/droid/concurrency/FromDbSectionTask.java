@@ -9,6 +9,8 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.store.operations.DatabaseManager;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -36,6 +38,16 @@ public class FromDbSectionTask extends StepicTask<Void, Void, List<Section>> {
     protected List<Section> doInBackgroundBody(Void... params) throws Exception {
         List<Section> fromCache = null;
         fromCache = mDatabaseManager.getAllSectionsOfCourse(mCourse);
+        Collections.sort(fromCache, new Comparator<Section>() {
+            @Override
+            public int compare(Section lhs, Section rhs) {
+                if (lhs == null || rhs == null) return 0;
+
+                int lhsPos = lhs.getPosition();
+                int rhsPos = rhs.getPosition();
+                return lhsPos - rhsPos;
+            }
+        });
         return fromCache;
     }
 

@@ -13,6 +13,8 @@ import org.stepic.droid.model.containers.UnitLessonProgressContainer;
 import org.stepic.droid.store.operations.DatabaseManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +44,7 @@ public class FromDbUnitLessonTask extends StepicTask<Void, Void, UnitLessonProgr
         List<Lesson> fromCacheLessons = new ArrayList<>();
         Map<Long, Progress> unitProgressMap = new HashMap<>();
 
-        for (Unit unit :fromCacheUnits) {
+        for (Unit unit : fromCacheUnits) {
             String progressId = unit.getProgress();
             unit.setIs_viewed_custom(mDatabaseManager.isViewedPublicWrapper(progressId));
 
@@ -53,7 +55,19 @@ public class FromDbUnitLessonTask extends StepicTask<Void, Void, UnitLessonProgr
             }
         }
 
+        Collections.sort(fromCacheUnits, new Comparator<Unit>() {
+            @Override
+            public int compare(Unit lhs, Unit rhs) {
+                if (lhs == null || rhs == null) return 0;
 
+                int lhsPos = lhs.getPosition();
+                int rhsPos = rhs.getPosition();
+                return lhsPos - rhsPos;
+            }
+        });
+
+
+//lessons will sort automatically
         for (Unit unitItem : fromCacheUnits) {
             Lesson lesson = mDatabaseManager.getLessonOfUnit(unitItem);
             if (lesson == null) {
@@ -62,6 +76,7 @@ public class FromDbUnitLessonTask extends StepicTask<Void, Void, UnitLessonProgr
 
             fromCacheLessons.add(lesson);
         }
+
 
         return new UnitLessonProgressContainer(fromCacheUnits, fromCacheLessons, unitProgressMap);
     }
