@@ -30,6 +30,7 @@ import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Option;
 import org.stepic.droid.model.Pair;
 import org.stepic.droid.model.Reply;
+import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.view.adapters.SortStepAdapter;
 import org.stepic.droid.view.layout_managers.WrapContentLinearLayoutManager;
 
@@ -151,7 +152,7 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
         for (String value : firstList) {
             View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_matching_first_option, mLeftLinearLayout, false);
             TextView header = ButterKnife.findById(view, R.id.option_text);
-            header.setText(value);
+            header.setText(HtmlHelper.fromHtml(value).toString());
             int lines = (mMaxWidth / halfScreen) + 1;
             int height = (int) MainApplication.getAppContext().getResources().getDimension(R.dimen.option_height);
             height = lines * height;

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Option;
+import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.view.custom.dragsortadapter.DragSortAdapter;
 import org.stepic.droid.view.custom.dragsortadapter.NoForegroundShadowBuilder;
 
@@ -94,7 +95,7 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
             holder.mContainer.getLayoutParams().height = height;
 //            holder.mOptionText.setLines((mWidth / halfScreen) + 1);
         }
-        holder.mOptionText.setText(mItemIdOptionMap.get(itemId).getValue());
+        holder.mOptionText.setText(HtmlHelper.fromHtml(mItemIdOptionMap.get(itemId).getValue()).toString());
         // NOTE: check for getDraggingId() match to set an "invisible space" while dragging
         holder.mContainer.setVisibility(getDraggingId() == itemId ? View.INVISIBLE : View.VISIBLE);
         holder.mContainer.postInvalidate();
