@@ -171,10 +171,10 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
         int maxWidth = 0;
         List<String> allTextList = new ArrayList<>(mFirstList);
         for (Option option : mOptionList) {
-            allTextList.add(option.getValue());
+            allTextList.add( option.getValue());
         }
         for (String text : allTextList) {
-            header.setText(text);
+            header.setText(HtmlHelper.fromHtml(text));
             header.setVisibility(View.INVISIBLE);
             mLeftLinearLayout.addView(view);
 
