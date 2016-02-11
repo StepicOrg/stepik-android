@@ -47,6 +47,7 @@ public class StepFragmentAdapter extends FragmentStatePagerAdapter {
         Bundle args = new Bundle();
         args.putSerializable(AppConstants.KEY_STEP_BUNDLE, step);
         args.putSerializable(AppConstants.KEY_LESSON_BUNDLE, mLesson);
+        args.putSerializable(AppConstants.KEY_UNIT_BUNDLE, mUnit);
         fragment.setArguments(args);
         return fragment;
     }

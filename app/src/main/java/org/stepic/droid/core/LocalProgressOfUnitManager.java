@@ -7,13 +7,14 @@ import com.squareup.otto.Bus;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.units.UnitProgressUpdateEvent;
 import org.stepic.droid.events.units.UnitScoreUpdateEvent;
-import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.StringUtil;
+import org.stepic.droid.web.IApi;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -21,11 +22,13 @@ import javax.inject.Inject;
 public class LocalProgressOfUnitManager implements ILocalProgressManager {
     private DatabaseManager mDatabaseManager;
     private Bus mBus;
+    private IApi mApi;
 
     @Inject
-    public LocalProgressOfUnitManager(DatabaseManager databaseManager, Bus bus) {
+    public LocalProgressOfUnitManager(DatabaseManager databaseManager, Bus bus, IApi api) {
         mDatabaseManager = databaseManager;
         mBus = bus;
+        mApi = api;
     }
 
 
@@ -59,49 +62,36 @@ public class LocalProgressOfUnitManager implements ILocalProgressManager {
     }
 
     @Override
-    public void updateStepProgress(long stepId, String scoreStr) {
-        long assignmentId = mDatabaseManager.getAssignmentIdByStepId(stepId);
-        Assignment assignment = mDatabaseManager.getAssignmentById(assignmentId);
-        if (assignment == null) {
+    public void updateUnitProgress(final long unitId) {
+
+        Unit unit = mDatabaseManager.getUnitById(unitId);
+        if (unit == null) return;
+        Progress updatedUnitProgress;
+        try {
+            updatedUnitProgress = mApi.getProgresses(new String[]{unit.getProgress()}).execute().body().getProgresses().get(0);
+        } catch (IOException e) {
+            e.printStackTrace();
             return;
         }
+        if (updatedUnitProgress == null)
+            return;
+        mDatabaseManager.addProgress(updatedUnitProgress);
 
-        String progressId = assignment.getProgress();
-        Progress progress= mDatabaseManager.getProgressById(progressId);
-        Double oldDoubleScore = getScoreOfProgressFromDb(progress);
-        if (oldDoubleScore == null) return;
-
-        Double score = StringUtil.safetyParseString(scoreStr);
-        if (score == null) return;
-        if (oldDoubleScore < score) {
-            progress.setScore(score + "");
-            mDatabaseManager.addProgress(progress);
-            Step step = mDatabaseManager.getStepById(stepId);
-            if (step == null) return;
-            final Unit unit =  mDatabaseManager.getUnitByLessonId(step.getLesson());
-            if (unit == null) return;
-
-            Progress unitProgress = mDatabaseManager.getProgressById(unit.getProgress());
-            Double scoreInUnit = getScoreOfProgressFromDb(unitProgress);
-            if (scoreInUnit == null) return;
-            scoreInUnit = scoreInUnit + score - oldDoubleScore;
-            unitProgress.setScore(scoreInUnit + "");
-            mDatabaseManager.addProgress(unitProgress);
-
-            Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
-            final Double finalScoreInUnit = scoreInUnit;
-            Runnable myRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    mBus.post(new UnitScoreUpdateEvent(unit.getId(), finalScoreInUnit));
-                }
-            };
-            mainHandler.post(myRunnable);
-
+        final Double finalScoreInUnit = getScoreOfProgress(updatedUnitProgress);
+        if (finalScoreInUnit == null) {
+            return;
         }
+        Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                mBus.post(new UnitScoreUpdateEvent(unitId, finalScoreInUnit));
+            }
+        };
+        mainHandler.post(myRunnable);
     }
 
-    private Double getScoreOfProgressFromDb(Progress progress) {
+    private Double getScoreOfProgress(Progress progress) {
 
         if (progress == null) return null;
         String oldScore = progress.getScore();

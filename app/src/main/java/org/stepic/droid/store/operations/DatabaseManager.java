@@ -70,6 +70,7 @@ public class DatabaseManager extends DbManagerBase {
     }
 
 
+    @Deprecated
     public long getAssignmentIdByStepId(long stepId) {
         try {
             open();
@@ -85,6 +86,33 @@ public class DatabaseManager extends DbManagerBase {
             }
             cursor.close();
             return -1;
+        } finally {
+            close();
+        }
+
+    }
+
+    @Nullable
+    public Assignment getAssignmentByStepIdInUnit(long stepId, long unitId) {
+        try {
+            open();
+            String Query = "Select * from " + DbStructureAssignment.ASSIGNMENTS + " where " + DbStructureAssignment.Column.STEP_ID + " =?";
+            Cursor cursor = database.rawQuery(Query, new String[]{stepId + ""});
+
+            cursor.moveToFirst();
+
+            while (!cursor.isAfterLast()) {
+                Assignment assignment = parseAssignment(cursor);
+                if (assignment.getUnit() == unitId)
+                {
+                    cursor.close();
+                    return assignment;
+                }
+                cursor.moveToNext();
+            }
+
+            cursor.close();
+            return null;
         } finally {
             close();
         }
@@ -292,7 +320,7 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
-
+    @Deprecated
     @Nullable
     public Unit getUnitByLessonId(long lessonId) {
         try {
@@ -300,6 +328,28 @@ public class DatabaseManager extends DbManagerBase {
 
             String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.LESSON + " =?";
             Cursor cursor = database.rawQuery(Query, new String[]{lessonId + ""});
+
+            cursor.moveToFirst();
+
+            if (!cursor.isAfterLast()) {
+                Unit unit = parseUnit(cursor);
+                cursor.close();
+                return unit;
+            }
+            cursor.close();
+            return null;
+        } finally {
+            close();
+        }
+    }
+
+    @Nullable
+    public Unit getUnitById(long unitId) {
+        try {
+            open();
+
+            String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.UNIT_ID + " =?";
+            Cursor cursor = database.rawQuery(Query, new String[]{unitId + ""});
 
             cursor.moveToFirst();
 

@@ -8,5 +8,5 @@ public interface ILocalProgressManager {
      */
     void checkUnitAsPassed(long stepId);
 
-    void updateStepProgress (long stepId, String score);
+    void updateUnitProgress(long unitId);
 }
