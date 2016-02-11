@@ -107,8 +107,11 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
 
     private void buildChoiceItem(CompoundButton item, String rawText) {
         int dp4 = (int) DpPixelsHelper.convertDpToPixel(4);
-        item.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        item.setPadding(0, dp4, 0, dp4);
+        int horizontalPadding = (int) DpPixelsHelper.convertDpToPixel(4);
+        RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        item.setLayoutParams(params);
+        item.setPadding(horizontalPadding, dp4, horizontalPadding, dp4);
+        item.setMinHeight((int)DpPixelsHelper.convertDpToPixel(48));
         String text = HtmlHelper.fromHtml(rawText).toString();
         item.setText(text);
         mChoiceContainer.addView(item);

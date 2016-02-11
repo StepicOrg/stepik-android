@@ -25,7 +25,9 @@
             <FrameLayout
                 android:id="@+id/attempt_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:padding="@dimen/attempt_padding"
+                />
 
             <LinearLayout
                 android:id="@+id/result_line"
