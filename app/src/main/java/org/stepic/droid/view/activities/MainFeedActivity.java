@@ -168,7 +168,7 @@ public class MainFeedActivity extends FragmentActivityBase
             case R.id.logout_item:
                 YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_LOGOUT);
 
-                LogoutAreYouSureDialog dialog = new LogoutAreYouSureDialog();
+                LogoutAreYouSureDialog dialog =  LogoutAreYouSureDialog.newInstance();
                 dialog.show(getSupportFragmentManager(), null);
 
                 new Handler().postDelayed(new Runnable() {

@@ -97,5 +97,6 @@
     <string name="send">send</string>
     <string name="email_sent">We have sent you an e-mail.</string>
     <string name="email_wrong">The e-mail address is not assigned to any user account.</string>
+    <string name="are_you_sure_logout">All saved data for offline will be removed. Are you sure? </string>
 
 </resources>
