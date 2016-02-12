@@ -8,6 +8,8 @@ import com.google.gson.GsonBuilder;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.util.AppConstants;
@@ -89,6 +91,9 @@ public class SharedPreferenceHelper {
         String json = gson.toJson(response);
         put(PreferenceType.LOGIN, AUTH_RESPONSE_JSON, json);
 
+        DateTime now = DateTime.now(DateTimeZone.UTC);
+        long millisNow = now.getMillis();
+        put(PreferenceType.LOGIN, ACCESS_TOKEN_TIMESTAMP, millisNow);
     }
 
     public void storeLastTokenType(boolean isSocial) {
@@ -120,6 +125,11 @@ public class SharedPreferenceHelper {
         return result;
     }
 
+    public long getAccessTokenTimestamp() {
+        long timestamp = getLong(PreferenceType.LOGIN, ACCESS_TOKEN_TIMESTAMP);
+        return timestamp;
+    }
+
 
     public boolean isMobileInternetAlsoAllowed() {
         return getBoolean(PreferenceType.WIFI, WIFI_KEY);
@@ -139,6 +149,11 @@ public class SharedPreferenceHelper {
         editor.putInt(key, value).apply();
     }
 
+    private void put(PreferenceType type, String key, long value) {
+        SharedPreferences.Editor editor = mContext.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
+        editor.putLong(key, value).apply();
+    }
+
     private void put(PreferenceType type, String key, Boolean value) {
         SharedPreferences.Editor editor = mContext.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.putBoolean(key, value).apply();
@@ -154,6 +169,11 @@ public class SharedPreferenceHelper {
                 .getInt(key, -1);
     }
 
+    private long getLong(PreferenceType preferenceType, String key) {
+        return mContext.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
+                .getLong(key, -1);
+    }
+
     private String getString(PreferenceType preferenceType, String key) {
         return mContext.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
                 .getString(key, null);
@@ -164,7 +184,7 @@ public class SharedPreferenceHelper {
                 .getBoolean(key, false);
     }
 
-
+    private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
     private final String PROFILE_JSON = "profile_json";
     private final String WIFI_KEY = "wifi_key";

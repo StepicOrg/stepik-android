@@ -17,6 +17,8 @@ import com.squareup.okhttp.Response;
 import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.Nullable;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.ScreenManager;
@@ -97,16 +99,31 @@ public class RetrofitRESTApi implements IApi {
                 try {
                     RWLocks.AuthLock.writeLock().lock();
                     AuthenticationStepicResponse response = mSharedPreference.getAuthResponseFromStore();
-                    if (response != null) {
-                        response = mOAuthService.updateToken(mConfig.getRefreshGrantType(), response.getRefresh_token()).execute().body();
+                    if (isNeededUpdate(response)) {
+                        try {
+                            response = mOAuthService.updateToken(mConfig.getRefreshGrantType(), response.getRefresh_token()).execute().body();
+                        } catch (Exception e) {
+                            YandexMetrica.reportError("cant update token", e);
+                            return chain.proceed(newRequest);
+                        }
+                        if (!response.isSuccess()) {
+                            //it is worst case:
+                            YandexMetrica.reportEvent("update is failed");
+                            return chain.proceed(newRequest);
+                        }
+
+                        //Update is success:
                         mSharedPreference.storeAuthInfo(response);
-                        newRequest = chain.request().newBuilder().addHeader("Authorization", getAuthHeaderValueForLogged()).build();
-                        return chain.proceed(newRequest);
                     }
+                    if (response != null) {
+                        YandexMetrica.reportEvent("response is null in loggedService");
+                        newRequest = chain.request().newBuilder().addHeader("Authorization", getAuthHeaderValueForLogged()).build();
+                    }
+                    return chain.proceed(newRequest);
                 } finally {
                     RWLocks.AuthLock.writeLock().unlock();
                 }
-                return chain.proceed(newRequest);
+
             }
         };
         okHttpClient.networkInterceptors().add(interceptor);
@@ -412,6 +429,10 @@ public class RetrofitRESTApi implements IApi {
     private String getAuthHeaderValueForLogged() {
         try {
             AuthenticationStepicResponse resp = mSharedPreference.getAuthResponseFromStore();
+            if (resp == null) {
+                YandexMetrica.reportEvent("resp null");
+                return "";
+            }
             String access_token = resp.getAccess_token();
             String type = resp.getToken_type();
             return type + " " + access_token;
@@ -432,5 +453,18 @@ public class RetrofitRESTApi implements IApi {
             // FIXME: 19.11.15 ^^^^^^
             return "";
         }
+    }
+
+    private boolean isNeededUpdate(AuthenticationStepicResponse response) {
+        if (response == null) return false;
+
+        long timestampStored = mSharedPreference.getAccessTokenTimestamp();
+        if (timestampStored == -1) return true;
+
+        long nowTemp = DateTime.now(DateTimeZone.UTC).getMillis();
+        long delta = nowTemp - timestampStored;
+        long expiresMillis = -1;
+        expiresMillis = (response.getExpires_in() - 50) * 1000; //50 secs for query.
+        return delta > expiresMillis;//token expired --> need update
     }
 }
