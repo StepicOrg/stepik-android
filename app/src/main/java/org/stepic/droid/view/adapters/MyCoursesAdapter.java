@@ -1,16 +1,18 @@
 package org.stepic.droid.view.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.facebook.common.util.UriUtil;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.DraweeView;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
@@ -28,7 +30,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.Bind;
-import butterknife.BindDrawable;
 import butterknife.ButterKnife;
 
 public class MyCoursesAdapter extends ArrayAdapter<Course> {
@@ -84,11 +85,23 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         viewHolderItem.courseName.setText(course.getTitle());
         viewHolderItem.courseSummary.setText(HtmlHelper.fromHtml(course.getSummary()));
         if (course.getCover() != null) {
-            Picasso.with(mFragment.getActivity()).load(mConfig.getBaseUrl() + course.getCover()).
-                    placeholder(viewHolderItem.placeholder).into(viewHolderItem.courseIcon);
+            DraweeController controller = Fresco.newDraweeControllerBuilder()
+                    .setUri(mConfig.getBaseUrl() + course.getCover())
+                    .setAutoPlayAnimations(true)
+                    .build();
+            viewHolderItem.courseIcon.setController(controller);
         } else {
-            Picasso.with(mFragment.getActivity()).load(R.drawable.stepic_logo_black_and_white).
-                    placeholder(viewHolderItem.placeholder).into(viewHolderItem.courseIcon);
+            //for empty cover:
+            Uri uri = new Uri.Builder()
+                    .scheme(UriUtil.LOCAL_RESOURCE_SCHEME) // "res"
+                    .path(String.valueOf(R.drawable.ic_course_placeholder))
+                    .build();
+
+            DraweeController controller = Fresco.newDraweeControllerBuilder()
+                    .setUri(uri)
+                    .setAutoPlayAnimations(true)
+                    .build();
+            viewHolderItem.courseIcon.setController(controller);
         }
         viewHolderItem.courseDateInterval.setText(course.getDateOfCourse());
 
@@ -221,28 +234,13 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         TextView courseSummary;
 
         @Bind(R.id.video_icon)
-        ImageView courseIcon;
+        DraweeView courseIcon;
 
         @Bind(R.id.course_date_interval)
         TextView courseDateInterval;
 
         @Bind(R.id.cv)
         View cardView;
-//
-//        @Bind(R.id.pre_load_iv)
-//        View preLoadIV;
-//
-//        @Bind(R.id.when_load_view)
-//        View whenLoad;
-//
-//        @Bind(R.id.after_load_iv)
-//        View afterLoad;
-//
-//        @Bind(R.id.load_button)
-//        View loadButton;
-
-        @BindDrawable(R.drawable.stepic_logo_black_and_white)
-        Drawable placeholder;
 
         public ViewHolderItem(View view) {
             ButterKnife.bind(this, view);
