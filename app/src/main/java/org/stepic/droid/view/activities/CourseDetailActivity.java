@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +21,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.squareup.otto.Subscribe;
 
@@ -34,6 +36,7 @@ import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepic.droid.model.User;
+import org.stepic.droid.model.Video;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
@@ -85,6 +88,8 @@ public class CourseDetailActivity extends FragmentActivityBase {
     @Bind(R.id.list_of_course_property)
     ListView mCoursePropertyListView;
 
+    private VideoView mVideoView;
+
 
     private List<CourseProperty> mCoursePropertyList;
     private Course mCourse;
@@ -115,6 +120,7 @@ public class CourseDetailActivity extends FragmentActivityBase {
         View header = ((LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.activity_course_detailed_header, null, false);
         mCoursePropertyListView.addHeaderView(header);
         mIntroView = ButterKnife.findById(header, R.id.intro_video);
+        mVideoView = ButterKnife.findById(header, R.id.videoView);
         mCourseNameView = ButterKnife.findById(header, R.id.course_name);
 
 
@@ -197,13 +203,33 @@ public class CourseDetailActivity extends FragmentActivityBase {
     private void setUpIntroVideo(){
         String urlToVideo = null;
 
-//        Video newTypeVideo = mCourse.getIntro_video();
-//        if (newTypeVideo != null && newTypeVideo.getUrls()!= null && !newTypeVideo.getUrls().isEmpty()) {
-//            urlToVideo = newTypeVideo.getUrls().get(0).getUrl();
-//        } else {
-//            urlToVideo = mCourse.getIntro();
-//        }
-        urlToVideo =mCourse.getIntro();
+        Video newTypeVideo = mCourse.getIntro_video();
+        if (newTypeVideo != null && newTypeVideo.getUrls()!= null && !newTypeVideo.getUrls().isEmpty()) {
+            urlToVideo = newTypeVideo.getUrls().get(0).getUrl();
+//            showNewStyleVideo(urlToVideo);
+            mIntroView.setVisibility(View.GONE);
+            mVideoView.setVisibility(View.GONE);
+        } else {
+            urlToVideo = mCourse.getIntro();
+            showOldStyleVideo(urlToVideo);
+        }
+
+    }
+
+    private void showNewStyleVideo(String urlToVideo){
+        mIntroView.setVisibility(View.GONE);
+        if (urlToVideo == null || urlToVideo.equals("")) {
+            mIntroView.setVisibility(View.GONE);
+        }
+        else{
+            mVideoView.setVisibility(View.VISIBLE);
+            mVideoView.setVideoURI(Uri.parse(urlToVideo));
+            mVideoView.start();
+        }
+    }
+
+    private void showOldStyleVideo(String urlToVideo) {
+        mVideoView.setVisibility(View.GONE);
         if (urlToVideo == null || urlToVideo.equals("")) {
             mIntroView.setVisibility(View.GONE);
         } else {
