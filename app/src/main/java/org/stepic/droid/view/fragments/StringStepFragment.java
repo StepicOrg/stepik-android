@@ -1,7 +1,16 @@
 package org.stepic.droid.view.fragments;
 
+import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+
 import com.squareup.otto.Subscribe;
 
+import org.stepic.droid.R;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.attempts.FailAttemptEvent;
 import org.stepic.droid.events.attempts.SuccessAttemptEvent;
@@ -9,10 +18,34 @@ import org.stepic.droid.events.submissions.FailGettingLastSubmissionEvent;
 import org.stepic.droid.events.submissions.FailSubmissionCreatedEvent;
 import org.stepic.droid.events.submissions.SubmissionCreatedEvent;
 import org.stepic.droid.events.submissions.SuccessGettingLastSubmissionEvent;
+import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.util.HtmlHelper;
 
-public class StringStepFragment extends SingleLineSendStepFragment {
+public class StringStepFragment extends StepWithAttemptsFragment {
+
+    protected EditText mAnswerField;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        mAnswerField = (EditText) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_free_answer_attempt, mAttemptContainer, false);
+        mAttemptContainer.addView(mAnswerField);
+        return v;
+    }
+
+
+    @Override
+    protected final void showAttempt(Attempt attempt) {
+        mAnswerField.getText().clear();
+    }
+
+    @Override
+    protected final void blockUIBeforeSubmit(boolean needBlock) {
+        mAnswerField.setEnabled(!needBlock);
+    }
+
     @Override
     protected Reply generateReply() {
         return new Reply.Builder()
