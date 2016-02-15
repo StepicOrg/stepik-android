@@ -12,12 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="100dp" />
 
-    <VideoView
-        android:focusableInTouchMode="false"
-        android:focusable="false"
-        android:layout_height="150dp"
-        android:layout_width="match_parent"
-        android:id="@+id/videoView" />
+
+    <include
+        android:id="@+id/player_layout"
+        layout="@layout/player_placeholder"/>
 
     <TextView
         android:layout_marginTop="8dp"
