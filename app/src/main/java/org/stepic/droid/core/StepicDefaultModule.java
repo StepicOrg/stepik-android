@@ -9,6 +9,7 @@ import com.squareup.otto.Bus;
 import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialManager;
@@ -22,6 +23,7 @@ import org.stepic.droid.store.dao.Dao;
 import org.stepic.droid.store.dao.DaoHelper;
 import org.stepic.droid.store.dao.IDaoHelper;
 import org.stepic.droid.store.dao.SectionDaoImpl;
+import org.stepic.droid.store.dao.UnitDaoImpl;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.ISearchResolver;
@@ -200,5 +202,10 @@ public class StepicDefaultModule {
     @Provides
     public Dao<Section> provideSectionDao(IDaoHelper daoHelper){
         return new SectionDaoImpl(daoHelper);
+    }
+
+    @Provides
+    public Dao<Unit> provideUnitDao(IDaoHelper daoHelper){
+        return new UnitDaoImpl(daoHelper);
     }
 }
