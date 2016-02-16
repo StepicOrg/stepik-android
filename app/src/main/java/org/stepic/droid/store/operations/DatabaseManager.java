@@ -81,26 +81,14 @@ public class DatabaseManager extends DbManagerBase {
         mAssignmentDao.insertOrUpdate(assignment);
     }
 
+    /**
+    deprecated because of step has 0..* assignments.
+     */
     @Deprecated
     public long getAssignmentIdByStepId(long stepId) {
-        try {
-            open();
-            String Query = "Select * from " + DbStructureAssignment.ASSIGNMENTS + " where " + DbStructureAssignment.Column.STEP_ID + " =?";
-            Cursor cursor = database.rawQuery(Query, new String[]{stepId + ""});
-
-            cursor.moveToFirst();
-
-            if (!cursor.isAfterLast()) {
-                long assignmentId = cursor.getLong(cursor.getColumnIndex(DbStructureAssignment.Column.ASSIGNMENT_ID));
-                cursor.close();
-                return assignmentId;
-            }
-            cursor.close();
-            return -1;
-        } finally {
-            close();
-        }
-
+        Assignment assignment = mAssignmentDao.get(DbStructureAssignment.Column.STEP_ID, stepId + "");
+        if (assignment == null) return -1;
+        return assignment.getId();
     }
 
     public Map<Long, Lesson> getMapFromStepIdToTheirLesson(long[] stepIds) {
