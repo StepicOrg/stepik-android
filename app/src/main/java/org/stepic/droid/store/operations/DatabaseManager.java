@@ -52,6 +52,10 @@ public class DatabaseManager extends DbManagerBase {
     IDao<Section> mSectionDao;
     @Inject
     IDao<Unit> mUnitDao;
+    @Inject
+    IDao<Progress> mProgressDao;
+    @Inject
+    IDao<Assignment> mAssignmentDao;
 
     public void addAssignment(Assignment assignment) {
         try {
@@ -268,24 +272,7 @@ public class DatabaseManager extends DbManagerBase {
 
     @Nullable
     public Progress getProgressById(String progressId) {
-        try {
-            open();
-
-            String Query = "Select * from " + DbStructureProgress.PROGRESS + " where " + DbStructureProgress.Column.ID + " =?";
-            Cursor cursor = database.rawQuery(Query, new String[]{progressId});
-
-            cursor.moveToFirst();
-
-            if (!cursor.isAfterLast()) {
-                Progress progress = parseProgress(cursor);
-                cursor.close();
-                return progress;
-            }
-            cursor.close();
-            return null;
-        } finally {
-            close();
-        }
+        return mProgressDao.get(DbStructureProgress.Column.ID, progressId);
     }
 
     @Nullable
@@ -1721,16 +1708,10 @@ public class DatabaseManager extends DbManagerBase {
 
 
     public void markProgressAsPassedIfInDb(String progressId) {
-        try {
-            open();
-            if (isProgressInDb(progressId)) {
-                ContentValues values = new ContentValues();
-                values.put(DbStructureProgress.Column.IS_PASSED, true);
-                database.update(DbStructureProgress.PROGRESS, values, DbStructureProgress.Column.ID + "=?", new String[]{progressId});
-            }
-
-        } finally {
-            close();
+        if (isProgressInDb(progressId)) {
+            ContentValues values = new ContentValues();
+            values.put(DbStructureProgress.Column.IS_PASSED, true);
+            mProgressDao.update(DbStructureProgress.Column.ID, progressId, values);
         }
     }
 
@@ -1755,39 +1736,11 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public void addProgress(Progress progress) {
-        try {
-            open();
-            ContentValues values = new ContentValues();
-
-            values.put(DbStructureProgress.Column.ID, progress.getId());
-            values.put(DbStructureProgress.Column.COST, progress.getCost());
-            values.put(DbStructureProgress.Column.SCORE, progress.getScore());
-            values.put(DbStructureProgress.Column.IS_PASSED, progress.is_passed());
-            values.put(DbStructureProgress.Column.LAST_VIEWED, progress.getLast_viewed());
-            values.put(DbStructureProgress.Column.N_STEPS, progress.getN_steps());
-            values.put(DbStructureProgress.Column.N_STEPS_PASSED, progress.getLast_viewed());
-
-
-            if (isProgressInDb(progress.getId())) {
-                database.update(DbStructureProgress.PROGRESS, values, DbStructureProgress.Column.ID + "=?", new String[]{progress.getId()});
-            } else {
-                database.insert(DbStructureProgress.PROGRESS, null, values);
-            }
-
-        } finally {
-            close();
-        }
+        mProgressDao.insertOrUpdate(progress);
     }
 
     private boolean isProgressInDb(String progressId) {
-        String Query = "Select * from " + DbStructureProgress.PROGRESS + " where " + DbStructureProgress.Column.ID + " =?";
-        Cursor cursor = database.rawQuery(Query, new String[]{progressId});
-        if (cursor.getCount() <= 0) {
-            cursor.close();
-            return false;
-        }
-        cursor.close();
-        return true;
+        return mProgressDao.isInDb(DbStructureProgress.Column.ID, progressId);
     }
 
     private boolean isAssignmentInDb(long assignmentId) {
@@ -1813,51 +1766,13 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public boolean isViewedPublicWrapper(String progressId) {
-        try {
-            open();
-            return progressIsViewed(progressId);
-        } finally {
-            close();
-        }
+        return progressIsViewed(progressId);
     }
 
     private boolean progressIsViewed(String progressId) {
         if (progressId == null) return false;
-        String Query = "Select * from " + DbStructureProgress.PROGRESS + " where " + DbStructureProgress.Column.ID + " =?";
-        Cursor cursor = database.rawQuery(Query, new String[]{progressId});
-
-        cursor.moveToFirst();
-
-        if (!cursor.isAfterLast()) {
-            boolean progress = cursor.getInt(cursor.getColumnIndex(DbStructureProgress.Column.IS_PASSED)) > 0;
-            cursor.close();
-            return progress;
-        }
-        cursor.close();
-        return false;
-    }
-
-    private Progress parseProgress(Cursor cursor) {
-        Progress progress = new Progress();
-
-
-        int indexId = cursor.getColumnIndex(DbStructureProgress.Column.ID);
-        int indexCost = cursor.getColumnIndex(DbStructureProgress.Column.COST);
-        int indexScore = cursor.getColumnIndex(DbStructureProgress.Column.SCORE);
-        int indexIs_Passed = cursor.getColumnIndex(DbStructureProgress.Column.IS_PASSED);
-        int indexLastViewed = cursor.getColumnIndex(DbStructureProgress.Column.LAST_VIEWED);
-        int indexSteps = cursor.getColumnIndex(DbStructureProgress.Column.N_STEPS);
-        int indexN_steps_passed = cursor.getColumnIndex(DbStructureProgress.Column.N_STEPS_PASSED);
-
-        progress.setId(cursor.getString(indexId));
-        progress.setCost(cursor.getInt(indexCost));
-        progress.setScore(cursor.getString(indexScore));
-        progress.setIs_passed(cursor.getInt(indexIs_Passed) > 0);
-        progress.setLast_viewed(cursor.getString(indexLastViewed));
-        progress.setN_steps(cursor.getInt(indexSteps));
-        progress.setN_steps_passed(cursor.getInt(indexN_steps_passed));
-
-        return progress;
+        Progress progress = mProgressDao.get(DbStructureProgress.Column.ID, progressId);
+        return progress.is_passed();
     }
 
     private boolean isAssignmentByStepViewed(long stepId) {

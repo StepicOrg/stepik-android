@@ -8,6 +8,7 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
@@ -20,6 +21,7 @@ import org.stepic.droid.store.DownloadManagerImpl;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.StoreStateManager;
+import org.stepic.droid.store.dao.AssignmentDaoImpl;
 import org.stepic.droid.store.dao.IDao;
 import org.stepic.droid.store.dao.ProgressDaoImpl;
 import org.stepic.droid.store.dao.SectionDaoImpl;
@@ -206,5 +208,10 @@ public class StepicDefaultModule {
     @Provides
     public IDao<Progress> provideProgressDao(SQLiteOpenHelper openHelper) {
         return new ProgressDaoImpl(openHelper);
+    }
+
+    @Provides
+    public IDao<Assignment> provideAssignmentDao(SQLiteOpenHelper openHelper) {
+        return new AssignmentDaoImpl(openHelper);
     }
 }
