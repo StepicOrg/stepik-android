@@ -14,11 +14,12 @@ import org.stepic.droid.util.RWLocks;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class DaoHelper implements IDaoHelper {
-    protected SQLiteDatabase database;
+public abstract class DaoBase<T> implements IDao<T> {
+
+    private SQLiteDatabase database;
     private SQLiteOpenHelper dbHelper;
 
-    public DaoHelper(SQLiteOpenHelper openHelper) {
+    public DaoBase(SQLiteOpenHelper openHelper) {
         dbHelper = openHelper;
     }
 
@@ -32,11 +33,11 @@ public final class DaoHelper implements IDaoHelper {
         RWLocks.DatabaseLock.writeLock().unlock();
     }
 
-    protected <T> T executeQuery(String sqlQuery, String[] selectionArgs, ResultHandler<T> handler) {
+    private <U> U executeQuery(String sqlQuery, String[] selectionArgs, ResultHandler<U> handler) {
         try {
             open();
             Cursor cursor = database.rawQuery(sqlQuery, selectionArgs);
-            T result = handler.handle(cursor);
+            U result = handler.handle(cursor);
             cursor.close();
             return result;
         } finally {
@@ -45,7 +46,7 @@ public final class DaoHelper implements IDaoHelper {
 
     }
 
-    protected void executeUpdate(String table, ContentValues values, String whereClause, String[] whereArgs) {
+    private void executeUpdate(String table, ContentValues values, String whereClause, String[] whereArgs) {
         try {
             open();
             database.update(table, values, whereClause, whereArgs);
@@ -54,7 +55,7 @@ public final class DaoHelper implements IDaoHelper {
         }
     }
 
-    protected void executeInsert(String table, ContentValues values) {
+    private void executeInsert(String table, ContentValues values) {
         try {
             open();
             database.insert(table, null, values);
@@ -63,8 +64,7 @@ public final class DaoHelper implements IDaoHelper {
         }
     }
 
-    @Override
-    public void insertOrUpdate(String tableName, ContentValues cv, String primaryKeyColumn, String primaryValue) {
+    private void insertOrUpdate(String tableName, ContentValues cv, String primaryKeyColumn, String primaryValue) {
         if (isInDb(tableName, primaryKeyColumn, primaryValue)) {
             String whereClause = primaryKeyColumn + "=?";
             String[] whereArgs = new String[]{primaryValue};
@@ -76,28 +76,29 @@ public final class DaoHelper implements IDaoHelper {
 
     @NotNull
     @Override
-    public <T> List<T> getAll(final IDao<T> dao, String tableName) {
-        String query = "Select * from " + tableName;
-        return getAllWithQuery(dao, query, null);
+    public List<T> getAll() {
+        String query = "Select * from " + getDbName();
+        return getAllWithQuery(query, null);
     }
 
-    @NotNull
-    public <T> List<T> getAll(final IDao<T> dao, String tableName, String whereColumn, String whereValue) {
-        String query = "Select * from " + tableName + " where " + whereColumn + " = ?";
-        return getAllWithQuery(dao, query, new String[]{whereValue});
-    }
-
-    @Nullable
     @Override
-    public <T> T get(final IDao<T> dao, String tableName, String whereColumn, String whereValue) {
-        String query = "Select * from " + tableName + " where " + whereColumn + " = ?";
+    @NotNull
+    public List<T> getAll(String whereColumn, String whereValue) {
+        String query = "Select * from " + getDbName() + " where " + whereColumn + " = ?";
+        return getAllWithQuery(query, new String[]{whereValue});
+    }
+
+    @Override
+    @Nullable
+    public T get(String whereColumn, String whereValue) {
+        String query = "Select * from " + getDbName() + " where " + whereColumn + " = ?";
         return executeQuery(query, new String[]{whereValue}, new ResultHandler<T>() {
             @Override
             public T handle(Cursor cursor) throws SQLException {
                 cursor.moveToFirst();
 
                 if (!cursor.isAfterLast()) {
-                    return dao.parsePersistentObject(cursor);
+                    return parsePersistentObject(cursor);
                 }
                 return null;
             }
@@ -105,15 +106,15 @@ public final class DaoHelper implements IDaoHelper {
 
     }
 
-    private <T> List<T> getAllWithQuery(final IDao<T> dao, String query, String[] whereArgs) {
-        return executeQuery(query, null, new ResultHandler<List<T>>() {
+    private List<T> getAllWithQuery(String query, String[] whereArgs) {
+        return executeQuery(query, whereArgs, new ResultHandler<List<T>>() {
             @Override
             public List<T> handle(Cursor cursor) throws SQLException {
                 List<T> listOfPersistentObjects = new ArrayList<>();
                 cursor.moveToFirst();
 
                 while (!cursor.isAfterLast()) {
-                    T persistentObject = dao.parsePersistentObject(cursor);
+                    T persistentObject = parsePersistentObject(cursor);
                     listOfPersistentObjects.add(persistentObject);
                     cursor.moveToNext();
                 }
@@ -123,9 +124,7 @@ public final class DaoHelper implements IDaoHelper {
         });
     }
 
-
-    @Override
-    public boolean isInDb(String tableName, String column, String columnValue) {
+    private boolean isInDb(String tableName, String column, String columnValue) {
         String Query = "Select * from " + tableName + " where " + column + " = ?";
         return executeQuery(Query, new String[]{columnValue}, new ResultHandler<Boolean>() {
             @Override
@@ -141,4 +140,13 @@ public final class DaoHelper implements IDaoHelper {
     }
 
 
+    @Override
+    public final void insertOrUpdate(T persistentObject) {
+        insertOrUpdate(getDbName(), getContentValues(persistentObject), getDefaultPrimaryColumn(), getDefaultPrimaryValue(persistentObject));
+    }
+
+    @Override
+    public final boolean isInDb(T persistentObject) {
+        return isInDb(getDbName(), getDefaultPrimaryColumn(), getDefaultPrimaryValue(persistentObject));
+    }
 }

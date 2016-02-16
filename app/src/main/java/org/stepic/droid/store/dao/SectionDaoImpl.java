@@ -2,60 +2,16 @@ package org.stepic.droid.store.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import org.stepic.droid.model.Section;
 import org.stepic.droid.store.structure.DbStructureSections;
 import org.stepic.droid.util.DbParseHelper;
 
-import java.util.List;
+public class SectionDaoImpl extends DaoBase<Section> {
 
-import javax.inject.Inject;
-
-public class SectionDaoImpl implements IDao<Section> {
-
-    IDaoHelper mDaoHelper;
-
-    @Inject
-    public SectionDaoImpl(IDaoHelper daoHelper) {
-        mDaoHelper = daoHelper;
-    }
-
-    @Override
-    public void insertOrUpdate(Section section) {
-        ContentValues values = new ContentValues();
-
-        values.put(DbStructureSections.Column.SECTION_ID, section.getId());
-        values.put(DbStructureSections.Column.TITLE, section.getTitle());
-        values.put(DbStructureSections.Column.SLUG, section.getSlug());
-        values.put(DbStructureSections.Column.IS_ACTIVE, section.is_active());
-        values.put(DbStructureSections.Column.BEGIN_DATE, section.getBegin_date());
-        values.put(DbStructureSections.Column.SOFT_DEADLINE, section.getSoft_deadline());
-        values.put(DbStructureSections.Column.HARD_DEADLINE, section.getHard_deadline());
-        values.put(DbStructureSections.Column.COURSE, section.getCourse());
-        values.put(DbStructureSections.Column.POSITION, section.getPosition());
-        values.put(DbStructureSections.Column.UNITS, DbParseHelper.parseLongArrayToString(section.getUnits()));
-
-        mDaoHelper.insertOrUpdate(DbStructureSections.SECTIONS, values, DbStructureSections.Column.SECTION_ID, section.getId() + "");
-    }
-
-    @Override
-    public boolean isInDb(Section persistentObject) {
-        return mDaoHelper.isInDb(DbStructureSections.SECTIONS, DbStructureSections.Column.SECTION_ID, persistentObject.getId() + "");
-    }
-
-    @Override
-    public List<Section> getAll() {
-        return mDaoHelper.getAll(this, DbStructureSections.SECTIONS);
-    }
-
-    @Override
-    public List<Section> getAll(String whereColumnName, String whereValue) {
-        return mDaoHelper.getAll(this, DbStructureSections.SECTIONS, whereColumnName, whereValue);
-    }
-
-    @Override
-    public Section get(String whereColumnName, String whereValue) {
-        return mDaoHelper.get(this, DbStructureSections.SECTIONS, whereColumnName, whereValue);
+    public SectionDaoImpl(SQLiteOpenHelper openHelper) {
+        super(openHelper);
     }
 
     @Override
@@ -89,5 +45,39 @@ public class SectionDaoImpl implements IDao<Section> {
         section.setUnits(DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexUnits)));
 
         return section;
+    }
+
+    @Override
+    public String getDbName() {
+        return DbStructureSections.SECTIONS;
+    }
+
+    @Override
+    public ContentValues getContentValues(Section section) {
+        ContentValues values = new ContentValues();
+
+        values.put(DbStructureSections.Column.SECTION_ID, section.getId());
+        values.put(DbStructureSections.Column.TITLE, section.getTitle());
+        values.put(DbStructureSections.Column.SLUG, section.getSlug());
+        values.put(DbStructureSections.Column.IS_ACTIVE, section.is_active());
+        values.put(DbStructureSections.Column.BEGIN_DATE, section.getBegin_date());
+        values.put(DbStructureSections.Column.SOFT_DEADLINE, section.getSoft_deadline());
+        values.put(DbStructureSections.Column.HARD_DEADLINE, section.getHard_deadline());
+        values.put(DbStructureSections.Column.COURSE, section.getCourse());
+        values.put(DbStructureSections.Column.POSITION, section.getPosition());
+        values.put(DbStructureSections.Column.UNITS, DbParseHelper.parseLongArrayToString(section.getUnits()));
+
+        return values;
+    }
+
+
+    @Override
+    public String getDefaultPrimaryColumn() {
+        return DbStructureSections.Column.SECTION_ID;
+    }
+
+    @Override
+    public String getDefaultPrimaryValue(Section persistentObject) {
+        return persistentObject.getId() + "";
     }
 }

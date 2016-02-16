@@ -2,26 +2,31 @@ package org.stepic.droid.store.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.structure.DbStructureUnit;
 import org.stepic.droid.util.DbParseHelper;
 
-import java.util.List;
+public class UnitDaoImpl extends DaoBase<Unit> {
 
-import javax.inject.Inject;
 
-public class UnitDaoImpl implements IDao<Unit> {
-
-    IDaoHelper mDaoHelper;
-
-    @Inject
-    public UnitDaoImpl(IDaoHelper daoHelper) {
-        mDaoHelper = daoHelper;
+    public UnitDaoImpl(SQLiteOpenHelper openHelper) {
+        super(openHelper);
     }
 
     @Override
-    public void insertOrUpdate(Unit unit) {
+    public Unit parsePersistentObject(Cursor cursor) {
+        throw new RuntimeException(); // TODO: 16.02.16 make it
+    }
+
+    @Override
+    public String getDbName() {
+        return DbStructureUnit.UNITS;
+    }
+
+    @Override
+    public ContentValues getContentValues(Unit unit) {
         ContentValues values = new ContentValues();
         values.put(DbStructureUnit.Column.UNIT_ID, unit.getId());
         values.put(DbStructureUnit.Column.SECTION, unit.getSection());
@@ -42,32 +47,17 @@ public class UnitDaoImpl implements IDao<Unit> {
         values.put(DbStructureUnit.Column.IS_ACTIVE, unit.is_active());
         values.put(DbStructureUnit.Column.CREATE_DATE, unit.getCreate_date());
         values.put(DbStructureUnit.Column.UPDATE_DATE, unit.getUpdate_date());
-        mDaoHelper.insertOrUpdate(DbStructureUnit.UNITS, values, DbStructureUnit.Column.UNIT_ID, unit.getId() + "");
+        return values;
     }
 
     @Override
-    public boolean isInDb(Unit persistentObject) {
-        return mDaoHelper.isInDb(DbStructureUnit.UNITS, DbStructureUnit.Column.UNIT_ID, persistentObject.getId() + "");
+    public String getDefaultPrimaryColumn() {
+       return DbStructureUnit.Column.UNIT_ID;
     }
 
     @Override
-    public List<Unit> getAll() {
-        throw new RuntimeException();
-    }
-
-    @Override
-    public List<Unit> getAll(String whereColumnName, String whereValue) {
-        throw new RuntimeException();
-    }
-
-    @Override
-    public Unit get(String whereColumnName, String whereValue) {
-        throw new RuntimeException();
-    }
-
-    @Override
-    public Unit parsePersistentObject(Cursor cursor) {
-        throw new RuntimeException();
+    public String getDefaultPrimaryValue(Unit persistentObject) {
+        return persistentObject.getId() + "";
     }
 
 

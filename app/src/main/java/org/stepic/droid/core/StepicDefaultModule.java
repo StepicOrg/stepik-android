@@ -8,6 +8,7 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -20,8 +21,7 @@ import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.dao.IDao;
-import org.stepic.droid.store.dao.DaoHelper;
-import org.stepic.droid.store.dao.IDaoHelper;
+import org.stepic.droid.store.dao.ProgressDaoImpl;
 import org.stepic.droid.store.dao.SectionDaoImpl;
 import org.stepic.droid.store.dao.UnitDaoImpl;
 import org.stepic.droid.store.operations.DatabaseManager;
@@ -194,18 +194,17 @@ public class StepicDefaultModule {
     }
 
     @Provides
-    @Singleton
-    public IDaoHelper provideDaoHelper (SQLiteOpenHelper SQLiteOpenHelper){
-        return new DaoHelper(SQLiteOpenHelper);
+    public IDao<Section> provideSectionDao(SQLiteOpenHelper openHelper){
+        return new SectionDaoImpl(openHelper);
     }
 
     @Provides
-    public IDao<Section> provideSectionDao(IDaoHelper daoHelper){
-        return new SectionDaoImpl(daoHelper);
+    public IDao<Unit> provideUnitDao(SQLiteOpenHelper openHelper){
+        return new UnitDaoImpl(openHelper);
     }
 
     @Provides
-    public IDao<Unit> provideUnitDao(IDaoHelper daoHelper){
-        return new UnitDaoImpl(daoHelper);
+    public IDao<Progress> provideProgressDao(SQLiteOpenHelper openHelper) {
+        return new ProgressDaoImpl(openHelper);
     }
 }
