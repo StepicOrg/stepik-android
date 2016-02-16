@@ -1,6 +1,8 @@
 package org.stepic.droid.store.operations;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.stepic.droid.base.MainApplication;
@@ -44,4 +46,28 @@ public abstract class DbManagerBase implements IDatabaseManager {
     public void dropDatabase() {
         MainApplication.getAppContext().deleteDatabase(DBStructureBase.FILE_NAME);
     }
+
+    protected <T> T executeQuery(String sqlQuery, String[] selectionArgs, ResultHandler<T> handler) {
+        try {
+            open();
+            Cursor cursor = database.rawQuery(sqlQuery, selectionArgs);
+            T result = handler.handle(cursor);
+            cursor.close();
+            return result;
+        } finally {
+            close();
+        }
+
+    }
+
+    protected void executeUpdate(String table, ContentValues values, String whereClause, String[] whereArgs) {
+        try {
+            open();
+            database.update(table, values, whereClause, whereArgs);
+        } finally {
+            close();
+        }
+    }
+
+
 }
