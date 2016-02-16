@@ -712,18 +712,6 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
-    public void deleteUnit(Unit unit) {
-        try {
-            open();
-            long unitId = unit.getId();
-            database.delete(DbStructureUnit.UNITS,
-                    "\"" + DbStructureUnit.Column.UNIT_ID + "\"" + " = " + unitId,
-                    null);
-        } finally {
-            close();
-        }
-    }
-
     public void deleteStep(Step step) {
         long stepId = step.getId();
         deleteStepById(stepId);
@@ -739,41 +727,6 @@ public class DatabaseManager extends DbManagerBase {
             close();
         }
     }
-
-    public void deleteLesson(Lesson lesson) {
-        try {
-            open();
-            long lessonId = lesson.getId();
-            database.delete(DbStructureLesson.LESSONS,
-                    "\"" + DbStructureLesson.Column.LESSON_ID + "\"" + " = " + lessonId,
-                    null);
-        } finally {
-            close();
-        }
-    }
-
-
-    public List<String> getPathsForAllCachedVideo() {
-        try {
-            open();
-            List<String> cachedPaths = new ArrayList<>();
-
-            Cursor cursor = getCachedVideosCursor();
-            cursor.moveToFirst();
-
-            while (!cursor.isAfterLast()) {
-                CachedVideo cachedVideo = parseCachedVideo(cursor);
-                cachedPaths.add(cachedVideo.getUrl());
-                cursor.moveToNext();
-            }
-
-            cursor.close();
-            return cachedPaths;
-        } finally {
-            close();
-        }
-    }
-
 
     @Nullable
     public CachedVideo getCachedVideoById(long videoId) {
@@ -985,43 +938,6 @@ public class DatabaseManager extends DbManagerBase {
         return lesson;
     }
 
-    private Unit parseUnit(Cursor cursor) {
-        Unit unit = new Unit();
-
-        int columnIndexUnitId = cursor.getColumnIndex(DbStructureUnit.Column.UNIT_ID);
-        int columnIndexSection = cursor.getColumnIndex(DbStructureUnit.Column.SECTION);
-        int columnIndexLesson = cursor.getColumnIndex(DbStructureUnit.Column.LESSON);
-        int columnIndexAssignments = cursor.getColumnIndex(DbStructureUnit.Column.ASSIGNMENTS);
-        int columnIndexPosition = cursor.getColumnIndex(DbStructureUnit.Column.POSITION);
-        int columnIndexProgress = cursor.getColumnIndex(DbStructureUnit.Column.PROGRESS);
-        int columnIndexBeginDate = cursor.getColumnIndex(DbStructureUnit.Column.BEGIN_DATE);
-        int columnIndexSoftDeadline = cursor.getColumnIndex(DbStructureUnit.Column.SOFT_DEADLINE);
-        int columnIndexHardDeadline = cursor.getColumnIndex(DbStructureUnit.Column.HARD_DEADLINE);
-        int columnIndexIsActive = cursor.getColumnIndex(DbStructureUnit.Column.IS_ACTIVE);
-        int indexIsCached = cursor.getColumnIndex(DbStructureUnit.Column.IS_CACHED);
-        int indexIsLoading = cursor.getColumnIndex(DbStructureUnit.Column.IS_LOADING);
-
-
-        unit.setId(cursor.getLong(columnIndexUnitId));
-        unit.setSection(cursor.getLong(columnIndexSection));
-        unit.setLesson(cursor.getLong(columnIndexLesson));
-        unit.setProgress(cursor.getString(columnIndexProgress));
-        unit.setAssignments(DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexAssignments)));
-        unit.setBegin_date(cursor.getString(columnIndexBeginDate));
-        unit.setSoft_deadline(cursor.getString(columnIndexSoftDeadline));
-        unit.setHard_deadline(cursor.getString(columnIndexHardDeadline));
-        unit.setPosition(cursor.getInt(columnIndexPosition));
-        unit.setIs_active(cursor.getInt(columnIndexIsActive) > 0);
-        unit.setIs_cached(cursor.getInt(indexIsCached) > 0);
-        unit.setIs_loading(cursor.getInt(indexIsLoading) > 0);
-
-        boolean is_viewed = isProgressViewed(unit.getProgress());
-        unit.setIs_viewed_custom(is_viewed);
-
-        return unit;
-
-    }
-
     private DownloadEntity parseDownloadEntity(Cursor cursor) {
         DownloadEntity downloadEntity = new DownloadEntity();
 
@@ -1038,12 +954,6 @@ public class DatabaseManager extends DbManagerBase {
         downloadEntity.setQuality(cursor.getString(indexQuality));
 
         return downloadEntity;
-    }
-
-
-    private Cursor getUnitCursor() {
-        return database.query(DbStructureUnit.UNITS, DbStructureUnit.getUsedColumns(),
-                null, null, null, null, null);
     }
 
     private CachedVideo parseCachedVideo(Cursor cursor) {
@@ -1074,18 +984,6 @@ public class DatabaseManager extends DbManagerBase {
         return true;
     }
 
-    private boolean isVideoInDb(Video video) {
-        String Query = "Select * from " + DbStructureCachedVideo.CACHED_VIDEO + " where " + DbStructureCachedVideo.Column.VIDEO_ID + " = " + video.getId();
-        Cursor cursor = database.rawQuery(Query, null);
-        if (cursor.getCount() <= 0) {
-            cursor.close();
-            return false;
-        }
-        cursor.close();
-        return true;
-    }
-
-
     private boolean isVideoInDb(long videoId) {
         String Query = "Select * from " + DbStructureCachedVideo.CACHED_VIDEO + " where " + DbStructureCachedVideo.Column.VIDEO_ID + " = " + videoId;
         Cursor cursor = database.rawQuery(Query, null);
@@ -1107,18 +1005,6 @@ public class DatabaseManager extends DbManagerBase {
         cursor.close();
         return true;
     }
-
-    private boolean isUnitInDb(Unit unit) {
-        String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.UNIT_ID + " = " + unit.getId();
-        Cursor cursor = database.rawQuery(Query, null);
-        if (cursor.getCount() <= 0) {
-            cursor.close();
-            return false;
-        }
-        cursor.close();
-        return true;
-    }
-
 
     private Cursor getCachedVideosCursor() {
         return database.query(DbStructureCachedVideo.CACHED_VIDEO, DbStructureCachedVideo.getUsedColumns(),

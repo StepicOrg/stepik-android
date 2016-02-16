@@ -29,4 +29,6 @@ public interface IDao<T> {
     String getDefaultPrimaryValue(T persistentObject);
 
     void update(String whereColumn, String whereValue, ContentValues contentValues);
+
+    void delete(String whereColumn, String whereValue);
 }

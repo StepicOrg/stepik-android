@@ -64,6 +64,15 @@ public abstract class DaoBase<T> implements IDao<T> {
         }
     }
 
+    private void executeDelete(String table, String whereClause, String[] whereArgs) {
+        try {
+            open();
+            database.delete(table, whereClause, whereArgs);
+        } finally {
+            close();
+        }
+    }
+
     private void insertOrUpdate(String tableName, ContentValues cv, String primaryKeyColumn, String primaryValue) {
         if (isInDb(primaryKeyColumn, primaryValue)) {
             String whereClause = primaryKeyColumn + "=?";
@@ -109,6 +118,12 @@ public abstract class DaoBase<T> implements IDao<T> {
     @Override
     public final void update(String whereColumn, String whereValue, ContentValues contentValues) {
         executeUpdate(getDbName(), contentValues, whereColumn + "=?", new String[]{whereValue});
+    }
+
+    @Override
+    public void delete(String whereColumn, String whereValue) {
+        String whereClause = whereColumn + " =?";
+        executeDelete(getDbName(), whereClause, new String[]{whereValue});
     }
 
     protected List<T> getAllWithQuery(String query, String[] whereArgs) {
