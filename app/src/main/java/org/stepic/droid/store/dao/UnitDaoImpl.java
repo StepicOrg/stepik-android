@@ -1,15 +1,17 @@
 package org.stepic.droid.store.dao;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.structure.DbStructureUnit;
 import org.stepic.droid.util.DbParseHelper;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
-public class UnitDaoImpl implements Dao<Unit> {
-
+public class UnitDaoImpl implements IDao<Unit> {
 
     IDaoHelper mDaoHelper;
 
@@ -47,4 +49,26 @@ public class UnitDaoImpl implements Dao<Unit> {
     public boolean isInDb(Unit persistentObject) {
         return mDaoHelper.isInDb(DbStructureUnit.UNITS, DbStructureUnit.Column.UNIT_ID, persistentObject.getId() + "");
     }
+
+    @Override
+    public List<Unit> getAll() {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public List<Unit> getAll(String whereColumnName, String whereValue) {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public Unit get(String whereColumnName, String whereValue) {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public Unit parsePersistentObject(Cursor cursor) {
+        throw new RuntimeException();
+    }
+
+
 }

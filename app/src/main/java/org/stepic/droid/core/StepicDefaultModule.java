@@ -19,7 +19,7 @@ import org.stepic.droid.store.DownloadManagerImpl;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.StoreStateManager;
-import org.stepic.droid.store.dao.Dao;
+import org.stepic.droid.store.dao.IDao;
 import org.stepic.droid.store.dao.DaoHelper;
 import org.stepic.droid.store.dao.IDaoHelper;
 import org.stepic.droid.store.dao.SectionDaoImpl;
@@ -200,12 +200,12 @@ public class StepicDefaultModule {
     }
 
     @Provides
-    public Dao<Section> provideSectionDao(IDaoHelper daoHelper){
+    public IDao<Section> provideSectionDao(IDaoHelper daoHelper){
         return new SectionDaoImpl(daoHelper);
     }
 
     @Provides
-    public Dao<Unit> provideUnitDao(IDaoHelper daoHelper){
+    public IDao<Unit> provideUnitDao(IDaoHelper daoHelper){
         return new UnitDaoImpl(daoHelper);
     }
 }

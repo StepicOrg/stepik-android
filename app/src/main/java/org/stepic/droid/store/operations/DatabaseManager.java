@@ -19,7 +19,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.model.VideoUrl;
-import org.stepic.droid.store.dao.Dao;
+import org.stepic.droid.store.dao.IDao;
 import org.stepic.droid.store.structure.DBStructureCourses;
 import org.stepic.droid.store.structure.DbStructureAssignment;
 import org.stepic.droid.store.structure.DbStructureBlock;
@@ -49,7 +49,9 @@ import javax.inject.Singleton;
 public class DatabaseManager extends DbManagerBase {
 
     @Inject
-    Dao<Section> mSectionDao;
+    IDao<Section> mSectionDao;
+    @Inject
+    IDao<Unit> mUnitDao;
 
     public void addAssignment(Assignment assignment) {
         try {
@@ -109,8 +111,7 @@ public class DatabaseManager extends DbManagerBase {
 
             while (!cursor.isAfterLast()) {
                 Assignment assignment = parseAssignment(cursor);
-                if (assignment.getUnit() == unitId)
-                {
+                if (assignment.getUnit() == unitId) {
                     cursor.close();
                     return assignment;
                 }
@@ -240,24 +241,7 @@ public class DatabaseManager extends DbManagerBase {
 
     @Nullable
     public Section getSectionById(long sectionId) {
-        try {
-            open();
-
-            String Query = "Select * from " + DbStructureSections.SECTIONS + " where " + DbStructureSections.Column.SECTION_ID + " = " + sectionId;
-            Cursor cursor = database.rawQuery(Query, null);
-
-            cursor.moveToFirst();
-
-            if (!cursor.isAfterLast()) {
-                Section section = parseSection(cursor);
-                cursor.close();
-                return section;
-            }
-            cursor.close();
-            return null;
-        } finally {
-            close();
-        }
+        return mSectionDao.get(DbStructureSections.Column.SECTION_ID, sectionId + "");
     }
 
     @Nullable
@@ -397,13 +381,8 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public boolean existStepInCourse(@NotNull Step step, @NotNull Course course) {
-        try {
-            open();
-            Section section = getSectionOfStep(step);
-            return section != null && section.getCourse() == course.getCourseId();
-        } finally {
-            close();
-        }
+        Section section = mSectionDao.get(DbStructureSections.Column.SECTION_ID, step.getId() + " ");
+        return section != null && section.getCourse() == course.getCourseId();
     }
 
     public boolean existStepInSection(@NotNull Step step, @NotNull Section section) {
@@ -417,7 +396,6 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public boolean existStepInUnit(@NotNull Step step, @NotNull Unit unit) {
-
         try {
             open();
             Lesson lesson = getLessonOfStep(step);
@@ -734,26 +712,7 @@ public class DatabaseManager extends DbManagerBase {
         return unit;
     }
 
-    @Nullable
-    private Section getSectionOfStep(Step step) {
-        Unit unit = getUnitOfStep(step);
-        if (unit == null) return null;
-
-        String sectionQuery = "Select * from " + DbStructureSections.SECTIONS + " where " + DbStructureSections.Column.SECTION_ID + " = " + unit.getSection();
-        Cursor sectionCursor = database.rawQuery(sectionQuery, null);
-        if (sectionCursor.getCount() <= 0) {
-            sectionCursor.close();
-            return null;
-        }
-        sectionCursor.moveToFirst();
-        Section section = parseSection(sectionCursor);
-        sectionCursor.close();
-        return section;
-    }
-
-
     public List<Course> getAllCourses(DatabaseManager.Table type) {
-
         try {
             open();
             List<Course> courses = new ArrayList<>();
@@ -859,31 +818,7 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public void addSection(Section section) {
-        try {
-            open();
-            ContentValues values = new ContentValues();
-
-            values.put(DbStructureSections.Column.SECTION_ID, section.getId());
-            values.put(DbStructureSections.Column.TITLE, section.getTitle());
-            values.put(DbStructureSections.Column.SLUG, section.getSlug());
-            values.put(DbStructureSections.Column.IS_ACTIVE, section.is_active());
-            values.put(DbStructureSections.Column.BEGIN_DATE, section.getBegin_date());
-            values.put(DbStructureSections.Column.SOFT_DEADLINE, section.getSoft_deadline());
-            values.put(DbStructureSections.Column.HARD_DEADLINE, section.getHard_deadline());
-            values.put(DbStructureSections.Column.COURSE, section.getCourse());
-            values.put(DbStructureSections.Column.POSITION, section.getPosition());
-            values.put(DbStructureSections.Column.UNITS, DbParseHelper.parseLongArrayToString(section.getUnits()));
-//            values.put(DbStructureSections.Column.IS_CACHED, section.is_cached());
-//            values.put(DbStructureSections.Column.IS_LOADING, section.is_loading());
-
-            if (isSectionInDb(section)) {
-                database.update(DbStructureSections.SECTIONS, values, DbStructureSections.Column.SECTION_ID + "=" + section.getId(), null);
-            } else {
-                database.insert(DbStructureSections.SECTIONS, null, values);
-            }
-        } finally {
-            close();
-        }
+        mSectionDao.insertOrUpdate(section);
     }
 
     public void addStep(Step step) {
@@ -942,47 +877,11 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public List<Section> getAllSections() {
-        try {
-            open();
-            List<Section> sections = new ArrayList<>();
-
-            Cursor cursor = getSectionCursor();
-            cursor.moveToFirst();
-
-            while (!cursor.isAfterLast()) {
-                Section section = parseSection(cursor);
-                sections.add(section);
-                cursor.moveToNext();
-            }
-
-            cursor.close();
-            return sections;
-        } finally {
-            close();
-        }
+        return mSectionDao.getAll();
     }
 
     public List<Section> getAllSectionsOfCourse(Course course) {
-        try {
-            open();
-            List<Section> sections = new ArrayList<>();
-
-            String Query = "Select * from " + DbStructureSections.SECTIONS + " where " + DbStructureSections.Column.COURSE + " = " + course.getCourseId();
-            Cursor cursor = database.rawQuery(Query, null);
-
-            cursor.moveToFirst();
-
-            while (!cursor.isAfterLast()) {
-                Section section = parseSection(cursor);
-                sections.add(section);
-                cursor.moveToNext();
-            }
-
-            cursor.close();
-            return sections;
-        } finally {
-            close();
-        }
+        return mSectionDao.getAll(DbStructureSections.Column.COURSE, course.getCourseId() + "");
     }
 
     public List<Unit> getAllUnitsOfSection(long sectionId) {
@@ -1053,16 +952,8 @@ public class DatabaseManager extends DbManagerBase {
     }
 
 
-    private boolean isSectionInDb(Section section) {
-
-        String Query = "Select * from " + DbStructureSections.SECTIONS + " where " + DbStructureSections.Column.SECTION_ID + " = " + section.getId();
-        Cursor cursor = database.rawQuery(Query, null);
-        if (cursor.getCount() <= 0) {
-            cursor.close();
-            return false;
-        }
-        cursor.close();
-        return true;
+    public boolean isSectionInDb(Section section) {
+        return mSectionDao.isInDb(section);
     }
 
     private boolean isStepInDb(Step step) {
@@ -1320,45 +1211,7 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public void addUnit(Unit unit) {
-        try {
-            open();
-
-            ContentValues values = new ContentValues();
-
-            values.put(DbStructureUnit.Column.UNIT_ID, unit.getId());
-            values.put(DbStructureUnit.Column.SECTION, unit.getSection());
-            values.put(DbStructureUnit.Column.LESSON, unit.getLesson());
-            values.put(DbStructureUnit.Column.ASSIGNMENTS, DbParseHelper.parseLongArrayToString(unit.getAssignments()));
-            values.put(DbStructureUnit.Column.POSITION, unit.getPosition());
-            values.put(DbStructureUnit.Column.PROGRESS, unit.getProgress());
-            values.put(DbStructureUnit.Column.BEGIN_DATE, unit.getBegin_date());
-            values.put(DbStructureUnit.Column.END_DATE, unit.getEnd_date());
-            values.put(DbStructureUnit.Column.SOFT_DEADLINE, unit.getSoft_deadline());
-            values.put(DbStructureUnit.Column.HARD_DEADLINE, unit.getHard_deadline());
-            values.put(DbStructureUnit.Column.GRADING_POLICY, unit.getGrading_policy());
-            values.put(DbStructureUnit.Column.BEGIN_DATE_SOURCE, unit.getBegin_date_source());
-            values.put(DbStructureUnit.Column.END_DATE_SOURCE, unit.getEnd_date_source());
-            values.put(DbStructureUnit.Column.SOFT_DEADLINE_SOURCE, unit.getSoft_deadline_source());
-            values.put(DbStructureUnit.Column.HARD_DEADLINE_SOURCE, unit.getHard_deadline_source());
-            values.put(DbStructureUnit.Column.GRADING_POLICY_SOURCE, unit.getGrading_policy_source());
-            values.put(DbStructureUnit.Column.IS_ACTIVE, unit.is_active());
-            values.put(DbStructureUnit.Column.CREATE_DATE, unit.getCreate_date());
-            values.put(DbStructureUnit.Column.UPDATE_DATE, unit.getUpdate_date());
-//            values.put(DbStructureUnit.Column.IS_CACHED, unit.is_cached());
-//            values.put(DbStructureUnit.Column.IS_LOADING, unit.is_loading());
-
-
-            if (isUnitInDb(unit)) {
-                database.update(DbStructureUnit.UNITS, values, DbStructureUnit.Column.UNIT_ID + "=" + unit.getId(), null);
-            } else {
-                database.insert(DbStructureUnit.UNITS, null, values);
-            }
-
-
-        } finally {
-            close();
-        }
-
+        mUnitDao.insertOrUpdate(unit);
     }
 
     public void addDownloadEntity(DownloadEntity downloadEntity) {
@@ -1606,44 +1459,6 @@ public class DatabaseManager extends DbManagerBase {
         return database.query(DbStructureCachedVideo.CACHED_VIDEO, DbStructureCachedVideo.getUsedColumns(),
                 null, null, null, null, null);
     }
-
-    private Cursor getSectionCursor() {
-        return database.query(DbStructureSections.SECTIONS, DbStructureSections.getUsedColumns(),
-                null, null, null, null, null);
-    }
-
-    private Section parseSection(Cursor cursor) {
-        Section section = new Section();
-
-        int columnIndexId = cursor.getColumnIndex(DbStructureSections.Column.SECTION_ID);
-        int columnIndexTitle = cursor.getColumnIndex(DbStructureSections.Column.TITLE);
-        int columnIndexSlug = cursor.getColumnIndex(DbStructureSections.Column.SLUG);
-        int columnIndexIsActive = cursor.getColumnIndex(DbStructureSections.Column.IS_ACTIVE);
-        int columnIndexBeginDate = cursor.getColumnIndex(DbStructureSections.Column.BEGIN_DATE);
-        int columnIndexSoftDeadline = cursor.getColumnIndex(DbStructureSections.Column.SOFT_DEADLINE);
-        int columnIndexHardDeadline = cursor.getColumnIndex(DbStructureSections.Column.HARD_DEADLINE);
-        int columnIndexCourseId = cursor.getColumnIndex(DbStructureSections.Column.COURSE);
-        int columnIndexPosition = cursor.getColumnIndex(DbStructureSections.Column.POSITION);
-        int columnIndexUnits = cursor.getColumnIndex(DbStructureSections.Column.UNITS);
-        int indexIsCached = cursor.getColumnIndex(DbStructureSections.Column.IS_CACHED);
-        int indexIsLoading = cursor.getColumnIndex(DbStructureSections.Column.IS_LOADING);
-
-        section.setId(cursor.getLong(columnIndexId));
-        section.setTitle(cursor.getString(columnIndexTitle));
-        section.setSlug(cursor.getString(columnIndexSlug));
-        section.setIs_active(cursor.getInt(columnIndexIsActive) > 0);
-        section.setBegin_date(cursor.getString(columnIndexBeginDate));
-        section.setSoft_deadline(cursor.getString(columnIndexSoftDeadline));
-        section.setHard_deadline(cursor.getString(columnIndexHardDeadline));
-        section.setCourse(cursor.getLong(columnIndexCourseId));
-        section.setPosition(cursor.getInt(columnIndexPosition));
-        section.setIs_cached(cursor.getInt(indexIsCached) > 0);
-        section.setIs_loading(cursor.getInt(indexIsLoading) > 0);
-        section.setUnits(DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexUnits)));
-
-        return section;
-    }
-
 
     private Course parseCourse(Cursor cursor) {
         Course course = new Course();
@@ -2022,14 +1837,14 @@ public class DatabaseManager extends DbManagerBase {
         return false;
     }
 
-    private Progress parseProgress (Cursor cursor) {
+    private Progress parseProgress(Cursor cursor) {
         Progress progress = new Progress();
 
 
         int indexId = cursor.getColumnIndex(DbStructureProgress.Column.ID);
         int indexCost = cursor.getColumnIndex(DbStructureProgress.Column.COST);
         int indexScore = cursor.getColumnIndex(DbStructureProgress.Column.SCORE);
-        int indexIs_Passed = cursor.getColumnIndex(DbStructureProgress.Column.IS_PASSED );
+        int indexIs_Passed = cursor.getColumnIndex(DbStructureProgress.Column.IS_PASSED);
         int indexLastViewed = cursor.getColumnIndex(DbStructureProgress.Column.LAST_VIEWED);
         int indexSteps = cursor.getColumnIndex(DbStructureProgress.Column.N_STEPS);
         int indexN_steps_passed = cursor.getColumnIndex(DbStructureProgress.Column.N_STEPS_PASSED);
