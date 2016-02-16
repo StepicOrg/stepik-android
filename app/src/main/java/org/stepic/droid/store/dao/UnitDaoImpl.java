@@ -9,8 +9,6 @@ import org.stepic.droid.store.structure.DbStructureUnit;
 import org.stepic.droid.util.DbParseHelper;
 
 public class UnitDaoImpl extends DaoBase<Unit> {
-
-
     public UnitDaoImpl(SQLiteOpenHelper openHelper) {
         super(openHelper);
     }
@@ -52,7 +50,7 @@ public class UnitDaoImpl extends DaoBase<Unit> {
 
     @Override
     public String getDefaultPrimaryColumn() {
-       return DbStructureUnit.Column.UNIT_ID;
+        return DbStructureUnit.Column.UNIT_ID;
     }
 
     @Override
