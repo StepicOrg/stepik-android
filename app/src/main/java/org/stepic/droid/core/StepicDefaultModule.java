@@ -2,19 +2,24 @@ package org.stepic.droid.core;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.model.Section;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.CleanManager;
+import org.stepic.droid.store.DatabaseHelper;
 import org.stepic.droid.store.DownloadManagerImpl;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.StoreStateManager;
+import org.stepic.droid.store.dao.Dao;
+import org.stepic.droid.store.dao.SectionDaoImpl;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.ISearchResolver;
@@ -174,7 +179,18 @@ public class StepicDefaultModule {
 
     @Singleton
     @Provides
-    public ILoginManager provideLoginManager (IShell shell, Context context){
+    public ILoginManager provideLoginManager(IShell shell, Context context) {
         return new LoginManager(shell, context);
+    }
+
+    @Singleton
+    @Provides
+    public SQLiteOpenHelper provideSqlOpenHelper(Context context) {
+        return new DatabaseHelper(context);
+    }
+
+    @Provides
+    public Dao<Section> provideSectionDao(SQLiteOpenHelper helper){
+        return new SectionDaoImpl(helper);
     }
 }

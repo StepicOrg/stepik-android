@@ -6,6 +6,7 @@ import android.database.Cursor;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.Block;
 import org.stepic.droid.model.CachedVideo;
@@ -18,6 +19,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.model.VideoUrl;
+import org.stepic.droid.store.dao.Dao;
 import org.stepic.droid.store.structure.DBStructureCourses;
 import org.stepic.droid.store.structure.DbStructureAssignment;
 import org.stepic.droid.store.structure.DbStructureBlock;
@@ -39,11 +41,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 // TODO: 16.01.16 split to DAOs, make more generic
 @Singleton
 public class DatabaseManager extends DbManagerBase {
+
+    @Inject
+    Dao<Section> mSectionDao;
 
     public void addAssignment(Assignment assignment) {
         try {
@@ -387,6 +393,7 @@ public class DatabaseManager extends DbManagerBase {
 
     public DatabaseManager(Context context) {
         super(context);
+        MainApplication.component().inject(this);
     }
 
     public boolean existStepInCourse(@NotNull Step step, @NotNull Course course) {

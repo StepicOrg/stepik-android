@@ -1,15 +1,19 @@
 package org.stepic.droid.store.dao;
 
 import android.content.ContentValues;
-import android.content.Context;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import org.stepic.droid.model.Section;
 import org.stepic.droid.store.structure.DbStructureSections;
 import org.stepic.droid.util.DbParseHelper;
 
+import javax.inject.Inject;
+
 public class SectionDaoImpl extends DaoBase implements Dao<Section> {
-    public SectionDaoImpl(Context context) {
-        super(context);
+
+    @Inject
+    public SectionDaoImpl(SQLiteOpenHelper openHelper) {
+        super(openHelper);
     }
 
     @Override

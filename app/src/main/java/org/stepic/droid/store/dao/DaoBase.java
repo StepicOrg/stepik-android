@@ -1,24 +1,20 @@
 package org.stepic.droid.store.dao;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
-import org.stepic.droid.store.DatabaseHelper;
 import org.stepic.droid.store.operations.ResultHandler;
 import org.stepic.droid.util.RWLocks;
 
 public abstract class DaoBase {
     protected SQLiteDatabase database;
-    private DatabaseHelper dbHelper;
-    protected Context mContext;
+    private SQLiteOpenHelper dbHelper;
 
-
-    public DaoBase(Context context) {
-        mContext = context;
-        dbHelper = new DatabaseHelper(context);
+    public DaoBase(SQLiteOpenHelper openHelper) {
+        dbHelper = openHelper;
     }
 
     private void open() {
