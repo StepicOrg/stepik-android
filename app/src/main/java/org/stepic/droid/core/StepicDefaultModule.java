@@ -201,8 +201,8 @@ public class StepicDefaultModule {
     }
 
     @Provides
-    public IDao<Unit> provideUnitDao(SQLiteOpenHelper openHelper){
-        return new UnitDaoImpl(openHelper);
+    public IDao<Unit> provideUnitDao(SQLiteOpenHelper openHelper, IDao<Progress> progressDao){
+        return new UnitDaoImpl(openHelper, progressDao);
     }
 
     @Provides

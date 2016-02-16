@@ -48,6 +48,21 @@ import javax.inject.Singleton;
 @Singleton
 public class DatabaseManager extends DbManagerBase {
 
+    public enum Table {
+        enrolled(DBStructureCourses.ENROLLED_COURSES),
+        featured(DBStructureCourses.FEATURED_COURSES);
+
+        private String description;
+
+        Table(String description) {
+            this.description = description;
+        }
+
+        private String getStoreName() {
+            return description;
+        }
+    }
+
     @Inject
     IDao<Section> mSectionDao;
     @Inject
@@ -56,6 +71,11 @@ public class DatabaseManager extends DbManagerBase {
     IDao<Progress> mProgressDao;
     @Inject
     IDao<Assignment> mAssignmentDao;
+
+    public DatabaseManager(Context context) {
+        super(context);
+        MainApplication.component().inject(this);
+    }
 
     public void addAssignment(Assignment assignment) {
         mAssignmentDao.insertOrUpdate(assignment);
@@ -81,18 +101,6 @@ public class DatabaseManager extends DbManagerBase {
             close();
         }
 
-    }
-
-    @Nullable
-    public Assignment getAssignmentByStepIdInUnit(long stepId, long unitId) {
-        List<Assignment> assignmentList = mAssignmentDao.getAll(DbStructureAssignment.Column.STEP_ID, stepId + "");
-        for (Assignment assignmentItem : assignmentList){
-            if (assignmentItem.getUnit() == unitId)
-            {
-                return assignmentItem;
-            }
-        }
-        return null;
     }
 
     public Map<Long, Lesson> getMapFromStepIdToTheirLesson(long[] stepIds) {
@@ -146,21 +154,6 @@ public class DatabaseManager extends DbManagerBase {
 
         } finally {
             close();
-        }
-    }
-
-    public enum Table {
-        enrolled(DBStructureCourses.ENROLLED_COURSES),
-        featured(DBStructureCourses.FEATURED_COURSES);
-
-        private String description;
-
-        Table(String description) {
-            this.description = description;
-        }
-
-        private String getStoreName() {
-            return description;
         }
     }
 
@@ -240,54 +233,15 @@ public class DatabaseManager extends DbManagerBase {
         return mProgressDao.get(DbStructureProgress.Column.ID, progressId);
     }
 
-    @Nullable
-    public Assignment getAssignmentById(long assignmentId) {
-        return mAssignmentDao.get(DbStructureAssignment.ASSIGNMENTS, assignmentId + "");
-    }
-
     @Deprecated
     @Nullable
     public Unit getUnitByLessonId(long lessonId) {
-        try {
-            open();
-
-            String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.LESSON + " =?";
-            Cursor cursor = database.rawQuery(Query, new String[]{lessonId + ""});
-
-            cursor.moveToFirst();
-
-            if (!cursor.isAfterLast()) {
-                Unit unit = parseUnit(cursor);
-                cursor.close();
-                return unit;
-            }
-            cursor.close();
-            return null;
-        } finally {
-            close();
-        }
+        return mUnitDao.get(DbStructureUnit.Column.LESSON, lessonId + "");
     }
 
     @Nullable
     public Unit getUnitById(long unitId) {
-        try {
-            open();
-
-            String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.UNIT_ID + " =?";
-            Cursor cursor = database.rawQuery(Query, new String[]{unitId + ""});
-
-            cursor.moveToFirst();
-
-            if (!cursor.isAfterLast()) {
-                Unit unit = parseUnit(cursor);
-                cursor.close();
-                return unit;
-            }
-            cursor.close();
-            return null;
-        } finally {
-            close();
-        }
+        return mUnitDao.get(DbStructureUnit.Column.UNIT_ID, unitId + "");
     }
 
     public List<DownloadEntity> getAllDownloadEntities() {
@@ -305,143 +259,6 @@ public class DatabaseManager extends DbManagerBase {
             cursor.close();
             return downloadEntities;
 
-        } finally {
-            close();
-        }
-    }
-
-    public DatabaseManager(Context context) {
-        super(context);
-        MainApplication.component().inject(this);
-    }
-
-    public boolean existStepInCourse(@NotNull Step step, @NotNull Course course) {
-        Section section = mSectionDao.get(DbStructureSections.Column.SECTION_ID, step.getId() + " ");
-        return section != null && section.getCourse() == course.getCourseId();
-    }
-
-    public boolean existStepInSection(@NotNull Step step, @NotNull Section section) {
-        try {
-            open();
-            Unit unit = getUnitOfStep(step);
-            return unit != null && unit.getSection() == section.getId();
-        } finally {
-            close();
-        }
-    }
-
-    public boolean existStepInUnit(@NotNull Step step, @NotNull Unit unit) {
-        try {
-            open();
-            Lesson lesson = getLessonOfStep(step);
-            return lesson != null && lesson.getId() == unit.getLesson();
-        } finally {
-            close();
-        }
-    }
-
-    public boolean existStepIntLesson(@NotNull Step step, @NotNull Lesson lesson) {
-        try {
-            open();
-            return isStepInDb(step) && step.getLesson() == lesson.getId();
-
-        } finally {
-            close();
-        }
-    }
-
-    public boolean isCourseLoading(Course course, DatabaseManager.Table type) {
-        if (course == null) return false;//// FIXME: 18.11.15 investiagate why null
-        try {
-            open();
-            String Query = "Select * from " + type.getStoreName() + " where " + DBStructureCourses.Column.COURSE_ID + " = " + course.getCourseId();
-            Cursor cursor = database.rawQuery(Query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-            int indexIsLoading = cursor.getColumnIndex(DBStructureCourses.Column.IS_LOADING);
-            boolean isLoading = cursor.getInt(indexIsLoading) > 0;
-            cursor.close();
-            return isLoading;
-        } finally {
-            close();
-        }
-    }
-
-    public boolean isCourseCached(Course course, DatabaseManager.Table type) {
-        try {
-            open();
-            String Query = "Select * from " + type.getStoreName() + " where " + DBStructureCourses.Column.COURSE_ID + " = " + course.getCourseId();
-            Cursor cursor = database.rawQuery(Query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-            int indexIsCached = cursor.getColumnIndex(DBStructureCourses.Column.IS_CACHED);
-            boolean isCached = cursor.getInt(indexIsCached) > 0;
-            cursor.close();
-            return isCached;
-        } finally {
-            close();
-        }
-    }
-
-    public boolean isSectionLoading(Section section) {
-        try {
-            open();
-            String Query = "Select * from " + DbStructureSections.SECTIONS + " where " + DbStructureSections.Column.SECTION_ID + " = " + section.getId();
-            Cursor cursor = database.rawQuery(Query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-            int indexIsLoading = cursor.getColumnIndex(DbStructureSections.Column.IS_LOADING);
-            boolean isLoading = cursor.getInt(indexIsLoading) > 0;
-            cursor.close();
-            return isLoading;
-        } finally {
-            close();
-        }
-    }
-
-    public boolean isSectionCached(Section section) {
-        try {
-            open();
-            String Query = "Select * from " + DbStructureSections.SECTIONS + " where " + DbStructureSections.Column.SECTION_ID + " = " + section.getId();
-            Cursor cursor = database.rawQuery(Query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-            int indexIsCached = cursor.getColumnIndex(DbStructureSections.Column.IS_CACHED);
-            boolean isCached = cursor.getInt(indexIsCached) > 0;
-            cursor.close();
-            return isCached;
-        } finally {
-            close();
-        }
-    }
-
-
-    public boolean isUnitLoading(Unit unit) {
-        try {
-            open();
-            String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.UNIT_ID + " = " + unit.getId();
-            Cursor cursor = database.rawQuery(Query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-            int indexIsLoading = cursor.getColumnIndex(DbStructureUnit.Column.IS_LOADING);
-            boolean isLoading = cursor.getInt(indexIsLoading) > 0;
-            cursor.close();
-            return isLoading;
         } finally {
             close();
         }
@@ -467,26 +284,6 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
-
-    public boolean isLessonLoading(Lesson lesson) {
-        try {
-            open();
-            String Query = "Select * from " + DbStructureLesson.LESSONS + " where " + DbStructureLesson.Column.LESSON_ID + " = " + lesson.getId();
-            Cursor cursor = database.rawQuery(Query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-            int indexIsLoading = cursor.getColumnIndex(DbStructureLesson.Column.IS_LOADING);
-            boolean isLoading = cursor.getInt(indexIsLoading) > 0;
-            cursor.close();
-            return isLoading;
-        } finally {
-            close();
-        }
-    }
-
     public boolean isLessonCached(Lesson lesson) {
         try {
             open();
@@ -502,26 +299,6 @@ public class DatabaseManager extends DbManagerBase {
             boolean isCached = cursor.getInt(indexIsCached) > 0;
             cursor.close();
             return isCached;
-        } finally {
-            close();
-        }
-    }
-
-
-    public boolean isStepLoading(Step step) {
-        try {
-            open();
-            String Query = "Select * from " + DbStructureStep.STEPS + " where " + DbStructureStep.Column.STEP_ID + " = " + step.getId();
-            Cursor cursor = database.rawQuery(Query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-            int indexIsLoading = cursor.getColumnIndex(DbStructureStep.Column.IS_LOADING);
-            boolean isLoading = cursor.getInt(indexIsLoading) > 0;
-            cursor.close();
-            return isLoading;
         } finally {
             close();
         }
@@ -560,16 +337,10 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public void updateOnlyCachedLoadingUnit(Unit unit) {
-        try {
-            open();
-            ContentValues cv = new ContentValues();
-            cv.put(DbStructureUnit.Column.IS_LOADING, unit.is_loading());
-            cv.put(DbStructureUnit.Column.IS_CACHED, unit.is_cached());
-
-            database.update(DbStructureUnit.UNITS, cv, DbStructureUnit.Column.UNIT_ID + "=" + unit.getId(), null);
-        } finally {
-            close();
-        }
+        ContentValues cv = new ContentValues();
+        cv.put(DbStructureUnit.Column.IS_LOADING, unit.is_loading());
+        cv.put(DbStructureUnit.Column.IS_CACHED, unit.is_cached());
+        mUnitDao.update(DbStructureUnit.Column.UNIT_ID, unit.getId()+"", cv);
     }
 
     public void updateOnlyCachedLoadingLesson(Lesson lesson) {
@@ -628,23 +399,6 @@ public class DatabaseManager extends DbManagerBase {
         Lesson lesson = parseLesson(lessonCursor);
         lessonCursor.close();
         return lesson;
-    }
-
-    @Nullable
-    private Unit getUnitOfStep(Step step) {
-        Lesson lesson = getLessonOfStep(step);
-        if (lesson == null) return null;
-
-        String unitQuery = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.LESSON + " = " + lesson.getId();
-        Cursor unitCursor = database.rawQuery(unitQuery, null);
-        if (unitCursor.getCount() <= 0) {
-            unitCursor.close();
-            return null;
-        }
-        unitCursor.moveToFirst();
-        Unit unit = parseUnit(unitCursor);
-        unitCursor.close();
-        return unit;
     }
 
     public List<Course> getAllCourses(DatabaseManager.Table type) {
@@ -820,26 +574,7 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public List<Unit> getAllUnitsOfSection(long sectionId) {
-        try {
-            open();
-            List<Unit> units = new ArrayList<>();
-
-            String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.SECTION + " = " + sectionId;
-            Cursor cursor = database.rawQuery(Query, null);
-
-            cursor.moveToFirst();
-
-            while (!cursor.isAfterLast()) {
-                Unit unit = parseUnit(cursor);
-                units.add(unit);
-                cursor.moveToNext();
-            }
-
-            cursor.close();
-            return units;
-        } finally {
-            close();
-        }
+        return mUnitDao.getAll(DbStructureUnit.Column.SECTION, sectionId + "");
     }
 
     public List<Step> getStepsOfLesson(long lessonId) {
@@ -884,10 +619,6 @@ public class DatabaseManager extends DbManagerBase {
         } finally {
             close();
         }
-    }
-
-    public boolean isSectionInDb(Section section) {
-        return mSectionDao.isInDb(section);
     }
 
     private boolean isStepInDb(Step step) {
@@ -1627,13 +1358,13 @@ public class DatabaseManager extends DbManagerBase {
 
 
     public void markProgressAsPassed(long assignmentId) {
-        Assignment assignment = mAssignmentDao.get(DbStructureAssignment.Column.ASSIGNMENT_ID , assignmentId+"");
+        Assignment assignment = mAssignmentDao.get(DbStructureAssignment.Column.ASSIGNMENT_ID, assignmentId + "");
         String progressId = assignment.getProgress();
-        boolean isProgressInDb = mProgressDao.isInDb(DbStructureProgress.Column.ID,  progressId);
-        if (isProgressInDb){
+        boolean isProgressInDb = mProgressDao.isInDb(DbStructureProgress.Column.ID, progressId);
+        if (isProgressInDb) {
             ContentValues values = new ContentValues();
             values.put(DbStructureProgress.Column.IS_PASSED, true);
-            mProgressDao.update(DbStructureProgress.Column.ID, progressId,values );
+            mProgressDao.update(DbStructureProgress.Column.ID, progressId, values);
         }
     }
 
@@ -1649,10 +1380,6 @@ public class DatabaseManager extends DbManagerBase {
 
     public void addProgress(Progress progress) {
         mProgressDao.insertOrUpdate(progress);
-    }
-
-    private boolean isAssignmentInDb(long assignmentId) {
-        return mAssignmentDao.isInDb(DbStructureAssignment.Column.ASSIGNMENT_ID, assignmentId+"");
     }
 
     private boolean isViewStateInDb(long assignmentId) {

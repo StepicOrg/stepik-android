@@ -4,18 +4,56 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.jetbrains.annotations.Nullable;
+import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.store.structure.DbStructureProgress;
 import org.stepic.droid.store.structure.DbStructureUnit;
 import org.stepic.droid.util.DbParseHelper;
 
+import java.util.List;
+
 public class UnitDaoImpl extends DaoBase<Unit> {
-    public UnitDaoImpl(SQLiteOpenHelper openHelper) {
+
+    IDao<Progress> mProgressDao;
+
+    public UnitDaoImpl(SQLiteOpenHelper openHelper, IDao<Progress> progressDao) {
         super(openHelper);
+        mProgressDao = progressDao;
     }
 
     @Override
     public Unit parsePersistentObject(Cursor cursor) {
-        throw new RuntimeException(); // TODO: 16.02.16 make it
+        Unit unit = new Unit();
+
+        int columnIndexUnitId = cursor.getColumnIndex(DbStructureUnit.Column.UNIT_ID);
+        int columnIndexSection = cursor.getColumnIndex(DbStructureUnit.Column.SECTION);
+        int columnIndexLesson = cursor.getColumnIndex(DbStructureUnit.Column.LESSON);
+        int columnIndexAssignments = cursor.getColumnIndex(DbStructureUnit.Column.ASSIGNMENTS);
+        int columnIndexPosition = cursor.getColumnIndex(DbStructureUnit.Column.POSITION);
+        int columnIndexProgress = cursor.getColumnIndex(DbStructureUnit.Column.PROGRESS);
+        int columnIndexBeginDate = cursor.getColumnIndex(DbStructureUnit.Column.BEGIN_DATE);
+        int columnIndexSoftDeadline = cursor.getColumnIndex(DbStructureUnit.Column.SOFT_DEADLINE);
+        int columnIndexHardDeadline = cursor.getColumnIndex(DbStructureUnit.Column.HARD_DEADLINE);
+        int columnIndexIsActive = cursor.getColumnIndex(DbStructureUnit.Column.IS_ACTIVE);
+        int indexIsCached = cursor.getColumnIndex(DbStructureUnit.Column.IS_CACHED);
+        int indexIsLoading = cursor.getColumnIndex(DbStructureUnit.Column.IS_LOADING);
+
+
+        unit.setId(cursor.getLong(columnIndexUnitId));
+        unit.setSection(cursor.getLong(columnIndexSection));
+        unit.setLesson(cursor.getLong(columnIndexLesson));
+        unit.setProgress(cursor.getString(columnIndexProgress));
+        unit.setAssignments(DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexAssignments)));
+        unit.setBegin_date(cursor.getString(columnIndexBeginDate));
+        unit.setSoft_deadline(cursor.getString(columnIndexSoftDeadline));
+        unit.setHard_deadline(cursor.getString(columnIndexHardDeadline));
+        unit.setPosition(cursor.getInt(columnIndexPosition));
+        unit.setIs_active(cursor.getInt(columnIndexIsActive) > 0);
+        unit.setIs_cached(cursor.getInt(indexIsCached) > 0);
+        unit.setIs_loading(cursor.getInt(indexIsLoading) > 0);
+
+        return unit;
     }
 
     @Override
@@ -58,5 +96,34 @@ public class UnitDaoImpl extends DaoBase<Unit> {
         return persistentObject.getId() + "";
     }
 
+    //For inner objects:
 
+    @Nullable
+    @Override
+    public Unit get(String whereColumn, String whereValue) {
+        Unit unit = super.get(whereColumn, whereValue);
+        return determinePassed(unit);
+    }
+
+    @Override
+    protected List<Unit> getAllWithQuery(String query, String[] whereArgs) {
+        List<Unit> unitList = super.getAllWithQuery(query, whereArgs);
+        for (Unit unitItem : unitList) {
+            determinePassed(unitItem);
+        }
+        return unitList;
+    }
+
+    private Unit determinePassed(Unit unit) {
+        boolean isPassed = false;
+        if (unit != null) {
+            String progressId = unit.getProgress();
+            Progress progress = mProgressDao.get(DbStructureProgress.Column.ID, progressId);
+            if (progress != null)
+                isPassed = progress.is_passed();
+            unit.setIs_viewed_custom(isPassed);
+        }
+
+        return unit;
+    }
 }

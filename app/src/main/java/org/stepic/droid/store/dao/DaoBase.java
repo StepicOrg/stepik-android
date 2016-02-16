@@ -76,14 +76,14 @@ public abstract class DaoBase<T> implements IDao<T> {
 
     @NotNull
     @Override
-    public List<T> getAll() {
+    public final List<T> getAll() {
         String query = "Select * from " + getDbName();
         return getAllWithQuery(query, null);
     }
 
     @Override
     @NotNull
-    public List<T> getAll(String whereColumn, String whereValue) {
+    public final List<T> getAll(String whereColumn, String whereValue) {
         String query = "Select * from " + getDbName() + " where " + whereColumn + " = ?";
         return getAllWithQuery(query, new String[]{whereValue});
     }
@@ -107,11 +107,11 @@ public abstract class DaoBase<T> implements IDao<T> {
     }
 
     @Override
-    public void update(String whereColumn, String whereValue, ContentValues contentValues) {
+    public final void update(String whereColumn, String whereValue, ContentValues contentValues) {
         executeUpdate(getDbName(), contentValues, whereColumn + "=?", new String[]{whereValue});
     }
 
-    private List<T> getAllWithQuery(String query, String[] whereArgs) {
+    protected List<T> getAllWithQuery(String query, String[] whereArgs) {
         return executeQuery(query, whereArgs, new ResultHandler<List<T>>() {
             @Override
             public List<T> handle(Cursor cursor) throws SQLException {
@@ -130,7 +130,7 @@ public abstract class DaoBase<T> implements IDao<T> {
     }
 
     @Override
-    public boolean isInDb(String column, String columnValue) {
+    public final boolean isInDb(String column, String columnValue) {
         String Query = "Select * from " + getDbName() + " where " + column + " = ?";
         return executeQuery(Query, new String[]{columnValue}, new ResultHandler<Boolean>() {
             @Override
