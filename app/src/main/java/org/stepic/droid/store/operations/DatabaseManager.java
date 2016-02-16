@@ -71,6 +71,8 @@ public class DatabaseManager extends DbManagerBase {
     IDao<Progress> mProgressDao;
     @Inject
     IDao<Assignment> mAssignmentDao;
+    @Inject
+    IDao<Lesson> mLessonDao;
 
     public DatabaseManager(Context context) {
         super(context);
@@ -92,16 +94,17 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public Map<Long, Lesson> getMapFromStepIdToTheirLesson(long[] stepIds) {
+        HashMap<Long, Lesson> result = new HashMap<>();
+        Set<Long> lessonSet = new HashSet<>();
+        List<Step> steps = new ArrayList<>();
         try {
             open();
-            HashMap<Long, Lesson> result = new HashMap<>();
-
 
             String stepIdsCommaSeparated = DbParseHelper.parseLongArrayToString(stepIds, ",");
             String Query = "Select * from " + DbStructureStep.STEPS + " where " + DbStructureStep.Column.STEP_ID + " IN (" + stepIdsCommaSeparated + ")";
             Cursor cursor = database.rawQuery(Query, null);
             cursor.moveToFirst();
-            List<Step> steps = new ArrayList<>();
+
             while (!cursor.isAfterLast()) {
                 Step step = parseStep(cursor);
                 steps.add(step);
@@ -109,40 +112,27 @@ public class DatabaseManager extends DbManagerBase {
             }
             cursor.close();
 
-            Set<Long> lessonSet = new HashSet<>(steps.size());
             for (Step step : steps) {
                 lessonSet.add(step.getLesson());
             }
 
-            Long[] lessonIds = lessonSet.toArray(new Long[0]);
-            String lessonIdsCommaSeparated = DbParseHelper.parseLongArrayToString(lessonIds, ",");
-            Query = "Select * from " + DbStructureLesson.LESSONS + " where " + DbStructureLesson.Column.LESSON_ID + " IN (" + lessonIdsCommaSeparated + ")";
-            cursor = database.rawQuery(Query, null);
-            cursor.moveToFirst();
-            List<Lesson> lessonArrayList = new ArrayList<>();
-            while (!cursor.isAfterLast()) {
-                Lesson lesson = parseLesson(cursor);
-                lessonArrayList.add(lesson);
-                cursor.moveToNext();
-            }
-            cursor.close();
-
-            for (Step stepItem : steps) {
-                for (Lesson lesson : lessonArrayList) {
-                    if (lesson.getId() == stepItem.getLesson()) {
-                        result.put(stepItem.getId(), lesson);
-                        break;
-                    }
-                }
-            }
-
-
-            return result;
-
-
         } finally {
             close();
         }
+        Long[] lessonIds = lessonSet.toArray(new Long[0]);
+        String lessonIdsCommaSeparated = DbParseHelper.parseLongArrayToString(lessonIds, ",");
+        List<Lesson> lessonArrayList = mLessonDao.getAllInRange( DbStructureLesson.Column.LESSON_ID, lessonIdsCommaSeparated);
+        for (Step stepItem : steps) {
+            for (Lesson lesson : lessonArrayList) {
+                if (lesson.getId() == stepItem.getLesson()) {
+                    result.put(stepItem.getId(), lesson);
+                    break;
+                }
+            }
+        }
+
+
+        return result;
     }
 
     @Nullable
@@ -169,24 +159,7 @@ public class DatabaseManager extends DbManagerBase {
 
     @Nullable
     public Lesson getLessonById(long lessonId) {
-        try {
-            open();
-
-            String Query = "Select * from " + DbStructureLesson.LESSONS + " where " + DbStructureLesson.Column.LESSON_ID + " = " + lessonId;
-            Cursor cursor = database.rawQuery(Query, null);
-
-            cursor.moveToFirst();
-
-            if (!cursor.isAfterLast()) {
-                Lesson lesson = parseLesson(cursor);
-                cursor.close();
-                return lesson;
-            }
-            cursor.close();
-            return null;
-        } finally {
-            close();
-        }
+        return mLessonDao.get(DbStructureLesson.LESSONS, lessonId+"");
     }
 
     @Nullable
@@ -332,29 +305,17 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public void updateOnlyCachedLoadingLesson(Lesson lesson) {
-        try {
-            open();
-            ContentValues cv = new ContentValues();
-            cv.put(DbStructureLesson.Column.IS_LOADING, lesson.is_loading());
-            cv.put(DbStructureLesson.Column.IS_CACHED, lesson.is_cached());
-
-            database.update(DbStructureLesson.LESSONS, cv, DbStructureLesson.Column.LESSON_ID + "=" + lesson.getId(), null);
-        } finally {
-            close();
-        }
+        ContentValues cv = new ContentValues();
+        cv.put(DbStructureLesson.Column.IS_LOADING, lesson.is_loading());
+        cv.put(DbStructureLesson.Column.IS_CACHED, lesson.is_cached());
+        mUnitDao.update(DbStructureLesson.Column.LESSON_ID, lesson.getId() + "", cv);
     }
 
     public void updateOnlyCachedLoadingSection(Section section) {
-        try {
-            open();
-            ContentValues cv = new ContentValues();
-            cv.put(DbStructureSections.Column.IS_LOADING, section.is_loading());
-            cv.put(DbStructureSections.Column.IS_CACHED, section.is_cached());
-
-            database.update(DbStructureSections.SECTIONS, cv, DbStructureSections.Column.SECTION_ID + "=" + section.getId(), null);
-        } finally {
-            close();
-        }
+        ContentValues cv = new ContentValues();
+        cv.put(DbStructureSections.Column.IS_LOADING, section.is_loading());
+        cv.put(DbStructureSections.Column.IS_CACHED, section.is_cached());
+        mSectionDao.update(DbStructureSections.Column.SECTION_ID, section.getId() + "", cv);
     }
 
     @Deprecated
@@ -369,24 +330,6 @@ public class DatabaseManager extends DbManagerBase {
         } finally {
             close();
         }
-    }
-
-
-    @Nullable
-    private Lesson getLessonOfStep(Step step) {
-        if (!isStepInDb(step)) {
-            return null;
-        }
-        String lessonQuery = "Select * from " + DbStructureLesson.LESSONS + " where " + DbStructureLesson.Column.LESSON_ID + " = " + step.getLesson();
-        Cursor lessonCursor = database.rawQuery(lessonQuery, null);
-        if (lessonCursor.getCount() <= 0) {
-            lessonCursor.close();
-            return null;
-        }
-        lessonCursor.moveToFirst();
-        Lesson lesson = parseLesson(lessonCursor);
-        lessonCursor.close();
-        return lesson;
     }
 
     public List<Course> getAllCourses(DatabaseManager.Table type) {
@@ -540,23 +483,6 @@ public class DatabaseManager extends DbManagerBase {
         database.insert(DbStructureBlock.BLOCKS, null, values);
     }
 
-    public void deleteSection(Section section) {
-        try {
-            open();
-            long sectionId = section.getId();
-            database.delete(DbStructureSections.SECTIONS,
-                    DbStructureSections.Column.SECTION_ID + " = " + sectionId,
-                    null);
-
-        } finally {
-            close();
-        }
-    }
-
-    public List<Section> getAllSections() {
-        return mSectionDao.getAll();
-    }
-
     public List<Section> getAllSectionsOfCourse(Course course) {
         return mSectionDao.getAll(DbStructureSections.Column.COURSE, course.getCourseId() + "");
     }
@@ -588,25 +514,9 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
+    @Nullable
     public Lesson getLessonOfUnit(Unit unit) {
-        try {
-            open();
-
-            String Query = "Select * from " + DbStructureLesson.LESSONS + " where " + DbStructureLesson.Column.LESSON_ID + " = " + unit.getLesson();
-            Cursor cursor = database.rawQuery(Query, null);
-
-            cursor.moveToFirst();
-
-            Lesson lesson = null;
-            if (!cursor.isAfterLast()) {
-                lesson = parseLesson(cursor);
-            }
-
-            cursor.close();
-            return lesson;
-        } finally {
-            close();
-        }
+        return mLessonDao.get(DbStructureLesson.Column.LESSON_ID, unit.getLesson()+"");
     }
 
     private boolean isStepInDb(Step step) {
@@ -840,90 +750,7 @@ public class DatabaseManager extends DbManagerBase {
 
 
     public void addLesson(Lesson lesson) {
-        try {
-            open();
-
-            ContentValues values = new ContentValues();
-
-            values.put(DbStructureLesson.Column.LESSON_ID, lesson.getId());
-            values.put(DbStructureLesson.Column.STEPS, DbParseHelper.parseLongArrayToString(lesson.getSteps()));
-            values.put(DbStructureLesson.Column.IS_FEATURED, lesson.is_featured());
-            values.put(DbStructureLesson.Column.IS_PRIME, lesson.is_prime());
-            values.put(DbStructureLesson.Column.PROGRESS, lesson.getProgress());
-            values.put(DbStructureLesson.Column.OWNER, lesson.getOwner());
-            values.put(DbStructureLesson.Column.SUBSCRIPTIONS, DbParseHelper.parseStringArrayToString(lesson.getSubscriptions()));
-            values.put(DbStructureLesson.Column.VIEWED_BY, lesson.getViewed_by());
-            values.put(DbStructureLesson.Column.PASSED_BY, lesson.getPassed_by());
-            values.put(DbStructureLesson.Column.DEPENDENCIES, DbParseHelper.parseStringArrayToString(lesson.getDependencies()));
-            values.put(DbStructureLesson.Column.IS_PUBLIC, lesson.is_public());
-            values.put(DbStructureLesson.Column.TITLE, lesson.getTitle());
-            values.put(DbStructureLesson.Column.SLUG, lesson.getSlug());
-            values.put(DbStructureLesson.Column.CREATE_DATE, lesson.getCreate_date());
-            values.put(DbStructureLesson.Column.LEARNERS_GROUP, lesson.getLearners_group());
-            values.put(DbStructureLesson.Column.TEACHER_GROUP, lesson.getTeacher_group());
-//            values.put(DbStructureLesson.Column.IS_CACHED, lesson.is_cached());
-//            values.put(DbStructureLesson.Column.IS_LOADING, lesson.is_loading());
-            values.put(DbStructureLesson.Column.COVER_URL, lesson.getCover_url());
-
-            if (isLessonInDb(lesson)) {
-                database.update(DbStructureLesson.LESSONS, values, DbStructureLesson.Column.LESSON_ID + "=" + lesson.getId(), null);
-            } else {
-                database.insert(DbStructureLesson.LESSONS, null, values);
-            }
-        } finally {
-            close();
-        }
-    }
-
-
-    private Cursor getLessonCursor() {
-        return database.query(DbStructureLesson.LESSONS, DbStructureLesson.getUsedColumns(),
-                null, null, null, null, null);
-    }
-
-    private Lesson parseLesson(Cursor cursor) {
-        Lesson lesson = new Lesson();
-        int columnIndexLessonId = cursor.getColumnIndex(DbStructureLesson.Column.LESSON_ID);
-        int columnIndexSteps = cursor.getColumnIndex(DbStructureLesson.Column.STEPS);
-        int columnIndexIsFeatured = cursor.getColumnIndex(DbStructureLesson.Column.IS_FEATURED);
-        int columnIndexIsPrime = cursor.getColumnIndex(DbStructureLesson.Column.IS_PRIME);
-        int columnIndexProgress = cursor.getColumnIndex(DbStructureLesson.Column.PROGRESS);
-        int columnIndexOwner = cursor.getColumnIndex(DbStructureLesson.Column.OWNER);
-        int columnIndexSubscriptions = cursor.getColumnIndex(DbStructureLesson.Column.SUBSCRIPTIONS);
-        int columnIndexViewedBy = cursor.getColumnIndex(DbStructureLesson.Column.VIEWED_BY);
-        int columnIndexPassedBy = cursor.getColumnIndex(DbStructureLesson.Column.PASSED_BY);
-        int columnIndexDependencies = cursor.getColumnIndex(DbStructureLesson.Column.DEPENDENCIES);
-        int columnIndexIsPublic = cursor.getColumnIndex(DbStructureLesson.Column.IS_PUBLIC);
-        int columnIndexTitle = cursor.getColumnIndex(DbStructureLesson.Column.TITLE);
-        int columnIndexSlug = cursor.getColumnIndex(DbStructureLesson.Column.SLUG);
-        int columnIndexCreateDate = cursor.getColumnIndex(DbStructureLesson.Column.CREATE_DATE);
-        int columnIndexLearnersGroup = cursor.getColumnIndex(DbStructureLesson.Column.LEARNERS_GROUP);
-        int columnIndexTeacherGroup = cursor.getColumnIndex(DbStructureLesson.Column.TEACHER_GROUP);
-        int indexIsCached = cursor.getColumnIndex(DbStructureLesson.Column.IS_CACHED);
-        int indexIsLoading = cursor.getColumnIndex(DbStructureLesson.Column.IS_LOADING);
-        int indexCoverURL = cursor.getColumnIndex(DbStructureLesson.Column.COVER_URL);
-
-        lesson.setId(cursor.getLong(columnIndexLessonId));
-        lesson.setSteps(DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexSteps)));
-        lesson.setIs_featured(cursor.getInt(columnIndexIsFeatured) > 0);
-        lesson.setIs_prime(cursor.getInt(columnIndexIsPrime) > 0);
-        lesson.setProgress(cursor.getString(columnIndexProgress));
-        lesson.setOwner(cursor.getInt(columnIndexOwner));
-        lesson.setSubscriptions(DbParseHelper.parseStringToStringArray(cursor.getString(columnIndexSubscriptions)));
-        lesson.setViewed_by(cursor.getInt(columnIndexViewedBy));
-        lesson.setPassed_by(cursor.getInt(columnIndexPassedBy));
-        lesson.setDependencies(DbParseHelper.parseStringToStringArray(cursor.getString(columnIndexDependencies)));
-        lesson.setIs_public(cursor.getInt(columnIndexIsPublic) > 0);
-        lesson.setTitle(cursor.getString(columnIndexTitle));
-        lesson.setSlug(cursor.getString(columnIndexSlug));
-        lesson.setCreate_date(cursor.getString(columnIndexCreateDate));
-        lesson.setLearners_group(cursor.getString(columnIndexLearnersGroup));
-        lesson.setTeacher_group(cursor.getString(columnIndexTeacherGroup));
-        lesson.setIs_cached(cursor.getInt(indexIsCached) > 0);
-        lesson.setIs_loading(cursor.getInt(indexIsLoading) > 0);
-        lesson.setCover_url(cursor.getString(indexCoverURL));
-
-        return lesson;
+        mLessonDao.insertOrUpdate(lesson);
     }
 
     private DownloadEntity parseDownloadEntity(Cursor cursor) {
@@ -974,17 +801,6 @@ public class DatabaseManager extends DbManagerBase {
 
     private boolean isVideoInDb(long videoId) {
         String Query = "Select * from " + DbStructureCachedVideo.CACHED_VIDEO + " where " + DbStructureCachedVideo.Column.VIDEO_ID + " = " + videoId;
-        Cursor cursor = database.rawQuery(Query, null);
-        if (cursor.getCount() <= 0) {
-            cursor.close();
-            return false;
-        }
-        cursor.close();
-        return true;
-    }
-
-    private boolean isLessonInDb(Lesson lesson) {
-        String Query = "Select * from " + DbStructureLesson.LESSONS + " where " + DbStructureLesson.Column.LESSON_ID + " = " + lesson.getId();
         Cursor cursor = database.rawQuery(Query, null);
         if (cursor.getCount() <= 0) {
             cursor.close();

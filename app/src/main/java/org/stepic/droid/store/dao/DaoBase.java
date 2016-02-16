@@ -126,6 +126,12 @@ public abstract class DaoBase<T> implements IDao<T> {
         executeDelete(getDbName(), whereClause, new String[]{whereValue});
     }
 
+    @Override
+    public final List<T> getAllInRange(String whereColumn, String commaSeparatedIds) {
+        String query = "Select * from " + getDbName() + " where " + whereColumn + " IN (" + commaSeparatedIds + ")";
+        return getAllWithQuery(query, null);
+    }
+
     protected List<T> getAllWithQuery(String query, String[] whereArgs) {
         return executeQuery(query, whereArgs, new ResultHandler<List<T>>() {
             @Override

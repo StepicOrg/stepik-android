@@ -31,4 +31,6 @@ public interface IDao<T> {
     void update(String whereColumn, String whereValue, ContentValues contentValues);
 
     void delete(String whereColumn, String whereValue);
+
+    List<T>  getAllInRange(String  whereColumn, String commaSeparatedIds);
 }
