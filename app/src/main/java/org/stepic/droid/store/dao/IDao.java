@@ -10,6 +10,8 @@ public interface IDao<T> {
 
     boolean isInDb(T persistentObject);
 
+    boolean isInDb(String whereColumn, String value);
+
     List<T> getAll();
 
     List<T> getAll(String whereColumnName, String whereValue);
@@ -25,4 +27,6 @@ public interface IDao<T> {
     String getDefaultPrimaryColumn();
 
     String getDefaultPrimaryValue(T persistentObject);
+
+    void update(String whereColumn, String whereValue, ContentValues contentValues);
 }

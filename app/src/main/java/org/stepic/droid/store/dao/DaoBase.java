@@ -65,7 +65,7 @@ public abstract class DaoBase<T> implements IDao<T> {
     }
 
     private void insertOrUpdate(String tableName, ContentValues cv, String primaryKeyColumn, String primaryValue) {
-        if (isInDb(tableName, primaryKeyColumn, primaryValue)) {
+        if (isInDb(primaryKeyColumn, primaryValue)) {
             String whereClause = primaryKeyColumn + "=?";
             String[] whereArgs = new String[]{primaryValue};
             executeUpdate(tableName, cv, whereClause, whereArgs);
@@ -106,6 +106,11 @@ public abstract class DaoBase<T> implements IDao<T> {
 
     }
 
+    @Override
+    public void update(String whereColumn, String whereValue, ContentValues contentValues) {
+        executeUpdate(getDbName(), contentValues, whereColumn + "=?", new String[]{whereValue});
+    }
+
     private List<T> getAllWithQuery(String query, String[] whereArgs) {
         return executeQuery(query, whereArgs, new ResultHandler<List<T>>() {
             @Override
@@ -124,8 +129,9 @@ public abstract class DaoBase<T> implements IDao<T> {
         });
     }
 
-    private boolean isInDb(String tableName, String column, String columnValue) {
-        String Query = "Select * from " + tableName + " where " + column + " = ?";
+    @Override
+    public boolean isInDb(String column, String columnValue) {
+        String Query = "Select * from " + getDbName() + " where " + column + " = ?";
         return executeQuery(Query, new String[]{columnValue}, new ResultHandler<Boolean>() {
             @Override
             public Boolean handle(Cursor cursor) throws SQLException {
@@ -147,6 +153,6 @@ public abstract class DaoBase<T> implements IDao<T> {
 
     @Override
     public final boolean isInDb(T persistentObject) {
-        return isInDb(getDbName(), getDefaultPrimaryColumn(), getDefaultPrimaryValue(persistentObject));
+        return isInDb(getDefaultPrimaryColumn(), getDefaultPrimaryValue(persistentObject));
     }
 }
