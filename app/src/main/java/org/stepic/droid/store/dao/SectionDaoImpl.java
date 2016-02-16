@@ -1,7 +1,6 @@
 package org.stepic.droid.store.dao;
 
 import android.content.ContentValues;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import org.stepic.droid.model.Section;
 import org.stepic.droid.store.structure.DbStructureSections;
@@ -9,11 +8,13 @@ import org.stepic.droid.util.DbParseHelper;
 
 import javax.inject.Inject;
 
-public class SectionDaoImpl extends DaoBase implements Dao<Section> {
+public class SectionDaoImpl implements Dao<Section> {
+
+    IDaoHelper mDaoHelper;
 
     @Inject
-    public SectionDaoImpl(SQLiteOpenHelper openHelper) {
-        super(openHelper);
+    public SectionDaoImpl(IDaoHelper daoHelper) {
+        mDaoHelper = daoHelper;
     }
 
     @Override
@@ -31,11 +32,11 @@ public class SectionDaoImpl extends DaoBase implements Dao<Section> {
         values.put(DbStructureSections.Column.POSITION, section.getPosition());
         values.put(DbStructureSections.Column.UNITS, DbParseHelper.parseLongArrayToString(section.getUnits()));
 
-        super.insertOrUpdate(DbStructureSections.SECTIONS, values, DbStructureSections.Column.SECTION_ID, section.getId() + "");
+        mDaoHelper.insertOrUpdate(DbStructureSections.SECTIONS, values, DbStructureSections.Column.SECTION_ID, section.getId() + "");
     }
 
     @Override
     public boolean isInDb(Section persistentObject) {
-        return super.isInDb(DbStructureSections.SECTIONS, DbStructureSections.Column.SECTION_ID, persistentObject.getId() + "");
+        return mDaoHelper.isInDb(DbStructureSections.SECTIONS, DbStructureSections.Column.SECTION_ID, persistentObject.getId() + "");
     }
 }

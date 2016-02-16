@@ -9,11 +9,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import org.stepic.droid.store.operations.ResultHandler;
 import org.stepic.droid.util.RWLocks;
 
-public abstract class DaoBase {
+public class DaoHelper implements IDaoHelper {
     protected SQLiteDatabase database;
     private SQLiteOpenHelper dbHelper;
 
-    public DaoBase(SQLiteOpenHelper openHelper) {
+    public DaoHelper(SQLiteOpenHelper openHelper) {
         dbHelper = openHelper;
     }
 
@@ -58,7 +58,7 @@ public abstract class DaoBase {
         }
     }
 
-    protected void insertOrUpdate(String tableName, ContentValues cv, String primaryKeyColumn, String primaryValue) {
+    public void insertOrUpdate(String tableName, ContentValues cv, String primaryKeyColumn, String primaryValue) {
         if (isInDb(tableName, primaryKeyColumn, primaryValue)) {
             String whereClause = primaryKeyColumn + "=?";
             String[] whereArgs = new String[]{primaryValue};
@@ -68,7 +68,7 @@ public abstract class DaoBase {
         }
     }
 
-    protected boolean isInDb(String tableName, String column, String columnValue) {
+    public boolean isInDb(String tableName, String column, String columnValue) {
         String Query = "Select * from " + tableName + " where " + column + " = ?";
         return executeQuery(Query, new String[]{columnValue}, new ResultHandler<Boolean>() {
             @Override

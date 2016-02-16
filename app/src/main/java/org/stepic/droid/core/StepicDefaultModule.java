@@ -19,6 +19,8 @@ import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.dao.Dao;
+import org.stepic.droid.store.dao.DaoHelper;
+import org.stepic.droid.store.dao.IDaoHelper;
 import org.stepic.droid.store.dao.SectionDaoImpl;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
@@ -190,7 +192,13 @@ public class StepicDefaultModule {
     }
 
     @Provides
-    public Dao<Section> provideSectionDao(SQLiteOpenHelper helper){
-        return new SectionDaoImpl(helper);
+    @Singleton
+    public IDaoHelper provideDaoHelper (SQLiteOpenHelper SQLiteOpenHelper){
+        return new DaoHelper(SQLiteOpenHelper);
+    }
+
+    @Provides
+    public Dao<Section> provideSectionDao(IDaoHelper daoHelper){
+        return new SectionDaoImpl(daoHelper);
     }
 }
