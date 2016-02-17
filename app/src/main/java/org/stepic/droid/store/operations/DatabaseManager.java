@@ -75,6 +75,8 @@ public class DatabaseManager extends DbManagerBase {
     IDao<Lesson> mLessonDao;
     @Inject
     IDao<ViewAssignment> mViewAssignmentDao;
+    @Inject
+    IDao <DownloadEntity> mDownloadEntityDao;
 
     public DatabaseManager(Context context) {
         super(context);
