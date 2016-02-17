@@ -518,7 +518,7 @@ public class DatabaseManager extends DbManagerBase {
 
     @Nullable
     public Lesson getLessonOfUnit(Unit unit) {
-        return mLessonDao.get(DbStructureLesson.Column.LESSON_ID, unit.getLesson()+"");
+        return mLessonDao.get(DbStructureLesson.Column.LESSON_ID, unit.getLesson() + "");
     }
 
     private boolean isStepInDb(Step step) {
@@ -864,9 +864,16 @@ public class DatabaseManager extends DbManagerBase {
         course.setIntro_video_id(cursor.getLong(indexIntroVideoId));
 
         CachedVideo video = getCachedVideoByIdPrivate(course.getIntro_video_id());
-        if (video != null) {
-            Video realVideo = new Video();
+        course.setIntro_video(transformCachedVideoToRealVideo(video));
+        return course;
+    }
 
+    //// FIXME: 17.02.16 refactor this hack
+    @Nullable
+    private Video transformCachedVideoToRealVideo(CachedVideo video){
+        Video realVideo = null;
+        if (video != null) {
+            realVideo = new Video();
             realVideo.setId(video.getVideoId());
             realVideo.setThumbnail(video.getThumbnail());
             VideoUrl videoUrl = new VideoUrl();
@@ -876,10 +883,8 @@ public class DatabaseManager extends DbManagerBase {
             List<VideoUrl> list = new ArrayList<>();
             list.add(videoUrl);
             realVideo.setUrls(list);
-
-            course.setIntro_video(realVideo);
         }
-        return course;
+        return realVideo;
     }
 
     private Step parseStep(Cursor cursor) {
@@ -941,35 +946,14 @@ public class DatabaseManager extends DbManagerBase {
         videoCursor.moveToFirst();
 
         if (!videoCursor.isAfterLast()) {
-            block.setVideo(parseRealVideo(videoCursor));
+            CachedVideo video= parseCachedVideo(videoCursor);
+            block.setVideo(transformCachedVideoToRealVideo(video));
         }
         videoCursor.close();
 
 
         return block;
     }
-
-    private Video parseRealVideo(Cursor cursor) {
-        Video video = new Video();
-
-        int indexVideoId = cursor.getColumnIndex(DbStructureCachedVideo.Column.VIDEO_ID);
-        int indexThumbnail = cursor.getColumnIndex(DbStructureCachedVideo.Column.THUMBNAIL);
-//        int indexUrl = cursor.getColumnIndex(DbStructureCachedVideo.Column.URL);
-//        int indexQuality = cursor.getColumnIndex(DbStructureCachedVideo.Column.QUALITY);
-
-//        List<VideoUrl> urls = new ArrayList<>();
-//        VideoUrl videoUrl = new VideoUrl();
-//        videoUrl.setQuality(cursor.getString(indexQuality));
-//        videoUrl.setUrl(cursor.getString(indexUrl));
-//        urls.add(videoUrl);
-//        video.setUrls(urls);
-
-        video.setThumbnail(cursor.getString(indexThumbnail));
-        video.setId(cursor.getLong(indexVideoId));
-
-        return video;
-    }
-
 
     private Cursor getCourseCursor(DatabaseManager.Table type) {
         return database.query(type.getStoreName(), DBStructureCourses.getUsedColumns(),
@@ -983,83 +967,24 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public void addToQueueViewedState(ViewAssignment viewState) {
-        try {
-            open();
-            ContentValues values = new ContentValues();
-
-            values.put(DbStructureViewQueue.Column.ASSIGNMENT_ID, viewState.getAssignment());
-            values.put(DbStructureViewQueue.Column.STEP_ID, viewState.getStep());
-            if (!isViewStateInDb(viewState.getAssignment())) {
-                database.insert(DbStructureViewQueue.VIEW_QUEUE, null, values);
-            }
-        } finally {
-            close();
-        }
+        mViewAssignmentDao.insertOrUpdate(viewState);
     }
 
-    private ViewAssignment parseViewAssignmentWrapper(Cursor cursor) {
-        int indexStepId = cursor.getColumnIndex(DbStructureViewQueue.Column.STEP_ID);
-        int indexAssignmentId = cursor.getColumnIndex(DbStructureViewQueue.Column.ASSIGNMENT_ID);
-
-
-        long stepId = cursor.getLong(indexStepId);
-        long assignmentId = cursor.getLong(indexAssignmentId);
-
-        return new ViewAssignment(assignmentId, stepId);
-    }
-
+    @NotNull
     public List<ViewAssignment> getAllInQueue() {
-        try {
-            open();
-            List<ViewAssignment> queue = new ArrayList<>();
-            Cursor cursor = getQueue();
-
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                ViewAssignment viewState = parseViewAssignmentWrapper(cursor);
-                queue.add(viewState);
-                cursor.moveToNext();
-            }
-            cursor.close();
-            return queue;
-
-        } finally {
-            close();
-        }
+        return mViewAssignmentDao.getAll();
     }
 
     public void removeFromQueue(ViewAssignment viewAssignmentWrapper) {
-        try {
-            open();
-
-            long assignmentId = viewAssignmentWrapper.getAssignment();
-            database.delete(DbStructureViewQueue.VIEW_QUEUE,
-                    DbStructureViewQueue.Column.ASSIGNMENT_ID + " = " + assignmentId,
-                    null);
-
-        } finally {
-            close();
-        }
+        long assignmentId = viewAssignmentWrapper.getAssignment();
+        mViewAssignmentDao.delete(DbStructureViewQueue.Column.ASSIGNMENT_ID, assignmentId + "");
     }
-
-
-    private Cursor getQueue() {
-        return database.query(DbStructureViewQueue.VIEW_QUEUE,
-                DbStructureViewQueue.getUsedColumns(), null, null, null, null, null);
-    }
-
 
     public void markProgressAsPassed(long assignmentId) {
         Assignment assignment = mAssignmentDao.get(DbStructureAssignment.Column.ASSIGNMENT_ID, assignmentId + "");
         String progressId = assignment.getProgress();
-        boolean isProgressInDb = mProgressDao.isInDb(DbStructureProgress.Column.ID, progressId);
-        if (isProgressInDb) {
-            ContentValues values = new ContentValues();
-            values.put(DbStructureProgress.Column.IS_PASSED, true);
-            mProgressDao.update(DbStructureProgress.Column.ID, progressId, values);
-        }
+        markProgressAsPassedIfInDb(progressId);
     }
-
 
     public void markProgressAsPassedIfInDb(String progressId) {
         boolean inDb = mProgressDao.isInDb(DbStructureProgress.Column.ID, progressId);
@@ -1074,22 +999,7 @@ public class DatabaseManager extends DbManagerBase {
         mProgressDao.insertOrUpdate(progress);
     }
 
-    private boolean isViewStateInDb(long assignmentId) {
-        String Query = "Select * from " + DbStructureViewQueue.VIEW_QUEUE + " where " + DbStructureViewQueue.Column.ASSIGNMENT_ID + " =?";
-        Cursor cursor = database.rawQuery(Query, new String[]{assignmentId + ""});
-        if (cursor.getCount() <= 0) {
-            cursor.close();
-            return false;
-        }
-        cursor.close();
-        return true;
-    }
-
-    public boolean isViewedPublicWrapper(String progressId) {
-        return isProgressViewed(progressId);
-    }
-
-    private boolean isProgressViewed(String progressId) {
+    public boolean isProgressViewed(String progressId) {
         if (progressId == null) return false;
         Progress progress = mProgressDao.get(DbStructureProgress.Column.ID, progressId);
         return progress.is_passed();
@@ -1103,11 +1013,6 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public boolean isStepPassed(long stepId) {
-        try {
-            open();
-            return isAssignmentByStepViewed(stepId);
-        } finally {
-            close();
-        }
+        return isAssignmentByStepViewed(stepId);
     }
 }
