@@ -4,13 +4,24 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Block;
 import org.stepic.droid.model.BlockPersistentWrapper;
+import org.stepic.droid.model.CachedVideo;
+import org.stepic.droid.model.Video;
+import org.stepic.droid.model.VideoUrl;
 import org.stepic.droid.store.structure.DbStructureBlock;
+import org.stepic.droid.store.structure.DbStructureCachedVideo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockDaoImpl extends DaoBase<BlockPersistentWrapper> {
-    public BlockDaoImpl(SQLiteOpenHelper openHelper) {
+    private final IDao<CachedVideo> mVideoDao;
+
+    public BlockDaoImpl(SQLiteOpenHelper openHelper, IDao<CachedVideo> videoDao) {
         super(openHelper);
+        mVideoDao = videoDao;
     }
 
     @Override
@@ -56,5 +67,48 @@ public class BlockDaoImpl extends DaoBase<BlockPersistentWrapper> {
     @Override
     public String getDefaultPrimaryValue(BlockPersistentWrapper persistentObject) {
         return persistentObject.getStepId()+"";
+    }
+
+    @Nullable
+    @Override
+    public BlockPersistentWrapper get(String whereColumn, String whereValue) {
+        BlockPersistentWrapper blockWrapper = super.get(whereColumn, whereValue);
+        addVideoToBlockWrapper(blockWrapper);
+        return blockWrapper;
+    }
+
+    @Override
+    protected List<BlockPersistentWrapper> getAllWithQuery(String query, String[] whereArgs) {
+        List<BlockPersistentWrapper> blockWrapperList = super.getAllWithQuery(query, whereArgs);
+        for (BlockPersistentWrapper blockWrapperItem : blockWrapperList) {
+            addVideoToBlockWrapper(blockWrapperItem);
+        }
+        return blockWrapperList;
+    }
+
+    private void addVideoToBlockWrapper(BlockPersistentWrapper blockWrapper){
+        if (blockWrapper != null && blockWrapper.getBlock() != null) {
+            CachedVideo video = mVideoDao.get(DbStructureCachedVideo.Column.STEP_ID, blockWrapper.getStepId() + "");
+            blockWrapper.getBlock().setVideo(transformCachedVideoToRealVideo(video));
+        }
+    }
+
+    //// FIXME: 17.02.16 refactor this hack
+    @Nullable
+    private Video transformCachedVideoToRealVideo(CachedVideo video) {
+        Video realVideo = null;
+        if (video != null) {
+            realVideo = new Video();
+            realVideo.setId(video.getVideoId());
+            realVideo.setThumbnail(video.getThumbnail());
+            VideoUrl videoUrl = new VideoUrl();
+            videoUrl.setQuality(video.getQuality());
+            videoUrl.setUrl(video.getUrl());
+
+            List<VideoUrl> list = new ArrayList<>();
+            list.add(videoUrl);
+            realVideo.setUrls(list);
+        }
+        return realVideo;
     }
 }
