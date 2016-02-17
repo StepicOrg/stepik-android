@@ -76,7 +76,7 @@ public class DatabaseManager extends DbManagerBase {
     @Inject
     IDao<ViewAssignment> mViewAssignmentDao;
     @Inject
-    IDao <DownloadEntity> mDownloadEntityDao;
+    IDao<DownloadEntity> mDownloadEntityDao;
 
     public DatabaseManager(Context context) {
         super(context);
@@ -88,7 +88,7 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     /**
-    deprecated because of step has 0..* assignments.
+     * deprecated because of step has 0..* assignments.
      */
     @Deprecated
     public long getAssignmentIdByStepId(long stepId) {
@@ -125,7 +125,7 @@ public class DatabaseManager extends DbManagerBase {
         }
         Long[] lessonIds = lessonSet.toArray(new Long[0]);
         String lessonIdsCommaSeparated = DbParseHelper.parseLongArrayToString(lessonIds, ",");
-        List<Lesson> lessonArrayList = mLessonDao.getAllInRange( DbStructureLesson.Column.LESSON_ID, lessonIdsCommaSeparated);
+        List<Lesson> lessonArrayList = mLessonDao.getAllInRange(DbStructureLesson.Column.LESSON_ID, lessonIdsCommaSeparated);
         for (Step stepItem : steps) {
             for (Lesson lesson : lessonArrayList) {
                 if (lesson.getId() == stepItem.getLesson()) {
@@ -163,7 +163,7 @@ public class DatabaseManager extends DbManagerBase {
 
     @Nullable
     public Lesson getLessonById(long lessonId) {
-        return mLessonDao.get(DbStructureLesson.LESSONS, lessonId+"");
+        return mLessonDao.get(DbStructureLesson.LESSONS, lessonId + "");
     }
 
     @Nullable
@@ -209,64 +209,19 @@ public class DatabaseManager extends DbManagerBase {
         return mUnitDao.get(DbStructureUnit.Column.UNIT_ID, unitId + "");
     }
 
+    @NotNull
     public List<DownloadEntity> getAllDownloadEntities() {
-        try {
-            open();
-            List<DownloadEntity> downloadEntities = new ArrayList<>();
-            Cursor cursor = getDownloadEntitiesCursor();
-
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                DownloadEntity de = parseDownloadEntity(cursor);
-                downloadEntities.add(de);
-                cursor.moveToNext();
-            }
-            cursor.close();
-            return downloadEntities;
-
-        } finally {
-            close();
-        }
+        return mDownloadEntityDao.getAll();
     }
 
-    public boolean isUnitCached(Unit unit) {
-        try {
-            open();
-            String Query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.UNIT_ID + " = " + unit.getId();
-            Cursor cursor = database.rawQuery(Query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-
-            int indexIsCached = cursor.getColumnIndex(DbStructureUnit.Column.IS_CACHED);
-            boolean isCached = cursor.getInt(indexIsCached) > 0;
-            cursor.close();
-            return isCached;
-        } finally {
-            close();
-        }
+    public boolean isUnitCached(@NotNull Unit unit) {
+        Unit dbUnit = mUnitDao.get(DbStructureUnit.Column.UNIT_ID, unit.getId() + "");
+        return dbUnit != null && dbUnit.is_cached();
     }
 
-    public boolean isLessonCached(Lesson lesson) {
-        try {
-            open();
-            String Query = "Select * from " + DbStructureLesson.LESSONS + " where " + DbStructureLesson.Column.LESSON_ID + " = " + lesson.getId();
-            Cursor cursor = database.rawQuery(Query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-
-            int indexIsCached = cursor.getColumnIndex(DbStructureLesson.Column.IS_CACHED);
-            boolean isCached = cursor.getInt(indexIsCached) > 0;
-            cursor.close();
-            return isCached;
-        } finally {
-            close();
-        }
+    public boolean isLessonCached(@NotNull Lesson lesson) {
+        Lesson dbLesson = mLessonDao.get(DbStructureLesson.Column.LESSON_ID, lesson.getId() + "");
+        return dbLesson != null && dbLesson.is_cached();
     }
 
     public boolean isStepCached(Step step) {
@@ -305,7 +260,7 @@ public class DatabaseManager extends DbManagerBase {
         ContentValues cv = new ContentValues();
         cv.put(DbStructureUnit.Column.IS_LOADING, unit.is_loading());
         cv.put(DbStructureUnit.Column.IS_CACHED, unit.is_cached());
-        mUnitDao.update(DbStructureUnit.Column.UNIT_ID, unit.getId()+"", cv);
+        mUnitDao.update(DbStructureUnit.Column.UNIT_ID, unit.getId() + "", cv);
     }
 
     public void updateOnlyCachedLoadingLesson(Lesson lesson) {
@@ -564,31 +519,11 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public void deleteDownloadEntityByDownloadId(long downloadId) {
-        try {
-            open();
-            database.delete(DbStructureSharedDownloads.SHARED_DOWNLOADS,
-                    "\"" + DbStructureSharedDownloads.Column.DOWNLOAD_ID + "\"" + " = " + downloadId,
-                    null);
-        } finally {
-            close();
-        }
+        mDownloadEntityDao.delete(DbStructureSharedDownloads.Column.DOWNLOAD_ID, downloadId + "");
     }
 
     public boolean isExistDownloadEntityByVideoId(long videoId) {
-        try {
-            open();
-            String Query = "Select * from " + DbStructureSharedDownloads.SHARED_DOWNLOADS + " where " + DbStructureSharedDownloads.Column.VIDEO_ID + " = " + videoId;
-            Cursor cursor = database.rawQuery(Query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.close();
-            return true;
-        } finally {
-            close();
-        }
-
+        return mDownloadEntityDao.isInDb(DbStructureSharedDownloads.Column.VIDEO_ID, videoId + "");
     }
 
     public void deleteVideo(Video video) {
@@ -702,24 +637,9 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
-
+    @Nullable
     public DownloadEntity getDownloadEntityIfExist(Long downloadId) {
-        try {
-            open();
-            String Query = "Select * from " + DbStructureSharedDownloads.SHARED_DOWNLOADS + " where " + DbStructureSharedDownloads.Column.DOWNLOAD_ID + " = " + downloadId;
-            Cursor cursor = database.rawQuery(Query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return null;
-            }
-            cursor.moveToFirst();
-            DownloadEntity downloadEntity = parseDownloadEntity(cursor);
-            cursor.close();
-            return downloadEntity;
-
-        } finally {
-            close();
-        }
+        return mDownloadEntityDao.get(DbStructureSharedDownloads.Column.DOWNLOAD_ID, downloadId + "");
     }
 
     public void clearCacheCourses(DatabaseManager.Table type) {
@@ -735,44 +655,12 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public void addDownloadEntity(DownloadEntity downloadEntity) {
-        try {
-            open();
-            if (isDownloadEntityInDb(downloadEntity)) return;
-
-            ContentValues values = new ContentValues();
-            values.put(DbStructureSharedDownloads.Column.DOWNLOAD_ID, downloadEntity.getDownloadId());
-            values.put(DbStructureSharedDownloads.Column.VIDEO_ID, downloadEntity.getVideoId());
-            values.put(DbStructureSharedDownloads.Column.STEP_ID, downloadEntity.getStepId());
-            values.put(DbStructureSharedDownloads.Column.THUMBNAIL, downloadEntity.getThumbnail());
-            values.put(DbStructureSharedDownloads.Column.QUALITY, downloadEntity.getQuality());
-            database.insert(DbStructureSharedDownloads.SHARED_DOWNLOADS, null, values);
-
-        } finally {
-            close();
-        }
+        mDownloadEntityDao.insertOrUpdate(downloadEntity);
     }
 
 
     public void addLesson(Lesson lesson) {
         mLessonDao.insertOrUpdate(lesson);
-    }
-
-    private DownloadEntity parseDownloadEntity(Cursor cursor) {
-        DownloadEntity downloadEntity = new DownloadEntity();
-
-        int indexDownloadId = cursor.getColumnIndex(DbStructureSharedDownloads.Column.DOWNLOAD_ID);
-        int indexStepId = cursor.getColumnIndex(DbStructureSharedDownloads.Column.STEP_ID);
-        int indexVideoId = cursor.getColumnIndex(DbStructureSharedDownloads.Column.VIDEO_ID);
-        int indexThumbnail = cursor.getColumnIndex(DbStructureSharedDownloads.Column.THUMBNAIL);
-        int indexQuality = cursor.getColumnIndex(DbStructureSharedDownloads.Column.QUALITY);
-
-        downloadEntity.setDownloadId(cursor.getLong(indexDownloadId));
-        downloadEntity.setStepId(cursor.getLong(indexStepId));
-        downloadEntity.setVideoId(cursor.getLong(indexVideoId));
-        downloadEntity.setThumbnail(cursor.getString(indexThumbnail));
-        downloadEntity.setQuality(cursor.getString(indexQuality));
-
-        return downloadEntity;
     }
 
     private CachedVideo parseCachedVideo(Cursor cursor) {
@@ -789,18 +677,6 @@ public class DatabaseManager extends DbManagerBase {
         cachedVideo.setStepId(cursor.getLong(indexStepId));
         cachedVideo.setQuality(cursor.getString(indexQuality));
         return cachedVideo;
-    }
-
-
-    private boolean isDownloadEntityInDb(DownloadEntity downloadEntity) {
-        String Query = "Select * from " + DbStructureSharedDownloads.SHARED_DOWNLOADS + " where " + DbStructureSharedDownloads.Column.DOWNLOAD_ID + " = " + downloadEntity.getDownloadId();
-        Cursor cursor = database.rawQuery(Query, null);
-        if (cursor.getCount() <= 0) {
-            cursor.close();
-            return false;
-        }
-        cursor.close();
-        return true;
     }
 
     private boolean isVideoInDb(long videoId) {
@@ -872,7 +748,7 @@ public class DatabaseManager extends DbManagerBase {
 
     //// FIXME: 17.02.16 refactor this hack
     @Nullable
-    private Video transformCachedVideoToRealVideo(CachedVideo video){
+    private Video transformCachedVideoToRealVideo(CachedVideo video) {
         Video realVideo = null;
         if (video != null) {
             realVideo = new Video();
@@ -948,7 +824,7 @@ public class DatabaseManager extends DbManagerBase {
         videoCursor.moveToFirst();
 
         if (!videoCursor.isAfterLast()) {
-            CachedVideo video= parseCachedVideo(videoCursor);
+            CachedVideo video = parseCachedVideo(videoCursor);
             block.setVideo(transformCachedVideoToRealVideo(video));
         }
         videoCursor.close();
@@ -961,11 +837,6 @@ public class DatabaseManager extends DbManagerBase {
         return database.query(type.getStoreName(), DBStructureCourses.getUsedColumns(),
                 null, null, null, null, null);
 
-    }
-
-    private Cursor getDownloadEntitiesCursor() {
-        return database.query(DbStructureSharedDownloads.SHARED_DOWNLOADS,
-                DbStructureSharedDownloads.getUsedColumns(), null, null, null, null, null);
     }
 
     public void addToQueueViewedState(ViewAssignment viewState) {

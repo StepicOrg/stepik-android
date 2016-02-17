@@ -3,6 +3,8 @@ package org.stepic.droid.store.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public interface IDao<T> {
@@ -12,8 +14,10 @@ public interface IDao<T> {
 
     boolean isInDb(String whereColumn, String value);
 
+    @NotNull
     List<T> getAll();
 
+    @NotNull
     List<T> getAll(String whereColumnName, String whereValue);
 
     T get(String whereColumnName, String whereValue);
