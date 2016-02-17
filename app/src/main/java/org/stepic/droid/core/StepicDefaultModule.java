@@ -9,6 +9,7 @@ import com.squareup.otto.Bus;
 import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Assignment;
+import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;
@@ -26,6 +27,7 @@ import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.dao.AssignmentDaoImpl;
 import org.stepic.droid.store.dao.IDao;
 import org.stepic.droid.store.dao.LessonDaoImpl;
+import org.stepic.droid.store.dao.PersistentVideoDaoImpl;
 import org.stepic.droid.store.dao.ProgressDaoImpl;
 import org.stepic.droid.store.dao.SectionDaoImpl;
 import org.stepic.droid.store.dao.DownloadEntityDaoImpl;
@@ -234,5 +236,10 @@ public class StepicDefaultModule {
     @Provides
     public IDao<DownloadEntity> provideDownloadEntity(SQLiteOpenHelper openHelper) {
         return new DownloadEntityDaoImpl(openHelper);
+    }
+
+    @Provides
+    public IDao<CachedVideo> provideCachedVideo(SQLiteOpenHelper openHelper) {
+        return new PersistentVideoDaoImpl(openHelper);
     }
 }
