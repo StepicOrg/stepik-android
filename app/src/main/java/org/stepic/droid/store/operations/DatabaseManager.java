@@ -73,6 +73,8 @@ public class DatabaseManager extends DbManagerBase {
     IDao<Assignment> mAssignmentDao;
     @Inject
     IDao<Lesson> mLessonDao;
+    @Inject
+    IDao<ViewAssignment> mViewAssignmentDao;
 
     public DatabaseManager(Context context) {
         super(context);

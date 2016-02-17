@@ -28,6 +28,7 @@ import org.stepic.droid.store.dao.LessonDaoImpl;
 import org.stepic.droid.store.dao.ProgressDaoImpl;
 import org.stepic.droid.store.dao.SectionDaoImpl;
 import org.stepic.droid.store.dao.UnitDaoImpl;
+import org.stepic.droid.store.dao.ViewAssignmentDaoImpl;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.ISearchResolver;
@@ -40,6 +41,7 @@ import org.stepic.droid.web.HttpManager;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.IHttpManager;
 import org.stepic.droid.web.RetrofitRESTApi;
+import org.stepic.droid.web.ViewAssignment;
 
 import javax.inject.Singleton;
 
@@ -220,5 +222,10 @@ public class StepicDefaultModule {
     @Provides
     public IDao<Lesson> provideLessonDao(SQLiteOpenHelper openHelper) {
         return new LessonDaoImpl(openHelper);
+    }
+
+    @Provides
+    public IDao<ViewAssignment> provideViewAssignment(SQLiteOpenHelper openHelper) {
+        return new ViewAssignmentDaoImpl(openHelper);
     }
 }
