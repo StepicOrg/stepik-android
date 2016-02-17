@@ -9,6 +9,7 @@ import com.squareup.otto.Bus;
 import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Assignment;
+import org.stepic.droid.model.BlockPersistentWrapper;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
@@ -25,6 +26,7 @@ import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.dao.AssignmentDaoImpl;
+import org.stepic.droid.store.dao.BlockDaoImpl;
 import org.stepic.droid.store.dao.IDao;
 import org.stepic.droid.store.dao.LessonDaoImpl;
 import org.stepic.droid.store.dao.PersistentVideoDaoImpl;
@@ -241,5 +243,10 @@ public class StepicDefaultModule {
     @Provides
     public IDao<CachedVideo> provideCachedVideo(SQLiteOpenHelper openHelper) {
         return new PersistentVideoDaoImpl(openHelper);
+    }
+
+    @Provides
+    public IDao<BlockPersistentWrapper> provideBlockWrapper(SQLiteOpenHelper openHelper) {
+        return new BlockDaoImpl(openHelper);
     }
 }

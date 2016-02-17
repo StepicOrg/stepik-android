@@ -24,9 +24,9 @@ public interface IDao<T> {
 
     T parsePersistentObject(Cursor cursor);
 
-    String getDbName();
-
     ContentValues getContentValues(T persistentObject);
+
+    String getDbName();
 
     String getDefaultPrimaryColumn();
 

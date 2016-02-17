@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.Block;
+import org.stepic.droid.model.BlockPersistentWrapper;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.DownloadEntity;
@@ -79,6 +80,8 @@ public class DatabaseManager extends DbManagerBase {
     IDao<DownloadEntity> mDownloadEntityDao;
     @Inject
     IDao<CachedVideo> mCachedVideoDao;
+    @Inject
+    IDao<BlockPersistentWrapper> mBlockPersistentWrapperDao;
 
     public DatabaseManager(Context context) {
         super(context);
