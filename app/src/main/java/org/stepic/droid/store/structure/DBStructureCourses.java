@@ -8,6 +8,7 @@ public final class DBStructureCourses extends DBStructureBase {
     public static final String FEATURED_COURSES = "featured_courses";
 
     public static final class Column {
+        @Deprecated
         public static final String ID = "_id";
         public static final String COURSE_ID = "course_id";
         public static final String SUMMARY = "summary";

@@ -14,7 +14,7 @@ import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.events.search.SuccessSearchEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.SearchResult;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.web.CoursesStepicResponse;
 import org.stepic.droid.web.SearchResultResponse;
@@ -133,7 +133,7 @@ public class CourseSearchFragment extends CourseListFragmentBase {
     }
 
     @Override
-    protected DatabaseManager.Table getCourseType() {
+    protected DatabaseFacade.Table getCourseType() {
         return null;
     }
 

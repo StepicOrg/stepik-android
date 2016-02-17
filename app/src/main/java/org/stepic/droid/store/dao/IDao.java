@@ -37,4 +37,8 @@ public interface IDao<T> {
     void delete(String whereColumn, String whereValue);
 
     List<T>  getAllInRange(String  whereColumn, String commaSeparatedIds);
+
+    //// FIXME: 17.02.16 remove this hack and don't use
+    @Deprecated
+    void setTableName(String name);
 }

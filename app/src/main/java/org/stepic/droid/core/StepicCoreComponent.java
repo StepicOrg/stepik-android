@@ -19,7 +19,7 @@ import org.stepic.droid.receivers.InternetConnectionEnabledReceiver;
 import org.stepic.droid.services.DeleteService;
 import org.stepic.droid.services.LoadService;
 import org.stepic.droid.services.ViewPusher;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.ImageOnDisk;
 import org.stepic.droid.view.adapters.CoursePropertyAdapter;
 import org.stepic.droid.view.adapters.DownloadsAdapter;
@@ -119,5 +119,5 @@ public interface StepicCoreComponent {
 
     void inject(RemindPasswordDialogFragment remindPasswordDialogFragment);
 
-    void inject(DatabaseManager databaseManager);
+    void inject(DatabaseFacade databaseFacade);
 }

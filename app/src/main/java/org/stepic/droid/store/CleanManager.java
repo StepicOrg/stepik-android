@@ -10,7 +10,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.services.DeleteService;
 import org.stepic.droid.services.LoadService;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 
 import java.io.Serializable;
@@ -42,7 +42,7 @@ public class CleanManager {
     }
 
 
-    public void removeCourse(final Course course, DatabaseManager.Table type) {
+    public void removeCourse(final Course course, DatabaseFacade.Table type) {
         Intent loadIntent = new Intent(MainApplication.getAppContext(), DeleteService.class);
 
         loadIntent.putExtra(AppConstants.KEY_LOAD_TYPE, LoadService.LoadTypeKey.Course);

@@ -22,7 +22,7 @@ import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.HtmlHelper;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
     IConfig mConfig;
 
     @Inject
-    DatabaseManager mDatabase;
+    DatabaseFacade mDatabase;
 
     @Inject
     IDownloadManager mDownloadManager;
@@ -51,10 +51,10 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 
     private Fragment mFragment;
     @Nullable
-    private final DatabaseManager.Table type;
+    private final DatabaseFacade.Table type;
     private LayoutInflater mInflater;
 
-    public MyCoursesAdapter(Fragment fragment, List<Course> courses, @Nullable DatabaseManager.Table type) {
+    public MyCoursesAdapter(Fragment fragment, List<Course> courses, @Nullable DatabaseFacade.Table type) {
         super(fragment.getActivity(), 0, courses);
         mFragment = fragment;
         this.type = type;
@@ -116,7 +116,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 //            }
 //        });
 
-//        if (type == DatabaseManager.Table.enrolled) {
+//        if (type == DatabaseFacade.Table.enrolled) {
 //            viewHolderItem.loadButton.setVisibility(View.VISIBLE);
 //            //cached/loading
 //            //false/false = show sky with suggestion for cache

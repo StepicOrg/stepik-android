@@ -22,7 +22,7 @@ import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.view.dialogs.ExplainPermissionDialog;
@@ -46,7 +46,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
     IDownloadManager mDownloadManager;
 
     @Inject
-    DatabaseManager mDatabaseManager;
+    DatabaseFacade mDatabaseFacade;
 
     @Inject
     IShell mShell;
@@ -220,7 +220,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                 mCleaner.removeSection(section);
                 section.setIs_loading(false);
                 section.setIs_cached(false);
-                mDatabaseManager.updateOnlyCachedLoadingSection(section);
+                mDatabaseFacade.updateOnlyCachedLoadingSection(section);
                 notifyItemChanged(position);
             } else {
                 if (section.is_loading()) {
@@ -229,7 +229,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                     YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CACHE_SECTION, JsonHelper.toJson(section));
                     section.setIs_cached(false);
                     section.setIs_loading(true);
-                    mDatabaseManager.updateOnlyCachedLoadingSection(section);
+                    mDatabaseFacade.updateOnlyCachedLoadingSection(section);
                     mDownloadManager.addSection(section);
                     notifyItemChanged(position);
                 }

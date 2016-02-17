@@ -14,7 +14,7 @@ import com.yandex.metrica.YandexMetrica;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.store.IStoreStateManager;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.ViewAssignment;
 
@@ -29,7 +29,7 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
     @Inject
     IApi mApi;
     @Inject
-    DatabaseManager databaseManager;
+    DatabaseFacade mDatabaseFacade;
     @Inject
     IStoreStateManager mStoreStateManager;
 
@@ -60,12 +60,12 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                List<ViewAssignment> list = databaseManager.getAllInQueue();
+                List<ViewAssignment> list = mDatabaseFacade.getAllInQueue();
                 for (ViewAssignment item : list) {
                     try {
                         retrofit.Response<Void> response = mApi.postViewed(item).execute();
                         if (response.isSuccess()) {
-                            databaseManager.removeFromQueue(item);
+                            mDatabaseFacade.removeFromQueue(item);
                         }
                     } catch (IOException e) {
                         YandexMetrica.reportError("Push state exception", e);

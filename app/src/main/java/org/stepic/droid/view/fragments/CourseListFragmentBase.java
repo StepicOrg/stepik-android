@@ -22,7 +22,7 @@ import org.stepic.droid.events.courses.PreLoadCoursesEvent;
 import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.activities.MainFeedActivity;
@@ -155,7 +155,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
     }
 
-    protected abstract DatabaseManager.Table getCourseType();
+    protected abstract DatabaseFacade.Table getCourseType();
 
     public void downloadData() {
         retrofit.Callback<CoursesStepicResponse> callback = new retrofit.Callback<CoursesStepicResponse>() {
@@ -178,7 +178,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         IApi api = mShell.getApi();
 
         bus.post(new PreLoadCoursesEvent(getCourseType()));
-        if (getCourseType() == DatabaseManager.Table.featured) {
+        if (getCourseType() == DatabaseFacade.Table.featured) {
             api.getFeaturedCourses(mCurrentPage).enqueue(callback);
         } else {
             api.getEnrolledCourses(mCurrentPage).enqueue(callback);
@@ -217,7 +217,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
                 break;
             }
         }
-        if (getCourseType() == DatabaseManager.Table.enrolled && !inList) {
+        if (getCourseType() == DatabaseFacade.Table.enrolled && !inList) {
             mCourses.add(courseForUpdate);
         }
 

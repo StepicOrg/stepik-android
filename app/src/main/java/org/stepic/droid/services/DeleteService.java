@@ -17,7 +17,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.IStoreStateManager;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.web.IApi;
@@ -40,7 +40,7 @@ public class DeleteService extends IntentService {
     @Inject
     IApi mApi;
     @Inject
-    DatabaseManager mDb;
+    DatabaseFacade mDb;
     @Inject
     IStoreStateManager mStoreStateManager;
 
@@ -64,7 +64,7 @@ public class DeleteService extends IntentService {
             switch (type) {
                 case Course:
                     Course course = (Course) intent.getSerializableExtra(AppConstants.KEY_COURSE_BUNDLE);
-                    DatabaseManager.Table tableType = (DatabaseManager.Table) intent.getSerializableExtra(AppConstants.KEY_TABLE_TYPE);
+                    DatabaseFacade.Table tableType = (DatabaseFacade.Table) intent.getSerializableExtra(AppConstants.KEY_TABLE_TYPE);
                     removeFromDisk(course, tableType);
                     break;
                 case Section:
@@ -150,7 +150,7 @@ public class DeleteService extends IntentService {
 //        mDb.deleteSection(section);
     }
 
-    private void removeFromDisk(Course course, DatabaseManager.Table tableType) {
+    private void removeFromDisk(Course course, DatabaseFacade.Table tableType) {
         List<Section> sections = mDb.getAllSectionsOfCourse(course);
         for (Section section : sections) {
             removeFromDisk(section);

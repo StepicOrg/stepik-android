@@ -30,7 +30,7 @@ import org.stepic.droid.events.courses.StartingSaveCoursesToDbEvent;
 import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.view.listeners.OnRootTouchedListener;
 
 public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
@@ -85,62 +85,62 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
     }
 
     @Override
-    protected DatabaseManager.Table getCourseType() {
-        return DatabaseManager.Table.featured;
+    protected DatabaseFacade.Table getCourseType() {
+        return DatabaseFacade.Table.featured;
     }
 
     @Override
     @Subscribe
     public void onFailureDataLoad(FailCoursesDownloadEvent e) {
-        if (e.getType() == DatabaseManager.Table.featured)
+        if (e.getType() == DatabaseFacade.Table.featured)
             super.onFailureDataLoad(e);
     }
 
     @Override
     @Subscribe
     public void onStartingSaveToDb(StartingSaveCoursesToDbEvent e) {
-        if (e.getType() == DatabaseManager.Table.featured)
+        if (e.getType() == DatabaseFacade.Table.featured)
             super.onStartingSaveToDb(e);
     }
 
     @Override
     @Subscribe
     public void onFinishingSaveToDb(FinishingSaveCoursesToDbEvent e) {
-        if (e.getType() == DatabaseManager.Table.featured)
+        if (e.getType() == DatabaseFacade.Table.featured)
             super.onFinishingSaveToDb(e);
     }
 
     @Override
     @Subscribe
     public void onStartingGetFromDb(StartingGetCoursesFromDbEvent e) {
-        if (e.getType() == DatabaseManager.Table.featured)
+        if (e.getType() == DatabaseFacade.Table.featured)
             super.onStartingGetFromDb(e);
     }
 
     @Override
     @Subscribe
     public void onFinishingGetFromDb(FinishingGetCoursesFromDbEvent e) {
-        if (e.getType() == DatabaseManager.Table.featured)
+        if (e.getType() == DatabaseFacade.Table.featured)
             super.onFinishingGetFromDb(e);
     }
 
     @Subscribe
     public void onGettingFromDbSuccess(GettingCoursesFromDbSuccessEvent e) {
-        if (e.getType() == DatabaseManager.Table.featured)
+        if (e.getType() == DatabaseFacade.Table.featured)
             super.onGettingFromDbSuccess(e);
     }
 
     @Subscribe
     @Override
     public void onSuccessDataLoad(SuccessCoursesDownloadEvent e) {
-        if (e.getType() == DatabaseManager.Table.featured)
+        if (e.getType() == DatabaseFacade.Table.featured)
             super.onSuccessDataLoad(e);
     }
 
     @Subscribe
     @Override
     public void onPreLoad(PreLoadCoursesEvent e) {
-        if (e.getType() == DatabaseManager.Table.featured)
+        if (e.getType() == DatabaseFacade.Table.featured)
             super.onPreLoad(e);
     }
 

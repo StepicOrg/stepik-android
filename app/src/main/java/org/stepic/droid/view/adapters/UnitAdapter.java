@@ -28,7 +28,7 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.view.dialogs.ExplainPermissionDialog;
@@ -54,7 +54,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     IDownloadManager mDownloadManager;
 
     @Inject
-    DatabaseManager mDbManager;
+    DatabaseFacade mDbManager;
 
     @Inject
     IShell mShell;

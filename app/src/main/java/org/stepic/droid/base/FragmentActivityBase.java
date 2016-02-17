@@ -15,7 +15,7 @@ import org.stepic.droid.core.ILessonSessionManager;
 import org.stepic.droid.core.ILoginManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.IStepResolver;
 
@@ -33,7 +33,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected CoursePropertyResolver mCoursePropertyResolver;
 
     @Inject
-    protected DatabaseManager mDbManager;
+    protected DatabaseFacade mDbManager;
 
     @Inject
     protected IShell mShell;

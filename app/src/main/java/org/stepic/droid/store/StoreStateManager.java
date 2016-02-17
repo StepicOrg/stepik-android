@@ -15,7 +15,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 
 import java.util.List;
@@ -26,33 +26,33 @@ import javax.inject.Singleton;
 @Singleton
 public class StoreStateManager implements IStoreStateManager {
 
-    private DatabaseManager mDatabaseManager;
+    private DatabaseFacade mDatabaseFacade;
     private Bus bus;
 
     @Inject
-    public StoreStateManager(DatabaseManager dbManager, Bus bus) {
-        mDatabaseManager = dbManager;
+    public StoreStateManager(DatabaseFacade dbManager, Bus bus) {
+        mDatabaseFacade = dbManager;
         this.bus = bus;
     }
 
     @Override
     public void updateUnitLessonState(long lessonId) {
-        List<Step> steps = mDatabaseManager.getStepsOfLesson(lessonId);
+        List<Step> steps = mDatabaseFacade.getStepsOfLesson(lessonId);
         for (Step step : steps) {
             if (!step.is_cached()) return;
         }
 
         //all steps of lesson is cached
-        Lesson lesson = mDatabaseManager.getLessonById(lessonId);
+        Lesson lesson = mDatabaseFacade.getLessonById(lessonId);
         if (lesson == null) {
             YandexMetrica.reportEvent(AppConstants.METRICA_LESSON_IN_STORE_STATE_NULL);
             return;
         }
         lesson.setIs_loading(false);
         lesson.setIs_cached(true);
-        mDatabaseManager.updateOnlyCachedLoadingLesson(lesson);
+        mDatabaseFacade.updateOnlyCachedLoadingLesson(lesson);
 
-        final Unit unit = mDatabaseManager.getUnitByLessonId(lessonId);
+        final Unit unit = mDatabaseFacade.getUnitByLessonId(lessonId);
         if (unit == null) {
             YandexMetrica.reportEvent(AppConstants.METRICA_UNIT_IN_STORE_STATE_NULL);
             return;
@@ -60,7 +60,7 @@ public class StoreStateManager implements IStoreStateManager {
         if (unit.is_loading() || !unit.is_cached()) {
             unit.setIs_loading(false);
             unit.setIs_cached(true);
-            mDatabaseManager.updateOnlyCachedLoadingUnit(unit);
+            mDatabaseFacade.updateOnlyCachedLoadingUnit(unit);
 
             Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
             //Say to ui that ui is cached now
@@ -84,20 +84,20 @@ public class StoreStateManager implements IStoreStateManager {
         //just make for parents
         //// FIXME: 14.12.15 it is not true, see related commit. Now we can delete one step.
 
-        Lesson lesson = mDatabaseManager.getLessonById(lessonId);
-        final Unit unit = mDatabaseManager.getUnitByLessonId(lessonId);
+        Lesson lesson = mDatabaseFacade.getLessonById(lessonId);
+        final Unit unit = mDatabaseFacade.getUnitByLessonId(lessonId);
 
         if (lesson.is_cached() || lesson.is_loading()) {
             lesson.setIs_loading(false);
             lesson.setIs_cached(false);
-            mDatabaseManager.updateOnlyCachedLoadingLesson(lesson);
+            mDatabaseFacade.updateOnlyCachedLoadingLesson(lesson);
         }
 
 
         if (unit.is_cached() || unit.is_loading()) {
             unit.setIs_loading(false);
             unit.setIs_cached(false);
-            mDatabaseManager.updateOnlyCachedLoadingUnit(unit);
+            mDatabaseFacade.updateOnlyCachedLoadingUnit(unit);
 
             Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
             //Say to ui that ui is cached now
@@ -123,7 +123,7 @@ public class StoreStateManager implements IStoreStateManager {
 
     @Override
     public void updateSectionAfterDeleting(long sectionId) {
-        final Section section = mDatabaseManager.getSectionById(sectionId);
+        final Section section = mDatabaseFacade.getSectionById(sectionId);
         if (section == null) {
             YandexMetrica.reportError(AppConstants.NULL_SECTION, new Exception("update Section after deleting"));
             return;
@@ -131,7 +131,7 @@ public class StoreStateManager implements IStoreStateManager {
         if (section.is_cached() || section.is_loading()) {
             section.setIs_cached(false);
             section.setIs_loading(false);
-            mDatabaseManager.updateOnlyCachedLoadingSection(section);
+            mDatabaseFacade.updateOnlyCachedLoadingSection(section);
             Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
             //Say to ui that ui is cached now
             Runnable myRunnable = new Runnable() {
@@ -149,7 +149,7 @@ public class StoreStateManager implements IStoreStateManager {
     @Deprecated
     private void updateCourseAfterDeleting(long courseId) {
 
-        Course course = mDatabaseManager.getCourseById(courseId, DatabaseManager.Table.enrolled);
+        Course course = mDatabaseFacade.getCourseById(courseId, DatabaseFacade.Table.enrolled);
         if (course == null) {
             YandexMetrica.reportError(AppConstants.NULL_COURSE, new Exception("update Course after deleting"));
             return;
@@ -157,19 +157,19 @@ public class StoreStateManager implements IStoreStateManager {
         if (course.is_cached() || course.is_loading()) {
             course.setIs_cached(false);
             course.setIs_loading(false);
-            mDatabaseManager.updateOnlyCachedLoadingCourse(course, DatabaseManager.Table.enrolled);
+            mDatabaseFacade.updateOnlyCachedLoadingCourse(course, DatabaseFacade.Table.enrolled);
         }
     }
 
     @Override
     public void updateSectionState(long sectionId) {
-        List<Unit> units = mDatabaseManager.getAllUnitsOfSection(sectionId);
+        List<Unit> units = mDatabaseFacade.getAllUnitsOfSection(sectionId);
         for (Unit unit : units) {
             if (!unit.is_cached()) return;
         }
 
         //all units, lessons, steps of sections are cached
-        final Section section = mDatabaseManager.getSectionById(sectionId);
+        final Section section = mDatabaseFacade.getSectionById(sectionId);
         if (section == null) {
             YandexMetrica.reportError(AppConstants.NULL_SECTION, new Exception("update section state"));
             return;
@@ -177,7 +177,7 @@ public class StoreStateManager implements IStoreStateManager {
         if (!section.is_cached() || section.is_loading()) {
             section.setIs_cached(true);
             section.setIs_loading(false);
-            mDatabaseManager.updateOnlyCachedLoadingSection(section);
+            mDatabaseFacade.updateOnlyCachedLoadingSection(section);
             Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
             //Say to ui that ui is cached now
             Runnable myRunnable = new Runnable() {
@@ -194,12 +194,12 @@ public class StoreStateManager implements IStoreStateManager {
 
     @Deprecated
     private void updateCourseState(long courseId) {
-        Course course = mDatabaseManager.getCourseById(courseId, DatabaseManager.Table.enrolled);
+        Course course = mDatabaseFacade.getCourseById(courseId, DatabaseFacade.Table.enrolled);
         if (course == null) {
-            course = mDatabaseManager.getCourseById(courseId, DatabaseManager.Table.featured);
-            mDatabaseManager.addCourse(course, DatabaseManager.Table.enrolled);
+            course = mDatabaseFacade.getCourseById(courseId, DatabaseFacade.Table.featured);
+            mDatabaseFacade.addCourse(course, DatabaseFacade.Table.enrolled);
         }
-        List<Section> sections = mDatabaseManager.getAllSectionsOfCourse(course);
+        List<Section> sections = mDatabaseFacade.getAllSectionsOfCourse(course);
         for (Section section : sections) {
             if (!section.is_cached()) return;
         }
@@ -211,6 +211,6 @@ public class StoreStateManager implements IStoreStateManager {
 
         course.setIs_loading(false);
         course.setIs_cached(true);
-        mDatabaseManager.updateOnlyCachedLoadingCourse(course, DatabaseManager.Table.enrolled);
+        mDatabaseFacade.updateOnlyCachedLoadingCourse(course, DatabaseFacade.Table.enrolled);
     }
 }

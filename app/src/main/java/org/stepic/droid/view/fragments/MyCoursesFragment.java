@@ -14,7 +14,7 @@ import org.stepic.droid.events.courses.StartingSaveCoursesToDbEvent;
 import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 
 public class MyCoursesFragment extends CoursesDatabaseFragmentBase {
 
@@ -23,62 +23,62 @@ public class MyCoursesFragment extends CoursesDatabaseFragmentBase {
     }
 
     @Override
-    protected DatabaseManager.Table getCourseType() {
-        return DatabaseManager.Table.enrolled;
+    protected DatabaseFacade.Table getCourseType() {
+        return DatabaseFacade.Table.enrolled;
     }
 
     @Override
     @Subscribe
     public void onFailureDataLoad(FailCoursesDownloadEvent e) {
-        if (e.getType() == DatabaseManager.Table.enrolled)
+        if (e.getType() == DatabaseFacade.Table.enrolled)
             super.onFailureDataLoad(e);
     }
 
     @Override
     @Subscribe
     public void onStartingSaveToDb(StartingSaveCoursesToDbEvent e) {
-        if (e.getType() == DatabaseManager.Table.enrolled)
+        if (e.getType() == DatabaseFacade.Table.enrolled)
             super.onStartingSaveToDb(e);
     }
 
     @Override
     @Subscribe
     public void onFinishingSaveToDb(FinishingSaveCoursesToDbEvent e) {
-        if (e.getType() == DatabaseManager.Table.enrolled)
+        if (e.getType() == DatabaseFacade.Table.enrolled)
             super.onFinishingSaveToDb(e);
     }
 
     @Override
     @Subscribe
     public void onStartingGetFromDb(StartingGetCoursesFromDbEvent e) {
-        if (e.getType() == DatabaseManager.Table.enrolled)
+        if (e.getType() == DatabaseFacade.Table.enrolled)
             super.onStartingGetFromDb(e);
     }
 
     @Override
     @Subscribe
     public void onFinishingGetFromDb(FinishingGetCoursesFromDbEvent e) {
-        if (e.getType() == DatabaseManager.Table.enrolled)
+        if (e.getType() == DatabaseFacade.Table.enrolled)
             super.onFinishingGetFromDb(e);
     }
 
     @Subscribe
     public void onGettingFromDbSuccess(GettingCoursesFromDbSuccessEvent e) {
-        if (e.getType() == DatabaseManager.Table.enrolled)
+        if (e.getType() == DatabaseFacade.Table.enrolled)
             super.onGettingFromDbSuccess(e);
     }
 
     @Subscribe
     @Override
     public void onSuccessDataLoad(SuccessCoursesDownloadEvent e) {
-        if (e.getType() == DatabaseManager.Table.enrolled)
+        if (e.getType() == DatabaseFacade.Table.enrolled)
             super.onSuccessDataLoad(e);
     }
 
     @Subscribe
     @Override
     public void onPreLoad(PreLoadCoursesEvent e) {
-        if (e.getType() == DatabaseManager.Table.enrolled)
+        if (e.getType() == DatabaseFacade.Table.enrolled)
             super.onPreLoad(e);
     }
 

@@ -11,6 +11,7 @@ import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.BlockPersistentWrapper;
 import org.stepic.droid.model.CachedVideo;
+import org.stepic.droid.model.Course;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;
@@ -28,6 +29,7 @@ import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.dao.AssignmentDaoImpl;
 import org.stepic.droid.store.dao.BlockDaoImpl;
+import org.stepic.droid.store.dao.CourseDaoImpl;
 import org.stepic.droid.store.dao.DownloadEntityDaoImpl;
 import org.stepic.droid.store.dao.IDao;
 import org.stepic.droid.store.dao.LessonDaoImpl;
@@ -37,7 +39,7 @@ import org.stepic.droid.store.dao.SectionDaoImpl;
 import org.stepic.droid.store.dao.StepDaoImpl;
 import org.stepic.droid.store.dao.UnitDaoImpl;
 import org.stepic.droid.store.dao.ViewAssignmentDaoImpl;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.ISearchResolver;
 import org.stepic.droid.util.resolvers.IStepResolver;
@@ -125,7 +127,7 @@ public class StepicDefaultModule {
     @Singleton
     public IVideoResolver provideVideoResolver(Context context,
                                                Bus bus,
-                                               DatabaseManager dbOperationsCachedVideo,
+                                               DatabaseFacade dbOperationsCachedVideo,
                                                UserPreferences userPreferences) {
         return new VideoResolver(context, bus, dbOperationsCachedVideo, userPreferences);
     }
@@ -149,13 +151,13 @@ public class StepicDefaultModule {
 
     @Singleton
     @Provides
-    public DatabaseManager provideDbOperationCachedVideo(Context context) {
-        return new DatabaseManager(context);
+    public DatabaseFacade provideDbOperationCachedVideo() {
+        return new DatabaseFacade();
     }
 
     @Singleton
     @Provides
-    public IStoreStateManager provideStoreManager(DatabaseManager dbManager, Bus bus) {
+    public IStoreStateManager provideStoreManager(DatabaseFacade dbManager, Bus bus) {
         return new StoreStateManager(dbManager, bus);
     }
 
@@ -191,8 +193,8 @@ public class StepicDefaultModule {
 
     @Singleton
     @Provides
-    public ILocalProgressManager provideProgressManager(DatabaseManager databaseManager, Bus bus, IApi api) {
-        return new LocalProgressOfUnitManager(databaseManager, bus, api);
+    public ILocalProgressManager provideProgressManager(DatabaseFacade databaseFacade, Bus bus, IApi api) {
+        return new LocalProgressOfUnitManager(databaseFacade, bus, api);
     }
 
     @Singleton
@@ -259,4 +261,10 @@ public class StepicDefaultModule {
                                   IDao<Progress> progressDao) {
         return new StepDaoImpl(openHelper, blockDao, assignmentDao, progressDao);
     }
+
+    @Provides
+    public IDao<Course> provideCourse(SQLiteOpenHelper openHelper, IDao<CachedVideo> daoCached) {
+        return new CourseDaoImpl(openHelper, daoCached);
+    }
+
 }

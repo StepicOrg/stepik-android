@@ -10,7 +10,7 @@ import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.containers.UnitLessonProgressContainer;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +23,7 @@ import javax.inject.Inject;
 
 public class FromDbUnitLessonTask extends StepicTask<Void, Void, UnitLessonProgressContainer> {
     @Inject
-    DatabaseManager mDatabaseManager;
+    DatabaseFacade mDatabaseFacade;
 
     @Inject
     Bus mBus;
@@ -40,16 +40,16 @@ public class FromDbUnitLessonTask extends StepicTask<Void, Void, UnitLessonProgr
     @Override
     protected UnitLessonProgressContainer doInBackgroundBody(Void... params) throws Exception {
 
-        List<Unit> fromCacheUnits = mDatabaseManager.getAllUnitsOfSection(mSection.getId());
+        List<Unit> fromCacheUnits = mDatabaseFacade.getAllUnitsOfSection(mSection.getId());
         List<Lesson> fromCacheLessons = new ArrayList<>();
         Map<Long, Progress> unitProgressMap = new HashMap<>();
 
         for (Unit unit : fromCacheUnits) {
             String progressId = unit.getProgress();
-            unit.setIs_viewed_custom(mDatabaseManager.isProgressViewed(progressId));
+            unit.setIs_viewed_custom(mDatabaseFacade.isProgressViewed(progressId));
 
             //new api:
-            Progress progress = mDatabaseManager.getProgressById(progressId);
+            Progress progress = mDatabaseFacade.getProgressById(progressId);
             if (progress != null) {
                 unitProgressMap.put(unit.getId(), progress);
             }
@@ -69,7 +69,7 @@ public class FromDbUnitLessonTask extends StepicTask<Void, Void, UnitLessonProgr
 
 //lessons will sort automatically
         for (Unit unitItem : fromCacheUnits) {
-            Lesson lesson = mDatabaseManager.getLessonOfUnit(unitItem);
+            Lesson lesson = mDatabaseFacade.getLessonOfUnit(unitItem);
             if (lesson == null) {
                 throw new UnitStoredButLessonNotException();
             }

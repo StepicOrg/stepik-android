@@ -17,7 +17,7 @@ import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.FileUtil;
 
@@ -35,7 +35,7 @@ public class LogoutAreYouSureDialog extends DialogFragment {
     @Inject
     IShell mShell;
     @Inject
-    DatabaseManager mDatabaseManager;
+    DatabaseFacade mDatabaseFacade;
     @Inject
     DownloadManager mSystemDownloadManager;
     @Inject
@@ -60,14 +60,14 @@ public class LogoutAreYouSureDialog extends DialogFragment {
                             @Override
                             protected Void doInBackground(Void... params) {
                                 //// FIXME: 22.10.15 do it in
-                                List<DownloadEntity> downloadEntities = mDatabaseManager.getAllDownloadEntities();
+                                List<DownloadEntity> downloadEntities = mDatabaseFacade.getAllDownloadEntities();
                                 for (DownloadEntity de : downloadEntities) {
                                     mSystemDownloadManager.remove(de.getDownloadId());
                                 }
 
                                 FileUtil.cleanDirectory(directoryForClean);
 
-                                mDatabaseManager.dropDatabase();
+                                mDatabaseFacade.dropDatabase();
                                 return null;
                             }
                         };

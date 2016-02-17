@@ -40,7 +40,7 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepic.droid.model.User;
 import org.stepic.droid.model.Video;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.ThumbnailParser;
@@ -363,10 +363,10 @@ public class CourseDetailActivity extends FragmentActivityBase {
 
                     localCopy.setEnrollment((int) localCopy.getCourseId());
 
-                    UpdateCourseTask updateCourseTask = new UpdateCourseTask(DatabaseManager.Table.enrolled, localCopy);
+                    UpdateCourseTask updateCourseTask = new UpdateCourseTask(DatabaseFacade.Table.enrolled, localCopy);
                     updateCourseTask.execute();
 
-                    UpdateCourseTask updateCourseFeaturedTask = new UpdateCourseTask(DatabaseManager.Table.featured, localCopy);
+                    UpdateCourseTask updateCourseFeaturedTask = new UpdateCourseTask(DatabaseFacade.Table.featured, localCopy);
                     updateCourseFeaturedTask.execute();
 
 

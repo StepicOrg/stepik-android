@@ -1,9 +1,9 @@
 package org.stepic.droid.events.courses;
 
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 
 public class PreLoadCoursesEvent extends CourseEventBase {
-    public PreLoadCoursesEvent(DatabaseManager.Table type) {
+    public PreLoadCoursesEvent(DatabaseFacade.Table type) {
         super(type);
     }
 }

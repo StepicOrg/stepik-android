@@ -17,7 +17,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.FileUtil;
 
@@ -28,7 +28,7 @@ import javax.inject.Inject;
 public class ClearCacheDialogFragment extends DialogFragment {
 
     @Inject
-    DatabaseManager mDatabaseManager;
+    DatabaseFacade mDatabaseFacade;
     @Inject
     UserPreferences userPreferences;
     @Inject
@@ -47,14 +47,14 @@ public class ClearCacheDialogFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_YES_CLEAR_CACHE);
                         //// FIXME: 22.10.15 do it in background
-                        List<DownloadEntity> downloadEntities = mDatabaseManager.getAllDownloadEntities();
+                        List<DownloadEntity> downloadEntities = mDatabaseFacade.getAllDownloadEntities();
                         for (DownloadEntity de : downloadEntities) {
                             mSystemDownloadManager.remove(de.getDownloadId());
                         }
 
                         FileUtil.cleanDirectory(userPreferences.getUserDownloadFolder());
 
-                        mDatabaseManager.dropDatabase();
+                        mDatabaseFacade.dropDatabase();
                         sendResult(Activity.RESULT_OK);
                         Toast.makeText(getContext(), R.string.cache_cleared, Toast.LENGTH_LONG).show();
                     }

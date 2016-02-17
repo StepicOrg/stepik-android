@@ -6,7 +6,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.sections.FinishingSaveSectionToDbEvent;
 import org.stepic.droid.events.sections.StartingSaveSectionToDbEvent;
 import org.stepic.droid.model.Section;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public class ToDbSectionTask extends StepicTask<Void, Void, Void> {
     Bus mBus;
 
     @Inject
-    DatabaseManager mDatabaseManager;
+    DatabaseFacade mDatabaseFacade;
     private final List<Section> mSectionList;
 
 
@@ -42,7 +42,7 @@ public class ToDbSectionTask extends StepicTask<Void, Void, Void> {
     @Override
     protected Void doInBackgroundBody(Void... params) throws Exception {
         for (Section sectionItem : mSectionList) {
-                mDatabaseManager.addSection(sectionItem);
+                mDatabaseFacade.addSection(sectionItem);
         }
         return null;
     }

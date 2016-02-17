@@ -22,7 +22,7 @@ import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.store.CleanManager;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ThumbnailParser;
 import org.stepic.droid.view.fragments.DownloadsFragment;
@@ -50,7 +50,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
     CleanManager mCleanManager;
 
     @Inject
-    DatabaseManager mDatabaseManager;
+    DatabaseFacade mDatabaseFacade;
     private DownloadsFragment downloadsFragment;
 
     public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Context context, DownloadsFragment downloadsFragment) {
@@ -154,7 +154,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
             AsyncTask<Void, Void, Step> task = new AsyncTask<Void, Void, Step>() {
                 @Override
                 protected Step doInBackground(Void... params) {
-                    return mDatabaseManager.getStepById(stepId);
+                    return mDatabaseFacade.getStepById(stepId);
                 }
 
                 @Override

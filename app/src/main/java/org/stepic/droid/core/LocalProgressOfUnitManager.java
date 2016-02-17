@@ -10,7 +10,7 @@ import org.stepic.droid.events.units.UnitScoreUpdateEvent;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.IApi;
 
@@ -20,13 +20,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class LocalProgressOfUnitManager implements ILocalProgressManager {
-    private DatabaseManager mDatabaseManager;
+    private DatabaseFacade mDatabaseFacade;
     private Bus mBus;
     private IApi mApi;
 
     @Inject
-    public LocalProgressOfUnitManager(DatabaseManager databaseManager, Bus bus, IApi api) {
-        mDatabaseManager = databaseManager;
+    public LocalProgressOfUnitManager(DatabaseFacade databaseFacade, Bus bus, IApi api) {
+        mDatabaseFacade = databaseFacade;
         mBus = bus;
         mApi = api;
     }
@@ -34,19 +34,19 @@ public class LocalProgressOfUnitManager implements ILocalProgressManager {
 
     @Override
     public void checkUnitAsPassed(final long stepId) {
-        Step step = mDatabaseManager.getStepById(stepId);
+        Step step = mDatabaseFacade.getStepById(stepId);
         if (step == null) return;
-        List<Step> stepList = mDatabaseManager.getStepsOfLesson(step.getLesson());
+        List<Step> stepList = mDatabaseFacade.getStepsOfLesson(step.getLesson());
         for (Step stepItem : stepList) {
             if (!stepItem.is_custom_passed()) return;
         }
 
-        Unit unit = mDatabaseManager.getUnitByLessonId(step.getLesson());
+        Unit unit = mDatabaseFacade.getUnitByLessonId(step.getLesson());
         if (unit == null) return;
 
 //        unit.setIs_viewed_custom(true);
-//        mDatabaseManager.addUnit(unit); //// TODO: 26.01.16 progress is not saved
-        mDatabaseManager.markProgressAsPassedIfInDb(unit.getProgress());
+//        mDatabaseFacade.addUnit(unit); //// TODO: 26.01.16 progress is not saved
+        mDatabaseFacade.markProgressAsPassedIfInDb(unit.getProgress());
 
         final long unitId = unit.getId();
         Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
@@ -64,7 +64,7 @@ public class LocalProgressOfUnitManager implements ILocalProgressManager {
     @Override
     public void updateUnitProgress(final long unitId) {
 
-        Unit unit = mDatabaseManager.getUnitById(unitId);
+        Unit unit = mDatabaseFacade.getUnitById(unitId);
         if (unit == null) return;
         Progress updatedUnitProgress;
         try {
@@ -75,7 +75,7 @@ public class LocalProgressOfUnitManager implements ILocalProgressManager {
         }
         if (updatedUnitProgress == null)
             return;
-        mDatabaseManager.addProgress(updatedUnitProgress);
+        mDatabaseFacade.addProgress(updatedUnitProgress);
 
         final Double finalScoreInUnit = getScoreOfProgress(updatedUnitProgress);
         if (finalScoreInUnit == null) {
