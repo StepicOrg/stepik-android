@@ -77,6 +77,8 @@ public class DatabaseManager extends DbManagerBase {
     IDao<ViewAssignment> mViewAssignmentDao;
     @Inject
     IDao<DownloadEntity> mDownloadEntityDao;
+    @Inject
+    IDao<CachedVideo> mCachedVideoDao;
 
     public DatabaseManager(Context context) {
         super(context);
@@ -352,7 +354,7 @@ public class DatabaseManager extends DbManagerBase {
                     storedVideo.setQuality(videoUrl.getQuality());
                     storedVideo.setUrl(videoUrl.getUrl());
                 }
-                addVideoPrivate(storedVideo);
+                addVideo(storedVideo);
                 values.put(DBStructureCourses.Column.INTRO_VIDEO_ID, storedVideo.getVideoId());
             }
 
@@ -494,28 +496,7 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public void addVideo(CachedVideo cachedVideo) {
-        try {
-            open();
-            addVideoPrivate(cachedVideo);
-        } finally {
-            close();
-        }
-    }
-
-    private void addVideoPrivate(CachedVideo cachedVideo) {
-        ContentValues values = new ContentValues();
-
-        values.put(DbStructureCachedVideo.Column.VIDEO_ID, cachedVideo.getVideoId());
-        values.put(DbStructureCachedVideo.Column.STEP_ID, cachedVideo.getStepId());
-        values.put(DbStructureCachedVideo.Column.URL, cachedVideo.getUrl());
-        values.put(DbStructureCachedVideo.Column.THUMBNAIL, cachedVideo.getThumbnail());
-        values.put(DbStructureCachedVideo.Column.QUALITY, cachedVideo.getQuality());
-
-        if (!isVideoInDb(cachedVideo.getVideoId())) {
-            database.insert(DbStructureCachedVideo.CACHED_VIDEO, null, values);
-        } else {
-            database.update(DbStructureCachedVideo.CACHED_VIDEO, values, DbStructureCachedVideo.Column.VIDEO_ID + "=" + cachedVideo.getVideoId(), null);
-        }
+        mCachedVideoDao.insertOrUpdate(cachedVideo);
     }
 
     public void deleteDownloadEntityByDownloadId(long downloadId) {
@@ -527,26 +508,11 @@ public class DatabaseManager extends DbManagerBase {
     }
 
     public void deleteVideo(Video video) {
-        try {
-            open();
-            long videoId = video.getId();
-            database.delete(DbStructureCachedVideo.CACHED_VIDEO,
-                    "\"" + DbStructureCachedVideo.Column.VIDEO_ID + "\"" + " = " + videoId,
-                    null);
-        } finally {
-            close();
-        }
+        mCachedVideoDao.delete(DbStructureCachedVideo.Column.VIDEO_ID, video.getId() + "");
     }
 
     public void deleteVideoByUrl(String path) {
-        try {
-            open();
-            database.delete(DbStructureCachedVideo.CACHED_VIDEO,
-                    DbStructureCachedVideo.Column.URL + " = " + "\"" + path + "\"",
-                    null);
-        } finally {
-            close();
-        }
+        mCachedVideoDao.delete(DbStructureCachedVideo.Column.URL, path);
     }
 
     public void deleteStep(Step step) {
@@ -567,48 +533,11 @@ public class DatabaseManager extends DbManagerBase {
 
     @Nullable
     public CachedVideo getCachedVideoById(long videoId) {
-        try {
-            open();
-            return getCachedVideoByIdPrivate(videoId);
-        } finally {
-            close();
-        }
-    }
-
-    private CachedVideo getCachedVideoByIdPrivate(long videoId) {
-        String Query = "Select * from " + DbStructureCachedVideo.CACHED_VIDEO + " where " + DbStructureCachedVideo.Column.VIDEO_ID + " = " + videoId;
-        Cursor cursor = database.rawQuery(Query, null);
-        if (cursor.getCount() <= 0) {
-            cursor.close();
-            return null;
-        }
-        cursor.moveToFirst();
-        CachedVideo video = parseCachedVideo(cursor);
-        cursor.close();
-        return video;
+        return mCachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, videoId + "");
     }
 
     public List<CachedVideo> getAllCachedVideo() {
-        try {
-            open();
-            List<CachedVideo> cachedVideos = new ArrayList<>();
-
-            Cursor cursor = getCachedVideosCursor();
-            cursor.moveToFirst();
-
-            while (!cursor.isAfterLast()) {
-                CachedVideo cachedVideo = parseCachedVideo(cursor);
-                if (cachedVideo.getStepId() != -1) {
-                    cachedVideos.add(cachedVideo);
-                }
-                cursor.moveToNext();
-            }
-
-            cursor.close();
-            return cachedVideos;
-        } finally {
-            close();
-        }
+        return mCachedVideoDao.getAll();
     }
 
     /**
@@ -618,22 +547,12 @@ public class DatabaseManager extends DbManagerBase {
      * @return null if video not existing in db, otherwise path to disk
      */
     public String getPathToVideoIfExist(@NotNull Video video) {
-        try {
-            open();
-            String Query = "Select * from " + DbStructureCachedVideo.CACHED_VIDEO + " where " + DbStructureCachedVideo.Column.VIDEO_ID + " = " + video.getId();
-            Cursor cursor = database.rawQuery(Query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return null;
-            }
-            cursor.moveToFirst();
-            int columnNumberOfPath = cursor.getColumnIndex(DbStructureCachedVideo.Column.URL);
-            String path = cursor.getString(columnNumberOfPath);
-            cursor.close();
-            return path;
+        CachedVideo cachedVideo = mCachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, video.getId() + "");
 
-        } finally {
-            close();
+        if (cachedVideo == null) {
+            return null;
+        } else {
+            return cachedVideo.getUrl();
         }
     }
 
@@ -661,38 +580,6 @@ public class DatabaseManager extends DbManagerBase {
 
     public void addLesson(Lesson lesson) {
         mLessonDao.insertOrUpdate(lesson);
-    }
-
-    private CachedVideo parseCachedVideo(Cursor cursor) {
-        CachedVideo cachedVideo = new CachedVideo();
-        int indexStepId = cursor.getColumnIndex(DbStructureCachedVideo.Column.STEP_ID);
-        int indexVideoId = cursor.getColumnIndex(DbStructureCachedVideo.Column.VIDEO_ID);
-        int indexUrl = cursor.getColumnIndex(DbStructureCachedVideo.Column.URL);
-        int indexThumbnail = cursor.getColumnIndex(DbStructureCachedVideo.Column.THUMBNAIL);
-        int indexQuality = cursor.getColumnIndex(DbStructureCachedVideo.Column.QUALITY);
-
-        cachedVideo.setVideoId(cursor.getLong(indexVideoId));
-        cachedVideo.setUrl(cursor.getString(indexUrl));
-        cachedVideo.setThumbnail(cursor.getString(indexThumbnail));
-        cachedVideo.setStepId(cursor.getLong(indexStepId));
-        cachedVideo.setQuality(cursor.getString(indexQuality));
-        return cachedVideo;
-    }
-
-    private boolean isVideoInDb(long videoId) {
-        String Query = "Select * from " + DbStructureCachedVideo.CACHED_VIDEO + " where " + DbStructureCachedVideo.Column.VIDEO_ID + " = " + videoId;
-        Cursor cursor = database.rawQuery(Query, null);
-        if (cursor.getCount() <= 0) {
-            cursor.close();
-            return false;
-        }
-        cursor.close();
-        return true;
-    }
-
-    private Cursor getCachedVideosCursor() {
-        return database.query(DbStructureCachedVideo.CACHED_VIDEO, DbStructureCachedVideo.getUsedColumns(),
-                null, null, null, null, null);
     }
 
     private Course parseCourse(Cursor cursor) {
@@ -741,7 +628,7 @@ public class DatabaseManager extends DbManagerBase {
         course.setSections(DbParseHelper.parseStringToLongArray(cursor.getString(indexSection)));
         course.setIntro_video_id(cursor.getLong(indexIntroVideoId));
 
-        CachedVideo video = getCachedVideoByIdPrivate(course.getIntro_video_id());
+        CachedVideo video = getCachedVideoById(course.getIntro_video_id());
         course.setIntro_video(transformCachedVideoToRealVideo(video));
         return course;
     }
@@ -818,18 +705,8 @@ public class DatabaseManager extends DbManagerBase {
         block.setName(cursor.getString(indexName));
         block.setText(cursor.getString(indexText));
 
-
-        String Query = "Select * from " + DbStructureCachedVideo.CACHED_VIDEO + " where " + DbStructureCachedVideo.Column.STEP_ID + " = " + step.getId();
-        Cursor videoCursor = database.rawQuery(Query, null);
-        videoCursor.moveToFirst();
-
-        if (!videoCursor.isAfterLast()) {
-            CachedVideo video = parseCachedVideo(videoCursor);
-            block.setVideo(transformCachedVideoToRealVideo(video));
-        }
-        videoCursor.close();
-
-
+        CachedVideo cachedVideo = mCachedVideoDao.get(DbStructureCachedVideo.Column.STEP_ID, step.getId() + "");
+        block.setVideo(transformCachedVideoToRealVideo(cachedVideo));
         return block;
     }
 
