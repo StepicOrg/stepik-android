@@ -439,12 +439,7 @@ public class DatabaseManager extends DbManagerBase {
     private void addBlock(Step step) {
         Block block = step.getBlock();
         if (block == null) return;
-        ContentValues values = new ContentValues();
-        values.put(DbStructureBlock.Column.STEP_ID, step.getId());
-        values.put(DbStructureBlock.Column.NAME, block.getName());
-        values.put(DbStructureBlock.Column.TEXT, block.getText());
-
-        database.insert(DbStructureBlock.BLOCKS, null, values);
+        mBlockPersistentWrapperDao.insertOrUpdate(new BlockPersistentWrapper(block, step.getId()));
     }
 
     public List<Section> getAllSectionsOfCourse(Course course) {
@@ -549,6 +544,7 @@ public class DatabaseManager extends DbManagerBase {
      * @param video video which we check for contains in db
      * @return null if video not existing in db, otherwise path to disk
      */
+    @Nullable
     public String getPathToVideoIfExist(@NotNull Video video) {
         CachedVideo cachedVideo = mCachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, video.getId() + "");
 
@@ -688,29 +684,12 @@ public class DatabaseManager extends DbManagerBase {
         step.setIs_custom_passed(isAssignmentByStepViewed(step.getId()));
 
 
-        String Query = "Select * from " + DbStructureBlock.BLOCKS + " where " + DbStructureBlock.Column.STEP_ID + " = " + step.getId();
-        Cursor blockCursor = database.rawQuery(Query, null);
-        blockCursor.moveToFirst();
+        BlockPersistentWrapper blockPersistentWrapper = mBlockPersistentWrapperDao.get(DbStructureBlock.Column.STEP_ID, step.getId() + "");
 
-        if (!blockCursor.isAfterLast()) {
-            step.setBlock(parseBlock(blockCursor, step));
+        if (blockPersistentWrapper != null){
+            step.setBlock(blockPersistentWrapper.getBlock());
         }
-        blockCursor.close();
         return step;
-    }
-
-    private Block parseBlock(Cursor cursor, Step step) {
-        Block block = new Block();
-
-        int indexName = cursor.getColumnIndex(DbStructureBlock.Column.NAME);
-        int indexText = cursor.getColumnIndex(DbStructureBlock.Column.TEXT);
-
-        block.setName(cursor.getString(indexName));
-        block.setText(cursor.getString(indexText));
-
-        CachedVideo cachedVideo = mCachedVideoDao.get(DbStructureCachedVideo.Column.STEP_ID, step.getId() + "");
-        block.setVideo(transformCachedVideoToRealVideo(cachedVideo));
-        return block;
     }
 
     private Cursor getCourseCursor(DatabaseManager.Table type) {
