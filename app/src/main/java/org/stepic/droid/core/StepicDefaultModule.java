@@ -15,6 +15,7 @@ import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
@@ -27,12 +28,13 @@ import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.dao.AssignmentDaoImpl;
 import org.stepic.droid.store.dao.BlockDaoImpl;
+import org.stepic.droid.store.dao.DownloadEntityDaoImpl;
 import org.stepic.droid.store.dao.IDao;
 import org.stepic.droid.store.dao.LessonDaoImpl;
 import org.stepic.droid.store.dao.PersistentVideoDaoImpl;
 import org.stepic.droid.store.dao.ProgressDaoImpl;
 import org.stepic.droid.store.dao.SectionDaoImpl;
-import org.stepic.droid.store.dao.DownloadEntityDaoImpl;
+import org.stepic.droid.store.dao.StepDaoImpl;
 import org.stepic.droid.store.dao.UnitDaoImpl;
 import org.stepic.droid.store.dao.ViewAssignmentDaoImpl;
 import org.stepic.droid.store.operations.DatabaseManager;
@@ -246,7 +248,15 @@ public class StepicDefaultModule {
     }
 
     @Provides
-    public IDao<BlockPersistentWrapper> provideBlockWrapper(SQLiteOpenHelper openHelper) {
-        return new BlockDaoImpl(openHelper);
+    public IDao<BlockPersistentWrapper> provideBlockWrapper(SQLiteOpenHelper openHelper, IDao<CachedVideo> daoCached) {
+        return new BlockDaoImpl(openHelper, daoCached);
+    }
+
+    @Provides
+    public IDao<Step> provideStep(SQLiteOpenHelper openHelper,
+                                  IDao<BlockPersistentWrapper> blockDao,
+                                  IDao<Assignment> assignmentDao,
+                                  IDao<Progress> progressDao) {
+        return new StepDaoImpl(openHelper, blockDao, assignmentDao, progressDao);
     }
 }

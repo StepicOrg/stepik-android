@@ -168,7 +168,7 @@ public abstract class DaoBase<T> implements IDao<T> {
 
 
     @Override
-    public final void insertOrUpdate(T persistentObject) {
+    public void insertOrUpdate(T persistentObject) {
         insertOrUpdate(getDbName(), getContentValues(persistentObject), getDefaultPrimaryColumn(), getDefaultPrimaryValue(persistentObject));
     }
 
