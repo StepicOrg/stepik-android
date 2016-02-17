@@ -26,11 +26,6 @@ public interface IDao<T> {
 
     ContentValues getContentValues(T persistentObject);
 
-    String getDbName();
-
-    String getDefaultPrimaryColumn();
-
-    String getDefaultPrimaryValue(T persistentObject);
 
     void update(String whereColumn, String whereValue, ContentValues contentValues);
 

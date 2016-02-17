@@ -181,4 +181,10 @@ public abstract class DaoBase<T> implements IDao<T> {
     public void setTableName(String name) {
         //do nothing
     }
+
+    abstract String getDbName();
+
+    abstract String getDefaultPrimaryColumn();
+
+    abstract String getDefaultPrimaryValue(T persistentObject);
 }
