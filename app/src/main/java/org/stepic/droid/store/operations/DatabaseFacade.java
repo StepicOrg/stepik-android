@@ -145,7 +145,7 @@ public class DatabaseFacade {
 
     @Nullable
     public Lesson getLessonById(long lessonId) {
-        return mLessonDao.get(DbStructureLesson.LESSONS, lessonId + "");
+        return mLessonDao.get(DbStructureLesson.Column.LESSON_ID, lessonId + "");
     }
 
     @Nullable
