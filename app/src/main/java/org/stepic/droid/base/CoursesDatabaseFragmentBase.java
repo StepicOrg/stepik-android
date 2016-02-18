@@ -43,11 +43,6 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase {
-    private static final String TAG = "base_fragment";
-
-
-    //    protected LoadingCoursesTask mLoadingCoursesTask;
-
     protected FromDbCoursesTask mDbGetCoursesTask;
     protected ToDbCoursesTask mDbSaveCoursesTask;
 
@@ -182,24 +177,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         super.onSuccessJoin(e);
     }
 
-//    private void updateEnrollment(Course courseForUpdate, long enrollment) {
-//
-//
-//        boolean inList = false;
-//        for (Course courseItem : mCourses) {
-//            if (courseItem.getCourseId() == courseForUpdate.getCourseId()) {
-//                courseItem.setEnrollment((int) courseItem.getCourseId());
-//                courseForUpdate = courseItem;
-//                inList = true;
-//                break;
-//            }
-//        }
-//        if (getCourseType() == DatabaseFacade.Table.enrolled && !inList) {
-//            mCourses.add(courseForUpdate);
-//        }
-//
-//    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -285,13 +262,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                             localRef.setEnrollment(0);
                             mDatabaseFacade.addCourse(localRef, DatabaseFacade.Table.featured);
                         }
-
-//                        if (!course.is_featured()){
-//                            localRef.setEnrollment(0);
-//                            mDatabaseFacade.addCourse(localRef, DatabaseFacade.Table.featured);}
-//                        else{
-//                            mDatabaseFacade.deleteCourse(localRef, DatabaseFacade.Table.featured);
-//                        }
 
                     }
                 });
