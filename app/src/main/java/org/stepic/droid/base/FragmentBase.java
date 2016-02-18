@@ -17,6 +17,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.ISearchResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 
@@ -60,6 +61,9 @@ public class FragmentBase extends Fragment {
 
     @Inject
     public UserPreferences mUserPreferences;
+
+    @Inject
+    public CoursePropertyResolver mCoursePropertyResolver;
 
 
     public FragmentBase() {
