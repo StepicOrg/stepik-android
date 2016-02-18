@@ -10,9 +10,9 @@
     <com.facebook.drawee.view.SimpleDraweeView
         android:scaleType="centerCrop"
         android:id="@+id/player_thumbnail"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        fresco:viewAspectRatio="1.77"
+        android:layout_gravity="center"
         tools:src = "@drawable/video_placeholder"/>
 
     <ImageView
