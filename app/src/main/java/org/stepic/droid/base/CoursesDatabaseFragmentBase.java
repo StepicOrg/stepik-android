@@ -51,7 +51,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         super.onActivityCreated(savedInstanceState);
 
         bus.register(this);
-
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {

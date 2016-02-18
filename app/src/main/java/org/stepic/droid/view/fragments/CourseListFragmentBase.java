@@ -147,7 +147,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
             @Override
             public void onClick(View v) {
                 MainFeedActivity parent = (MainFeedActivity) getActivity();
-                if (parent == null || parent instanceof MainFeedActivity == false) return;
+                if (parent == null || !(parent instanceof MainFeedActivity)) return;
 
                 parent.showFindLesson();
             }
