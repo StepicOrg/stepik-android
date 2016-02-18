@@ -110,11 +110,17 @@ public class DownloadsFragment extends FragmentBase {
             @Override
             protected VideosAndMapToLesson doInBackground(Void... params) {
                 List<CachedVideo> videos = mDatabaseFacade.getAllCachedVideo();
-                long[] stepIds = StepicLogicHelper.fromVideosToStepIds(videos);
+                List<CachedVideo> filteredVideos = new ArrayList<>();
+                for (CachedVideo video : videos) {
+                    if (video != null && video.getStepId() >=0){
+                        filteredVideos.add(video);
+                    }
+                }
+                long[] stepIds = StepicLogicHelper.fromVideosToStepIds(filteredVideos);
 
                 Map<Long, Lesson> map = mDatabaseFacade.getMapFromStepIdToTheirLesson(stepIds);
 
-                return new VideosAndMapToLesson(videos, map);
+                return new VideosAndMapToLesson(filteredVideos, map);
             }
 
             @Override
