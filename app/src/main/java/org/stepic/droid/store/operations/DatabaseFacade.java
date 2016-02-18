@@ -212,7 +212,7 @@ public class DatabaseFacade {
         ContentValues cv = new ContentValues();
         cv.put(DbStructureLesson.Column.IS_LOADING, lesson.is_loading());
         cv.put(DbStructureLesson.Column.IS_CACHED, lesson.is_cached());
-        mUnitDao.update(DbStructureLesson.Column.LESSON_ID, lesson.getId() + "", cv);
+        mLessonDao.update(DbStructureLesson.Column.LESSON_ID, lesson.getId() + "", cv);
     }
 
     public void updateOnlyCachedLoadingSection(Section section) {
