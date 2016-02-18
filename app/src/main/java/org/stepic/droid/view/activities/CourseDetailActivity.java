@@ -111,7 +111,7 @@ public class CourseDetailActivity extends FragmentActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_course_detailed);
+        setContentView(R.layout.fragment_course_detailed);
         ButterKnife.bind(this);
 
 
@@ -123,12 +123,12 @@ public class CourseDetailActivity extends FragmentActivityBase {
         mCourse = (Course) (getIntent().getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
         mCoursePropertyList = mCoursePropertyResolver.getSortedPropertyList(mCourse);
 
-        View footer = ((LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.activity_course_detailed_footer, null, false);
+        View footer = ((LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_footer, null, false);
         mCoursePropertyListView.addFooterView(footer);
         mInstructorsCarousel = ButterKnife.findById(footer, R.id.instructors_carousel);
         mInstructorsProgressBar = ButterKnife.findById(footer, R.id.load_progressbar);
 
-        View header = ((LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.activity_course_detailed_header, null, false);
+        View header = ((LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_header, null, false);
         mCoursePropertyListView.addHeaderView(header);
         mIntroView = ButterKnife.findById(header, R.id.intro_video);
         mThumbnail = ButterKnife.findById(header, R.id.player_thumbnail);
