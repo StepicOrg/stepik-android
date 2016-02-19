@@ -43,7 +43,7 @@ public class AssignmentDaoImpl extends DaoBase<Assignment> {
 
         values.put(DbStructureAssignment.Column.ASSIGNMENT_ID, assignment.getId());
         values.put(DbStructureAssignment.Column.CREATE_DATE, assignment.getCreate_date());
-        values.put(DbStructureAssignment.Column.PROGRESS, assignment.getProgress());
+        values.put(DbStructureAssignment.Column.PROGRESS, assignment.getProgressId());
         values.put(DbStructureAssignment.Column.STEP_ID, assignment.getStep());
         values.put(DbStructureAssignment.Column.UNIT_ID, assignment.getUnit());
         values.put(DbStructureAssignment.Column.UPDATE_DATE, assignment.getUpdate_date());

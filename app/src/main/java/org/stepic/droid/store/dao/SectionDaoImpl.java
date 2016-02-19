@@ -17,6 +17,7 @@ public class SectionDaoImpl extends DaoBase<Section> {
     @Override
     public Section parsePersistentObject(Cursor cursor) {
         Section section = new Section();
+//        section = new Section();
 
         int columnIndexId = cursor.getColumnIndex(DbStructureSections.Column.SECTION_ID);
         int columnIndexTitle = cursor.getColumnIndex(DbStructureSections.Column.TITLE);
@@ -34,15 +35,15 @@ public class SectionDaoImpl extends DaoBase<Section> {
         section.setId(cursor.getLong(columnIndexId));
         section.setTitle(cursor.getString(columnIndexTitle));
         section.setSlug(cursor.getString(columnIndexSlug));
-        section.setIs_active(cursor.getInt(columnIndexIsActive) > 0);
+        section.set_active(cursor.getInt(columnIndexIsActive) > 0);
         section.setBegin_date(cursor.getString(columnIndexBeginDate));
         section.setSoft_deadline(cursor.getString(columnIndexSoftDeadline));
         section.setHard_deadline(cursor.getString(columnIndexHardDeadline));
         section.setCourse(cursor.getLong(columnIndexCourseId));
         section.setPosition(cursor.getInt(columnIndexPosition));
-        section.setIs_cached(cursor.getInt(indexIsCached) > 0);
-        section.setIs_loading(cursor.getInt(indexIsLoading) > 0);
-        section.setUnits(DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexUnits)));
+        section.set_cached(cursor.getInt(indexIsCached) > 0);
+        section.set_loading(cursor.getInt(indexIsLoading) > 0);
+        section.setUnits(DbParseHelper.INSTANCE.parseStringToLongArray(cursor.getString(columnIndexUnits)));
 
         return section;
     }

@@ -44,9 +44,9 @@ public class LocalProgressOfUnitManager implements ILocalProgressManager {
         Unit unit = mDatabaseFacade.getUnitByLessonId(step.getLesson());
         if (unit == null) return;
 
-//        unit.setIs_viewed_custom(true);
+//        unit.set_viewed_custom(true);
 //        mDatabaseFacade.addUnit(unit); //// TODO: 26.01.16 progress is not saved
-        mDatabaseFacade.markProgressAsPassedIfInDb(unit.getProgress());
+        mDatabaseFacade.markProgressAsPassedIfInDb(unit.getProgressId());
 
         final long unitId = unit.getId();
         Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
@@ -68,7 +68,7 @@ public class LocalProgressOfUnitManager implements ILocalProgressManager {
         if (unit == null) return;
         Progress updatedUnitProgress;
         try {
-            updatedUnitProgress = mApi.getProgresses(new String[]{unit.getProgress()}).execute().body().getProgresses().get(0);
+            updatedUnitProgress = mApi.getProgresses(new String[]{unit.getProgressId()}).execute().body().getProgresses().get(0);
         } catch (IOException e) {
             e.printStackTrace();
             return;

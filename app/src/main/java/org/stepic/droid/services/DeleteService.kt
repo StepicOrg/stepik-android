@@ -85,8 +85,9 @@ class DeleteService : IntentService("delete_service") {
     }
 
     private fun removeFromDisk(step: Step) {
-        if (step.block.video != null) {
-            val path = mDb.getPathToVideoIfExist(step.block.video)
+        val video = step.block?.video
+        video?.let{
+            val path = mDb.getPathToVideoIfExist(video)
             var file = File(path)
             if (file.exists()) {
                 file.delete()
@@ -98,8 +99,7 @@ class DeleteService : IntentService("delete_service") {
                 file.delete()
             }
 
-
-            mDb.deleteVideo(step.block.video)
+            mDb.deleteVideo(video)
         }
 
         mDb.deleteStep(step) // remove steps

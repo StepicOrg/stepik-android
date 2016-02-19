@@ -68,7 +68,7 @@ public class Course implements Serializable, Parcelable {
     }
 
     @Deprecated
-    public synchronized void setIs_loading(boolean is_loading) {
+    public synchronized void set_loading(boolean is_loading) {
         this.is_loading = is_loading;
     }
 
@@ -78,7 +78,7 @@ public class Course implements Serializable, Parcelable {
     }
 
     @Deprecated
-    public synchronized void setIs_cached(boolean is_cached) {
+    public synchronized void set_cached(boolean is_cached) {
         this.is_cached = is_cached;
     }
 
@@ -347,7 +347,7 @@ public class Course implements Serializable, Parcelable {
         this.is_spoc = is_spoc;
     }
 
-    public void setIs_active(boolean is_active) {
+    public void set_active(boolean is_active) {
         this.is_active = is_active;
     }
 

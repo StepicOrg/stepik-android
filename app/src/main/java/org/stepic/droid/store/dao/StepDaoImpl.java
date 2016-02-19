@@ -59,10 +59,10 @@ public class StepDaoImpl extends DaoBase<Step> {
         step.setViewed_by(cursor.getLong(columnIndexViewedBy));
         step.setPassed_by(cursor.getLong(columnIndexPassedBy));
         step.setUpdate_date(cursor.getString(columnIndexUpdateDate));
-        step.setSubscriptions(DbParseHelper.parseStringToStringArray(cursor.getString(columnIndexSubscriptions)));
+        step.setSubscriptions(DbParseHelper.INSTANCE.parseStringToStringArray(cursor.getString(columnIndexSubscriptions)));
         step.setPosition(cursor.getLong(columnIndexPosition));
-        step.setIs_cached(cursor.getInt(columnIndexIsCached) > 0);
-        step.setIs_loading(cursor.getInt(columnIndexIsLoading) > 0);
+        step.set_cached(cursor.getInt(columnIndexIsCached) > 0);
+        step.set_loading(cursor.getInt(columnIndexIsLoading) > 0);
 
 //        step.setIs_custom_passed(isAssignmentByStepViewed(step.getId()));
         return step;
@@ -76,7 +76,7 @@ public class StepDaoImpl extends DaoBase<Step> {
         values.put(DbStructureStep.Column.LESSON_ID, step.getLesson());
         values.put(DbStructureStep.Column.STATUS, step.getStatus());
         values.put(DbStructureStep.Column.PROGRESS, step.getProgress());
-        values.put(DbStructureStep.Column.SUBSCRIPTIONS, DbParseHelper.parseStringArrayToString(step.getSubscriptions()));
+        values.put(DbStructureStep.Column.SUBSCRIPTIONS, DbParseHelper.INSTANCE.parseStringArrayToString(step.getSubscriptions()));
         values.put(DbStructureStep.Column.VIEWED_BY, step.getViewed_by());
         values.put(DbStructureStep.Column.PASSED_BY, step.getPassed_by());
         values.put(DbStructureStep.Column.CREATE_DATE, step.getCreate_date());
@@ -127,10 +127,10 @@ public class StepDaoImpl extends DaoBase<Step> {
         }
 
         Assignment assignment = mAssignmentDao.get(DbStructureAssignment.Column.STEP_ID, step.getId() + "");
-        if (assignment != null && assignment.getProgress() != null) {
-            Progress progress = mProgressDao.get(DbStructureProgress.Column.ID, assignment.getProgress());
+        if (assignment != null && assignment.getProgressId() != null) {
+            Progress progress = mProgressDao.get(DbStructureProgress.Column.ID, assignment.getProgressId());
             if (progress != null) {
-                step.setIs_custom_passed(progress.is_passed());
+                step.set_custom_passed(progress.is_passed());
             }
         }
     }

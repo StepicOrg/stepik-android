@@ -208,8 +208,8 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 //
 //        YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_DELETE_COURSE, JsonHelper.toJson(course));
 //        mCleaner.removeCourse(course, type);
-//        course.setIs_cached(false);
-//        course.setIs_loading(false);
+//        course.set_cached(false);
+//        course.set_loading(false);
 //        mDatabase.updateOnlyCachedLoadingCourse(course, type);
 //        notifyDataSetChanged();
 //    }
@@ -218,8 +218,8 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 //        // FIXME: 21.10.15 IMPLEMENTS IN BACKGROUND THREAD
 //        YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CACHE_COURSE, JsonHelper.toJson(course));
 //        mDownloadManager.addCourse(course, type);
-//        course.setIs_loading(true);
-//        course.setIs_cached(false);
+//        course.set_loading(true);
+//        course.set_cached(false);
 //        mDatabase.updateOnlyCachedLoadingCourse(course, type);
 //        notifyDataSetChanged();
 //    }

@@ -4,9 +4,9 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 
 public final class DateTimeHelper {
-    public static String getPresentOfDate(String dateInISOFormat, DateTimeFormatter mFormatForView, DateTime dateTime) {
+    public static String getPresentOfDate(String dateInISOFormat, DateTimeFormatter mFormatForView) {
         if (dateInISOFormat == null) return "";
-        dateTime = new DateTime(dateInISOFormat);
+        DateTime dateTime = new DateTime(dateInISOFormat);
         return mFormatForView.print(dateTime);
     }
 }

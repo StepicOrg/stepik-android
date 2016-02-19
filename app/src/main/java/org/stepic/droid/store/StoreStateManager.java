@@ -48,8 +48,8 @@ public class StoreStateManager implements IStoreStateManager {
             YandexMetrica.reportEvent(AppConstants.METRICA_LESSON_IN_STORE_STATE_NULL);
             return;
         }
-        lesson.setIs_loading(false);
-        lesson.setIs_cached(true);
+        lesson.set_loading(false);
+        lesson.set_cached(true);
         mDatabaseFacade.updateOnlyCachedLoadingLesson(lesson);
 
         final Unit unit = mDatabaseFacade.getUnitByLessonId(lessonId);
@@ -58,8 +58,8 @@ public class StoreStateManager implements IStoreStateManager {
             return;
         }
         if (unit.is_loading() || !unit.is_cached()) {
-            unit.setIs_loading(false);
-            unit.setIs_cached(true);
+            unit.set_loading(false);
+            unit.set_cached(true);
             mDatabaseFacade.updateOnlyCachedLoadingUnit(unit);
 
             Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
@@ -88,15 +88,15 @@ public class StoreStateManager implements IStoreStateManager {
         final Unit unit = mDatabaseFacade.getUnitByLessonId(lessonId);
 
         if (lesson.is_cached() || lesson.is_loading()) {
-            lesson.setIs_loading(false);
-            lesson.setIs_cached(false);
+            lesson.set_loading(false);
+            lesson.set_cached(false);
             mDatabaseFacade.updateOnlyCachedLoadingLesson(lesson);
         }
 
 
         if (unit.is_cached() || unit.is_loading()) {
-            unit.setIs_loading(false);
-            unit.setIs_cached(false);
+            unit.set_loading(false);
+            unit.set_cached(false);
             mDatabaseFacade.updateOnlyCachedLoadingUnit(unit);
 
             Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
@@ -129,8 +129,8 @@ public class StoreStateManager implements IStoreStateManager {
             return;
         }
         if (section.is_cached() || section.is_loading()) {
-            section.setIs_cached(false);
-            section.setIs_loading(false);
+            section.set_cached(false);
+            section.set_loading(false);
             mDatabaseFacade.updateOnlyCachedLoadingSection(section);
             Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
             //Say to ui that ui is cached now
@@ -155,8 +155,8 @@ public class StoreStateManager implements IStoreStateManager {
             return;
         }
         if (course.is_cached() || course.is_loading()) {
-            course.setIs_cached(false);
-            course.setIs_loading(false);
+            course.set_cached(false);
+            course.set_loading(false);
             mDatabaseFacade.updateOnlyCachedLoadingCourse(course, DatabaseFacade.Table.enrolled);
         }
     }
@@ -175,8 +175,8 @@ public class StoreStateManager implements IStoreStateManager {
             return;
         }
         if (!section.is_cached() || section.is_loading()) {
-            section.setIs_cached(true);
-            section.setIs_loading(false);
+            section.set_cached(true);
+            section.set_loading(false);
             mDatabaseFacade.updateOnlyCachedLoadingSection(section);
             Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
             //Say to ui that ui is cached now
@@ -209,8 +209,8 @@ public class StoreStateManager implements IStoreStateManager {
             return;
         }
 
-        course.setIs_loading(false);
-        course.setIs_cached(true);
+        course.set_loading(false);
+        course.set_cached(true);
         mDatabaseFacade.updateOnlyCachedLoadingCourse(course, DatabaseFacade.Table.enrolled);
     }
 }

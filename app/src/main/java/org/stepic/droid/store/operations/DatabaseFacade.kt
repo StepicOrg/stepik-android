@@ -80,7 +80,7 @@ class DatabaseFacade {
             else mCoursesEnrolledDao
 
 
-    fun addAssignment(assignment: Assignment?) = assignment?.let {mAssignmentDao.insertOrUpdate(assignment)}
+    fun addAssignment(assignment: Assignment?) = assignment?.let { mAssignmentDao.insertOrUpdate(assignment) }
 
     /**
      * deprecated because of step has 0..* assignments.
@@ -91,28 +91,29 @@ class DatabaseFacade {
         return assignment?.id ?: -1;
     }
 
-    fun getMapFromStepIdToTheirLesson(stepIds: LongArray): Map<Long, Lesson> {
+    fun getMapFromStepIdToTheirLesson(stepIds: LongArray?): Map<Long, Lesson> {
         val result = HashMap<Long, Lesson>()
-        val lessonSet = HashSet<Long>()
+        stepIds?.let {
+            val lessonSet = HashSet<Long>()
 
-        val stepIdsCommaSeparated = DbParseHelper.parseLongArrayToString(stepIds, ",")
-        val steps = mStepDao.getAllInRange(DbStructureStep.Column.STEP_ID, stepIdsCommaSeparated)
-        for (step in steps) {
-            lessonSet.add(step.lesson)
-        }
+            DbParseHelper.parseLongArrayToString(stepIds, ",")?.let {
+                val steps = mStepDao.getAllInRange(DbStructureStep.Column.STEP_ID, it)
+                for (step in steps) {
+                    lessonSet.add(step.lesson)
+                }
 
-        val lessonIds = lessonSet.toLongArray()
-        val lessonIdsCommaSeparated = DbParseHelper.parseLongArrayToString(lessonIds, ",")
-        val lessonArrayList = mLessonDao.getAllInRange(DbStructureLesson.Column.LESSON_ID, lessonIdsCommaSeparated)
-        for (stepItem in steps) {
-            for (lesson in lessonArrayList) {
-                if (lesson.id == stepItem.lesson) {
-                    result.put(stepItem.id, lesson)
-                    break
+                val lessonIds = lessonSet.toLongArray()
+                val lessonIdsCommaSeparated = DbParseHelper.parseLongArrayToString(lessonIds, ",")
+                lessonIdsCommaSeparated?.let {
+                    val lessonCollection = mLessonDao.getAllInRange(DbStructureLesson.Column.LESSON_ID, lessonIdsCommaSeparated).toHashSet()
+                    for (stepItem in steps) {
+                        lessonCollection
+                                .find { it.id == stepItem.lesson }
+                                ?.let { result.put(stepItem.id, it) }
+                    }
                 }
             }
         }
-
         return result
     }
 

@@ -69,12 +69,12 @@ public  class CourseDaoImpl extends DaoBase<Course> {
         course.setBegin_date_source(cursor.getString(indexBeginDateSource));
         course.setLast_deadline(cursor.getString(indexLastDeadline));
         course.setDescription(cursor.getString(indexDescription));
-        course.setInstructors(DbParseHelper.parseStringToLongArray(cursor.getString(indexInstructors)));
+        course.setInstructors(DbParseHelper.INSTANCE.parseStringToLongArray(cursor.getString(indexInstructors)));
         course.setRequirements(cursor.getString(indexRequirements));
         course.setEnrollment(cursor.getInt(indexEnrollment));
-        course.setIs_cached(cursor.getInt(indexIsCached) > 0);
-        course.setIs_loading(cursor.getInt(indexIsLoading) > 0);
-        course.setSections(DbParseHelper.parseStringToLongArray(cursor.getString(indexSection)));
+        course.set_cached(cursor.getInt(indexIsCached) > 0);
+        course.set_loading(cursor.getInt(indexIsLoading) > 0);
+        course.setSections(DbParseHelper.INSTANCE.parseStringToLongArray(cursor.getString(indexSection)));
         course.setIntro_video_id(cursor.getLong(indexIntroVideoId));
         return course;
     }

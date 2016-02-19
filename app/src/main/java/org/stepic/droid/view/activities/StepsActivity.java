@@ -342,7 +342,7 @@ public class StepsActivity extends FragmentActivityBase {
             @Override
             protected Void doInBackground(Void... params) {
                 for (Step item : localSteps) {
-                    item.setIs_custom_passed(mDbManager.isStepPassed(item.getId()));
+                    item.set_custom_passed(mDbManager.isStepPassed(item.getId()));
                     mDbManager.addStep(item); // FIXME: 26.01.16 WARNING, this line is dangerous
                 }
                 return null;
@@ -373,7 +373,7 @@ public class StepsActivity extends FragmentActivityBase {
         }
 
         if (step != null) {
-            step.setIs_custom_passed(true);
+            step.set_custom_passed(true);
             int pos = mViewPager.getCurrentItem();
 
             for (int i = 0; i < mTabLayout.getTabCount(); i++) {

@@ -45,8 +45,8 @@ public class FromDbUnitLessonTask extends StepicTask<Void, Void, UnitLessonProgr
         Map<Long, Progress> unitProgressMap = new HashMap<>();
 
         for (Unit unit : fromCacheUnits) {
-            String progressId = unit.getProgress();
-            unit.setIs_viewed_custom(mDatabaseFacade.isProgressViewed(progressId));
+            String progressId = unit.getProgressId();
+            unit.set_viewed_custom(mDatabaseFacade.isProgressViewed(progressId));
 
             //new api:
             Progress progress = mDatabaseFacade.getProgressById(progressId);

@@ -314,8 +314,8 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         int position = unitPairPosition.second;
 
         //now we have not null unit and correct position at list
-        unit.setIs_cached(true);
-        unit.setIs_loading(false);
+        unit.set_cached(true);
+        unit.set_loading(false);
         mAdapter.notifyItemChanged(position);
     }
 
@@ -328,7 +328,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         Unit unit = unitPairPosition.first;
         int position = unitPairPosition.second;
 
-        unit.setIs_viewed_custom(true);
+        unit.set_viewed_custom(true);
         mAdapter.notifyItemChanged(position);
     }
 

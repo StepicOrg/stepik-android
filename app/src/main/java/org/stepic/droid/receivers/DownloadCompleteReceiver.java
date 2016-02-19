@@ -53,8 +53,8 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     mDatabaseFacade.addVideo(cachedVideo);
 
                     Step step = mDatabaseFacade.getStepById(step_id);
-                    step.setIs_cached(true);
-                    step.setIs_loading(false);
+                    step.set_cached(true);
+                    step.set_loading(false);
                     mDatabaseFacade.updateOnlyCachedLoadingStep(step);
                     mStoreStateManager.updateUnitLessonState(step.getLesson());
                 }

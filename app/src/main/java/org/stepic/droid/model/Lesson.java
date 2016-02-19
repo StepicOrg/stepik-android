@@ -36,7 +36,7 @@ public class Lesson implements Parcelable, Serializable {
         return is_loading;
     }
 
-    public synchronized void setIs_loading(boolean is_loading) {
+    public synchronized void set_loading(boolean is_loading) {
         this.is_loading = is_loading;
     }
 
@@ -44,7 +44,7 @@ public class Lesson implements Parcelable, Serializable {
         return is_cached;
     }
 
-    public synchronized void setIs_cached(boolean is_cached) {
+    public synchronized void set_cached(boolean is_cached) {
         this.is_cached = is_cached;
     }
 
