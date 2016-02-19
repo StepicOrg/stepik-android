@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.neenbedankt.android-apt' //needed for source code generation
 
 
@@ -34,6 +35,9 @@ android {
         classic {
             applicationId "org.stepic.droid"
         }
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
     }
 }
 
@@ -75,8 +79,6 @@ dependencies {
 
     compile 'com.squareup:otto:1.3.8'
 
-    compile 'org.jetbrains:annotations:13.0'
-
     // AppMetrica from maven central. Protobuf will be included as dependency.
     compile 'com.yandex.android:mobmetricalib:2.21@aar'
 
@@ -101,11 +103,21 @@ dependencies {
 
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta1' // or 1.3.1
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta1' // or 1.3.1
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta1' // or 1.3.1
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta1'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // or 1.3.1
 }
 
 repositories {
     mavenCentral()
+}
+buildscript {
+    ext.kotlin_version = '1.0.0'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
 }
 
 
