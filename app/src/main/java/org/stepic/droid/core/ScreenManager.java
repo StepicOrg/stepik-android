@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 
 import com.yandex.metrica.YandexMetrica;
 
@@ -29,6 +30,7 @@ import org.stepic.droid.view.activities.RegisterActivity;
 import org.stepic.droid.view.activities.SectionActivity;
 import org.stepic.droid.view.activities.StepsActivity;
 import org.stepic.droid.view.activities.UnitsActivity;
+import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.web.ViewAssignment;
 
 import javax.inject.Inject;
@@ -70,7 +72,7 @@ public class ScreenManager implements IScreenManager {
     @Override
     public void showMainFeed(Context sourceActivity) {
         YandexMetrica.reportEvent("Screen manager: show main feed");
-        //todo finish all activities which exist for login (launch, splash, etc).
+        //todo onFinish all activities which exist for login (launch, splash, etc).
         Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         /*
@@ -157,11 +159,10 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
-    public void openRemindPassword(Context context) {
+    public void openRemindPassword(AppCompatActivity context) {
         YandexMetrica.reportEvent("Screen manager: remind password");
-        String url = mConfig.getBaseUrl() + "/accounts/password/reset/";
-        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
-        context.startActivity(intent);
+        android.support.v4.app.DialogFragment dialogFragment = RemindPasswordDialogFragment.newInstance();
+        dialogFragment.show(context.getSupportFragmentManager(), null);
     }
 
     @Override

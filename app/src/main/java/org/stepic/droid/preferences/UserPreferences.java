@@ -32,7 +32,7 @@ public class UserPreferences {
      *
      * @return folder for current user, where videos are saved.
      */
-    public File getDownloadFolder() {
+    public File getUserDownloadFolder() {
 
         File android = new File(Environment.getExternalStorageDirectory(), "Android");
         File downloadsDir = new File(android, "data");

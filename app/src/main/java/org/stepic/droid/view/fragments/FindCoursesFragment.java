@@ -35,6 +35,10 @@ import org.stepic.droid.view.listeners.OnRootTouchedListener;
 
 public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
 
+    public  static FindCoursesFragment newInstance(){
+        return new FindCoursesFragment();
+    }
+
     SearchView mSearchView = null;
     MenuItem mMenuItem = null;
     private boolean handledByRoot = false;
@@ -188,4 +192,11 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
         });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mSearchView != null){
+            mSearchView.setOnQueryTextListener(null);
+        }
+    }
 }

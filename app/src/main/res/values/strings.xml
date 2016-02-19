@@ -7,13 +7,13 @@
     <string name="create_my_account">Create account</string>
     <string name="by_creating_you_agree">By creating stepic account, you agree to the</string>
     <string name="terms">Terms</string>
-    <string name="email_login" translatable="false">e-mail</string>
+    <string name="email_login" translatable="false">E-mail</string>
     <string name="remind_password">Forgot password?</string>
     <string name="sign_in">Sign In</string>
     <string name="not_video_player_error">Please, install player for video playing</string>
-    <string name="first_name">first name</string>
-    <string name="second_name">second name</string>
-    <string name="password_hint">password</string>
+    <string name="first_name">First name</string>
+    <string name="second_name">Second name</string>
+    <string name="password_hint">Password</string>
     <string name="my_courses_title">My courses</string>
     <string name="best_lessons_title">Best lessons</string>
     <string name="drawer_open">open drawer</string>
@@ -92,5 +92,11 @@
     <string name="hint_for_type_answer">Type your answer here…</string>
     <string name="py_message"><![CDATA[Please open this problem in your <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>]]></string>
     <string name="review_warning">This task with review. Tap to open in web for points.</string>
+    <string name="password_too_short">Password must be a minimum of 6 characters.</string>
+    <string name="reset_password">Reset password</string>
+    <string name="send">send</string>
+    <string name="email_sent">We have sent you an e-mail.</string>
+    <string name="email_wrong">The e-mail address is not assigned to any user account.</string>
+    <string name="are_you_sure_logout">All saved data for offline will be removed. Are you sure? </string>
 
 </resources>

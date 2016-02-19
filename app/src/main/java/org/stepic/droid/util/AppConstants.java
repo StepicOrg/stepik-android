@@ -14,7 +14,9 @@ public class AppConstants {
             "<head>\n" +
             "<title>Step. Stepic.org</title>\n" +
             "<script type=\"text/x-mathjax-config\">\n" +
-            "  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
+            "  MathJax.Hub.Config({" +
+            "messageStyle: \"none\", " +
+            "tex2jax: {preview: \"none\", inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
             "</script>\n" +
             "<script type=\"text/javascript\"\n" +
             " src=\"http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML\">\n" +
@@ -95,4 +97,8 @@ public class AppConstants {
     public static final java.lang.String SEARCH = "search courses";
     public static final java.lang.String METRICA_LESSON_IN_STORE_STATE_NULL = "lesson was null in store state manager";
     public static final java.lang.String METRICA_UNIT_IN_STORE_STATE_NULL = "unit was null in store state manager";
+    public static final java.lang.String THUMBNAIL_POSTFIX_EXTENSION= ".png";
+    public static final java.lang.String DELIMITER_TEXT_SCORE= "/";
+
+
 }

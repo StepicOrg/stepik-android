@@ -9,13 +9,13 @@
     <string name="drawer_closed">закрыть меню</string>
     <string name="drawer_open">открыть меню</string>
     <string name="find_courses_title">Найти курсы</string>
-    <string name="first_name">имя</string>
+    <string name="first_name">Имя</string>
     <string name="logout_title">Выход</string>
     <string name="my_courses_title">Мои курсы</string>
     <string name="or_sign_up_with_email">или зарегистрироваться через e-mail</string>
-    <string name="password_hint">пароль</string>
+    <string name="password_hint">Пароль</string>
     <string name="remind_password">Вспомнить пароль</string>
-    <string name="second_name">фамилия</string>
+    <string name="second_name">Фамилия</string>
     <string name="settings_title">Настройки</string>
     <string name="sign_in">Вход</string>
     <string name="sign_up">Регистрация</string>
@@ -90,5 +90,11 @@
     <string name="hint_for_type_answer">Введите ответ здесь…</string>
     <string name="py_message"><![CDATA[Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>]]></string>
     <string name="review_warning">Это задание с рецензией. Нажмите, чтобы закончить задание в web и получить баллы.</string>
+    <string name="password_too_short">Минимальное количество символов в пароле: 6. </string>
+    <string name="reset_password">Сбросить пароль</string>
+    <string name="send">отправить</string>
+    <string name="email_sent">Мы отправили вам письмо.</string>
+    <string name="email_wrong">Нет пользователя с таким e-mail.</string>
+    <string name="are_you_sure_logout">Все сохраненные данные будут удалены. Вы уверены?</string>
 
 </resources>

@@ -8,6 +8,8 @@ import android.os.AsyncTask;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Credentials;
+import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -15,6 +17,8 @@ import com.squareup.okhttp.Response;
 import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.Nullable;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.ScreenManager;
@@ -22,6 +26,7 @@ import org.stepic.droid.deserializers.DatasetDeserializer;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.DatasetWrapper;
 import org.stepic.droid.model.EnrollmentWrapper;
+import org.stepic.droid.model.RegistrationUser;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
@@ -32,7 +37,12 @@ import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.RWLocks;
 
 import java.io.IOException;
+import java.net.CookieManager;
+import java.net.HttpCookie;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -60,6 +70,7 @@ public class RetrofitRESTApi implements IApi {
 
     private StepicRestLoggedService mLoggedService;
     private StepicRestOAuthService mOAuthService;
+    private StepicEmptyAuthService mStepicEmptyAuthService;
 
 
     public RetrofitRESTApi() {
@@ -67,6 +78,15 @@ public class RetrofitRESTApi implements IApi {
 
         makeOauthServiceWithNewAuthHeader(mSharedPreference.isLastTokenSocial() ? TokenType.social : TokenType.loginPassword);
         makeLoggedService();
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mConfig.getBaseUrl())
+                .addConverterFactory(generateGsonFactory())
+                .client(okHttpClient)
+                .build();
+        mStepicEmptyAuthService = retrofit.create(StepicEmptyAuthService.class);
 
     }
 
@@ -79,16 +99,31 @@ public class RetrofitRESTApi implements IApi {
                 try {
                     RWLocks.AuthLock.writeLock().lock();
                     AuthenticationStepicResponse response = mSharedPreference.getAuthResponseFromStore();
-                    if (response != null) {
-                        response = mOAuthService.updateToken(mConfig.getRefreshGrantType(), response.getRefresh_token()).execute().body();
+                    if (isNeededUpdate(response)) {
+                        try {
+                            response = mOAuthService.updateToken(mConfig.getRefreshGrantType(), response.getRefresh_token()).execute().body();
+                        } catch (Exception e) {
+                            YandexMetrica.reportError("cant update token", e);
+                            return chain.proceed(newRequest);
+                        }
+                        if (response == null || !response.isSuccess()) {
+                            //it is worst case:
+                            YandexMetrica.reportEvent("update is failed");
+                            return chain.proceed(newRequest);
+                        }
+
+                        //Update is success:
                         mSharedPreference.storeAuthInfo(response);
-                        newRequest = chain.request().newBuilder().addHeader("Authorization", getAuthHeaderValueForLogged()).build();
-                        return chain.proceed(newRequest);
                     }
+                    if (response != null) {
+                        YandexMetrica.reportEvent("response is not null in loggedService");
+                        newRequest = chain.request().newBuilder().addHeader("Authorization", getAuthHeaderValueForLogged()).build();
+                    }
+                    return chain.proceed(newRequest);
                 } finally {
                     RWLocks.AuthLock.writeLock().unlock();
                 }
-                return chain.proceed(newRequest);
+
             }
         };
         okHttpClient.networkInterceptors().add(interceptor);
@@ -151,8 +186,50 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
-    public Call<IStepicResponse> signUp(String firstName, String secondName, String email, String password) {
-        throw new RuntimeException("not implemented");
+    public Call<RegistrationResponse> signUp(String firstName, String lastName, String email, String password) {
+        YandexMetrica.reportEvent("Api: try register");
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Interceptor interceptor = new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request newRequest = chain.request();
+
+                List<HttpCookie> cookies = getCookiesForBaseUrl();
+                if (cookies == null)
+                    return chain.proceed(newRequest);
+                String csrftoken = null;
+                String sessionId = null;
+                for (HttpCookie item : cookies) {
+                    if (item.getName() != null && item.getName().equals("csrftoken")) {
+                        csrftoken = item.getValue();
+                        continue;
+                    }
+                    if (item.getName() != null && item.getName().equals("sessionid")) {
+                        sessionId = item.getValue();
+                    }
+                }
+
+                String cookieResult = "csrftoken=" + csrftoken + "; " + "sessionid=" + sessionId;
+
+                Request.Builder requestBuilder = chain
+                        .request()
+                        .newBuilder()
+                        .addHeader("Referer", mConfig.getBaseUrl())
+                        .addHeader("X-CSRFToken", csrftoken)
+                        .addHeader("Cookie", cookieResult);
+                newRequest = requestBuilder.build();
+                return chain.proceed(newRequest);
+            }
+        };
+        okHttpClient.networkInterceptors().add(interceptor);
+        Retrofit notLogged = new Retrofit.Builder()
+                .baseUrl(mConfig.getBaseUrl())
+                .addConverterFactory(generateGsonFactory())
+                .client(okHttpClient)
+                .build();
+        StepicRestOAuthService tempService = notLogged.create(StepicRestOAuthService.class);
+        return tempService.createAccount(new UserRegistrationRequest(new RegistrationUser(firstName, lastName, email, password)));
     }
 
     public Call<CoursesStepicResponse> getEnrolledCourses(int page) {
@@ -281,9 +358,81 @@ public class RetrofitRESTApi implements IApi {
         return mLoggedService.getExistingSubmissions(attemptId, order);
     }
 
+    @Override
+    public Call<Void> remindPassword(String email) {
+        String encodedEmail = URLEncoder.encode(email);
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Interceptor interceptor = new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request newRequest = chain.request();
+
+                List<HttpCookie> cookies = getCookiesForBaseUrl();
+                if (cookies == null)
+                    return chain.proceed(newRequest);
+                String csrftoken = null;
+                String sessionId = null;
+                for (HttpCookie item : cookies) {
+                    if (item.getName() != null && item.getName().equals("csrftoken")) {
+                        csrftoken = item.getValue();
+                        continue;
+                    }
+                    if (item.getName() != null && item.getName().equals("sessionid")) {
+                        sessionId = item.getValue();
+                    }
+                }
+
+                String cookieResult = "csrftoken=" + csrftoken + "; " + "sessionid=" + sessionId;
+                if (csrftoken == null) return chain.proceed(newRequest);
+                HttpUrl url = newRequest
+                        .httpUrl()
+                        .newBuilder()
+                        .addQueryParameter("csrfmiddlewaretoken", csrftoken)
+                        .addQueryParameter("csrfmiddlewaretoken", csrftoken)
+                        .build();
+                newRequest = newRequest.newBuilder()
+                        .addHeader("referer", mConfig.getBaseUrl())
+                        .addHeader("X-CSRFToken", csrftoken)
+                        .addHeader("Cookie", cookieResult)
+                        .url(url)
+                        .build();
+                return chain.proceed(newRequest);
+            }
+        };
+        okHttpClient.networkInterceptors().add(interceptor);
+        Retrofit notLogged = new Retrofit.Builder()
+                .baseUrl(mConfig.getBaseUrl())
+                .addConverterFactory(generateGsonFactory())
+                .client(okHttpClient)
+                .build();
+        StepicEmptyAuthService tempService = notLogged.create(StepicEmptyAuthService.class);
+        return tempService.remindPassword(encodedEmail);
+
+    }
+
+    @Nullable
+    private List<HttpCookie> getCookiesForBaseUrl() throws IOException {
+        retrofit.Response ob = mStepicEmptyAuthService.getStepicForFun().execute();
+        Headers headers = ob.headers();
+        CookieManager cookieManager = new CookieManager();
+        URI myUri = null;
+        try {
+            myUri = new URI(mConfig.getBaseUrl());
+        } catch (URISyntaxException e) {
+            return null;
+        }
+        cookieManager.put(myUri, headers.toMultimap());
+        return cookieManager.getCookieStore().get(myUri);
+    }
+
     private String getAuthHeaderValueForLogged() {
         try {
             AuthenticationStepicResponse resp = mSharedPreference.getAuthResponseFromStore();
+            if (resp == null) {
+                YandexMetrica.reportEvent("resp null");
+                return "";
+            }
             String access_token = resp.getAccess_token();
             String type = resp.getToken_type();
             return type + " " + access_token;
@@ -304,5 +453,18 @@ public class RetrofitRESTApi implements IApi {
             // FIXME: 19.11.15 ^^^^^^
             return "";
         }
+    }
+
+    private boolean isNeededUpdate(AuthenticationStepicResponse response) {
+        if (response == null) return false;
+
+        long timestampStored = mSharedPreference.getAccessTokenTimestamp();
+        if (timestampStored == -1) return true;
+
+        long nowTemp = DateTime.now(DateTimeZone.UTC).getMillis();
+        long delta = nowTemp - timestampStored;
+        long expiresMillis = -1;
+        expiresMillis = (response.getExpires_in() - 50) * 1000; //50 secs for query.
+        return delta > expiresMillis;//token expired --> need update
     }
 }

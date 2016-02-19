@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,14 +15,18 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
+import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
@@ -33,9 +39,11 @@ import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepic.droid.model.User;
+import org.stepic.droid.model.Video;
 import org.stepic.droid.store.operations.DatabaseManager;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.ThumbnailParser;
 import org.stepic.droid.view.adapters.CoursePropertyAdapter;
 import org.stepic.droid.view.adapters.InstructorAdapter;
 import org.stepic.droid.view.layout_managers.WrapContentLinearLayoutManager;
@@ -45,6 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 import retrofit.Callback;
@@ -53,6 +62,8 @@ import retrofit.Retrofit;
 
 public class CourseDetailActivity extends FragmentActivityBase {
 
+    @Bind(R.id.root_view)
+    View mRootView;
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
@@ -81,6 +92,14 @@ public class CourseDetailActivity extends FragmentActivityBase {
 
     @Bind(R.id.list_of_course_property)
     ListView mCoursePropertyListView;
+
+    @BindDrawable(R.drawable.video_placeholder)
+    Drawable mVideoPlaceholder;
+
+
+    ImageView mThumbnail;
+
+    View mPlayer;
 
 
     private List<CourseProperty> mCoursePropertyList;
@@ -112,6 +131,9 @@ public class CourseDetailActivity extends FragmentActivityBase {
         View header = ((LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.activity_course_detailed_header, null, false);
         mCoursePropertyListView.addHeaderView(header);
         mIntroView = ButterKnife.findById(header, R.id.intro_video);
+        mThumbnail = ButterKnife.findById(header, R.id.player_thumbnail);
+        mPlayer = ButterKnife.findById(header, R.id.player_layout);
+        mPlayer.setVisibility(View.GONE);
         mCourseNameView = ButterKnife.findById(header, R.id.course_name);
 
 
@@ -132,6 +154,7 @@ public class CourseDetailActivity extends FragmentActivityBase {
 
         overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         hideSoftKeypad();
+        setUpIntroVideo();
     }
 
     @Override
@@ -139,24 +162,6 @@ public class CourseDetailActivity extends FragmentActivityBase {
         super.onStart();
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        String urlToVideo = mCourse.getIntro();
-        if (urlToVideo == null || urlToVideo.equals("")) {
-            mIntroView.setVisibility(View.GONE);
-        } else {
-            WebSettings webSettings = mIntroView.getSettings();
-            webSettings.setJavaScriptEnabled(true);
-            webSettings.setAppCacheEnabled(true);
-            webSettings.setDomStorageEnabled(true);
-
-
-            final String mimeType = "text/html";
-            final String encoding = "UTF-8";
-            mIntroView.loadUrl(urlToVideo);
-//            mIntroView.loadDataWithBaseURL("", html, mimeType, encoding, "");
-//            mHeaderWv.setText(HtmlHelper.fromHtml(mStep.getBlock().getText()));
-            mIntroView.setVisibility(View.VISIBLE);
-        }
 
 
 //        String urltovideo = "https://player.vimeo.com/external/111345189.hd.mp4?s=ea9aab1c15434d7bfd3515afaf70a9de&profile_id=113&oauth2_token_id=3605157";
@@ -204,6 +209,73 @@ public class CourseDetailActivity extends FragmentActivityBase {
             });
         }
         bus.register(this);
+    }
+
+    private void setUpIntroVideo() {
+        String urlToVideo = null;
+
+        Video newTypeVideo = mCourse.getIntro_video();
+        if (newTypeVideo != null && newTypeVideo.getUrls() != null && !newTypeVideo.getUrls().isEmpty()) {
+            urlToVideo = newTypeVideo.getUrls().get(0).getUrl();
+            showNewStyleVideo(urlToVideo, newTypeVideo.getThumbnail());
+        } else {
+            urlToVideo = mCourse.getIntro();
+            showOldStyleVideo(urlToVideo);
+        }
+
+    }
+
+    private void showNewStyleVideo(final String urlToVideo, String pathThumbnail) {
+        mIntroView.setVisibility(View.GONE);
+        if (urlToVideo == null || urlToVideo.equals("") || pathThumbnail == null || pathThumbnail.equals("")) {
+            mIntroView.setVisibility(View.GONE);
+            mPlayer.setVisibility(View.GONE);
+        } else {
+            setmThumbnail(pathThumbnail);
+            mPlayer.setVisibility(View.VISIBLE);
+            mPlayer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri videoUri = Uri.parse(urlToVideo);
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
+                    intent.setDataAndType(videoUri, "video/*");
+                    //todo change icon to play
+                    try {
+                        startActivity(intent);
+                    } catch (Exception ex) {
+                        YandexMetrica.reportError("NotPlayer", ex);
+                        Toast.makeText(CourseDetailActivity.this, R.string.not_video_player_error, Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+    }
+
+    private void showOldStyleVideo(String urlToVideo) {
+        mPlayer.setVisibility(View.GONE);
+        if (urlToVideo == null || urlToVideo.equals("")) {
+            mIntroView.setVisibility(View.GONE);
+            mPlayer.setVisibility(View.GONE);
+        } else {
+            WebSettings webSettings = mIntroView.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+            webSettings.setAppCacheEnabled(true);
+            webSettings.setDomStorageEnabled(true);
+
+            webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+            webSettings.setPluginState(WebSettings.PluginState.ON);
+            mIntroView.setWebChromeClient(new WebChromeClient());
+            mIntroView.clearFocus();
+            mRootView.requestFocus();
+
+            final String mimeType = "text/html";
+            final String encoding = "UTF-8";
+            mIntroView.loadUrl(urlToVideo);
+//            mIntroView.loadDataWithBaseURL("", html, mimeType, encoding, "");
+//            mHeaderWv.setText(HtmlHelper.fromHtml(mStep.getBlock().getText()));
+            mIntroView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -261,6 +333,8 @@ public class CourseDetailActivity extends FragmentActivityBase {
 
     @Override
     protected void onDestroy() {
+        mIntroView.destroy();
+        mIntroView = null;
         super.onDestroy();
         mCourse = null;
     }
@@ -331,6 +405,15 @@ public class CourseDetailActivity extends FragmentActivityBase {
         ProgressHelper.dismiss(mJoinCourseSpinner);
         mJoinCourseView.setEnabled(true);
 
+    }
+
+    private void setmThumbnail(String thumbnail) {
+        Uri uri = ThumbnailParser.getUriForThumbnail(thumbnail);
+        Picasso.with(this)
+                .load(uri)
+                .placeholder(mVideoPlaceholder)
+                .error(mVideoPlaceholder)
+                .into(mThumbnail);
     }
 
 

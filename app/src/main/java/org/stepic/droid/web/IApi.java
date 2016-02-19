@@ -17,7 +17,7 @@ public interface IApi {
 
     Call<AuthenticationStepicResponse> authWithCode(String code);
 
-    Call<IStepicResponse> signUp(String firstName, String secondName, String email, String password);
+    Call<RegistrationResponse> signUp(String firstName, String secondName, String email, String password);
 
     Call<CoursesStepicResponse> getEnrolledCourses(int page);
 
@@ -58,4 +58,6 @@ public interface IApi {
     Call<AttemptResponse> getExistingAttempts(long stepId);
 
     Call<SubmissionResponse> getSubmissions(long attemptId);
+
+    Call<Void> remindPassword(String email);
 }

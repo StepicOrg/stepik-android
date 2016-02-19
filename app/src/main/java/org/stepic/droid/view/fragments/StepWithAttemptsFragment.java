@@ -325,7 +325,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
         switch (submission.getStatus()) {
             case CORRECT:
-                onCorrectSubmission();
+                onCorrectSubmission(submission);
                 setTextToActionButton(mTryAgainText);
                 blockUIBeforeSubmit(true);
                 break;
@@ -375,8 +375,8 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         mResultLine.setVisibility(View.VISIBLE);
     }
 
-    protected final void onCorrectSubmission() {
-        markLocalProgressAsViewed();
+    protected final void onCorrectSubmission(Submission submission) {
+        markLocalProgressAsViewed(submission);
         mAttemptContainer.setBackgroundResource(R.color.correct_answer_background);
         mStatusIcon.setImageDrawable(mCorrectIcon);
         mStatusTextView.setText(getCorrectString());
@@ -408,7 +408,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     }
 
 
-    protected final void markLocalProgressAsViewed() {
+    protected final void markLocalProgressAsViewed(final Submission submission) {
         bus.post(new UpdateStepEvent(mStep.getId()));
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             long stepId = mStep.getId();
@@ -417,6 +417,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
                 long assignmentId = mDatabaseManager.getAssignmentIdByStepId(stepId);
                 mDatabaseManager.markProgressAsPassed(assignmentId);
                 mLocalProgressManager.checkUnitAsPassed(stepId);
+                mLocalProgressManager.updateUnitProgress(mUnit.getId());
                 return null;
             }
         };

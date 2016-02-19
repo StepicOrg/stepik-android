@@ -492,8 +492,7 @@ public class StepsActivity extends FragmentActivityBase {
         if (qualityForView != null) {
             quality.setTitle(qualityForView);
         } else {
-            quality.setTitle("");
-
+            quality.setVisible(false);
         }
         return true;
     }

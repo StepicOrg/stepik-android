@@ -7,6 +7,7 @@ public final class DbStructureUnit extends DBStructureBase {
     public static final String UNITS = "units";
 
     public static final class Column {
+        @Deprecated
         public static final String ID = "_id";
         public static final String UNIT_ID = "unit_id";
         public static final String SECTION = "section_id";

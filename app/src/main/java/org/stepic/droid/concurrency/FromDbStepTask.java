@@ -8,6 +8,8 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.store.operations.DatabaseManager;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -30,7 +32,18 @@ public class FromDbStepTask extends StepicTask<Void, Void, List<Step>> {
 
     @Override
     protected List<Step> doInBackgroundBody(Void... params) throws Exception {
-        return mDatabaseManager.getStepsOfLesson(mLesson.getId());
+        List<Step> stepList = mDatabaseManager.getStepsOfLesson(mLesson.getId());
+        Collections.sort(stepList, new Comparator<Step>() {
+            @Override
+            public int compare(Step lhs, Step rhs) {
+                if (lhs == null || rhs == null) return 0;
+
+                long lhsPos = lhs.getPosition();
+                long rhsPos = rhs.getPosition();
+                return (int)(lhsPos - rhsPos);
+            }
+        });
+        return stepList;
     }
 
     @Override

@@ -5,6 +5,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.yandex.metrica.YandexMetrica;
+
 public class ProgressHelper {
     public static void dismiss(ProgressBar mProgressLoogin) {
 
@@ -34,7 +36,12 @@ public class ProgressHelper {
     }
 
     public static void dismiss(ProgressDialog progressDialog) {
-        if (progressDialog != null)
-            progressDialog.dismiss();
+        if (progressDialog != null && progressDialog.isShowing()) {
+            try {
+                progressDialog.dismiss();
+            } catch (Exception ex) {
+                YandexMetrica.reportError("progressDialog", ex);
+            }
+        }
     }
 }

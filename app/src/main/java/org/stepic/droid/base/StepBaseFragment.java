@@ -9,6 +9,7 @@ import android.webkit.WebView;
 import org.stepic.droid.R;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
+import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.AppConstants;
 
 import butterknife.Bind;
@@ -20,6 +21,7 @@ public abstract class StepBaseFragment extends FragmentBase {
 
     protected Step mStep;
     protected Lesson mLesson;
+    protected Unit mUnit;
 
 
     @Override
@@ -27,6 +29,7 @@ public abstract class StepBaseFragment extends FragmentBase {
         super.onActivityCreated(savedInstanceState);
         mStep = (Step) getArguments().getSerializable(AppConstants.KEY_STEP_BUNDLE);
         mLesson = (Lesson) getArguments().getSerializable(AppConstants.KEY_LESSON_BUNDLE);
+        mUnit = (Unit)getArguments().getSerializable(AppConstants.KEY_UNIT_BUNDLE);
 
         if (mStep != null &&
                 mStep.getBlock() != null &&

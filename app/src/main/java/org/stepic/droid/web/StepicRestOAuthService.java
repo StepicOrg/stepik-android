@@ -1,6 +1,7 @@
 package org.stepic.droid.web;
 
 import retrofit.Call;
+import retrofit.http.Body;
 import retrofit.http.POST;
 import retrofit.http.Query;
 
@@ -19,5 +20,8 @@ public interface StepicRestOAuthService {
     Call<AuthenticationStepicResponse> getTokenByCode(@Query("grant_type") String grant_type,
                                                       @Query("code") String code,
                                                       @Query("redirect_uri") String redirect_uri);
+
+    @POST("/api/users")
+    Call<RegistrationResponse> createAccount(@Body UserRegistrationRequest user);
 
 }

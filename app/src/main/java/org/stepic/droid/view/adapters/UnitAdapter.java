@@ -4,14 +4,18 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
@@ -19,6 +23,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.CleanManager;
@@ -31,10 +36,12 @@ import org.stepic.droid.view.listeners.OnClickLoadListener;
 import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import butterknife.BindDrawable;
 import butterknife.ButterKnife;
 
 public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements StepicOnClickItemListener, OnClickLoadListener {
@@ -64,15 +71,16 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     private Activity mActivity;
     private final List<Unit> mUnitList;
     private RecyclerView mRecyclerView;
+    private final Map<Long, Progress> mUnitProgressMap;
 
-    public UnitAdapter(Context context, Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Activity activity) {
+    public UnitAdapter(Context context, Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, Activity activity) {
 
         this.mContext = context;
         this.mParentSection = parentSection;
         this.mUnitList = unitList;
         this.mLessonList = lessonList;
         mActivity = activity;
-
+        mUnitProgressMap = unitProgressMap;
         MainApplication.component().inject(this);
     }
 
@@ -110,11 +118,49 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         holder.unitTitle.setText(titleBuilder.toString());
 
+        Progress progress = mUnitProgressMap.get(unit.getId());
+        int cost = 0;
+        double doubleScore = 0;
+        String scoreString = "";
+        if (progress != null) {
+            cost = progress.getCost();
+            scoreString = progress.getScore();
+            try {
+                doubleScore = Double.parseDouble(scoreString);
+                if ((doubleScore == Math.floor(doubleScore)) && !Double.isInfinite(doubleScore)) {
+                    scoreString = (int) doubleScore + "";
+                }
+
+            } catch (Exception ignored) {
+            }
+        }
+
+        Picasso.with(MainApplication.getAppContext())
+                .load(lesson.getCover_url())
+                .placeholder(holder.mLessonPlaceholderDrawable)
+                .error(holder.mLessonPlaceholderDrawable)
+                .into(holder.mLessonIcon);
+
+        if (cost != 0) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(scoreString);
+            sb.append(AppConstants.DELIMITER_TEXT_SCORE);
+            sb.append(cost);
+            holder.mTextScore.setVisibility(View.VISIBLE);
+            holder.mProgressScore.setVisibility(View.VISIBLE);
+            holder.mProgressScore.setMax(cost);
+            holder.mProgressScore.setProgress((int)doubleScore);
+            holder.mTextScore.setText(sb.toString());
+        } else {
+            holder.mTextScore.setVisibility(View.GONE);
+            holder.mProgressScore.setVisibility(View.GONE);
+        }
+
 
         if (unit.is_viewed_custom()) {
-            holder.viewedItem.setVisibility(View.INVISIBLE);
-        } else {
             holder.viewedItem.setVisibility(View.VISIBLE);
+        } else {
+            holder.viewedItem.setVisibility(View.INVISIBLE);
         }
 
         if (unit.is_cached()) {
@@ -231,9 +277,6 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         @Bind(R.id.cv)
         View cv;
 
-        @Bind(R.id.unit_layout)
-        View layout;
-
         @Bind(R.id.unit_title)
         TextView unitTitle;
 
@@ -252,6 +295,18 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         @Bind(R.id.viewed_item)
         View viewedItem;
+
+        @Bind(R.id.text_score)
+        TextView mTextScore;
+
+        @Bind(R.id.student_progress_score_bar)
+        ProgressBar mProgressScore;
+
+        @Bind(R.id.lesson_icon)
+        ImageView mLessonIcon;
+
+        @BindDrawable(R.drawable.ic_lesson_cover)
+        Drawable mLessonPlaceholderDrawable;
 
         public UnitViewHolder(View itemView, final StepicOnClickItemListener listener, final OnClickLoadListener loadListener) {
             super(itemView);

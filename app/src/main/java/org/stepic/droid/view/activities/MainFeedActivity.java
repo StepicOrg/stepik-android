@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -33,7 +34,6 @@ import org.stepic.droid.view.fragments.MyCoursesFragment;
 import org.stepic.droid.view.fragments.SettingsFragment;
 import org.stepic.droid.web.StepicProfileResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -57,11 +57,8 @@ public class MainFeedActivity extends FragmentActivityBase
     @Bind(R.id.drawer)
     DrawerLayout mDrawerLayout;
 
-
-    //    @Bind(R.id.profile_image)
     ImageView mProfileImage;
 
-    //    @Bind(R.id.username)
     TextView mUserNameTextView;
 
 
@@ -73,7 +70,6 @@ public class MainFeedActivity extends FragmentActivityBase
 
 
     private List<FragmentBase> mFragments;
-    private FragmentBase mCurrentFragment;
     private int mCurrentIndex;
 
 
@@ -87,7 +83,6 @@ public class MainFeedActivity extends FragmentActivityBase
         mProfileImage = ButterKnife.findById(headerLayout, R.id.profile_image);
         mUserNameTextView = ButterKnife.findById(headerLayout, R.id.username);
 
-
         setUpToolbar();
         setUpDrawerLayout();
         initFragments(savedInstanceState);
@@ -100,10 +95,13 @@ public class MainFeedActivity extends FragmentActivityBase
             mShell.getApi().getUserProfile().enqueue(new Callback<StepicProfileResponse>() {
                 @Override
                 public void onResponse(Response<StepicProfileResponse> response, Retrofit retrofit) {
-                    Profile profile = response.body().getProfile();
+                    if (response.isSuccess()) {
+                        Profile profile = response.body().getProfile();
 
-                    helper.storeProfile(profile);
-                    bus.post(new ProfileCanBeShownEvent(profile));
+                        helper.storeProfile(profile);
+                        bus.post(new ProfileCanBeShownEvent(profile));
+                    }
+                    // TODO: 09.02.16 add 'else' statement
                 }
 
                 @Override
@@ -117,9 +115,6 @@ public class MainFeedActivity extends FragmentActivityBase
         } else {
             bus.post(new ProfileCanBeShownEvent(cachedProfile));
         }
-//        SharedPreferenceHelper sharedPreferenceHelper = mShell.getSharedPreferenceHelper();
-//        AuthenticationStepicResponse resp = sharedPreferenceHelper.getAuthResponseFromStore(MainFeedActivity.this);
-
     }
 
     private void setUpToolbar() {
@@ -130,13 +125,6 @@ public class MainFeedActivity extends FragmentActivityBase
     }
 
     private void initFragments(Bundle savedInstance) {
-        //// TODO: 22.12.15 optimize it, remove dependence on indices
-        mFragments = new ArrayList<>();
-        mFragments.add(new MyCoursesFragment());
-        mFragments.add(new FindCoursesFragment());
-        mFragments.add(new DownloadsFragment());
-        mFragments.add(new SettingsFragment());
-
         if (savedInstance == null) {
             mCurrentIndex = 0;
         } else {
@@ -154,7 +142,6 @@ public class MainFeedActivity extends FragmentActivityBase
     }
 
     private void showCurrentFragment(MenuItem menuItem) {
-        mCurrentFragment = mFragments.get(mCurrentIndex);
         setTitle(menuItem.getTitle());
         setFragment();
     }
@@ -171,16 +158,17 @@ public class MainFeedActivity extends FragmentActivityBase
             case R.id.find_lessons:
                 mCurrentIndex = 1;
                 break;
-            case R.id.my_settings:
-                mCurrentIndex = 3;
-                break;
             case R.id.cached_videos:
                 mCurrentIndex = 2;
                 break;
+            case R.id.my_settings:
+                mCurrentIndex = 3;
+                break;
+
             case R.id.logout_item:
                 YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_LOGOUT);
 
-                LogoutAreYouSureDialog dialog = new LogoutAreYouSureDialog();
+                LogoutAreYouSureDialog dialog =  LogoutAreYouSureDialog.newInstance();
                 dialog.show(getSupportFragmentManager(), null);
 
                 new Handler().postDelayed(new Runnable() {
@@ -229,7 +217,27 @@ public class MainFeedActivity extends FragmentActivityBase
     }
 
     private void setFragment() {
-        setFragment(R.id.frame, mCurrentFragment);
+        Fragment shortLifetimeRef = null;
+        switch (mCurrentIndex) {
+            case 0:
+                shortLifetimeRef = MyCoursesFragment.newInstance();
+                break;
+            case 1:
+                shortLifetimeRef = FindCoursesFragment.newInstance();
+                break;
+            case 2:
+                shortLifetimeRef = DownloadsFragment.newInstance();
+                break;
+            case 3:
+                shortLifetimeRef = SettingsFragment.newInstance();
+                break;
+            default:
+                shortLifetimeRef = null;
+                break;
+        }
+        if (shortLifetimeRef != null) {
+            setFragment(R.id.frame, shortLifetimeRef);
+        }
     }
 
     @Subscribe

@@ -1,6 +1,8 @@
 package org.stepic.droid.view.fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +22,7 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.wifi_settings.WifiLoadIsChangedEvent;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.view.custom.BetterSwitch;
 import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
 import org.stepic.droid.view.dialogs.ClearCacheDialogFragment;
@@ -30,6 +33,13 @@ import butterknife.BindString;
 import butterknife.ButterKnife;
 
 public class SettingsFragment extends FragmentBase {
+
+    public  static SettingsFragment newInstance(){
+        return new SettingsFragment();
+    }
+
+    private static final int REQUEST_CLEAR_CACHE = 0;
+
     @Bind(R.id.clear_cache_button)
     Button mClearCacheButton;
 
@@ -44,6 +54,15 @@ public class SettingsFragment extends FragmentBase {
 
     @BindString(R.string.version)
     String versionPrefix;
+
+    @BindString(R.string.clear_cache_title)
+    String mClearCacheTitle;
+
+    @BindString(R.string.kb)
+    String kb;
+
+    @BindString(R.string.mb)
+    String mb;
 
     private DialogFragment mClearCacheDialogFragment;
 
@@ -61,15 +80,7 @@ public class SettingsFragment extends FragmentBase {
 
         showVersionName();
 
-        mClearCacheDialogFragment = new ClearCacheDialogFragment();
-
-        mClearCacheButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CLEAR_CACHE);
-                mClearCacheDialogFragment.show(getFragmentManager(), null);
-            }
-        });
+        setUpClearCacheButton();
 
         mWifiLoadSwitch.setChecked(!mSharedPreferenceHelper.isMobileInternetAlsoAllowed());//if first time it is true
 
@@ -100,6 +111,39 @@ public class SettingsFragment extends FragmentBase {
                 videoDialog.show(getFragmentManager(), null);
             }
         });
+    }
+
+    private void setUpClearCacheButton() {
+        mClearCacheDialogFragment = new ClearCacheDialogFragment();
+        mClearCacheDialogFragment.setTargetFragment(this, REQUEST_CLEAR_CACHE);
+        mClearCacheButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CLEAR_CACHE);
+                mClearCacheDialogFragment.show(getFragmentManager(), null);
+            }
+        });
+        StringBuilder clearCacheButtonText = new StringBuilder();
+        clearCacheButtonText.append(mClearCacheTitle);
+        long size = FileUtil.getFileOrFolderSizeInKb(mUserPreferences.getUserDownloadFolder());
+        if (size > 0) {
+            mClearCacheButton.setEnabled(true);
+            clearCacheButtonText.append(" ");
+            clearCacheButtonText.append("(");
+            if (size > 1024) {
+                size = size / 1024;
+                clearCacheButtonText.append(size);
+                clearCacheButtonText.append(mb);
+            } else {
+                clearCacheButtonText.append(size);
+                clearCacheButtonText.append(kb);
+            }
+            clearCacheButtonText.append(")");
+        }
+        else{
+            mClearCacheButton.setEnabled(false);
+        }
+        mClearCacheButton.setText(clearCacheButtonText.toString());
     }
 
     @Override
@@ -144,6 +188,16 @@ public class SettingsFragment extends FragmentBase {
         } catch (Exception e) {
             YandexMetrica.reportError(AppConstants.NOT_SIGNIFICANT_ERROR, e);
             mVersionTv.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if (requestCode == REQUEST_CLEAR_CACHE) {
+            setUpClearCacheButton();
         }
     }
 }

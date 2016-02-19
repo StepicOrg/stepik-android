@@ -28,6 +28,7 @@ import org.stepic.droid.events.units.SuccessLoadUnitsEvent;
 import org.stepic.droid.events.units.UnitCachedEvent;
 import org.stepic.droid.events.units.UnitLessonSavedEvent;
 import org.stepic.droid.events.units.UnitProgressUpdateEvent;
+import org.stepic.droid.events.units.UnitScoreUpdateEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
@@ -42,7 +43,9 @@ import org.stepic.droid.web.ProgressesResponse;
 import org.stepic.droid.web.UnitStepicResponse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -72,6 +75,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     private UnitAdapter mAdapter;
     private List<Unit> mUnitList;
     private List<Lesson> mLessonList;
+    private Map<Long, Progress> mUnitProgressMap;
 
     private FromDbUnitLessonTask mFromDbTask;
     private ToDbUnitLessonTask mToDbTask;
@@ -96,7 +100,8 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         mUnitsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mUnitList = new ArrayList<>();
         mLessonList = new ArrayList<>();
-        mAdapter = new UnitAdapter(this, mSection, mUnitList, mLessonList, this);
+        mUnitProgressMap = new HashMap<>();
+        mAdapter = new UnitAdapter(this, mSection, mUnitList, mLessonList, mUnitProgressMap, this);
         mUnitsRecyclerView.setAdapter(mAdapter);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -195,13 +200,17 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         mToDbTask.execute();
     }
 
-    private void showUnitsLessons(List<Unit> units, List<Lesson> lessons) {
+    private void showUnitsLessons(List<Unit> units, List<Lesson> lessons, Map<Long, Progress> longProgressMap) {
 
         mLessonList.clear();
         mLessonList.addAll(lessons);
 
         mUnitList.clear();
         mUnitList.addAll(units);
+
+        mUnitProgressMap.clear();
+        mUnitProgressMap.putAll(longProgressMap);
+
         dismissReport();
         mAdapter.notifyDataSetChanged();
 
@@ -271,7 +280,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     public void onSuccessLoadFromDb(LoadedFromDbUnitsLessonsEvent e) {
         if (mSection != e.getSection()) return;
         if (e.getUnits() != null && e.getLessons() != null && e.getUnits().size() != 0 && e.getLessons().size() != 0) {
-            showUnitsLessons(e.getUnits(), e.getLessons());
+            showUnitsLessons(e.getUnits(), e.getLessons(), e.getProgressMap());
             if (firstLoad) {
                 firstLoad = false;
                 updateUnits();
@@ -320,6 +329,21 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         int position = unitPairPosition.second;
 
         unit.setIs_viewed_custom(true);
+        mAdapter.notifyItemChanged(position);
+    }
+
+    @Subscribe
+    public void onUnitScoreChanged (UnitScoreUpdateEvent event) {
+        long unitId = event.getUnitId();
+
+        Pair<Unit, Integer> unitPairPosition = getUnitOnScreenAndPositionById(unitId);
+        if (unitPairPosition == null) return;
+        Unit unit = unitPairPosition.first;
+        int position = unitPairPosition.second;
+
+        Progress progress =  mUnitProgressMap.get(unitId);
+        progress.setScore(event.getNewScore() + "");
+
         mAdapter.notifyItemChanged(position);
     }
 

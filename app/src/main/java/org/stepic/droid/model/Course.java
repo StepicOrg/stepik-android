@@ -59,6 +59,8 @@ public class Course implements Serializable, Parcelable {
     private String slug; //link to ../course/#slug#
     private boolean is_cached;
     private boolean is_loading;
+    private Video intro_video;
+    private long intro_video_id;
 
     @Deprecated
     public boolean is_loading() {
@@ -83,6 +85,10 @@ public class Course implements Serializable, Parcelable {
     private transient DateTime mBeginDateTime = null;
 
     private transient DateTime mEndDateTime = null;
+
+    public void setIntro_video(Video intro_video) {
+        this.intro_video = intro_video;
+    }
 
     private String formatForView = null;
 
@@ -393,6 +399,13 @@ public class Course implements Serializable, Parcelable {
         return last_deadline;
     }
 
+    public long getIntro_video_id() {
+        return intro_video_id;
+    }
+
+    public void setIntro_video_id(long intro_video_id) {
+        this.intro_video_id = intro_video_id;
+    }
 
     public long[] getSections() {
         return sections;
@@ -402,6 +415,9 @@ public class Course implements Serializable, Parcelable {
         this.sections = sections;
     }
 
+    public Video getIntro_video() {
+        return intro_video;
+    }
 
     @Override
     public int describeContents() {
@@ -440,6 +456,8 @@ public class Course implements Serializable, Parcelable {
         dest.writeString(this.slug);
         dest.writeByte(is_cached ? (byte) 1 : (byte) 0);
         dest.writeByte(is_loading ? (byte) 1 : (byte) 0);
+        dest.writeParcelable(this.intro_video, 0);
+        dest.writeLong(this.intro_video_id);
         dest.writeSerializable(this.mBeginDateTime);
         dest.writeSerializable(this.mEndDateTime);
         dest.writeString(this.formatForView);
@@ -476,6 +494,8 @@ public class Course implements Serializable, Parcelable {
         this.slug = in.readString();
         this.is_cached = in.readByte() != 0;
         this.is_loading = in.readByte() != 0;
+        this.intro_video = in.readParcelable(Video.class.getClassLoader());
+        this.intro_video_id = in.readLong();
         this.mBeginDateTime = (DateTime) in.readSerializable();
         this.mEndDateTime = (DateTime) in.readSerializable();
         this.formatForView = in.readString();

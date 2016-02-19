@@ -168,7 +168,13 @@ public class StepicDefaultModule {
 
     @Singleton
     @Provides
-    public ILocalProgressManager provideProgressManager(DatabaseManager databaseManager, Bus bus) {
-        return new LocalProgressOfUnitManager(databaseManager, bus);
+    public ILocalProgressManager provideProgressManager(DatabaseManager databaseManager, Bus bus, IApi api) {
+        return new LocalProgressOfUnitManager(databaseManager, bus, api);
+    }
+
+    @Singleton
+    @Provides
+    public ILoginManager provideLoginManager (IShell shell, Context context){
+        return new LoginManager(shell, context);
     }
 }

@@ -24,7 +24,7 @@ public class NumberStepFragment extends SingleLineSendStepFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        mAnswerField.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+        mAnswerField.setRawInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
         return v;
     }
 

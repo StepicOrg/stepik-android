@@ -12,30 +12,23 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
-import org.stepic.droid.preferences.SharedPreferenceHelper;
+import org.stepic.droid.core.ActivityFinisher;
+import org.stepic.droid.core.ProgressHandler;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DpPixelsHelper;
-import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.SocialAuthAdapter;
 import org.stepic.droid.view.decorators.SpacesItemDecorationHorizontal;
-import org.stepic.droid.web.AuthenticationStepicResponse;
-import org.stepic.droid.web.IApi;
-
-import java.net.ProtocolException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import butterknife.OnClick;
 
 public class LoginActivity extends FragmentActivityBase {
 
@@ -60,7 +53,7 @@ public class LoginActivity extends FragmentActivityBase {
     @Bind(R.id.social_list)
     RecyclerView mSocialRecyclerView;
 
-    ProgressDialog mProgressLogin;
+    private ProgressDialog mProgressLogin;
 
 
     @Override
@@ -138,41 +131,40 @@ public class LoginActivity extends FragmentActivityBase {
             }
         });
 
-        mForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mShell.getScreenProvider().openRemindPassword(LoginActivity.this);
-            }
-        });
-
-
         mRootView.requestFocus();
 
         //if we redirect from social:
 
         Intent intent = getIntent();
         if (intent.getData() != null) {
-            try {
-                String code = intent.getData().getQueryParameter("code");
-
-                hideSoftKeypad();
-                ProgressHelper.activate(mProgressLogin);
-                mShell.getApi().authWithCode(code).enqueue(new Callback<AuthenticationStepicResponse>() {
-                    @Override
-                    public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
-                        successLogin(response, retrofit);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        failLogin(t);
-                    }
-                });
-            } catch (Throwable t) {
-                YandexMetrica.reportError("callback_from_social_login", t);
-            }
+            redirectFromSocial(intent);
         }
 
+    }
+
+    private void redirectFromSocial(Intent intent) {
+        try {
+            String code = intent.getData().getQueryParameter("code");
+            mLoginManager.loginWithCode(code, new ProgressHandler() {
+                @Override
+                public void activate() {
+                    hideSoftKeypad();
+                    ProgressHelper.activate(mProgressLogin);
+                }
+
+                @Override
+                public void dismiss() {
+                    ProgressHelper.dismiss(mProgressLogin);
+                }
+            }, new ActivityFinisher() {
+                @Override
+                public void onFinish() {
+                   finish();
+                }
+            });
+        } catch (Throwable t) {
+            YandexMetrica.reportError("callback_from_social_login", t);
+        }
     }
 
     @Override
@@ -195,72 +187,42 @@ public class LoginActivity extends FragmentActivityBase {
     }
 
     private void tryLogin() {
-        hideSoftKeypad();
+        String login = mLoginText.getText().toString();
+        String password = mPasswordText.getText().toString();
 
-        String login = mLoginText.getText().toString().trim();
-        String password = mPasswordText.getText().toString().trim();
+        mLoginManager.login(login, password,
+                new ProgressHandler() {
+                    @Override
+                    public void activate() {
+                        hideSoftKeypad();
+                        ProgressHelper.activate(mProgressLogin);
+                    }
 
-
-        ProgressHelper.activate(mProgressLogin);
-        IApi api = mShell.getApi();
-        api.authWithLoginPassword(login, password).enqueue(new Callback<AuthenticationStepicResponse>() {
-            @Override
-            public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
-                    successLogin(response, retrofit);
-                } else {
-                    failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())));
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                failLogin(t);
-            }
-        });
+                    @Override
+                    public void dismiss() {
+                        ProgressHelper.dismiss(mProgressLogin);
+                    }
+                },
+                new ActivityFinisher() {
+                    @Override
+                    public void onFinish() {
+                        finish();
+                    }
+                });
     }
 
 
-    private void successLogin(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
-        SharedPreferenceHelper preferenceHelper = mShell.getSharedPreferenceHelper();
-        AuthenticationStepicResponse authStepic = response.body();
-        preferenceHelper.storeAuthInfo(authStepic);
-
-        ProgressHelper.dismiss(mProgressLogin);
-
-        if (authStepic != null) {
-            YandexMetrica.reportEvent(AppConstants.METRICA_SUCCESS_LOGIN);
-            onUserLoginSuccess();
-        } else {
-            failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())));
-        }
-    }
-
-    private void failLogin(Throwable t) {
-        YandexMetrica.reportEvent(AppConstants.METRICA_FAIL_LOGIN);
-        YandexMetrica.reportError(AppConstants.METRICA_FAIL_LOGIN, t);
-        ProgressHelper.dismiss(mProgressLogin);
-        if (t != null) {
-            if (t instanceof ProtocolException) {
-                Toast.makeText(LoginActivity.this, R.string.failLogin, Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(LoginActivity.this, R.string.failLoginConnectionProblems, Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 
     @Override
     protected void onDestroy() {
         mCloseButton.setOnClickListener(null);
         mLoginBtn.setOnClickListener(null);
-        mForgotPassword.setOnClickListener(null);
         super.onDestroy();
-
     }
 
-    private void onUserLoginSuccess() {
-        mShell.getScreenProvider().showMainFeed(this);
-        finish();
+    @OnClick(R.id.forgot_password_tv)
+    public void OnClickForgotPassword() {
+        mShell.getScreenProvider().openRemindPassword(LoginActivity.this);
     }
 
 }
