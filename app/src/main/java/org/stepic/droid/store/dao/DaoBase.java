@@ -126,6 +126,7 @@ public abstract class DaoBase<T> implements IDao<T> {
         executeDelete(getDbName(), whereClause, new String[]{whereValue});
     }
 
+    @NotNull
     @Override
     public final List<T> getAllInRange(String whereColumn, String commaSeparatedIds) {
         String query = "Select * from " + getDbName() + " where " + whereColumn + " IN (" + commaSeparatedIds + ")";
@@ -187,4 +188,8 @@ public abstract class DaoBase<T> implements IDao<T> {
     abstract String getDefaultPrimaryColumn();
 
     abstract String getDefaultPrimaryValue(T persistentObject);
+
+    abstract  ContentValues getContentValues(T persistentObject);
+
+    abstract T parsePersistentObject(Cursor cursor);
 }
