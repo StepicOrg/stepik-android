@@ -17,7 +17,6 @@ import com.squareup.otto.Subscribe;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.concurrency.FromDbStepTask;
-import org.stepic.droid.concurrency.ToDbStepTask;
 import org.stepic.droid.events.steps.FailLoadStepEvent;
 import org.stepic.droid.events.steps.FromDbStepEvent;
 import org.stepic.droid.events.steps.SuccessLoadStepEvent;
@@ -51,7 +50,6 @@ import retrofit.Retrofit;
 
 public class StepsActivity extends FragmentActivityBase {
 
-    //    public final static String KEY_INDEX_CURRENT_FRAGMENT = "key_index";
     public final static String KEY_COUNT_CURRENT_FRAGMENT = "key_count";
     public final static String KEY_INDEX_CURRENT_FRAGMENT = "key_current";
 
@@ -77,13 +75,7 @@ public class StepsActivity extends FragmentActivityBase {
     private Unit mUnit;
     private Lesson mLesson;
     private boolean isLoaded;
-
-
-    private volatile boolean isAssignmentsUpdated = false;
-    private volatile boolean isProgressUpdated = false;
-
-
-    private ToDbStepTask saveStepsTask;
+    private String qualityForView;
     private FromDbStepTask getFromDbStepsTask;
 
     //    private int lastSavedPosition;
@@ -95,13 +87,11 @@ public class StepsActivity extends FragmentActivityBase {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_steps);
         if (savedInstanceState == null) {
-//            lastSavedPosition = -1;
             mCount = -1;
         } else {
             mCount = savedInstanceState.getInt(KEY_COUNT_CURRENT_FRAGMENT);
         }
         if (savedInstanceState == null) {
-//            lastSavedPosition = -1;
             mCurrent = -1;
         } else {
             mCurrent = savedInstanceState.getInt(KEY_INDEX_CURRENT_FRAGMENT);
@@ -217,7 +207,6 @@ public class StepsActivity extends FragmentActivityBase {
         }
 
         if (e.getStepList() != null && !e.getStepList().isEmpty() && e.getStepList().size() == mLesson.getSteps().length) {
-//            bus.post(new SuccessLoadStepEvent(e.getStepList()));
 
             final List<Step> stepsFromDB = e.getStepList();
             mShell.getApi().getSteps(mLesson.getSteps()).enqueue(new Callback<StepResponse>() {
@@ -383,15 +372,6 @@ public class StepsActivity extends FragmentActivityBase {
         }
     }
 
-//    @Subscribe
-//    public void onSuccessSaveToDb(SuccessToDbStepEvent e) {
-//        if (e.getmLesson().getId() != mLesson.getId()) return;
-//
-//        FromDbStepTask stepTask = new FromDbStepTask(mLesson);
-//        stepTask.execute();
-//    }
-//
-
     private void showSteps(List<Step> steps) {
         mStepList.clear();
         mStepList.addAll(steps);
@@ -433,14 +413,6 @@ public class StepsActivity extends FragmentActivityBase {
         outState.putInt(KEY_COUNT_CURRENT_FRAGMENT, mStepList.size());
     }
 
-//    @Override
-//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-////        if (savedInstanceState != null) {
-////            lastSavedPosition = savedInstanceState.getInt(KEY_INDEX_CURRENT_FRAGMENT);
-////        }
-//    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -469,8 +441,6 @@ public class StepsActivity extends FragmentActivityBase {
         super.onStop();
         bus.unregister(this);
     }
-
-    private String qualityForView;
 
     @Subscribe
     public void onQualityDetermined(VideoQualityEvent e) {
