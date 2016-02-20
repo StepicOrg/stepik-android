@@ -106,7 +106,7 @@ public class RetrofitRESTApi implements IApi {
                             YandexMetrica.reportError("cant update token", e);
                             return chain.proceed(newRequest);
                         }
-                        if (!response.isSuccess()) {
+                        if (response == null || !response.isSuccess()) {
                             //it is worst case:
                             YandexMetrica.reportEvent("update is failed");
                             return chain.proceed(newRequest);
@@ -116,7 +116,7 @@ public class RetrofitRESTApi implements IApi {
                         mSharedPreference.storeAuthInfo(response);
                     }
                     if (response != null) {
-                        YandexMetrica.reportEvent("response is null in loggedService");
+                        YandexMetrica.reportEvent("response is not null in loggedService");
                         newRequest = chain.request().newBuilder().addHeader("Authorization", getAuthHeaderValueForLogged()).build();
                     }
                     return chain.proceed(newRequest);
