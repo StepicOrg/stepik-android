@@ -52,25 +52,25 @@ class DeleteService : IntentService("delete_service") {
 
 
     override fun onHandleIntent(intent: Intent) {
-        val type = intent.getSerializableExtra(AppConstants.KEY_LOAD_TYPE) as LoadService.LoadTypeKey
+        val type = intent.getSerializableExtra(AppConstants.KEY_LOAD_TYPE) as? LoadService.LoadTypeKey
         try {
             when (type) {
                 LoadService.LoadTypeKey.Course -> {
-                    val course = intent.getSerializableExtra(AppConstants.KEY_COURSE_BUNDLE) as Course
-                    val tableType = intent.getSerializableExtra(AppConstants.KEY_TABLE_TYPE) as DatabaseFacade.Table
+                    val course = intent.getSerializableExtra(AppConstants.KEY_COURSE_BUNDLE) as? Course
+                    val tableType = intent.getSerializableExtra(AppConstants.KEY_TABLE_TYPE) as? DatabaseFacade.Table
                     removeFromDisk(course)
                 }
                 LoadService.LoadTypeKey.Section -> {
-                    val section = intent.getSerializableExtra(AppConstants.KEY_SECTION_BUNDLE) as Section
+                    val section = intent.getSerializableExtra(AppConstants.KEY_SECTION_BUNDLE) as? Section
                     removeFromDisk(section)
                 }
                 LoadService.LoadTypeKey.UnitLesson -> {
-                    val unit = intent.getSerializableExtra(AppConstants.KEY_UNIT_BUNDLE) as Unit
-                    val lesson = intent.getSerializableExtra(AppConstants.KEY_LESSON_BUNDLE) as Lesson
+                    val unit = intent.getSerializableExtra(AppConstants.KEY_UNIT_BUNDLE) as? Unit
+                    val lesson = intent.getSerializableExtra(AppConstants.KEY_LESSON_BUNDLE) as? Lesson
                     removeFromDisk(lesson)
                 }
                 LoadService.LoadTypeKey.Step -> {
-                    val step = intent.getSerializableExtra(AppConstants.KEY_STEP_BUNDLE) as Step
+                    val step = intent.getSerializableExtra(AppConstants.KEY_STEP_BUNDLE) as? Step
                     removeFromDisk(step)
                 }
             }
@@ -84,10 +84,9 @@ class DeleteService : IntentService("delete_service") {
 
     }
 
-    private fun removeFromDisk(step: Step) {
-        val video = step.block?.video
-        video?.let{
-            val path = mDb.getPathToVideoIfExist(video)
+    private fun removeFromDisk(step: Step?) {
+        step?.block?.video?.let {
+            val path = mDb.getPathToVideoIfExist(it)
             var file = File(path)
             if (file.exists()) {
                 file.delete()
@@ -99,41 +98,48 @@ class DeleteService : IntentService("delete_service") {
                 file.delete()
             }
 
-            mDb.deleteVideo(video)
+            mDb.deleteVideo(it)
         }
-
-        mDb.deleteStep(step) // remove steps
-        mStoreStateManager.updateStepAfterDeleting(step)
-        val mainHandler = Handler(MainApplication.getAppContext().mainLooper)
-        mainHandler.post { mBus.post(StepRemovedEvent(step.id)) }
-    }
-
-    private fun removeFromDisk(lesson: Lesson) {
-        val steps = mDb.getStepsOfLesson(lesson.id)
-        for (step in steps) {
-            removeFromDisk(step)
+        step?.let {
+            mDb.deleteStep(step) // remove steps
+            mStoreStateManager.updateStepAfterDeleting(step)
+            val mainHandler = Handler(MainApplication.getAppContext().mainLooper)
+            mainHandler.post { mBus.post(StepRemovedEvent(step.id)) }
         }
     }
 
-    private fun removeFromDisk(section: Section) {
-        val units = mDb.getAllUnitsOfSection(section.id)
-        val lessons = ArrayList<Lesson>()
-        for (unit in units) {
-            val lesson = mDb.getLessonOfUnit(unit)
-            if (lesson != null) {
-                lessons.add(lesson)
+    private fun removeFromDisk(lesson: Lesson?) {
+        lesson?.let {
+            val steps = mDb.getStepsOfLesson(lesson.id)
+            for (step in steps) {
+                removeFromDisk(step)
             }
         }
+    }
 
-        for (lesson in lessons) {
-            removeFromDisk(lesson)
+    private fun removeFromDisk(section: Section?) {
+        section?.let {
+            val units = mDb.getAllUnitsOfSection(section.id)
+            val lessons = ArrayList<Lesson>()
+            for (unit in units) {
+                val lesson = mDb.getLessonOfUnit(unit)
+                if (lesson != null) {
+                    lessons.add(lesson)
+                }
+            }
+
+            for (lesson in lessons) {
+                removeFromDisk(lesson)
+            }
         }
     }
 
-    private fun removeFromDisk(course: Course) {
-        val sections = mDb.getAllSectionsOfCourse(course)
-        for (section in sections) {
-            removeFromDisk(section)
+    private fun removeFromDisk(course: Course?) {
+        course?.let {
+            val sections = mDb.getAllSectionsOfCourse(course)
+            for (section in sections) {
+                removeFromDisk(section)
+            }
         }
     }
 }

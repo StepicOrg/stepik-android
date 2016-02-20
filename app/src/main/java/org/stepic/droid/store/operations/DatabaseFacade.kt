@@ -240,7 +240,7 @@ class DatabaseFacade {
 
     fun getCachedVideoById(videoId: Long) = mCachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, videoId.toString())
 
-    val allCachedVideo: List<CachedVideo> = mCachedVideoDao.getAll()
+    fun getAllCachedVideos() = mCachedVideoDao.getAll()
 
     /**
      * getPath of cached video

@@ -109,7 +109,7 @@ public class DownloadsFragment extends FragmentBase {
         AsyncTask<Void, Void, VideosAndMapToLesson> task = new AsyncTask<Void, Void, VideosAndMapToLesson>() {
             @Override
             protected VideosAndMapToLesson doInBackground(Void... params) {
-                List<CachedVideo> videos = mDatabaseFacade.getAllCachedVideo();
+                List<CachedVideo> videos = mDatabaseFacade.getAllCachedVideos();
                 List<CachedVideo> filteredVideos = new ArrayList<>();
                 for (CachedVideo video : videos) {
                     if (video != null && video.getStepId() >=0){

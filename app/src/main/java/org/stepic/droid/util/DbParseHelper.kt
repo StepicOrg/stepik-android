@@ -1,7 +1,5 @@
 package org.stepic.droid.util
 
-import android.util.Log
-
 object DbParseHelper {
 
     private val DELIMITER = "__,__"

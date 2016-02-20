@@ -339,7 +339,7 @@ public class Course implements Serializable, Parcelable {
         this.is_contest = is_contest;
     }
 
-    public void setIs_featured(boolean is_featured) {
+    public void set_featured(boolean is_featured) {
         this.is_featured = is_featured;
     }
 
@@ -371,7 +371,7 @@ public class Course implements Serializable, Parcelable {
         this.language = language;
     }
 
-    public void setIs_public(boolean is_public) {
+    public void set_public(boolean is_public) {
         this.is_public = is_public;
     }
 

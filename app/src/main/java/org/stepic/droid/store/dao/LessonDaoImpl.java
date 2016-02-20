@@ -37,16 +37,16 @@ public class LessonDaoImpl extends DaoBase<Lesson> {
         int indexCoverURL = cursor.getColumnIndex(DbStructureLesson.Column.COVER_URL);
 
         lesson.setId(cursor.getLong(columnIndexLessonId));
-        lesson.setSteps(DbParseHelper.INSTANCE.parseStringToLongArray(cursor.getString(columnIndexSteps)));
-        lesson.setIs_featured(cursor.getInt(columnIndexIsFeatured) > 0);
-        lesson.setIs_prime(cursor.getInt(columnIndexIsPrime) > 0);
+        lesson.setSteps(DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexSteps)));
+        lesson.set_featured(cursor.getInt(columnIndexIsFeatured) > 0);
+        lesson.set_prime(cursor.getInt(columnIndexIsPrime) > 0);
         lesson.setProgress(cursor.getString(columnIndexProgress));
         lesson.setOwner(cursor.getInt(columnIndexOwner));
-        lesson.setSubscriptions(DbParseHelper.INSTANCE.parseStringToStringArray(cursor.getString(columnIndexSubscriptions)));
+        lesson.setSubscriptions(DbParseHelper.parseStringToStringArray(cursor.getString(columnIndexSubscriptions)));
         lesson.setViewed_by(cursor.getInt(columnIndexViewedBy));
         lesson.setPassed_by(cursor.getInt(columnIndexPassedBy));
-        lesson.setDependencies(DbParseHelper.INSTANCE.parseStringToStringArray(cursor.getString(columnIndexDependencies)));
-        lesson.setIs_public(cursor.getInt(columnIndexIsPublic) > 0);
+        lesson.setDependencies(DbParseHelper.parseStringToStringArray(cursor.getString(columnIndexDependencies)));
+        lesson.set_public(cursor.getInt(columnIndexIsPublic) > 0);
         lesson.setTitle(cursor.getString(columnIndexTitle));
         lesson.setSlug(cursor.getString(columnIndexSlug));
         lesson.setCreate_date(cursor.getString(columnIndexCreateDate));
@@ -74,10 +74,10 @@ public class LessonDaoImpl extends DaoBase<Lesson> {
         values.put(DbStructureLesson.Column.IS_PRIME, lesson.is_prime());
         values.put(DbStructureLesson.Column.PROGRESS, lesson.getProgress());
         values.put(DbStructureLesson.Column.OWNER, lesson.getOwner());
-        values.put(DbStructureLesson.Column.SUBSCRIPTIONS, DbParseHelper.INSTANCE.parseStringArrayToString(lesson.getSubscriptions()));
+        values.put(DbStructureLesson.Column.SUBSCRIPTIONS, DbParseHelper.parseStringArrayToString(lesson.getSubscriptions()));
         values.put(DbStructureLesson.Column.VIEWED_BY, lesson.getViewed_by());
         values.put(DbStructureLesson.Column.PASSED_BY, lesson.getPassed_by());
-        values.put(DbStructureLesson.Column.DEPENDENCIES, DbParseHelper.INSTANCE.parseStringArrayToString(lesson.getDependencies()));
+        values.put(DbStructureLesson.Column.DEPENDENCIES, DbParseHelper.parseStringArrayToString(lesson.getDependencies()));
         values.put(DbStructureLesson.Column.IS_PUBLIC, lesson.is_public());
         values.put(DbStructureLesson.Column.TITLE, lesson.getTitle());
         values.put(DbStructureLesson.Column.SLUG, lesson.getSlug());

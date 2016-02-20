@@ -28,7 +28,7 @@ public class ProgressDaoImpl extends DaoBase<Progress> {
         progress.setId(cursor.getString(indexId));
         progress.setCost(cursor.getInt(indexCost));
         progress.setScore(cursor.getString(indexScore));
-        progress.setIs_passed(cursor.getInt(indexIs_Passed) > 0);
+        progress.set_passed(cursor.getInt(indexIs_Passed) > 0);
         progress.setLast_viewed(cursor.getString(indexLastViewed));
         progress.setN_steps(cursor.getInt(indexSteps));
         progress.setN_steps_passed(cursor.getInt(indexN_steps_passed));
