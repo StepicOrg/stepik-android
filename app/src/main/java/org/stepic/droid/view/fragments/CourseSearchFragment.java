@@ -96,7 +96,7 @@ public class CourseSearchFragment extends CourseListFragmentBase {
         if (mCurrentPage == 1) {
             mCourses.clear();
         }
-        mHasNextPage = e.getResponse().body().getMeta().isHas_next();
+        mHasNextPage = e.getResponse().body().getMeta().getHas_next();
         mCurrentPage++;
 
         // TODO: 31.12.15 has next page should be new for search results

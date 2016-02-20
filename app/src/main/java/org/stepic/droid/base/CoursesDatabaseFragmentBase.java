@@ -117,7 +117,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             ProgressHelper.dismiss(mSwipeRefreshLayout);
             saveDataToCache(coursesStepicResponse.getCourses());
 
-            mHasNextPage = coursesStepicResponse.getMeta().isHas_next();
+            mHasNextPage = coursesStepicResponse.getMeta().getHas_next();
             if (mHasNextPage) {
                 mCurrentPage = coursesStepicResponse.getMeta().getPage() + 1;
             }

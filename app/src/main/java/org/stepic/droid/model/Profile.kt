@@ -15,12 +15,12 @@ data class Profile(
         val details: String? = null,
         val notification_email_delay: String? = null,
         val level_title: String? = null,
-        val isSubscribed_for_mail: Boolean = false,
+        val subscribed_for_mail: Boolean = false,
         val is_staff: Boolean = false,
         val is_guest: Boolean = false,
-        val isCan_add_lesson: Boolean = false,
-        val isCan_add_course: Boolean = false,
-        val isCan_add_group: Boolean = false,
-        val isSubscribed_for_news_en: Boolean = false,
-        val isSubscribed_for_news_ru: Boolean = false
+        val can_add_lesson: Boolean = false,
+        val can_add_course: Boolean = false,
+        val can_add_group: Boolean = false,
+        val subscribed_for_news_en: Boolean = false,
+        val subscribed_for_news_ru: Boolean = false
         ) : Serializable
