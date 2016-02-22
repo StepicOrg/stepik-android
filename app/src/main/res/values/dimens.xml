@@ -26,5 +26,9 @@
     <dimen name="padding_registration_left_right">44dp</dimen>
     <dimen name="margin_from_image_in_items">8dp</dimen>
     <dimen name="attempt_padding">8dp</dimen>
+    <dimen name="drawable_padding">8dp</dimen>
+    <dimen name="feedback_button_length">200dp</dimen>
+    <dimen name="feedback_textsize">16sp</dimen>
+    <dimen name="button_padding">8dp</dimen>
 
 </resources>

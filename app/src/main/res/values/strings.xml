@@ -98,5 +98,9 @@
     <string name="email_sent">We have sent you an e-mail.</string>
     <string name="email_wrong">The e-mail address is not assigned to any user account.</string>
     <string name="are_you_sure_logout">All saved data for offline will be removed. Are you sure? </string>
+    <string name="feedback_good_description">The app is pleasure to use.</string>
+    <string name="feedback_good">excellent</string>
+    <string name="feedback_bad">terrible</string>
+    <string name="feedback_bad_description">The app is inconvenient, loading is slow.</string>
 
 </resources>

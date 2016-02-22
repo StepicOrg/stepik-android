@@ -96,5 +96,9 @@
     <string name="email_sent">Мы отправили вам письмо.</string>
     <string name="email_wrong">Нет пользователя с таким e-mail.</string>
     <string name="are_you_sure_logout">Все сохраненные данные будут удалены. Вы уверены?</string>
+    <string name="feedback_good_description">Приложение нравится, им приятно пользоваться.</string>
+    <string name="feedback_good">отлично</string>
+    <string name="feedback_bad">плохо</string>
+    <string name="feedback_bad_description">Приложение неудобное, долго загружается.</string>
 
 </resources>

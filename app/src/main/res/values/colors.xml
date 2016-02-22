@@ -71,4 +71,6 @@
     <color name="correct_answer_background">#E9F9E9</color>
     <color name="wrong_answer_background">#F5EBF2</color>
     <color name="disabled_button_color">#D3D7D7</color>
+    <color name="feedback_bad_color">@color/wrong_answer_background</color>
+    <color name="feedback_good_color">@color/correct_answer_background</color>
 </resources>

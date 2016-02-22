@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+
+             android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:padding="8dp"
+        >
+
+        <LinearLayout
+            android:layout_width="@dimen/feedback_button_length"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            >
+
+            <Button
+                android:padding="@dimen/button_padding"
+                android:id="@+id/feedback_bad_btn"
+                android:background="@color/feedback_bad_color"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_thumb_down_white_24dp"
+                android:drawablePadding="@dimen/drawable_padding"
+                android:drawableStart="@drawable/ic_thumb_down_white_24dp"
+                android:gravity="center"
+                tools:text="@string/feedback_bad"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/feedback_bad_description"
+                android:textSize="@dimen/feedback_textsize"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/feedback_button_length"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="150dp"
+            android:orientation="vertical">
+
+            <Button
+                android:padding="@dimen/button_padding"
+                android:id="@+id/feedback_good_btn"
+                android:background="@color/feedback_good_color"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_thumb_up_white_24dp"
+                android:drawablePadding="@dimen/drawable_padding"
+                android:drawableStart="@drawable/ic_thumb_up_white_24dp"
+                android:gravity="center"
+                tools:text="@string/feedback_good"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textSize="@dimen/feedback_textsize"
+                tools:text="@string/feedback_good_description"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</FrameLayout>
