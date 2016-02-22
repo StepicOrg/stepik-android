@@ -1,5 +1,6 @@
 package org.stepic.droid.model
 
+import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 data class Profile(
@@ -22,5 +23,7 @@ data class Profile(
         val can_add_course: Boolean = false,
         val can_add_group: Boolean = false,
         val subscribed_for_news_en: Boolean = false,
-        val subscribed_for_news_ru: Boolean = false
-        ) : Serializable
+        val subscribed_for_news_ru: Boolean = false,
+        @SerializedName("email-addresses")
+        var emailAddresses: List<Long?>?
+) : Serializable
