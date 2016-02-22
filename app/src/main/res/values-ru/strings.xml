@@ -99,7 +99,7 @@
     <string name="feedback_good_description">Приложение нравится, им приятно пользоваться.</string>
     <string name="feedback_good">отлично</string>
     <string name="feedback_bad">плохо</string>
-    <string name="feedback_bad_description">Приложение неудобное, долго загружается.</string>
+    <string name="feedback_bad_description">Приложение неудобное, долго загружается, видео не воспроизводится.</string>
     <string name="feedback_title">Оставить отзыв</string>
 
 </resources>
