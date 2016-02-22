@@ -5,16 +5,20 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.web.AuthenticationStepicResponse;
+
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -62,6 +66,32 @@ public class SharedPreferenceHelper {
         Gson gson = new GsonBuilder().create();
         Profile result = gson.fromJson(json, Profile.class);
         return result;
+    }
+
+    public void storeEmailAddresses(List<EmailAddress> emailAddresses) {
+        if (emailAddresses == null) return;
+        Gson gson = new Gson();
+        String json = gson.toJson(emailAddresses);
+        put(PreferenceType.LOGIN, EMAIL_LIST, json);
+    }
+
+    @Nullable
+    public List<EmailAddress> getStoredEmails() {
+        String json = getString(PreferenceType.LOGIN, EMAIL_LIST);
+        if (json == null) {
+            return null;
+        }
+        Gson gson = new GsonBuilder().create();
+        List<EmailAddress> result = null;
+        try {
+
+            result = gson.fromJson(json, new TypeToken<List<EmailAddress>>() {
+            }.getType());
+        } catch (Exception e) {
+            return null;
+        }
+        return result;
+
     }
 
     public void storeVideoQuality(String videoQuality) {
@@ -187,6 +217,7 @@ public class SharedPreferenceHelper {
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
     private final String PROFILE_JSON = "profile_json";
+    private final String EMAIL_LIST = "email-list";
     private final String WIFI_KEY = "wifi_key";
     private final String IS_SOCIAL = "is_social_key";
     private final String VIDEO_QUALITY_KEY = "video_quality_key";
