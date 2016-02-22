@@ -60,4 +60,6 @@ public interface IApi {
     Call<SubmissionResponse> getSubmissions(long attemptId);
 
     Call<Void> remindPassword(String email);
+
+    Call<EmailAddressResponse> getEmailAddresses(long[] ids);
 }

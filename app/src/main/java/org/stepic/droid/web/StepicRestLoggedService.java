@@ -77,5 +77,6 @@ public interface StepicRestLoggedService {
     @GET("api/submissions")
     Call<SubmissionResponse> getExistingSubmissions(@Query("attempt") long attemptId, @Query("order") String desc);
 
-
+    @GET("api/email-addresses")
+    Call<EmailAddressResponse> getEmailAddresses(@Query("ids[]")long[] ids);
 }

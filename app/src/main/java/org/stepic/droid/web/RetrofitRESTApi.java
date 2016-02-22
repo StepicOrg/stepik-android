@@ -16,6 +16,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.yandex.metrica.YandexMetrica;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -409,6 +410,11 @@ public class RetrofitRESTApi implements IApi {
         StepicEmptyAuthService tempService = notLogged.create(StepicEmptyAuthService.class);
         return tempService.remindPassword(encodedEmail);
 
+    }
+
+    @Override
+    public Call<EmailAddressResponse> getEmailAddresses(@NotNull long[] ids) {
+        return mLoggedService.getEmailAddresses(ids);
     }
 
     @Nullable
