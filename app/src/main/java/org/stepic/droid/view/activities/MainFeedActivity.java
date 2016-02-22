@@ -79,10 +79,7 @@ public class MainFeedActivity extends FragmentActivityBase
         setContentView(R.layout.activity_main_feed);
         ButterKnife.bind(this);
 
-        View headerLayout = mNavigationView.getHeaderView(0);
-        mProfileImage = ButterKnife.findById(headerLayout, R.id.profile_image);
-        mUserNameTextView = ButterKnife.findById(headerLayout, R.id.username);
-
+        initDrawerHeader();
         setUpToolbar();
         setUpDrawerLayout();
         initFragments(savedInstanceState);
@@ -91,30 +88,37 @@ public class MainFeedActivity extends FragmentActivityBase
 
         final SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
         Profile cachedProfile = helper.getProfile();
-        if (cachedProfile == null) { //todo always update??
-            mShell.getApi().getUserProfile().enqueue(new Callback<StepicProfileResponse>() {
-                @Override
-                public void onResponse(Response<StepicProfileResponse> response, Retrofit retrofit) {
-                    if (response.isSuccess()) {
-                        Profile profile = response.body().getProfile();
-
-                        helper.storeProfile(profile);
-                        bus.post(new ProfileCanBeShownEvent(profile));
-                    }
-                    // TODO: 09.02.16 add 'else' statement
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    // FIXME: 06.10.15 Sometimes profile is not load, investigate it! (maybe just set for update when create this activity)
-                    mProfileImage.setVisibility(View.INVISIBLE);
-                    mUserNameTextView.setText("");
-
-                }
-            });
-        } else {
-            bus.post(new ProfileCanBeShownEvent(cachedProfile));
+        if (cachedProfile != null) {
+            showProfile(new ProfileCanBeShownEvent(cachedProfile));//update now!
         }
+        mShell.getApi().getUserProfile().enqueue(new Callback<StepicProfileResponse>() {
+            @Override
+            public void onResponse(Response<StepicProfileResponse> response, Retrofit retrofit) {
+                if (response.isSuccess()) {
+                    Profile profile = response.body().getProfile();
+
+                    helper.storeProfile(profile);
+                    bus.post(new ProfileCanBeShownEvent(profile));//show if we can
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                // FIXME: 06.10.15 Sometimes profile is not load, investigate it! (maybe just set for update when create this activity)
+                //do nothing because view is now visible
+
+            }
+        });
+    }
+
+    private void initDrawerHeader() {
+        View headerLayout = mNavigationView.getHeaderView(0);
+        mProfileImage = ButterKnife.findById(headerLayout, R.id.profile_image);
+        mUserNameTextView = ButterKnife.findById(headerLayout, R.id.username);
+
+        mProfileImage.setVisibility(View.INVISIBLE);
+        mUserNameTextView.setVisibility(View.INVISIBLE);
+        mUserNameTextView.setText("");
     }
 
     @Override
@@ -257,6 +261,7 @@ public class MainFeedActivity extends FragmentActivityBase
             return;
         }
         mProfileImage.setVisibility(View.VISIBLE);
+        mUserNameTextView.setVisibility(View.VISIBLE);
         Picasso.with(MainFeedActivity.this).load(profile.getAvatar()).
                 placeholder(mUserPlaceholder).error(mUserPlaceholder).into(mProfileImage);
         mUserNameTextView.setText(profile.getFirst_name() + " " + profile.getLast_name());
