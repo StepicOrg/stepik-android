@@ -24,6 +24,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.events.profile.ProfileCanBeShownEvent;
+import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.util.AppConstants;
@@ -32,6 +33,7 @@ import org.stepic.droid.view.fragments.DownloadsFragment;
 import org.stepic.droid.view.fragments.FindCoursesFragment;
 import org.stepic.droid.view.fragments.MyCoursesFragment;
 import org.stepic.droid.view.fragments.SettingsFragment;
+import org.stepic.droid.web.EmailAddressResponse;
 import org.stepic.droid.web.StepicProfileResponse;
 
 import java.util.List;
@@ -96,6 +98,28 @@ public class MainFeedActivity extends FragmentActivityBase
             public void onResponse(Response<StepicProfileResponse> response, Retrofit retrofit) {
                 if (response.isSuccess()) {
                     Profile profile = response.body().getProfile();
+                    final long[] emailIds = profile.getEmailAddresses();
+                    if (emailIds != null && emailIds.length != 0) {
+                        mShell.getApi().getEmailAddresses(emailIds).enqueue(new Callback<EmailAddressResponse>() {
+                            @Override
+                            public void onResponse(Response<EmailAddressResponse> response, Retrofit retrofit) {
+                                if (response.isSuccess()) {
+                                    EmailAddressResponse emailsResponse = response.body();
+                                    if (emailsResponse != null) {
+                                        List<EmailAddress> emails = emailsResponse.getEmailAddresses();
+                                        if (emails != null && !emails.isEmpty()) {
+                                            helper.storeEmailAddresses(emails);
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+
+                            }
+                        });
+                    }
 
                     helper.storeProfile(profile);
                     bus.post(new ProfileCanBeShownEvent(profile));//show if we can

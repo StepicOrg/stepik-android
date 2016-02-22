@@ -25,5 +25,5 @@ data class Profile(
         val subscribed_for_news_en: Boolean = false,
         val subscribed_for_news_ru: Boolean = false,
         @SerializedName("email-addresses")
-        var emailAddresses: List<Long?>?
+        var emailAddresses: LongArray?
 ) : Serializable

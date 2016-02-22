@@ -5,10 +5,13 @@ import android.os.Environment;
 
 import com.yandex.metrica.YandexMetrica;
 
+import org.jetbrains.annotations.Nullable;
+import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -60,6 +63,30 @@ public class UserPreferences {
         return userId;
     }
 
+    @Nullable
+    public List<EmailAddress> getUserEmails() {
+        return mSharedPreferenceHelper.getStoredEmails();
+    }
+
+    @Nullable
+    public EmailAddress getPrimaryEmail() {
+        List<EmailAddress> emails = getUserEmails();
+        if (emails == null || emails.isEmpty()) return null;
+        if (emails.size() == 1) return emails.get(0);
+
+        //emails >1
+        EmailAddress primary = null;
+        for (EmailAddress item : emails) {
+            if (item != null && item.is_primary()) {
+                primary = item;
+                break;
+            }
+        }
+        if (primary == null) {
+            primary = emails.get(0);
+        }
+        return primary;
+    }
 
     public boolean isNetworkMobileAllowed() {
         return mSharedPreferenceHelper.isMobileInternetAlsoAllowed();
