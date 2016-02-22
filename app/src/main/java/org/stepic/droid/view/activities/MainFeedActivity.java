@@ -30,6 +30,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.fragments.DownloadsFragment;
+import org.stepic.droid.view.fragments.FeedbackFragment;
 import org.stepic.droid.view.fragments.FindCoursesFragment;
 import org.stepic.droid.view.fragments.MyCoursesFragment;
 import org.stepic.droid.view.fragments.SettingsFragment;
@@ -201,7 +202,9 @@ public class MainFeedActivity extends FragmentActivityBase
             case R.id.my_settings:
                 mCurrentIndex = 3;
                 break;
-
+            case R.id.feedback:
+                mCurrentIndex = 4;
+                break;
             case R.id.logout_item:
                 YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_LOGOUT);
 
@@ -267,6 +270,9 @@ public class MainFeedActivity extends FragmentActivityBase
                 break;
             case 3:
                 shortLifetimeRef = SettingsFragment.newInstance();
+                break;
+            case 4:
+                shortLifetimeRef = FeedbackFragment.Companion.newInstance();
                 break;
             default:
                 shortLifetimeRef = null;

@@ -30,6 +30,12 @@
             android:icon="@drawable/ic_settings_black_24dp"/>
 
         <item
+            android:id="@+id/feedback"
+            android:title="@string/feedback_title"
+            android:icon="@drawable/ic_comment_black_24dp"/>
+
+
+        <item
             android:id="@+id/logout_item"
             android:title="@string/logout_title"
             android:icon="@drawable/ic_exit_to_app_black_24dp"

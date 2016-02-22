@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.yandex.metrica.YandexMetrica;
 
@@ -108,6 +109,18 @@ public class ScreenManager implements IScreenManager {
         bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
         intent.putExtras(bundle);
         sourceActivity.startActivity(intent);
+    }
+
+    @Override
+    public void showTextFeedback(Activity sourceActivity) {
+        Toast.makeText(sourceActivity, "TEXT FEEDBACK", Toast.LENGTH_SHORT).show();
+        // TODO: 23.02.16 implement
+    }
+
+    @Override
+    public void showStoreWithApp(Activity sourceActivity) {
+        Toast.makeText(sourceActivity, "GOOGLE PLAY", Toast.LENGTH_SHORT).show();
+        // TODO: 23.02.16 implement
     }
 
     @Override

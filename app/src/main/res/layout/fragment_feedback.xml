@@ -22,6 +22,7 @@
             >
 
             <Button
+
                 android:padding="@dimen/button_padding"
                 android:id="@+id/feedback_bad_btn"
                 android:background="@color/feedback_bad_color"
@@ -31,7 +32,7 @@
                 android:drawablePadding="@dimen/drawable_padding"
                 android:drawableStart="@drawable/ic_thumb_down_white_24dp"
                 android:gravity="center"
-                tools:text="@string/feedback_bad"
+                android:text="@string/feedback_bad"
                 />
 
             <TextView
@@ -62,7 +63,7 @@
                 android:drawablePadding="@dimen/drawable_padding"
                 android:drawableStart="@drawable/ic_thumb_up_white_24dp"
                 android:gravity="center"
-                tools:text="@string/feedback_good"
+                android:text="@string/feedback_good"
                 />
 
             <TextView
@@ -72,7 +73,7 @@
                 android:gravity="center"
                 android:padding="8dp"
                 android:textSize="@dimen/feedback_textsize"
-                tools:text="@string/feedback_good_description"/>
+                android:text="@string/feedback_good_description"/>
         </LinearLayout>
     </LinearLayout>
 

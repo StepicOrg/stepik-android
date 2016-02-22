@@ -17,7 +17,7 @@
         <LinearLayout
             android:layout_width="@dimen/feedback_button_length"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="top"
             android:orientation="vertical"
             >
 
@@ -31,7 +31,7 @@
                 android:drawableStart="@drawable/ic_thumb_down_white_24dp"
                 android:gravity="center"
                 android:padding="@dimen/button_padding"
-                tools:text="@string/feedback_bad"
+                android:text="@string/feedback_bad"
                 />
 
             <TextView
@@ -48,7 +48,7 @@
         <LinearLayout
             android:layout_width="@dimen/feedback_button_length"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="top"
             android:layout_marginLeft="150dp"
             android:layout_marginStart="150dp"
             android:orientation="vertical">
@@ -63,7 +63,7 @@
                 android:drawableStart="@drawable/ic_thumb_up_white_24dp"
                 android:gravity="center"
                 android:padding="@dimen/button_padding"
-                tools:text="@string/feedback_good"
+                android:text="@string/feedback_good"
                 />
 
             <TextView
@@ -72,8 +72,8 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:padding="8dp"
-                android:textSize="@dimen/feedback_textsize"
-                tools:text="@string/feedback_good_description"/>
+                android:text="@string/feedback_good_description"
+                android:textSize="@dimen/feedback_textsize"/>
         </LinearLayout>
     </LinearLayout>
 
