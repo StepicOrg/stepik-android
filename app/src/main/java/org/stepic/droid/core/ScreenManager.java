@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import com.yandex.metrica.YandexMetrica;
 
@@ -30,6 +29,7 @@ import org.stepic.droid.view.activities.MainFeedActivity;
 import org.stepic.droid.view.activities.RegisterActivity;
 import org.stepic.droid.view.activities.SectionActivity;
 import org.stepic.droid.view.activities.StepsActivity;
+import org.stepic.droid.view.activities.TextFeedbackActivity;
 import org.stepic.droid.view.activities.UnitsActivity;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.web.ViewAssignment;
@@ -113,8 +113,8 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showTextFeedback(Activity sourceActivity) {
-        Toast.makeText(sourceActivity, "TEXT FEEDBACK", Toast.LENGTH_SHORT).show();
-        // TODO: 23.02.16 implement
+        Intent launchIntent = new Intent(sourceActivity, TextFeedbackActivity.class);
+        sourceActivity.startActivity(launchIntent);
     }
 
     @Override

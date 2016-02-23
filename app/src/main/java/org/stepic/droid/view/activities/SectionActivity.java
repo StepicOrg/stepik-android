@@ -287,6 +287,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         return true;
     }
 
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
