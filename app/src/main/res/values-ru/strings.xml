@@ -101,5 +101,8 @@
     <string name="feedback_bad">плохо</string>
     <string name="feedback_bad_description">Приложение неудобное, долго загружается, видео не воспроизводится.</string>
     <string name="feedback_title">Оставить отзыв</string>
+    <string name="feedback_hint">Напишите нам…</string>
+    <string name="feedback_description">Напишите нам свое предложение, замечание или идею</string>
+    <string name="feedback_contacts_description">Контакты для обратной связи</string>
 
 </resources>
