@@ -34,6 +34,7 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.RWLocks;
 
@@ -72,7 +73,7 @@ public class RetrofitRESTApi implements IApi {
     private StepicRestLoggedService mLoggedService;
     private StepicRestOAuthService mOAuthService;
     private StepicEmptyAuthService mStepicEmptyAuthService;
-    private StepicZendeskEmptyAuthService mZendeskAuthService;
+//    private StepicZendeskEmptyAuthService mZendeskAuthService;
 
 
     public RetrofitRESTApi() {
@@ -89,18 +90,18 @@ public class RetrofitRESTApi implements IApi {
                 .client(okHttpClient)
                 .build();
         mStepicEmptyAuthService = retrofit.create(StepicEmptyAuthService.class);
-        makeZendeskService();
+//        makeZendeskService();
     }
 
-    private void makeZendeskService() {
-        OkHttpClient okHttpClient = new OkHttpClient();
-        setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(mConfig.getZendeskHost())
-                .client(okHttpClient)
-                .build();
-        mZendeskAuthService = retrofit.create(StepicZendeskEmptyAuthService.class);
-    }
+//    private void makeZendeskService() {
+//        OkHttpClient okHttpClient = new OkHttpClient();
+//        setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(mConfig.getZendeskHost())
+//                .client(okHttpClient)
+//                .build();
+//        mZendeskAuthService = retrofit.create(StepicZendeskEmptyAuthService.class);
+//    }
 
     private void makeLoggedService() {
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -474,9 +475,21 @@ public class RetrofitRESTApi implements IApi {
 
     @Nullable
     private String getCsrfTokenForZendesk() throws IOException {
-        retrofit.Response<Void> r = mZendeskAuthService.getZendeskForFun().execute();
+        OkHttpClient client = new OkHttpClient();
+
+        String url = mConfig.getZendeskHost() + "/hc/ru/requests/new";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        String htmlText = response.body().string();
+        String csrf_token = HtmlHelper.getValueOfMetaOrNull(htmlText, "csrf-token");
+
+
         int i = 0;
-        return null;
+        return csrf_token;
     }
 
     @Nullable
