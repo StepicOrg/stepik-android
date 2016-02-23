@@ -8,6 +8,7 @@ import org.stepic.droid.social.ISocialType;
 
 import retrofit.Call;
 
+
 public interface IApi {
     enum TokenType {
         social, loginPassword
@@ -62,4 +63,6 @@ public interface IApi {
     Call<Void> remindPassword(String email);
 
     Call<EmailAddressResponse> getEmailAddresses(long[] ids);
+
+    Call<Void> sendFeedback(String email, String rawDescription);
 }

@@ -72,6 +72,7 @@ public class RetrofitRESTApi implements IApi {
     private StepicRestLoggedService mLoggedService;
     private StepicRestOAuthService mOAuthService;
     private StepicEmptyAuthService mStepicEmptyAuthService;
+    private StepicZendeskEmptyAuthService mZendeskAuthService;
 
 
     public RetrofitRESTApi() {
@@ -88,7 +89,17 @@ public class RetrofitRESTApi implements IApi {
                 .client(okHttpClient)
                 .build();
         mStepicEmptyAuthService = retrofit.create(StepicEmptyAuthService.class);
+        makeZendeskService();
+    }
 
+    private void makeZendeskService() {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mConfig.getZendeskHost())
+                .client(okHttpClient)
+                .build();
+        mZendeskAuthService = retrofit.create(StepicZendeskEmptyAuthService.class);
     }
 
     private void makeLoggedService() {
@@ -415,6 +426,57 @@ public class RetrofitRESTApi implements IApi {
     @Override
     public Call<EmailAddressResponse> getEmailAddresses(@NotNull long[] ids) {
         return mLoggedService.getEmailAddresses(ids);
+    }
+
+    @Override
+    public Call<Void> sendFeedback(String email, String rawDescription) {
+
+
+        Interceptor interceptor = new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request newRequest = chain.request();
+
+                String csrftoken = getCsrfTokenForZendesk();
+                if (csrftoken == null) {
+                    return chain.proceed(newRequest);
+                }
+
+                HttpUrl url = newRequest
+                        .httpUrl()
+                        .newBuilder()
+                        .addQueryParameter("authenticity_token", csrftoken)
+                        .build();
+                newRequest = newRequest.newBuilder()
+                        .url(url)
+                        .build();
+                return chain.proceed(newRequest);
+            }
+        };
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.networkInterceptors().add(interceptor);
+        Retrofit notLogged = new Retrofit.Builder()
+                .baseUrl(mConfig.getZendeskHost())
+                .addConverterFactory(generateGsonFactory())
+                .client(okHttpClient)
+                .build();
+        StepicZendeskEmptyAuthService tempService = notLogged.create(StepicZendeskEmptyAuthService.class);
+
+        String encodedEmail = URLEncoder.encode(email);
+        String encodedDescription = URLEncoder.encode(rawDescription);
+        String subject = "Отзыв об Android приложении Stepic.org";// TODO: 24.02.16 get from resources
+        String encodedSubject = URLEncoder.encode(subject);
+        String aboutSystem = "Android 6.0";// TODO: 24.02.16 get from system
+        String encodedSystem = URLEncoder.encode(aboutSystem);
+        return tempService.sendFeedback(encodedSubject, encodedEmail, encodedSystem, encodedDescription);
+    }
+
+    @Nullable
+    private String getCsrfTokenForZendesk() throws IOException {
+        retrofit.Response<Void> r = mZendeskAuthService.getZendeskForFun().execute();
+        int i = 0;
+        return null;
     }
 
     @Nullable
