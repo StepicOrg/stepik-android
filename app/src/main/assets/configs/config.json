@@ -10,5 +10,6 @@
   "DATE_PATTERN": "dd MMMM yyyy HH:mm",
   "DATE_PATTERN_FOR_VIEW": "dd MMMM yyyy",
   "REDIRECT_URI": "stepic://stepic.org/oauth",
-  "ARRAY_IDS_PARAM": "ids[]"
+  "ARRAY_IDS_PARAM": "ids[]",
+  "ZENDESK_HOST": "https://stepic.zendesk.com"
 }
