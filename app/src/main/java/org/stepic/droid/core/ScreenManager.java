@@ -118,9 +118,13 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
-    public void showStoreWithApp(Activity sourceActivity) {
-        Toast.makeText(sourceActivity, "GOOGLE PLAY", Toast.LENGTH_SHORT).show();
-        // TODO: 23.02.16 implement
+    public void showStoreWithApp(@NotNull Activity sourceActivity) {
+        final String appPackageName = sourceActivity.getPackageName();
+        try {
+            sourceActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            sourceActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
     }
 
     @Override
