@@ -10,6 +10,11 @@ import android.widget.EditText
 import android.widget.Toast
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.util.ValidatorUtil
+import retrofit.BaseUrl
+import retrofit.Callback
+import retrofit.Response
+import retrofit.Retrofit
 
 class TextFeedbackFragment : FragmentBase() {
 
@@ -25,7 +30,7 @@ class TextFeedbackFragment : FragmentBase() {
 
     lateinit var mToolbar: Toolbar
     lateinit var mEmailEditText: EditText
-    lateinit var mContactsEditText: EditText
+    lateinit var mDescriptionEditTex: EditText
     lateinit var mSendButton: Button
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -55,10 +60,10 @@ class TextFeedbackFragment : FragmentBase() {
             }
             false
         }
-
-        mContactsEditText = v.findViewById(R.id.feedback_contacts) as EditText
         val primaryEmail = mUserPreferences.primaryEmail?.email
-        primaryEmail?.let { mContactsEditText.setText(primaryEmail) }
+        primaryEmail?.let { mEmailEditText.setText(primaryEmail) }
+
+        mDescriptionEditTex = v.findViewById(R.id.feedback_form) as EditText
     }
 
     fun initButton(v: View) {
@@ -84,7 +89,33 @@ class TextFeedbackFragment : FragmentBase() {
     fun sendFeedback() {
         //todo implement
         hideSoftKeypad()
-        Toast.makeText(context, "feedback is sent", Toast.LENGTH_SHORT).show()
+        val email = mEmailEditText.text.toString()
+        val description = mDescriptionEditTex.text.toString()
+        if (email.isEmpty() || description.isEmpty()) {
+            Toast.makeText(context, "Заполните поля", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (!ValidatorUtil.isEmailValid(email)) {
+            Toast.makeText(context, R.string.email_incorrect, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        mShell.api.sendFeedback(email, description).enqueue(object : Callback<Void> {
+
+            override fun onResponse(response: Response<Void>?, retrofit: Retrofit?) {
+                if (response?.isSuccess ?: false) {
+                    Toast.makeText(context, "Сообщение отправлено", Toast.LENGTH_SHORT).show()//todo get from res
+                } else {
+                    Toast.makeText(context, "Что-то пошло не так, сервер вернул ошибку: " + response?.code(), Toast.LENGTH_SHORT).show()//todo get from res
+                }
+            }
+
+            override fun onFailure(throwable: Throwable?) {
+                Toast.makeText(context, "Проблемы с интернетом. Данные не отправлены.", Toast.LENGTH_SHORT).show()//todo get from res
+            }
+
+
+        })
     }
 
     override fun onDestroyView() {
