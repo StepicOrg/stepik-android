@@ -13,4 +13,5 @@ public interface IConfig {
     String getIDSParam();
 
     String getRedirectUri();
+    String getZendeskHost();
 }

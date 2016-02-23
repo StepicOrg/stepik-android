@@ -32,6 +32,8 @@ public class ConfigRelease implements IConfig {
     private static final String DATE_PATTERN_FOR_VIEW = "DATE_PATTERN_FOR_VIEW";
     private static final String ARRAY_IDS_PARAM = "ARRAY_IDS_PARAM";
     private static final String REDIRECT_URI = "REDIRECT_URI";
+    private static final String ZENDESK_HOST = "ZENDESK_HOST";
+
 
 
     @Inject
@@ -111,6 +113,11 @@ public class ConfigRelease implements IConfig {
     @Override
     public String getRedirectUri() {
         return getString(REDIRECT_URI);
+    }
+
+    @Override
+    public String getZendeskHost() {
+        return getString(ZENDESK_HOST);
     }
 
 
