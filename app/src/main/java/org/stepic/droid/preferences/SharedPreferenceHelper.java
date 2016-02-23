@@ -217,7 +217,7 @@ public class SharedPreferenceHelper {
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
     private final String PROFILE_JSON = "profile_json";
-    private final String EMAIL_LIST = "email-list";
+    private final String EMAIL_LIST = "email_list";
     private final String WIFI_KEY = "wifi_key";
     private final String IS_SOCIAL = "is_social_key";
     private final String VIDEO_QUALITY_KEY = "video_quality_key";

@@ -24,6 +24,6 @@ data class Profile(
         val can_add_group: Boolean = false,
         val subscribed_for_news_en: Boolean = false,
         val subscribed_for_news_ru: Boolean = false,
-        @SerializedName("email-addresses")
+        @SerializedName("email_addresses")
         var emailAddresses: LongArray?
 ) : Serializable
