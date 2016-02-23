@@ -106,5 +106,6 @@
     <string name="feedback_hint">Give feedback…</string>
     <string name="feedback_description">Send us your suggestions, comments or idea</string>
     <string name="feedback_contacts_description">Contacts for feedback</string>
+    <string name="email_incorrect">E-mail is incorrect</string>
 
 </resources>
