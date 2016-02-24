@@ -105,5 +105,6 @@
     <string name="feedback_description">Напишите нам свое предложение, замечание или идею</string>
     <string name="feedback_contacts_description">Контакты для обратной связи</string>
     <string name="email_incorrect">Введен некоррентный e-mail</string>
+    <string name="feedback_subject">Отзыв об Android приложении Stepic.org</string>
 
 </resources>

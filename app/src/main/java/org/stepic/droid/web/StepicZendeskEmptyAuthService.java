@@ -1,17 +1,19 @@
 package org.stepic.droid.web;
-
-
 import retrofit.Call;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
+import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.Query;
 
 public interface StepicZendeskEmptyAuthService {
 
-    @FormUrlEncoded
+    @Deprecated
+    @GET("/hc/ru/requests/new")
+    Call<Void> getZendeskForFun();
+
+
     @POST("/hc/ru/requests/")
-    Call<Void> sendFeedback(@Field(value = "request[subject]", encoded = true) String requestSubject,
-                            @Field(value = "request[anonymous_requester_email]", encoded = true) String email,
-                            @Field(value = "request[custom_fields][24562019]", encoded = true) String systemInfo,
-                            @Field(value = "request[description]", encoded = true) String description);
+    Call<Void> sendFeedback(@Query(value = "request[subject]", encoded = true) String requestSubject,
+                            @Query(value = "request[anonymous_requester_email]", encoded = true) String email,
+                            @Query(value = "request[custom_fields][24562019]", encoded = true) String systemInfo,
+                            @Query(value = "request[description]", encoded = true) String description);
 }
