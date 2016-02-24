@@ -106,5 +106,8 @@
     <string name="feedback_contacts_description">Контакты для обратной связи</string>
     <string name="email_incorrect">Введен некоррентный e-mail</string>
     <string name="feedback_subject">Отзыв об Android приложении Stepic.org</string>
+    <string name="feedback_sent">Сообщение отправлено</string>
+    <string name="feedback_fail">Упс… что-то пошло не так. Попробуйте позже</string>
+    <string name="feedback_internet_problem">Интернет недоступен. Попробуйте позже</string>
 
 </resources>

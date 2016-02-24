@@ -24,6 +24,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.SocialAuthAdapter;
+import org.stepic.droid.view.custom.LoadingProgressDialog;
 import org.stepic.droid.view.decorators.SpacesItemDecorationHorizontal;
 
 import butterknife.Bind;
@@ -86,11 +87,7 @@ public class LoginActivity extends FragmentActivityBase {
         mSocialRecyclerView.setLayoutManager(layoutManager);
         mSocialRecyclerView.setAdapter(new SocialAuthAdapter(this));
 
-        mProgressLogin = new ProgressDialog(this);
-        mProgressLogin.setTitle(getString(R.string.loading));
-        mProgressLogin.setMessage(getString(R.string.loading_message));
-        mProgressLogin.setCancelable(false);
-
+        mProgressLogin = new LoadingProgressDialog(this);
 
         mLoginText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

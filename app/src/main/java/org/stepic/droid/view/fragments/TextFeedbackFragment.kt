@@ -1,5 +1,6 @@
 package org.stepic.droid.view.fragments
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -8,9 +9,16 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.squareup.otto.Subscribe
+import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.events.feedback.FeedbackFailEvent
+import org.stepic.droid.events.feedback.FeedbackInternetProblemsEvent
+import org.stepic.droid.events.feedback.FeedbackSentEvent
+import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ValidatorUtil
+import org.stepic.droid.view.custom.LoadingProgressDialog
 import retrofit.BaseUrl
 import retrofit.Callback
 import retrofit.Response
@@ -32,6 +40,11 @@ class TextFeedbackFragment : FragmentBase() {
     lateinit var mEmailEditText: EditText
     lateinit var mDescriptionEditTex: EditText
     lateinit var mSendButton: Button
+    var mProgressDialog : ProgressDialog? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater?.inflate(R.layout.fragment_text_feedback, container, false)
@@ -41,8 +54,19 @@ class TextFeedbackFragment : FragmentBase() {
             initTextFields(v)
             initButton(v)
             v.findViewById(R.id.root_view).requestFocus()
+            mProgressDialog = LoadingProgressDialog(context)
         }
         return v
+    }
+
+    override fun onStart() {
+        super.onStart()
+        bus.register(this)
+    }
+
+    override fun onStop() {
+        bus.unregister(this)
+        super.onStop()
     }
 
     fun initToolbar(v: View) {
@@ -100,22 +124,42 @@ class TextFeedbackFragment : FragmentBase() {
             return
         }
 
+        ProgressHelper.activate(mProgressDialog)
         mShell.api.sendFeedback(email, description).enqueue(object : Callback<Void> {
 
             override fun onResponse(response: Response<Void>?, retrofit: Retrofit?) {
+                ProgressHelper.dismiss(mProgressDialog)
                 if (response?.isSuccess ?: false) {
-                    Toast.makeText(context, "Сообщение отправлено", Toast.LENGTH_SHORT).show()//todo get from res
+                    bus.post(FeedbackSentEvent())
+
                 } else {
-                    Toast.makeText(context, "Что-то пошло не так, сервер вернул ошибку: " + response?.code(), Toast.LENGTH_SHORT).show()//todo get from res
+                    bus.post(FeedbackFailEvent())
                 }
             }
 
             override fun onFailure(throwable: Throwable?) {
-                Toast.makeText(context, "Проблемы с интернетом. Данные не отправлены.", Toast.LENGTH_SHORT).show()//todo get from res
+                ProgressHelper.dismiss(mProgressDialog)
+                bus.post(FeedbackInternetProblemsEvent())
             }
-
-
         })
+    }
+
+    @Subscribe
+    fun onFeedbackSent(event: FeedbackSentEvent) {
+        Toast.makeText(context, R.string.feedback_sent, Toast.LENGTH_SHORT).show()
+        mShell.screenProvider.showMainFeed(activity)
+    }
+
+    @Subscribe
+    fun onServerFail(event: FeedbackFailEvent) {
+        Toast.makeText(context, R.string.feedback_fail, Toast.LENGTH_LONG).show()
+        YandexMetrica.reportEvent("Feedback is failed due to server")
+    }
+
+    @Subscribe
+    fun onInternetProblems(event: FeedbackInternetProblemsEvent) {
+        Toast.makeText(context, R.string.feedback_internet_problem, Toast.LENGTH_LONG).show()
+        YandexMetrica.reportEvent("Feedback internet fail")
     }
 
     override fun onDestroyView() {

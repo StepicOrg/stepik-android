@@ -108,5 +108,8 @@
     <string name="feedback_contacts_description">Contacts for feedback</string>
     <string name="email_incorrect">E-mail is incorrect</string>
     <string name="feedback_subject">Feedback about the Android app of Stepic.org</string>
+    <string name="feedback_sent">Feedback is sent</string>
+    <string name="feedback_fail">Sorry, service is not available. Try later</string>
+    <string name="feedback_internet_problem">Sorry, internet is not available. Try again later</string>
 
 </resources>
