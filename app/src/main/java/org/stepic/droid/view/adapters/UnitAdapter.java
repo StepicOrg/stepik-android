@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -251,15 +250,16 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 notifyItemChanged(position);
             } else {
                 if (unit.is_loading()) {
-                    Log.d("unit", "cancel loading");
-                    mDownloadManager.cancelUnitLoading(lesson);
-                    unit.set_loading(false);
-                    unit.set_cached(false);
-                    lesson.set_loading(false);
-                    lesson.set_cached(false);
-                    mDbManager.updateOnlyCachedLoadingLesson(lesson);
-                    mDbManager.updateOnlyCachedLoadingUnit(unit);
-                    notifyItemChanged(position);
+                    //cancel loading
+//                    Log.d("unit", "cancel loading");
+//                    mDownloadManager.cancelUnitLoading(lesson);
+//                    unit.set_loading(false);
+//                    unit.set_cached(false);
+//                    lesson.set_loading(false);
+//                    lesson.set_cached(false);
+//                    mDbManager.updateOnlyCachedLoadingLesson(lesson);
+//                    mDbManager.updateOnlyCachedLoadingUnit(unit);
+//                    notifyItemChanged(position);
 
                 } else {
 
