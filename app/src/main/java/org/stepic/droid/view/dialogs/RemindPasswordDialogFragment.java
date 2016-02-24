@@ -150,7 +150,10 @@ public class RemindPasswordDialogFragment extends DialogFragment {
                             mRootView.requestFocus();
                         showError(mEmailTextWrapper, mEmailWrong);
                     } else {
-                        Toast.makeText(getContext(), R.string.failLoginConnectionProblems, Toast.LENGTH_SHORT).show();
+                        final Context context = getContext();
+                        if (context != null) {
+                            Toast.makeText(context, R.string.failLoginConnectionProblems, Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                 }
@@ -158,7 +161,11 @@ public class RemindPasswordDialogFragment extends DialogFragment {
                 @Override
                 public void onFailure(Throwable t) {
                     ProgressHelper.dismiss(mProgressLogin);
-                    Toast.makeText(getContext(), R.string.failLoginConnectionProblems, Toast.LENGTH_SHORT).show();
+
+                    final Context context = getContext();
+                    if (context != null) {
+                        Toast.makeText(context, R.string.failLoginConnectionProblems, Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
