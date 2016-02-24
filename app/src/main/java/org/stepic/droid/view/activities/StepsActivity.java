@@ -1,6 +1,7 @@
 package org.stepic.droid.view.activities;
 
 import android.support.v4.app.Fragment;
+import android.view.MenuItem;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.base.SingleFragmentActivity;
@@ -18,5 +19,16 @@ public class StepsActivity extends SingleFragmentActivity {
         Unit unit = (Unit) (getIntent().getExtras().get(AppConstants.KEY_UNIT_BUNDLE));
         Lesson lesson = (Lesson) (getIntent().getExtras().get(AppConstants.KEY_LESSON_BUNDLE));
         return StepsFragment.newInstance(unit, lesson);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

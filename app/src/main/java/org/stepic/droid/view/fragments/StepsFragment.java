@@ -427,23 +427,6 @@ public class StepsFragment extends FragmentBase {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    public void finish() {
-        getActivity().finish();
-        getActivity().overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
-    }
-
     @Subscribe
     public void onQualityDetermined(VideoQualityEvent e) {
         int currentPosition = mViewPager.getCurrentItem();
