@@ -43,7 +43,7 @@ public class DeviceInfoUtil {
     }
 
 
-    public static String getInfosAboutDevice(Activity a) {
+    public static String getInfosAboutDevice(Context a) {
         String s = "";
         try {
             PackageInfo pInfo = a.getPackageManager().getPackageInfo(
@@ -67,12 +67,7 @@ public class DeviceInfoUtil {
         s += "\n Manufacturer: " + android.os.Build.MANUFACTURER;
         s += "\n Other TAGS: " + android.os.Build.TAGS;
 
-        s += "\n screenWidth: "
-                + a.getWindow().getWindowManager().getDefaultDisplay()
-                .getWidth();
-        s += "\n screenHeigth: "
-                + a.getWindow().getWindowManager().getDefaultDisplay()
-                .getHeight();
+
         s += "\n Keyboard available: "
                 + (a.getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
 
