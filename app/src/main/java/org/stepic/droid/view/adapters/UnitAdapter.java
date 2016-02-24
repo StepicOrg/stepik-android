@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -238,6 +239,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
 
             if (unit.is_cached()) {
+                //delete
                 YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_DELETE_UNIT, JsonHelper.toJson(unit));
                 mCleaner.removeUnitLesson(unit, lesson);
                 unit.set_loading(false);
@@ -249,7 +251,16 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 notifyItemChanged(position);
             } else {
                 if (unit.is_loading()) {
-                    // TODO: 11.11.15 cancel downloading
+                    Log.d("unit", "cancel loading");
+                    mDownloadManager.cancelUnitLoading(lesson);
+                    unit.set_loading(false);
+                    unit.set_cached(false);
+                    lesson.set_loading(false);
+                    lesson.set_cached(false);
+                    mDbManager.updateOnlyCachedLoadingLesson(lesson);
+                    mDbManager.updateOnlyCachedLoadingUnit(unit);
+                    notifyItemChanged(position);
+
                 } else {
 
                     YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CACHE_UNIT, JsonHelper.toJson(unit));

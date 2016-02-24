@@ -14,4 +14,6 @@ public interface IDownloadManager {
     void addCourse(Course course, DatabaseFacade.Table type);
 
     void addUnitLesson(Unit unit, Lesson lesson);
+
+    void cancelUnitLoading(Lesson lesson);
 }

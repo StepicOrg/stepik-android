@@ -12,8 +12,10 @@ import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.util.RWLocks;
 
 import java.io.File;
 
@@ -28,6 +30,9 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     @Inject
     IStoreStateManager mStoreStateManager;
 
+    @Inject
+    ICancelSniffer mCancelSniffer;
+
     public DownloadCompleteReceiver() {
         MainApplication.component().inject(this);
     }
@@ -38,25 +43,41 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void[] params) {
-                //critical section:
+                try {
+                    RWLocks.DownloadLock.writeLock().lock();
 
-                DownloadEntity downloadEntity = mDatabaseFacade.getDownloadEntityIfExist(referenceId);
-                if (downloadEntity != null) {
-                    long video_id = downloadEntity.getVideoId();
-                    long step_id = downloadEntity.getStepId();
-                    mDatabaseFacade.deleteDownloadEntityByDownloadId(referenceId);
+                    DownloadEntity downloadEntity = mDatabaseFacade.getDownloadEntityIfExist(referenceId);
+                    if (downloadEntity != null) {
+                        long video_id = downloadEntity.getVideoId();
+                        long step_id = downloadEntity.getStepId();
+                        mDatabaseFacade.deleteDownloadEntityByDownloadId(referenceId);
 
-                    File downloadFolderAndFile = new File(mUserPrefs.getUserDownloadFolder(), video_id + "");
-                    String path = Uri.fromFile(downloadFolderAndFile).getPath();
-                    CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, downloadEntity.getThumbnail());
-                    cachedVideo.setQuality(downloadEntity.getQuality());
-                    mDatabaseFacade.addVideo(cachedVideo);
 
-                    Step step = mDatabaseFacade.getStepById(step_id);
-                    step.set_cached(true);
-                    step.set_loading(false);
-                    mDatabaseFacade.updateOnlyCachedLoadingStep(step);
-                    mStoreStateManager.updateUnitLessonState(step.getLesson());
+                        File downloadFolderAndFile = new File(mUserPrefs.getUserDownloadFolder(), video_id + "");
+                        String path = Uri.fromFile(downloadFolderAndFile).getPath();
+
+                        if (mCancelSniffer.isStepIdCanceled(step_id)) {
+                            File file = new File(path);
+                            if (file.exists()) {
+                                file.delete();
+                            }
+                            mCancelSniffer.removeStepIdCancel(step_id);
+                        }
+                        {
+                            //is not canceled
+                            CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, downloadEntity.getThumbnail());
+                            cachedVideo.setQuality(downloadEntity.getQuality());
+                            mDatabaseFacade.addVideo(cachedVideo);
+
+                            Step step = mDatabaseFacade.getStepById(step_id);
+                            step.set_cached(true);
+                            step.set_loading(false);
+                            mDatabaseFacade.updateOnlyCachedLoadingStep(step);
+                            mStoreStateManager.updateUnitLessonState(step.getLesson());
+                        }
+                    }
+                } finally {
+                    RWLocks.DownloadLock.writeLock().unlock();
                 }
                 return null;
                 //end critical section

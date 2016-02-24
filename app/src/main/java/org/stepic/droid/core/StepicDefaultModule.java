@@ -24,9 +24,11 @@ import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.DatabaseHelper;
 import org.stepic.droid.store.DownloadManagerImpl;
+import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.StoreStateManager;
+import org.stepic.droid.store.SynchronizedCancelSniffer;
 import org.stepic.droid.store.dao.AssignmentDaoImpl;
 import org.stepic.droid.store.dao.BlockDaoImpl;
 import org.stepic.droid.store.dao.CourseDaoImpl;
@@ -210,12 +212,12 @@ public class StepicDefaultModule {
     }
 
     @Provides
-    public IDao<Section> provideSectionDao(SQLiteOpenHelper openHelper){
+    public IDao<Section> provideSectionDao(SQLiteOpenHelper openHelper) {
         return new SectionDaoImpl(openHelper);
     }
 
     @Provides
-    public IDao<Unit> provideUnitDao(SQLiteOpenHelper openHelper, IDao<Progress> progressDao){
+    public IDao<Unit> provideUnitDao(SQLiteOpenHelper openHelper, IDao<Progress> progressDao) {
         return new UnitDaoImpl(openHelper, progressDao);
     }
 
@@ -265,6 +267,12 @@ public class StepicDefaultModule {
     @Provides
     public IDao<Course> provideCourse(SQLiteOpenHelper openHelper, IDao<CachedVideo> daoCached) {
         return new CourseDaoImpl(openHelper, daoCached);
+    }
+
+    @Provides
+    @Singleton
+    public ICancelSniffer provideCancelSniffer() {
+        return new SynchronizedCancelSniffer();
     }
 
 }

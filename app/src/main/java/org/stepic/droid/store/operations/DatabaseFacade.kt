@@ -2,34 +2,13 @@ package org.stepic.droid.store.operations
 
 import android.content.ContentValues
 import org.stepic.droid.base.MainApplication
-import org.stepic.droid.model.Assignment
-import org.stepic.droid.model.CachedVideo
-import org.stepic.droid.model.Course
-import org.stepic.droid.model.DownloadEntity
-import org.stepic.droid.model.Lesson
-import org.stepic.droid.model.Progress
-import org.stepic.droid.model.Section
-import org.stepic.droid.model.Step
+import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
-import org.stepic.droid.model.Video
 import org.stepic.droid.store.dao.IDao
-import org.stepic.droid.store.structure.DBStructureBase
-import org.stepic.droid.store.structure.DBStructureCourses
-import org.stepic.droid.store.structure.DbStructureAssignment
-import org.stepic.droid.store.structure.DbStructureCachedVideo
-import org.stepic.droid.store.structure.DbStructureLesson
-import org.stepic.droid.store.structure.DbStructureProgress
-import org.stepic.droid.store.structure.DbStructureSections
-import org.stepic.droid.store.structure.DbStructureSharedDownloads
-import org.stepic.droid.store.structure.DbStructureStep
-import org.stepic.droid.store.structure.DbStructureUnit
-import org.stepic.droid.store.structure.DbStructureViewQueue
+import org.stepic.droid.store.structure.*
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.web.ViewAssignment
-
-import java.util.HashMap
-import java.util.HashSet
-
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -132,7 +111,7 @@ class DatabaseFacade {
 
     fun getUnitById(unitId: Long) = mUnitDao.get(DbStructureUnit.Column.UNIT_ID, unitId.toString())
 
-    val allDownloadEntities = mDownloadEntityDao.getAll()
+    fun getAllDownloadEntities() = mDownloadEntityDao.getAll()
 
     fun isUnitCached(unit: Unit?): Boolean {
         val id = unit?.id ?: return false
@@ -216,7 +195,14 @@ class DatabaseFacade {
 
     fun getStepsOfLesson(lessonId: Long) = mStepDao.getAll(DbStructureStep.Column.LESSON_ID, lessonId.toString())
 
-    fun getLessonOfUnit(unit: Unit) = mLessonDao.get(DbStructureLesson.Column.LESSON_ID, unit.lesson.toString())
+    fun getLessonOfUnit(unit: Unit?): Lesson? {
+        if (unit != null) {
+            return mLessonDao.get(DbStructureLesson.Column.LESSON_ID, unit.lesson.toString())
+        } else {
+            return null
+        }
+    }
+
 
     fun addVideo(cachedVideo: CachedVideo?) = cachedVideo?.let { mCachedVideoDao.insertOrUpdate(cachedVideo) }
 
@@ -227,7 +213,10 @@ class DatabaseFacade {
             mDownloadEntityDao.isInDb(DbStructureSharedDownloads.Column.VIDEO_ID, videoId.toString())
 
     fun deleteVideo(video: Video) =
-            mCachedVideoDao.delete(DbStructureCachedVideo.Column.VIDEO_ID, video.id.toString())
+            deleteVideo(video.id)
+
+    fun deleteVideo(videoId: Long) =
+            mCachedVideoDao.delete(DbStructureCachedVideo.Column.VIDEO_ID, videoId.toString())
 
     fun deleteVideoByUrl(path: String?) = path?.let { mCachedVideoDao.delete(DbStructureCachedVideo.Column.URL, path) }
 
@@ -263,7 +252,9 @@ class DatabaseFacade {
         val courses = getAllCourses(type)
 
         for (courseItem in courses) {
-            deleteCourse(courseItem, type)
+            courseItem?.let {
+                deleteCourse(courseItem, type)
+            }
         }
     }
 
@@ -275,7 +266,7 @@ class DatabaseFacade {
 
     fun addToQueueViewedState(viewState: ViewAssignment) = mViewAssignmentDao.insertOrUpdate(viewState)
 
-    val allInQueue: List<ViewAssignment> = mViewAssignmentDao.getAll()
+    val allInQueue: List<ViewAssignment?> = mViewAssignmentDao.getAll()
 
     fun removeFromQueue(viewAssignmentWrapper: ViewAssignment?) {
         val assignmentId = viewAssignmentWrapper?.assignment ?: return

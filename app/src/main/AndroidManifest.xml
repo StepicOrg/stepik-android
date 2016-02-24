@@ -107,6 +107,10 @@
             android:name="org.stepic.droid.services.ViewPusher"
             android:exported="true"/>
 
+        <service
+            android:name="org.stepic.droid.services.CancelLoadingService"
+            android:exported="true"/>
+
         <activity
             android:name=".view.activities.CourseSearchResultActivity"
             android:label="@string/search_title"
