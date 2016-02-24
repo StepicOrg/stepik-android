@@ -96,6 +96,7 @@ public class StepsFragment extends FragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_steps, container, false);
+        setHasOptionsMenu(true);
         ButterKnife.bind(this, v);
         Log.d(TAG, "onCreateView");
         return v;
