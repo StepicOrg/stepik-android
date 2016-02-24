@@ -13,7 +13,7 @@ import com.squareup.otto.Subscribe
 import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.events.feedback.FeedbackFailEvent
+import org.stepic.droid.events.feedback.FeedbackFailedEvent
 import org.stepic.droid.events.feedback.FeedbackInternetProblemsEvent
 import org.stepic.droid.events.feedback.FeedbackSentEvent
 import org.stepic.droid.util.ProgressHelper
@@ -133,7 +133,7 @@ class TextFeedbackFragment : FragmentBase() {
                     bus.post(FeedbackSentEvent())
 
                 } else {
-                    bus.post(FeedbackFailEvent())
+                    bus.post(FeedbackFailedEvent())
                 }
             }
 
@@ -151,7 +151,7 @@ class TextFeedbackFragment : FragmentBase() {
     }
 
     @Subscribe
-    fun onServerFail(event: FeedbackFailEvent) {
+    fun onServerFail(event: FeedbackFailedEvent) {
         Toast.makeText(context, R.string.feedback_fail, Toast.LENGTH_LONG).show()
         YandexMetrica.reportEvent("Feedback is failed due to server")
     }
