@@ -99,7 +99,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     protected void setFragment(@IdRes int res, Fragment fragment) {
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(res, fragment);
+        fragmentTransaction.replace(res, fragment, fragment.getClass().toString());
         fragmentTransaction.commit();
     }
 }
