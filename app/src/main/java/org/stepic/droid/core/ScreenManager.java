@@ -22,6 +22,7 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
+import org.stepic.droid.util.resolvers.IMainMenuResolver;
 import org.stepic.droid.view.activities.CourseDetailActivity;
 import org.stepic.droid.view.activities.LaunchActivity;
 import org.stepic.droid.view.activities.LoginActivity;
@@ -32,6 +33,7 @@ import org.stepic.droid.view.activities.StepsActivity;
 import org.stepic.droid.view.activities.TextFeedbackActivity;
 import org.stepic.droid.view.activities.UnitsActivity;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
+import org.stepic.droid.view.fragments.DownloadsFragment;
 import org.stepic.droid.web.ViewAssignment;
 
 import javax.inject.Inject;
@@ -40,10 +42,13 @@ import javax.inject.Singleton;
 @Singleton
 public class ScreenManager implements IScreenManager {
     private IConfig mConfig;
+    private IMainMenuResolver mMainMenuResolver;
+
 
     @Inject
-    public ScreenManager(IConfig config) {
+    public ScreenManager(IConfig config, IMainMenuResolver mainMenuResolver) {
         this.mConfig = config;
+        mMainMenuResolver = mainMenuResolver;
     }
 
     @Override
@@ -125,6 +130,17 @@ public class ScreenManager implements IScreenManager {
         } catch (android.content.ActivityNotFoundException anfe) {
             sourceActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
+    }
+
+    @Override
+    public void showDownload() {
+        Intent intent = new Intent (MainApplication.getAppContext(), MainFeedActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Bundle bundle = new Bundle();
+        int index = mMainMenuResolver.getIndexOfFragment(DownloadsFragment.class);
+        bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
+        intent.putExtras(bundle);
+        MainApplication.getAppContext().startActivity(intent);
     }
 
     @Override
