@@ -5,8 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
+import android.util.Log;
 
 import com.squareup.otto.Bus;
 
@@ -23,6 +23,7 @@ import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.RWLocks;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
@@ -40,6 +41,9 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     @Inject
     ICancelSniffer mCancelSniffer;
 
+    @Inject
+    ExecutorService mThreadSingleThreadExecutor;
+
     public DownloadCompleteReceiver() {
         MainApplication.component().inject(this);
     }
@@ -47,15 +51,14 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         final long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+
+        mThreadSingleThreadExecutor.execute(new Runnable() {
             @Override
-            protected Void doInBackground(Void[] params) {
+            public void run() {
                 blockForInBackground(referenceId);
-                //end critical section
-                return null;
+                Log.d("thread", Thread.currentThread().getName()+ " ");
             }
-        };
-        task.execute();
+        });
     }
 
     private void blockForInBackground(final long referenceId) {

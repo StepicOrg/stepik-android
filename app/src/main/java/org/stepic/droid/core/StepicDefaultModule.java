@@ -57,6 +57,10 @@ import org.stepic.droid.web.IHttpManager;
 import org.stepic.droid.web.RetrofitRESTApi;
 import org.stepic.droid.web.ViewAssignment;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -282,5 +286,15 @@ public class StepicDefaultModule {
     public  IMainMenuResolver provideResolver(){
         return new MainMenuResolverImpl();
     }
+
+    @Provides
+    @Singleton
+    public ExecutorService  provideSingle(){return Executors.newSingleThreadExecutor();}
+
+
+    //it is good for many short lived, which should do async
+    @Provides
+    @Singleton
+    public ThreadPoolExecutor provideThreadPool(){return (ThreadPoolExecutor) Executors.newCachedThreadPool();}
 
 }
