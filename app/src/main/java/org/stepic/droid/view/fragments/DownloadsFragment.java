@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -35,6 +36,7 @@ import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DbParseHelper;
+import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.view.adapters.DownloadsAdapter;
 
@@ -62,6 +64,9 @@ public class DownloadsFragment extends FragmentBase {
 
     @Bind(R.id.list_of_downloads)
     RecyclerView mDownloadsView;
+
+    @Bind(R.id.progress_bar)
+    ProgressBar mProgressBar;
 
     private DownloadsAdapter mDownloadAdapter;
     private List<CachedVideo> mCachedVideoList;
@@ -98,7 +103,14 @@ public class DownloadsFragment extends FragmentBase {
         mDownloadsView.setItemAnimator(new SlideInRightAnimator());
         mDownloadsView.getItemAnimator().setRemoveDuration(10);
 
-        checkForEmpty();
+        if (isLoaded){
+            checkForEmpty();
+        }
+        else{
+            mEmptyDownloadView.setVisibility(View.GONE);
+            ProgressHelper.activate(mProgressBar);
+        }
+
 
         bus.register(this);
     }
@@ -146,21 +158,13 @@ public class DownloadsFragment extends FragmentBase {
 
     @Subscribe
     public void onFinishLoadCachedVideos(FinishDownloadCachedVideosEvent event) {
-        List<CachedVideo> list = event.getCachedVideos();
-        if (list == null) {
-            return;
-        }
-
-        Map<Long, Lesson> map = event.getMap();
-        if (map == null) {
-            return;
-        }
-
-        showCachedVideos(list, map);
+        showCachedVideos(event.getCachedVideos(), event.getMap());
     }
 
     private void showCachedVideos(List<CachedVideo> videosForShowing, Map<Long, Lesson> map) {
         isLoaded = true;
+        ProgressHelper.dismiss(mProgressBar);
+        if (videosForShowing == null || map == null) return;
         mStepIdToLesson.clear();
         mStepIdToLesson.putAll(map);
         mCachedVideoList.clear();
