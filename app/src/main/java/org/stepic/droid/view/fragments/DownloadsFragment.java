@@ -51,7 +51,7 @@ import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 
 public class DownloadsFragment extends FragmentBase {
 
-    public  static DownloadsFragment newInstance(){
+    public static DownloadsFragment newInstance() {
         return new DownloadsFragment();
     }
 
@@ -67,6 +67,16 @@ public class DownloadsFragment extends FragmentBase {
     private List<CachedVideo> mCachedVideoList;
     private Map<Long, Lesson> mStepIdToLesson;
 
+    private boolean isLoaded;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+
+        mCachedVideoList = new ArrayList<>();
+        mStepIdToLesson = new HashMap<>();
+    }
 
     @Nullable
     @Override
@@ -80,14 +90,15 @@ public class DownloadsFragment extends FragmentBase {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mCachedVideoList = new ArrayList<>();
-        mStepIdToLesson = new HashMap<>();
-        mDownloadAdapter = new DownloadsAdapter(mCachedVideoList, mStepIdToLesson, getContext(), this);
+
+        mDownloadAdapter = new DownloadsAdapter(mCachedVideoList, mStepIdToLesson, getActivity(), this);
         mDownloadsView.setAdapter(mDownloadAdapter);
 
         mDownloadsView.setLayoutManager(new LinearLayoutManager(getContext()));
         mDownloadsView.setItemAnimator(new SlideInRightAnimator());
         mDownloadsView.getItemAnimator().setRemoveDuration(10);
+
+        checkForEmpty();
 
         bus.register(this);
     }
@@ -101,8 +112,9 @@ public class DownloadsFragment extends FragmentBase {
     @Override
     public void onStart() {
         super.onStart();
-//        bus.register(this);
-        updateCachedAsync();
+        if (!isLoaded) {
+            updateCachedAsync();
+        }
     }
 
     private void updateCachedAsync() {
@@ -112,7 +124,7 @@ public class DownloadsFragment extends FragmentBase {
                 List<CachedVideo> videos = mDatabaseFacade.getAllCachedVideos();
                 List<CachedVideo> filteredVideos = new ArrayList<>();
                 for (CachedVideo video : videos) {
-                    if (video != null && video.getStepId() >=0){
+                    if (video != null && video.getStepId() >= 0) {
                         filteredVideos.add(video);
                     }
                 }
@@ -148,6 +160,7 @@ public class DownloadsFragment extends FragmentBase {
     }
 
     private void showCachedVideos(List<CachedVideo> videosForShowing, Map<Long, Lesson> map) {
+        isLoaded = true;
         mStepIdToLesson.clear();
         mStepIdToLesson.putAll(map);
         mCachedVideoList.clear();
@@ -160,7 +173,7 @@ public class DownloadsFragment extends FragmentBase {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        if (mEmptyDownloadView.getVisibility() != View.VISIBLE ) {
+        if (mEmptyDownloadView.getVisibility() != View.VISIBLE) {
             inflater.inflate(R.menu.delete_menu, menu);
         }
     }
@@ -266,13 +279,13 @@ public class DownloadsFragment extends FragmentBase {
         int position = mCachedVideoList.indexOf(videoForDeleteFromList);
         mCachedVideoList.remove(videoForDeleteFromList);
         mStepIdToLesson.remove(videoForDeleteFromList.getStepId());
-        if (mCachedVideoList.size() == 0){
+        if (mCachedVideoList.size() == 0) {
 
         }
         return position;
     }
 
-    public void checkForEmpty () {
+    public void checkForEmpty() {
         //// FIXME: 14.12.15 add to notify methods
         if (!mCachedVideoList.isEmpty()) {
             mEmptyDownloadView.setVisibility(View.GONE);
