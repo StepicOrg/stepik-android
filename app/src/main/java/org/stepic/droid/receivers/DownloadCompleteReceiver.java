@@ -50,58 +50,62 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void[] params) {
-                try {
-                    RWLocks.DownloadLock.writeLock().lock();
-
-                    DownloadEntity downloadEntity = mDatabaseFacade.getDownloadEntityIfExist(referenceId);
-                    if (downloadEntity != null) {
-                        long video_id = downloadEntity.getVideoId();
-                        final long step_id = downloadEntity.getStepId();
-                        mDatabaseFacade.deleteDownloadEntityByDownloadId(referenceId);
-
-
-                        File downloadFolderAndFile = new File(mUserPrefs.getUserDownloadFolder(), video_id + "");
-                        String path = Uri.fromFile(downloadFolderAndFile).getPath();
-
-                        if (mCancelSniffer.isStepIdCanceled(step_id)) {
-                            File file = new File(path);
-                            if (file.exists()) {
-                                file.delete();
-                            }
-                            mCancelSniffer.removeStepIdCancel(step_id);
-                        }
-                        {
-                            //is not canceled
-                            final CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, downloadEntity.getThumbnail());
-                            cachedVideo.setQuality(downloadEntity.getQuality());
-                            mDatabaseFacade.addVideo(cachedVideo);
-
-                            final Step step = mDatabaseFacade.getStepById(step_id);
-                            step.set_cached(true);
-                            step.set_loading(false);
-                            mDatabaseFacade.updateOnlyCachedLoadingStep(step);
-                            mStoreStateManager.updateUnitLessonState(step.getLesson());
-                            final Lesson lesson = mDatabaseFacade.getLessonById(step.getLesson());
-                            Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
-                            //Say to ui that ui is cached now
-                            Runnable myRunnable = new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (lesson != null)
-                                        bus.post(new VideoCachedOnDiskEvent(step_id, lesson, cachedVideo));
-                                }
-                            };
-                            mainHandler.post(myRunnable);
-                        }
-                    }
-                } finally {
-                    RWLocks.DownloadLock.writeLock().unlock();
-                }
-                return null;
+                blockForInBackground(referenceId);
                 //end critical section
+                return null;
             }
         };
         task.execute();
+    }
+
+    private void blockForInBackground(final long referenceId) {
+        try {
+            RWLocks.DownloadLock.writeLock().lock();
+
+            DownloadEntity downloadEntity = mDatabaseFacade.getDownloadEntityIfExist(referenceId);
+            if (downloadEntity != null) {
+                long video_id = downloadEntity.getVideoId();
+                final long step_id = downloadEntity.getStepId();
+                mDatabaseFacade.deleteDownloadEntityByDownloadId(referenceId);
+
+
+                File downloadFolderAndFile = new File(mUserPrefs.getUserDownloadFolder(), video_id + "");
+                String path = Uri.fromFile(downloadFolderAndFile).getPath();
+
+                if (mCancelSniffer.isStepIdCanceled(step_id)) {
+                    File file = new File(path);
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                    mCancelSniffer.removeStepIdCancel(step_id);
+                }
+                {
+                    //is not canceled
+                    final CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, downloadEntity.getThumbnail());
+                    cachedVideo.setQuality(downloadEntity.getQuality());
+                    mDatabaseFacade.addVideo(cachedVideo);
+
+                    final Step step = mDatabaseFacade.getStepById(step_id);
+                    step.set_cached(true);
+                    step.set_loading(false);
+                    mDatabaseFacade.updateOnlyCachedLoadingStep(step);
+                    mStoreStateManager.updateUnitLessonState(step.getLesson());
+                    final Lesson lesson = mDatabaseFacade.getLessonById(step.getLesson());
+                    Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
+                    //Say to ui that ui is cached now
+                    Runnable myRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            if (lesson != null)
+                                bus.post(new VideoCachedOnDiskEvent(step_id, lesson, cachedVideo));
+                        }
+                    };
+                    mainHandler.post(myRunnable);
+                }
+            }
+        } finally {
+            RWLocks.DownloadLock.writeLock().unlock();
+        }
     }
 
 }
