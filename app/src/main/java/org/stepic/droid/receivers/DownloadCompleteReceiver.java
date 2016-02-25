@@ -6,10 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
+
+import com.squareup.otto.Bus;
 
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.events.video.VideoCachedOnDiskEvent;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
+import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.ICancelSniffer;
@@ -29,6 +34,8 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     DatabaseFacade mDatabaseFacade;
     @Inject
     IStoreStateManager mStoreStateManager;
+    @Inject
+    Bus bus;
 
     @Inject
     ICancelSniffer mCancelSniffer;
@@ -49,7 +56,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     DownloadEntity downloadEntity = mDatabaseFacade.getDownloadEntityIfExist(referenceId);
                     if (downloadEntity != null) {
                         long video_id = downloadEntity.getVideoId();
-                        long step_id = downloadEntity.getStepId();
+                        final long step_id = downloadEntity.getStepId();
                         mDatabaseFacade.deleteDownloadEntityByDownloadId(referenceId);
 
 
@@ -65,15 +72,26 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                         }
                         {
                             //is not canceled
-                            CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, downloadEntity.getThumbnail());
+                            final CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, downloadEntity.getThumbnail());
                             cachedVideo.setQuality(downloadEntity.getQuality());
                             mDatabaseFacade.addVideo(cachedVideo);
 
-                            Step step = mDatabaseFacade.getStepById(step_id);
+                            final Step step = mDatabaseFacade.getStepById(step_id);
                             step.set_cached(true);
                             step.set_loading(false);
                             mDatabaseFacade.updateOnlyCachedLoadingStep(step);
                             mStoreStateManager.updateUnitLessonState(step.getLesson());
+                            final Lesson lesson = mDatabaseFacade.getLessonById(step.getLesson());
+                            Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
+                            //Say to ui that ui is cached now
+                            Runnable myRunnable = new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (lesson != null)
+                                        bus.post(new VideoCachedOnDiskEvent(step_id, lesson, cachedVideo));
+                                }
+                            };
+                            mainHandler.post(myRunnable);
                         }
                     }
                 } finally {

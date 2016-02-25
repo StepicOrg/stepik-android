@@ -28,6 +28,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.steps.ClearAllDownloadWithoutAnimationEvent;
 import org.stepic.droid.events.steps.StepRemovedEvent;
 import org.stepic.droid.events.video.FinishDownloadCachedVideosEvent;
+import org.stepic.droid.events.video.VideoCachedOnDiskEvent;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
@@ -102,11 +103,11 @@ public class DownloadsFragment extends FragmentBase {
         mDownloadsView.setLayoutManager(new LinearLayoutManager(getContext()));
         mDownloadsView.setItemAnimator(new SlideInRightAnimator());
         mDownloadsView.getItemAnimator().setRemoveDuration(10);
+        mDownloadsView.getItemAnimator().setAddDuration(10);
 
-        if (isLoaded){
+        if (isLoaded) {
             checkForEmpty();
-        }
-        else{
+        } else {
             mEmptyDownloadView.setVisibility(View.GONE);
             ProgressHelper.activate(mProgressBar);
         }
@@ -270,6 +271,23 @@ public class DownloadsFragment extends FragmentBase {
             mDownloadAdapter.notifyItemRemoved(position);
         }
     }
+
+    @Subscribe
+    public void onStepCached(VideoCachedOnDiskEvent event) {
+        addStepToList(event.getStepId(), event.getLesson(), event.getVideo());
+    }
+
+    private void addStepToList(long stepId, Lesson lesson, CachedVideo video) {
+        if (mStepIdToLesson == null || mCachedVideoList == null) return;
+        mStepIdToLesson.put(stepId, lesson);
+        int pos = mCachedVideoList.size();
+        mCachedVideoList.add(video);
+        if (mDownloadAdapter != null && pos >= 0 && pos < mCachedVideoList.size()) {
+            checkForEmpty();
+            mDownloadAdapter.notifyItemInserted(pos);
+        }
+    }
+
 
     private int removeByStepId(long stepId) {
         if (!mStepIdToLesson.containsKey(stepId)) return -1;
