@@ -90,6 +90,14 @@
         </receiver>
 
         <receiver
+            android:name="org.stepic.droid.receivers.DownloadClickReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
             android:name=".receivers.InternetConnectionEnabledReceiver"
             android:exported="true">
             <intent-filter>
@@ -105,6 +113,10 @@
             android:exported="true"/>
         <service
             android:name="org.stepic.droid.services.ViewPusher"
+            android:exported="true"/>
+
+        <service
+            android:name="org.stepic.droid.services.CancelLoadingService"
             android:exported="true"/>
 
         <activity

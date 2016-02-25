@@ -14,8 +14,10 @@ import org.stepic.droid.concurrency.ToDbUnitLessonTask;
 import org.stepic.droid.concurrency.UpdateCourseTask;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.receivers.DownloadClickReceiver;
 import org.stepic.droid.receivers.DownloadCompleteReceiver;
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver;
+import org.stepic.droid.services.CancelLoadingService;
 import org.stepic.droid.services.DeleteService;
 import org.stepic.droid.services.LoadService;
 import org.stepic.droid.services.ViewPusher;
@@ -120,4 +122,8 @@ public interface StepicCoreComponent {
     void inject(RemindPasswordDialogFragment remindPasswordDialogFragment);
 
     void inject(DatabaseFacade databaseFacade);
+
+    void inject(CancelLoadingService service);
+
+    void inject(DownloadClickReceiver downloadClickReceiver);
 }

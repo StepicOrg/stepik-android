@@ -6,13 +6,11 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import org.stepic.droid.base.MainApplication
-import org.stepic.droid.base.StepBaseFragment
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Step
 import org.stepic.droid.model.Unit
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.resolvers.IStepResolver
-
 import javax.inject.Inject
 
 class StepFragmentAdapter(fm: FragmentManager, val mStepList: List<Step?>, val mLesson: Lesson?, val mUnit: Unit?) : FragmentStatePagerAdapter(fm) {
@@ -39,6 +37,7 @@ class StepFragmentAdapter(fm: FragmentManager, val mStepList: List<Step?>, val m
     }
 
     fun getTabDrawable(position: Int): Drawable? {
+        if (position >= mStepList.size) return null
         val step = mStepList[position]
         return mResolver.getDrawableForType(step?.block?.name, step?.is_custom_passed?:false)
     }

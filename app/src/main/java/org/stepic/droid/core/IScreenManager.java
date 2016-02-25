@@ -46,4 +46,6 @@ public interface IScreenManager {
     void showTextFeedback(Activity sourceActivity);
 
     void showStoreWithApp(Activity sourceActivity);
+
+    void showDownload();
 }

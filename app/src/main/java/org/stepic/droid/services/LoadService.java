@@ -21,6 +21,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
@@ -61,6 +62,8 @@ public class LoadService extends IntentService {
     DatabaseFacade mDb;
     @Inject
     IStoreStateManager mStoreStateManager;
+    @Inject
+    ICancelSniffer mCancelSniffer;
 
     public enum LoadTypeKey {
         Course, Section, UnitLesson, Step
@@ -148,6 +151,11 @@ public class LoadService extends IntentService {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
             } else {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
+            }
+
+            if (mCancelSniffer.isStepIdCanceled(step.getId())){
+                mCancelSniffer.removeStepIdCancel(step.getId());
+                return;
             }
 
             if (!mDb.isExistDownloadEntityByVideoId(fileId) && !downloadFolderAndFile.exists()) {

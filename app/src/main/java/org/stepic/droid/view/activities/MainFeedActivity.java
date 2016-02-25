@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
@@ -22,7 +21,6 @@ import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
-import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.events.profile.ProfileCanBeShownEvent;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
@@ -71,10 +69,16 @@ public class MainFeedActivity extends FragmentActivityBase
     @BindDrawable(R.drawable.placeholder_icon)
     Drawable mUserPlaceholder;
 
-
-    private List<FragmentBase> mFragments;
     private int mCurrentIndex;
 
+//    @Override
+//    protected void onNewIntent(Intent intent) {
+//        super.onNewIntent(intent);
+//        Bundle extras = intent.getExtras();
+//        if (extras != null){
+//            initFragments(extras);
+//        }
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +89,12 @@ public class MainFeedActivity extends FragmentActivityBase
         initDrawerHeader();
         setUpToolbar();
         setUpDrawerLayout();
-        initFragments(savedInstanceState);
+        Bundle extras = getIntent().getExtras();
+        if (savedInstanceState != null) {
+            initFragments(savedInstanceState);
+        } else {
+            initFragments(extras);
+        }
 
         bus.register(this);
 
@@ -162,49 +171,32 @@ public class MainFeedActivity extends FragmentActivityBase
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void initFragments(Bundle savedInstance) {
-        if (savedInstance == null) {
+    private void initFragments(Bundle bundle) {
+        if (bundle == null) {
             mCurrentIndex = 0;
         } else {
-            mCurrentIndex = savedInstance.getInt(KEY_CURRENT_INDEX);
+            mCurrentIndex = bundle.getInt(KEY_CURRENT_INDEX);
         }
 
-        showCurrentFragment();
+        showCurrentFragment(mCurrentIndex);
     }
 
-    private void showCurrentFragment() {
+    private void showCurrentFragment(int currentIndex) {
+        mCurrentIndex = currentIndex;
         Menu menu = mNavigationView.getMenu();
-        MenuItem menuItem = menu.getItem(mCurrentIndex);
+        MenuItem menuItem = menu.getItem(currentIndex);
         menuItem.setChecked(true); //when we do not choose in menu
         showCurrentFragment(menuItem);
     }
 
     private void showCurrentFragment(MenuItem menuItem) {
         setTitle(menuItem.getTitle());
-        setFragment();
+        setFragment(menuItem);
     }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
-
-        //Check to see which item was being clicked and perform appropriate action
         switch (menuItem.getItemId()) {
-            //todo: substitute to getting from provider
-            case R.id.my_courses:
-                mCurrentIndex = 0;
-                break;
-            case R.id.find_lessons:
-                mCurrentIndex = 1;
-                break;
-            case R.id.cached_videos:
-                mCurrentIndex = 2;
-                break;
-            case R.id.my_settings:
-                mCurrentIndex = 3;
-                break;
-            case R.id.feedback:
-                mCurrentIndex = 4;
-                break;
             case R.id.logout_item:
                 YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_LOGOUT);
 
@@ -220,10 +212,9 @@ public class MainFeedActivity extends FragmentActivityBase
                 return true;
 
             default:
-                Toast.makeText(getApplicationContext(), "Somethings Wrong", Toast.LENGTH_SHORT).show();
+                showCurrentFragment(menuItem);
                 break;
         }
-        showCurrentFragment(menuItem);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -234,14 +225,9 @@ public class MainFeedActivity extends FragmentActivityBase
     }
 
     private void setUpDrawerLayout() {
-
         mNavigationView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_closed);
-
-        //Setting the actionbarToggle to drawer layout
         mDrawerLayout.setDrawerListener(actionBarDrawerToggle);
-
-        //calling sync state is necessary or else your hamburger icon wont show up
         actionBarDrawerToggle.syncState();
     }
 
@@ -256,28 +242,31 @@ public class MainFeedActivity extends FragmentActivityBase
         }
     }
 
-    private void setFragment() {
+    private void setFragment(MenuItem menuItem) {
         Fragment shortLifetimeRef = null;
-        switch (mCurrentIndex) {
-            case 0:
+        switch (menuItem.getItemId()) {
+            case R.id.my_courses:
+                mCurrentIndex = 1;
                 shortLifetimeRef = MyCoursesFragment.newInstance();
                 break;
-            case 1:
+            case R.id.find_lessons:
+                mCurrentIndex = 2;
                 shortLifetimeRef = FindCoursesFragment.newInstance();
                 break;
-            case 2:
+            case R.id.cached_videos:
+                mCurrentIndex = 3;
                 shortLifetimeRef = DownloadsFragment.newInstance();
                 break;
-            case 3:
+            case R.id.my_settings:
+                mCurrentIndex = 4;
                 shortLifetimeRef = SettingsFragment.newInstance();
                 break;
-            case 4:
+            case R.id.feedback:
+                mCurrentIndex = 5;
                 shortLifetimeRef = FeedbackFragment.Companion.newInstance();
                 break;
-            default:
-                shortLifetimeRef = null;
-                break;
         }
+        mCurrentIndex--; // menu indices from 1
         if (shortLifetimeRef != null) {
             setFragment(R.id.frame, shortLifetimeRef);
         }
@@ -311,6 +300,6 @@ public class MainFeedActivity extends FragmentActivityBase
 
     public void showFindLesson() {
         mCurrentIndex = 1;
-        showCurrentFragment();
+        showCurrentFragment(mCurrentIndex);
     }
 }
