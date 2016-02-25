@@ -312,6 +312,7 @@ public class DownloadsFragment extends FragmentBase {
     public void checkForEmpty() {
         //// FIXME: 14.12.15 add to notify methods
         if (!mCachedVideoList.isEmpty()) {
+            ProgressHelper.dismiss(mProgressBar);
             mEmptyDownloadView.setVisibility(View.GONE);
         } else {
             mEmptyDownloadView.setVisibility(View.VISIBLE);
