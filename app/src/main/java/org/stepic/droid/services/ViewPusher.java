@@ -12,7 +12,7 @@ import org.stepic.droid.core.ILocalProgressManager;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.IStoreStateManager;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.web.IApi;
@@ -36,7 +36,7 @@ public class ViewPusher extends IntentService {
     @Inject
     IApi mApi;
     @Inject
-    DatabaseManager mDb;
+    DatabaseFacade mDb;
     @Inject
     IStoreStateManager mStoreStateManager;
 

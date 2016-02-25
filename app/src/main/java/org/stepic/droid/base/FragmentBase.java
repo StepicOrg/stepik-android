@@ -16,8 +16,10 @@ import org.stepic.droid.core.IShell;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.IDownloadManager;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.ISearchResolver;
+import org.stepic.droid.util.resolvers.IStepResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 
 import javax.inject.Inject;
@@ -35,7 +37,7 @@ public class FragmentBase extends Fragment {
     public ISearchResolver mSearchResolver;
 
     @Inject
-    public DatabaseManager mDatabaseManager;
+    public DatabaseFacade mDatabaseFacade;
 
     @Inject
     public Bus bus;
@@ -60,6 +62,12 @@ public class FragmentBase extends Fragment {
 
     @Inject
     public UserPreferences mUserPreferences;
+
+    @Inject
+    public CoursePropertyResolver mCoursePropertyResolver;
+
+    @Inject
+    public IStepResolver mStepResolver;
 
 
     public FragmentBase() {

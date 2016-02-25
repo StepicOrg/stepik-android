@@ -6,7 +6,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.steps.SuccessToDbStepEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ public class ToDbStepTask extends StepicTask<Void, Void, Void> {
     private final List<Step> mStepList;
     private final Lesson mLesson;
     @Inject
-    DatabaseManager mDatabaseManager;
+    DatabaseFacade mDatabaseFacade;
 
     @Inject
     Bus mBus;
@@ -43,7 +43,7 @@ public class ToDbStepTask extends StepicTask<Void, Void, Void> {
     @Override
     protected Void doInBackgroundBody(Void... params) throws Exception {
         for (Step step : mStepList) {
-            mDatabaseManager.addStep(step);
+            mDatabaseFacade.addStep(step);
         }
         return null;
     }

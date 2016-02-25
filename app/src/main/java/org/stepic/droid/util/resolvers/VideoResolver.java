@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.model.VideoUrl;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 
 import java.io.File;
 import java.util.List;
@@ -18,10 +18,10 @@ public class VideoResolver implements IVideoResolver {
 
     private Context mContext;
     private Bus mBus;
-    private DatabaseManager mDbOperations;
+    private DatabaseFacade mDbOperations;
     private UserPreferences mUserPreferences;
 
-    public VideoResolver(Context context, Bus bus, DatabaseManager dbOperationsCachedVideo, UserPreferences userPreferences) {
+    public VideoResolver(Context context, Bus bus, DatabaseFacade dbOperationsCachedVideo, UserPreferences userPreferences) {
         mContext = context;
         mBus = bus;
         mDbOperations = dbOperationsCachedVideo;

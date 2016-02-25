@@ -119,6 +119,16 @@
                 android:resource="@xml/searchable"/>
         </activity>
 
+        <activity
+            android:name=".view.activities.TextFeedbackActivity"
+            android:label="@string/feedback_title"
+            android:parentActivityName="org.stepic.droid.view.activities.MainFeedActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.activities.MainFeedActivity"/>
+        </activity>
+
 
     </application>
 </manifest>

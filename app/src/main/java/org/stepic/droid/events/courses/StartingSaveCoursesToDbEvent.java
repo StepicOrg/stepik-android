@@ -1,9 +1,9 @@
 package org.stepic.droid.events.courses;
 
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 
 public class StartingSaveCoursesToDbEvent extends CourseEventBase {
-    public StartingSaveCoursesToDbEvent(DatabaseManager.Table type) {
+    public StartingSaveCoursesToDbEvent(DatabaseFacade.Table type) {
         super(type);
     }
 }

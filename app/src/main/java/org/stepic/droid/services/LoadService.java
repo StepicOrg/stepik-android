@@ -22,7 +22,7 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.IStoreStateManager;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ProgressUtil;
@@ -58,7 +58,7 @@ public class LoadService extends IntentService {
     @Inject
     IApi mApi;
     @Inject
-    DatabaseManager mDb;
+    DatabaseFacade mDb;
     @Inject
     IStoreStateManager mStoreStateManager;
 
@@ -90,7 +90,7 @@ public class LoadService extends IntentService {
             switch (type) {
                 case Course:
                     Course course = (Course) intent.getSerializableExtra(AppConstants.KEY_COURSE_BUNDLE);
-                    DatabaseManager.Table tableType = (DatabaseManager.Table) intent.getSerializableExtra(AppConstants.KEY_TABLE_TYPE);
+                    DatabaseFacade.Table tableType = (DatabaseFacade.Table) intent.getSerializableExtra(AppConstants.KEY_TABLE_TYPE);
                     addCourse(course, tableType);
                     break;
                 case Section:
@@ -173,8 +173,8 @@ public class LoadService extends IntentService {
             long fileId = video.getId();
             addDownload(uri, fileId, lesson.getTitle(), step);
         } else {
-            step.setIs_loading(false);
-            step.setIs_cached(true);
+            step.set_loading(false);
+            step.set_cached(true);
             mDb.updateOnlyCachedLoadingStep(step);
             mStoreStateManager.updateUnitLessonState(step.getLesson());
         }
@@ -206,12 +206,12 @@ public class LoadService extends IntentService {
                         for (Step step : steps) {
                             mDb.addStep(step);
                             boolean cached = mDb.isStepCached(step);
-                            step.setIs_cached(cached);
+                            step.set_cached(cached);
                         }
                         for (Step step : steps) {
                             if (!step.is_cached()) {
-                                step.setIs_loading(true);
-                                step.setIs_cached(false);
+                                step.set_loading(true);
+                                step.set_cached(false);
                                 mDb.updateOnlyCachedLoadingStep(step);
                             }
                         }
@@ -272,10 +272,10 @@ public class LoadService extends IntentService {
                         if (!mDb.isUnitCached(unit) && !mDb.isLessonCached(lesson)) {
                             //need to be load
 
-                            unit.setIs_loading(true);
-                            unit.setIs_cached(false);
-                            lesson.setIs_loading(true);
-                            lesson.setIs_cached(false);
+                            unit.set_loading(true);
+                            unit.set_cached(false);
+                            lesson.set_loading(true);
+                            lesson.set_cached(false);
 
                             mDb.updateOnlyCachedLoadingLesson(lesson);
                             mDb.updateOnlyCachedLoadingUnit(unit);
@@ -299,12 +299,12 @@ public class LoadService extends IntentService {
     }
 
     @Deprecated
-    private void addCourse(Course course, DatabaseManager.Table type) {
+    private void addCourse(Course course, DatabaseFacade.Table type) {
         mDb.addCourse(course, type);
         course = mDb.getCourseById(course.getCourseId(), type); //make copy of course.
 
-        course.setIs_loading(true);
-        course.setIs_cached(false);
+        course.set_loading(true);
+        course.set_cached(false);
         mDb.updateOnlyCachedLoadingCourse(course, type);
 
         Response<SectionsStepicResponse> response;
@@ -315,8 +315,8 @@ public class LoadService extends IntentService {
 
                 for (Section section : sections) {
                     mDb.addSection(section);
-                    section.setIs_cached(false);
-                    section.setIs_loading(true);
+                    section.set_cached(false);
+                    section.set_loading(true);
                     mDb.updateOnlyCachedLoadingSection(section);
                 }
 

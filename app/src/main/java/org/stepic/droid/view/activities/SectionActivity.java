@@ -275,8 +275,8 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         if (section == null || position == -1 || position >= mSectionList.size()) return;
 
         //now we have not null section and correct position at list
-        section.setIs_cached(isCached);
-        section.setIs_loading(isLoading);
+        section.set_cached(isCached);
+        section.set_loading(isLoading);
         mAdapter.notifyItemChanged(position);
     }
 
@@ -287,6 +287,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         return true;
     }
 
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 

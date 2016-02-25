@@ -42,4 +42,8 @@ public interface IScreenManager {
     void showSocialLogin(Context context);
 
     void showCourseDescription(Activity sourceActivity, @NotNull Course course);
+
+    void showTextFeedback(Activity sourceActivity);
+
+    void showStoreWithApp(Activity sourceActivity);
 }

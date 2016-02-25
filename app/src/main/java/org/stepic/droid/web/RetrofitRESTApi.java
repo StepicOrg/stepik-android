@@ -16,9 +16,11 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.yandex.metrica.YandexMetrica;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.ScreenManager;
@@ -31,8 +33,10 @@ import org.stepic.droid.model.Reply;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.ISocialType;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.DeviceInfoUtil;
+import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.RWLocks;
 
@@ -62,7 +66,7 @@ public class RetrofitRESTApi implements IApi {
     @Inject
     ScreenManager screenManager;
     @Inject
-    DatabaseManager mDbManager;
+    DatabaseFacade mDbManager;
     @Inject
     IConfig mConfig;
     @Inject
@@ -71,6 +75,7 @@ public class RetrofitRESTApi implements IApi {
     private StepicRestLoggedService mLoggedService;
     private StepicRestOAuthService mOAuthService;
     private StepicEmptyAuthService mStepicEmptyAuthService;
+    private StepicZendeskEmptyAuthService mZendeskAuthService;
 
 
     public RetrofitRESTApi() {
@@ -87,8 +92,18 @@ public class RetrofitRESTApi implements IApi {
                 .client(okHttpClient)
                 .build();
         mStepicEmptyAuthService = retrofit.create(StepicEmptyAuthService.class);
-
+//        makeZendeskService();
     }
+
+//    private void makeZendeskService() {
+//        OkHttpClient okHttpClient = new OkHttpClient();
+//        setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(mConfig.getZendeskHost())
+//                .client(okHttpClient)
+//                .build();
+//        mZendeskAuthService = retrofit.create(StepicZendeskEmptyAuthService.class);
+//    }
 
     private void makeLoggedService() {
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -411,6 +426,105 @@ public class RetrofitRESTApi implements IApi {
 
     }
 
+    @Override
+    public Call<EmailAddressResponse> getEmailAddresses(@NotNull long[] ids) {
+        return mLoggedService.getEmailAddresses(ids);
+    }
+
+    @Override
+    public Call<Void> sendFeedback(String email, String rawDescription) {
+
+
+        Interceptor interceptor = new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request newRequest = chain.request();
+
+                String csrftoken = null;
+                String zendesk_shared_session = null;
+                String help_center_session = null;
+                try {
+                    Response response = getZendeskResponse();
+                    String htmlText = response.body().string();
+                    csrftoken = HtmlHelper.getValueOfMetaOrNull(htmlText, "csrf-token");
+
+                    Headers headers = response.headers();
+                    CookieManager cookieManager = new CookieManager();
+                    URI myUri = null;
+                    try {
+                        myUri = new URI(mConfig.getZendeskHost());
+                    } catch (URISyntaxException e) {
+                        return null;
+                    }
+                    cookieManager.put(myUri, headers.toMultimap());
+                    List<HttpCookie> cookies = cookieManager.getCookieStore().get(myUri);
+
+                    for (HttpCookie item : cookies) {
+                        if (item.getName() != null && item.getName().equals("_zendesk_shared_session")) {
+                            zendesk_shared_session = item.getValue();
+                            continue;
+                        }
+                        if (item.getName() != null && item.getName().equals("_help_center_session")) {
+                            help_center_session = item.getValue();
+                        }
+                    }
+
+                } catch (Exception e) {
+                    return chain.proceed(newRequest);
+                }
+                if (csrftoken == null && zendesk_shared_session == null && help_center_session == null) {
+                    return chain.proceed(newRequest);
+                }
+
+
+                String cookieResult = "_zendesk_shared_session=" + zendesk_shared_session + "; " + "_help_center_session=" + help_center_session;
+
+                HttpUrl url = newRequest
+                        .httpUrl()
+                        .newBuilder()
+                        .addQueryParameter("authenticity_token", csrftoken)
+                        .build();
+                newRequest = newRequest.newBuilder()
+                        .addHeader("Cookie", cookieResult)
+                        .url(url)
+                        .build();
+                return chain.proceed(newRequest);
+            }
+        };
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.networkInterceptors().add(interceptor);
+        Retrofit notLogged = new Retrofit.Builder()
+                .baseUrl(mConfig.getZendeskHost())
+                .addConverterFactory(generateGsonFactory())
+                .client(okHttpClient)
+                .build();
+        StepicZendeskEmptyAuthService tempService = notLogged.create(StepicZendeskEmptyAuthService.class);
+
+        String encodedEmail = URLEncoder.encode(email);
+        String encodedDescription = URLEncoder.encode(rawDescription);
+        String subject = MainApplication.getAppContext().getString(R.string.feedback_subject);
+        String encodedSubject = URLEncoder.encode(subject);
+        String aboutSystem = DeviceInfoUtil.getInfosAboutDevice(MainApplication.getAppContext());
+        String encodedSystem = URLEncoder.encode(aboutSystem);
+//        String lala = URLEncoder.encode("NSQf8mf4Dc0ldKXzVBY3gpMjPkmDIdM+9qDYojJ2cJ+AvH8LeoWEbMzPbpQ08w+I1Z7iErDkjl1ZIe9zbagk2w==");
+        return tempService.sendFeedback(encodedSubject, encodedEmail, encodedSystem, encodedDescription);
+    }
+
+    @Nullable
+    private Response getZendeskResponse() throws IOException {
+        OkHttpClient client = new OkHttpClient();
+
+        String url = mConfig.getZendeskHost() + "/hc/ru/requests/new";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        return response;
+    }
+
     @Nullable
     private List<HttpCookie> getCookiesForBaseUrl() throws IOException {
         retrofit.Response ob = mStepicEmptyAuthService.getStepicForFun().execute();
@@ -444,7 +558,7 @@ public class RetrofitRESTApi implements IApi {
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
-                    mDbManager.clearCacheCourses(DatabaseManager.Table.enrolled);
+                    mDbManager.clearCacheCourses(DatabaseFacade.Table.enrolled);
                     return null;
                 }
             };

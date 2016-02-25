@@ -96,5 +96,18 @@
     <string name="email_sent">Мы отправили вам письмо.</string>
     <string name="email_wrong">Нет пользователя с таким e-mail.</string>
     <string name="are_you_sure_logout">Все сохраненные данные будут удалены. Вы уверены?</string>
+    <string name="feedback_good_description">Приложение нравится, им приятно пользоваться.</string>
+    <string name="feedback_good">отлично</string>
+    <string name="feedback_bad">плохо</string>
+    <string name="feedback_bad_description">Приложение неудобное, долго загружается, видео не воспроизводится.</string>
+    <string name="feedback_title">Оставить отзыв</string>
+    <string name="feedback_hint">Напишите нам…</string>
+    <string name="feedback_description">Напишите нам свое предложение, замечание или идею</string>
+    <string name="feedback_contacts_description">Контакты для обратной связи</string>
+    <string name="email_incorrect">Введен некоррентный e-mail</string>
+    <string name="feedback_subject">Отзыв об Android приложении Stepic.org</string>
+    <string name="feedback_sent">Сообщение отправлено</string>
+    <string name="feedback_fail">Упс… что-то пошло не так. Попробуйте позже</string>
+    <string name="feedback_internet_problem">Интернет недоступен. Попробуйте позже</string>
 
 </resources>

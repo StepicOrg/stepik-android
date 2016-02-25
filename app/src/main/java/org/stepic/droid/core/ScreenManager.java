@@ -29,6 +29,7 @@ import org.stepic.droid.view.activities.MainFeedActivity;
 import org.stepic.droid.view.activities.RegisterActivity;
 import org.stepic.droid.view.activities.SectionActivity;
 import org.stepic.droid.view.activities.StepsActivity;
+import org.stepic.droid.view.activities.TextFeedbackActivity;
 import org.stepic.droid.view.activities.UnitsActivity;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.web.ViewAssignment;
@@ -108,6 +109,22 @@ public class ScreenManager implements IScreenManager {
         bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
         intent.putExtras(bundle);
         sourceActivity.startActivity(intent);
+    }
+
+    @Override
+    public void showTextFeedback(Activity sourceActivity) {
+        Intent launchIntent = new Intent(sourceActivity, TextFeedbackActivity.class);
+        sourceActivity.startActivity(launchIntent);
+    }
+
+    @Override
+    public void showStoreWithApp(@NotNull Activity sourceActivity) {
+        final String appPackageName = sourceActivity.getPackageName();
+        try {
+            sourceActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            sourceActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
     }
 
     @Override

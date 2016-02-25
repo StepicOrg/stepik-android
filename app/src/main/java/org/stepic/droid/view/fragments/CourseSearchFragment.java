@@ -14,7 +14,7 @@ import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.events.search.SuccessSearchEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.SearchResult;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.web.CoursesStepicResponse;
 import org.stepic.droid.web.SearchResultResponse;
@@ -96,7 +96,7 @@ public class CourseSearchFragment extends CourseListFragmentBase {
         if (mCurrentPage == 1) {
             mCourses.clear();
         }
-        mHasNextPage = e.getResponse().body().getMeta().isHas_next();
+        mHasNextPage = e.getResponse().body().getMeta().getHas_next();
         mCurrentPage++;
 
         // TODO: 31.12.15 has next page should be new for search results
@@ -133,7 +133,7 @@ public class CourseSearchFragment extends CourseListFragmentBase {
     }
 
     @Override
-    protected DatabaseManager.Table getCourseType() {
+    protected DatabaseFacade.Table getCourseType() {
         return null;
     }
 

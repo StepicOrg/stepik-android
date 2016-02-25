@@ -8,7 +8,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ public class ToDbUnitLessonTask extends StepicTask<Void, Void, Void> {
     private final List<Lesson> lessonList;
     private List<Progress> progresses;
     @Inject
-    DatabaseManager mDatabaseManager;
+    DatabaseFacade mDatabaseFacade;
 
     @Inject
     Bus mBus;
@@ -53,14 +53,14 @@ public class ToDbUnitLessonTask extends StepicTask<Void, Void, Void> {
     @Override
     protected Void doInBackgroundBody(Void... params) throws Exception {
         for (Progress item : progresses) {
-            mDatabaseManager.addProgress(item);
+            mDatabaseFacade.addProgress(item);
         }
         
         for (Unit unitItem : unitList) {
-            mDatabaseManager.addUnit(unitItem);
+            mDatabaseFacade.addUnit(unitItem);
         }
         for (Lesson lessonItem : lessonList) {
-            mDatabaseManager.addLesson(lessonItem);
+            mDatabaseFacade.addLesson(lessonItem);
         }
 
         return null;

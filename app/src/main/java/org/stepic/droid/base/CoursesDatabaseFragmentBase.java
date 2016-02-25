@@ -29,7 +29,7 @@ import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.ProgressHelper;
@@ -43,11 +43,6 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase {
-    private static final String TAG = "base_fragment";
-
-
-    //    protected LoadingCoursesTask mLoadingCoursesTask;
-
     protected FromDbCoursesTask mDbGetCoursesTask;
     protected ToDbCoursesTask mDbSaveCoursesTask;
 
@@ -56,7 +51,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         super.onActivityCreated(savedInstanceState);
 
         bus.register(this);
-
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -73,7 +67,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         }
 
         mCourses.clear();
-        if (getCourseType() == DatabaseManager.Table.enrolled) {
+        if (getCourseType() == DatabaseFacade.Table.enrolled) {
             for (Course course : cachedCourses) {
                 if (course.getEnrollment() != 0)
                     mCourses.add(course);
@@ -123,7 +117,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             ProgressHelper.dismiss(mSwipeRefreshLayout);
             saveDataToCache(coursesStepicResponse.getCourses());
 
-            mHasNextPage = coursesStepicResponse.getMeta().isHas_next();
+            mHasNextPage = coursesStepicResponse.getMeta().getHas_next();
             if (mHasNextPage) {
                 mCurrentPage = coursesStepicResponse.getMeta().getPage() + 1;
             }
@@ -181,24 +175,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         //Only for find courses event.
         super.onSuccessJoin(e);
     }
-
-//    private void updateEnrollment(Course courseForUpdate, long enrollment) {
-//
-//
-//        boolean inList = false;
-//        for (Course courseItem : mCourses) {
-//            if (courseItem.getCourseId() == courseForUpdate.getCourseId()) {
-//                courseItem.setEnrollment((int) courseItem.getCourseId());
-//                courseForUpdate = courseItem;
-//                inList = true;
-//                break;
-//            }
-//        }
-//        if (getCourseType() == DatabaseManager.Table.enrolled && !inList) {
-//            mCourses.add(courseForUpdate);
-//        }
-//
-//    }
 
     @Override
     public void onStart() {
@@ -279,19 +255,12 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                 new Handler().post(new Runnable() {
                     @Override
                     public void run() {
-                        mDatabaseManager.deleteCourse(localRef, DatabaseManager.Table.enrolled);
+                        mDatabaseFacade.deleteCourse(localRef, DatabaseFacade.Table.enrolled);
 
-                        if (mDatabaseManager.getCourseById(course.getCourseId(), DatabaseManager.Table.featured) != null) {
+                        if (mDatabaseFacade.getCourseById(course.getCourseId(), DatabaseFacade.Table.featured) != null) {
                             localRef.setEnrollment(0);
-                            mDatabaseManager.addCourse(localRef, DatabaseManager.Table.featured);
+                            mDatabaseFacade.addCourse(localRef, DatabaseFacade.Table.featured);
                         }
-
-//                        if (!course.is_featured()){
-//                            localRef.setEnrollment(0);
-//                            mDatabaseManager.addCourse(localRef, DatabaseManager.Table.featured);}
-//                        else{
-//                            mDatabaseManager.deleteCourse(localRef, DatabaseManager.Table.featured);
-//                        }
 
                     }
                 });
@@ -310,7 +279,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     public void onSuccessDrop(final SuccessDropCourseEvent e) {
         YandexMetrica.reportEvent(AppConstants.METRICA_DROP_COURSE + " successful", JsonHelper.toJson(e.getCourse()));
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + e.getCourse().getTitle(), Toast.LENGTH_LONG).show();
-        if (e.getType() == DatabaseManager.Table.enrolled) {
+        if (e.getType() == DatabaseFacade.Table.enrolled) {
             mCourses.remove(e.getCourse());
             mCoursesAdapter.notifyDataSetChanged();
         }

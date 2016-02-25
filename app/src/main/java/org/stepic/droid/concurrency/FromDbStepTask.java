@@ -6,7 +6,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.steps.FromDbStepEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -17,7 +17,7 @@ import javax.inject.Inject;
 public class FromDbStepTask extends StepicTask<Void, Void, List<Step>> {
 
     @Inject
-    DatabaseManager mDatabaseManager;
+    DatabaseFacade mDatabaseFacade;
 
     @Inject
     Bus mBus;
@@ -32,7 +32,7 @@ public class FromDbStepTask extends StepicTask<Void, Void, List<Step>> {
 
     @Override
     protected List<Step> doInBackgroundBody(Void... params) throws Exception {
-        List<Step> stepList = mDatabaseManager.getStepsOfLesson(mLesson.getId());
+        List<Step> stepList = mDatabaseFacade.getStepsOfLesson(mLesson.getId());
         Collections.sort(stepList, new Comparator<Step>() {
             @Override
             public int compare(Step lhs, Step rhs) {

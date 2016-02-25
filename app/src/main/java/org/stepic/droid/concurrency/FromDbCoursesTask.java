@@ -8,7 +8,7 @@ import org.stepic.droid.core.IShell;
 import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
 import org.stepic.droid.events.courses.StartingGetCoursesFromDbEvent;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 
 import java.util.List;
 
@@ -23,11 +23,11 @@ public class FromDbCoursesTask extends StepicTask<Void, Void, List<Course>> {
     Bus mBus;
 
     @Inject
-    DatabaseManager dbOperationsCourses;
+    DatabaseFacade dbOperationsCourses;
 
-    private DatabaseManager.Table mCourseType;
+    private DatabaseFacade.Table mCourseType;
 
-    public FromDbCoursesTask(@NotNull DatabaseManager.Table courseType) {
+    public FromDbCoursesTask(@NotNull DatabaseFacade.Table courseType) {
         super(MainApplication.getAppContext());
 
         MainApplication.component(mContext).inject(this);

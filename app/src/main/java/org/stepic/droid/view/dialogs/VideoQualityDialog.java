@@ -14,7 +14,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public class VideoQualityDialog extends DialogFragment {
     IShell mShell;
 
     @Inject
-    DatabaseManager mDbManager;
+    DatabaseFacade mDbManager;
 
     @Inject
     UserPreferences mUserPreferences;

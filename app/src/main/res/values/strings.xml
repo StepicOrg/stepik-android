@@ -7,7 +7,7 @@
     <string name="create_my_account">Create account</string>
     <string name="by_creating_you_agree">By creating stepic account, you agree to the</string>
     <string name="terms">Terms</string>
-    <string name="email_login" translatable="false">E-mail</string>
+    <string name="email" translatable="false">E-mail</string>
     <string name="remind_password">Forgot password?</string>
     <string name="sign_in">Sign In</string>
     <string name="not_video_player_error">Please, install player for video playing</string>
@@ -98,5 +98,18 @@
     <string name="email_sent">We have sent you an e-mail.</string>
     <string name="email_wrong">The e-mail address is not assigned to any user account.</string>
     <string name="are_you_sure_logout">All saved data for offline will be removed. Are you sure? </string>
+    <string name="feedback_good_description">The app is pleasure to use.</string>
+    <string name="feedback_good">excellent</string>
+    <string name="feedback_bad">terrible</string>
+    <string name="feedback_bad_description">The app is inconvenient, loading is slow, video is not playing.</string>
+    <string name="feedback_title">Give feedback</string>
+    <string name="feedback_hint">Give feedback…</string>
+    <string name="feedback_description">Send us your suggestions, comments or idea</string>
+    <string name="feedback_contacts_description">Contacts for feedback</string>
+    <string name="email_incorrect">E-mail is incorrect</string>
+    <string name="feedback_subject">Feedback about the Android app of Stepic.org</string>
+    <string name="feedback_sent">Feedback is sent</string>
+    <string name="feedback_fail">Sorry, service is not available. Try later</string>
+    <string name="feedback_internet_problem">Sorry, internet is not available. Try again later</string>
 
 </resources>

@@ -28,7 +28,7 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.view.dialogs.ExplainPermissionDialog;
@@ -54,7 +54,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     IDownloadManager mDownloadManager;
 
     @Inject
-    DatabaseManager mDbManager;
+    DatabaseFacade mDbManager;
 
     @Inject
     IShell mShell;
@@ -240,10 +240,10 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             if (unit.is_cached()) {
                 YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_DELETE_UNIT, JsonHelper.toJson(unit));
                 mCleaner.removeUnitLesson(unit, lesson);
-                unit.setIs_loading(false);
-                unit.setIs_cached(false);
-                lesson.setIs_loading(false);
-                lesson.setIs_cached(false);
+                unit.set_loading(false);
+                unit.set_cached(false);
+                lesson.set_loading(false);
+                lesson.set_cached(false);
                 mDbManager.updateOnlyCachedLoadingLesson(lesson);
                 mDbManager.updateOnlyCachedLoadingUnit(unit);
                 notifyItemChanged(position);
@@ -253,10 +253,10 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 } else {
 
                     YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CACHE_UNIT, JsonHelper.toJson(unit));
-                    unit.setIs_cached(false);
-                    lesson.setIs_cached(false);
-                    unit.setIs_loading(true);
-                    lesson.setIs_loading(true);
+                    unit.set_cached(false);
+                    lesson.set_cached(false);
+                    unit.set_loading(true);
+                    lesson.set_loading(true);
                     mDbManager.updateOnlyCachedLoadingLesson(lesson);
                     mDbManager.updateOnlyCachedLoadingUnit(unit);
                     mDownloadManager.addUnitLesson(unit, lesson);

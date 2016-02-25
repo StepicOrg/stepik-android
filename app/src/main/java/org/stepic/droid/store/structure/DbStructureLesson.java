@@ -6,6 +6,7 @@ public final class DbStructureLesson extends DBStructureBase {
     public static final String LESSONS = "lessons";
 
     public static final class Column {
+        @Deprecated
         public static final String ID = "_id";
         public static final String LESSON_ID = "lesson_id";
         public static final String STEPS = "steps_arr";

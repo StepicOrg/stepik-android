@@ -7,7 +7,7 @@ import org.stepic.droid.events.sections.FinishingGetSectionFromDbEvent;
 import org.stepic.droid.events.sections.StartingGetSectionFromDbEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,7 +18,7 @@ import javax.inject.Inject;
 public class FromDbSectionTask extends StepicTask<Void, Void, List<Section>> {
 
     @Inject
-    DatabaseManager mDatabaseManager;
+    DatabaseFacade mDatabaseFacade;
 
     @Inject
     Bus mBus;
@@ -37,7 +37,7 @@ public class FromDbSectionTask extends StepicTask<Void, Void, List<Section>> {
     @Override
     protected List<Section> doInBackgroundBody(Void... params) throws Exception {
         List<Section> fromCache = null;
-        fromCache = mDatabaseManager.getAllSectionsOfCourse(mCourse);
+        fromCache = mDatabaseFacade.getAllSectionsOfCourse(mCourse);
         Collections.sort(fromCache, new Comparator<Section>() {
             @Override
             public int compare(Section lhs, Section rhs) {

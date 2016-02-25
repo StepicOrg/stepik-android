@@ -7,7 +7,7 @@ import org.stepic.droid.core.IShell;
 import org.stepic.droid.events.courses.FinishingSaveCoursesToDbEvent;
 import org.stepic.droid.events.courses.StartingSaveCoursesToDbEvent;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +21,13 @@ public class ToDbCoursesTask extends StepicTask<Void, Void, Void> {
     @Inject
     Bus bus;
     @Inject
-    DatabaseManager mDatabaseManager;
+    DatabaseFacade mDatabaseFacade;
 
     private List<Course> mCourses;
-    private DatabaseManager.Table mCourseType;
+    private DatabaseFacade.Table mCourseType;
     private int mPage;
 
-    public ToDbCoursesTask(List<Course> courses, DatabaseManager.Table type, int page) {
+    public ToDbCoursesTask(List<Course> courses, DatabaseFacade.Table type, int page) {
         super(MainApplication.getAppContext());
         MainApplication.component().inject(this);
 
@@ -37,7 +37,7 @@ public class ToDbCoursesTask extends StepicTask<Void, Void, Void> {
         mCourses = courses;
     }
 
-    public ToDbCoursesTask(Course course, DatabaseManager.Table type) {
+    public ToDbCoursesTask(Course course, DatabaseFacade.Table type) {
         super(MainApplication.getAppContext());
         MainApplication.component().inject(this);
 
@@ -52,15 +52,15 @@ public class ToDbCoursesTask extends StepicTask<Void, Void, Void> {
     protected Void doInBackgroundBody(Void... params) throws Exception {
 
         if (mPage == 1) {
-            List<Course> courses = mDatabaseManager.getAllCourses(mCourseType);
+            List<Course> courses = mDatabaseFacade.getAllCourses(mCourseType);
             for (Course course : courses) {
                 course.setEnrollment(0);
-                mDatabaseManager.addCourse(course, mCourseType);
+                mDatabaseFacade.addCourse(course, mCourseType);
             }
         }
 
         for (Course courseItem : mCourses) {
-            mDatabaseManager.addCourse(courseItem, mCourseType);
+            mDatabaseFacade.addCourse(courseItem, mCourseType);
         }
         return null;
 

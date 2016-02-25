@@ -24,14 +24,17 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.events.profile.ProfileCanBeShownEvent;
+import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.fragments.DownloadsFragment;
+import org.stepic.droid.view.fragments.FeedbackFragment;
 import org.stepic.droid.view.fragments.FindCoursesFragment;
 import org.stepic.droid.view.fragments.MyCoursesFragment;
 import org.stepic.droid.view.fragments.SettingsFragment;
+import org.stepic.droid.web.EmailAddressResponse;
 import org.stepic.droid.web.StepicProfileResponse;
 
 import java.util.List;
@@ -79,10 +82,7 @@ public class MainFeedActivity extends FragmentActivityBase
         setContentView(R.layout.activity_main_feed);
         ButterKnife.bind(this);
 
-        View headerLayout = mNavigationView.getHeaderView(0);
-        mProfileImage = ButterKnife.findById(headerLayout, R.id.profile_image);
-        mUserNameTextView = ButterKnife.findById(headerLayout, R.id.username);
-
+        initDrawerHeader();
         setUpToolbar();
         setUpDrawerLayout();
         initFragments(savedInstanceState);
@@ -91,29 +91,67 @@ public class MainFeedActivity extends FragmentActivityBase
 
         final SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
         Profile cachedProfile = helper.getProfile();
-        if (cachedProfile == null) { //todo always update??
-            mShell.getApi().getUserProfile().enqueue(new Callback<StepicProfileResponse>() {
-                @Override
-                public void onResponse(Response<StepicProfileResponse> response, Retrofit retrofit) {
-                    if (response.isSuccess()) {
-                        Profile profile = response.body().getProfile();
+        if (cachedProfile != null) {
+            showProfile(new ProfileCanBeShownEvent(cachedProfile));//update now!
+        }
+        mShell.getApi().getUserProfile().enqueue(new Callback<StepicProfileResponse>() {
+            @Override
+            public void onResponse(Response<StepicProfileResponse> response, Retrofit retrofit) {
+                if (response.isSuccess()) {
+                    Profile profile = response.body().getProfile();
+                    final long[] emailIds = profile.getEmailAddresses();
+                    if (emailIds != null && emailIds.length != 0) {
+                        mShell.getApi().getEmailAddresses(emailIds).enqueue(new Callback<EmailAddressResponse>() {
+                            @Override
+                            public void onResponse(Response<EmailAddressResponse> response, Retrofit retrofit) {
+                                if (response.isSuccess()) {
+                                    EmailAddressResponse emailsResponse = response.body();
+                                    if (emailsResponse != null) {
+                                        List<EmailAddress> emails = emailsResponse.getEmailAddresses();
+                                        if (emails != null && !emails.isEmpty()) {
+                                            helper.storeEmailAddresses(emails);
+                                        }
+                                    }
+                                }
+                            }
 
-                        helper.storeProfile(profile);
-                        bus.post(new ProfileCanBeShownEvent(profile));
+                            @Override
+                            public void onFailure(Throwable t) {
+
+                            }
+                        });
                     }
-                    // TODO: 09.02.16 add 'else' statement
-                }
 
-                @Override
-                public void onFailure(Throwable t) {
-                    // FIXME: 06.10.15 Sometimes profile is not load, investigate it! (maybe just set for update when create this activity)
-                    mProfileImage.setVisibility(View.INVISIBLE);
-                    mUserNameTextView.setText("");
-
+                    helper.storeProfile(profile);
+                    bus.post(new ProfileCanBeShownEvent(profile));//show if we can
                 }
-            });
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                // FIXME: 06.10.15 Sometimes profile is not load, investigate it! (maybe just set for update when create this activity)
+                //do nothing because view is now visible
+
+            }
+        });
+    }
+
+    private void initDrawerHeader() {
+        View headerLayout = mNavigationView.getHeaderView(0);
+        mProfileImage = ButterKnife.findById(headerLayout, R.id.profile_image);
+        mUserNameTextView = ButterKnife.findById(headerLayout, R.id.username);
+
+        mProfileImage.setVisibility(View.INVISIBLE);
+        mUserNameTextView.setVisibility(View.INVISIBLE);
+        mUserNameTextView.setText("");
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            bus.post(new ProfileCanBeShownEvent(cachedProfile));
+            super.onBackPressed();
         }
     }
 
@@ -164,11 +202,13 @@ public class MainFeedActivity extends FragmentActivityBase
             case R.id.my_settings:
                 mCurrentIndex = 3;
                 break;
-
+            case R.id.feedback:
+                mCurrentIndex = 4;
+                break;
             case R.id.logout_item:
                 YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_LOGOUT);
 
-                LogoutAreYouSureDialog dialog =  LogoutAreYouSureDialog.newInstance();
+                LogoutAreYouSureDialog dialog = LogoutAreYouSureDialog.newInstance();
                 dialog.show(getSupportFragmentManager(), null);
 
                 new Handler().postDelayed(new Runnable() {
@@ -231,6 +271,9 @@ public class MainFeedActivity extends FragmentActivityBase
             case 3:
                 shortLifetimeRef = SettingsFragment.newInstance();
                 break;
+            case 4:
+                shortLifetimeRef = FeedbackFragment.Companion.newInstance();
+                break;
             default:
                 shortLifetimeRef = null;
                 break;
@@ -248,6 +291,7 @@ public class MainFeedActivity extends FragmentActivityBase
             return;
         }
         mProfileImage.setVisibility(View.VISIBLE);
+        mUserNameTextView.setVisibility(View.VISIBLE);
         Picasso.with(MainFeedActivity.this).load(profile.getAvatar()).
                 placeholder(mUserPlaceholder).error(mUserPlaceholder).into(mProfileImage);
         mUserNameTextView.setText(profile.getFirst_name() + " " + profile.getLast_name());

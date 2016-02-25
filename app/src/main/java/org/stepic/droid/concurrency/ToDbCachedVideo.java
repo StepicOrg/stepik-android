@@ -4,14 +4,14 @@ import android.content.Context;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.CachedVideo;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 
 import javax.inject.Inject;
 
 public class ToDbCachedVideo extends StepicTask<Void, Void, Void> {
 
     @Inject
-    DatabaseManager databaseManager;
+    DatabaseFacade mDatabaseFacade;
 
     private CachedVideo cachedVideo;
 
@@ -27,7 +27,7 @@ public class ToDbCachedVideo extends StepicTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackgroundBody(Void... params) throws Exception {
-        databaseManager.addVideo(cachedVideo);
+        mDatabaseFacade.addVideo(cachedVideo);
         return null;
     }
 }

@@ -13,7 +13,7 @@ import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.IStoreStateManager;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 
 import java.io.File;
 
@@ -24,7 +24,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     @Inject
     UserPreferences mUserPrefs;
     @Inject
-    DatabaseManager databaseManager;
+    DatabaseFacade mDatabaseFacade;
     @Inject
     IStoreStateManager mStoreStateManager;
 
@@ -40,22 +40,22 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
             protected Void doInBackground(Void[] params) {
                 //critical section:
 
-                DownloadEntity downloadEntity = databaseManager.getDownloadEntityIfExist(referenceId);
+                DownloadEntity downloadEntity = mDatabaseFacade.getDownloadEntityIfExist(referenceId);
                 if (downloadEntity != null) {
                     long video_id = downloadEntity.getVideoId();
                     long step_id = downloadEntity.getStepId();
-                    databaseManager.deleteDownloadEntityByDownloadId(referenceId);
+                    mDatabaseFacade.deleteDownloadEntityByDownloadId(referenceId);
 
                     File downloadFolderAndFile = new File(mUserPrefs.getUserDownloadFolder(), video_id + "");
                     String path = Uri.fromFile(downloadFolderAndFile).getPath();
                     CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, downloadEntity.getThumbnail());
                     cachedVideo.setQuality(downloadEntity.getQuality());
-                    databaseManager.addVideo(cachedVideo);
+                    mDatabaseFacade.addVideo(cachedVideo);
 
-                    Step step = databaseManager.getStepById(step_id);
-                    step.setIs_cached(true);
-                    step.setIs_loading(false);
-                    databaseManager.updateOnlyCachedLoadingStep(step);
+                    Step step = mDatabaseFacade.getStepById(step_id);
+                    step.set_cached(true);
+                    step.set_loading(false);
+                    mDatabaseFacade.updateOnlyCachedLoadingStep(step);
                     mStoreStateManager.updateUnitLessonState(step.getLesson());
                 }
                 return null;

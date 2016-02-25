@@ -10,7 +10,7 @@ public class ProgressUtil {
 
         List<String> progressesId = new ArrayList<>();
         for (IProgressable item : objects) {
-            progressesId.add(item.getProgress());
+            progressesId.add(item.getProgressId());
         }
         return progressesId.toArray(new String[progressesId.size()]);
     }

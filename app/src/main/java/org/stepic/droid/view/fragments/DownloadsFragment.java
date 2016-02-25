@@ -32,7 +32,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.VideosAndMapToLesson;
 import org.stepic.droid.store.CleanManager;
-import org.stepic.droid.store.operations.DatabaseManager;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DbParseHelper;
 import org.stepic.droid.util.StepicLogicHelper;
@@ -109,12 +109,18 @@ public class DownloadsFragment extends FragmentBase {
         AsyncTask<Void, Void, VideosAndMapToLesson> task = new AsyncTask<Void, Void, VideosAndMapToLesson>() {
             @Override
             protected VideosAndMapToLesson doInBackground(Void... params) {
-                List<CachedVideo> videos = mDatabaseManager.getAllCachedVideo();
-                long[] stepIds = StepicLogicHelper.fromVideosToStepIds(videos);
+                List<CachedVideo> videos = mDatabaseFacade.getAllCachedVideos();
+                List<CachedVideo> filteredVideos = new ArrayList<>();
+                for (CachedVideo video : videos) {
+                    if (video != null && video.getStepId() >=0){
+                        filteredVideos.add(video);
+                    }
+                }
+                long[] stepIds = StepicLogicHelper.fromVideosToStepIds(filteredVideos);
 
-                Map<Long, Lesson> map = mDatabaseManager.getMapFromStepIdToTheirLesson(stepIds);
+                Map<Long, Lesson> map = mDatabaseFacade.getMapFromStepIdToTheirLesson(stepIds);
 
-                return new VideosAndMapToLesson(videos, map);
+                return new VideosAndMapToLesson(filteredVideos, map);
             }
 
             @Override
@@ -186,7 +192,7 @@ public class DownloadsFragment extends FragmentBase {
     public static class ClearVideosDialog extends DialogFragment {
 
         @Inject
-        DatabaseManager mDatabaseManager;
+        DatabaseFacade mDatabaseFacade;
         @Inject
         CleanManager mCleanManager;
         @Inject
@@ -210,7 +216,7 @@ public class DownloadsFragment extends FragmentBase {
                             mBus.post(new ClearAllDownloadWithoutAnimationEvent(stepIds));
                             if (stepIds == null) return;
                             for (long stepId : stepIds) {
-                                Step step = mDatabaseManager.getStepById(stepId);
+                                Step step = mDatabaseFacade.getStepById(stepId);
                                 mCleanManager.removeStep(step);
                             }
                         }
