@@ -1,10 +1,11 @@
 package org.stepic.droid.util.resolvers
 
+import android.support.v4.app.Fragment
 import org.stepic.droid.view.fragments.*
 
 class MainMenuResolverImpl : IMainMenuResolver {
     @Throws(IllegalArgumentException::class)
-    override fun getIndexOfFragment(clazz: Class<Any>): Int {
+    override fun getIndexOfFragment(clazz: Class<out Fragment>): Int {
         when (clazz) {
             MyCoursesFragment::class.java -> return 0
             FindCoursesFragment::class.java -> return 1
