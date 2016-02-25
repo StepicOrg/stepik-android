@@ -118,6 +118,8 @@ public class DownloadsFragment extends FragmentBase {
     @Override
     public void onDestroyView() {
         bus.unregister(this);
+        mDownloadsView.setAdapter(null);
+        mDownloadAdapter = null;
         super.onDestroyView();
     }
 
