@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.squareup.otto.Bus;
 
+import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.concurrency.MainHandlerImpl;
 import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Assignment;
@@ -275,18 +277,27 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public  IMainMenuResolver provideResolver(){
+    public IMainMenuResolver provideResolver() {
         return new MainMenuResolverImpl();
     }
 
     @Provides
     @Singleton
-    public ExecutorService  provideSingle(){return Executors.newSingleThreadExecutor();}
+    public ExecutorService provideSingle() {
+        return Executors.newSingleThreadExecutor();
+    }
 
 
     //it is good for many short lived, which should do async
     @Provides
     @Singleton
-    public ThreadPoolExecutor provideThreadPool(){return (ThreadPoolExecutor) Executors.newCachedThreadPool();}
+    public ThreadPoolExecutor provideThreadPool() {
+        return (ThreadPoolExecutor) Executors.newCachedThreadPool();
+    }
 
+    @Singleton
+    @Provides
+    public IMainHandler provideHandlerForUIThread() {
+        return new MainHandlerImpl();
+    }
 }
