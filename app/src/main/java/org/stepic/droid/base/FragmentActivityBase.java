@@ -19,6 +19,8 @@ import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.IStepResolver;
 
+import java.util.concurrent.ThreadPoolExecutor;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -48,6 +50,9 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     @Inject
     protected ILoginManager mLoginManager;
+
+    @Inject
+    protected ThreadPoolExecutor mThreadPoolExecutor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

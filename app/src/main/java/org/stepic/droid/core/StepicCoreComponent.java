@@ -6,10 +6,8 @@ import org.stepic.droid.concurrency.tasks.FromDbCoursesTask;
 import org.stepic.droid.concurrency.tasks.FromDbSectionTask;
 import org.stepic.droid.concurrency.tasks.FromDbStepTask;
 import org.stepic.droid.concurrency.tasks.FromDbUnitLessonTask;
-import org.stepic.droid.concurrency.tasks.ToDbCachedVideo;
 import org.stepic.droid.concurrency.tasks.ToDbCoursesTask;
 import org.stepic.droid.concurrency.tasks.ToDbSectionTask;
-import org.stepic.droid.concurrency.tasks.ToDbStepTask;
 import org.stepic.droid.concurrency.tasks.ToDbUnitLessonTask;
 import org.stepic.droid.concurrency.tasks.UpdateCourseTask;
 import org.stepic.droid.model.Course;
@@ -86,11 +84,7 @@ public interface StepicCoreComponent {
 
     void inject(ToDbUnitLessonTask stepicTask);
 
-    void inject(ToDbStepTask stepicTask);
-
     void inject(FromDbStepTask stepicTask);
-
-    void inject(ToDbCachedVideo stepicTask);
 
     void inject(AllowMobileDataDialogFragment allowMobileDataDialogFragment);
 

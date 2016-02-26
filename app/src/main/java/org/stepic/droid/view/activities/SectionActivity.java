@@ -64,8 +64,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     private Course mCourse;
     private SectionAdapter mAdapter;
     private List<Section> mSectionList;
-    private FromDbSectionTask mFromDbSectionTask;
-    private ToDbSectionTask mToDbSectionTask;
 
     boolean isScreenEmpty;
     boolean firstLoad;
@@ -143,8 +141,8 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     }
 
     private void getAndShowSectionsFromCache() {
-        mFromDbSectionTask = new FromDbSectionTask(mCourse);
-        mFromDbSectionTask.execute();
+        FromDbSectionTask fromDbSectionTask = new FromDbSectionTask(mCourse);
+        fromDbSectionTask.executeOnExecutor(mThreadPoolExecutor);
     }
 
     private void showSections(List<Section> sections) {
@@ -184,8 +182,8 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
 
     private void saveDataToCache(List<Section> sections) {
-        mToDbSectionTask = new ToDbSectionTask(sections);
-        mToDbSectionTask.execute();
+        ToDbSectionTask toDbSectionTask = new ToDbSectionTask(sections);
+        toDbSectionTask.executeOnExecutor(mThreadPoolExecutor);
     }
 
     @Subscribe

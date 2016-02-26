@@ -118,7 +118,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     private void getAndShowUnitsFromCache() {
         mFromDbTask = new FromDbUnitLessonTask(mSection);
-        mFromDbTask.execute();
+        mFromDbTask.executeOnExecutor(mThreadPoolExecutor);
     }
 
 
@@ -197,7 +197,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     private void saveToDb(List<Unit> unitList, List<Lesson> lessonList, List<Progress> progresses) {
         mToDbTask = new ToDbUnitLessonTask(mSection, unitList, lessonList, progresses);
-        mToDbTask.execute();
+        mToDbTask.executeOnExecutor(mThreadPoolExecutor);
     }
 
     private void showUnitsLessons(List<Unit> units, List<Lesson> lessons, Map<Long, Progress> longProgressMap) {

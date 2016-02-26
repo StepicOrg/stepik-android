@@ -356,10 +356,10 @@ public class CourseDetailFragment extends FragmentBase {
                     localCopy.setEnrollment((int) localCopy.getCourseId());
 
                     UpdateCourseTask updateCourseTask = new UpdateCourseTask(DatabaseFacade.Table.enrolled, localCopy);
-                    updateCourseTask.execute();
+                    updateCourseTask.executeOnExecutor(mThreadPoolExecutor);
 
                     UpdateCourseTask updateCourseFeaturedTask = new UpdateCourseTask(DatabaseFacade.Table.featured, localCopy);
-                    updateCourseFeaturedTask.execute();
+                    updateCourseFeaturedTask.executeOnExecutor(mThreadPoolExecutor);
 
 
                     bus.post(new SuccessJoinEvent(localCopy));

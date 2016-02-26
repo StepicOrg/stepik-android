@@ -231,7 +231,7 @@ public class StepsFragment extends FragmentBase {
     private void updateSteps() {
         ProgressHelper.activate(mProgressBar);
         getFromDbStepsTask = new FromDbStepTask(mLesson);
-        getFromDbStepsTask.execute();
+        getFromDbStepsTask.executeOnExecutor(mThreadPoolExecutor);
     }
 
     @Subscribe
