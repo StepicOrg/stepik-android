@@ -19,7 +19,6 @@ import org.stepic.droid.events.feedback.FeedbackSentEvent
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ValidatorUtil
 import org.stepic.droid.view.custom.LoadingProgressDialog
-import retrofit.BaseUrl
 import retrofit.Callback
 import retrofit.Response
 import retrofit.Retrofit
@@ -116,7 +115,7 @@ class TextFeedbackFragment : FragmentBase() {
         val email = mEmailEditText.text.toString()
         val description = mDescriptionEditTex.text.toString()
         if (email.isEmpty() || description.isEmpty()) {
-            Toast.makeText(context, "Заполните поля", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, R.string.feedback_fill_fields, Toast.LENGTH_SHORT).show()
             return
         }
         if (!ValidatorUtil.isEmailValid(email)) {

@@ -109,5 +109,6 @@
     <string name="feedback_sent">Сообщение отправлено</string>
     <string name="feedback_fail">Упс… что-то пошло не так. Попробуйте позже</string>
     <string name="feedback_internet_problem">Интернет недоступен. Попробуйте позже</string>
+    <string name="feedback_fill_fields">Заполните пусты поля</string>
 
 </resources>
