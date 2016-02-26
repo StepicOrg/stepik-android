@@ -117,6 +117,7 @@ dependencies {
     compile files('libs/log4j-api-2.4.1.jar')
     compile files('libs/slf4j-api-1.7.12.jar')
 
+    compile 'de.mrmaffen:vlc-android-sdk:3.0.0'
 }
 
 repositories {
