@@ -93,7 +93,7 @@
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED"/>
             </intent-filter>
         </receiver>
 
@@ -140,6 +140,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.activities.MainFeedActivity"/>
         </activity>
+
+        <activity
+            android:name=".view.activities.VideoActivity"
+            android:label="@string/video_title"/>
 
 
     </application>
