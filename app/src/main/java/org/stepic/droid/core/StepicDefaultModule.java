@@ -51,9 +51,7 @@ import org.stepic.droid.util.resolvers.MainMenuResolverImpl;
 import org.stepic.droid.util.resolvers.SearchResolver;
 import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.util.resolvers.VideoResolver;
-import org.stepic.droid.web.HttpManager;
 import org.stepic.droid.web.IApi;
-import org.stepic.droid.web.IHttpManager;
 import org.stepic.droid.web.RetrofitRESTApi;
 import org.stepic.droid.web.ViewAssignment;
 
@@ -99,12 +97,6 @@ public class StepicDefaultModule {
     @Singleton
     public IApi provideIApi() {
         return new RetrofitRESTApi();
-    }
-
-    @Provides
-    @Singleton
-    public IHttpManager provideIHttpManager(Context context) {
-        return new HttpManager(context);
     }
 
     @Provides

@@ -36,7 +36,6 @@ import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.view.dialogs.VideoQualityDialog;
 import org.stepic.droid.view.fragments.DownloadsFragment;
-import org.stepic.droid.web.HttpManager;
 import org.stepic.droid.web.RetrofitRESTApi;
 
 import javax.inject.Singleton;
@@ -49,8 +48,6 @@ public interface StepicCoreComponent {
     void inject(FragmentActivityBase someActivity);
 
     void inject(Shell injectAllToShell);
-
-    void inject(HttpManager httpManager);
 
     void inject(MyCoursesAdapter adapter);
 
