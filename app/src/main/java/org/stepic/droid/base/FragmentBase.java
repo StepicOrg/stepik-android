@@ -12,6 +12,7 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.core.ILessonSessionManager;
 import org.stepic.droid.core.ILocalProgressManager;
+import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
@@ -22,6 +23,8 @@ import org.stepic.droid.util.resolvers.ISearchResolver;
 import org.stepic.droid.util.resolvers.IStepResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 
+import java.util.concurrent.ThreadPoolExecutor;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -29,6 +32,9 @@ import butterknife.ButterKnife;
 public class FragmentBase extends Fragment {
 
     protected String TAG = "StepicFragment";
+
+    @Inject
+    public ThreadPoolExecutor mThreadPoolExecutor;
 
     @Inject
     public ILessonSessionManager mLessonManager;
@@ -68,6 +74,9 @@ public class FragmentBase extends Fragment {
 
     @Inject
     public IStepResolver mStepResolver;
+
+    @Inject
+    public IMainHandler mMainHandler;
 
 
     public FragmentBase() {

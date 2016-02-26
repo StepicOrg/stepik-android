@@ -15,7 +15,6 @@ import com.squareup.otto.Subscribe;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
-import org.stepic.droid.concurrency.FromDbCoursesTask;
 import org.stepic.droid.concurrency.ToDbCoursesTask;
 import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
 import org.stepic.droid.events.courses.FailDropCourseEvent;
@@ -38,12 +37,13 @@ import org.stepic.droid.web.CoursesStepicResponse;
 
 import java.util.List;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
 public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase {
-    protected FromDbCoursesTask mDbGetCoursesTask;
     protected ToDbCoursesTask mDbSaveCoursesTask;
 
 
@@ -86,14 +86,24 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
 
     public void getAndShowDataFromCache() {
-        mDbGetCoursesTask = new FromDbCoursesTask(getCourseType()) {
-            @Override
-            protected void onSuccess(List<Course> courses) {
-                super.onSuccess(courses);
-                bus.post(new GettingCoursesFromDbSuccessEvent(getCourseType(), courses));
+        bus.post(new StartingGetCoursesFromDbEvent(getCourseType()));//// TODO: 26.02.16 refactor this
+        mThreadPoolExecutor.execute(new Runnable() {
+            final DatabaseFacade.Table type = getCourseType();
+
+            public void run() {
+                final List<Course> courseList = mDatabaseFacade.getAllCourses(type);
+                
+                //// FIXME: 26.02.16 this code will good at kotlin
+                mMainHandler.post(new Function0<Unit>() {
+                    @Override
+                    public Unit invoke() {
+                        bus.post(new FinishingGetCoursesFromDbEvent(type, courseList));// TODO: 26.02.16 refactor
+                        bus.post(new GettingCoursesFromDbSuccessEvent(type, courseList));
+                        return Unit.INSTANCE;
+                    }
+                });
             }
-        };
-        mDbGetCoursesTask.execute();
+        });
     }
 
     @Subscribe
