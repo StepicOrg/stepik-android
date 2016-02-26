@@ -39,7 +39,7 @@ class TextFeedbackFragment : FragmentBase() {
     lateinit var mEmailEditText: EditText
     lateinit var mDescriptionEditTex: EditText
     lateinit var mSendButton: Button
-    var mProgressDialog : ProgressDialog? = null
+    var mProgressDialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,8 +80,9 @@ class TextFeedbackFragment : FragmentBase() {
             if (i == EditorInfo.IME_ACTION_SEND) {
                 sendFeedback()
                 true
+            } else {
+                false
             }
-            false
         }
         val primaryEmail = mUserPreferences.primaryEmail?.email
         primaryEmail?.let { mEmailEditText.setText(primaryEmail) }
@@ -110,7 +111,6 @@ class TextFeedbackFragment : FragmentBase() {
     }
 
     fun sendFeedback() {
-        //todo implement
         hideSoftKeypad()
         val email = mEmailEditText.text.toString()
         val description = mDescriptionEditTex.text.toString()
