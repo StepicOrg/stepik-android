@@ -21,7 +21,7 @@ import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.concurrency.FromDbStepTask;
+import org.stepic.droid.concurrency.tasks.FromDbStepTask;
 import org.stepic.droid.events.steps.FailLoadStepEvent;
 import org.stepic.droid.events.steps.FromDbStepEvent;
 import org.stepic.droid.events.steps.SuccessLoadStepEvent;

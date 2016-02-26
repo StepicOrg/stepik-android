@@ -18,8 +18,8 @@ import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
-import org.stepic.droid.concurrency.FromDbSectionTask;
-import org.stepic.droid.concurrency.ToDbSectionTask;
+import org.stepic.droid.concurrency.tasks.FromDbSectionTask;
+import org.stepic.droid.concurrency.tasks.ToDbSectionTask;
 import org.stepic.droid.events.notify_ui.NotifyUISectionsEvent;
 import org.stepic.droid.events.sections.FailureResponseSectionEvent;
 import org.stepic.droid.events.sections.FinishingGetSectionFromDbEvent;

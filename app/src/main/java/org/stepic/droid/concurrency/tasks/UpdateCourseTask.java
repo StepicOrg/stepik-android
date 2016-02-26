@@ -1,4 +1,4 @@
-package org.stepic.droid.concurrency;
+package org.stepic.droid.concurrency.tasks;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IShell;

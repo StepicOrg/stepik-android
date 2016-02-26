@@ -1,4 +1,4 @@
-package org.stepic.droid.concurrency;
+package org.stepic.droid.concurrency.tasks;
 
 import android.content.Context;
 

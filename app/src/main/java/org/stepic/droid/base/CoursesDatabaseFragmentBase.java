@@ -15,7 +15,8 @@ import com.squareup.otto.Subscribe;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
-import org.stepic.droid.concurrency.ToDbCoursesTask;
+import org.stepic.droid.concurrency.tasks.FromDbCoursesTask;
+import org.stepic.droid.concurrency.tasks.ToDbCoursesTask;
 import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
 import org.stepic.droid.events.courses.FailDropCourseEvent;
 import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
@@ -37,15 +38,13 @@ import org.stepic.droid.web.CoursesStepicResponse;
 
 import java.util.List;
 
-import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
 public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase {
     protected ToDbCoursesTask mDbSaveCoursesTask;
-
+    protected FromDbCoursesTask mDbFromCoursesTask;
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -81,29 +80,19 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     private void saveDataToCache(List<Course> courses) {
         mDbSaveCoursesTask = new ToDbCoursesTask(courses, getCourseType(), mCurrentPage);
-        mDbSaveCoursesTask.execute();
+        mDbSaveCoursesTask.executeOnExecutor(mThreadPoolExecutor);
     }
 
 
     public void getAndShowDataFromCache() {
-        bus.post(new StartingGetCoursesFromDbEvent(getCourseType()));//// TODO: 26.02.16 refactor this
-        mThreadPoolExecutor.execute(new Runnable() {
-            final DatabaseFacade.Table type = getCourseType();
-
-            public void run() {
-                final List<Course> courseList = mDatabaseFacade.getAllCourses(type);
-                
-                //// FIXME: 26.02.16 this code will good at kotlin
-                mMainHandler.post(new Function0<Unit>() {
-                    @Override
-                    public Unit invoke() {
-                        bus.post(new FinishingGetCoursesFromDbEvent(type, courseList));// TODO: 26.02.16 refactor
-                        bus.post(new GettingCoursesFromDbSuccessEvent(type, courseList));
-                        return Unit.INSTANCE;
-                    }
-                });
+        mDbFromCoursesTask = new FromDbCoursesTask(getCourseType()){
+            @Override
+            protected void onSuccess(List<Course> courses) {
+                super.onSuccess(courses);
+                bus.post(new GettingCoursesFromDbSuccessEvent(getCourseType(), courses));
             }
-        });
+        };
+        mDbFromCoursesTask.executeOnExecutor(mThreadPoolExecutor);
     }
 
     @Subscribe
