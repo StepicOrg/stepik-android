@@ -184,14 +184,6 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
-    public void openSignUpInWeb(Context context) {
-        YandexMetrica.reportEvent("Screen manager: open signup in Web");
-        String url = mConfig.getBaseUrl() + "/accounts/signup/";
-        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
-        context.startActivity(intent);
-    }
-
-    @Override
     public void openRemindPassword(AppCompatActivity context) {
         YandexMetrica.reportEvent("Screen manager: remind password");
         android.support.v4.app.DialogFragment dialogFragment = RemindPasswordDialogFragment.newInstance();
@@ -206,13 +198,6 @@ public class ScreenManager implements IScreenManager {
         loadIntent.putExtra(AppConstants.KEY_STEP_BUNDLE, viewAssignmentWrapper.getStep());
         loadIntent.putExtra(AppConstants.KEY_ASSIGNMENT_BUNDLE, viewAssignmentWrapper.getAssignment());
         MainApplication.getAppContext().startService(loadIntent);
-    }
-
-    @Override
-    public void showSocialLogin(Context context) {
-        String url = mConfig.getBaseUrl() + "/oauth2/authorize/?client_id=P3svssuGYOJ8g8rrJSJtVbqnyE0QinTfncbfFr9p&response_type=token";
-        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
-        context.startActivity(intent);
     }
 
 }
