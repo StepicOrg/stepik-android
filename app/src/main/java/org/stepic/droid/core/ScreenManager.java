@@ -8,12 +8,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.NotNull;
-import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
@@ -34,6 +32,7 @@ import org.stepic.droid.view.activities.SectionActivity;
 import org.stepic.droid.view.activities.StepsActivity;
 import org.stepic.droid.view.activities.TextFeedbackActivity;
 import org.stepic.droid.view.activities.UnitsActivity;
+import org.stepic.droid.view.activities.VideoActivity;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.view.fragments.DownloadsFragment;
 import org.stepic.droid.web.ViewAssignment;
@@ -147,15 +146,19 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showVideo(Activity sourceActivity, String videoPath) {
-        Uri videoUri = Uri.parse(videoPath);
-        Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
-        intent.setDataAndType(videoUri, "video/*");
-        try {
-            sourceActivity.startActivity(intent);
-        } catch (Exception ex) {
-            YandexMetrica.reportError("NotPlayer", ex);
-            Toast.makeText(sourceActivity, R.string.not_video_player_error, Toast.LENGTH_LONG).show();
-        }
+        Intent intent = new Intent(MainApplication.getAppContext(), VideoActivity.class);
+        intent.putExtra(VideoActivity.Companion.getVideoPathKey(), videoPath);
+        sourceActivity.startActivity(intent);
+
+//        Uri videoUri = Uri.parse(videoPath);
+//        Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
+//        intent.setDataAndType(videoUri, "video/*");
+//        try {
+//            sourceActivity.startActivity(intent);
+//        } catch (Exception ex) {
+//            YandexMetrica.reportError("NotPlayer", ex);
+//            Toast.makeText(sourceActivity, R.string.not_video_player_error, Toast.LENGTH_LONG).show();
+//        }
     }
 
     @Override
