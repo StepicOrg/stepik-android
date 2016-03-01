@@ -8,10 +8,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.NotNull;
+import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
@@ -134,13 +136,26 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showDownload() {
-        Intent intent = new Intent (MainApplication.getAppContext(), MainFeedActivity.class);
+        Intent intent = new Intent(MainApplication.getAppContext(), MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Bundle bundle = new Bundle();
         int index = mMainMenuResolver.getIndexOfFragment(DownloadsFragment.class);
         bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
         intent.putExtras(bundle);
         MainApplication.getAppContext().startActivity(intent);
+    }
+
+    @Override
+    public void showVideo(Activity sourceActivity, String videoPath) {
+        Uri videoUri = Uri.parse(videoPath);
+        Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
+        intent.setDataAndType(videoUri, "video/*");
+        try {
+            sourceActivity.startActivity(intent);
+        } catch (Exception ex) {
+            YandexMetrica.reportError("NotPlayer", ex);
+            Toast.makeText(sourceActivity, R.string.not_video_player_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

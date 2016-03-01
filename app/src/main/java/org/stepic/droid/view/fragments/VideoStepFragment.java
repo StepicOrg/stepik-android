@@ -1,6 +1,5 @@
 package org.stepic.droid.view.fragments;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -163,18 +162,7 @@ public class VideoStepFragment extends StepBaseFragment {
     @Subscribe
     public void onVideoResolved(VideoResolvedEvent e) {
         if (e.getStepId() != mStep.getId()) return;
-        Uri videoUri = Uri.parse(e.getPathToVideo());
-
-        Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
-        intent.setDataAndType(videoUri, "video/*");
-        //todo change icon to play
-        try {
-            startActivity(intent);
-        } catch (Exception ex) {
-            YandexMetrica.reportError("NotPlayer", ex);
-            Toast.makeText(getContext(), R.string.not_video_player_error, Toast.LENGTH_LONG).show();
-        }
-
+        mShell.getScreenProvider().showVideo(getActivity(), e.getPathToVideo());
     }
 
 }
