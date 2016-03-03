@@ -1,13 +1,18 @@
 package org.stepic.droid.view.fragments
 
+import android.content.Context
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
+import android.support.v7.widget.AppCompatSeekBar
 import android.util.Log
 import android.view.*
+import android.widget.SeekBar
+import android.widget.TextView
 import android.widget.Toast
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.util.TimeUtil
 import org.videolan.libvlc.IVLCVout
 import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.Media
@@ -37,6 +42,14 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     var mVideoHeight: Int = 0
     private val mPlayerListener = MyPlayerListener(this)
 
+    var isSeekBarDragging: Boolean = false
+
+    //Controller:
+    var mPlayerSeekBar: AppCompatSeekBar? = null
+    var mCurrentTime: TextView? = null
+    var mMaxTime: TextView? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mFilePath = arguments.getString(VIDEO_KEY)
@@ -48,6 +61,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mVideoView = v?.findViewById(R.id.texture_video_view) as? SurfaceView
         mVideoViewHolder = mVideoView?.holder
         return v
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        setupController()
     }
 
     private fun createPlayer() {
@@ -82,7 +100,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             val m = Media(libvlc, uri)
             mMediaPlayer?.setMedia(m)
 
-            mMediaPlayer?.setRate(1.5f)
+            //            mMediaPlayer?.setRate(1.5f)
             mMediaPlayer?.play()
         } catch (e: Exception) {
             Toast.makeText(activity, "Error creating player!", Toast.LENGTH_LONG).show()
@@ -93,39 +111,20 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     private fun releasePlayer() {
         if (libvlc == null)
             return
-        mMediaPlayer!!.stop()
-        val vout = mMediaPlayer!!.getVLCVout()
-        vout.removeCallback(this)
-        vout.detachViews()
-        mVideoViewHolder = null
+        mMediaPlayer?.stop()
+//        val vout = mMediaPlayer!!.getVLCVout()
+//        vout.removeCallback(this)
+//        vout.detachViews()
+//        mVideoViewHolder = null
         libvlc?.release()
         libvlc = null
-
+        mMediaPlayer?.release()
         mVideoWidth = 0
         mVideoHeight = 0
     }
 
     override fun eventHardwareAccelerationError() {
         throw UnsupportedOperationException()
-    }
-
-    private class MyPlayerListener(owner: VideoFragment) : MediaPlayer.EventListener {
-        private val mOwner: WeakReference<VideoFragment>
-
-        init {
-            mOwner = WeakReference<VideoFragment>(owner)
-        }
-
-        override fun onEvent(event: MediaPlayer.Event) {
-            val player = mOwner.get()
-
-            when (event.type) {
-                MediaPlayer.Event.EndReached -> {
-                    Log.d("lala", "MediaPlayerEndReached")
-                    player.releasePlayer()
-                }
-            }
-        }
     }
 
 
@@ -201,5 +200,88 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mVideoView?.invalidate()
     }
 
+    private fun setupController() {
+        view?.let {
+            val container = it.findViewById(R.id.video_view_container) as ViewGroup
+            val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val controller = inflater.inflate(R.layout.player_controller, null)
+
+            initSeekBar(controller)
+            mCurrentTime = controller.findViewById(R.id.current_video_time) as? TextView
+            mMaxTime = controller.findViewById(R.id.overall_video_time) as? TextView
+            container.addView(controller)
+        }
+    }
+
+    private fun initSeekBar(view: View) {
+        mPlayerSeekBar = view.findViewById(R.id.player_controller_progress) as? AppCompatSeekBar
+        mPlayerSeekBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    if (mMediaPlayer?.isReleased?:true){
+                        createPlayer()
+                    }
+                    mMediaPlayer?.position = progress.toFloat() / seekBar.max.toFloat()
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                isSeekBarDragging = true
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                isSeekBarDragging = false
+            }
+        })
+    }
+
+    private class MyPlayerListener(owner: VideoFragment) : MediaPlayer.EventListener {
+        private val mOwner: WeakReference<VideoFragment>
+
+        init {
+            mOwner = WeakReference<VideoFragment>(owner)
+        }
+
+        override fun onEvent(event: MediaPlayer.Event) {
+            val playerFragment = mOwner?.get()
+            val player = playerFragment?.mMediaPlayer
+            when (event.type) {
+                MediaPlayer.Event.Playing -> {
+                    if (player?.isPlaying ?: false) {
+                        player?.length?.let {
+                            Log.d("lala", "length = " + it)
+                            playerFragment?.mMaxTime?.text = TimeUtil.getFormattedVideoTime(it)
+                        }
+                    }
+                }
+                MediaPlayer.Event.EndReached -> {
+                    Log.d("lala", "MediaPlayerEndReached")
+                    player?.length?.let {
+                        playerFragment?.mCurrentTime?.text = TimeUtil.getFormattedVideoTime(it)
+                    }
+                    playerFragment?.releasePlayer()
+                }
+                MediaPlayer.Event.PositionChanged -> {
+                    val currentPos = player?.position
+                    currentPos?.let {
+                        Log.d("lala", "positionChanged " + it)
+                        playerFragment?.mPlayerSeekBar?.let {
+                            if (!playerFragment.isSeekBarDragging) {
+                                val max = it.max
+                                it.progress = (max.toFloat() * currentPos).toInt()
+                            }
+                        }
+                    }
+                }
+                MediaPlayer.Event.TimeChanged -> {
+                    Log.d("lala", "timechanged " + player?.time)
+                    player?.time?.let {
+                        playerFragment?.mCurrentTime?.text =
+                                TimeUtil.getFormattedVideoTime(it)
+                    }
+                }
+            }
+        }
+    }
 
 }
