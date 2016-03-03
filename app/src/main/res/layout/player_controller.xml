@@ -17,9 +17,10 @@
         <RelativeLayout
             android:id="@+id/playback_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="5dp">
 
-            <SeekBar
+            <android.support.v7.widget.AppCompatSeekBar
                 android:id="@+id/player_controller_progress"
                 android:layout_width="match_parent"
                 android:layout_height="24dp"
