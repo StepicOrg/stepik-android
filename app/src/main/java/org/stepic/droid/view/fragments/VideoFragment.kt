@@ -125,6 +125,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun eventHardwareAccelerationError() {
         throw UnsupportedOperationException()
+        //fixme: recreate player
     }
 
 

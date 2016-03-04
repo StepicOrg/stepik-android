@@ -30,5 +30,6 @@
     <dimen name="feedback_button_length">200dp</dimen>
     <dimen name="feedback_textsize">16sp</dimen>
     <dimen name="button_padding">6dp</dimen>
+    <dimen name="seekbar_video_margin">8dp</dimen>
 
 </resources>
