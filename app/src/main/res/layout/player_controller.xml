@@ -84,7 +84,8 @@
                 android:layout_height="wrap_content"
                 android:visibility="invisible"/>
 
-            <Button
+            <ImageView
+                android:src="@drawable/ic_choice"
                 android:id="@+id/jump_back_button"
                 android:layout_width="@dimen/min_ux_touchable_size"
                 android:layout_height="wrap_content"/>
@@ -94,12 +95,14 @@
                 android:layout_width="@dimen/min_ux_touchable_size"
                 android:layout_height="wrap_content"/>
 
-            <Button
+            <ImageView
+                android:src="@drawable/ic_dataset"
                 android:id="@+id/jump_forward_button"
                 android:layout_width="@dimen/min_ux_touchable_size"
                 android:layout_height="wrap_content"/>
 
-            <Button
+            <ImageView
+                android:src="@drawable/ic_chemical"
                 android:id="@+id/rate_chooser"
                 android:layout_width="@dimen/min_ux_touchable_size"
                 android:layout_height="wrap_content"/>
