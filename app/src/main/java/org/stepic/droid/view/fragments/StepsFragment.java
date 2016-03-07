@@ -433,7 +433,7 @@ public class StepsFragment extends FragmentBase {
         }
 
         for (int i = 0; i < mStepAdapter.getCount(); i++) {
-            if (i < mTabLayout.getTabCount() && i > 0 && mStepAdapter != null) {
+            if (i < mTabLayout.getTabCount() && i >= 0 && mStepAdapter != null) {
                 TabLayout.Tab tab = mTabLayout.getTabAt(i);
                 if (tab != null) {
                     tab.setIcon(mStepAdapter.getTabDrawable(i));
