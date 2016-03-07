@@ -31,5 +31,6 @@
     <dimen name="feedback_textsize">16sp</dimen>
     <dimen name="button_padding">6dp</dimen>
     <dimen name="seekbar_video_margin">8dp</dimen>
+    <dimen name="control_item_margin">4dp</dimen>
 
 </resources>

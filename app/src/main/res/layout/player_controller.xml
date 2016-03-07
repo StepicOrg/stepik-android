@@ -79,33 +79,55 @@
             android:orientation="horizontal">
 
             <Button
+                android:gravity="center_vertical"
                 android:id="@+id/subtitles_button"
                 android:layout_width="@dimen/min_ux_touchable_size"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/control_item_margin"
                 android:visibility="invisible"/>
 
             <ImageView
-                android:src="@drawable/ic_choice"
+                android:gravity="top"
                 android:id="@+id/jump_back_button"
                 android:layout_width="@dimen/min_ux_touchable_size"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/control_item_margin"
+                android:src="@drawable/ic_replay_10_white_48dp"/>
 
-            <Button
+            <ImageSwitcher
+                android:gravity="center_vertical"
                 android:id="@+id/play_pause_button"
-                android:layout_width="@dimen/min_ux_touchable_size"
-                android:layout_height="wrap_content"/>
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_margin="@dimen/control_item_margin"
+                android:padding="4dp">
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_play_circle_outline_white_72"/>
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_pause_circle_outline_white_72"/>
+            </ImageSwitcher>
 
             <ImageView
-                android:src="@drawable/ic_dataset"
                 android:id="@+id/jump_forward_button"
                 android:layout_width="@dimen/min_ux_touchable_size"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/control_item_margin"
+                android:src="@drawable/ic_forward_10_white_48dp"/>
 
             <ImageView
-                android:src="@drawable/ic_chemical"
                 android:id="@+id/rate_chooser"
                 android:layout_width="@dimen/min_ux_touchable_size"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/control_item_margin"
+                android:src="@drawable/ic_chemical"/>
 
         </LinearLayout>
 
