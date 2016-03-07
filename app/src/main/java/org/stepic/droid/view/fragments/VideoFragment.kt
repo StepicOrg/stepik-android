@@ -7,9 +7,7 @@ import android.os.Bundle
 import android.support.v7.widget.AppCompatSeekBar
 import android.util.Log
 import android.view.*
-import android.widget.SeekBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.util.TimeUtil
@@ -22,6 +20,8 @@ import java.util.*
 
 class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout.Callback {
     companion object {
+        private val INDEX_PLAY_IMAGE = 0
+        private val INDEX_PAUSE_IMAGE = 1
         private val VIDEO_KEY = "video_key"
         fun newInstance(videoUri: String): VideoFragment {
             val args = Bundle()
@@ -39,7 +39,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     var mMediaPlayer: MediaPlayer? = null
     var mVideoWidth: Int = 0
     var mVideoHeight: Int = 0
-    private var mPlayerListener : MyPlayerListener? = null
+    private var mPlayerListener: MyPlayerListener? = null
 
     var isSeekBarDragging: Boolean = false
 
@@ -47,6 +47,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     var mPlayerSeekBar: AppCompatSeekBar? = null
     var mCurrentTime: TextView? = null
     var mMaxTime: TextView? = null
+    var mPlayPauseSwitcher: ImageSwitcher? = null
+    var mPlayImageView: ImageView? = null
+    var mPauseImageView: ImageView? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,8 +105,10 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
             //            mMediaPlayer?.setRate(1.5f)
             mMediaPlayer?.play()
+
+            mPlayPauseSwitcher?.setClickable(true)
         } catch (e: Exception) {
-            Toast.makeText(activity , "Error creating player!", Toast.LENGTH_LONG).show()
+            Toast.makeText(activity, "Error creating player!", Toast.LENGTH_LONG).show()
         }
 
     }
@@ -114,7 +119,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         vout?.removeCallback(this)
         vout?.detachViews()
         mPlayerListener = null
-//        mVideoViewHolder = null
+        //        mVideoViewHolder = null
         mMediaPlayer?.setEventListener(null)
         libvlc?.release()
         libvlc?.setOnHardwareAccelerationError (null)
@@ -215,6 +220,31 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             val container = it.findViewById(R.id.video_view_container) as ViewGroup
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val controller = inflater.inflate(R.layout.player_controller, null)
+            mPlayPauseSwitcher = controller.findViewById(R.id.play_pause_switcher) as? ImageSwitcher
+            mPauseImageView = controller.findViewById(R.id.pause_image_view) as? ImageView
+            mPlayImageView = container.findViewById(R.id.play_image_view) as? ImageView
+
+            mPlayPauseSwitcher?.setOnClickListener {
+                val index = mPlayPauseSwitcher?.displayedChild
+                when(index){
+                    INDEX_PLAY_IMAGE -> {
+                        if (!(mMediaPlayer?.isPlaying?:true)){
+                            mMediaPlayer?.play()
+                        }
+                        else if (mMediaPlayer == null) {
+                            mPlayPauseSwitcher?.setClickable(false)
+                            createPlayer()
+                            mPlayPauseSwitcher?.showNext()
+                        }
+                    }
+                    INDEX_PAUSE_IMAGE ->{
+                        if (mMediaPlayer?.isPlaying?:false){
+                            mMediaPlayer?.pause()
+                        }
+
+                    }
+                }
+            }
 
             initSeekBar(controller)
             mCurrentTime = controller.findViewById(R.id.current_video_time) as? TextView
@@ -223,16 +253,20 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         }
     }
 
-    private fun  destroyVideoView(){
+    private fun destroyVideoView() {
         mVideoView = null
         mVideoViewHolder = null
     }
 
     private fun destroyController() {
         //todo: implement other
+        mPlayPauseSwitcher?.setOnClickListener(null)
         mPlayerSeekBar = null
         mCurrentTime = null
         mMaxTime = null
+        mPlayPauseSwitcher = null
+        mPauseImageView = null
+        mPlayImageView = null
     }
 
     private fun initSeekBar(view: View) {
@@ -240,7 +274,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mPlayerSeekBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
-                    if (mMediaPlayer?.isReleased?:true){
+                    if (mMediaPlayer?.isReleased ?: true) {
                         createPlayer()
                     }
                     mMediaPlayer?.position = progress.toFloat() / seekBar.max.toFloat()
@@ -267,8 +301,12 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         override fun onEvent(event: MediaPlayer.Event) {
             val player = mOwner?.mMediaPlayer
             when (event.type) {
+                MediaPlayer.Event.Paused -> {
+                    mOwner?.showPlay()
+                }
                 MediaPlayer.Event.Playing -> {
                     if (player?.isPlaying ?: false) {
+                        mOwner?.showPause()
                         player?.length?.let {
                             Log.d("lala", "length = " + it)
                             mOwner?.mMaxTime?.text = TimeUtil.getFormattedVideoTime(it)
@@ -276,7 +314,8 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     }
                 }
                 MediaPlayer.Event.EndReached -> {
-                    Log.d("lala", "MediaPlayerEndReached")
+                    mOwner?.showPlay()
+                    Log.d("lala", "MediaPlayerEndReached " + player?.time + "/"+player?.length)
                     player?.length?.let {
                         mOwner?.mCurrentTime?.text = TimeUtil.getFormattedVideoTime(it)
                     }
@@ -287,7 +326,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     currentPos?.let {
                         Log.d("lala", "positionChanged " + it)
                         mOwner?.mPlayerSeekBar?.let {
-                            if (!(mOwner?.isSeekBarDragging?:false)) {
+                            if (!(mOwner?.isSeekBarDragging ?: false)) {
                                 val max = it.max
                                 it.progress = (max.toFloat() * currentPos).toInt()
                             }
@@ -302,6 +341,17 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     }
                 }
             }
+        }
+    }
+    private fun showPlay() {
+        if (mPlayPauseSwitcher?.displayedChild == INDEX_PAUSE_IMAGE){
+            mPlayPauseSwitcher?.showNext()
+        }
+    }
+
+    private fun showPause(){
+        if (mPlayPauseSwitcher?.displayedChild == INDEX_PLAY_IMAGE){
+            mPlayPauseSwitcher?.showNext()
         }
     }
 

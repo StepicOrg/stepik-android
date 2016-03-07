@@ -96,20 +96,20 @@
 
             <ImageSwitcher
                 android:gravity="center_vertical"
-                android:id="@+id/play_pause_button"
+                android:id="@+id/play_pause_switcher"
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:layout_margin="@dimen/control_item_margin"
                 android:padding="4dp">
 
                 <ImageView
-                    android:id="@+id/imageView1"
+                    android:id="@+id/play_image_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_play_circle_outline_white_72"/>
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/pause_image_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_pause_circle_outline_white_72"/>
