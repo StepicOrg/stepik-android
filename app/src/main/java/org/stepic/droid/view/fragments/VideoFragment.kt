@@ -235,12 +235,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     INDEX_PLAY_IMAGE -> {
                         if (!(mMediaPlayer?.isPlaying ?: true)) {
                             mMediaPlayer?.play()
+                        } else if (mMediaPlayer == null) {
+                            mPlayPauseSwitcher?.setClickable(false)
+                            createPlayer()
+                            mPlayPauseSwitcher?.showNext()
                         }
-                        //                        else if (mMediaPlayer == null) {
-                        //                            mPlayPauseSwitcher?.setClickable(false)
-                        //                            createPlayer()
-                        //                            mPlayPauseSwitcher?.showNext()
-                        //                        }
                     }
                     INDEX_PAUSE_IMAGE -> {
                         if (mMediaPlayer?.isPlaying ?: false) {
@@ -255,14 +254,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             mJumpBackwardImageView = controller.findViewById(R.id.jump_back_button) as? ImageView
 
             mJumpForwardImageView?.setOnClickListener {
-                val currentTime = mMediaPlayer?.time
-                val max = mMediaPlayer?.length
-                if (currentTime != null && max != null) {
-                    mMediaPlayer?.time = Math.min(currentTime + JUMP_TIME_MILLIS, max - JUMP_MAX_DELTA)
-                    if (!(mMediaPlayer?.isPlaying ?: true)) {
-                        mMediaPlayer?.play()
-                    }
-                }
+                onJumpForward()
             }
 
             mJumpBackwardImageView?.setOnClickListener {
@@ -276,15 +268,30 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         }
     }
 
-    private fun onJumpBackward() {
-        // mMediaPlayer!!.time = Math.max(0L, mMediaPlayer!!.length - JUMP_TIME_MILLIS)
+    private fun onJumpForward() {
+        val currentTime = mMediaPlayer?.time
+        val maxTime = mMaxTimeInMillis
+        if (currentTime != null && maxTime != null && maxTime != 0L) {
+            val newTime: Long = Math.min(currentTime + JUMP_TIME_MILLIS, maxTime - JUMP_MAX_DELTA)
+            mMediaPlayer?.time = newTime
 
+            val positionByHand = (newTime.toFloat() / maxTime.toFloat()).toFloat()
+            mPlayerSeekBar?.let {
+                it.progress = (it.max.toFloat() * positionByHand).toInt()
+            }
+            if (!(mMediaPlayer?.isPlaying ?: true)) {
+                mMediaPlayer?.play()
+            }
+        }
+    }
+
+    private fun onJumpBackward() {
         if (mMediaPlayer == null) {
             if (!(mMaxTime?.text?.equals("") ?: true)) {
                 createPlayer()
-                val length : Long = mMaxTimeInMillis ?: 0L
+                val length: Long = mMaxTimeInMillis ?: 0L
                 val newTime = Math.max(0L, length - JUMP_TIME_MILLIS)
-                mMediaPlayer!!.time = newTime
+                mMediaPlayer?.time = newTime
             }
         } else {
             val currentTime = mMediaPlayer?.time
@@ -321,12 +328,14 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     private fun initSeekBar(view: View) {
         mPlayerSeekBar = view.findViewById(R.id.player_controller_progress) as? AppCompatSeekBar
         mPlayerSeekBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            var newPosition = -1f
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
                     if (mMediaPlayer?.isReleased ?: true) {
                         createPlayer()
                     }
-                    mMediaPlayer?.position = progress.toFloat() / seekBar.max.toFloat()
+                    newPosition = progress.toFloat() / seekBar.max.toFloat()
+
                 }
             }
 
@@ -335,6 +344,10 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
+                if (newPosition >= 0){
+                    mMediaPlayer?.position = newPosition
+                    newPosition = -1f
+                }
                 isSeekBarDragging = false
             }
         })
@@ -354,6 +367,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     mOwner?.showPlay()
                 }
                 MediaPlayer.Event.Playing -> {
+                    mOwner?.mJumpForwardImageView?.isClickable = true
                     if (player?.isPlaying ?: false) {
                         mOwner?.showPause()
                         player?.length?.let {
@@ -372,6 +386,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 }
                 MediaPlayer.Event.PositionChanged -> {
                     val currentPos = player?.position
+
                     currentPos?.let {
                         Log.d("lala", "positionChanged " + it)
                         mOwner?.mPlayerSeekBar?.let {
