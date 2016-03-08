@@ -71,41 +71,36 @@
                 tools:text="03:35"/>
         </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/controls_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <Button
-                android:gravity="center_vertical"
-                android:id="@+id/subtitles_button"
-                android:layout_width="@dimen/min_ux_touchable_size"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/control_item_margin"
-                android:visibility="invisible"/>
+            >
 
             <ImageView
-                android:gravity="top"
                 android:id="@+id/jump_back_button"
-                android:layout_width="@dimen/min_ux_touchable_size"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
                 android:layout_margin="@dimen/control_item_margin"
+                android:layout_toLeftOf="@+id/play_pause_switcher"
+                android:gravity="top"
+                android:padding="4dp"
                 android:src="@drawable/ic_replay_10_white_48dp"/>
 
             <ImageSwitcher
-                android:gravity="center_vertical"
                 android:id="@+id/play_pause_switcher"
-                android:layout_width="72dp"
-                android:layout_height="72dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerInParent="true"
                 android:layout_margin="@dimen/control_item_margin"
+                android:gravity="center"
                 android:padding="4dp">
 
                 <ImageView
                     android:id="@+id/play_image_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:src="@drawable/ic_play_circle_outline_white_72"/>
 
                 <ImageView
@@ -117,19 +112,54 @@
 
             <ImageView
                 android:id="@+id/jump_forward_button"
-                android:layout_width="@dimen/min_ux_touchable_size"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
                 android:layout_margin="@dimen/control_item_margin"
+                android:layout_toRightOf="@+id/play_pause_switcher"
+                android:padding="4dp"
                 android:src="@drawable/ic_forward_10_white_48dp"/>
+
 
             <ImageView
                 android:id="@+id/rate_chooser"
-                android:layout_width="@dimen/min_ux_touchable_size"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
                 android:layout_margin="@dimen/control_item_margin"
+                android:layout_toRightOf="@+id/jump_forward_button"
+                android:padding="4dp"
                 android:src="@drawable/ic_chemical"/>
 
-        </LinearLayout>
+
+            <ImageSwitcher
+                android:id="@+id/full_screen_switcher"
+                android:layout_width="@dimen/min_ux_touchable_size"
+                android:layout_height="@dimen/min_ux_touchable_size"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="end|center"
+                android:layout_margin="@dimen/control_item_margin"
+                android:gravity="center"
+                >
+
+                <ImageView
+                    android:id="@+id/full_screen_btn"
+                    android:layout_width="@dimen/min_ux_touchable_size"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_fullscreen_white_24px"/>
+
+                <ImageView
+                    android:id="@+id/full_screen_exit_btn"
+                    android:layout_width="@dimen/min_ux_touchable_size"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_fullscreen_exit_white_24px"/>
+
+
+            </ImageSwitcher>
+        </RelativeLayout>
 
 
     </LinearLayout>
