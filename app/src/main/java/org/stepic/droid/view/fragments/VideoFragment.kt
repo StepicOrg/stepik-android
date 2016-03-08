@@ -10,6 +10,8 @@ import android.view.*
 import android.widget.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.base.MainApplication
+import org.stepic.droid.preferences.VideoPlayback
 import org.stepic.droid.util.TimeUtil
 import org.videolan.libvlc.IVLCVout
 import org.videolan.libvlc.LibVLC
@@ -55,6 +57,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     var mPauseImageView: ImageView? = null
     var mJumpForwardImageView: ImageView? = null
     var mJumpBackwardImageView: ImageView? = null
+    var mVideoRateChooser: ImageView? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -261,11 +264,66 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 onJumpBackward()
             }
 
+
+            mVideoRateChooser = controller.findViewById(R.id.rate_chooser) as? ImageView
+            mVideoRateChooser?.setImageResource(R.drawable.ic_playbackrate_1_light)//fixme get from User preferences
+            mVideoRateChooser?.setOnClickListener {
+                showChooseRateMenu(it)
+            }
+
+
             initSeekBar(controller)
             mCurrentTime = controller.findViewById(R.id.current_video_time) as? TextView
             mMaxTime = controller.findViewById(R.id.overall_video_time) as? TextView
             container.addView(controller)
         }
+    }
+
+    private fun showChooseRateMenu(view: View) {
+        val popupMenu = PopupMenu(MainApplication.getAppContext(), view)
+        popupMenu.inflate(R.menu.video_rate_menu)
+        popupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.x0_5 -> {
+                    handleRate(VideoPlayback.x0_5)
+                    true
+                }
+
+                R.id.x0_75 -> {
+                    handleRate(VideoPlayback.x0_75)
+                    true
+                }
+
+                R.id.x1 -> {
+                    handleRate(VideoPlayback.x1_0)
+                    true
+                }
+
+                R.id.x1_25 -> {
+                    handleRate(VideoPlayback.x1_25)
+                    true
+                }
+
+                R.id.x1_5 -> {
+                    handleRate(VideoPlayback.x1_5)
+                    true
+                }
+                R.id.x2 -> {
+                    handleRate(VideoPlayback.x2)
+                    true
+                }
+
+                else -> {
+                    false
+                }
+            }
+        }
+        popupMenu.show()
+    }
+
+    private fun handleRate(rate: VideoPlayback) {
+        mVideoRateChooser?.setImageDrawable(rate.icon)
+        mMediaPlayer?.rate = rate.rateFloat
     }
 
     private fun onJumpForward() {
@@ -314,7 +372,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mPlayPauseSwitcher?.setOnClickListener(null)
         mJumpBackwardImageView?.setOnClickListener(null)
         mJumpForwardImageView?.setOnClickListener(null)
+        mVideoRateChooser?.setOnClickListener(null)
 
+        mVideoRateChooser = null
         mJumpBackwardImageView = null
         mJumpForwardImageView = null
         mPlayerSeekBar = null
@@ -344,7 +404,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                if (newPosition >= 0){
+                if (newPosition >= 0) {
                     mMediaPlayer?.position = newPosition
                     newPosition = -1f
                 }
