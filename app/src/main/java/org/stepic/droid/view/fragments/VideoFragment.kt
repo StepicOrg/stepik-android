@@ -58,6 +58,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     var mJumpForwardImageView: ImageView? = null
     var mJumpBackwardImageView: ImageView? = null
     var mVideoRateChooser: ImageView? = null
+    var mFullScreenSwitcher : ImageSwitcher? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -271,6 +272,10 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 showChooseRateMenu(it)
             }
 
+            mFullScreenSwitcher = controller.findViewById(R.id.full_screen_switcher) as? ImageSwitcher
+            mFullScreenSwitcher?.setOnClickListener{
+                //fixme make full screen in and exit
+            }
 
             initSeekBar(controller)
             mCurrentTime = controller.findViewById(R.id.current_video_time) as? TextView
@@ -373,7 +378,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mJumpBackwardImageView?.setOnClickListener(null)
         mJumpForwardImageView?.setOnClickListener(null)
         mVideoRateChooser?.setOnClickListener(null)
+        mFullScreenSwitcher?.setOnClickListener(null)
 
+        mFullScreenSwitcher = null
         mVideoRateChooser = null
         mJumpBackwardImageView = null
         mJumpForwardImageView = null
@@ -478,6 +485,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         if (mPlayPauseSwitcher?.displayedChild == INDEX_PLAY_IMAGE) {
             mPlayPauseSwitcher?.showNext()
         }
+    }
+
+    private fun hideNavigationBar() {
+        val uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
+        activity?.window?.decorView?.systemUiVisibility = uiOptions
     }
 
 }
