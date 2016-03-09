@@ -39,7 +39,7 @@
                 android:progressDrawable="@drawable/video_progressbar_layers"
                 android:thumb="@drawable/video_seekbar_thumb"
                 android:thumbOffset="0dp"
-                tools:progress="0"
+                tools:progress="20"
                 tools:secondaryProgress="60"
                 tools:targetApi="17"/>
 
@@ -127,7 +127,7 @@
                 android:layout_height="40dp"
                 android:layout_centerInParent="true"
                 android:layout_margin="@dimen/control_item_margin"
-                android:layout_toRightOf="@+id/jump_forward_button"
+                android:layout_toLeftOf="@+id/jump_back_button"
                 android:padding="4dp"
                 tools:src="@drawable/ic_playbackrate_0_5_light"/>
 

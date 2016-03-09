@@ -14,6 +14,7 @@
 
 
     <application
+        android:largeHeap="true"
         android:name="org.stepic.droid.base.MainApplication"
         android:allowBackup="false"
         android:icon="@drawable/stepic_logo"
@@ -142,6 +143,7 @@
         </activity>
 
         <activity
+            android:hardwareAccelerated="true"
             android:name=".view.activities.VideoActivity"
             android:label="@string/video_title"
             android:theme="@style/AppTheme.Fullscreen"/>
