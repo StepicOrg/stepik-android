@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.*
 import android.widget.*
 import com.squareup.otto.Subscribe
+import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
@@ -187,8 +188,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     }
 
     override fun eventHardwareAccelerationError() {
-        throw UnsupportedOperationException()
+        //throw UnsupportedOperationException()
         //fixme: recreate player
+        YandexMetrica.reportEvent("vlc error hardware")
     }
 
     override fun onStart() {
