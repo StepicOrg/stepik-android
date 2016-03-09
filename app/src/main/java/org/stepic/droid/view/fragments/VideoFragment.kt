@@ -1,6 +1,7 @@
 package org.stepic.droid.view.fragments
 
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
@@ -60,7 +61,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     var mJumpForwardImageView: ImageView? = null
     var mJumpBackwardImageView: ImageView? = null
     var mVideoRateChooser: ImageView? = null
-    var mFullScreenSwitcher: ImageSwitcher? = null
+    var mFullScreenSwitcher: ImageView? = null
     var isControllerVisible = true
 
 
@@ -287,15 +288,47 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 showChooseRateMenu(it)
             }
 
-            mFullScreenSwitcher = mController.findViewById(R.id.full_screen_switcher) as? ImageSwitcher
-            mFullScreenSwitcher?.setOnClickListener {
-                //fixme make full screen in and exit
-            }
+            initFullScreenButton(mController)
 
             initSeekBar(mController)
             mCurrentTime = mController.findViewById(R.id.current_video_time) as? TextView
             mMaxTime = mController.findViewById(R.id.overall_video_time) as? TextView
             container.addView(mController)
+        }
+    }
+
+    private fun initFullScreenButton(controller: View?) {
+        mFullScreenSwitcher = mController.findViewById(R.id.full_screen_switcher) as? ImageView
+
+        val display = (activity.getSystemService(Context.WINDOW_SERVICE) as WindowManager).getDefaultDisplay()
+        val rotation = display.rotation
+        when (rotation) {
+            Surface.ROTATION_0, Surface.ROTATION_180 -> {
+                //portrait
+                mFullScreenSwitcher?.setImageResource(R.drawable.ic_fullscreen_white_24px)
+            }
+
+            Surface.ROTATION_90, Surface.ROTATION_270 -> {
+                //landscape
+                mFullScreenSwitcher?.setImageResource(R.drawable.ic_fullscreen_exit_white_24px)
+            }
+        }
+        mFullScreenSwitcher?.setOnClickListener { onClickFullScreen() }
+    }
+
+    private fun onClickFullScreen() {
+        val display = (activity.getSystemService(Context.WINDOW_SERVICE) as WindowManager).getDefaultDisplay()
+        val rotation = display.rotation
+        when (rotation) {
+            Surface.ROTATION_0, Surface.ROTATION_180 -> {
+                //portrait
+                activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            }
+
+            Surface.ROTATION_90, Surface.ROTATION_270 -> {
+                //landscape
+                activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            }
         }
     }
 
