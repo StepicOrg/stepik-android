@@ -71,7 +71,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        retainInstance = true
         mFilePath = arguments.getString(VIDEO_KEY)
+        createPlayer()
     }
 
 
@@ -96,6 +98,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             }
         }
         setupController(mFragmentContainer)
+        bindViewWithPlayer()
         return mFragmentContainer
     }
 
@@ -103,8 +106,22 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         super.onActivityCreated(savedInstanceState)
     }
 
+    private fun bindViewWithPlayer() {
+        mVideoViewHolder?.setKeepScreenOn(true)
+
+        val vout = mMediaPlayer?.getVLCVout()
+        vout?.setVideoView(mVideoView)
+        vout?.addCallback(this)
+        vout?.attachViews()
+
+        mPlayerListener = MyPlayerListener(this)
+        mMediaPlayer?.setEventListener(mPlayerListener)
+        mMediaPlayer?.play()
+
+        mPlayPauseSwitcher?.setClickable(true)
+    }
+
     private fun createPlayer() {
-        releasePlayer()
         try {
             val options = ArrayList<String>()
 
@@ -113,18 +130,18 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             options.add("-vvv") // verbosity
             libvlc = LibVLC(options)
             libvlc?.setOnHardwareAccelerationError(this)
-            mVideoViewHolder?.setKeepScreenOn(true)
+            //            mVideoViewHolder?.setKeepScreenOn(true)
 
             // Create media player
             mMediaPlayer = MediaPlayer(libvlc)
-            mPlayerListener = MyPlayerListener(this)
-            mMediaPlayer?.setEventListener(mPlayerListener)
+            //            mPlayerListener = MyPlayerListener(this)
+            //            mMediaPlayer?.setEventListener(mPlayerListener)
 
             // Set up video output
-            val vout = mMediaPlayer?.getVLCVout()
-            vout?.setVideoView(mVideoView)
-            vout?.addCallback(this)
-            vout?.attachViews()
+            //            val vout = mMediaPlayer?.getVLCVout()
+            //            vout?.setVideoView(mVideoView)
+            //            vout?.addCallback(this)
+            //            vout?.attachViews()
 
             val file = File (mFilePath)
             var uri: Uri?
@@ -137,9 +154,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             mMediaPlayer?.setMedia(m)
 
             mMediaPlayer?.setRate(mUserPreferences.videoPlaybackRate.rateFloat)
-            mMediaPlayer?.play()
+            //            mMediaPlayer?.play()
             isEndReachedFirstTime = false
-            mPlayPauseSwitcher?.setClickable(true)
+            //            mPlayPauseSwitcher?.setClickable(true)
         } catch (e: Exception) {
             Toast.makeText(activity, "Error creating player!", Toast.LENGTH_LONG).show()
         }
@@ -164,7 +181,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     }
 
     override fun eventHardwareAccelerationError() {
-
         throw UnsupportedOperationException()
         //fixme: recreate player
     }
@@ -172,12 +188,15 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onResume() {
         super.onResume()
-        createPlayer()
+        mMediaPlayer?.let {
+            if (!it.isPlaying)
+                it.play()
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        releasePlayer()
+        mMediaPlayer?.pause()
     }
 
     override fun onDestroyView() {
@@ -273,6 +292,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                         } else if (mMediaPlayer == null) {
                             mPlayPauseSwitcher?.setClickable(false)
                             createPlayer()
+                            bindViewWithPlayer()
                             mPlayPauseSwitcher?.showNext()
                         }
                     }
@@ -281,6 +301,16 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                             mMediaPlayer?.pause()
                         }
 
+                    }
+                }
+            }
+
+            mMediaPlayer?.let {
+                if (!it.isReleased) {
+                    if (it.isPlaying) {
+                        showPause()
+                    } else {
+                        showPlay()
                     }
                 }
             }
@@ -430,12 +460,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     private fun onJumpBackward() {
         if (mMediaPlayer == null) {
-            if (!(mMaxTime?.text?.equals("") ?: true)) {
-                createPlayer()
-                val length: Long = mMaxTimeInMillis ?: 0L
-                val newTime = Math.max(0L, length - JUMP_TIME_MILLIS)
-                mMediaPlayer?.time = newTime
-            }
+            createPlayer()
+            bindViewWithPlayer()
+            val length: Long = mMaxTimeInMillis ?: 0L
+            val newTime = Math.max(0L, length - JUMP_TIME_MILLIS)
+            mMediaPlayer?.time = newTime
         } else {
             val currentTime = mMediaPlayer?.time
             currentTime?.let {
@@ -482,6 +511,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 if (fromUser) {
                     if (mMediaPlayer?.isReleased ?: true) {
                         createPlayer()
+                        bindViewWithPlayer()
                     }
                     newPosition = progress.toFloat() / seekBar.max.toFloat()
 
