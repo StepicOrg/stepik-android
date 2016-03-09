@@ -14,7 +14,6 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.receivers.DownloadClickReceiver;
 import org.stepic.droid.receivers.DownloadCompleteReceiver;
-import org.stepic.droid.receivers.IncomingCallReceiver;
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver;
 import org.stepic.droid.services.CancelLoadingService;
 import org.stepic.droid.services.DeleteService;
@@ -35,6 +34,7 @@ import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.view.dialogs.VideoQualityDialog;
 import org.stepic.droid.view.fragments.DownloadsFragment;
+import org.stepic.droid.view.fragments.VideoFragment;
 import org.stepic.droid.web.RetrofitRESTApi;
 
 import javax.inject.Singleton;
@@ -119,5 +119,5 @@ public interface StepicCoreComponent {
 
     void inject(FromDbCoursesTask fromDbCoursesTask);
 
-    void inject(IncomingCallReceiver.MyStatePhoneListener receiver);
+    void inject(VideoFragment.MyStatePhoneListener receiver);
 }

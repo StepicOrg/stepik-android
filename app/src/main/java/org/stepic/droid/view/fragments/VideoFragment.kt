@@ -6,14 +6,18 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.AppCompatSeekBar
+import android.telephony.PhoneStateListener
+import android.telephony.TelephonyManager
 import android.util.Log
 import android.view.*
 import android.widget.*
+import com.squareup.otto.Bus
 import com.squareup.otto.Subscribe
 import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
+import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.events.IncomingCallEvent
 import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.util.TimeUtil
@@ -24,6 +28,7 @@ import org.videolan.libvlc.Media
 import org.videolan.libvlc.MediaPlayer
 import java.io.File
 import java.util.*
+import javax.inject.Inject
 
 class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout.Callback {
     companion object {
@@ -41,6 +46,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             return fragment
         }
     }
+
+    val myStatePhoneListener = MyStatePhoneListener()
+    val tmgr = MainApplication.getAppContext().getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
 
     var mFragmentContainer: ViewGroup? = null
     var mVideoView: SurfaceView? = null;
@@ -79,6 +87,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         retainInstance = true
         mFilePath = arguments.getString(VIDEO_KEY)
         createPlayer()
+        initPhoneStateListener()
     }
 
 
@@ -237,6 +246,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onDestroy() {
         releasePlayer()
+        removePhoneStateCallbacks()
         super.onDestroy()
         Log.d("ttt", "onDestroy")
     }
@@ -659,9 +669,44 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
 
     @Subscribe
-    fun onIncomingCall(event : IncomingCallEvent){
-        if (mMediaPlayer?.isPlaying?:false){
+    fun onIncomingCall(event: IncomingCallEvent) {
+        if (mMediaPlayer?.isPlaying ?: false) {
             mMediaPlayer?.pause()
+        }
+    }
+
+    fun initPhoneStateListener() {
+        try {
+            tmgr?.listen(myStatePhoneListener, PhoneStateListener.LISTEN_CALL_STATE)
+        } catch (ex: Exception) {
+            YandexMetrica.reportError("initPhoneStateListener", ex)
+        }
+    }
+
+    fun removePhoneStateCallbacks() {
+        try {
+            tmgr?.listen(myStatePhoneListener, PhoneStateListener.LISTEN_NONE)
+        } catch(ex: Exception) {
+            YandexMetrica.reportError("removePhoneStateCallbacks", ex)
+        }
+    }
+
+    class MyStatePhoneListener : PhoneStateListener() {
+
+        init {
+            MainApplication.component().inject(this)
+        }
+
+        @Inject
+        lateinit var mBus: Bus
+
+        @Inject
+        lateinit var mHandler: IMainHandler
+
+        override fun onCallStateChanged(state: Int, incomingNumber: String?) {
+            if (state == 1) {
+                mHandler.post { mBus.post(IncomingCallEvent()) }
+            }
         }
     }
 }

@@ -107,14 +107,6 @@
             </intent-filter>
         </receiver>
 
-        <receiver
-            android:name=".receivers.IncomingCallReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.PHONE_STATE" />
-            </intent-filter>
-        </receiver>
-
-
         <service
             android:name="org.stepic.droid.services.LoadService"
             android:exported="true"/>
