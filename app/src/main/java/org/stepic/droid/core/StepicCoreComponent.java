@@ -14,6 +14,7 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.receivers.DownloadClickReceiver;
 import org.stepic.droid.receivers.DownloadCompleteReceiver;
+import org.stepic.droid.receivers.IncomingCallReceiver;
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver;
 import org.stepic.droid.services.CancelLoadingService;
 import org.stepic.droid.services.DeleteService;
@@ -117,4 +118,6 @@ public interface StepicCoreComponent {
     void inject(DownloadClickReceiver downloadClickReceiver);
 
     void inject(FromDbCoursesTask fromDbCoursesTask);
+
+    void inject(IncomingCallReceiver receiver);
 }

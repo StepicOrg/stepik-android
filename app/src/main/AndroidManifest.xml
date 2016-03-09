@@ -106,6 +106,15 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name=".receivers.IncomingCallReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.ANSWER"/>
+            </intent-filter>
+        </receiver>
+
+
         <service
             android:name="org.stepic.droid.services.LoadService"
             android:exported="true"/>
