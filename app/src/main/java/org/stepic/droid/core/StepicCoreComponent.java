@@ -119,5 +119,5 @@ public interface StepicCoreComponent {
 
     void inject(FromDbCoursesTask fromDbCoursesTask);
 
-    void inject(IncomingCallReceiver receiver);
+    void inject(IncomingCallReceiver.MyStatePhoneListener receiver);
 }

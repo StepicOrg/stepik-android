@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
 
     <application
@@ -107,10 +108,9 @@
         </receiver>
 
         <receiver
-            android:name=".receivers.IncomingCallReceiver"
-            android:exported="true">
+            android:name=".receivers.IncomingCallReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.ANSWER"/>
+                <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
 

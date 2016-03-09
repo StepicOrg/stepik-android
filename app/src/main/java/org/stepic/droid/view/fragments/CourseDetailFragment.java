@@ -29,7 +29,6 @@ import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
-import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
@@ -244,17 +243,7 @@ public class CourseDetailFragment extends FragmentBase {
             mPlayer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Uri videoUri = Uri.parse(urlToVideo);
-
-                    Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
-                    intent.setDataAndType(videoUri, "video/*");
-                    //todo change icon to play
-                    try {
-                        startActivity(intent);
-                    } catch (Exception ex) {
-                        YandexMetrica.reportError("NotPlayer", ex);
-                        Toast.makeText(getActivity(), R.string.not_video_player_error, Toast.LENGTH_LONG).show();
-                    }
+                    mShell.getScreenProvider().showVideo(getActivity(), urlToVideo);
                 }
             });
         }
