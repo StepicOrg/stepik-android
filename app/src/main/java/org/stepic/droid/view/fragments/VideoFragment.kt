@@ -91,8 +91,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
                 if (!isEndReachedFirstTime) {
                     showController(true)
-                }
-                else{
+                } else {
                     isEndReachedFirstTime = false
                 }
             }
@@ -138,7 +137,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             val m = Media(libvlc, uri)
             mMediaPlayer?.setMedia(m)
 
-            //            mMediaPlayer?.setRate(1.5f)
+            mMediaPlayer?.setRate(mUserPreferences.videoPlaybackRate.rateFloat)
             mMediaPlayer?.play()
             isEndReachedFirstTime = false
             mPlayPauseSwitcher?.setClickable(true)
@@ -301,7 +300,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             }
 
             mVideoRateChooser = mController?.findViewById(R.id.rate_chooser) as? ImageView
-            mVideoRateChooser?.setImageResource(R.drawable.ic_playbackrate_1_light)//fixme get from User preferences
+            mVideoRateChooser?.setImageDrawable(mUserPreferences.videoPlaybackRate.icon)
             mVideoRateChooser?.setOnClickListener {
                 showChooseRateMenu(it)
             }
@@ -412,6 +411,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     private fun handleRate(rate: VideoPlaybackRate) {
         mVideoRateChooser?.setImageDrawable(rate.icon)
         mMediaPlayer?.rate = rate.rateFloat
+        mUserPreferences.videoPlaybackRate = rate
     }
 
     private fun onJumpForward() {

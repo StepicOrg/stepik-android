@@ -104,7 +104,7 @@ public class UserPreferences {
         return mSharedPreferenceHelper.getVideoPlaybackRate();
     }
 
-    public void storeVideoPlaybackRate(VideoPlaybackRate rate) {
+    public void setVideoPlaybackRate(VideoPlaybackRate rate) {
         mSharedPreferenceHelper.storeVideoPlaybackRate(rate);
     }
 
