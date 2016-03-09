@@ -100,4 +100,12 @@ public class UserPreferences {
         mSharedPreferenceHelper.storeVideoQuality(videoQuality);
     }
 
+    public VideoPlaybackRate getVideoPlaybackRate() {
+        return mSharedPreferenceHelper.getVideoPlaybackRate();
+    }
+
+    public void storeVideoPlaybackRate(VideoPlaybackRate rate) {
+        mSharedPreferenceHelper.storeVideoPlaybackRate(rate);
+    }
+
 }

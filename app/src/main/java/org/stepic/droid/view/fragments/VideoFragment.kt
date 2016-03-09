@@ -12,7 +12,7 @@ import android.widget.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
-import org.stepic.droid.preferences.VideoPlayback
+import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.util.TimeUtil
 import org.stepic.droid.view.custom.TouchDispatchableFrameLayout
 import org.videolan.libvlc.IVLCVout
@@ -373,31 +373,31 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.x0_5 -> {
-                    handleRate(VideoPlayback.x0_5)
+                    handleRate(VideoPlaybackRate.x0_5)
                     true
                 }
 
                 R.id.x0_75 -> {
-                    handleRate(VideoPlayback.x0_75)
+                    handleRate(VideoPlaybackRate.x0_75)
                     true
                 }
 
                 R.id.x1 -> {
-                    handleRate(VideoPlayback.x1_0)
+                    handleRate(VideoPlaybackRate.x1_0)
                     true
                 }
 
                 R.id.x1_25 -> {
-                    handleRate(VideoPlayback.x1_25)
+                    handleRate(VideoPlaybackRate.x1_25)
                     true
                 }
 
                 R.id.x1_5 -> {
-                    handleRate(VideoPlayback.x1_5)
+                    handleRate(VideoPlaybackRate.x1_5)
                     true
                 }
                 R.id.x2 -> {
-                    handleRate(VideoPlayback.x2)
+                    handleRate(VideoPlaybackRate.x2)
                     true
                 }
 
@@ -409,7 +409,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         popupMenu.show()
     }
 
-    private fun handleRate(rate: VideoPlayback) {
+    private fun handleRate(rate: VideoPlaybackRate) {
         mVideoRateChooser?.setImageDrawable(rate.icon)
         mMediaPlayer?.rate = rate.rateFloat
     }
