@@ -68,6 +68,8 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     var isEndReachedFirstTime = false
 
+    var isOnStartAfterOnCreateView = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,6 +101,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         }
         setupController(mFragmentContainer)
         bindViewWithPlayer()
+        mMediaPlayer?.play()
+        isOnStartAfterOnCreateView = true
+        Log.d("ttt", "onCreateView")
         return mFragmentContainer
     }
 
@@ -116,7 +121,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
         mPlayerListener = MyPlayerListener(this)
         mMediaPlayer?.setEventListener(mPlayerListener)
-        mMediaPlayer?.play()
 
         mPlayPauseSwitcher?.setClickable(true)
     }
@@ -185,41 +189,64 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         //fixme: recreate player
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (isOnStartAfterOnCreateView) {
+            isOnStartAfterOnCreateView = false
+        } else {
+            bindViewWithPlayer()
+        }
+        Log.d("ttt", "onStart")
+    }
+
 
     override fun onResume() {
         super.onResume()
-        mMediaPlayer?.let {
-            if (!it.isPlaying)
-                it.play()
-        }
+        Log.d("ttt", "onResume")
+        //        mMediaPlayer?.let {
+        //            if (!it.isPlaying)
+        //                it.play()
+        //        }
     }
 
     override fun onPause() {
         super.onPause()
-        mMediaPlayer?.pause()
+        if (mMediaPlayer?.isPlaying ?: false) {
+            mMediaPlayer?.pause()
+        }
+        Log.d("ttt", "onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("ttt", "onStop")
     }
 
     override fun onDestroyView() {
         destroyVideoView()
         destroyController()
         super.onDestroyView()
+        Log.d("ttt", "onDestroyView")
     }
 
     override fun onDestroy() {
         releasePlayer()
         super.onDestroy()
+        Log.d("ttt", "onDestroy")
     }
 
     override fun onSurfacesCreated(p0: IVLCVout?) {
+        Log.d("ttt", "onSurfacesCreated " + mVideoView)
     }
 
     override fun onSurfacesDestroyed(p0: IVLCVout?) {
+        Log.d("ttt", "onSurfacesDestroyed")
     }
 
     override fun onNewLayout(vout: IVLCVout, width: Int, height: Int, visibleWidth: Int, visibleHeight: Int, sarNum: Int, sarDen: Int) {
         if (width * height == 0)
             return
-
+        Log.d("ttt", "onNewLayout")
         // store video size
         mVideoWidth = width
         mVideoHeight = height
