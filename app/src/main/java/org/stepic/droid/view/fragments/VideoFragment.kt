@@ -83,8 +83,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
         activity.window.decorView.setOnSystemUiVisibilityChangeListener { visibility: Int ->
             if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
-                showController(!isControllerVisible)
-
+                showController(true)
             }
         }
         return mFragmentContainer
@@ -452,7 +451,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     mOwner?.showPlay()
                 }
                 MediaPlayer.Event.Playing -> {
-                    mOwner?.mJumpForwardImageView?.isClickable = true
                     if (player?.isPlaying ?: false) {
                         mOwner?.showPause()
                         player?.length?.let {
@@ -462,6 +460,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     }
                 }
                 MediaPlayer.Event.EndReached -> {
+                    mOwner?.showController(true)
                     mOwner?.showPlay()
                     Log.d("lala", "MediaPlayerEndReached " + player?.time + "/" + player?.length)
                     player?.length?.let {
@@ -513,6 +512,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     private fun showController(needShow: Boolean) {
         if (needShow) {
             mController.visibility = View.VISIBLE
+            if (activity?.window?.decorView?.systemUiVisibility != 0) {
+                activity?.window?.decorView?.systemUiVisibility = 0
+            }
             isControllerVisible = true
         } else {
             mController.visibility = View.GONE
