@@ -197,6 +197,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             bindViewWithPlayer()
         }
         Log.d("ttt", "onStart")
+        bus.register(this)
     }
 
 
@@ -218,6 +219,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     }
 
     override fun onStop() {
+        bus.unregister(this)
         super.onStop()
         Log.d("ttt", "onStop")
     }
