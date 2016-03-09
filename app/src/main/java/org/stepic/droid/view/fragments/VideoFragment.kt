@@ -36,6 +36,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         }
     }
 
+    var mFragmentContainer: ViewGroup? = null
     var mVideoView: SurfaceView? = null;
     var mFilePath: String? = null;
     var mVideoViewHolder: SurfaceHolder? = null
@@ -49,6 +50,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     var isSeekBarDragging: Boolean = false
 
     //Controller:
+    lateinit var mController: ViewGroup
     var mPlayerSeekBar: AppCompatSeekBar? = null
     var mCurrentTime: TextView? = null
     var mMaxTime: TextView? = null
@@ -58,7 +60,8 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     var mJumpForwardImageView: ImageView? = null
     var mJumpBackwardImageView: ImageView? = null
     var mVideoRateChooser: ImageView? = null
-    var mFullScreenSwitcher : ImageSwitcher? = null
+    var mFullScreenSwitcher: ImageSwitcher? = null
+    var isControllerVisible = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,10 +71,23 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v = inflater?.inflate(R.layout.fragment_video, container, false);
-        mVideoView = v?.findViewById(R.id.texture_video_view) as? SurfaceView
+        mFragmentContainer = inflater?.inflate(R.layout.fragment_video, container, false) as? ViewGroup
+        mVideoView = mFragmentContainer?.findViewById(R.id.texture_video_view) as? SurfaceView
+        mFragmentContainer?.setOnTouchListener { view, motionEvent ->
+            if (isControllerVisible) {
+                showController(!isControllerVisible)
+            }
+            false
+        }
         mVideoViewHolder = mVideoView?.holder
-        return v
+
+        activity.window.decorView.setOnSystemUiVisibilityChangeListener { visibility: Int ->
+            if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
+                showController(!isControllerVisible)
+
+            }
+        }
+        return mFragmentContainer
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -228,11 +244,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         view?.let {
             val container = it.findViewById(R.id.video_view_container) as ViewGroup
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val controller = inflater.inflate(R.layout.player_controller, null)
+            mController = inflater.inflate(R.layout.player_controller, null) as ViewGroup
 
-            mPlayPauseSwitcher = controller.findViewById(R.id.play_pause_switcher) as? ImageSwitcher
-            mPauseImageView = controller.findViewById(R.id.pause_image_view) as? ImageView
-            mPlayImageView = controller.findViewById(R.id.play_image_view) as? ImageView
+            mPlayPauseSwitcher = mController.findViewById(R.id.play_pause_switcher) as? ImageSwitcher
+            mPauseImageView = mController.findViewById(R.id.pause_image_view) as? ImageView
+            mPlayImageView = mController.findViewById(R.id.play_image_view) as? ImageView
             mPlayPauseSwitcher?.setOnClickListener {
                 val index = mPlayPauseSwitcher?.displayedChild
                 when (index) {
@@ -254,8 +270,8 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 }
             }
 
-            mJumpForwardImageView = controller.findViewById(R.id.jump_forward_button) as? ImageView
-            mJumpBackwardImageView = controller.findViewById(R.id.jump_back_button) as? ImageView
+            mJumpForwardImageView = mController.findViewById(R.id.jump_forward_button) as? ImageView
+            mJumpBackwardImageView = mController.findViewById(R.id.jump_back_button) as? ImageView
 
             mJumpForwardImageView?.setOnClickListener {
                 onJumpForward()
@@ -266,21 +282,21 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             }
 
 
-            mVideoRateChooser = controller.findViewById(R.id.rate_chooser) as? ImageView
+            mVideoRateChooser = mController.findViewById(R.id.rate_chooser) as? ImageView
             mVideoRateChooser?.setImageResource(R.drawable.ic_playbackrate_1_light)//fixme get from User preferences
             mVideoRateChooser?.setOnClickListener {
                 showChooseRateMenu(it)
             }
 
-            mFullScreenSwitcher = controller.findViewById(R.id.full_screen_switcher) as? ImageSwitcher
-            mFullScreenSwitcher?.setOnClickListener{
+            mFullScreenSwitcher = mController.findViewById(R.id.full_screen_switcher) as? ImageSwitcher
+            mFullScreenSwitcher?.setOnClickListener {
                 //fixme make full screen in and exit
             }
 
-            initSeekBar(controller)
-            mCurrentTime = controller.findViewById(R.id.current_video_time) as? TextView
-            mMaxTime = controller.findViewById(R.id.overall_video_time) as? TextView
-            container.addView(controller)
+            initSeekBar(mController)
+            mCurrentTime = mController.findViewById(R.id.current_video_time) as? TextView
+            mMaxTime = mController.findViewById(R.id.overall_video_time) as? TextView
+            container.addView(mController)
         }
     }
 
@@ -379,7 +395,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mJumpForwardImageView?.setOnClickListener(null)
         mVideoRateChooser?.setOnClickListener(null)
         mFullScreenSwitcher?.setOnClickListener(null)
+        mFragmentContainer?.setOnClickListener(null)
 
+        mFragmentContainer = null
         mFullScreenSwitcher = null
         mVideoRateChooser = null
         mJumpBackwardImageView = null
@@ -490,6 +508,17 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     private fun hideNavigationBar() {
         val uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
         activity?.window?.decorView?.systemUiVisibility = uiOptions
+    }
+
+    private fun showController(needShow: Boolean) {
+        if (needShow) {
+            mController.visibility = View.VISIBLE
+            isControllerVisible = true
+        } else {
+            mController.visibility = View.GONE
+            hideNavigationBar()
+            isControllerVisible = false
+        }
     }
 
 }
