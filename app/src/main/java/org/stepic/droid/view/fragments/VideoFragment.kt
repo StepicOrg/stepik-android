@@ -14,6 +14,7 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.preferences.VideoPlayback
 import org.stepic.droid.util.TimeUtil
+import org.stepic.droid.view.custom.TouchDispatchableFrameLayout
 import org.videolan.libvlc.IVLCVout
 import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.Media
@@ -23,6 +24,7 @@ import java.util.*
 
 class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout.Callback {
     companion object {
+        private val TIMEOUT_BEFORE_HIDE = 4500L
         private val INDEX_PLAY_IMAGE = 0
         private val INDEX_PAUSE_IMAGE = 1
         private val JUMP_TIME_MILLIS = 10000L
@@ -51,7 +53,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     var isSeekBarDragging: Boolean = false
 
     //Controller:
-    lateinit var mController: ViewGroup
+    var mController: TouchDispatchableFrameLayout? = null
     var mPlayerSeekBar: AppCompatSeekBar? = null
     var mCurrentTime: TextView? = null
     var mMaxTime: TextView? = null
@@ -63,6 +65,8 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     var mVideoRateChooser: ImageView? = null
     var mFullScreenSwitcher: ImageView? = null
     var isControllerVisible = true
+
+    var isEndReachedFirstTime = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +80,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mVideoView = mFragmentContainer?.findViewById(R.id.texture_video_view) as? SurfaceView
         mFragmentContainer?.setOnTouchListener { view, motionEvent ->
             if (isControllerVisible) {
+                Log.d("ttt", "mFragmentContainer?.setOnTouchListener  " + view.javaClass.canonicalName)
                 showController(!isControllerVisible)
             }
             false
@@ -84,15 +89,20 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
         activity.window.decorView.setOnSystemUiVisibilityChangeListener { visibility: Int ->
             if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
-                showController(true)
+                if (!isEndReachedFirstTime) {
+                    showController(true)
+                }
+                else{
+                    isEndReachedFirstTime = false
+                }
             }
         }
+        setupController(mFragmentContainer)
         return mFragmentContainer
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setupController()
     }
 
     private fun createPlayer() {
@@ -130,7 +140,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
             //            mMediaPlayer?.setRate(1.5f)
             mMediaPlayer?.play()
-
+            isEndReachedFirstTime = false
             mPlayPauseSwitcher?.setClickable(true)
         } catch (e: Exception) {
             Toast.makeText(activity, "Error creating player!", Toast.LENGTH_LONG).show()
@@ -240,15 +250,24 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mVideoView?.invalidate()
     }
 
-    private fun setupController() {
-        view?.let {
-            val container = it.findViewById(R.id.video_view_container) as ViewGroup
-            val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            mController = inflater.inflate(R.layout.player_controller, null) as ViewGroup
+    private fun setupController(inflatingView: View?) {
+        inflatingView?.let {
+            mController = it.findViewById(R.id.player_controller) as TouchDispatchableFrameLayout
+            mController?.setParentTouchEvent {
+                Log.d("ttt", "onTouch")
+                autoHideController()
+            }
 
-            mPlayPauseSwitcher = mController.findViewById(R.id.play_pause_switcher) as? ImageSwitcher
-            mPauseImageView = mController.findViewById(R.id.pause_image_view) as? ImageView
-            mPlayImageView = mController.findViewById(R.id.play_image_view) as? ImageView
+            if (mController == null) throw RuntimeException()
+            mController?.setOnTouchListener { view, motionEvent ->
+                Log.d("ttt", "TRYE YERT")
+                true
+            }
+            autoHideController()
+
+            mPlayPauseSwitcher = mController?.findViewById(R.id.play_pause_switcher) as? ImageSwitcher
+            mPauseImageView = mController?.findViewById(R.id.pause_image_view) as? ImageView
+            mPlayImageView = mController?.findViewById(R.id.play_image_view) as? ImageView
             mPlayPauseSwitcher?.setOnClickListener {
                 val index = mPlayPauseSwitcher?.displayedChild
                 when (index) {
@@ -270,8 +289,8 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 }
             }
 
-            mJumpForwardImageView = mController.findViewById(R.id.jump_forward_button) as? ImageView
-            mJumpBackwardImageView = mController.findViewById(R.id.jump_back_button) as? ImageView
+            mJumpForwardImageView = mController?.findViewById(R.id.jump_forward_button) as? ImageView
+            mJumpBackwardImageView = mController?.findViewById(R.id.jump_back_button) as? ImageView
 
             mJumpForwardImageView?.setOnClickListener {
                 onJumpForward()
@@ -281,8 +300,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 onJumpBackward()
             }
 
-
-            mVideoRateChooser = mController.findViewById(R.id.rate_chooser) as? ImageView
+            mVideoRateChooser = mController?.findViewById(R.id.rate_chooser) as? ImageView
             mVideoRateChooser?.setImageResource(R.drawable.ic_playbackrate_1_light)//fixme get from User preferences
             mVideoRateChooser?.setOnClickListener {
                 showChooseRateMenu(it)
@@ -291,14 +309,31 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             initFullScreenButton(mController)
 
             initSeekBar(mController)
-            mCurrentTime = mController.findViewById(R.id.current_video_time) as? TextView
-            mMaxTime = mController.findViewById(R.id.overall_video_time) as? TextView
-            container.addView(mController)
+            mCurrentTime = mController?.findViewById(R.id.current_video_time) as? TextView
+            mMaxTime = mController?.findViewById(R.id.overall_video_time) as? TextView
+            //            container.addView(mController)
+        }
+    }
+
+    private var mHideRunnable: Runnable? = null
+
+    private fun autoHideController(timeout: Long = TIMEOUT_BEFORE_HIDE) {
+        val view = mController
+        mHideRunnable?.let {
+            view?.removeCallbacks(it)
+        }
+        if (timeout >= 0) {
+            mHideRunnable = Runnable {
+                mController?.let {
+                    showController(false)
+                }
+            }
+            view?.postDelayed(mHideRunnable, timeout)
         }
     }
 
     private fun initFullScreenButton(controller: View?) {
-        mFullScreenSwitcher = mController.findViewById(R.id.full_screen_switcher) as? ImageView
+        mFullScreenSwitcher = mController?.findViewById(R.id.full_screen_switcher) as? ImageView
 
         val display = (activity.getSystemService(Context.WINDOW_SERVICE) as WindowManager).getDefaultDisplay()
         val rotation = display.rotation
@@ -442,8 +477,8 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mPlayImageView = null
     }
 
-    private fun initSeekBar(view: View) {
-        mPlayerSeekBar = view.findViewById(R.id.player_controller_progress) as? AppCompatSeekBar
+    private fun initSeekBar(view: View?) {
+        mPlayerSeekBar = view?.findViewById(R.id.player_controller_progress) as? AppCompatSeekBar
         mPlayerSeekBar?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             var newPosition = -1f
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
@@ -493,6 +528,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     }
                 }
                 MediaPlayer.Event.EndReached -> {
+                    mOwner?.isEndReachedFirstTime = true
                     mOwner?.showController(true)
                     mOwner?.showPlay()
                     Log.d("lala", "MediaPlayerEndReached " + player?.time + "/" + player?.length)
@@ -544,13 +580,20 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     private fun showController(needShow: Boolean) {
         if (needShow) {
-            mController.visibility = View.VISIBLE
+            mController?.visibility = View.VISIBLE
             if (activity?.window?.decorView?.systemUiVisibility != 0) {
                 activity?.window?.decorView?.systemUiVisibility = 0
             }
+            if (!isEndReachedFirstTime) {
+                Log.d("ttt", "show controller default")
+                autoHideController()
+            } else {
+                Log.d("ttt", "show controller -1, end reached")
+                autoHideController(-1)
+            }
             isControllerVisible = true
         } else {
-            mController.visibility = View.GONE
+            mController?.visibility = View.GONE
             hideNavigationBar()
             isControllerVisible = false
         }
