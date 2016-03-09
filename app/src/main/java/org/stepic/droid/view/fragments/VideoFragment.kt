@@ -9,9 +9,11 @@ import android.support.v7.widget.AppCompatSeekBar
 import android.util.Log
 import android.view.*
 import android.widget.*
+import com.squareup.otto.Subscribe
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
+import org.stepic.droid.events.IncomingCallEvent
 import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.util.TimeUtil
 import org.stepic.droid.view.custom.TouchDispatchableFrameLayout
@@ -653,4 +655,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         }
     }
 
+
+    @Subscribe
+    fun onIncomingCall(event : IncomingCallEvent){
+        if (mMediaPlayer?.isPlaying?:false){
+            mMediaPlayer?.pause()
+        }
+    }
 }
