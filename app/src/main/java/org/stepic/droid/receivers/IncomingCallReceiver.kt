@@ -9,6 +9,7 @@ import com.squareup.otto.Bus
 import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.events.IncomingCallEvent
 import javax.inject.Inject
 
 class IncomingCallReceiver() : BroadcastReceiver() {
@@ -37,7 +38,7 @@ class IncomingCallReceiver() : BroadcastReceiver() {
 
         override fun onCallStateChanged(state: Int, incomingNumber: String?) {
             if (state == 1) {
-                mHandler.post { mBus.post(IncomingCallReceiver()) }
+                mHandler.post { mBus.post(IncomingCallEvent()) }
             }
         }
     }
