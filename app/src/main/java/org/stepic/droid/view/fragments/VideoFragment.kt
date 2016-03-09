@@ -80,7 +80,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mVideoView = mFragmentContainer?.findViewById(R.id.texture_video_view) as? SurfaceView
         mFragmentContainer?.setOnTouchListener { view, motionEvent ->
             if (isControllerVisible) {
-                Log.d("ttt", "mFragmentContainer?.setOnTouchListener  " + view.javaClass.canonicalName)
                 showController(!isControllerVisible)
             }
             false
@@ -253,13 +252,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         inflatingView?.let {
             mController = it.findViewById(R.id.player_controller) as TouchDispatchableFrameLayout
             mController?.setParentTouchEvent {
-                Log.d("ttt", "onTouch")
                 autoHideController()
             }
 
             if (mController == null) throw RuntimeException()
             mController?.setOnTouchListener { view, motionEvent ->
-                Log.d("ttt", "TRYE YERT")
                 true
             }
             autoHideController()
@@ -585,10 +582,8 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 activity?.window?.decorView?.systemUiVisibility = 0
             }
             if (!isEndReachedFirstTime) {
-                Log.d("ttt", "show controller default")
                 autoHideController()
             } else {
-                Log.d("ttt", "show controller -1, end reached")
                 autoHideController(-1)
             }
             isControllerVisible = true
