@@ -96,21 +96,10 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mFragmentContainer = inflater?.inflate(R.layout.fragment_video, container, false) as? ViewGroup
         mVideoView = mFragmentContainer?.findViewById(R.id.texture_video_view) as? SurfaceView
         mFragmentContainer?.setOnTouchListener { view, motionEvent ->
-            if (isControllerVisible) {
-                showController(!isControllerVisible)
-            }
+            showController(!isControllerVisible)
             false
         }
         mVideoViewHolder = mVideoView?.holder
-        activity.window.decorView.setOnSystemUiVisibilityChangeListener { visibility: Int ->
-            if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
-                if (!isEndReachedFirstTime) {
-                    showController(true)
-                } else {
-                    isEndReachedFirstTime = false
-                }
-            }
-        }
         setupController(mFragmentContainer)
         bindViewWithPlayer()
         mMediaPlayer?.play()
@@ -641,17 +630,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         }
     }
 
-    private fun hideNavigationBar() {
-        val uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
-        activity?.window?.decorView?.systemUiVisibility = uiOptions
-    }
-
     private fun showController(needShow: Boolean) {
         if (needShow) {
             mController?.visibility = View.VISIBLE
-            if (activity?.window?.decorView?.systemUiVisibility != 0) {
-                activity?.window?.decorView?.systemUiVisibility = 0
-            }
             if (!isEndReachedFirstTime) {
                 autoHideController()
             } else {
@@ -660,7 +641,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             isControllerVisible = true
         } else {
             mController?.visibility = View.GONE
-            hideNavigationBar()
             isControllerVisible = false
         }
     }
