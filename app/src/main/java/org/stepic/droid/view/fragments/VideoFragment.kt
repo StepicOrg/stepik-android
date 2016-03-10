@@ -143,6 +143,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
             options.add("--audio-time-stretch") // time stretching
             options.add("--no-drop-late-frames") //help when user accelerates video
+            options.add("--no-skip-frames")
             options.add("-vvv") // verbosity
             libvlc = LibVLC(options)
             libvlc?.setOnHardwareAccelerationError(this)
