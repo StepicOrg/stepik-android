@@ -206,10 +206,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onStart() {
         super.onStart()
-        if (isOnStartAfterSurfaceDestroyed) {
-            bindViewWithPlayer()
-            isOnStartAfterSurfaceDestroyed = false
-        }
         Log.d("ttt", "onStart")
         bus.register(this)
     }
@@ -217,6 +213,10 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onResume() {
         super.onResume()
+        if (isOnStartAfterSurfaceDestroyed) {
+            bindViewWithPlayer()
+            isOnStartAfterSurfaceDestroyed = false
+        }
         Log.d("ttt", "onResume")
     }
 
