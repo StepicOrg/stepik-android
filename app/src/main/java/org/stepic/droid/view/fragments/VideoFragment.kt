@@ -102,7 +102,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             false
         }
         mVideoViewHolder = mVideoView?.holder
-
         activity.window.decorView.setOnSystemUiVisibilityChangeListener { visibility: Int ->
             if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
                 if (!isEndReachedFirstTime) {
