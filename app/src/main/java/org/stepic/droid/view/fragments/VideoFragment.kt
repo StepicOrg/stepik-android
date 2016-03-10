@@ -79,7 +79,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     var isEndReachedFirstTime = false
 
-    var isOnStartAfterOnCreateView = false
+    var isOnStartAfterSurfaceDestroyed = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,6 +88,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mFilePath = arguments.getString(VIDEO_KEY)
         createPlayer()
         initPhoneStateListener()
+        mMediaPlayer?.play()
     }
 
 
@@ -114,7 +115,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         setupController(mFragmentContainer)
         bindViewWithPlayer()
         mMediaPlayer?.play()
-        isOnStartAfterOnCreateView = true
+        isOnStartAfterSurfaceDestroyed = false
         Log.d("ttt", "onCreateView")
         return mFragmentContainer
     }
@@ -205,10 +206,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onStart() {
         super.onStart()
-        if (isOnStartAfterOnCreateView) {
-            isOnStartAfterOnCreateView = false
-        } else {
+        if (isOnStartAfterSurfaceDestroyed) {
             bindViewWithPlayer()
+            isOnStartAfterSurfaceDestroyed = false
         }
         Log.d("ttt", "onStart")
         bus.register(this)
@@ -218,10 +218,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     override fun onResume() {
         super.onResume()
         Log.d("ttt", "onResume")
-        //        mMediaPlayer?.let {
-        //            if (!it.isPlaying)
-        //                it.play()
-        //        }
     }
 
     override fun onPause() {
@@ -258,6 +254,8 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onSurfacesDestroyed(p0: IVLCVout?) {
         Log.d("ttt", "onSurfacesDestroyed")
+        isOnStartAfterSurfaceDestroyed = true
+
     }
 
     override fun onNewLayout(vout: IVLCVout, width: Int, height: Int, visibleWidth: Int, visibleHeight: Int, sarNum: Int, sarDen: Int) {
