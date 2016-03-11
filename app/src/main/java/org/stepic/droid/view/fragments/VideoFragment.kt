@@ -314,25 +314,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             mPauseImageView = mController?.findViewById(R.id.pause_image_view) as? ImageView
             mPlayImageView = mController?.findViewById(R.id.play_image_view) as? ImageView
             mPlayPauseSwitcher?.setOnClickListener {
-                val index = mPlayPauseSwitcher?.displayedChild
-                when (index) {
-                    INDEX_PLAY_IMAGE -> {
-                        if (!(mMediaPlayer?.isPlaying ?: true)) {
-                            mMediaPlayer?.play()
-                        } else if (mMediaPlayer == null) {
-                            mPlayPauseSwitcher?.setClickable(false)
-                            createPlayer()
-                            bindViewWithPlayer()
-                            mPlayPauseSwitcher?.showNext()
-                        }
-                    }
-                    INDEX_PAUSE_IMAGE -> {
-                        if (mMediaPlayer?.isPlaying ?: false) {
-                            mMediaPlayer?.pause()
-                        }
-
-                    }
-                }
+                onPlayPause()
             }
 
             mMediaPlayer?.let {
@@ -368,6 +350,31 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             mCurrentTime = mController?.findViewById(R.id.current_video_time) as? TextView
             mMaxTime = mController?.findViewById(R.id.overall_video_time) as? TextView
             //            container.addView(mController)
+        }
+    }
+
+    private fun onPlayPause() {
+        val index = mPlayPauseSwitcher?.displayedChild
+        when (index) {
+            INDEX_PLAY_IMAGE -> {
+                if (!(mMediaPlayer?.isPlaying ?: true)) {
+                    mMediaPlayer?.play()
+                } else if (mMediaPlayer == null) {
+                    mPlayPauseSwitcher?.setClickable(false)
+                    createPlayer()
+                    bindViewWithPlayer()
+                    if (!(mMediaPlayer?.isPlaying ?: false)) {
+                        mMediaPlayer?.play()
+                    }
+                    mPlayPauseSwitcher?.showNext()
+                }
+            }
+            INDEX_PAUSE_IMAGE -> {
+                if (mMediaPlayer?.isPlaying ?: false) {
+                    mMediaPlayer?.pause()
+                }
+
+            }
         }
     }
 
@@ -494,6 +501,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             bindViewWithPlayer()
             val length: Long = mMaxTimeInMillis ?: 0L
             val newTime = Math.max(0L, length - JUMP_TIME_MILLIS)
+            if (!(mMediaPlayer?.isPlaying ?: false)) {
+                mMediaPlayer?.play()
+            }
             mMediaPlayer?.time = newTime
         } else {
             val currentTime = mMediaPlayer?.time
