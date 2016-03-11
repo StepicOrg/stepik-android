@@ -300,4 +300,10 @@ public class StepicDefaultModule {
     public IMainHandler provideHandlerForUIThread() {
         return new MainHandlerImpl();
     }
+
+    @Singleton
+    @Provides
+    public AudioFocusHelper provideAudioFocusHelper(Context context, IMainHandler mainHandler, Bus bus) {
+        return new AudioFocusHelper(context, bus, mainHandler);
+    }
 }
