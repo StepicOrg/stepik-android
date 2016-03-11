@@ -19,6 +19,7 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.events.IncomingCallEvent
+import org.stepic.droid.events.audio.AudioFocusLossEvent
 import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.util.TimeUtil
 import org.stepic.droid.view.custom.TouchDispatchableFrameLayout
@@ -88,7 +89,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mFilePath = arguments.getString(VIDEO_KEY)
         createPlayer()
         initPhoneStateListener()
-        mMediaPlayer?.play()
+        playPlayer()
     }
 
 
@@ -102,7 +103,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mVideoViewHolder = mVideoView?.holder
         setupController(mFragmentContainer)
         bindViewWithPlayer()
-        mMediaPlayer?.play()
+        playPlayer()
         isOnStartAfterSurfaceDestroyed = false
         Log.d("ttt", "onCreateView")
         return mFragmentContainer
@@ -160,9 +161,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             mMediaPlayer?.setMedia(m)
 
             mMediaPlayer?.setRate(mUserPreferences.videoPlaybackRate.rateFloat)
-            //            mMediaPlayer?.play()
             isEndReachedFirstTime = false
-            //            mPlayPauseSwitcher?.setClickable(true)
         } catch (e: Exception) {
             Toast.makeText(activity, "Error creating player!", Toast.LENGTH_LONG).show()
         }
@@ -210,9 +209,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onPause() {
         super.onPause()
-        if (mMediaPlayer?.isPlaying ?: false) {
-            mMediaPlayer?.pause()
-        }
+        pausePlayer()
         Log.d("ttt", "onPause")
     }
 
@@ -358,22 +355,17 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         when (index) {
             INDEX_PLAY_IMAGE -> {
                 if (!(mMediaPlayer?.isPlaying ?: true)) {
-                    mMediaPlayer?.play()
+                    playPlayer() //double checking here =(
                 } else if (mMediaPlayer == null) {
                     mPlayPauseSwitcher?.setClickable(false)
                     createPlayer()
                     bindViewWithPlayer()
-                    if (!(mMediaPlayer?.isPlaying ?: false)) {
-                        mMediaPlayer?.play()
-                    }
+                    playPlayer()
                     mPlayPauseSwitcher?.showNext()
                 }
             }
             INDEX_PAUSE_IMAGE -> {
-                if (mMediaPlayer?.isPlaying ?: false) {
-                    mMediaPlayer?.pause()
-                }
-
+                pausePlayer()
             }
         }
     }
@@ -489,9 +481,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             mPlayerSeekBar?.let {
                 it.progress = (it.max.toFloat() * positionByHand).toInt()
             }
-            if (!(mMediaPlayer?.isPlaying ?: true)) {
-                mMediaPlayer?.play()
-            }
+            playPlayer()
         }
     }
 
@@ -501,17 +491,13 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             bindViewWithPlayer()
             val length: Long = mMaxTimeInMillis ?: 0L
             val newTime = Math.max(0L, length - JUMP_TIME_MILLIS)
-            if (!(mMediaPlayer?.isPlaying ?: false)) {
-                mMediaPlayer?.play()
-            }
+            playPlayer()
             mMediaPlayer?.time = newTime
         } else {
             val currentTime = mMediaPlayer?.time
             currentTime?.let {
                 mMediaPlayer?.time = Math.max(0L, currentTime - JUMP_TIME_MILLIS)
-                if (!(mMediaPlayer?.isPlaying ?: true)) {
-                    mMediaPlayer?.play()
-                }
+                playPlayer()
             }
         }
     }
@@ -640,6 +626,22 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         }
     }
 
+    private fun pausePlayer() {
+        if (mMediaPlayer?.isPlaying ?: false) {
+            mMediaPlayer?.pause()
+            val isReleased = mAudioFocusHelper.releaseAudioFocus()
+            Log.d("ttt", "audio focus isReleased " + isReleased)
+        }
+    }
+
+    private fun playPlayer() {
+        if (!(mMediaPlayer?.isPlaying ?: true)) {
+            val isAudioGained = mAudioFocusHelper.requestAudioFocus()
+            mMediaPlayer?.play()
+            Log.d("ttt", "isAudioGained " + isAudioGained)
+        }
+    }
+
     private fun showController(needShow: Boolean) {
         if (needShow) {
             mController?.visibility = View.VISIBLE
@@ -658,9 +660,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     @Subscribe
     fun onIncomingCall(event: IncomingCallEvent) {
-        if (mMediaPlayer?.isPlaying ?: false) {
-            mMediaPlayer?.pause()
-        }
+        pausePlayer()
     }
 
     fun initPhoneStateListener() {
@@ -696,5 +696,10 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 mHandler.post { mBus.post(IncomingCallEvent()) }
             }
         }
+    }
+
+    @Subscribe
+    fun onAudioFocusLoss(event : AudioFocusLossEvent) {
+        pausePlayer()
     }
 }

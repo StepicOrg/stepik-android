@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.squareup.leakcanary.RefWatcher;
 import com.squareup.otto.Bus;
 
+import org.stepic.droid.core.AudioFocusHelper;
 import org.stepic.droid.core.ILessonSessionManager;
 import org.stepic.droid.core.ILocalProgressManager;
 import org.stepic.droid.concurrency.IMainHandler;
@@ -78,6 +79,8 @@ public class FragmentBase extends Fragment {
     @Inject
     public IMainHandler mMainHandler;
 
+    @Inject
+    public AudioFocusHelper mAudioFocusHelper;
 
     public FragmentBase() {
         MainApplication.component(MainApplication.getAppContext()).inject(this);
