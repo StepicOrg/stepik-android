@@ -147,6 +147,7 @@
             android:hardwareAccelerated="true"
             android:name=".view.activities.VideoActivity"
             android:theme="@style/AppTheme.Fullscreen"
+            android:configChanges="orientation|screenSize"
             android:label="@string/video_title"/>
 
 

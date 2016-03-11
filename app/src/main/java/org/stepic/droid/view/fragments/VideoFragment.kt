@@ -21,6 +21,7 @@ import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.events.IncomingCallEvent
 import org.stepic.droid.events.audio.AudioFocusLossEvent
 import org.stepic.droid.preferences.VideoPlaybackRate
+import org.stepic.droid.util.DpPixelsHelper
 import org.stepic.droid.util.TimeUtil
 import org.stepic.droid.view.custom.TouchDispatchableFrameLayout
 import org.videolan.libvlc.IVLCVout
@@ -50,7 +51,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     val myStatePhoneListener = MyStatePhoneListener()
     val tmgr = MainApplication.getAppContext().getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
-
+    var mSurfaceFrame: FrameLayout? = null
     var mFragmentContainer: ViewGroup? = null
     var mVideoView: SurfaceView? = null;
     var mFilePath: String? = null;
@@ -82,6 +83,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     var isOnStartAfterSurfaceDestroyed = false
 
+    private var mVideoVisibleHeight: Int = 0
+    private var mVideoVisibleWidth: Int = 0
+    private var mSarNum: Int = 0
+    private var mSarDen: Int = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,6 +101,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mFragmentContainer = inflater?.inflate(R.layout.fragment_video, container, false) as? ViewGroup
+        mSurfaceFrame = mFragmentContainer?.findViewById(R.id.player_surface_frame) as? FrameLayout
         mVideoView = mFragmentContainer?.findViewById(R.id.texture_video_view) as? SurfaceView
         mFragmentContainer?.setOnTouchListener { view, motionEvent ->
             showController(!isControllerVisible)
@@ -237,6 +244,19 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         Log.d("ttt", "onSurfacesCreated " + mVideoView)
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        Log.d("ttt", "onConfigurationChanged")
+
+        val widthPx = DpPixelsHelper.convertDpToPixel(newConfig?.screenWidthDp?.toFloat() ?: 0f).toInt()
+        val heightPx = DpPixelsHelper.convertDpToPixel(newConfig?.screenHeightDp?.toFloat() ?: 0f).toInt()
+
+        Log.d("ttt", "width = " + newConfig?.screenWidthDp + " height = " + newConfig?.screenHeightDp)
+        Log.d("ttt", "width = " + widthPx + " height = " + heightPx)
+
+        changeSurfaceLayout()
+    }
+
     override fun onSurfacesDestroyed(p0: IVLCVout?) {
         Log.d("ttt", "onSurfacesDestroyed")
         isOnStartAfterSurfaceDestroyed = true
@@ -250,21 +270,22 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         // store video size
         mVideoWidth = width
         mVideoHeight = height
-        setSize(mVideoWidth, mVideoHeight)
+        mVideoVisibleWidth = visibleWidth
+        mVideoVisibleHeight = visibleHeight
+        mSarNum = sarNum
+        mSarDen = sarDen
+        changeSurfaceLayout()
     }
 
-    private fun setSize(width: Int, height: Int) {
-        mVideoWidth = width
-        mVideoHeight = height
-        if (mVideoWidth * mVideoHeight <= 1)
-            return
-
+    private fun changeSurfaceLayout() {
         if (mVideoViewHolder == null || mVideoView == null)
             return
 
         // get screen size
-        var w = activity.getWindow().getDecorView().getWidth()
-        var h = activity.getWindow().getDecorView().getHeight()
+        var w = activity.getWindow().getDecorView().getWidth().toDouble()
+        var h = activity.getWindow().getDecorView().getHeight().toDouble()
+
+        mMediaPlayer?.vlcVout?.setWindowSize(w.toInt(), h.toInt())
 
         // getWindow().getDecorView() doesn't always take orientation into
         // account, we have to correct the values
@@ -275,23 +296,69 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             h = i
         }
 
-        val videoAR = mVideoWidth.toFloat() / mVideoHeight.toFloat()
-        val screenAR = w.toFloat() / h.toFloat()
+        // sanity check
+        if (w * h == 0.toDouble() || mVideoWidth * mVideoHeight == 0) {
+            Log.e("ttt", "Invalid surface size")
+            return
+        }
 
-        if (screenAR < videoAR)
-            h = (w / videoAR).toInt()
+
+        // compute the aspect ratio
+        var ar: Double
+        val vw: Double
+        if (mSarDen == mSarNum) {
+            /* No indication about the density, assuming 1:1 */
+            vw = mVideoVisibleWidth.toDouble()
+            ar = mVideoVisibleWidth.toDouble() / mVideoVisibleHeight.toDouble()
+        } else {
+            /* Use the specified aspect ratio */
+            vw = mVideoVisibleWidth * mSarNum.toDouble() / mSarDen
+            ar = vw / mVideoVisibleHeight
+        }
+        // compute the display aspect ratio
+        val dar = w / h
+
+        //        //optimize view (ORIGINAL)
+        //        h = mVideoVisibleHeight.toDouble()
+        //        w = vw
+
+        ar = 16.0 / 9.0
+        if (dar < ar)
+            h = w / ar
         else
-            w = (h * videoAR).toInt()
+            w = h * ar
 
-        // force surface buffer size
-        mVideoViewHolder?.setFixedSize(mVideoWidth, mVideoHeight)
+        var lp: ViewGroup.LayoutParams = mVideoView!!.getLayoutParams()
+        lp.width = Math.ceil(w.toDouble() * mVideoWidth / mVideoVisibleWidth).toInt()
+        lp.height = Math.ceil(h.toDouble() * mVideoHeight / mVideoVisibleHeight).toInt()
+        mVideoView!!.setLayoutParams(lp)
 
-        // set display size
-        val lp = mVideoView?.getLayoutParams()
-        lp?.width = w
-        lp?.height = h
-        mVideoView?.setLayoutParams(lp)
+
+
+        // set frame size (crop if necessary)
+        lp = mSurfaceFrame!!.getLayoutParams()
+        lp.width = Math.floor(w.toDouble()).toInt()
+        lp.height = Math.floor(h.toDouble()).toInt()
+        mSurfaceFrame!!.setLayoutParams(lp)
+
         mVideoView?.invalidate()
+
+
+
+
+
+
+
+        //        // force surface buffer size
+        //        mMediaPlayer?.vlcVout?.setWindowSize(mVideoWidth, mVideoHeight)
+        //        //        mVideoViewHolder?.setFixedSize(mVideoWidth, mVideoHeight)
+        //
+        //        // set display size
+        //        val lp = mVideoView?.getLayoutParams()
+        //        lp?.width = w
+        //        lp?.height = h
+        //        mVideoView?.setLayoutParams(lp)
+        //        mVideoView?.invalidate()
     }
 
     private fun setupController(inflatingView: View?) {
@@ -699,7 +766,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     }
 
     @Subscribe
-    fun onAudioFocusLoss(event : AudioFocusLossEvent) {
+    fun onAudioFocusLoss(event: AudioFocusLossEvent) {
         pausePlayer()
     }
 }
