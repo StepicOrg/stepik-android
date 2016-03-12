@@ -9,6 +9,7 @@
     <color name="transparent">#00FFFFFF</color>
     <color name="stepic_regular_text">#5E5E5E</color>
     <color name="stepic_weak_text">#A5A5A5</color>
+    <color name="black">#000000</color>
 
     <!-- stepic brand book-->
     <color name="stepic_brand_primary">#66CC66</color>
