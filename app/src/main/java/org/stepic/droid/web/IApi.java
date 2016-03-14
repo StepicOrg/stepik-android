@@ -2,6 +2,7 @@ package org.stepic.droid.web;
 
 import android.content.Context;
 
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.social.ISocialType;
@@ -38,6 +39,7 @@ public interface IApi {
 
     Call<StepResponse> getSteps(long[] steps);
 
+    @Nullable
     Call<Void> dropCourse(long courseId);
 
     Call<ProgressesResponse> getProgresses(String[] progresses);

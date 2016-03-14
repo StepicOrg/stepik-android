@@ -33,7 +33,7 @@ public class ConfigRelease implements IConfig {
     private static final String ARRAY_IDS_PARAM = "ARRAY_IDS_PARAM";
     private static final String REDIRECT_URI = "REDIRECT_URI";
     private static final String ZENDESK_HOST = "ZENDESK_HOST";
-
+    private static final String COURSE_CLOSEABLE = "COURSE_CLOSEABLE";
 
 
     @Inject
@@ -120,6 +120,11 @@ public class ConfigRelease implements IConfig {
         return getString(ZENDESK_HOST);
     }
 
+    @Override
+    public boolean isUserCanDropCourse() {
+        return getBoolean(COURSE_CLOSEABLE, true);
+    }
+
 
     private String getString(String key) {
         return getString(key, null);
@@ -129,6 +134,15 @@ public class ConfigRelease implements IConfig {
         JsonElement element = getObject(key);
         if (element != null) {
             return element.getAsString();
+        } else {
+            return defaultValue;
+        }
+    }
+
+    private boolean getBoolean(String key, boolean defaultValue) {
+        JsonElement element = getObject(key);
+        if (element != null) {
+            return element.getAsBoolean();
         } else {
             return defaultValue;
         }

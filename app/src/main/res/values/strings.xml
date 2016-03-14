@@ -111,5 +111,6 @@
     <string name="feedback_sent">Feedback is sent</string>
     <string name="feedback_fail">Sorry, service is not available. Try later</string>
     <string name="feedback_internet_problem">Sorry, internet is not available. Try again later</string>
+    <string name="cant_drop">You can not drop course</string>
 
 </resources>

@@ -14,4 +14,5 @@ public interface IConfig {
 
     String getRedirectUri();
     String getZendeskHost();
+    boolean isUserCanDropCourse();
 }
