@@ -21,6 +21,7 @@ import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.events.IncomingCallEvent
 import org.stepic.droid.events.audio.AudioFocusLossEvent
 import org.stepic.droid.preferences.VideoPlaybackRate
+import org.stepic.droid.util.AndroidDevices
 import org.stepic.droid.util.DpPixelsHelper
 import org.stepic.droid.util.TimeUtil
 import org.stepic.droid.view.custom.TouchDispatchableFrameLayout
@@ -28,6 +29,7 @@ import org.videolan.libvlc.IVLCVout
 import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.Media
 import org.videolan.libvlc.MediaPlayer
+import org.videolan.libvlc.util.AndroidUtil
 import java.io.File
 import java.util.*
 import javax.inject.Inject
@@ -104,10 +106,10 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mSurfaceFrame = mFragmentContainer?.findViewById(R.id.player_surface_frame) as? FrameLayout
         mVideoView = mFragmentContainer?.findViewById(R.id.texture_video_view) as? SurfaceView
         mFragmentContainer?.setOnTouchListener { view, motionEvent ->
-            if (isControllerVisible) {
+//            if (isControllerVisible) {
                 Log.d("ttt", "mFragmentContainer?.setOnTouchListener  " + view.javaClass.canonicalName)
                 showController(!isControllerVisible)
-            }
+//            }
             false
         }
         mVideoViewHolder = mVideoView?.holder
@@ -297,6 +299,15 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         // get screen size
         var w = activity.getWindow().getDecorView().getWidth().toDouble()
         var h = activity.getWindow().getDecorView().getHeight().toDouble()
+
+        w += 50
+
+        Log.d("ttt", "decorview w " + w)
+        Log.d("ttt", "decorview h " + h)
+        Log.d("ttt", "videowidth " + mVideoWidth)
+        Log.d("ttt", "videoheight " + mVideoHeight)
+        Log.d("ttt", "video visible width " + mVideoVisibleWidth)
+        Log.d("ttt", "video visible height " + mVideoVisibleHeight)
 
         mMediaPlayer?.vlcVout?.setWindowSize(w.toInt(), h.toInt())
 
@@ -722,17 +733,52 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         }
     }
 
-    private fun hideNavigationBar() {
-        val uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
-        activity?.window?.decorView?.systemUiVisibility = uiOptions
+    private fun hideNavigationBar(dim: Boolean = true) {
+        if (!AndroidUtil.isHoneycombOrLater())
+            return
+        var visibility = 0
+        var navbar = 0
+
+        if (AndroidUtil.isJellyBeanOrLater()) {
+            visibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            navbar = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        }
+        if (dim) {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            if (AndroidUtil.isICSOrLater())
+                navbar = navbar or View.SYSTEM_UI_FLAG_LOW_PROFILE
+            else
+                visibility = visibility or View.STATUS_BAR_HIDDEN
+            if (!AndroidDevices.hasCombBar()) {
+                navbar = navbar or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                if (AndroidUtil.isKitKatOrLater())
+                    visibility = visibility or View.SYSTEM_UI_FLAG_IMMERSIVE
+                if (AndroidUtil.isJellyBeanOrLater())
+                    visibility = visibility or View.SYSTEM_UI_FLAG_FULLSCREEN
+            }
+        } else {
+            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            if (AndroidUtil.isICSOrLater())
+                visibility = visibility or View.SYSTEM_UI_FLAG_VISIBLE
+            else
+                visibility = visibility or View.STATUS_BAR_VISIBLE
+        }
+
+        if (AndroidDevices.hasNavBar())
+            visibility = visibility or navbar
+        activity.window.getDecorView().setSystemUiVisibility(visibility)
+
+        //        val uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
+        //        activity?.window?.decorView?.systemUiVisibility = uiOptions
     }
 
     private fun showController(needShow: Boolean) {
         if (needShow) {
             mController?.visibility = View.VISIBLE
-            if (activity?.window?.decorView?.systemUiVisibility != 0) {
-                activity?.window?.decorView?.systemUiVisibility = 0
-            }
+            hideNavigationBar(false)
+//            if (activity?.window?.decorView?.systemUiVisibility != 0) {
+//                activity?.window?.decorView?.systemUiVisibility = 0
+//            }
             if (!isEndReachedFirstTime) {
                 autoHideController()
             } else {

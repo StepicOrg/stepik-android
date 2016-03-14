@@ -7,14 +7,33 @@
     android:layout_height="match_parent"
     android:keepScreenOn="true">
 
-    <include layout="@layout/video_view"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <FrameLayout
+            android:id="@+id/player_surface_frame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:foregroundGravity="clip_horizontal|clip_vertical">
+
+            <SurfaceView
+                android:id="@+id/texture_video_view"
+                android:layout_width="1dp"
+                android:layout_height="1dp">
+
+            </SurfaceView>
+        </FrameLayout>
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/wrapper_video_controller"
-        android:animateLayoutChanges="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom">
+        android:layout_gravity="bottom"
+        android:animateLayoutChanges="true">
 
         <org.stepic.droid.view.custom.TouchDispatchableFrameLayout
             android:id="@+id/player_controller"
