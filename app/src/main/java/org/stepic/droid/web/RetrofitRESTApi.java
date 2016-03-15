@@ -302,6 +302,7 @@ public class RetrofitRESTApi implements IApi {
 
     @Override
     public Call<Void> dropCourse(long courseId) {
+        if (!mConfig.isUserCanDropCourse()) return null;
         YandexMetrica.reportEvent("Api: " + AppConstants.METRICA_DROP_COURSE, JsonHelper.toJson(courseId));
         return mLoggedService.dropCourse(courseId);
     }

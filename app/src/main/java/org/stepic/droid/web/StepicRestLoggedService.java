@@ -32,7 +32,7 @@ public interface StepicRestLoggedService {
 
     //todo:is_featured always true
     @GET("api/courses")
-    Call<CoursesStepicResponse> getFeaturedCourses(@Query("is_featured") boolean is_featured,
+    Call<CoursesStepicResponse> getFeaturedCourses(@Query("is_featured_or_enrolled") boolean is_featured,
                                                    @Query("page") int page);
 
     @GET("api/units")
