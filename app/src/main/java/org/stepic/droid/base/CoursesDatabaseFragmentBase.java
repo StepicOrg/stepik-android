@@ -38,6 +38,7 @@ import org.stepic.droid.web.CoursesStepicResponse;
 
 import java.util.List;
 
+import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
@@ -245,34 +246,39 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             Toast.makeText(getContext(), R.string.you_not_enrolled, Toast.LENGTH_LONG).show();
             return;
         }
-        mShell.getApi().dropCourse(course.getCourseId()).enqueue(new Callback<Void>() {
+        Call<Void> drop = mShell.getApi().dropCourse(course.getCourseId());
+        if (drop != null) {
+           drop.enqueue(new Callback<Void>() {
+                Course localRef = course;
 
-            Course localRef = course;
+                @Override
+                public void onResponse(Response<Void> response, Retrofit retrofit) {
 
-            @Override
-            public void onResponse(Response<Void> response, Retrofit retrofit) {
+                    new Handler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mDatabaseFacade.deleteCourse(localRef, DatabaseFacade.Table.enrolled);
 
-                new Handler().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mDatabaseFacade.deleteCourse(localRef, DatabaseFacade.Table.enrolled);
+                            if (mDatabaseFacade.getCourseById(course.getCourseId(), DatabaseFacade.Table.featured) != null) {
+                                localRef.setEnrollment(0);
+                                mDatabaseFacade.addCourse(localRef, DatabaseFacade.Table.featured);
+                            }
 
-                        if (mDatabaseFacade.getCourseById(course.getCourseId(), DatabaseFacade.Table.featured) != null) {
-                            localRef.setEnrollment(0);
-                            mDatabaseFacade.addCourse(localRef, DatabaseFacade.Table.featured);
                         }
+                    });
 
-                    }
-                });
+                    bus.post(new SuccessDropCourseEvent(getCourseType(), localRef));
+                }
 
-                bus.post(new SuccessDropCourseEvent(getCourseType(), localRef));
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                bus.post(new FailDropCourseEvent(getCourseType(), localRef));
-            }
-        });
+                @Override
+                public void onFailure(Throwable t) {
+                    bus.post(new FailDropCourseEvent(getCourseType(), localRef));
+                }
+            });
+        }
+        else{
+            Toast.makeText(MainApplication.getAppContext(), R.string.cant_drop, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Subscribe
