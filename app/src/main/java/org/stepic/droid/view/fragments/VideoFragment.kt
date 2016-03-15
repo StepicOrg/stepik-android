@@ -129,8 +129,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
 
     private fun bindViewWithPlayer() {
-        mVideoViewHolder?.setKeepScreenOn(true)
-
         val vout = mMediaPlayer?.getVLCVout()
         vout?.setVideoView(mVideoView)
         vout?.addCallback(this)
@@ -152,7 +150,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             options.add("-vvv") // verbosity
             libvlc = LibVLC(options)
             libvlc?.setOnHardwareAccelerationError(this)
-            //            mVideoViewHolder?.setKeepScreenOn(true)
 
             // Create media player
             mMediaPlayer = MediaPlayer(libvlc)
@@ -710,6 +707,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     private fun pausePlayer() {
         if (mMediaPlayer?.isPlaying ?: false) {
+            mFragmentContainer?.keepScreenOn = false
             mMediaPlayer?.pause()
             val isReleased = mAudioFocusHelper.releaseAudioFocus()
             Log.d("ttt", "audio focus isReleased " + isReleased)
@@ -718,6 +716,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     private fun playPlayer() {
         if (!(mMediaPlayer?.isPlaying ?: true)) {
+            mFragmentContainer?.keepScreenOn = true
             val isAudioGained = mAudioFocusHelper.requestAudioFocus()
             mMediaPlayer?.play()
             Log.d("ttt", "isAudioGained " + isAudioGained)
