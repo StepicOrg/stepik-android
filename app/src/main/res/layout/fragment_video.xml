@@ -9,8 +9,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:layout_height="match_parent">
 
         <FrameLayout
             android:id="@+id/player_surface_frame"
@@ -29,6 +28,7 @@
     </FrameLayout>
 
     <FrameLayout
+        android:fitsSystemWindows="true"
         android:id="@+id/wrapper_video_controller"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -106,23 +106,12 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mSurfaceFrame = mFragmentContainer?.findViewById(R.id.player_surface_frame) as? FrameLayout
         mVideoView = mFragmentContainer?.findViewById(R.id.texture_video_view) as? SurfaceView
         mFragmentContainer?.setOnTouchListener { view, motionEvent ->
-//            if (isControllerVisible) {
-                Log.d("ttt", "mFragmentContainer?.setOnTouchListener  " + view.javaClass.canonicalName)
-                showController(!isControllerVisible)
-//            }
+            Log.d("ttt", "mFragmentContainer?.setOnTouchListener  " + view.javaClass.canonicalName)
+            showController(!isControllerVisible)
             false
         }
         mVideoViewHolder = mVideoView?.holder
 
-        activity.window.decorView.setOnSystemUiVisibilityChangeListener { visibility: Int ->
-            if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
-                if (!isEndReachedFirstTime) {
-                    showController(true)
-                } else {
-                    isEndReachedFirstTime = false
-                }
-            }
-        }
         setupController(mFragmentContainer)
         bindViewWithPlayer()
         playPlayer()
@@ -133,7 +122,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        hideNavigationBar(false)
+        //        activity?.requestedOrientation = getScreenOrientation()
+
     }
+
 
     private fun bindViewWithPlayer() {
         mVideoViewHolder?.setKeepScreenOn(true)
@@ -299,8 +292,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         // get screen size
         var w = activity.getWindow().getDecorView().getWidth().toDouble()
         var h = activity.getWindow().getDecorView().getHeight().toDouble()
-
-        w += 50
 
         Log.d("ttt", "decorview w " + w)
         Log.d("ttt", "decorview h " + h)
@@ -734,6 +725,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     }
 
     private fun hideNavigationBar(dim: Boolean = true) {
+        Log.d("ttt", "hideNavigationBar " + dim)
         if (!AndroidUtil.isHoneycombOrLater())
             return
         var visibility = 0
@@ -744,7 +736,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             navbar = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         }
         if (dim) {
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
             if (AndroidUtil.isICSOrLater())
                 navbar = navbar or View.SYSTEM_UI_FLAG_LOW_PROFILE
             else
@@ -757,7 +749,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     visibility = visibility or View.SYSTEM_UI_FLAG_FULLSCREEN
             }
         } else {
-            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
             if (AndroidUtil.isICSOrLater())
                 visibility = visibility or View.SYSTEM_UI_FLAG_VISIBLE
             else
@@ -766,19 +758,20 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
         if (AndroidDevices.hasNavBar())
             visibility = visibility or navbar
-        activity.window.getDecorView().setSystemUiVisibility(visibility)
+        activity?.window?.decorView?.systemUiVisibility = visibility
 
         //        val uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
         //        activity?.window?.decorView?.systemUiVisibility = uiOptions
     }
 
     private fun showController(needShow: Boolean) {
+        Log.d("tttt", "showController(" + needShow + ")" + mController?.visibility)
         if (needShow) {
             mController?.visibility = View.VISIBLE
             hideNavigationBar(false)
-//            if (activity?.window?.decorView?.systemUiVisibility != 0) {
-//                activity?.window?.decorView?.systemUiVisibility = 0
-//            }
+            //            if (activity?.window?.decorView?.systemUiVisibility != 0) {
+            //                activity?.window?.decorView?.systemUiVisibility = 0
+            //            }
             if (!isEndReachedFirstTime) {
                 autoHideController()
             } else {
@@ -787,7 +780,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             isControllerVisible = true
         } else {
             mController?.visibility = View.GONE
-            hideNavigationBar()
+            hideNavigationBar(true)
             isControllerVisible = false
         }
     }
