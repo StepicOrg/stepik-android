@@ -96,7 +96,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mFilePath = arguments.getString(VIDEO_KEY)
         createPlayer()
         initPhoneStateListener()
-        playPlayer()
+//        playPlayer()
     }
 
 
@@ -136,6 +136,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mMediaPlayer?.setEventListener(mPlayerListener)
 
         mPlayPauseSwitcher?.setClickable(true)
+
+        //it is SO DIRTY HACK:
+        playPlayer()
     }
 
     private fun createPlayer() {
@@ -293,12 +296,12 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         var w = activity.getWindow().getDecorView().getWidth().toDouble()
         var h = activity.getWindow().getDecorView().getHeight().toDouble()
 
-        Log.d("ttt", "decorview w " + w)
-        Log.d("ttt", "decorview h " + h)
-        Log.d("ttt", "videowidth " + mVideoWidth)
-        Log.d("ttt", "videoheight " + mVideoHeight)
-        Log.d("ttt", "video visible width " + mVideoVisibleWidth)
-        Log.d("ttt", "video visible height " + mVideoVisibleHeight)
+//        Log.d("ttt", "decorview w " + w)
+//        Log.d("ttt", "decorview h " + h)
+//        Log.d("ttt", "videowidth " + mVideoWidth)
+//        Log.d("ttt", "videoheight " + mVideoHeight)
+//        Log.d("ttt", "video visible width " + mVideoVisibleWidth)
+//        Log.d("ttt", "video visible height " + mVideoVisibleHeight)
 
         mMediaPlayer?.vlcVout?.setWindowSize(w.toInt(), h.toInt())
 
