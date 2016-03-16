@@ -57,7 +57,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     var mFragmentContainer: ViewGroup? = null
     var mVideoView: SurfaceView? = null;
     var mFilePath: String? = null;
-    var mVideoViewHolder: SurfaceHolder? = null
     var libvlc: LibVLC? = null
     var mMediaPlayer: MediaPlayer? = null
     var mVideoWidth: Int = 0
@@ -110,7 +109,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             showController(!isControllerVisible)
             false
         }
-        mVideoViewHolder = mVideoView?.holder
 
         setupController(mFragmentContainer)
         bindViewWithPlayer()
@@ -245,8 +243,13 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         Log.d("ttt", "onDestroy")
     }
 
-    override fun onSurfacesCreated(p0: IVLCVout?) {
+    override fun onSurfacesCreated(vlcOut: IVLCVout?) {
         Log.d("ttt", "onSurfacesCreated " + mVideoView)
+//        vlcOut?.attachViews()
+        Log.d("tttt", "onSurfacesCreated attached? " + vlcOut?.areViewsAttached())
+        Log.d("tttt", "onSurfacesCreated playerstate? " + mMediaPlayer?.playerState)
+        val i  =100
+        val j =102
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -262,7 +265,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         changeSurfaceLayout()
     }
 
-    override fun onSurfacesDestroyed(p0: IVLCVout?) {
+    override fun onSurfacesDestroyed(vlcOut: IVLCVout?) {
         Log.d("ttt", "onSurfacesDestroyed")
         isOnStartAfterSurfaceDestroyed = true
 
@@ -283,7 +286,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     }
 
     private fun changeSurfaceLayout() {
-        if (mVideoViewHolder == null || mVideoView == null)
+        if (mVideoView == null)
             return
 
         // get screen size
@@ -583,7 +586,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     private fun destroyVideoView() {
         mVideoView = null
-        mVideoViewHolder = null
     }
 
     private fun destroyController() {
