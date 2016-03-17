@@ -22,7 +22,6 @@ import org.stepic.droid.events.IncomingCallEvent
 import org.stepic.droid.events.audio.AudioFocusLossEvent
 import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.util.AndroidDevices
-import org.stepic.droid.util.DpPixelsHelper
 import org.stepic.droid.util.TimeUtil
 import org.stepic.droid.view.custom.TouchDispatchableFrameLayout
 import org.videolan.libvlc.IVLCVout
@@ -112,17 +111,15 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
         setupController(mFragmentContainer)
         bindViewWithPlayer()
-        playPlayer()
         isOnStartAfterSurfaceDestroyed = false
         Log.d("ttt", "onCreateView")
+        determineFullScreenIcon()
         return mFragmentContainer
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         hideNavigationBar(false)
-        //        activity?.requestedOrientation = getScreenOrientation()
-
     }
 
 
@@ -138,7 +135,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mPlayPauseSwitcher?.setClickable(true)
 
         //it is SO DIRTY HACK:
-        playPlayer()
+//        playPlayer()
     }
 
     private fun createPlayer() {
@@ -259,12 +256,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         super.onConfigurationChanged(newConfig)
         Log.d("ttt", "onConfigurationChanged")
 
-        val widthPx = DpPixelsHelper.convertDpToPixel(newConfig?.screenWidthDp?.toFloat() ?: 0f).toInt()
-        val heightPx = DpPixelsHelper.convertDpToPixel(newConfig?.screenHeightDp?.toFloat() ?: 0f).toInt()
-
-        Log.d("ttt", "width = " + newConfig?.screenWidthDp + " height = " + newConfig?.screenHeightDp)
-        Log.d("ttt", "width = " + widthPx + " height = " + heightPx)
-
         changeSurfaceLayout()
     }
 
@@ -289,6 +280,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     }
 
     private fun changeSurfaceLayout() {
+        determineFullScreenIcon()
         if (mVideoView == null)
             return
 
@@ -474,20 +466,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     private fun initFullScreenButton(controller: View?) {
         mFullScreenSwitcher = mController?.findViewById(R.id.full_screen_switcher) as? ImageView
-
-        val display = (activity.getSystemService(Context.WINDOW_SERVICE) as WindowManager).getDefaultDisplay()
-        val rotation = display.rotation
-        when (rotation) {
-            Surface.ROTATION_0, Surface.ROTATION_180 -> {
-                //portrait
-                mFullScreenSwitcher?.setImageResource(R.drawable.ic_fullscreen_white_24px)
-            }
-
-            Surface.ROTATION_90, Surface.ROTATION_270 -> {
-                //landscape
-                mFullScreenSwitcher?.setImageResource(R.drawable.ic_fullscreen_exit_white_24px)
-            }
-        }
         mFullScreenSwitcher?.setOnClickListener { onClickFullScreen() }
     }
 
@@ -833,5 +811,16 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     @Subscribe
     fun onAudioFocusLoss(event: AudioFocusLossEvent) {
         pausePlayer()
+    }
+
+    fun determineFullScreenIcon(){
+        val isPortrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+        if (isPortrait)
+        {
+            mFullScreenSwitcher?.setImageResource(R.drawable.ic_fullscreen_white_24px)
+        }
+        else{
+            mFullScreenSwitcher?.setImageResource(R.drawable.ic_fullscreen_exit_white_24px)
+        }
     }
 }
