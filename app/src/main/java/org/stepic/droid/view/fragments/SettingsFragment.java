@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 
 public class SettingsFragment extends FragmentBase {
 
-    public  static SettingsFragment newInstance(){
+    public static SettingsFragment newInstance() {
         return new SettingsFragment();
     }
 
@@ -45,6 +45,9 @@ public class SettingsFragment extends FragmentBase {
 
     @Bind(R.id.fragment_settings_wifi_enable_switch)
     BetterSwitch mWifiLoadSwitch;
+
+    @Bind(R.id.fragment_settings_external_player_switch)
+    BetterSwitch mExternalPlayerSwitch;
 
     @Bind(R.id.video_quality_view)
     View mVideoQuality;
@@ -83,6 +86,15 @@ public class SettingsFragment extends FragmentBase {
         setUpClearCacheButton();
 
         mWifiLoadSwitch.setChecked(!mSharedPreferenceHelper.isMobileInternetAlsoAllowed());//if first time it is true
+
+        mExternalPlayerSwitch.setChecked(mUserPreferences.isOpenInExternal());
+
+        mExternalPlayerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mUserPreferences.setOpenInExternal(isChecked);
+            }
+        });
 
 
         mWifiLoadSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -139,8 +151,7 @@ public class SettingsFragment extends FragmentBase {
                 clearCacheButtonText.append(kb);
             }
             clearCacheButtonText.append(")");
-        }
-        else{
+        } else {
             mClearCacheButton.setEnabled(false);
         }
         mClearCacheButton.setText(clearCacheButtonText.toString());
@@ -161,6 +172,7 @@ public class SettingsFragment extends FragmentBase {
     @Override
     public void onDestroyView() {
         mWifiLoadSwitch.setOnCheckedChangeListener(null);
+        mExternalPlayerSwitch.setOnCheckedChangeListener(null);
         super.onDestroyView();
     }
 
