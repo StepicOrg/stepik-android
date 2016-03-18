@@ -151,7 +151,23 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showVideo(Activity sourceActivity, String videoPath) {
-        if (VLCUtil.hasCompatibleCPU(MainApplication.getAppContext()) && !mUserPreferences.isOpenInExternal()) {
+        YandexMetrica.reportEvent("video is tried to show");
+        boolean isOpenExternal =  mUserPreferences.isOpenInExternal();
+        if (isOpenExternal){
+            YandexMetrica.reportEvent("video open external");
+        }
+        else{
+            YandexMetrica.reportEvent("video open native");
+        }
+
+        boolean isCompatible = VLCUtil.hasCompatibleCPU(MainApplication.getAppContext());
+        if (!isCompatible){
+            YandexMetrica.reportEvent("video is not compatible");
+        }
+
+
+
+        if (isCompatible && !isOpenExternal) {
             Intent intent = new Intent(MainApplication.getAppContext(), VideoActivity.class);
             intent.putExtra(VideoActivity.Companion.getVideoPathKey(), videoPath);
             sourceActivity.startActivity(intent);
