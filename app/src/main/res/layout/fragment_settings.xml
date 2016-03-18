@@ -32,10 +32,21 @@
                 android:textStyle="bold" />
 
             <org.stepic.droid.view.custom.BetterSwitch
-                android:id="@+id/fragment_settings_wifi_enable_switch"
+                android:id="@+id/fragment_settings_external_player_switch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:contentDescription="@+id/fragment_settings_wifi_enable_switch"
+                android:foreground="@drawable/non_radius_foreground"
+                android:padding="16dp"
+                android:text="@string/open_in_external_player"
+                android:textColor="@color/stepic_regular_text"
+                android:textSize="16sp" />
+
+            <org.stepic.droid.view.custom.BetterSwitch
+                android:id="@+id/fragment_settings_wifi_enable_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/wi_fi_setting"
                 android:foreground="@drawable/non_radius_foreground"
                 android:padding="16dp"
                 android:text="@string/wi_fi_setting"

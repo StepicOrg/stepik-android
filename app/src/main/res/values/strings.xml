@@ -120,4 +120,5 @@
     <string name="x1_5" translatable="false">x1.5</string>
     <string name="x2_0" translatable="false">x2.0</string>
     <string name="cant_drop">You can not drop course</string>
+    <string name="open_in_external_player">Open in external player</string>
 </resources>
