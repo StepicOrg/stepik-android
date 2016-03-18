@@ -1,5 +1,6 @@
 package org.stepic.droid.view.fragments
 
+import android.app.KeyguardManager
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
@@ -91,7 +92,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     private var mVideoVisibleWidth: Int = 0
     private var mSarNum: Int = 0
     private var mSarDen: Int = 0
-
+    private var isOnResumeDirectlyAfterOnCreate = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,6 +100,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mFilePath = arguments.getString(VIDEO_KEY)
         //        createPlayer()
         initPhoneStateListener()
+        isOnResumeDirectlyAfterOnCreate = true
         //        playPlayer()
     }
 
@@ -246,29 +248,50 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onResume() {
         super.onResume()
-        if (isOnStartAfterSurfaceDestroyed) {
-            bindViewWithPlayer()
-            isOnStartAfterSurfaceDestroyed = false
-        }
-
+        val km = MainApplication.getAppContext().getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
         createPlayer()
         bindViewWithPlayer()
+        if (isOnResumeDirectlyAfterOnCreate) {
+            isOnResumeDirectlyAfterOnCreate = false
+            mMediaPlayer?.setEventListener(mPlayerListener)
 
-        mMediaPlayer?.setEventListener(preRollListener)
-        mMediaPlayer?.play()
-        mMediaPlayer?.time = mCurrentTimeInMillis
-        mPlayerSeekBar?.let {
-            if (!isSeekBarDragging) {
-                val max = it.max
-                it.progress = (max.toFloat() * mCurrentTimeInMillis).toInt()
+        } else {
+            mMediaPlayer?.setEventListener(preRollListener)
+
+        }
+        if (!km.inKeyguardRestrictedInputMode()) {
+            playPlayer()
+            mMediaPlayer?.time = mCurrentTimeInMillis
+            mPlayerSeekBar?.let {
+                if (!isSeekBarDragging) {
+                    val max = it.max
+                    var positionByHand = 0f
+                    if (mMaxTimeInMillis != null) {
+                        val maxTime = mMaxTimeInMillis ?: 1L
+                        positionByHand = (mCurrentTimeInMillis.toFloat() / maxTime.toFloat()).toFloat()
+
+                    }
+                    if (positionByHand > max) {
+                        positionByHand = 0f
+                    }
+
+                    it.progress = (max.toFloat() * positionByHand).toInt()
+                }
             }
+            Log.d("ttt", "onResume without km")
         }
         Log.d("ttt", "onResume")
     }
 
     override fun onPause() {
         super.onPause()
-        mCurrentTimeInMillis = (mMediaPlayer?.time ?: 0L) - DELTA_TIME
+        val player = mMediaPlayer
+        if (player == null || player.isReleased) {
+            mCurrentTimeInMillis = 0L
+        } else if (player.time >= 0) {
+            Log.d("ttt", "OnPause mplayer time " + mMediaPlayer?.time)
+            mCurrentTimeInMillis = (mMediaPlayer?.time ?: 0L) - DELTA_TIME
+        }
         if (mCurrentTimeInMillis < 0L) mCurrentTimeInMillis = 0L
         pausePlayer()
         mMediaPlayer?.setEventListener(null)
@@ -779,6 +802,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             val player = mOwner?.mMediaPlayer
             when (event.type) {
                 MediaPlayer.Event.Playing -> {
+                    //                    mOwner?.pausePlayer()
                     player?.pause()
                     val YOYOMTHFCKR = player?.setTime (mOwner?.mCurrentTimeInMillis ?: 0L)
                     Log.d("lala", "SET " + YOYOMTHFCKR.toString())
