@@ -42,6 +42,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         private val JUMP_TIME_MILLIS = 10000L
         private val JUMP_MAX_DELTA = 3000L
         private val VIDEO_KEY = "video_key"
+        private val DELTA_TIME = 0L
         fun newInstance(videoUri: String): VideoFragment {
             val args = Bundle()
             args.putString(VIDEO_KEY, videoUri)
@@ -61,8 +62,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     var mMediaPlayer: MediaPlayer? = null
     var mVideoWidth: Int = 0
     var mVideoHeight: Int = 0
-    private var mPlayerListener: MyPlayerListener? = null
+    private val mPlayerListener: MyPlayerListener = MyPlayerListener(this)
     var mMaxTimeInMillis: Long? = null
+    var mCurrentTimeInMillis: Long = 0L
 
     var isSeekBarDragging: Boolean = false
 
@@ -90,14 +92,12 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     private var mSarNum: Int = 0
     private var mSarDen: Int = 0
 
-    private var mMedia: Media? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
         mFilePath = arguments.getString(VIDEO_KEY)
-        createPlayer()
+        //        createPlayer()
         initPhoneStateListener()
         //        playPlayer()
     }
@@ -113,7 +113,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             false
         }
         setupController(mFragmentContainer)
-        bindViewWithPlayer()
+        //        bindViewWithPlayer()
         isOnStartAfterSurfaceDestroyed = false
         Log.d("ttt", "onCreateView")
         determineFullScreenIcon()
@@ -130,8 +130,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         vout?.setVideoView(mVideoView)
         vout?.addCallback(this)
         vout?.attachViews()
-
-        mPlayerListener = MyPlayerListener(this)
+        //
         mMediaPlayer?.setEventListener(mPlayerListener)
 
         mPlayPauseSwitcher?.setClickable(true)
@@ -202,9 +201,10 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 uri = Uri.parse(mFilePath)
             }
 
-            mMedia = Media(libvlc, uri)
+            val media = Media(libvlc, uri)
             //            mMedia?.setHWDecoderEnabled(true, true)
-            mMediaPlayer?.setMedia(mMedia)
+            mMediaPlayer?.setMedia(media)
+            media.release()
 
             mMediaPlayer?.setRate(mUserPreferences.videoPlaybackRate.rateFloat)
             isEndReachedFirstTime = false
@@ -219,7 +219,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         val vout = mMediaPlayer?.getVLCVout()
         vout?.removeCallback(this)
         vout?.detachViews()
-        mPlayerListener = null
         //        mVideoViewHolder = null
         mMediaPlayer?.setEventListener(null)
         libvlc?.release()
@@ -251,12 +250,31 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             bindViewWithPlayer()
             isOnStartAfterSurfaceDestroyed = false
         }
+
+        createPlayer()
+        bindViewWithPlayer()
+
+        mMediaPlayer?.setEventListener(preRollListener)
+        mMediaPlayer?.play()
+        mMediaPlayer?.time = mCurrentTimeInMillis
+        mPlayerSeekBar?.let {
+            if (!isSeekBarDragging) {
+                val max = it.max
+                it.progress = (max.toFloat() * mCurrentTimeInMillis).toInt()
+            }
+        }
         Log.d("ttt", "onResume")
     }
 
     override fun onPause() {
         super.onPause()
+        mCurrentTimeInMillis = (mMediaPlayer?.time ?: 0L) - DELTA_TIME
+        if (mCurrentTimeInMillis < 0L) mCurrentTimeInMillis = 0L
         pausePlayer()
+        mMediaPlayer?.setEventListener(null)
+        releasePlayer()
+
+
         Log.d("ttt", "onPause")
     }
 
@@ -264,6 +282,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         bus.unregister(this)
         super.onStop()
         clearAutoHideQueue()
+        mAudioFocusHelper.releaseAudioFocus()
         Log.d("ttt", "onStop")
     }
 
@@ -275,7 +294,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     }
 
     override fun onDestroy() {
-        releasePlayer()
+        //        releasePlayer()
         removePhoneStateCallbacks()
         super.onDestroy()
         Log.d("ttt", "onDestroy")
@@ -675,6 +694,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         override fun onEvent(event: MediaPlayer.Event) {
             val player = mOwner?.mMediaPlayer
             when (event.type) {
+                MediaPlayer.Event.Opening -> {
+                    Log.d("lala", "MediaPlayer.Event.Opening")
+                }
                 MediaPlayer.Event.Paused -> {
                     mOwner?.showPlay()
                 }
@@ -741,6 +763,34 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             mMediaPlayer?.pause()
             val isReleased = mAudioFocusHelper.releaseAudioFocus()
             Log.d("ttt", "audio focus isReleased " + isReleased)
+        }
+    }
+
+    private val preRollListener = PreRollListener(this)
+
+    private class PreRollListener(owner: VideoFragment) : MediaPlayer.EventListener {
+        private var mOwner: VideoFragment?
+
+        init {
+            mOwner = owner
+        }
+
+        override fun onEvent(event: MediaPlayer.Event) {
+            val player = mOwner?.mMediaPlayer
+            when (event.type) {
+                MediaPlayer.Event.Playing -> {
+                    player?.pause()
+                    val YOYOMTHFCKR = player?.setTime (mOwner?.mCurrentTimeInMillis ?: 0L)
+                    Log.d("lala", "SET " + YOYOMTHFCKR.toString())
+                    player?.setEventListener (mOwner?.mPlayerListener)
+                    player?.length?.let {
+                        mOwner?.mSlashTime?.visibility = View.VISIBLE
+                        mOwner?.mMaxTimeInMillis = it
+                        mOwner?.mMaxTime?.text = TimeUtil.getFormattedVideoTime(it)
+                        mOwner?.mCurrentTime?.text = TimeUtil.getFormattedVideoTime(mOwner?.mCurrentTimeInMillis ?: 0L)
+                    }
+                }
+            }
         }
     }
 
