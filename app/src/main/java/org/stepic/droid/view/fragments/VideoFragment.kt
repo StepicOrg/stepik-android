@@ -95,7 +95,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mFilePath = arguments.getString(VIDEO_KEY)
         createPlayer()
         initPhoneStateListener()
-//        playPlayer()
+        //        playPlayer()
     }
 
 
@@ -135,7 +135,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mPlayPauseSwitcher?.setClickable(true)
 
         //it is SO DIRTY HACK:
-//        playPlayer()
+        //        playPlayer()
     }
 
     private fun createPlayer() {
@@ -205,6 +205,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         super.onStart()
         Log.d("ttt", "onStart")
         bus.register(this)
+        showController(true)
     }
 
 
@@ -226,6 +227,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     override fun onStop() {
         bus.unregister(this)
         super.onStop()
+        clearAutoHideQueue()
         Log.d("ttt", "onStop")
     }
 
@@ -245,11 +247,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onSurfacesCreated(vlcOut: IVLCVout?) {
         Log.d("ttt", "onSurfacesCreated " + mVideoView)
-//        vlcOut?.attachViews()
+        //        vlcOut?.attachViews()
         Log.d("tttt", "onSurfacesCreated attached? " + vlcOut?.areViewsAttached())
         Log.d("tttt", "onSurfacesCreated playerstate? " + mMediaPlayer?.playerState)
-        val i  =100
-        val j =102
+        val i = 100
+        val j = 102
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -288,12 +290,12 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         var w = activity.getWindow().getDecorView().getWidth().toDouble()
         var h = activity.getWindow().getDecorView().getHeight().toDouble()
 
-//        Log.d("ttt", "decorview w " + w)
-//        Log.d("ttt", "decorview h " + h)
-//        Log.d("ttt", "videowidth " + mVideoWidth)
-//        Log.d("ttt", "videoheight " + mVideoHeight)
-//        Log.d("ttt", "video visible width " + mVideoVisibleWidth)
-//        Log.d("ttt", "video visible height " + mVideoVisibleHeight)
+        //        Log.d("ttt", "decorview w " + w)
+        //        Log.d("ttt", "decorview h " + h)
+        //        Log.d("ttt", "videowidth " + mVideoWidth)
+        //        Log.d("ttt", "videoheight " + mVideoHeight)
+        //        Log.d("ttt", "video visible width " + mVideoVisibleWidth)
+        //        Log.d("ttt", "video visible height " + mVideoVisibleHeight)
 
         mMediaPlayer?.vlcVout?.setWindowSize(w.toInt(), h.toInt())
 
@@ -382,7 +384,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             mController?.setOnTouchListener { view, motionEvent ->
                 true
             }
-            autoHideController()
 
             mPlayPauseSwitcher = mController?.findViewById(R.id.play_pause_switcher) as? ImageSwitcher
             mPauseImageView = mController?.findViewById(R.id.pause_image_view) as? ImageView
@@ -461,6 +462,13 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 }
             }
             view?.postDelayed(mHideRunnable, timeout)
+        }
+    }
+
+    private fun clearAutoHideQueue() {
+        val view = mController
+        mHideRunnable?.let {
+            view?.removeCallbacks(it)
         }
     }
 
@@ -813,13 +821,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         pausePlayer()
     }
 
-    fun determineFullScreenIcon(){
+    fun determineFullScreenIcon() {
         val isPortrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-        if (isPortrait)
-        {
+        if (isPortrait) {
             mFullScreenSwitcher?.setImageResource(R.drawable.ic_fullscreen_white_24px)
-        }
-        else{
+        } else {
             mFullScreenSwitcher?.setImageResource(R.drawable.ic_fullscreen_exit_white_24px)
         }
     }
