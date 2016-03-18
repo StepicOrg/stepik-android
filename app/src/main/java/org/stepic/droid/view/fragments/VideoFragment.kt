@@ -89,6 +89,8 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     private var mSarNum: Int = 0
     private var mSarDen: Int = 0
 
+    private var mMedia: Media? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,7 +111,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             showController(!isControllerVisible)
             false
         }
-
         setupController(mFragmentContainer)
         bindViewWithPlayer()
         isOnStartAfterSurfaceDestroyed = false
@@ -122,7 +123,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         super.onActivityCreated(savedInstanceState)
         hideNavigationBar(false)
     }
-
 
     private fun bindViewWithPlayer() {
         val vout = mMediaPlayer?.getVLCVout()
@@ -168,8 +168,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             } else {
                 uri = Uri.parse(mFilePath)
             }
-            val m = Media(libvlc, uri)
-            mMediaPlayer?.setMedia(m)
+
+            mMedia = Media(libvlc, uri)
+            mMediaPlayer?.setMedia(mMedia)
 
             mMediaPlayer?.setRate(mUserPreferences.videoPlaybackRate.rateFloat)
             isEndReachedFirstTime = false
@@ -378,7 +379,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         inflatingView?.let {
             mController = it.findViewById(R.id.player_controller) as TouchDispatchableFrameLayout
             mController?.setParentTouchEvent {
-                autoHideController()
+                showController(true)
             }
 
             if (mController == null) throw RuntimeException()
@@ -701,6 +702,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     private fun pausePlayer() {
         if (mMediaPlayer?.isPlaying ?: false) {
+            showController(true, isInfiniteShow = true)
             mFragmentContainer?.keepScreenOn = false
             mMediaPlayer?.pause()
             val isReleased = mAudioFocusHelper.releaseAudioFocus()
@@ -757,7 +759,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         //        activity?.window?.decorView?.systemUiVisibility = uiOptions
     }
 
-    private fun showController(needShow: Boolean) {
+    private fun showController(needShow: Boolean, isInfiniteShow: Boolean = false) {
         Log.d("tttt", "showController(" + needShow + ")" + mController?.visibility)
         if (needShow) {
             mController?.visibility = View.VISIBLE
@@ -765,10 +767,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             //            if (activity?.window?.decorView?.systemUiVisibility != 0) {
             //                activity?.window?.decorView?.systemUiVisibility = 0
             //            }
-            if (!isEndReachedFirstTime) {
-                autoHideController()
-            } else {
+
+            if (isEndReachedFirstTime || isInfiniteShow||!(mMediaPlayer?.isPlaying?:false)) {
                 autoHideController(-1)
+            } else {
+                autoHideController()
             }
             isControllerVisible = true
         } else {
