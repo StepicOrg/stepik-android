@@ -95,6 +95,7 @@
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/overall_video_time"
                         android:layout_toStartOf="@+id/overall_video_time"
+                        android:visibility="invisible"
                         android:text="@string/video_time_delimiter"/>
 
                     <TextView

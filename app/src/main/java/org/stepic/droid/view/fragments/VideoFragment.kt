@@ -77,6 +77,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     var mJumpBackwardImageView: ImageView? = null
     var mVideoRateChooser: ImageView? = null
     var mFullScreenSwitcher: ImageView? = null
+    private var mSlashTime: TextView? = null
     var isControllerVisible = true
 
     var isEndReachedFirstTime = false
@@ -422,6 +423,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             initFullScreenButton(mController)
 
             initSeekBar(mController)
+            mSlashTime = mController?.findViewById(R.id.slash_video_time) as? TextView
             mCurrentTime = mController?.findViewById(R.id.current_video_time) as? TextView
             mMaxTime = mController?.findViewById(R.id.overall_video_time) as? TextView
             //            container.addView(mController)
@@ -645,6 +647,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     if (player?.isPlaying ?: false) {
                         mOwner?.showPause()
                         player?.length?.let {
+                            mOwner?.mSlashTime?.visibility = View.VISIBLE
                             mOwner?.mMaxTimeInMillis = it
                             mOwner?.mMaxTime?.text = TimeUtil.getFormattedVideoTime(it)
                         }
