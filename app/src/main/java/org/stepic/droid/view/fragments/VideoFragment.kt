@@ -1,9 +1,13 @@
 package org.stepic.droid.view.fragments
 
 import android.app.KeyguardManager
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.AppCompatSeekBar
@@ -105,6 +109,29 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     }
 
 
+    private val mReceiver: BroadcastReceiver = MyBroadcastReceiver(this)
+
+    private class MyBroadcastReceiver(owner: VideoFragment) : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            when (intent?.getAction()) {
+                AudioManager.ACTION_AUDIO_BECOMING_NOISY ->
+                    mOwner?.pausePlayer()
+            }
+
+
+        }
+
+
+        private var mOwner: VideoFragment?
+
+        init {
+            mOwner = owner
+        }
+
+
+    }
+
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mFragmentContainer = inflater?.inflate(R.layout.fragment_video, container, false) as? ViewGroup
         mSurfaceFrame = mFragmentContainer?.findViewById(R.id.player_surface_frame) as? FrameLayout
@@ -119,6 +146,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         isOnStartAfterSurfaceDestroyed = false
         Log.d("ttt", "onCreateView")
         determineFullScreenIcon()
+
+        var filter = IntentFilter()
+        filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
+        activity.registerReceiver(mReceiver, filter)
+
         return mFragmentContainer
     }
 
@@ -312,6 +344,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     override fun onDestroyView() {
         destroyVideoView()
         destroyController()
+        activity?.unregisterReceiver(mReceiver)
         super.onDestroyView()
         Log.d("ttt", "onDestroyView")
     }
