@@ -21,6 +21,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
@@ -47,12 +48,13 @@ import javax.inject.Singleton;
 public class ScreenManager implements IScreenManager {
     private IConfig mConfig;
     private IMainMenuResolver mMainMenuResolver;
-
+    private UserPreferences mUserPreferences;
 
     @Inject
-    public ScreenManager(IConfig config, IMainMenuResolver mainMenuResolver) {
+    public ScreenManager(IConfig config, IMainMenuResolver mainMenuResolver, UserPreferences userPreferences) {
         this.mConfig = config;
         mMainMenuResolver = mainMenuResolver;
+        mUserPreferences = userPreferences;
     }
 
     @Override
@@ -149,7 +151,7 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showVideo(Activity sourceActivity, String videoPath) {
-        if (VLCUtil.hasCompatibleCPU(MainApplication.getAppContext())) {
+        if (VLCUtil.hasCompatibleCPU(MainApplication.getAppContext()) && !mUserPreferences.isOpenInExternal()) {
             Intent intent = new Intent(MainApplication.getAppContext(), VideoActivity.class);
             intent.putExtra(VideoActivity.Companion.getVideoPathKey(), videoPath);
             sourceActivity.startActivity(intent);

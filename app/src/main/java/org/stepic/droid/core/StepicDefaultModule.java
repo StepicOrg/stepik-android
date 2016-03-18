@@ -78,8 +78,8 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public IScreenManager provideIScreenManager(IConfig config, IMainMenuResolver mainMenuResolver) {
-        return new ScreenManager(config, mainMenuResolver);
+    public IScreenManager provideIScreenManager(IConfig config, IMainMenuResolver mainMenuResolver, UserPreferences userPreferences) {
+        return new ScreenManager(config, mainMenuResolver, userPreferences);
     }
 
     @Provides
