@@ -32,6 +32,7 @@ public class SharedPreferenceHelper {
         mContext = MainApplication.getAppContext();
     }
 
+
     public enum PreferenceType {
         LOGIN("login preference"),
         WIFI("wifi_preference"),
@@ -64,6 +65,14 @@ public class SharedPreferenceHelper {
         }
 
         return VideoPlaybackRate.x1_0;//default
+    }
+
+    public boolean isOpenInExternal() {
+        return getBoolean(PreferenceType.VIDEO_SETTINGS, VIDEO_EXTERNAL_PREF_KEY);
+    }
+
+    public void setOpenInExternal(boolean isOpenInExternal) {
+        put(PreferenceType.VIDEO_SETTINGS, VIDEO_EXTERNAL_PREF_KEY, isOpenInExternal);
     }
 
     public void storeProfile(Profile profile) {
@@ -240,5 +249,6 @@ public class SharedPreferenceHelper {
     private final String VIDEO_QUALITY_KEY = "video_quality_key";
     private final String TEMP_POSITION_KEY = "temp_position_key";
     private final String VIDEO_RATE_PREF_KEY = "video_rate_pref_key";
+    private final String VIDEO_EXTERNAL_PREF_KEY = "video_external_pref_key";
 
 }

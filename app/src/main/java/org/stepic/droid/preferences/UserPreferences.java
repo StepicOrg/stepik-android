@@ -108,4 +108,12 @@ public class UserPreferences {
         mSharedPreferenceHelper.storeVideoPlaybackRate(rate);
     }
 
+    public boolean isOpenInExternal() {
+        return mSharedPreferenceHelper.isOpenInExternal();
+    }
+
+    public void setOpenInExternal(boolean isOpenInExternal) {
+        mSharedPreferenceHelper.setOpenInExternal(isOpenInExternal);
+    }
+
 }
