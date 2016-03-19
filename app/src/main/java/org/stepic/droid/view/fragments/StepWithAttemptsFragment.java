@@ -135,7 +135,6 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
             }
         });
 
-
         startWork();
     }
 
@@ -194,7 +193,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
                     List<Attempt> attemptList = body.getAttempts();
                     if (attemptList == null || attemptList.isEmpty() || !attemptList.get(0).getStatus().equals("active")) {
-                        createNewAttempt(); //fixme it is ok way, but 'active' can be not active
+                        createNewAttempt();
                     } else {
                         YandexMetrica.reportEvent(AppConstants.GET_OLD_ATTEMPT);
                         Attempt attempt = attemptList.get(0);
@@ -281,9 +280,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
                         if (response.isSuccess()) {
                             List<Submission> submissionList = response.body().getSubmissions();
                             if (submissionList == null || submissionList.isEmpty()) {
-//                              bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId, null));//fixme it is normal way, but old attempts are broken
-                                //it should run when we not post our submission, just getting submission of last attempt
-                                createNewAttempt();//fixme make new working attempt, it generates some number extra queries
+                                bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId, null));
                                 return;
                             }
 
