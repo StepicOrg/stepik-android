@@ -35,7 +35,6 @@ import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.view.dialogs.VideoQualityDialog;
 import org.stepic.droid.view.fragments.DownloadsFragment;
-import org.stepic.droid.view.fragments.VideoFragment;
 import org.stepic.droid.web.RetrofitRESTApi;
 
 import javax.inject.Singleton;
@@ -120,7 +119,7 @@ public interface StepicCoreComponent {
 
     void inject(FromDbCoursesTask fromDbCoursesTask);
 
-    void inject(VideoFragment.MyStatePhoneListener receiver);
+    void inject(MyPhoneStateListener receiver);
 
     void inject(RegistrationIntentService service);
 }

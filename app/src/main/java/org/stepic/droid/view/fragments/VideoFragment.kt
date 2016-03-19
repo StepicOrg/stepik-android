@@ -16,13 +16,12 @@ import android.telephony.TelephonyManager
 import android.util.Log
 import android.view.*
 import android.widget.*
-import com.squareup.otto.Bus
 import com.squareup.otto.Subscribe
 import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.core.MyPhoneStateListener
 import org.stepic.droid.events.IncomingCallEvent
 import org.stepic.droid.events.audio.AudioFocusLossEvent
 import org.stepic.droid.preferences.VideoPlaybackRate
@@ -37,7 +36,6 @@ import org.videolan.libvlc.util.AndroidUtil
 import org.videolan.libvlc.util.HWDecoderUtil
 import java.io.File
 import java.util.*
-import javax.inject.Inject
 
 class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout.Callback {
     companion object {
@@ -57,7 +55,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         }
     }
 
-    val myStatePhoneListener = MyStatePhoneListener()
+    val myStatePhoneListener = MyPhoneStateListener()
     val tmgr = MainApplication.getAppContext().getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
     var mSurfaceFrame: FrameLayout? = null
     var mFragmentContainer: ViewGroup? = null
@@ -941,25 +939,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             tmgr?.listen(myStatePhoneListener, PhoneStateListener.LISTEN_NONE)
         } catch(ex: Exception) {
             YandexMetrica.reportError("removePhoneStateCallbacks", ex)
-        }
-    }
-
-    class MyStatePhoneListener : PhoneStateListener() {
-
-        init {
-            MainApplication.component().inject(this)
-        }
-
-        @Inject
-        lateinit var mBus: Bus
-
-        @Inject
-        lateinit var mHandler: IMainHandler
-
-        override fun onCallStateChanged(state: Int, incomingNumber: String?) {
-            if (state == 1) {
-                mHandler.post { mBus.post(IncomingCallEvent()) }
-            }
         }
     }
 
