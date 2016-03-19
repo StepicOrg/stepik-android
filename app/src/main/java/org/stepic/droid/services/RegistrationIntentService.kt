@@ -8,12 +8,16 @@ import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.web.IApi
 import javax.inject.Inject
 
 class RegistrationIntentService : IntentService("StepicGcmReg"){
 
     @Inject
     lateinit var mSharedPreferences : SharedPreferenceHelper
+
+    @Inject
+    lateinit var mApi : IApi
 
     init {
         MainApplication.component().inject(this)
@@ -50,5 +54,6 @@ class RegistrationIntentService : IntentService("StepicGcmReg"){
      */
     private fun sendRegistrationToServer(token: String) {
         // Add custom implementation, as needed.
+//        mApi
     }
 }
