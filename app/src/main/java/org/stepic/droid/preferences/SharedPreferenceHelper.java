@@ -51,6 +51,14 @@ public class SharedPreferenceHelper {
         }
     }
 
+    public void setIsGcmTokenOk(boolean isGcmTokenOk) {
+        put(PreferenceType.LOGIN, GCM_TOKEN_ACTUAL, isGcmTokenOk);
+    }
+
+    public boolean isGcmTokenOk(){
+        return getBoolean(PreferenceType.LOGIN, GCM_TOKEN_ACTUAL);
+    }
+
     public void storeVideoPlaybackRate(@NotNull VideoPlaybackRate videoPlaybackRate) {
         int videoIndex = videoPlaybackRate.getIndex();
         put(PreferenceType.VIDEO_SETTINGS, VIDEO_RATE_PREF_KEY, videoIndex);
@@ -250,5 +258,6 @@ public class SharedPreferenceHelper {
     private final String TEMP_POSITION_KEY = "temp_position_key";
     private final String VIDEO_RATE_PREF_KEY = "video_rate_pref_key";
     private final String VIDEO_EXTERNAL_PREF_KEY = "video_external_pref_key";
+    private final String GCM_TOKEN_ACTUAL = "gcm_token_actual";
 
 }
