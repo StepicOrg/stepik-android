@@ -42,6 +42,25 @@ public class DeviceInfoUtil {
         return activeNetworkInfo != null;
     }
 
+    public static String getShortInfo(Context a){
+        String s = "";
+        try {
+            PackageInfo pInfo = a.getPackageManager().getPackageInfo(
+                    a.getPackageName(), PackageManager.GET_META_DATA);
+            s += "\n APP Package Name: " + a.getPackageName();
+            s += "\n APP Version Name: " + pInfo.versionName;
+            s += "\n APP Version Code: " + pInfo.versionCode;
+            s += "\n";
+        } catch (NameNotFoundException e) {
+        }
+        s += "\n OS Version: " + System.getProperty("os.version") + " ("
+                + android.os.Build.VERSION.INCREMENTAL + ")";
+        s += "\n OS API Level: " + android.os.Build.VERSION.SDK;
+        s += "\n Device: " + android.os.Build.DEVICE;
+        s += "\n Model (and Product): " + android.os.Build.MODEL + " ("
+                + android.os.Build.PRODUCT + ")";
+        return s;
+    }
 
     public static String getInfosAboutDevice(Context a) {
         String s = "";

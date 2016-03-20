@@ -69,4 +69,6 @@ public interface IApi {
     Call<Void> sendFeedback(String email, String rawDescription);
 
     Call<DeviceResponse> getDevices ();
+
+    Call<DeviceResponse> registerDevice(String token);
 }

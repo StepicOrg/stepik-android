@@ -82,4 +82,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/devices")
     Call<DeviceResponse> getDevices (@Query("user") long userId);
+
+    @POST("api/devices")
+    Call<DeviceResponse> registerDevice(@Body DeviceRequest deviceRequest);
 }
