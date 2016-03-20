@@ -79,4 +79,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/email-addresses")
     Call<EmailAddressResponse> getEmailAddresses(@Query("ids[]")long[] ids);
+
+    @GET("api/devices")
+    Call<DeviceResponse> getDevices (@Query("user") long userId);
 }
