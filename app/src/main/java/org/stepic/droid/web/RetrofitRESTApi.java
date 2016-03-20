@@ -367,9 +367,9 @@ public class RetrofitRESTApi implements IApi {
     public Call<AttemptResponse> getExistingAttempts(long stepId) {
         Profile profile = mSharedPreference.getProfile();
         long userId = 0;
-        if (profile == null){
+        if (profile == null) {
             YandexMetrica.reportEvent("profile is null, when attempt");
-        } else{
+        } else {
             userId = profile.getId();
         }
         return mLoggedService.getExistingAttempts(stepId, userId);
@@ -518,6 +518,16 @@ public class RetrofitRESTApi implements IApi {
         String encodedSystem = URLEncoder.encode(aboutSystem);
 //        String lala = URLEncoder.encode("NSQf8mf4Dc0ldKXzVBY3gpMjPkmDIdM+9qDYojJ2cJ+AvH8LeoWEbMzPbpQ08w+I1Z7iErDkjl1ZIe9zbagk2w==");
         return tempService.sendFeedback(encodedSubject, encodedEmail, encodedSystem, encodedDescription);
+    }
+
+    @Override
+    public Call<DeviceResponse> getDevices() {
+        Profile profile = mSharedPreference.getProfile();
+        long userId = 0;
+        if (profile != null) {
+            userId = profile.getId();
+        }
+        return mLoggedService.getDevices(userId);
     }
 
     @Nullable

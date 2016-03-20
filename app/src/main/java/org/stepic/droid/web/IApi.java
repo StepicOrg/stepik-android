@@ -67,4 +67,6 @@ public interface IApi {
     Call<EmailAddressResponse> getEmailAddresses(long[] ids);
 
     Call<Void> sendFeedback(String email, String rawDescription);
+
+    Call<DeviceResponse> getDevices ();
 }
