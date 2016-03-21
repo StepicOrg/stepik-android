@@ -13,7 +13,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 36
-        versionName "1.5"
+        versionName "1.5dev"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // Enabling multidex support.
         multiDexEnabled true
@@ -132,5 +132,3 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
-
-

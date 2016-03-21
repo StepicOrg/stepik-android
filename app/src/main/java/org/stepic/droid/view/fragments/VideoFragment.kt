@@ -70,6 +70,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     private val mPlayerListener: MyPlayerListener = MyPlayerListener(this)
     var mMaxTimeInMillis: Long? = null
     var mCurrentTimeInMillis: Long = 0L
+    var mProgressBar: ProgressBar? = null
 
     var isSeekBarDragging: Boolean = false
 
@@ -97,6 +98,8 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     private var mSarNum: Int = 0
     private var mSarDen: Int = 0
     private var isOnResumeDirectlyAfterOnCreate = true
+
+    private var isLoading: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -128,17 +131,22 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             mOwner = owner
         }
 
-
     }
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mFragmentContainer = inflater?.inflate(R.layout.fragment_video, container, false) as? ViewGroup
-        mSurfaceFrame = mFragmentContainer?.findViewById(R.id.player_surface_frame) as? FrameLayout
-        mVideoView = mFragmentContainer?.findViewById(R.id.texture_video_view) as? SurfaceView
+        mFragmentContainer = inflater?.inflate(R.layout.fragment_video, container, false) as ViewGroup
+
+        mProgressBar = mFragmentContainer?.findViewById(R.id.load_progressbar) as ProgressBar
+        mProgressBar?.visibility = View.VISIBLE
+
+        mSurfaceFrame = mFragmentContainer?.findViewById(R.id.player_surface_frame) as FrameLayout
+        mVideoView = mFragmentContainer?.findViewById(R.id.texture_video_view) as SurfaceView
         mFragmentContainer?.setOnTouchListener { view, motionEvent ->
-            Log.d("ttt", "mFragmentContainer?.setOnTouchListener  " + view.javaClass.canonicalName)
-            showController(!isControllerVisible)
+            if (!isLoading) {
+                Log.d("ttt", "mFragmentContainer?.setOnTouchListener  " + view.javaClass.canonicalName)
+                showController(!isControllerVisible)
+            }
             false
         }
         setupController(mFragmentContainer)
@@ -150,7 +158,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         var filter = IntentFilter()
         filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
         activity.registerReceiver(mReceiver, filter)
-
+        startLoading()
         return mFragmentContainer
     }
 
@@ -274,7 +282,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         super.onStart()
         Log.d("ttt", "onStart")
         bus.register(this)
-        showController(true)
+        if (!isLoading) {
+            showController(true)
+        }
     }
 
 
@@ -401,13 +411,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         var w = activity.getWindow().getDecorView().getWidth().toDouble()
         var h = activity.getWindow().getDecorView().getHeight().toDouble()
 
-        //        Log.d("ttt", "decorview w " + w)
-        //        Log.d("ttt", "decorview h " + h)
-        //        Log.d("ttt", "videowidth " + mVideoWidth)
-        //        Log.d("ttt", "videoheight " + mVideoHeight)
-        //        Log.d("ttt", "video visible width " + mVideoVisibleWidth)
-        //        Log.d("ttt", "video visible height " + mVideoVisibleHeight)
-
         mMediaPlayer?.vlcVout?.setWindowSize(w.toInt(), h.toInt())
 
         // getWindow().getDecorView() doesn't always take orientation into
@@ -466,22 +469,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
         mVideoView?.invalidate()
 
-
-
-
-
-
-
-        //        // force surface buffer size
-        //        mMediaPlayer?.vlcVout?.setWindowSize(mVideoWidth, mVideoHeight)
-        //        //        mVideoViewHolder?.setFixedSize(mVideoWidth, mVideoHeight)
-        //
-        //        // set display size
-        //        val lp = mVideoView?.getLayoutParams()
-        //        lp?.width = w
-        //        lp?.height = h
-        //        mVideoView?.setLayoutParams(lp)
-        //        mVideoView?.invalidate()
     }
 
     private fun setupController(inflatingView: View?) {
@@ -496,9 +483,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 true
             }
 
-            mPlayPauseSwitcher = mController?.findViewById(R.id.play_pause_switcher) as? ImageSwitcher
-            mPauseImageView = mController?.findViewById(R.id.pause_image_view) as? ImageView
-            mPlayImageView = mController?.findViewById(R.id.play_image_view) as? ImageView
+            mPlayPauseSwitcher = mController?.findViewById(R.id.play_pause_switcher) as ImageSwitcher
+            mPauseImageView = mController?.findViewById(R.id.pause_image_view) as ImageView
+            mPlayImageView = mController?.findViewById(R.id.play_image_view) as ImageView
             mPlayPauseSwitcher?.setOnClickListener {
                 onPlayPause()
             }
@@ -513,8 +500,8 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 }
             }
 
-            mJumpForwardImageView = mController?.findViewById(R.id.jump_forward_button) as? ImageView
-            mJumpBackwardImageView = mController?.findViewById(R.id.jump_back_button) as? ImageView
+            mJumpForwardImageView = mController?.findViewById(R.id.jump_forward_button) as ImageView
+            mJumpBackwardImageView = mController?.findViewById(R.id.jump_back_button) as ImageView
 
             mJumpForwardImageView?.setOnClickListener {
                 onJumpForward()
@@ -524,7 +511,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 onJumpBackward()
             }
 
-            mVideoRateChooser = mController?.findViewById(R.id.rate_chooser) as? ImageView
+            mVideoRateChooser = mController?.findViewById(R.id.rate_chooser) as ImageView
             mVideoRateChooser?.setImageDrawable(mUserPreferences.videoPlaybackRate.icon)
             mVideoRateChooser?.setOnClickListener {
                 showChooseRateMenu(it)
@@ -533,9 +520,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             initFullScreenButton(mController)
 
             initSeekBar(mController)
-            mSlashTime = mController?.findViewById(R.id.slash_video_time) as? TextView
-            mCurrentTime = mController?.findViewById(R.id.current_video_time) as? TextView
-            mMaxTime = mController?.findViewById(R.id.overall_video_time) as? TextView
+            mSlashTime = mController?.findViewById(R.id.slash_video_time) as TextView
+            mCurrentTime = mController?.findViewById(R.id.current_video_time) as TextView
+            mMaxTime = mController?.findViewById(R.id.overall_video_time) as TextView
             //            container.addView(mController)
         }
     }
@@ -757,6 +744,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     mOwner?.showPlay()
                 }
                 MediaPlayer.Event.Playing -> {
+                    mOwner?.stopLoading()
                     if (player?.isPlaying ?: false) {
                         mOwner?.showPause()
                         player?.length?.let {
@@ -835,11 +823,10 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             val player = mOwner?.mMediaPlayer
             when (event.type) {
                 MediaPlayer.Event.Playing -> {
-                    //                    mOwner?.pausePlayer()
+                    //mOwner?.pausePlayer()//it is not need, because we do not want change button
                     player?.pause()
-                    val YOYOMTHFCKR = player?.setTime (mOwner?.mCurrentTimeInMillis ?: 0L)
-                    Log.d("lala", "SET " + YOYOMTHFCKR.toString())
                     player?.setEventListener (mOwner?.mPlayerListener)
+                    mOwner?.stopLoading()
                     player?.length?.let {
                         mOwner?.mSlashTime?.visibility = View.VISIBLE
                         mOwner?.mMaxTimeInMillis = it
@@ -905,9 +892,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         if (needShow) {
             mController?.visibility = View.VISIBLE
             hideNavigationBar(false)
-            //            if (activity?.window?.decorView?.systemUiVisibility != 0) {
-            //                activity?.window?.decorView?.systemUiVisibility = 0
-            //            }
 
             if (isEndReachedFirstTime || isInfiniteShow || !(mMediaPlayer?.isPlaying ?: false)) {
                 autoHideController(-1)
@@ -975,5 +959,17 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         } else {
             mFullScreenSwitcher?.setImageResource(R.drawable.ic_fullscreen_exit_white_24px)
         }
+    }
+
+    fun startLoading() {
+        isLoading = true
+        showController(false)
+        mProgressBar?.visibility = View.VISIBLE
+    }
+
+    fun stopLoading() {
+        mProgressBar?.visibility = View.GONE
+        showController(true)
+        isLoading = false
     }
 }
