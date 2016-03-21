@@ -168,21 +168,6 @@
                         android:padding="4dp"
                         tools:src="@drawable/ic_playbackrate_0_5_light"/>
 
-
-                    <ImageView
-                        android:id="@+id/full_screen_switcher"
-                        android:layout_width="@dimen/min_ux_touchable_size"
-                        android:layout_height="@dimen/min_ux_touchable_size"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="end|center"
-                        android:layout_margin="@dimen/control_item_margin"
-                        android:gravity="center"
-                        android:padding="12dp"
-                        tools:src="@drawable/ic_fullscreen_white_24px"
-                        />
-
-
                 </RelativeLayout>
 
 

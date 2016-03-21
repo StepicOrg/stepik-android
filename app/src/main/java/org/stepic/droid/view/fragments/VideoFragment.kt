@@ -85,11 +85,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     var mJumpForwardImageView: ImageView? = null
     var mJumpBackwardImageView: ImageView? = null
     var mVideoRateChooser: ImageView? = null
-    var mFullScreenSwitcher: ImageView? = null
+    //    var mFullScreenSwitcher: ImageView? = null
     private var mSlashTime: TextView? = null
     var isControllerVisible = true
 
-    var isEndReachedFirstTime = false
+    var isEndReached = false
 
     var isOnStartAfterSurfaceDestroyed = false
 
@@ -121,16 +121,13 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     mOwner?.pausePlayer()
             }
 
-
         }
-
 
         private var mOwner: VideoFragment?
 
         init {
             mOwner = owner
         }
-
     }
 
 
@@ -153,7 +150,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         //        bindViewWithPlayer()
         isOnStartAfterSurfaceDestroyed = false
         Log.d("ttt", "onCreateView")
-        determineFullScreenIcon()
+        //        determineFullScreenIcon()
 
         var filter = IntentFilter()
         filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
@@ -165,6 +162,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         hideNavigationBar(false)
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
     }
 
     private fun bindViewWithPlayer() {
@@ -249,7 +247,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             media.release()
 
             mMediaPlayer?.setRate(mUserPreferences.videoPlaybackRate.rateFloat)
-            isEndReachedFirstTime = false
+            isEndReached = false
         } catch (e: Exception) {
             Toast.makeText(activity, "Error creating player!", Toast.LENGTH_LONG).show()
         }
@@ -290,6 +288,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onResume() {
         super.onResume()
+        recreateAndPreloadPlayer()
+    }
+
+    fun recreateAndPreloadPlayer(){
+
         val km = MainApplication.getAppContext().getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
         createPlayer()
         bindViewWithPlayer()
@@ -323,6 +326,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             Log.d("ttt", "onResume without km")
         }
         Log.d("ttt", "onResume")
+
     }
 
     override fun onPause() {
@@ -338,7 +342,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         pausePlayer()
         mMediaPlayer?.setEventListener(null)
         releasePlayer()
-
 
         Log.d("ttt", "onPause")
     }
@@ -376,10 +379,13 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
         Log.d("ttt", "onConfigurationChanged")
+        if (isEndReached) {
+            recreateAndPreloadPlayer()
+        }
 
         changeSurfaceLayout()
+        super.onConfigurationChanged(newConfig)
     }
 
     override fun onSurfacesDestroyed(vlcOut: IVLCVout?) {
@@ -403,7 +409,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     }
 
     private fun changeSurfaceLayout() {
-        determineFullScreenIcon()
+        //        determineFullScreenIcon()
         if (mVideoView == null)
             return
 
@@ -517,7 +523,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 showChooseRateMenu(it)
             }
 
-            initFullScreenButton(mController)
+            //            initFullScreenButton(mController)
 
             initSeekBar(mController)
             mSlashTime = mController?.findViewById(R.id.slash_video_time) as TextView
@@ -571,26 +577,26 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         }
     }
 
-    private fun initFullScreenButton(controller: View?) {
-        mFullScreenSwitcher = mController?.findViewById(R.id.full_screen_switcher) as? ImageView
-        mFullScreenSwitcher?.setOnClickListener { onClickFullScreen() }
-    }
+    //    private fun initFullScreenButton(controller: View?) {
+    //        mFullScreenSwitcher = mController?.findViewById(R.id.full_screen_switcher) as? ImageView
+    //        mFullScreenSwitcher?.setOnClickListener { onClickFullScreen() }
+    //    }
 
-    private fun onClickFullScreen() {
-        val display = (activity.getSystemService(Context.WINDOW_SERVICE) as WindowManager).getDefaultDisplay()
-        val rotation = display.rotation
-        when (rotation) {
-            Surface.ROTATION_0, Surface.ROTATION_180 -> {
-                //portrait
-                activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            }
-
-            Surface.ROTATION_90, Surface.ROTATION_270 -> {
-                //landscape
-                activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            }
-        }
-    }
+    //    private fun onClickFullScreen() {
+    //        val display = (activity.getSystemService(Context.WINDOW_SERVICE) as WindowManager).getDefaultDisplay()
+    //        val rotation = display.rotation
+    //        when (rotation) {
+    //            Surface.ROTATION_0, Surface.ROTATION_180 -> {
+    //                //portrait
+    //                activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+    //            }
+    //
+    //            Surface.ROTATION_90, Surface.ROTATION_270 -> {
+    //                //landscape
+    //                activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+    //            }
+    //        }
+    //    }
 
     private fun showChooseRateMenu(view: View) {
         val popupMenu = PopupMenu(MainApplication.getAppContext(), view)
@@ -682,11 +688,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mJumpBackwardImageView?.setOnClickListener(null)
         mJumpForwardImageView?.setOnClickListener(null)
         mVideoRateChooser?.setOnClickListener(null)
-        mFullScreenSwitcher?.setOnClickListener(null)
+        //        mFullScreenSwitcher?.setOnClickListener(null)
         mFragmentContainer?.setOnClickListener(null)
 
         mFragmentContainer = null
-        mFullScreenSwitcher = null
+        //        mFullScreenSwitcher = null
         mVideoRateChooser = null
         mJumpBackwardImageView = null
         mJumpForwardImageView = null
@@ -755,7 +761,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     }
                 }
                 MediaPlayer.Event.EndReached -> {
-                    mOwner?.isEndReachedFirstTime = true
+                    mOwner?.isEndReached = true
                     mOwner?.showController(true)
                     mOwner?.showPlay()
                     Log.d("lala", "MediaPlayerEndReached " + player?.time + "/" + player?.length)
@@ -893,7 +899,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             mController?.visibility = View.VISIBLE
             hideNavigationBar(false)
 
-            if (isEndReachedFirstTime || isInfiniteShow || !(mMediaPlayer?.isPlaying ?: false)) {
+            if (isEndReached || isInfiniteShow || !(mMediaPlayer?.isPlaying ?: false)) {
                 autoHideController(-1)
             } else {
                 autoHideController()
@@ -952,14 +958,14 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         pausePlayer()
     }
 
-    fun determineFullScreenIcon() {
-        val isPortrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-        if (isPortrait) {
-            mFullScreenSwitcher?.setImageResource(R.drawable.ic_fullscreen_white_24px)
-        } else {
-            mFullScreenSwitcher?.setImageResource(R.drawable.ic_fullscreen_exit_white_24px)
-        }
-    }
+    //    fun determineFullScreenIcon() {
+    //        val isPortrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+    //        if (isPortrait) {
+    //            mFullScreenSwitcher?.setImageResource(R.drawable.ic_fullscreen_white_24px)
+    //        } else {
+    //            mFullScreenSwitcher?.setImageResource(R.drawable.ic_fullscreen_exit_white_24px)
+    //        }
+    //    }
 
     fun startLoading() {
         isLoading = true
