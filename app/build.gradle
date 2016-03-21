@@ -13,7 +13,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 36
-        versionName "1.5dev"
+        versionName "1.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // Enabling multidex support.
         multiDexEnabled true
@@ -25,6 +25,7 @@ android {
                     'proguard-rules.pro'
         }
         debug {
+            versionNameSuffix "DEV"
         }
     }
 
