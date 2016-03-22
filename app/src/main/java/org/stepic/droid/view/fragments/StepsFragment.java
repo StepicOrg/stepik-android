@@ -34,6 +34,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.model.VideoUrl;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.ProgressUtil;
@@ -182,7 +183,31 @@ public class StepsFragment extends FragmentBase {
                     CachedVideo video = mDatabaseFacade.getCachedVideoById(step.getBlock().getVideo().getId());
                     String quality;
                     if (video == null) {
-                        quality = mUserPreferences.getQualityVideo();
+                        String resultQuality = mUserPreferences.getQualityVideo();
+                        try {
+
+                            int weWant = Integer.parseInt( mUserPreferences.getQualityVideo());
+                            final List<VideoUrl> urls = step.getBlock().getVideo().getUrls();
+                            int bestDelta = Integer.MAX_VALUE;
+                            int bestIndex = 0;
+                            for (int i = 0; i<urls.size(); i++){
+                                int current = Integer.parseInt( urls.get(i).getQuality());
+                                int delta = Math.abs(current-weWant);
+                                if (delta    < bestDelta){
+                                    bestDelta = delta;
+                                    bestIndex = i;
+                                }
+
+                            }
+                            resultQuality = urls.get(bestIndex).getQuality();
+                        }
+                        catch (NumberFormatException e)
+                        {
+                            resultQuality = mUserPreferences.getQualityVideo();
+                        }
+
+
+                        quality = resultQuality;
                     } else {
                         quality = video.getQuality();
                     }

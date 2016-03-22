@@ -20,6 +20,7 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
+import org.stepic.droid.model.VideoUrl;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IStoreStateManager;
@@ -159,10 +160,24 @@ public class LoadService extends IntentService {
             }
 
             if (!mDb.isExistDownloadEntityByVideoId(fileId) && !downloadFolderAndFile.exists()) {
-                long downloadId = mSystemDownloadManager.enqueue(request);
+
+                String videoQuality = null;
+                try {
+                    for (VideoUrl urlItem : step.getBlock().getVideo().getUrls()) {
+                        if (urlItem.getUrl().trim().equals(url)) {
+                            videoQuality = urlItem.getQuality();
+                            break;
+                        }
+                    }
+                }
+                catch (NullPointerException npe){
+                    videoQuality = mUserPrefs.getQualityVideo();
+                }
+
+                    long downloadId = mSystemDownloadManager.enqueue(request);
                 String local_thumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
                 String thumbnailsPath = FileUtil.saveImageToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getUserDownloadFolder());
-                final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, mUserPrefs.getQualityVideo());
+                final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, videoQuality);
                 mDb.addDownloadEntity(newEntity);
             }
         } catch (SecurityException ex) {
