@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 
 public class FragmentBase extends Fragment {
 
-    protected String TAG = "StepicFragment";
+//    protected String TAG = "StepicFragment";
 
     @Inject
     public ThreadPoolExecutor mThreadPoolExecutor;
