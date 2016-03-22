@@ -1,14 +1,16 @@
 package org.stepic.droid.view.fragments;
 
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,14 +24,18 @@ import com.squareup.otto.Subscribe;
 import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.steps.ClearAllDownloadWithoutAnimationEvent;
 import org.stepic.droid.events.steps.StepRemovedEvent;
+import org.stepic.droid.events.video.DownloadReportEvent;
 import org.stepic.droid.events.video.FinishDownloadCachedVideosEvent;
 import org.stepic.droid.events.video.VideoCachedOnDiskEvent;
 import org.stepic.droid.model.CachedVideo;
+import org.stepic.droid.model.DownloadEntity;
+import org.stepic.droid.model.DownloadReportItem;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.VideosAndMapToLesson;
@@ -51,6 +57,8 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 
 public class DownloadsFragment extends FragmentBase {
 
@@ -72,6 +80,8 @@ public class DownloadsFragment extends FragmentBase {
     private DownloadsAdapter mDownloadAdapter;
     private List<CachedVideo> mCachedVideoList;
     private Map<Long, Lesson> mStepIdToLesson;
+    private List<DownloadEntity> mNowDownloadingList;
+    private Runnable mLoadingUpdater = null;
 
     private boolean isLoaded;
 
@@ -114,10 +124,95 @@ public class DownloadsFragment extends FragmentBase {
 
 
         bus.register(this);
+        startLoadingStatusUpdater();
+    }
+
+    private void startLoadingStatusUpdater() {
+        if (mLoadingUpdater != null) return;
+        mLoadingUpdater = new Runnable() {
+            @Override
+            public void run() {
+                while (!Thread.currentThread().isInterrupted()) {
+                    Thread t = Thread.currentThread();
+                    Cursor cursor = getCursorForAllDownloads();
+                    if (cursor == null) continue;
+                    try {
+                        cursor.moveToFirst();
+
+                        while (!cursor.isAfterLast()) {
+                            int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                            if (bytes_total > 0) {
+                                int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                                int columnStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+                                int downloadId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
+                                int columnReason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
+                                final DownloadReportItem downloadReportItem = new DownloadReportItem(bytes_downloaded, bytes_total, columnStatus, downloadId, columnReason);
+                                final Boolean isInterrupted = Thread.currentThread().isInterrupted();
+                                mMainHandler.post(new Function0<Unit>() {
+                                    @Override
+                                    public Unit invoke() {
+                                        bus.post(new DownloadReportEvent(downloadReportItem));
+                                        return Unit.INSTANCE;
+                                    }
+                                });
+                            }
+                        }
+                    } finally {
+                        cursor.close();
+                    }
+
+                }
+                Log.d("ppp", "This thread is terminated");
+            }
+
+
+        };
+        mThread = new Thread(mLoadingUpdater);
+        mThread.start();
+    }
+
+    private Thread mThread;
+
+    private void stopLoadingStatusUpdater() {
+        if (mLoadingUpdater != null) {
+            mThread.interrupt();
+            mLoadingUpdater = null;
+        }
+    }
+
+    @Subscribe
+    public void onLoadingUpdate(DownloadReportEvent event) {
+        DownloadReportItem item = event.getDownloadReportItem();
+        Log.d("wakawaka", "receive");
+    }
+
+    private long[] getAllDownloadIds(@NotNull List<DownloadEntity> list) {
+        final List<DownloadEntity> copyOfList = new ArrayList<>(list);
+        long[] result = new long[copyOfList.size()];
+        int i = 0;
+        for (DownloadEntity element : copyOfList) {
+            result[i++] = element.getDownloadId();
+        }
+        return result;
+    }
+
+    //Query the download manager about downloads that have been requested.
+    @Nullable
+    private Cursor getCursorForAllDownloads() {
+        mNowDownloadingList = mDatabaseFacade.getAllDownloadEntities();
+        long[] ids = getAllDownloadIds(mNowDownloadingList);
+        if (ids == null || ids.length == 0) return null;
+
+
+        DownloadManager.Query query = new DownloadManager.Query();
+        query.setFilterById(ids);
+        return mSystemDownloadManager.query(query);
+
     }
 
     @Override
     public void onDestroyView() {
+        stopLoadingStatusUpdater();
         bus.unregister(this);
         mDownloadsView.setAdapter(null);
         mDownloadAdapter = null;
