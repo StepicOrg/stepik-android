@@ -1,5 +1,6 @@
 package org.stepic.droid.base;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -81,6 +82,9 @@ public class FragmentBase extends Fragment {
 
     @Inject
     public AudioFocusHelper mAudioFocusHelper;
+
+    @Inject
+    public DownloadManager mSystemDownloadManager;
 
     public FragmentBase() {
         MainApplication.component(MainApplication.getAppContext()).inject(this);
