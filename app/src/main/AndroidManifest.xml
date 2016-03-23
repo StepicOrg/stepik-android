@@ -144,7 +144,7 @@
         </activity>
 
         <activity
-            android:hardwareAccelerated="true"
+            android:hardwareAccelerated="false"
             android:name=".view.activities.VideoActivity"
             android:theme="@style/AppTheme.VideoPlayer"
             android:configChanges="orientation|screenSize"
