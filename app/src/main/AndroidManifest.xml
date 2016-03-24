@@ -39,18 +39,6 @@
             android:name="org.stepic.droid.view.activities.RegisterActivity"/>
         <activity
             android:name="org.stepic.droid.view.activities.LoginActivity">
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-
-                <data
-                    android:host="stepic.org"
-                    android:pathPattern="/oauth"
-                    android:scheme="stepic"/>
-            </intent-filter>
         </activity>
 
         <activity
