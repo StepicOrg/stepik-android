@@ -272,8 +272,8 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun eventHardwareAccelerationError() {
         //throw UnsupportedOperationException()
-        //fixme: recreate player
         YandexMetrica.reportEvent(TAG + "vlc error hardware")
+        recreateAndPreloadPlayer()
     }
 
     override fun onStart() {
@@ -781,7 +781,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     }
                 }
                 MediaPlayer.Event.TimeChanged -> {
-                    Log.d("lala", "timechanged " + player?.time)
                     player?.time?.let {
                         mOwner?.mCurrentTime?.text =
                                 TimeUtil.getFormattedVideoTime(it)
@@ -854,7 +853,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     private fun hideNavigationBar(dim: Boolean = true) {
         YandexMetrica.reportEvent(TAG + "hideNavigationBar")
-        Log.d("ttt", "hideNavigationBar " + dim)
         if (!AndroidUtil.isHoneycombOrLater())
             return
         var visibility = 0
@@ -892,7 +890,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     private fun showController(needShow: Boolean, isInfiniteShow: Boolean = false) {
         YandexMetrica.reportEvent(TAG + "showController")
-        Log.d("tttt", "showController(" + needShow + ")" + mController?.visibility)
         if (needShow) {
             mController?.visibility = View.VISIBLE
             hideNavigationBar(false)
