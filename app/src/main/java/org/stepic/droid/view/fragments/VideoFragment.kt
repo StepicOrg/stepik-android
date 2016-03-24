@@ -645,16 +645,24 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     private fun onJumpForward() {
         YandexMetrica.reportEvent(TAG + "onJumpForward")
-        val currentTime = mMediaPlayer?.time
+        var currentTime = mMediaPlayer?.time
+        if (currentTime == 0L && mCurrentTimeInMillis > 0L){
+            currentTime = mCurrentTimeInMillis
+        }
         val maxTime = mMaxTimeInMillis
         if (currentTime != null && maxTime != null && maxTime != 0L) {
             val newTime: Long = Math.min(currentTime + JUMP_TIME_MILLIS, maxTime - JUMP_MAX_DELTA)
-            mMediaPlayer?.time = newTime
 
             val positionByHand = (newTime.toFloat() / maxTime.toFloat()).toFloat()
             mPlayerSeekBar?.let {
                 it.progress = (it.max.toFloat() * positionByHand).toInt()
             }
+            mCurrentTimeInMillis = newTime
+
+            pausePlayer()
+            mMediaPlayer?.setEventListener(null)
+            releasePlayer()
+            recreateAndPreloadPlayer()
             playPlayer()
         }
     }
