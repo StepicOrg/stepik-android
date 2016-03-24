@@ -790,6 +790,12 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     player?.length?.let {
                         mOwner?.mCurrentTime?.text = TimeUtil.getFormattedVideoTime(it)
                     }
+                    mOwner?.mPlayerSeekBar?.let {
+                        if (!(mOwner?.isSeekBarDragging ?: false)) {
+                            val max = it.max
+                            it.progress = max
+                        }
+                    }
                     mOwner?.releasePlayer()
                 }
                 MediaPlayer.Event.PositionChanged -> {
