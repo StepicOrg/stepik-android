@@ -191,36 +191,36 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             options.add("--no-skip-frames")
             options.add("-vvv") // verbosity
 
-//            //Magic commands:  HW_ACCELERATION_FULL
-//            val decoder = HWDecoderUtil.getDecoderFromDevice()
-//            if (decoder == HWDecoderUtil.Decoder.NONE) {
-//                options.add("--codec=all")
-//            } else {
-//
-//                /*
-//         * Set higher caching values if using iomx decoding, since some omx
-//         * decoders have a very high latency, and if the preroll data isn't
-//         * enough to make the decoder output a frame, the playback timing gets
-//         * started too soon, and every decoded frame appears to be too late.
-//         * On Nexus One, the decoder latency seems to be 25 input packets
-//         * for 320x170 H.264, a few packets less on higher resolutions.
-//         * On Nexus S, the decoder latency seems to be about 7 packets.
-//         */
-//                options.add("--file-caching=1500")
-//                options.add("--network-caching=1500")
-//
-//                val sb = StringBuilder("--codec=")
-//                if (decoder == HWDecoderUtil.Decoder.MEDIACODEC)
-//                    sb.append(if (AndroidUtil.isLolliPopOrLater()) "mediacodec_ndk" else "mediacodec_jni").append(",")
-//                else if (decoder == HWDecoderUtil.Decoder.OMX)
-//                    sb.append("iomx,")
-//                else
-//                    sb.append(if (AndroidUtil.isLolliPopOrLater()) "mediacodec_ndk" else "mediacodec_jni").append(",iomx,")
-//                sb.append("all")
-//
-//                options.add(sb.toString())
-//            }
-//            //end magic
+            //            //Magic commands:  HW_ACCELERATION_FULL
+            //            val decoder = HWDecoderUtil.getDecoderFromDevice()
+            //            if (decoder == HWDecoderUtil.Decoder.NONE) {
+            //                options.add("--codec=all")
+            //            } else {
+            //
+            //                /*
+            //         * Set higher caching values if using iomx decoding, since some omx
+            //         * decoders have a very high latency, and if the preroll data isn't
+            //         * enough to make the decoder output a frame, the playback timing gets
+            //         * started too soon, and every decoded frame appears to be too late.
+            //         * On Nexus One, the decoder latency seems to be 25 input packets
+            //         * for 320x170 H.264, a few packets less on higher resolutions.
+            //         * On Nexus S, the decoder latency seems to be about 7 packets.
+            //         */
+            //                options.add("--file-caching=1500")
+            //                options.add("--network-caching=1500")
+            //
+            //                val sb = StringBuilder("--codec=")
+            //                if (decoder == HWDecoderUtil.Decoder.MEDIACODEC)
+            //                    sb.append(if (AndroidUtil.isLolliPopOrLater()) "mediacodec_ndk" else "mediacodec_jni").append(",")
+            //                else if (decoder == HWDecoderUtil.Decoder.OMX)
+            //                    sb.append("iomx,")
+            //                else
+            //                    sb.append(if (AndroidUtil.isLolliPopOrLater()) "mediacodec_ndk" else "mediacodec_jni").append(",iomx,")
+            //                sb.append("all")
+            //
+            //                options.add(sb.toString())
+            //            }
+            //            //end magic
 
             libvlc = LibVLC(options)
             libvlc?.setOnHardwareAccelerationError(this)
@@ -285,20 +285,21 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         super.onStart()
         YandexMetrica.reportEvent(TAG + "onStart")
         Log.d("ttt", "onStart")
-        bus.register(this)
-        if (!isLoading) {
-            showController(true)
-        }
     }
 
 
     override fun onResume() {
         super.onResume()
+        Log.d("tttt", "onResume")
+        bus.register(this)
+        if (!isLoading) {
+            showController(true)
+        }
         YandexMetrica.reportEvent(TAG + "onResume")
         recreateAndPreloadPlayer()
     }
 
-    fun recreateAndPreloadPlayer(){
+    fun recreateAndPreloadPlayer() {
         YandexMetrica.reportEvent(TAG + "recreateAndPreloadPlayer")
         val km = MainApplication.getAppContext().getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
         createPlayer()
@@ -312,7 +313,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
         }
         if (!km.inKeyguardRestrictedInputMode()) {
-            playPlayer()
+            mMediaPlayer?.play()
             mMediaPlayer?.time = mCurrentTimeInMillis
             mPlayerSeekBar?.let {
                 if (!isSeekBarDragging) {
@@ -337,6 +338,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onPause() {
         super.onPause()
+        showPlay() // because callback not working here
         val player = mMediaPlayer
         if (player == null || player.isReleased) {
             mCurrentTimeInMillis = 0L
@@ -350,13 +352,13 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         releasePlayer()
         YandexMetrica.reportEvent(TAG + "onPause end")
         Log.d("ttt", "onPause")
+        clearAutoHideQueue()
+        mAudioFocusHelper.releaseAudioFocus()
+        bus.unregister(this)
     }
 
     override fun onStop() {
-        bus.unregister(this)
         super.onStop()
-        clearAutoHideQueue()
-        mAudioFocusHelper.releaseAudioFocus()
         Log.d("ttt", "onStop")
         YandexMetrica.reportEvent(TAG + "onStop end")
     }
@@ -859,6 +861,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                         mOwner?.mMaxTimeInMillis = it
                         mOwner?.mMaxTime?.text = TimeUtil.getFormattedVideoTime(it)
                         mOwner?.mCurrentTime?.text = TimeUtil.getFormattedVideoTime(mOwner?.mCurrentTimeInMillis ?: 0L)
+                        player.time = mOwner?.mCurrentTimeInMillis ?: 0L
                     }
                 }
             }
@@ -957,7 +960,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             YandexMetrica.reportError("removePhoneStateCallbacks", ex)
         }
     }
-
 
 
     @Subscribe
