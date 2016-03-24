@@ -343,7 +343,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         bus.unregister(this)
     }
 
-    fun stopPlayingBeforeRecreating(){
+    fun stopPlayingBeforeRecreating() {
         showPlay() // because callback not working here
         val player = mMediaPlayer
         if (player == null || player.isReleased) {
@@ -646,7 +646,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     private fun onJumpForward() {
         YandexMetrica.reportEvent(TAG + "onJumpForward")
         var currentTime = mMediaPlayer?.time
-        if (currentTime == 0L && mCurrentTimeInMillis > 0L){
+        if (currentTime == 0L && mCurrentTimeInMillis > 0L) {
             currentTime = mCurrentTimeInMillis
         }
         val maxTime = mMaxTimeInMillis
@@ -670,18 +670,28 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     private fun onJumpBackward() {
         YandexMetrica.reportEvent(TAG + "onJumpBackward")
         if (mMediaPlayer == null) {
-            createPlayer()
-            bindViewWithPlayer()
             val length: Long = mMaxTimeInMillis ?: 0L
-            val newTime = Math.max(0L, length - JUMP_TIME_MILLIS)
+            mCurrentTimeInMillis = Math.max(0L, length - JUMP_TIME_MILLIS)
+
+            pausePlayer()
+            mMediaPlayer?.setEventListener(null)
+            releasePlayer()
+            recreateAndPreloadPlayer()
             playPlayer()
-            mMediaPlayer?.time = newTime
+
         } else {
-            val currentTime = mMediaPlayer?.time
-            currentTime?.let {
-                mMediaPlayer?.time = Math.max(0L, currentTime - JUMP_TIME_MILLIS)
-                playPlayer()
+            var currentTime = mMediaPlayer?.time ?: 0L
+            if (currentTime == 0L && mCurrentTimeInMillis > 0L) {
+                currentTime = mCurrentTimeInMillis
             }
+            mCurrentTimeInMillis = Math.max(0L, currentTime.toLong() - JUMP_TIME_MILLIS)
+
+            pausePlayer()
+            mMediaPlayer?.setEventListener(null)
+            releasePlayer()
+            recreateAndPreloadPlayer()
+            playPlayer()
+
         }
     }
 
@@ -729,16 +739,16 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                if (newPosition >= 0 && mMediaPlayer?.isPlaying?:false) {
-                    val seekToTime : Float = mMaxTimeInMillis?.toFloat()?:0f
-                    mCurrentTimeInMillis = (newPosition*seekToTime).toLong()
+                if (newPosition >= 0 && mMediaPlayer?.isPlaying ?: false) {
+                    val seekToTime: Float = mMaxTimeInMillis?.toFloat() ?: 0f
+                    mCurrentTimeInMillis = (newPosition * seekToTime).toLong()
 
                     pausePlayer()
                     mMediaPlayer?.setEventListener(null)
                     releasePlayer()
                     recreateAndPreloadPlayer()
                     playPlayer()
-//                    mMediaPlayer?.position = newPosition
+                    //                    mMediaPlayer?.position = newPosition
                     newPosition = -1f
                 }
                 isSeekBarDragging = false
