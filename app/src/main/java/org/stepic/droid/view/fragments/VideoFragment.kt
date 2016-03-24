@@ -83,7 +83,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     var mJumpForwardImageView: ImageView? = null
     var mJumpBackwardImageView: ImageView? = null
     var mVideoRateChooser: ImageView? = null
-    //    var mFullScreenSwitcher: ImageView? = null
     private var mSlashTime: TextView? = null
     var isControllerVisible = true
 
@@ -147,10 +146,8 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             false
         }
         setupController(mFragmentContainer)
-        //        bindViewWithPlayer()
         isOnStartAfterSurfaceDestroyed = false
         Log.d("ttt", "onCreateView")
-        //        determineFullScreenIcon()
 
         var filter = IntentFilter()
         filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
@@ -177,8 +174,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
         mPlayPauseSwitcher?.setClickable(true)
 
-        //it is SO DIRTY HACK:
-        //        playPlayer()
     }
 
     private fun createPlayer() {
@@ -423,7 +418,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     private fun changeSurfaceLayout() {
         YandexMetrica.reportEvent(TAG + "changeSurfaceLayout")
-        //        determineFullScreenIcon()
         if (mVideoView == null)
             return
 
@@ -538,8 +532,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 showChooseRateMenu(it)
             }
 
-            //            initFullScreenButton(mController)
-
             initSeekBar(mController)
             mSlashTime = mController?.findViewById(R.id.slash_video_time) as TextView
             mCurrentTime = mController?.findViewById(R.id.current_video_time) as TextView
@@ -595,27 +587,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         }
         YandexMetrica.reportEvent(TAG + "clearAutoHideQueue")
     }
-
-    //    private fun initFullScreenButton(controller: View?) {
-    //        mFullScreenSwitcher = mController?.findViewById(R.id.full_screen_switcher) as? ImageView
-    //        mFullScreenSwitcher?.setOnClickListener { onClickFullScreen() }
-    //    }
-
-    //    private fun onClickFullScreen() {
-    //        val display = (activity.getSystemService(Context.WINDOW_SERVICE) as WindowManager).getDefaultDisplay()
-    //        val rotation = display.rotation
-    //        when (rotation) {
-    //            Surface.ROTATION_0, Surface.ROTATION_180 -> {
-    //                //portrait
-    //                activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-    //            }
-    //
-    //            Surface.ROTATION_90, Surface.ROTATION_270 -> {
-    //                //landscape
-    //                activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-    //            }
-    //        }
-    //    }
 
     private fun showChooseRateMenu(view: View) {
         YandexMetrica.reportEvent(TAG + "showChooseRateMenu")
@@ -710,11 +681,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mJumpBackwardImageView?.setOnClickListener(null)
         mJumpForwardImageView?.setOnClickListener(null)
         mVideoRateChooser?.setOnClickListener(null)
-        //        mFullScreenSwitcher?.setOnClickListener(null)
         mFragmentContainer?.setOnClickListener(null)
 
         mFragmentContainer = null
-        //        mFullScreenSwitcher = null
         mVideoRateChooser = null
         mJumpBackwardImageView = null
         mJumpForwardImageView = null
@@ -919,9 +888,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         if (AndroidDevices.hasNavBar())
             visibility = visibility or navbar
         activity?.window?.decorView?.systemUiVisibility = visibility
-
-        //        val uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
-        //        activity?.window?.decorView?.systemUiVisibility = uiOptions
     }
 
     private fun showController(needShow: Boolean, isInfiniteShow: Boolean = false) {
@@ -972,15 +938,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     fun onAudioFocusLoss(event: AudioFocusLossEvent) {
         pausePlayer()
     }
-
-    //    fun determineFullScreenIcon() {
-    //        val isPortrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-    //        if (isPortrait) {
-    //            mFullScreenSwitcher?.setImageResource(R.drawable.ic_fullscreen_white_24px)
-    //        } else {
-    //            mFullScreenSwitcher?.setImageResource(R.drawable.ic_fullscreen_exit_white_24px)
-    //        }
-    //    }
 
     fun startLoading() {
         YandexMetrica.reportEvent(TAG + "startLoading")
