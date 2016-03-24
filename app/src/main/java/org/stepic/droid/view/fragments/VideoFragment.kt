@@ -291,10 +291,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             showController(true)
         }
         YandexMetrica.reportEvent(TAG + "onResume")
-        recreateAndPreloadPlayer()
+        recreateAndPreloadPlayer(isNeedPlayAfterRecreating = false)
     }
 
-    fun recreateAndPreloadPlayer() {
+    fun recreateAndPreloadPlayer(isNeedPlayAfterRecreating: Boolean = true) {
+        needPlay = isNeedPlayAfterRecreating
         YandexMetrica.reportEvent(TAG + "recreateAndPreloadPlayer")
         val km = MainApplication.getAppContext().getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
         createPlayer()
@@ -393,7 +394,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         Log.d("ttt", "onConfigurationChanged")
         YandexMetrica.reportEvent(TAG + "onConfigurationChanged")
         if (isEndReached) {
-            recreateAndPreloadPlayer()
+            recreateAndPreloadPlayer(isNeedPlayAfterRecreating =  false)
         }
 
         changeSurfaceLayout()
@@ -663,7 +664,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             mMediaPlayer?.setEventListener(null)
             releasePlayer()
             recreateAndPreloadPlayer()
-            playPlayer()
         }
     }
 
@@ -677,7 +677,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             mMediaPlayer?.setEventListener(null)
             releasePlayer()
             recreateAndPreloadPlayer()
-            playPlayer()
 
         } else {
             var currentTime = mMediaPlayer?.time ?: 0L
@@ -690,8 +689,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             mMediaPlayer?.setEventListener(null)
             releasePlayer()
             recreateAndPreloadPlayer()
-            playPlayer()
-
         }
     }
 
@@ -747,8 +744,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     mMediaPlayer?.setEventListener(null)
                     releasePlayer()
                     recreateAndPreloadPlayer()
-                    playPlayer()
-                    //                    mMediaPlayer?.position = newPosition
                     newPosition = -1f
                 }
                 isSeekBarDragging = false
@@ -846,6 +841,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     }
 
     private val preRollListener = PreRollListener(this)
+    private var needPlay = false
 
     private class PreRollListener(owner: VideoFragment) : MediaPlayer.EventListener {
         private var mOwner: VideoFragment?
@@ -869,6 +865,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                         mOwner?.mMaxTime?.text = TimeUtil.getFormattedVideoTime(it)
                         mOwner?.mCurrentTime?.text = TimeUtil.getFormattedVideoTime(mOwner?.mCurrentTimeInMillis ?: 0L)
                         player.time = mOwner?.mCurrentTimeInMillis ?: 0L
+                    }
+                    if (mOwner?.needPlay?:false){
+                        mOwner?.mFragmentContainer?.keepScreenOn = true
+                        mOwner?.mAudioFocusHelper?.requestAudioFocus()
+                        player?.play()
                     }
                 }
             }
