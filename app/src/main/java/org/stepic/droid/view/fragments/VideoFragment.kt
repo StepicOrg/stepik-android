@@ -333,6 +333,17 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onPause() {
         super.onPause()
+
+        stopPlayingBeforeRecreating()
+
+        YandexMetrica.reportEvent(TAG + "onPause end")
+        Log.d("ttt", "onPause")
+        clearAutoHideQueue()
+        mAudioFocusHelper.releaseAudioFocus()
+        bus.unregister(this)
+    }
+
+    fun stopPlayingBeforeRecreating(){
         showPlay() // because callback not working here
         val player = mMediaPlayer
         if (player == null || player.isReleased) {
@@ -345,11 +356,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         pausePlayer()
         mMediaPlayer?.setEventListener(null)
         releasePlayer()
-        YandexMetrica.reportEvent(TAG + "onPause end")
-        Log.d("ttt", "onPause")
-        clearAutoHideQueue()
-        mAudioFocusHelper.releaseAudioFocus()
-        bus.unregister(this)
     }
 
     override fun onStop() {
@@ -715,8 +721,16 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                if (newPosition >= 0) {
-                    mMediaPlayer?.position = newPosition
+                if (newPosition >= 0 && mMediaPlayer?.isPlaying?:false) {
+                    val seekToTime : Float = mMaxTimeInMillis?.toFloat()?:0f
+                    mCurrentTimeInMillis = (newPosition*seekToTime).toLong()
+
+                    pausePlayer()
+                    mMediaPlayer?.setEventListener(null)
+                    releasePlayer()
+                    recreateAndPreloadPlayer()
+                    playPlayer()
+//                    mMediaPlayer?.position = newPosition
                     newPosition = -1f
                 }
                 isSeekBarDragging = false
@@ -736,6 +750,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             when (event.type) {
                 MediaPlayer.Event.Opening -> {
                     Log.d("lala", "MediaPlayer.Event.Opening")
+                }
+                MediaPlayer.Event.SeekableChanged -> {
+                    Log.d("lala", "MediaPlayer.Event.SeekableChanged = " + player?.isSeekable)
                 }
                 MediaPlayer.Event.Paused -> {
                     mOwner?.showPlay()
@@ -769,9 +786,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 }
                 MediaPlayer.Event.PositionChanged -> {
                     val currentPos = player?.position
-
                     currentPos?.let {
-                        Log.d("lala", "positionChanged " + it)
                         mOwner?.mPlayerSeekBar?.let {
                             if (!(mOwner?.isSeekBarDragging ?: false)) {
                                 val max = it.max
