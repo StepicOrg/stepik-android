@@ -2,16 +2,14 @@ package org.stepic.droid.core;
 
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.concurrency.FromDbCoursesTask;
-import org.stepic.droid.concurrency.FromDbSectionTask;
-import org.stepic.droid.concurrency.FromDbStepTask;
-import org.stepic.droid.concurrency.FromDbUnitLessonTask;
-import org.stepic.droid.concurrency.ToDbCachedVideo;
-import org.stepic.droid.concurrency.ToDbCoursesTask;
-import org.stepic.droid.concurrency.ToDbSectionTask;
-import org.stepic.droid.concurrency.ToDbStepTask;
-import org.stepic.droid.concurrency.ToDbUnitLessonTask;
-import org.stepic.droid.concurrency.UpdateCourseTask;
+import org.stepic.droid.concurrency.tasks.FromDbCoursesTask;
+import org.stepic.droid.concurrency.tasks.FromDbSectionTask;
+import org.stepic.droid.concurrency.tasks.FromDbStepTask;
+import org.stepic.droid.concurrency.tasks.FromDbUnitLessonTask;
+import org.stepic.droid.concurrency.tasks.ToDbCoursesTask;
+import org.stepic.droid.concurrency.tasks.ToDbSectionTask;
+import org.stepic.droid.concurrency.tasks.ToDbUnitLessonTask;
+import org.stepic.droid.concurrency.tasks.UpdateCourseTask;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.receivers.DownloadClickReceiver;
@@ -36,7 +34,6 @@ import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.view.dialogs.VideoQualityDialog;
 import org.stepic.droid.view.fragments.DownloadsFragment;
-import org.stepic.droid.web.HttpManager;
 import org.stepic.droid.web.RetrofitRESTApi;
 
 import javax.inject.Singleton;
@@ -49,8 +46,6 @@ public interface StepicCoreComponent {
     void inject(FragmentActivityBase someActivity);
 
     void inject(Shell injectAllToShell);
-
-    void inject(HttpManager httpManager);
 
     void inject(MyCoursesAdapter adapter);
 
@@ -77,8 +72,6 @@ public interface StepicCoreComponent {
 
     //All Tasks:
 
-    void inject(FromDbCoursesTask stepicTask);
-
     void inject(ToDbCoursesTask stepicTask);
 
     void inject(UpdateCourseTask stepicTask);
@@ -91,11 +84,7 @@ public interface StepicCoreComponent {
 
     void inject(ToDbUnitLessonTask stepicTask);
 
-    void inject(ToDbStepTask stepicTask);
-
     void inject(FromDbStepTask stepicTask);
-
-    void inject(ToDbCachedVideo stepicTask);
 
     void inject(AllowMobileDataDialogFragment allowMobileDataDialogFragment);
 
@@ -126,4 +115,8 @@ public interface StepicCoreComponent {
     void inject(CancelLoadingService service);
 
     void inject(DownloadClickReceiver downloadClickReceiver);
+
+    void inject(FromDbCoursesTask fromDbCoursesTask);
+
+    void inject(MyStatePhoneListener listener);
 }

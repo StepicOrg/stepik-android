@@ -15,8 +15,8 @@ import com.squareup.otto.Subscribe;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
-import org.stepic.droid.concurrency.FromDbCoursesTask;
-import org.stepic.droid.concurrency.ToDbCoursesTask;
+import org.stepic.droid.concurrency.tasks.FromDbCoursesTask;
+import org.stepic.droid.concurrency.tasks.ToDbCoursesTask;
 import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
 import org.stepic.droid.events.courses.FailDropCourseEvent;
 import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
@@ -44,9 +44,8 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase {
-    protected FromDbCoursesTask mDbGetCoursesTask;
     protected ToDbCoursesTask mDbSaveCoursesTask;
-
+    protected FromDbCoursesTask mDbFromCoursesTask;
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -82,19 +81,19 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     private void saveDataToCache(List<Course> courses) {
         mDbSaveCoursesTask = new ToDbCoursesTask(courses, getCourseType(), mCurrentPage);
-        mDbSaveCoursesTask.execute();
+        mDbSaveCoursesTask.executeOnExecutor(mThreadPoolExecutor);
     }
 
 
     public void getAndShowDataFromCache() {
-        mDbGetCoursesTask = new FromDbCoursesTask(getCourseType()) {
+        mDbFromCoursesTask = new FromDbCoursesTask(getCourseType()){
             @Override
             protected void onSuccess(List<Course> courses) {
                 super.onSuccess(courses);
                 bus.post(new GettingCoursesFromDbSuccessEvent(getCourseType(), courses));
             }
         };
-        mDbGetCoursesTask.execute();
+        mDbFromCoursesTask.executeOnExecutor(mThreadPoolExecutor);
     }
 
     @Subscribe

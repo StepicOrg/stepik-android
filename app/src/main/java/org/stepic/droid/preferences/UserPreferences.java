@@ -100,4 +100,20 @@ public class UserPreferences {
         mSharedPreferenceHelper.storeVideoQuality(videoQuality);
     }
 
+    public VideoPlaybackRate getVideoPlaybackRate() {
+        return mSharedPreferenceHelper.getVideoPlaybackRate();
+    }
+
+    public void setVideoPlaybackRate(VideoPlaybackRate rate) {
+        mSharedPreferenceHelper.storeVideoPlaybackRate(rate);
+    }
+
+    public boolean isOpenInExternal() {
+        return mSharedPreferenceHelper.isOpenInExternal();
+    }
+
+    public void setOpenInExternal(boolean isOpenInExternal) {
+        mSharedPreferenceHelper.setOpenInExternal(isOpenInExternal);
+    }
+
 }

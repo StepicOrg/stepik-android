@@ -1,5 +1,6 @@
 package org.stepic.droid.base;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,8 +11,10 @@ import android.view.inputmethod.InputMethodManager;
 import com.squareup.leakcanary.RefWatcher;
 import com.squareup.otto.Bus;
 
+import org.stepic.droid.core.AudioFocusHelper;
 import org.stepic.droid.core.ILessonSessionManager;
 import org.stepic.droid.core.ILocalProgressManager;
+import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
@@ -22,13 +25,18 @@ import org.stepic.droid.util.resolvers.ISearchResolver;
 import org.stepic.droid.util.resolvers.IStepResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 
+import java.util.concurrent.ThreadPoolExecutor;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
 public class FragmentBase extends Fragment {
 
-    protected String TAG = "StepicFragment";
+//    protected String TAG = "StepicFragment";
+
+    @Inject
+    public ThreadPoolExecutor mThreadPoolExecutor;
 
     @Inject
     public ILessonSessionManager mLessonManager;
@@ -69,6 +77,14 @@ public class FragmentBase extends Fragment {
     @Inject
     public IStepResolver mStepResolver;
 
+    @Inject
+    public IMainHandler mMainHandler;
+
+    @Inject
+    public AudioFocusHelper mAudioFocusHelper;
+
+    @Inject
+    public DownloadManager mSystemDownloadManager;
 
     public FragmentBase() {
         MainApplication.component(MainApplication.getAppContext()).inject(this);

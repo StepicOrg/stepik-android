@@ -118,7 +118,6 @@
                         android:gravity="center"
                         android:maxWidth="@dimen/min_max_width_for_tablets"
                         android:text="@string/by_creating_you_agree"
-                        android:textColor="@color/grey_redirected_txt"
                         android:textSize="11sp"
                         android:visibility="gone" />
 
@@ -130,7 +129,7 @@
                         android:gravity="center"
                         android:linksClickable="true"
                         android:text="@string/terms"
-                        android:textColor="@color/cyan_text_navigation"
+                        android:textColor="?attr/colorAccent"
                         android:textSize="11sp"
                         android:visibility="gone" />
 

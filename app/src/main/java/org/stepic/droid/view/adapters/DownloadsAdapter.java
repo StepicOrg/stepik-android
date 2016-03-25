@@ -1,7 +1,6 @@
 package org.stepic.droid.view.adapters;
 
-import android.content.Context;
-import android.content.Intent;
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -11,13 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
@@ -43,7 +41,7 @@ import butterknife.ButterKnife;
 public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.DownloadsViewHolder> implements StepicOnClickItemListener, OnClickLoadListener {
 
     private List<CachedVideo> mCachedVideoList;
-    private Context mContext;
+    private Activity sourceActivity;
     private Map<Long, Lesson> mStepIdToLessonMap;
 
     @Inject
@@ -51,19 +49,21 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
 
     @Inject
     DatabaseFacade mDatabaseFacade;
+    @Inject
+    IScreenManager mScreenManager;
     private DownloadsFragment downloadsFragment;
 
-    public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Context context, DownloadsFragment downloadsFragment) {
+    public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Activity context, DownloadsFragment downloadsFragment) {
         this.downloadsFragment = downloadsFragment;
         MainApplication.component().inject(this);
         mCachedVideoList = cachedVideos;
-        mContext = context;
+        sourceActivity = context;
         mStepIdToLessonMap = videoIdToStepMap;
     }
 
     @Override
     public DownloadsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.cached_video_item, null);
+        View v = LayoutInflater.from(sourceActivity).inflate(R.layout.cached_video_item, null);
         return new DownloadsViewHolder(v, this, this);
     }
 
@@ -130,16 +130,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
     public void onClick(int position) {
         if (position >= 0 && position < mCachedVideoList.size()) {
             CachedVideo video = mCachedVideoList.get(position);
-            Uri videoUri = Uri.parse(video.getUrl());
-
-            Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
-            intent.setDataAndType(videoUri, "video/*");
-            try {
-                mContext.startActivity(intent);
-            } catch (Exception ex) {
-                YandexMetrica.reportError("NotPlayer", ex);
-                Toast.makeText(mContext, R.string.not_video_player_error, Toast.LENGTH_LONG).show();
-            }
+            mScreenManager.showVideo(sourceActivity, video.getUrl());
         }
     }
 

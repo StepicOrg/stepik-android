@@ -32,11 +32,13 @@ public class SharedPreferenceHelper {
         mContext = MainApplication.getAppContext();
     }
 
+
     public enum PreferenceType {
         LOGIN("login preference"),
         WIFI("wifi_preference"),
         VIDEO_QUALITY("video_quality_preference"),
-        TEMP("temporary");
+        TEMP("temporary"),
+        VIDEO_SETTINGS("video_settings");
 
         private String description;
 
@@ -47,6 +49,30 @@ public class SharedPreferenceHelper {
         private String getStoreName() {
             return description;
         }
+    }
+
+    public void storeVideoPlaybackRate(@NotNull VideoPlaybackRate videoPlaybackRate) {
+        int videoIndex = videoPlaybackRate.getIndex();
+        put(PreferenceType.VIDEO_SETTINGS, VIDEO_RATE_PREF_KEY, videoIndex);
+    }
+
+    @NotNull
+    public VideoPlaybackRate getVideoPlaybackRate() {
+        int index = getInt(PreferenceType.VIDEO_SETTINGS, VIDEO_RATE_PREF_KEY);
+
+        for (VideoPlaybackRate item : VideoPlaybackRate.values()) {
+            if (index == item.getIndex()) return item;
+        }
+
+        return VideoPlaybackRate.x1_0;//default
+    }
+
+    public boolean isOpenInExternal() {
+        return getBoolean(PreferenceType.VIDEO_SETTINGS, VIDEO_EXTERNAL_PREF_KEY);
+    }
+
+    public void setOpenInExternal(boolean isOpenInExternal) {
+        put(PreferenceType.VIDEO_SETTINGS, VIDEO_EXTERNAL_PREF_KEY, isOpenInExternal);
     }
 
     public void storeProfile(Profile profile) {
@@ -222,5 +248,7 @@ public class SharedPreferenceHelper {
     private final String IS_SOCIAL = "is_social_key";
     private final String VIDEO_QUALITY_KEY = "video_quality_key";
     private final String TEMP_POSITION_KEY = "temp_position_key";
+    private final String VIDEO_RATE_PREF_KEY = "video_rate_pref_key";
+    private final String VIDEO_EXTERNAL_PREF_KEY = "video_external_pref_key";
 
 }

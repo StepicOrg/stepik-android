@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/x0_5"
+        android:icon="@drawable/ic_playbackrate_0_5_light"
+        android:title="@string/x0_5"/>
+
+
+    <item
+        android:id="@+id/x0_75"
+        android:icon="@drawable/ic_playbackrate_0_75_light"
+        android:title="@string/x0_75"
+        />
+    <item
+        android:id="@+id/x1"
+        android:icon="@drawable/ic_playbackrate_1_light"
+        android:title="@string/x1"
+        />
+
+    <item
+        android:id="@+id/x1_25"
+        android:icon="@drawable/ic_playbackrate_1_25_light"
+        android:title="@string/x1_25"/>
+
+    <item
+        android:id="@+id/x1_5"
+        android:icon="@drawable/ic_playbackrate_1_5_light"
+        android:title="@string/x1_5"/>
+
+    <item
+        android:id="@+id/x2"
+        android:icon="@drawable/ic_playbackrate_2_0_light"
+        android:title="@string/x2_0"/>
+</menu>

@@ -19,7 +19,6 @@ import org.stepic.droid.events.feedback.FeedbackSentEvent
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ValidatorUtil
 import org.stepic.droid.view.custom.LoadingProgressDialog
-import retrofit.BaseUrl
 import retrofit.Callback
 import retrofit.Response
 import retrofit.Retrofit
@@ -40,7 +39,7 @@ class TextFeedbackFragment : FragmentBase() {
     lateinit var mEmailEditText: EditText
     lateinit var mDescriptionEditTex: EditText
     lateinit var mSendButton: Button
-    var mProgressDialog : ProgressDialog? = null
+    var mProgressDialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,8 +80,9 @@ class TextFeedbackFragment : FragmentBase() {
             if (i == EditorInfo.IME_ACTION_SEND) {
                 sendFeedback()
                 true
+            } else {
+                false
             }
-            false
         }
         val primaryEmail = mUserPreferences.primaryEmail?.email
         primaryEmail?.let { mEmailEditText.setText(primaryEmail) }
@@ -111,12 +111,11 @@ class TextFeedbackFragment : FragmentBase() {
     }
 
     fun sendFeedback() {
-        //todo implement
         hideSoftKeypad()
         val email = mEmailEditText.text.toString()
         val description = mDescriptionEditTex.text.toString()
         if (email.isEmpty() || description.isEmpty()) {
-            Toast.makeText(context, "Заполните поля", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, R.string.feedback_fill_fields, Toast.LENGTH_SHORT).show()
             return
         }
         if (!ValidatorUtil.isEmailValid(email)) {

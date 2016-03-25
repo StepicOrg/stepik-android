@@ -28,6 +28,7 @@ import org.stepic.droid.deserializers.DatasetDeserializer;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.DatasetWrapper;
 import org.stepic.droid.model.EnrollmentWrapper;
+import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.RegistrationUser;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -70,7 +71,7 @@ public class RetrofitRESTApi implements IApi {
     @Inject
     IConfig mConfig;
     @Inject
-    UserPreferences userPreferences;
+    UserPreferences mUserPreferences;
 
     private StepicRestLoggedService mLoggedService;
     private StepicRestOAuthService mOAuthService;
@@ -364,7 +365,14 @@ public class RetrofitRESTApi implements IApi {
 
     @Override
     public Call<AttemptResponse> getExistingAttempts(long stepId) {
-        return mLoggedService.getExistingAttempts(stepId);
+        Profile profile = mSharedPreference.getProfile();
+        long userId = 0;
+        if (profile == null){
+            YandexMetrica.reportEvent("profile is null, when attempt");
+        } else{
+            userId = profile.getId();
+        }
+        return mLoggedService.getExistingAttempts(stepId, userId);
     }
 
     @Override

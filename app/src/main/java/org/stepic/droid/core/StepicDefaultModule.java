@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.squareup.otto.Bus;
 
+import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.concurrency.MainHandlerImpl;
 import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Assignment;
@@ -51,11 +53,13 @@ import org.stepic.droid.util.resolvers.MainMenuResolverImpl;
 import org.stepic.droid.util.resolvers.SearchResolver;
 import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.util.resolvers.VideoResolver;
-import org.stepic.droid.web.HttpManager;
 import org.stepic.droid.web.IApi;
-import org.stepic.droid.web.IHttpManager;
 import org.stepic.droid.web.RetrofitRESTApi;
 import org.stepic.droid.web.ViewAssignment;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Singleton;
 
@@ -74,8 +78,8 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public IScreenManager provideIScreenManager(IConfig config, IMainMenuResolver mainMenuResolver) {
-        return new ScreenManager(config, mainMenuResolver);
+    public IScreenManager provideIScreenManager(IConfig config, IMainMenuResolver mainMenuResolver, UserPreferences userPreferences) {
+        return new ScreenManager(config, mainMenuResolver, userPreferences);
     }
 
     @Provides
@@ -95,12 +99,6 @@ public class StepicDefaultModule {
     @Singleton
     public IApi provideIApi() {
         return new RetrofitRESTApi();
-    }
-
-    @Provides
-    @Singleton
-    public IHttpManager provideIHttpManager(Context context) {
-        return new HttpManager(context);
     }
 
     @Provides
@@ -279,8 +277,33 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public  IMainMenuResolver provideResolver(){
+    public IMainMenuResolver provideResolver() {
         return new MainMenuResolverImpl();
     }
 
+    @Provides
+    @Singleton
+    public ExecutorService provideSingle() {
+        return Executors.newSingleThreadExecutor();
+    }
+
+
+    //it is good for many short lived, which should do async
+    @Provides
+    @Singleton
+    public ThreadPoolExecutor provideThreadPool() {
+        return (ThreadPoolExecutor) Executors.newCachedThreadPool();
+    }
+
+    @Singleton
+    @Provides
+    public IMainHandler provideHandlerForUIThread() {
+        return new MainHandlerImpl();
+    }
+
+    @Singleton
+    @Provides
+    public AudioFocusHelper provideAudioFocusHelper(Context context, IMainHandler mainHandler, Bus bus) {
+        return new AudioFocusHelper(context, bus, mainHandler);
+    }
 }

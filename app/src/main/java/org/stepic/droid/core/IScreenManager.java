@@ -32,14 +32,9 @@ public interface IScreenManager {
 
     void openStepInWeb(Context context, Step step);
 
-    void openSignUpInWeb(Context context);
-
     void openRemindPassword(AppCompatActivity context);
 
     void pushToViewedQueue(ViewAssignment viewAssignmentWrapper);
-
-    @Deprecated
-    void showSocialLogin(Context context);
 
     void showCourseDescription(Activity sourceActivity, @NotNull Course course);
 
@@ -48,4 +43,6 @@ public interface IScreenManager {
     void showStoreWithApp(Activity sourceActivity);
 
     void showDownload();
+
+    void showVideo(Activity sourceActivity, String source);
 }

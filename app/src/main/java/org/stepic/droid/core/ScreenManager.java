@@ -8,10 +8,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.NotNull;
+import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
@@ -19,6 +21,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
@@ -32,9 +35,11 @@ import org.stepic.droid.view.activities.SectionActivity;
 import org.stepic.droid.view.activities.StepsActivity;
 import org.stepic.droid.view.activities.TextFeedbackActivity;
 import org.stepic.droid.view.activities.UnitsActivity;
+import org.stepic.droid.view.activities.VideoActivity;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.view.fragments.DownloadsFragment;
 import org.stepic.droid.web.ViewAssignment;
+import org.videolan.libvlc.util.VLCUtil;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,12 +48,13 @@ import javax.inject.Singleton;
 public class ScreenManager implements IScreenManager {
     private IConfig mConfig;
     private IMainMenuResolver mMainMenuResolver;
-
+    private UserPreferences mUserPreferences;
 
     @Inject
-    public ScreenManager(IConfig config, IMainMenuResolver mainMenuResolver) {
+    public ScreenManager(IConfig config, IMainMenuResolver mainMenuResolver, UserPreferences userPreferences) {
         this.mConfig = config;
         mMainMenuResolver = mainMenuResolver;
+        mUserPreferences = userPreferences;
     }
 
     @Override
@@ -134,13 +140,48 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showDownload() {
-        Intent intent = new Intent (MainApplication.getAppContext(), MainFeedActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new Intent(MainApplication.getAppContext(), MainFeedActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Bundle bundle = new Bundle();
         int index = mMainMenuResolver.getIndexOfFragment(DownloadsFragment.class);
         bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
         intent.putExtras(bundle);
         MainApplication.getAppContext().startActivity(intent);
+    }
+
+    @Override
+    public void showVideo(Activity sourceActivity, String videoPath) {
+        YandexMetrica.reportEvent("video is tried to show");
+        boolean isOpenExternal =  mUserPreferences.isOpenInExternal();
+        if (isOpenExternal){
+            YandexMetrica.reportEvent("video open external");
+        }
+        else{
+            YandexMetrica.reportEvent("video open native");
+        }
+
+        boolean isCompatible = VLCUtil.hasCompatibleCPU(MainApplication.getAppContext());
+        if (!isCompatible){
+            YandexMetrica.reportEvent("video is not compatible");
+        }
+
+
+
+        if (isCompatible && !isOpenExternal) {
+            Intent intent = new Intent(MainApplication.getAppContext(), VideoActivity.class);
+            intent.putExtra(VideoActivity.Companion.getVideoPathKey(), videoPath);
+            sourceActivity.startActivity(intent);
+        } else {
+            Uri videoUri = Uri.parse(videoPath);
+            Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
+            intent.setDataAndType(videoUri, "video/*");
+            try {
+                sourceActivity.startActivity(intent);
+            } catch (Exception ex) {
+                YandexMetrica.reportError("NotPlayer", ex);
+                Toast.makeText(sourceActivity, R.string.not_video_player_error, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override
@@ -184,14 +225,6 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
-    public void openSignUpInWeb(Context context) {
-        YandexMetrica.reportEvent("Screen manager: open signup in Web");
-        String url = mConfig.getBaseUrl() + "/accounts/signup/";
-        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
-        context.startActivity(intent);
-    }
-
-    @Override
     public void openRemindPassword(AppCompatActivity context) {
         YandexMetrica.reportEvent("Screen manager: remind password");
         android.support.v4.app.DialogFragment dialogFragment = RemindPasswordDialogFragment.newInstance();
@@ -206,13 +239,6 @@ public class ScreenManager implements IScreenManager {
         loadIntent.putExtra(AppConstants.KEY_STEP_BUNDLE, viewAssignmentWrapper.getStep());
         loadIntent.putExtra(AppConstants.KEY_ASSIGNMENT_BUNDLE, viewAssignmentWrapper.getAssignment());
         MainApplication.getAppContext().startService(loadIntent);
-    }
-
-    @Override
-    public void showSocialLogin(Context context) {
-        String url = mConfig.getBaseUrl() + "/oauth2/authorize/?client_id=P3svssuGYOJ8g8rrJSJtVbqnyE0QinTfncbfFr9p&response_type=token";
-        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
-        context.startActivity(intent);
     }
 
 }

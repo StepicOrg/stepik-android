@@ -109,6 +109,8 @@
     <string name="feedback_sent">Сообщение отправлено</string>
     <string name="feedback_fail">Упс… что-то пошло не так. Попробуйте позже</string>
     <string name="feedback_internet_problem">Интернет недоступен. Попробуйте позже</string>
+    <string name="feedback_fill_fields">Заполните пусты поля</string>
     <string name="cant_drop">Вы не можете покинуть курс</string>
+    <string name="open_in_external_player">Открывать в системном плеере</string>
 
 </resources>

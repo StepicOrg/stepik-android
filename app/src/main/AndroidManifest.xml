@@ -11,9 +11,11 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" android:maxSdkVersion="22" />
 
 
     <application
+        android:largeHeap="true"
         android:name="org.stepic.droid.base.MainApplication"
         android:allowBackup="false"
         android:icon="@drawable/stepic_logo"
@@ -81,7 +83,7 @@
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED"/>
             </intent-filter>
         </receiver>
 
@@ -128,6 +130,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.activities.MainFeedActivity"/>
         </activity>
+
+        <activity
+            android:hardwareAccelerated="false"
+            android:name=".view.activities.VideoActivity"
+            android:theme="@style/AppTheme.VideoPlayer"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/video_title"/>
 
 
     </application>

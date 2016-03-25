@@ -5,11 +5,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.os.Handler;
+import android.util.Log;
+
+import com.squareup.otto.Bus;
 
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.events.video.VideoCachedOnDiskEvent;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
+import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.ICancelSniffer;
@@ -18,6 +23,7 @@ import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.RWLocks;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
@@ -29,9 +35,14 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     DatabaseFacade mDatabaseFacade;
     @Inject
     IStoreStateManager mStoreStateManager;
+    @Inject
+    Bus bus;
 
     @Inject
     ICancelSniffer mCancelSniffer;
+
+    @Inject
+    ExecutorService mThreadSingleThreadExecutor;
 
     public DownloadCompleteReceiver() {
         MainApplication.component().inject(this);
@@ -40,50 +51,64 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         final long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+
+        mThreadSingleThreadExecutor.execute(new Runnable() {
             @Override
-            protected Void doInBackground(Void[] params) {
-                try {
-                    RWLocks.DownloadLock.writeLock().lock();
-
-                    DownloadEntity downloadEntity = mDatabaseFacade.getDownloadEntityIfExist(referenceId);
-                    if (downloadEntity != null) {
-                        long video_id = downloadEntity.getVideoId();
-                        long step_id = downloadEntity.getStepId();
-                        mDatabaseFacade.deleteDownloadEntityByDownloadId(referenceId);
-
-
-                        File downloadFolderAndFile = new File(mUserPrefs.getUserDownloadFolder(), video_id + "");
-                        String path = Uri.fromFile(downloadFolderAndFile).getPath();
-
-                        if (mCancelSniffer.isStepIdCanceled(step_id)) {
-                            File file = new File(path);
-                            if (file.exists()) {
-                                file.delete();
-                            }
-                            mCancelSniffer.removeStepIdCancel(step_id);
-                        }
-                        {
-                            //is not canceled
-                            CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, downloadEntity.getThumbnail());
-                            cachedVideo.setQuality(downloadEntity.getQuality());
-                            mDatabaseFacade.addVideo(cachedVideo);
-
-                            Step step = mDatabaseFacade.getStepById(step_id);
-                            step.set_cached(true);
-                            step.set_loading(false);
-                            mDatabaseFacade.updateOnlyCachedLoadingStep(step);
-                            mStoreStateManager.updateUnitLessonState(step.getLesson());
-                        }
-                    }
-                } finally {
-                    RWLocks.DownloadLock.writeLock().unlock();
-                }
-                return null;
-                //end critical section
+            public void run() {
+                blockForInBackground(referenceId);
+                Log.d("thread", Thread.currentThread().getName()+ " ");
             }
-        };
-        task.execute();
+        });
+    }
+
+    private void blockForInBackground(final long referenceId) {
+        try {
+            RWLocks.DownloadLock.writeLock().lock();
+
+            DownloadEntity downloadEntity = mDatabaseFacade.getDownloadEntityIfExist(referenceId);
+            if (downloadEntity != null) {
+                long video_id = downloadEntity.getVideoId();
+                final long step_id = downloadEntity.getStepId();
+                mDatabaseFacade.deleteDownloadEntityByDownloadId(referenceId);
+
+
+                File downloadFolderAndFile = new File(mUserPrefs.getUserDownloadFolder(), video_id + "");
+                String path = Uri.fromFile(downloadFolderAndFile).getPath();
+
+                if (mCancelSniffer.isStepIdCanceled(step_id)) {
+                    File file = new File(path);
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                    mCancelSniffer.removeStepIdCancel(step_id);
+                }
+                {
+                    //is not canceled
+                    final CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, downloadEntity.getThumbnail());
+                    cachedVideo.setQuality(downloadEntity.getQuality());
+                    mDatabaseFacade.addVideo(cachedVideo);
+
+                    final Step step = mDatabaseFacade.getStepById(step_id);
+                    step.set_cached(true);
+                    step.set_loading(false);
+                    mDatabaseFacade.updateOnlyCachedLoadingStep(step);
+                    mStoreStateManager.updateUnitLessonState(step.getLesson());
+                    final Lesson lesson = mDatabaseFacade.getLessonById(step.getLesson());
+                    Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
+                    //Say to ui that ui is cached now
+                    Runnable myRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            if (lesson != null)
+                                bus.post(new VideoCachedOnDiskEvent(step_id, lesson, cachedVideo));
+                        }
+                    };
+                    mainHandler.post(myRunnable);
+                }
+            }
+        } finally {
+            RWLocks.DownloadLock.writeLock().unlock();
+        }
     }
 
 }

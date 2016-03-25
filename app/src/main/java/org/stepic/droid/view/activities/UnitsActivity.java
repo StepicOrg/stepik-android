@@ -18,8 +18,8 @@ import com.yandex.metrica.YandexMetrica;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
-import org.stepic.droid.concurrency.FromDbUnitLessonTask;
-import org.stepic.droid.concurrency.ToDbUnitLessonTask;
+import org.stepic.droid.concurrency.tasks.FromDbUnitLessonTask;
+import org.stepic.droid.concurrency.tasks.ToDbUnitLessonTask;
 import org.stepic.droid.events.lessons.SuccessLoadLessonsEvent;
 import org.stepic.droid.events.notify_ui.NotifyUIUnitLessonEvent;
 import org.stepic.droid.events.units.FailureLoadEvent;
@@ -118,7 +118,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     private void getAndShowUnitsFromCache() {
         mFromDbTask = new FromDbUnitLessonTask(mSection);
-        mFromDbTask.execute();
+        mFromDbTask.executeOnExecutor(mThreadPoolExecutor);
     }
 
 
@@ -197,7 +197,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     private void saveToDb(List<Unit> unitList, List<Lesson> lessonList, List<Progress> progresses) {
         mToDbTask = new ToDbUnitLessonTask(mSection, unitList, lessonList, progresses);
-        mToDbTask.execute();
+        mToDbTask.executeOnExecutor(mThreadPoolExecutor);
     }
 
     private void showUnitsLessons(List<Unit> units, List<Lesson> lessons, Map<Long, Progress> longProgressMap) {

@@ -1,33 +1,41 @@
 package org.stepic.droid.view.fragments;
 
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.steps.ClearAllDownloadWithoutAnimationEvent;
 import org.stepic.droid.events.steps.StepRemovedEvent;
+import org.stepic.droid.events.video.DownloadReportEvent;
 import org.stepic.droid.events.video.FinishDownloadCachedVideosEvent;
+import org.stepic.droid.events.video.VideoCachedOnDiskEvent;
 import org.stepic.droid.model.CachedVideo;
+import org.stepic.droid.model.DownloadEntity;
+import org.stepic.droid.model.DownloadReportItem;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.VideosAndMapToLesson;
@@ -35,6 +43,7 @@ import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DbParseHelper;
+import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.view.adapters.DownloadsAdapter;
 
@@ -48,10 +57,12 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 
 public class DownloadsFragment extends FragmentBase {
 
-    public  static DownloadsFragment newInstance(){
+    public static DownloadsFragment newInstance() {
         return new DownloadsFragment();
     }
 
@@ -63,10 +74,25 @@ public class DownloadsFragment extends FragmentBase {
     @Bind(R.id.list_of_downloads)
     RecyclerView mDownloadsView;
 
+    @Bind(R.id.progress_bar)
+    ProgressBar mProgressBar;
+
     private DownloadsAdapter mDownloadAdapter;
     private List<CachedVideo> mCachedVideoList;
     private Map<Long, Lesson> mStepIdToLesson;
+    private List<DownloadEntity> mNowDownloadingList;
+    private Runnable mLoadingUpdater = null;
 
+    private boolean isLoaded;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+
+        mCachedVideoList = new ArrayList<>();
+        mStepIdToLesson = new HashMap<>();
+    }
 
     @Nullable
     @Override
@@ -80,29 +106,125 @@ public class DownloadsFragment extends FragmentBase {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mCachedVideoList = new ArrayList<>();
-        mStepIdToLesson = new HashMap<>();
-        mDownloadAdapter = new DownloadsAdapter(mCachedVideoList, mStepIdToLesson, getContext(), this);
+
+        mDownloadAdapter = new DownloadsAdapter(mCachedVideoList, mStepIdToLesson, getActivity(), this);
         mDownloadsView.setAdapter(mDownloadAdapter);
 
         mDownloadsView.setLayoutManager(new LinearLayoutManager(getContext()));
         mDownloadsView.setItemAnimator(new SlideInRightAnimator());
         mDownloadsView.getItemAnimator().setRemoveDuration(10);
+        mDownloadsView.getItemAnimator().setAddDuration(10);
+
+        if (isLoaded) {
+            checkForEmpty();
+        } else {
+            mEmptyDownloadView.setVisibility(View.GONE);
+            ProgressHelper.activate(mProgressBar);
+        }
+
 
         bus.register(this);
+//        startLoadingStatusUpdater();
+    }
+
+    private void startLoadingStatusUpdater() {
+        if (mLoadingUpdater != null) return;
+        mLoadingUpdater = new Runnable() {
+            @Override
+            public void run() {
+                while (!Thread.currentThread().isInterrupted()) {
+                    Thread t = Thread.currentThread();
+                    Cursor cursor = getCursorForAllDownloads();
+                    if (cursor == null) continue;
+                    try {
+                        cursor.moveToFirst();
+
+                        while (!cursor.isAfterLast()) {
+                            int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                            if (bytes_total > 0) {
+                                int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                                int columnStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+                                int downloadId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
+                                int columnReason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
+                                final DownloadReportItem downloadReportItem = new DownloadReportItem(bytes_downloaded, bytes_total, columnStatus, downloadId, columnReason);
+                                final Boolean isInterrupted = Thread.currentThread().isInterrupted();
+                                mMainHandler.post(new Function0<Unit>() {
+                                    @Override
+                                    public Unit invoke() {
+                                        bus.post(new DownloadReportEvent(downloadReportItem));
+                                        return Unit.INSTANCE;
+                                    }
+                                });
+                            }
+                        }
+                    } finally {
+                        cursor.close();
+                    }
+
+                }
+                Log.d("ppp", "This thread is terminated");
+            }
+
+
+        };
+        mThread = new Thread(mLoadingUpdater);
+        mThread.start();
+    }
+
+    private Thread mThread;
+
+    private void stopLoadingStatusUpdater() {
+        if (mLoadingUpdater != null) {
+            mThread.interrupt();
+            mLoadingUpdater = null;
+        }
+    }
+
+    @Subscribe
+    public void onLoadingUpdate(DownloadReportEvent event) {
+        DownloadReportItem item = event.getDownloadReportItem();
+        Log.d("wakawaka", "receive");
+    }
+
+    private long[] getAllDownloadIds(@NotNull List<DownloadEntity> list) {
+        final List<DownloadEntity> copyOfList = new ArrayList<>(list);
+        long[] result = new long[copyOfList.size()];
+        int i = 0;
+        for (DownloadEntity element : copyOfList) {
+            result[i++] = element.getDownloadId();
+        }
+        return result;
+    }
+
+    //Query the download manager about downloads that have been requested.
+    @Nullable
+    private Cursor getCursorForAllDownloads() {
+        mNowDownloadingList = mDatabaseFacade.getAllDownloadEntities();
+        long[] ids = getAllDownloadIds(mNowDownloadingList);
+        if (ids == null || ids.length == 0) return null;
+
+
+        DownloadManager.Query query = new DownloadManager.Query();
+        query.setFilterById(ids);
+        return mSystemDownloadManager.query(query);
+
     }
 
     @Override
     public void onDestroyView() {
+//        stopLoadingStatusUpdater();
         bus.unregister(this);
+        mDownloadsView.setAdapter(null);
+        mDownloadAdapter = null;
         super.onDestroyView();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-//        bus.register(this);
-        updateCachedAsync();
+        if (!isLoaded) {
+            updateCachedAsync();
+        }
     }
 
     private void updateCachedAsync() {
@@ -112,7 +234,7 @@ public class DownloadsFragment extends FragmentBase {
                 List<CachedVideo> videos = mDatabaseFacade.getAllCachedVideos();
                 List<CachedVideo> filteredVideos = new ArrayList<>();
                 for (CachedVideo video : videos) {
-                    if (video != null && video.getStepId() >=0){
+                    if (video != null && video.getStepId() >= 0) {
                         filteredVideos.add(video);
                     }
                 }
@@ -134,20 +256,13 @@ public class DownloadsFragment extends FragmentBase {
 
     @Subscribe
     public void onFinishLoadCachedVideos(FinishDownloadCachedVideosEvent event) {
-        List<CachedVideo> list = event.getCachedVideos();
-        if (list == null) {
-            return;
-        }
-
-        Map<Long, Lesson> map = event.getMap();
-        if (map == null) {
-            return;
-        }
-
-        showCachedVideos(list, map);
+        showCachedVideos(event.getCachedVideos(), event.getMap());
     }
 
     private void showCachedVideos(List<CachedVideo> videosForShowing, Map<Long, Lesson> map) {
+        isLoaded = true;
+        ProgressHelper.dismiss(mProgressBar);
+        if (videosForShowing == null || map == null) return;
         mStepIdToLesson.clear();
         mStepIdToLesson.putAll(map);
         mCachedVideoList.clear();
@@ -160,7 +275,7 @@ public class DownloadsFragment extends FragmentBase {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        if (mEmptyDownloadView.getVisibility() != View.VISIBLE ) {
+        if (mEmptyDownloadView.getVisibility() != View.VISIBLE) {
             inflater.inflate(R.menu.delete_menu, menu);
         }
     }
@@ -252,6 +367,23 @@ public class DownloadsFragment extends FragmentBase {
         }
     }
 
+    @Subscribe
+    public void onStepCached(VideoCachedOnDiskEvent event) {
+        addStepToList(event.getStepId(), event.getLesson(), event.getVideo());
+    }
+
+    private void addStepToList(long stepId, Lesson lesson, CachedVideo video) {
+        if (mStepIdToLesson == null || mCachedVideoList == null) return;
+        mStepIdToLesson.put(stepId, lesson);
+        int pos = mCachedVideoList.size();
+        mCachedVideoList.add(video);
+        if (mDownloadAdapter != null && pos >= 0 && pos < mCachedVideoList.size()) {
+            checkForEmpty();
+            mDownloadAdapter.notifyItemInserted(pos);
+        }
+    }
+
+
     private int removeByStepId(long stepId) {
         if (!mStepIdToLesson.containsKey(stepId)) return -1;
         CachedVideo videoForDeleteFromList = null;
@@ -266,15 +398,16 @@ public class DownloadsFragment extends FragmentBase {
         int position = mCachedVideoList.indexOf(videoForDeleteFromList);
         mCachedVideoList.remove(videoForDeleteFromList);
         mStepIdToLesson.remove(videoForDeleteFromList.getStepId());
-        if (mCachedVideoList.size() == 0){
+        if (mCachedVideoList.size() == 0) {
 
         }
         return position;
     }
 
-    public void checkForEmpty () {
+    public void checkForEmpty() {
         //// FIXME: 14.12.15 add to notify methods
         if (!mCachedVideoList.isEmpty()) {
+            ProgressHelper.dismiss(mProgressBar);
             mEmptyDownloadView.setVisibility(View.GONE);
         } else {
             mEmptyDownloadView.setVisibility(View.VISIBLE);

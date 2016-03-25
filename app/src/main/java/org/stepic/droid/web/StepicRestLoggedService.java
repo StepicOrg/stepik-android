@@ -72,7 +72,7 @@ public interface StepicRestLoggedService {
     Call<SubmissionResponse> createNewSubmission(@Body SubmissionRequest submissionRequest);
 
     @GET("api/attempts")
-    Call<AttemptResponse> getExistingAttempts(@Query("step") long stepId);
+    Call<AttemptResponse> getExistingAttempts(@Query("step") long stepId, @Query("user") long userId);
 
     @GET("api/submissions")
     Call<SubmissionResponse> getExistingSubmissions(@Query("attempt") long attemptId, @Query("order") String desc);

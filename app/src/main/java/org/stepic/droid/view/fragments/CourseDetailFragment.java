@@ -29,11 +29,10 @@ import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
-import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.concurrency.UpdateCourseTask;
+import org.stepic.droid.concurrency.tasks.UpdateCourseTask;
 import org.stepic.droid.events.instructors.FailureLoadInstructorsEvent;
 import org.stepic.droid.events.instructors.OnResponseLoadingInstructorsEvent;
 import org.stepic.droid.events.instructors.StartLoadingInstructorsEvent;
@@ -244,17 +243,7 @@ public class CourseDetailFragment extends FragmentBase {
             mPlayer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Uri videoUri = Uri.parse(urlToVideo);
-
-                    Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
-                    intent.setDataAndType(videoUri, "video/*");
-                    //todo change icon to play
-                    try {
-                        startActivity(intent);
-                    } catch (Exception ex) {
-                        YandexMetrica.reportError("NotPlayer", ex);
-                        Toast.makeText(getActivity(), R.string.not_video_player_error, Toast.LENGTH_LONG).show();
-                    }
+                    mShell.getScreenProvider().showVideo(getActivity(), urlToVideo);
                 }
             });
         }
@@ -356,10 +345,10 @@ public class CourseDetailFragment extends FragmentBase {
                     localCopy.setEnrollment((int) localCopy.getCourseId());
 
                     UpdateCourseTask updateCourseTask = new UpdateCourseTask(DatabaseFacade.Table.enrolled, localCopy);
-                    updateCourseTask.execute();
+                    updateCourseTask.executeOnExecutor(mThreadPoolExecutor);
 
                     UpdateCourseTask updateCourseFeaturedTask = new UpdateCourseTask(DatabaseFacade.Table.featured, localCopy);
-                    updateCourseFeaturedTask.execute();
+                    updateCourseFeaturedTask.executeOnExecutor(mThreadPoolExecutor);
 
 
                     bus.post(new SuccessJoinEvent(localCopy));

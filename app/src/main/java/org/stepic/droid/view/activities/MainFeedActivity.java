@@ -1,5 +1,6 @@
 package org.stepic.droid.view.activities;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -71,14 +72,14 @@ public class MainFeedActivity extends FragmentActivityBase
 
     private int mCurrentIndex;
 
-//    @Override
-//    protected void onNewIntent(Intent intent) {
-//        super.onNewIntent(intent);
-//        Bundle extras = intent.getExtras();
-//        if (extras != null){
-//            initFragments(extras);
-//        }
-//    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            initFragments(extras);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -268,7 +269,16 @@ public class MainFeedActivity extends FragmentActivityBase
         }
         mCurrentIndex--; // menu indices from 1
         if (shortLifetimeRef != null) {
-            setFragment(R.id.frame, shortLifetimeRef);
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame);
+            if (fragment != null) {
+                String before = fragment.getTag();
+                String now = shortLifetimeRef.getClass().toString();
+                if (!before.equals(now)) {
+                    setFragment(R.id.frame, shortLifetimeRef);
+                }
+            } else {
+                setFragment(R.id.frame, shortLifetimeRef);
+            }
         }
     }
 

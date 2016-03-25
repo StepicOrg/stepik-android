@@ -55,13 +55,14 @@ public class VideoResolver implements IVideoResolver {
 
     private String resolveFromWeb(List<VideoUrl> urlList) {
         String resolvedURL = null;
-        for (int i = 0; i < urlList.size(); i++) {
+        if (urlList == null || urlList.isEmpty()) return null;
+        int upperBound = urlList.size() - 1;
+        for (int i = upperBound; i >= 0; i--) {
             VideoUrl tempLink = urlList.get(i);
             if (tempLink != null) {
                 String quality = tempLink.getQuality();
                 if (quality != null &&
-                        (quality.equals(mUserPreferences.getQualityVideo()) || i == urlList.size() - 1)) {
-                    //// TODO: 15.10.15 determine video which is available for the phone. Not default
+                        (quality.equals(mUserPreferences.getQualityVideo()) || i == 0)) {
                     resolvedURL = tempLink.getUrl();
                     break;
                 }
