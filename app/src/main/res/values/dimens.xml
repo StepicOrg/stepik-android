@@ -32,5 +32,6 @@
     <dimen name="button_padding">6dp</dimen>
     <dimen name="seekbar_video_margin">8dp</dimen>
     <dimen name="control_item_margin">2dp</dimen>
+    <dimen name="thumb_size">18dp</dimen>
 
 </resources>

@@ -4,7 +4,7 @@
     <solid android:color="@color/stepic_blue_ribbon" />
     <stroke android:color="@color/stepic_blue_ribbon" />
     <size
-        android:height="18dp"
-        android:width="18dp" />
+        android:height="@dimen/thumb_size"
+        android:width="@dimen/thumb_size" />
 
 </shape>

@@ -59,7 +59,7 @@
                     <android.support.v7.widget.AppCompatSeekBar
                         android:id="@+id/player_controller_progress"
                         android:layout_width="match_parent"
-                        android:layout_height="24dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/seekbar_video_margin"
                         android:layout_marginLeft="@dimen/seekbar_video_margin"
                         android:layout_marginRight="@dimen/seekbar_video_margin"
@@ -68,6 +68,7 @@
                         android:layout_toStartOf="@+id/current_video_time"
                         android:background="@drawable/ic_seek_background"
                         android:max="100"
+                        android:maxHeight="1000dp"
                         android:paddingEnd="0dp"
                         android:paddingLeft="0dp"
                         android:paddingRight="0dp"
@@ -183,8 +184,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:indeterminate="true"
-        android:visibility="gone"
         android:padding="5dp"
+        android:visibility="gone"
         tools:visibility="visible"/>
 
 </FrameLayout>
