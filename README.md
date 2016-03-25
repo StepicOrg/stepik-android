@@ -3,6 +3,11 @@ Stepic for Android
 
 Mobile application of [Stepic.org][1].
 
+Store
+========
+
+Actual version of app you can [get from Google Play][2]
+
 License
 =======
 
@@ -22,3 +27,4 @@ License
 
 
  [1]: htts://stepic.org
+ [2]: https://play.google.com/store/apps/details?id=org.stepic.droid
