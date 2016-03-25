@@ -13,7 +13,6 @@ import android.os.Bundle
 import android.support.v7.widget.AppCompatSeekBar
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
-import android.util.Log
 import android.view.*
 import android.widget.*
 import com.squareup.otto.Subscribe
@@ -100,13 +99,10 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        YandexMetrica.reportEvent(TAG + "onCreate")
         retainInstance = true
         mFilePath = arguments.getString(VIDEO_KEY)
-        //        createPlayer()
         initPhoneStateListener()
         isOnResumeDirectlyAfterOnCreate = true
-        //        playPlayer()
     }
 
 
@@ -130,7 +126,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        YandexMetrica.reportEvent(TAG + "onCreateView")
         mFragmentContainer = inflater?.inflate(R.layout.fragment_video, container, false) as ViewGroup
 
         mProgressBar = mFragmentContainer?.findViewById(R.id.load_progressbar) as ProgressBar
@@ -140,14 +135,12 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mVideoView = mFragmentContainer?.findViewById(R.id.texture_video_view) as SurfaceView
         mFragmentContainer?.setOnTouchListener { view, motionEvent ->
             if (!isLoading) {
-                Log.d("ttt", "mFragmentContainer?.setOnTouchListener  " + view.javaClass.canonicalName)
                 showController(!isControllerVisible)
             }
             false
         }
         setupController(mFragmentContainer)
         isOnStartAfterSurfaceDestroyed = false
-        Log.d("ttt", "onCreateView")
 
         var filter = IntentFilter()
         filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
@@ -158,13 +151,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        YandexMetrica.reportEvent(TAG + "onActivityCreated")
         hideNavigationBar(false)
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
     }
 
     private fun bindViewWithPlayer() {
-        YandexMetrica.reportEvent(TAG + "bindViewWithPlayer")
         val vout = mMediaPlayer?.getVLCVout()
         vout?.setVideoView(mVideoView)
         vout?.addCallback(this)
@@ -178,14 +169,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     private fun createPlayer() {
         try {
-            YandexMetrica.reportEvent(TAG + "createPlayer")
             val options = ArrayList<String>()
 
             options.add("--audio-time-stretch") // time stretching
             options.add("--no-drop-late-frames") //help when user accelerates video
             options.add("--no-skip-frames")
-            options.add("-vvv") // verbosity
-
             //            //Magic commands:  HW_ACCELERATION_FULL
             //            val decoder = HWDecoderUtil.getDecoderFromDevice()
             //            if (decoder == HWDecoderUtil.Decoder.NONE) {
@@ -248,13 +236,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             isEndReached = false
         } catch (e: Exception) {
             YandexMetrica.reportEvent(TAG + "Error creating player")
-            Toast.makeText(activity, "Error creating player!", Toast.LENGTH_LONG).show()
         }
 
     }
 
     private fun releasePlayer() {
-        YandexMetrica.reportEvent(TAG + "releasePlayer")
         mMediaPlayer?.stop()
         val vout = mMediaPlayer?.getVLCVout()
         vout?.removeCallback(this)
@@ -278,25 +264,20 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onStart() {
         super.onStart()
-        YandexMetrica.reportEvent(TAG + "onStart")
-        Log.d("ttt", "onStart")
     }
 
 
     override fun onResume() {
         super.onResume()
-        Log.d("tttt", "onResume")
         bus.register(this)
         if (!isLoading) {
             showController(true)
         }
-        YandexMetrica.reportEvent(TAG + "onResume")
         recreateAndPreloadPlayer(isNeedPlayAfterRecreating = false)
     }
 
     fun recreateAndPreloadPlayer(isNeedPlayAfterRecreating: Boolean = true) {
         needPlay = isNeedPlayAfterRecreating
-        YandexMetrica.reportEvent(TAG + "recreateAndPreloadPlayer")
         val km = MainApplication.getAppContext().getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
         createPlayer()
         bindViewWithPlayer()
@@ -328,7 +309,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 }
             }
         }
-        YandexMetrica.reportEvent(TAG + "recreateAndPreloadPlayer end")
 
     }
 
@@ -337,8 +317,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
         stopPlayingBeforeRecreating()
 
-        YandexMetrica.reportEvent(TAG + "onPause end")
-        Log.d("ttt", "onPause")
         clearAutoHideQueue()
         mAudioFocusHelper.releaseAudioFocus()
         bus.unregister(this)
@@ -350,7 +328,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         if (player == null || player.isReleased) {
             mCurrentTimeInMillis = 0L
         } else if (player.time >= 0) {
-            Log.d("ttt", "OnPause mplayer time " + mMediaPlayer?.time)
             mCurrentTimeInMillis = (mMediaPlayer?.time ?: 0L) - DELTA_TIME
         }
         if (mCurrentTimeInMillis < 0L) mCurrentTimeInMillis = 0L
@@ -359,59 +336,37 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         releasePlayer()
     }
 
-    override fun onStop() {
-        super.onStop()
-        Log.d("ttt", "onStop")
-        YandexMetrica.reportEvent(TAG + "onStop end")
-    }
-
     override fun onDestroyView() {
         destroyVideoView()
         destroyController()
         activity?.unregisterReceiver(mReceiver)
         super.onDestroyView()
-        Log.d("ttt", "onDestroyView")
-        YandexMetrica.reportEvent(TAG + "onDestroyView end")
     }
 
     override fun onDestroy() {
-        //        releasePlayer()
         removePhoneStateCallbacks()
         super.onDestroy()
-        Log.d("ttt", "onDestroy")
-        YandexMetrica.reportEvent(TAG + "onDestroy end")
     }
 
     override fun onSurfacesCreated(vlcOut: IVLCVout?) {
-        Log.d("ttt", "onSurfacesCreated " + mVideoView)
-        //        vlcOut?.attachViews()
-        Log.d("tttt", "onSurfacesCreated attached? " + vlcOut?.areViewsAttached())
-        Log.d("tttt", "onSurfacesCreated playerstate? " + mMediaPlayer?.playerState)
-        YandexMetrica.reportEvent(TAG + "onSurfacesCreated end")
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
-        Log.d("ttt", "onConfigurationChanged")
-        YandexMetrica.reportEvent(TAG + "onConfigurationChanged")
         if (isEndReached) {
             recreateAndPreloadPlayer(isNeedPlayAfterRecreating =  false)
         }
 
         changeSurfaceLayout()
         super.onConfigurationChanged(newConfig)
-        YandexMetrica.reportEvent(TAG + "onConfigurationChanged end")
     }
 
     override fun onSurfacesDestroyed(vlcOut: IVLCVout?) {
-        Log.d("ttt", "onSurfacesDestroyed")
         isOnStartAfterSurfaceDestroyed = true
-        YandexMetrica.reportEvent(TAG + "onSurfacesDestroyed")
     }
 
     override fun onNewLayout(vout: IVLCVout, width: Int, height: Int, visibleWidth: Int, visibleHeight: Int, sarNum: Int, sarDen: Int) {
         if (width * height == 0)
             return
-        Log.d("ttt", "onNewLayout")
         // store video size
         mVideoWidth = width
         mVideoHeight = height
@@ -420,11 +375,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mSarNum = sarNum
         mSarDen = sarDen
         changeSurfaceLayout()
-        YandexMetrica.reportEvent(TAG + "onNewLayout")
     }
 
     private fun changeSurfaceLayout() {
-        YandexMetrica.reportEvent(TAG + "changeSurfaceLayout")
         if (mVideoView == null)
             return
 
@@ -445,7 +398,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
         // sanity check
         if (w * h == 0.toDouble() || mVideoWidth * mVideoHeight == 0) {
-            Log.e("ttt", "Invalid surface size")
             YandexMetrica.reportEvent(TAG + "Invalid surface size")
             return
         }
@@ -543,8 +495,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             mSlashTime = mController?.findViewById(R.id.slash_video_time) as TextView
             mCurrentTime = mController?.findViewById(R.id.current_video_time) as TextView
             mMaxTime = mController?.findViewById(R.id.overall_video_time) as TextView
-            //            container.addView(mController)
-            YandexMetrica.reportEvent(TAG + "setup controller")
         }
     }
 
@@ -566,7 +516,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 pausePlayer()
             }
         }
-        YandexMetrica.reportEvent(TAG + "onPlayPause")
     }
 
     private var mHideRunnable: Runnable? = null
@@ -584,7 +533,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             }
             view?.postDelayed(mHideRunnable, timeout)
         }
-        YandexMetrica.reportEvent(TAG + "autoHideController")
     }
 
     private fun clearAutoHideQueue() {
@@ -592,7 +540,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mHideRunnable?.let {
             view?.removeCallbacks(it)
         }
-        YandexMetrica.reportEvent(TAG + "clearAutoHideQueue")
     }
 
     private fun showChooseRateMenu(view: View) {
@@ -761,12 +708,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         override fun onEvent(event: MediaPlayer.Event) {
             val player = mOwner?.mMediaPlayer
             when (event.type) {
-                MediaPlayer.Event.Opening -> {
-                    Log.d("lala", "MediaPlayer.Event.Opening")
-                }
-                MediaPlayer.Event.SeekableChanged -> {
-                    Log.d("lala", "MediaPlayer.Event.SeekableChanged = " + player?.isSeekable)
-                }
                 MediaPlayer.Event.Paused -> {
                     mOwner?.showPlay()
                 }
@@ -785,7 +726,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     mOwner?.isEndReached = true
                     mOwner?.showController(true)
                     mOwner?.showPlay()
-                    Log.d("lala", "MediaPlayerEndReached " + player?.time + "/" + player?.length)
                     player?.length?.let {
                         mOwner?.mCurrentTime?.text = TimeUtil.getFormattedVideoTime(it)
                     }
@@ -836,7 +776,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             mFragmentContainer?.keepScreenOn = false
             mMediaPlayer?.pause()
             val isReleased = mAudioFocusHelper.releaseAudioFocus()
-            Log.d("ttt", "audio focus isReleased " + isReleased)
         }
     }
 
@@ -854,7 +793,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             val player = mOwner?.mMediaPlayer
             when (event.type) {
                 MediaPlayer.Event.Playing -> {
-                    YandexMetrica.reportEvent(TAG + "preRollListener playing")
                     //mOwner?.pausePlayer()//it is not need, because we do not want change button
                     player?.pause()
                     player?.setEventListener (mOwner?.mPlayerListener)
@@ -881,12 +819,10 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             mFragmentContainer?.keepScreenOn = true
             val isAudioGained = mAudioFocusHelper.requestAudioFocus()
             mMediaPlayer?.play()
-            Log.d("ttt", "isAudioGained " + isAudioGained)
         }
     }
 
     private fun hideNavigationBar(dim: Boolean = true) {
-        YandexMetrica.reportEvent(TAG + "hideNavigationBar")
         if (!AndroidUtil.isHoneycombOrLater())
             return
         var visibility = 0
@@ -923,7 +859,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     }
 
     private fun showController(needShow: Boolean, isInfiniteShow: Boolean = false) {
-        YandexMetrica.reportEvent(TAG + "showController")
         if (needShow) {
             mController?.visibility = View.VISIBLE
             hideNavigationBar(false)
@@ -949,7 +884,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     fun initPhoneStateListener() {
         try {
-            YandexMetrica.reportEvent(TAG + "initPhoneStateListener")
             tmgr?.listen(myStatePhoneListener, PhoneStateListener.LISTEN_CALL_STATE)
         } catch (ex: Exception) {
             YandexMetrica.reportError("initPhoneStateListener", ex)
