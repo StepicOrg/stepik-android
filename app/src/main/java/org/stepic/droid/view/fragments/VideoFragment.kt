@@ -290,6 +290,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
         }
         if (!km.inKeyguardRestrictedInputMode()) {
+            if (!needPlay && !isEndReached) {
+                startLoading()
+            }
             mMediaPlayer?.play()
             mMediaPlayer?.time = mCurrentTimeInMillis
             mPlayerSeekBar?.let {
@@ -353,7 +356,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
         if (isEndReached) {
-            recreateAndPreloadPlayer(isNeedPlayAfterRecreating =  false)
+            recreateAndPreloadPlayer(isNeedPlayAfterRecreating = false)
         }
 
         changeSurfaceLayout()
@@ -405,15 +408,15 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
         // compute the aspect ratio
         var ar: Double
-//        val vw: Double
+        //        val vw: Double
         if (mSarDen == mSarNum) {
             /* No indication about the density, assuming 1:1 */
-//            vw = mVideoVisibleWidth.toDouble()
-//            ar = mVideoVisibleWidth.toDouble() / mVideoVisibleHeight.toDouble()
+            //            vw = mVideoVisibleWidth.toDouble()
+            //            ar = mVideoVisibleWidth.toDouble() / mVideoVisibleHeight.toDouble()
         } else {
             /* Use the specified aspect ratio */
-//            vw = mVideoVisibleWidth * mSarNum.toDouble() / mSarDen
-//            ar = vw / mVideoVisibleHeight
+            //            vw = mVideoVisibleWidth * mSarNum.toDouble() / mSarDen
+            //            ar = vw / mVideoVisibleHeight
         }
         // compute the display aspect ratio
         val dar = w / h
@@ -803,7 +806,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                         mOwner?.mCurrentTime?.text = TimeUtil.getFormattedVideoTime(mOwner?.mCurrentTimeInMillis ?: 0L)
                         player.time = mOwner?.mCurrentTimeInMillis ?: 0L
                     }
-                    if (mOwner?.needPlay?:false){
+                    if (mOwner?.needPlay ?: false) {
                         mOwner?.mFragmentContainer?.keepScreenOn = true
                         mOwner?.mAudioFocusHelper?.requestAudioFocus()
                         player?.play()
