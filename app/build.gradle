@@ -151,9 +151,6 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
-<<<<<<< HEAD
-}
-=======
+
 }
 apply plugin: 'com.google.gms.google-services'
->>>>>>> release/1.6_pushes
