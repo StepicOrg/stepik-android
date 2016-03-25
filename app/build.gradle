@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.neenbedankt.android-apt' //needed for source code generation
 
-
 android {
 
     compileSdkVersion 23
@@ -12,8 +11,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 41
-        versionName "1.5.3"
+        versionCode 42
+        versionName "1.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // Enabling multidex support.
         multiDexEnabled true
@@ -137,6 +136,8 @@ dependencies {
     compile files('libs/slf4j-api-1.7.12.jar')
 
     compile 'de.mrmaffen:vlc-android-sdk:3.0.0'
+
+    compile "com.google.android.gms:play-services-gcm:8.4.0"
 }
 
 repositories {
@@ -150,4 +151,9 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
+<<<<<<< HEAD
 }
+=======
+}
+apply plugin: 'com.google.gms.google-services'
+>>>>>>> release/1.6_pushes

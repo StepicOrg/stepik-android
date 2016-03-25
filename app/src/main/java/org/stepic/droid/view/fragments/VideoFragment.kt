@@ -20,7 +20,7 @@ import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
-import org.stepic.droid.core.MyStatePhoneListener
+import org.stepic.droid.core.MyPhoneStateListener
 import org.stepic.droid.events.IncomingCallEvent
 import org.stepic.droid.events.audio.AudioFocusLossEvent
 import org.stepic.droid.preferences.VideoPlaybackRate
@@ -54,7 +54,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         }
     }
 
-    val myStatePhoneListener = MyStatePhoneListener()
+    val myStatePhoneListener = MyPhoneStateListener()
     val tmgr = MainApplication.getAppContext().getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
     var mSurfaceFrame: FrameLayout? = null
     var mFragmentContainer: ViewGroup? = null
@@ -901,7 +901,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             YandexMetrica.reportError("removePhoneStateCallbacks", ex)
         }
     }
-
 
     @Subscribe
     fun onAudioFocusLoss(event: AudioFocusLossEvent) {

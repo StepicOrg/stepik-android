@@ -18,6 +18,7 @@ import org.stepic.droid.receivers.InternetConnectionEnabledReceiver;
 import org.stepic.droid.services.CancelLoadingService;
 import org.stepic.droid.services.DeleteService;
 import org.stepic.droid.services.LoadService;
+import org.stepic.droid.services.RegistrationIntentService;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.ImageOnDisk;
@@ -118,5 +119,7 @@ public interface StepicCoreComponent {
 
     void inject(FromDbCoursesTask fromDbCoursesTask);
 
-    void inject(MyStatePhoneListener listener);
+    void inject(MyPhoneStateListener receiver);
+
+    void inject(RegistrationIntentService service);
 }

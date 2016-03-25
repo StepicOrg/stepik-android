@@ -7,8 +7,7 @@ import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.events.IncomingCallEvent
 import javax.inject.Inject
 
-class MyStatePhoneListener: PhoneStateListener() {
-
+class MyPhoneStateListener : PhoneStateListener() {
     init {
         MainApplication.component().inject(this)
     }
