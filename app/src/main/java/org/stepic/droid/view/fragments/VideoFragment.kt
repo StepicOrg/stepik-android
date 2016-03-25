@@ -110,7 +110,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     private class MyBroadcastReceiver(owner: VideoFragment) : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            when (intent?.getAction()) {
+            when (intent?.action) {
                 AudioManager.ACTION_AUDIO_BECOMING_NOISY ->
                     mOwner?.pausePlayer()
             }
@@ -156,14 +156,14 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     }
 
     private fun bindViewWithPlayer() {
-        val vout = mMediaPlayer?.getVLCVout()
+        val vout = mMediaPlayer?.vlcVout
         vout?.setVideoView(mVideoView)
         vout?.addCallback(this)
         vout?.attachViews()
         //
         mMediaPlayer?.setEventListener(mPlayerListener)
 
-        mPlayPauseSwitcher?.setClickable(true)
+        mPlayPauseSwitcher?.isClickable = true
 
     }
 
@@ -229,10 +229,10 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
             val media = Media(libvlc, uri)
             //            mMedia?.setHWDecoderEnabled(true, true)
-            mMediaPlayer?.setMedia(media)
+            mMediaPlayer?.media = media
             media.release()
 
-            mMediaPlayer?.setRate(mUserPreferences.videoPlaybackRate.rateFloat)
+            mMediaPlayer?.rate = mUserPreferences.videoPlaybackRate.rateFloat
             isEndReached = false
         } catch (e: Exception) {
             YandexMetrica.reportEvent(TAG + "Error creating player")
@@ -242,7 +242,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     private fun releasePlayer() {
         mMediaPlayer?.stop()
-        val vout = mMediaPlayer?.getVLCVout()
+        val vout = mMediaPlayer?.vlcVout
         vout?.removeCallback(this)
         vout?.detachViews()
         //        mVideoViewHolder = null
@@ -382,8 +382,8 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             return
 
         // get screen size
-        var w = activity.getWindow().getDecorView().getWidth().toDouble()
-        var h = activity.getWindow().getDecorView().getHeight().toDouble()
+        var w = activity.window.decorView.width.toDouble()
+        var h = activity.window.decorView.height.toDouble()
 
         mMediaPlayer?.vlcVout?.setWindowSize(w.toInt(), h.toInt())
 
@@ -405,15 +405,15 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
         // compute the aspect ratio
         var ar: Double
-        val vw: Double
+//        val vw: Double
         if (mSarDen == mSarNum) {
             /* No indication about the density, assuming 1:1 */
-            vw = mVideoVisibleWidth.toDouble()
-            ar = mVideoVisibleWidth.toDouble() / mVideoVisibleHeight.toDouble()
+//            vw = mVideoVisibleWidth.toDouble()
+//            ar = mVideoVisibleWidth.toDouble() / mVideoVisibleHeight.toDouble()
         } else {
             /* Use the specified aspect ratio */
-            vw = mVideoVisibleWidth * mSarNum.toDouble() / mSarDen
-            ar = vw / mVideoVisibleHeight
+//            vw = mVideoVisibleWidth * mSarNum.toDouble() / mSarDen
+//            ar = vw / mVideoVisibleHeight
         }
         // compute the display aspect ratio
         val dar = w / h
@@ -428,18 +428,18 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         else
             w = h * ar
 
-        var lp: ViewGroup.LayoutParams = mVideoView!!.getLayoutParams()
+        var lp: ViewGroup.LayoutParams = mVideoView!!.layoutParams
         lp.width = Math.ceil(w.toDouble() * mVideoWidth / mVideoVisibleWidth).toInt()
         lp.height = Math.ceil(h.toDouble() * mVideoHeight / mVideoVisibleHeight).toInt()
-        mVideoView!!.setLayoutParams(lp)
+        mVideoView!!.layoutParams = lp
 
 
 
         // set frame size (crop if necessary)
-        lp = mSurfaceFrame!!.getLayoutParams()
+        lp = mSurfaceFrame!!.layoutParams
         lp.width = Math.floor(w.toDouble()).toInt()
         lp.height = Math.floor(h.toDouble()).toInt()
-        mSurfaceFrame!!.setLayoutParams(lp)
+        mSurfaceFrame!!.layoutParams = lp
 
         mVideoView?.invalidate()
 
@@ -505,7 +505,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                 if (!(mMediaPlayer?.isPlaying ?: true)) {
                     playPlayer() //double checking here =(
                 } else if (mMediaPlayer == null) {
-                    mPlayPauseSwitcher?.setClickable(false)
+                    mPlayPauseSwitcher?.isClickable = false
                     createPlayer()
                     bindViewWithPlayer()
                     playPlayer()
@@ -644,7 +644,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     }
 
     private fun destroyController() {
-        //todo: implement other
         mPlayPauseSwitcher?.setOnClickListener(null)
         mJumpBackwardImageView?.setOnClickListener(null)
         mJumpForwardImageView?.setOnClickListener(null)
@@ -775,7 +774,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             showController(true, isInfiniteShow = true)
             mFragmentContainer?.keepScreenOn = false
             mMediaPlayer?.pause()
-            val isReleased = mAudioFocusHelper.releaseAudioFocus()
+            mAudioFocusHelper.releaseAudioFocus()
         }
     }
 
@@ -817,7 +816,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     private fun playPlayer() {
         if (!(mMediaPlayer?.isPlaying ?: true)) {
             mFragmentContainer?.keepScreenOn = true
-            val isAudioGained = mAudioFocusHelper.requestAudioFocus()
+            mAudioFocusHelper.requestAudioFocus()
             mMediaPlayer?.play()
         }
     }
@@ -834,6 +833,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         }
         if (dim) {
             activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            @Suppress("DEPRECATION")
             if (AndroidUtil.isICSOrLater())
                 navbar = navbar or View.SYSTEM_UI_FLAG_LOW_PROFILE
             else
@@ -847,6 +847,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             }
         } else {
             activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            @Suppress("DEPRECATION")
             if (AndroidUtil.isICSOrLater())
                 visibility = visibility or View.SYSTEM_UI_FLAG_VISIBLE
             else
