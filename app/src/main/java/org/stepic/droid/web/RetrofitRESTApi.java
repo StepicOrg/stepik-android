@@ -516,7 +516,6 @@ public class RetrofitRESTApi implements IApi {
         String encodedSubject = URLEncoder.encode(subject);
         String aboutSystem = DeviceInfoUtil.getInfosAboutDevice(MainApplication.getAppContext());
         String encodedSystem = URLEncoder.encode(aboutSystem);
-//        String lala = URLEncoder.encode("NSQf8mf4Dc0ldKXzVBY3gpMjPkmDIdM+9qDYojJ2cJ+AvH8LeoWEbMzPbpQ08w+I1Z7iErDkjl1ZIe9zbagk2w==");
         return tempService.sendFeedback(encodedSubject, encodedEmail, encodedSystem, encodedDescription);
     }
 
@@ -603,8 +602,7 @@ public class RetrofitRESTApi implements IApi {
 
         long nowTemp = DateTime.now(DateTimeZone.UTC).getMillis();
         long delta = nowTemp - timestampStored;
-        long expiresMillis = -1;
-        expiresMillis = (response.getExpires_in() - 50) * 1000; //50 secs for query.
+        long expiresMillis = (response.getExpires_in() - 50) * 1000;
         return delta > expiresMillis;//token expired --> need update
     }
 }

@@ -125,7 +125,6 @@ public class DeviceInfoUtil {
     }
 
     public static boolean isConnectedToWifi(Context c) {
-        // via vwifi
         State wifi = ((ConnectivityManager) c
                 .getSystemService(Context.CONNECTIVITY_SERVICE))
                 .getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();

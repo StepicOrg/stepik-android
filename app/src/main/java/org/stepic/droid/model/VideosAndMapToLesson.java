@@ -16,7 +16,7 @@ public class VideosAndMapToLesson {
         return cachedVideoList;
     }
 
-    public Map<Long, Lesson> getmStepIdToLesson() {
+    public Map<Long, Lesson> getStepIdToLesson() {
         return mStepIdToLesson;
     }
 }

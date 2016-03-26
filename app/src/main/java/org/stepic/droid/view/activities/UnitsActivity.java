@@ -144,8 +144,8 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     @Subscribe
     public void onSuccessLoadUnits(SuccessLoadUnitsEvent e) {
-        if (mSection == null || e.getmSection() == null
-                || e.getmSection().getId() != mSection.getId())
+        if (mSection == null || e.getSection() == null
+                || e.getSection().getId() != mSection.getId())
             return;
 
         UnitStepicResponse unitStepicResponse = e.getResponse().body();
@@ -220,8 +220,8 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     @Subscribe
     public void onFailLoad(FailureLoadEvent e) {
-        if (mSection == null || e.getmSection() == null
-                || e.getmSection().getId() != mSection.getId())
+        if (mSection == null || e.getSection() == null
+                || e.getSection().getId() != mSection.getId())
             return;
 
         if (mUnitList != null && mUnitList.size() == 0) {
@@ -293,7 +293,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     @Subscribe
     public void onFinishSaveToDb(UnitLessonSavedEvent e) {
-        if (e.getmSection() == mSection) {
+        if (e.getSection() == mSection) {
             getAndShowUnitsFromCache();
         }
     }

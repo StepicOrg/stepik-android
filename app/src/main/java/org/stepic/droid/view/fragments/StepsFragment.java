@@ -144,13 +144,11 @@ public class StepsFragment extends FragmentBase {
 
             }
         });
-        Log.d(TAG, "onAcivityCreated");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart");
         bus.register(this);
         //isLoaded is retained and stepList too, but this method should be in onStart due to user can rotate device, when
         //loading is not finished. it can produce many requests, but it will be happen when user rotates device many times per second.
@@ -165,7 +163,6 @@ public class StepsFragment extends FragmentBase {
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop");
         bus.unregister(this);
     }
 

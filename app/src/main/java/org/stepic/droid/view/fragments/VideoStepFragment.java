@@ -60,7 +60,7 @@ public class VideoStepFragment extends StepBaseFragment {
         String thumbnail = "";
         if (mStep.getBlock() != null && mStep.getBlock().getVideo() != null && mStep.getBlock().getVideo().getThumbnail() != null) {
             thumbnail = mStep.getBlock().getVideo().getThumbnail();
-            setmThumbnail(thumbnail);
+            setThumbnail(thumbnail);
 
         } else {
             Picasso.with(getContext())
@@ -146,11 +146,11 @@ public class VideoStepFragment extends StepBaseFragment {
     public void onVideoLoaded(VideoLoadedEvent e) {
         if (e.getStepId() != mStep.getId()) return;
 
-        setmThumbnail(e.getThumbnail());
+        setThumbnail(e.getThumbnail());
         tempVideoUrl = e.getVideoUrl();
     }
 
-    private void setmThumbnail(String thumbnail) {
+    private void setThumbnail(String thumbnail) {
         Uri uri = ThumbnailParser.getUriForThumbnail(thumbnail);
         Picasso.with(getContext())
                 .load(uri)

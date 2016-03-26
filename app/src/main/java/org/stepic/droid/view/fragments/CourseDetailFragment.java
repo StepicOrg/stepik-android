@@ -219,7 +219,7 @@ public class CourseDetailFragment extends FragmentBase {
     }
 
     private void setUpIntroVideo() {
-        String urlToVideo = null;
+        String urlToVideo;
 
         Video newTypeVideo = mCourse.getIntro_video();
         if (newTypeVideo != null && newTypeVideo.getUrls() != null && !newTypeVideo.getUrls().isEmpty()) {
@@ -238,7 +238,7 @@ public class CourseDetailFragment extends FragmentBase {
             mIntroView.setVisibility(View.GONE);
             mPlayer.setVisibility(View.GONE);
         } else {
-            setmThumbnail(pathThumbnail);
+            setThumbnail(pathThumbnail);
             mPlayer.setVisibility(View.VISIBLE);
             mPlayer.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -388,7 +388,7 @@ public class CourseDetailFragment extends FragmentBase {
 
     }
 
-    private void setmThumbnail(String thumbnail) {
+    private void setThumbnail(String thumbnail) {
         Uri uri = ThumbnailParser.getUriForThumbnail(thumbnail);
         Picasso.with(getActivity())
                 .load(uri)

@@ -27,7 +27,7 @@ public class UnitLessonSavedEvent {
         return units;
     }
 
-    public Section getmSection() {
+    public Section getSection() {
         return mSection;
     }
 }

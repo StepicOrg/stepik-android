@@ -248,7 +248,7 @@ public class DownloadsFragment extends FragmentBase {
             @Override
             protected void onPostExecute(VideosAndMapToLesson videoAndMap) {
                 super.onPostExecute(videoAndMap);
-                bus.post(new FinishDownloadCachedVideosEvent(videoAndMap.getCachedVideoList(), videoAndMap.getmStepIdToLesson()));
+                bus.post(new FinishDownloadCachedVideosEvent(videoAndMap.getCachedVideoList(), videoAndMap.getStepIdToLesson()));
             }
         };
         task.execute();

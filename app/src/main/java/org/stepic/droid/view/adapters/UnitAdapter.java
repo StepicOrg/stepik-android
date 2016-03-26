@@ -217,7 +217,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
-                    // Show an expanation to the user *asynchronously* -- don't block
+                    // Show an explanation to the user *asynchronously* -- don't block
                     // this thread waiting for the user's response! After the user
                     // sees the explanation, try again to request the permission.
 

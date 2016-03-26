@@ -31,7 +31,7 @@ public class CoursePropertyAdapter extends ArrayAdapter<CourseProperty> {
 
         View view = convertView;
         // Check if an existing view is being reused, otherwise inflate the view
-        ViewHolderItem viewHolderItem = null;
+        ViewHolderItem viewHolderItem;
         if (view == null) {
             view = mInflater.inflate(R.layout.course_property_item, null);
             viewHolderItem = new ViewHolderItem(view);

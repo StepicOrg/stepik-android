@@ -18,7 +18,7 @@ public class SuccessLoadUnitsEvent {
         this.retrofit = retrofit;
     }
 
-    public Section getmSection() {
+    public Section getSection() {
         return mSection;
     }
 

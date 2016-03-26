@@ -35,7 +35,7 @@ public class HtmlHelper {
         {
             final String id = element.getAttributeValue("name"); // Get Attribute 'id'
             if( id != null && id.equals(metaKey)){
-                strData = element.getAttributeValue("content").toString();
+                strData = element.getAttributeValue("content");
             }
         }
         return strData;

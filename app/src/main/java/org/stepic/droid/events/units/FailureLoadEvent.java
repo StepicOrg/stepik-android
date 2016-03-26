@@ -10,7 +10,7 @@ public class FailureLoadEvent {
         this.mSection = mSection;
     }
 
-    public Section getmSection() {
+    public Section getSection() {
         return mSection;
     }
 }

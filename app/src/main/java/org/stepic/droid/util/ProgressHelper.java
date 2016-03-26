@@ -8,10 +8,10 @@ import android.widget.ProgressBar;
 import com.yandex.metrica.YandexMetrica;
 
 public class ProgressHelper {
-    public static void dismiss(ProgressBar mProgressLoogin) {
+    public static void dismiss(ProgressBar mProgressLogin) {
 
-        if (mProgressLoogin != null && mProgressLoogin.getVisibility() != View.GONE) {
-            mProgressLoogin.setVisibility(View.GONE);
+        if (mProgressLogin != null && mProgressLogin.getVisibility() != View.GONE) {
+            mProgressLogin.setVisibility(View.GONE);
         }
     }
 
