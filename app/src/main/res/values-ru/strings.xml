@@ -112,5 +112,6 @@
     <string name="feedback_fill_fields">Заполните пусты поля</string>
     <string name="cant_drop">Вы не можете покинуть курс</string>
     <string name="open_in_external_player">Открывать в системном плеере</string>
+    <string name="code_warning">Этот шаг не оптимизирован для мобильных</string>
 
 </resources>

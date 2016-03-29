@@ -9,6 +9,8 @@ public class Reply {
     private final String formula;
     private final String number;
     private final List<Integer> ordering;
+    private final String language;
+    private final String code;
 
     public static class Builder {
 
@@ -18,6 +20,8 @@ public class Reply {
         private String formula;
         private String number;
         private List<Integer> ordering;
+        private String language;
+        private String code;
 
         public Builder() {
         }
@@ -52,6 +56,16 @@ public class Reply {
             return this;
         }
 
+        public Builder setLanguage(String language) {
+            this.language = language;
+            return this;
+        }
+
+        public Builder setCode(String code) {
+            this.code = code;
+            return this;
+        }
+
         public Reply build() {
             return new Reply(this);
         }
@@ -65,6 +79,8 @@ public class Reply {
         formula = builder.formula;
         number = builder.number;
         ordering = builder.ordering;
+        language = builder.language;
+        code = builder.code;
     }
 
     public String getNumber() {
@@ -89,5 +105,13 @@ public class Reply {
 
     public List<Integer> getOrdering() {
         return ordering;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public String getCode() {
+        return code;
     }
 }
