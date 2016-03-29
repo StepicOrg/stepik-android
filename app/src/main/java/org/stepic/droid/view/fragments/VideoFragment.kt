@@ -54,7 +54,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         }
     }
 
-    val myStatePhoneListener = MyStatePhoneListener()
+    val myStatePhoneListener =  MyStatePhoneListener()
     val tmgr = MainApplication.getAppContext().getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
     var mSurfaceFrame: FrameLayout? = null
     var mFragmentContainer: ViewGroup? = null
@@ -160,7 +160,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         vout?.setVideoView(mVideoView)
         vout?.addCallback(this)
         vout?.attachViews()
-        //
+
         mMediaPlayer?.setEventListener(mPlayerListener)
 
         mPlayPauseSwitcher?.isClickable = true
@@ -270,9 +270,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     override fun onResume() {
         super.onResume()
         bus.register(this)
-        if (!isLoading) {
-            showController(true)
-        }
         recreateAndPreloadPlayer(isNeedPlayAfterRecreating = false)
     }
 
@@ -281,19 +278,19 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         val km = MainApplication.getAppContext().getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
         createPlayer()
         bindViewWithPlayer()
-        if (isOnResumeDirectlyAfterOnCreate) {
-            isOnResumeDirectlyAfterOnCreate = false
-            mMediaPlayer?.setEventListener(mPlayerListener)
 
-        } else {
-            mMediaPlayer?.setEventListener(preRollListener)
-
-        }
         if (!km.inKeyguardRestrictedInputMode()) {
             if (!needPlay && !isEndReached) {
                 startLoading()
             }
-            mMediaPlayer?.play()
+            if (isOnResumeDirectlyAfterOnCreate) {
+                isOnResumeDirectlyAfterOnCreate = false
+                mMediaPlayer?.setEventListener(mPlayerListener)
+                playPlayer()
+            } else {
+                mMediaPlayer?.setEventListener(preRollListener)
+                mMediaPlayer?.play()
+            }
             mMediaPlayer?.time = mCurrentTimeInMillis
             mPlayerSeekBar?.let {
                 if (!isSeekBarDragging) {
@@ -311,6 +308,8 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     it.progress = (max.toFloat() * positionByHand).toInt()
                 }
             }
+        } else {
+            showController(false)
         }
 
     }
@@ -610,7 +609,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             }
             mCurrentTimeInMillis = newTime
 
-            pausePlayer()
+            pausePlayer(releaseAudioFocusAndScreen = false)
             mMediaPlayer?.setEventListener(null)
             releasePlayer()
             recreateAndPreloadPlayer()
@@ -623,7 +622,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             val length: Long = mMaxTimeInMillis ?: 0L
             mCurrentTimeInMillis = Math.max(0L, length - JUMP_TIME_MILLIS)
 
-            pausePlayer()
+            pausePlayer(releaseAudioFocusAndScreen = false)
             mMediaPlayer?.setEventListener(null)
             releasePlayer()
             recreateAndPreloadPlayer()
@@ -635,7 +634,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             }
             mCurrentTimeInMillis = Math.max(0L, currentTime.toLong() - JUMP_TIME_MILLIS)
 
-            pausePlayer()
+            pausePlayer(releaseAudioFocusAndScreen = false)
             mMediaPlayer?.setEventListener(null)
             releasePlayer()
             recreateAndPreloadPlayer()
@@ -685,11 +684,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                if (newPosition >= 0 && mMediaPlayer?.isPlaying ?: false) {
+                if (newPosition >= 0) {
                     val seekToTime: Float = mMaxTimeInMillis?.toFloat() ?: 0f
                     mCurrentTimeInMillis = (newPosition * seekToTime).toLong()
 
-                    pausePlayer()
+                    pausePlayer(releaseAudioFocusAndScreen = false)
                     mMediaPlayer?.setEventListener(null)
                     releasePlayer()
                     recreateAndPreloadPlayer()
@@ -772,12 +771,15 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         }
     }
 
-    private fun pausePlayer() {
+    private fun pausePlayer(releaseAudioFocusAndScreen: Boolean = true) {
         if (mMediaPlayer?.isPlaying ?: false) {
             showController(true, isInfiniteShow = true)
-            mFragmentContainer?.keepScreenOn = false
+
             mMediaPlayer?.pause()
-            mAudioFocusHelper.releaseAudioFocus()
+            if (releaseAudioFocusAndScreen) {
+                mFragmentContainer?.keepScreenOn = false
+                mAudioFocusHelper.releaseAudioFocus()
+            }
         }
     }
 
@@ -901,7 +903,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             YandexMetrica.reportError("removePhoneStateCallbacks", ex)
         }
     }
-
 
     @Subscribe
     fun onAudioFocusLoss(event: AudioFocusLossEvent) {
