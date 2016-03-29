@@ -11,13 +11,13 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.web.IApi
 import javax.inject.Inject
 
-class RegistrationIntentService : IntentService("StepicGcmReg"){
+class RegistrationIntentService : IntentService("StepicGcmReg") {
 
     @Inject
-    lateinit var mSharedPreferences : SharedPreferenceHelper
+    lateinit var mSharedPreferences: SharedPreferenceHelper
 
     @Inject
-    lateinit var mApi : IApi
+    lateinit var mApi: IApi
 
     init {
         MainApplication.component().inject(this)
@@ -40,8 +40,8 @@ class RegistrationIntentService : IntentService("StepicGcmReg"){
         }
 
         // Notify UI that registration has completed, so the progress indicator can be hidden.
-//        val registrationComplete = Intent(QuickstartPreferences.REGISTRATION_COMPLETE)
-//        LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete)
+        //        val registrationComplete = Intent(QuickstartPreferences.REGISTRATION_COMPLETE)
+        //        LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete)
     }
 
     /**
@@ -54,6 +54,6 @@ class RegistrationIntentService : IntentService("StepicGcmReg"){
      */
     private fun sendRegistrationToServer(token: String) {
         // Add custom implementation, as needed.
-//        mApi
+        mApi.registerDevice(token).execute()
     }
 }
