@@ -123,6 +123,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
 
     private void updateUnits() {
+        //// FIXME: 29.03.16 if units are empty or null, show banner, NOW INFINITE LOOP AND LOADING
         mShell.getApi().getUnits(mSection.getUnits()).enqueue(new Callback<UnitStepicResponse>() {
             @Override
             public void onResponse(Response<UnitStepicResponse> response, Retrofit retrofit) {

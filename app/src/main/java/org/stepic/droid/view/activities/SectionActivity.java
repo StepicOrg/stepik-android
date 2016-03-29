@@ -122,6 +122,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     }
 
     private void updateSections() {
+        // FIXME: 29.03.16 if sections are empty or null, show banner, NOW INFINITE LOOP AND LOADING
         mShell.getApi().getSections(mCourse.getSections()).enqueue(new Callback<SectionsStepicResponse>() {
             @Override
             public void onResponse(Response<SectionsStepicResponse> response, Retrofit retrofit) {
