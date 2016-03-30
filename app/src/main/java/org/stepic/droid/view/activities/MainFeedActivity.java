@@ -10,12 +10,15 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.yandex.metrica.YandexMetrica;
@@ -26,6 +29,7 @@ import org.stepic.droid.events.profile.ProfileCanBeShownEvent;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
+import org.stepic.droid.services.RegistrationIntentService;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.fragments.DownloadsFragment;
@@ -49,6 +53,7 @@ import retrofit.Retrofit;
 public class MainFeedActivity extends FragmentActivityBase
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String KEY_CURRENT_INDEX = "Current_index";
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
@@ -144,6 +149,14 @@ public class MainFeedActivity extends FragmentActivityBase
 
             }
         });
+
+
+        if (checkPlayServices() && !mSharedPreferenceHelper.isGcmTokenOk()) {
+            // Start IntentService to register this application with GCM.
+            Log.d("eee", "start from main feed");
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
     }
 
     private void initDrawerHeader() {
@@ -311,5 +324,26 @@ public class MainFeedActivity extends FragmentActivityBase
     public void showFindLesson() {
         mCurrentIndex = 1;
         showCurrentFragment(mCurrentIndex);
+    }
+
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                //Log.i(TAG, "This device is not supported.");
+                return false;
+            }
+            return false;
+        }
+        return true;
     }
 }

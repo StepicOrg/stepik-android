@@ -167,5 +167,10 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name=".services.RegistrationIntentService"
+            android:exported="false">
+        </service>
+
     </application>
 </manifest>
