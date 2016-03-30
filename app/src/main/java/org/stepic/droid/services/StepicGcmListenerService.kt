@@ -15,6 +15,7 @@ import org.stepic.droid.view.activities.MainFeedActivity
 class StepicGcmListenerService : GcmListenerService() {
 
     override fun onMessageReceived(from: String?, data: Bundle?) {
+        val emptyBundle = data!!.getBundle("notification")
         val message = data!!.getString("gcm.notification.title")
         YandexMetrica.reportEvent("gcm.notification.title is " + message);
         sendNotification("ETO CUSTOM " + (message ?: "null"))
@@ -33,10 +34,17 @@ class StepicGcmListenerService : GcmListenerService() {
                 PendingIntent.FLAG_ONE_SHOT)
 
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val notificationBuilder = NotificationCompat.Builder(this).setSmallIcon(R.drawable.stepic_logo).setContentTitle("GCM Message").setContentText(message).setAutoCancel(true).setSound(defaultSoundUri).setContentIntent(pendingIntent)
+        val notification = NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.stepic_logo)
+                .setContentTitle("GCM Message")
+                .setContentText(message)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent)
+                .build()
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
+        notificationManager.notify(0 /* ID of notification */, notification)
     }
 }
