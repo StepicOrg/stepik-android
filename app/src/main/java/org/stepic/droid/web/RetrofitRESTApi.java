@@ -516,7 +516,7 @@ public class RetrofitRESTApi implements IApi {
         String encodedSubject = URLEncoder.encode(subject);
         String aboutSystem = DeviceInfoUtil.getInfosAboutDevice(MainApplication.getAppContext());
         String encodedSystem = URLEncoder.encode(aboutSystem);
-        return tempService.sendFeedback(encodedSubject, encodedEmail, encodedSystem, encodedDescription);
+        return tempService.sendFeedback(encodedSubject, encodedEmail, encodedSystem, encodedDescription, "www.stepic.org");
     }
 
     @Override
