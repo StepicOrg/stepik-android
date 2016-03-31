@@ -6,12 +6,14 @@ import android.text.Spanned;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.Source;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class HtmlHelper {
 
+    @NotNull
     public static Spanned fromHtml(@Nullable String content) {
         if (content == null)
             return Html.fromHtml("");

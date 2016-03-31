@@ -12,6 +12,7 @@ import org.stepic.droid.concurrency.tasks.ToDbUnitLessonTask;
 import org.stepic.droid.concurrency.tasks.UpdateCourseTask;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.notifications.StepicGcmListenerService;
 import org.stepic.droid.receivers.DownloadClickReceiver;
 import org.stepic.droid.receivers.DownloadCompleteReceiver;
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver;
@@ -122,4 +123,6 @@ public interface StepicCoreComponent {
     void inject(MyPhoneStateListener receiver);
 
     void inject(RegistrationIntentService service);
+
+    void inject(StepicGcmListenerService listenerService);
 }

@@ -85,4 +85,7 @@ public interface StepicRestLoggedService {
 
     @POST("api/devices")
     Call<DeviceResponse> registerDevice(@Body DeviceRequest deviceRequest);
+
+    @GET("api/courses")
+    Call<CoursesStepicResponse> getCourses(@Query("ids[]") long[] courseIds);
 }

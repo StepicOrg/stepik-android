@@ -71,4 +71,6 @@ public interface IApi {
     Call<DeviceResponse> getDevices ();
 
     Call<DeviceResponse> registerDevice(String token);
+
+    Call<CoursesStepicResponse> getCourse(long id);
 }
