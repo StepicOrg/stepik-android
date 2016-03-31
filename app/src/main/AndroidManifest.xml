@@ -153,14 +153,14 @@
         </receiver>
 
         <service
-            android:name="org.stepic.droid.services.StepicGcmListenerService"
+            android:name=".notifications.StepicGcmListenerService"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name=".services.StepicInstanceIDListenerService"
+            android:name=".notifications.StepicInstanceIDListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
@@ -168,7 +168,7 @@
         </service>
 
         <service
-            android:name=".services.RegistrationIntentService"
+            android:name=".notifications.RegistrationIntentService"
             android:exported="false">
         </service>
 

@@ -1,4 +1,4 @@
-package org.stepic.droid.services
+package org.stepic.droid.notifications
 
 import android.app.NotificationManager
 import android.app.PendingIntent
