@@ -8,14 +8,19 @@ import android.media.RingtoneManager
 import android.os.Bundle
 import android.support.v4.app.NotificationCompat
 import com.google.android.gms.gcm.GcmListenerService
+import com.google.gson.Gson
 import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
+import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.view.activities.MainFeedActivity
 
 class StepicGcmListenerService : GcmListenerService() {
 
     override fun onMessageReceived(from: String?, data: Bundle?) {
         val emptyBundle = data!!.getBundle("notification")
+        val notificationRawString : String = data!!.getString("object")
+        val stepicNotification =  Gson().fromJson(notificationRawString, Notification::class.java)
+
         val message = data!!.getString("gcm.notification.title")
         YandexMetrica.reportEvent("gcm.notification.title is " + message);
         sendNotification("ETO CUSTOM " + (message ?: "null"))

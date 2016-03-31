@@ -8,7 +8,7 @@ data class Notification(
         var is_unread: Boolean? = null,
         @SerializedName("is_muted")
         var isMuted: Boolean? = null,
-        @SerializedName("is_favourite")
+        @SerializedName("is_favorite")
         var isFavourite: Boolean? = null,
         var time: String? = null,
         var type: NotificationType? = null,
