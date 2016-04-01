@@ -64,7 +64,7 @@ public class SharedPreferenceHelper {
         put(PreferenceType.LOGIN, GCM_TOKEN_ACTUAL, isGcmTokenOk);
     }
 
-    public boolean isGcmTokenOk(){
+    public boolean isGcmTokenOk() {
         return getBoolean(PreferenceType.LOGIN, GCM_TOKEN_ACTUAL);
     }
 
@@ -268,6 +268,6 @@ public class SharedPreferenceHelper {
     private final String VIDEO_RATE_PREF_KEY = "video_rate_pref_key";
     private final String VIDEO_EXTERNAL_PREF_KEY = "video_external_pref_key";
     private final String GCM_TOKEN_ACTUAL = "gcm_token_actual";
-    private final String NOTIFICATION_DISABLED = "notification_diabled_by_user";
+    private final String NOTIFICATION_DISABLED = "notification_disabled_by_user";
 
 }
