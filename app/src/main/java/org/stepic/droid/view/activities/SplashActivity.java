@@ -4,13 +4,12 @@ package org.stepic.droid.view.activities;
 import android.os.Bundle;
 import android.os.Handler;
 
-import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 
 import butterknife.ButterKnife;
 
 
-public class SplashActivity extends FragmentActivityBase {
+public class SplashActivity extends BackToExitActivityBase {
 
     // Splash screen wait time
     private static final int SPLASH_TIME_OUT = 1500;
@@ -26,7 +25,6 @@ public class SplashActivity extends FragmentActivityBase {
         }
 
         setContentView(org.stepic.droid.R.layout.activity_splash);
-        overridePendingTransition(org.stepic.droid.R.anim.slide_in_from_end, org.stepic.droid.R.anim.slide_out_to_start);
         ButterKnife.bind(this);
 
         new Handler().postDelayed(new Runnable() {

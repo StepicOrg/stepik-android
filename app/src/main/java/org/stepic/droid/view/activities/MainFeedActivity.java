@@ -24,7 +24,6 @@ import com.squareup.picasso.Picasso;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.events.profile.ProfileCanBeShownEvent;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
@@ -49,7 +48,7 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class MainFeedActivity extends FragmentActivityBase
+public class MainFeedActivity extends BackToExitActivityBase
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String KEY_CURRENT_INDEX = "Current_index";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;

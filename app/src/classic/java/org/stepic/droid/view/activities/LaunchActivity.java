@@ -10,14 +10,13 @@ import android.view.View;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.util.AppConstants;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 
-public class LaunchActivity extends FragmentActivityBase {
+public class LaunchActivity extends BackToExitActivityBase {
 
     public static final String OVERRIDE_ANIMATION_FLAG = "override_animation_flag";
 
