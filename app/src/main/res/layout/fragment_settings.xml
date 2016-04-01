@@ -103,30 +103,30 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/fragment_settings_notification_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/notification_title"
-                android:textColor="@color/stepic_blue_ribbon"
-                android:textSize="16sp"
-                android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/fragment_settings_notification_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/notification_title"
+                    android:textColor="@color/stepic_blue_ribbon"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
 
-            <org.stepic.droid.view.custom.BetterSwitch
-                android:id="@+id/fragment_settings_notification_learn_switch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/notification_learn_list"
-                android:foreground="@drawable/non_radius_foreground"
-                android:padding="16dp"
-                android:text="@string/notification_learn_list"
-                android:textColor="@color/stepic_regular_text"
-                android:textSize="16sp"/>
+                <org.stepic.droid.view.custom.BetterSwitch
+                    android:id="@+id/fragment_settings_notification_learn_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/notification_learn_list"
+                    android:foreground="@drawable/non_radius_foreground"
+                    android:padding="16dp"
+                    android:text="@string/notification_learn_list"
+                    android:textColor="@color/stepic_regular_text"
+                    android:textSize="16sp"/>
             </LinearLayout>
 
 
@@ -137,7 +137,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/notification_settings"
-            android:layout_margin="@dimen/settingsLeft_RightMargin"
+            android:layout_marginBottom="40dp"
+            android:layout_marginEnd="@dimen/settingsLeft_RightMargin"
+            android:layout_marginLeft="@dimen/settingsLeft_RightMargin"
+            android:layout_marginRight="@dimen/settingsLeft_RightMargin"
+            android:layout_marginStart="@dimen/settingsLeft_RightMargin"
+            android:layout_marginTop="@dimen/settingsLeft_RightMargin"
             tools:text="@string/clear_cache_title"/>
 
         <TextView
@@ -150,6 +155,7 @@
             android:gravity="center_horizontal"
             android:textColor="@color/stepic_weak_text"
             android:textSize="@dimen/text_height"
+            android:visibility="gone"
             tools:text="Version is great"/>
 
     </RelativeLayout>

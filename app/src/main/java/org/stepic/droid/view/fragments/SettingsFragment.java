@@ -84,7 +84,7 @@ public class SettingsFragment extends FragmentBase {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        showVersionName();
+//        showVersionName();
 
         setUpClearCacheButton();
 
