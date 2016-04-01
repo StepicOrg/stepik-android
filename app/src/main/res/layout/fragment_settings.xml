@@ -11,10 +11,10 @@
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.CardView
-            android:id="@+id/top_settings"
+            android:id="@+id/video_settings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/settingsLeft_RightMargin"
             app:cardCornerRadius="2dp">
 
             <LinearLayout
@@ -40,7 +40,7 @@
                     android:id="@+id/fragment_settings_external_player_switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@+id/fragment_settings_wifi_enable_switch"
+                    android:contentDescription="@string/open_in_external_player"
                     android:foreground="@drawable/non_radius_foreground"
                     android:padding="16dp"
                     android:text="@string/open_in_external_player"
@@ -90,12 +90,54 @@
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
+        <android.support.v7.widget.CardView
+            android:id="@+id/notification_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/video_settings"
+            android:layout_margin="@dimen/settingsLeft_RightMargin"
+            app:cardCornerRadius="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/fragment_settings_notification_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/notification_title"
+                android:textColor="@color/stepic_blue_ribbon"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <org.stepic.droid.view.custom.BetterSwitch
+                android:id="@+id/fragment_settings_notification_learn_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/notification_learn_list"
+                android:foreground="@drawable/non_radius_foreground"
+                android:padding="16dp"
+                android:text="@string/notification_learn_list"
+                android:textColor="@color/stepic_regular_text"
+                android:textSize="16sp"/>
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/clear_cache_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/top_settings"
-            android:layout_margin="5dp"
+            android:layout_below="@id/notification_settings"
+            android:layout_margin="@dimen/settingsLeft_RightMargin"
             tools:text="@string/clear_cache_title"/>
 
         <TextView

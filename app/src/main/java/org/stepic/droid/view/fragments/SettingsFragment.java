@@ -55,6 +55,9 @@ public class SettingsFragment extends FragmentBase {
     @Bind(R.id.version_tv)
     TextView mVersionTv;
 
+    @Bind(R.id.fragment_settings_notification_learn_switch)
+    BetterSwitch notificationLearnSwitch;
+
     @BindString(R.string.version)
     String versionPrefix;
 
@@ -84,6 +87,8 @@ public class SettingsFragment extends FragmentBase {
         showVersionName();
 
         setUpClearCacheButton();
+
+        setUpNotificationLearn();
 
         mWifiLoadSwitch.setChecked(!mSharedPreferenceHelper.isMobileInternetAlsoAllowed());//if first time it is true
 
@@ -173,6 +178,7 @@ public class SettingsFragment extends FragmentBase {
     public void onDestroyView() {
         mWifiLoadSwitch.setOnCheckedChangeListener(null);
         mExternalPlayerSwitch.setOnCheckedChangeListener(null);
+        notificationLearnSwitch.setOnCheckedChangeListener(null);
         super.onDestroyView();
     }
 
@@ -211,5 +217,15 @@ public class SettingsFragment extends FragmentBase {
         if (requestCode == REQUEST_CLEAR_CACHE) {
             setUpClearCacheButton();
         }
+    }
+
+    private void setUpNotificationLearn() {
+        notificationLearnSwitch.setChecked(mUserPreferences.isNotificationEnabled());
+        notificationLearnSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mUserPreferences.setNotificationEnabled(isChecked);
+            }
+        });
     }
 }

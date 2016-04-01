@@ -122,4 +122,6 @@
     <string name="cant_drop">You can not drop course</string>
     <string name="open_in_external_player">Open in external player</string>
     <string name="code_warning">This step is not optimized for mobile</string>
+    <string name="notification_title">Notification</string>
+    <string name="notification_learn_list">Deadlines, new modules, certificates</string>
 </resources>
