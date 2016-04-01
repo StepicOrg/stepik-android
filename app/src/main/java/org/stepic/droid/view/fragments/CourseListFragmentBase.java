@@ -155,6 +155,16 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
     }
 
+    @Override
+    public void onDestroyView() {
+        if (mListOfCourses!= null){
+            mListOfCourses.setAdapter(null);
+            mListOfCourses.setOnScrollListener(null);
+            mListOfCourses.setOnItemClickListener(null);
+        }
+        super.onDestroyView();
+    }
+
     protected abstract DatabaseFacade.Table getCourseType();
 
     public void downloadData() {
