@@ -32,11 +32,11 @@ class RegistrationIntentService : IntentService("StepicGcmReg") {
 
             sendRegistrationToServer(token)
 
-            mSharedPreferences.setIsGcmTokenOk(true)
+            mSharedPreferences.setNotificationDisabled(true)
             YandexMetrica.reportEvent("notification gcm token is updated")
         } catch (e: Exception) {
             YandexMetrica.reportEvent("notification gcm token is not updated")
-            mSharedPreferences.setIsGcmTokenOk(false)
+            mSharedPreferences.setNotificationDisabled(false)
         }
 
         // Notify UI that registration has completed, so the progress indicator can be hidden.

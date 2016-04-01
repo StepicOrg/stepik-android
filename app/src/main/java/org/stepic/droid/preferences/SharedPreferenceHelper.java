@@ -32,6 +32,15 @@ public class SharedPreferenceHelper {
         mContext = MainApplication.getAppContext();
     }
 
+    public boolean isNotificationDisabled() {
+        //default is enabled
+        return getBoolean(PreferenceType.LOGIN, NOTIFICATION_DISABLED);
+    }
+
+    public void setNotificationDisabled(boolean isNotificationDisabled) {
+        put(PreferenceType.LOGIN, NOTIFICATION_DISABLED, isNotificationDisabled);
+    }
+
 
     public enum PreferenceType {
         LOGIN("login preference"),
@@ -259,5 +268,6 @@ public class SharedPreferenceHelper {
     private final String VIDEO_RATE_PREF_KEY = "video_rate_pref_key";
     private final String VIDEO_EXTERNAL_PREF_KEY = "video_external_pref_key";
     private final String GCM_TOKEN_ACTUAL = "gcm_token_actual";
+    private final String NOTIFICATION_DISABLED = "notification_diabled_by_user";
 
 }

@@ -116,4 +116,13 @@ public class UserPreferences {
         mSharedPreferenceHelper.setOpenInExternal(isOpenInExternal);
     }
 
+    public boolean isNotificationEnabled () {
+        return !mSharedPreferenceHelper.isNotificationDisabled();
+    }
+
+    public void setNotificationEnabled(boolean isEnabled) {
+        mSharedPreferenceHelper.setNotificationDisabled(!isEnabled);
+    }
+
+
 }

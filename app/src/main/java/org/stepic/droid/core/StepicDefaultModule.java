@@ -20,6 +20,8 @@ import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.notifications.INotificationManager;
+import org.stepic.droid.notifications.NotificationManagerImpl;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialManager;
@@ -305,5 +307,11 @@ public class StepicDefaultModule {
     @Provides
     public AudioFocusHelper provideAudioFocusHelper(Context context, IMainHandler mainHandler, Bus bus) {
         return new AudioFocusHelper(context, bus, mainHandler);
+    }
+
+    @Singleton
+    @Provides
+    public INotificationManager provideNotificationManager (DatabaseFacade dbFacade, IApi api, IConfig config, UserPreferences userPreferences) {
+        return new NotificationManagerImpl(dbFacade, api, config, userPreferences);
     }
 }
