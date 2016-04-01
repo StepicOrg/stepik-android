@@ -30,7 +30,8 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="org.stepic.droid.view.activities.SplashActivity">
+            android:name="org.stepic.droid.view.activities.SplashActivity"
+            android:theme="@style/AppTheme.BrandedLaunch">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
