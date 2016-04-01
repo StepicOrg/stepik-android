@@ -28,15 +28,14 @@ import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.events.profile.ProfileCanBeShownEvent;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
-import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.notifications.RegistrationIntentService;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.fragments.DownloadsFragment;
 import org.stepic.droid.view.fragments.FeedbackFragment;
 import org.stepic.droid.view.fragments.FindCoursesFragment;
 import org.stepic.droid.view.fragments.MyCoursesFragment;
-import org.stepic.droid.view.fragments.SettingsFragment;
 import org.stepic.droid.web.EmailAddressResponse;
 import org.stepic.droid.web.StepicProfileResponse;
 
@@ -224,6 +223,15 @@ public class MainFeedActivity extends FragmentActivityBase
                     }
                 }, 0);
                 return true;
+            case R.id.my_settings:
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDrawerLayout.closeDrawers();
+                    }
+                }, 0);
+                mShell.getScreenProvider().showSettings(this);
+                return true;
 
             default:
                 showCurrentFragment(menuItem);
@@ -258,6 +266,7 @@ public class MainFeedActivity extends FragmentActivityBase
 
     private void setFragment(MenuItem menuItem) {
         Fragment shortLifetimeRef = null;
+        boolean isFragment = true;
         switch (menuItem.getItemId()) {
             case R.id.my_courses:
                 mCurrentIndex = 1;
@@ -271,26 +280,24 @@ public class MainFeedActivity extends FragmentActivityBase
                 mCurrentIndex = 3;
                 shortLifetimeRef = DownloadsFragment.newInstance();
                 break;
-            case R.id.my_settings:
-                mCurrentIndex = 4;
-                shortLifetimeRef = SettingsFragment.newInstance();
-                break;
             case R.id.feedback:
                 mCurrentIndex = 5;
                 shortLifetimeRef = FeedbackFragment.Companion.newInstance();
                 break;
         }
-        mCurrentIndex--; // menu indices from 1
-        if (shortLifetimeRef != null) {
-            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame);
-            if (fragment != null) {
-                String before = fragment.getTag();
-                String now = shortLifetimeRef.getClass().toString();
-                if (!before.equals(now)) {
+        if (isFragment) {
+            mCurrentIndex--; // menu indices from 1
+            if (shortLifetimeRef != null) {
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame);
+                if (fragment != null) {
+                    String before = fragment.getTag();
+                    String now = shortLifetimeRef.getClass().toString();
+                    if (!before.equals(now)) {
+                        setFragment(R.id.frame, shortLifetimeRef);
+                    }
+                } else {
                     setFragment(R.id.frame, shortLifetimeRef);
                 }
-            } else {
-                setFragment(R.id.frame, shortLifetimeRef);
             }
         }
     }

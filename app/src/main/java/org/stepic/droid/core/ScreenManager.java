@@ -32,6 +32,7 @@ import org.stepic.droid.view.activities.LoginActivity;
 import org.stepic.droid.view.activities.MainFeedActivity;
 import org.stepic.droid.view.activities.RegisterActivity;
 import org.stepic.droid.view.activities.SectionActivity;
+import org.stepic.droid.view.activities.SettingsActivity;
 import org.stepic.droid.view.activities.StepsActivity;
 import org.stepic.droid.view.activities.TextFeedbackActivity;
 import org.stepic.droid.view.activities.UnitsActivity;
@@ -182,6 +183,13 @@ public class ScreenManager implements IScreenManager {
                 Toast.makeText(sourceActivity, R.string.not_video_player_error, Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    @Override
+    public void showSettings(Activity sourceActivity) {
+        Intent intent = new Intent(sourceActivity, SettingsActivity.class);
+        sourceActivity.startActivity(intent);
+        sourceActivity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
     }
 
     @Override
