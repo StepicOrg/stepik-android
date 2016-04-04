@@ -83,6 +83,7 @@ class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val c
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+        addVibrationIfNeed(notification)
 
 
         val notificationManager = MainApplication.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -109,6 +110,12 @@ class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val c
                     .placeholder(notificationPlaceholder)
                     .error(notificationPlaceholder)
                     .get()
+        }
+    }
+
+    private fun addVibrationIfNeed(builder: NotificationCompat.Builder) {
+        if (userPreferences.isVibrateNotificationEnabled) {
+            builder.setVibrate(longArrayOf(0, 100, 0, 100))
         }
     }
 }

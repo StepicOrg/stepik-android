@@ -125,4 +125,7 @@ public class UserPreferences {
     }
 
 
+    public boolean isVibrateNotificationEnabled() {
+        return true;
+    }
 }
