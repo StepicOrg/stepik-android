@@ -34,11 +34,11 @@ public class SharedPreferenceHelper {
 
     public boolean isNotificationDisabled() {
         //default is enabled
-        return getBoolean(PreferenceType.LOGIN, NOTIFICATION_DISABLED);
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_DISABLED);
     }
 
     public void setNotificationDisabled(boolean isNotificationDisabled) {
-        put(PreferenceType.LOGIN, NOTIFICATION_DISABLED, isNotificationDisabled);
+        put(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_DISABLED, isNotificationDisabled);
     }
 
 
@@ -47,7 +47,8 @@ public class SharedPreferenceHelper {
         WIFI("wifi_preference"),
         VIDEO_QUALITY("video_quality_preference"),
         TEMP("temporary"),
-        VIDEO_SETTINGS("video_settings");
+        VIDEO_SETTINGS("video_settings"),
+        DEVICE_SPECIFIC("device_specific");
 
         private String description;
 
