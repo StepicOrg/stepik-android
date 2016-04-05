@@ -58,6 +58,9 @@ public class SettingsFragment extends FragmentBase {
     @Bind(R.id.fragment_settings_notification_learn_switch)
     BetterSwitch notificationLearnSwitch;
 
+    @Bind(R.id.fragment_settings_notification_vibration_switch)
+    BetterSwitch notificationVibration;
+
     @BindString(R.string.version)
     String versionPrefix;
 
@@ -87,6 +90,8 @@ public class SettingsFragment extends FragmentBase {
 //        showVersionName();
 
         setUpClearCacheButton();
+
+        setUpNotificationVibration();
 
         setUpNotificationLearn();
 
@@ -126,6 +131,16 @@ public class SettingsFragment extends FragmentBase {
             @Override
             public void onClick(View v) {
                 videoDialog.show(getFragmentManager(), null);
+            }
+        });
+    }
+
+    private void setUpNotificationVibration() {
+        notificationVibration.setChecked(mUserPreferences.isVibrateNotificationEnabled());
+        notificationVibration.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mUserPreferences.setVibrateNotificationEnabled(isChecked);
             }
         });
     }
@@ -179,6 +194,7 @@ public class SettingsFragment extends FragmentBase {
         mWifiLoadSwitch.setOnCheckedChangeListener(null);
         mExternalPlayerSwitch.setOnCheckedChangeListener(null);
         notificationLearnSwitch.setOnCheckedChangeListener(null);
+        notificationVibration.setOnCheckedChangeListener(null);
         super.onDestroyView();
     }
 

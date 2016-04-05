@@ -115,5 +115,6 @@
     <string name="code_warning">Этот шаг не оптимизирован для мобильных</string>
     <string name="notification_title">Уведомления</string>
     <string name="notification_learn_list">Дедлайны, новые модули, сертификаты</string>
+    <string name="vibration_title">Вибрация</string>
 
 </resources>

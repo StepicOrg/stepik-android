@@ -124,4 +124,5 @@
     <string name="code_warning">This step is not optimized for mobile</string>
     <string name="notification_title">Notification</string>
     <string name="notification_learn_list">Deadlines, new modules, certificates</string>
+    <string name="vibration_title">Vibration</string>
 </resources>

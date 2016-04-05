@@ -117,6 +117,18 @@
                     android:textSize="16sp"
                     android:textStyle="bold"/>
 
+
+                <org.stepic.droid.view.custom.BetterSwitch
+                    android:id="@+id/fragment_settings_notification_vibration_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/notification_learn_list"
+                    android:foreground="@drawable/non_radius_foreground"
+                    android:padding="16dp"
+                    android:text="@string/vibration_title"
+                    android:textColor="@color/stepic_regular_text"
+                    android:textSize="16sp"/>
+
                 <org.stepic.droid.view.custom.BetterSwitch
                     android:id="@+id/fragment_settings_notification_learn_switch"
                     android:layout_width="match_parent"
