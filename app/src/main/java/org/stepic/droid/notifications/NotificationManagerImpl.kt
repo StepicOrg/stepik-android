@@ -115,7 +115,7 @@ class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val c
 
     private fun addVibrationIfNeed(builder: NotificationCompat.Builder) {
         if (userPreferences.isVibrateNotificationEnabled) {
-            builder.setVibrate(longArrayOf(0, 100, 0, 100))
+            builder.setDefaults(NotificationCompat.DEFAULT_VIBRATE)
         }
     }
 }
