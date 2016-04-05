@@ -10,6 +10,7 @@ import android.media.RingtoneManager
 import android.os.Looper
 import android.support.annotation.DrawableRes
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.ContextCompat
 import com.squareup.picasso.Picasso
 import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
@@ -18,6 +19,7 @@ import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.model.Course
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.ColorUtil
@@ -26,7 +28,7 @@ import org.stepic.droid.util.JsonHelper
 import org.stepic.droid.view.activities.MainFeedActivity
 import org.stepic.droid.web.IApi
 
-class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val configs: IConfig, val userPreferences: UserPreferences) : INotificationManager {
+class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val configs: IConfig, val userPreferences: UserPreferences, val sharedPreferences: SharedPreferenceHelper) : INotificationManager {
 
     override fun showNotification(notification: Notification) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
@@ -70,11 +72,13 @@ class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val c
         val largeIcon = getPictureByCourseId()
         val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
 
+        val title = MainApplication.getAppContext().getString(R.string.app_name)
+
         val justText: String = HtmlHelper.fromHtml(rawMessageHtml).toString()
         val notification = NotificationCompat.Builder(MainApplication.getAppContext())
                 .setLargeIcon(largeIcon)
                 .setSmallIcon(R.drawable.ic_matching)
-                .setContentTitle("I handle this notification")
+                .setContentTitle(title)
                 .setContentText(justText)
                 .setStyle(NotificationCompat.BigTextStyle()
                         .bigText(justText))
