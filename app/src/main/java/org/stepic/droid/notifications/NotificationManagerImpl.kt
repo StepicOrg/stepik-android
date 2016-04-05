@@ -47,20 +47,20 @@ class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val c
         } else {
             //resolve which notification we should show
             when (notification.type) {
-                NotificationType.learn -> sendLearnNotification(notification.htmlText)
-                NotificationType.comments -> sendCommentNotification(notification.htmlText)
+                NotificationType.learn -> sendLearnNotification(notification.htmlText, notification.id?:0)
+                NotificationType.comments -> sendCommentNotification(notification.htmlText, notification.id?:0)
                 else -> YandexMetrica.reportEvent("notification is not support: " + notification.type)
             }
         }
     }
 
-    private fun sendCommentNotification(rawMessageHtml: String) {
+    private fun sendCommentNotification(rawMessageHtml: String, id: Long) {
         // just for test fixme: remove THIS!!! IMPLEMENT COMMENT
         YandexMetrica.reportEvent("notification comment is shown")
-        sendLearnNotification(rawMessageHtml)
+        sendLearnNotification(rawMessageHtml, id)
     }
 
-    private fun sendLearnNotification(rawMessageHtml: String) {
+    private fun sendLearnNotification(rawMessageHtml: String, id : Long) {
         YandexMetrica.reportEvent("notification learn is shown")
 
         val intent = Intent(MainApplication.getAppContext(), MainFeedActivity::class.java)
@@ -92,7 +92,7 @@ class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val c
 
         val notificationManager = MainApplication.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        notificationManager.notify(0 /* ID of notification */, notification.build())
+        notificationManager.notify(id.toInt(), notification.build())
     }
 
     private fun getPictureByCourseId(courseId: Long = 67): Bitmap {
