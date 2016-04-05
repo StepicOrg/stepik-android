@@ -116,7 +116,7 @@ public class UserPreferences {
         mSharedPreferenceHelper.setOpenInExternal(isOpenInExternal);
     }
 
-    public boolean isNotificationEnabled () {
+    public boolean isNotificationEnabled() {
         return !mSharedPreferenceHelper.isNotificationDisabled();
     }
 
@@ -126,6 +126,10 @@ public class UserPreferences {
 
 
     public boolean isVibrateNotificationEnabled() {
-        return true;
+        return !mSharedPreferenceHelper.isNotificationVibrationDisabled();
+    }
+
+    public void setVibrateNotificationEnabled(boolean isEnabled) {
+        mSharedPreferenceHelper.setNotificationVibrationDisabled(!isEnabled);
     }
 }

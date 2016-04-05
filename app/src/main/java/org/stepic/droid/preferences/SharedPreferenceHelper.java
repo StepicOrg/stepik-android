@@ -32,6 +32,15 @@ public class SharedPreferenceHelper {
         mContext = MainApplication.getAppContext();
     }
 
+    public boolean isNotificationVibrationDisabled() {
+        //default is enabled
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_VIBRATION_DISABLED);
+    }
+
+    public void setNotificationVibrationDisabled(boolean isNotificationVibrationDisabled) {
+        put(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_VIBRATION_DISABLED, isNotificationVibrationDisabled);
+    }
+
     public boolean isNotificationDisabled() {
         //default is enabled
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_DISABLED);
@@ -270,5 +279,6 @@ public class SharedPreferenceHelper {
     private final String VIDEO_EXTERNAL_PREF_KEY = "video_external_pref_key";
     private final String GCM_TOKEN_ACTUAL = "gcm_token_actual";
     private final String NOTIFICATION_DISABLED = "notification_disabled_by_user";
+    private final String NOTIFICATION_VIBRATION_DISABLED = "not_vibrat_disabled";
 
 }
