@@ -116,5 +116,10 @@
     <string name="notification_title">Уведомления</string>
     <string name="notification_learn_list">Дедлайны, новые модули, сертификаты</string>
     <string name="vibration_title">Вибрация</string>
-
+    <plurals name="notification_plural">
+        <item quantity="one">%d новое уведомление</item>
+        <item quantity="few">%d новых уведомления</item>
+        <item quantity="many">%d новых уведомлений</item>
+        <item quantity="other">%d новых уведомлений</item>
+    </plurals>
 </resources>
