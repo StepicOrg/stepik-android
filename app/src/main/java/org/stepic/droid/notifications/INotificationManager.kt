@@ -7,4 +7,6 @@ interface  INotificationManager {
      * worker thread
      */
     fun showNotification(notification : Notification);
+
+    fun discardAllNotifications()
 }

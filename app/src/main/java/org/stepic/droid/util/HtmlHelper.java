@@ -8,6 +8,7 @@ import net.htmlparser.jericho.Source;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.stepic.droid.notifications.model.Notification;
 
 import java.util.List;
 
@@ -41,5 +42,10 @@ public class HtmlHelper {
             }
         }
         return strData;
+    }
+
+    @Nullable
+    public  static Long parseCourseIdFromNotification(Notification notification) {
+        return 67L;
     }
 }

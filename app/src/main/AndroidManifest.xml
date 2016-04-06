@@ -18,6 +18,7 @@
     <permission
         android:name="org.stepic.droid.permission.C2D_MESSAGE"
         android:protectionLevel="signature"/>
+
     <uses-permission android:name="org.stepic.droid.permission.C2D_MESSAGE"/>
 
     <uses-permission android:name="android.permission.VIBRATE"/>
@@ -195,5 +196,10 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name=".notifications.NotificationBroadcastReceiver">
+            <intent-filter>
+                <action android:name="notification_cancelled"/>
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

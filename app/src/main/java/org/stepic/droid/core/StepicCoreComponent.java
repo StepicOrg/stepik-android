@@ -12,6 +12,8 @@ import org.stepic.droid.concurrency.tasks.ToDbUnitLessonTask;
 import org.stepic.droid.concurrency.tasks.UpdateCourseTask;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.notifications.NotificationBroadcastReceiver;
+import org.stepic.droid.notifications.RegistrationIntentService;
 import org.stepic.droid.notifications.StepicGcmListenerService;
 import org.stepic.droid.receivers.DownloadClickReceiver;
 import org.stepic.droid.receivers.DownloadCompleteReceiver;
@@ -19,7 +21,6 @@ import org.stepic.droid.receivers.InternetConnectionEnabledReceiver;
 import org.stepic.droid.services.CancelLoadingService;
 import org.stepic.droid.services.DeleteService;
 import org.stepic.droid.services.LoadService;
-import org.stepic.droid.notifications.RegistrationIntentService;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.ImageOnDisk;
@@ -125,4 +126,6 @@ public interface StepicCoreComponent {
     void inject(RegistrationIntentService service);
 
     void inject(StepicGcmListenerService listenerService);
+
+    void inject (NotificationBroadcastReceiver receiver);
 }
