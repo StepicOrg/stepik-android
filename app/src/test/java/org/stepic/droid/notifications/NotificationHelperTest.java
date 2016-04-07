@@ -14,4 +14,9 @@ public class NotificationHelperTest {
     public void testIsValidByAction_False() {
         assertFalse(NotificationHelper.isNotificationValidByAction("invalid_not_812uqw12"));
     }
+
+    @Test
+    public void testIsValidByAction_Null_False(){
+        assertFalse(NotificationHelper.isNotificationValidByAction(null));
+    }
 }

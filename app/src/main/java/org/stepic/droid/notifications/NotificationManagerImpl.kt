@@ -50,8 +50,12 @@ class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val c
 
     private fun resolveAndSendNotification(notification: Notification) {
         val htmlText = notification.htmlText
-        if (htmlText == null || htmlText.isEmpty()) {
+        if (!NotificationHelper.isNotificationValidByAction(notification.action)) {
+            YandexMetrica.reportEvent("notification action is not support", JsonHelper.toJson(notification))
+            return
+        } else if (htmlText == null || htmlText.isEmpty()) {
             YandexMetrica.reportEvent("notification html text was null", JsonHelper.toJson(notification))
+            return
         } else {
             //resolve which notification we should show
             when (notification.type) {
@@ -111,12 +115,12 @@ class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val c
         notificationManager.cancel(notificationNumber - 1)
         notificationManager.notify(notificationNumber, notification.build())
     }
-    private fun getDeleteIntent () : PendingIntent{
+
+    private fun getDeleteIntent(): PendingIntent {
         val onNotificationDiscarded = Intent(MainApplication.getAppContext(), NotificationBroadcastReceiver::class.java);
         onNotificationDiscarded.action = AppConstants.NOTIFICATION_CANCELED
         return PendingIntent.getBroadcast(MainApplication.getAppContext(), 0, onNotificationDiscarded, PendingIntent.FLAG_CANCEL_CURRENT)
     }
-
 
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -128,7 +132,7 @@ class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val c
     private fun getPictureByCourseId(courseId: Long?): Bitmap {
         //FIXME create special icon for notification placeholder ?? dp in mdpi
         @DrawableRes val notificationPlaceholder = R.drawable.ic_course_placeholder
-        if (courseId == null){
+        if (courseId == null) {
             return BitmapFactory.decodeResource(MainApplication.getAppContext().getResources(), notificationPlaceholder);
         }
         var course: Course? = dbFacade.getCourseById(courseId, DatabaseFacade.Table.enrolled)
