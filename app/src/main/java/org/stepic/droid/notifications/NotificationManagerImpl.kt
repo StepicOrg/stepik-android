@@ -49,13 +49,14 @@ class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val c
 
 
     private fun resolveAndSendNotification(notification: Notification) {
-        if (notification.htmlText == null || notification.htmlText.isEmpty()) {
+        val htmlText = notification.htmlText
+        if (htmlText == null || htmlText.isEmpty()) {
             YandexMetrica.reportEvent("notification html text was null", JsonHelper.toJson(notification))
         } else {
             //resolve which notification we should show
             when (notification.type) {
-                NotificationType.learn -> sendLearnNotification(notification, notification.htmlText, notification.id ?: 0)
-                NotificationType.comments -> sendCommentNotification(notification, notification.htmlText, notification.id ?: 0)
+                NotificationType.learn -> sendLearnNotification(notification, htmlText, notification.id ?: 0)
+                NotificationType.comments -> sendCommentNotification(notification, htmlText, notification.id ?: 0)
                 else -> YandexMetrica.reportEvent("notification is not support: " + notification.type)
             }
         }
