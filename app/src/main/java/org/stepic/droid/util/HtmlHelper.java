@@ -52,36 +52,25 @@ public class HtmlHelper {
     }
 
     private static Long parseCourseIdFromNotification(String htmlRaw) {
-        StringBuilder raw = new StringBuilder();
-        boolean flag = false;
-        for (int i = 0; i < htmlRaw.length(); i++) {
-            if (htmlRaw.charAt(i) == '<') {
-                flag = true;
-                continue;
-            }
+        int start = htmlRaw.indexOf('<');
+        int end = htmlRaw.indexOf('>');
+        if (start == -1 || end == -1) return null;
+        String substring = htmlRaw.substring(start, end);
 
-            if (htmlRaw.charAt(i) == '>')
-                break;
+        String[] resultOfSplit = substring.split("-");
 
-            if (flag)
-                raw.append(htmlRaw.charAt(i));
-        }
-
-        if (raw.length() > 0) {
-            String[] splitted = raw.toString().split("-");
-            if (splitted.length > 0) {
-                String numb = splitted[splitted.length - 1];
-                StringBuilder n = new StringBuilder();
-                for (int i = 0; i < numb.length(); i++) {
-                    if (Character.isDigit(numb.charAt(i)) == true) {
-                        n.append(numb.charAt(i));
-                    }
+        if (resultOfSplit.length > 0) {
+            String numb = resultOfSplit[resultOfSplit.length - 1];
+            StringBuilder n = new StringBuilder();
+            for (int i = 0; i < numb.length(); i++) {
+                if (Character.isDigit(numb.charAt(i))) {
+                    n.append(numb.charAt(i));
                 }
-
-                if (n.length() > 0)
-                    return Long.parseLong(n.toString());
-                return null;
             }
+
+            if (n.length() > 0)
+                return Long.parseLong(n.toString());
+            return null;
         }
 
         return null;

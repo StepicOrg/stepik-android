@@ -1,10 +1,8 @@
 package org.stepic.droid.util
 
+import org.junit.Assert.*
 import org.junit.Test
 import org.stepic.droid.notifications.model.Notification
-
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 
 class HtmlHelperTest {
     @Test
@@ -23,6 +21,15 @@ class HtmlHelperTest {
     fun testNotificationHardDeadline() {
         val htmlRaw = " В курсе <a href=\"/course/Web-%D1%82%D0%B5%D1%85%D0%BD%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D0%B8-154/\">Web технологии</a> менее чем через 36 часов наступит совсем крайний срок сдачи заданий по модулю <a href=\"/course/Web-%D1%82%D0%B5%D1%85%D0%BD%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D0%B8-154/\">Дополнительные темы</a> "
          predictCourseIdByHtml(154L, htmlRaw)
+    }
+
+    @Test
+    fun testCourseById_InvalidHtmlText_Null(){
+        val htmlRaw = "<---->"
+        val notification = Notification()
+        notification.htmlText = htmlRaw
+        val id = HtmlHelper.parseCourseIdFromNotification(notification)
+        assertNull(id)
     }
 
     private fun predictCourseIdByHtml(courseId : Long, htmlRaw: String){
