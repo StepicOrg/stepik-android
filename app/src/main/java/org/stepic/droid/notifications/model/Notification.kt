@@ -15,7 +15,8 @@ data class Notification(
         val level: String? = null,
         val priority: String? = null,
         @SerializedName("html_text")
-        val htmlText: String? = null
+        var htmlText: String? = null,
+        var action: String? = null
 )
 
 enum class NotificationType {

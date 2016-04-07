@@ -51,7 +51,7 @@ public class HtmlHelper {
         return parseCourseIdFromNotification(htmlRaw);
     }
 
-    public static Long parseCourseIdFromNotification(String htmlRaw) {
+    private static Long parseCourseIdFromNotification(String htmlRaw) {
         StringBuilder raw = new StringBuilder();
         boolean flag = false;
         for (int i = 0; i < htmlRaw.length(); i++) {

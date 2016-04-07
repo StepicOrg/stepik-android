@@ -1,5 +1,3 @@
-package org.stepic.droid;
-
 import android.test.ApplicationTestCase;
 
 import org.stepic.droid.base.MainApplication;
