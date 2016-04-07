@@ -25,6 +25,8 @@ class Step : Parcelable, Serializable {
     constructor()
 
     override fun describeContents(): Int {
+        val step = Step()
+        step.block?.video?.urls?.size
         return 0
     }
 
