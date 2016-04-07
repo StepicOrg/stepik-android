@@ -12,8 +12,8 @@ data class Notification(
         var isFavourite: Boolean? = null,
         var time: String? = null,
         var type: NotificationType? = null,
-        val level: String? = null,
-        val priority: String? = null,
+        var level: String? = null,
+        var priority: String? = null,
         @SerializedName("html_text")
         var htmlText: String? = null,
         var action: String? = null

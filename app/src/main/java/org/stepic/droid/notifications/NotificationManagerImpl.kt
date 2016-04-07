@@ -32,7 +32,7 @@ import org.stepic.droid.view.activities.MainFeedActivity
 import org.stepic.droid.web.IApi
 import java.util.concurrent.atomic.AtomicInteger
 
-class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val configs: IConfig, val userPreferences: UserPreferences, val sharedPreferences: SharedPreferenceHelper) : INotificationManager {
+class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val configs: IConfig, val userPreferences: UserPreferences, val databaseFacade: DatabaseFacade) : INotificationManager {
     val GROUP_NOTIFICATION_KEY = "learn_notification"
 
     val notificationCounter: AtomicInteger = AtomicInteger()
@@ -55,6 +55,9 @@ class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val c
             return
         } else if (htmlText == null || htmlText.isEmpty()) {
             YandexMetrica.reportEvent("notification html text was null", JsonHelper.toJson(notification))
+            return
+        } else if (notification.isMuted ?: false) {
+            YandexMetrica.reportEvent("notification html text was muted", JsonHelper.toJson(notification))
             return
         } else {
             //resolve which notification we should show

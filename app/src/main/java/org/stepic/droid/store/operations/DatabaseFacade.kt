@@ -4,6 +4,7 @@ import android.content.ContentValues
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
+import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.store.dao.IDao
 import org.stepic.droid.store.structure.*
 import org.stepic.droid.util.DbParseHelper
@@ -43,6 +44,9 @@ class DatabaseFacade {
     lateinit var mCoursesEnrolledDao: IDao<Course>
     @Inject
     lateinit var mCoursesFeaturedDao: IDao<Course>
+
+    @Inject
+    lateinit var mNotificationDao : IDao<Notification>
 
     init {
         MainApplication.component().inject(this)
@@ -267,6 +271,26 @@ class DatabaseFacade {
     fun addToQueueViewedState(viewState: ViewAssignment) = mViewAssignmentDao.insertOrUpdate(viewState)
 
     val allInQueue: List<ViewAssignment?> = mViewAssignmentDao.getAll()
+
+    fun getAllNotification() : List<Notification?> = mNotificationDao.getAll()
+
+    fun addNotification (notification: Notification) {
+        mNotificationDao.insertOrUpdate(notification)
+    }
+
+    fun removeNotification(id : Long){
+        mNotificationDao.delete(DbStructureNotification.Column.ID, id.toString())
+    }
+
+    fun removeAllNotifications(){
+        val notifications = getAllNotification()
+
+        for (notificationItem in notifications) {
+            notificationItem?.id?.let {
+                removeNotification(it)
+            }
+        }
+    }
 
     fun removeFromQueue(viewAssignmentWrapper: ViewAssignment?) {
         val assignmentId = viewAssignmentWrapper?.assignment ?: return

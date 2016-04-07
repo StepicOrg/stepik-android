@@ -10,6 +10,7 @@ import org.stepic.droid.store.structure.DbStructureAssignment;
 import org.stepic.droid.store.structure.DbStructureBlock;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
 import org.stepic.droid.store.structure.DbStructureLesson;
+import org.stepic.droid.store.structure.DbStructureNotification;
 import org.stepic.droid.store.structure.DbStructureProgress;
 import org.stepic.droid.store.structure.DbStructureSections;
 import org.stepic.droid.store.structure.DbStructureSharedDownloads;
@@ -47,6 +48,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom3To4(db);
         upgradeFrom4To5(db);
         upgradeFrom5To6(db);
+        upgradeFrom6To7(db);
+    }
+
+    private void upgradeFrom6To7(SQLiteDatabase db) {
+        createNotification(db, DbStructureNotification.NOTIFICATIONS_TEMP);
     }
 
     @Override
@@ -112,6 +118,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 6) {
             upgradeFrom5To6(db);
         }
+
+        if (oldVersion < 7) {
+            upgradeFrom6To7(db);
+        }
     }
 
     private void upgradeFrom3To4(SQLiteDatabase db) {
@@ -127,6 +137,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private void upgradeFrom5To6(SQLiteDatabase db) {
         alterColumn(db, DbStructureLesson.LESSONS, DbStructureLesson.Column.COVER_URL, TEXT_TYPE);
     }
+
     private void alterColumn(SQLiteDatabase db, String dbName, String column, String type) {
         String upgrade = "ALTER TABLE " + dbName + " ADD COLUMN "
                 + column + " " + type + " ";
@@ -339,6 +350,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + " ("
                 + DbStructureViewQueue.Column.STEP_ID + " LONG, "
                 + DbStructureViewQueue.Column.ASSIGNMENT_ID + " LONG "
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createNotification(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureNotification.Column.ID + " LONG, "
+                + DbStructureNotification.Column.IS_UNREAD + " BOOLEAN, "
+                + DbStructureNotification.Column.IS_MUTED + " BOOLEAN, "
+                + DbStructureNotification.Column.IS_FAVOURITE + " BOOLEAN, "
+                + DbStructureNotification.Column.TIME + " TEXT, "
+                + DbStructureNotification.Column.TYPE + " TEXT, "
+                + DbStructureNotification.Column.LEVEL + " TEXT, "
+                + DbStructureNotification.Column.PRIORITY + " TEXT, "
+                + DbStructureNotification.Column.HTML_TEXT + " TEXT, "
+                + DbStructureNotification.Column.ACTION + " TEXT "
                 + ")";
         db.execSQL(sql);
     }
