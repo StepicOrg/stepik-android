@@ -45,6 +45,7 @@ public class NotificationDaoImpl extends DaoBase<Notification> {
         values.put(DbStructureNotification.Column.PRIORITY, persistentObject.getPriority());
         values.put(DbStructureNotification.Column.HTML_TEXT, persistentObject.getHtmlText());
         values.put(DbStructureNotification.Column.ACTION, persistentObject.getAction());
+        values.put(DbStructureNotification.Column.COURSE_ID, persistentObject.getCourse_id());
         return values;
     }
 
@@ -62,6 +63,7 @@ public class NotificationDaoImpl extends DaoBase<Notification> {
         int columnIndexPriority = cursor.getColumnIndex(DbStructureNotification.Column.PRIORITY);
         int columnIndexHtmlText = cursor.getColumnIndex(DbStructureNotification.Column.HTML_TEXT);
         int columnIndexAction = cursor.getColumnIndex(DbStructureNotification.Column.ACTION);
+        int columnIndexCourseId = cursor.getColumnIndex(DbStructureNotification.Column.COURSE_ID);
 
         notification.setId(cursor.getLong(columnIndexId));
         notification.set_unread(cursor.getInt(columnIndexIsUnread) > 0);
@@ -73,6 +75,7 @@ public class NotificationDaoImpl extends DaoBase<Notification> {
         notification.setPriority(cursor.getString(columnIndexPriority));
         notification.setHtmlText(cursor.getString(columnIndexHtmlText));
         notification.setAction(cursor.getString(columnIndexAction));
+        notification.setCourse_id(cursor.getLong(columnIndexCourseId));
 
         return notification;
     }

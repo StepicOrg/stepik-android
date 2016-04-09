@@ -366,7 +366,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureNotification.Column.LEVEL + " TEXT, "
                 + DbStructureNotification.Column.PRIORITY + " TEXT, "
                 + DbStructureNotification.Column.HTML_TEXT + " TEXT, "
-                + DbStructureNotification.Column.ACTION + " TEXT "
+                + DbStructureNotification.Column.ACTION + " TEXT, "
+                + DbStructureNotification.Column.COURSE_ID + " LONG "
                 + ")";
         db.execSQL(sql);
     }

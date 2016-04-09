@@ -46,7 +46,7 @@ class DatabaseFacade {
     lateinit var mCoursesFeaturedDao: IDao<Course>
 
     @Inject
-    lateinit var mNotificationDao : IDao<Notification>
+    lateinit var mNotificationDao: IDao<Notification>
 
     init {
         MainApplication.component().inject(this)
@@ -272,17 +272,17 @@ class DatabaseFacade {
 
     val allInQueue: List<ViewAssignment?> = mViewAssignmentDao.getAll()
 
-    fun getAllNotification() : List<Notification?> = mNotificationDao.getAll()
+    fun getAllNotification(): List<Notification?> = mNotificationDao.getAll()
 
-    fun addNotification (notification: Notification) {
+    fun addNotification(notification: Notification) {
         mNotificationDao.insertOrUpdate(notification)
     }
 
-    fun removeNotification(id : Long){
+    fun removeNotification(id: Long) {
         mNotificationDao.delete(DbStructureNotification.Column.ID, id.toString())
     }
 
-    fun removeAllNotifications(){
+    fun removeAllNotifications() {
         val notifications = getAllNotification()
 
         for (notificationItem in notifications) {
@@ -324,5 +324,9 @@ class DatabaseFacade {
         val assignment = mAssignmentDao.get(DbStructureAssignment.Column.STEP_ID, stepId.toString()) ?: return false
         val progressId = assignment.progress
         return isProgressViewed(progressId)
+    }
+
+    fun getAllNotificationsOfCourse(courseId: Long): List<Notification?> {
+        return mNotificationDao.getAll(DbStructureNotification.Column.COURSE_ID, courseId.toString())
     }
 }

@@ -16,12 +16,23 @@ public class DbStructureNotification extends DBStructureBase {
         public static final String PRIORITY = "priority";
         public static final String HTML_TEXT = "html_text";
         public static final String ACTION = "action";
+        public static final String COURSE_ID = "course_id";
 
     }
 
     public static String[] getUsedColumns() {
         if (mUsedColumns == null) {
             mUsedColumns = new String[]{
+                    Column.ID,
+                    Column.IS_UNREAD,
+                    Column.IS_MUTED,
+                    Column.IS_FAVOURITE,
+                    Column.TYPE,
+                    Column.LEVEL,
+                    Column.PRIORITY,
+                    Column.HTML_TEXT,
+                    Column.ACTION,
+                    Column.COURSE_ID
             };
         }
         return mUsedColumns;

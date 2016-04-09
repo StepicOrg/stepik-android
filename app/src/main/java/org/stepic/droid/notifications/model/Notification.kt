@@ -16,7 +16,8 @@ data class Notification(
         var priority: String? = null,
         @SerializedName("html_text")
         var htmlText: String? = null,
-        var action: String? = null
+        var action: String? = null,
+        var course_id : Long? = null
 )
 
 enum class NotificationType {
