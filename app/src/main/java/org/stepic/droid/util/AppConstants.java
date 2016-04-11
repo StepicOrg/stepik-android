@@ -102,5 +102,5 @@ public class AppConstants {
     public static final java.lang.String NOTIFICATION_CANCELED = "notification_cancelled";
 
 
-
+    public static final String OPEN_NOTIFICATION = "Open_notification";
 }

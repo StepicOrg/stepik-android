@@ -23,13 +23,16 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         val action = intent?.action
         if (action == AppConstants.NOTIFICATION_CANCELED) {
-            val task = object : AsyncTask<Void, Void, Void>() {
-                override fun doInBackground(vararg params: Void): Void? {
-                    notificationManager.discardAllNotifications()
-                    return null
+            val courseId = intent?.extras?.getLong(AppConstants.COURSE_ID_KEY)
+            courseId?.let {
+                val task = object : AsyncTask<Void, Void, Void>() {
+                    override fun doInBackground(vararg params: Void): Void? {
+                        notificationManager.discardAllNotifications(it)
+                        return null
+                    }
                 }
+                task.executeOnExecutor(threadPool)
             }
-            task.executeOnExecutor(threadPool)
         }
     }
 }

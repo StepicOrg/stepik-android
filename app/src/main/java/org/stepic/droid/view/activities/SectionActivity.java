@@ -3,6 +3,7 @@ package org.stepic.droid.view.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
@@ -80,7 +81,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         firstLoad = true;
 
 
-
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(
                 R.color.stepic_brand_primary,
@@ -105,6 +105,18 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         mCourse = (Course) (intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
+
+        if (intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
+            final long courseId = mCourse.getCourseId();
+            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    notificationManager.discardAllNotifications(courseId);
+                    return null;
+                }
+            };
+            task.executeOnExecutor(mThreadPoolExecutor);
+        }
         getAndShowSectionsFromCache();
     }
 

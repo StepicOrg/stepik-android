@@ -3,6 +3,7 @@ package org.stepic.droid.notifications
 import android.os.Bundle
 import com.google.android.gms.gcm.GcmListenerService
 import com.google.gson.Gson
+import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.notifications.model.Notification
 import javax.inject.Inject
@@ -18,9 +19,13 @@ class StepicGcmListenerService : GcmListenerService() {
 
     override fun onMessageReceived(from: String?, data: Bundle?) {
         val notificationRawString: String? = data?.getString("object")
-        val stepicNotification = Gson().fromJson(notificationRawString, Notification::class.java)
-        stepicNotification?.let {
-            notificationManager.showNotification(it)
+        try {
+            val stepicNotification = Gson().fromJson(notificationRawString, Notification::class.java)
+            stepicNotification?.let {
+                notificationManager.showNotification(it)
+            }
+        } catch(e: Exception) {
+            YandexMetrica.reportError("notification error parse", e);
         }
     }
 

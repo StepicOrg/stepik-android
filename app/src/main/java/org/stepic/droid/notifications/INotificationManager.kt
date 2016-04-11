@@ -8,5 +8,5 @@ interface  INotificationManager {
      */
     fun showNotification(notification : Notification);
 
-    fun discardAllNotifications()
+    fun discardAllNotifications(courseId:Long)
 }

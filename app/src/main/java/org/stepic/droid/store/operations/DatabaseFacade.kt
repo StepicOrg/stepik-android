@@ -292,6 +292,10 @@ class DatabaseFacade {
         }
     }
 
+    fun removeAllNotificationsByCourseId(courseId:Long){
+        mNotificationDao.delete(DbStructureNotification.Column.COURSE_ID, courseId.toString())
+    }
+
     fun removeFromQueue(viewAssignmentWrapper: ViewAssignment?) {
         val assignmentId = viewAssignmentWrapper?.assignment ?: return
         mViewAssignmentDao.delete(DbStructureViewQueue.Column.ASSIGNMENT_ID, assignmentId.toString())
@@ -326,7 +330,7 @@ class DatabaseFacade {
         return isProgressViewed(progressId)
     }
 
-    fun getAllNotificationsOfCourse(courseId: Long): List<Notification?> {
+    fun getAllNotificationsOfCourse(courseId: Long): MutableList<Notification?> {
         return mNotificationDao.getAll(DbStructureNotification.Column.COURSE_ID, courseId.toString())
     }
 }
