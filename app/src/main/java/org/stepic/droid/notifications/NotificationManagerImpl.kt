@@ -20,6 +20,7 @@ import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.model.Course
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
@@ -29,12 +30,12 @@ import org.stepic.droid.util.JsonHelper
 import org.stepic.droid.view.activities.SectionActivity
 import org.stepic.droid.web.IApi
 
-class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val configs: IConfig, val userPreferences: UserPreferences, val databaseFacade: DatabaseFacade) : INotificationManager {
+class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper, val api: IApi, val configs: IConfig, val userPreferences: UserPreferences, val databaseFacade: DatabaseFacade) : INotificationManager {
     override fun showNotification(notification: Notification) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             throw RuntimeException("Can't create notification on main thread")
         }
-        if (userPreferences.isNotificationEnabled) {
+        if (userPreferences.isNotificationEnabled && sharedPreferenceHelper.isGcmTokenOk) {
             resolveAndSendNotification(notification)
         } else {
             YandexMetrica.reportEvent("Notification is disabled by user in app")
@@ -164,7 +165,7 @@ class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val c
 
     private fun getCourse(courseId: Long?): Course? {
         if (courseId == null) return null
-        var course: Course? = dbFacade.getCourseById(courseId, DatabaseFacade.Table.enrolled)
+        var course: Course? = databaseFacade.getCourseById(courseId, DatabaseFacade.Table.enrolled)
         if (course == null) {
             course = api.getCourse(courseId).execute()?.body()?.courses?.get(0)
         }

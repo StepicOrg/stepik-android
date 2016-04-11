@@ -92,4 +92,7 @@ public interface StepicRestLoggedService {
 
     @PUT("api/notifications/{id}")
     Call<Void> putNotification(@Path("id") long notificationId, @Body NotificationRequest notificationRequest);
+
+    @DELETE("api/devices/{id}")
+    Call<Void> removeDevice(@Path("id") long deviceId);
 }

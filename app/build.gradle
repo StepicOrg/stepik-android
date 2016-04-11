@@ -75,6 +75,8 @@ dependencies {
     provided 'org.glassfish:javax.annotation:10.0-b28'
     //needed to resolve compilation errors, thanks to tutplus.org for finding the dependency
     compile 'com.jakewharton:butterknife:7.0.1'
+
+    compile 'javax.annotation:jsr250-api:1.0'
     //</DI>
 
     compile 'com.android.support:multidex:1.0.1'

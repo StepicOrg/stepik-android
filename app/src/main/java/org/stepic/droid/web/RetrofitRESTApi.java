@@ -550,6 +550,11 @@ public class RetrofitRESTApi implements IApi {
         return mLoggedService.putNotification(notificationId, new NotificationRequest(notification));
     }
 
+    @Override
+    public Call<Void> removeDevice(long deviceId) {
+        return mLoggedService.removeDevice(deviceId);
+    }
+
     @Nullable
     private Response getZendeskResponse() throws IOException {
         OkHttpClient client = new OkHttpClient();

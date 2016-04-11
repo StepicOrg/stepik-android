@@ -274,7 +274,7 @@ public class StepicDefaultModule {
     }
 
     @Provides
-    public  IDao<Notification> provideNotification(SQLiteOpenHelper openHelper) {
+    public IDao<Notification> provideNotification(SQLiteOpenHelper openHelper) {
         return new NotificationDaoImpl(openHelper);
     }
 
@@ -318,7 +318,7 @@ public class StepicDefaultModule {
 
     @Singleton
     @Provides
-    public INotificationManager provideNotificationManager (DatabaseFacade dbFacade, IApi api, IConfig config, UserPreferences userPreferences, DatabaseFacade db) {
-        return new NotificationManagerImpl(dbFacade, api, config, userPreferences, db);
+    public INotificationManager provideNotificationManager(SharedPreferenceHelper sp, IApi api, IConfig config, UserPreferences userPreferences, DatabaseFacade db) {
+        return new NotificationManagerImpl(sp, api, config, userPreferences, db);
     }
 }

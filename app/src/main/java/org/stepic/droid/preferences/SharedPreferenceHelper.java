@@ -50,7 +50,6 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_DISABLED, isNotificationDisabled);
     }
 
-
     public enum PreferenceType {
         LOGIN("login preference"),
         WIFI("wifi_preference"),
@@ -280,5 +279,4 @@ public class SharedPreferenceHelper {
     private final String GCM_TOKEN_ACTUAL = "gcm_token_actual";
     private final String NOTIFICATION_DISABLED = "notification_disabled_by_user";
     private final String NOTIFICATION_VIBRATION_DISABLED = "not_vibrat_disabled";
-
 }

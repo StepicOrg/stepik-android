@@ -23,6 +23,7 @@ import org.stepic.droid.util.FileUtil;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
@@ -40,6 +41,10 @@ public class LogoutAreYouSureDialog extends DialogFragment {
     DownloadManager mSystemDownloadManager;
     @Inject
     UserPreferences mUserPreferences;
+    @Inject
+    ThreadPoolExecutor mThreadPoolExecutor;
+    @Inject
+    SharedPreferenceHelper mSharedPreferenceHelper;
 
     @NotNull
     @Override
@@ -54,12 +59,10 @@ public class LogoutAreYouSureDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_YES_LOGOUT);
 
-                        final File directoryForClean  = mUserPreferences.getUserDownloadFolder();
-
+                        final File directoryForClean = mUserPreferences.getUserDownloadFolder();
                         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                             @Override
                             protected Void doInBackground(Void... params) {
-                                //// FIXME: 22.10.15 do it in
                                 List<DownloadEntity> downloadEntities = mDatabaseFacade.getAllDownloadEntities();
                                 for (DownloadEntity de : downloadEntities) {
                                     mSystemDownloadManager.remove(de.getDownloadId());
@@ -71,10 +74,9 @@ public class LogoutAreYouSureDialog extends DialogFragment {
                                 return null;
                             }
                         };
-                        task.execute();
+                        task.executeOnExecutor(mThreadPoolExecutor);
 
-                        SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
-                        helper.deleteAuthInfo();
+                        mSharedPreferenceHelper.deleteAuthInfo();
                         mShell.getScreenProvider().showLaunchScreen(MainApplication.getAppContext(), false);
                     }
                 })

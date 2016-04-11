@@ -10,7 +10,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -151,7 +150,6 @@ public class MainFeedActivity extends BackToExitActivityBase
 
         if (checkPlayServices() && !mSharedPreferenceHelper.isGcmTokenOk()) {
             // Start IntentService to register this application with GCM.
-            Log.d("eee", "start from main feed");
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }

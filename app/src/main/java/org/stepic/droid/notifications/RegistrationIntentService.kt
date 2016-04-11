@@ -53,7 +53,6 @@ class RegistrationIntentService : IntentService("StepicGcmReg") {
      * @param token The new token.
      */
     private fun sendRegistrationToServer(token: String) {
-        // Add custom implementation, as needed.
         mApi.registerDevice(token).execute()
     }
 }
