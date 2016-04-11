@@ -76,7 +76,7 @@ class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val c
             YandexMetrica.reportEvent("notification, cant parse courseId")
             return
         }
-
+        stepicNotification.course_id = courseId
         val notificationOfCourseList: MutableList<Notification?> = databaseFacade.getAllNotificationsOfCourse(courseId)
         val relatedCourse = getCourse(courseId)
         var isNeedAdd = true
@@ -86,6 +86,7 @@ class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val c
                 break
             }
         }
+
         if (isNeedAdd) {
             notificationOfCourseList.add(stepicNotification)
             databaseFacade.addNotification(stepicNotification)
@@ -126,7 +127,6 @@ class NotificationManagerImpl(val dbFacade: DatabaseFacade, val api: IApi, val c
         addVibrationIfNeed(notification)
 
         val numberOfNotification = notificationOfCourseList.size
-        stepicNotification.course_id = courseId
         val summaryText = MainApplication.getAppContext().getResources().getQuantityString(R.plurals.notification_plural, numberOfNotification, numberOfNotification)
         if (notificationOfCourseList.size == 1) {
             notification.setStyle(NotificationCompat.BigTextStyle()

@@ -8,6 +8,7 @@ import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.Headers;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
@@ -88,4 +89,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/courses")
     Call<CoursesStepicResponse> getCourses(@Query("ids[]") long[] courseIds);
+
+    @PUT("api/notifications/{id}")
+    Call<Void> putNotification(@Path("id") long notificationId, @Body NotificationRequest notificationRequest);
 }

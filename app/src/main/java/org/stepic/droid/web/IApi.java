@@ -73,4 +73,6 @@ public interface IApi {
     Call<DeviceResponse> registerDevice(String token);
 
     Call<CoursesStepicResponse> getCourse(long id);
+
+    Call<Void> markNotificationAsRead (long notificationId, boolean isRead);
 }

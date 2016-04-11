@@ -31,6 +31,7 @@ import org.stepic.droid.model.EnrollmentWrapper;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.RegistrationUser;
 import org.stepic.droid.model.Reply;
+import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.ISocialType;
@@ -540,6 +541,13 @@ public class RetrofitRESTApi implements IApi {
     public Call<CoursesStepicResponse> getCourse(long id) {
         long[] ids = new long[]{id};
         return mLoggedService.getCourses(ids);
+    }
+
+    @Override
+    public Call<Void> markNotificationAsRead(long notificationId, boolean isRead) {
+        Notification notification = new Notification();
+        notification.set_unread(!isRead);
+        return mLoggedService.putNotification(notificationId, new NotificationRequest(notification));
     }
 
     @Nullable

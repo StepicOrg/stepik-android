@@ -32,11 +32,13 @@ import org.stepic.droid.events.sections.StartingSaveSectionToDbEvent;
 import org.stepic.droid.events.sections.SuccessResponseSectionsEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.SectionAdapter;
 import org.stepic.droid.web.SectionsStepicResponse;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,12 +108,22 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         super.onNewIntent(intent);
         mCourse = (Course) (intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
 
-        if (intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
+        if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
             final long courseId = mCourse.getCourseId();
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
+                    List<Notification> notifications = mDbManager.getAllNotificationsOfCourse(courseId);
                     notificationManager.discardAllNotifications(courseId);
+                    for (Notification notificationItem : notifications) {
+                        if (notificationItem != null && notificationItem.getId() != null) {
+                            try {
+                                mShell.getApi().markNotificationAsRead(notificationItem.getId(), true).execute();
+                            } catch (IOException e) {
+                                YandexMetrica.reportError("notification is not posted", e);
+                            }
+                        }
+                    }
                     return null;
                 }
             };
