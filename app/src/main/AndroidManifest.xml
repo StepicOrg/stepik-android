@@ -68,7 +68,12 @@
 
         <activity
             android:name=".view.activities.SectionActivity"
-            android:label="@string/syllabus_title">
+            android:label="@string/syllabus_title"
+            android:parentActivityName=".view.activities.MainFeedActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.activities.MainFeedActivity"/>
 
         </activity>
 

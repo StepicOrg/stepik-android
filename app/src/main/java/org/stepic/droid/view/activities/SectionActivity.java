@@ -1,6 +1,7 @@
 package org.stepic.droid.view.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -78,7 +79,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         isScreenEmpty = true;
         firstLoad = true;
 
-        mCourse = (Course) (getIntent().getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
+
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(
@@ -97,6 +98,13 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
         ProgressHelper.activate(mProgressBar);
         bus.register(this);
+        onNewIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mCourse = (Course) (intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
         getAndShowSectionsFromCache();
     }
 
@@ -119,6 +127,12 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     private void updateSections() {
