@@ -14,6 +14,7 @@
         android:layout_below="@+id/appBarLayout">
 
         <include layout="@layout/report_problem_layout" />
+        <include layout="@layout/report_empty_layout" />
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout_units"

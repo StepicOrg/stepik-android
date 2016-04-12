@@ -65,6 +65,9 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Bind(R.id.report_problem)
     protected View mReportConnectionProblem;
 
+    @Bind(R.id.report_empty)
+    protected View mReportEmptyView;
+
     private Course mCourse;
     private SectionAdapter mAdapter;
     private List<Section> mSectionList;
@@ -160,23 +163,30 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     }
 
     private void updateSections() {
-        // FIXME: 29.03.16 if sections are empty or null, show banner, NOW INFINITE LOOP AND LOADING
-        mShell.getApi().getSections(mCourse.getSections()).enqueue(new Callback<SectionsStepicResponse>() {
-            @Override
-            public void onResponse(Response<SectionsStepicResponse> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
-                    bus.post(new SuccessResponseSectionsEvent(mCourse, response, retrofit));
-                } else {
-                    bus.post(new FailureResponseSectionEvent(mCourse));
+        long[] sections = mCourse.getSections();
+        if (sections == null || sections.length == 0) {
+            mReportEmptyView.setVisibility(View.VISIBLE);
+            ProgressHelper.dismiss(mProgressBar);
+            ProgressHelper.dismiss(mSwipeRefreshLayout);
+        } else {
+            mReportEmptyView.setVisibility(View.GONE);
+            mShell.getApi().getSections(mCourse.getSections()).enqueue(new Callback<SectionsStepicResponse>() {
+                @Override
+                public void onResponse(Response<SectionsStepicResponse> response, Retrofit retrofit) {
+                    if (response.isSuccess()) {
+                        bus.post(new SuccessResponseSectionsEvent(mCourse, response, retrofit));
+                    } else {
+                        bus.post(new FailureResponseSectionEvent(mCourse));
+                    }
+
                 }
 
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                bus.post(new FailureResponseSectionEvent(mCourse));
-            }
-        });
+                @Override
+                public void onFailure(Throwable t) {
+                    bus.post(new FailureResponseSectionEvent(mCourse));
+                }
+            });
+        }
     }
 
     private void getAndShowSectionsFromCache() {

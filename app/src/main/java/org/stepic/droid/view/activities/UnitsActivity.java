@@ -70,6 +70,9 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     @Bind(R.id.report_problem)
     protected View mReportConnectionProblem;
 
+    @Bind(R.id.report_empty)
+    protected View mReportEmpty;
+
 
     private Section mSection;
     private UnitAdapter mAdapter;
@@ -123,22 +126,29 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
 
     private void updateUnits() {
-        //// FIXME: 29.03.16 if units are empty or null, show banner, NOW INFINITE LOOP AND LOADING
-        mShell.getApi().getUnits(mSection.getUnits()).enqueue(new Callback<UnitStepicResponse>() {
-            @Override
-            public void onResponse(Response<UnitStepicResponse> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
-                    bus.post(new SuccessLoadUnitsEvent(mSection, response, retrofit));
-                } else {
+        long[] units = mSection.getUnits();
+        if (units == null || units.length == 0) {
+            ProgressHelper.dismiss(mProgressBar);
+            ProgressHelper.dismiss(mSwipeRefreshLayout);
+            mReportEmpty.setVisibility(View.VISIBLE);
+        } else {
+            mReportEmpty.setVisibility(View.GONE);
+            mShell.getApi().getUnits(mSection.getUnits()).enqueue(new Callback<UnitStepicResponse>() {
+                @Override
+                public void onResponse(Response<UnitStepicResponse> response, Retrofit retrofit) {
+                    if (response.isSuccess()) {
+                        bus.post(new SuccessLoadUnitsEvent(mSection, response, retrofit));
+                    } else {
+                        bus.post(new FailureLoadEvent(mSection));
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
                     bus.post(new FailureLoadEvent(mSection));
                 }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                bus.post(new FailureLoadEvent(mSection));
-            }
-        });
+            });
+        }
 
     }
 
@@ -334,7 +344,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     }
 
     @Subscribe
-    public void onUnitScoreChanged (UnitScoreUpdateEvent event) {
+    public void onUnitScoreChanged(UnitScoreUpdateEvent event) {
         long unitId = event.getUnitId();
 
         Pair<Unit, Integer> unitPairPosition = getUnitOnScreenAndPositionById(unitId);
@@ -342,7 +352,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         Unit unit = unitPairPosition.first;
         int position = unitPairPosition.second;
 
-        Progress progress =  mUnitProgressMap.get(unitId);
+        Progress progress = mUnitProgressMap.get(unitId);
         progress.setScore(event.getNewScore() + "");
 
         mAdapter.notifyItemChanged(position);

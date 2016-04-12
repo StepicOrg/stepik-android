@@ -122,4 +122,5 @@
         <item quantity="many">%d новых уведомлений</item>
         <item quantity="other">%d новых уведомлений</item>
     </plurals>
+    <string name="empty_try_later">Сейчас здесь пусто, попробуйте позже.</string>
 </resources>
