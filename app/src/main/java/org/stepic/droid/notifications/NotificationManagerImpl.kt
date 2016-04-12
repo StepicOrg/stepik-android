@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.support.annotation.DrawableRes
@@ -193,11 +193,9 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     private fun addSoundIfNeed(builder: NotificationCompat.Builder){
         if (userPreferences.isSoundNotificationEnabled){
-            val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-            builder.setSound(defaultSoundUri)
-        }
-        else{
-
+            val stepicSound = Uri.parse("android.resource://"
+                    + MainApplication.getAppContext().getPackageName() + "/" + R.raw.default_sound);
+            builder.setSound(stepicSound)
         }
     }
 
