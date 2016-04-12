@@ -25,6 +25,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class SharedPreferenceHelper {
+    private static final String NOTIFICATION_SOUND_DISABLED = "notification_sound";
     private Context mContext;
 
     @Inject
@@ -48,6 +49,14 @@ public class SharedPreferenceHelper {
 
     public void setNotificationDisabled(boolean isNotificationDisabled) {
         put(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_DISABLED, isNotificationDisabled);
+    }
+
+    public boolean isNotificationSoundDisabled() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_SOUND_DISABLED);
+    }
+
+    public void setNotificationSoundDisabled(boolean isDisabled) {
+        put(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_SOUND_DISABLED, isDisabled);
     }
 
     public enum PreferenceType {

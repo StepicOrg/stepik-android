@@ -126,6 +126,7 @@
     <string name="notification_learn_list">Deadlines, new modules, certificates</string>
     <string name="vibration_title">Vibration</string>
     <string name="empty_try_later">Now here is empty, try again later.</string>
+    <string name="sound_title">Sound</string>
     <plurals name="notification_plural">
         <item quantity="one">%d new notification</item>
         <item quantity="other">%d new notifications</item>

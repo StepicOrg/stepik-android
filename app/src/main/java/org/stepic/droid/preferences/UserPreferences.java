@@ -132,4 +132,13 @@ public class UserPreferences {
     public void setVibrateNotificationEnabled(boolean isEnabled) {
         mSharedPreferenceHelper.setNotificationVibrationDisabled(!isEnabled);
     }
+
+    public boolean isSoundNotificationEnabled() {
+        return !mSharedPreferenceHelper.isNotificationSoundDisabled();
+    }
+
+    public void setNotificationSoundEnabled(boolean isEnabled) {
+        mSharedPreferenceHelper.setNotificationSoundDisabled(!isEnabled);
+    }
+
 }

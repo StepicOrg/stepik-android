@@ -123,4 +123,5 @@
         <item quantity="other">%d новых уведомлений</item>
     </plurals>
     <string name="empty_try_later">Сейчас здесь пусто, попробуйте позже.</string>
+    <string name="sound_title">Звук</string>
 </resources>

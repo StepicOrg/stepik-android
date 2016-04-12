@@ -93,8 +93,6 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             databaseFacade.addNotification(stepicNotification)
         }
 
-
-        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val largeIcon = getPictureByCourse(relatedCourse)
         val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
 
@@ -121,11 +119,11 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                 .setContentText(justText)
                 .setColor(colorArgb)
                 .setAutoCancel(true)
-                .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setDeleteIntent(getDeleteIntent(courseId))
         addVibrationIfNeed(notification)
+        addSoundIfNeed(notification)
 
         val numberOfNotification = notificationOfCourseList.size
         val summaryText = MainApplication.getAppContext().getResources().getQuantityString(R.plurals.notification_plural, numberOfNotification, numberOfNotification)
@@ -190,6 +188,16 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     private fun addVibrationIfNeed(builder: NotificationCompat.Builder) {
         if (userPreferences.isVibrateNotificationEnabled) {
             builder.setDefaults(NotificationCompat.DEFAULT_VIBRATE)
+        }
+    }
+
+    private fun addSoundIfNeed(builder: NotificationCompat.Builder){
+        if (userPreferences.isSoundNotificationEnabled){
+            val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+            builder.setSound(defaultSoundUri)
+        }
+        else{
+
         }
     }
 
