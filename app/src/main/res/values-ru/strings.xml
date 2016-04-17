@@ -26,7 +26,7 @@
     <string name="course_info_title">Информация о курсе</string>
     <string name="requirements">Требования</string>
     <string name="join_course">Поступить</string>
-    <string name="join_course_exception">Проверьте интернет соединение.</string>
+    <string name="join_course_exception">Проверьте интернет-соединение.</string>
     <string name="join_course_impossible">Сейчас нельзя присоединиться к курсу.</string>
     <string name="loading">Загрузка</string>
     <string name="begin_date_section">Дата начала:</string>
@@ -53,7 +53,7 @@
     <string name="try_in_web_drop">Попробуйте отписаться в web-версии</string>
     <string name="you_not_enrolled">Вы не записаны на данный курс</string>
     <string name="cancel">Отмена</string>
-    <string name="failLogin">E-mail адрес/пароль не верны</string>
+    <string name="failLogin">E-mail адрес/пароль неверны</string>
     <string name="are_you_sure">Вы уверены?</string>
     <string name="deny">Отклонить</string>
     <string name="allow">Разрешить</string>
@@ -85,7 +85,7 @@
     <string name="wrong">Неправильно. Пожалуйста, попробуйте еще раз.</string>
     <string name="correct">Верно!</string>
     <string name="try_again">Попробовать снова</string>
-    <string name="step_only_online">Шаги можно проходить только онлайн. Чтобы начать решать, включите интернет соединение.</string>
+    <string name="step_only_online">Шаги можно проходить только онлайн. Чтобы начать решать, включите интернет-соединение.</string>
     <string name="correct_free_response">Ваше решение сохранено.</string>
     <string name="hint_for_type_answer">Введите ответ здесь…</string>
     <string name="py_message"><![CDATA[Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>]]></string>
