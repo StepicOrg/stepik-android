@@ -49,6 +49,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -571,7 +572,8 @@ public class RetrofitRESTApi implements IApi {
 
     @Nullable
     private List<HttpCookie> getCookiesForBaseUrl() throws IOException {
-        retrofit.Response ob = mStepicEmptyAuthService.getStepicForFun().execute();
+        String lang = Locale.getDefault().getLanguage();
+        retrofit.Response ob = mStepicEmptyAuthService.getStepicForFun(lang).execute();
         Headers headers = ob.headers();
         CookieManager cookieManager = new CookieManager();
         URI myUri = null;
