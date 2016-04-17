@@ -107,7 +107,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         taskBuilder.addParentStack(SectionActivity::class.java)
         taskBuilder.addNextIntent(intent)
 
-        val pendingIntent = taskBuilder.getPendingIntent(0, PendingIntent.FLAG_ONE_SHOT)
+        val pendingIntent = taskBuilder.getPendingIntent(courseId.toInt(), PendingIntent.FLAG_ONE_SHOT)
 
         val title = MainApplication.getAppContext().getString(R.string.app_name)
         val justText: String = HtmlHelper.fromHtml(rawMessageHtml).toString()
