@@ -7,7 +7,7 @@
     android:hint="@string/hint_for_type_answer"
     android:minLines="1"
     android:maxLines="9000"
-    android:inputType="text"
+    android:inputType="text|textCapSentences"
     android:imeOptions="actionSend"
     android:scrollbarStyle="outsideOverlay"
     android:scrollbars="vertical"
