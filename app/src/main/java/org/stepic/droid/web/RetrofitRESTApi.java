@@ -133,7 +133,7 @@ public class RetrofitRESTApi implements IApi {
                         mSharedPreference.storeAuthInfo(response);
                     }
                     if (response != null) {
-                        YandexMetrica.reportEvent("response is not null in loggedService");
+                        //it is good way
                         newRequest = chain.request().newBuilder().addHeader("Authorization", getAuthHeaderValueForLogged()).build();
                     }
                     return chain.proceed(newRequest);
