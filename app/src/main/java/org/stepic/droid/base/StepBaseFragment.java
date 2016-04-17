@@ -51,6 +51,13 @@ public abstract class StepBaseFragment extends FragmentBase {
         bus.register(this);
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        hideSoftKeypad();
+    }
+
     @Override
     public void onDestroyView() {
         bus.unregister(this);
