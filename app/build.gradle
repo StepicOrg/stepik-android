@@ -12,7 +12,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 44
-        versionName "1.6"
+        versionName "1.6.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // Enabling multidex support.
         multiDexEnabled true
