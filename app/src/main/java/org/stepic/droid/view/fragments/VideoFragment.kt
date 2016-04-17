@@ -174,50 +174,12 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             options.add("--audio-time-stretch") // time stretching
             options.add("--no-drop-late-frames") //help when user accelerates video
             options.add("--no-skip-frames")
-            //            //Magic commands:  HW_ACCELERATION_FULL
-            //            val decoder = HWDecoderUtil.getDecoderFromDevice()
-            //            if (decoder == HWDecoderUtil.Decoder.NONE) {
-            //                options.add("--codec=all")
-            //            } else {
-            //
-            //                /*
-            //         * Set higher caching values if using iomx decoding, since some omx
-            //         * decoders have a very high latency, and if the preroll data isn't
-            //         * enough to make the decoder output a frame, the playback timing gets
-            //         * started too soon, and every decoded frame appears to be too late.
-            //         * On Nexus One, the decoder latency seems to be 25 input packets
-            //         * for 320x170 H.264, a few packets less on higher resolutions.
-            //         * On Nexus S, the decoder latency seems to be about 7 packets.
-            //         */
-            //                options.add("--file-caching=1500")
-            //                options.add("--network-caching=1500")
-            //
-            //                val sb = StringBuilder("--codec=")
-            //                if (decoder == HWDecoderUtil.Decoder.MEDIACODEC)
-            //                    sb.append(if (AndroidUtil.isLolliPopOrLater()) "mediacodec_ndk" else "mediacodec_jni").append(",")
-            //                else if (decoder == HWDecoderUtil.Decoder.OMX)
-            //                    sb.append("iomx,")
-            //                else
-            //                    sb.append(if (AndroidUtil.isLolliPopOrLater()) "mediacodec_ndk" else "mediacodec_jni").append(",iomx,")
-            //                sb.append("all")
-            //
-            //                options.add(sb.toString())
-            //            }
-            //            //end magic
 
             libvlc = LibVLC(options)
             libvlc?.setOnHardwareAccelerationError(this)
 
             // Create media player
             mMediaPlayer = MediaPlayer(libvlc)
-            //            mPlayerListener = MyPlayerListener(this)
-            //            mMediaPlayer?.setEventListener(mPlayerListener)
-
-            // Set up video output
-            //            val vout = mMediaPlayer?.getVLCVout()
-            //            vout?.setVideoView(mVideoView)
-            //            vout?.addCallback(this)
-            //            vout?.attachViews()
 
             val file = File (mFilePath)
             var uri: Uri?
@@ -228,7 +190,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             }
 
             val media = Media(libvlc, uri)
-            //            mMedia?.setHWDecoderEnabled(true, true)
             mMediaPlayer?.media = media
             media.release()
 
@@ -245,7 +206,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         val vout = mMediaPlayer?.vlcVout
         vout?.removeCallback(this)
         vout?.detachViews()
-        //        mVideoViewHolder = null
         mMediaPlayer?.setEventListener(null)
         libvlc?.release()
         libvlc?.setOnHardwareAccelerationError (null)
@@ -257,7 +217,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     }
 
     override fun eventHardwareAccelerationError() {
-        //throw UnsupportedOperationException()
         YandexMetrica.reportEvent(TAG + "vlc error hardware")
         recreateAndPreloadPlayer()
     }
