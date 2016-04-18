@@ -20,7 +20,7 @@ public class LaunchActivity extends BackToExitActivityBase {
 
     public static final String OVERRIDE_ANIMATION_FLAG = "override_animation_flag";
 
-    @Bind(R.id.sign_up_btn)
+    @Bind(R.id.sign_up_btn_activity_launch)
     View mSignUpButton;
 
     @Bind(R.id.sign_in_tv)

@@ -35,6 +35,9 @@ android {
         classic {
             applicationId "org.stepic.droid"
         }
+        releasedev{
+            applicationId "org.stepic.droid.release"
+        }
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'

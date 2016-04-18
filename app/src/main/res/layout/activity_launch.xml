@@ -47,7 +47,7 @@
                 android:text="@string/sign_in" />
 
             <TextView
-                android:id="@+id/sign_up_btn"
+                android:id="@+id/sign_up_btn_activity_launch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/sign_in_tv"
