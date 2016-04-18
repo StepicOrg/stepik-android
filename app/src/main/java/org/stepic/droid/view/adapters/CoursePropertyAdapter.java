@@ -17,12 +17,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CoursePropertyAdapter extends ArrayAdapter<CourseProperty> {
-    private LayoutInflater mInflater;
+    private LayoutInflater inflater;
 
-    public CoursePropertyAdapter(Context context,
-                                 List<CourseProperty> coursePropertyList) {
+    public CoursePropertyAdapter(Context context, List<CourseProperty> coursePropertyList) {
         super(context, 0, coursePropertyList);
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -30,10 +29,9 @@ public class CoursePropertyAdapter extends ArrayAdapter<CourseProperty> {
         final CourseProperty courseProperty = getItem(position);
 
         View view = convertView;
-        // Check if an existing view is being reused, otherwise inflate the view
         ViewHolderItem viewHolderItem;
         if (view == null) {
-            view = mInflater.inflate(R.layout.course_property_item, null);
+            view = inflater.inflate(R.layout.course_property_item, null);
             viewHolderItem = new ViewHolderItem(view);
             view.setTag(viewHolderItem);
         } else {

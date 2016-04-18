@@ -42,7 +42,6 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         }
     }
 
-
     private fun resolveAndSendNotification(notification: Notification) {
         val htmlText = notification.htmlText
         if (!NotificationHelper.isNotificationValidByAction(notification.action)) {
@@ -65,8 +64,6 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     }
 
     private fun sendCommentNotification(stepicNotification: Notification, rawMessageHtml: String, id: Long) {
-        //        YandexMetrica.reportEvent("notification comment is shown")
-        //        sendLearnNotification(stepicNotification, rawMessageHtml, id)
     }
 
     private fun sendLearnNotification(stepicNotification: Notification, rawMessageHtml: String, id: Long) {
@@ -140,9 +137,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                 val line = HtmlHelper.fromHtml(notificationItem?.htmlText).toString()
                 inboxStyle.addLine(line);
             }
-
             inboxStyle.setSummaryText(summaryText)
-
             notification.setStyle(inboxStyle)
                     .setNumber(numberOfNotification)
         }
@@ -191,8 +186,8 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         }
     }
 
-    private fun addSoundIfNeed(builder: NotificationCompat.Builder){
-        if (userPreferences.isSoundNotificationEnabled){
+    private fun addSoundIfNeed(builder: NotificationCompat.Builder) {
+        if (userPreferences.isSoundNotificationEnabled) {
             val stepicSound = Uri.parse("android.resource://"
                     + MainApplication.getAppContext().getPackageName() + "/" + R.raw.default_sound);
             builder.setSound(stepicSound)
