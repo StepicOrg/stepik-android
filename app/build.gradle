@@ -11,8 +11,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 45
-        versionName "1.6.1"
+        versionCode 46
+        versionName "1.6.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // Enabling multidex support.
         multiDexEnabled true
