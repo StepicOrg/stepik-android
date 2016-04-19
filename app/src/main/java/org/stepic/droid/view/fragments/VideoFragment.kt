@@ -218,7 +218,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
 
     override fun eventHardwareAccelerationError() {
         YandexMetrica.reportEvent(TAG + "vlc error hardware")
-        recreateAndPreloadPlayer()
+        activity?.finish()
     }
 
     override fun onStart() {
