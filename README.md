@@ -1,10 +1,8 @@
 #Stepic for Android
-========
 
 Mobile application of [Stepic.org][1].
 
 ##Store
-========
 New version of Stepic App is now available on Google Play
 
 <a href='https://play.google.com/store/apps/details?id=org.stepic.droid&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' height=100 src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
@@ -17,7 +15,6 @@ New version of Stepic App is now available on Google Play
 <img src="/screenshots/4-eng.png?raw=true" width="256">
 
 ##License
-=======
 
     Copyright 2016 Stepic.org.
 
