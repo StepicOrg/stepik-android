@@ -51,7 +51,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom6To7(db);
     }
 
+
     private void upgradeFrom6To7(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS " + DbStructureNotification.NOTIFICATIONS_TEMP);
         createNotification(db, DbStructureNotification.NOTIFICATIONS_TEMP);
     }
 
