@@ -35,7 +35,9 @@ import org.videolan.libvlc.util.AndroidUtil
 import java.io.File
 import java.util.*
 
-class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout.Callback {
+class VideoFragment : FragmentBase(), IVLCVout.Callback {
+
+
     companion object {
         private val TIMEOUT_BEFORE_HIDE = 4500L
         private val INDEX_PLAY_IMAGE = 0
@@ -176,7 +178,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             options.add("--no-skip-frames")
 
             libvlc = LibVLC(options)
-            libvlc?.setOnHardwareAccelerationError(this)
 
             // Create media player
             mMediaPlayer = MediaPlayer(libvlc)
@@ -208,7 +209,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         vout?.detachViews()
         mMediaPlayer?.setEventListener(null)
         libvlc?.release()
-        libvlc?.setOnHardwareAccelerationError (null)
         libvlc = null
         mMediaPlayer?.release()
         mMediaPlayer = null
@@ -216,7 +216,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mVideoHeight = 0
     }
 
-    override fun eventHardwareAccelerationError() {
+    override fun onHardwareAccelerationError(vlcVout: IVLCVout?) {
         YandexMetrica.reportEvent(TAG + "vlc error hardware")
         activity?.finish()
     }
