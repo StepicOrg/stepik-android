@@ -17,4 +17,9 @@ class VideoActivity : SingleFragmentActivity() {
             return null
         }
     }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
+    }
 }

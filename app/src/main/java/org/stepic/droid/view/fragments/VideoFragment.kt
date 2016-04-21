@@ -683,6 +683,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
                     }
                 }
                 MediaPlayer.Event.EndReached -> {
+                    mOwner?.activity?.finish()
                     mOwner?.isEndReached = true
                     mOwner?.showController(true)
                     mOwner?.showPlay()
@@ -696,6 +697,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
                         }
                     }
                     mOwner?.releasePlayer()
+                    mOwner?.activity?.finish()
                 }
                 MediaPlayer.Event.PositionChanged -> {
                     val currentPos = player?.position
