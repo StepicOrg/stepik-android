@@ -59,6 +59,7 @@ public class StepTypeResolver implements IStepResolver {
         mapFromTypeToDrawable.put(AppConstants.TYPE_PUZZLE, getDrawable(context, R.drawable.ic_puzzle1));
         mapFromTypeToDrawable.put(AppConstants.TYPE_PYCHARM, getDrawable(context, R.drawable.ic_pycharm1));
         mapFromTypeToDrawable.put(AppConstants.TYPE_CODE, getDrawable(context, R.drawable.ic_code1));
+        mapFromTypeToDrawable.put(AppConstants.TYPE_ADMIN, getDrawable(context, R.drawable.ic_code1));
 
 
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_TEXT, getDrawable(context, R.drawable.ic_theory));
@@ -78,6 +79,7 @@ public class StepTypeResolver implements IStepResolver {
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_PUZZLE, getDrawable(context, R.drawable.ic_puzzle));
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_PYCHARM, getDrawable(context, R.drawable.ic_pycharm));
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_CODE, getDrawable(context, R.drawable.ic_code));
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_ADMIN, getDrawable(context, R.drawable.ic_code));
 
     }
 
