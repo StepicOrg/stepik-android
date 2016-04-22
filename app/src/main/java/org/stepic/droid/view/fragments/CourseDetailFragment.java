@@ -180,14 +180,6 @@ public class CourseDetailFragment extends FragmentBase {
                 new LinearLayoutManager(getActivity(),
                         LinearLayoutManager.HORIZONTAL, false);//// TODO: 30.09.15 determine right-to-left-mode
         mInstructorsCarousel.setLayoutManager(layoutManager);
-        mInstructorsCarousel.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                mInstructorsCarousel.getViewTreeObserver().removeOnPreDrawListener(this);
-                centeringRecycler();
-                return true;
-            }
-        });
     }
 
     @Override
@@ -299,13 +291,23 @@ public class CourseDetailFragment extends FragmentBase {
 
             mUserList.clear();
             mUserList.addAll(users);
+
+            mInstructorsCarousel.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    mInstructorsCarousel.getViewTreeObserver().removeOnPreDrawListener(this);
+                    centeringRecycler();
+                    return true;
+                }
+            });
+
             mInstructorAdapter.notifyDataSetChanged();
 
             ProgressHelper.dismiss(mInstructorsProgressBar);
         }
     }
 
-    private void centeringRecycler () {
+    private void centeringRecycler() {
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -313,8 +315,8 @@ public class CourseDetailFragment extends FragmentBase {
 
 
         int widthOfAllItems = mInstructorsCarousel.getMeasuredWidth();
-        Log.d("eee","width of screen "+ widthOfScreen);
-        Log.d("eee","width of Items "+ widthOfAllItems);
+        Log.d("eee", "width of screen " + widthOfScreen);
+        Log.d("eee", "width of Items " + widthOfAllItems);
         if (widthOfScreen > widthOfAllItems) {
             int padding = (int) (widthOfScreen - widthOfAllItems) / 2;
             mInstructorsCarousel.setPadding(padding, 0, padding, 0);
