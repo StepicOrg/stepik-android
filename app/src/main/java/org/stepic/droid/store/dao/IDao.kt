@@ -11,7 +11,7 @@ interface IDao<T> {
 
     fun getAll():List<T?>
 
-    fun getAll(whereColumnName: String, whereValue: String): List<T?>
+    fun getAll(whereColumnName: String, whereValue: String): MutableList<T?>
 
     fun get(whereColumnName: String, whereValue: String): T?
 

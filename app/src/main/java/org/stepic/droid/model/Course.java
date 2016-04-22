@@ -379,11 +379,11 @@ public class Course implements Serializable, Parcelable {
         this.slug = slug;
     }
 
-    public void setmBeginDateTime(DateTime mBeginDateTime) {
+    public void setBeginDateTime(DateTime mBeginDateTime) {
         this.mBeginDateTime = mBeginDateTime;
     }
 
-    public void setmEndDateTime(DateTime mEndDateTime) {
+    public void setEndDateTime(DateTime mEndDateTime) {
         this.mEndDateTime = mEndDateTime;
     }
 

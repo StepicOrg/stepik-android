@@ -3,6 +3,7 @@ package org.stepic.droid.util.resolvers;
 import android.content.Context;
 
 import com.squareup.otto.Bus;
+import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Video;
@@ -53,26 +54,44 @@ public class VideoResolver implements IVideoResolver {
 
     }
 
+    @Nullable
     private String resolveFromWeb(List<VideoUrl> urlList) {
         String resolvedURL = null;
-        if (urlList == null || urlList.isEmpty()) return null;
-        int upperBound = urlList.size() - 1;
-        for (int i = upperBound; i >= 0; i--) {
-            VideoUrl tempLink = urlList.get(i);
-            if (tempLink != null) {
-                String quality = tempLink.getQuality();
-                if (quality != null &&
-                        (quality.equals(mUserPreferences.getQualityVideo()) || i == 0)) {
-                    resolvedURL = tempLink.getUrl();
-                    break;
+
+
+        try {
+            int weWant = Integer.parseInt(mUserPreferences.getQualityVideo());
+            int bestDelta = Integer.MAX_VALUE;
+            int bestIndex = 0;
+            for (int i = 0; i < urlList.size(); i++) {
+                int current = Integer.parseInt(urlList.get(i).getQuality());
+                int delta = Math.abs(current - weWant);
+                if (delta < bestDelta) {
+                    bestDelta = delta;
+                    bestIndex = i;
+                }
+
+            }
+            resolvedURL = urlList.get(bestIndex).getUrl();
+        } catch (NumberFormatException e) {
+            //this is approach in BAD case
+            YandexMetrica.reportError("video resolver is failed", e);
+            if (urlList == null || urlList.isEmpty()) return null;
+            int upperBound = urlList.size() - 1;
+            for (int i = upperBound; i >= 0; i--) {
+                VideoUrl tempLink = urlList.get(i);
+                if (tempLink != null) {
+                    String quality = tempLink.getQuality();
+                    if (quality != null &&
+                            (quality.equals(mUserPreferences.getQualityVideo()))) {
+                        resolvedURL = tempLink.getUrl();
+                        break;
+                    }
                 }
             }
         }
 
-        if (resolvedURL != null) {
-            return resolvedURL;
-        } else
-            return null;
+        return resolvedURL;
 
     }
 

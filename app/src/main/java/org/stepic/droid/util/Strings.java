@@ -51,7 +51,7 @@ public class Strings {
     /**
      * Convert time to a string
      * @param millis e.g.time/length from file
-     * @return formated string (hh:)mm:ss
+     * @return formatted string (hh:)mm:ss
      */
     public static String millisToString(long millis) {
         return Strings.millisToString(millis, false);
@@ -60,7 +60,7 @@ public class Strings {
     /**
      * Convert time to a string
      * @param millis e.g.time/length from file
-     * @return formated string "[hh]h[mm]min" / "[mm]min[s]s"
+     * @return formatted string "[hh]h[mm]min" / "[mm]min[s]s"
      */
     public static String millisToText(long millis) {
         return Strings.millisToString(millis, true);

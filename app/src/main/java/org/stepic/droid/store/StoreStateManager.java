@@ -142,7 +142,7 @@ public class StoreStateManager implements IStoreStateManager {
             };
             mainHandler.post(myRunnable);
         }
-//Don't need suppot course state
+//Don't need support course state
 //        updateCourseAfterDeleting(section.getCourse());
     }
 

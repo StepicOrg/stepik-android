@@ -27,7 +27,7 @@ public class FileUtil {
 
             // this will be useful so that you can show a typical 0-100%
             // progress bar
-            int lenghtOfFile = connection.getContentLength();
+            int lengthOfFile = connection.getContentLength();
 
             // download the file
             InputStream input = new BufferedInputStream(url.openStream(),

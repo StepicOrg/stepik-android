@@ -20,6 +20,9 @@ import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.notifications.INotificationManager;
+import org.stepic.droid.notifications.NotificationManagerImpl;
+import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialManager;
@@ -37,6 +40,7 @@ import org.stepic.droid.store.dao.CourseDaoImpl;
 import org.stepic.droid.store.dao.DownloadEntityDaoImpl;
 import org.stepic.droid.store.dao.IDao;
 import org.stepic.droid.store.dao.LessonDaoImpl;
+import org.stepic.droid.store.dao.NotificationDaoImpl;
 import org.stepic.droid.store.dao.PersistentVideoDaoImpl;
 import org.stepic.droid.store.dao.ProgressDaoImpl;
 import org.stepic.droid.store.dao.SectionDaoImpl;
@@ -270,6 +274,11 @@ public class StepicDefaultModule {
     }
 
     @Provides
+    public IDao<Notification> provideNotification(SQLiteOpenHelper openHelper) {
+        return new NotificationDaoImpl(openHelper);
+    }
+
+    @Provides
     @Singleton
     public ICancelSniffer provideCancelSniffer() {
         return new SynchronizedCancelSniffer();
@@ -305,5 +314,11 @@ public class StepicDefaultModule {
     @Provides
     public AudioFocusHelper provideAudioFocusHelper(Context context, IMainHandler mainHandler, Bus bus) {
         return new AudioFocusHelper(context, bus, mainHandler);
+    }
+
+    @Singleton
+    @Provides
+    public INotificationManager provideNotificationManager(SharedPreferenceHelper sp, IApi api, IConfig config, UserPreferences userPreferences, DatabaseFacade db) {
+        return new NotificationManagerImpl(sp, api, config, userPreferences, db);
     }
 }

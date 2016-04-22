@@ -67,4 +67,14 @@ public interface IApi {
     Call<EmailAddressResponse> getEmailAddresses(long[] ids);
 
     Call<Void> sendFeedback(String email, String rawDescription);
+
+    Call<DeviceResponse> getDevices ();
+
+    Call<DeviceResponse> registerDevice(String token);
+
+    Call<CoursesStepicResponse> getCourse(long id);
+
+    Call<Void> markNotificationAsRead (long notificationId, boolean isRead);
+
+    Call<Void> removeDevice(long deviceId);
 }

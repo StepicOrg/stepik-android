@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +23,7 @@ import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.view.dialogs.ExplainPermissionDialog;
 import org.stepic.droid.view.listeners.OnClickLoadListener;
@@ -111,12 +111,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
 
         if (section.is_active()) {
 
-            int strong_text_color;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                strong_text_color = MainApplication.getAppContext().getResources().getColor(R.color.stepic_regular_text, MainApplication.getAppContext().getTheme());
-            } else {
-                strong_text_color = MainApplication.getAppContext().getResources().getColor(R.color.stepic_regular_text);
-            }
+            int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, MainApplication.getAppContext());
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                strong_text_color = MainApplication.getAppContext().getResources().getColor(R.color.stepic_regular_text, MainApplication.getAppContext().getTheme());
+//            } else {
+//                strong_text_color = MainApplication.getAppContext().getResources().getColor(R.color.stepic_regular_text);
+//            }
 
             holder.sectionTitle.setTextColor(strong_text_color);
             holder.cv.setFocusable(false);
@@ -158,12 +158,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             holder.whenLoad.setVisibility(View.INVISIBLE);
             holder.afterLoad.setVisibility(View.GONE);
 
-            int weak_text_color;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                weak_text_color = MainApplication.getAppContext().getColor(R.color.stepic_weak_text);
-            } else {
-                weak_text_color = MainApplication.getAppContext().getResources().getColor(R.color.stepic_weak_text);
-            }
+            int weak_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_weak_text, MainApplication.getAppContext());
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                weak_text_color = MainApplication.getAppContext().getColor(R.color.stepic_weak_text);
+//            } else {
+//                weak_text_color = MainApplication.getAppContext().getResources().getColor(R.color.stepic_weak_text);
+//            }
             holder.sectionTitle.setTextColor(weak_text_color);
             holder.cv.setFocusable(false);
             holder.cv.setClickable(false);

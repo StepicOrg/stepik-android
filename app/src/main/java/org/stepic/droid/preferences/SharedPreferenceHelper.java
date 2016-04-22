@@ -25,6 +25,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class SharedPreferenceHelper {
+    private static final String NOTIFICATION_SOUND_DISABLED = "notification_sound";
     private Context mContext;
 
     @Inject
@@ -32,13 +33,39 @@ public class SharedPreferenceHelper {
         mContext = MainApplication.getAppContext();
     }
 
+    public boolean isNotificationVibrationDisabled() {
+        //default is enabled
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_VIBRATION_DISABLED);
+    }
+
+    public void setNotificationVibrationDisabled(boolean isNotificationVibrationDisabled) {
+        put(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_VIBRATION_DISABLED, isNotificationVibrationDisabled);
+    }
+
+    public boolean isNotificationDisabled() {
+        //default is enabled
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_DISABLED);
+    }
+
+    public void setNotificationDisabled(boolean isNotificationDisabled) {
+        put(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_DISABLED, isNotificationDisabled);
+    }
+
+    public boolean isNotificationSoundDisabled() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_SOUND_DISABLED);
+    }
+
+    public void setNotificationSoundDisabled(boolean isDisabled) {
+        put(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_SOUND_DISABLED, isDisabled);
+    }
 
     public enum PreferenceType {
         LOGIN("login preference"),
         WIFI("wifi_preference"),
         VIDEO_QUALITY("video_quality_preference"),
         TEMP("temporary"),
-        VIDEO_SETTINGS("video_settings");
+        VIDEO_SETTINGS("video_settings"),
+        DEVICE_SPECIFIC("device_specific");
 
         private String description;
 
@@ -49,6 +76,14 @@ public class SharedPreferenceHelper {
         private String getStoreName() {
             return description;
         }
+    }
+
+    public void setIsGcmTokenOk(boolean isGcmTokenOk) {
+        put(PreferenceType.LOGIN, GCM_TOKEN_ACTUAL, isGcmTokenOk);
+    }
+
+    public boolean isGcmTokenOk() {
+        return getBoolean(PreferenceType.LOGIN, GCM_TOKEN_ACTUAL);
     }
 
     public void storeVideoPlaybackRate(@NotNull VideoPlaybackRate videoPlaybackRate) {
@@ -250,5 +285,7 @@ public class SharedPreferenceHelper {
     private final String TEMP_POSITION_KEY = "temp_position_key";
     private final String VIDEO_RATE_PREF_KEY = "video_rate_pref_key";
     private final String VIDEO_EXTERNAL_PREF_KEY = "video_external_pref_key";
-
+    private final String GCM_TOKEN_ACTUAL = "gcm_token_actual";
+    private final String NOTIFICATION_DISABLED = "notification_disabled_by_user";
+    private final String NOTIFICATION_VIBRATION_DISABLED = "not_vibrat_disabled";
 }

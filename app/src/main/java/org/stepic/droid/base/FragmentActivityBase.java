@@ -14,6 +14,8 @@ import org.stepic.droid.R;
 import org.stepic.droid.core.ILessonSessionManager;
 import org.stepic.droid.core.ILoginManager;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.notifications.INotificationManager;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
@@ -27,6 +29,12 @@ import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class FragmentActivityBase extends AppCompatActivity {
+
+    @Inject
+    protected INotificationManager notificationManager;
+
+    @Inject
+    protected SharedPreferenceHelper mSharedPreferenceHelper;
 
     @Inject
     protected ILessonSessionManager mLessonManager;

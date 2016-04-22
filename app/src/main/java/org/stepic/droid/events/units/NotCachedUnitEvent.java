@@ -1,13 +1,13 @@
 package org.stepic.droid.events.units;
 
 public class NotCachedUnitEvent {
-    long uintId;
+    long unitId;
 
-    public NotCachedUnitEvent(long uintId) {
-        this.uintId = uintId;
+    public NotCachedUnitEvent(long unitId) {
+        this.unitId = unitId;
     }
 
-    public long getUintId() {
-        return uintId;
+    public long getUnitId() {
+        return unitId;
     }
 }

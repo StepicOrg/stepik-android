@@ -20,7 +20,7 @@ import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
-import org.stepic.droid.core.MyStatePhoneListener
+import org.stepic.droid.core.MyPhoneStateListener
 import org.stepic.droid.events.IncomingCallEvent
 import org.stepic.droid.events.audio.AudioFocusLossEvent
 import org.stepic.droid.preferences.VideoPlaybackRate
@@ -35,7 +35,9 @@ import org.videolan.libvlc.util.AndroidUtil
 import java.io.File
 import java.util.*
 
-class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout.Callback {
+class VideoFragment : FragmentBase(), IVLCVout.Callback {
+
+
     companion object {
         private val TIMEOUT_BEFORE_HIDE = 4500L
         private val INDEX_PLAY_IMAGE = 0
@@ -54,7 +56,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         }
     }
 
-    val myStatePhoneListener = MyStatePhoneListener()
+    val myStatePhoneListener = MyPhoneStateListener()
     val tmgr = MainApplication.getAppContext().getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
     var mSurfaceFrame: FrameLayout? = null
     var mFragmentContainer: ViewGroup? = null
@@ -160,7 +162,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         vout?.setVideoView(mVideoView)
         vout?.addCallback(this)
         vout?.attachViews()
-        //
+
         mMediaPlayer?.setEventListener(mPlayerListener)
 
         mPlayPauseSwitcher?.isClickable = true
@@ -174,50 +176,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             options.add("--audio-time-stretch") // time stretching
             options.add("--no-drop-late-frames") //help when user accelerates video
             options.add("--no-skip-frames")
-            //            //Magic commands:  HW_ACCELERATION_FULL
-            //            val decoder = HWDecoderUtil.getDecoderFromDevice()
-            //            if (decoder == HWDecoderUtil.Decoder.NONE) {
-            //                options.add("--codec=all")
-            //            } else {
-            //
-            //                /*
-            //         * Set higher caching values if using iomx decoding, since some omx
-            //         * decoders have a very high latency, and if the preroll data isn't
-            //         * enough to make the decoder output a frame, the playback timing gets
-            //         * started too soon, and every decoded frame appears to be too late.
-            //         * On Nexus One, the decoder latency seems to be 25 input packets
-            //         * for 320x170 H.264, a few packets less on higher resolutions.
-            //         * On Nexus S, the decoder latency seems to be about 7 packets.
-            //         */
-            //                options.add("--file-caching=1500")
-            //                options.add("--network-caching=1500")
-            //
-            //                val sb = StringBuilder("--codec=")
-            //                if (decoder == HWDecoderUtil.Decoder.MEDIACODEC)
-            //                    sb.append(if (AndroidUtil.isLolliPopOrLater()) "mediacodec_ndk" else "mediacodec_jni").append(",")
-            //                else if (decoder == HWDecoderUtil.Decoder.OMX)
-            //                    sb.append("iomx,")
-            //                else
-            //                    sb.append(if (AndroidUtil.isLolliPopOrLater()) "mediacodec_ndk" else "mediacodec_jni").append(",iomx,")
-            //                sb.append("all")
-            //
-            //                options.add(sb.toString())
-            //            }
-            //            //end magic
 
             libvlc = LibVLC(options)
-            libvlc?.setOnHardwareAccelerationError(this)
 
             // Create media player
             mMediaPlayer = MediaPlayer(libvlc)
-            //            mPlayerListener = MyPlayerListener(this)
-            //            mMediaPlayer?.setEventListener(mPlayerListener)
-
-            // Set up video output
-            //            val vout = mMediaPlayer?.getVLCVout()
-            //            vout?.setVideoView(mVideoView)
-            //            vout?.addCallback(this)
-            //            vout?.attachViews()
 
             val file = File (mFilePath)
             var uri: Uri?
@@ -228,7 +191,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             }
 
             val media = Media(libvlc, uri)
-            //            mMedia?.setHWDecoderEnabled(true, true)
             mMediaPlayer?.media = media
             media.release()
 
@@ -245,10 +207,8 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         val vout = mMediaPlayer?.vlcVout
         vout?.removeCallback(this)
         vout?.detachViews()
-        //        mVideoViewHolder = null
         mMediaPlayer?.setEventListener(null)
         libvlc?.release()
-        libvlc?.setOnHardwareAccelerationError (null)
         libvlc = null
         mMediaPlayer?.release()
         mMediaPlayer = null
@@ -256,10 +216,9 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         mVideoHeight = 0
     }
 
-    override fun eventHardwareAccelerationError() {
-        //throw UnsupportedOperationException()
+    override fun onHardwareAccelerationError(vlcVout: IVLCVout?) {
         YandexMetrica.reportEvent(TAG + "vlc error hardware")
-        recreateAndPreloadPlayer()
+        activity?.finish()
     }
 
     override fun onStart() {
@@ -270,9 +229,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
     override fun onResume() {
         super.onResume()
         bus.register(this)
-        if (!isLoading) {
-            showController(true)
-        }
         recreateAndPreloadPlayer(isNeedPlayAfterRecreating = false)
     }
 
@@ -281,19 +237,19 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         val km = MainApplication.getAppContext().getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
         createPlayer()
         bindViewWithPlayer()
-        if (isOnResumeDirectlyAfterOnCreate) {
-            isOnResumeDirectlyAfterOnCreate = false
-            mMediaPlayer?.setEventListener(mPlayerListener)
 
-        } else {
-            mMediaPlayer?.setEventListener(preRollListener)
-
-        }
         if (!km.inKeyguardRestrictedInputMode()) {
             if (!needPlay && !isEndReached) {
                 startLoading()
             }
-            mMediaPlayer?.play()
+            if (isOnResumeDirectlyAfterOnCreate) {
+                isOnResumeDirectlyAfterOnCreate = false
+                mMediaPlayer?.setEventListener(mPlayerListener)
+                playPlayer()
+            } else {
+                mMediaPlayer?.setEventListener(preRollListener)
+                mMediaPlayer?.play()
+            }
             mMediaPlayer?.time = mCurrentTimeInMillis
             mPlayerSeekBar?.let {
                 if (!isSeekBarDragging) {
@@ -311,6 +267,8 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     it.progress = (max.toFloat() * positionByHand).toInt()
                 }
             }
+        } else {
+            showController(false)
         }
 
     }
@@ -610,7 +568,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             }
             mCurrentTimeInMillis = newTime
 
-            pausePlayer()
+            pausePlayer(releaseAudioFocusAndScreen = false)
             mMediaPlayer?.setEventListener(null)
             releasePlayer()
             recreateAndPreloadPlayer()
@@ -623,7 +581,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             val length: Long = mMaxTimeInMillis ?: 0L
             mCurrentTimeInMillis = Math.max(0L, length - JUMP_TIME_MILLIS)
 
-            pausePlayer()
+            pausePlayer(releaseAudioFocusAndScreen = false)
             mMediaPlayer?.setEventListener(null)
             releasePlayer()
             recreateAndPreloadPlayer()
@@ -635,7 +593,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             }
             mCurrentTimeInMillis = Math.max(0L, currentTime.toLong() - JUMP_TIME_MILLIS)
 
-            pausePlayer()
+            pausePlayer(releaseAudioFocusAndScreen = false)
             mMediaPlayer?.setEventListener(null)
             releasePlayer()
             recreateAndPreloadPlayer()
@@ -685,11 +643,11 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                if (newPosition >= 0 && mMediaPlayer?.isPlaying ?: false) {
+                if (newPosition >= 0) {
                     val seekToTime: Float = mMaxTimeInMillis?.toFloat() ?: 0f
                     mCurrentTimeInMillis = (newPosition * seekToTime).toLong()
 
-                    pausePlayer()
+                    pausePlayer(releaseAudioFocusAndScreen = false)
                     mMediaPlayer?.setEventListener(null)
                     releasePlayer()
                     recreateAndPreloadPlayer()
@@ -725,6 +683,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                     }
                 }
                 MediaPlayer.Event.EndReached -> {
+                    mOwner?.activity?.finish()
                     mOwner?.isEndReached = true
                     mOwner?.showController(true)
                     mOwner?.showPlay()
@@ -738,6 +697,7 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
                         }
                     }
                     mOwner?.releasePlayer()
+                    mOwner?.activity?.finish()
                 }
                 MediaPlayer.Event.PositionChanged -> {
                     val currentPos = player?.position
@@ -772,12 +732,15 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
         }
     }
 
-    private fun pausePlayer() {
+    private fun pausePlayer(releaseAudioFocusAndScreen: Boolean = true) {
         if (mMediaPlayer?.isPlaying ?: false) {
             showController(true, isInfiniteShow = true)
-            mFragmentContainer?.keepScreenOn = false
+
             mMediaPlayer?.pause()
-            mAudioFocusHelper.releaseAudioFocus()
+            if (releaseAudioFocusAndScreen) {
+                mFragmentContainer?.keepScreenOn = false
+                mAudioFocusHelper.releaseAudioFocus()
+            }
         }
     }
 
@@ -901,7 +864,6 @@ class VideoFragment : FragmentBase(), LibVLC.HardwareAccelerationError, IVLCVout
             YandexMetrica.reportError("removePhoneStateCallbacks", ex)
         }
     }
-
 
     @Subscribe
     fun onAudioFocusLoss(event: AudioFocusLossEvent) {

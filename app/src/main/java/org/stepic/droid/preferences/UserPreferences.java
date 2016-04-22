@@ -116,4 +116,29 @@ public class UserPreferences {
         mSharedPreferenceHelper.setOpenInExternal(isOpenInExternal);
     }
 
+    public boolean isNotificationEnabled() {
+        return !mSharedPreferenceHelper.isNotificationDisabled();
+    }
+
+    public void setNotificationEnabled(boolean isEnabled) {
+        mSharedPreferenceHelper.setNotificationDisabled(!isEnabled);
+    }
+
+
+    public boolean isVibrateNotificationEnabled() {
+        return !mSharedPreferenceHelper.isNotificationVibrationDisabled();
+    }
+
+    public void setVibrateNotificationEnabled(boolean isEnabled) {
+        mSharedPreferenceHelper.setNotificationVibrationDisabled(!isEnabled);
+    }
+
+    public boolean isSoundNotificationEnabled() {
+        return !mSharedPreferenceHelper.isNotificationSoundDisabled();
+    }
+
+    public void setNotificationSoundEnabled(boolean isEnabled) {
+        mSharedPreferenceHelper.setNotificationSoundDisabled(!isEnabled);
+    }
+
 }

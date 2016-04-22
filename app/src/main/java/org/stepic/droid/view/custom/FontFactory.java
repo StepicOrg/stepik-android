@@ -31,7 +31,6 @@ public class FontFactory {
                         .getAssets(), "fonts/" + font);
                 fontMap.put(font, typeface);
             } catch (Exception ignored) {
-//                YandexMetrica.reportError("FontFactory", ignored);
             }
         }
         return typeface;

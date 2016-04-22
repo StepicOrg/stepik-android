@@ -51,6 +51,7 @@ public class AppConstants {
     public static final String TYPE_PUZZLE = "puzzle";
     public static final String TYPE_PYCHARM = "pycharm";
     public static final String TYPE_CODE = "code";
+    public static final String TYPE_ADMIN = "admin";
 
     //App Metrica:
     public static final String METRICA_CLICK_SIGN_IN = "click sign in on launch screen";
@@ -99,6 +100,8 @@ public class AppConstants {
     public static final java.lang.String METRICA_UNIT_IN_STORE_STATE_NULL = "unit was null in store state manager";
     public static final java.lang.String THUMBNAIL_POSTFIX_EXTENSION= ".png";
     public static final java.lang.String DELIMITER_TEXT_SCORE= "/";
+    public static final java.lang.String NOTIFICATION_CANCELED = "notification_cancelled";
 
 
+    public static final String OPEN_NOTIFICATION = "Open_notification";
 }

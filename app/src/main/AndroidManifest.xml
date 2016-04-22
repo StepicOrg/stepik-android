@@ -11,20 +11,30 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" android:maxSdkVersion="22" />
+    <uses-permission
+        android:name="android.permission.READ_PHONE_STATE"
+        android:maxSdkVersion="22"/>
 
+    <permission
+        android:name="org.stepic.droid.permission.C2D_MESSAGE"
+        android:protectionLevel="signature"/>
+
+    <uses-permission android:name="org.stepic.droid.permission.C2D_MESSAGE"/>
+
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
-        android:largeHeap="true"
         android:name="org.stepic.droid.base.MainApplication"
         android:allowBackup="false"
-        android:icon="@drawable/stepic_logo"
+        android:icon="@mipmap/ic_app_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:supportsRtl="false"
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="org.stepic.droid.view.activities.SplashActivity">
+            android:name="org.stepic.droid.view.activities.SplashActivity"
+            android:theme="@style/AppTheme.BrandedLaunch">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -43,7 +53,8 @@
 
         <activity
             android:name="org.stepic.droid.view.activities.MainFeedActivity"
-            android:label="@string/my_courses_title">
+            android:label="@string/my_courses_title"
+            android:launchMode="singleTop">
 
             <meta-data
                 android:name="android.app.default_searchable"
@@ -57,7 +68,12 @@
 
         <activity
             android:name=".view.activities.SectionActivity"
-            android:label="@string/syllabus_title">
+            android:label="@string/syllabus_title"
+            android:parentActivityName=".view.activities.MainFeedActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.activities.MainFeedActivity"/>
 
         </activity>
 
@@ -132,12 +148,63 @@
         </activity>
 
         <activity
-            android:hardwareAccelerated="false"
             android:name=".view.activities.VideoActivity"
-            android:theme="@style/AppTheme.VideoPlayer"
             android:configChanges="orientation|screenSize"
-            android:label="@string/video_title"/>
+            android:hardwareAccelerated="false"
+            android:label="@string/video_title"
+            android:theme="@style/AppTheme.VideoPlayer"/>
 
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
 
+                <category android:name="org.stepic.droid"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".notifications.StepicGcmListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name=".notifications.StepicInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".notifications.RegistrationIntentService"
+            android:exported="false">
+        </service>
+
+        <activity
+            android:name=".view.activities.SettingsActivity"
+            android:label="@string/settings_title"
+            android:parentActivityName=".view.activities.MainFeedActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.activities.MainFeedActivity"/>
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES"/>
+            </intent-filter>
+        </activity>
+
+        <receiver android:name=".notifications.NotificationBroadcastReceiver">
+            <intent-filter>
+                <action android:name="notification_cancelled"/>
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

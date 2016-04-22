@@ -31,6 +31,7 @@ import org.stepic.droid.model.EnrollmentWrapper;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.RegistrationUser;
 import org.stepic.droid.model.Reply;
+import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.ISocialType;
@@ -48,6 +49,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -132,7 +134,7 @@ public class RetrofitRESTApi implements IApi {
                         mSharedPreference.storeAuthInfo(response);
                     }
                     if (response != null) {
-                        YandexMetrica.reportEvent("response is not null in loggedService");
+                        //it is good way
                         newRequest = chain.request().newBuilder().addHeader("Authorization", getAuthHeaderValueForLogged()).build();
                     }
                     return chain.proceed(newRequest);
@@ -367,9 +369,9 @@ public class RetrofitRESTApi implements IApi {
     public Call<AttemptResponse> getExistingAttempts(long stepId) {
         Profile profile = mSharedPreference.getProfile();
         long userId = 0;
-        if (profile == null){
+        if (profile == null) {
             YandexMetrica.reportEvent("profile is null, when attempt");
-        } else{
+        } else {
             userId = profile.getId();
         }
         return mLoggedService.getExistingAttempts(stepId, userId);
@@ -516,8 +518,42 @@ public class RetrofitRESTApi implements IApi {
         String encodedSubject = URLEncoder.encode(subject);
         String aboutSystem = DeviceInfoUtil.getInfosAboutDevice(MainApplication.getAppContext());
         String encodedSystem = URLEncoder.encode(aboutSystem);
-//        String lala = URLEncoder.encode("NSQf8mf4Dc0ldKXzVBY3gpMjPkmDIdM+9qDYojJ2cJ+AvH8LeoWEbMzPbpQ08w+I1Z7iErDkjl1ZIe9zbagk2w==");
-        return tempService.sendFeedback(encodedSubject, encodedEmail, encodedSystem, encodedDescription);
+        return tempService.sendFeedback(encodedSubject, encodedEmail, encodedSystem, encodedDescription, "www.stepic.org");
+    }
+
+    @Override
+    public Call<DeviceResponse> getDevices() {
+        Profile profile = mSharedPreference.getProfile();
+        long userId = 0;
+        if (profile != null) {
+            userId = profile.getId();
+        }
+        return mLoggedService.getDevices(userId);
+    }
+
+    @Override
+    public Call<DeviceResponse> registerDevice(String token) {
+        String description = DeviceInfoUtil.getShortInfo(MainApplication.getAppContext());
+        DeviceRequest deviceRequest = new DeviceRequest(token, description);
+        return mLoggedService.registerDevice(deviceRequest);
+    }
+
+    @Override
+    public Call<CoursesStepicResponse> getCourse(long id) {
+        long[] ids = new long[]{id};
+        return mLoggedService.getCourses(ids);
+    }
+
+    @Override
+    public Call<Void> markNotificationAsRead(long notificationId, boolean isRead) {
+        Notification notification = new Notification();
+        notification.set_unread(!isRead);
+        return mLoggedService.putNotification(notificationId, new NotificationRequest(notification));
+    }
+
+    @Override
+    public Call<Void> removeDevice(long deviceId) {
+        return mLoggedService.removeDevice(deviceId);
     }
 
     @Nullable
@@ -536,7 +572,8 @@ public class RetrofitRESTApi implements IApi {
 
     @Nullable
     private List<HttpCookie> getCookiesForBaseUrl() throws IOException {
-        retrofit.Response ob = mStepicEmptyAuthService.getStepicForFun().execute();
+        String lang = Locale.getDefault().getLanguage();
+        retrofit.Response ob = mStepicEmptyAuthService.getStepicForFun(lang).execute();
         Headers headers = ob.headers();
         CookieManager cookieManager = new CookieManager();
         URI myUri = null;
@@ -586,8 +623,7 @@ public class RetrofitRESTApi implements IApi {
 
         long nowTemp = DateTime.now(DateTimeZone.UTC).getMillis();
         long delta = nowTemp - timestampStored;
-        long expiresMillis = -1;
-        expiresMillis = (response.getExpires_in() - 50) * 1000; //50 secs for query.
+        long expiresMillis = (response.getExpires_in() - 50) * 1000;
         return delta > expiresMillis;//token expired --> need update
     }
 }

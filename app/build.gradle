@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.neenbedankt.android-apt' //needed for source code generation
 
-
 android {
 
     compileSdkVersion 23
@@ -12,8 +11,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 41
-        versionName "1.5.3"
+        versionCode 49
+        versionName "1.6.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // Enabling multidex support.
         multiDexEnabled true
@@ -36,6 +35,9 @@ android {
         classic {
             applicationId "org.stepic.droid"
         }
+        releasedev{
+            applicationId "org.stepic.droid.release"
+        }
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -45,13 +47,13 @@ android {
         abi {
             enable true
             reset()
-            include 'armeabi', 'armeabi-v7a', 'mips',  'x86' //select ABIs to build APKs for
+            include 'armeabi-v7a', 'mips',  'x86' //select ABIs to build APKs for
             universalApk true //generate an additional APK that contains all the ABIs
         }
     }
 
     // map for the version code
-    project.ext.versionCodes = ['armeabi': 1, 'armeabi-v7a': 2,  'mips': 5, 'x86': 8]
+    project.ext.versionCodes = ['armeabi-v7a': 2,  'mips': 5, 'x86': 8]
 
     android.applicationVariants.all { variant ->
         // assign different version code for each output
@@ -76,6 +78,8 @@ dependencies {
     provided 'org.glassfish:javax.annotation:10.0-b28'
     //needed to resolve compilation errors, thanks to tutplus.org for finding the dependency
     compile 'com.jakewharton:butterknife:7.0.1'
+
+    compile 'javax.annotation:jsr250-api:1.0'
     //</DI>
 
     compile 'com.android.support:multidex:1.0.1'
@@ -116,17 +120,9 @@ dependencies {
     // Optional -- Mockito framework
     testCompile 'org.mockito:mockito-core:1.10.19'
 
-    androidTestCompile 'com.android.support:support-annotations:23.1.1'
-    androidTestCompile 'com.android.support.test:runner:0.4.1'
-    androidTestCompile 'com.android.support.test:rules:0.4.1'
-    // Optional -- Hamcrest library
-    androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
-    // Optional -- UI testing with Espresso
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
-
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta1' // or 1.3.1
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta1' // or 1.3.1
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta1' // or 1.3.1
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2' // or 1.3.1
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2' // or 1.3.1
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2' // or 1.3.1
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
@@ -136,7 +132,9 @@ dependencies {
     compile files('libs/log4j-api-2.4.1.jar')
     compile files('libs/slf4j-api-1.7.12.jar')
 
-    compile 'de.mrmaffen:vlc-android-sdk:3.0.0'
+    compile 'de.mrmaffen:vlc-android-sdk:1.9.0'
+
+    compile "com.google.android.gms:play-services-gcm:8.4.0"
 }
 
 repositories {
@@ -150,4 +148,6 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
+
 }
+apply plugin: 'com.google.gms.google-services'

@@ -1,7 +1,9 @@
 package org.stepic.droid.view.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
@@ -30,11 +32,13 @@ import org.stepic.droid.events.sections.StartingSaveSectionToDbEvent;
 import org.stepic.droid.events.sections.SuccessResponseSectionsEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.SectionAdapter;
 import org.stepic.droid.web.SectionsStepicResponse;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +65,9 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Bind(R.id.report_problem)
     protected View mReportConnectionProblem;
 
+    @Bind(R.id.report_empty)
+    protected View mReportEmptyView;
+
     private Course mCourse;
     private SectionAdapter mAdapter;
     private List<Section> mSectionList;
@@ -78,7 +85,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         isScreenEmpty = true;
         firstLoad = true;
 
-        mCourse = (Course) (getIntent().getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(
@@ -97,6 +103,35 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
         ProgressHelper.activate(mProgressBar);
         bus.register(this);
+        onNewIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mCourse = (Course) (intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
+
+        if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
+            final long courseId = mCourse.getCourseId();
+            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    List<Notification> notifications = mDbManager.getAllNotificationsOfCourse(courseId);
+                    notificationManager.discardAllNotifications(courseId);
+                    for (Notification notificationItem : notifications) {
+                        if (notificationItem != null && notificationItem.getId() != null) {
+                            try {
+                                mShell.getApi().markNotificationAsRead(notificationItem.getId(), true).execute();
+                            } catch (IOException e) {
+                                YandexMetrica.reportError("notification is not posted", e);
+                            }
+                        }
+                    }
+                    return null;
+                }
+            };
+            task.executeOnExecutor(mThreadPoolExecutor);
+        }
         getAndShowSectionsFromCache();
     }
 
@@ -121,23 +156,37 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
     private void updateSections() {
-        mShell.getApi().getSections(mCourse.getSections()).enqueue(new Callback<SectionsStepicResponse>() {
-            @Override
-            public void onResponse(Response<SectionsStepicResponse> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
-                    bus.post(new SuccessResponseSectionsEvent(mCourse, response, retrofit));
-                } else {
-                    bus.post(new FailureResponseSectionEvent(mCourse));
+        long[] sections = mCourse.getSections();
+        if (sections == null || sections.length == 0) {
+            mReportEmptyView.setVisibility(View.VISIBLE);
+            ProgressHelper.dismiss(mProgressBar);
+            ProgressHelper.dismiss(mSwipeRefreshLayout);
+        } else {
+            mReportEmptyView.setVisibility(View.GONE);
+            mShell.getApi().getSections(mCourse.getSections()).enqueue(new Callback<SectionsStepicResponse>() {
+                @Override
+                public void onResponse(Response<SectionsStepicResponse> response, Retrofit retrofit) {
+                    if (response.isSuccess()) {
+                        bus.post(new SuccessResponseSectionsEvent(mCourse, response, retrofit));
+                    } else {
+                        bus.post(new FailureResponseSectionEvent(mCourse));
+                    }
+
                 }
 
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                bus.post(new FailureResponseSectionEvent(mCourse));
-            }
-        });
+                @Override
+                public void onFailure(Throwable t) {
+                    bus.post(new FailureResponseSectionEvent(mCourse));
+                }
+            });
+        }
     }
 
     private void getAndShowSectionsFromCache() {

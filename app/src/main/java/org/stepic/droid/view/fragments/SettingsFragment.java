@@ -55,6 +55,15 @@ public class SettingsFragment extends FragmentBase {
     @Bind(R.id.version_tv)
     TextView mVersionTv;
 
+    @Bind(R.id.fragment_settings_notification_learn_switch)
+    BetterSwitch notificationLearnSwitch;
+
+    @Bind(R.id.fragment_settings_notification_vibration_switch)
+    BetterSwitch notificationVibration;
+
+    @Bind(R.id.fragment_settings_notification_sound_switch)
+    BetterSwitch notificationSound;
+
     @BindString(R.string.version)
     String versionPrefix;
 
@@ -81,9 +90,15 @@ public class SettingsFragment extends FragmentBase {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        showVersionName();
+//        showVersionName();
 
         setUpClearCacheButton();
+
+        setUpNotificationVibration();
+
+        setUpNotificationLearn();
+
+        setUpSound();
 
         mWifiLoadSwitch.setChecked(!mSharedPreferenceHelper.isMobileInternetAlsoAllowed());//if first time it is true
 
@@ -121,6 +136,26 @@ public class SettingsFragment extends FragmentBase {
             @Override
             public void onClick(View v) {
                 videoDialog.show(getFragmentManager(), null);
+            }
+        });
+    }
+
+    private void setUpNotificationVibration() {
+        notificationVibration.setChecked(mUserPreferences.isVibrateNotificationEnabled());
+        notificationVibration.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mUserPreferences.setVibrateNotificationEnabled(isChecked);
+            }
+        });
+    }
+
+    private void setUpSound() {
+        notificationSound.setChecked(mUserPreferences.isSoundNotificationEnabled());
+        notificationSound.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mUserPreferences.setNotificationSoundEnabled(isChecked);
             }
         });
     }
@@ -173,6 +208,9 @@ public class SettingsFragment extends FragmentBase {
     public void onDestroyView() {
         mWifiLoadSwitch.setOnCheckedChangeListener(null);
         mExternalPlayerSwitch.setOnCheckedChangeListener(null);
+        notificationLearnSwitch.setOnCheckedChangeListener(null);
+        notificationVibration.setOnCheckedChangeListener(null);
+        notificationSound.setOnCheckedChangeListener(null);
         super.onDestroyView();
     }
 
@@ -211,5 +249,15 @@ public class SettingsFragment extends FragmentBase {
         if (requestCode == REQUEST_CLEAR_CACHE) {
             setUpClearCacheButton();
         }
+    }
+
+    private void setUpNotificationLearn() {
+        notificationLearnSwitch.setChecked(mUserPreferences.isNotificationEnabled());
+        notificationLearnSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mUserPreferences.setNotificationEnabled(isChecked);
+            }
+        });
     }
 }

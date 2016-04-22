@@ -16,15 +16,17 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.events.profile.ProfileCanBeShownEvent;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
+import org.stepic.droid.notifications.RegistrationIntentService;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
@@ -32,7 +34,6 @@ import org.stepic.droid.view.fragments.DownloadsFragment;
 import org.stepic.droid.view.fragments.FeedbackFragment;
 import org.stepic.droid.view.fragments.FindCoursesFragment;
 import org.stepic.droid.view.fragments.MyCoursesFragment;
-import org.stepic.droid.view.fragments.SettingsFragment;
 import org.stepic.droid.web.EmailAddressResponse;
 import org.stepic.droid.web.StepicProfileResponse;
 
@@ -46,9 +47,10 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class MainFeedActivity extends FragmentActivityBase
+public class MainFeedActivity extends BackToExitActivityBase
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String KEY_CURRENT_INDEX = "Current_index";
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
@@ -144,6 +146,13 @@ public class MainFeedActivity extends FragmentActivityBase
 
             }
         });
+
+
+        if (checkPlayServices() && !mSharedPreferenceHelper.isGcmTokenOk()) {
+            // Start IntentService to register this application with GCM.
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
     }
 
     private void initDrawerHeader() {
@@ -211,6 +220,15 @@ public class MainFeedActivity extends FragmentActivityBase
                     }
                 }, 0);
                 return true;
+            case R.id.my_settings:
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDrawerLayout.closeDrawers();
+                    }
+                }, 0);
+                mShell.getScreenProvider().showSettings(this);
+                return true;
 
             default:
                 showCurrentFragment(menuItem);
@@ -245,6 +263,7 @@ public class MainFeedActivity extends FragmentActivityBase
 
     private void setFragment(MenuItem menuItem) {
         Fragment shortLifetimeRef = null;
+        boolean isFragment = true;
         switch (menuItem.getItemId()) {
             case R.id.my_courses:
                 mCurrentIndex = 1;
@@ -258,26 +277,24 @@ public class MainFeedActivity extends FragmentActivityBase
                 mCurrentIndex = 3;
                 shortLifetimeRef = DownloadsFragment.newInstance();
                 break;
-            case R.id.my_settings:
-                mCurrentIndex = 4;
-                shortLifetimeRef = SettingsFragment.newInstance();
-                break;
             case R.id.feedback:
                 mCurrentIndex = 5;
                 shortLifetimeRef = FeedbackFragment.Companion.newInstance();
                 break;
         }
-        mCurrentIndex--; // menu indices from 1
-        if (shortLifetimeRef != null) {
-            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame);
-            if (fragment != null) {
-                String before = fragment.getTag();
-                String now = shortLifetimeRef.getClass().toString();
-                if (!before.equals(now)) {
+        if (isFragment) {
+            mCurrentIndex--; // menu indices from 1
+            if (shortLifetimeRef != null) {
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame);
+                if (fragment != null) {
+                    String before = fragment.getTag();
+                    String now = shortLifetimeRef.getClass().toString();
+                    if (!before.equals(now)) {
+                        setFragment(R.id.frame, shortLifetimeRef);
+                    }
+                } else {
                     setFragment(R.id.frame, shortLifetimeRef);
                 }
-            } else {
-                setFragment(R.id.frame, shortLifetimeRef);
             }
         }
     }
@@ -311,5 +328,26 @@ public class MainFeedActivity extends FragmentActivityBase
     public void showFindLesson() {
         mCurrentIndex = 1;
         showCurrentFragment(mCurrentIndex);
+    }
+
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                //Log.i(TAG, "This device is not supported.");
+                return false;
+            }
+            return false;
+        }
+        return true;
     }
 }
