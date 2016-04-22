@@ -9,6 +9,7 @@
     android:minHeight="@dimen/option_height"
     android:maxHeight="100dp"
     android:orientation="vertical"
+    app:cardBackgroundColor="@color/default_option_color"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
