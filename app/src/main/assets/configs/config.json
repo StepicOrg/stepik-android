@@ -12,5 +12,6 @@
   "REDIRECT_URI": "stepic://stepic.org/oauth",
   "ARRAY_IDS_PARAM": "ids[]",
   "ZENDESK_HOST": "https://stepic.zendesk.com",
-  "COURSE_CLOSEABLE":true
+  "COURSE_CLOSEABLE":true,
+  "CUSTOM_UPDATE":false
 }

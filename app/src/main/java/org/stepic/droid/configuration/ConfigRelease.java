@@ -34,6 +34,7 @@ public class ConfigRelease implements IConfig {
     private static final String REDIRECT_URI = "REDIRECT_URI";
     private static final String ZENDESK_HOST = "ZENDESK_HOST";
     private static final String COURSE_CLOSEABLE = "COURSE_CLOSEABLE";
+    private static final String CUSTOM_UPDATE = "CUSTOM_UPDATE";
 
 
     @Inject
@@ -123,6 +124,11 @@ public class ConfigRelease implements IConfig {
     @Override
     public boolean isUserCanDropCourse() {
         return getBoolean(COURSE_CLOSEABLE, true);
+    }
+
+    @Override
+    public boolean isCustomUpdateEnable() {
+        return getBoolean(CUSTOM_UPDATE, false);
     }
 
 
