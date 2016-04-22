@@ -11,8 +11,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/instructor_icon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
         android:layout_gravity="center" />
 
 
