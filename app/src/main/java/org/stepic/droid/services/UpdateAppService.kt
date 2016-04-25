@@ -50,7 +50,7 @@ class UpdateAppService : IntentService("update_stepic") {
             if (appInfo?.custom_version ?: 0 > currentVersion) {
                 //need update
                 val linkForUpdate = getLinkForUpdating(appInfo)
-
+                val isAppInGp = appInfo?.is_app_in_gp ?: true
             }
         } else {
             return;
