@@ -16,4 +16,6 @@ public interface IConfig {
     String getZendeskHost();
     boolean isUserCanDropCourse();
     boolean isCustomUpdateEnable();
+    String getUpdateEndpoint();
+    int getOldUpdatingVersion();
 }

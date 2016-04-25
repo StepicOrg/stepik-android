@@ -35,6 +35,8 @@ public class ConfigRelease implements IConfig {
     private static final String ZENDESK_HOST = "ZENDESK_HOST";
     private static final String COURSE_CLOSEABLE = "COURSE_CLOSEABLE";
     private static final String CUSTOM_UPDATE = "CUSTOM_UPDATE";
+    private static final String UPDATE_ENDPOINT = "UPDATE_ENDPOINT";
+    private static final String CUSTOM_UPDATING_VERSION = "CUSTOM_UPDATING_VERSION";
 
 
     @Inject
@@ -131,6 +133,16 @@ public class ConfigRelease implements IConfig {
         return getBoolean(CUSTOM_UPDATE, false);
     }
 
+    @Override
+    public String getUpdateEndpoint() {
+        return getString(UPDATE_ENDPOINT, "");
+    }
+
+    @Override
+    public int getOldUpdatingVersion() {
+        return getInt(CUSTOM_UPDATING_VERSION, 0);
+    }
+
 
     private String getString(String key) {
         return getString(key, null);
@@ -149,6 +161,15 @@ public class ConfigRelease implements IConfig {
         JsonElement element = getObject(key);
         if (element != null) {
             return element.getAsBoolean();
+        } else {
+            return defaultValue;
+        }
+    }
+
+    private int getInt(String key, int defaultValue) {
+        JsonElement element = getObject(key);
+        if (element != null) {
+            return element.getAsInt();
         } else {
             return defaultValue;
         }
