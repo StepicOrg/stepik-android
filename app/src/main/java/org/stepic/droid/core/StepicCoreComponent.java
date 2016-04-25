@@ -21,6 +21,7 @@ import org.stepic.droid.receivers.InternetConnectionEnabledReceiver;
 import org.stepic.droid.services.CancelLoadingService;
 import org.stepic.droid.services.DeleteService;
 import org.stepic.droid.services.LoadService;
+import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.ImageOnDisk;
@@ -94,6 +95,8 @@ public interface StepicCoreComponent {
     void inject(LoadService loadService);
 
     void inject(DeleteService loadService);
+
+    void inject(UpdateAppService updateAppService);
 
     void inject(DownloadCompleteReceiver downloadCompleteReceiver);
 
