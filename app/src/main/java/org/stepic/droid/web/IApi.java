@@ -77,4 +77,6 @@ public interface IApi {
     Call<Void> markNotificationAsRead (long notificationId, boolean isRead);
 
     Call<Void> removeDevice(long deviceId);
+
+    Call<UpdateResponse> getInfoForUpdating();
 }

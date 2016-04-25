@@ -31,6 +31,5 @@ class UpdateAppService : IntentService("update_stepic") {
     }
 
     private fun checkUpdateAndPushMessageOnMainFeed() {
-
     }
 }
