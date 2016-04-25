@@ -4,6 +4,7 @@ import android.app.IntentService
 import android.app.Service
 import android.content.Intent
 import com.squareup.otto.Bus
+import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
@@ -26,7 +27,11 @@ class UpdateAppService : IntentService("update_stepic") {
     lateinit var bus: Bus;
 
     override fun onHandleIntent(intent: Intent?) {
-        checkUpdateAndPushMessageOnMainFeed()
+        try {
+            checkUpdateAndPushMessageOnMainFeed()
+        } catch (t: Throwable) {
+            YandexMetrica.reportError("update check failed", t)
+        }
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -37,7 +42,7 @@ class UpdateAppService : IntentService("update_stepic") {
 
     private fun checkUpdateAndPushMessageOnMainFeed() {
         if (configs.isCustomUpdateEnable) {
-            val appInfo = api.infoForUpdating.execute()?.body()?.appInfo
+            val appInfo = api.infoForUpdating?.app_info
             val currentCustomVersion = configs.oldUpdatingVersion
 
             if (appInfo?.custom_version ?: 0 > currentCustomVersion) {

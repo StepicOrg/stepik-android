@@ -28,6 +28,7 @@ import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.notifications.RegistrationIntentService;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
+import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.fragments.DownloadsFragment;
@@ -85,7 +86,7 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_feed);
         ButterKnife.bind(this);
 
@@ -153,6 +154,9 @@ public class MainFeedActivity extends BackToExitActivityBase
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }
+
+        Intent updateIntent = new Intent(this, UpdateAppService.class);
+        startService(updateIntent);
     }
 
     private void initDrawerHeader() {

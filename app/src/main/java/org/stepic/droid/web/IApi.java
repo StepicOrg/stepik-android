@@ -7,6 +7,8 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.social.ISocialType;
 
+import java.io.IOException;
+
 import retrofit.Call;
 
 
@@ -78,5 +80,5 @@ public interface IApi {
 
     Call<Void> removeDevice(long deviceId);
 
-    Call<UpdateResponse> getInfoForUpdating();
+    UpdateResponse getInfoForUpdating() throws IOException;
 }

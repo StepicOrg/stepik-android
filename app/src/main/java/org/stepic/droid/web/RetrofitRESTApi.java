@@ -79,7 +79,7 @@ public class RetrofitRESTApi implements IApi {
     private StepicRestOAuthService mOAuthService;
     private StepicEmptyAuthService mStepicEmptyAuthService;
     private StepicZendeskEmptyAuthService mZendeskAuthService;
-    private CommonService commonService;
+    private final OkHttpClient okHttpClient = new OkHttpClient();
 
 
     public RetrofitRESTApi() {
@@ -97,7 +97,6 @@ public class RetrofitRESTApi implements IApi {
                 .build();
         mStepicEmptyAuthService = retrofit.create(StepicEmptyAuthService.class);
 //        makeZendeskService();
-        makeCommonService();
     }
 
 //    private void makeZendeskService() {
@@ -110,15 +109,6 @@ public class RetrofitRESTApi implements IApi {
 //        mZendeskAuthService = retrofit.create(StepicZendeskEmptyAuthService.class);
 //    }
 
-    private void makeCommonService() {
-        OkHttpClient okHttpClient = new OkHttpClient();
-        setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
-        Retrofit commonRetrofit = new Retrofit.Builder()
-                .addConverterFactory(generateGsonFactory())
-                .client(okHttpClient)
-                .build();
-        commonService = commonRetrofit.create(CommonService.class);
-    }
 
     private void makeLoggedService() {
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -569,8 +559,16 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
-    public Call<UpdateResponse> getInfoForUpdating() {
-        return commonService.updatingInfo();
+    public UpdateResponse getInfoForUpdating() throws IOException {
+        Request request = new Request.Builder()
+                .url(mConfig.getBaseUrl() + "/" + mConfig.getUpdateEndpoint())
+                .build();
+
+        String jsonString = okHttpClient.newCall(request).execute().body().string();
+
+        Gson gson = new Gson();
+        UpdateResponse response = gson.fromJson(jsonString, UpdateResponse.class);
+        return response;
     }
 
     @Nullable
