@@ -24,6 +24,7 @@ import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.events.profile.ProfileCanBeShownEvent;
+import org.stepic.droid.events.updating.NeedUpdateEvent;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.notifications.RegistrationIntentService;
@@ -31,6 +32,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
+import org.stepic.droid.view.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.view.fragments.DownloadsFragment;
 import org.stepic.droid.view.fragments.FeedbackFragment;
 import org.stepic.droid.view.fragments.FindCoursesFragment;
@@ -86,7 +88,7 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-         super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_feed);
         ButterKnife.bind(this);
 
@@ -353,5 +355,16 @@ public class MainFeedActivity extends BackToExitActivityBase
             return false;
         }
         return true;
+    }
+
+    @Subscribe
+    public void needUpdateCallback(NeedUpdateEvent event) {
+
+        if (!event.isAppInGp() && event.getLinkForUpdate() == null) {
+            return;
+        }
+
+        NeedUpdatingDialog dialog = NeedUpdatingDialog.Companion.newInstance(event.getLinkForUpdate(), event.isAppInGp());
+            dialog.show(getSupportFragmentManager(), null); // FIXME: 25.04.16 DO NOT RECREATE
     }
 }

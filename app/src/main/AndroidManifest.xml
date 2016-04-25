@@ -129,6 +129,11 @@
             android:name="org.stepic.droid.services.UpdateAppService"
             android:exported="true"/>
 
+
+        <service
+            android:name="org.stepic.droid.services.UpdateWithApkService"
+            android:exported="true"/>
+
         <activity
             android:name=".view.activities.CourseSearchResultActivity"
             android:label="@string/search_title"
