@@ -8,8 +8,8 @@ import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
+import org.stepic.droid.events.updating.NeedUpdateEvent
 import org.stepic.droid.model.AppInfo
-import org.stepic.droid.util.AndroidDevices
 import org.stepic.droid.util.DeviceInfoUtil
 import org.stepic.droid.web.IApi
 import javax.inject.Inject
@@ -51,6 +51,7 @@ class UpdateAppService : IntentService("update_stepic") {
                 //need update
                 val linkForUpdate = getLinkForUpdating(appInfo)
                 val isAppInGp = appInfo?.is_app_in_gp ?: true
+                mainHandler.post { bus.post(NeedUpdateEvent(linkForUpdate, isAppInGp)) }
             }
         } else {
             return;
