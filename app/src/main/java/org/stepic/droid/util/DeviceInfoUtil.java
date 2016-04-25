@@ -21,6 +21,8 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.Display;
 
+import com.yandex.metrica.YandexMetrica;
+
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -42,7 +44,7 @@ public class DeviceInfoUtil {
         return activeNetworkInfo != null;
     }
 
-    public static String getShortInfo(Context a){
+    public static String getShortInfo(Context a) {
         String s = "";
         try {
             PackageInfo pInfo = a.getPackageManager().getPackageInfo(
@@ -60,6 +62,18 @@ public class DeviceInfoUtil {
         s += "\n Model (and Product): " + android.os.Build.MODEL + " ("
                 + android.os.Build.PRODUCT + ")";
         return s;
+    }
+
+    public static int getBuildVersion(Context a) {
+
+        try {
+            PackageInfo pInfo = a.getPackageManager().getPackageInfo(
+                    a.getPackageName(), PackageManager.GET_META_DATA);
+            return pInfo.versionCode;
+        } catch (NameNotFoundException e) {
+            YandexMetrica.reportError("getBuildVersion", e);
+            return Integer.MAX_VALUE;
+        }
     }
 
     public static String getInfosAboutDevice(Context a) {

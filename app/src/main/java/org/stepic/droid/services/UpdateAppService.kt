@@ -9,6 +9,8 @@ import org.stepic.droid.base.MainApplication
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.model.AppInfo
+import org.stepic.droid.util.AndroidDevices
+import org.stepic.droid.util.DeviceInfoUtil
 import org.stepic.droid.web.IApi
 import javax.inject.Inject
 
@@ -43,12 +45,11 @@ class UpdateAppService : IntentService("update_stepic") {
     private fun checkUpdateAndPushMessageOnMainFeed() {
         if (configs.isCustomUpdateEnable) {
             val appInfo = api.infoForUpdating?.app_info
-            val currentCustomVersion = configs.oldUpdatingVersion
+            val currentVersion = DeviceInfoUtil.getBuildVersion(MainApplication.getAppContext());
 
-            if (appInfo?.custom_version ?: 0 > currentCustomVersion) {
+            if (appInfo?.custom_version ?: 0 > currentVersion) {
                 //need update
                 val linkForUpdate = getLinkForUpdating(appInfo)
-                val jjj = 0
 
             }
         } else {

@@ -138,12 +138,6 @@ public class ConfigRelease implements IConfig {
         return getString(UPDATE_ENDPOINT, "");
     }
 
-    @Override
-    public int getOldUpdatingVersion() {
-        return getInt(CUSTOM_UPDATING_VERSION, 0);
-    }
-
-
     private String getString(String key) {
         return getString(key, null);
     }

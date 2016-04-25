@@ -17,5 +17,4 @@ public interface IConfig {
     boolean isUserCanDropCourse();
     boolean isCustomUpdateEnable();
     String getUpdateEndpoint();
-    int getOldUpdatingVersion();
 }
