@@ -13,5 +13,7 @@
   "ARRAY_IDS_PARAM": "ids[]",
   "ZENDESK_HOST": "https://stepic.zendesk.com",
   "COURSE_CLOSEABLE":true,
-  "CUSTOM_UPDATE":false
+  "CUSTOM_UPDATE":true,
+  "UPDATE_ENDPOINT":"https://stepic.org/media/attachments/lesson/26968/custom_app_update.json",
+  "CUSTOM_UPDATING_VERSION:1
 }
