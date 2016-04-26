@@ -2,6 +2,7 @@
 <manifest
     package="org.stepic.droid"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:installLocation="auto">
 
 
@@ -30,7 +31,9 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="false"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace = "android:allowBackup"
+        >
 
         <activity
             android:name="org.stepic.droid.view.activities.SplashActivity"
@@ -75,7 +78,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.activities.MainFeedActivity"/>
 
-        </activity>
+        </activity>во скольк
 
         <activity
             android:name=".view.activities.UnitsActivity"
