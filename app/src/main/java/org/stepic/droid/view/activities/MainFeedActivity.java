@@ -32,6 +32,7 @@ import org.stepic.droid.notifications.RegistrationIntentService;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.view.fragments.DownloadsFragment;
@@ -364,9 +365,12 @@ public class MainFeedActivity extends BackToExitActivityBase
         if (!event.isAppInGp() && event.getLinkForUpdate() == null) {
             return;
         }
+        long storedTimestamp = mSharedPreferenceHelper.getLastShownUpdatingMessageTimestamp();
+        boolean needUpdate = DateTimeHelper.INSTANCE.isNeededUpdate(storedTimestamp, AppConstants.MILLIS_IN_24HOURS);
+        if (!needUpdate) return;
+
+        mSharedPreferenceHelper.storeLastShownUpdatingMessage();
         YandexMetrica.reportEvent(AppConstants.UPDATING_MESSAGE_IS_SHOWN);
-
-
         DialogFragment dialog = NeedUpdatingDialog.Companion.newInstance(event.getLinkForUpdate(), event.isAppInGp());
         dialog.show(getSupportFragmentManager(), null);
     }

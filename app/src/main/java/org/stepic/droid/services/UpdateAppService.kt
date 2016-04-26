@@ -10,6 +10,8 @@ import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.events.updating.NeedUpdateEvent
 import org.stepic.droid.model.AppInfo
+import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.DeviceInfoUtil
 import org.stepic.droid.web.IApi
 import javax.inject.Inject
@@ -28,9 +30,16 @@ class UpdateAppService : IntentService("update_stepic") {
     @Inject
     lateinit var bus: Bus;
 
+    @Inject
+    lateinit var sharedPreferencesHelper: SharedPreferenceHelper
+
     override fun onHandleIntent(intent: Intent?) {
         try {
-            checkUpdateAndPushMessageOnMainFeed()
+            val lastShown = sharedPreferencesHelper.lastShownUpdatingMessageTimestamp
+            val needUpdate = DateTimeHelper.isNeededUpdate(lastShown)
+            if (needUpdate) {
+                checkUpdateAndPushMessageOnMainFeed()
+            }
         } catch (t: Throwable) {
             YandexMetrica.reportError("update check failed", t)
         }

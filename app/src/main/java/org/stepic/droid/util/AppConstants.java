@@ -106,5 +106,6 @@ public class AppConstants {
 
 
     public static final String OPEN_NOTIFICATION = "Open_notification";
+    public static final long MILLIS_IN_24HOURS = 86400000L;
 
 }

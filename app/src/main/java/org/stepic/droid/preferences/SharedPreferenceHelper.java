@@ -187,6 +187,17 @@ public class SharedPreferenceHelper {
         put(PreferenceType.LOGIN, ACCESS_TOKEN_TIMESTAMP, millisNow);
     }
 
+    public void storeLastShownUpdatingMessage() {
+        DateTime now = DateTime.now(DateTimeZone.UTC);
+        long millisNow = now.getMillis();
+        put(PreferenceType.DEVICE_SPECIFIC, UPDATING_TIMESTAMP, millisNow);
+    }
+
+    public long getLastShownUpdatingMessageTimestamp() {
+        long timestamp = getLong(PreferenceType.DEVICE_SPECIFIC, UPDATING_TIMESTAMP);
+        return timestamp;
+    }
+
     public void storeLastTokenType(boolean isSocial) {
         put(PreferenceType.LOGIN, IS_SOCIAL, isSocial);
     }
@@ -276,6 +287,7 @@ public class SharedPreferenceHelper {
     }
 
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
+    private final String UPDATING_TIMESTAMP = "updating_timestamp";
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
     private final String PROFILE_JSON = "profile_json";
     private final String EMAIL_LIST = "email_list";
