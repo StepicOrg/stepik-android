@@ -1,9 +1,12 @@
 package org.stepic.droid.view.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -31,6 +34,7 @@ import org.stepic.droid.model.Profile;
 import org.stepic.droid.notifications.RegistrationIntentService;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.services.UpdateAppService;
+import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
@@ -373,5 +377,25 @@ public class MainFeedActivity extends BackToExitActivityBase
         YandexMetrica.reportEvent(AppConstants.UPDATING_MESSAGE_IS_SHOWN);
         DialogFragment dialog = NeedUpdatingDialog.Companion.newInstance(event.getLinkForUpdate(), event.isAppInGp());
         dialog.show(getSupportFragmentManager(), null);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == AppConstants.REQUEST_EXTERNAL_STORAGE) {
+            String permissionExternalStorage = permissions[0];
+            if (permissionExternalStorage == null) return;
+
+            if (permissionExternalStorage.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                String link = mSharedPreferenceHelper.getTempLink();
+                if (link != null) {
+                    Intent updateIntent = new Intent(this, UpdateWithApkService.class);
+                    updateIntent.putExtra(UpdateWithApkService.Companion.getLinkKey(), link);
+                    this.startService(updateIntent);
+                }
+            }
+        }
     }
 }

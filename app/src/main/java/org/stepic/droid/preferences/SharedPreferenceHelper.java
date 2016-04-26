@@ -26,6 +26,7 @@ import javax.inject.Singleton;
 @Singleton
 public class SharedPreferenceHelper {
     private static final String NOTIFICATION_SOUND_DISABLED = "notification_sound";
+    private static final String TEMP_UPDATE_LINK = "temp_update_link";
     private Context mContext;
 
     @Inject
@@ -162,6 +163,15 @@ public class SharedPreferenceHelper {
     public void storeTempPosition(int position) {
         put(PreferenceType.TEMP, TEMP_POSITION_KEY, position);
     }
+
+    public void storeTempLink(String link) {
+        put(PreferenceType.TEMP, TEMP_UPDATE_LINK, link);
+    }
+
+    public String getTempLink () {
+        return getString(PreferenceType.TEMP, TEMP_UPDATE_LINK);
+    }
+
 
     public int getTempPosition() {
         return getInt(PreferenceType.TEMP, TEMP_POSITION_KEY);

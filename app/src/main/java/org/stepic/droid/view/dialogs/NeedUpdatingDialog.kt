@@ -1,9 +1,13 @@
 package org.stepic.droid.view.dialogs
 
+import android.Manifest
 import android.app.Dialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.DialogFragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
@@ -47,11 +51,31 @@ class NeedUpdatingDialog : DialogFragment() {
             if (isInGP) {
                 shell.screenProvider.showStoreWithApp(activity)
             } else {
-                val updateIntent = Intent(activity, UpdateWithApkService::class.java)
-                updateIntent.putExtra(UpdateWithApkService.linkKey, link)
-                activity.startService(updateIntent)
+
+                val permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                    shell.sharedPreferenceHelper.storeTempLink(link)
+
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        val dialog = ExplainPermissionDialog()
+                        dialog.show(activity.getFragmentManager(), null)
+
+                    } else {
+                        ActivityCompat.requestPermissions(activity,
+                                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                                AppConstants.REQUEST_EXTERNAL_STORAGE)
+
+                    }
+                } else {
+                    val updateIntent = Intent(activity, UpdateWithApkService::class.java)
+                    updateIntent.putExtra(UpdateWithApkService.linkKey, link)
+                    activity.startService(updateIntent)
+                }
             }
         }.setNegativeButton(R.string.update_later, null)// TODO: 25.04.16 implement timestamp to sp
         return builder.create()
     }
+
 }
