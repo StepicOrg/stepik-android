@@ -10,11 +10,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Option;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.view.custom.dragsortadapter.DragSortAdapter;
 import org.stepic.droid.view.custom.dragsortadapter.NoForegroundShadowBuilder;
@@ -95,7 +98,21 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
             holder.mContainer.getLayoutParams().height = height;
 //            holder.mOptionText.setLines((mWidth / halfScreen) + 1);
         }
-        holder.mOptionText.setText(HtmlHelper.fromHtml(mItemIdOptionMap.get(itemId).getValue()).toString());
+
+        if (!isMatching) {
+            WebSettings webSettings = holder.enhancedText.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+            holder.enhancedText.setBackgroundColor(0);
+            holder.enhancedText.setBackgroundResource(R.color.default_option_color);
+
+            final String html = AppConstants.PRE_BODY + HtmlHelper.fromHtml(mItemIdOptionMap.get(itemId).getValue()).toString() + AppConstants.POST_BODY;
+
+            final String mimeType = "text/html";
+            final String encoding = "UTF-8";
+            holder.enhancedText.loadDataWithBaseURL("", html, mimeType, encoding, "");
+        } else {
+            holder.mOptionText.setText(HtmlHelper.fromHtml(mItemIdOptionMap.get(itemId).getValue()).toString());
+        }
         // NOTE: check for getDraggingId() match to set an "invisible space" while dragging
         holder.mContainer.setVisibility(getDraggingId() == itemId ? View.INVISIBLE : View.VISIBLE);
         holder.mContainer.postInvalidate();
@@ -132,15 +149,24 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
         private final boolean mIsMatching;
         @Bind(R.id.container)
         ViewGroup mContainer;
-        @Bind(R.id.option_text)
+
         TextView mOptionText;
         @Bind(R.id.sort_icon)
         View mSortImageView;
+
+        WebView enhancedText;
+
 
         public OptionViewHolder(DragSortAdapter adapter, View itemView, boolean isMatching) {
             super(adapter, itemView);
             mIsMatching = isMatching;
             ButterKnife.bind(this, itemView);
+            //// FIXME: 26.04.16 refactor this
+            if (mIsMatching) {
+                mOptionText = (TextView) itemView.findViewById(R.id.option_text);
+            } else {
+                enhancedText = (WebView) itemView.findViewById(R.id.option_text);
+            }
             mSortImageView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {

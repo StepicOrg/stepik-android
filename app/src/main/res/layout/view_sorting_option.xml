@@ -32,12 +32,11 @@
             android:layout_weight="80"
             android:scrollbarStyle="outsideOverlay">
 
-            <TextView
+            <WebView
                 android:id="@+id/option_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-
                 android:gravity="center"
                 android:padding="8dp"
                 tools:text="option "/>
