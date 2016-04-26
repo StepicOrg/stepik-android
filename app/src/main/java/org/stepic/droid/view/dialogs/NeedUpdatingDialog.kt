@@ -5,10 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
+import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.core.IShell
 import org.stepic.droid.services.UpdateWithApkService
+import org.stepic.droid.util.AppConstants
 import javax.inject.Inject
 
 class NeedUpdatingDialog : DialogFragment() {
@@ -41,6 +43,7 @@ class NeedUpdatingDialog : DialogFragment() {
 
         val builder = AlertDialog.Builder(activity, R.style.MyAlertDialogStyle)
         builder.setTitle(R.string.update_available_title).setPositiveButton(R.string.update_now) { dialog, which ->
+            YandexMetrica.reportEvent(AppConstants.UPDATING_MESSAGE_IS_APPROVED)
             if (isInGP) {
                 shell.screenProvider.showStoreWithApp(activity)
             } else {

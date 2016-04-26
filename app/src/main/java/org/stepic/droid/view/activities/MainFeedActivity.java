@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -363,8 +364,10 @@ public class MainFeedActivity extends BackToExitActivityBase
         if (!event.isAppInGp() && event.getLinkForUpdate() == null) {
             return;
         }
+        YandexMetrica.reportEvent(AppConstants.UPDATING_MESSAGE_IS_SHOWN);
 
-        NeedUpdatingDialog dialog = NeedUpdatingDialog.Companion.newInstance(event.getLinkForUpdate(), event.isAppInGp());
-            dialog.show(getSupportFragmentManager(), null); // FIXME: 25.04.16 DO NOT RECREATE
+
+        DialogFragment dialog = NeedUpdatingDialog.Companion.newInstance(event.getLinkForUpdate(), event.isAppInGp());
+        dialog.show(getSupportFragmentManager(), null);
     }
 }
