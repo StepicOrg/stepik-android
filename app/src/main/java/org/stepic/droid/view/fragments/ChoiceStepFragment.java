@@ -3,8 +3,6 @@ package org.stepic.droid.view.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.AppCompatRadioButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +25,9 @@ import org.stepic.droid.model.Reply;
 import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.RadioGroupHelper;
+import org.stepic.droid.view.custom.StepicCheckBox;
+import org.stepic.droid.view.custom.StepicOptionView;
+import org.stepic.droid.view.custom.StepicRadioButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,11 +61,11 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
         mChoiceContainer.removeAllViews();
 
         for (String option : options) {
-            CompoundButton optionViewItem;
+            StepicOptionView optionViewItem;
             if (dataset.is_multiple_choice()) {
-                optionViewItem = new AppCompatCheckBox(getActivity());
+                optionViewItem = new StepicCheckBox(getActivity());
             } else {
-                optionViewItem = new AppCompatRadioButton(getActivity());
+                optionViewItem = new StepicRadioButton(getActivity());
             }
             buildChoiceItem(optionViewItem, option);
         }
@@ -105,13 +106,13 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
         }
     }
 
-    private void buildChoiceItem(CompoundButton item, String rawText) {
+    private void buildChoiceItem(StepicOptionView item, String rawText) {
         int dp4 = (int) DpPixelsHelper.convertDpToPixel(4);
         int horizontalPadding = (int) DpPixelsHelper.convertDpToPixel(4);
         RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         item.setLayoutParams(params);
         item.setPadding(horizontalPadding, dp4, horizontalPadding, dp4);
-        item.setMinHeight((int)DpPixelsHelper.convertDpToPixel(48));
+        item.setMinimumHeight((int) DpPixelsHelper.convertDpToPixel(48));
         String text = HtmlHelper.fromHtml(rawText).toString();
         item.setText(text);
         mChoiceContainer.addView(item);
