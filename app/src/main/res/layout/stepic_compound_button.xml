@@ -6,6 +6,7 @@
               android:layout_height="wrap_content"
               android:minHeight="48dp"
               android:orientation="horizontal"
+              android:descendantFocusability="beforeDescendants"
               android:padding="8dp">
 
     <ImageView
@@ -23,6 +24,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+
         tools:text="The first option"/>
 
 

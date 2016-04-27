@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 
 import com.squareup.otto.Subscribe;
@@ -22,7 +21,6 @@ import org.stepic.droid.events.submissions.SuccessGettingLastSubmissionEvent;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Dataset;
 import org.stepic.droid.model.Reply;
-import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.RadioGroupHelper;
 import org.stepic.droid.view.custom.StepicCheckBox;
@@ -83,7 +81,7 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
     protected Reply generateReply() {
         List<Boolean> options = new ArrayList<>();
         for (int i = 0; i < mChoiceContainer.getChildCount(); i++) {
-            CompoundButton view = (CompoundButton) mChoiceContainer.getChildAt(i);
+            StepicOptionView view = (StepicOptionView) mChoiceContainer.getChildAt(i);
             options.add(view.isChecked());
         }
         return new Reply.Builder()
@@ -101,18 +99,18 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
         if (choices == null) return;
 
         for (int i = 0; i < mChoiceContainer.getChildCount(); i++) {
-            CompoundButton view = (CompoundButton) mChoiceContainer.getChildAt(i);
+            StepicOptionView view = (StepicOptionView) mChoiceContainer.getChildAt(i);
             view.setChecked(choices.get(i));
         }
     }
 
     private void buildChoiceItem(StepicOptionView item, String rawText) {
-        int dp4 = (int) DpPixelsHelper.convertDpToPixel(4);
-        int horizontalPadding = (int) DpPixelsHelper.convertDpToPixel(4);
-        RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        item.setLayoutParams(params);
-        item.setPadding(horizontalPadding, dp4, horizontalPadding, dp4);
-        item.setMinimumHeight((int) DpPixelsHelper.convertDpToPixel(48));
+//        int dp4 = (int) DpPixelsHelper.convertDpToPixel(4);
+//        int horizontalPadding = (int) DpPixelsHelper.convertDpToPixel(4);
+//        RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        item.setLayoutParams(params);
+//        item.setPadding(horizontalPadding, dp4, horizontalPadding, dp4);
+//        item.setMinimumHeight((int) DpPixelsHelper.convertDpToPixel(48));
         String text = HtmlHelper.fromHtml(rawText).toString();
         item.setText(text);
         mChoiceContainer.addView(item);
