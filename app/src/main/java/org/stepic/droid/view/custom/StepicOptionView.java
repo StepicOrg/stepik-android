@@ -3,9 +3,9 @@ package org.stepic.droid.view.custom;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Checkable;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
-public abstract class StepicOptionView extends FrameLayout implements Checkable {
+public abstract class StepicOptionView extends LinearLayout implements Checkable {
     public StepicOptionView(Context context) {
         super(context);
     }
