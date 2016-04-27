@@ -1,27 +1,33 @@
 package org.stepic.droid.view.custom;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Checkable;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import org.stepic.droid.R;
 import org.stepic.droid.util.AppConstants;
 
-public abstract class StepicOptionView extends LinearLayout implements Checkable {
+public abstract class StepicOptionView extends FrameLayout implements Checkable {
 
     private ImageView optionIcon;
 
     private WebView optionText;
+
+    private ProgressBar progressBar;
 
 
     private static final int[] CHECKED_STATE_SET = {
@@ -44,11 +50,29 @@ public abstract class StepicOptionView extends LinearLayout implements Checkable
         LayoutInflater.from(context).inflate(R.layout.stepic_compound_button, this, true);
         optionIcon = (ImageView) findViewById(R.id.image_compound_button);
         optionText = (WebView) findViewById(R.id.text_compound_button);
+        progressBar = (ProgressBar) findViewById(R.id.load_progressbar);
         init();
     }
 
     private void init() {
         setClickable(true);
+
+        optionText.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                Log.d("eee", "onPageStarted");
+                progressBar.setVisibility(VISIBLE);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                Log.d("eee", "onPageFinished");
+                progressBar.setVisibility(GONE);
+
+            }
+        });
         optionText.setClickable(true);
         optionText.setOnLongClickListener(new OnLongClickListener() {
             @Override
@@ -63,7 +87,6 @@ public abstract class StepicOptionView extends LinearLayout implements Checkable
             public final static int FINGER_UNDEFINED = 3;
 
             private int fingerState = FINGER_RELEASED;
-
 
             @Override
             public boolean onTouch(View v, MotionEvent motionEvent) {
@@ -124,7 +147,6 @@ public abstract class StepicOptionView extends LinearLayout implements Checkable
         WebSettings webSettings = optionText.getSettings();
         webSettings.setJavaScriptEnabled(true);
         optionText.setBackgroundColor(0);
-//        holder.enhancedText.setBackgroundResource(R.color.default_option_color);
 
         final String html = AppConstants.PRE_BODY + text + AppConstants.POST_BODY;
 
