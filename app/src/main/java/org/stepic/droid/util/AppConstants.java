@@ -19,7 +19,7 @@ public class AppConstants {
             "tex2jax: {preview: \"none\", inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
             "</script>\n" +
             "<script type=\"text/javascript\"\n" +
-            " src=\"http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML\">\n" +
+            " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full\">\n" +
             "</script>\n" +
 
             "<style>\n" +

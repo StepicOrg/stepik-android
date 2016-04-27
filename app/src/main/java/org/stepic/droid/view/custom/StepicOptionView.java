@@ -130,7 +130,7 @@ public abstract class StepicOptionView extends LinearLayout implements Checkable
 
         final String mimeType = "text/html";
         final String encoding = "UTF-8";
-        optionText.loadDataWithBaseURL("", html, mimeType, encoding, "");
+        optionText.loadDataWithBaseURL("file:///android_asset/", html, mimeType, encoding, "");
     }
 
 

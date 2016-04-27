@@ -109,7 +109,7 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
 
             final String mimeType = "text/html";
             final String encoding = "UTF-8";
-            holder.enhancedText.loadDataWithBaseURL("", html, mimeType, encoding, "");
+            holder.enhancedText.loadDataWithBaseURL("file:///android_asset/", html, mimeType, encoding, "");
         } else {
             holder.mOptionText.setText(HtmlHelper.fromHtml(mItemIdOptionMap.get(itemId).getValue()).toString());
         }

@@ -42,7 +42,7 @@ public abstract class StepBaseFragment extends FragmentBase {
 
             final String mimeType = "text/html";
             final String encoding = "UTF-8";
-            mHeaderWv.loadDataWithBaseURL("", html, mimeType, encoding, "");
+            mHeaderWv.loadDataWithBaseURL("file:///android_asset/", html, mimeType, encoding, "");
 //            mHeaderWv.setText(HtmlHelper.fromHtml(mStep.getBlock().getText()));
             mHeaderWv.setVisibility(View.VISIBLE);
         } else {
