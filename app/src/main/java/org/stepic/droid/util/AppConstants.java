@@ -12,7 +12,7 @@ public class AppConstants {
     public static final String DEFAULT_QUALITY = "360";
     public static final String PRE_BODY = "<html>\n" +
             "<head>\n" +
-            "<title>Step. Stepic.org</title>\n" +
+            "<title>Step</title>\n" +
             "<script type=\"text/x-mathjax-config\">\n" +
             "  MathJax.Hub.Config({" +
             "messageStyle: \"none\", " +
