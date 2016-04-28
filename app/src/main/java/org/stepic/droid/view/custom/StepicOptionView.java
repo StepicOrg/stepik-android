@@ -160,7 +160,9 @@ public abstract class StepicOptionView extends RelativeLayout implements Checkab
 
     @Override
     public boolean performClick() {
-        toggle();
+        if (isEnabled()) {
+            toggle();
+        }
         return super.performClick();
     }
 
