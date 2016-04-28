@@ -29,6 +29,12 @@ public abstract class StepicOptionView extends RelativeLayout implements Checkab
 
     private ProgressBar progressBar;
 
+    private boolean mBroadcasting;
+
+
+    private OnCheckedChangeListener mOnCheckedChangeListener;
+    private OnCheckedChangeListener mOnCheckedChangeWidgetListener;
+
 
     private static final int[] CHECKED_STATE_SET = {
             android.R.attr.state_checked
@@ -131,7 +137,31 @@ public abstract class StepicOptionView extends RelativeLayout implements Checkab
         if (isChecked != checked) {
             isChecked = checked;
             refreshDrawableState();
+
+            // Avoid infinite recursions if setChecked() is called from a listener
+            if (mBroadcasting) {
+                return;
+            }
+
+            mBroadcasting = true;
+            if (mOnCheckedChangeListener != null) {
+                mOnCheckedChangeListener.onCheckedChanged(this, isChecked);
+            }
+            if (mOnCheckedChangeWidgetListener != null) {
+                mOnCheckedChangeWidgetListener.onCheckedChanged(this, isChecked);
+            }
+
+            mBroadcasting = false;
         }
+
+    }
+
+    public void setOnCheckedChangeListener(OnCheckedChangeListener listener) {
+        mOnCheckedChangeListener = listener;
+    }
+
+    void setOnCheckedChangeWidgetListener(OnCheckedChangeListener listener) {
+        mOnCheckedChangeWidgetListener = listener;
     }
 
     @Override
@@ -226,5 +256,15 @@ public abstract class StepicOptionView extends RelativeLayout implements Checkab
             super.writeToParcel(dest, flags);
             dest.writeInt(checked ? 1 : 0);
         }
+    }
+
+    public static interface OnCheckedChangeListener {
+        /**
+         * Called when the checked state of a compound button has changed.
+         *
+         * @param buttonView The compound button view whose state has changed.
+         * @param isChecked  The new checked state of buttonView.
+         */
+        void onCheckedChanged(StepicOptionView buttonView, boolean isChecked);
     }
 }

@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioGroup;
 
 import com.squareup.otto.Subscribe;
 
@@ -26,19 +25,20 @@ import org.stepic.droid.util.RadioGroupHelper;
 import org.stepic.droid.view.custom.StepicCheckBox;
 import org.stepic.droid.view.custom.StepicOptionView;
 import org.stepic.droid.view.custom.StepicRadioButton;
+import org.stepic.droid.view.custom.StepicRadioGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChoiceStepFragment extends StepWithAttemptsFragment {
 
-    private RadioGroup mChoiceContainer;
+    private StepicRadioGroup mChoiceContainer;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        mChoiceContainer = (RadioGroup) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_choice_attempt, mAttemptContainer, false);
+        mChoiceContainer = (StepicRadioGroup) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_choice_attempt, mAttemptContainer, false);
         mAttemptContainer.addView(mChoiceContainer);
         return v;
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RadioGroup
+<org.stepic.droid.view.custom.StepicRadioGroup
     android:id="@+id/choice_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,4 +10,4 @@
     tools:background="@color/correct_answer_background"
     tools:layout_height="300dp">
 
-</RadioGroup>
+</org.stepic.droid.view.custom.StepicRadioGroup>
