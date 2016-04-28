@@ -28,7 +28,7 @@
         android:layout_toRightOf="@id/image_compound_button"
         tools:visibility="visible"/>
 
-    <WebView
+    <org.stepic.droid.view.custom.LatexSupportableWebView
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/image_compound_button"
         android:id="@+id/text_compound_button"

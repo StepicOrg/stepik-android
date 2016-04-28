@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Checkable;
@@ -19,13 +18,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import org.stepic.droid.R;
-import org.stepic.droid.util.AppConstants;
 
 public abstract class StepicOptionView extends FrameLayout implements Checkable {
 
     private ImageView optionIcon;
 
-    private WebView optionText;
+    private LatexSupportableWebView optionText;
 
     private ProgressBar progressBar;
 
@@ -49,7 +47,7 @@ public abstract class StepicOptionView extends FrameLayout implements Checkable 
 
         LayoutInflater.from(context).inflate(R.layout.stepic_compound_button, this, true);
         optionIcon = (ImageView) findViewById(R.id.image_compound_button);
-        optionText = (WebView) findViewById(R.id.text_compound_button);
+        optionText = (LatexSupportableWebView) findViewById(R.id.text_compound_button);
         progressBar = (ProgressBar) findViewById(R.id.load_progressbar);
         init();
     }
@@ -74,12 +72,6 @@ public abstract class StepicOptionView extends FrameLayout implements Checkable 
             }
         });
         optionText.setClickable(true);
-        optionText.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return true;
-            }
-        });
         optionText.setOnTouchListener(new OnTouchListener() {
             public final static int FINGER_RELEASED = 0;
             public final static int FINGER_TOUCHED = 1;
@@ -122,6 +114,7 @@ public abstract class StepicOptionView extends FrameLayout implements Checkable 
                 return false;
             }
         });
+
         optionIcon.setImageResource(getUncheckedDrawableForOption());
     }
 
@@ -144,15 +137,7 @@ public abstract class StepicOptionView extends FrameLayout implements Checkable 
     }
 
     public void setText(CharSequence text) {
-        WebSettings webSettings = optionText.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        optionText.setBackgroundColor(0);
-
-        final String html = AppConstants.PRE_BODY + text + AppConstants.POST_BODY;
-
-        final String mimeType = "text/html";
-        final String encoding = "UTF-8";
-        optionText.loadDataWithBaseURL("file:///android_asset/", html, mimeType, encoding, "");
+        optionText.setText(text);
     }
 
 

@@ -10,15 +10,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.TextView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Option;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.HtmlHelper;
+import org.stepic.droid.view.custom.LatexSupportableWebView;
 import org.stepic.droid.view.custom.dragsortadapter.DragSortAdapter;
 import org.stepic.droid.view.custom.dragsortadapter.NoForegroundShadowBuilder;
 
@@ -100,16 +98,7 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
         }
 
         if (!isMatching) {
-            WebSettings webSettings = holder.enhancedText.getSettings();
-            webSettings.setJavaScriptEnabled(true);
-            holder.enhancedText.setBackgroundColor(0);
-            holder.enhancedText.setBackgroundResource(R.color.default_option_color);
-
-            final String html = AppConstants.PRE_BODY + HtmlHelper.fromHtml(mItemIdOptionMap.get(itemId).getValue()).toString() + AppConstants.POST_BODY;
-
-            final String mimeType = "text/html";
-            final String encoding = "UTF-8";
-            holder.enhancedText.loadDataWithBaseURL("file:///android_asset/", html, mimeType, encoding, "");
+            holder.enhancedText.setText(HtmlHelper.fromHtml(mItemIdOptionMap.get(itemId).getValue()).toString());
         } else {
             holder.mOptionText.setText(HtmlHelper.fromHtml(mItemIdOptionMap.get(itemId).getValue()).toString());
         }
@@ -154,7 +143,7 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
         @Bind(R.id.sort_icon)
         View mSortImageView;
 
-        WebView enhancedText;
+        LatexSupportableWebView enhancedText;
 
 
         public OptionViewHolder(DragSortAdapter adapter, View itemView, boolean isMatching) {
@@ -165,7 +154,7 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
             if (mIsMatching) {
                 mOptionText = (TextView) itemView.findViewById(R.id.option_text);
             } else {
-                enhancedText = (WebView) itemView.findViewById(R.id.option_text);
+                enhancedText = (LatexSupportableWebView) itemView.findViewById(R.id.option_text);
             }
             mSortImageView.setOnTouchListener(new View.OnTouchListener() {
                 @Override

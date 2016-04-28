@@ -307,7 +307,7 @@ public class StepsFragment extends FragmentBase {
         if (steps.isEmpty()) {
             bus.post(new FailLoadStepEvent());
         } else {
-//            ToDbStepTask task = new ToDbStepTask(mLesson, steps);
+//            ToDbStepTask task = new ToDbStepTask(lesson, steps);
 //            task.execute();
 
             mShell.getApi().getAssignments(mUnit.getAssignments()).enqueue(new Callback<AssignmentResponse>() {
