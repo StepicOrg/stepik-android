@@ -18,6 +18,7 @@
     <dimen name="min_max_width_for_tablets">600dp</dimen>
     <dimen name="half_padding_between_textinput">8dp</dimen>
     <dimen name="padding_text_in_cv">16dp</dimen>
+    <dimen name="padding_left_right_list_item">16dp</dimen>
     <dimen name="padding_bot_top_cv">24dp</dimen>
     <dimen name="text_size_title">24sp</dimen>
     <dimen name="guide_top_bot_padding">4dp</dimen>

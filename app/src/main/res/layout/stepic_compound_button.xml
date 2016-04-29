@@ -2,36 +2,54 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/image_compound_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        tools:src="@drawable/ic_delete" />
-
-    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-        android:id="@+id/load_progressbar"
-        style="@style/Widget.MaterialProgressBar.ProgressBar.Small"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/image_compound_button"
-        android:indeterminate="true"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:clickable="false"
+        android:focusable="false"
+        android:minHeight="48dp"
+        android:paddingEnd="@dimen/padding_left_right_list_item"
+        android:paddingLeft="@dimen/padding_left_right_list_item"
+        android:paddingRight="@dimen/padding_left_right_list_item"
+        android:paddingStart="@dimen/padding_left_right_list_item">
 
-    <org.stepic.droid.view.custom.LatexSupportableWebView
-        android:id="@+id/text_compound_button"
+        <ImageView
+            android:id="@+id/image_compound_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            tools:src="@drawable/ic_delete" />
+
+        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+            android:id="@+id/load_progressbar"
+            style="@style/Widget.MaterialProgressBar.ProgressBar.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/image_compound_button"
+            android:indeterminate="true"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <org.stepic.droid.view.custom.LatexSupportableWebView
+            android:id="@+id/text_compound_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_toRightOf="@id/image_compound_button"
+
+            tools:text="The first option" />
+
+
+    </RelativeLayout>
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_toRightOf="@id/image_compound_button"
-
-        tools:text="The first option" />
-
-
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/silver" />
 </merge>

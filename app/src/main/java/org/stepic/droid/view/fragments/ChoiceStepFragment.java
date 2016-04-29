@@ -40,6 +40,7 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
         View v = super.onCreateView(inflater, container, savedInstanceState);
         mChoiceContainer = (StepicRadioGroup) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_choice_attempt, mAttemptContainer, false);
         mAttemptContainer.addView(mChoiceContainer);
+        mAttemptContainer.setPadding(0, 0, 0, 0);
         return v;
     }
 

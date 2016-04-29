@@ -19,7 +19,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import org.stepic.droid.R;
-import org.stepic.droid.util.DpPixelsHelper;
 
 public abstract class StepicOptionView extends RelativeLayout implements Checkable {
 
@@ -61,10 +60,10 @@ public abstract class StepicOptionView extends RelativeLayout implements Checkab
     }
 
     private void init() {
-        int dp8 = (int) DpPixelsHelper.convertDpToPixel(8);
-        setPadding(dp8, dp8, dp8, dp8);
-        int dp48 = (int) DpPixelsHelper.convertDpToPixel(48);
-        setMinimumHeight(dp48);
+//        int dp8 = (int) DpPixelsHelper.convertDpToPixel(8);
+//        setPadding(dp8, dp8, dp8, dp8);
+//        int dp48 = (int) DpPixelsHelper.convertDpToPixel(48);
+//        setMinimumHeight(dp48);
 
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         setClickable(true);
@@ -107,7 +106,7 @@ public abstract class StepicOptionView extends RelativeLayout implements Checkab
                         if (fingerState != FINGER_DRAGGING) {
                             fingerState = FINGER_RELEASED;
 
-                            StepicOptionView parent = (StepicOptionView) v.getParent(); //// FIXME: 27.04.16 find better way for handling
+                            ViewGroup parent = (ViewGroup) v.getParent().getParent(); //// FIXME: 27.04.16 find better way for handling
                             parent.performClick();
 
                         } else if (fingerState == FINGER_DRAGGING) fingerState = FINGER_RELEASED;
