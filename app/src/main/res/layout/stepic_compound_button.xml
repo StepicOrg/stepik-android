@@ -3,10 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
+        android:id="@+id/rel_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="false"
-        android:focusable="false"
         android:minHeight="48dp"
         android:paddingEnd="@dimen/padding_left_right_list_item"
         android:paddingLeft="@dimen/padding_left_right_list_item"
@@ -18,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            tools:src="@drawable/ic_delete" />
+            tools:src="@drawable/ic_radio_button_checked_white_24px" />
 
         <me.zhanghai.android.materialprogressbar.MaterialProgressBar
             android:id="@+id/load_progressbar"
@@ -50,6 +49,16 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
         android:background="@color/silver" />
+
+
+    <FrameLayout
+        android:id="@+id/rippleFrameLayoutInOption"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:foreground="@drawable/non_radius_foreground" />
 </merge>

@@ -8,19 +8,18 @@ import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Checkable;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import org.stepic.droid.R;
 
-public abstract class StepicOptionView extends RelativeLayout implements Checkable {
+public abstract class StepicOptionView extends FrameLayout implements Checkable {
 
     private ImageView optionIcon;
 
@@ -29,7 +28,6 @@ public abstract class StepicOptionView extends RelativeLayout implements Checkab
     private ProgressBar progressBar;
 
     private boolean mBroadcasting;
-
 
     private OnCheckedChangeListener mOnCheckedChangeListener;
     private OnCheckedChangeListener mOnCheckedChangeWidgetListener;
@@ -40,6 +38,7 @@ public abstract class StepicOptionView extends RelativeLayout implements Checkab
     };
 
     private boolean isChecked;
+    private FrameLayout rippleEffectFrameLayout;
 
     public StepicOptionView(Context context) {
         this(context, null);
@@ -56,17 +55,20 @@ public abstract class StepicOptionView extends RelativeLayout implements Checkab
         optionIcon = (ImageView) findViewById(R.id.image_compound_button);
         optionText = (LatexSupportableWebView) findViewById(R.id.text_compound_button);
         progressBar = (ProgressBar) findViewById(R.id.load_progressbar);
+        rippleEffectFrameLayout = (FrameLayout) findViewById(R.id.rippleFrameLayoutInOption);
+
         init();
     }
 
     private void init() {
-//        int dp8 = (int) DpPixelsHelper.convertDpToPixel(8);
-//        setPadding(dp8, dp8, dp8, dp8);
-//        int dp48 = (int) DpPixelsHelper.convertDpToPixel(48);
-//        setMinimumHeight(dp48);
+        rippleEffectFrameLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                performClick();
+            }
+        });
 
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        setClickable(true);
 
         optionText.setWebViewClient(new WebViewClient() {
             @Override
@@ -82,49 +84,6 @@ public abstract class StepicOptionView extends RelativeLayout implements Checkab
                 Log.d("eee", "onPageFinished");
                 progressBar.setVisibility(GONE);
 
-            }
-        });
-        optionText.setClickable(true);
-        optionText.setOnTouchListener(new OnTouchListener() {
-            public final static int FINGER_RELEASED = 0;
-            public final static int FINGER_TOUCHED = 1;
-            public final static int FINGER_DRAGGING = 2;
-            public final static int FINGER_UNDEFINED = 3;
-
-            private int fingerState = FINGER_RELEASED;
-
-            @Override
-            public boolean onTouch(View v, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-
-                    case MotionEvent.ACTION_DOWN:
-                        if (fingerState == FINGER_RELEASED) fingerState = FINGER_TOUCHED;
-                        else fingerState = FINGER_UNDEFINED;
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        if (fingerState != FINGER_DRAGGING) {
-                            fingerState = FINGER_RELEASED;
-
-                            ViewGroup parent = (ViewGroup) v.getParent().getParent(); //// FIXME: 27.04.16 find better way for handling
-                            parent.performClick();
-
-                        } else if (fingerState == FINGER_DRAGGING) fingerState = FINGER_RELEASED;
-                        else fingerState = FINGER_UNDEFINED;
-                        break;
-
-                    case MotionEvent.ACTION_MOVE:
-                        if (fingerState == FINGER_TOUCHED || fingerState == FINGER_DRAGGING)
-                            fingerState = FINGER_DRAGGING;
-                        else fingerState = FINGER_UNDEFINED;
-                        break;
-
-                    default:
-                        fingerState = FINGER_UNDEFINED;
-
-                }
-
-                return false;
             }
         });
 
@@ -153,6 +112,12 @@ public abstract class StepicOptionView extends RelativeLayout implements Checkab
             mBroadcasting = false;
         }
 
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        rippleEffectFrameLayout.setClickable(enabled);
+        super.setEnabled(enabled);
     }
 
     public void setOnCheckedChangeListener(OnCheckedChangeListener listener) {
