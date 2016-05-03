@@ -398,4 +398,8 @@ public class MainFeedActivity extends BackToExitActivityBase
             }
         }
     }
+
+    public static int getDownloadFragmentIndex(){
+        return 2;
+    }
 }

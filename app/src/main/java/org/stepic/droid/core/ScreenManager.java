@@ -25,7 +25,6 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
-import org.stepic.droid.util.resolvers.IMainMenuResolver;
 import org.stepic.droid.view.activities.CourseDetailActivity;
 import org.stepic.droid.view.activities.LaunchActivity;
 import org.stepic.droid.view.activities.LoginActivity;
@@ -38,7 +37,6 @@ import org.stepic.droid.view.activities.TextFeedbackActivity;
 import org.stepic.droid.view.activities.UnitsActivity;
 import org.stepic.droid.view.activities.VideoActivity;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
-import org.stepic.droid.view.fragments.DownloadsFragment;
 import org.stepic.droid.web.ViewAssignment;
 import org.videolan.libvlc.util.VLCUtil;
 
@@ -48,13 +46,11 @@ import javax.inject.Singleton;
 @Singleton
 public class ScreenManager implements IScreenManager {
     private IConfig mConfig;
-    private IMainMenuResolver mMainMenuResolver;
     private UserPreferences mUserPreferences;
 
     @Inject
-    public ScreenManager(IConfig config, IMainMenuResolver mainMenuResolver, UserPreferences userPreferences) {
+    public ScreenManager(IConfig config, UserPreferences userPreferences) {
         this.mConfig = config;
-        mMainMenuResolver = mainMenuResolver;
         mUserPreferences = userPreferences;
     }
 
@@ -144,7 +140,7 @@ public class ScreenManager implements IScreenManager {
         Intent intent = new Intent(MainApplication.getAppContext(), MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Bundle bundle = new Bundle();
-        int index = mMainMenuResolver.getIndexOfFragment(DownloadsFragment.class);
+        int index = MainFeedActivity.getDownloadFragmentIndex();
         bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
         intent.putExtras(bundle);
         MainApplication.getAppContext().startActivity(intent);

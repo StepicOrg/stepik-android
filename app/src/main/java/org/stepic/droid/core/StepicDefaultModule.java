@@ -82,8 +82,8 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public IScreenManager provideIScreenManager(IConfig config, IMainMenuResolver mainMenuResolver, UserPreferences userPreferences) {
-        return new ScreenManager(config, mainMenuResolver, userPreferences);
+    public IScreenManager provideIScreenManager(IConfig config, UserPreferences userPreferences) {
+        return new ScreenManager(config, userPreferences);
     }
 
     @Provides
@@ -282,12 +282,6 @@ public class StepicDefaultModule {
     @Singleton
     public ICancelSniffer provideCancelSniffer() {
         return new SynchronizedCancelSniffer();
-    }
-
-    @Provides
-    @Singleton
-    public IMainMenuResolver provideResolver() {
-        return new MainMenuResolverImpl();
     }
 
     @Provides
