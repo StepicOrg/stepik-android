@@ -17,6 +17,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.model.CachedVideo;
+import org.stepic.droid.model.DownloadingVideoItem;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.store.CleanManager;
@@ -47,6 +48,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
     private List<CachedVideo> mCachedVideoList;
     private Activity sourceActivity;
     private Map<Long, Lesson> mStepIdToLessonMap;
+    final private List<DownloadingVideoItem> mDownloadingVideoList;
 
     @Inject
     CleanManager mCleanManager;
@@ -61,12 +63,13 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
 
     private DownloadsFragment downloadsFragment;
 
-    public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Activity context, DownloadsFragment downloadsFragment) {
+    public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Activity context, DownloadsFragment downloadsFragment, List<DownloadingVideoItem> downloadingList) {
         this.downloadsFragment = downloadsFragment;
         MainApplication.component().inject(this);
         mCachedVideoList = cachedVideos;
         sourceActivity = context;
         mStepIdToLessonMap = videoIdToStepMap;
+        mDownloadingVideoList = downloadingList;
     }
 
     @Override

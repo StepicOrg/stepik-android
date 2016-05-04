@@ -1,5 +1,5 @@
 package org.stepic.droid.events.video
 
-import org.stepic.droid.model.DownloadReportItem
+import org.stepic.droid.model.DownloadingVideoItem
 
-data class DownloadReportEvent(val downloadReportItem: DownloadReportItem)
+data class DownloadReportEvent(val downloadingVideoItem: DownloadingVideoItem)
