@@ -124,7 +124,7 @@ public class DownloadsFragment extends FragmentBase {
 
 
         bus.register(this);
-//        startLoadingStatusUpdater();
+        startLoadingStatusUpdater();
     }
 
     private void startLoadingStatusUpdater() {
@@ -156,6 +156,7 @@ public class DownloadsFragment extends FragmentBase {
                                     }
                                 });
                             }
+                            cursor.moveToNext();
                         }
                     } finally {
                         cursor.close();
@@ -183,7 +184,7 @@ public class DownloadsFragment extends FragmentBase {
     @Subscribe
     public void onLoadingUpdate(DownloadReportEvent event) {
         DownloadReportItem item = event.getDownloadReportItem();
-        Log.d("wakawaka", "receive");
+        Log.d("wakawaka", "receive: " + item.toString());
     }
 
     private long[] getAllDownloadIds(@NotNull List<DownloadEntity> list) {
@@ -212,7 +213,7 @@ public class DownloadsFragment extends FragmentBase {
 
     @Override
     public void onDestroyView() {
-//        stopLoadingStatusUpdater();
+        stopLoadingStatusUpdater();
         bus.unregister(this);
         mDownloadsView.setAdapter(null);
         mDownloadAdapter = null;
