@@ -30,6 +30,7 @@ import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
@@ -51,6 +52,10 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
     DatabaseFacade mDatabaseFacade;
     @Inject
     IScreenManager mScreenManager;
+
+    @Inject
+    ThreadPoolExecutor threadPoolExecutor;
+
     private DownloadsFragment downloadsFragment;
 
     public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Activity context, DownloadsFragment downloadsFragment) {
@@ -154,7 +159,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
                     mCleanManager.removeStep(step);
                 }
             };
-            task.execute();
+            task.executeOnExecutor(threadPoolExecutor);
             downloadsFragment.checkForEmpty();
             notifyItemRemoved(position);
         }
