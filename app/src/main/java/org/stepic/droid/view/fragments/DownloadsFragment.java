@@ -177,6 +177,8 @@ public class DownloadsFragment extends FragmentBase {
                         cursor.close();
                     }
 
+                    // TODO: 04.05.16 thread sleep? 2000 ms?
+
                 }
                 Log.d("ppp", "This thread is terminated");
             }
@@ -199,7 +201,23 @@ public class DownloadsFragment extends FragmentBase {
     @Subscribe
     public void onLoadingUpdate(DownloadReportEvent event) {
         DownloadingVideoItem item = event.getDownloadingVideoItem();
-        Log.d("wakawaka", "receive: " + item.toString());
+        int position = -1;
+        for (int i = 0; i < mDownloadingWithProgressList.size(); i++) {
+            if (item.getDownloadEntity().getDownloadId() == mDownloadingWithProgressList.get(i).getDownloadEntity().getDownloadId()){
+                position = i;
+                break;
+            }
+        }
+        // FIXME: 04.05.16 support lesson map for view of step
+
+        if (position >= 0){
+            mDownloadingWithProgressList.get(position).setDownloadReportItem(item.getDownloadReportItem());
+            mDownloadAdapter.notifyItemChanged(position); // TODO: 04.05.16 change to method update in adapter
+        }
+        else{
+            mDownloadingWithProgressList.add(item);
+            mDownloadAdapter.notifyItemInserted(mDownloadingWithProgressList.size() - 1); // TODO: 04.05.16 change to method update in adapter
+        }
     }
 
     private long[] getAllDownloadIds(@NotNull List<DownloadEntity> list) {

@@ -39,7 +39,6 @@
                 android:src="@drawable/video_placeholder" />
 
             <RelativeLayout
-                android:id="@+id/course_info_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
@@ -69,6 +68,7 @@
                     app:mpb_progressStyle="horizontal" />
 
                 <TextView
+                    android:id="@+id/progress_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_above="@id/video_downloading_progress_bar"
