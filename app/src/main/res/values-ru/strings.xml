@@ -127,4 +127,5 @@
     <string name="update_available_title">Доступна новая версия приложения</string>
     <string name="update_now">Обновить</string>
     <string name="update_later">Позже</string>
+    <string name="instructors">Преподаватели</string>
 </resources>
