@@ -41,6 +41,9 @@ import butterknife.ButterKnife;
 
 public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.DownloadsViewHolder> implements StepicOnClickItemListener, OnClickLoadListener {
 
+    public static final int TYPE_DOWNLOADING_VIDEO = 1;
+    public static final int TYPE_DOWNLOADED_VIDEO = 2;
+
     private List<CachedVideo> mCachedVideoList;
     private Activity sourceActivity;
     private Map<Long, Lesson> mStepIdToLessonMap;
