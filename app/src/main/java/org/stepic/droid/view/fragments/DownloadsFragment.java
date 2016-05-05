@@ -127,7 +127,7 @@ public class DownloadsFragment extends FragmentBase {
 
 
         bus.register(this);
-        startLoadingStatusUpdater();
+//        startLoadingStatusUpdater();
     }
 
     private void startLoadingStatusUpdater() {
@@ -246,7 +246,7 @@ public class DownloadsFragment extends FragmentBase {
 
     @Override
     public void onDestroyView() {
-        stopLoadingStatusUpdater();
+//        stopLoadingStatusUpdater();
         bus.unregister(this);
         mDownloadsView.setAdapter(null);
         mDownloadAdapter = null;
