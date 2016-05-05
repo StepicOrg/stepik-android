@@ -66,6 +66,8 @@ import kotlin.jvm.functions.Function0;
 
 public class DownloadsFragment extends FragmentBase {
 
+    private static final int UPDATE_DELAY  = 300;
+
     public static DownloadsFragment newInstance() {
         return new DownloadsFragment();
     }
@@ -121,6 +123,7 @@ public class DownloadsFragment extends FragmentBase {
         mDownloadsView.setItemAnimator(new SlideInRightAnimator());
         mDownloadsView.getItemAnimator().setRemoveDuration(10);
         mDownloadsView.getItemAnimator().setAddDuration(10);
+        mDownloadsView.getItemAnimator().setMoveDuration(10);
 
         if (isLoaded) {
             checkForEmpty();
@@ -181,7 +184,11 @@ public class DownloadsFragment extends FragmentBase {
                         cursor.close();
                     }
 
-                    // TODO: 04.05.16 thread sleep? 2000 ms?
+                    try {
+                        Thread.sleep(UPDATE_DELAY); // TODO: 04.05.16 thread sleep? 2000 ms?
+                    } catch (InterruptedException e) {
+                        return;
+                    }
 
                 }
                 Log.d("ppp", "This thread is terminated");
