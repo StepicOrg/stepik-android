@@ -154,6 +154,10 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         }
     }
 
+    public void notifyCachedVideoRemoved(int position) {
+        notifyItemRemoved(position + mDownloadingVideoList.size());
+    }
+
     public class DownloadingViewHolder extends GenericViewHolder {
         @Bind(R.id.cancel_load)
         View cancelLoad;

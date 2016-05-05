@@ -428,7 +428,7 @@ public class DownloadsFragment extends FragmentBase {
 
         if (position >= 0) {
             checkForEmpty();
-            mDownloadAdapter.notifyItemRemoved(position);
+            mDownloadAdapter.notifyCachedVideoRemoved(position);
         }
     }
 
