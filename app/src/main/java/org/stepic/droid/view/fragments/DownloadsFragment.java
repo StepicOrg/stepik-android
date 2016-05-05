@@ -216,6 +216,7 @@ public class DownloadsFragment extends FragmentBase {
         }
         else{
             mDownloadingWithProgressList.add(item);
+            Log.d("eee", "notify inserted: " + (mDownloadingWithProgressList.size() - 1));
             mDownloadAdapter.notifyItemInserted(mDownloadingWithProgressList.size() - 1); // TODO: 04.05.16 change to method update in adapter
         }
     }

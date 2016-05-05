@@ -100,12 +100,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     @Override
     public void onBindViewHolder(GenericViewHolder holder, int position) {
         holder.setDataOnView(position);
-
+        Log.d("eee", "onBind: " + position);
     }
 
     @Override
     public int getItemCount() {
-        return mCachedVideoList.size();
+        return mCachedVideoList.size() + mDownloadingVideoList.size();
     }
 
     @Override
