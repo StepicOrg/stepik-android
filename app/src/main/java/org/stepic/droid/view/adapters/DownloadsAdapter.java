@@ -336,4 +336,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         public abstract void setDataOnView(int position);
     }
+
+    public void notifyCachedVideoInserted(int position){
+        int realPosition = position + mDownloadingVideoList.size();
+        notifyItemInserted(realPosition);
+    }
 }

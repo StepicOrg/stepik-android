@@ -50,9 +50,9 @@ import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.view.adapters.DownloadsAdapter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 
@@ -81,7 +81,7 @@ public class DownloadsFragment extends FragmentBase {
 
     private DownloadsAdapter mDownloadAdapter;
     private List<CachedVideo> mCachedVideoList;
-    private Map<Long, Lesson> mStepIdToLesson;
+    private ConcurrentHashMap<Long, Lesson> mStepIdToLesson;
     private List<DownloadingVideoItem> mDownloadingWithProgressList;
     private Runnable mLoadingUpdater = null;
 
@@ -93,7 +93,7 @@ public class DownloadsFragment extends FragmentBase {
         setRetainInstance(true);
 
         mCachedVideoList = new ArrayList<>();
-        mStepIdToLesson = new HashMap<>();
+        mStepIdToLesson = new ConcurrentHashMap<>();
         mDownloadingWithProgressList = new ArrayList<>();
     }
 
@@ -203,20 +203,36 @@ public class DownloadsFragment extends FragmentBase {
         DownloadingVideoItem item = event.getDownloadingVideoItem();
         int position = -1;
         for (int i = 0; i < mDownloadingWithProgressList.size(); i++) {
-            if (item.getDownloadEntity().getDownloadId() == mDownloadingWithProgressList.get(i).getDownloadEntity().getDownloadId()){
+            if (item.getDownloadEntity().getDownloadId() == mDownloadingWithProgressList.get(i).getDownloadEntity().getDownloadId()) {
                 position = i;
                 break;
             }
         }
         // FIXME: 04.05.16 support lesson map for view of step
+        final long stepId = item.getDownloadEntity().getStepId();
+        if (!mStepIdToLesson.containsKey(stepId)) {
+            mThreadPoolExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    Step step = mDatabaseFacade.getStepById(stepId);
+                    if (step != null) {
+                        Lesson lesson = mDatabaseFacade.getLessonById(step.getLesson());
+                        if (lesson != null) {
+                            mStepIdToLesson.put(stepId, lesson);
+                        }
+                    }
+                }
+            });
+            return; // if we do not know about lesson name -> not show this video.
+        }
 
-        if (position >= 0){
+        if (position >= 0) {
             mDownloadingWithProgressList.get(position).setDownloadReportItem(item.getDownloadReportItem());
             mDownloadAdapter.notifyItemChanged(position); // TODO: 04.05.16 change to method update in adapter
-        }
-        else{
+        } else {
             mDownloadingWithProgressList.add(item);
             Log.d("eee", "notify inserted: " + (mDownloadingWithProgressList.size() - 1));
+            checkForEmpty();
             mDownloadAdapter.notifyItemInserted(mDownloadingWithProgressList.size() - 1); // TODO: 04.05.16 change to method update in adapter
         }
     }
@@ -414,7 +430,7 @@ public class DownloadsFragment extends FragmentBase {
         mCachedVideoList.add(video);
         if (mDownloadAdapter != null && pos >= 0 && pos < mCachedVideoList.size()) {
             checkForEmpty();
-            mDownloadAdapter.notifyItemInserted(pos);
+            mDownloadAdapter.notifyCachedVideoInserted(pos);
         }
     }
 
