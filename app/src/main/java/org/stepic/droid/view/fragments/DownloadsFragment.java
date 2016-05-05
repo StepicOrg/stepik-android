@@ -50,8 +50,10 @@ import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.view.adapters.DownloadsAdapter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
@@ -84,6 +86,7 @@ public class DownloadsFragment extends FragmentBase {
     private ConcurrentHashMap<Long, Lesson> mStepIdToLesson;
     private List<DownloadingVideoItem> mDownloadingWithProgressList;
     private Runnable mLoadingUpdater = null;
+    private Set<Long> cachedStepsSet;
 
     private boolean isLoaded;
 
@@ -95,6 +98,7 @@ public class DownloadsFragment extends FragmentBase {
         mCachedVideoList = new ArrayList<>();
         mStepIdToLesson = new ConcurrentHashMap<>();
         mDownloadingWithProgressList = new ArrayList<>();
+        cachedStepsSet = new HashSet<>();
     }
 
     @Nullable
@@ -110,7 +114,7 @@ public class DownloadsFragment extends FragmentBase {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mDownloadAdapter = new DownloadsAdapter(mCachedVideoList, mStepIdToLesson, getActivity(), this, mDownloadingWithProgressList);
+        mDownloadAdapter = new DownloadsAdapter(mCachedVideoList, mStepIdToLesson, getActivity(), this, mDownloadingWithProgressList, cachedStepsSet);
         mDownloadsView.setAdapter(mDownloadAdapter);
 
         mDownloadsView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -226,6 +230,10 @@ public class DownloadsFragment extends FragmentBase {
             return; // if we do not know about lesson name -> not show this video.
         }
 
+        if (cachedStepsSet.contains(stepId)){
+            return; //if already cached do not show
+        }
+
         if (position >= 0) {
             mDownloadingWithProgressList.get(position).setDownloadReportItem(item.getDownloadReportItem());
             mDownloadAdapter.notifyItemChanged(position); // TODO: 04.05.16 change to method update in adapter
@@ -318,6 +326,12 @@ public class DownloadsFragment extends FragmentBase {
         mStepIdToLesson.putAll(map);
         mCachedVideoList.clear();
         mCachedVideoList.addAll(videosForShowing);
+
+        cachedStepsSet.clear();
+        for (int i = 0; i < mCachedVideoList.size(); i++) {
+            cachedStepsSet.add(videosForShowing.get(i).getStepId());
+        }
+
         checkForEmpty();
         mDownloadAdapter.notifyDataSetChanged();
     }
@@ -428,9 +442,10 @@ public class DownloadsFragment extends FragmentBase {
         mStepIdToLesson.put(stepId, lesson);
         int pos = mCachedVideoList.size();
         mCachedVideoList.add(video);
+        cachedStepsSet.add(stepId);
         if (mDownloadAdapter != null && pos >= 0 && pos < mCachedVideoList.size()) {
             checkForEmpty();
-            mDownloadAdapter.notifyCachedVideoInserted(pos);
+            mDownloadAdapter.notifyCachedVideoInserted(stepId, pos);
         }
     }
 
@@ -449,6 +464,7 @@ public class DownloadsFragment extends FragmentBase {
         int position = mCachedVideoList.indexOf(videoForDeleteFromList);
         mCachedVideoList.remove(videoForDeleteFromList);
         mStepIdToLesson.remove(videoForDeleteFromList.getStepId());
+        cachedStepsSet.remove(videoForDeleteFromList.getStepId());
         if (mCachedVideoList.size() == 0) {
 
         }

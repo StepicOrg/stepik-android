@@ -34,6 +34,7 @@ import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
@@ -65,14 +66,16 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     ThreadPoolExecutor threadPoolExecutor;
 
     private DownloadsFragment downloadsFragment;
+    private Set<Long> cachedStepsSet;
 
-    public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Activity context, DownloadsFragment downloadsFragment, List<DownloadingVideoItem> downloadingList) {
+    public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Activity context, DownloadsFragment downloadsFragment, List<DownloadingVideoItem> downloadingList, Set<Long> cachedStepsSet) {
         this.downloadsFragment = downloadsFragment;
         MainApplication.component().inject(this);
         mCachedVideoList = cachedVideos;
         sourceActivity = context;
         mStepIdToLessonMap = videoIdToStepMap;
         mDownloadingVideoList = downloadingList;
+        this.cachedStepsSet = cachedStepsSet;
     }
 
     @Override
@@ -122,6 +125,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             CachedVideo video = mCachedVideoList.get(position);
             mCachedVideoList.remove(position);
             mStepIdToLessonMap.remove(video.getStepId());
+            cachedStepsSet.remove(video.getStepId());
+
             final long stepId = video.getStepId();
 
             AsyncTask<Void, Void, Step> task = new AsyncTask<Void, Void, Step>() {
@@ -337,8 +342,33 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         public abstract void setDataOnView(int position);
     }
 
-    public void notifyCachedVideoInserted(int position){
+    public void notifyCachedVideoInserted(long stepId, int position) {
+        // when cached video is insert, we should remove downloading
+        int downloadingPos = -1;
+        for (int i = 0; i < mDownloadingVideoList.size(); i++) {
+            if (mDownloadingVideoList.get(i).getDownloadEntity().getStepId() == stepId) {
+                downloadingPos = i;
+                break;
+            }
+        }
+
+        boolean isVideoWasInDownloading = downloadingPos >= 0;
+        if (isVideoWasInDownloading) {
+            mDownloadingVideoList.remove(downloadingPos);
+        }
+
         int realPosition = position + mDownloadingVideoList.size();
-        notifyItemInserted(realPosition);
+
+        if (isVideoWasInDownloading) {
+            if (downloadingPos == realPosition) {
+                notifyItemChanged(realPosition);
+            } else {
+                notifyItemMoved(downloadingPos, realPosition);
+            }
+        } else {
+            notifyItemInserted(realPosition);
+        }
+
+
     }
 }
