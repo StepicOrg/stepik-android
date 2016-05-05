@@ -32,7 +32,6 @@ import org.stepic.droid.model.Pair;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.view.adapters.SortStepAdapter;
-import org.stepic.droid.view.layout_managers.WrapContentLinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +59,7 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
         mLeftLinearLayout = ButterKnife.findById(view, R.id.leftColumn);
 
         mRecyclerView.setNestedScrollingEnabled(false);
-        mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        LinearLayoutManager layoutManager = new WrapContentLinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         layoutManager.setSmoothScrollbarEnabled(true);
 
         mRecyclerView.setLayoutManager(layoutManager);
@@ -171,7 +169,7 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
         int maxWidth = 0;
         List<String> allTextList = new ArrayList<>(mFirstList);
         for (Option option : mOptionList) {
-            allTextList.add( option.getValue());
+            allTextList.add(option.getValue());
         }
         for (String text : allTextList) {
             header.setText(HtmlHelper.fromHtml(text));

@@ -21,6 +21,8 @@ import org.stepic.droid.receivers.InternetConnectionEnabledReceiver;
 import org.stepic.droid.services.CancelLoadingService;
 import org.stepic.droid.services.DeleteService;
 import org.stepic.droid.services.LoadService;
+import org.stepic.droid.services.UpdateAppService;
+import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.ImageOnDisk;
@@ -34,6 +36,7 @@ import org.stepic.droid.view.adapters.UnitAdapter;
 import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
 import org.stepic.droid.view.dialogs.ClearCacheDialogFragment;
 import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
+import org.stepic.droid.view.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.view.dialogs.VideoQualityDialog;
 import org.stepic.droid.view.fragments.DownloadsFragment;
@@ -95,6 +98,8 @@ public interface StepicCoreComponent {
 
     void inject(DeleteService loadService);
 
+    void inject(UpdateAppService updateAppService);
+
     void inject(DownloadCompleteReceiver downloadCompleteReceiver);
 
     void inject(ImageOnDisk imageOnDisk);
@@ -128,4 +133,8 @@ public interface StepicCoreComponent {
     void inject(StepicGcmListenerService listenerService);
 
     void inject (NotificationBroadcastReceiver receiver);
+
+    void inject(NeedUpdatingDialog needUpdatingDialog);
+
+    void inject(UpdateWithApkService service);
 }

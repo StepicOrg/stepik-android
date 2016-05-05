@@ -2,6 +2,7 @@
 <manifest
     package="org.stepic.droid"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:installLocation="auto">
 
 
@@ -15,12 +16,6 @@
         android:name="android.permission.READ_PHONE_STATE"
         android:maxSdkVersion="22"/>
 
-    <permission
-        android:name="org.stepic.droid.permission.C2D_MESSAGE"
-        android:protectionLevel="signature"/>
-
-    <uses-permission android:name="org.stepic.droid.permission.C2D_MESSAGE"/>
-
     <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
@@ -30,7 +25,9 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="false"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace = "android:allowBackup"
+        >
 
         <activity
             android:name="org.stepic.droid.view.activities.SplashActivity"
@@ -75,7 +72,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.activities.MainFeedActivity"/>
 
-        </activity>
+        </activity>во скольк
 
         <activity
             android:name=".view.activities.UnitsActivity"
@@ -123,6 +120,15 @@
 
         <service
             android:name="org.stepic.droid.services.CancelLoadingService"
+            android:exported="true"/>
+
+        <service
+            android:name="org.stepic.droid.services.UpdateAppService"
+            android:exported="true"/>
+
+
+        <service
+            android:name="org.stepic.droid.services.UpdateWithApkService"
             android:exported="true"/>
 
         <activity

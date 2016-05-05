@@ -17,7 +17,7 @@ public class FileUtil {
         fileOrDirectory.delete();
     }
 
-    public static String saveImageToDisk(String filename, final String urlPath, File root) {
+    public static String saveFileToDisk(String filename, final String urlPath, File root) {
         String filepath = (new File(root, filename)).getPath();
         int count;
         try {

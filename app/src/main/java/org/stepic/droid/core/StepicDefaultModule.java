@@ -49,11 +49,9 @@ import org.stepic.droid.store.dao.UnitDaoImpl;
 import org.stepic.droid.store.dao.ViewAssignmentDaoImpl;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
-import org.stepic.droid.util.resolvers.IMainMenuResolver;
 import org.stepic.droid.util.resolvers.ISearchResolver;
 import org.stepic.droid.util.resolvers.IStepResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
-import org.stepic.droid.util.resolvers.MainMenuResolverImpl;
 import org.stepic.droid.util.resolvers.SearchResolver;
 import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.util.resolvers.VideoResolver;
@@ -82,8 +80,8 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public IScreenManager provideIScreenManager(IConfig config, IMainMenuResolver mainMenuResolver, UserPreferences userPreferences) {
-        return new ScreenManager(config, mainMenuResolver, userPreferences);
+    public IScreenManager provideIScreenManager(IConfig config, UserPreferences userPreferences) {
+        return new ScreenManager(config, userPreferences);
     }
 
     @Provides
@@ -282,12 +280,6 @@ public class StepicDefaultModule {
     @Singleton
     public ICancelSniffer provideCancelSniffer() {
         return new SynchronizedCancelSniffer();
-    }
-
-    @Provides
-    @Singleton
-    public IMainMenuResolver provideResolver() {
-        return new MainMenuResolverImpl();
     }
 
     @Provides

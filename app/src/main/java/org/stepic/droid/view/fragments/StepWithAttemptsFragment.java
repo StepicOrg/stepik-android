@@ -152,12 +152,12 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
             setTextToActionButton(mTryAgainText);
         }
 
-        if (mStep.getActions() != null && mStep.getActions().getDo_review() != null) {
+        if (step.getActions() != null && step.getActions().getDo_review() != null) {
             mPeerReviewIndicator.setVisibility(View.VISIBLE);
             mPeerReviewIndicator.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mShell.getScreenProvider().openStepInWeb(getContext(), mStep);
+                    mShell.getScreenProvider().openStepInWeb(getContext(), step);
                 }
             });
         }
@@ -168,8 +168,8 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
      * @return false if restore was failed;
      */
     protected final boolean tryRestoreState() {
-        mAttempt = mLessonManager.restoreAttemptForStep(mStep.getId());
-        mSubmission = mLessonManager.restoreSubmissionForStep(mStep.getId());
+        mAttempt = mLessonManager.restoreAttemptForStep(step.getId());
+        mSubmission = mLessonManager.restoreSubmissionForStep(step.getId());
         if (mSubmission == null || mAttempt == null) return false;
 
         showAttemptAbstractWrapMethod(mAttempt, true);
@@ -178,8 +178,8 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     }
 
     protected final void getExistingAttempts() {
-        mShell.getApi().getExistingAttempts(mStep.getId()).enqueue(new Callback<AttemptResponse>() {
-            Step localStep = mStep;
+        mShell.getApi().getExistingAttempts(step.getId()).enqueue(new Callback<AttemptResponse>() {
+            Step localStep = step;
 
             @Override
             public void onResponse(Response<AttemptResponse> response, Retrofit retrofit) {
@@ -213,9 +213,9 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
 
     protected final void createNewAttempt() {
-        if (mStep == null) return;
-        mShell.getApi().createNewAttempt(mStep.getId()).enqueue(new Callback<AttemptResponse>() {
-            Step localStep = mStep;
+        if (step == null) return;
+        mShell.getApi().createNewAttempt(step.getId()).enqueue(new Callback<AttemptResponse>() {
+            Step localStep = step;
 
             @Override
             public void onResponse(Response<AttemptResponse> response, Retrofit retrofit) {
@@ -345,7 +345,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
             mSubmission = new Submission(reply, mAttempt.getId(), Submission.Status.LOCAL);
         }
 
-        mLessonManager.saveSession(mStep.getId(), mAttempt, mSubmission);
+        mLessonManager.saveSession(step.getId(), mAttempt, mSubmission);
     }
 
     protected final void showOnlyInternetProblem(boolean isNeedShow) {
@@ -406,15 +406,15 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
 
     protected final void markLocalProgressAsViewed(final Submission submission) {
-        bus.post(new UpdateStepEvent(mStep.getId()));
+        bus.post(new UpdateStepEvent(step.getId()));
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            long stepId = mStep.getId();
+            long stepId = step.getId();
 
             protected Void doInBackground(Void... params) {
                 long assignmentId = mDatabaseFacade.getAssignmentIdByStepId(stepId);
                 mDatabaseFacade.markProgressAsPassed(assignmentId);
                 mLocalProgressManager.checkUnitAsPassed(stepId);
-                mLocalProgressManager.updateUnitProgress(mUnit.getId());
+                mLocalProgressManager.updateUnitProgress(unit.getId());
                 return null;
             }
         };
@@ -453,7 +453,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     private void showAttemptAbstractWrapMethod(Attempt attempt, boolean isCreatedAttempt) {
         showAttempt(attempt);
-        if (mLessonManager.restoreSubmissionForStep(mStep.getId()) == null && !isCreatedAttempt) {
+        if (mLessonManager.restoreSubmissionForStep(step.getId()) == null && !isCreatedAttempt) {
             getStatusOfSubmission(attempt.getId());//fill last server submission if exist
         } else {
             showLoadState(false);
@@ -498,7 +498,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     @Subscribe
     public void onSuccessLoadAttempt(SuccessAttemptEvent e) {
-        if (mStep == null || e.getStepId() != mStep.getId() || e.getAttempt() == null) return;
+        if (step == null || e.getStepId() != step.getId() || e.getAttempt() == null) return;
 
         showAttemptAbstractWrapMethod(e.getAttempt(), e.isJustCreated());
         mAttempt = e.getAttempt();
@@ -506,7 +506,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     @Subscribe
     public void onFailCreateAttemptEvent(FailAttemptEvent event) {
-        if (mStep == null || event.getStepId() != mStep.getId()) return;
+        if (step == null || event.getStepId() != step.getId()) return;
         showOnlyInternetProblem(true);
     }
 

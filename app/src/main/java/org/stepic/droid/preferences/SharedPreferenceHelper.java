@@ -26,6 +26,7 @@ import javax.inject.Singleton;
 @Singleton
 public class SharedPreferenceHelper {
     private static final String NOTIFICATION_SOUND_DISABLED = "notification_sound";
+    private static final String TEMP_UPDATE_LINK = "temp_update_link";
     private Context mContext;
 
     @Inject
@@ -163,6 +164,15 @@ public class SharedPreferenceHelper {
         put(PreferenceType.TEMP, TEMP_POSITION_KEY, position);
     }
 
+    public void storeTempLink(String link) {
+        put(PreferenceType.TEMP, TEMP_UPDATE_LINK, link);
+    }
+
+    public String getTempLink () {
+        return getString(PreferenceType.TEMP, TEMP_UPDATE_LINK);
+    }
+
+
     public int getTempPosition() {
         return getInt(PreferenceType.TEMP, TEMP_POSITION_KEY);
     }
@@ -185,6 +195,17 @@ public class SharedPreferenceHelper {
         DateTime now = DateTime.now(DateTimeZone.UTC);
         long millisNow = now.getMillis();
         put(PreferenceType.LOGIN, ACCESS_TOKEN_TIMESTAMP, millisNow);
+    }
+
+    public void storeLastShownUpdatingMessage() {
+        DateTime now = DateTime.now(DateTimeZone.UTC);
+        long millisNow = now.getMillis();
+        put(PreferenceType.DEVICE_SPECIFIC, UPDATING_TIMESTAMP, millisNow);
+    }
+
+    public long getLastShownUpdatingMessageTimestamp() {
+        long timestamp = getLong(PreferenceType.DEVICE_SPECIFIC, UPDATING_TIMESTAMP);
+        return timestamp;
     }
 
     public void storeLastTokenType(boolean isSocial) {
@@ -276,6 +297,7 @@ public class SharedPreferenceHelper {
     }
 
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
+    private final String UPDATING_TIMESTAMP = "updating_timestamp";
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
     private final String PROFILE_JSON = "profile_json";
     private final String EMAIL_LIST = "email_list";

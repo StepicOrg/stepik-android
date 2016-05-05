@@ -12,5 +12,7 @@
   "REDIRECT_URI": "stepic://stepic.org/oauth",
   "ARRAY_IDS_PARAM": "ids[]",
   "ZENDESK_HOST": "https://stepic.zendesk.com",
-  "COURSE_CLOSEABLE":true
+  "COURSE_CLOSEABLE":true,
+  "CUSTOM_UPDATE":true,
+  "UPDATE_ENDPOINT":"media/attachments/lesson/26968/custom_app_update.json"
 }

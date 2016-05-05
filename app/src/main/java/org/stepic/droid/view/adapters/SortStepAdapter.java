@@ -16,6 +16,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Option;
 import org.stepic.droid.util.HtmlHelper;
+import org.stepic.droid.view.custom.LatexSupportableWebView;
 import org.stepic.droid.view.custom.dragsortadapter.DragSortAdapter;
 import org.stepic.droid.view.custom.dragsortadapter.NoForegroundShadowBuilder;
 
@@ -95,7 +96,12 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
             holder.mContainer.getLayoutParams().height = height;
 //            holder.mOptionText.setLines((mWidth / halfScreen) + 1);
         }
-        holder.mOptionText.setText(HtmlHelper.fromHtml(mItemIdOptionMap.get(itemId).getValue()).toString());
+
+        if (!isMatching) {
+            holder.enhancedText.setText(HtmlHelper.fromHtml(mItemIdOptionMap.get(itemId).getValue()).toString());
+        } else {
+            holder.mOptionText.setText(HtmlHelper.fromHtml(mItemIdOptionMap.get(itemId).getValue()).toString());
+        }
         // NOTE: check for getDraggingId() match to set an "invisible space" while dragging
         holder.mContainer.setVisibility(getDraggingId() == itemId ? View.INVISIBLE : View.VISIBLE);
         holder.mContainer.postInvalidate();
@@ -132,15 +138,24 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
         private final boolean mIsMatching;
         @Bind(R.id.container)
         ViewGroup mContainer;
-        @Bind(R.id.option_text)
+
         TextView mOptionText;
         @Bind(R.id.sort_icon)
         View mSortImageView;
+
+        LatexSupportableWebView enhancedText;
+
 
         public OptionViewHolder(DragSortAdapter adapter, View itemView, boolean isMatching) {
             super(adapter, itemView);
             mIsMatching = isMatching;
             ButterKnife.bind(this, itemView);
+            //// FIXME: 26.04.16 refactor this
+            if (mIsMatching) {
+                mOptionText = (TextView) itemView.findViewById(R.id.option_text);
+            } else {
+                enhancedText = (LatexSupportableWebView) itemView.findViewById(R.id.option_text);
+            }
             mSortImageView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {

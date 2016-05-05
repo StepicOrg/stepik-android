@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="top">
-    <WebView
+    <org.stepic.droid.view.custom.LatexSupportableWebView
         android:id="@+id/text_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

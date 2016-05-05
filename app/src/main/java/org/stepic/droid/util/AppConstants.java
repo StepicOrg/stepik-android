@@ -12,14 +12,14 @@ public class AppConstants {
     public static final String DEFAULT_QUALITY = "360";
     public static final String PRE_BODY = "<html>\n" +
             "<head>\n" +
-            "<title>Step. Stepic.org</title>\n" +
+            "<title>Step</title>\n" +
             "<script type=\"text/x-mathjax-config\">\n" +
             "  MathJax.Hub.Config({" +
             "messageStyle: \"none\", " +
             "tex2jax: {preview: \"none\", inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
             "</script>\n" +
             "<script type=\"text/javascript\"\n" +
-            " src=\"http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML\">\n" +
+            " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full\">\n" +
             "</script>\n" +
 
             "<style>\n" +
@@ -98,10 +98,14 @@ public class AppConstants {
     public static final java.lang.String SEARCH = "search courses";
     public static final java.lang.String METRICA_LESSON_IN_STORE_STATE_NULL = "lesson was null in store state manager";
     public static final java.lang.String METRICA_UNIT_IN_STORE_STATE_NULL = "unit was null in store state manager";
-    public static final java.lang.String THUMBNAIL_POSTFIX_EXTENSION= ".png";
-    public static final java.lang.String DELIMITER_TEXT_SCORE= "/";
+    public static final java.lang.String THUMBNAIL_POSTFIX_EXTENSION = ".png";
+    public static final java.lang.String DELIMITER_TEXT_SCORE = "/";
     public static final java.lang.String NOTIFICATION_CANCELED = "notification_cancelled";
+    public static final java.lang.String UPDATING_MESSAGE_IS_SHOWN = "updating shown";
+    public static final java.lang.String UPDATING_MESSAGE_IS_APPROVED = "updating approved";
 
 
     public static final String OPEN_NOTIFICATION = "Open_notification";
+    public static final long MILLIS_IN_24HOURS = 86400000L;
+
 }

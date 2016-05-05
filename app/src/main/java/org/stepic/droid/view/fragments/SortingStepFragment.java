@@ -24,7 +24,6 @@ import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Option;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.view.adapters.SortStepAdapter;
-import org.stepic.droid.view.layout_managers.WrapContentLinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +46,7 @@ public class SortingStepFragment extends StepWithAttemptsFragment {
         mRecyclerView = ButterKnife.findById(view, R.id.recycler);
 
         mRecyclerView.setNestedScrollingEnabled(false);
-        mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        LinearLayoutManager layoutManager = new WrapContentLinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         layoutManager.setSmoothScrollbarEnabled(true);
 
         mRecyclerView.setLayoutManager(layoutManager);

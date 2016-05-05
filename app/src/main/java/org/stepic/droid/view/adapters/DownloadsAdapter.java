@@ -5,10 +5,12 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -17,6 +19,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.model.CachedVideo;
+import org.stepic.droid.model.DownloadingVideoItem;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.store.CleanManager;
@@ -24,12 +27,14 @@ import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ThumbnailParser;
 import org.stepic.droid.view.fragments.DownloadsFragment;
+import org.stepic.droid.view.listeners.OnClickCancelListener;
 import org.stepic.droid.view.listeners.OnClickLoadListener;
 import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
@@ -38,11 +43,15 @@ import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
-public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.DownloadsViewHolder> implements StepicOnClickItemListener, OnClickLoadListener {
+public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.GenericViewHolder> implements StepicOnClickItemListener, OnClickLoadListener, OnClickCancelListener {
+
+    public static final int TYPE_DOWNLOADING_VIDEO = 1;
+    public static final int TYPE_DOWNLOADED_VIDEO = 2;
 
     private List<CachedVideo> mCachedVideoList;
     private Activity sourceActivity;
     private Map<Long, Lesson> mStepIdToLessonMap;
+    final private List<DownloadingVideoItem> mDownloadingVideoList;
 
     @Inject
     CleanManager mCleanManager;
@@ -51,73 +60,46 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
     DatabaseFacade mDatabaseFacade;
     @Inject
     IScreenManager mScreenManager;
+
+    @Inject
+    ThreadPoolExecutor threadPoolExecutor;
+
     private DownloadsFragment downloadsFragment;
 
-    public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Activity context, DownloadsFragment downloadsFragment) {
+    public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Activity context, DownloadsFragment downloadsFragment, List<DownloadingVideoItem> downloadingList) {
         this.downloadsFragment = downloadsFragment;
         MainApplication.component().inject(this);
         mCachedVideoList = cachedVideos;
         sourceActivity = context;
         mStepIdToLessonMap = videoIdToStepMap;
+        mDownloadingVideoList = downloadingList;
     }
 
     @Override
-    public DownloadsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(sourceActivity).inflate(R.layout.cached_video_item, null);
-        return new DownloadsViewHolder(v, this, this);
+    public GenericViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == TYPE_DOWNLOADED_VIDEO) {
+            View v = LayoutInflater.from(sourceActivity).inflate(R.layout.cached_video_item, null);
+            return new DownloadsViewHolder(v, this, this);
+        } else if (viewType == TYPE_DOWNLOADING_VIDEO) {
+            View v = LayoutInflater.from(sourceActivity).inflate(R.layout.downloading_video_item, null);
+            return new DownloadingViewHolder(v, this);
+        } else {
+            return null;
+        }
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (position >= mDownloadingVideoList.size()) {
+            return TYPE_DOWNLOADED_VIDEO;
+        } else {
+            return TYPE_DOWNLOADING_VIDEO;
+        }
+    }
 
     @Override
-    public void onBindViewHolder(DownloadsViewHolder holder, int position) {
-        CachedVideo cachedVideo = mCachedVideoList.get(position);
-
-
-        holder.loadActionIcon.setVisibility(View.GONE);
-        holder.progressIcon.setVisibility(View.GONE);
-        holder.deleteIcon.setVisibility(View.VISIBLE);
-
-        String thumbnail = cachedVideo.getThumbnail();
-        if (thumbnail != null) {
-            Uri uriForThumbnail = ThumbnailParser.getUriForThumbnail(thumbnail);
-            Picasso.with(MainApplication.getAppContext())
-                    .load(uriForThumbnail)
-                    .placeholder(holder.placeholder)
-                    .error(holder.placeholder)
-                    .into(holder.mVideoIcon);
-        } else {
-            Picasso.with(MainApplication.getAppContext())
-                    .load(R.drawable.video_placeholder)
-                    .placeholder(holder.placeholder)
-                    .error(holder.placeholder)
-                    .into(holder.mVideoIcon);
-        }
-
-        Lesson relatedLesson = mStepIdToLessonMap.get(cachedVideo.getStepId());
-        if (relatedLesson != null) {
-            String header = relatedLesson.getTitle();
-            holder.mVideoHeader.setText(header);
-        } else {
-            holder.mVideoHeader.setText("");
-        }
-        File file = new File(cachedVideo.getUrl()); // predict: heavy operation
-        long size = FileUtil.getFileOrFolderSizeInKb(file);
-        String sizeString;
-        if (size < 1024) {
-            sizeString = size + " " + holder.kb;
-        } else {
-            size /= 1024;
-            sizeString = size + " " + holder.mb;
-        }
-        holder.mSize.setText(sizeString);
-
-        String quality = cachedVideo.getQuality();
-        if (quality == null || quality.length() == 0) {
-            holder.mCurrentQuality.setText("");
-        } else {
-            quality += "p";
-            holder.mCurrentQuality.setText(quality);
-        }
+    public void onBindViewHolder(GenericViewHolder holder, int position) {
+        holder.setDataOnView(position);
 
     }
 
@@ -154,13 +136,92 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
                     mCleanManager.removeStep(step);
                 }
             };
-            task.execute();
+            task.executeOnExecutor(threadPoolExecutor);
             downloadsFragment.checkForEmpty();
             notifyItemRemoved(position);
         }
     }
 
-    public static class DownloadsViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public void onClickCancel(int position) {
+        if (position >= 0 && position < mDownloadingVideoList.size()) {
+            Log.d("eee", "click cancel " + position);
+        }
+    }
+
+    public class DownloadingViewHolder extends GenericViewHolder {
+        @Bind(R.id.cancel_load)
+        View cancelLoad;
+
+        @Bind(R.id.video_header)
+        TextView mVideoHeader;
+
+        @Bind(R.id.video_icon)
+        ImageView mVideoIcon;
+
+        @BindDrawable(R.drawable.video_placeholder)
+        Drawable placeholder;
+
+        @Bind(R.id.video_downloading_progress_bar)
+        ProgressBar downloadingProgressBar;
+
+        @Bind(R.id.progress_text)
+        TextView progressTextView;
+
+        @BindString(R.string.kb)
+        String kb;
+
+        @BindString(R.string.mb)
+        String mb;
+
+        public DownloadingViewHolder(View itemView, final OnClickCancelListener cancelListener) {
+            super(itemView);
+
+            ButterKnife.bind(this, itemView);
+            cancelLoad.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cancelListener.onClickCancel(getAdapterPosition());
+                }
+            });
+        }
+
+        @Override
+        public void setDataOnView(int position) {
+            DownloadingVideoItem downloadingVideoItem = mDownloadingVideoList.get(position);
+
+            String thumbnail = downloadingVideoItem.getDownloadEntity().getThumbnail();
+            if (thumbnail != null) {
+                Uri uriForThumbnail = ThumbnailParser.getUriForThumbnail(thumbnail);
+                Picasso.with(MainApplication.getAppContext())
+                        .load(uriForThumbnail)
+                        .placeholder(placeholder)
+                        .error(placeholder)
+                        .into(mVideoIcon);
+            } else {
+                Picasso.with(MainApplication.getAppContext())
+                        .load(R.drawable.video_placeholder)
+                        .placeholder(placeholder)
+                        .error(placeholder)
+                        .into(mVideoIcon);
+            }
+
+            Lesson relatedLesson = mStepIdToLessonMap.get(downloadingVideoItem.getDownloadEntity().getStepId());
+            if (relatedLesson != null) {
+                String header = relatedLesson.getTitle();
+                mVideoHeader.setText(header);
+            } else {
+                mVideoHeader.setText("");
+            }
+
+
+            // TODO: 04.05.16 set text view with progress
+            downloadingProgressBar.setMax(downloadingVideoItem.getDownloadReportItem().getMBytesTotal());
+            downloadingProgressBar.setProgress(downloadingVideoItem.getDownloadReportItem().getMBytesDownloaded());
+        }
+    }
+
+    public class DownloadsViewHolder extends GenericViewHolder {
 
         @Bind(R.id.current_quality)
         TextView mCurrentQuality;
@@ -202,18 +263,77 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
 
                 @Override
                 public void onClick(View v) {
-                    click.onClick(getAdapterPosition());
+                    click.onClick(getAdapterPosition() - mDownloadingVideoList.size());
                 }
             });
 
             mLoadRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    loadListener.onClickLoad(getAdapterPosition());
+                    loadListener.onClickLoad(getAdapterPosition() - mDownloadingVideoList.size());
                 }
             });
-
-
         }
+
+        @Override
+        public void setDataOnView(int position) {
+            CachedVideo cachedVideo = mCachedVideoList.get(position - mDownloadingVideoList.size());
+
+
+            loadActionIcon.setVisibility(View.GONE);
+            progressIcon.setVisibility(View.GONE);
+            deleteIcon.setVisibility(View.VISIBLE);
+
+            String thumbnail = cachedVideo.getThumbnail();
+            if (thumbnail != null) {
+                Uri uriForThumbnail = ThumbnailParser.getUriForThumbnail(thumbnail);
+                Picasso.with(MainApplication.getAppContext())
+                        .load(uriForThumbnail)
+                        .placeholder(placeholder)
+                        .error(placeholder)
+                        .into(mVideoIcon);
+            } else {
+                Picasso.with(MainApplication.getAppContext())
+                        .load(R.drawable.video_placeholder)
+                        .placeholder(placeholder)
+                        .error(placeholder)
+                        .into(mVideoIcon);
+            }
+
+            Lesson relatedLesson = mStepIdToLessonMap.get(cachedVideo.getStepId());
+            if (relatedLesson != null) {
+                String header = relatedLesson.getTitle();
+                mVideoHeader.setText(header);
+            } else {
+                mVideoHeader.setText("");
+            }
+            File file = new File(cachedVideo.getUrl()); // predict: heavy operation
+            long size = FileUtil.getFileOrFolderSizeInKb(file);
+            String sizeString;
+            if (size < 1024) {
+                sizeString = size + " " + kb;
+            } else {
+                size /= 1024;
+                sizeString = size + " " + mb;
+            }
+            mSize.setText(sizeString);
+
+            String quality = cachedVideo.getQuality();
+            if (quality == null || quality.length() == 0) {
+                mCurrentQuality.setText("");
+            } else {
+                quality += "p";
+                mCurrentQuality.setText(quality);
+            }
+        }
+    }
+
+    public abstract class GenericViewHolder extends RecyclerView.ViewHolder {
+
+        public GenericViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        public abstract void setDataOnView(int position);
     }
 }

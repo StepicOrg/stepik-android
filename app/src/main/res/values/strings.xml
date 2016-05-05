@@ -127,6 +127,10 @@
     <string name="vibration_title">Vibration</string>
     <string name="empty_try_later">Now here is empty, try again later.</string>
     <string name="sound_title">Sound</string>
+    <string name="update_available_title">New version is available</string>
+    <string name="update_now">Update</string>
+    <string name="update_later">Later</string>
+    <string name="instructors">Instructors</string>
     <plurals name="notification_plural">
         <item quantity="one">%d new notification</item>
         <item quantity="other">%d new notifications</item>

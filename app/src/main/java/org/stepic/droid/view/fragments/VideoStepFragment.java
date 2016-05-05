@@ -55,11 +55,11 @@ public class VideoStepFragment extends StepBaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //// FIXME: 16.10.15 assert not null step, block, video
-        mHeaderWv.setVisibility(View.GONE);
+        headerWv.setVisibility(View.GONE);
 
         String thumbnail = "";
-        if (mStep.getBlock() != null && mStep.getBlock().getVideo() != null && mStep.getBlock().getVideo().getThumbnail() != null) {
-            thumbnail = mStep.getBlock().getVideo().getThumbnail();
+        if (step.getBlock() != null && step.getBlock().getVideo() != null && step.getBlock().getVideo().getThumbnail() != null) {
+            thumbnail = step.getBlock().getVideo().getThumbnail();
             setThumbnail(thumbnail);
 
         } else {
@@ -70,13 +70,13 @@ public class VideoStepFragment extends StepBaseFragment {
                     .into(mThumbnail);
         }
 
-        if (mStep.getBlock().getVideo() == null) {
+        if (step.getBlock().getVideo() == null) {
             AsyncTask<Void, Void, VideoLoadedEvent> resolveTask = new AsyncTask<Void, Void, VideoLoadedEvent>() {
                 @Override
                 protected VideoLoadedEvent doInBackground(Void... params) {
                     //if in database not valid step (when video is loading, step has null download reference to video)
                     //try to load from web this step with many references:
-                    long stepId = mStep.getId();
+                    long stepId = step.getId();
                     long stepArray[] = new long[]{stepId};
                     try {
                         List<Step> steps = mShell.getApi().getSteps(stepArray).execute().body().getSteps();
@@ -107,7 +107,7 @@ public class VideoStepFragment extends StepBaseFragment {
 
         }
         mPlayer.setOnClickListener(new View.OnClickListener() {
-            Step localStep = mStep;
+            Step localStep = step;
 
             @Override
             public void onClick(View v) {
@@ -144,7 +144,7 @@ public class VideoStepFragment extends StepBaseFragment {
 
     @Subscribe
     public void onVideoLoaded(VideoLoadedEvent e) {
-        if (e.getStepId() != mStep.getId()) return;
+        if (e.getStepId() != step.getId()) return;
 
         setThumbnail(e.getThumbnail());
         tempVideoUrl = e.getVideoUrl();
@@ -161,7 +161,7 @@ public class VideoStepFragment extends StepBaseFragment {
 
     @Subscribe
     public void onVideoResolved(VideoResolvedEvent e) {
-        if (e.getStepId() != mStep.getId()) return;
+        if (e.getStepId() != step.getId()) return;
         mShell.getScreenProvider().showVideo(getActivity(), e.getPathToVideo());
     }
 

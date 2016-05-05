@@ -8,6 +8,7 @@
     android:layout_height="wrap_content"
     android:minHeight="@dimen/option_height"
     android:orientation="vertical"
+    app:cardBackgroundColor="@color/default_option_color"
     app:cardUseCompatPadding="true">
 
     <LinearLayout

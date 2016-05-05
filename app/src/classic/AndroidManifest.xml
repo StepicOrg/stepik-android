@@ -4,6 +4,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:installLocation="auto">
 
+    <permission
+        android:name="org.stepic.droid.permission.C2D_MESSAGE"
+        android:protectionLevel="signature"/>
+
+    <uses-permission android:name="org.stepic.droid.permission.C2D_MESSAGE"/>
+
     <application
         android:allowBackup="false">
 

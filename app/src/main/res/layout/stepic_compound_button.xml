@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:id="@+id/rel_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:paddingEnd="@dimen/padding_left_right_list_item"
+        android:paddingLeft="@dimen/padding_left_right_list_item"
+        android:paddingRight="@dimen/padding_left_right_list_item"
+        android:paddingStart="@dimen/padding_left_right_list_item">
+
+        <ImageView
+            android:id="@+id/image_compound_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            tools:src="@drawable/ic_radio_button_checked_white_24px" />
+
+        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+            android:id="@+id/load_progressbar"
+            style="@style/Widget.MaterialProgressBar.ProgressBar.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/image_compound_button"
+            android:indeterminate="true"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <org.stepic.droid.view.custom.LatexSupportableWebView
+            android:id="@+id/text_compound_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_toRightOf="@id/image_compound_button"
+
+            tools:text="The first option" />
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="@color/silver" />
+
+
+    <FrameLayout
+        android:id="@+id/rippleFrameLayoutInOption"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:foreground="@drawable/non_radius_foreground" />
+</merge>

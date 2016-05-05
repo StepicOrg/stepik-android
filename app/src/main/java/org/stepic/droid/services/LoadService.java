@@ -176,7 +176,7 @@ public class LoadService extends IntentService {
 
                     long downloadId = mSystemDownloadManager.enqueue(request);
                 String local_thumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
-                String thumbnailsPath = FileUtil.saveImageToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getUserDownloadFolder());
+                String thumbnailsPath = FileUtil.saveFileToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getUserDownloadFolder());
                 final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, videoQuality);
                 mDb.addDownloadEntity(newEntity);
             }

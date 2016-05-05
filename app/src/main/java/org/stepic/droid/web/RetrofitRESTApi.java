@@ -79,6 +79,7 @@ public class RetrofitRESTApi implements IApi {
     private StepicRestOAuthService mOAuthService;
     private StepicEmptyAuthService mStepicEmptyAuthService;
     private StepicZendeskEmptyAuthService mZendeskAuthService;
+    private final OkHttpClient okHttpClient = new OkHttpClient();
 
 
     public RetrofitRESTApi() {
@@ -107,6 +108,7 @@ public class RetrofitRESTApi implements IApi {
 //                .build();
 //        mZendeskAuthService = retrofit.create(StepicZendeskEmptyAuthService.class);
 //    }
+
 
     private void makeLoggedService() {
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -518,7 +520,7 @@ public class RetrofitRESTApi implements IApi {
         String encodedSubject = URLEncoder.encode(subject);
         String aboutSystem = DeviceInfoUtil.getInfosAboutDevice(MainApplication.getAppContext());
         String encodedSystem = URLEncoder.encode(aboutSystem);
-        return tempService.sendFeedback(encodedSubject, encodedEmail, encodedSystem, encodedDescription, "www.stepic.org");
+        return tempService.sendFeedback(encodedSubject, encodedEmail, encodedSystem, encodedDescription, mConfig.getBaseUrl());
     }
 
     @Override
@@ -554,6 +556,19 @@ public class RetrofitRESTApi implements IApi {
     @Override
     public Call<Void> removeDevice(long deviceId) {
         return mLoggedService.removeDevice(deviceId);
+    }
+
+    @Override
+    public UpdateResponse getInfoForUpdating() throws IOException {
+        Request request = new Request.Builder()
+                .url(mConfig.getBaseUrl() + "/" + mConfig.getUpdateEndpoint())
+                .build();
+
+        String jsonString = okHttpClient.newCall(request).execute().body().string();
+
+        Gson gson = new Gson();
+        UpdateResponse response = gson.fromJson(jsonString, UpdateResponse.class);
+        return response;
     }
 
     @Nullable

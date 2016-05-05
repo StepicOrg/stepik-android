@@ -14,10 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -48,7 +50,6 @@ import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.ThumbnailParser;
 import org.stepic.droid.view.adapters.CoursePropertyAdapter;
 import org.stepic.droid.view.adapters.InstructorAdapter;
-import org.stepic.droid.view.layout_managers.WrapContentLinearLayoutManager;
 import org.stepic.droid.web.UserStepicResponse;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class CourseDetailFragment extends FragmentBase {
-    
+
     public static CourseDetailFragment newInstance(Course course) {
         Bundle args = new Bundle();
         args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
@@ -170,6 +171,15 @@ public class CourseDetailFragment extends FragmentBase {
         getActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         hideSoftKeypad();
         setUpIntroVideo();
+
+        mUserList = new ArrayList<>();
+        mInstructorAdapter = new InstructorAdapter(mUserList, getActivity());
+        mInstructorsCarousel.setAdapter(mInstructorAdapter);
+
+        RecyclerView.LayoutManager layoutManager =
+                new LinearLayoutManager(getActivity(),
+                        LinearLayoutManager.HORIZONTAL, false);//// TODO: 30.09.15 determine right-to-left-mode
+        mInstructorsCarousel.setLayoutManager(layoutManager);
     }
 
     @Override
@@ -191,16 +201,11 @@ public class CourseDetailFragment extends FragmentBase {
             });
         }
 
-        mUserList = new ArrayList<>();
-        mInstructorAdapter = new InstructorAdapter(mUserList, getActivity());
-        mInstructorsCarousel.setAdapter(mInstructorAdapter);
+        bus.register(this);
+        fetchInstructors();
+    }
 
-        RecyclerView.LayoutManager layoutManager =
-                new WrapContentLinearLayoutManager(getActivity(),
-                        LinearLayoutManager.HORIZONTAL, false);//// TODO: 30.09.15 determine right-to-left-mode
-        mInstructorsCarousel.setLayoutManager(layoutManager);
-
-
+    private void fetchInstructors() {
         if (mCourse.getInstructors() != null && mCourse.getInstructors().length != 0) {
             bus.post(new StartLoadingInstructorsEvent(mCourse));
             mShell.getApi().getUsers(mCourse.getInstructors()).enqueue(new Callback<UserStepicResponse>() {
@@ -215,7 +220,6 @@ public class CourseDetailFragment extends FragmentBase {
                 }
             });
         }
-        bus.register(this);
     }
 
     private void setUpIntroVideo() {
@@ -287,8 +291,35 @@ public class CourseDetailFragment extends FragmentBase {
 
             mUserList.clear();
             mUserList.addAll(users);
+
+            mInstructorsCarousel.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    mInstructorsCarousel.getViewTreeObserver().removeOnPreDrawListener(this);
+                    centeringRecycler();
+                    return true;
+                }
+            });
+
             mInstructorAdapter.notifyDataSetChanged();
+
             ProgressHelper.dismiss(mInstructorsProgressBar);
+        }
+    }
+
+    private void centeringRecycler() {
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int widthOfScreen = size.x;
+
+
+        int widthOfAllItems = mInstructorsCarousel.getMeasuredWidth();
+        Log.d("eee", "width of screen " + widthOfScreen);
+        Log.d("eee", "width of Items " + widthOfAllItems);
+        if (widthOfScreen > widthOfAllItems) {
+            int padding = (int) (widthOfScreen - widthOfAllItems) / 2;
+            mInstructorsCarousel.setPadding(padding, 0, padding, 0);
         }
     }
 
@@ -310,14 +341,14 @@ public class CourseDetailFragment extends FragmentBase {
     public void onStop() {
         super.onStop();
         bus.unregister(this);
-        mInstructorAdapter = null;
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroyView() {
         mIntroView.destroy();
         mIntroView = null;
-        super.onDestroy();
+        mInstructorAdapter = null;
+        super.onDestroyView();
         mCourse = null;
     }
 
