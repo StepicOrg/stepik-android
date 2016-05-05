@@ -298,7 +298,7 @@ public class DownloadsFragment extends FragmentBase {
         isLoaded = true;
         ProgressHelper.dismiss(mProgressBar);
         if (videosForShowing == null || map == null) return;
-        mStepIdToLesson.clear();
+        mStepIdToLesson.clear(); // FIXME: 05.05.16 really need?
         mStepIdToLesson.putAll(map);
         mCachedVideoList.clear();
         mCachedVideoList.addAll(videosForShowing);
@@ -441,7 +441,7 @@ public class DownloadsFragment extends FragmentBase {
 
     public void checkForEmpty() {
         //// FIXME: 14.12.15 add to notify methods
-        if (!mCachedVideoList.isEmpty()) {
+        if (!mCachedVideoList.isEmpty() || !mDownloadingWithProgressList.isEmpty()) {
             ProgressHelper.dismiss(mProgressBar);
             mEmptyDownloadView.setVisibility(View.GONE);
         } else {
