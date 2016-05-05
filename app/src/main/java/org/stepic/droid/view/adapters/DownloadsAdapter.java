@@ -143,7 +143,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             };
             task.executeOnExecutor(threadPoolExecutor);
             downloadsFragment.checkForEmpty();
-            notifyItemRemoved(position);
+            notifyItemRemoved(position + mDownloadingVideoList.size());
         }
     }
 

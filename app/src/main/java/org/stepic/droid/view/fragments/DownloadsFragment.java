@@ -66,6 +66,7 @@ import kotlin.jvm.functions.Function0;
 
 public class DownloadsFragment extends FragmentBase {
 
+    private static final int ANIMATION_DURATION = 100; //reset to 10 after debug
     private static final int UPDATE_DELAY  = 300;
 
     public static DownloadsFragment newInstance() {
@@ -121,9 +122,9 @@ public class DownloadsFragment extends FragmentBase {
 
         mDownloadsView.setLayoutManager(new LinearLayoutManager(getContext()));
         mDownloadsView.setItemAnimator(new SlideInRightAnimator());
-        mDownloadsView.getItemAnimator().setRemoveDuration(10);
-        mDownloadsView.getItemAnimator().setAddDuration(10);
-        mDownloadsView.getItemAnimator().setMoveDuration(10);
+        mDownloadsView.getItemAnimator().setRemoveDuration(ANIMATION_DURATION);
+        mDownloadsView.getItemAnimator().setAddDuration(ANIMATION_DURATION);
+        mDownloadsView.getItemAnimator().setMoveDuration(ANIMATION_DURATION);
 
         if (isLoaded) {
             checkForEmpty();
@@ -430,7 +431,7 @@ public class DownloadsFragment extends FragmentBase {
     @Subscribe
     public void onStepRemoved(StepRemovedEvent e) {
         long stepId = e.getStepId();
-
+        if (!cachedStepsSet.contains(stepId)) return;
         int position = removeByStepId(stepId);
 
         if (position >= 0) {
