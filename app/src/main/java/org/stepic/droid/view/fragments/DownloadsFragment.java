@@ -256,11 +256,11 @@ public class DownloadsFragment extends FragmentBase {
 
         if (position >= 0) {
             mDownloadingWithProgressList.get(position).setDownloadReportItem(item.getDownloadReportItem());
-            mDownloadAdapter.notifyItemChanged(position); // TODO: 04.05.16 change to method update in adapter
+            mDownloadAdapter.notifyDownloadingVideoChanged(position); // TODO: 04.05.16 change to method update in adapter
         } else {
             mDownloadingWithProgressList.add(item);
             checkForEmpty();
-            mDownloadAdapter.notifyItemInserted(mDownloadingWithProgressList.size() - 1); // TODO: 04.05.16 change to method update in adapter
+            mDownloadAdapter.notifyDownloadingItemInserted(mDownloadingWithProgressList.size() - 1); // TODO: 04.05.16 change to method update in adapter
         }
     }
 

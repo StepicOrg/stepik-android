@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -89,6 +90,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         } else if (viewType == TYPE_DOWNLOADING_VIDEO) {
             View v = LayoutInflater.from(sourceActivity).inflate(R.layout.downloading_video_item, null);
             return new DownloadingViewHolder(v, this);
+        } else if (viewType == TYPE_TITLE) {
+            View v = LayoutInflater.from(sourceActivity).inflate(R.layout.header_download_item, null);
+            return new TitleViewHolder(v);
         } else {
             return null;
         }
@@ -96,12 +100,15 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Override
     public int getItemViewType(int position) {
-        if (position >= mDownloadingVideoList.size()) {
+        if (!mDownloadingVideoList.isEmpty() && position == 0) {
+            return TYPE_TITLE;
+        } else if (position >= mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1)) {
             return TYPE_DOWNLOADED_VIDEO;
         } else {
             return TYPE_DOWNLOADING_VIDEO;
         }
     }
+
 
     @Override
     public void onBindViewHolder(GenericViewHolder holder, int position) {
@@ -110,7 +117,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Override
     public int getItemCount() {
-        return mCachedVideoList.size() + mDownloadingVideoList.size();
+        final int countOnRecycler = mCachedVideoList.size() + mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1);
+        return countOnRecycler;
     }
 
     @Override
@@ -157,13 +165,14 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     }
 
     public void notifyCachedVideoRemoved(int position) {
-        notifyItemRemoved(position + mDownloadingVideoList.size());
+
+        notifyItemRemoved(position + mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1));
     }
 
     public class DownloadingViewHolder extends GenericViewHolder {
+
         @Bind(R.id.cancel_load)
         View cancelLoad;
-
         @Bind(R.id.video_header)
         TextView mVideoHeader;
 
@@ -195,12 +204,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         String downloadPending;
 
         Drawable indeterminateDrawable;
+
         Drawable finiteDrawable;
 
         public DownloadingViewHolder(View itemView, final OnClickCancelListener cancelListener) {
             super(itemView);
 
-            ButterKnife.bind(this, itemView);
             cancelLoad.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -214,7 +223,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         @Override
         public void setDataOnView(int position) {
-            DownloadingVideoItem downloadingVideoItem = mDownloadingVideoList.get(position);
+            DownloadingVideoItem downloadingVideoItem = mDownloadingVideoList.get(position - 1);//here downloading list shoudn't be empty!
 
             String thumbnail = downloadingVideoItem.getDownloadEntity().getThumbnail();
             if (thumbnail != null) {
@@ -282,6 +291,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
                 stringBuilder.append(mb);
             }
         }
+
     }
 
     public class DownloadsViewHolder extends GenericViewHolder {
@@ -321,7 +331,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         public DownloadsViewHolder(View itemView, final StepicOnClickItemListener click, final OnClickLoadListener loadListener) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+
             itemView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -340,7 +350,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         @Override
         public void setDataOnView(int position) {
-            CachedVideo cachedVideo = mCachedVideoList.get(position - mDownloadingVideoList.size());
+            CachedVideo cachedVideo = mCachedVideoList.get(position - mDownloadingVideoList.size() - (mDownloadingVideoList.isEmpty() ? 0 : 1));
 
 
             loadActionIcon.setVisibility(View.GONE);
@@ -389,15 +399,47 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
                 mCurrentQuality.setText(quality);
             }
         }
+
+    }
+
+    public class TitleViewHolder extends GenericViewHolder {
+
+        @Bind(R.id.button_header_download_item)
+        Button headerButton;
+
+        @Bind(R.id.text_header_download_item)
+        TextView headerTextView;
+
+        String titleDownloading;
+
+        String titleForDownloadingButton;
+
+        public TitleViewHolder(View itemView) {
+            super(itemView);
+            titleDownloading = MainApplication.getAppContext().getString(R.string.downloading_title);
+            titleForDownloadingButton = MainApplication.getAppContext().getString(R.string.downloading_cancel_all);
+        }
+
+        @Override
+        public void setDataOnView(int position) {
+            // TODO: 06.05.16 choose by position if zero -> downloading, else -> downloaded
+
+            headerButton.setText(titleForDownloadingButton);
+            headerTextView.setText(titleDownloading);
+
+        }
+
     }
 
     public abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 
         public GenericViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
         }
 
         public abstract void setDataOnView(int position);
+
     }
 
     public void notifyCachedVideoInserted(long stepId, int position) {
@@ -410,7 +452,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             }
         }
 
+
         boolean isVideoWasInDownloading = downloadingPos >= 0;
+
+        downloadingPos += 1; //title
+        position += 1; //title
+
         if (isVideoWasInDownloading) {
             mDownloadingVideoList.remove(downloadingPos);
         }
@@ -433,5 +480,13 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         }
 
 
+    }
+
+    public void notifyDownloadingVideoChanged(int position) {
+        notifyItemChanged(position + 1);
+    }
+
+    public void notifyDownloadingItemInserted(int position) {
+        notifyItemInserted(position + 1);
     }
 }
