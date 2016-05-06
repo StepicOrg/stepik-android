@@ -327,12 +327,8 @@ public class DownloadsFragment extends FragmentBase {
         isLoaded = true;
         ProgressHelper.dismiss(mProgressBar);
         if (videosForShowing == null || map == null) return;
-        mStepIdToLesson.clear(); // FIXME: 05.05.16 really need?
         mStepIdToLesson.putAll(map);
-        mCachedVideoList.clear();
         mCachedVideoList.addAll(videosForShowing);
-
-        cachedStepsSet.clear();
         for (int i = 0; i < mCachedVideoList.size(); i++) {
             cachedStepsSet.add(videosForShowing.get(i).getStepId());
         }
