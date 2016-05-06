@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
@@ -379,6 +380,9 @@ public class DownloadsFragment extends FragmentBase {
         @Inject
         Bus mBus;
 
+        @Inject
+        ThreadPoolExecutor threadPoolExecutor;
+
         @NotNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -396,10 +400,17 @@ public class DownloadsFragment extends FragmentBase {
                             YandexMetrica.reportEvent(AppConstants.METRICA_YES_CLEAR_VIDEOS);
                             mBus.post(new ClearAllDownloadWithoutAnimationEvent(stepIds));
                             if (stepIds == null) return;
-                            for (long stepId : stepIds) {
-                                Step step = mDatabaseFacade.getStepById(stepId);
-                                mCleanManager.removeStep(step);
-                            }
+
+                            threadPoolExecutor.execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    for (long stepId : stepIds) {
+                                        Step step = mDatabaseFacade.getStepById(stepId);
+                                        mCleanManager.removeStep(step);
+                                    }
+                                }
+                            });
+
                         }
                     })
                     .setNegativeButton(R.string.no, null);
