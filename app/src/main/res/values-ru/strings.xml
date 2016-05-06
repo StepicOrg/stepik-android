@@ -130,4 +130,6 @@
     <string name="instructors">Преподаватели</string>
     <string name="download_pending">Скачивается…</string>
     <string name="delimiter_for_download">" из "</string>
+    <string name="downloading_title">Скачивается…</string>
+    <string name="downloading_cancel_all">Отменить все</string>
 </resources>

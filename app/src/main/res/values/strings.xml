@@ -133,6 +133,8 @@
     <string name="instructors">Instructors</string>
     <string name="delimiter_for_download">/</string>
     <string name="download_pending">Download pending…</string>
+    <string name="downloading_title">Downloading…</string>
+    <string name="downloading_cancel_all">Cancel all</string>
     <string name="percent_symbol" translatable="false">%d%%</string>
     <plurals name="notification_plural">
         <item quantity="one">%d new notification</item>
