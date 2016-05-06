@@ -11,7 +11,6 @@ import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -316,7 +315,7 @@ public class DownloadsFragment extends FragmentBase {
                 bus.post(new FinishDownloadCachedVideosEvent(videoAndMap.getCachedVideoList(), videoAndMap.getStepIdToLesson()));
             }
         };
-        task.execute();
+        task.executeOnExecutor(mThreadPoolExecutor);
     }
 
     @Subscribe
