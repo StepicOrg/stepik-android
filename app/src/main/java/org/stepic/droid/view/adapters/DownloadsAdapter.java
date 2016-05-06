@@ -169,6 +169,15 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         notifyItemRemoved(position + mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1));
     }
 
+    public void notifyDownloadingVideoRemoved(int position) {
+        if (mDownloadingVideoList.isEmpty()) {
+            notifyItemRemoved(0);//title
+            notifyItemRemoved(1);//last view
+        } else {
+            notifyCachedVideoRemoved(position);
+        }
+    }
+
     public class DownloadingViewHolder extends GenericViewHolder {
 
         @Bind(R.id.cancel_load)
@@ -455,12 +464,13 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         boolean isVideoWasInDownloading = downloadingPos >= 0;
 
-        downloadingPos += 1; //title
-        position += 1; //title
 
         if (isVideoWasInDownloading) {
             mDownloadingVideoList.remove(downloadingPos);
         }
+
+        downloadingPos += mDownloadingVideoList.isEmpty() ? 0 : 1; //title
+        position += mDownloadingVideoList.isEmpty() ? 0 : 1; //title
 
         int realPosition = position + mDownloadingVideoList.size();
 

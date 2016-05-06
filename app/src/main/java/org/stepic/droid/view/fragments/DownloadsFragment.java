@@ -334,6 +334,15 @@ public class DownloadsFragment extends FragmentBase {
             cachedStepsSet.add(videosForShowing.get(i).getStepId());
         }
 
+        ArrayList<DownloadingVideoItem> localList = new ArrayList<>(mDownloadingWithProgressList);
+        for (int i = 0; i< localList.size(); i++){
+            long stepIdOfDownloading = mDownloadingWithProgressList.get(i).getDownloadEntity().getStepId();
+            if (cachedStepsSet.contains(stepIdOfDownloading)){
+                mDownloadingWithProgressList.remove(i);
+                mDownloadAdapter.notifyDownloadingVideoRemoved(i);
+            }
+        }
+
         checkForEmpty();
         mDownloadAdapter.notifyDataSetChanged();
     }
