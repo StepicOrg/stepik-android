@@ -66,7 +66,7 @@ import kotlin.jvm.functions.Function0;
 
 public class DownloadsFragment extends FragmentBase {
 
-    private static final int ANIMATION_DURATION = 100; //reset to 10 after debug
+    private static final int ANIMATION_DURATION = 500; //reset to 10 after debug
     private static final int UPDATE_DELAY  = 300;
 
     public static DownloadsFragment newInstance() {

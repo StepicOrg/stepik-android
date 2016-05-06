@@ -367,7 +367,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             if (downloadingPos == realPosition) {
                 notifyItemChanged(realPosition);
             } else {
-                notifyItemMoved(downloadingPos, realPosition);
+                if (downloadingPos != 0) {
+                    notifyItemMoved(downloadingPos, realPosition);
+                    notifyItemRangeChanged(downloadingPos + 1, getItemCount());
+                } else {
+                    notifyDataSetChanged();
+                }
             }
         } else {
             notifyItemInserted(realPosition);
