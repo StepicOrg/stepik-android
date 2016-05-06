@@ -54,5 +54,9 @@
         <item name="android:minHeight">@dimen/min_ux_touchable_size</item>
     </style>
 
+    <style name="StepicSmallMaterialButton" parent="@style/Widget.AppCompat.Button.Small">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
 
 </resources>

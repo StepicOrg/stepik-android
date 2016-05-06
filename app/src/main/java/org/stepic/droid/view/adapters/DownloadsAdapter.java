@@ -50,6 +50,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     public static final int TYPE_DOWNLOADING_VIDEO = 1;
     public static final int TYPE_DOWNLOADED_VIDEO = 2;
+    public static final int TYPE_TITLE = 3;
 
     private List<CachedVideo> mCachedVideoList;
     private Activity sourceActivity;
