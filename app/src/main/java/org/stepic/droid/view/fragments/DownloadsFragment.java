@@ -141,6 +141,20 @@ public class DownloadsFragment extends FragmentBase {
     private void startLoadingStatusUpdater() {
         if (mLoadingUpdater != null) return;
         mLoadingUpdater = new Runnable() {
+            //Query the download manager about downloads that have been requested.
+            @Nullable
+            private Pair<Cursor, List<DownloadEntity>> getCursorAndEntitiesForAllDownloads() {
+                List<DownloadEntity> nowDownloadingList = mDatabaseFacade.getAllDownloadEntities();
+                long[] ids = getAllDownloadIds(nowDownloadingList);
+                if (ids == null || ids.length == 0) return null;
+
+
+                DownloadManager.Query query = new DownloadManager.Query();
+                query.setFilterById(ids);
+                return new Pair<>(mSystemDownloadManager.query(query), nowDownloadingList);
+
+            }
+
             @Override
             public void run() {
                 while (!Thread.currentThread().isInterrupted()) {
@@ -263,19 +277,6 @@ public class DownloadsFragment extends FragmentBase {
         return result;
     }
 
-    //Query the download manager about downloads that have been requested.
-    @Nullable
-    private Pair<Cursor, List<DownloadEntity>> getCursorAndEntitiesForAllDownloads() {
-        List<DownloadEntity> nowDownloadingList = mDatabaseFacade.getAllDownloadEntities();
-        long[] ids = getAllDownloadIds(nowDownloadingList);
-        if (ids == null || ids.length == 0) return null;
-
-
-        DownloadManager.Query query = new DownloadManager.Query();
-        query.setFilterById(ids);
-        return new Pair<>(mSystemDownloadManager.query(query), nowDownloadingList);
-
-    }
 
     @Override
     public void onDestroyView() {
