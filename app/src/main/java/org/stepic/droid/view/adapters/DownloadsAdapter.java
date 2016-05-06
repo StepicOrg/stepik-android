@@ -182,6 +182,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         @BindString(R.string.mb)
         String mb;
 
+        @Bind(R.id.progress_percent)
+        TextView progressPercent;
+
         public DownloadingViewHolder(View itemView, final OnClickCancelListener cancelListener) {
             super(itemView);
 

@@ -69,11 +69,23 @@
 
                 <TextView
                     android:id="@+id/progress_text"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_above="@id/video_downloading_progress_bar"
                     android:textSize="@dimen/text_header"
                     tools:text="9 of 45 MB" />
+
+
+                <TextView
+                    android:id="@+id/progress_percent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/video_downloading_progress_bar"
+                    android:layout_alignParentRight="true"
+                    android:layout_toRightOf="@id/progress_text"
+                    android:textSize="@dimen/text_header"
+                    android:gravity="right"
+                    tools:text="75%" />
 
 
             </RelativeLayout>
