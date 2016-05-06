@@ -67,7 +67,7 @@ import kotlin.jvm.functions.Function0;
 public class DownloadsFragment extends FragmentBase {
 
     private static final int ANIMATION_DURATION = 500; //reset to 10 after debug
-    private static final int UPDATE_DELAY  = 300;
+    private static final int UPDATE_DELAY = 300;
 
     public static DownloadsFragment newInstance() {
         return new DownloadsFragment();
@@ -148,7 +148,6 @@ public class DownloadsFragment extends FragmentBase {
                 long[] ids = getAllDownloadIds(nowDownloadingList);
                 if (ids == null || ids.length == 0) return null;
 
-
                 DownloadManager.Query query = new DownloadManager.Query();
                 query.setFilterById(ids);
                 return new Pair<>(mSystemDownloadManager.query(query), nowDownloadingList);
@@ -167,32 +166,32 @@ public class DownloadsFragment extends FragmentBase {
 
                         while (!cursor.isAfterLast()) {
                             int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
-                            if (bytes_total > 0) {
-                                int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
-                                int columnStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
-                                int downloadId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
-                                int columnReason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
-                                final DownloadReportItem downloadReportItem = new DownloadReportItem(bytes_downloaded, bytes_total, columnStatus, downloadId, columnReason);
-                                DownloadEntity relatedDownloadEntity = null;
-                                for (DownloadEntity entity : entities) {
-                                    if (entity.getDownloadId() == downloadId) {
-                                        relatedDownloadEntity = entity;
-                                        break;
-                                    }
-                                }
-
-                                if (relatedDownloadEntity != null) {
-                                    final DownloadingVideoItem downloadingVideoItem = new DownloadingVideoItem(downloadReportItem, relatedDownloadEntity);
-
-                                    mMainHandler.post(new Function0<Unit>() {
-                                        @Override
-                                        public Unit invoke() {
-                                            bus.post(new DownloadReportEvent(downloadingVideoItem));
-                                            return Unit.INSTANCE;
-                                        }
-                                    });
+//                            if (bytes_total > 0) {
+                            int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                            int columnStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+                            int downloadId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
+                            int columnReason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
+                            final DownloadReportItem downloadReportItem = new DownloadReportItem(bytes_downloaded, bytes_total, columnStatus, downloadId, columnReason);
+                            DownloadEntity relatedDownloadEntity = null;
+                            for (DownloadEntity entity : entities) {
+                                if (entity.getDownloadId() == downloadId) {
+                                    relatedDownloadEntity = entity;
+                                    break;
                                 }
                             }
+
+                            if (relatedDownloadEntity != null) {
+                                final DownloadingVideoItem downloadingVideoItem = new DownloadingVideoItem(downloadReportItem, relatedDownloadEntity);
+
+                                mMainHandler.post(new Function0<Unit>() {
+                                    @Override
+                                    public Unit invoke() {
+                                        bus.post(new DownloadReportEvent(downloadingVideoItem));
+                                        return Unit.INSTANCE;
+                                    }
+                                });
+                            }
+//                            }
                             cursor.moveToNext();
                         }
                     } finally {
@@ -206,7 +205,6 @@ public class DownloadsFragment extends FragmentBase {
                     }
 
                 }
-                Log.d("ppp", "This thread is terminated");
             }
 
 
@@ -234,7 +232,6 @@ public class DownloadsFragment extends FragmentBase {
                 break;
             }
         }
-        // FIXME: 04.05.16 support lesson map for view of step
         final long stepId = item.getDownloadEntity().getStepId();
         if (!mStepIdToLesson.containsKey(stepId)) {
             mThreadPoolExecutor.execute(new Runnable() {
@@ -242,6 +239,7 @@ public class DownloadsFragment extends FragmentBase {
                 public void run() {
                     Step step = mDatabaseFacade.getStepById(stepId);
                     if (step != null) {
+
                         Lesson lesson = mDatabaseFacade.getLessonById(step.getLesson());
                         if (lesson != null) {
                             mStepIdToLesson.put(stepId, lesson);
@@ -252,7 +250,7 @@ public class DownloadsFragment extends FragmentBase {
             return; // if we do not know about lesson name -> not show this video.
         }
 
-        if (cachedStepsSet.contains(stepId)){
+        if (cachedStepsSet.contains(stepId)) {
             return; //if already cached do not show
         }
 
@@ -261,7 +259,6 @@ public class DownloadsFragment extends FragmentBase {
             mDownloadAdapter.notifyItemChanged(position); // TODO: 04.05.16 change to method update in adapter
         } else {
             mDownloadingWithProgressList.add(item);
-            Log.d("eee", "notify inserted: " + (mDownloadingWithProgressList.size() - 1));
             checkForEmpty();
             mDownloadAdapter.notifyItemInserted(mDownloadingWithProgressList.size() - 1); // TODO: 04.05.16 change to method update in adapter
         }
