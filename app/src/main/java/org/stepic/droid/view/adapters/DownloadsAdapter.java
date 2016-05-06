@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -43,6 +42,9 @@ import butterknife.Bind;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
+import me.zhanghai.android.materialprogressbar.HorizontalProgressDrawable;
+import me.zhanghai.android.materialprogressbar.IndeterminateHorizontalProgressDrawable;
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.GenericViewHolder> implements StepicOnClickItemListener, OnClickLoadListener, OnClickCancelListener {
 
@@ -171,7 +173,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         Drawable placeholder;
 
         @Bind(R.id.video_downloading_progress_bar)
-        ProgressBar downloadingProgressBar;
+        MaterialProgressBar downloadingProgressBar;
 
         @Bind(R.id.progress_text)
         TextView progressTextView;
@@ -185,6 +187,15 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         @Bind(R.id.progress_percent)
         TextView progressPercent;
 
+        @BindString(R.string.delimiter_for_download)
+        String downloadDelimiter;
+
+        @BindString(R.string.download_pending)
+        String downloadPending;
+
+        Drawable indeterminateDrawable;
+        Drawable finiteDrawable;
+
         public DownloadingViewHolder(View itemView, final OnClickCancelListener cancelListener) {
             super(itemView);
 
@@ -195,6 +206,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
                     cancelListener.onClickCancel(getAdapterPosition());
                 }
             });
+
+            indeterminateDrawable = new IndeterminateHorizontalProgressDrawable(sourceActivity);
+            finiteDrawable = new HorizontalProgressDrawable(sourceActivity);
         }
 
         @Override
@@ -225,10 +239,47 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
                 mVideoHeader.setText("");
             }
 
+            int bytesTotal = downloadingVideoItem.getDownloadReportItem().getBytesTotal();
+            int bytesDownloaded = downloadingVideoItem.getDownloadReportItem().getBytesDownloaded();
 
-            // TODO: 04.05.16 set text view with progress
-            downloadingProgressBar.setMax(downloadingVideoItem.getDownloadReportItem().getMBytesTotal());
-            downloadingProgressBar.setProgress(downloadingVideoItem.getDownloadReportItem().getMBytesDownloaded());
+
+            StringBuilder loadProgressStringBuilder = new StringBuilder();
+            if (bytesTotal <= 0) {
+                loadProgressStringBuilder.append(downloadPending);
+                downloadingProgressBar.setIndeterminateDrawable(indeterminateDrawable);
+                progressPercent.setVisibility(View.INVISIBLE);
+            } else {
+                int totalSizeForView = bytesTotal / 1024;
+                int downloadedSieForView = bytesDownloaded / 1024;
+
+                appendToSbSize(downloadedSieForView, loadProgressStringBuilder);
+                loadProgressStringBuilder.append(downloadDelimiter);
+                appendToSbSize(totalSizeForView, loadProgressStringBuilder);
+
+                downloadingProgressBar.setMax(bytesTotal);
+                downloadingProgressBar.setProgress(bytesDownloaded);
+                downloadingProgressBar.setIndeterminateDrawable(finiteDrawable);
+
+                int percentValue = (int) (((double) bytesDownloaded / (double) bytesTotal) * 100);
+                progressPercent.setText(sourceActivity.getResources().getString(R.string.percent_symbol, percentValue));
+                progressPercent.setVisibility(View.VISIBLE);
+            }
+            progressTextView.setText(loadProgressStringBuilder.toString());
+        }
+
+        private void appendToSbSize(int downloadedSieForView, StringBuilder stringBuilder) {
+
+
+            if (downloadedSieForView < 1024) {
+                stringBuilder.append(downloadedSieForView);
+                stringBuilder.append(" ");
+                stringBuilder.append(kb);
+            } else {
+                downloadedSieForView /= 1024;
+                stringBuilder.append(downloadedSieForView);
+                stringBuilder.append(" ");
+                stringBuilder.append(mb);
+            }
         }
     }
 

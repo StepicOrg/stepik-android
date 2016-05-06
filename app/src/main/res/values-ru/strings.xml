@@ -128,4 +128,6 @@
     <string name="update_now">Обновить</string>
     <string name="update_later">Позже</string>
     <string name="instructors">Преподаватели</string>
+    <string name="download_pending">Скачивается…</string>
+    <string name="delimiter_for_download">" из "</string>
 </resources>

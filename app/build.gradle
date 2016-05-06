@@ -113,7 +113,7 @@ dependencies {
 
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
 
-    compile 'me.zhanghai.android.materialprogressbar:library:1.1.4'
+    compile 'me.zhanghai.android.materialprogressbar:library:1.1.6'
 
     // Required -- JUnit 4 framework
     testCompile 'junit:junit:4.12'

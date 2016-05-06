@@ -131,6 +131,9 @@
     <string name="update_now">Update</string>
     <string name="update_later">Later</string>
     <string name="instructors">Instructors</string>
+    <string name="delimiter_for_download">/</string>
+    <string name="download_pending">Download pending…</string>
+    <string name="percent_symbol" translatable="false">%d%%</string>
     <plurals name="notification_plural">
         <item quantity="one">%d new notification</item>
         <item quantity="other">%d new notifications</item>
