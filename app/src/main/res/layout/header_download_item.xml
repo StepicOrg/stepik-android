@@ -14,20 +14,21 @@
             android:id="@+id/text_header_download_item"
             style="@style/cv_text_title"
             android:layout_width="match_parent"
+            android:gravity="center_vertical"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="2dp"
             android:layout_toLeftOf="@+id/button_header_download_item"
-            tools:text="Title....................." />
+            tools:text="Скачивается..." />
 
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/button_header_download_item"
             style="@style/StepicSmallMaterialButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            tools:text="Button 123456789" />
+            tools:text="Отменить все" />
 
     </RelativeLayout>
 

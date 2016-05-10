@@ -54,8 +54,12 @@
         <item name="android:minHeight">@dimen/min_ux_touchable_size</item>
     </style>
 
-    <style name="StepicSmallMaterialButton" parent="@style/Widget.AppCompat.Button.Small">
-        <item name="android:textColor">@android:color/white</item>
+    <style name="StepicSmallMaterialButton" parent="Theme.AppCompat.Light">
+        <item name="android:minHeight">@dimen/height_of_small_button</item>
+        <item name="android:maxHeight">@dimen/height_of_small_button</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/btn_color_selector_accent</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
 
