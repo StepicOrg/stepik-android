@@ -367,7 +367,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         @Override
         public void setDataOnView(int position) {
-            CachedVideo cachedVideo = mCachedVideoList.get(position - mDownloadingVideoList.size() - (mDownloadingVideoList.isEmpty() ? 0 : 1));
+            CachedVideo cachedVideo = mCachedVideoList.get(position - mDownloadingVideoList.size() - (mDownloadingVideoList.isEmpty() ? 0 : 1) - (mCachedVideoList.isEmpty() ? 0 : 1));
 
 
             loadActionIcon.setVisibility(View.GONE);
