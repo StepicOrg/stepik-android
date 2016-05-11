@@ -512,6 +512,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     }
 
     public void notifyDownloadingItemInserted(int position) {
+        notifyItemChanged(0);
         notifyItemInserted(position + 1);
     }
 
