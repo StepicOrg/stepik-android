@@ -123,6 +123,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Override
     public void onClick(int position) {
+        //the position in list!
         if (position >= 0 && position < mCachedVideoList.size()) {
             CachedVideo video = mCachedVideoList.get(position);
             mScreenManager.showVideo(sourceActivity, video.getUrl());
@@ -131,6 +132,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Override
     public void onClickLoad(int position) {
+        //the position in list!
         if (position >= 0 && position < mCachedVideoList.size()) {
             CachedVideo video = mCachedVideoList.get(position);
             mCachedVideoList.remove(position);
@@ -159,22 +161,29 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Override
     public void onClickCancel(int position) {
+        //the position in list!
         if (position >= 0 && position < mDownloadingVideoList.size()) {
             Log.d("eee", "click cancel " + position);
         }
     }
 
     public void notifyCachedVideoRemoved(int position) {
+        if (mCachedVideoList.isEmpty()){
+            notifyItemRemoved(position + mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1));//title
+            notifyItemRemoved(position + mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1)  + 1);//last item
+        }
+        else{
+            notifyItemRemoved(position + mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1) + 1);
+        }
 
-        notifyItemRemoved(position + mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1));
     }
 
-    public void notifyDownloadingVideoRemoved(int position) {
+    public void notifyDownloadingVideoRemoved(int positionInList) {
         if (mDownloadingVideoList.isEmpty()) {
             notifyItemRemoved(0);//title
             notifyItemRemoved(1);//last view
         } else {
-            notifyCachedVideoRemoved(position);
+            notifyItemRemoved(positionInList + 1);
         }
     }
 
