@@ -137,7 +137,6 @@ public class DownloadsFragment extends FragmentBase {
 
 
         bus.register(this);
-        startLoadingStatusUpdater();
     }
 
     private void startLoadingStatusUpdater() {
@@ -283,10 +282,14 @@ public class DownloadsFragment extends FragmentBase {
         return result;
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        stopLoadingStatusUpdater();
+    }
 
     @Override
     public void onDestroyView() {
-        stopLoadingStatusUpdater();
         bus.unregister(this);
         mDownloadsView.setAdapter(null);
         mDownloadAdapter = null;
@@ -296,6 +299,7 @@ public class DownloadsFragment extends FragmentBase {
     @Override
     public void onStart() {
         super.onStart();
+        startLoadingStatusUpdater();
         if (!isLoaded) {
             updateCachedAsync();
         }
