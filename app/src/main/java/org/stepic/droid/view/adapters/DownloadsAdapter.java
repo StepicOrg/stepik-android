@@ -231,7 +231,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             cancelLoad.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    cancelListener.onClickCancel(getAdapterPosition() + 1);
+                    cancelListener.onClickCancel(getAdapterPosition() - getTitleCount(mDownloadingVideoList));
                 }
             });
 
