@@ -331,7 +331,7 @@ public class DownloadsFragment extends FragmentBase {
         mStepIdToLesson.putAll(map);
         mCachedVideoList.addAll(videosForShowing);
         for (int i = 0; i < mCachedVideoList.size(); i++) {
-            cachedStepsSet.add(videosForShowing.get(i).getStepId());
+            cachedStepsSet.add(mCachedVideoList.get(i).getStepId());
         }
 
         ArrayList<DownloadingVideoItem> localList = new ArrayList<>(mDownloadingWithProgressList);
