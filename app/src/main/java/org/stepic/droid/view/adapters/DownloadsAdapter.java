@@ -156,7 +156,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             };
             task.executeOnExecutor(threadPoolExecutor);
             downloadsFragment.checkForEmpty();
-            notifyItemRemoved(position + mDownloadingVideoList.size());
+            notifyCachedVideoRemoved(position);
         }
     }
 
@@ -354,14 +354,14 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
                 @Override
                 public void onClick(View v) {
-                    click.onClick(getAdapterPosition() - mDownloadingVideoList.size());
+                    click.onClick(getAdapterPosition() - mDownloadingVideoList.size() - getTitleCount(mDownloadingVideoList) - getTitleCount(mCachedVideoList));
                 }
             });
 
             mLoadRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    loadListener.onClickLoad(getAdapterPosition() - mDownloadingVideoList.size());
+                    loadListener.onClickLoad(getAdapterPosition() - mDownloadingVideoList.size() - getTitleCount(mDownloadingVideoList) - getTitleCount(mCachedVideoList));
                 }
             });
         }
