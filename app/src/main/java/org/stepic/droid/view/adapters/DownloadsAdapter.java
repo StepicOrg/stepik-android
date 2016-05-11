@@ -100,7 +100,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Override
     public int getItemViewType(int position) {
-        if ((!mDownloadingVideoList.isEmpty() && position == 0) || (!mCachedVideoList.isEmpty() && position == mDownloadingVideoList.size())) {
+        if ((!mDownloadingVideoList.isEmpty() && position == 0) || (!mCachedVideoList.isEmpty() && position == (mDownloadingVideoList.size() + 1))) { //+1 from title downloading
             return TYPE_TITLE;
         } else if (position >= mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1) + (mCachedVideoList.isEmpty() ? 0 : 1)) {
             return TYPE_DOWNLOADED_VIDEO;
