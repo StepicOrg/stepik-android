@@ -2,6 +2,7 @@ package org.stepic.droid.view.fragments;
 
 import android.app.Dialog;
 import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -29,6 +30,8 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.events.loading.FinishDeletingLoadEvent;
+import org.stepic.droid.events.loading.StartDeletingLoadEvent;
 import org.stepic.droid.events.steps.ClearAllDownloadWithoutAnimationEvent;
 import org.stepic.droid.events.steps.StepRemovedEvent;
 import org.stepic.droid.events.video.DownloadReportEvent;
@@ -49,6 +52,7 @@ import org.stepic.droid.util.DbParseHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.view.adapters.DownloadsAdapter;
+import org.stepic.droid.view.custom.LoadingProgressDialog;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -92,7 +96,7 @@ public class DownloadsFragment extends FragmentBase {
     private List<DownloadingVideoItem> mDownloadingWithProgressList;
     private Runnable mLoadingUpdater = null;
     private Set<Long> cachedStepsSet;
-
+    private ProgressDialog loadingProgressDialog;
     private boolean isLoaded;
 
     @Override
@@ -135,7 +139,7 @@ public class DownloadsFragment extends FragmentBase {
             ProgressHelper.activate(mProgressBar);
         }
 
-
+        loadingProgressDialog = new LoadingProgressDialog(getContext());
         bus.register(this);
     }
 
@@ -173,7 +177,7 @@ public class DownloadsFragment extends FragmentBase {
                             int downloadId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
                             int columnReason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
 
-                            if (columnStatus == DownloadManager.STATUS_SUCCESSFUL){
+                            if (columnStatus == DownloadManager.STATUS_SUCCESSFUL) {
                                 Intent successLoaded = new Intent(MainApplication.getAppContext(), DownloadCompleteReceiver.class);
                                 successLoaded.putExtra(DownloadManager.EXTRA_DOWNLOAD_ID, (long) downloadId);
                                 MainApplication.getAppContext().sendBroadcast(successLoaded);
@@ -293,6 +297,7 @@ public class DownloadsFragment extends FragmentBase {
         bus.unregister(this);
         mDownloadsView.setAdapter(null);
         mDownloadAdapter = null;
+        loadingProgressDialog = null;
         super.onDestroyView();
     }
 
@@ -348,9 +353,9 @@ public class DownloadsFragment extends FragmentBase {
         }
 
         ArrayList<DownloadingVideoItem> localList = new ArrayList<>(mDownloadingWithProgressList);
-        for (int i = 0; i< localList.size(); i++){
+        for (int i = 0; i < localList.size(); i++) {
             long stepIdOfDownloading = mDownloadingWithProgressList.get(i).getDownloadEntity().getStepId();
-            if (cachedStepsSet.contains(stepIdOfDownloading)){
+            if (cachedStepsSet.contains(stepIdOfDownloading)) {
                 mDownloadingWithProgressList.remove(i);
                 mDownloadAdapter.notifyDownloadingVideoRemoved(i);
             }
@@ -423,16 +428,31 @@ public class DownloadsFragment extends FragmentBase {
                             mBus.post(new ClearAllDownloadWithoutAnimationEvent(stepIds));
                             if (stepIds == null) return;
 
-                            threadPoolExecutor.execute(new Runnable() {
+
+                            AsyncTask task = new AsyncTask() {
+
                                 @Override
-                                public void run() {
+                                protected void onPreExecute() {
+                                    super.onPreExecute();
+                                    mBus.post(new StartDeletingLoadEvent());
+
+                                }
+
+                                @Override
+                                protected Object doInBackground(Object[] params) {
                                     for (long stepId : stepIds) {
                                         Step step = mDatabaseFacade.getStepById(stepId);
                                         mCleanManager.removeStep(step);
                                     }
+                                    return null;
                                 }
-                            });
 
+                                @Override
+                                protected void onPostExecute(Object o) {
+                                    mBus.post(new FinishDeletingLoadEvent());
+                                }
+                            };
+                            task.executeOnExecutor(threadPoolExecutor);
                         }
                     })
                     .setNegativeButton(R.string.no, null);
@@ -514,6 +534,16 @@ public class DownloadsFragment extends FragmentBase {
             mEmptyDownloadView.setVisibility(View.VISIBLE);
         }
         getActivity().invalidateOptionsMenu();
+    }
+
+    @Subscribe
+    public void onShouldStartLoad(StartDeletingLoadEvent event){
+        ProgressHelper.activate(loadingProgressDialog);
+    }
+
+    @Subscribe
+    public void onShouldStopLoad(FinishDeletingLoadEvent event){
+        ProgressHelper.dismiss(loadingProgressDialog);
     }
 
 }
