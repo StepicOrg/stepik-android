@@ -168,11 +168,10 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     }
 
     public void notifyCachedVideoRemoved(int position) {
-        if (mCachedVideoList.isEmpty()){
+        if (mCachedVideoList.isEmpty()) {
             notifyItemRemoved(position + mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1));//title
-            notifyItemRemoved(position + mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1)  + 1);//last item
-        }
-        else{
+            notifyItemRemoved(position + mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1) + 1);//last item
+        } else {
             notifyItemRemoved(position + mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1) + 1);
         }
 
@@ -484,8 +483,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             mDownloadingVideoList.remove(downloadingPos);
         }
 
-        downloadingPos += mDownloadingVideoList.isEmpty() ? 0 : 1; //title
-        position += mDownloadingVideoList.isEmpty() ? 0 : 1; //title
+        downloadingPos += ((mDownloadingVideoList.isEmpty() ? 0 : 1) + (mCachedVideoList.isEmpty() ? 0 : 1)); //title
+        position += ((mDownloadingVideoList.isEmpty() ? 0 : 1) + (mCachedVideoList.isEmpty() ? 0 : 1)); //title
 
         int realPosition = position + mDownloadingVideoList.size();
 
