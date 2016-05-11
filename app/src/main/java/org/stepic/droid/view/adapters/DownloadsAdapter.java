@@ -117,7 +117,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Override
     public int getItemCount() {
-        final int countOnRecycler = mCachedVideoList.size() + mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1);
+        final int countOnRecycler = mCachedVideoList.size() + mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1) + (mCachedVideoList.isEmpty() ? 0 : 1);
         return countOnRecycler;
     }
 
