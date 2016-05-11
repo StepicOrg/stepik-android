@@ -101,9 +101,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Override
     public int getItemViewType(int position) {
-        if ((!mDownloadingVideoList.isEmpty() && position == 0) || (!mCachedVideoList.isEmpty() && position == (mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1)))) {
+        if ((!mDownloadingVideoList.isEmpty() && position == 0) || (!mCachedVideoList.isEmpty() && position == (mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList)))) {
             return TYPE_TITLE;
-        } else if (position >= mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1) + (mCachedVideoList.isEmpty() ? 0 : 1)) {
+        } else if (position >= mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList) + getTitleCount(mCachedVideoList)) {
             return TYPE_DOWNLOADED_VIDEO;
         } else {
             return TYPE_DOWNLOADING_VIDEO;
@@ -118,7 +118,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Override
     public int getItemCount() {
-        final int countOnRecycler = mCachedVideoList.size() + mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1) + (mCachedVideoList.isEmpty() ? 0 : 1);
+        final int countOnRecycler = mCachedVideoList.size() + mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList) + getTitleCount(mCachedVideoList);
         return countOnRecycler;
     }
 
@@ -170,10 +170,10 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     public void notifyCachedVideoRemoved(int position) {
         if (mCachedVideoList.isEmpty()) {
-            notifyItemRemoved(position + mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1));//title
-            notifyItemRemoved(position + mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1) + 1);//last item
+            notifyItemRemoved(position + mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList));//title
+            notifyItemRemoved(position + mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList) + 1);//last item
         } else {
-            notifyItemRemoved(position + mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1) + 1);
+            notifyItemRemoved(position + mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList) + 1);
         }
 
     }
@@ -368,7 +368,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         @Override
         public void setDataOnView(int position) {
-            CachedVideo cachedVideo = mCachedVideoList.get(position - mDownloadingVideoList.size() - (mDownloadingVideoList.isEmpty() ? 0 : 1) - (mCachedVideoList.isEmpty() ? 0 : 1));
+            CachedVideo cachedVideo = mCachedVideoList.get(position - mDownloadingVideoList.size() - getTitleCount(mDownloadingVideoList) - getTitleCount(mCachedVideoList));
 
 
             loadActionIcon.setVisibility(View.GONE);
@@ -484,8 +484,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             mDownloadingVideoList.remove(downloadingPos);
         }
 
-        downloadingPos += ((mDownloadingVideoList.isEmpty() ? 0 : 1) + (mCachedVideoList.isEmpty() ? 0 : 1)); //title
-        position += ((mDownloadingVideoList.isEmpty() ? 0 : 1) + (mCachedVideoList.isEmpty() ? 0 : 1)); //title
+        downloadingPos += (getTitleCount(mDownloadingVideoList) + getTitleCount(mCachedVideoList)); //title
+        position += (getTitleCount(mDownloadingVideoList) + getTitleCount(mCachedVideoList)); //title
 
         int realPosition = position + mDownloadingVideoList.size();
 
@@ -515,7 +515,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         notifyItemInserted(position + 1);
     }
 
-    public int getTitleCount(Collection collection) {
+    public static int getTitleCount(Collection collection) {
         return collection.isEmpty() ? 0 : 1;
     }
 }
