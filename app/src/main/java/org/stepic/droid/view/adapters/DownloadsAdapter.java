@@ -32,6 +32,7 @@ import org.stepic.droid.view.listeners.OnClickLoadListener;
 import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -230,7 +231,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             cancelLoad.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    cancelListener.onClickCancel(getAdapterPosition());
+                    cancelListener.onClickCancel(getAdapterPosition() + 1);
                 }
             });
 
@@ -512,5 +513,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     public void notifyDownloadingItemInserted(int position) {
         notifyItemInserted(position + 1);
+    }
+
+    public int getTitleCount(Collection collection) {
+        return collection.isEmpty() ? 0 : 1;
     }
 }
