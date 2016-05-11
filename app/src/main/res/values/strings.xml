@@ -136,6 +136,8 @@
     <string name="downloading_title">Downloading…</string>
     <string name="downloading_cancel_all">Cancel all</string>
     <string name="percent_symbol" translatable="false">%d%%</string>
+    <string name="cached_title">Cached</string>
+    <string name="remove_all">Remove all</string>
     <plurals name="notification_plural">
         <item quantity="one">%d new notification</item>
         <item quantity="other">%d new notifications</item>

@@ -132,4 +132,6 @@
     <string name="delimiter_for_download">" из "</string>
     <string name="downloading_title">Скачивается…</string>
     <string name="downloading_cancel_all">Отменить все</string>
+    <string name="cached_title">Загружено</string>
+    <string name="remove_all">Удалить все</string>
 </resources>

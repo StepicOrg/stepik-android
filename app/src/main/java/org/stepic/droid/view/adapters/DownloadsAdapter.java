@@ -420,21 +420,28 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         TextView headerTextView;
 
         String titleDownloading;
-
         String titleForDownloadingButton;
+        String titleCached;
+        String titleForCachedButton;
 
         public TitleViewHolder(View itemView) {
             super(itemView);
             titleDownloading = MainApplication.getAppContext().getString(R.string.downloading_title);
             titleForDownloadingButton = MainApplication.getAppContext().getString(R.string.downloading_cancel_all);
+            titleCached = MainApplication.getAppContext().getString(R.string.cached_title);
+            titleForCachedButton = MainApplication.getAppContext().getString(R.string.remove_all);
         }
 
         @Override
         public void setDataOnView(int position) {
             // TODO: 06.05.16 choose by position if zero -> downloading, else -> downloaded
-
-            headerButton.setText(titleForDownloadingButton);
-            headerTextView.setText(titleDownloading);
+            if (position == 0) {
+                headerTextView.setText(titleDownloading);
+                headerButton.setText(titleForDownloadingButton);
+            } else {
+                headerTextView.setText(titleCached);
+                headerButton.setText(titleForCachedButton);
+            }
 
         }
 
