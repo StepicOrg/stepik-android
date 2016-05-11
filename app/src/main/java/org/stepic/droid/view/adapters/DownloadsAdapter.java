@@ -100,9 +100,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Override
     public int getItemViewType(int position) {
-        if (!mDownloadingVideoList.isEmpty() && position == 0) {
+        if ((!mDownloadingVideoList.isEmpty() && position == 0) || (!mCachedVideoList.isEmpty() && position == mDownloadingVideoList.size())) {
             return TYPE_TITLE;
-        } else if (position >= mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1)) {
+        } else if (position >= mDownloadingVideoList.size() + (mDownloadingVideoList.isEmpty() ? 0 : 1) + (mCachedVideoList.isEmpty() ? 0 : 1)) {
             return TYPE_DOWNLOADED_VIDEO;
         } else {
             return TYPE_DOWNLOADING_VIDEO;
@@ -434,8 +434,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         @Override
         public void setDataOnView(int position) {
-            // TODO: 06.05.16 choose by position if zero -> downloading, else -> downloaded
-            if (position == 0) {
+            if (position == 0 && !mDownloadingVideoList.isEmpty()) {
                 headerTextView.setText(titleDownloading);
                 headerButton.setText(titleForDownloadingButton);
             } else {
