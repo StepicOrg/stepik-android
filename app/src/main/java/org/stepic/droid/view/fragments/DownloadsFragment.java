@@ -3,6 +3,7 @@ package org.stepic.droid.view.fragments;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ import org.stepic.droid.model.DownloadingVideoItem;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.VideosAndMapToLesson;
+import org.stepic.droid.receivers.DownloadCompleteReceiver;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
@@ -171,6 +173,13 @@ public class DownloadsFragment extends FragmentBase {
                             int columnStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
                             int downloadId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
                             int columnReason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
+
+                            if (columnStatus == DownloadManager.STATUS_SUCCESSFUL){
+                                Intent successLoaded = new Intent(MainApplication.getAppContext(), DownloadCompleteReceiver.class);
+                                successLoaded.putExtra(DownloadManager.EXTRA_DOWNLOAD_ID, (long) downloadId);
+                                MainApplication.getAppContext().sendBroadcast(successLoaded);
+                            }
+
                             final DownloadReportItem downloadReportItem = new DownloadReportItem(bytes_downloaded, bytes_total, columnStatus, downloadId, columnReason);
                             DownloadEntity relatedDownloadEntity = null;
                             for (DownloadEntity entity : entities) {
