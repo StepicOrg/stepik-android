@@ -150,14 +150,41 @@ public class DownloadsFragment extends FragmentBase {
             @Nullable
             private Pair<Cursor, List<DownloadEntity>> getCursorAndEntitiesForAllDownloads() {
                 List<DownloadEntity> nowDownloadingList = mDatabaseFacade.getAllDownloadEntities();
+
                 long[] ids = getAllDownloadIds(nowDownloadingList);
                 if (ids == null || ids.length == 0) return null;
+
 
                 DownloadManager.Query query = new DownloadManager.Query();
                 query.setFilterById(ids);
                 return new Pair<>(mSystemDownloadManager.query(query), nowDownloadingList);
 
             }
+
+            private long[] getAllDownloadIds(@NotNull List<DownloadEntity> list) {
+                final List<DownloadEntity> copyOfList = new ArrayList<>(list);
+                long[] result = new long[copyOfList.size()];
+                int i = 0;
+                for (DownloadEntity element : copyOfList) {
+                    if (!cancelSniffer.isStepIdCanceled(element.getStepId()))
+                        result[i++] = element.getDownloadId();
+                }
+                return result;
+            }
+
+            private boolean isInDownloadManager(long downloadId) {
+                boolean isInDM = false;
+                DownloadManager.Query query = new DownloadManager.Query();
+                query.setFilterById(downloadId);
+                Cursor cursor = mSystemDownloadManager.query(query);
+                try {
+                    isInDM = cursor.getCount() > 0;
+                } finally {
+                    cursor.close();
+                }
+                return isInDM;
+            }
+
 
             @Override
             public void run() {
@@ -171,7 +198,6 @@ public class DownloadsFragment extends FragmentBase {
 
                         while (!cursor.isAfterLast()) {
                             int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
-//                            if (bytes_total > 0) {
                             int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
                             int columnStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
                             int downloadId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
@@ -181,6 +207,7 @@ public class DownloadsFragment extends FragmentBase {
                                 Intent successLoaded = new Intent(MainApplication.getAppContext(), DownloadCompleteReceiver.class);
                                 successLoaded.putExtra(DownloadManager.EXTRA_DOWNLOAD_ID, (long) downloadId);
                                 MainApplication.getAppContext().sendBroadcast(successLoaded);
+                                continue;
                             }
 
                             final DownloadReportItem downloadReportItem = new DownloadReportItem(bytes_downloaded, bytes_total, columnStatus, downloadId, columnReason);
@@ -192,7 +219,7 @@ public class DownloadsFragment extends FragmentBase {
                                 }
                             }
 
-                            if (relatedDownloadEntity != null) {
+                            if (relatedDownloadEntity != null && !cancelSniffer.isStepIdCanceled(relatedDownloadEntity.getStepId()) && isInDownloadManager(relatedDownloadEntity.getDownloadId())) {
                                 final DownloadingVideoItem downloadingVideoItem = new DownloadingVideoItem(downloadReportItem, relatedDownloadEntity);
 
                                 mMainHandler.post(new Function0<Unit>() {
@@ -203,7 +230,6 @@ public class DownloadsFragment extends FragmentBase {
                                     }
                                 });
                             }
-//                            }
                             cursor.moveToNext();
                         }
                     } finally {
@@ -274,16 +300,6 @@ public class DownloadsFragment extends FragmentBase {
             checkForEmpty();
             mDownloadAdapter.notifyDownloadingItemInserted(mDownloadingWithProgressList.size() - 1); // TODO: 04.05.16 change to method update in adapter
         }
-    }
-
-    private long[] getAllDownloadIds(@NotNull List<DownloadEntity> list) {
-        final List<DownloadEntity> copyOfList = new ArrayList<>(list);
-        long[] result = new long[copyOfList.size()];
-        int i = 0;
-        for (DownloadEntity element : copyOfList) {
-            result[i++] = element.getDownloadId();
-        }
-        return result;
     }
 
     @Override
@@ -537,12 +553,12 @@ public class DownloadsFragment extends FragmentBase {
     }
 
     @Subscribe
-    public void onShouldStartLoad(StartDeletingLoadEvent event){
+    public void onShouldStartLoad(StartDeletingLoadEvent event) {
         ProgressHelper.activate(loadingProgressDialog);
     }
 
     @Subscribe
-    public void onShouldStopLoad(FinishDeletingLoadEvent event){
+    public void onShouldStopLoad(FinishDeletingLoadEvent event) {
         ProgressHelper.dismiss(loadingProgressDialog);
     }
 

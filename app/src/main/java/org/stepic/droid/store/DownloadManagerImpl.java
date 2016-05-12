@@ -66,12 +66,24 @@ public class DownloadManagerImpl implements IDownloadManager {
 
     }
 
+    @Deprecated
     @Override
     public void cancelUnitLoading(Lesson lesson) {
         Intent loadIntent = new Intent(MainApplication.getAppContext(), CancelLoadingService.class);
 
         loadIntent.putExtra(AppConstants.KEY_LOAD_TYPE, LoadService.LoadTypeKey.UnitLesson);
         loadIntent.putExtra(AppConstants.KEY_LESSON_BUNDLE, (Serializable) lesson);
+
+        MainApplication.getAppContext().startService(loadIntent);
+
+    }
+
+    @Override
+    public void cancelStep(long stepId) {
+        Intent loadIntent = new Intent(MainApplication.getAppContext(), CancelLoadingService.class);
+
+        loadIntent.putExtra(AppConstants.KEY_LOAD_TYPE, LoadService.LoadTypeKey.Step);
+        loadIntent.putExtra(AppConstants.KEY_STEP_BUNDLE, stepId);
 
         MainApplication.getAppContext().startService(loadIntent);
 

@@ -8,6 +8,7 @@ import com.squareup.otto.Bus
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Section
+import org.stepic.droid.model.Step
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.ICancelSniffer
 import org.stepic.droid.store.IStoreStateManager
@@ -53,16 +54,20 @@ class CancelLoadingService : IntentService("cancel_loading") {
                 return
             }
             LoadService.LoadTypeKey.Step -> {
-                return
+                val stepId = intent?.getLongExtra(AppConstants.KEY_STEP_BUNDLE, -1)
+                if (stepId != null && stepId >= 0L) {
+                    cancelStepVideo(stepId)
+                }
             }
         }
     }
 
+    @Deprecated("this method is not tested and may be not worked, use cancelStepVideo instead")
     private fun cancelUnitLesson(lesson: Lesson?) {
         lesson?.let {
             try {
-                val lessonSteps =  lesson.steps
-                lessonSteps?.forEach { mCancelSniffer.addStepIdCancel(it)}
+                val lessonSteps = lesson.steps
+                lessonSteps?.forEach { mCancelSniffer.addStepIdCancel(it) }
 
                 RWLocks.DownloadLock.writeLock().lock()
                 val steps = mDb.getStepsOfLesson(lesson.id)
@@ -92,6 +97,31 @@ class CancelLoadingService : IntentService("cancel_loading") {
             } finally {
                 RWLocks.DownloadLock.writeLock().unlock()
             }
+        }
+    }
+
+    private fun cancelStepVideo(stepId: Long) {
+        try {
+            RWLocks.DownloadLock.writeLock().lock()
+            var downloadEntity = mDb.getDownloadEntityByStepId(stepId)
+            downloadEntity?.let {
+                val numberOfRemoved = mSystemDownloadManager.remove(downloadEntity.downloadId)
+                if (numberOfRemoved > 0) {
+                    mCancelSniffer.removeStepIdCancel(stepId)
+                    mDb.deleteDownloadEntityByDownloadId(downloadEntity.downloadId)
+                    mDb.deleteVideo(downloadEntity.videoId)
+                    val step = mDb.getStepById(stepId)
+
+                    if (step != null) {
+                        step.is_cached = false
+                        step.is_loading = false
+                        mDb.updateOnlyCachedLoadingStep(step)
+                        mStoreStateManager.updateStepAfterDeleting(step)
+                    }
+                }
+            }
+        } finally {
+            RWLocks.DownloadLock.writeLock().unlock()
         }
     }
 

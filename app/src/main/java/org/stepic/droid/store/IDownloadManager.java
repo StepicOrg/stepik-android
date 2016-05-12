@@ -16,4 +16,6 @@ public interface IDownloadManager {
     void addUnitLesson(Unit unit, Lesson lesson);
 
     void cancelUnitLoading(Lesson lesson);
+
+    void cancelStep(long stepId);
 }

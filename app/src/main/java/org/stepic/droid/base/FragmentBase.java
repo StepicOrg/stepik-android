@@ -18,6 +18,8 @@ import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.services.CancelLoadingService;
+import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
@@ -85,6 +87,9 @@ public class FragmentBase extends Fragment {
 
     @Inject
     public DownloadManager mSystemDownloadManager;
+
+    @Inject
+    public ICancelSniffer cancelSniffer;
 
     public FragmentBase() {
         MainApplication.component(MainApplication.getAppContext()).inject(this);

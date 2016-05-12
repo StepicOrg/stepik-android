@@ -10,12 +10,10 @@ import javax.inject.Singleton;
 public class SynchronizedCancelSniffer implements ICancelSniffer {
 
     private final Set<Long> mCanceledStepIdsSet;
-//    private final Set<Long> mCanceledLessonIdsSet;
 
     @Inject
     public SynchronizedCancelSniffer() {
         mCanceledStepIdsSet = new HashSet<>();
-//        mCanceledLessonIdsSet = new HashSet<>();
     }
 
     @Override
@@ -33,18 +31,4 @@ public class SynchronizedCancelSniffer implements ICancelSniffer {
         return mCanceledStepIdsSet.contains(stepId);
     }
 
-//    @Override
-//    public synchronized void addLessonIdCancel(long lessonId) {
-//        mCanceledLessonIdsSet.add(lessonId);
-//    }
-//
-//    @Override
-//    public synchronized void removeLessonIdCancel(long lessonId) {
-//        mCanceledLessonIdsSet.remove(lessonId);
-//    }
-//
-//    @Override
-//    public synchronized boolean isLessonIdCanceled(long lessonId) {
-//        return mCanceledLessonIdsSet.contains(lessonId);
-//    }
 }

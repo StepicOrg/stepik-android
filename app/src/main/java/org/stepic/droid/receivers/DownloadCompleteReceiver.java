@@ -82,6 +82,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     }
                     mCancelSniffer.removeStepIdCancel(step_id);
                 }
+                else
                 {
                     //is not canceled
                     final CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, downloadEntity.getThumbnail());

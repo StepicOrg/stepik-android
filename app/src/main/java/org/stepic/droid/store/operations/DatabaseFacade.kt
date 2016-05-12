@@ -131,7 +131,11 @@ class DatabaseFacade {
 
     fun isStepCached(step: Step?): Boolean {
         val id = step?.id ?: return false
-        val dbStep = mStepDao.get(DbStructureStep.Column.STEP_ID, id.toString())
+        return isStepCached(id)
+    }
+
+    fun isStepCached(stepId: Long):Boolean {
+        val dbStep = mStepDao.get(DbStructureStep.Column.STEP_ID, stepId.toString())
         return dbStep != null && dbStep.is_cached
     }
 
@@ -292,7 +296,7 @@ class DatabaseFacade {
         }
     }
 
-    fun removeAllNotificationsByCourseId(courseId:Long){
+    fun removeAllNotificationsByCourseId(courseId: Long) {
         mNotificationDao.delete(DbStructureNotification.Column.COURSE_ID, courseId.toString())
     }
 
@@ -333,4 +337,6 @@ class DatabaseFacade {
     fun getAllNotificationsOfCourse(courseId: Long): MutableList<Notification?> {
         return mNotificationDao.getAll(DbStructureNotification.Column.COURSE_ID, courseId.toString())
     }
+
+    fun getDownloadEntityByStepId(stepId: Long) = mDownloadEntityDao.get(DbStructureSharedDownloads.Column.STEP_ID, stepId.toString())
 }

@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,8 @@ import org.stepic.droid.model.DownloadingVideoItem;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.store.CleanManager;
+import org.stepic.droid.store.ICancelSniffer;
+import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ThumbnailParser;
@@ -69,6 +70,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Inject
     ThreadPoolExecutor threadPoolExecutor;
+
+    @Inject
+    ICancelSniffer cancelSniffer;
+
+    @Inject
+    IDownloadManager downloadManager;
 
     private DownloadsFragment downloadsFragment;
     private Set<Long> cachedStepsSet;
@@ -164,7 +171,23 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     public void onClickCancel(int position) {
         //the position in list!
         if (position >= 0 && position < mDownloadingVideoList.size()) {
-            Log.d("eee", "click cancel " + position);
+            DownloadingVideoItem downloadingVideoItem = mDownloadingVideoList.get(position);
+            final long stepId = downloadingVideoItem.getDownloadEntity().getStepId();
+            threadPoolExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    cancelSniffer.addStepIdCancel(stepId);
+                    downloadManager.cancelStep(stepId);
+                }
+            });
+
+            mDownloadingVideoList.remove(position);
+            if (mDownloadingVideoList.isEmpty()) {
+                notifyItemRemoved(0);
+                notifyItemRemoved(1);
+            } else {
+                notifyItemRemoved(position + 1);
+            }
         }
     }
 
