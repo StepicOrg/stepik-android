@@ -317,7 +317,7 @@ public class LoadService extends IntentService {
 
         } catch (IOException e) {
             YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, e);
-            e.printStackTrace();
+            mStoreStateManager.updateSectionAfterDeleting(section.getId());
         }
     }
 
