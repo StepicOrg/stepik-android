@@ -484,6 +484,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             if (position == 0 && !mDownloadingVideoList.isEmpty()) {
                 //downloading
 
+                if (downloadsFragment != null){
+                    downloadsFragment.cancelAll();
+                }
 
             } else {
                 //cached

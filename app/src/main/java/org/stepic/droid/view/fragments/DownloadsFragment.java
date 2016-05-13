@@ -457,4 +457,40 @@ public class DownloadsFragment extends FragmentBase {
         ProgressHelper.dismiss(loadingProgressDialog);
     }
 
+    public void cancelAll() {
+        AsyncTask task = new AsyncTask() {
+            @Override
+            protected void onPreExecute() {
+                ProgressHelper.activate(loadingProgressDialog);
+            }
+
+            @Override
+            protected Object doInBackground(Object[] params) {
+                List<DownloadEntity> downloadEntities = mDatabaseFacade.getAllDownloadEntities();
+                long stepIds[] = new long[downloadEntities.size()];
+                for (int i = 0; i < downloadEntities.size(); i++) {
+                    stepIds[i] = downloadEntities.get(i).getStepId();
+                }
+
+                for (int i = 0; i < stepIds.length; i++) {
+                    long stepId = stepIds[i];
+                    cancelSniffer.addStepIdCancel(stepId);
+                    mDownloadManager.cancelStep(stepId);
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Object o) {
+                if (mDownloadingWithProgressList != null && mDownloadAdapter != null) {
+                    mDownloadingWithProgressList.clear();
+                    mDownloadAdapter.notifyDataSetChanged();
+                }
+                checkForEmpty();
+                ProgressHelper.dismiss(loadingProgressDialog);
+            }
+        };
+        task.executeOnExecutor(mThreadPoolExecutor);
+    }
 }

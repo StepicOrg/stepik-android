@@ -4,6 +4,7 @@ import android.app.DownloadManager
 import android.app.IntentService
 import android.app.Service
 import android.content.Intent
+import android.util.Log
 import com.squareup.otto.Bus
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.model.Lesson
@@ -106,6 +107,7 @@ class CancelLoadingService : IntentService("cancel_loading") {
             var downloadEntity = mDb.getDownloadEntityByStepId(stepId)
             downloadEntity?.let {
                 val numberOfRemoved = mSystemDownloadManager.remove(downloadEntity.downloadId)
+                Log.d("ttt", "remove downloadId: " + downloadEntity.downloadId)
                 if (numberOfRemoved > 0) {
                     mCancelSniffer.removeStepIdCancel(stepId)
                     mDb.deleteDownloadEntityByDownloadId(downloadEntity.downloadId)
