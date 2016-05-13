@@ -188,8 +188,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     public void notifyCachedVideoRemoved(int position) {
         if (mCachedVideoList.isEmpty()) {
-            notifyItemRemoved(position + mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList));//title
-            notifyItemRemoved(position + mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList) + 1);//last item
+            notifyItemRangeRemoved(position + mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList), 2);//title and item
         } else {
             notifyItemRemoved(position + mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList) + 1);
         }
