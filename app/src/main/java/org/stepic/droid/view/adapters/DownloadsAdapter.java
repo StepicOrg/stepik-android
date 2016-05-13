@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,8 +26,10 @@ import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.util.DbParseHelper;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ThumbnailParser;
+import org.stepic.droid.view.dialogs.ClearVideosDialog;
 import org.stepic.droid.view.fragments.DownloadsFragment;
 import org.stepic.droid.view.listeners.OnClickCancelListener;
 import org.stepic.droid.view.listeners.OnClickLoadListener;
@@ -437,7 +440,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     }
 
-    public class TitleViewHolder extends GenericViewHolder {
+    public class TitleViewHolder extends GenericViewHolder implements OnClickCancelListener {
 
         @Bind(R.id.button_header_download_item)
         Button headerButton;
@@ -456,6 +459,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             titleForDownloadingButton = MainApplication.getAppContext().getString(R.string.downloading_cancel_all);
             titleCached = MainApplication.getAppContext().getString(R.string.cached_title);
             titleForCachedButton = MainApplication.getAppContext().getString(R.string.remove_all);
+            headerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TitleViewHolder.this.onClickCancel(getAdapterPosition());
+                }
+            });
         }
 
         @Override
@@ -470,6 +479,29 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         }
 
+        @Override
+        public void onClickCancel(int position) {
+            if (position == 0 && !mDownloadingVideoList.isEmpty()) {
+                //downloading
+
+
+            } else {
+                //cached
+                ClearVideosDialog dialogFragment = new ClearVideosDialog();
+
+                Bundle bundle = new Bundle();
+                long[] stepIds = new long[mCachedVideoList.size()];
+                int i = 0;
+                for (CachedVideo videoItem : mCachedVideoList) {
+                    stepIds[i++] = videoItem.getStepId();
+                }
+                String stringWithIds = DbParseHelper.parseLongArrayToString(stepIds);
+                bundle.putString(ClearVideosDialog.KEY_STRING_IDS, stringWithIds);
+                dialogFragment.setArguments(bundle);
+
+                dialogFragment.show(downloadsFragment.getFragmentManager(), null);
+            }
+        }
     }
 
     public abstract class GenericViewHolder extends RecyclerView.ViewHolder {

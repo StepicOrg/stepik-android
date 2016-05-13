@@ -35,11 +35,11 @@ import org.stepic.droid.view.adapters.StepFragmentAdapter;
 import org.stepic.droid.view.adapters.UnitAdapter;
 import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
 import org.stepic.droid.view.dialogs.ClearCacheDialogFragment;
+import org.stepic.droid.view.dialogs.ClearVideosDialog;
 import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.view.dialogs.VideoQualityDialog;
-import org.stepic.droid.view.fragments.DownloadsFragment;
 import org.stepic.droid.web.RetrofitRESTApi;
 
 import javax.inject.Singleton;
@@ -112,7 +112,7 @@ public interface StepicCoreComponent {
 
     void inject(DownloadsAdapter downloadsAdapter);
 
-    void inject(DownloadsFragment.ClearVideosDialog clearVideosDialog);
+    void inject(ClearVideosDialog clearVideosDialog);
 
     void inject(CoursePropertyAdapter coursePropertyAdapter);
 
