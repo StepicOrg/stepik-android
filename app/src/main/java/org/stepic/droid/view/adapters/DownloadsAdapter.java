@@ -182,12 +182,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             });
 
             mDownloadingVideoList.remove(position);
-            if (mDownloadingVideoList.isEmpty()) {
-                notifyItemRemoved(0);
-                notifyItemRemoved(1);
-            } else {
-                notifyItemRemoved(position + 1);
-            }
+            notifyDataSetChanged(); // TODO: 13.05.16 investigate and make remove animation
         }
     }
 
