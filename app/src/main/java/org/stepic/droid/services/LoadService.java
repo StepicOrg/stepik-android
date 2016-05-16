@@ -154,8 +154,22 @@ public class LoadService extends IntentService {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
             }
 
-            if (mCancelSniffer.isStepIdCanceled(step.getId())){
+            if (mCancelSniffer.isStepIdCanceled(step.getId())) {
                 mCancelSniffer.removeStepIdCancel(step.getId());
+                Lesson lesson = mDb.getLessonById(step.getLesson());
+                if (lesson != null) {
+                    Unit unit = mDb.getUnitByLessonId(lesson.getId());
+                    if (unit != null && mCancelSniffer.isUnitIdIsCanceled(unit.getId())) {
+                        mStoreStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
+                        mCancelSniffer.removeUnitIdCancel(unit.getId());
+                        Section section = mDb.getSectionById(unit.getSection());
+                        if (section != null && mCancelSniffer.isSectionIdIsCanceled(section.getId())) {
+                            mCancelSniffer.removeSectionIdCancel(section.getId());
+                        }
+                    }
+
+                }
+
                 return;
             }
 
@@ -169,12 +183,11 @@ public class LoadService extends IntentService {
                             break;
                         }
                     }
-                }
-                catch (NullPointerException npe){
+                } catch (NullPointerException npe) {
                     videoQuality = mUserPrefs.getQualityVideo();
                 }
 
-                    long downloadId = mSystemDownloadManager.enqueue(request);
+                long downloadId = mSystemDownloadManager.enqueue(request);
                 String local_thumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
                 String thumbnailsPath = FileUtil.saveFileToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getUserDownloadFolder());
                 final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, videoQuality);
@@ -225,7 +238,14 @@ public class LoadService extends IntentService {
                 Response<StepResponse> response = mApi.getSteps(lesson.getSteps()).execute();
                 if (response.isSuccess()) {
                     List<Step> steps = response.body().getSteps();
-                    if (steps != null && steps.size() != 0) {
+                    if (steps != null && !steps.isEmpty()) {
+                        if (mCancelSniffer.isUnitIdIsCanceled(unit.getId())) {
+                            for (Step step : steps) {
+                                mCancelSniffer.addStepIdCancel(step.getId());
+                            }
+                            mCancelSniffer.removeUnitIdCancel(unit.getId());
+                        }
+
                         for (Step step : steps) {
                             mDb.addStep(step);
                             boolean cached = mDb.isStepCached(step);
@@ -284,7 +304,12 @@ public class LoadService extends IntentService {
                     for (Lesson lesson : lessons) {
                         idToLessonMap.put(lesson.getId(), lesson);
                     }
-
+                    if (mCancelSniffer.isSectionIdIsCanceled(section.getId())) {
+                        for (Unit unit : units) {
+                            mCancelSniffer.addUnitIdCancel(unit.getId());
+                        }
+                        mCancelSniffer.removeSectionIdCancel(section.getId());
+                    }
                     for (Unit unit : units) {
                         Lesson lesson = idToLessonMap.get(unit.getLesson());
 
