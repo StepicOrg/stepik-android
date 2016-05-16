@@ -244,12 +244,7 @@ public class LoadService extends IntentService {
                 if (response.isSuccess()) {
                     List<Step> steps = response.body().getSteps();
                     if (steps != null && !steps.isEmpty()) {
-                        if (mCancelSniffer.isUnitIdIsCanceled(unit.getId())) {
-                            for (Step step : steps) {
-                                mCancelSniffer.addStepIdCancel(step.getId());
-                            }
-                            mCancelSniffer.removeUnitIdCancel(unit.getId());
-                        }
+
 
                         for (Step step : steps) {
                             mDb.addStep(step);
@@ -262,6 +257,12 @@ public class LoadService extends IntentService {
                                 step.set_cached(false);
                                 mDb.updateOnlyCachedLoadingStep(step);
                             }
+                        }
+                        if (mCancelSniffer.isUnitIdIsCanceled(unit.getId())) {
+                            for (Step step : steps) {
+                                mCancelSniffer.addStepIdCancel(step.getId());
+                            }
+                            mCancelSniffer.removeUnitIdCancel(unit.getId());
                         }
 
                         for (Step step : steps) {
@@ -309,12 +310,7 @@ public class LoadService extends IntentService {
                     for (Lesson lesson : lessons) {
                         idToLessonMap.put(lesson.getId(), lesson);
                     }
-                    if (mCancelSniffer.isSectionIdIsCanceled(section.getId())) {
-                        for (Unit unit : units) {
-                            mCancelSniffer.addUnitIdCancel(unit.getId());
-                        }
-                        mCancelSniffer.removeSectionIdCancel(section.getId());
-                    }
+
                     for (Unit unit : units) {
                         Lesson lesson = idToLessonMap.get(unit.getLesson());
 
@@ -334,7 +330,12 @@ public class LoadService extends IntentService {
                             mDb.updateOnlyCachedLoadingUnit(unit);
                         }
                     }
-
+                    if (mCancelSniffer.isSectionIdIsCanceled(section.getId())) {
+                        for (Unit unit : units) {
+                            mCancelSniffer.addUnitIdCancel(unit.getId());
+                        }
+                        mCancelSniffer.removeSectionIdCancel(section.getId());
+                    }
                     for (Unit unit : units) {
                         Lesson lesson = idToLessonMap.get(unit.getLesson());
                         addUnitLesson(unit, lesson);

@@ -27,13 +27,13 @@ import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.CleanManager;
+import org.stepic.droid.store.ConcurrentCancelSniffer;
 import org.stepic.droid.store.DatabaseHelper;
 import org.stepic.droid.store.DownloadManagerImpl;
 import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.StoreStateManager;
-import org.stepic.droid.store.SynchronizedCancelSniffer;
 import org.stepic.droid.store.dao.AssignmentDaoImpl;
 import org.stepic.droid.store.dao.BlockDaoImpl;
 import org.stepic.droid.store.dao.CourseDaoImpl;
@@ -279,7 +279,7 @@ public class StepicDefaultModule {
     @Provides
     @Singleton
     public ICancelSniffer provideCancelSniffer() {
-        return new SynchronizedCancelSniffer();
+        return new ConcurrentCancelSniffer();
     }
 
     @Provides

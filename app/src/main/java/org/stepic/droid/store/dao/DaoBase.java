@@ -21,27 +21,38 @@ public abstract class DaoBase<T> implements IDao<T> {
 
     public DaoBase(SQLiteOpenHelper openHelper) {
         dbHelper = openHelper;
+        database = dbHelper.getWritableDatabase();
     }
 
     private void open() {
         RWLocks.DatabaseLock.writeLock().lock();
-        database = dbHelper.getWritableDatabase();
+//        database = dbHelper.getWritableDatabase();
     }
 
     private void close() {
-        database.close();
+//        database.close();
         RWLocks.DatabaseLock.writeLock().unlock();
+    }
+
+    private void openRead(){
+        RWLocks.DatabaseLock.readLock().lock();
+//        database=dbHelper.getReadableDatabase();
+    }
+
+    private void  closeRead(){
+//        database.close();
+        RWLocks.DatabaseLock.readLock().unlock();
     }
 
     private <U> U executeQuery(String sqlQuery, String[] selectionArgs, ResultHandler<U> handler) {
         try {
-            open();
+            openRead();
             Cursor cursor = database.rawQuery(sqlQuery, selectionArgs);
             U result = handler.handle(cursor);
             cursor.close();
             return result;
         } finally {
-            close();
+            closeRead();
         }
 
     }
