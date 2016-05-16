@@ -28,6 +28,7 @@ import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ProgressUtil;
+import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.web.IApi;
@@ -153,45 +154,49 @@ public class LoadService extends IntentService {
             } else {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
             }
-
-            if (mCancelSniffer.isStepIdCanceled(step.getId())) {
-                mCancelSniffer.removeStepIdCancel(step.getId());
-                Lesson lesson = mDb.getLessonById(step.getLesson());
-                if (lesson != null) {
-                    Unit unit = mDb.getUnitByLessonId(lesson.getId());
-                    if (unit != null && mCancelSniffer.isUnitIdIsCanceled(unit.getId())) {
-                        mStoreStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
-                        mCancelSniffer.removeUnitIdCancel(unit.getId());
-                        Section section = mDb.getSectionById(unit.getSection());
-                        if (section != null && mCancelSniffer.isSectionIdIsCanceled(section.getId())) {
-                            mCancelSniffer.removeSectionIdCancel(section.getId());
+            try {
+                RWLocks.CancelLock.writeLock().lock();
+                if (mCancelSniffer.isStepIdCanceled(step.getId())) {
+                    mCancelSniffer.removeStepIdCancel(step.getId());
+                    Lesson lesson = mDb.getLessonById(step.getLesson());
+                    if (lesson != null) {
+                        Unit unit = mDb.getUnitByLessonId(lesson.getId());
+                        if (unit != null && mCancelSniffer.isUnitIdIsCanceled(unit.getId())) {
+                            mStoreStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
+                            mCancelSniffer.removeUnitIdCancel(unit.getId());
+                            Section section = mDb.getSectionById(unit.getSection());
+                            if (section != null && mCancelSniffer.isSectionIdIsCanceled(section.getId())) {
+                                mCancelSniffer.removeSectionIdCancel(section.getId());
+                            }
                         }
+
                     }
 
+                    return;
                 }
 
-                return;
-            }
+                if (!mDb.isExistDownloadEntityByVideoId(fileId) && !downloadFolderAndFile.exists()) {
 
-            if (!mDb.isExistDownloadEntityByVideoId(fileId) && !downloadFolderAndFile.exists()) {
-
-                String videoQuality = null;
-                try {
-                    for (VideoUrl urlItem : step.getBlock().getVideo().getUrls()) {
-                        if (urlItem.getUrl().trim().equals(url)) {
-                            videoQuality = urlItem.getQuality();
-                            break;
+                    String videoQuality = null;
+                    try {
+                        for (VideoUrl urlItem : step.getBlock().getVideo().getUrls()) {
+                            if (urlItem.getUrl().trim().equals(url)) {
+                                videoQuality = urlItem.getQuality();
+                                break;
+                            }
                         }
+                    } catch (NullPointerException npe) {
+                        videoQuality = mUserPrefs.getQualityVideo();
                     }
-                } catch (NullPointerException npe) {
-                    videoQuality = mUserPrefs.getQualityVideo();
-                }
 
-                long downloadId = mSystemDownloadManager.enqueue(request);
-                String local_thumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
-                String thumbnailsPath = FileUtil.saveFileToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getUserDownloadFolder());
-                final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, videoQuality);
-                mDb.addDownloadEntity(newEntity);
+                    long downloadId = mSystemDownloadManager.enqueue(request);
+                    String local_thumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
+                    String thumbnailsPath = FileUtil.saveFileToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getUserDownloadFolder());
+                    final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, videoQuality);
+                    mDb.addDownloadEntity(newEntity);
+                }
+            } finally {
+                RWLocks.CancelLock.writeLock().unlock();
             }
         } catch (SecurityException ex) {
             YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, ex);

@@ -134,7 +134,7 @@ class DatabaseFacade {
         return isStepCached(id)
     }
 
-    fun isStepCached(stepId: Long):Boolean {
+    fun isStepCached(stepId: Long): Boolean {
         val dbStep = mStepDao.get(DbStructureStep.Column.STEP_ID, stepId.toString())
         return dbStep != null && dbStep.is_cached
     }
@@ -339,4 +339,16 @@ class DatabaseFacade {
     }
 
     fun getDownloadEntityByStepId(stepId: Long) = mDownloadEntityDao.get(DbStructureSharedDownloads.Column.STEP_ID, stepId.toString())
+
+    fun getAllDownloadingUnits() : LongArray {
+        val units = mUnitDao.getAll(DbStructureUnit.Column.IS_LOADING, 1.toString())
+        val unitIds = units.map { it?.id }.filterNotNull()
+        return unitIds.toLongArray()
+    }
+
+    fun getAllDownloadingSections() : LongArray{
+        val sections = mSectionDao.getAll(DbStructureSections.Column.IS_LOADING, 1.toString())
+        val sectionIds = sections.map { it?.id}.filterNotNull()
+        return sectionIds.toLongArray()
+    }
 }

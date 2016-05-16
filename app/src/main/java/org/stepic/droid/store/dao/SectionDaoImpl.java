@@ -32,6 +32,8 @@ public class SectionDaoImpl extends DaoBase<Section> {
         int indexIsCached = cursor.getColumnIndex(DbStructureSections.Column.IS_CACHED);
         int indexIsLoading = cursor.getColumnIndex(DbStructureSections.Column.IS_LOADING);
 
+        int isCacheddd = cursor.getInt(indexIsCached);
+
         section.setId(cursor.getLong(columnIndexId));
         section.setTitle(cursor.getString(columnIndexTitle));
         section.setSlug(cursor.getString(columnIndexSlug));

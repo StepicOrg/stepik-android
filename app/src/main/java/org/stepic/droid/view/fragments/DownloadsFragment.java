@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +39,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.VideosAndMapToLesson;
 import org.stepic.droid.receivers.DownloadCompleteReceiver;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.view.adapters.DownloadsAdapter;
 import org.stepic.droid.view.custom.LoadingProgressDialog;
@@ -466,16 +468,50 @@ public class DownloadsFragment extends FragmentBase {
 
             @Override
             protected Object doInBackground(Object[] params) {
-                List<DownloadEntity> downloadEntities = mDatabaseFacade.getAllDownloadEntities();
-                long stepIds[] = new long[downloadEntities.size()];
-                for (int i = 0; i < downloadEntities.size(); i++) {
-                    stepIds[i] = downloadEntities.get(i).getStepId();
-                }
+                try {
+                    RWLocks.CancelLock.writeLock().lock();
+                    long[] sectionIdsLoading = mDatabaseFacade.getAllDownloadingSections();//need lock here and in loading service.
+                    for (int i = 0; i < sectionIdsLoading.length; i++) {
+                        Log.d("eee", "cancel section " + sectionIdsLoading[i]);
+                        cancelSniffer.addSectionIdCancel(sectionIdsLoading[i]);
+                        List<org.stepic.droid.model.Unit> units = mDatabaseFacade.getAllUnitsOfSection(sectionIdsLoading[i]);
+                        if (!units.isEmpty()) {
+                            for (org.stepic.droid.model.Unit unitItem : units) {
+                                cancelSniffer.addUnitIdCancel(unitItem.getId());
+                            }
+                        }
+                    }
 
-                for (int i = 0; i < stepIds.length; i++) {
-                    long stepId = stepIds[i];
-                    cancelSniffer.addStepIdCancel(stepId);
-                    mDownloadManager.cancelStep(stepId);
+                    long[] unitIdsLoading = mDatabaseFacade.getAllDownloadingUnits();
+                    for (int i = 0; i < unitIdsLoading.length; i++) {
+                        Log.d("eee", "cancel unit " + unitIdsLoading[i]);
+                        cancelSniffer.addUnitIdCancel(unitIdsLoading[i]);
+
+                        org.stepic.droid.model.Unit unit = mDatabaseFacade.getUnitById(unitIdsLoading[i]);
+                        Lesson lesson = mDatabaseFacade.getLessonById(unit.getLesson());
+                        if (lesson != null) {
+                            List<Step> steps = mDatabaseFacade.getStepsOfLesson(lesson.getId());
+                            if (!steps.isEmpty()) {
+                                for (Step stepItem : steps) {
+                                    cancelSniffer.addStepIdCancel(stepItem.getId());
+                                }
+                            }
+                        }
+                    }
+
+                    List<DownloadEntity> downloadEntities = mDatabaseFacade.getAllDownloadEntities();
+                    long stepIds[] = new long[downloadEntities.size()];
+                    for (int i = 0; i < downloadEntities.size(); i++) {
+                        stepIds[i] = downloadEntities.get(i).getStepId();
+                    }
+
+                    for (int i = 0; i < stepIds.length; i++) {
+                        long stepId = stepIds[i];
+                        cancelSniffer.addStepIdCancel(stepId);
+                        mDownloadManager.cancelStep(stepId);
+                    }
+                } finally {
+                    RWLocks.CancelLock.writeLock().unlock();
                 }
 
                 return null;
