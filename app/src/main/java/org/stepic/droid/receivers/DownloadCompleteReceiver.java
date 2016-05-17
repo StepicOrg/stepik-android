@@ -16,6 +16,7 @@ import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
+import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IStoreStateManager;
@@ -56,7 +57,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
             @Override
             public void run() {
                 blockForInBackground(referenceId);
-                Log.d("thread", Thread.currentThread().getName()+ " ");
+                Log.d("thread", Thread.currentThread().getName() + " ");
             }
         });
     }
@@ -81,9 +82,22 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                         file.delete();
                     }
                     mCancelSniffer.removeStepIdCancel(step_id);
-                }
-                else
-                {
+                    Step step = mDatabaseFacade.getStepById(step_id);
+                    if (step != null) {
+                        Lesson lesson = mDatabaseFacade.getLessonById(step.getLesson());
+                        if (lesson != null) {
+                            Unit unit = mDatabaseFacade.getUnitByLessonId(lesson.getId());
+                            if (unit != null && mCancelSniffer.isUnitIdIsCanceled(unit.getId())) {
+                                mStoreStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
+                                mCancelSniffer.removeUnitIdCancel(unit.getId());
+                                if (mCancelSniffer.isSectionIdIsCanceled(unit.getSection())) {
+                                    mCancelSniffer.removeSectionIdCancel(unit.getSection());
+                                }
+                            }
+
+                        }
+                    }
+                } else {
                     //is not canceled
                     final CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, downloadEntity.getThumbnail());
                     cachedVideo.setQuality(downloadEntity.getQuality());
@@ -107,7 +121,9 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     mainHandler.post(myRunnable);
                 }
             }
-        } finally {
+        } finally
+
+        {
             RWLocks.DownloadLock.writeLock().unlock();
         }
     }
