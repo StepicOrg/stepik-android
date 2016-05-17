@@ -251,15 +251,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             } else {
                 if (unit.is_loading()) {
                     //cancel loading
-//                    Log.d("unit", "cancel loading");
-//                    mDownloadManager.cancelUnitLoading(lesson);
-//                    unit.set_loading(false);
-//                    unit.set_cached(false);
-//                    lesson.set_loading(false);
-//                    lesson.set_cached(false);
-//                    mDbManager.updateOnlyCachedLoadingLesson(lesson);
-//                    mDbManager.updateOnlyCachedLoadingUnit(unit);
-//                    notifyItemChanged(position);
+                    mScreenManager.showDownload();
 
                 } else {
 

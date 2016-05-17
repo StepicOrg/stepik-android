@@ -112,11 +112,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         if (section.is_active()) {
 
             int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, MainApplication.getAppContext());
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                strong_text_color = MainApplication.getAppContext().getResources().getColor(R.color.stepic_regular_text, MainApplication.getAppContext().getTheme());
-//            } else {
-//                strong_text_color = MainApplication.getAppContext().getResources().getColor(R.color.stepic_regular_text);
-//            }
 
             holder.sectionTitle.setTextColor(strong_text_color);
             holder.cv.setFocusable(false);
@@ -159,11 +154,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             holder.afterLoad.setVisibility(View.GONE);
 
             int weak_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_weak_text, MainApplication.getAppContext());
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                weak_text_color = MainApplication.getAppContext().getColor(R.color.stepic_weak_text);
-//            } else {
-//                weak_text_color = MainApplication.getAppContext().getResources().getColor(R.color.stepic_weak_text);
-//            }
             holder.sectionTitle.setTextColor(weak_text_color);
             holder.cv.setFocusable(false);
             holder.cv.setClickable(false);
@@ -224,7 +214,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                 notifyItemChanged(position);
             } else {
                 if (section.is_loading()) {
-                    // TODO: 11.11.15 cancel downloading
+                    mScreenManager.showDownload();
                 } else {
                     YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CACHE_SECTION, JsonHelper.toJson(section));
                     section.set_cached(false);
