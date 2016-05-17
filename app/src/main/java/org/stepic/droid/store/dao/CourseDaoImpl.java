@@ -2,7 +2,7 @@ package org.stepic.droid.store.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteDatabase;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CachedVideo;
@@ -20,7 +20,7 @@ public  class CourseDaoImpl extends DaoBase<Course> {
     private final IDao<CachedVideo> mCachedVideoDao;
     private String mTableName;
 
-    public CourseDaoImpl(SQLiteOpenHelper openHelper, IDao<CachedVideo> cachedVideoDao) {
+    public CourseDaoImpl(SQLiteDatabase openHelper, IDao<CachedVideo> cachedVideoDao) {
         super(openHelper);
         mCachedVideoDao = cachedVideoDao;
     }

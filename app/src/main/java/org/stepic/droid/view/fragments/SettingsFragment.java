@@ -1,6 +1,7 @@
 package org.stepic.droid.view.fragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,12 +21,16 @@ import com.yandex.metrica.YandexMetrica;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.events.loading.FinishDeletingLoadEvent;
+import org.stepic.droid.events.loading.StartDeletingLoadEvent;
 import org.stepic.droid.events.wifi_settings.WifiLoadIsChangedEvent;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.FileUtil;
+import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.custom.BetterSwitch;
+import org.stepic.droid.view.custom.LoadingProgressDialog;
 import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
-import org.stepic.droid.view.dialogs.ClearCacheDialogFragment;
+import org.stepic.droid.view.dialogs.ClearVideosDialog;
 import org.stepic.droid.view.dialogs.VideoQualityDialog;
 
 import butterknife.Bind;
@@ -37,8 +42,6 @@ public class SettingsFragment extends FragmentBase {
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
     }
-
-    private static final int REQUEST_CLEAR_CACHE = 0;
 
     @Bind(R.id.clear_cache_button)
     Button mClearCacheButton;
@@ -76,6 +79,7 @@ public class SettingsFragment extends FragmentBase {
     @BindString(R.string.mb)
     String mb;
 
+    private ProgressDialog loadingProgressDialog;
     private DialogFragment mClearCacheDialogFragment;
 
     @Nullable
@@ -89,8 +93,6 @@ public class SettingsFragment extends FragmentBase {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-//        showVersionName();
 
         setUpClearCacheButton();
 
@@ -138,6 +140,8 @@ public class SettingsFragment extends FragmentBase {
                 videoDialog.show(getFragmentManager(), null);
             }
         });
+
+        loadingProgressDialog = new LoadingProgressDialog(getContext());
     }
 
     private void setUpNotificationVibration() {
@@ -161,8 +165,7 @@ public class SettingsFragment extends FragmentBase {
     }
 
     private void setUpClearCacheButton() {
-        mClearCacheDialogFragment = new ClearCacheDialogFragment();
-        mClearCacheDialogFragment.setTargetFragment(this, REQUEST_CLEAR_CACHE);
+        mClearCacheDialogFragment = new ClearVideosDialog();
         mClearCacheButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -246,9 +249,17 @@ public class SettingsFragment extends FragmentBase {
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
-        if (requestCode == REQUEST_CLEAR_CACHE) {
-            setUpClearCacheButton();
-        }
+    }
+
+    @Subscribe
+    public void onStartDeleting(StartDeletingLoadEvent event) {
+        ProgressHelper.activate(loadingProgressDialog);
+    }
+
+    @Subscribe
+    public void onFinishDeleting(FinishDeletingLoadEvent event) {
+        setUpClearCacheButton();
+        ProgressHelper.dismiss(loadingProgressDialog);
     }
 
     private void setUpNotificationLearn() {

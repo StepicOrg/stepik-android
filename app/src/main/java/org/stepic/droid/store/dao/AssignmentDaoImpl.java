@@ -2,13 +2,13 @@ package org.stepic.droid.store.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteDatabase;
 
 import org.stepic.droid.model.Assignment;
 import org.stepic.droid.store.structure.DbStructureAssignment;
 
 public class AssignmentDaoImpl extends DaoBase<Assignment> {
-    public AssignmentDaoImpl(SQLiteOpenHelper openHelper) {
+    public AssignmentDaoImpl(SQLiteDatabase openHelper) {
         super(openHelper);
     }
 

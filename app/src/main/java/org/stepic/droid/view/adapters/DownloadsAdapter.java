@@ -499,7 +499,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
                     stepIds[i++] = videoItem.getStepId();
                 }
                 String stringWithIds = DbParseHelper.parseLongArrayToString(stepIds);
-                bundle.putString(ClearVideosDialog.KEY_STRING_IDS, stringWithIds);
+                bundle.putString(ClearVideosDialog.Companion.getKEY_STRING_IDS(), stringWithIds);
                 dialogFragment.setArguments(bundle);
 
                 dialogFragment.show(downloadsFragment.getFragmentManager(), null);

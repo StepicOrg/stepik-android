@@ -18,10 +18,13 @@ import org.stepic.droid.store.structure.DbStructureStep;
 import org.stepic.droid.store.structure.DbStructureUnit;
 import org.stepic.droid.store.structure.DbStructureViewQueue;
 
+import javax.inject.Inject;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TEXT_TYPE = "TEXT";
     private static final String LONG_TYPE = "LONG";
 
+    @Inject
     public DatabaseHelper(Context context) {
         super(context, DBStructureBase.FILE_NAME, null, DBStructureBase.VERSION);
     }

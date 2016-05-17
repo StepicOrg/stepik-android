@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,11 +16,9 @@ import java.util.List;
 public abstract class DaoBase<T> implements IDao<T> {
 
     private SQLiteDatabase database;
-    private SQLiteOpenHelper dbHelper;
 
-    public DaoBase(SQLiteOpenHelper openHelper) {
-        dbHelper = openHelper;
-        database = dbHelper.getWritableDatabase();
+    public DaoBase(SQLiteDatabase writeableDatabase) {
+        database = writeableDatabase;
     }
 
     private void open() {
@@ -34,12 +31,11 @@ public abstract class DaoBase<T> implements IDao<T> {
         RWLocks.DatabaseLock.writeLock().unlock();
     }
 
-    private void openRead(){
+    private void openRead() {
         RWLocks.DatabaseLock.readLock().lock();
-//        database=dbHelper.getReadableDatabase();
     }
 
-    private void  closeRead(){
+    private void closeRead() {
 //        database.close();
         RWLocks.DatabaseLock.readLock().unlock();
     }
@@ -200,7 +196,12 @@ public abstract class DaoBase<T> implements IDao<T> {
 
     abstract String getDefaultPrimaryValue(T persistentObject);
 
-    abstract  ContentValues getContentValues(T persistentObject);
+    abstract ContentValues getContentValues(T persistentObject);
 
     abstract T parsePersistentObject(Cursor cursor);
+
+    @Override
+    public void removeAll() {
+        executeDelete(getDbName(), null, null);
+    }
 }

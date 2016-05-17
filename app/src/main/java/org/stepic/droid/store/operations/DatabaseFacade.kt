@@ -55,7 +55,17 @@ class DatabaseFacade {
     }
 
     fun dropDatabase() {
-        MainApplication.getAppContext().deleteDatabase(DBStructureBase.FILE_NAME)
+        mSectionDao.removeAll()
+        mUnitDao.removeAll()
+        mProgressDao.removeAll()
+        mLessonDao.removeAll()
+        mViewAssignmentDao.removeAll()
+        mDownloadEntityDao.removeAll()
+        mCachedVideoDao.removeAll()
+        mStepDao.removeAll()
+        mCoursesEnrolledDao.removeAll()
+        mCoursesFeaturedDao.removeAll()
+        mNotificationDao.removeAll()
     }
 
     fun getCourseDao(table: Table) =

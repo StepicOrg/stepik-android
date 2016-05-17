@@ -2,7 +2,7 @@ package org.stepic.droid.store.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteDatabase;
 
 import org.stepic.droid.model.Section;
 import org.stepic.droid.store.structure.DbStructureSections;
@@ -10,7 +10,7 @@ import org.stepic.droid.util.DbParseHelper;
 
 public class SectionDaoImpl extends DaoBase<Section> {
 
-    public SectionDaoImpl(SQLiteOpenHelper openHelper) {
+    public SectionDaoImpl(SQLiteDatabase openHelper) {
         super(openHelper);
     }
 

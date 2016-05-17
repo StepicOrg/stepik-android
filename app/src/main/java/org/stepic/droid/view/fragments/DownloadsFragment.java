@@ -376,9 +376,13 @@ public class DownloadsFragment extends FragmentBase {
     @Subscribe
     public void onClearAll(ClearAllDownloadWithoutAnimationEvent e) {
         long[] stepIds = e.getStepIds();
-        if (stepIds == null) return;
-        for (long stepId : stepIds) {
-            removeByStepId(stepId);
+        if (stepIds == null) {
+            cachedStepsSet.clear();
+            mCachedVideoList.clear();
+        } else {
+            for (long stepId : stepIds) {
+                removeByStepId(stepId);
+            }
         }
         checkForEmpty();
         mDownloadAdapter.notifyDataSetChanged();
