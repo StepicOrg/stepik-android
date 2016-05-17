@@ -1,5 +1,7 @@
 package org.stepic.droid.store;
 
+import android.util.Log;
+
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,6 +28,7 @@ public class ConcurrentCancelSniffer implements ICancelSniffer {
 
     @Override
     public void removeStepIdCancel(long stepId) {
+        Log.d("eee", "remove stepid sniffer: " + stepId);
         mCanceledStepIdsSet.remove(stepId);
     }
 

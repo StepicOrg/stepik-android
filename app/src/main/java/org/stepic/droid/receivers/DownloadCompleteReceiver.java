@@ -45,6 +45,9 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     @Inject
     ExecutorService mThreadSingleThreadExecutor;
 
+    @Inject
+    DownloadManager downloadManager;
+
     public DownloadCompleteReceiver() {
         MainApplication.component().inject(this);
     }
@@ -67,16 +70,18 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
             RWLocks.DownloadLock.writeLock().lock();
 
             DownloadEntity downloadEntity = mDatabaseFacade.getDownloadEntityIfExist(referenceId);
+            downloadManager.remove(referenceId);//remove notification (is it really work and need?)
             if (downloadEntity != null) {
                 long video_id = downloadEntity.getVideoId();
                 final long step_id = downloadEntity.getStepId();
                 mDatabaseFacade.deleteDownloadEntityByDownloadId(referenceId);
-
+Log.d("eee", "inDownloadComplete stepId: " + step_id);
 
                 File downloadFolderAndFile = new File(mUserPrefs.getUserDownloadFolder(), video_id + "");
                 String path = Uri.fromFile(downloadFolderAndFile).getPath();
 
                 if (mCancelSniffer.isStepIdCanceled(step_id)) {
+                    Log.d("eee", "inDownloadComplete CANCEL stepId: " + step_id);
                     File file = new File(path);
                     if (file.exists()) {
                         file.delete();
@@ -120,6 +125,9 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     };
                     mainHandler.post(myRunnable);
                 }
+            }
+            else{
+                Log.d("eee", "download null "+ referenceId);
             }
         } finally
 

@@ -170,7 +170,7 @@ public class LoadService extends IntentService {
                 } catch (NullPointerException npe) {
                     videoQuality = mUserPrefs.getQualityVideo();
                 }
-
+                Log.d("eee", "try load pls stepId: " + step.getId());
                 long downloadId = mSystemDownloadManager.enqueue(request);
                 String local_thumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
                 String thumbnailsPath = FileUtil.saveFileToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getUserDownloadFolder());

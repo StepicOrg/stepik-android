@@ -44,13 +44,10 @@ class CancelLoadingService : IntentService("cancel_loading") {
         val type = intent?.getSerializableExtra(AppConstants.KEY_LOAD_TYPE) as? LoadService.LoadTypeKey
         when (type) {
             LoadService.LoadTypeKey.Section -> {
-                val section = intent?.getSerializableExtra(AppConstants.KEY_SECTION_BUNDLE) as? Section
-                cancelSection(section)
+                return
             }
             LoadService.LoadTypeKey.UnitLesson -> {
                 return
-                //                val lesson = intent?.getSerializableExtra(AppConstants.KEY_LESSON_BUNDLE) as? Lesson
-                //                cancelUnitLesson(lesson)
             }
             LoadService.LoadTypeKey.Course -> {
                 return
@@ -64,51 +61,13 @@ class CancelLoadingService : IntentService("cancel_loading") {
         }
     }
 
-    //    @Deprecated("this method is not tested and may be not worked, use cancelStepVideo instead")
-    //    private fun cancelUnitLesson(lesson: Lesson?) {
-    //        lesson?.let {
-    //            try {
-    //                val lessonSteps = lesson.steps
-    //                lessonSteps?.forEach { mCancelSniffer.addStepIdCancel(it) }
-    //
-    //                RWLocks.DownloadLock.writeLock().lock()
-    //                val steps = mDb.getStepsOfLesson(lesson.id)
-    //                val downloads = mDb.getAllDownloadEntities()
-    //
-    //
-    //                //todo: improve time of operation
-    //                for (step in steps) {
-    //                    for (download in downloads) {
-    //                        if (step != null && download != null && download.stepId.equals(step.id)) {
-    //                            val numberOfRemoved = mSystemDownloadManager.remove(download.downloadId)
-    //                            if (numberOfRemoved > 0) {
-    //                                mCancelSniffer.removeStepIdCancel(step.id)
-    //                                mDb.deleteDownloadEntityByDownloadId(download.downloadId)
-    //                                mDb.deleteVideo(download.videoId)
-    //                                if (mDb.isStepCached(step)) {
-    //                                    step.is_cached = false
-    //                                    step.is_loading = false
-    //                                    mDb.updateOnlyCachedLoadingStep(step)
-    //                                }
-    //                            }
-    //                        }
-    //                    }
-    //                }
-    //
-    //                mStoreStateManager.updateUnitLessonAfterDeleting(lesson.id)
-    //            } finally {
-    //                RWLocks.DownloadLock.writeLock().unlock()
-    //            }
-    //        }
-    //    }
-
     private fun cancelStepVideo(stepId: Long) {
         try {
             RWLocks.DownloadLock.writeLock().lock()
             var downloadEntity = mDb.getDownloadEntityByStepId(stepId)
             downloadEntity?.let {
                 val numberOfRemoved = mSystemDownloadManager.remove(downloadEntity.downloadId)
-                Log.d("ttt", "remove downloadId: " + downloadEntity.downloadId)
+                Log.d("ttt", "remove downloadId:step " + downloadEntity.downloadId + ":" + stepId + " Num:" + numberOfRemoved)
                 if (numberOfRemoved > 0) {
                     mCancelSniffer.removeStepIdCancel(stepId)
                     mDb.deleteDownloadEntityByDownloadId(downloadEntity.downloadId)
@@ -142,10 +101,4 @@ class CancelLoadingService : IntentService("cancel_loading") {
         }
     }
 
-    private fun cancelSection(section: Section?) {
-        section?.let {
-
-        }
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 }
