@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.events.DownloadingIsLoadedSuccessfullyEvent;
 import org.stepic.droid.events.loading.FinishDeletingLoadEvent;
 import org.stepic.droid.events.loading.StartDeletingLoadEvent;
 import org.stepic.droid.events.steps.ClearAllDownloadWithoutAnimationEvent;
@@ -182,15 +183,22 @@ public class DownloadsFragment extends FragmentBase {
                             int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
                             int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
                             int columnStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
-                            int downloadId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
+                            final int downloadId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
                             int columnReason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
 
-//                            if (columnStatus == DownloadManager.STATUS_SUCCESSFUL) {
+                            if (columnStatus == DownloadManager.STATUS_SUCCESSFUL) {
+                                mMainHandler.post(new Function0<Unit>() {
+                                    @Override
+                                    public Unit invoke() {
+                                        bus.post(new DownloadingIsLoadedSuccessfullyEvent(downloadId));
+                                        return Unit.INSTANCE;
+                                    }
+                                });
 //                                Intent successLoaded = new Intent(MainApplication.getAppContext(), DownloadCompleteReceiver.class);
 //                                successLoaded.putExtra(DownloadManager.EXTRA_DOWNLOAD_ID, (long) downloadId);
 //                                MainApplication.getAppContext().sendBroadcast(successLoaded);
-//                                continue;
-//                            }
+                                continue;
+                            }
 
                             final DownloadReportItem downloadReportItem = new DownloadReportItem(bytes_downloaded, bytes_total, columnStatus, downloadId, columnReason);
                             DownloadEntity relatedDownloadEntity = null;
@@ -231,6 +239,25 @@ public class DownloadsFragment extends FragmentBase {
         };
         mThread = new Thread(mLoadingUpdater);
         mThread.start();
+    }
+
+    @Subscribe
+    public void onDownloadingSuccessfully(DownloadingIsLoadedSuccessfullyEvent event) {
+        long downloadId = event.getDownloadId();
+        int pos = -1;
+        for (int i = 0; i < mDownloadingWithProgressList.size(); i++) {
+            DownloadingVideoItem item = mDownloadingWithProgressList.get(i);
+            if (item.getDownloadEntity().getDownloadId() == downloadId) {
+                pos = i;
+                break;
+            }
+        }
+
+        if (pos >= 0 && pos <mDownloadingWithProgressList.size()){
+            mDownloadingWithProgressList.remove(pos );
+            mDownloadAdapter.notifyDownloadingVideoRemoved(pos);
+        }
+
     }
 
     private Thread mThread;
