@@ -543,7 +543,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         if (isVideoWasInDownloading) {
             if (downloadingPos == realPosition) {
-                notifyItemChanged(realPosition);
+                notifyDataSetChanged();
             } else {
                 if (downloadingPos != 1) {
                     notifyItemMoved(downloadingPos, realPosition);
