@@ -2,7 +2,6 @@ package org.stepic.droid.view.fragments;
 
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.loading.FinishDeletingLoadEvent;
 import org.stepic.droid.events.loading.StartDeletingLoadEvent;
 import org.stepic.droid.events.steps.ClearAllDownloadWithoutAnimationEvent;
@@ -37,7 +35,6 @@ import org.stepic.droid.model.DownloadingVideoItem;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.VideosAndMapToLesson;
-import org.stepic.droid.receivers.DownloadCompleteReceiver;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.StepicLogicHelper;
@@ -188,12 +185,12 @@ public class DownloadsFragment extends FragmentBase {
                             int downloadId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
                             int columnReason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
 
-                            if (columnStatus == DownloadManager.STATUS_SUCCESSFUL) {
-                                Intent successLoaded = new Intent(MainApplication.getAppContext(), DownloadCompleteReceiver.class);
-                                successLoaded.putExtra(DownloadManager.EXTRA_DOWNLOAD_ID, (long) downloadId);
-                                MainApplication.getAppContext().sendBroadcast(successLoaded);
-                                continue;
-                            }
+//                            if (columnStatus == DownloadManager.STATUS_SUCCESSFUL) {
+//                                Intent successLoaded = new Intent(MainApplication.getAppContext(), DownloadCompleteReceiver.class);
+//                                successLoaded.putExtra(DownloadManager.EXTRA_DOWNLOAD_ID, (long) downloadId);
+//                                MainApplication.getAppContext().sendBroadcast(successLoaded);
+//                                continue;
+//                            }
 
                             final DownloadReportItem downloadReportItem = new DownloadReportItem(bytes_downloaded, bytes_total, columnStatus, downloadId, columnReason);
                             DownloadEntity relatedDownloadEntity = null;

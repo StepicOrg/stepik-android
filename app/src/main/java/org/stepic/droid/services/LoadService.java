@@ -5,6 +5,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.util.Log;
 
 import com.squareup.otto.Bus;
 import com.yandex.metrica.YandexMetrica;
@@ -74,7 +75,7 @@ public class LoadService extends IntentService {
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
-     * <p/>
+     * <p>
      * name Used to name the worker thread, important only for debugging.
      */
     public LoadService() {
@@ -154,49 +155,27 @@ public class LoadService extends IntentService {
             } else {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
             }
-            try {
-                RWLocks.CancelLock.writeLock().lock();
-                if (mCancelSniffer.isStepIdCanceled(step.getId())) {
-                    mCancelSniffer.removeStepIdCancel(step.getId());
-                    Lesson lesson = mDb.getLessonById(step.getLesson());
-                    if (lesson != null) {
-                        Unit unit = mDb.getUnitByLessonId(lesson.getId());
-                        if (unit != null && mCancelSniffer.isUnitIdIsCanceled(unit.getId())) {
-                            mStoreStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
-                            mCancelSniffer.removeUnitIdCancel(unit.getId());
-                            Section section = mDb.getSectionById(unit.getSection());
-                            if (section != null && mCancelSniffer.isSectionIdIsCanceled(section.getId())) {
-                                mCancelSniffer.removeSectionIdCancel(section.getId());
-                            }
+            if (isNeedCancel(step)) return;
+
+            if (!mDb.isExistDownloadEntityByVideoId(fileId) && !downloadFolderAndFile.exists()) {
+
+                String videoQuality = null;
+                try {
+                    for (VideoUrl urlItem : step.getBlock().getVideo().getUrls()) {
+                        if (urlItem.getUrl().trim().equals(url)) {
+                            videoQuality = urlItem.getQuality();
+                            break;
                         }
-
                     }
-
-                    return;
+                } catch (NullPointerException npe) {
+                    videoQuality = mUserPrefs.getQualityVideo();
                 }
 
-                if (!mDb.isExistDownloadEntityByVideoId(fileId) && !downloadFolderAndFile.exists()) {
-
-                    String videoQuality = null;
-                    try {
-                        for (VideoUrl urlItem : step.getBlock().getVideo().getUrls()) {
-                            if (urlItem.getUrl().trim().equals(url)) {
-                                videoQuality = urlItem.getQuality();
-                                break;
-                            }
-                        }
-                    } catch (NullPointerException npe) {
-                        videoQuality = mUserPrefs.getQualityVideo();
-                    }
-
-                    long downloadId = mSystemDownloadManager.enqueue(request);
-                    String local_thumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
-                    String thumbnailsPath = FileUtil.saveFileToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getUserDownloadFolder());
-                    final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, videoQuality);
-                    mDb.addDownloadEntity(newEntity);
-                }
-            } finally {
-                RWLocks.CancelLock.writeLock().unlock();
+                long downloadId = mSystemDownloadManager.enqueue(request);
+                String local_thumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
+                String thumbnailsPath = FileUtil.saveFileToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getUserDownloadFolder());
+                final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, videoQuality);
+                mDb.addDownloadEntity(newEntity);
             }
         } catch (SecurityException ex) {
             YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, ex);
@@ -204,6 +183,33 @@ public class LoadService extends IntentService {
             YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, ex);
         }
 
+    }
+
+    private boolean isNeedCancel(Step step) {
+        try {
+            RWLocks.CancelLock.writeLock().lock();
+            if (mCancelSniffer.isStepIdCanceled(step.getId())) {
+                mCancelSniffer.removeStepIdCancel(step.getId());
+                Lesson lesson = mDb.getLessonById(step.getLesson());
+                if (lesson != null) {
+                    Unit unit = mDb.getUnitByLessonId(lesson.getId());
+                    if (unit != null && mCancelSniffer.isUnitIdIsCanceled(unit.getId())) {
+                        mStoreStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
+                        mCancelSniffer.removeUnitIdCancel(unit.getId());
+                        Section section = mDb.getSectionById(unit.getSection());
+                        if (section != null && mCancelSniffer.isSectionIdIsCanceled(section.getId())) {
+                            mCancelSniffer.removeSectionIdCancel(section.getId());
+                        }
+                    }
+
+                }
+
+                return true;
+            }
+        } finally {
+            RWLocks.CancelLock.writeLock().unlock();
+        }
+        return false;
     }
 
     private void addStep(Step step, Lesson lesson) {
@@ -218,6 +224,7 @@ public class LoadService extends IntentService {
             step.set_cached(true);
             mDb.updateOnlyCachedLoadingStep(step);
             mStoreStateManager.updateUnitLessonState(step.getLesson());
+            isNeedCancel(step);
         }
     }
 
@@ -259,10 +266,11 @@ public class LoadService extends IntentService {
                             }
                         }
                         if (mCancelSniffer.isUnitIdIsCanceled(unit.getId())) {
+                            Log.d("eee", "LoadService unit canceled: " + unit.getId());
                             for (Step step : steps) {
                                 mCancelSniffer.addStepIdCancel(step.getId());
+                                Log.d("eee", "LoadService step canceled after unit: " + step.getId());
                             }
-                            mCancelSniffer.removeUnitIdCancel(unit.getId());
                         }
 
                         for (Step step : steps) {
@@ -331,10 +339,11 @@ public class LoadService extends IntentService {
                         }
                     }
                     if (mCancelSniffer.isSectionIdIsCanceled(section.getId())) {
+                        Log.d("eee", "LoadService section canceled: " + section.getId());
                         for (Unit unit : units) {
                             mCancelSniffer.addUnitIdCancel(unit.getId());
+                            Log.d("eee", "LoadService unit canceled after section: " + unit.getId());
                         }
-                        mCancelSniffer.removeSectionIdCancel(section.getId());
                     }
                     for (Unit unit : units) {
                         Lesson lesson = idToLessonMap.get(unit.getLesson());
