@@ -120,6 +120,20 @@ class CancelLoadingService : IntentService("cancel_loading") {
                         step.is_loading = false
                         mDb.updateOnlyCachedLoadingStep(step)
                         mStoreStateManager.updateStepAfterDeleting(step)
+
+                        val lesson = mDb.getLessonById(step.id)
+                        lesson?.let {
+                            val unit = mDb.getUnitByLessonId(lesson.id)
+                            unit?.let {
+                                if (mCancelSniffer.isUnitIdIsCanceled(unit.id)) {
+                                    mCancelSniffer.removeUnitIdCancel(unit.id)
+
+                                    if (mCancelSniffer.isSectionIdIsCanceled(unit.section)) {
+                                        mCancelSniffer.removeSectionIdCancel(unit.section)
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

@@ -75,7 +75,7 @@ public class LoadService extends IntentService {
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
-     * <p>
+     * <p/>
      * name Used to name the worker thread, important only for debugging.
      */
     public LoadService() {
@@ -196,9 +196,9 @@ public class LoadService extends IntentService {
                     if (unit != null && mCancelSniffer.isUnitIdIsCanceled(unit.getId())) {
                         mStoreStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
                         mCancelSniffer.removeUnitIdCancel(unit.getId());
-                        Section section = mDb.getSectionById(unit.getSection());
-                        if (section != null && mCancelSniffer.isSectionIdIsCanceled(section.getId())) {
-                            mCancelSniffer.removeSectionIdCancel(section.getId());
+
+                        if (mCancelSniffer.isSectionIdIsCanceled(unit.getSection())) {
+                            mCancelSniffer.removeSectionIdCancel(unit.getSection());
                         }
                     }
 
