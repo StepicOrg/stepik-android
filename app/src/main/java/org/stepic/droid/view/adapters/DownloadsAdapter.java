@@ -1,10 +1,15 @@
 package org.stepic.droid.view.adapters;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -484,10 +489,26 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             if (position == 0 && !mDownloadingVideoList.isEmpty()) {
                 //downloading
 
-                if (downloadsFragment != null){
-                    downloadsFragment.cancelAll();
-                }
-
+                DialogFragment dialogFragment = new DialogFragment() {
+                    @NonNull
+                    @Override
+                    public Dialog onCreateDialog(Bundle savedInstanceState) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
+                        builder.setTitle(R.string.title_confirmation)
+                                .setMessage(R.string.cancel_videos_explanation)
+                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (downloadsFragment != null) {
+                                            downloadsFragment.cancelAll();
+                                        }
+                                    }
+                                })
+                                .setNegativeButton(R.string.no, null);
+                        return builder.create();
+                    }
+                };
+                dialogFragment.show(downloadsFragment.getFragmentManager(), null);
             } else {
                 //cached
                 ClearVideosDialog dialogFragment = new ClearVideosDialog();

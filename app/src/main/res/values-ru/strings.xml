@@ -41,7 +41,7 @@
     <string name="video_title">Видео</string>
     <string name="clear_cache_title">Очистить кэш</string>
     <string name="wi_fi_setting">Загружать только по Wi-Fi </string>
-    <string name="title_clear_cache_dialog">Подтверждение</string>
+    <string name="title_confirmation">Подтверждение</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="open_web_to_solve">пройти задание в web-версии</string>
@@ -134,4 +134,5 @@
     <string name="downloading_cancel_all">Отменить все</string>
     <string name="cached_title">Загружено</string>
     <string name="remove_all">Удалить все</string>
+    <string name="cancel_videos_explanation">Отмена загрузки видео времязатратня операция. Вы уверены?</string>
 </resources>

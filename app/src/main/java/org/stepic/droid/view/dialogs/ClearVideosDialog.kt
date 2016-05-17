@@ -44,7 +44,7 @@ class ClearVideosDialog : DialogFragment() {
 
 
         val builder = AlertDialog.Builder(activity, R.style.MyAlertDialogStyle)
-        builder.setTitle(R.string.title_clear_cache_dialog).setMessage(R.string.clear_videos).setPositiveButton(R.string.yes) { dialog, which ->
+        builder.setTitle(R.string.title_confirmation).setMessage(R.string.clear_videos).setPositiveButton(R.string.yes) { dialog, which ->
             YandexMetrica.reportEvent(AppConstants.METRICA_YES_CLEAR_VIDEOS)
 
             val task = object : AsyncTask<Void, Void, Void>() {

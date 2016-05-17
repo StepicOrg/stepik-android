@@ -43,7 +43,7 @@
     <string name="video_title">Video</string>
     <string name="wi_fi_setting">Wi-Fi only download</string>
     <string name="clear_cache_title">Clear cache</string>
-    <string name="title_clear_cache_dialog">Please confirm</string>
+    <string name="title_confirmation">Please confirm</string>
     <string name="yes">Yes</string>
     <string name="allow">Allow</string>
     <string name="deny">Deny</string>
@@ -138,6 +138,7 @@
     <string name="percent_symbol" translatable="false">%d%%</string>
     <string name="cached_title">Cached</string>
     <string name="remove_all">Remove all</string>
+    <string name="cancel_videos_explanation">Cancel of uploading videos is time-consuming. Are you sure?</string>
     <plurals name="notification_plural">
         <item quantity="one">%d new notification</item>
         <item quantity="other">%d new notifications</item>
