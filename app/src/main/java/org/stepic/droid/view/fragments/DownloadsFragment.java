@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.concurrency.DownloadPoster;
 import org.stepic.droid.events.DownloadingIsLoadedSuccessfullyEvent;
 import org.stepic.droid.events.loading.FinishDeletingLoadEvent;
 import org.stepic.droid.events.loading.StartDeletingLoadEvent;
@@ -57,8 +58,8 @@ import kotlin.jvm.functions.Function0;
 
 public class DownloadsFragment extends FragmentBase {
 
-    private static final int ANIMATION_DURATION = 500; //reset to 10 after debug
-    private static final int UPDATE_DELAY = 300;
+    private static final int ANIMATION_DURATION = 10; //reset to 10 after debug
+    private static final int UPDATE_DELAY = 150;
 
     public static DownloadsFragment newInstance() {
         return new DownloadsFragment();
@@ -194,9 +195,7 @@ public class DownloadsFragment extends FragmentBase {
                                         return Unit.INSTANCE;
                                     }
                                 });
-//                                Intent successLoaded = new Intent(MainApplication.getAppContext(), DownloadCompleteReceiver.class);
-//                                successLoaded.putExtra(DownloadManager.EXTRA_DOWNLOAD_ID, (long) downloadId);
-//                                MainApplication.getAppContext().sendBroadcast(successLoaded);
+                                cursor.moveToNext();
                                 continue;
                             }
 
@@ -211,14 +210,7 @@ public class DownloadsFragment extends FragmentBase {
 
                             if (relatedDownloadEntity != null && !cancelSniffer.isStepIdCanceled(relatedDownloadEntity.getStepId()) && isInDownloadManager(relatedDownloadEntity.getDownloadId())) {
                                 final DownloadingVideoItem downloadingVideoItem = new DownloadingVideoItem(downloadReportItem, relatedDownloadEntity);
-
-                                mMainHandler.post(new Function0<Unit>() {
-                                    @Override
-                                    public Unit invoke() {
-                                        bus.post(new DownloadReportEvent(downloadingVideoItem));
-                                        return Unit.INSTANCE;
-                                    }
-                                });
+                                mMainHandler.post(new DownloadPoster(downloadingVideoItem));
                             }
                             cursor.moveToNext();
                         }
@@ -303,11 +295,11 @@ public class DownloadsFragment extends FragmentBase {
 
         if (position >= 0) {
             mDownloadingWithProgressList.get(position).setDownloadReportItem(item.getDownloadReportItem());
-            mDownloadAdapter.notifyDownloadingVideoChanged(position); // TODO: 04.05.16 change to method update in adapter
+            mDownloadAdapter.notifyDownloadingVideoChanged(position);
         } else {
             mDownloadingWithProgressList.add(item);
             checkForEmpty();
-            mDownloadAdapter.notifyDownloadingItemInserted(mDownloadingWithProgressList.size() - 1); // TODO: 04.05.16 change to method update in adapter
+            mDownloadAdapter.notifyDownloadingItemInserted(mDownloadingWithProgressList.size() - 1);
         }
     }
 

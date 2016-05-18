@@ -2,6 +2,7 @@ package org.stepic.droid.core;
 
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.concurrency.DownloadPoster;
 import org.stepic.droid.concurrency.tasks.FromDbCoursesTask;
 import org.stepic.droid.concurrency.tasks.FromDbSectionTask;
 import org.stepic.droid.concurrency.tasks.FromDbStepTask;
@@ -134,4 +135,6 @@ public interface StepicCoreComponent {
     void inject(NeedUpdatingDialog needUpdatingDialog);
 
     void inject(UpdateWithApkService service);
+
+    void inject(DownloadPoster downloadPoster);
 }
