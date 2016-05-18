@@ -105,7 +105,7 @@
     <string name="feedback_title">Give feedback</string>
     <string name="feedback_hint">Give feedback…</string>
     <string name="feedback_description">Send us your suggestions, comments or idea</string>
-    <string name="feedback_contacts_description">Contacts for feedback</string>
+    <string name="feedback_contacts_description">Contacts for feedback:</string>
     <string name="email_incorrect">E-mail is incorrect</string>
     <string name="feedback_subject">Feedback about the Android app of Stepic.org</string>
     <string name="feedback_sent">Feedback is sent</string>
@@ -138,6 +138,8 @@
     <string name="percent_symbol" translatable="false">%d%%</string>
     <string name="cached_title">Cached</string>
     <string name="remove_all">Remove all</string>
+    <string name="hint_for_idea">Type your suggestions, comments or idea</string>
+    <string name="feedback_from">From</string>
     <string name="cancel_videos_explanation">Cancel of uploading videos is time-consuming. Are you sure?</string>
     <plurals name="notification_plural">
         <item quantity="one">%d new notification</item>

@@ -103,7 +103,7 @@
     <string name="feedback_title">Оставить отзыв</string>
     <string name="feedback_hint">Напишите нам…</string>
     <string name="feedback_description">Напишите нам свое предложение, замечание или идею</string>
-    <string name="feedback_contacts_description">Контакты для обратной связи</string>
+    <string name="feedback_contacts_description">Контакты для обратной связи:</string>
     <string name="email_incorrect">Введен некоррентный e-mail</string>
     <string name="feedback_subject">Отзыв об Android приложении Stepic.org</string>
     <string name="feedback_sent">Сообщение отправлено</string>
@@ -135,4 +135,6 @@
     <string name="cached_title">Загружено</string>
     <string name="remove_all">Удалить все</string>
     <string name="cancel_videos_explanation">Отмена загрузки видео времязатратня операция. Вы уверены?</string>
+    <string name="hint_for_idea">Напишите замечание или идею</string>
+    <string name="feedback_from">От</string>
 </resources>

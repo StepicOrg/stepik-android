@@ -91,8 +91,8 @@ class TextFeedbackFragment : FragmentBase() {
     }
 
     fun initButton(v: View) {
-        mSendButton = v.findViewById(R.id.feedback_send_button) as Button
-        mSendButton.setOnClickListener { sendFeedback() }
+//        mSendButton = v.findViewById(R.id.feedback_send_button) as Button
+//        mSendButton.setOnClickListener { sendFeedback() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
