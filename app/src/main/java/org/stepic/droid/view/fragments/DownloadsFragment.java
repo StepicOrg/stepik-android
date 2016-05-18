@@ -295,7 +295,7 @@ public class DownloadsFragment extends FragmentBase {
 
         if (position >= 0) {
             mDownloadingWithProgressList.get(position).setDownloadReportItem(item.getDownloadReportItem());
-            mDownloadAdapter.notifyDownloadingVideoChanged(position);
+            mDownloadAdapter.notifyDownloadingVideoChanged(position, stepId);
         } else {
             mDownloadingWithProgressList.add(item);
             checkForEmpty();

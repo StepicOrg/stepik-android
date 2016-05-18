@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,7 +126,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         }
     }
 
-
     @Override
     public void onBindViewHolder(GenericViewHolder holder, int position) {
         holder.setDataOnView(position);
@@ -191,24 +191,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
             mDownloadingVideoList.remove(position);
             notifyDataSetChanged(); // TODO: 13.05.16 investigate and make remove animation
-        }
-    }
-
-    public void notifyCachedVideoRemoved(int position) {
-        if (mCachedVideoList.isEmpty()) {
-            notifyItemRangeRemoved(position + mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList), 2);//title and item
-        } else {
-            notifyItemRemoved(position + mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList) + 1);
-        }
-
-    }
-
-    public void notifyDownloadingVideoRemoved(int positionInList) {
-        if (mDownloadingVideoList.isEmpty()) {
-            notifyItemRemoved(0);//title
-            notifyItemRemoved(1);//last view
-        } else {
-            notifyItemRemoved(positionInList + 1);
         }
     }
 
@@ -557,36 +539,64 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             mDownloadingVideoList.remove(downloadingPos);
         }
 
-        downloadingPos += (getTitleCount(mDownloadingVideoList) + getTitleCount(mCachedVideoList)); //title
-        position += (getTitleCount(mDownloadingVideoList) + getTitleCount(mCachedVideoList)); //title
+        notifyDataSetChanged();
 
-        int realPosition = position + mDownloadingVideoList.size();
-
-        if (isVideoWasInDownloading) {
-            if (downloadingPos == realPosition) {
-                notifyDataSetChanged();
-            } else {
-                if (downloadingPos != 1) {
-                    notifyItemMoved(downloadingPos, realPosition);
-                    notifyItemRangeChanged(downloadingPos + 1, getItemCount());
-                } else {
-                    notifyDataSetChanged();
-                }
-            }
-        } else {
-            notifyItemInserted(realPosition);
-        }
+//        downloadingPos += (getTitleCount(mDownloadingVideoList) + getTitleCount(mCachedVideoList)); //title
+//        position += (getTitleCount(mDownloadingVideoList) + getTitleCount(mCachedVideoList)); //title
+//
+//        int realPosition = position + mDownloadingVideoList.size();
+//
+//        if (isVideoWasInDownloading) {
+//            if (downloadingPos == realPosition) {
+//                notifyDataSetChanged();
+//            } else {
+//                if (downloadingPos != 1) {
+//                    notifyItemMoved(downloadingPos, realPosition);
+//                    notifyItemRangeChanged(downloadingPos + 1, getItemCount());
+//                } else {
+//                    notifyDataSetChanged();
+//                }
+//            }
+//        } else {
+//            notifyItemInserted(realPosition);
+//        }
 
 
     }
 
-    public void notifyDownloadingVideoChanged(int position) {
-        notifyItemChanged(position + 1);
+    public void notifyDownloadingVideoChanged(int position, long stepId) {
+        DownloadingVideoItem item = mDownloadingVideoList.get(position);
+        if (item != null) {
+            if (item.getDownloadEntity().getStepId() == stepId) {
+                notifyItemChanged(position);
+            } else {
+                notifyDataSetChanged();
+                Log.d("eee", "notifyDATASET WHEN CHANGE");
+            }
+        }
     }
 
     public void notifyDownloadingItemInserted(int position) {
         notifyItemChanged(0);
         notifyItemInserted(position + 1);
+    }
+
+    public void notifyCachedVideoRemoved(int position) {
+        if (mCachedVideoList.isEmpty()) {
+            notifyItemRangeRemoved(position + mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList), 2);//title and item
+        } else {
+            notifyItemRemoved(position + mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList) + 1);
+        }
+
+    }
+
+    public void notifyDownloadingVideoRemoved(int positionInList) {
+        if (mDownloadingVideoList.isEmpty()) {
+            notifyItemRemoved(0);//title
+            notifyItemRemoved(1);//last view
+        } else {
+            notifyItemRemoved(positionInList + 1);
+        }
     }
 
     public static int getTitleCount(Collection collection) {
