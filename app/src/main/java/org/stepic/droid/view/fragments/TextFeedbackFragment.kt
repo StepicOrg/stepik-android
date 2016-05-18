@@ -1,12 +1,14 @@
 package org.stepic.droid.view.fragments
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import com.squareup.otto.Subscribe
@@ -38,7 +40,7 @@ class TextFeedbackFragment : FragmentBase() {
     lateinit var mToolbar: Toolbar
     lateinit var mEmailEditText: EditText
     lateinit var mDescriptionEditTex: EditText
-    lateinit var rootView : ViewGroup
+    lateinit var rootScrollView: ViewGroup
     var mProgressDialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,12 +53,8 @@ class TextFeedbackFragment : FragmentBase() {
         v?.let {
             initToolbar(v)
             initTextFields(v)
-            initButton(v)
-            rootView = v.findViewById(R.id.root_view) as ViewGroup
-            rootView.requestFocus()
-            rootView.setOnClickListener{
-                mDescriptionEditTex.performClick()
-            }
+            initScrollView(v)
+            v.findViewById(R.id.main_root_view).requestFocus()
             mProgressDialog = LoadingProgressDialog(context)
 
         }
@@ -71,6 +69,15 @@ class TextFeedbackFragment : FragmentBase() {
     override fun onStop() {
         bus.unregister(this)
         super.onStop()
+    }
+
+    fun initScrollView(v: View) {
+        rootScrollView = v.findViewById(R.id.root_view) as ViewGroup
+        rootScrollView.setOnTouchListener { v, event ->
+            if (!mDescriptionEditTex.isFocused)
+                mDescriptionEditTex.requestFocus()
+            false
+        }
     }
 
     fun initToolbar(v: View) {
@@ -93,11 +100,17 @@ class TextFeedbackFragment : FragmentBase() {
         primaryEmail?.let { mEmailEditText.setText(primaryEmail) }
 
         mDescriptionEditTex = v.findViewById(R.id.feedback_form) as EditText
+        mDescriptionEditTex.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                showSoftKeypad(view)
+            }
+        }
     }
 
-    fun initButton(v: View) {
-//        mSendButton = v.findViewById(R.id.feedback_send_button) as Button
-//        mSendButton.setOnClickListener { sendFeedback() }
+    private fun showSoftKeypad(editTextView: View) {
+        val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(editTextView, InputMethodManager.SHOW_IMPLICIT)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -168,7 +181,8 @@ class TextFeedbackFragment : FragmentBase() {
 
     override fun onDestroyView() {
         mEmailEditText.setOnEditorActionListener(null)
-        rootView.setOnClickListener(null)
+        rootScrollView.setOnClickListener(null)
+        mDescriptionEditTex.onFocusChangeListener = null
         super.onDestroyView()
     }
 
