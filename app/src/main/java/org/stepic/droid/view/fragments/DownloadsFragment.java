@@ -59,7 +59,9 @@ import kotlin.jvm.functions.Function0;
 public class DownloadsFragment extends FragmentBase {
 
     private static final int ANIMATION_DURATION = 10; //reset to 10 after debug
-    private static final int UPDATE_DELAY = 150;
+    private static final int UPDATE_DELAY = 300;
+    private static final int UPDATE_DELAY_WHEN_IDLE = 3000;
+
 
     public static DownloadsFragment newInstance() {
         return new DownloadsFragment();
@@ -174,7 +176,14 @@ public class DownloadsFragment extends FragmentBase {
             public void run() {
                 while (!Thread.currentThread().isInterrupted()) {
                     Pair<Cursor, List<DownloadEntity>> pairCursorAndDownloading = getCursorAndEntitiesForAllDownloads();
-                    if (pairCursorAndDownloading == null) continue;
+                    if (pairCursorAndDownloading == null) {
+                        try {
+                            Thread.sleep(UPDATE_DELAY_WHEN_IDLE);
+                        } catch (InterruptedException e) {
+                            return;
+                        }
+                        continue;
+                    }
                     Cursor cursor = pairCursorAndDownloading.first;
                     List<DownloadEntity> entities = pairCursorAndDownloading.second;
                     try {
