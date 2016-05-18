@@ -245,8 +245,8 @@ public class DownloadsFragment extends FragmentBase {
             }
         }
 
-        if (pos >= 0 && pos <mDownloadingWithProgressList.size()){
-            mDownloadingWithProgressList.remove(pos );
+        if (pos >= 0 && pos < mDownloadingWithProgressList.size()) {
+            mDownloadingWithProgressList.remove(pos);
             mDownloadAdapter.notifyDownloadingVideoRemoved(pos);
         }
 
