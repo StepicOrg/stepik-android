@@ -577,26 +577,27 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     }
 
     public void notifyDownloadingItemInserted(int position) {
-        notifyItemChanged(0);
-        notifyItemInserted(position + 1);
+        notifyDataSetChanged();
+        if (mDownloadingVideoList.size() <= 1) {
+            notifyDataSetChanged();
+        } else {
+            notifyItemChanged(0);
+            notifyItemInserted(position + 1);
+        }
+
     }
 
     public void notifyCachedVideoRemoved(int position) {
-        if (mCachedVideoList.isEmpty()) {
-            notifyItemRangeRemoved(position + mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList), 2);//title and item
-        } else {
-            notifyItemRemoved(position + mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList) + 1);
-        }
-
+        notifyDataSetChanged(); //it is okay
     }
 
-    public void notifyDownloadingVideoRemoved(int positionInList) {
-        if (mDownloadingVideoList.isEmpty()) {
-            notifyItemRemoved(0);//title
-            notifyItemRemoved(1);//last view
-        } else {
-            notifyItemRemoved(positionInList + 1);
-        }
+    public void notifyDownloadingVideoRemoved(int positionInList, long downloadId) {
+            if (mDownloadingVideoList.isEmpty()) {
+                notifyItemRemoved(0);//title
+                notifyItemRemoved(1);//last view
+            } else {
+                notifyItemRemoved(positionInList + 1);
+            }
     }
 
     public static int getTitleCount(Collection collection) {

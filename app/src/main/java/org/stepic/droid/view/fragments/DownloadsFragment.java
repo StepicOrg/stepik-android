@@ -37,6 +37,7 @@ import org.stepic.droid.model.DownloadingVideoItem;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.VideosAndMapToLesson;
+import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.StepicLogicHelper;
@@ -256,7 +257,7 @@ public class DownloadsFragment extends FragmentBase {
 
         if (pos >= 0 && pos < mDownloadingWithProgressList.size()) {
             mDownloadingWithProgressList.remove(pos);
-            mDownloadAdapter.notifyDownloadingVideoRemoved(pos);
+            mDownloadAdapter.notifyDownloadingVideoRemoved(pos , downloadId);
         }
 
     }
@@ -378,14 +379,9 @@ public class DownloadsFragment extends FragmentBase {
             cachedStepsSet.add(mCachedVideoList.get(i).getStepId());
         }
 
-        ArrayList<DownloadingVideoItem> localList = new ArrayList<>(mDownloadingWithProgressList);
-        for (int i = 0; i < localList.size(); i++) {
-            long stepIdOfDownloading = mDownloadingWithProgressList.get(i).getDownloadEntity().getStepId();
-            if (cachedStepsSet.contains(stepIdOfDownloading)) {
-                mDownloadingWithProgressList.remove(i);
-                mDownloadAdapter.notifyDownloadingVideoRemoved(i);
-            }
-        }
+        List<DownloadingVideoItem> localList = KotlinUtil.INSTANCE.filterIfNotContains(mDownloadingWithProgressList, cachedStepsSet);
+        mDownloadingWithProgressList.clear();
+        mDownloadingWithProgressList.addAll(localList);
 
         checkForEmpty();
         mDownloadAdapter.notifyDataSetChanged();
