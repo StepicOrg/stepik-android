@@ -170,7 +170,6 @@ public class LoadService extends IntentService {
                 } catch (NullPointerException npe) {
                     videoQuality = mUserPrefs.getQualityVideo();
                 }
-                Log.d("eee", "try load pls stepId: " + step.getId());
                 long downloadId = mSystemDownloadManager.enqueue(request);
                 String local_thumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
                 String thumbnailsPath = FileUtil.saveFileToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getUserDownloadFolder());
@@ -266,10 +265,8 @@ public class LoadService extends IntentService {
                             }
                         }
                         if (mCancelSniffer.isUnitIdIsCanceled(unit.getId())) {
-                            Log.d("eee", "LoadService unit canceled: " + unit.getId());
                             for (Step step : steps) {
                                 mCancelSniffer.addStepIdCancel(step.getId());
-                                Log.d("eee", "LoadService step canceled after unit: " + step.getId());
                             }
                         }
 
@@ -339,10 +336,8 @@ public class LoadService extends IntentService {
                         }
                     }
                     if (mCancelSniffer.isSectionIdIsCanceled(section.getId())) {
-                        Log.d("eee", "LoadService section canceled: " + section.getId());
                         for (Unit unit : units) {
                             mCancelSniffer.addUnitIdCancel(unit.getId());
-                            Log.d("eee", "LoadService unit canceled after section: " + unit.getId());
                         }
                     }
                     for (Unit unit : units) {

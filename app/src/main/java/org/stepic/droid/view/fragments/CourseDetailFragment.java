@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -315,8 +314,6 @@ public class CourseDetailFragment extends FragmentBase {
 
 
         int widthOfAllItems = mInstructorsCarousel.getMeasuredWidth();
-        Log.d("eee", "width of screen " + widthOfScreen);
-        Log.d("eee", "width of Items " + widthOfAllItems);
         if (widthOfScreen > widthOfAllItems) {
             int padding = (int) (widthOfScreen - widthOfAllItems) / 2;
             mInstructorsCarousel.setPadding(padding, 0, padding, 0);

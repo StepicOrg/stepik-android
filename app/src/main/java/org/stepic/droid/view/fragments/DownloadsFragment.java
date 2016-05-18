@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -499,7 +498,6 @@ public class DownloadsFragment extends FragmentBase {
                     RWLocks.CancelLock.writeLock().lock();
                     long[] sectionIdsLoading = mDatabaseFacade.getAllDownloadingSections();//need lock here and in loading service.
                     for (int i = 0; i < sectionIdsLoading.length; i++) {
-                        Log.d("eee", "cancel section " + sectionIdsLoading[i]);
                         cancelSniffer.addSectionIdCancel(sectionIdsLoading[i]);
                         List<org.stepic.droid.model.Unit> units = mDatabaseFacade.getAllUnitsOfSection(sectionIdsLoading[i]);
                         if (!units.isEmpty()) {
@@ -511,7 +509,6 @@ public class DownloadsFragment extends FragmentBase {
 
                     long[] unitIdsLoading = mDatabaseFacade.getAllDownloadingUnits();
                     for (int i = 0; i < unitIdsLoading.length; i++) {
-                        Log.d("eee", "cancel unit " + unitIdsLoading[i]);
                         cancelSniffer.addUnitIdCancel(unitIdsLoading[i]);
 
                         org.stepic.droid.model.Unit unit = mDatabaseFacade.getUnitById(unitIdsLoading[i]);

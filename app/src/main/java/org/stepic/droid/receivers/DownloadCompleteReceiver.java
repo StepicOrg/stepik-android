@@ -60,7 +60,6 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
             @Override
             public void run() {
                 blockForInBackground(referenceId);
-                Log.d("thread", Thread.currentThread().getName() + " ");
             }
         });
     }
@@ -74,13 +73,11 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                 long video_id = downloadEntity.getVideoId();
                 final long step_id = downloadEntity.getStepId();
                 mDatabaseFacade.deleteDownloadEntityByDownloadId(referenceId);
-                Log.d("eee", "inDownloadComplete stepId: " + step_id);
 
                 File downloadFolderAndFile = new File(mUserPrefs.getUserDownloadFolder(), video_id + "");
                 String path = Uri.fromFile(downloadFolderAndFile).getPath();
 
                 if (mCancelSniffer.isStepIdCanceled(step_id)) {
-                    Log.d("eee", "inDownloadComplete CANCEL stepId: " + step_id);
                     downloadManager.remove(referenceId);//remove notification (is it really work and need?)
                     mCancelSniffer.removeStepIdCancel(step_id);
                     Step step = mDatabaseFacade.getStepById(step_id);
@@ -122,7 +119,6 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                 }
             } else {
                 downloadManager.remove(referenceId);//remove notification (is it really work and need?)
-                Log.d("eee", "download null " + referenceId);
             }
         } finally
 

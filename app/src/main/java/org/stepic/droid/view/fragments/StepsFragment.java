@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -99,7 +98,6 @@ public class StepsFragment extends FragmentBase {
         View v = inflater.inflate(R.layout.activity_steps, container, false);
         setHasOptionsMenu(true);
         ButterKnife.bind(this, v);
-        Log.d(TAG, "onCreateView");
         return v;
     }
 
@@ -114,7 +112,6 @@ public class StepsFragment extends FragmentBase {
         mLesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
 
         mStepList = new ArrayList<>();
-        Log.d(TAG, "onCreate");
     }
 
     @Override
