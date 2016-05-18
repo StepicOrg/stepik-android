@@ -38,7 +38,7 @@ class TextFeedbackFragment : FragmentBase() {
     lateinit var mToolbar: Toolbar
     lateinit var mEmailEditText: EditText
     lateinit var mDescriptionEditTex: EditText
-    lateinit var mSendButton: Button
+    lateinit var rootView : ViewGroup
     var mProgressDialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,8 +52,13 @@ class TextFeedbackFragment : FragmentBase() {
             initToolbar(v)
             initTextFields(v)
             initButton(v)
-            v.findViewById(R.id.root_view).requestFocus()
+            rootView = v.findViewById(R.id.root_view) as ViewGroup
+            rootView.requestFocus()
+            rootView.setOnClickListener{
+                mDescriptionEditTex.performClick()
+            }
             mProgressDialog = LoadingProgressDialog(context)
+
         }
         return v
     }
@@ -163,7 +168,7 @@ class TextFeedbackFragment : FragmentBase() {
 
     override fun onDestroyView() {
         mEmailEditText.setOnEditorActionListener(null)
-        mSendButton.setOnClickListener(null)
+        rootView.setOnClickListener(null)
         super.onDestroyView()
     }
 
