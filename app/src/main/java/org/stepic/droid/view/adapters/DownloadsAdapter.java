@@ -19,11 +19,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.otto.Bus;
 import com.squareup.picasso.Picasso;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IScreenManager;
+import org.stepic.droid.events.CancelAllVideosEvent;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadingVideoItem;
 import org.stepic.droid.model.Lesson;
@@ -427,6 +429,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     }
 
+
     public class TitleViewHolder extends GenericViewHolder implements OnClickCancelListener {
 
         @Bind(R.id.button_header_download_item)
@@ -466,30 +469,13 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         }
 
+
         @Override
         public void onClickCancel(int position) {
             if (position == 0 && !mDownloadingVideoList.isEmpty()) {
                 //downloading
 
-                DialogFragment dialogFragment = new DialogFragment() {
-                    @NonNull
-                    @Override
-                    public Dialog onCreateDialog(Bundle savedInstanceState) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
-                        builder.setTitle(R.string.title_confirmation)
-                                .setMessage(R.string.cancel_videos_explanation)
-                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        if (downloadsFragment != null) {
-                                            downloadsFragment.cancelAll();
-                                        }
-                                    }
-                                })
-                                .setNegativeButton(R.string.no, null);
-                        return builder.create();
-                    }
-                };
+                DialogFragment dialogFragment = new CancelVideoDialog();
                 dialogFragment.show(downloadsFragment.getFragmentManager(), null);
             } else {
                 //cached
@@ -507,6 +493,31 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
                 dialogFragment.show(downloadsFragment.getFragmentManager(), null);
             }
+        }
+    }
+
+    public static class CancelVideoDialog extends DialogFragment {
+        @Inject
+        Bus bus;
+
+        public CancelVideoDialog() {
+            MainApplication.component().inject(this);
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
+            builder.setTitle(R.string.title_confirmation)
+                    .setMessage(R.string.cancel_videos_explanation)
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            bus.post(new CancelAllVideosEvent());
+                        }
+                    })
+                    .setNegativeButton(R.string.no, null);
+            return builder.create();
         }
     }
 
@@ -592,12 +603,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     }
 
     public void notifyDownloadingVideoRemoved(int positionInList, long downloadId) {
-            if (mDownloadingVideoList.isEmpty()) {
-                notifyItemRemoved(0);//title
-                notifyItemRemoved(1);//last view
-            } else {
-                notifyItemRemoved(positionInList + 1);
-            }
+        if (mDownloadingVideoList.isEmpty()) {
+            notifyItemRemoved(0);//title
+            notifyItemRemoved(1);//last view
+        } else {
+            notifyItemRemoved(positionInList + 1);
+        }
     }
 
     public static int getTitleCount(Collection collection) {

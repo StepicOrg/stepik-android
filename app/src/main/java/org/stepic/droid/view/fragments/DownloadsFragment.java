@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.concurrency.DownloadPoster;
+import org.stepic.droid.events.CancelAllVideosEvent;
 import org.stepic.droid.events.DownloadingIsLoadedSuccessfullyEvent;
 import org.stepic.droid.events.loading.FinishDeletingLoadEvent;
 import org.stepic.droid.events.loading.StartDeletingLoadEvent;
@@ -484,7 +485,8 @@ public class DownloadsFragment extends FragmentBase {
         ProgressHelper.dismiss(loadingProgressDialog);
     }
 
-    public void cancelAll() {
+    @Subscribe
+    public void cancelAll(CancelAllVideosEvent event) {
         AsyncTask task = new AsyncTask() {
             @Override
             protected void onPreExecute() {

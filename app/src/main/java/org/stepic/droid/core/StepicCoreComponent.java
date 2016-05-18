@@ -137,4 +137,6 @@ public interface StepicCoreComponent {
     void inject(UpdateWithApkService service);
 
     void inject(DownloadPoster downloadPoster);
+
+    void inject(DownloadsAdapter.CancelVideoDialog cancelVideoDialog);
 }
