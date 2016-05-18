@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -39,7 +38,7 @@ class TextFeedbackFragment : FragmentBase() {
 
     lateinit var mToolbar: Toolbar
     lateinit var mEmailEditText: EditText
-    lateinit var mDescriptionEditTex: EditText
+    lateinit var mDescriptionEditText: EditText
     lateinit var rootScrollView: ViewGroup
     var mProgressDialog: ProgressDialog? = null
 
@@ -54,7 +53,13 @@ class TextFeedbackFragment : FragmentBase() {
             initToolbar(v)
             initTextFields(v)
             initScrollView(v)
-            v.findViewById(R.id.main_root_view).requestFocus()
+
+            if (mEmailEditText.text.isEmpty()){
+                mEmailEditText.requestFocus()
+            }
+            else{
+                mDescriptionEditText.requestFocus()
+            }
             mProgressDialog = LoadingProgressDialog(context)
 
         }
@@ -74,8 +79,8 @@ class TextFeedbackFragment : FragmentBase() {
     fun initScrollView(v: View) {
         rootScrollView = v.findViewById(R.id.root_view) as ViewGroup
         rootScrollView.setOnTouchListener { v, event ->
-            if (!mDescriptionEditTex.isFocused)
-                mDescriptionEditTex.requestFocus()
+            if (!mDescriptionEditText.isFocused)
+                mDescriptionEditText.requestFocus()
             false
         }
     }
@@ -99,8 +104,8 @@ class TextFeedbackFragment : FragmentBase() {
         val primaryEmail = mUserPreferences.primaryEmail?.email
         primaryEmail?.let { mEmailEditText.setText(primaryEmail) }
 
-        mDescriptionEditTex = v.findViewById(R.id.feedback_form) as EditText
-        mDescriptionEditTex.setOnFocusChangeListener { view, hasFocus ->
+        mDescriptionEditText = v.findViewById(R.id.feedback_form) as EditText
+        mDescriptionEditText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) {
                 showSoftKeypad(view)
             }
@@ -131,7 +136,7 @@ class TextFeedbackFragment : FragmentBase() {
     fun sendFeedback() {
         hideSoftKeypad()
         val email = mEmailEditText.text.toString()
-        val description = mDescriptionEditTex.text.toString()
+        val description = mDescriptionEditText.text.toString()
         if (email.isEmpty() || description.isEmpty()) {
             Toast.makeText(context, R.string.feedback_fill_fields, Toast.LENGTH_SHORT).show()
             return
@@ -182,7 +187,7 @@ class TextFeedbackFragment : FragmentBase() {
     override fun onDestroyView() {
         mEmailEditText.setOnEditorActionListener(null)
         rootScrollView.setOnClickListener(null)
-        mDescriptionEditTex.onFocusChangeListener = null
+        mDescriptionEditText.onFocusChangeListener = null
         super.onDestroyView()
     }
 
