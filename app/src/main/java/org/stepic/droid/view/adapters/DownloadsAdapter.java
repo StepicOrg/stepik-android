@@ -192,6 +192,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
             mDownloadingVideoList.remove(position);
             notifyDataSetChanged(); // TODO: 13.05.16 investigate and make remove animation
+            if (downloadsFragment != null) {
+                downloadsFragment.checkForEmpty();
+            }
         }
     }
 
@@ -199,6 +202,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         @Bind(R.id.cancel_load)
         View cancelLoad;
+
         @Bind(R.id.video_header)
         TextView mVideoHeader;
 
