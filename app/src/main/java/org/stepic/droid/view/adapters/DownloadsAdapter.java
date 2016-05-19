@@ -586,6 +586,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             } else {
                 notifyDataSetChanged();
             }
+        } else {
+            notifyDataSetChanged();
         }
     }
 
@@ -605,12 +607,13 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     }
 
     public void notifyDownloadingVideoRemoved(int positionInList, long downloadId) {
-        if (mDownloadingVideoList.isEmpty()) {
-            notifyItemRemoved(0);//title
-            notifyItemRemoved(1);//last view
-        } else {
-            notifyItemRemoved(positionInList + 1);
-        }
+        notifyDataSetChanged();
+//        if (mDownloadingVideoList.isEmpty()) {
+//            notifyItemRemoved(0);//title
+//            notifyItemRemoved(1);//last view
+//        } else {
+//            notifyItemRemoved(positionInList + 1);
+//        }
     }
 
     public static int getTitleCount(Collection collection) {
