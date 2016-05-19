@@ -214,7 +214,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                 notifyItemChanged(position);
             } else {
                 if (section.is_loading()) {
-                    mScreenManager.showDownload();
+                    mScreenManager.showDownload(mContext);
                 } else {
                     YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CACHE_SECTION, JsonHelper.toJson(section));
                     section.set_cached(false);

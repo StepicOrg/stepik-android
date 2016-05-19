@@ -251,7 +251,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             } else {
                 if (unit.is_loading()) {
                     //cancel loading
-                    mScreenManager.showDownload();
+                    mScreenManager.showDownload(mContext);
 
                 } else {
 

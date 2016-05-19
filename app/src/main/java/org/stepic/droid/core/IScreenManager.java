@@ -44,6 +44,8 @@ public interface IScreenManager {
 
     void showDownload();
 
+    void showDownload(Context context);
+
     void showVideo(Activity sourceActivity, String source);
 
     void showSettings(Activity sourceActivity);
