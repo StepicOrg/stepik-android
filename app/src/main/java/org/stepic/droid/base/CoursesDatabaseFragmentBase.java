@@ -32,6 +32,7 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
+import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.fragments.CourseListFragmentBase;
 import org.stepic.droid.web.CoursesStepicResponse;
@@ -67,6 +68,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         }
 
         mCourses.clear();
+        cachedCourses = KotlinUtil.INSTANCE.filterIfNotUnique(cachedCourses);
         if (getCourseType() == DatabaseFacade.Table.enrolled) {
             for (Course course : cachedCourses) {
                 if (course.getEnrollment() != 0)
