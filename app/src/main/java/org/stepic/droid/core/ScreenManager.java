@@ -144,7 +144,7 @@ public class ScreenManager implements IScreenManager {
     @Override
     public void showDownload(Context context) {
         Intent intent = new Intent(context, MainFeedActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Bundle bundle = new Bundle();
         int index = MainFeedActivity.getDownloadFragmentIndex();
         bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
