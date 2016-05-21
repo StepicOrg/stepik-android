@@ -6,4 +6,5 @@ public class RWLocks {
     public static final ReentrantReadWriteLock AuthLock = new ReentrantReadWriteLock();
     public static final ReentrantReadWriteLock DatabaseLock = new ReentrantReadWriteLock();
     public static final ReentrantReadWriteLock DownloadLock = new ReentrantReadWriteLock();
+    public static final ReentrantReadWriteLock CancelLock = new ReentrantReadWriteLock();
 }

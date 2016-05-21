@@ -4,6 +4,8 @@
     android:layout_width="56dp"
     android:layout_height="56dp"
     android:layout_gravity="center"
+    android:layout_centerVertical="true"
+    android:layout_alignParentRight="true"
     android:clickable="true"
     android:focusable="true"
     android:foreground="@drawable/circle_foreground">
@@ -16,13 +18,13 @@
         android:src="@drawable/ic_cloud_download_grey600_24dp" />
 
 
-    <ProgressBar
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
         android:id="@+id/when_load_view"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="center"
-        android:indeterminateDrawable="@drawable/login_progress"
-        android:visibility="invisible" />
+        style="@style/Widget.MaterialProgressBar.ProgressBar.Small.NoPadding"
+        android:indeterminate="true" />
 
 
     <ImageView

@@ -41,7 +41,7 @@
     <string name="video_title">Видео</string>
     <string name="clear_cache_title">Очистить кэш</string>
     <string name="wi_fi_setting">Загружать только по Wi-Fi </string>
-    <string name="title_clear_cache_dialog">Подтверждение</string>
+    <string name="title_confirmation">Подтверждение</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="open_web_to_solve">пройти задание в web-версии</string>
@@ -103,13 +103,13 @@
     <string name="feedback_title">Оставить отзыв</string>
     <string name="feedback_hint">Напишите нам…</string>
     <string name="feedback_description">Напишите нам свое предложение, замечание или идею</string>
-    <string name="feedback_contacts_description">Контакты для обратной связи</string>
+    <string name="feedback_contacts_description">Контакты для обратной связи:</string>
     <string name="email_incorrect">Введен некоррентный e-mail</string>
     <string name="feedback_subject">Отзыв об Android приложении Stepic.org</string>
     <string name="feedback_sent">Сообщение отправлено</string>
     <string name="feedback_fail">Упс… что-то пошло не так. Попробуйте позже</string>
     <string name="feedback_internet_problem">Интернет недоступен. Попробуйте позже</string>
-    <string name="feedback_fill_fields">Заполните пусты поля</string>
+    <string name="feedback_fill_fields">Заполните пустые поля</string>
     <string name="cant_drop">Вы не можете покинуть курс</string>
     <string name="open_in_external_player">Открывать в системном плеере</string>
     <string name="code_warning">Этот шаг не оптимизирован для мобильных</string>
@@ -128,4 +128,13 @@
     <string name="update_now">Обновить</string>
     <string name="update_later">Позже</string>
     <string name="instructors">Преподаватели</string>
+    <string name="download_pending">Скачивается…</string>
+    <string name="delimiter_for_download">" из "</string>
+    <string name="downloading_title">Скачивается…</string>
+    <string name="downloading_cancel_all">Отменить все</string>
+    <string name="cached_title">Загружено</string>
+    <string name="remove_all">Удалить все</string>
+    <string name="cancel_videos_explanation">Отмена загрузки видео времязатратня операция. Вы уверены?</string>
+    <string name="hint_for_idea">Напишите замечание или идею</string>
+    <string name="feedback_from">От</string>
 </resources>

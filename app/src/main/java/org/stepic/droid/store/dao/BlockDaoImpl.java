@@ -2,7 +2,7 @@ package org.stepic.droid.store.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteDatabase;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Block;
@@ -19,7 +19,7 @@ import java.util.List;
 public class BlockDaoImpl extends DaoBase<BlockPersistentWrapper> {
     private final IDao<CachedVideo> mVideoDao;
 
-    public BlockDaoImpl(SQLiteOpenHelper openHelper, IDao<CachedVideo> videoDao) {
+    public BlockDaoImpl(SQLiteDatabase openHelper, IDao<CachedVideo> videoDao) {
         super(openHelper);
         mVideoDao = videoDao;
     }

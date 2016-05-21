@@ -55,7 +55,17 @@ class DatabaseFacade {
     }
 
     fun dropDatabase() {
-        MainApplication.getAppContext().deleteDatabase(DBStructureBase.FILE_NAME)
+        mSectionDao.removeAll()
+        mUnitDao.removeAll()
+        mProgressDao.removeAll()
+        mLessonDao.removeAll()
+        mViewAssignmentDao.removeAll()
+        mDownloadEntityDao.removeAll()
+        mCachedVideoDao.removeAll()
+        mStepDao.removeAll()
+        mCoursesEnrolledDao.removeAll()
+        mCoursesFeaturedDao.removeAll()
+        mNotificationDao.removeAll()
     }
 
     fun getCourseDao(table: Table) =
@@ -131,7 +141,11 @@ class DatabaseFacade {
 
     fun isStepCached(step: Step?): Boolean {
         val id = step?.id ?: return false
-        val dbStep = mStepDao.get(DbStructureStep.Column.STEP_ID, id.toString())
+        return isStepCached(id)
+    }
+
+    fun isStepCached(stepId: Long): Boolean {
+        val dbStep = mStepDao.get(DbStructureStep.Column.STEP_ID, stepId.toString())
         return dbStep != null && dbStep.is_cached
     }
 
@@ -292,7 +306,7 @@ class DatabaseFacade {
         }
     }
 
-    fun removeAllNotificationsByCourseId(courseId:Long){
+    fun removeAllNotificationsByCourseId(courseId: Long) {
         mNotificationDao.delete(DbStructureNotification.Column.COURSE_ID, courseId.toString())
     }
 
@@ -332,5 +346,19 @@ class DatabaseFacade {
 
     fun getAllNotificationsOfCourse(courseId: Long): MutableList<Notification?> {
         return mNotificationDao.getAll(DbStructureNotification.Column.COURSE_ID, courseId.toString())
+    }
+
+    fun getDownloadEntityByStepId(stepId: Long) = mDownloadEntityDao.get(DbStructureSharedDownloads.Column.STEP_ID, stepId.toString())
+
+    fun getAllDownloadingUnits() : LongArray {
+        val units = mUnitDao.getAll(DbStructureUnit.Column.IS_LOADING, 1.toString())
+        val unitIds = units.map { it?.id }.filterNotNull()
+        return unitIds.toLongArray()
+    }
+
+    fun getAllDownloadingSections() : LongArray{
+        val sections = mSectionDao.getAll(DbStructureSections.Column.IS_LOADING, 1.toString())
+        val sectionIds = sections.map { it?.id}.filterNotNull()
+        return sectionIds.toLongArray()
     }
 }

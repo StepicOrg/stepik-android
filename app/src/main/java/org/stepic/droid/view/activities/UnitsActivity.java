@@ -24,6 +24,7 @@ import org.stepic.droid.events.lessons.SuccessLoadLessonsEvent;
 import org.stepic.droid.events.notify_ui.NotifyUIUnitLessonEvent;
 import org.stepic.droid.events.units.FailureLoadEvent;
 import org.stepic.droid.events.units.LoadedFromDbUnitsLessonsEvent;
+import org.stepic.droid.events.units.NotCachedUnitEvent;
 import org.stepic.droid.events.units.SuccessLoadUnitsEvent;
 import org.stepic.droid.events.units.UnitCachedEvent;
 import org.stepic.droid.events.units.UnitLessonSavedEvent;
@@ -378,6 +379,30 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         bus.unregister(this);
         mLessonManager.reset();
         super.onDestroy();
+    }
+
+    @Subscribe
+    public void onNotCachedSection(NotCachedUnitEvent e) {
+        long unitId = e.getUnitId();
+        updateState(unitId, false, false);
+    }
+
+    private void updateState(long unitId, boolean isCached, boolean isLoading) {
+
+        int position = -1;
+        Unit unit = null;
+        for (int i = 0; i < mUnitList.size(); i++) {
+            if (mUnitList.get(i).getId() == unitId) {
+                position = i;
+                unit = mUnitList.get(i);
+                break;
+            }
+        }
+        if (unit == null || position == -1 || position >= mUnitList.size()) return;
+
+        unit.set_cached(isCached);
+        unit.set_loading(isLoading);
+        mAdapter.notifyItemChanged(position);
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

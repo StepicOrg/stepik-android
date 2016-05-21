@@ -5,6 +5,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.util.Log;
 
 import com.squareup.otto.Bus;
 import com.yandex.metrica.YandexMetrica;
@@ -28,6 +29,7 @@ import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ProgressUtil;
+import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.web.IApi;
@@ -153,11 +155,7 @@ public class LoadService extends IntentService {
             } else {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
             }
-
-            if (mCancelSniffer.isStepIdCanceled(step.getId())){
-                mCancelSniffer.removeStepIdCancel(step.getId());
-                return;
-            }
+            if (isNeedCancel(step)) return;
 
             if (!mDb.isExistDownloadEntityByVideoId(fileId) && !downloadFolderAndFile.exists()) {
 
@@ -169,12 +167,10 @@ public class LoadService extends IntentService {
                             break;
                         }
                     }
-                }
-                catch (NullPointerException npe){
+                } catch (NullPointerException npe) {
                     videoQuality = mUserPrefs.getQualityVideo();
                 }
-
-                    long downloadId = mSystemDownloadManager.enqueue(request);
+                long downloadId = mSystemDownloadManager.enqueue(request);
                 String local_thumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
                 String thumbnailsPath = FileUtil.saveFileToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getUserDownloadFolder());
                 final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, videoQuality);
@@ -186,6 +182,33 @@ public class LoadService extends IntentService {
             YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, ex);
         }
 
+    }
+
+    private boolean isNeedCancel(Step step) {
+        try {
+            RWLocks.CancelLock.writeLock().lock();
+            if (mCancelSniffer.isStepIdCanceled(step.getId())) {
+                mCancelSniffer.removeStepIdCancel(step.getId());
+                Lesson lesson = mDb.getLessonById(step.getLesson());
+                if (lesson != null) {
+                    Unit unit = mDb.getUnitByLessonId(lesson.getId());
+                    if (unit != null && mCancelSniffer.isUnitIdIsCanceled(unit.getId())) {
+                        mStoreStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
+                        mCancelSniffer.removeUnitIdCancel(unit.getId());
+
+                        if (mCancelSniffer.isSectionIdIsCanceled(unit.getSection())) {
+                            mCancelSniffer.removeSectionIdCancel(unit.getSection());
+                        }
+                    }
+
+                }
+
+                return true;
+            }
+        } finally {
+            RWLocks.CancelLock.writeLock().unlock();
+        }
+        return false;
     }
 
     private void addStep(Step step, Lesson lesson) {
@@ -200,6 +223,7 @@ public class LoadService extends IntentService {
             step.set_cached(true);
             mDb.updateOnlyCachedLoadingStep(step);
             mStoreStateManager.updateUnitLessonState(step.getLesson());
+            isNeedCancel(step);
         }
     }
 
@@ -225,7 +249,9 @@ public class LoadService extends IntentService {
                 Response<StepResponse> response = mApi.getSteps(lesson.getSteps()).execute();
                 if (response.isSuccess()) {
                     List<Step> steps = response.body().getSteps();
-                    if (steps != null && steps.size() != 0) {
+                    if (steps != null && !steps.isEmpty()) {
+
+
                         for (Step step : steps) {
                             mDb.addStep(step);
                             boolean cached = mDb.isStepCached(step);
@@ -236,6 +262,11 @@ public class LoadService extends IntentService {
                                 step.set_loading(true);
                                 step.set_cached(false);
                                 mDb.updateOnlyCachedLoadingStep(step);
+                            }
+                        }
+                        if (mCancelSniffer.isUnitIdIsCanceled(unit.getId())) {
+                            for (Step step : steps) {
+                                mCancelSniffer.addStepIdCancel(step.getId());
                             }
                         }
 
@@ -304,7 +335,11 @@ public class LoadService extends IntentService {
                             mDb.updateOnlyCachedLoadingUnit(unit);
                         }
                     }
-
+                    if (mCancelSniffer.isSectionIdIsCanceled(section.getId())) {
+                        for (Unit unit : units) {
+                            mCancelSniffer.addUnitIdCancel(unit.getId());
+                        }
+                    }
                     for (Unit unit : units) {
                         Lesson lesson = idToLessonMap.get(unit.getLesson());
                         addUnitLesson(unit, lesson);
@@ -317,7 +352,7 @@ public class LoadService extends IntentService {
 
         } catch (IOException e) {
             YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, e);
-            e.printStackTrace();
+            mStoreStateManager.updateSectionAfterDeleting(section.getId());
         }
     }
 

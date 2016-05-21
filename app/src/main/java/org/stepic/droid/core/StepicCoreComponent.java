@@ -2,6 +2,7 @@ package org.stepic.droid.core;
 
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.concurrency.DownloadPoster;
 import org.stepic.droid.concurrency.tasks.FromDbCoursesTask;
 import org.stepic.droid.concurrency.tasks.FromDbSectionTask;
 import org.stepic.droid.concurrency.tasks.FromDbStepTask;
@@ -34,12 +35,11 @@ import org.stepic.droid.view.adapters.SocialAuthAdapter;
 import org.stepic.droid.view.adapters.StepFragmentAdapter;
 import org.stepic.droid.view.adapters.UnitAdapter;
 import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
-import org.stepic.droid.view.dialogs.ClearCacheDialogFragment;
+import org.stepic.droid.view.dialogs.ClearVideosDialog;
 import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.view.dialogs.VideoQualityDialog;
-import org.stepic.droid.view.fragments.DownloadsFragment;
 import org.stepic.droid.web.RetrofitRESTApi;
 
 import javax.inject.Singleton;
@@ -68,8 +68,6 @@ public interface StepicCoreComponent {
     void inject(UnitAdapter adapter);
 
     void inject(StepFragmentAdapter adapter);
-
-    void inject(ClearCacheDialogFragment dialogFragment);
 
     void inject(LogoutAreYouSureDialog dialogFragment);
 
@@ -112,7 +110,7 @@ public interface StepicCoreComponent {
 
     void inject(DownloadsAdapter downloadsAdapter);
 
-    void inject(DownloadsFragment.ClearVideosDialog clearVideosDialog);
+    void inject(ClearVideosDialog clearVideosDialog);
 
     void inject(CoursePropertyAdapter coursePropertyAdapter);
 
@@ -137,4 +135,8 @@ public interface StepicCoreComponent {
     void inject(NeedUpdatingDialog needUpdatingDialog);
 
     void inject(UpdateWithApkService service);
+
+    void inject(DownloadPoster downloadPoster);
+
+    void inject(DownloadsAdapter.CancelVideoDialog cancelVideoDialog);
 }

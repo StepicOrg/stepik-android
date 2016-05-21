@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,31 +16,39 @@ import java.util.List;
 public abstract class DaoBase<T> implements IDao<T> {
 
     private SQLiteDatabase database;
-    private SQLiteOpenHelper dbHelper;
 
-    public DaoBase(SQLiteOpenHelper openHelper) {
-        dbHelper = openHelper;
+    public DaoBase(SQLiteDatabase writeableDatabase) {
+        database = writeableDatabase;
     }
 
     private void open() {
         RWLocks.DatabaseLock.writeLock().lock();
-        database = dbHelper.getWritableDatabase();
+//        database = dbHelper.getWritableDatabase();
     }
 
     private void close() {
-        database.close();
+//        database.close();
         RWLocks.DatabaseLock.writeLock().unlock();
+    }
+
+    private void openRead() {
+        RWLocks.DatabaseLock.readLock().lock();
+    }
+
+    private void closeRead() {
+//        database.close();
+        RWLocks.DatabaseLock.readLock().unlock();
     }
 
     private <U> U executeQuery(String sqlQuery, String[] selectionArgs, ResultHandler<U> handler) {
         try {
-            open();
+            openRead();
             Cursor cursor = database.rawQuery(sqlQuery, selectionArgs);
             U result = handler.handle(cursor);
             cursor.close();
             return result;
         } finally {
-            close();
+            closeRead();
         }
 
     }
@@ -189,7 +196,12 @@ public abstract class DaoBase<T> implements IDao<T> {
 
     abstract String getDefaultPrimaryValue(T persistentObject);
 
-    abstract  ContentValues getContentValues(T persistentObject);
+    abstract ContentValues getContentValues(T persistentObject);
 
     abstract T parsePersistentObject(Cursor cursor);
+
+    @Override
+    public void removeAll() {
+        executeDelete(getDbName(), null, null);
+    }
 }

@@ -35,5 +35,5 @@
     <dimen name="control_item_margin">2dp</dimen>
     <dimen name="thumb_size">18dp</dimen>
     <dimen name="settingsLeft_RightMargin">5dp</dimen>
-
+    <dimen name="height_of_small_button">36dp</dimen>
 </resources>

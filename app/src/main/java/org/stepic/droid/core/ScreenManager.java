@@ -137,31 +137,35 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showDownload() {
-        Intent intent = new Intent(MainApplication.getAppContext(), MainFeedActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        Context context = MainApplication.getAppContext();
+        showDownload(context);
+    }
+
+    @Override
+    public void showDownload(Context context) {
+        Intent intent = new Intent(context, MainFeedActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Bundle bundle = new Bundle();
         int index = MainFeedActivity.getDownloadFragmentIndex();
         bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
         intent.putExtras(bundle);
-        MainApplication.getAppContext().startActivity(intent);
+        context.startActivity(intent);
     }
 
     @Override
     public void showVideo(Activity sourceActivity, String videoPath) {
         YandexMetrica.reportEvent("video is tried to show");
-        boolean isOpenExternal =  mUserPreferences.isOpenInExternal();
-        if (isOpenExternal){
+        boolean isOpenExternal = mUserPreferences.isOpenInExternal();
+        if (isOpenExternal) {
             YandexMetrica.reportEvent("video open external");
-        }
-        else{
+        } else {
             YandexMetrica.reportEvent("video open native");
         }
 
         boolean isCompatible = VLCUtil.hasCompatibleCPU(MainApplication.getAppContext());
-        if (!isCompatible){
+        if (!isCompatible) {
             YandexMetrica.reportEvent("video is not compatible");
         }
-
 
 
         if (isCompatible && !isOpenExternal) {

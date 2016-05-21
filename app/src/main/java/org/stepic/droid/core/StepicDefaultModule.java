@@ -2,6 +2,7 @@ package org.stepic.droid.core;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.squareup.otto.Bus;
@@ -27,13 +28,13 @@ import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.CleanManager;
+import org.stepic.droid.store.ConcurrentCancelSniffer;
 import org.stepic.droid.store.DatabaseHelper;
 import org.stepic.droid.store.DownloadManagerImpl;
 import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.StoreStateManager;
-import org.stepic.droid.store.SynchronizedCancelSniffer;
 import org.stepic.droid.store.dao.AssignmentDaoImpl;
 import org.stepic.droid.store.dao.BlockDaoImpl;
 import org.stepic.droid.store.dao.CourseDaoImpl;
@@ -213,53 +214,59 @@ public class StepicDefaultModule {
         return new DatabaseHelper(context);
     }
 
+    @Singleton
     @Provides
-    public IDao<Section> provideSectionDao(SQLiteOpenHelper openHelper) {
+    public SQLiteDatabase provideWritableDatabase(DatabaseHelper helper){
+        return helper.getWritableDatabase();
+    }
+
+    @Provides
+    public IDao<Section> provideSectionDao(SQLiteDatabase openHelper) {
         return new SectionDaoImpl(openHelper);
     }
 
     @Provides
-    public IDao<Unit> provideUnitDao(SQLiteOpenHelper openHelper, IDao<Progress> progressDao) {
+    public IDao<Unit> provideUnitDao(SQLiteDatabase openHelper, IDao<Progress> progressDao) {
         return new UnitDaoImpl(openHelper, progressDao);
     }
 
     @Provides
-    public IDao<Progress> provideProgressDao(SQLiteOpenHelper openHelper) {
+    public IDao<Progress> provideProgressDao(SQLiteDatabase openHelper) {
         return new ProgressDaoImpl(openHelper);
     }
 
     @Provides
-    public IDao<Assignment> provideAssignmentDao(SQLiteOpenHelper openHelper) {
+    public IDao<Assignment> provideAssignmentDao(SQLiteDatabase openHelper) {
         return new AssignmentDaoImpl(openHelper);
     }
 
     @Provides
-    public IDao<Lesson> provideLessonDao(SQLiteOpenHelper openHelper) {
+    public IDao<Lesson> provideLessonDao(SQLiteDatabase openHelper) {
         return new LessonDaoImpl(openHelper);
     }
 
     @Provides
-    public IDao<ViewAssignment> provideViewAssignment(SQLiteOpenHelper openHelper) {
+    public IDao<ViewAssignment> provideViewAssignment(SQLiteDatabase openHelper) {
         return new ViewAssignmentDaoImpl(openHelper);
     }
 
     @Provides
-    public IDao<DownloadEntity> provideDownloadEntity(SQLiteOpenHelper openHelper) {
+    public IDao<DownloadEntity> provideDownloadEntity(SQLiteDatabase openHelper) {
         return new DownloadEntityDaoImpl(openHelper);
     }
 
     @Provides
-    public IDao<CachedVideo> provideCachedVideo(SQLiteOpenHelper openHelper) {
+    public IDao<CachedVideo> provideCachedVideo(SQLiteDatabase openHelper) {
         return new PersistentVideoDaoImpl(openHelper);
     }
 
     @Provides
-    public IDao<BlockPersistentWrapper> provideBlockWrapper(SQLiteOpenHelper openHelper, IDao<CachedVideo> daoCached) {
+    public IDao<BlockPersistentWrapper> provideBlockWrapper(SQLiteDatabase openHelper, IDao<CachedVideo> daoCached) {
         return new BlockDaoImpl(openHelper, daoCached);
     }
 
     @Provides
-    public IDao<Step> provideStep(SQLiteOpenHelper openHelper,
+    public IDao<Step> provideStep(SQLiteDatabase openHelper,
                                   IDao<BlockPersistentWrapper> blockDao,
                                   IDao<Assignment> assignmentDao,
                                   IDao<Progress> progressDao) {
@@ -267,19 +274,19 @@ public class StepicDefaultModule {
     }
 
     @Provides
-    public IDao<Course> provideCourse(SQLiteOpenHelper openHelper, IDao<CachedVideo> daoCached) {
+    public IDao<Course> provideCourse(SQLiteDatabase openHelper, IDao<CachedVideo> daoCached) {
         return new CourseDaoImpl(openHelper, daoCached);
     }
 
     @Provides
-    public IDao<Notification> provideNotification(SQLiteOpenHelper openHelper) {
+    public IDao<Notification> provideNotification(SQLiteDatabase openHelper) {
         return new NotificationDaoImpl(openHelper);
     }
 
     @Provides
     @Singleton
     public ICancelSniffer provideCancelSniffer() {
-        return new SynchronizedCancelSniffer();
+        return new ConcurrentCancelSniffer();
     }
 
     @Provides

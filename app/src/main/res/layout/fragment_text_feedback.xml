@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/root_view"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@color/white"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
 
     <include
         android:id="@+id/appBarLayout"
-        layout="@layout/appbar_only_toolbar"/>
+        layout="@layout/appbar_only_toolbar" />
 
     <ScrollView
+        android:id="@+id/root_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:layout_height="match_parent"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
         android:scrollbarStyle="outsideOverlay">
 
         <LinearLayout
@@ -23,55 +25,58 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="@string/feedback_description"
-                android:textSize="18sp"/>
+                android:orientation="horizontal"
+                android:paddingLeft="16dp">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="8dp"
+                    android:text="@string/feedback_from"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/feedback_contacts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/email"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp"
+                    android:scrollbarStyle="outsideOverlay"
+                    android:scrollbars="vertical" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/silver" />
 
             <EditText
                 android:id="@+id/feedback_form"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="top|start"
-                android:hint="@string/hint_for_type_answer"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:hint="@string/hint_for_idea"
                 android:inputType="textMultiLine|textCapSentences"
-                android:maxLines="9000"
-                android:minLines="5"
-                android:padding="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="8dp"
                 android:scrollbarStyle="outsideOverlay"
-                android:scrollbars="vertical"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="@string/feedback_contacts_description"
-                android:textSize="18sp"/>
-
-            <EditText
-                android:id="@+id/feedback_contacts"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="top|start"
-                android:hint="@string/email"
-                android:imeOptions="actionSend"
-                android:inputType="textEmailAddress"
-                android:padding="8dp"
-                android:scrollbarStyle="outsideOverlay"
-                android:scrollbars="vertical"/>
+                android:scrollbars="vertical" />
 
 
-            <Button
-                android:id="@+id/feedback_send_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
-                android:text="@string/send"/>
         </LinearLayout>
     </ScrollView>
 

@@ -2,7 +2,7 @@ package org.stepic.droid.store.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteDatabase;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Assignment;
@@ -24,7 +24,7 @@ public class StepDaoImpl extends DaoBase<Step> {
     private final IDao<Assignment> mAssignmentDao;
     private final IDao<Progress> mProgressDao;
 
-    public StepDaoImpl(SQLiteOpenHelper openHelper,
+    public StepDaoImpl(SQLiteDatabase openHelper,
                        IDao<BlockPersistentWrapper> blockWrapperDao,
                        IDao<Assignment> assignmentDao,
                        IDao<Progress> progressDao) {

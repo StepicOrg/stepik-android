@@ -93,9 +93,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                 R.color.stepic_blue_ribbon);
 
 
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         mSectionsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mSectionList = new ArrayList<>();
         mAdapter = new SectionAdapter(mSectionList, this, this);
@@ -104,6 +101,14 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         ProgressHelper.activate(mProgressBar);
         bus.register(this);
         onNewIntent(getIntent());
+    }
+
+    private void setUpToolbar(){
+        if (mCourse!=null && mCourse.getTitle()!=null && !mCourse.getTitle().isEmpty()) {
+            setTitle(mCourse.getTitle());
+        }
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -132,6 +137,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
             };
             task.executeOnExecutor(mThreadPoolExecutor);
         }
+        setUpToolbar();
         getAndShowSectionsFromCache();
     }
 

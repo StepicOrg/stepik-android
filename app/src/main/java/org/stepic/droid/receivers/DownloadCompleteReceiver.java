@@ -16,6 +16,7 @@ import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
+import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IStoreStateManager;
@@ -44,6 +45,9 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     @Inject
     ExecutorService mThreadSingleThreadExecutor;
 
+    @Inject
+    DownloadManager downloadManager;
+
     public DownloadCompleteReceiver() {
         MainApplication.component().inject(this);
     }
@@ -56,7 +60,6 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
             @Override
             public void run() {
                 blockForInBackground(referenceId);
-                Log.d("thread", Thread.currentThread().getName()+ " ");
             }
         });
     }
@@ -71,18 +74,27 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                 final long step_id = downloadEntity.getStepId();
                 mDatabaseFacade.deleteDownloadEntityByDownloadId(referenceId);
 
-
                 File downloadFolderAndFile = new File(mUserPrefs.getUserDownloadFolder(), video_id + "");
                 String path = Uri.fromFile(downloadFolderAndFile).getPath();
 
                 if (mCancelSniffer.isStepIdCanceled(step_id)) {
-                    File file = new File(path);
-                    if (file.exists()) {
-                        file.delete();
-                    }
+                    downloadManager.remove(referenceId);//remove notification (is it really work and need?)
                     mCancelSniffer.removeStepIdCancel(step_id);
-                }
-                {
+                    Step step = mDatabaseFacade.getStepById(step_id);
+                    if (step != null) {
+                        Lesson lesson = mDatabaseFacade.getLessonById(step.getLesson());
+                        if (lesson != null) {
+                            Unit unit = mDatabaseFacade.getUnitByLessonId(lesson.getId());
+                            if (unit != null && mCancelSniffer.isUnitIdIsCanceled(unit.getId())) {
+                                mStoreStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
+                                mCancelSniffer.removeUnitIdCancel(unit.getId());
+                                if (mCancelSniffer.isSectionIdIsCanceled(unit.getSection())) {
+                                    mCancelSniffer.removeSectionIdCancel(unit.getSection());
+                                }
+                            }
+                        }
+                    }
+                } else {
                     //is not canceled
                     final CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, downloadEntity.getThumbnail());
                     cachedVideo.setQuality(downloadEntity.getQuality());
@@ -105,8 +117,12 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     };
                     mainHandler.post(myRunnable);
                 }
+            } else {
+                downloadManager.remove(referenceId);//remove notification (is it really work and need?)
             }
-        } finally {
+        } finally
+
+        {
             RWLocks.DownloadLock.writeLock().unlock();
         }
     }

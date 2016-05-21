@@ -11,8 +11,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 50
-        versionName "1.7"
+        versionCode 53
+        versionName "1.8.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // Enabling multidex support.
         multiDexEnabled true
@@ -113,7 +113,7 @@ dependencies {
 
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
 
-    compile 'me.zhanghai.android.materialprogressbar:library:1.1.4'
+    compile 'me.zhanghai.android.materialprogressbar:library:1.1.6'
 
     // Required -- JUnit 4 framework
     testCompile 'junit:junit:4.12'

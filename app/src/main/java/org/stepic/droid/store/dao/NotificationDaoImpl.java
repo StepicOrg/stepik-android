@@ -2,14 +2,14 @@ package org.stepic.droid.store.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteDatabase;
 
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.notifications.model.NotificationType;
 import org.stepic.droid.store.structure.DbStructureNotification;
 
 public class NotificationDaoImpl extends DaoBase<Notification> {
-    public NotificationDaoImpl(SQLiteOpenHelper openHelper) {
+    public NotificationDaoImpl(SQLiteDatabase openHelper) {
         super(openHelper);
     }
 

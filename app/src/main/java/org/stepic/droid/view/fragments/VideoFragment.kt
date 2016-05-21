@@ -136,7 +136,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         mSurfaceFrame = mFragmentContainer?.findViewById(R.id.player_surface_frame) as FrameLayout
         mVideoView = mFragmentContainer?.findViewById(R.id.texture_video_view) as SurfaceView
         mFragmentContainer?.setOnTouchListener { view, motionEvent ->
-            if (!isLoading) {
+            if (true || !isLoading) {
                 showController(!isControllerVisible)
             }
             false

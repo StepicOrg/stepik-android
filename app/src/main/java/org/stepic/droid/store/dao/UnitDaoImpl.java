@@ -2,7 +2,7 @@ package org.stepic.droid.store.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteDatabase;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Progress;
@@ -17,7 +17,7 @@ public class UnitDaoImpl extends DaoBase<Unit> {
 
     IDao<Progress> mProgressDao;
 
-    public UnitDaoImpl(SQLiteOpenHelper openHelper, IDao<Progress> progressDao) {
+    public UnitDaoImpl(SQLiteDatabase openHelper, IDao<Progress> progressDao) {
         super(openHelper);
         mProgressDao = progressDao;
     }

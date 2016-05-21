@@ -2,13 +2,13 @@ package org.stepic.droid.store.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteDatabase;
 
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.store.structure.DbStructureSharedDownloads;
 
 public class DownloadEntityDaoImpl extends DaoBase<DownloadEntity> {
-    public DownloadEntityDaoImpl(SQLiteOpenHelper openHelper) {
+    public DownloadEntityDaoImpl(SQLiteDatabase openHelper) {
         super(openHelper);
     }
 

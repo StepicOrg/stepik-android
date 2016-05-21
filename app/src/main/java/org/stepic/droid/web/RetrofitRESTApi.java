@@ -575,7 +575,7 @@ public class RetrofitRESTApi implements IApi {
     private Response getZendeskResponse() throws IOException {
         OkHttpClient client = new OkHttpClient();
 
-        String url = mConfig.getZendeskHost() + "/hc/ru/requests/new";
+        String url = mConfig.getZendeskHost() + "/hc/en-us/requests/new";
 
         Request request = new Request.Builder()
                 .url(url)

@@ -52,7 +52,7 @@ public class LogoutAreYouSureDialog extends DialogFragment {
         MainApplication.component().inject(this);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
-        builder.setTitle(R.string.title_clear_cache_dialog)
+        builder.setTitle(R.string.title_confirmation)
                 .setMessage(R.string.are_you_sure_logout)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override

@@ -2,13 +2,13 @@ package org.stepic.droid.store.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteDatabase;
 
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
 
 public class PersistentVideoDaoImpl extends DaoBase<CachedVideo> {
-    public PersistentVideoDaoImpl(SQLiteOpenHelper openHelper) {
+    public PersistentVideoDaoImpl(SQLiteDatabase openHelper) {
         super(openHelper);
     }
 
