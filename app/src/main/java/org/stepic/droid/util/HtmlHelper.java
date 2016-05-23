@@ -78,70 +78,50 @@ public class HtmlHelper {
 
 
     public static String buildMathPage(CharSequence body, int widthPx) {
-        String result = PRE_BODY + "<body style=\"width:" + widthPx + "px;\">" + body + POST_BODY;
+        String preBody = String.format(PRE_BODY, MathJaxScript, widthPx);
+        String result = preBody + body + POST_BODY;
         return result;
     }
 
-    public static String buildPageWithAdjustingTextAndImage(CharSequence body, int widthPx){
-        String PRE_BODY_VIEWPORT = "<html>\n" +
-                "<head>\n" +
-                "<title>Step</title>\n" +
-                "<style>\n"
-                + "\nhtml{-webkit-text-size-adjust: 100%;}"
-                + "\nbody{font-size: 12pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-                + "\nh1{font-size: 20pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-                + "\nh2{font-size: 17pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-                + "\nh3{font-size: 14pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-                + "\nimg { max-width: 100%; }" +
-                "</style>\n" +
-
-                "\n" +
-                "<meta name=\"viewport\" content=\"width=" +widthPx+", user-scalable=no\" />"+
-
-                "</head>\n";
-
-//        String result = PRE_BODY_VIEWPORY + "<body style=\"width:" + widthPx + "px;\">" + body + POST_BODY;
-        String result = PRE_BODY_VIEWPORT + "<body>" + body + POST_BODY;
+    public static String buildPageWithAdjustingTextAndImage(CharSequence body, int widthPx) {
+        String preBody = String.format(PRE_BODY, " ", widthPx);
+        String result = preBody + body + POST_BODY;
         return result;
     }
 
-    public static final String PRE_BODY_NOT_MATH = "<html>\n" +
-            "<head>\n" +
-            "<title>Step</title>\n" +
-            "<style>\n"
-            + "\nhtml{-webkit-text-size-adjust: 100%;}"
-            + "\nbody{font-size: 12pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-            + "\nh1{font-size: 20pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-            + "\nh2{font-size: 17pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-            + "\nh3{font-size: 14pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-            + "\nimg { max-width: 100%; }" +
-            "</style>\n" +
-            "</head>\n";
-
+    //string with 2 format args
     public static final String PRE_BODY = "<html>\n" +
             "<head>\n" +
             "<title>Step</title>\n" +
 
-
-            "<script type=\"text/x-mathjax-config\">\n" +
-            "  MathJax.Hub.Config({" +
-            "messageStyle: \"none\", " +
-            "tex2jax: {preview: \"none\", inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
-            "</script>\n" +
-            "<script type=\"text/javascript\"\n" +
-            " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full\">\n" +
-            "</script>\n" +
+            "%s" +
 
             "<style>\n"
-            + "\nhtml{-webkit-text-size-adjust: 100%;}"
+            + "\nhtml{-webkit-text-size-adjust: 100%%;}"
             + "\nbody{font-size: 12pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
             + "\nh1{font-size: 20pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
             + "\nh2{font-size: 17pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
             + "\nh3{font-size: 14pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-            + "\nimg { max-width: 100%; }" +
+            + "\nimg { max-width: 100%%; }" +
+            "<meta name=\"viewport\" content=\"width=" +
+
+            "%d" +
+
+            ", user-scalable=no\" />" +
             "</style>\n" +
-            "</head>\n";
-    //    +"<body>";
+            "</head>\n"
+            + "<body>";
+
     public static final String POST_BODY = "</body>\n" +
             "</html>";
+
+    public static final String MathJaxScript =
+            "<script type=\"text/x-mathjax-config\">\n" +
+                    "  MathJax.Hub.Config({" +
+                    "messageStyle: \"none\", " +
+                    "tex2jax: {preview: \"none\", inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
+                    "</script>\n" +
+                    "<script type=\"text/javascript\"\n" +
+                    " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full\">\n" +
+                    "</script>\n";
 }
