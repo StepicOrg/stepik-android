@@ -98,4 +98,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/discussion-proxies/{id}")
     Call<DiscussionProxyResponse> getDiscussionProxy(@Path("id") String discussionProxyId);
+
+    @GET("api/comments")
+    Call<CommentsResponse> getComments(@Query("ids[]") long[] ids);
 }

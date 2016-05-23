@@ -576,6 +576,17 @@ public class RetrofitRESTApi implements IApi {
         return response;
     }
 
+    @Override
+    public Call<CommentsResponse> getCommentAnd20Replies(long commentId) {
+        long[] id = new long[]{commentId};
+        return mLoggedService.getComments(id);
+    }
+
+    @Override
+    public Call<CommentsResponse> getCommentsByIds(long[] commentIds) {
+        return mLoggedService.getComments(commentIds);
+    }
+
     @Nullable
     private Response getZendeskResponse() throws IOException {
         OkHttpClient client = new OkHttpClient();
