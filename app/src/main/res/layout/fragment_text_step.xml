@@ -2,9 +2,15 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <android.support.v4.widget.NestedScrollView
+                                                android:id="@+id/nestedScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbarStyle="outsideOverlay">
@@ -18,7 +24,17 @@
                 android:id="@+id/header"
                 layout="@layout/step_text_header"/>
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
+        <android.support.design.widget.FloatingActionButton
+            android:src="@drawable/ic_comment_black_24dp"
+            android:layout_margin="16dp"
+            app:fabSize="normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_anchor="@id/nestedScrollView"
+            app:layout_anchorGravity="bottom|right|end"
+            app:layout_behavior="org.stepic.droid.view.util.ScrollAwareFABBehavior" />
+    </android.support.design.widget.CoordinatorLayout>
 
     <include layout="@layout/drop_shadow_view"/>
 </FrameLayout>
