@@ -141,6 +141,7 @@
     <string name="hint_for_idea">Type your suggestions, comments or idea</string>
     <string name="feedback_from">From</string>
     <string name="cancel_videos_explanation">Cancel of uploading videos is time-consuming. Are you sure?</string>
+    <string name="comments_title">Comments</string>
     <plurals name="notification_plural">
         <item quantity="one">%d new notification</item>
         <item quantity="other">%d new notifications</item>

@@ -137,4 +137,5 @@
     <string name="cancel_videos_explanation">Отмена загрузки видео времязатратня операция. Вы уверены?</string>
     <string name="hint_for_idea">Напишите замечание или идею</string>
     <string name="feedback_from">От</string>
+    <string name="comments_title">Комментарии</string>
 </resources>

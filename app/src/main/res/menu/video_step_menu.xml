@@ -5,4 +5,10 @@
         android:id="@+id/action_quality"
         android:title=""
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/comments_title"
+        app:showAsAction="never"/>
 </menu>
