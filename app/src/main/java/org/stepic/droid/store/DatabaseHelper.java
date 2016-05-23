@@ -23,6 +23,7 @@ import javax.inject.Inject;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TEXT_TYPE = "TEXT";
     private static final String LONG_TYPE = "LONG";
+    private static final String INT_TYPE = "INTEGER";
 
     @Inject
     public DatabaseHelper(Context context) {
@@ -52,6 +53,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom4To5(db);
         upgradeFrom5To6(db);
         upgradeFrom6To7(db);
+        upgradeFrom7To8(db);
+    }
+
+    private void upgradeFrom7To8(SQLiteDatabase db) {
+        alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.DISCUSSION_COUNT, INT_TYPE);
+        alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.DISCUSSION_ID, TEXT_TYPE);
     }
 
 
@@ -126,6 +133,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 7) {
             upgradeFrom6To7(db);
+        }
+
+        if (oldVersion < 8) {
+            upgradeFrom7To8(db);
         }
     }
 
