@@ -10,25 +10,6 @@ public class AppConstants {
     public static final String KEY_LESSON_BUNDLE = "lesson";
     public static final String KEY_STEP_BUNDLE = "step";
     public static final String DEFAULT_QUALITY = "360";
-    public static final String PRE_BODY = "<html>\n" +
-            "<head>\n" +
-            "<title>Step</title>\n" +
-            "<script type=\"text/x-mathjax-config\">\n" +
-            "  MathJax.Hub.Config({" +
-            "messageStyle: \"none\", " +
-            "tex2jax: {preview: \"none\", inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
-            "</script>\n" +
-            "<script type=\"text/javascript\"\n" +
-            " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full\">\n" +
-            "</script>\n" +
-
-            "<style>\n" +
-            "\nimg { max-width: 100%; }" +
-            "</style>\n" +
-            "</head>\n" +
-            "<body>";
-    public static final String POST_BODY = "</body>\n" +
-            "</html>";
     public static final String KEY_LOAD_TYPE = "KEY_LOAD_TYPE";
     public static final String KEY_TABLE_TYPE = "table_type";
 
