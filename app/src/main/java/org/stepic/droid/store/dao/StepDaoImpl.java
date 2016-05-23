@@ -50,7 +50,12 @@ public class StepDaoImpl extends DaoBase<Step> {
         int columnIndexPosition = cursor.getColumnIndex(DbStructureStep.Column.POSITION);
         int columnIndexIsCached = cursor.getColumnIndex(DbStructureStep.Column.IS_CACHED);
         int columnIndexIsLoading = cursor.getColumnIndex(DbStructureStep.Column.IS_LOADING);
+        int columnIndexDiscussionCount = cursor.getColumnIndex(DbStructureStep.Column.DISCUSSION_COUNT);
+        int columnIndexDiscussionId = cursor.getColumnIndex(DbStructureStep.Column.DISCUSSION_ID);
 
+
+        step.setDiscussions_count(cursor.getInt(columnIndexDiscussionCount));
+        step.setDiscussion_proxy(cursor.getString(columnIndexDiscussionId));
         step.setId(cursor.getLong(columnIndexStepId));
         step.setLesson(cursor.getLong(columnIndexLessonId));
         step.setCreate_date(cursor.getString(columnIndexCreateDate));
@@ -82,6 +87,8 @@ public class StepDaoImpl extends DaoBase<Step> {
         values.put(DbStructureStep.Column.CREATE_DATE, step.getCreate_date());
         values.put(DbStructureStep.Column.UPDATE_DATE, step.getUpdate_date());
         values.put(DbStructureStep.Column.POSITION, step.getPosition());
+        values.put(DbStructureStep.Column.DISCUSSION_COUNT, step.getDiscussions_count());
+        values.put(DbStructureStep.Column.DISCUSSION_ID, step.getDiscussion_proxy());
 
         return values;
     }

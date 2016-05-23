@@ -80,5 +80,11 @@ public interface IApi {
 
     Call<Void> removeDevice(long deviceId);
 
+    Call<DiscussionProxyResponse> getDiscussionProxies (String discussionProxyId);
+
     UpdateResponse getInfoForUpdating() throws IOException;
+
+    Call<CommentsResponse> getCommentAnd20Replies (long commentId);
+
+    Call<CommentsResponse> getCommentsByIds (long [] commentIds);
 }

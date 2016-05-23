@@ -19,6 +19,8 @@ public final class DbStructureStep extends DBStructureBase {
         public static final String POSITION = "position";
         public static final String IS_CACHED = "is_cached";
         public static final String IS_LOADING = "is_loading";
+        public static final String DISCUSSION_COUNT = "discussion_count";
+        public static final String DISCUSSION_ID = "discussion_id";
     }
 
     public static String[] getUsedColumns() {
@@ -36,6 +38,8 @@ public final class DbStructureStep extends DBStructureBase {
                     Column.POSITION,
                     Column.IS_CACHED,
                     Column.IS_LOADING,
+                    Column.DISCUSSION_COUNT,
+                    Column.DISCUSSION_ID
             };
         }
         return mUsedColumns;

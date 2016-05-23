@@ -559,6 +559,11 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
+    public Call<DiscussionProxyResponse> getDiscussionProxies(String discussionProxyId) {
+        return mLoggedService.getDiscussionProxy(discussionProxyId);
+    }
+
+    @Override
     public UpdateResponse getInfoForUpdating() throws IOException {
         Request request = new Request.Builder()
                 .url(mConfig.getBaseUrl() + "/" + mConfig.getUpdateEndpoint())
@@ -569,6 +574,17 @@ public class RetrofitRESTApi implements IApi {
         Gson gson = new Gson();
         UpdateResponse response = gson.fromJson(jsonString, UpdateResponse.class);
         return response;
+    }
+
+    @Override
+    public Call<CommentsResponse> getCommentAnd20Replies(long commentId) {
+        long[] id = new long[]{commentId};
+        return mLoggedService.getComments(id);
+    }
+
+    @Override
+    public Call<CommentsResponse> getCommentsByIds(long[] commentIds) {
+        return mLoggedService.getComments(commentIds);
     }
 
     @Nullable
