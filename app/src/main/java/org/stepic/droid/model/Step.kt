@@ -21,19 +21,19 @@ class Step : Parcelable, Serializable {
     var is_loading: Boolean = false
     var is_custom_passed: Boolean = false
     var actions: ActionsContainer? = null
+    var discussions_count: Int = 0
+    var discussion_proxy: String? = null
 
     constructor()
 
-    override fun describeContents(): Int {
-        val step = Step()
-        step.block?.video?.urls?.size
-        return 0
-    }
+    override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeLong(this.id)
         dest.writeLong(this.lesson)
         dest.writeLong(this.position)
+        dest.writeInt(this.discussions_count)
+        dest.writeString(this.discussion_proxy)
         dest.writeString(this.status)
         dest.writeParcelable(this.block, 0)
         dest.writeString(this.progress)
@@ -52,6 +52,8 @@ class Step : Parcelable, Serializable {
         this.id = input.readLong()
         this.lesson = input.readLong()
         this.position = input.readLong()
+        this.discussions_count = input.readInt()
+        this.discussion_proxy = input.readString()
         this.status = input.readString()
         this.block = input.readParcelable<Block>(Block::class.java.classLoader)
         this.progress = input.readString()
