@@ -49,4 +49,6 @@ public interface IScreenManager {
     void showVideo(Activity sourceActivity, String source);
 
     void showSettings(Activity sourceActivity);
+
+    void openComments(Context context, String discussionProxyId);
 }

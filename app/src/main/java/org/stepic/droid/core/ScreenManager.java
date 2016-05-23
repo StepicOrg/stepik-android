@@ -193,6 +193,11 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
+    public void openComments(Context context, String discussionProxyId) {
+        Toast.makeText(context, "hello " + discussionProxyId, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
     public void showSections(Context sourceActivity, @NotNull Course course) {
         YandexMetrica.reportEvent("Screen manager: show section", JsonHelper.toJson(course));
         Intent intent = new Intent(sourceActivity, SectionActivity.class);

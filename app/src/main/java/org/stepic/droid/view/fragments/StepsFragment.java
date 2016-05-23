@@ -180,23 +180,21 @@ public class StepsFragment extends FragmentBase {
                         String resultQuality = mUserPreferences.getQualityVideo();
                         try {
 
-                            int weWant = Integer.parseInt( mUserPreferences.getQualityVideo());
+                            int weWant = Integer.parseInt(mUserPreferences.getQualityVideo());
                             final List<VideoUrl> urls = step.getBlock().getVideo().getUrls();
                             int bestDelta = Integer.MAX_VALUE;
                             int bestIndex = 0;
-                            for (int i = 0; i<urls.size(); i++){
-                                int current = Integer.parseInt( urls.get(i).getQuality());
-                                int delta = Math.abs(current-weWant);
-                                if (delta    < bestDelta){
+                            for (int i = 0; i < urls.size(); i++) {
+                                int current = Integer.parseInt(urls.get(i).getQuality());
+                                int delta = Math.abs(current - weWant);
+                                if (delta < bestDelta) {
                                     bestDelta = delta;
                                     bestIndex = i;
                                 }
 
                             }
                             resultQuality = urls.get(bestIndex).getQuality();
-                        }
-                        catch (NumberFormatException e)
-                        {
+                        } catch (NumberFormatException e) {
                             resultQuality = mUserPreferences.getQualityVideo();
                         }
 
@@ -481,5 +479,19 @@ public class StepsFragment extends FragmentBase {
         } else {
             quality.setVisible(false);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_comments:
+                int position = mViewPager.getCurrentItem();
+                Step step = mStepList.get(position);
+                mShell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy());
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
