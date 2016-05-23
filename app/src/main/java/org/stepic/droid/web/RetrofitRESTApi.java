@@ -559,6 +559,11 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
+    public Call<DiscussionProxyResponse> getDiscussionProxies(String discussionProxyId) {
+        return mLoggedService.getDiscussionProxy(discussionProxyId);
+    }
+
+    @Override
     public UpdateResponse getInfoForUpdating() throws IOException {
         Request request = new Request.Builder()
                 .url(mConfig.getBaseUrl() + "/" + mConfig.getUpdateEndpoint())

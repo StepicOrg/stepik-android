@@ -79,10 +79,10 @@ public interface StepicRestLoggedService {
     Call<SubmissionResponse> getExistingSubmissions(@Query("attempt") long attemptId, @Query("order") String desc);
 
     @GET("api/email-addresses")
-    Call<EmailAddressResponse> getEmailAddresses(@Query("ids[]")long[] ids);
+    Call<EmailAddressResponse> getEmailAddresses(@Query("ids[]") long[] ids);
 
     @GET("api/devices")
-    Call<DeviceResponse> getDevices (@Query("user") long userId);
+    Call<DeviceResponse> getDevices(@Query("user") long userId);
 
     @POST("api/devices")
     Call<DeviceResponse> registerDevice(@Body DeviceRequest deviceRequest);
@@ -95,4 +95,7 @@ public interface StepicRestLoggedService {
 
     @DELETE("api/devices/{id}")
     Call<Void> removeDevice(@Path("id") long deviceId);
+
+    @GET("api/discussion-proxies/{id}")
+    Call<DiscussionProxyResponse> getDiscussionProxy(@Path("id") String discussionProxyId);
 }
