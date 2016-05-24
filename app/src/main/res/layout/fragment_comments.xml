@@ -9,11 +9,18 @@
         android:id="@+id/appBarLayout"
         layout="@layout/appbar_only_toolbar" />
 
-    <TextView
-        android:id="@+id/discussionTv"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="HELLO"/>
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/discussionTv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="HELLO"/>
+
+        <include layout="@layout/progress_bar_on_empty_screen"/>
+    </FrameLayout>
 
 </LinearLayout>
