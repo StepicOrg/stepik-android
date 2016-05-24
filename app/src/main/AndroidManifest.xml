@@ -212,5 +212,8 @@
                 <action android:name="notification_cancelled"/>
             </intent-filter>
         </receiver>
+
+        <activity android:name=".view.activities.CommentsActivity"
+            android:label="@string/comments_title"/>
     </application>
 </manifest>
