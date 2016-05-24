@@ -479,6 +479,13 @@ public class StepsFragment extends FragmentBase {
         } else {
             quality.setVisible(false);
         }
+
+        MenuItem comments = menu.findItem(R.id.action_comments);
+        if (mStepList.isEmpty()) {
+            comments.setVisible(false);
+        } else {
+            comments.setVisible(true);
+        }
     }
 
     @Override
@@ -486,6 +493,10 @@ public class StepsFragment extends FragmentBase {
         switch (item.getItemId()) {
             case R.id.action_comments:
                 int position = mViewPager.getCurrentItem();
+                if (position < 0 || position >= mStepList.size()) {
+                    return super.onOptionsItemSelected(item);
+                }
+
                 Step step = mStepList.get(position);
                 mShell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy());
                 break;
