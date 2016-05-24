@@ -1,13 +1,11 @@
 package org.stepic.droid.view.activities
 
-import android.support.v4.app.Fragment
 import org.stepic.droid.base.SingleFragmentActivity
+import org.stepic.droid.view.fragments.CommentsFragment
 
 class CommentsActivity : SingleFragmentActivity() {
-    override fun createFragment(): Fragment? {
-        throw UnsupportedOperationException()
-    }
 
+    override fun createFragment() = CommentsFragment.newInstance()
 
     override fun finish() {
         super.finish()
