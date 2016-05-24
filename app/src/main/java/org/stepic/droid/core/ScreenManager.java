@@ -25,6 +25,7 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
+import org.stepic.droid.view.activities.CommentsActivity;
 import org.stepic.droid.view.activities.CourseDetailActivity;
 import org.stepic.droid.view.activities.LaunchActivity;
 import org.stepic.droid.view.activities.LoginActivity;
@@ -194,7 +195,12 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void openComments(Context context, String discussionProxyId) {
-        Toast.makeText(context, "hello " + discussionProxyId, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(context, CommentsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Bundle bundle = new Bundle();
+        bundle.putString(CommentsActivity.Companion.getKeyDiscusionProxyId(), discussionProxyId);
+        intent.putExtras(bundle);
+        context.startActivity(intent);
     }
 
     @Override

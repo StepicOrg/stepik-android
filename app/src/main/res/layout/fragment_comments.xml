@@ -4,4 +4,16 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+
+    <include
+        android:id="@+id/appBarLayout"
+        layout="@layout/appbar_only_toolbar" />
+
+    <TextView
+        android:id="@+id/discussionTv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="HELLO"/>
+
 </LinearLayout>

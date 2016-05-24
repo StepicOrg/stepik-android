@@ -1,11 +1,40 @@
 package org.stepic.droid.view.activities
 
+import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.view.MenuItem
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.view.fragments.CommentsFragment
 
 class CommentsActivity : SingleFragmentActivity() {
 
-    override fun createFragment() = CommentsFragment.newInstance()
+    companion object {
+        val keyDiscusionProxyId = "KEY_DISCUSSION_PROXY_ID"
+    }
+
+    override fun createFragment(): Fragment {
+        val discussionId: String = intent.extras.getString(keyDiscusionProxyId)
+        return CommentsFragment.newInstance(discussionId)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> {
+                if (mSharedPreferenceHelper.authResponseFromStore == null) {
+                    finish();
+                    return true
+                } else {
+                    return super.onOptionsItemSelected(item)
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     override fun finish() {
         super.finish()

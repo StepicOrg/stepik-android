@@ -26,7 +26,7 @@
         android:largeHeap="true"
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
-        tools:replace = "android:allowBackup"
+        tools:replace="android:allowBackup"
         >
 
         <activity
@@ -72,7 +72,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.activities.MainFeedActivity"/>
 
-        </activity>во скольк
+        </activity>
 
         <activity
             android:name=".view.activities.UnitsActivity"
@@ -82,6 +82,7 @@
         <activity
             android:name=".view.activities.StepsActivity"
             android:hardwareAccelerated="false"
+            android:launchMode="singleTop"
             android:label="@string/steps_title"/>
 
         <receiver
@@ -213,7 +214,14 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".view.activities.CommentsActivity"
-            android:label="@string/comments_title"/>
+        <activity
+            android:name=".view.activities.CommentsActivity"
+            android:label="@string/comments_title"
+            android:parentActivityName=".view.activities.StepsActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.activities.StepsActivity"/>
+        </activity>
     </application>
 </manifest>
