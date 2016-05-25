@@ -32,6 +32,7 @@ class CommentManager {
     val cachedCommentsSetMap: MutableMap<Long, Comment> = HashMap()
     val cachedCommentsList: MutableList<Comment> = ArrayList()
     val userSetMap: MutableMap<Int, User> = HashMap() //userId -> User
+    val replyToPositionInParentMap: MutableMap<Long, Int> = HashMap()
 
 
     @Inject
@@ -62,7 +63,7 @@ class CommentManager {
                     if (stepicResponse != null) {
                         stepicResponse.comments
                                 .forEach {
-                                    if (it.id != null && !(it.id in cachedCommentsSetMap)) {
+                                    if (it.id != null && it.id !in cachedCommentsSetMap) {
                                         cachedCommentsSetMap.put(it.id, it)
                                         if (it.parent == null) {
                                             sumOfCachedParent++;
@@ -89,6 +90,7 @@ class CommentManager {
                                 val cachedRepliesNumber = parentCommentToSumOfCachedReplies.get(parentComment.id) ?: 0
                                 while (i < sumOfCachedParent && childIndex < cachedRepliesNumber) {
                                     val childComment = cachedCommentsSetMap [parentComment.replies[childIndex]] ?: break
+                                    replyToPositionInParentMap.put(childComment.id!!, childIndex)
                                     cachedCommentsList.add(childComment)
                                     i++
                                     childIndex++
@@ -98,7 +100,7 @@ class CommentManager {
 
                         stepicResponse.users
                                 .forEach {
-                                    if (!(it.id in userSetMap)) {
+                                    if (it.id !in userSetMap) {
                                         userSetMap.put(it.id, it)
                                     }
                                 }
@@ -117,5 +119,28 @@ class CommentManager {
         })
     }
 
+    fun getSize() = cachedCommentsList.size
+
+    fun getItemWithNeedUpdatingInfoByPosition(position: Int): Pair<Boolean, Comment> {
+        var needUpdate = false
+        val comment: Comment = cachedCommentsList[position]
+        val parentComment: Comment? = cachedCommentsSetMap[comment.parent] //comment.parent can be null
+
+        if (parentComment == null) {
+            //comment is parent comment
+            if (discussionProxy!!.discussions.size > sumOfCachedParent) {
+                needUpdate = true
+            }
+
+        } else {
+            //comment is reply
+            val pos: Int = replyToPositionInParentMap[comment.id]!!
+            val numberOfCached = parentCommentToSumOfCachedReplies[parentComment.id]
+            if ((pos + 1) == numberOfCached && parentComment.reply_count > numberOfCached) {
+                needUpdate = true
+            }
+        }
+        return Pair(needUpdate, comment)
+    }
 
 }
