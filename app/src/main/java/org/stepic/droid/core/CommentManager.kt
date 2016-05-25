@@ -143,4 +143,6 @@ class CommentManager {
         return Pair(needUpdate, comment)
     }
 
+    fun getUserById(userId:Int) = userSetMap[userId]
+
 }
