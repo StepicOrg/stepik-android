@@ -44,11 +44,7 @@ class CommentsFragment : FragmentBase() {
     lateinit var discussionId: String
 
     lateinit var mToolbar: Toolbar
-    lateinit var discussionTv: TextView
     lateinit var loadProgressBarOnCenter: ProgressBar
-
-    val commentsList: MutableList<Comment> = ArrayList()
-    val commentsIdSet: MutableSet<Long> = HashSet() //it is set of comments, which are already on screen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +58,6 @@ class CommentsFragment : FragmentBase() {
         setHasOptionsMenu(true)
         v?.let {
             initToolbar(v)
-            initDiscussionTv(v)
             initEmptyProgressOnCenter(v)
         }
         return v
@@ -72,11 +67,6 @@ class CommentsFragment : FragmentBase() {
         super.onActivityCreated(savedInstanceState)
         showEmptyProgressOnCenter()
         loadDiscussionProxyById()
-    }
-
-    private fun initDiscussionTv(v: View) {
-        discussionTv = v.findViewById(R.id.discussionTv) as TextView
-        discussionTv.text = discussionId
     }
 
     private fun initEmptyProgressOnCenter(v: View) {
