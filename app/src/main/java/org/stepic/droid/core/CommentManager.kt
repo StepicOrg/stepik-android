@@ -43,13 +43,13 @@ class CommentManager {
     fun loadComments() {
         val orderOfComments = discussionProxy?.discussions
         orderOfComments?.let {
-            val maxSize = Math.max((sumOfCachedParent + maxOfParentInQuery), orderOfComments.size)
-            if (maxSize == sumOfCachedParent) {
+            val sizeNeedLoad = Math.min((sumOfCachedParent + maxOfParentInQuery), orderOfComments.size)
+            if (sizeNeedLoad == sumOfCachedParent  || sizeNeedLoad == 0) {
                 // we don't need to load comments
                 return
             }
 
-            val idsForLoading = it.subList(sumOfCachedParent, sumOfCachedParent + maxOfParentInQuery).toLongArray()
+            val idsForLoading = it.subList(sumOfCachedParent, sumOfCachedParent + sizeNeedLoad - 1).toLongArray()
             loadCommentsByIds(idsForLoading)
         }
     }
