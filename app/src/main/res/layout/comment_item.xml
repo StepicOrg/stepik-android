@@ -12,12 +12,13 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/comment_root"
             android:paddingTop="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <com.facebook.drawee.view.SimpleDraweeView
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
+                tools:layout_marginLeft="8dp"
+                tools:layout_marginRight="8dp"
                 android:id="@+id/user_icon"
                 android:layout_width="48dp"
                 android:layout_height="48dp"

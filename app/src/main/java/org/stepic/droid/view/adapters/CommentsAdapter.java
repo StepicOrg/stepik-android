@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.common.util.UriUtil;
@@ -17,6 +19,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.model.User;
 import org.stepic.droid.model.comments.Comment;
+import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.HtmlHelper;
 
 import butterknife.Bind;
@@ -53,6 +56,26 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
         DraweeController controller = getControllerForUserAvatar(comment);
         holder.userIcon.setController(controller);
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.userIcon.getLayoutParams();
+        int dp8inPx = (int) DpPixelsHelper.convertDpToPixel(8);
+        if (isParent){
+            layoutParams.setMargins(dp8inPx, 0, dp8inPx, 0);
+        }
+        else{
+            layoutParams.setMargins(0, 0, dp8inPx, 0);
+        }
+        holder.userIcon.setLayoutParams(layoutParams);
+
+        LinearLayout.LayoutParams lp;
+        lp = (LinearLayout.LayoutParams) holder.commentRoot.getLayoutParams();
+        if (isParent) {
+            lp.setMargins(0, 0, 0, 0);
+        } else {
+            int dp16inPx = (int) DpPixelsHelper.convertDpToPixel(16);
+            int dp64inPx = (int) DpPixelsHelper.convertDpToPixel(64);
+            lp.setMargins(dp64inPx, 0, dp16inPx, 0);
+        }
+        holder.commentRoot.setLayoutParams(lp);
     }
 
     private DraweeController getControllerForUserAvatar(Comment comment) {
@@ -96,6 +119,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
         @Bind(R.id.user_icon)
         DraweeView userIcon;
+
+        @Bind(R.id.comment_root)
+        ViewGroup commentRoot;
 
         public CommentsViewHolder(View itemView) {
             super(itemView);
