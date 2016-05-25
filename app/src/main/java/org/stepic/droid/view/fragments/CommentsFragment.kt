@@ -2,13 +2,14 @@ package org.stepic.droid.view.fragments
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.Toast
 import com.squareup.otto.Subscribe
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
@@ -16,16 +17,15 @@ import org.stepic.droid.base.MainApplication
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.events.comments.CommentsLoadedSuccessfullyEvent
 import org.stepic.droid.events.comments.DiscussionProxyLoadedSuccessfullyEvent
-import org.stepic.droid.model.comments.Comment
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.web.DiscussionProxyResponse
 import retrofit.Callback
 import retrofit.Response
 import retrofit.Retrofit
-import java.util.*
 import javax.inject.Inject
 
-class CommentsFragment : FragmentBase() {
+class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
+
     companion object {
         private val discussionIdKey = "dis_id_key"
 
@@ -45,6 +45,7 @@ class CommentsFragment : FragmentBase() {
 
     lateinit var mToolbar: Toolbar
     lateinit var loadProgressBarOnCenter: ProgressBar
+    lateinit var swipeRefreshLayout : SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +60,7 @@ class CommentsFragment : FragmentBase() {
         v?.let {
             initToolbar(v)
             initEmptyProgressOnCenter(v)
+            initSwipeRefreshLayout(v)
         }
         return v
     }
@@ -67,6 +69,15 @@ class CommentsFragment : FragmentBase() {
         super.onActivityCreated(savedInstanceState)
         showEmptyProgressOnCenter()
         loadDiscussionProxyById()
+    }
+
+    private fun initSwipeRefreshLayout (v : View){
+        swipeRefreshLayout = v.findViewById(R.id.swipe_refresh_layout_comments) as SwipeRefreshLayout
+        swipeRefreshLayout.setOnRefreshListener(this)
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.stepic_brand_primary,
+                R.color.stepic_orange_carrot,
+                R.color.stepic_blue_ribbon)
     }
 
     private fun initEmptyProgressOnCenter(v: View) {
@@ -101,11 +112,6 @@ class CommentsFragment : FragmentBase() {
         })
     }
 
-    private fun loadComments(ids : LongArray) {
-//if order is changed --> clear list and set, where it was changed
-
-    }
-
     @Subscribe
     fun onDiscussionProxyLoadedSuccessfully(successfullyEvent: DiscussionProxyLoadedSuccessfullyEvent) {
         commentManager.discussionProxy = successfullyEvent.discussionProxy
@@ -136,6 +142,15 @@ class CommentsFragment : FragmentBase() {
         bus.unregister(this)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        swipeRefreshLayout.setOnRefreshListener(null)
+    }
+
+    override fun onRefresh() {
+        Toast.makeText(context, "Hey, try refresh need implementing!", Toast.LENGTH_LONG).show()
+        // todo implement
+    }
 
     private fun showEmptyProgressOnCenter(needShow: Boolean = true) {
         if (needShow) {
