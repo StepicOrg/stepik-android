@@ -17,7 +17,6 @@ import org.stepic.droid.core.CommentManager
 import org.stepic.droid.events.comments.CommentsLoadedSuccessfullyEvent
 import org.stepic.droid.events.comments.DiscussionProxyLoadedSuccessfullyEvent
 import org.stepic.droid.model.comments.Comment
-import org.stepic.droid.model.comments.DiscussionProxy
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.web.DiscussionProxyResponse
 import retrofit.Callback
@@ -50,7 +49,6 @@ class CommentsFragment : FragmentBase() {
 
     val commentsList: MutableList<Comment> = ArrayList()
     val commentsIdSet: MutableSet<Long> = HashSet() //it is set of comments, which are already on screen
-    var discussionProxy: DiscussionProxy? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,22 +118,22 @@ class CommentsFragment : FragmentBase() {
 
     @Subscribe
     fun onDiscussionProxyLoadedSuccessfully(successfullyEvent: DiscussionProxyLoadedSuccessfullyEvent) {
-        discussionProxy = successfullyEvent.discussionProxy
-//        loadComments()
-        val e = 0
+        commentManager.discussionProxy = successfullyEvent.discussionProxy
+        commentManager.loadComments()
     }
 
 
     @Subscribe
     fun onCommentsLoadedSuccessfully(successfullyEvent: CommentsLoadedSuccessfullyEvent) {
 
-        successfullyEvent.comments
-                .forEach {
-                    if (it.id != null && !commentsIdSet.contains(it.id))
-                        commentsIdSet.add(it.id)
-                    commentsList.add(it)
-                }
-        //now in list we have new comments, which we should show
+//        successfullyEvent.comments
+//                .forEach {
+//                    if (it.id != null && !commentsIdSet.contains(it.id))
+//                        commentsIdSet.add(it.id)
+//                    commentsList.add(it)
+//                }
+        ProgressHelper.dismiss(loadProgressBarOnCenter)
+        //adapter.notify
     }
 
     override fun onStart() {
