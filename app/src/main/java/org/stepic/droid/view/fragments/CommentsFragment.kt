@@ -57,7 +57,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         super.onCreate(savedInstanceState)
         retainInstance = true
         MainApplication.component().inject(this)
-        commentAdapter = CommentsAdapter(commentManager)
+        commentAdapter = CommentsAdapter(commentManager, context)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -135,15 +135,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     @Subscribe
     fun onCommentsLoadedSuccessfully(successfullyEvent: CommentsLoadedSuccessfullyEvent) {
-
-//        successfullyEvent.comments
-//                .forEach {
-//                    if (it.id != null && !commentsIdSet.contains(it.id))
-//                        commentsIdSet.add(it.id)
-//                    commentsList.add(it)
-//                }
         ProgressHelper.dismiss(loadProgressBarOnCenter)
-        //adapter.notify
+        commentAdapter.notifyDataSetChanged();
     }
 
     override fun onStart() {
