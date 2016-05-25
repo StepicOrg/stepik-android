@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +20,7 @@ import org.stepic.droid.core.CommentManager
 import org.stepic.droid.events.comments.CommentsLoadedSuccessfullyEvent
 import org.stepic.droid.events.comments.DiscussionProxyLoadedSuccessfullyEvent
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.view.adapters.CommentsAdapter
 import org.stepic.droid.web.DiscussionProxyResponse
 import retrofit.Callback
 import retrofit.Response
@@ -39,18 +42,22 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     @Inject
-    lateinit var commentManager : CommentManager
+    lateinit var commentManager: CommentManager
+
+    lateinit var commentAdapter: CommentsAdapter
 
     lateinit var discussionId: String
 
     lateinit var mToolbar: Toolbar
     lateinit var loadProgressBarOnCenter: ProgressBar
-    lateinit var swipeRefreshLayout : SwipeRefreshLayout
+    lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
         MainApplication.component().inject(this)
+        commentAdapter = CommentsAdapter(commentManager)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -61,8 +68,15 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             initToolbar(v)
             initEmptyProgressOnCenter(v)
             initSwipeRefreshLayout(v)
+            initRecyclerView(v)
         }
         return v
+    }
+
+    private fun initRecyclerView(v: View) {
+        recyclerView = v.findViewById(R.id.recycler_view_comments) as RecyclerView
+        recyclerView.adapter = commentAdapter
+        recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -71,7 +85,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         loadDiscussionProxyById()
     }
 
-    private fun initSwipeRefreshLayout (v : View){
+    private fun initSwipeRefreshLayout(v: View) {
         swipeRefreshLayout = v.findViewById(R.id.swipe_refresh_layout_comments) as SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(this)
         swipeRefreshLayout.setColorSchemeResources(
