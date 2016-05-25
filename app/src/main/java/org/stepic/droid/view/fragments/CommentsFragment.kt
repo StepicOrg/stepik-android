@@ -12,6 +12,8 @@ import android.widget.TextView
 import com.squareup.otto.Subscribe
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.base.MainApplication
+import org.stepic.droid.core.CommentManager
 import org.stepic.droid.events.comments.CommentsLoadedSuccessfullyEvent
 import org.stepic.droid.events.comments.DiscussionProxyLoadedSuccessfullyEvent
 import org.stepic.droid.model.comments.Comment
@@ -22,6 +24,7 @@ import retrofit.Callback
 import retrofit.Response
 import retrofit.Retrofit
 import java.util.*
+import javax.inject.Inject
 
 class CommentsFragment : FragmentBase() {
     companion object {
@@ -36,6 +39,9 @@ class CommentsFragment : FragmentBase() {
         }
     }
 
+    @Inject
+    lateinit var commentManager : CommentManager
+
     lateinit var discussionId: String
 
     lateinit var mToolbar: Toolbar
@@ -49,6 +55,7 @@ class CommentsFragment : FragmentBase() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
+        MainApplication.component().inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {

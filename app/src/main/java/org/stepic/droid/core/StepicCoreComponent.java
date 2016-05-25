@@ -40,6 +40,7 @@ import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.view.dialogs.VideoQualityDialog;
+import org.stepic.droid.view.fragments.CommentsFragment;
 import org.stepic.droid.web.RetrofitRESTApi;
 
 import javax.inject.Singleton;
@@ -139,4 +140,8 @@ public interface StepicCoreComponent {
     void inject(DownloadPoster downloadPoster);
 
     void inject(DownloadsAdapter.CancelVideoDialog cancelVideoDialog);
+
+    void inject(CommentManager commentManager);
+
+    void inject(CommentsFragment commentsFragment);
 }
