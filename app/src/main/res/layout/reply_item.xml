@@ -15,13 +15,13 @@
             android:id="@+id/comment_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/reply_margin"
             android:paddingTop="@dimen/comment_content_padding_top">
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/user_icon"
-                android:layout_width="@dimen/avatar_size_depend_on_reply_margin"
-                android:layout_height="@dimen/avatar_size_depend_on_reply_margin"
-                android:layout_marginLeft="@dimen/margin_leftRight_comment_depend_on_reply_margin"
+                android:layout_width="@dimen/avatar_size_reply"
+                android:layout_height="@dimen/avatar_size_reply"
                 android:layout_marginRight="@dimen/margin_leftRight_comment_depend_on_reply_margin"
                 android:padding="@dimen/padding_for_circle_image"
                 fresco:failureImage="@drawable/placeholder_icon"

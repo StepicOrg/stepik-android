@@ -524,7 +524,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         }
     }
 
-    public abstract class GenericViewHolder extends RecyclerView.ViewHolder {
+     abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 
         public GenericViewHolder(View itemView) {
             super(itemView);
