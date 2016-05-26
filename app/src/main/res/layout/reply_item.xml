@@ -16,7 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/reply_margin"
-            android:paddingTop="@dimen/comment_content_padding_top">
+            android:paddingTop="@dimen/comment_content_padding_top"
+            android:paddingBottom="@dimen/comment_content_padding_top">
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/user_icon"
