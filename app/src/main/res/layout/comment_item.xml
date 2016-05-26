@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/user_icon">
 
-                <TextView
+                <org.stepic.droid.view.custom.LatexSupportableWebView
                     android:id="@+id/text_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"

@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -18,6 +17,7 @@ import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.model.User;
 import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.util.HtmlHelper;
+import org.stepic.droid.view.custom.LatexSupportableWebView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -100,7 +100,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
     abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.text_comment)
-        TextView commentText;
+        LatexSupportableWebView commentText;
 
         @Bind(R.id.user_icon)
         DraweeView userIcon;
