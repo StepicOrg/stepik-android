@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -108,6 +109,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         @Bind(R.id.comment_root)
         ViewGroup commentRoot;
 
+        @Bind(R.id.user_name_comments)
+        TextView userName;
+
         public GenericViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -125,17 +129,31 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
 
             commentText.setText(HtmlHelper.fromHtml(comment.getText()));
 
-            DraweeController controller = getControllerForUserAvatar(comment);
+            User user = getUser(comment);
+
+            DraweeController controller = getControllerForUserAvatar(user);
             userIcon.setController(controller);
+
+            if (user != null) {
+                userName.setVisibility(View.VISIBLE);
+                userName.setText(user.getFirst_name() + " " + user.getLast_name());
+            } else {
+                userName.setVisibility(View.GONE);
+            }
         }
 
-        protected final DraweeController getControllerForUserAvatar(Comment comment) {
-            String userAvatar = null;
+        protected final User getUser(Comment comment) {
             if (comment.getUser() != null) {
                 User user = commentManager.getUserById(comment.getUser());
-                if (user != null) {
-                    userAvatar = user.getAvatar();
-                }
+                return user;
+            }
+            return null;
+        }
+
+        protected final DraweeController getControllerForUserAvatar(User user) {
+            String userAvatar = null;
+            if (user != null) {
+                userAvatar = user.getAvatar();
             }
             DraweeController controller = null;
             if (userAvatar != null) {

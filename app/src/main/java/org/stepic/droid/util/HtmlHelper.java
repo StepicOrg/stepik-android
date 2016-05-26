@@ -110,7 +110,7 @@ public class HtmlHelper {
             ", user-scalable=no\" />" +
             "</style>\n" +
             "</head>\n"
-            + "<body>";
+            + "<body style='margin:0;padding:0;'>";
 
     public static final String POST_BODY = "</body>\n" +
             "</html>";

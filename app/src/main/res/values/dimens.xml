@@ -44,4 +44,9 @@
     <dimen name="comment_content_padding_top">4dp</dimen>
     <dimen name="avatar_size_reply">40dp</dimen>
     <dimen name="right_padding_comments">8dp</dimen>
+    <dimen name="bot_padding_name">4dp</dimen>
+    <dimen name="name_size_comments">14sp</dimen>
+    <dimen name="left_padding_name_comments">0dp</dimen>
+    <dimen name="margin_option_text">12dp</dimen>
+    <dimen name="margin_option_top_bot">4dp</dimen>
 </resources>

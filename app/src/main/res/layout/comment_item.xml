@@ -29,19 +29,34 @@
                 fresco:roundAsCircle="true"
                 tools:src="@drawable/placeholder_icon"/>
 
-            <FrameLayout
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/user_icon">
+
+                <TextView
+                    android:paddingLeft="@dimen/left_padding_name_comments"
+                    android:id="@+id/user_name_comments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text ="John Doe"
+                    android:textSize="@dimen/name_size_comments"
+                    android:textColor="@color/black"
+                    android:paddingBottom="@dimen/bot_padding_name"
+                    android:textStyle="bold"
+                    fontPath="fonts/NotoSans-Bold.ttf"
+                    />
 
                 <org.stepic.droid.view.custom.LatexSupportableWebView
                     android:id="@+id/text_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="4dp"
                     android:gravity="left"
                     android:layout_marginRight="@dimen/right_padding_comments"
                     tools:text="Long long text of comment Long long text of comment Long long text of commentLong long text of comment Long long text of comment"/>
-            </FrameLayout>
+            </LinearLayout>
         </RelativeLayout>
 
         <View
