@@ -35,6 +35,7 @@
                 android:layout_toRightOf="@id/user_icon">
 
                 <org.stepic.droid.view.custom.LatexSupportableWebView
+                    android:layout_marginRight="@dimen/right_padding_comments"
                     android:id="@+id/text_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"

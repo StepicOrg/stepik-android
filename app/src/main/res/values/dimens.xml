@@ -43,4 +43,5 @@
     <dimen name="reply_margin">64dp</dimen>
     <dimen name="comment_content_padding_top">4dp</dimen>
     <dimen name="avatar_size_reply">40dp</dimen>
+    <dimen name="right_padding_comments">8dp</dimen>
 </resources>
