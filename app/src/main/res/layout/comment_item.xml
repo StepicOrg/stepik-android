@@ -3,6 +3,7 @@
              xmlns:fresco="http://schemas.android.com/apk/res-auto"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
+             android:foreground="@drawable/non_radius_foreground"
              android:layout_height="wrap_content">
 
     <LinearLayout
@@ -67,4 +68,13 @@
             android:background="@color/silver"/>
     </LinearLayout>
 
+
+    <FrameLayout
+        android:id="@+id/rippleFrameLayoutInOption"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:foreground="@drawable/non_radius_foreground" />
 </FrameLayout>
