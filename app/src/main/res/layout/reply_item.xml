@@ -61,6 +61,8 @@
             </LinearLayout>
         </RelativeLayout>
 
+        <include layout="@layout/load_more_comments_view"/>
+
         <View
             android:id="@+id/grey_bar"
             android:layout_width="match_parent"
