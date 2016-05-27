@@ -122,8 +122,12 @@ class CommentManager {
     fun getSize() = cachedCommentsList.size
 
     fun getItemWithNeedUpdatingInfoByPosition(position: Int): Pair<Boolean, Comment> {
-        var needUpdate = false
         val comment: Comment = cachedCommentsList[position]
+        return getCommentAndNeedUpdateBase(comment)
+    }
+
+    private fun getCommentAndNeedUpdateBase(comment: Comment): Pair<Boolean, Comment> {
+        var needUpdate = false
         val parentComment: Comment? = cachedCommentsSetMap[comment.parent] //comment.parent can be null
 
         if (parentComment == null) {
@@ -144,5 +148,19 @@ class CommentManager {
     }
 
     fun getUserById(userId:Int) = userSetMap[userId]
+
+    fun isNeedUpdateParentInReply(commentReply : Comment) : Boolean{
+        val positionInParent = replyToPositionInParentMap[commentReply.id]
+        if (discussionProxy!!.discussions.size > sumOfCachedParent){
+            //need update parent:
+            //and it is last cached reply?
+            val positionInParent = replyToPositionInParentMap[commentReply.id]
+            val numberOfCached = parentCommentToSumOfCachedReplies[commentReply.parent]
+            if (numberOfCached != null && positionInParent !=null && (positionInParent+1) == numberOfCached ){
+                return true
+            }
+        }
+        return false
+    }
 
 }

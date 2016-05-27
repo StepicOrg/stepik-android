@@ -81,6 +81,12 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
             kotlin.Pair<Boolean, Comment> needUpdateAndComment = commentManager.getItemWithNeedUpdatingInfoByPosition(position);
             initialSetUp(needUpdateAndComment);
             boolean needUpdate = needUpdateAndComment.component1();
+            Comment comment = needUpdateAndComment.getSecond();
+            if (comment.getReply_count() == 0 && needUpdate) {
+                loadMoreView.setVisibility(View.VISIBLE);
+            } else {
+                loadMoreView.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -94,7 +100,15 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         public void setDataOnView(int position) {
             kotlin.Pair<Boolean, Comment> needUpdateAndComment = commentManager.getItemWithNeedUpdatingInfoByPosition(position);
             initialSetUp(needUpdateAndComment);
+            Comment comment = needUpdateAndComment.component2();
+            Long parentId = comment.getParent();
 
+            boolean isNeedUpdateParent = commentManager.isNeedUpdateParentInReply(comment);
+            if (isNeedUpdateParent) {
+                loadMoreView.setVisibility(View.VISIBLE);
+            } else {
+                loadMoreView.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -111,6 +125,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
 
         @Bind(R.id.user_name_comments)
         TextView userName;
+
+        @Bind(R.id.load_more_view)
+        View loadMoreView;
 
         public GenericViewHolder(View itemView) {
             super(itemView);
