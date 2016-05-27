@@ -27,13 +27,13 @@ class CommentManager {
     private val maxOfParentInQuery = 10 // server supports 20, but we can change it
     private val maxOfRepliesInQuery = 20 // we can't change it
     private var sumOfCachedParent: Int = 0;
-    var discussionProxy: DiscussionProxy? = null
+    private var discussionProxy: DiscussionProxy? = null
     val parentCommentToSumOfCachedReplies: MutableMap<Long, Int> = HashMap()
     val cachedCommentsSetMap: MutableMap<Long, Comment> = HashMap()
     val cachedCommentsList: MutableList<Comment> = ArrayList()
     val userSetMap: MutableMap<Int, User> = HashMap() //userId -> User
     val replyToPositionInParentMap: MutableMap<Long, Int> = HashMap()
-
+    val parentIdToPositionInDiscussionMap: MutableMap<Long, Int> = HashMap()
 
     @Inject
     constructor() {
@@ -44,7 +44,7 @@ class CommentManager {
         val orderOfComments = discussionProxy?.discussions
         orderOfComments?.let {
             val sizeNeedLoad = Math.min((sumOfCachedParent + maxOfParentInQuery), orderOfComments.size)
-            if (sizeNeedLoad == sumOfCachedParent  || sizeNeedLoad == 0) {
+            if (sizeNeedLoad == sumOfCachedParent || sizeNeedLoad == 0) {
                 // we don't need to load comments
                 return
             }
@@ -132,7 +132,8 @@ class CommentManager {
 
         if (parentComment == null) {
             //comment is parent comment
-            if (discussionProxy!!.discussions.size > sumOfCachedParent) {
+            val positionInDiscussion = parentIdToPositionInDiscussionMap[comment.id]!!
+            if (discussionProxy!!.discussions.size > sumOfCachedParent && (positionInDiscussion + 1) == sumOfCachedParent ) {
                 needUpdate = true
             }
 
@@ -147,20 +148,30 @@ class CommentManager {
         return Pair(needUpdate, comment)
     }
 
-    fun getUserById(userId:Int) = userSetMap[userId]
+    fun getUserById(userId: Int) = userSetMap[userId]
 
-    fun isNeedUpdateParentInReply(commentReply : Comment) : Boolean{
+    fun isNeedUpdateParentInReply(commentReply: Comment): Boolean {
         val positionInParent = replyToPositionInParentMap[commentReply.id]
-        if (discussionProxy!!.discussions.size > sumOfCachedParent){
+        if (discussionProxy!!.discussions.size > sumOfCachedParent) {
             //need update parent:
             //and it is last cached reply?
             val positionInParent = replyToPositionInParentMap[commentReply.id]
             val numberOfCached = parentCommentToSumOfCachedReplies[commentReply.parent]
-            if (numberOfCached != null && positionInParent !=null && (positionInParent+1) == numberOfCached ){
+            if (numberOfCached != null && positionInParent != null && (positionInParent + 1) == numberOfCached) {
                 return true
             }
         }
         return false
+    }
+
+    fun setDiscussionProxy(dP: DiscussionProxy) {
+        discussionProxy = dP
+        //todo: remove dp from manager, make only list in discussion proxy based on sorting
+        var i = 0
+        while (i < dP.discussions.size) {
+            parentIdToPositionInDiscussionMap.put(dP.discussions[i], i)
+            i++
+        }
     }
 
 }
