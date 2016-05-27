@@ -49,7 +49,7 @@ class CommentManager {
                 return
             }
 
-            val idsForLoading = it.subList(sumOfCachedParent, sumOfCachedParent + sizeNeedLoad - 1).toLongArray()
+            val idsForLoading = it.subList(sumOfCachedParent, sumOfCachedParent + sizeNeedLoad).toLongArray()
             loadCommentsByIds(idsForLoading)
         }
     }
