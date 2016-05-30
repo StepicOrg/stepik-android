@@ -88,11 +88,10 @@ class CommentManager {
                             if (parentComment.replies != null && !parentComment.replies.isEmpty()) {
                                 var childIndex = 0
                                 val cachedRepliesNumber = parentCommentToSumOfCachedReplies.get(parentComment.id) ?: 0
-                                while (i < sumOfCachedParent && childIndex < cachedRepliesNumber) {
+                                while (childIndex < cachedRepliesNumber) {
                                     val childComment = cachedCommentsSetMap [parentComment.replies[childIndex]] ?: break
                                     replyToPositionInParentMap.put(childComment.id!!, childIndex)
                                     cachedCommentsList.add(childComment)
-                                    i++
                                     childIndex++
                                 }
                             }
