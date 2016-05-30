@@ -119,7 +119,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
             else{
                 loadMoreReply.setVisibility(View.GONE);
             }
-
         }
     }
 

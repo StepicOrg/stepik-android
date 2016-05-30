@@ -6,6 +6,11 @@
              android:layout_height="wrap_content"
     android:orientation="vertical">
 <FrameLayout
+    android:id="@+id/comment_root"
+    android:clickable="true"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:foreground="@drawable/non_radius_foreground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <LinearLayout
@@ -15,7 +20,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/comment_root"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/reply_margin"
@@ -52,7 +57,9 @@
                     android:textStyle="bold"
                     fontPath="fonts/NotoSans-Bold.ttf"
                     />
-
+<org.stepic.droid.view.custom.InterceptFrameLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
                 <org.stepic.droid.view.custom.LatexSupportableWebView
                     android:layout_marginRight="@dimen/right_padding_comments"
                     android:id="@+id/text_comment"
@@ -60,7 +67,7 @@
                     android:layout_height="match_parent"
                     android:gravity="left"
                     tools:text="Long long text of comment Long long text of comment Long long text of commentLong long text of comment Long long text of comment"/>
-
+</org.stepic.droid.view.custom.InterceptFrameLayout>
                 <TextView
                     android:id="@+id/load_more_reply"
                     android:visibility="gone"
@@ -84,15 +91,6 @@
             android:layout_height="1dp"
             android:background="@color/silver"/>
     </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/rippleFrameLayoutInOption"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:foreground="@drawable/non_radius_foreground" />
 </FrameLayout>
     <include layout="@layout/load_more_comments_view"/>
 
