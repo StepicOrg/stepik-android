@@ -20,6 +20,7 @@ import org.stepic.droid.model.CommentAdapterItem;
 import org.stepic.droid.model.User;
 import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.util.HtmlHelper;
+import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.view.custom.LatexSupportableWebView;
 
 import butterknife.Bind;
@@ -84,12 +85,19 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
             initialSetUp(needUpdateAndComment);
             boolean needUpdate = needUpdateAndComment.isNeedUpdating();
             Comment comment = needUpdateAndComment.getComment();
-            if (comment.getReply_count() == 0 && needUpdate) {
-                loadMoreView.setVisibility(View.VISIBLE);
+
+            if (needUpdateAndComment.isParentLoading()) {
+                loadMoreParentProgressState();
             } else {
-                loadMoreView.setVisibility(View.GONE);
+                if (comment.getReply_count() == 0 && needUpdate) {
+                    loadMoreSuggestLoadingState();
+                } else {
+                    loadMoreHide();
+                }
             }
         }
+
+
     }
 
     class ReplyViewHolder extends GenericViewHolder {
@@ -105,13 +113,13 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
             loadMoreReply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   onClickLoadMoreReplies(getAdapterPosition());
+                    onClickLoadMoreReplies(getAdapterPosition());
                 }
             });
         }
 
-        void onClickLoadMoreReplies(int position){
-            CommentAdapterItem needUpdateAndComment =  commentManager.getItemWithNeedUpdatingInfoByPosition(position);
+        void onClickLoadMoreReplies(int position) {
+            CommentAdapterItem needUpdateAndComment = commentManager.getItemWithNeedUpdatingInfoByPosition(position);
             Comment comment = needUpdateAndComment.getComment();
             commentManager.addToLoading(comment.getId());
             notifyItemChanged(position);
@@ -130,20 +138,22 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                 boolean isNeedUpdate = needUpdateAndComment.isNeedUpdating();
                 if (isNeedUpdate) {
                     loadMoreReply.setVisibility(View.VISIBLE);
-                }
-                else{
+                } else {
                     loadMoreReply.setVisibility(View.GONE);
                 }
-            }
-            else{
+            } else {
                 progressLoadMoreReplies.setVisibility(View.VISIBLE);
             }
 
             boolean isNeedUpdateParent = commentManager.isNeedUpdateParentInReply(comment);
-            if (isNeedUpdateParent) {
-                loadMoreView.setVisibility(View.VISIBLE);
+            if (needUpdateAndComment.isParentLoading()) {
+                loadMoreParentProgressState();
             } else {
-                loadMoreView.setVisibility(View.GONE);
+                if (isNeedUpdateParent) {
+                    loadMoreSuggestLoadingState();
+                } else {
+                    loadMoreHide();
+                }
             }
 
         }
@@ -166,9 +176,35 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         @Bind(R.id.load_more_view)
         View loadMoreView;
 
+        @Bind(R.id.load_more_textview)
+        View loadMoreTextView;
+
+        @Bind(R.id.progress_load_more_comments)
+        View progressLoadMoreComments;
+
         public GenericViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            loadMoreView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        RWLocks.LoadMoreLock.writeLock().lock();
+                        if (loadMoreTextView.getVisibility() == View.VISIBLE) {
+                            onClickMoreLayout(getAdapterPosition());
+                        }
+                    } finally {
+                        RWLocks.LoadMoreLock.writeLock().unlock();
+                    }
+                }
+            });
+        }
+
+        private void onClickMoreLayout(int adapterPosition) {
+            CommentAdapterItem commentAdapterItem = commentManager.getItemWithNeedUpdatingInfoByPosition(adapterPosition);
+            commentManager.addCommentIdWhereLoadMoreClicked(commentAdapterItem.getComment().getId());
+            notifyItemChanged(adapterPosition);
+            commentManager.loadComments();
         }
 
         public abstract void setDataOnView(int position);
@@ -230,5 +266,25 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
             }
             return controller;
         }
+
+        protected final void loadMoreParentProgressState() {
+            loadMoreView.setVisibility(View.VISIBLE);
+            progressLoadMoreComments.setVisibility(View.VISIBLE);
+            loadMoreTextView.setVisibility(View.GONE);
+        }
+
+
+        protected final void loadMoreSuggestLoadingState() {
+            loadMoreView.setVisibility(View.VISIBLE);
+            progressLoadMoreComments.setVisibility(View.GONE);
+            loadMoreTextView.setVisibility(View.VISIBLE);
+        }
+
+        protected final void loadMoreHide() {
+            loadMoreView.setVisibility(View.GONE);
+            loadMoreTextView.setVisibility(View.GONE);
+            progressLoadMoreComments.setVisibility(View.GONE);
+        }
+
     }
 }

@@ -35,7 +35,8 @@ class CommentManager {
     val userSetMap: MutableMap<Int, User> = HashMap() //userId -> User
     val replyToPositionInParentMap: MutableMap<Long, Int> = HashMap()
     val parentIdToPositionInDiscussionMap: MutableMap<Long, Int> = HashMap()
-    var repliesIdIsLoading: MutableSet<Long> = HashSet()
+    val repliesIdIsLoading: MutableSet<Long> = HashSet()
+    val commentIdIsLoading: MutableSet<Long> = HashSet() //can be reply or comment (with 0 replies) for load more comments).
 
     @Inject
     constructor() {
@@ -51,7 +52,7 @@ class CommentManager {
                 return
             }
 
-            val idsForLoading = it.subList(sumOfCachedParent,  sizeNeedLoad).toLongArray()
+            val idsForLoading = it.subList(sumOfCachedParent, sizeNeedLoad).toLongArray()
             loadCommentsByIds(idsForLoading)
         }
     }
@@ -72,7 +73,7 @@ class CommentManager {
         }
     }
 
-    private fun loadCommentsByIds(idsForLoading: LongArray, fromReply : Boolean = false) {
+    private fun loadCommentsByIds(idsForLoading: LongArray, fromReply: Boolean = false) {
         api.getCommentsByIds(idsForLoading).enqueue(object : Callback<CommentsResponse> {
             override fun onResponse(response: Response<CommentsResponse>?, retrofit: Retrofit?) {
 
@@ -124,7 +125,9 @@ class CommentManager {
                         //commentIdIsLoading = commentIdIsLoading.filterNot { cachedCommentsSetMap.containsKey(it) }.toHashSet()
                         if (fromReply) {
                             repliesIdIsLoading.clear()
-                        }// all commentsIdIsLoading is cached
+                        } else {
+                            commentIdIsLoading.clear()
+                        }
                         bus.post(CommentsLoadedSuccessfullyEvent()) // notify UI
                     } else {
                         //todo on fail
@@ -168,7 +171,8 @@ class CommentManager {
         }
 
         val isLoading = repliesIdIsLoading.contains(comment.id)
-        return CommentAdapterItem(isNeedUpdating = needUpdate, isLoading = isLoading, comment = comment)
+        val isParentLoading = commentIdIsLoading.contains(comment.id)
+        return CommentAdapterItem(isNeedUpdating = needUpdate, isLoading = isLoading, comment = comment, isParentLoading = isParentLoading)
     }
 
     fun addToLoading(commentId: Long) {
@@ -184,7 +188,8 @@ class CommentManager {
             //and it is last cached reply?
             val positionInParent = replyToPositionInParentMap[commentReply.id]
             val numberOfCached = parentCommentToSumOfCachedReplies[commentReply.parent]
-            if (numberOfCached != null && positionInParent != null && (positionInParent + 1) == numberOfCached) {
+            val posInDisscussion = parentIdToPositionInDiscussionMap[commentReply.parent] ?: return false
+            if (numberOfCached != null && positionInParent != null && (positionInParent + 1) == numberOfCached && (posInDisscussion + 1) == sumOfCachedParent) {
                 return true
             }
         }
@@ -199,6 +204,10 @@ class CommentManager {
             parentIdToPositionInDiscussionMap.put(dP.discussions[i], i)
             i++
         }
+    }
+
+    fun addCommentIdWhereLoadMoreClicked(commentId: Long) {
+        commentIdIsLoading.add(commentId)
     }
 
 }
