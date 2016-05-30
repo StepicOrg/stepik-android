@@ -92,6 +92,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
 
     class ReplyViewHolder extends GenericViewHolder {
 
+        @Bind(R.id.load_more_reply)
+        View loadMoreReply;
+
         public ReplyViewHolder(View itemView) {
             super(itemView);
         }
@@ -101,7 +104,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
             kotlin.Pair<Boolean, Comment> needUpdateAndComment = commentManager.getItemWithNeedUpdatingInfoByPosition(position);
             initialSetUp(needUpdateAndComment);
             Comment comment = needUpdateAndComment.component2();
-            Long parentId = comment.getParent();
 
             boolean isNeedUpdateParent = commentManager.isNeedUpdateParentInReply(comment);
             if (isNeedUpdateParent) {
@@ -109,6 +111,15 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
             } else {
                 loadMoreView.setVisibility(View.GONE);
             }
+
+            boolean isNeedUpdate = needUpdateAndComment.component1();
+            if (isNeedUpdate) {
+                loadMoreReply.setVisibility(View.VISIBLE);
+            }
+            else{
+                loadMoreReply.setVisibility(View.GONE);
+            }
+
         }
     }
 

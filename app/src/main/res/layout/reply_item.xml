@@ -60,6 +60,19 @@
                     android:layout_height="match_parent"
                     android:gravity="left"
                     tools:text="Long long text of comment Long long text of comment Long long text of commentLong long text of comment Long long text of comment"/>
+
+                <TextView
+                    android:id="@+id/load_more_reply"
+                    android:visibility="gone"
+                    tools:visibility = "visible"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?colorAccent"
+                    android:text="@string/load_more_reply"
+                    android:gravity="left"
+                    android:paddingTop="8dp"
+                    android:textSize="14sp"/>
+
             </LinearLayout>
         </RelativeLayout>
 
