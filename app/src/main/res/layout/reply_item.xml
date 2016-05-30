@@ -64,7 +64,7 @@
                     android:layout_marginRight="@dimen/right_padding_comments"
                     android:id="@+id/text_comment"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="left"
                     tools:text="Long long text of comment Long long text of comment Long long text of commentLong long text of comment Long long text of comment"/>
 </org.stepic.droid.view.custom.InterceptFrameLayout>

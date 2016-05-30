@@ -102,8 +102,9 @@ public class HtmlHelper {
             + "\nh1{font-size: 20pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
             + "\nh2{font-size: 17pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
             + "\nh3{font-size: 14pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-            + "\nimg { max-width: 100%%; }" +
-            "<meta name=\"viewport\" content=\"width=" +
+            + "\nimg { max-width: 100%%; }"
+            + "\np{margin: 0px; padding: 0px; display: inline;}"
+            + "<meta name=\"viewport\" content=\"width=" +
 
             "%d" +
 

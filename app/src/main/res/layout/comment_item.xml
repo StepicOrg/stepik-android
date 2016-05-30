@@ -55,7 +55,7 @@
                 <org.stepic.droid.view.custom.LatexSupportableWebView
                     android:id="@+id/text_comment"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:gravity="left"
                     android:layout_marginRight="@dimen/right_padding_comments"
