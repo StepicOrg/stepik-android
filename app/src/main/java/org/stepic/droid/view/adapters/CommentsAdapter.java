@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.facebook.common.util.UriUtil;
@@ -15,6 +16,7 @@ import com.facebook.drawee.view.DraweeView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.core.CommentManager;
+import org.stepic.droid.model.CommentAdapterItem;
 import org.stepic.droid.model.User;
 import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.util.HtmlHelper;
@@ -51,8 +53,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
 
     @Override
     public int getItemViewType(int position) {
-        kotlin.Pair<Boolean, Comment> needUpdateAndComment = commentManager.getItemWithNeedUpdatingInfoByPosition(position);
-        Long parentId = needUpdateAndComment.getSecond().getParent();
+        CommentAdapterItem needUpdateAndComment = commentManager.getItemWithNeedUpdatingInfoByPosition(position);
+        Long parentId = needUpdateAndComment.getComment().getParent();
         if (parentId == null) {
             return TYPE_PARENT_COMMENT;
         } else {
@@ -78,10 +80,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
 
         @Override
         public void setDataOnView(int position) {
-            kotlin.Pair<Boolean, Comment> needUpdateAndComment = commentManager.getItemWithNeedUpdatingInfoByPosition(position);
+            CommentAdapterItem needUpdateAndComment = commentManager.getItemWithNeedUpdatingInfoByPosition(position);
             initialSetUp(needUpdateAndComment);
-            boolean needUpdate = needUpdateAndComment.component1();
-            Comment comment = needUpdateAndComment.getSecond();
+            boolean needUpdate = needUpdateAndComment.isNeedUpdating();
+            Comment comment = needUpdateAndComment.getComment();
             if (comment.getReply_count() == 0 && needUpdate) {
                 loadMoreView.setVisibility(View.VISIBLE);
             } else {
@@ -95,15 +97,47 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         @Bind(R.id.load_more_reply)
         View loadMoreReply;
 
+        @Bind(R.id.progress_load_more_replies)
+        ProgressBar progressLoadMoreReplies;
+
         public ReplyViewHolder(View itemView) {
             super(itemView);
+            loadMoreReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                   onClickLoadMoreReplies(getAdapterPosition());
+                }
+            });
+        }
+
+        void onClickLoadMoreReplies(int position){
+            CommentAdapterItem needUpdateAndComment =  commentManager.getItemWithNeedUpdatingInfoByPosition(position);
+            Comment comment = needUpdateAndComment.getComment();
+            commentManager.addToLoading(comment.getId());
+            notifyItemChanged(position);
+            commentManager.loadExtraReplies(comment);
+
         }
 
         @Override
         public void setDataOnView(int position) {
-            kotlin.Pair<Boolean, Comment> needUpdateAndComment = commentManager.getItemWithNeedUpdatingInfoByPosition(position);
+            CommentAdapterItem needUpdateAndComment = commentManager.getItemWithNeedUpdatingInfoByPosition(position);
             initialSetUp(needUpdateAndComment);
-            Comment comment = needUpdateAndComment.component2();
+            Comment comment = needUpdateAndComment.getComment();
+
+            if (!needUpdateAndComment.isLoading()) {
+                progressLoadMoreReplies.setVisibility(View.GONE);
+                boolean isNeedUpdate = needUpdateAndComment.isNeedUpdating();
+                if (isNeedUpdate) {
+                    loadMoreReply.setVisibility(View.VISIBLE);
+                }
+                else{
+                    loadMoreReply.setVisibility(View.GONE);
+                }
+            }
+            else{
+                progressLoadMoreReplies.setVisibility(View.VISIBLE);
+            }
 
             boolean isNeedUpdateParent = commentManager.isNeedUpdateParentInReply(comment);
             if (isNeedUpdateParent) {
@@ -112,13 +146,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                 loadMoreView.setVisibility(View.GONE);
             }
 
-            boolean isNeedUpdate = needUpdateAndComment.component1();
-            if (isNeedUpdate) {
-                loadMoreReply.setVisibility(View.VISIBLE);
-            }
-            else{
-                loadMoreReply.setVisibility(View.GONE);
-            }
         }
     }
 
@@ -146,8 +173,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
 
         public abstract void setDataOnView(int position);
 
-        protected final void initialSetUp(kotlin.Pair<Boolean, Comment> needUpdateAndComment) {
-            Comment comment = needUpdateAndComment.component2();
+        protected final void initialSetUp(CommentAdapterItem needUpdateAndComment) {
+            Comment comment = needUpdateAndComment.getComment();
 
             boolean isParent = false;
             if (comment.getParent() == null) {

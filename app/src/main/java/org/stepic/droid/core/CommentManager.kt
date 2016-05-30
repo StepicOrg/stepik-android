@@ -4,6 +4,7 @@ import com.squareup.otto.Bus
 
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.events.comments.CommentsLoadedSuccessfullyEvent
+import org.stepic.droid.model.CommentAdapterItem
 import org.stepic.droid.model.User
 import org.stepic.droid.model.comments.Comment
 import org.stepic.droid.model.comments.DiscussionProxy
@@ -34,6 +35,7 @@ class CommentManager {
     val userSetMap: MutableMap<Int, User> = HashMap() //userId -> User
     val replyToPositionInParentMap: MutableMap<Long, Int> = HashMap()
     val parentIdToPositionInDiscussionMap: MutableMap<Long, Int> = HashMap()
+    var repliesIdIsLoading: MutableSet<Long> = HashSet()
 
     @Inject
     constructor() {
@@ -49,12 +51,28 @@ class CommentManager {
                 return
             }
 
-            val idsForLoading = it.subList(sumOfCachedParent, sumOfCachedParent + sizeNeedLoad).toLongArray()
+            val idsForLoading = it.subList(sumOfCachedParent,  sizeNeedLoad).toLongArray()
             loadCommentsByIds(idsForLoading)
         }
     }
 
-    private fun loadCommentsByIds(idsForLoading: LongArray) {
+    fun loadExtraReplies(oneOfReplyComment: Comment) {
+        val parentCommentId = oneOfReplyComment.parent
+        val parentComment = cachedCommentsSetMap[parentCommentId]
+        if (parentComment != null && parentComment.replies != null) {
+            val countOfCachedReplies: Int = parentCommentToSumOfCachedReplies[parentCommentId] ?: return
+
+            val sizeNeedLoad = Math.min(parentComment.replies.size, countOfCachedReplies + maxOfRepliesInQuery)
+            if (sizeNeedLoad == countOfCachedReplies || sizeNeedLoad == 0) {
+                return
+            }
+
+            val idsForLoading = parentComment.replies.subList(countOfCachedReplies, sizeNeedLoad).toLongArray()
+            loadCommentsByIds(idsForLoading, fromReply = true)
+        }
+    }
+
+    private fun loadCommentsByIds(idsForLoading: LongArray, fromReply : Boolean = false) {
         api.getCommentsByIds(idsForLoading).enqueue(object : Callback<CommentsResponse> {
             override fun onResponse(response: Response<CommentsResponse>?, retrofit: Retrofit?) {
 
@@ -103,6 +121,10 @@ class CommentManager {
                                         userSetMap.put(it.id, it)
                                     }
                                 }
+                        //commentIdIsLoading = commentIdIsLoading.filterNot { cachedCommentsSetMap.containsKey(it) }.toHashSet()
+                        if (fromReply) {
+                            repliesIdIsLoading.clear()
+                        }// all commentsIdIsLoading is cached
                         bus.post(CommentsLoadedSuccessfullyEvent()) // notify UI
                     } else {
                         //todo on fail
@@ -120,19 +142,19 @@ class CommentManager {
 
     fun getSize() = cachedCommentsList.size
 
-    fun getItemWithNeedUpdatingInfoByPosition(position: Int): Pair<Boolean, Comment> {
+    fun getItemWithNeedUpdatingInfoByPosition(position: Int): CommentAdapterItem {
         val comment: Comment = cachedCommentsList[position]
         return getCommentAndNeedUpdateBase(comment)
     }
 
-    private fun getCommentAndNeedUpdateBase(comment: Comment): Pair<Boolean, Comment> {
+    private fun getCommentAndNeedUpdateBase(comment: Comment): CommentAdapterItem {
         var needUpdate = false
         val parentComment: Comment? = cachedCommentsSetMap[comment.parent] //comment.parent can be null
 
         if (parentComment == null) {
             //comment is parent comment
             val positionInDiscussion = parentIdToPositionInDiscussionMap[comment.id]!!
-            if (discussionProxy!!.discussions.size > sumOfCachedParent && (positionInDiscussion + 1) == sumOfCachedParent ) {
+            if (discussionProxy!!.discussions.size > sumOfCachedParent && (positionInDiscussion + 1) == sumOfCachedParent) {
                 needUpdate = true
             }
 
@@ -144,7 +166,13 @@ class CommentManager {
                 needUpdate = true
             }
         }
-        return Pair(needUpdate, comment)
+
+        val isLoading = repliesIdIsLoading.contains(comment.id)
+        return CommentAdapterItem(isNeedUpdating = needUpdate, isLoading = isLoading, comment = comment)
+    }
+
+    fun addToLoading(commentId: Long) {
+        repliesIdIsLoading.add(commentId)
     }
 
     fun getUserById(userId: Int) = userSetMap[userId]
