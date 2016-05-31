@@ -1,7 +1,6 @@
 package org.stepic.droid.util;
 
 import android.text.Html;
-import android.text.Spanned;
 
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.Source;
@@ -15,15 +14,43 @@ import java.util.List;
 public class HtmlHelper {
 
     @NotNull
-    public static Spanned fromHtml(@Nullable String content) {
+    public static CharSequence fromHtml(@Nullable String content) {
         if (content == null)
             return Html.fromHtml("");
 
         return Html.fromHtml(content);
     }
 
+    /** Trims trailing whitespace. Removes any of these characters:
+     * 0009, HORIZONTAL TABULATION
+     * 000A, LINE FEED
+     * 000B, VERTICAL TABULATION
+     * 000C, FORM FEED
+     * 000D, CARRIAGE RETURN
+     * 001C, FILE SEPARATOR
+     * 001D, GROUP SEPARATOR
+     * 001E, RECORD SEPARATOR
+     * 001F, UNIT SEPARATOR
+     * @return "" if source is null, otherwise string with all trailing whitespace removed
+     */
+    public static CharSequence trimTrailingWhitespace(CharSequence source) {
+
+        if(source == null)
+            return "";
+
+        int i = source.length();
+
+        // loop back to the first non-whitespace character
+        while(--i >= 0 && Character.isWhitespace(source.charAt(i))) {
+        }
+
+        return source.subSequence(0, i+1);
+    }
+
     public static boolean isForWebView(@NotNull String text) {
-        return text.contains("$") || text.contains("<img");
+        boolean isContainsPicture = text.contains("<img");
+        boolean isContainsLatex = text.contains("$");
+        return isContainsLatex || isContainsPicture;
     }
 
     /**

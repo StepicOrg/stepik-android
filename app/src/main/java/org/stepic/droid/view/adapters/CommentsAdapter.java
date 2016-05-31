@@ -161,8 +161,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
 
     abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 
+        @Bind(R.id.text_view_latex)
+        LatexSupportableWebView commentTextWebView;
+
         @Bind(R.id.text_comment)
-        LatexSupportableWebView commentText;
+        TextView commentText;
 
         @Bind(R.id.user_icon)
         DraweeView userIcon;
@@ -217,7 +220,18 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                 isParent = true;
             }
 
-            commentText.setText(HtmlHelper.fromHtml(comment.getText()));
+            boolean needWebView = HtmlHelper.isForWebView(comment.getText());
+
+            if (!needWebView) {
+                String str = HtmlHelper.trimTrailingWhitespace(HtmlHelper.fromHtml(comment.getText())).toString();
+                commentText.setVisibility(View.VISIBLE);
+                commentTextWebView.setVisibility(View.GONE);
+                commentText.setText(str); //remake
+            } else {
+                commentTextWebView.setVisibility(View.VISIBLE);
+                commentText.setVisibility(View.GONE);
+                commentTextWebView.setText(comment.getText());
+            }
 
             User user = getUser(comment);
 

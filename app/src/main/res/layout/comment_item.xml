@@ -53,7 +53,8 @@
                     fontPath="fonts/NotoSans-Bold.ttf"
                     />
 
-                <org.stepic.droid.view.custom.LatexSupportableWebView
+                <TextView
+                    android:textColor="@color/black"
                     android:id="@+id/text_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -61,6 +62,17 @@
                     android:gravity="left"
                     android:layout_marginRight="@dimen/right_padding_comments"
                     tools:text="Long long text of comment Long long text of comment Long long text of commentLong long text of comment Long long text of comment"/>
+
+                <org.stepic.droid.view.custom.LatexSupportableWebView
+                    android:id="@+id/text_view_latex"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:gravity="left"
+                    android:layout_marginRight="@dimen/right_padding_comments"
+                    android:scrollbarStyle="outsideOverlay"
+                    tools:text="Long long text of comment Long long text of comment Long long text of commentLong long text of comment Long long text of comment"/>
+
             </LinearLayout>
         </RelativeLayout>
 

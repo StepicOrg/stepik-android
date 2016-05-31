@@ -61,13 +61,23 @@
 <org.stepic.droid.view.custom.InterceptFrameLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
-                <org.stepic.droid.view.custom.LatexSupportableWebView
+                <TextView
+                    android:textColor="@color/black"
                     android:layout_marginRight="@dimen/right_padding_comments"
                     android:id="@+id/text_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     tools:text="Long long text of comment Long long text of comment Long long text of commentLong long text of comment Long long text of comment"/>
+    <org.stepic.droid.view.custom.LatexSupportableWebView
+        android:textColor="@color/black"
+        android:layout_marginRight="@dimen/right_padding_comments"
+        android:id="@+id/text_view_latex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:scrollbarStyle="outsideOverlay"
+        tools:text="Long long text of comment Long long text of comment Long long text of commentLong long text of comment Long long text of comment"/>
 </org.stepic.droid.view.custom.InterceptFrameLayout>
                 <TextView
                     android:id="@+id/load_more_reply"
