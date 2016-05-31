@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.Toast
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.events.comments.NeedReloadCommentsEvent
 import org.stepic.droid.web.CommentsResponse
 import retrofit.Callback
 import retrofit.Response
@@ -102,7 +103,7 @@ class NewCommentFragment : FragmentBase() {
     }
 
     private fun sendComment() {
-        Toast.makeText(context, "Comment is sent", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, R.string.comment_sent, Toast.LENGTH_LONG).show()
         val text: String = mTextBody.text.toString()
         if (text.isEmpty()) {
             Toast.makeText(context, R.string.feedback_fill_fields, Toast.LENGTH_SHORT).show()
@@ -110,6 +111,7 @@ class NewCommentFragment : FragmentBase() {
             mShell.api.postComment(text, target!!, parent).enqueue(object : Callback<CommentsResponse> {
                 override fun onResponse(response: Response<CommentsResponse>?, retrofit: Retrofit?) {
                     if (response?.isSuccess ?: false && response?.body()?.comments != null) {
+                        bus.post(NeedReloadCommentsEvent(targetId = target!!))
                         activity.finish()
                     } else {
                         //todo implement

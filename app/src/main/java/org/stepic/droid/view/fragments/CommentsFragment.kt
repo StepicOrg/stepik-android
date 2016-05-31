@@ -18,10 +18,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.core.CommentManager
-import org.stepic.droid.events.comments.CommentsLoadedSuccessfullyEvent
-import org.stepic.droid.events.comments.DiscussionProxyLoadedSuccessfullyEvent
-import org.stepic.droid.events.comments.EmptyCommentsInDiscussionProxyEvent
-import org.stepic.droid.events.comments.InternetConnectionProblemInCommentsEvent
+import org.stepic.droid.events.comments.*
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.view.adapters.CommentsAdapter
 import org.stepic.droid.web.DiscussionProxyResponse
@@ -111,6 +108,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        bus.register(this)
         showEmptyProgressOnCenter()
         if (commentManager.isEmpty()) {
             loadDiscussionProxyById()
@@ -195,18 +193,26 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         commentAdapter.notifyDataSetChanged();
     }
 
+    @Subscribe
+    fun onNeedUpdate(needUpdateEvent : NeedReloadCommentsEvent){
+        if (needUpdateEvent.targetId == stepId)
+        {
+            //without animation.
+            onRefresh() // it can be dangerous, when 10 or more comments was submit by another users.
+        }
+    }
+
     override fun onStart() {
         super.onStart()
-        bus.register(this)
     }
 
     override fun onStop() {
         super.onStop()
-        bus.unregister(this)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        bus.unregister(this)
         swipeRefreshLayout.setOnRefreshListener(null)
         floatingActionButton?.setOnClickListener(null)
     }

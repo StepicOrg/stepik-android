@@ -151,4 +151,5 @@
         <item quantity="one">%d new notification</item>
         <item quantity="other">%d new notifications</item>
     </plurals>
+    <string name="comment_sent">Comment is sent successfully</string>
 </resources>

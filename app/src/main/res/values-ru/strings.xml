@@ -143,4 +143,5 @@
     <string name="hint_for_new_comment">Оставьте комментарий</string>
     <string name="new_comment_title">Новый комментарий</string>
     <string name="leave_first_comment">Нет обсуждений. Начните первое.</string>
+    <string name="comment_sent">Комментарий успешно отправлен</string>
 </resources>
