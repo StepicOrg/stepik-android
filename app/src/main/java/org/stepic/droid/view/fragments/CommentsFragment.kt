@@ -112,7 +112,12 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         showEmptyProgressOnCenter()
-        loadDiscussionProxyById()
+        if (commentManager.isEmpty()) {
+            loadDiscussionProxyById()
+        }
+        else{
+            showEmptyProgressOnCenter(false)
+        }
     }
 
     private fun initSwipeRefreshLayout(v: View) {
