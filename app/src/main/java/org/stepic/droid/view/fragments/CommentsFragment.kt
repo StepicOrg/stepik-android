@@ -190,7 +190,11 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     fun onCommentsLoadedSuccessfully(successfullyEvent: CommentsLoadedSuccessfullyEvent) {
         cancelSwipeRefresh()
         showEmptyProgressOnCenter(false)
-        commentAdapter.notifyDataSetChanged();
+        showInternetConnectionProblem(false)
+        if (!commentManager.isEmpty()){
+            showEmptyState(false)
+        }
+        commentAdapter.notifyDataSetChanged()
     }
 
     @Subscribe
@@ -208,6 +212,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onStop() {
         super.onStop()
+        cancelSwipeRefresh()
     }
 
     override fun onDestroyView() {
