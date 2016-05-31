@@ -22,6 +22,10 @@ public class HtmlHelper {
         return Html.fromHtml(content);
     }
 
+    public static boolean isForWebView(@NotNull String text) {
+        return text.contains("$") || text.contains("<img");
+    }
+
     /**
      * get meta value
      *
