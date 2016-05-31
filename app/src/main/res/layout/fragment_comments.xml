@@ -48,6 +48,7 @@
 
         <include layout="@layout/progress_bar_on_empty_screen"/>
         <include layout="@layout/empty_comments"/>
+        <include layout="@layout/report_problem_layout" />
     </FrameLayout>
 
 </LinearLayout>

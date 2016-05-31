@@ -21,6 +21,7 @@ import org.stepic.droid.core.CommentManager
 import org.stepic.droid.events.comments.CommentsLoadedSuccessfullyEvent
 import org.stepic.droid.events.comments.DiscussionProxyLoadedSuccessfullyEvent
 import org.stepic.droid.events.comments.EmptyCommentsInDiscussionProxyEvent
+import org.stepic.droid.events.comments.InternetConnectionProblemInCommentsEvent
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.view.adapters.CommentsAdapter
 import org.stepic.droid.web.DiscussionProxyResponse
@@ -59,6 +60,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     lateinit var recyclerView: RecyclerView
     var floatingActionButton: FloatingActionButton? = null
     lateinit var emptyStateView: View
+    lateinit var errorView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,8 +81,13 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             initRecyclerView(v)
             initAddCommentButton(v)
             initEmptyState(v)
+            initConnectionError(v)
         }
         return v
+    }
+
+    private fun initConnectionError(v: View) {
+        errorView = v.findViewById(R.id.report_problem)
     }
 
     private fun initEmptyState(v: View) {
@@ -138,15 +145,22 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                         bus.post(EmptyCommentsInDiscussionProxyEvent(id))
                     }
                 } else {
-                    //TODO IMPLEMENT ON FAIL
+                    bus.post(InternetConnectionProblemInCommentsEvent(discussionId))
                 }
             }
 
             override fun onFailure(t: Throwable?) {
-                //TODO IMPLEMENT ON FAIL
+                bus.post(InternetConnectionProblemInCommentsEvent(discussionId))
             }
 
         })
+    }
+
+    @Subscribe
+    fun onInternetConnectionProblem (event: InternetConnectionProblemInCommentsEvent){
+        if (event.discussionProxyId == discussionId){
+            showInternetConnectionProblem()
+        }
     }
 
     @Subscribe
@@ -193,6 +207,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     private fun showEmptyProgressOnCenter(needShow: Boolean = true) {
         if (needShow) {
             ProgressHelper.activate(loadProgressBarOnCenter)
+            showEmptyState(false)
+            showInternetConnectionProblem(false)
         } else {
             ProgressHelper.dismiss(loadProgressBarOnCenter)
         }
@@ -202,8 +218,20 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         if (isNeedShow) {
             emptyStateView.visibility = View.VISIBLE
             showEmptyProgressOnCenter(false)
+            showInternetConnectionProblem(false)
         } else {
             emptyStateView.visibility = View.GONE
+        }
+    }
+
+    private fun showInternetConnectionProblem(needShow: Boolean = true){
+        if (needShow){
+            errorView.visibility = View.VISIBLE
+            showEmptyState(false)
+            showEmptyProgressOnCenter(false)
+        }
+        else{
+            errorView.visibility = View.GONE
         }
     }
 
