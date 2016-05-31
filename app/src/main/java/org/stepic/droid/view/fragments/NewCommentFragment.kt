@@ -5,11 +5,10 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.Toast
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 
@@ -65,6 +64,26 @@ class NewCommentFragment : FragmentBase() {
     private fun showSoftKeypad(editTextView: View) {
         val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(editTextView, InputMethodManager.SHOW_IMPLICIT)
+    }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.new_comment_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_send_comment -> {
+                sendComment()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun sendComment() {
+        Toast.makeText(context, "Comment is sent", Toast.LENGTH_LONG).show()
+        //TODO: Implement, notify which comment was added?
+        activity.finish()
     }
 }
