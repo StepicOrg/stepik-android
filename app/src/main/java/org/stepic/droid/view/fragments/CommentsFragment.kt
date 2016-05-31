@@ -58,6 +58,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var recyclerView: RecyclerView
     var floatingActionButton: FloatingActionButton? = null
+    lateinit var emptyStateView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,8 +78,13 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             initSwipeRefreshLayout(v)
             initRecyclerView(v)
             initAddCommentButton(v)
+            initEmptyState(v)
         }
         return v
+    }
+
+    private fun initEmptyState(v: View) {
+        emptyStateView = v.findViewById(R.id.empty_comments)
     }
 
     private fun initAddCommentButton(v: View) {
@@ -146,7 +152,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     @Subscribe
     fun onEmptyComments(event: EmptyCommentsInDiscussionProxyEvent) {
         if (event.discussionProxyId == discussionId) {
-            //todo make empty state
+            showEmptyState()
         }
     }
 
@@ -189,6 +195,15 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             ProgressHelper.activate(loadProgressBarOnCenter)
         } else {
             ProgressHelper.dismiss(loadProgressBarOnCenter)
+        }
+    }
+
+    private fun showEmptyState(isNeedShow: Boolean = true) {
+        if (isNeedShow) {
+            emptyStateView.visibility = View.VISIBLE
+            showEmptyProgressOnCenter(false)
+        } else {
+            emptyStateView.visibility = View.GONE
         }
     }
 

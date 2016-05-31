@@ -146,6 +146,7 @@
     <string name="load_more_reply">Load more</string>
     <string name="hint_for_new_comment">Add your comment</string>
     <string name="new_comment_title">New comment</string>
+    <string name="leave_first_comment">No discussions. Feel free to start one.</string>
     <plurals name="notification_plural">
         <item quantity="one">%d new notification</item>
         <item quantity="other">%d new notifications</item>
