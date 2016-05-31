@@ -35,6 +35,8 @@
             </android.support.v4.widget.SwipeRefreshLayout>
 
             <android.support.design.widget.FloatingActionButton
+                android:id="@+id/add_new_comment_button"
+                android:contentDescription="@string/new_comment_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"

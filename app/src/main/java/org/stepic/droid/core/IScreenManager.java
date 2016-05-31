@@ -51,4 +51,6 @@ public interface IScreenManager {
     void showSettings(Activity sourceActivity);
 
     void openComments(Context context, String discussionProxyId);
+
+    void openNewCommentForm(Activity sourceActivity);
 }

@@ -1,6 +1,7 @@
 package org.stepic.droid.view.fragments
 
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
@@ -52,6 +53,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     lateinit var loadProgressBarOnCenter: ProgressBar
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var recyclerView: RecyclerView
+    var floatingActionButton: FloatingActionButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,8 +71,14 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             initEmptyProgressOnCenter(v)
             initSwipeRefreshLayout(v)
             initRecyclerView(v)
+            initAddCommentButton(v)
         }
         return v
+    }
+
+    private fun initAddCommentButton(v: View) {
+        floatingActionButton = v.findViewById(R.id.add_new_comment_button) as FloatingActionButton
+        floatingActionButton!!.setOnClickListener { mShell.screenProvider.openNewCommentForm(activity) }
     }
 
     private fun initRecyclerView(v: View) {
@@ -152,6 +160,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     override fun onDestroyView() {
         super.onDestroyView()
         swipeRefreshLayout.setOnRefreshListener(null)
+        floatingActionButton?.setOnClickListener(null)
     }
 
     override fun onRefresh() {

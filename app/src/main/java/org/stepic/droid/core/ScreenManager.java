@@ -30,6 +30,7 @@ import org.stepic.droid.view.activities.CourseDetailActivity;
 import org.stepic.droid.view.activities.LaunchActivity;
 import org.stepic.droid.view.activities.LoginActivity;
 import org.stepic.droid.view.activities.MainFeedActivity;
+import org.stepic.droid.view.activities.NewCommentActivity;
 import org.stepic.droid.view.activities.RegisterActivity;
 import org.stepic.droid.view.activities.SectionActivity;
 import org.stepic.droid.view.activities.SettingsActivity;
@@ -201,6 +202,12 @@ public class ScreenManager implements IScreenManager {
         bundle.putString(CommentsActivity.Companion.getKeyDiscusionProxyId(), discussionProxyId);
         intent.putExtras(bundle);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void openNewCommentForm(Activity sourceActivity) {
+        Intent intent = new Intent(sourceActivity, NewCommentActivity.class);
+        sourceActivity.startActivity(intent);
     }
 
     @Override
