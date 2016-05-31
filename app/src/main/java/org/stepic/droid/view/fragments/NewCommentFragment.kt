@@ -11,15 +11,23 @@ import android.widget.EditText
 import android.widget.Toast
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.web.CommentsResponse
+import retrofit.Callback
+import retrofit.Response
+import retrofit.Retrofit
 
 class NewCommentFragment : FragmentBase() {
 
     companion object {
-//        private val discussionIdKey = "dis_id_key"
+        private val targetKey = "targetKey"
+        private val parentKey = "parentKey"
 
-        fun newInstance(): Fragment {
+        fun newInstance(target: Long, parent: Long?): Fragment {
             val args = Bundle()
-//            args.putString(discussionIdKey, discussionId)
+            if (parent != null) {
+                args.putLong(parentKey, parent)
+            }
+            args.putLong(targetKey, target)
             val fragment = NewCommentFragment()
             fragment.arguments = args
             return fragment
@@ -28,10 +36,22 @@ class NewCommentFragment : FragmentBase() {
 
     lateinit var mToolbar: Toolbar
     lateinit var mTextBody: EditText
+    var target: Long? = null
+    var parent: Long? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater?.inflate(R.layout.new_comment_fragment, container, false)
-//        discussionId = arguments.getString(CommentsFragment.discussionIdKey)
+        target = arguments.getLong(NewCommentFragment.targetKey)
+        parent = arguments.getLong(NewCommentFragment.parentKey)
+        if (parent == 0L){
+            parent = null
+        }
         setHasOptionsMenu(true)
         v?.let {
             initToolbar(v)
@@ -83,7 +103,24 @@ class NewCommentFragment : FragmentBase() {
 
     private fun sendComment() {
         Toast.makeText(context, "Comment is sent", Toast.LENGTH_LONG).show()
-        //TODO: Implement, notify which comment was added?
-        activity.finish()
+        val text: String = mTextBody.text.toString()
+        if (text.isEmpty()) {
+            Toast.makeText(context, R.string.feedback_fill_fields, Toast.LENGTH_SHORT).show()
+        } else {
+            mShell.api.postComment(text, target!!, parent).enqueue(object : Callback<CommentsResponse> {
+                override fun onResponse(response: Response<CommentsResponse>?, retrofit: Retrofit?) {
+                    if (response?.isSuccess ?: false && response?.body()?.comments != null) {
+                        activity.finish()
+                    } else {
+                        //todo implement
+                    }
+                }
+
+                override fun onFailure(t: Throwable?) {
+                    //todo implement
+                }
+
+            })
+        }
     }
 }

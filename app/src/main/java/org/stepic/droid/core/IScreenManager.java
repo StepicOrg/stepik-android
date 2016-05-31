@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
@@ -23,6 +24,10 @@ public interface IScreenManager {
     void showMainFeed(Context sourceActivity);
 
     void showCourseDescription(Fragment sourceActivity, @NotNull Course course);
+
+    void openComments(Context context, String discussionProxyId, long stepId);
+
+    void openNewCommentForm(Activity sourceActivity, Long target, @Nullable Long parent);
 
     void showSections(Context sourceActivity, @NotNull Course course);
 
@@ -50,7 +55,4 @@ public interface IScreenManager {
 
     void showSettings(Activity sourceActivity);
 
-    void openComments(Context context, String discussionProxyId);
-
-    void openNewCommentForm(Activity sourceActivity);
 }

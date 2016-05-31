@@ -498,7 +498,7 @@ public class StepsFragment extends FragmentBase {
                 }
 
                 Step step = mStepList.get(position);
-                mShell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy());
+                mShell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
                 break;
             default:
                 return super.onOptionsItemSelected(item);

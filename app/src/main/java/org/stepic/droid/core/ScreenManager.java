@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
@@ -195,18 +196,25 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
-    public void openComments(Context context, String discussionProxyId) {
+    public void openComments(Context context, String discussionProxyId, long stepId) {
         Intent intent = new Intent(context, CommentsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle bundle = new Bundle();
         bundle.putString(CommentsActivity.Companion.getKeyDiscusionProxyId(), discussionProxyId);
+        bundle.putLong(CommentsActivity.Companion.getKeyStepId(), stepId);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }
 
     @Override
-    public void openNewCommentForm(Activity sourceActivity) {
+    public void openNewCommentForm(Activity sourceActivity, Long target, @Nullable Long parent) {
         Intent intent = new Intent(sourceActivity, NewCommentActivity.class);
+        Bundle bundle = new Bundle();
+        if (parent != null) {
+            bundle.putLong(NewCommentActivity.Companion.getKeyParent(), parent);
+        }
+        bundle.putLong(NewCommentActivity.Companion.getKeyTarget(), target);
+        intent.putExtras(bundle);
         sourceActivity.startActivity(intent);
     }
 

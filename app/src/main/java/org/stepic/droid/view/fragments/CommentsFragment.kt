@@ -32,10 +32,12 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
         private val discussionIdKey = "dis_id_key"
+        private val stepIdKey = "stepId"
 
-        fun newInstance(discussionId: String): Fragment {
+        fun newInstance(discussionId: String, stepId: Long): Fragment {
             val args = Bundle()
             args.putString(discussionIdKey, discussionId)
+            args.putLong(stepIdKey, stepId)
             val fragment = CommentsFragment()
             fragment.arguments = args
             return fragment
@@ -48,6 +50,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     lateinit var commentAdapter: CommentsAdapter
 
     lateinit var discussionId: String
+    var stepId: Long? = null
 
     lateinit var mToolbar: Toolbar
     lateinit var loadProgressBarOnCenter: ProgressBar
@@ -65,6 +68,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater?.inflate(R.layout.fragment_comments, container, false)
         discussionId = arguments.getString(discussionIdKey)
+        stepId = arguments.getLong(stepIdKey)
         setHasOptionsMenu(true)
         v?.let {
             initToolbar(v)
@@ -78,7 +82,11 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun initAddCommentButton(v: View) {
         floatingActionButton = v.findViewById(R.id.add_new_comment_button) as FloatingActionButton
-        floatingActionButton!!.setOnClickListener { mShell.screenProvider.openNewCommentForm(activity) }
+        floatingActionButton!!.setOnClickListener {
+            if (stepId != null) {
+                mShell.screenProvider.openNewCommentForm(activity, stepId, null)
+            }
+        }
     }
 
     private fun initRecyclerView(v: View) {

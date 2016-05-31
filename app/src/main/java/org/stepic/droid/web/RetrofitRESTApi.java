@@ -591,7 +591,7 @@ public class RetrofitRESTApi implements IApi {
     @Override
     public Call<CommentsResponse> postComment(String text, long target, @Nullable Long parent) {
         Comment comment = new Comment(target, text, parent);
-        return mLoggedService.postComment(comment);
+        return mLoggedService.postComment(new CommentRequest(comment));
     }
 
     @Nullable

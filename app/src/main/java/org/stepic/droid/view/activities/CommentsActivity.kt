@@ -10,11 +10,13 @@ class CommentsActivity : SingleFragmentActivity() {
 
     companion object {
         val keyDiscusionProxyId = "KEY_DISCUSSION_PROXY_ID"
+        val keyStepId = "KEY_step_id"
     }
 
     override fun createFragment(): Fragment {
         val discussionId: String = intent.extras.getString(keyDiscusionProxyId)
-        return CommentsFragment.newInstance(discussionId)
+        val stepId: Long = intent.extras.getLong(keyStepId)
+        return CommentsFragment.newInstance(discussionId,stepId )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

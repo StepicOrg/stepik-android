@@ -6,8 +6,19 @@ import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.view.fragments.NewCommentFragment
 
 class NewCommentActivity : SingleFragmentActivity() {
+
+    companion object {
+        val keyTarget = "KEY_target_id"
+        val keyParent = "KEY_Parent_id"
+    }
+
     override fun createFragment(): Fragment? {
-        return NewCommentFragment.newInstance()
+        val target: Long = intent.extras.getLong(NewCommentActivity.keyTarget)
+        var parent: Long? = intent.extras.getLong(NewCommentActivity.keyParent)
+        if (parent == 0L) {
+            parent = null
+        }
+        return NewCommentFragment.newInstance(target, parent)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
