@@ -20,6 +20,7 @@ import org.stepic.droid.base.MainApplication
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.events.comments.CommentsLoadedSuccessfullyEvent
 import org.stepic.droid.events.comments.DiscussionProxyLoadedSuccessfullyEvent
+import org.stepic.droid.events.comments.EmptyCommentsInDiscussionProxyEvent
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.view.adapters.CommentsAdapter
 import org.stepic.droid.web.DiscussionProxyResponse
@@ -125,10 +126,10 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             override fun onResponse(response: Response<DiscussionProxyResponse>?, retrofit: Retrofit?) {
                 if (response != null && response.isSuccess) {
                     val discussionProxy = response.body().discussionProxies.firstOrNull()
-                    if (discussionProxy != null) {
+                    if (discussionProxy != null && discussionProxy.discussions.isNotEmpty()) {
                         bus.post(DiscussionProxyLoadedSuccessfullyEvent(discussionProxy))
                     } else {
-                        //TODO IMPLEMENT ON FAIL.
+                        bus.post(EmptyCommentsInDiscussionProxyEvent(id))
                     }
                 } else {
                     //TODO IMPLEMENT ON FAIL
@@ -140,6 +141,13 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             }
 
         })
+    }
+
+    @Subscribe
+    fun onEmptyComments(event: EmptyCommentsInDiscussionProxyEvent) {
+        if (event.discussionProxyId == discussionId) {
+            //todo make empty state
+        }
     }
 
     @Subscribe
