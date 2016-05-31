@@ -4,6 +4,7 @@ import com.squareup.otto.Bus
 
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.events.comments.CommentsLoadedSuccessfullyEvent
+import org.stepic.droid.events.comments.InternetConnectionProblemInCommentsEvent
 import org.stepic.droid.model.CommentAdapterItem
 import org.stepic.droid.model.User
 import org.stepic.droid.model.comments.Comment
@@ -49,6 +50,7 @@ class CommentManager {
             val sizeNeedLoad = Math.min((sumOfCachedParent + maxOfParentInQuery), orderOfComments.size)
             if (sizeNeedLoad == sumOfCachedParent || sizeNeedLoad == 0) {
                 // we don't need to load comments
+                bus.post(CommentsLoadedSuccessfullyEvent()) // notify UI
                 return
             }
 
@@ -65,6 +67,7 @@ class CommentManager {
 
             val sizeNeedLoad = Math.min(parentComment.replies.size, countOfCachedReplies + maxOfRepliesInQuery)
             if (sizeNeedLoad == countOfCachedReplies || sizeNeedLoad == 0) {
+                bus.post(CommentsLoadedSuccessfullyEvent()) // notify UI
                 return
             }
 
@@ -84,9 +87,9 @@ class CommentManager {
                                 ?.forEach {
                                     if (it.id != null && it.id !in cachedCommentsSetMap) {
                                         cachedCommentsSetMap.put(it.id, it)
-                                        val parentId : Long? = it.parent
+                                        val parentId: Long? = it.parent
                                         if (parentId == null) {
-                                            sumOfCachedParent++;
+//                                            sumOfCachedParent++;
                                         } else {
                                             var numberOfCachedBefore: Int = parentCommentToSumOfCachedReplies[parentId] ?: 0
                                             numberOfCachedBefore++
@@ -94,6 +97,7 @@ class CommentManager {
                                         }
                                     }
                                 }
+                        sumOfCachedParent = cachedCommentsSetMap.filter { it.value.parent==null }.size
 
                         cachedCommentsList.clear()
                         var i = 0
@@ -131,15 +135,15 @@ class CommentManager {
                         }
                         bus.post(CommentsLoadedSuccessfullyEvent()) // notify UI
                     } else {
-                        //todo on fail
+                        bus.post(InternetConnectionProblemInCommentsEvent(discussionProxy!!.id))
                     }
                 } else {
-                    //todo on fail
+                    bus.post(InternetConnectionProblemInCommentsEvent(discussionProxy!!.id))
                 }
             }
 
             override fun onFailure(t: Throwable?) {
-                //todo on fail
+                bus.post(InternetConnectionProblemInCommentsEvent(discussionProxy!!.id))
             }
         })
     }
@@ -166,7 +170,7 @@ class CommentManager {
             //comment is reply
             val pos: Int = replyToPositionInParentMap[comment.id]!!
             val numberOfCached = parentCommentToSumOfCachedReplies[parentComment.id]
-            if ((pos + 1) == numberOfCached && parentComment.reply_count?:0 > numberOfCached) {
+            if ((pos + 1) == numberOfCached && parentComment.reply_count ?: 0 > numberOfCached) {
                 needUpdate = true
             }
         }
@@ -199,7 +203,7 @@ class CommentManager {
 
     fun setDiscussionProxy(dP: DiscussionProxy) {
         discussionProxy = dP
-        //todo: remove dp from manager, make only list in discussion proxy based on sorting
+        //todo: remove dp from manager, make only list in discussion proxy based on sorting and discussion id!
         var i = 0
         while (i < dP.discussions.size) {
             parentIdToPositionInDiscussionMap.put(dP.discussions[i], i)
@@ -209,6 +213,12 @@ class CommentManager {
 
     fun addCommentIdWhereLoadMoreClicked(commentId: Long) {
         commentIdIsLoading.add(commentId)
+    }
+
+    fun isEmpty() = cachedCommentsList.isEmpty()
+
+    fun reset() {
+        sumOfCachedParent = 0
     }
 
 }

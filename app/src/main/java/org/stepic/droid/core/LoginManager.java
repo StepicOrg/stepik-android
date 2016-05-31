@@ -89,7 +89,7 @@ public class LoginManager implements ILoginManager {
             if (t instanceof ProtocolException) {
                 Toast.makeText(mContext, R.string.failLogin, Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(mContext, R.string.failLoginConnectionProblems, Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, R.string.connectionProblems, Toast.LENGTH_LONG).show();
             }
         }
     }

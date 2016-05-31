@@ -152,7 +152,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
                     } else {
                         final Context context = getContext();
                         if (context != null) {
-                            Toast.makeText(context, R.string.failLoginConnectionProblems, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.connectionProblems, Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -164,7 +164,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
 
                     final Context context = getContext();
                     if (context != null) {
-                        Toast.makeText(context, R.string.failLoginConnectionProblems, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.connectionProblems, Toast.LENGTH_SHORT).show();
                     }
                 }
             });

@@ -202,7 +202,7 @@ public class RegisterActivity extends FragmentActivityBase {
                 @Override
                 public void onFailure(Throwable t) {
                     ProgressHelper.dismiss(mProgress);
-                    Toast.makeText(RegisterActivity.this, R.string.failLoginConnectionProblems, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, R.string.connectionProblems, Toast.LENGTH_SHORT).show();
                 }
             });
         }

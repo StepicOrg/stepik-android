@@ -157,15 +157,21 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     @Subscribe
-    fun onInternetConnectionProblem (event: InternetConnectionProblemInCommentsEvent){
-        if (event.discussionProxyId == discussionId){
-            showInternetConnectionProblem()
+    fun onInternetConnectionProblem(event: InternetConnectionProblemInCommentsEvent) {
+        if (event.discussionProxyId == discussionId) {
+            cancelSwipeRefresh()
+            if (commentManager.isEmpty()) {
+                showInternetConnectionProblem()
+            } else {
+                Toast.makeText(context, R.string.connectionProblems, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
     @Subscribe
     fun onEmptyComments(event: EmptyCommentsInDiscussionProxyEvent) {
-        if (event.discussionProxyId == discussionId) {
+        if (event.discussionProxyId == discussionId && commentManager.isEmpty()) {
+            cancelSwipeRefresh()
             showEmptyState()
         }
     }
@@ -179,7 +185,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     @Subscribe
     fun onCommentsLoadedSuccessfully(successfullyEvent: CommentsLoadedSuccessfullyEvent) {
-        ProgressHelper.dismiss(loadProgressBarOnCenter)
+        cancelSwipeRefresh()
+        showEmptyProgressOnCenter(false)
         commentAdapter.notifyDataSetChanged();
     }
 
@@ -200,8 +207,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onRefresh() {
-        Toast.makeText(context, "Hey, try refresh need implementing!", Toast.LENGTH_LONG).show()
-        // todo implement
+        commentManager.reset()
+        loadDiscussionProxyById()
     }
 
     private fun showEmptyProgressOnCenter(needShow: Boolean = true) {
@@ -224,15 +231,18 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
-    private fun showInternetConnectionProblem(needShow: Boolean = true){
-        if (needShow){
+    private fun showInternetConnectionProblem(needShow: Boolean = true) {
+        if (needShow) {
             errorView.visibility = View.VISIBLE
             showEmptyState(false)
             showEmptyProgressOnCenter(false)
-        }
-        else{
+        } else {
             errorView.visibility = View.GONE
         }
+    }
+
+    private fun cancelSwipeRefresh() {
+        ProgressHelper.dismiss(swipeRefreshLayout)
     }
 
 }
