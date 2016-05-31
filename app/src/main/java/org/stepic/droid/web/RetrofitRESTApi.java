@@ -31,6 +31,7 @@ import org.stepic.droid.model.EnrollmentWrapper;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.RegistrationUser;
 import org.stepic.droid.model.Reply;
+import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
@@ -585,6 +586,12 @@ public class RetrofitRESTApi implements IApi {
     @Override
     public Call<CommentsResponse> getCommentsByIds(long[] commentIds) {
         return mLoggedService.getComments(commentIds);
+    }
+
+    @Override
+    public Call<CommentsResponse> postComment(String text, long target, @Nullable Long parent) {
+        Comment comment = new Comment(target, text, parent);
+        return mLoggedService.postComment(comment);
     }
 
     @Nullable

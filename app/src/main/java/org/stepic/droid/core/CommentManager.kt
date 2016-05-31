@@ -81,15 +81,16 @@ class CommentManager {
                     val stepicResponse = response.body()
                     if (stepicResponse != null) {
                         stepicResponse.comments
-                                .forEach {
+                                ?.forEach {
                                     if (it.id != null && it.id !in cachedCommentsSetMap) {
                                         cachedCommentsSetMap.put(it.id, it)
-                                        if (it.parent == null) {
+                                        val parentId : Long? = it.parent
+                                        if (parentId == null) {
                                             sumOfCachedParent++;
                                         } else {
-                                            var numberOfCachedBefore: Int = parentCommentToSumOfCachedReplies[it.parent] ?: 0
+                                            var numberOfCachedBefore: Int = parentCommentToSumOfCachedReplies[parentId] ?: 0
                                             numberOfCachedBefore++
-                                            parentCommentToSumOfCachedReplies[it.parent] = numberOfCachedBefore
+                                            parentCommentToSumOfCachedReplies[parentId] = numberOfCachedBefore
                                         }
                                     }
                                 }
@@ -117,7 +118,7 @@ class CommentManager {
                         }
 
                         stepicResponse.users
-                                .forEach {
+                                ?.forEach {
                                     if (it.id !in userSetMap) {
                                         userSetMap.put(it.id, it)
                                     }
@@ -165,7 +166,7 @@ class CommentManager {
             //comment is reply
             val pos: Int = replyToPositionInParentMap[comment.id]!!
             val numberOfCached = parentCommentToSumOfCachedReplies[parentComment.id]
-            if ((pos + 1) == numberOfCached && parentComment.reply_count > numberOfCached) {
+            if ((pos + 1) == numberOfCached && parentComment.reply_count?:0 > numberOfCached) {
                 needUpdate = true
             }
         }

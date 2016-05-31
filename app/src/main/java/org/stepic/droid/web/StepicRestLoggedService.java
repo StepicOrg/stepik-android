@@ -1,6 +1,7 @@
 package org.stepic.droid.web;
 
 import org.stepic.droid.model.EnrollmentWrapper;
+import org.stepic.droid.model.comments.Comment;
 
 import retrofit.Call;
 import retrofit.http.Body;
@@ -101,4 +102,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/comments")
     Call<CommentsResponse> getComments(@Query("ids[]") long[] ids);
+
+    @POST("api/comments")
+    Call<CommentsResponse> postComment(@Body Comment comment);
 }
