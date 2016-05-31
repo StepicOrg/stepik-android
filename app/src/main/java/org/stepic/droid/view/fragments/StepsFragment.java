@@ -117,6 +117,19 @@ public class StepsFragment extends FragmentBase {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        init();
+        bus.register(this);
+        //isLoaded is retained and stepList too, but this method should be in onStart due to user can rotate device, when
+        //loading is not finished. it can produce many requests, but it will be happen when user rotates device many times per second.
+        if (mLesson != null && mLesson.getSteps() != null && mLesson.getSteps().length != 0 && !isLoaded) {
+            updateSteps();
+        } else {
+            ArrayList<Step> newList = new ArrayList<>(mStepList);
+            showSteps(newList);
+        }
+    }
+
+    private  void init(){
         mStepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), mStepList, mLesson, mUnit);
         mViewPager.setAdapter(mStepAdapter);
 
@@ -146,20 +159,17 @@ public class StepsFragment extends FragmentBase {
     @Override
     public void onStart() {
         super.onStart();
-        bus.register(this);
-        //isLoaded is retained and stepList too, but this method should be in onStart due to user can rotate device, when
-        //loading is not finished. it can produce many requests, but it will be happen when user rotates device many times per second.
-        if (mLesson != null && mLesson.getSteps() != null && mLesson.getSteps().length != 0 && !isLoaded) {
-            updateSteps();
-        } else {
-            ArrayList<Step> newList = new ArrayList<>(mStepList);
-            showSteps(newList);
-        }
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
         bus.unregister(this);
     }
 
