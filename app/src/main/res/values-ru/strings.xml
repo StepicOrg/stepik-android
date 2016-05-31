@@ -140,4 +140,6 @@
     <string name="comments_title">Комментарии</string>
     <string name="load_more">ещё</string>
     <string name="load_more_reply">Показать еще</string>
+    <string name="hint_for_new_comment">Оставьте комментарий</string>
+    <string name="new_comment_title">Новый комментарий</string>
 </resources>
