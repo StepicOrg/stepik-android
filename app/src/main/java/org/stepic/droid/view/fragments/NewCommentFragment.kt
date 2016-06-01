@@ -112,7 +112,7 @@ class NewCommentFragment : FragmentBase() {
                 override fun onResponse(response: Response<CommentsResponse>?, retrofit: Retrofit?) {
                     if (response?.isSuccess ?: false && response?.body()?.comments != null) {
                         bus.post(NeedReloadCommentsEvent(targetId = target!!))
-                        activity.finish()
+                        activity?.finish()
                     } else {
                         //todo implement
                     }
