@@ -145,4 +145,5 @@
     <string name="leave_first_comment">Нет обсуждений. Начните первое.</string>
     <string name="comment_sent">Комментарий успешно отправлен</string>
     <string name="comment_denied">Извините, возможность оставлять комментарии отключена</string>
+    <string name="reply_title">Ответить</string>
 </resources>
