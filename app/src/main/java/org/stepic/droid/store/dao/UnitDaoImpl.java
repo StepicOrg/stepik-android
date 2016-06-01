@@ -118,7 +118,10 @@ public class UnitDaoImpl extends DaoBase<Unit> {
         boolean isPassed = false;
         if (unit != null) {
             String progressId = unit.getProgressId();
-            Progress progress = mProgressDao.get(DbStructureProgress.Column.ID, progressId);
+            Progress progress = null;
+            if (progressId != null) {
+                progress = mProgressDao.get(DbStructureProgress.Column.ID, progressId);
+            }
             if (progress != null)
                 isPassed = progress.is_passed();
             unit.set_viewed_custom(isPassed);
