@@ -196,14 +196,18 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
-    public void openComments(Context context, String discussionProxyId, long stepId) {
-        Intent intent = new Intent(context, CommentsActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Bundle bundle = new Bundle();
-        bundle.putString(CommentsActivity.Companion.getKeyDiscusionProxyId(), discussionProxyId);
-        bundle.putLong(CommentsActivity.Companion.getKeyStepId(), stepId);
-        intent.putExtras(bundle);
-        context.startActivity(intent);
+    public void openComments(Context context, @Nullable String discussionProxyId, long stepId) {
+        if (discussionProxyId == null) {
+            Toast.makeText(context, R.string.comment_denied, Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(context, CommentsActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Bundle bundle = new Bundle();
+            bundle.putString(CommentsActivity.Companion.getKeyDiscusionProxyId(), discussionProxyId);
+            bundle.putLong(CommentsActivity.Companion.getKeyStepId(), stepId);
+            intent.putExtras(bundle);
+            context.startActivity(intent);
+        }
     }
 
     @Override
