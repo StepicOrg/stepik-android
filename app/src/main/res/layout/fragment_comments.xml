@@ -9,7 +9,6 @@
     <include
         android:id="@+id/appBarLayout"
         layout="@layout/appbar_only_toolbar"/>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -17,6 +16,12 @@
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+
+            <include layout="@layout/progress_bar_on_empty_screen"/>
+            <include layout="@layout/empty_comments"/>
+            <include layout="@layout/report_problem_layout" />
+
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/swipe_refresh_layout_comments"
@@ -46,9 +51,6 @@
                 app:layout_behavior="org.stepic.droid.view.util.ScrollAwareFABBehavior"/>
         </android.support.design.widget.CoordinatorLayout>
 
-        <include layout="@layout/progress_bar_on_empty_screen"/>
-        <include layout="@layout/empty_comments"/>
-        <include layout="@layout/report_problem_layout" />
     </FrameLayout>
 
 </LinearLayout>
