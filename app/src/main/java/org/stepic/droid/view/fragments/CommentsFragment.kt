@@ -17,6 +17,7 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.events.comments.*
+import org.stepic.droid.model.comments.Comment
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.view.adapters.CommentsAdapter
 import org.stepic.droid.view.util.ContextMenuRecyclerView
@@ -126,7 +127,10 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun replyToComment(position: Int) {
-        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
+        val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
+        comment?.let {
+            mShell.screenProvider.openNewCommentForm(activity, stepId, it.parent?:it.id)
+        }
     }
 
 
@@ -136,8 +140,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         showEmptyProgressOnCenter()
         if (commentManager.isEmpty()) {
             loadDiscussionProxyById()
-        }
-        else{
+        } else {
             showEmptyProgressOnCenter(false)
         }
     }
@@ -215,16 +218,15 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         cancelSwipeRefresh()
         showEmptyProgressOnCenter(false)
         showInternetConnectionProblem(false)
-        if (!commentManager.isEmpty()){
+        if (!commentManager.isEmpty()) {
             showEmptyState(false)
         }
         commentAdapter.notifyDataSetChanged()
     }
 
     @Subscribe
-    fun onNeedUpdate(needUpdateEvent : NeedReloadCommentsEvent){
-        if (needUpdateEvent.targetId == stepId)
-        {
+    fun onNeedUpdate(needUpdateEvent: NeedReloadCommentsEvent) {
+        if (needUpdateEvent.targetId == stepId) {
             //without animation.
             onRefresh() // it can be dangerous, when 10 or more comments was submit by another users.
         }

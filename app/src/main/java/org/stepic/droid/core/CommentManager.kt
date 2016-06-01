@@ -85,19 +85,18 @@ class CommentManager {
                     if (stepicResponse != null) {
                         stepicResponse.comments
                                 ?.forEach {
-                                    if (it.id != null && it.id !in cachedCommentsSetMap) {
-                                        cachedCommentsSetMap.put(it.id, it)
+                                    if (it.id != null) {
+                                        val previousValue: Comment? = cachedCommentsSetMap.put(it.id, it)
                                         val parentId: Long? = it.parent
-                                        if (parentId == null) {
-//                                            sumOfCachedParent++;
-                                        } else {
+                                        if (parentId != null && previousValue == null) {
+                                            //first time
                                             var numberOfCachedBefore: Int = parentCommentToSumOfCachedReplies[parentId] ?: 0
                                             numberOfCachedBefore++
                                             parentCommentToSumOfCachedReplies[parentId] = numberOfCachedBefore
                                         }
                                     }
                                 }
-                        sumOfCachedParent = cachedCommentsSetMap.filter { it.value.parent==null }.size
+                        sumOfCachedParent = cachedCommentsSetMap.filter { it.value.parent == null }.size
 
                         cachedCommentsList.clear()
                         var i = 0
