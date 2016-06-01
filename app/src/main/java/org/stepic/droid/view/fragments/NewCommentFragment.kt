@@ -145,7 +145,8 @@ class NewCommentFragment : FragmentBase() {
 
                     override fun onResponse(response: Response<CommentsResponse>?, retrofit: Retrofit?) {
                         if (response?.isSuccess ?: false && response?.body()?.comments != null) {
-                            bus.post(NeedReloadCommentsEvent(targetId = target!!))
+                            val newComment = response?.body()?.comments?.firstOrNull()
+                            bus.post(NeedReloadCommentsEvent(targetId = target!!, newCommentInsert = newComment))
                             Toast.makeText(MainApplication.getAppContext(), R.string.comment_sent, Toast.LENGTH_SHORT).show()
                             onFinishTryingSending()
                             activity?.finish()

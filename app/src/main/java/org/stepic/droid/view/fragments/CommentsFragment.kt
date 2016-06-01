@@ -58,6 +58,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     var floatingActionButton: FloatingActionButton? = null
     lateinit var emptyStateView: View
     lateinit var errorView: View
+    var needInsertLate: Comment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -129,7 +130,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     private fun replyToComment(position: Int) {
         val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
         comment?.let {
-            mShell.screenProvider.openNewCommentForm(activity, stepId, it.parent?:it.id)
+            mShell.screenProvider.openNewCommentForm(activity, stepId, it.parent ?: it.id)
         }
     }
 
@@ -221,7 +222,14 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         if (!commentManager.isEmpty()) {
             showEmptyState(false)
         }
-        commentAdapter.notifyDataSetChanged()
+        val needInsertLocal = needInsertLate
+        if (needInsertLocal != null && (!commentManager.isCommentCached(needInsertLocal.id) || !commentManager.isCommentCached(needInsertLocal.parent))) {
+            val longArr  = listOf(needInsertLocal.id, needInsertLocal.parent).filterNotNull().toLongArray()
+            commentManager.loadCommentsByIds(longArr)
+        } else {
+            needInsertLate = null
+            commentAdapter.notifyDataSetChanged()
+        }
     }
 
     @Subscribe
@@ -229,6 +237,10 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         if (needUpdateEvent.targetId == stepId) {
             //without animation.
             onRefresh() // it can be dangerous, when 10 or more comments was submit by another users.
+            if (needUpdateEvent.newCommentInsert != null) {
+                //share for updating:
+                needInsertLate = needUpdateEvent.newCommentInsert
+            }
         }
     }
 

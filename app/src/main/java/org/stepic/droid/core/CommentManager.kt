@@ -30,14 +30,14 @@ class CommentManager {
     private val maxOfRepliesInQuery = 20 // we can't change it
     private var sumOfCachedParent: Int = 0;
     private var discussionProxy: DiscussionProxy? = null
-    val parentCommentToSumOfCachedReplies: MutableMap<Long, Int> = HashMap()
-    val cachedCommentsSetMap: MutableMap<Long, Comment> = HashMap()
-    val cachedCommentsList: MutableList<Comment> = ArrayList()
-    val userSetMap: MutableMap<Int, User> = HashMap() //userId -> User
-    val replyToPositionInParentMap: MutableMap<Long, Int> = HashMap()
-    val parentIdToPositionInDiscussionMap: MutableMap<Long, Int> = HashMap()
-    val repliesIdIsLoading: MutableSet<Long> = HashSet()
-    val commentIdIsLoading: MutableSet<Long> = HashSet() //can be reply or comment (with 0 replies) for load more comments).
+    private val parentCommentToSumOfCachedReplies: MutableMap<Long, Int> = HashMap()
+    private val cachedCommentsSetMap: MutableMap<Long, Comment> = HashMap()
+    private val cachedCommentsList: MutableList<Comment> = ArrayList()
+    private val userSetMap: MutableMap<Int, User> = HashMap() //userId -> User
+    private val replyToPositionInParentMap: MutableMap<Long, Int> = HashMap()
+    private val parentIdToPositionInDiscussionMap: MutableMap<Long, Int> = HashMap()
+    private val repliesIdIsLoading: MutableSet<Long> = HashSet()
+    private val commentIdIsLoading: MutableSet<Long> = HashSet() //can be reply or comment (with 0 replies) for load more comments).
 
     @Inject
     constructor() {
@@ -76,7 +76,7 @@ class CommentManager {
         }
     }
 
-    private fun loadCommentsByIds(idsForLoading: LongArray, fromReply: Boolean = false) {
+    fun loadCommentsByIds(idsForLoading: LongArray, fromReply: Boolean = false) {
         api.getCommentsByIds(idsForLoading).enqueue(object : Callback<CommentsResponse> {
             override fun onResponse(response: Response<CommentsResponse>?, retrofit: Retrofit?) {
 
@@ -218,6 +218,14 @@ class CommentManager {
 
     fun reset() {
         sumOfCachedParent = 0
+    }
+
+    fun isCommentCached(commentId: Long?) : Boolean {
+        if (commentId == null) {
+            return false
+        } else {
+            return cachedCommentsSetMap.containsKey(commentId)
+        }
     }
 
 }
