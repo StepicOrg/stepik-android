@@ -3,6 +3,7 @@ package org.stepic.droid.view.adapters;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -170,8 +171,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         @Bind(R.id.user_icon)
         DraweeView userIcon;
 
-        @Bind(R.id.comment_root)
-        ViewGroup commentRoot;
+        @Bind(R.id.comment_clickable_root)
+        ViewGroup commentClickableRoot;
 
         @Bind(R.id.user_name_comments)
         TextView userName;
@@ -185,7 +186,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         @Bind(R.id.progress_load_more_comments)
         View progressLoadMoreComments;
 
-        public GenericViewHolder(View itemView) {
+        public GenericViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             loadMoreView.setOnClickListener(new View.OnClickListener() {
@@ -201,6 +202,23 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                     }
                 }
             });
+            commentClickableRoot.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                    itemView.showContextMenu();
+                    return true;
+                }
+            });
+
+            commentClickableRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemView.showContextMenu();
+                }
+            });
+
+
         }
 
         private void onClickMoreLayout(int adapterPosition) {

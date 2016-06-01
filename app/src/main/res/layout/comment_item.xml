@@ -8,8 +8,13 @@
               android:orientation="vertical">
 
     <FrameLayout
+        android:id="@+id/comment_clickable_root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:foreground="@drawable/non_radius_foreground">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,25 +60,31 @@
                         tools:text="John Doe"
                         />
 
-                    <TextView
-                        android:id="@+id/text_comment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:layout_marginRight="@dimen/right_padding_comments"
-                        android:gravity="left"
-                        android:textColor="@color/black"
-                        tools:text="Long long text of comment Long long text of comment Long long text of commentLong long text of comment Long long text of comment"/>
 
-                    <org.stepic.droid.view.custom.LatexSupportableWebView
-                        android:id="@+id/text_view_latex"
+                    <org.stepic.droid.view.custom.InterceptFrameLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:layout_marginRight="@dimen/right_padding_comments"
-                        android:gravity="left"
-                        android:scrollbarStyle="outsideOverlay"
-                        tools:text="Long long text of comment Long long text of comment Long long text of commentLong long text of comment Long long text of comment"/>
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/text_comment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:layout_marginRight="@dimen/right_padding_comments"
+                            android:gravity="left"
+                            android:textColor="@color/black"
+                            tools:text="Long long text of comment Long long text of comment Long long text of commentLong long text of comment Long long text of comment"/>
+
+                        <org.stepic.droid.view.custom.LatexSupportableWebView
+                            android:id="@+id/text_view_latex"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:layout_marginRight="@dimen/right_padding_comments"
+                            android:gravity="left"
+                            android:scrollbarStyle="outsideOverlay"
+                            tools:text="Long long text of comment Long long text of comment Long long text of commentLong long text of comment Long long text of comment"/>
+                    </org.stepic.droid.view.custom.InterceptFrameLayout>
 
                 </LinearLayout>
             </RelativeLayout>
@@ -85,16 +96,6 @@
                 android:layout_height="1dp"
                 android:background="@color/silver"/>
         </LinearLayout>
-
-
-        <FrameLayout
-            android:id="@+id/rippleFrameLayoutInOption"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:foreground="@drawable/non_radius_foreground"/>
     </FrameLayout>
 
     <include layout="@layout/load_more_comments_view"/>

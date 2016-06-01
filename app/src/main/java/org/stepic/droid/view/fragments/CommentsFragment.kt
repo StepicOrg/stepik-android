@@ -8,9 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.squareup.otto.Subscribe
@@ -21,6 +19,7 @@ import org.stepic.droid.core.CommentManager
 import org.stepic.droid.events.comments.*
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.view.adapters.CommentsAdapter
+import org.stepic.droid.view.util.ContextMenuRecyclerView
 import org.stepic.droid.web.DiscussionProxyResponse
 import retrofit.Callback
 import retrofit.Response
@@ -104,7 +103,32 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         recyclerView = v.findViewById(R.id.recycler_view_comments) as RecyclerView
         recyclerView.adapter = commentAdapter
         recyclerView.layoutManager = LinearLayoutManager(context)
+        registerForContextMenu(recyclerView)
     }
+
+    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+
+        val inflater = activity.menuInflater
+        inflater.inflate(R.menu.comment_context_menu, menu)
+    }
+
+    override fun onContextItemSelected(item: MenuItem?): Boolean {
+        val info = item?.getMenuInfo() as ContextMenuRecyclerView.RecyclerViewContextMenuInfo
+        val position = info.position
+        when (item?.itemId) {
+            R.id.menu_item_reply -> {
+                replyToComment(info.position)
+                return true
+            }
+            else -> return super.onContextItemSelected(item)
+        }
+    }
+
+    private fun replyToComment(position: Int) {
+        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
+    }
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -220,6 +244,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         bus.unregister(this)
         swipeRefreshLayout.setOnRefreshListener(null)
         floatingActionButton?.setOnClickListener(null)
+        unregisterForContextMenu(recyclerView)
     }
 
     override fun onRefresh() {
