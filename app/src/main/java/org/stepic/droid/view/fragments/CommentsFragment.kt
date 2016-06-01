@@ -108,7 +108,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
-
+        menu?.setHeaderTitle(R.string.one_comment_title)
         val inflater = activity.menuInflater
         inflater.inflate(R.menu.comment_context_menu, menu)
     }
