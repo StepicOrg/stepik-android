@@ -25,6 +25,7 @@ import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.view.custom.LatexSupportableWebView;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.GenericViewHolder> {
@@ -186,6 +187,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         @Bind(R.id.progress_load_more_comments)
         View progressLoadMoreComments;
 
+        @BindString(R.string.comment_is_deleted)
+        String commentIsDeletedMessage;
+
         public GenericViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -231,7 +235,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         public abstract void setDataOnView(int position);
 
         protected final void initialSetUp(CommentAdapterItem needUpdateAndComment) {
-            Comment comment = needUpdateAndComment.getComment();
+            final Comment comment = needUpdateAndComment.getComment();
 
             boolean isParent = false;
             if (comment.getParent() == null) {
@@ -244,7 +248,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                 String str = HtmlHelper.trimTrailingWhitespace(HtmlHelper.fromHtml(comment.getText())).toString();
                 commentText.setVisibility(View.VISIBLE);
                 commentTextWebView.setVisibility(View.GONE);
-                commentText.setText(str); //remake
+                if (comment.is_deleted() != null && comment.is_deleted()) {
+                    commentText.setText(commentIsDeletedMessage);
+                } else {
+                    commentText.setText(str);
+                }
             } else {
                 commentTextWebView.setVisibility(View.VISIBLE);
                 commentText.setVisibility(View.GONE);
