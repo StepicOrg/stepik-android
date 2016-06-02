@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.events.video.VideoLoadedEvent;
 import org.stepic.droid.events.video.VideoResolvedEvent;
@@ -130,7 +131,7 @@ public class VideoStepFragment extends StepBaseFragment {
                         if (url != null) {
                             bus.post(new VideoResolvedEvent(localStep.getBlock().getVideo(), url, localStep.getId()));
                         } else {
-                            Toast.makeText(getActivity(), R.string.sync_problem, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainApplication.getAppContext(), R.string.sync_problem, Toast.LENGTH_SHORT).show();
                         }
                     }
                 };
