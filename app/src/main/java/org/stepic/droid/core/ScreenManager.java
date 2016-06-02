@@ -197,9 +197,12 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void openComments(Context context, @Nullable String discussionProxyId, long stepId) {
+
         if (discussionProxyId == null) {
+            YandexMetrica.reportEvent("comment: not available");
             Toast.makeText(context, R.string.comment_denied, Toast.LENGTH_SHORT).show();
         } else {
+            YandexMetrica.reportEvent("comments: open list");
             Intent intent = new Intent(context, CommentsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Bundle bundle = new Bundle();
@@ -212,6 +215,7 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void openNewCommentForm(Activity sourceActivity, Long target, @Nullable Long parent) {
+        YandexMetrica.reportEvent("comments: open write form");
         Intent intent = new Intent(sourceActivity, NewCommentActivity.class);
         Bundle bundle = new Bundle();
         if (parent != null) {

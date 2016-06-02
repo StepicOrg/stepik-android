@@ -10,6 +10,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
+import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
@@ -116,6 +117,7 @@ class NewCommentFragment : FragmentBase() {
     }
 
     private fun sendComment() {
+        YandexMetrica.reportEvent("comments: click send comment")
         val text: String = mTextBody.text.toString()
         if (text.isEmpty()) {
             Toast.makeText(context, R.string.feedback_fill_fields, Toast.LENGTH_SHORT).show()
@@ -145,6 +147,7 @@ class NewCommentFragment : FragmentBase() {
 
                     override fun onResponse(response: Response<CommentsResponse>?, retrofit: Retrofit?) {
                         if (response?.isSuccess ?: false && response?.body()?.comments != null) {
+                            YandexMetrica.reportEvent("comments: comment was sent successfully")
                             val newComment = response?.body()?.comments?.firstOrNull()
                             bus.post(NeedReloadCommentsEvent(targetId = target!!, newCommentInsert = newComment))
                             Toast.makeText(MainApplication.getAppContext(), R.string.comment_sent, Toast.LENGTH_SHORT).show()
