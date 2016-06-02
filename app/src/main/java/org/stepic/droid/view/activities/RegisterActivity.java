@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.okhttp.ResponseBody;
+import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
@@ -23,7 +24,6 @@ import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.ValidatorUtil;
 import org.stepic.droid.web.RegistrationResponse;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 
 import butterknife.Bind;
@@ -191,8 +191,8 @@ public class RegisterActivity extends FragmentActivityBase {
                         RegistrationResponse error = null;
                         try {
                             error = errorConverter.convert(response.errorBody());
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        } catch (Exception e) {
+                            YandexMetrica.reportError("registration important error", e); //it is unknown response Expected BEGIN_OBJECT but was STRING at line 1 column 1 path
                         }
                         handleErrorRegistrationResponse(error);
                     }
