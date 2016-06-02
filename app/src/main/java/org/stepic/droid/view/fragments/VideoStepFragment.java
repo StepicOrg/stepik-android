@@ -135,7 +135,7 @@ public class VideoStepFragment extends StepBaseFragment {
                         }
                     }
                 };
-                resolveTask.execute();
+                resolveTask.executeOnExecutor(mThreadPoolExecutor);
             }
         });
     }
