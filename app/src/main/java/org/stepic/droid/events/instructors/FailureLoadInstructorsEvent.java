@@ -9,8 +9,4 @@ public class FailureLoadInstructorsEvent extends InstructorsBaseEvent {
         super(mCourse);
         this.t = t;
     }
-
-    public Throwable getT() {
-        return t;
-    }
 }

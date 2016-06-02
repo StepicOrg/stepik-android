@@ -210,7 +210,16 @@ public class CourseDetailFragment extends FragmentBase {
             mShell.getApi().getUsers(mCourse.getInstructors()).enqueue(new Callback<UserStepicResponse>() {
                 @Override
                 public void onResponse(Response<UserStepicResponse> response, Retrofit retrofit) {
-                    bus.post(new OnResponseLoadingInstructorsEvent(mCourse, response, retrofit));
+                    if (response.isSuccess()) {
+                        if (response.body() == null) {
+                            bus.post(new FailureLoadInstructorsEvent(mCourse, null));
+                        } else {
+
+                            bus.post(new OnResponseLoadingInstructorsEvent(mCourse, response, retrofit));
+                        }
+                    } else {
+                        bus.post(new FailureLoadInstructorsEvent(mCourse, null));
+                    }
                 }
 
                 @Override
