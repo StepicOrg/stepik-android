@@ -6,11 +6,25 @@
     android:layout_height="match_parent"
     android:layout_gravity="center">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <include layout="@layout/step_text_header"/>
 
     <include
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/player_layout"
         layout="@layout/player_placeholder"/>
+
+        <include layout="@layout/open_comment_view"
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:layout_marginBottom="8dp"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
 
     <include
         layout="@layout/drop_shadow_view"/>
