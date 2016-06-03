@@ -151,6 +151,12 @@
         <item quantity="one">%d new notification</item>
         <item quantity="other">%d new notifications</item>
     </plurals>
+
+    <plurals name="open_comments">
+        <item quantity="one">Open comments (%d)</item>
+        <item quantity="other">Open comments (%d)</item>
+    </plurals>
+
     <string name="comment_sent">Comment is sent successfully</string>
     <string name="comment_denied">Comments are not available for this lesson</string>
     <string name="reply_title">Reply</string>

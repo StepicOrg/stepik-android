@@ -3,6 +3,7 @@ package org.stepic.droid.base;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.TextView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.model.Lesson;
@@ -17,6 +18,12 @@ public abstract class StepBaseFragment extends FragmentBase {
 
     @Bind(R.id.text_header)
     protected LatexSupportableWebView headerWv;
+
+    @Bind(R.id.open_comments_root)
+    protected View openCommentViewClickable;
+
+    @Bind(R.id.open_comments_text)
+    protected TextView textForComment;
 
     protected Step step;
     protected Lesson lesson;
@@ -34,13 +41,30 @@ public abstract class StepBaseFragment extends FragmentBase {
                 step.getBlock() != null &&
                 step.getBlock().getText() != null &&
                 !step.getBlock().getText().equals("")) {
-
             headerWv.setText(step.getBlock().getText());
             headerWv.setVisibility(View.VISIBLE);
         } else {
             headerWv.setVisibility(View.GONE);
         }
+
+        if (step != null && step.getDiscussion_proxy() != null) {
+            showComment();
+        } else {
+            openCommentViewClickable.setVisibility(View.GONE);
+        }
+
         bus.register(this);
+    }
+
+    private void showComment() {
+        openCommentViewClickable.setVisibility(View.VISIBLE);
+        openCommentViewClickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mShell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+            }
+        });
+        textForComment.setText(MainApplication.getAppContext().getResources().getQuantityString(R.plurals.open_comments, step.getDiscussions_count(), step.getDiscussions_count()));
     }
 
 
@@ -53,6 +77,7 @@ public abstract class StepBaseFragment extends FragmentBase {
     @Override
     public void onDestroyView() {
         bus.unregister(this);
+        openCommentViewClickable.setOnClickListener(null);
         super.onDestroyView();
     }
 }
