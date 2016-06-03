@@ -20,6 +20,7 @@ import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.model.CommentAdapterItem;
 import org.stepic.droid.model.User;
 import org.stepic.droid.model.comments.Comment;
+import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.view.custom.LatexSupportableWebView;
@@ -237,27 +238,28 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         protected final void initialSetUp(CommentAdapterItem needUpdateAndComment) {
             final Comment comment = needUpdateAndComment.getComment();
 
-            boolean isParent = false;
-            if (comment.getParent() == null) {
-                isParent = true;
-            }
+            final boolean isParent = comment.getParent() == null;
 
-            boolean needWebView = HtmlHelper.isForWebView(comment.getText());
-
-            if (!needWebView) {
-                String str = HtmlHelper.trimTrailingWhitespace(HtmlHelper.fromHtml(comment.getText())).toString();
-                commentText.setVisibility(View.VISIBLE);
-                commentTextWebView.setVisibility(View.GONE);
-                if (comment.is_deleted() != null && comment.is_deleted()) {
-                    commentText.setText(commentIsDeletedMessage);
-                } else {
-                    commentText.setText(str);
-                }
+            if (comment.is_deleted() != null && comment.is_deleted()) {
+                commentClickableRoot.setBackgroundColor(ColorUtil.INSTANCE.getColorArgb(R.color.wrong_answer_background, context));
+                commentText.setText(commentIsDeletedMessage);
             } else {
-                commentTextWebView.setVisibility(View.VISIBLE);
-                commentText.setVisibility(View.GONE);
-                commentTextWebView.setText(comment.getText());
+                // not deleted
+                commentClickableRoot.setBackgroundColor(ColorUtil.INSTANCE.getColorArgb(R.color.white, context));
+
+                boolean needWebView = HtmlHelper.isForWebView(comment.getText());
+                if (!needWebView) {
+                    String str = HtmlHelper.trimTrailingWhitespace(HtmlHelper.fromHtml(comment.getText())).toString();
+                    commentText.setVisibility(View.VISIBLE);
+                    commentTextWebView.setVisibility(View.GONE);
+                    commentText.setText(str);
+                } else {
+                    commentTextWebView.setVisibility(View.VISIBLE);
+                    commentText.setVisibility(View.GONE);
+                    commentTextWebView.setText(comment.getText());
+                }
             }
+
 
             User user = getUser(comment);
 
