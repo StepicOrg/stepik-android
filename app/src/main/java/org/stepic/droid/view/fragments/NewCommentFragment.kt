@@ -14,7 +14,7 @@ import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
-import org.stepic.droid.events.comments.NeedReloadCommentsEvent
+import org.stepic.droid.events.comments.NewCommentWasAdded
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.view.custom.LoadingProgressDialog
 import org.stepic.droid.web.CommentsResponse
@@ -149,7 +149,7 @@ class NewCommentFragment : FragmentBase() {
                         if (response?.isSuccess ?: false && response?.body()?.comments != null) {
                             YandexMetrica.reportEvent("comments: comment was sent successfully")
                             val newComment = response?.body()?.comments?.firstOrNull()
-                            bus.post(NeedReloadCommentsEvent(targetId = target!!, newCommentInsert = newComment))
+                            bus.post(NewCommentWasAdded(targetId = target!!, newCommentInsert = newComment))
                             Toast.makeText(MainApplication.getAppContext(), R.string.comment_sent, Toast.LENGTH_SHORT).show()
                             onFinishTryingSending()
                             activity?.finish()

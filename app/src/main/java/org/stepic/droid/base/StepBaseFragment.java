@@ -5,14 +5,22 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
+
 import org.stepic.droid.R;
+import org.stepic.droid.events.comments.NewCommentWasAdded;
+import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.custom.LatexSupportableWebView;
+import org.stepic.droid.web.StepResponse;
 
 import butterknife.Bind;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public abstract class StepBaseFragment extends FragmentBase {
 
@@ -47,13 +55,17 @@ public abstract class StepBaseFragment extends FragmentBase {
             headerWv.setVisibility(View.GONE);
         }
 
+        updateCommentState();
+
+        bus.register(this);
+    }
+
+    private void updateCommentState() {
         if (step != null && step.getDiscussion_proxy() != null) {
             showComment();
         } else {
             openCommentViewClickable.setVisibility(View.GONE);
         }
-
-        bus.register(this);
     }
 
     private void showComment() {
@@ -79,5 +91,50 @@ public abstract class StepBaseFragment extends FragmentBase {
         bus.unregister(this);
         openCommentViewClickable.setOnClickListener(null);
         super.onDestroyView();
+    }
+
+    @Subscribe
+    public void onNewCommentWasAdded(NewCommentWasAdded event) {
+        if (step != null && event.getTargetId() == step.getId()) {
+            long[] arr = new long[]{step.getId()};
+
+            mShell.getApi().getSteps(arr).enqueue(new Callback<StepResponse>() {
+                @Override
+                public void onResponse(Response<StepResponse> response, Retrofit retrofit) {
+                    if (response.isSuccess()) {
+                        StepResponse stepResponse = response.body();
+                        if (stepResponse != null && stepResponse.getSteps() != null && stepResponse.getSteps().size() > 0) {
+                            final Step stepFromInternet = stepResponse.getSteps().get(0);
+                            if (stepFromInternet != null) {
+                                mThreadPoolExecutor.execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mDatabaseFacade.addStep(stepFromInternet); //fixme: fragment in closure -> leak
+                                    }
+                                });
+
+                                 //fixme: it is so bad, we should be updated from model, not here =(
+                                bus.post(new StepWasUpdatedEvent(stepFromInternet));
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+
+                }
+            });
+        }
+
+    }
+
+    @Subscribe
+    public void onStepWasUpdated(StepWasUpdatedEvent event){
+        if (event.getStep().getId() == step.getId()){
+            step.setDiscussion_proxy(event.getStep().getDiscussion_proxy()); //fixme do it in immutable way
+            step.setDiscussions_count(event.getStep().getDiscussions_count());
+            updateCommentState();
+        }
     }
 }

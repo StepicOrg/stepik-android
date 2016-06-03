@@ -23,6 +23,8 @@ import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.attempts.FailAttemptEvent;
 import org.stepic.droid.events.attempts.SuccessAttemptEvent;
+import org.stepic.droid.events.comments.NewCommentWasAdded;
+import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.events.submissions.FailGettingLastSubmissionEvent;
 import org.stepic.droid.events.submissions.FailSubmissionCreatedEvent;
@@ -528,4 +530,14 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         return mCorrectString;
     }
 
+    @Subscribe
+    public void onNewCommentWasAdded(NewCommentWasAdded event) {
+        super.onNewCommentWasAdded(event);
+
+    }
+
+    @Subscribe
+    public void onStepWasUpdated(StepWasUpdatedEvent event) {
+        super.onStepWasUpdated(event);
+    }
 }

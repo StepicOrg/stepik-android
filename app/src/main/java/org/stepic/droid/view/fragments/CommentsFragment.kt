@@ -233,7 +233,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     @Subscribe
-    fun onNeedUpdate(needUpdateEvent: NeedReloadCommentsEvent) {
+    fun onNeedUpdate(needUpdateEvent: NewCommentWasAdded) {
         if (needUpdateEvent.targetId == stepId) {
             if (needUpdateEvent.newCommentInsert != null) {
                 //share for updating:
