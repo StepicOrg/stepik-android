@@ -223,7 +223,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             showEmptyState(false)
         }
         val needInsertLocal = needInsertLate
-        if (needInsertLocal != null && (!commentManager.isCommentCached(needInsertLocal.id) || !commentManager.isCommentCached(needInsertLocal.parent))) {
+        if (needInsertLocal != null && (!commentManager.isCommentCached(needInsertLocal.id) || ( needInsertLocal.parent != null && !commentManager.isCommentCached(needInsertLocal.parent)))) {
             val longArr  = listOf(needInsertLocal.id, needInsertLocal.parent).filterNotNull().toLongArray()
             commentManager.loadCommentsByIds(longArr)
         } else {
@@ -235,12 +235,12 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     @Subscribe
     fun onNeedUpdate(needUpdateEvent: NeedReloadCommentsEvent) {
         if (needUpdateEvent.targetId == stepId) {
-            //without animation.
-            onRefresh() // it can be dangerous, when 10 or more comments was submit by another users.
             if (needUpdateEvent.newCommentInsert != null) {
                 //share for updating:
                 needInsertLate = needUpdateEvent.newCommentInsert
             }
+            //without animation.
+            onRefresh() // it can be dangerous, when 10 or more comments was submit by another users.
         }
     }
 
