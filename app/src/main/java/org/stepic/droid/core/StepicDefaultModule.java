@@ -216,7 +216,7 @@ public class StepicDefaultModule {
 
     @Singleton
     @Provides
-    public SQLiteDatabase provideWritableDatabase(DatabaseHelper helper){
+    public SQLiteDatabase provideWritableDatabase(DatabaseHelper helper) {
         return helper.getWritableDatabase();
     }
 
@@ -319,5 +319,10 @@ public class StepicDefaultModule {
     @Provides
     public INotificationManager provideNotificationManager(SharedPreferenceHelper sp, IApi api, IConfig config, UserPreferences userPreferences, DatabaseFacade db) {
         return new NotificationManagerImpl(sp, api, config, userPreferences, db);
+    }
+
+    @Provides
+    public CommentManager provideCommentsManager() {
+        return new CommentManager();
     }
 }

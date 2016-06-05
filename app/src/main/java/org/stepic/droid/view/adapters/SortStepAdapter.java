@@ -141,7 +141,7 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
 
         TextView mOptionText;
         @Bind(R.id.sort_icon)
-        View mSortImageView;
+        View mSortController;
 
         LatexSupportableWebView enhancedText;
 
@@ -156,7 +156,7 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
             } else {
                 enhancedText = (LatexSupportableWebView) itemView.findViewById(R.id.option_text);
             }
-            mSortImageView.setOnTouchListener(new View.OnTouchListener() {
+            mSortController.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     startDrag();

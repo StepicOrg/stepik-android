@@ -59,7 +59,7 @@
     <string name="allow">Разрешить</string>
     <string name="allow_question">Разрешить?</string>
     <string name="explain_permission">Для сохранения и просмотра видео в режиме оффлайн Stepic должен иметь права записи файлов в память телефона.</string>
-    <string name="failLoginConnectionProblems">Отсутствует подключение к Интернету</string>
+    <string name="connectionProblems">Отсутствует подключение к Интернету</string>
     <string name="video_quality">Качество видео</string>
     <string name="sync_problem">Возникли проблемы с синхронизацией данных, пожалуйста, повторите попытку позже.</string>
     <string name="empty_courses">Похоже, что Вы не записаны ни на один курс. Кликните, чтобы найти свой первый курс!</string>
@@ -92,7 +92,7 @@
     <string name="review_warning">Это задание с рецензией. Нажмите, чтобы закончить задание в web и получить баллы.</string>
     <string name="password_too_short">Минимальное количество символов в пароле: 6. </string>
     <string name="reset_password">Сбросить пароль</string>
-    <string name="send">отправить</string>
+    <string name="send">Отправить</string>
     <string name="email_sent">Мы отправили вам письмо.</string>
     <string name="email_wrong">Нет пользователя с таким e-mail.</string>
     <string name="are_you_sure_logout">Все сохраненные данные будут удалены. Вы уверены?</string>
@@ -137,4 +137,15 @@
     <string name="cancel_videos_explanation">Отмена загрузки видео времязатратня операция. Вы уверены?</string>
     <string name="hint_for_idea">Напишите замечание или идею</string>
     <string name="feedback_from">От</string>
+    <string name="comments_title">Комментарии</string>
+    <string name="load_more">ещё</string>
+    <string name="load_more_reply">Показать еще</string>
+    <string name="hint_for_new_comment">Оставьте комментарий</string>
+    <string name="new_comment_title">Новый комментарий</string>
+    <string name="leave_first_comment">Нет обсуждений. Начните первое.</string>
+    <string name="comment_sent">Комментарий успешно отправлен</string>
+    <string name="comment_denied">Извините, возможность оставлять комментарии отключена</string>
+    <string name="reply_title">Ответить</string>
+    <string name="one_comment_title">Комментарий</string>
+    <string name="comment_is_deleted">Этот комментарий был удален</string>
 </resources>

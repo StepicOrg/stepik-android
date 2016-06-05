@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
@@ -25,10 +26,12 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
+import org.stepic.droid.view.activities.CommentsActivity;
 import org.stepic.droid.view.activities.CourseDetailActivity;
 import org.stepic.droid.view.activities.LaunchActivity;
 import org.stepic.droid.view.activities.LoginActivity;
 import org.stepic.droid.view.activities.MainFeedActivity;
+import org.stepic.droid.view.activities.NewCommentActivity;
 import org.stepic.droid.view.activities.RegisterActivity;
 import org.stepic.droid.view.activities.SectionActivity;
 import org.stepic.droid.view.activities.SettingsActivity;
@@ -190,6 +193,37 @@ public class ScreenManager implements IScreenManager {
         Intent intent = new Intent(sourceActivity, SettingsActivity.class);
         sourceActivity.startActivity(intent);
         sourceActivity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
+    }
+
+    @Override
+    public void openComments(Context context, @Nullable String discussionProxyId, long stepId) {
+
+        if (discussionProxyId == null) {
+            YandexMetrica.reportEvent("comment: not available");
+            Toast.makeText(context, R.string.comment_denied, Toast.LENGTH_SHORT).show();
+        } else {
+            YandexMetrica.reportEvent("comments: open list");
+            Intent intent = new Intent(context, CommentsActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Bundle bundle = new Bundle();
+            bundle.putString(CommentsActivity.Companion.getKeyDiscusionProxyId(), discussionProxyId);
+            bundle.putLong(CommentsActivity.Companion.getKeyStepId(), stepId);
+            intent.putExtras(bundle);
+            context.startActivity(intent);
+        }
+    }
+
+    @Override
+    public void openNewCommentForm(Activity sourceActivity, Long target, @Nullable Long parent) {
+        YandexMetrica.reportEvent("comments: open write form");
+        Intent intent = new Intent(sourceActivity, NewCommentActivity.class);
+        Bundle bundle = new Bundle();
+        if (parent != null) {
+            bundle.putLong(NewCommentActivity.Companion.getKeyParent(), parent);
+        }
+        bundle.putLong(NewCommentActivity.Companion.getKeyTarget(), target);
+        intent.putExtras(bundle);
+        sourceActivity.startActivity(intent);
     }
 
     @Override

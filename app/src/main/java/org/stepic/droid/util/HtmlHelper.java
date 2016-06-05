@@ -1,7 +1,6 @@
 package org.stepic.droid.util;
 
 import android.text.Html;
-import android.text.Spanned;
 
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.Source;
@@ -15,11 +14,43 @@ import java.util.List;
 public class HtmlHelper {
 
     @NotNull
-    public static Spanned fromHtml(@Nullable String content) {
+    public static CharSequence fromHtml(@Nullable String content) {
         if (content == null)
             return Html.fromHtml("");
 
         return Html.fromHtml(content);
+    }
+
+    /** Trims trailing whitespace. Removes any of these characters:
+     * 0009, HORIZONTAL TABULATION
+     * 000A, LINE FEED
+     * 000B, VERTICAL TABULATION
+     * 000C, FORM FEED
+     * 000D, CARRIAGE RETURN
+     * 001C, FILE SEPARATOR
+     * 001D, GROUP SEPARATOR
+     * 001E, RECORD SEPARATOR
+     * 001F, UNIT SEPARATOR
+     * @return "" if source is null, otherwise string with all trailing whitespace removed
+     */
+    public static CharSequence trimTrailingWhitespace(CharSequence source) {
+
+        if(source == null)
+            return "";
+
+        int i = source.length();
+
+        // loop back to the first non-whitespace character
+        while(--i >= 0 && Character.isWhitespace(source.charAt(i))) {
+        }
+
+        return source.subSequence(0, i+1);
+    }
+
+    public static boolean isForWebView(@NotNull String text) {
+        boolean isContainsPicture = text.contains("<img");
+        boolean isContainsLatex = text.contains("$");
+        return isContainsLatex || isContainsPicture;
     }
 
     /**
@@ -102,15 +133,16 @@ public class HtmlHelper {
             + "\nh1{font-size: 20pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
             + "\nh2{font-size: 17pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
             + "\nh3{font-size: 14pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-            + "\nimg { max-width: 100%%; }" +
-            "<meta name=\"viewport\" content=\"width=" +
+            + "\nimg { max-width: 100%%; }"
+            + "\np{margin: 0px; padding: 0px; display: inline;}"
+            + "<meta name=\"viewport\" content=\"width=" +
 
             "%d" +
 
             ", user-scalable=no\" />" +
             "</style>\n" +
             "</head>\n"
-            + "<body>";
+            + "<body style='margin:0;padding:0;'>";
 
     public static final String POST_BODY = "</body>\n" +
             "</html>";

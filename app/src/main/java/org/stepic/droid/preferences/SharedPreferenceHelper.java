@@ -60,6 +60,23 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_SOUND_DISABLED, isDisabled);
     }
 
+    public enum CommentsOrder {
+        DISCUSSION_NEW_FIRST("discussion"),
+        DISCUSSION_MOST_LIKED("discussions_most_liked"),
+        DISCUSSION_MOST_ACTIVE("discussions_most_active"),
+        DISCUSSION_RECENT_ACTIVITY("discussions_recent_activity");
+
+        private String description;
+
+        CommentsOrder(String description) {
+            this.description = description;
+        }
+
+        private String getStoreName() {
+            return description;
+        }
+    }
+
     public enum PreferenceType {
         LOGIN("login preference"),
         WIFI("wifi_preference"),

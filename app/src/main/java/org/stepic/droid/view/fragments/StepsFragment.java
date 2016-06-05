@@ -117,6 +117,19 @@ public class StepsFragment extends FragmentBase {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        init();
+        bus.register(this);
+        //isLoaded is retained and stepList too, but this method should be in onStart due to user can rotate device, when
+        //loading is not finished. it can produce many requests, but it will be happen when user rotates device many times per second.
+        if (mLesson != null && mLesson.getSteps() != null && mLesson.getSteps().length != 0 && !isLoaded) {
+            updateSteps();
+        } else {
+            ArrayList<Step> newList = new ArrayList<>(mStepList);
+            showSteps(newList);
+        }
+    }
+
+    private  void init(){
         mStepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), mStepList, mLesson, mUnit);
         mViewPager.setAdapter(mStepAdapter);
 
@@ -146,20 +159,17 @@ public class StepsFragment extends FragmentBase {
     @Override
     public void onStart() {
         super.onStart();
-        bus.register(this);
-        //isLoaded is retained and stepList too, but this method should be in onStart due to user can rotate device, when
-        //loading is not finished. it can produce many requests, but it will be happen when user rotates device many times per second.
-        if (mLesson != null && mLesson.getSteps() != null && mLesson.getSteps().length != 0 && !isLoaded) {
-            updateSteps();
-        } else {
-            ArrayList<Step> newList = new ArrayList<>(mStepList);
-            showSteps(newList);
-        }
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
         bus.unregister(this);
     }
 
@@ -180,23 +190,21 @@ public class StepsFragment extends FragmentBase {
                         String resultQuality = mUserPreferences.getQualityVideo();
                         try {
 
-                            int weWant = Integer.parseInt( mUserPreferences.getQualityVideo());
+                            int weWant = Integer.parseInt(mUserPreferences.getQualityVideo());
                             final List<VideoUrl> urls = step.getBlock().getVideo().getUrls();
                             int bestDelta = Integer.MAX_VALUE;
                             int bestIndex = 0;
-                            for (int i = 0; i<urls.size(); i++){
-                                int current = Integer.parseInt( urls.get(i).getQuality());
-                                int delta = Math.abs(current-weWant);
-                                if (delta    < bestDelta){
+                            for (int i = 0; i < urls.size(); i++) {
+                                int current = Integer.parseInt(urls.get(i).getQuality());
+                                int delta = Math.abs(current - weWant);
+                                if (delta < bestDelta) {
                                     bestDelta = delta;
                                     bestIndex = i;
                                 }
 
                             }
                             resultQuality = urls.get(bestIndex).getQuality();
-                        }
-                        catch (NumberFormatException e)
-                        {
+                        } catch (NumberFormatException e) {
                             resultQuality = mUserPreferences.getQualityVideo();
                         }
 
@@ -481,5 +489,30 @@ public class StepsFragment extends FragmentBase {
         } else {
             quality.setVisible(false);
         }
+
+        MenuItem comments = menu.findItem(R.id.action_comments);
+        if (mStepList.isEmpty()) {
+            comments.setVisible(false);
+        } else {
+            comments.setVisible(true);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_comments:
+                int position = mViewPager.getCurrentItem();
+                if (position < 0 || position >= mStepList.size()) {
+                    return super.onOptionsItemSelected(item);
+                }
+
+                Step step = mStepList.get(position);
+                mShell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

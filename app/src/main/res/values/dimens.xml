@@ -36,4 +36,17 @@
     <dimen name="thumb_size">18dp</dimen>
     <dimen name="settingsLeft_RightMargin">5dp</dimen>
     <dimen name="height_of_small_button">36dp</dimen>
+    <dimen name="min_height_of_comment">100dp</dimen>
+    <dimen name="margin_leftRight_comment_depend_on_reply_margin">8dp</dimen>
+    <dimen name="padding_for_circle_image">4dp</dimen>
+    <dimen name="avatar_size_depend_on_reply_margin">48dp</dimen>
+    <dimen name="reply_margin">64dp</dimen>
+    <dimen name="comment_content_padding_top">4dp</dimen>
+    <dimen name="avatar_size_reply">40dp</dimen>
+    <dimen name="right_padding_comments">8dp</dimen>
+    <dimen name="bot_padding_name">4dp</dimen>
+    <dimen name="name_size_comments">14sp</dimen>
+    <dimen name="left_padding_name_comments">0dp</dimen>
+    <dimen name="margin_option_text">12dp</dimen>
+    <dimen name="margin_option_top_bot">4dp</dimen>
 </resources>

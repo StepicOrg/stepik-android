@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.DragEvent;
 import android.view.View;
 
+import com.yandex.metrica.YandexMetrica;
+
 import java.lang.ref.WeakReference;
 
 import static java.lang.Float.MIN_VALUE;
@@ -134,7 +136,10 @@ final class DragManager implements View.OnDragListener {
                                         }
                                     });
                                 } else {
-                                    adapter.notifyItemChanged(adapter.getPositionForId(itemId));
+                                    //it can be in scroll -> do nothing
+                                    YandexMetrica.reportEvent("drag manager strange notify");
+                                    adapter.notifyDataSetChanged();
+//                                    adapter.notifyItemChanged(adapter.getPositionForId(itemId)); // it produced to crashes
                                 }
                             }
                         });

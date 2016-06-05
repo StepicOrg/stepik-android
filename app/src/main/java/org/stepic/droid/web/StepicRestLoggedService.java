@@ -101,4 +101,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/comments")
     Call<CommentsResponse> getComments(@Query("ids[]") long[] ids);
+
+    @POST("api/comments")
+    Call<CommentsResponse> postComment(@Body CommentRequest comment);
 }

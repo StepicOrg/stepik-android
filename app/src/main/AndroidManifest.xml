@@ -26,7 +26,7 @@
         android:largeHeap="true"
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
-        tools:replace = "android:allowBackup"
+        tools:replace="android:allowBackup"
         >
 
         <activity
@@ -72,7 +72,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.activities.MainFeedActivity"/>
 
-        </activity>во скольк
+        </activity>
 
         <activity
             android:name=".view.activities.UnitsActivity"
@@ -82,7 +82,8 @@
         <activity
             android:name=".view.activities.StepsActivity"
             android:hardwareAccelerated="false"
-            android:label="@string/steps_title"/>
+            android:label="@string/steps_title"
+            android:launchMode="singleTop"/>
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadCompleteReceiver"
@@ -212,5 +213,27 @@
                 <action android:name="notification_cancelled"/>
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name=".view.activities.CommentsActivity"
+            android:label="@string/comments_title"
+            android:launchMode="singleTop"
+            android:parentActivityName=".view.activities.StepsActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.activities.StepsActivity"/>
+        </activity>
+
+        <activity
+            android:name=".view.activities.NewCommentActivity"
+            android:label="@string/new_comment_title"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:parentActivityName=".view.activities.CommentsActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.activities.CommentsActivity"/>
+        </activity>
     </application>
 </manifest>

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbarStyle="outsideOverlay">
@@ -19,6 +20,5 @@
                 layout="@layout/step_text_header"/>
         </LinearLayout>
     </ScrollView>
-
     <include layout="@layout/drop_shadow_view"/>
 </FrameLayout>

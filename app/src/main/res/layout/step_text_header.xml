@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="top">
     <org.stepic.droid.view.custom.LatexSupportableWebView
+        android:layout_margin="16dp"
         android:id="@+id/text_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

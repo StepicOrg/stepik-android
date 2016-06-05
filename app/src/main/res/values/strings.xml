@@ -58,7 +58,7 @@
     <string name="you_not_enrolled">You are not enrolled</string>
     <string name="cancel">Cancel</string>
     <string name="failLogin">Login/password was incorrect</string>
-    <string name="failLoginConnectionProblems">Internet connection was lost</string>
+    <string name="connectionProblems">Internet connection was lost</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="explain_permission">For cache course and watch video offline Stepic need permission to storage of phone.</string>
     <string name="allow_question">Allow?</string>
@@ -94,7 +94,7 @@
     <string name="review_warning">This task with review. Tap to open in web for points.</string>
     <string name="password_too_short">Password must be a minimum of 6 characters.</string>
     <string name="reset_password">Reset password</string>
-    <string name="send">send</string>
+    <string name="send">Send</string>
     <string name="email_sent">We have sent you an e-mail.</string>
     <string name="email_wrong">The e-mail address is not assigned to any user account.</string>
     <string name="are_you_sure_logout">All saved data for offline will be removed. Are you sure? </string>
@@ -141,8 +141,19 @@
     <string name="hint_for_idea">Type your suggestions, comments or idea</string>
     <string name="feedback_from">From</string>
     <string name="cancel_videos_explanation">Cancel of uploading videos is time-consuming. Are you sure?</string>
+    <string name="comments_title">Comments</string>
+    <string name="load_more">more</string>
+    <string name="load_more_reply">Load more</string>
+    <string name="hint_for_new_comment">Add your comment</string>
+    <string name="new_comment_title">New comment</string>
+    <string name="leave_first_comment">No discussions. Feel free to start one.</string>
     <plurals name="notification_plural">
         <item quantity="one">%d new notification</item>
         <item quantity="other">%d new notifications</item>
     </plurals>
+    <string name="comment_sent">Comment is sent successfully</string>
+    <string name="comment_denied">Comments are not available for this lesson</string>
+    <string name="reply_title">Reply</string>
+    <string name="one_comment_title">Comment</string>
+    <string name="comment_is_deleted">This comment was deleted</string>
 </resources>

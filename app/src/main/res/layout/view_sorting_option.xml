@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:padding="8dp"
+            android:layout_margin="8dp"
             tools:text="option " />
         </ScrollView>
 
