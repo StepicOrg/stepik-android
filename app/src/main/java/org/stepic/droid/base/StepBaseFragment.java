@@ -3,20 +3,35 @@ package org.stepic.droid.base;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.TextView;
+
+import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
+import org.stepic.droid.events.comments.NewCommentWasAdded;
+import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.custom.LatexSupportableWebView;
+import org.stepic.droid.web.StepResponse;
 
 import butterknife.Bind;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public abstract class StepBaseFragment extends FragmentBase {
 
     @Bind(R.id.text_header)
     protected LatexSupportableWebView headerWv;
+
+    @Bind(R.id.open_comments_root)
+    protected View openCommentViewClickable;
+
+    @Bind(R.id.open_comments_text)
+    protected TextView textForComment;
 
     protected Step step;
     protected Lesson lesson;
@@ -34,13 +49,34 @@ public abstract class StepBaseFragment extends FragmentBase {
                 step.getBlock() != null &&
                 step.getBlock().getText() != null &&
                 !step.getBlock().getText().equals("")) {
-
             headerWv.setText(step.getBlock().getText());
             headerWv.setVisibility(View.VISIBLE);
         } else {
             headerWv.setVisibility(View.GONE);
         }
+
+        updateCommentState();
+
         bus.register(this);
+    }
+
+    private void updateCommentState() {
+        if (step != null && step.getDiscussion_proxy() != null) {
+            showComment();
+        } else {
+            openCommentViewClickable.setVisibility(View.GONE);
+        }
+    }
+
+    private void showComment() {
+        openCommentViewClickable.setVisibility(View.VISIBLE);
+        openCommentViewClickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mShell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+            }
+        });
+        textForComment.setText(MainApplication.getAppContext().getResources().getQuantityString(R.plurals.open_comments, step.getDiscussions_count(), step.getDiscussions_count()));
     }
 
 
@@ -53,6 +89,52 @@ public abstract class StepBaseFragment extends FragmentBase {
     @Override
     public void onDestroyView() {
         bus.unregister(this);
+        openCommentViewClickable.setOnClickListener(null);
         super.onDestroyView();
+    }
+
+    @Subscribe
+    public void onNewCommentWasAdded(NewCommentWasAdded event) {
+        if (step != null && event.getTargetId() == step.getId()) {
+            long[] arr = new long[]{step.getId()};
+
+            mShell.getApi().getSteps(arr).enqueue(new Callback<StepResponse>() {
+                @Override
+                public void onResponse(Response<StepResponse> response, Retrofit retrofit) {
+                    if (response.isSuccess()) {
+                        StepResponse stepResponse = response.body();
+                        if (stepResponse != null && stepResponse.getSteps() != null && stepResponse.getSteps().size() > 0) {
+                            final Step stepFromInternet = stepResponse.getSteps().get(0);
+                            if (stepFromInternet != null) {
+                                mThreadPoolExecutor.execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mDatabaseFacade.addStep(stepFromInternet); //fixme: fragment in closure -> leak
+                                    }
+                                });
+
+                                 //fixme: it is so bad, we should be updated from model, not here =(
+                                bus.post(new StepWasUpdatedEvent(stepFromInternet));
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+
+                }
+            });
+        }
+
+    }
+
+    @Subscribe
+    public void onStepWasUpdated(StepWasUpdatedEvent event){
+        if (event.getStep().getId() == step.getId()){
+            step.setDiscussion_proxy(event.getStep().getDiscussion_proxy()); //fixme do it in immutable way
+            step.setDiscussions_count(event.getStep().getDiscussions_count());
+            updateCommentState();
+        }
     }
 }

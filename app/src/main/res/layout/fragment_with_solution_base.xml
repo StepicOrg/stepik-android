@@ -91,12 +91,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/min_ux_touchable_size"
                 android:layout_margin="5dp"
-                android:layout_marginBottom="50dp"
                 tools:text="@string/submit"/>
 
             <include layout="@layout/progress_bar_on_empty_screen"/>
 
             <include layout="@layout/steps_only_online"/>
+
+            <include layout="@layout/open_comment_view"/>
 
         </LinearLayout>
     </ScrollView>

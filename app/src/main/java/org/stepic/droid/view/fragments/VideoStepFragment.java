@@ -18,6 +18,8 @@ import com.yandex.metrica.YandexMetrica;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.base.StepBaseFragment;
+import org.stepic.droid.events.comments.NewCommentWasAdded;
+import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.events.video.VideoLoadedEvent;
 import org.stepic.droid.events.video.VideoResolvedEvent;
 import org.stepic.droid.model.Step;
@@ -164,6 +166,17 @@ public class VideoStepFragment extends StepBaseFragment {
     public void onVideoResolved(VideoResolvedEvent e) {
         if (e.getStepId() != step.getId()) return;
         mShell.getScreenProvider().showVideo(getActivity(), e.getPathToVideo());
+    }
+
+    @Subscribe
+    public void onNewCommentWasAdded(NewCommentWasAdded event) {
+        super.onNewCommentWasAdded(event);
+
+    }
+
+    @Subscribe
+    public void onStepWasUpdated(StepWasUpdatedEvent event) {
+        super.onStepWasUpdated(event);
     }
 
 }
