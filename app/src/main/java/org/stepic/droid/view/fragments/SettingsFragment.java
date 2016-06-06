@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -67,6 +68,9 @@ public class SettingsFragment extends FragmentBase {
     @Bind(R.id.fragment_settings_notification_sound_switch)
     BetterSwitch notificationSound;
 
+    @Bind(R.id.move_data_button)
+    Button moveDataButton;
+
     @BindString(R.string.version)
     String versionPrefix;
 
@@ -101,6 +105,8 @@ public class SettingsFragment extends FragmentBase {
         setUpNotificationLearn();
 
         setUpSound();
+
+        setUpMoveButton();
 
         mWifiLoadSwitch.setChecked(!mSharedPreferenceHelper.isMobileInternetAlsoAllowed());//if first time it is true
 
@@ -142,6 +148,18 @@ public class SettingsFragment extends FragmentBase {
         });
 
         loadingProgressDialog = new LoadingProgressDialog(getContext());
+    }
+
+    private void setUpMoveButton() {
+        moveDataButton.setVisibility(View.VISIBLE);
+        Boolean isSDPresent = Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED) && Environment.isExternalStorageRemovable() ;
+
+        if (isSDPresent) {
+            moveDataButton.setText("Yeah, I have card");
+        } else {
+            moveDataButton.setText("Sorry =(");
+        }
+
     }
 
     private void setUpNotificationVibration() {
