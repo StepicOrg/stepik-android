@@ -1,18 +1,18 @@
 /*****************************************************************************
  * UiTools.java
- *****************************************************************************
+ * ****************************************************************************
  * Copyright © 2011-2014 VLC authors and VideoLAN
- *
+ * <p/>
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
+ * <p/>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
@@ -21,11 +21,13 @@
 package org.stepic.droid.util;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.base.MainApplication;
 import org.videolan.libvlc.util.AndroidUtil;
 
@@ -47,10 +49,10 @@ public class Util {
             r = new BufferedReader(new InputStreamReader(is, "UTF8"));
             StringBuilder sb = new StringBuilder();
             String line = r.readLine();
-            if(line != null) {
+            if (line != null) {
                 sb.append(line);
                 line = r.readLine();
-                while(line != null) {
+                while (line != null) {
                     sb.append('\n');
                     sb.append(line);
                     line = r.readLine();
@@ -66,7 +68,7 @@ public class Util {
     }
 
     @TargetApi(android.os.Build.VERSION_CODES.GINGERBREAD)
-    public static void commitPreferences(SharedPreferences.Editor editor){
+    public static void commitPreferences(SharedPreferences.Editor editor) {
         if (AndroidUtil.isGingerbreadOrLater())
             editor.apply();
         else
@@ -78,7 +80,8 @@ public class Util {
             try {
                 closeable.close();
                 return true;
-            } catch (IOException e) {}
+            } catch (IOException e) {
+            }
         return false;
     }
 
@@ -86,5 +89,18 @@ public class Util {
         List<ResolveInfo> list = MainApplication.getAppContext().getPackageManager().queryIntentActivities(intent,
                 PackageManager.MATCH_DEFAULT_ONLY);
         return list.size() > 0;
+    }
+
+
+    @Nullable
+    public static String getVersionName() {
+        Context mainAppContext = MainApplication.getAppContext();
+        String versionName = null;
+        try {
+            versionName = mainAppContext.getPackageManager().getPackageInfo(mainAppContext.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e1) {
+            return null;
+        }
+        return versionName;
     }
 }

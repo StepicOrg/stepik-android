@@ -155,45 +155,5 @@
 
         </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/clear_cache_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/notification_settings"
-            android:layout_marginEnd="@dimen/settingsLeft_RightMargin"
-            android:layout_marginLeft="@dimen/settingsLeft_RightMargin"
-            android:layout_marginRight="@dimen/settingsLeft_RightMargin"
-            android:layout_marginStart="@dimen/settingsLeft_RightMargin"
-            android:layout_marginTop="@dimen/settingsLeft_RightMargin"
-            tools:text="@string/clear_cache_title"/>
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/move_data_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/clear_cache_button"
-            android:layout_marginBottom="40dp"
-            android:layout_marginEnd="@dimen/settingsLeft_RightMargin"
-            android:layout_marginLeft="@dimen/settingsLeft_RightMargin"
-            android:layout_marginRight="@dimen/settingsLeft_RightMargin"
-            android:layout_marginStart="@dimen/settingsLeft_RightMargin"
-            android:layout_marginTop="@dimen/settingsLeft_RightMargin"
-            android:visibility="gone"
-            tools:visibility="visible"
-            />
-
-        <TextView
-            android:id="@+id/version_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/clear_cache_button"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="8dp"
-            android:gravity="center_horizontal"
-            android:textColor="@color/stepic_weak_text"
-            android:textSize="@dimen/text_height"
-            android:visibility="gone"
-            tools:text="Version is great"/>
-
     </RelativeLayout>
 </ScrollView>
