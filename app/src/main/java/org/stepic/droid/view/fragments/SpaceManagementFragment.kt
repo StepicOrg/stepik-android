@@ -19,7 +19,9 @@ import org.stepic.droid.util.FileUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StorageUtil
 import org.stepic.droid.view.custom.LoadingProgressDialog
+import org.stepic.droid.view.dialogs.ChooseStorageDialog
 import org.stepic.droid.view.dialogs.ClearVideosDialog
+import org.stepic.droid.view.dialogs.VideoQualityDialog
 
 class SpaceManagementFragment : FragmentBase() {
     companion object {
@@ -64,7 +66,7 @@ class SpaceManagementFragment : FragmentBase() {
         chooseStorageButton = view.findViewById(R.id.choose_storage_button)
         userStorageInfo = view.findViewById(R.id.user_storage_info) as TextView
 
-        fun hideAllStorageInfo (){
+        fun hideAllStorageInfo() {
             notMountExplanation.visibility = View.GONE
             mountExplanation.visibility = View.GONE
             chooseStorageButton.visibility = View.GONE
@@ -78,7 +80,13 @@ class SpaceManagementFragment : FragmentBase() {
                 notMountExplanation.visibility = View.GONE
                 mountExplanation.visibility = View.VISIBLE
                 chooseStorageButton.visibility = View.VISIBLE
-                //TODO: ADD user_storage_info from user prefs
+                val chooseStorageDialog = ChooseStorageDialog()
+                chooseStorageButton.setOnClickListener {
+                    if (!chooseStorageDialog.isAdded) {
+                        chooseStorageDialog.show(fragmentManager, null)
+                    }
+                }
+                //TODO: ADD user_storage_info from user prefs IN userStorageInfo!
             } else if (storageState == StorageUtil.SDState.sdCardNotMounted) {
                 notMountExplanation.visibility = View.VISIBLE
                 mountExplanation.visibility = View.GONE
@@ -103,6 +111,7 @@ class SpaceManagementFragment : FragmentBase() {
 
     override fun onDestroyView() {
         clearCacheButton.setOnClickListener(null)
+        chooseStorageButton.setOnClickListener(null)
         super.onDestroyView()
     }
 

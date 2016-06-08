@@ -89,4 +89,5 @@ public class AppConstants {
     public static final String OPEN_NOTIFICATION = "Open_notification";
     public static final long MILLIS_IN_24HOURS = 86400000L;
 
+    public static final java.lang.String METRICA_CANCEL_CHOOSE_STORE_CLICK = "storage: cancel choice";
 }

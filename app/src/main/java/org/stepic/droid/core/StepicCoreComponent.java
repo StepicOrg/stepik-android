@@ -35,6 +35,7 @@ import org.stepic.droid.view.adapters.SocialAuthAdapter;
 import org.stepic.droid.view.adapters.StepFragmentAdapter;
 import org.stepic.droid.view.adapters.UnitAdapter;
 import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
+import org.stepic.droid.view.dialogs.ChooseStorageDialog;
 import org.stepic.droid.view.dialogs.ClearVideosDialog;
 import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.dialogs.NeedUpdatingDialog;
@@ -144,4 +145,6 @@ public interface StepicCoreComponent {
     void inject(CommentManager commentManager);
 
     void inject(CommentsFragment commentsFragment);
+
+    void inject(ChooseStorageDialog chooseStorageDialog);
 }
