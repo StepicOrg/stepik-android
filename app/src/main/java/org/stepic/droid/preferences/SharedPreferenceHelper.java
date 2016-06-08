@@ -34,6 +34,15 @@ public class SharedPreferenceHelper {
         mContext = MainApplication.getAppContext();
     }
 
+    public boolean isSDChosen() {
+        //default is not. false -> sd is not chosen
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, SD_CHOSEN);
+    }
+
+    public void setSDChosen(boolean isSdChosen) {
+        put(PreferenceType.DEVICE_SPECIFIC, SD_CHOSEN, isSdChosen);
+    }
+
     public boolean isNotificationVibrationDisabled() {
         //default is enabled
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_VIBRATION_DISABLED);
@@ -327,4 +336,5 @@ public class SharedPreferenceHelper {
     private final String GCM_TOKEN_ACTUAL = "gcm_token_actual";
     private final String NOTIFICATION_DISABLED = "notification_disabled_by_user";
     private final String NOTIFICATION_VIBRATION_DISABLED = "not_vibrat_disabled";
+    private final String SD_CHOSEN = "sd_chosen";
 }

@@ -141,4 +141,12 @@ public class UserPreferences {
         mSharedPreferenceHelper.setNotificationSoundDisabled(!isEnabled);
     }
 
+    public void setSdChosen(boolean isSdChosen){
+        mSharedPreferenceHelper.setSDChosen(isSdChosen);
+    }
+
+    public boolean isSdChosen (){
+        return mSharedPreferenceHelper.isSDChosen();
+    }
+
 }
