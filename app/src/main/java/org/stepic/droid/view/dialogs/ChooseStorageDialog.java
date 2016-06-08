@@ -2,7 +2,6 @@ package org.stepic.droid.view.dialogs;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -44,6 +43,7 @@ public class ChooseStorageDialog extends DialogFragment {
                 indexChosen = i;
             }
         }
+        final LogoutAreYouSureDialog dialog1 = new LogoutAreYouSureDialog(); //// FIXME: 08.06.16 make new Dialog with are you sure
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
         builder.setTitle(R.string.choose_storage_title)
@@ -58,23 +58,31 @@ public class ChooseStorageDialog extends DialogFragment {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(final DialogInterface dialog, final int which) {
-                                AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                                    @Override
-                                    protected Void doInBackground(Void... params) {
-//                                        mUserPreferences.storeQualityVideo(mPositionToQualityMap.get(which));
-                                        //fixme store to userPrefs PLS and show progress if need move. AND MOVE
-                                        return null;
-                                    }
+                                //show only if want change, check which
 
-                                    @Override
-                                    protected void onPostExecute(Void aVoid) {
-                                        super.onPostExecute(aVoid);
-                                        if (dialog != null) {
-                                            dialog.dismiss();
-                                        }
-                                    }
-                                };
-                                task.executeOnExecutor(threadPoolExecutor);
+                                if (!dialog1.isAdded()) {
+                                    dialog1.show(getFragmentManager(), null);
+                                }
+                                dismiss();
+                                // TODO: 08.06.16 MAKE ALL WORK IN ANOTHER WAY
+
+//                                AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+//                                    @Override
+//                                    protected Void doInBackground(Void... params) {
+////                                        mUserPreferences.storeQualityVideo(mPositionToQualityMap.get(which));
+//                                        //fixme store to userPrefs PLS and show progress if need move. AND MOVE
+//                                        return null;
+//                                    }
+//
+//                                    @Override
+//                                    protected void onPostExecute(Void aVoid) {
+//                                        super.onPostExecute(aVoid);
+//                                        if (dialog != null) {
+//                                            dialog.dismiss();
+//                                        }
+//                                    }
+//                                };
+//                                task.executeOnExecutor(threadPoolExecutor);
                             }
                         });
 
