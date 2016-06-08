@@ -158,4 +158,5 @@
     <string name="space_management_title">Управление памятью</string>
     <string name="clear_cache_explanation">Приложение поддерживает просмотр видео онлайн, но для просмотра уроков без Интернет-подключения их необходимо сохранять. Большую часть памяти занимают видео-уроки. Удаление всех загруженных видео может занять несколько минут.</string>
     <string name="empty">Пусто</string>
+    <string name="storage">Память</string>
 </resources>

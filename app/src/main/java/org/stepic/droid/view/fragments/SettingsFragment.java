@@ -45,6 +45,9 @@ public class SettingsFragment extends FragmentBase {
     @Bind(R.id.fragment_settings_notification_sound_switch)
     BetterSwitch notificationSound;
 
+    @Bind(R.id.storage_management_button)
+    View storageManagementButton;
+
     @BindString(R.string.version)
     String versionPrefix;
 
@@ -66,8 +69,8 @@ public class SettingsFragment extends FragmentBase {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         setUpNotificationVibration();
 
@@ -114,6 +117,13 @@ public class SettingsFragment extends FragmentBase {
             }
         });
 
+        storageManagementButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mShell.getScreenProvider().showStorageManagement(getActivity());
+            }
+        });
+
     }
 
     private void setUpNotificationVibration() {
@@ -155,6 +165,7 @@ public class SettingsFragment extends FragmentBase {
         notificationLearnSwitch.setOnCheckedChangeListener(null);
         notificationVibration.setOnCheckedChangeListener(null);
         notificationSound.setOnCheckedChangeListener(null);
+        storageManagementButton.setOnClickListener(null);
         super.onDestroyView();
     }
 
