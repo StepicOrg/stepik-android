@@ -166,4 +166,7 @@
     <string name="space_management_title">Space management</string>
     <string name="clear_cache_explanation">The App supports viewing videos online, but to view the lessons without Internet connection is necessary to keep them. Most of the space is taken by the video tutorials. Deleting all downloaded videos can take a few minutes.</string>
     <string name="storage">Storage</string>
+    <string name="notMountExplanation">The SD card is not plugged in the device. To save the videos to the SD card, plug it in the phone and restart the App.</string>
+    <string name="mountExplanation">You can save lessons on SD-card or internal device memory. Please note that when saving on SD-card, lessons when removing the SD-card will no longer be available offline.</string>
+    <string name="choose_storage_title">Choose storage</string>
 </resources>
