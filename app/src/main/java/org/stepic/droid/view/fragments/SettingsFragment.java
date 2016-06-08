@@ -113,7 +113,9 @@ public class SettingsFragment extends FragmentBase {
         mVideoQuality.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                videoDialog.show(getFragmentManager(), null);
+                if (!videoDialog.isAdded()) {
+                    videoDialog.show(getFragmentManager(), null);
+                }
             }
         });
 
