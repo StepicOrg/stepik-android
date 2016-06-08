@@ -12,9 +12,11 @@ import com.yandex.metrica.YandexMetrica;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.model.StorageOption;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.util.AppConstants;
 
+import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
@@ -33,6 +35,15 @@ public class ChooseStorageDialog extends DialogFragment {
         MainApplication.component().inject(this);
 
         //fixme get From User Prefs
+        final List<StorageOption> storageOptions = mUserPreferences.getStorageOptionList();
+        String[] headers = new String[storageOptions.size()];
+        int indexChosen = -1; //// FIXME: 08.06.16 change to 0
+        for (int i = 0; i < headers.length; i++) {
+            headers[i] = storageOptions.get(i).getPresentableInfo();
+            if (storageOptions.get(i).isChosen()) {
+                indexChosen = i;
+            }
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
         builder.setTitle(R.string.choose_storage_title)
@@ -42,8 +53,8 @@ public class ChooseStorageDialog extends DialogFragment {
                         YandexMetrica.reportEvent(AppConstants.METRICA_CANCEL_CHOOSE_STORE_CLICK);
                     }
                 })
-                .setSingleChoiceItems(new String[]{"TUPA DEFAULT", "TUPA SECONDARY"},
-                        0,
+                .setSingleChoiceItems(headers,
+                        indexChosen,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(final DialogInterface dialog, final int which) {

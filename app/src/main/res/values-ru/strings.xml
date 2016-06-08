@@ -70,6 +70,7 @@
     <string name="loading_message">Пожалуйста, подождите…</string>
     <string name="kb">КБ</string>
     <string name="mb">МБ</string>
+    <string name="gb">ГБ</string>
     <string name="clear">Очистить</string>
     <string name="clear_videos">Вы уверены, что хотите удалить все закешированные видео?</string>
     <string name="empty_downloading">Нет загруженных видео</string>
@@ -162,4 +163,7 @@
     <string name="notMountExplanation">Карта памяти не установлена на устройство. Для того, чтобы сохранять видео на карту памяти, вставьте ее в телефон и перезапустите приложение.</string>
     <string name="mountExplanation">Вы можете сохранять уроки на SD-карту или на внутреннюю память устройства. Обратите внимание, что если уроки были записаны на SD-карту, то, при извлечении SD-карты, они перестанут быть доступны для прохождения офлайн.</string>
     <string name="choose_storage_title">Место для хранения</string>
+    <string name="secondary_storage">Внешняя</string>
+    <string name="default_storage">Внутренняя</string>
+    <string name="free_title">свободно</string>
 </resources>

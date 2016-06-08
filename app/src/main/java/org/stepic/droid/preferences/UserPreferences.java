@@ -5,12 +5,17 @@ import android.os.Environment;
 
 import com.yandex.metrica.YandexMetrica;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.stepic.droid.R;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
+import org.stepic.droid.model.StorageOption;
+import org.stepic.droid.util.StorageUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -22,11 +27,26 @@ public class UserPreferences {
     Context mContext;
     SharedPreferenceHelper mSharedPreferenceHelper;
 
+    private String kb;
+    private String mb;
+    private String gb;
+    private String defaultStorage;
+    private String secondary;
+    private String free_title;
+
 
     @Inject
     public UserPreferences(Context context, SharedPreferenceHelper helper) {
         mContext = context;
         mSharedPreferenceHelper = helper;
+        kb = context.getString(R.string.kb);
+        mb = context.getString(R.string.mb);
+        gb = context.getString(R.string.gb);
+        defaultStorage = context.getString(R.string.default_storage);
+        secondary = context.getString(R.string.secondary_storage);
+        free_title = context.getString(R.string.free_title);
+
+
     }
 
     /**
@@ -141,12 +161,91 @@ public class UserPreferences {
         mSharedPreferenceHelper.setNotificationSoundDisabled(!isEnabled);
     }
 
-    public void setSdChosen(boolean isSdChosen){
+    public void setSdChosen(boolean isSdChosen) {
         mSharedPreferenceHelper.setSDChosen(isSdChosen);
     }
 
-    public boolean isSdChosen (){
+    public boolean isSdChosen() {
         return mSharedPreferenceHelper.isSDChosen();
+    }
+
+    /**
+     * @return list of storage option: list.size()<=2, can be empty
+     */
+    @NotNull
+    public List<StorageOption> getStorageOptionList() {
+        List<StorageOption> list = new ArrayList<>();
+        File[] files = StorageUtil.getRawAppDirs();
+        if (files == null || files.length == 0) {
+            return list;
+        }
+
+        int i = 0;
+        while (i < files.length && i < 2) {
+            if (files[i] != null) {
+                long free = StorageUtil.getAvailableMemorySize(files[i]);
+                long total = StorageUtil.getTotalMemorySize(files[i]);
+
+                boolean isChosen = false;
+                final boolean isSd = isSdChosen();
+                if (isSd && i != 0) {
+                    isChosen = true;
+                } else if (!isSd && i == 0) {
+                    isChosen = true;
+                }
+                String info = formatOptionList(i, free, total, files[i]);
+
+                StorageOption option = new StorageOption(info, isChosen, total, free, files[i]);
+                list.add(option);
+            }
+            i++;
+        }
+
+
+        return list;
+    }
+
+    //move to another class. total&free in bytes
+    private String formatOptionList(int index, long total, long free, File file) {
+        total /= 1024;
+        free /= 1024; //now in kb
+        StringBuilder sb = new StringBuilder();
+        if (index == 0) {
+            sb.append(defaultStorage);
+        } else {
+            sb.append(secondary);
+        }
+
+        sb.append(" (");
+
+        addToBuilderSizeSpaceMeasure(sb, total);
+        sb.append(")");
+        sb.append(". ");
+        addToBuilderSizeSpaceMeasure(sb, free);
+        sb.append(" ");
+        sb.append(free_title);
+        return sb.toString();
+    }
+
+    private void addToBuilderSizeSpaceMeasure(StringBuilder sb, long sizeInKb) {
+        if (sizeInKb < 1024) {
+            sb.append(sizeInKb);
+            sb.append(" ");
+            sb.append(kb);
+        } else {
+            sizeInKb /= 1024;
+
+            if (sizeInKb >= 1024) {
+                sizeInKb /= 1024;
+                sb.append(sizeInKb);
+                sb.append(" ");
+                sb.append(gb);
+            } else {
+                sb.append(sizeInKb);
+                sb.append(" ");
+                sb.append(mb);
+            }
+        }
     }
 
 }

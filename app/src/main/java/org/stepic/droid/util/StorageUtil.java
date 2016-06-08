@@ -1,6 +1,7 @@
 package org.stepic.droid.util;
 
 import android.content.Context;
+import android.os.StatFs;
 import android.support.v4.content.ContextCompat;
 
 import org.jetbrains.annotations.Nullable;
@@ -39,5 +40,19 @@ public class StorageUtil {
 
     public static File[] getRawAppDirs() {
         return ContextCompat.getExternalFilesDirs(MainApplication.getAppContext(), null);
+    }
+
+    public static long getAvailableMemorySize(File path) {
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long availableBlocks = stat.getAvailableBlocks();
+        return availableBlocks * blockSize;
+    }
+
+    public static long getTotalMemorySize(File path) {
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long totalBlocks = stat.getBlockCount();
+        return totalBlocks * blockSize;
     }
 }

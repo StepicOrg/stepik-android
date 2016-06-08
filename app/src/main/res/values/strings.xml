@@ -72,6 +72,7 @@
     <string name="loading_message">Please wait…</string>
     <string name="kb">KB</string>
     <string name="mb">MB</string>
+    <string name="gb">GB</string>
     <string name="empty">Empty</string>
     <string name="clear">Clear</string>
     <string name="clear_videos">Are you sure that want to delete all cached videos?</string>
@@ -169,4 +170,7 @@
     <string name="notMountExplanation">The SD card is not plugged in the device. To save the videos to the SD card, plug it in the phone and restart the App.</string>
     <string name="mountExplanation">You can save lessons on SD-card or internal device memory. Please note that when saving on SD-card, lessons when removing the SD-card will no longer be available offline.</string>
     <string name="choose_storage_title">Choose storage</string>
+    <string name="default_storage">Default</string>
+    <string name="secondary_storage">Secondary</string>
+    <string name="free_title">free</string>
 </resources>
