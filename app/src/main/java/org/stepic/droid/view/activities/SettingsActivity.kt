@@ -9,16 +9,16 @@ import org.stepic.droid.R
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.view.fragments.SettingsFragment
 
-class SettingsActivity : SingleFragmentActivity() {
+open class SettingsActivity : SingleFragmentActivity() {
+
+    override fun createFragment(): Fragment? {
+        return SettingsFragment.newInstance()
+    }
 
     var mToolbar: Toolbar? = null;
 
     override fun getLayoutResId(): Int {
-        return R.layout.activity_settings
-    }
-
-    override fun createFragment(): Fragment? {
-        return SettingsFragment.newInstance()
+        return R.layout.activity_container_with_bar
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

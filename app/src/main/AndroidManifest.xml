@@ -24,6 +24,7 @@
         android:icon="@mipmap/ic_app_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:manageSpaceActivity=".view.activities.SpaceManagementActivity"
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup"
@@ -196,6 +197,7 @@
         <activity
             android:name=".view.activities.SettingsActivity"
             android:label="@string/settings_title"
+            android:launchMode="singleTop"
             android:parentActivityName=".view.activities.MainFeedActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -206,6 +208,17 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.NOTIFICATION_PREFERENCES"/>
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".view.activities.SpaceManagementActivity"
+            android:launchMode="singleTop"
+            android:label="@string/space_management_title"
+            android:parentActivityName=".view.activities.SettingsActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.activities.SettingsActivity"/>
         </activity>
 
         <receiver android:name=".notifications.NotificationBroadcastReceiver">
@@ -228,8 +241,8 @@
         <activity
             android:name=".view.activities.NewCommentActivity"
             android:label="@string/new_comment_title"
-            android:windowSoftInputMode="adjustResize|stateHidden"
-            android:parentActivityName=".view.activities.CommentsActivity">
+            android:parentActivityName=".view.activities.CommentsActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
