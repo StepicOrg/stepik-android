@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 
 import org.jetbrains.annotations.Nullable;
+import org.stepic.droid.base.MainApplication;
 
 import java.io.File;
 
@@ -34,5 +35,9 @@ public class StorageUtil {
                 return SDState.sdcardMounted;
             }
         }
+    }
+
+    public static File[] getRawAppDirs() {
+        return ContextCompat.getExternalFilesDirs(MainApplication.getAppContext(), null);
     }
 }
