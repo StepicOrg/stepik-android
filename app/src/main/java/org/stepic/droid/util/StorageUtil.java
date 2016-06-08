@@ -3,20 +3,22 @@ package org.stepic.droid.util;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
 public class StorageUtil {
-    enum SDState {
+    public enum SDState {
         sdcardMounted,
         sdCardNotMounted,
         sdCardNotAvailableOnDevice,
         accessToStorageRestricted
     }
 
-    @NotNull
-    public static SDState getSDState(Context context) {
+    @Nullable
+    public static SDState getSDState(@Nullable Context context) {
+        if (context == null) return null;
+
         File[] files = ContextCompat.getExternalFilesDirs(context, null);
         if (files == null || files.length <= 0) {
             return SDState.accessToStorageRestricted;

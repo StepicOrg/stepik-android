@@ -17,6 +17,7 @@ import org.stepic.droid.events.loading.StartDeletingLoadEvent
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.FileUtil
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.StorageUtil
 import org.stepic.droid.view.custom.LoadingProgressDialog
 import org.stepic.droid.view.dialogs.ClearVideosDialog
 
@@ -33,6 +34,11 @@ class SpaceManagementFragment : FragmentBase() {
     private var mClearCacheDialogFragment: DialogFragment? = null
     private var loadingProgressDialog: ProgressDialog? = null
 
+    private lateinit var notMountExplanation: View
+    private lateinit var mountExplanation: View
+    private lateinit var chooseStorageButton: View
+    private lateinit var userStorageInfo: TextView
+
     private var kb: String? = null
     private var mb: String? = null
     private var empty: String? = null
@@ -47,8 +53,42 @@ class SpaceManagementFragment : FragmentBase() {
         view?.let {
             initResStrings()
             initClearCacheFeature(it)
+            initAccordingToStoreState(it)
         }
         loadingProgressDialog = LoadingProgressDialog(context)
+    }
+
+    private fun initAccordingToStoreState(view: View) {
+        notMountExplanation = view.findViewById(R.id.notMountExplanation)
+        mountExplanation = view.findViewById(R.id.mountExplanation)
+        chooseStorageButton = view.findViewById(R.id.choose_storage_button)
+        userStorageInfo = view.findViewById(R.id.user_storage_info) as TextView
+
+        fun hideAllStorageInfo (){
+            notMountExplanation.visibility = View.GONE
+            mountExplanation.visibility = View.GONE
+            chooseStorageButton.visibility = View.GONE
+        }
+
+        val storageState = StorageUtil.getSDState(context)
+        if (storageState == null) {
+            hideAllStorageInfo()
+        } else {
+            if (storageState == StorageUtil.SDState.sdcardMounted) {
+                notMountExplanation.visibility = View.GONE
+                mountExplanation.visibility = View.VISIBLE
+                chooseStorageButton.visibility = View.VISIBLE
+                //TODO: ADD user_storage_info from user prefs
+            } else if (storageState == StorageUtil.SDState.sdCardNotMounted) {
+                notMountExplanation.visibility = View.VISIBLE
+                mountExplanation.visibility = View.GONE
+                chooseStorageButton.visibility = View.GONE
+            } else {
+                //restricted and not available
+                hideAllStorageInfo()
+            }
+
+        }
     }
 
     override fun onStart() {
