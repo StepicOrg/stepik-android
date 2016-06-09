@@ -74,6 +74,29 @@ public class UserPreferences {
         return userStepicIdDir;
     }
 
+    @Nullable
+    public File getSdCardDownloadFolder() {
+        try {
+            File androidDataPackage = getStorageOptionList().get(1).getFile().getParentFile();
+            File userStepicIdDir = new File(androidDataPackage, getUserId() + "");
+            userStepicIdDir.mkdirs();
+            try {
+                //hide from gallery our videos.
+                File noMediaFile = new File(userStepicIdDir, ".nomedia");
+                noMediaFile.createNewFile();
+            } catch (IOException ioException) {
+                // FIXME: 20.10.15 handle exception
+                YandexMetrica.reportError("can't create .nomedia", ioException);
+            }
+
+            return userStepicIdDir;
+        } catch (IndexOutOfBoundsException ex) {
+            return null;
+        } catch (NullPointerException ex) {
+            return null;
+        }
+    }
+
     private long getUserId() {
         Profile userProfile = mSharedPreferenceHelper.getProfile();
         long userId = -1; // default anonymous user id

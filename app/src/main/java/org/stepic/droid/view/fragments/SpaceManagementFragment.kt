@@ -12,8 +12,8 @@ import com.squareup.otto.Subscribe
 import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.events.loading.FinishDeletingLoadEvent
-import org.stepic.droid.events.loading.StartDeletingLoadEvent
+import org.stepic.droid.events.loading.FinishLoadEvent
+import org.stepic.droid.events.loading.StartLoadEvent
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.FileUtil
 import org.stepic.droid.util.ProgressHelper
@@ -129,12 +129,12 @@ class SpaceManagementFragment : FragmentBase() {
     }
 
     @Subscribe
-    fun onStartDeleting(event: StartDeletingLoadEvent) {
+    fun onStartLoading(event: StartLoadEvent) {
         ProgressHelper.activate(loadingProgressDialog)
     }
 
     @Subscribe
-    fun onFinishDeleting(event: FinishDeletingLoadEvent) {
+    fun onFinishLoading(event: FinishLoadEvent) {
         setUpClearCacheButton()
         ProgressHelper.dismiss(loadingProgressDialog)
     }

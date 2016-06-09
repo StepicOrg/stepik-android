@@ -23,8 +23,8 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.concurrency.DownloadPoster;
 import org.stepic.droid.events.CancelAllVideosEvent;
 import org.stepic.droid.events.DownloadingIsLoadedSuccessfullyEvent;
-import org.stepic.droid.events.loading.FinishDeletingLoadEvent;
-import org.stepic.droid.events.loading.StartDeletingLoadEvent;
+import org.stepic.droid.events.loading.FinishLoadEvent;
+import org.stepic.droid.events.loading.StartLoadEvent;
 import org.stepic.droid.events.steps.ClearAllDownloadWithoutAnimationEvent;
 import org.stepic.droid.events.steps.StepRemovedEvent;
 import org.stepic.droid.events.video.DownloadReportEvent;
@@ -475,12 +475,12 @@ public class DownloadsFragment extends FragmentBase {
     }
 
     @Subscribe
-    public void onShouldStartLoad(StartDeletingLoadEvent event) {
+    public void onShouldStartLoad(StartLoadEvent event) {
         ProgressHelper.activate(loadingProgressDialog);
     }
 
     @Subscribe
-    public void onShouldStopLoad(FinishDeletingLoadEvent event) {
+    public void onShouldStopLoad(FinishLoadEvent event) {
         ProgressHelper.dismiss(loadingProgressDialog);
     }
 

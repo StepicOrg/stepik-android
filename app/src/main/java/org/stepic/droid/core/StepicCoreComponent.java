@@ -41,6 +41,7 @@ import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.view.dialogs.VideoQualityDialog;
+import org.stepic.droid.view.dialogs.WantMoveDataDialog;
 import org.stepic.droid.view.fragments.CommentsFragment;
 import org.stepic.droid.web.RetrofitRESTApi;
 
@@ -147,4 +148,6 @@ public interface StepicCoreComponent {
     void inject(CommentsFragment commentsFragment);
 
     void inject(ChooseStorageDialog chooseStorageDialog);
+
+    void inject(WantMoveDataDialog wantMoveDataDialog);
 }

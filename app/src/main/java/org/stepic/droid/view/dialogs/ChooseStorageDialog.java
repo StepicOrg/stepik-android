@@ -43,7 +43,8 @@ public class ChooseStorageDialog extends DialogFragment {
                 indexChosen = i;
             }
         }
-        final LogoutAreYouSureDialog dialog1 = new LogoutAreYouSureDialog(); //// FIXME: 08.06.16 make new Dialog with are you sure
+        final int finalIndexChosen = indexChosen;
+        final DialogFragment youWantMoveDataDialog = WantMoveDataDialog.newInstance(); //// FIXME: 08.06.16 make new Dialog with are you sure
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
         builder.setTitle(R.string.choose_storage_title)
@@ -54,35 +55,20 @@ public class ChooseStorageDialog extends DialogFragment {
                     }
                 })
                 .setSingleChoiceItems(headers,
-                        indexChosen,
+                        finalIndexChosen,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(final DialogInterface dialog, final int which) {
                                 //show only if want change, check which
+                                if (which == finalIndexChosen) {
+                                    dismiss();
+                                    return;
+                                }
 
-                                if (!dialog1.isAdded()) {
-                                    dialog1.show(getFragmentManager(), null);
+                                if (!youWantMoveDataDialog.isAdded()) {
+                                    youWantMoveDataDialog.show(getFragmentManager(), null);
                                 }
                                 dismiss();
-                                // TODO: 08.06.16 MAKE ALL WORK IN ANOTHER WAY
-
-//                                AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-//                                    @Override
-//                                    protected Void doInBackground(Void... params) {
-////                                        mUserPreferences.storeQualityVideo(mPositionToQualityMap.get(which));
-//                                        //fixme store to userPrefs PLS and show progress if need move. AND MOVE
-//                                        return null;
-//                                    }
-//
-//                                    @Override
-//                                    protected void onPostExecute(Void aVoid) {
-//                                        super.onPostExecute(aVoid);
-//                                        if (dialog != null) {
-//                                            dialog.dismiss();
-//                                        }
-//                                    }
-//                                };
-//                                task.executeOnExecutor(threadPoolExecutor);
                             }
                         });
 

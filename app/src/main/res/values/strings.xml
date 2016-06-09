@@ -173,4 +173,5 @@
     <string name="default_storage">Default</string>
     <string name="secondary_storage">Secondary</string>
     <string name="free_title">free</string>
+    <string name="move_data_explanation">All previously downloaded videos will be transferred and new videos will be loaded in new location. The operation may take a few minutes. Are you sure?</string>
 </resources>

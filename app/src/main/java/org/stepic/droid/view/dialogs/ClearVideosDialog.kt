@@ -10,8 +10,8 @@ import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.concurrency.IMainHandler
-import org.stepic.droid.events.loading.FinishDeletingLoadEvent
-import org.stepic.droid.events.loading.StartDeletingLoadEvent
+import org.stepic.droid.events.loading.FinishLoadEvent
+import org.stepic.droid.events.loading.StartLoadEvent
 import org.stepic.droid.events.steps.ClearAllDownloadWithoutAnimationEvent
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.CleanManager
@@ -50,7 +50,7 @@ class ClearVideosDialog : DialogFragment() {
             val task = object : AsyncTask<Void, Void, Void>() {
                 override fun onPreExecute() {
                     super.onPreExecute()
-                    mBus.post(StartDeletingLoadEvent())
+                    mBus.post(StartLoadEvent())
 
                 }
 
@@ -77,7 +77,7 @@ class ClearVideosDialog : DialogFragment() {
                 }
 
                 override fun onPostExecute(o: Void?) {
-                    mBus.post(FinishDeletingLoadEvent())
+                    mBus.post(FinishLoadEvent())
                 }
             }
             task.executeOnExecutor(threadPoolExecutor)

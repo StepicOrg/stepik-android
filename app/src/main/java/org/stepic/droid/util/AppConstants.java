@@ -90,4 +90,5 @@ public class AppConstants {
     public static final long MILLIS_IN_24HOURS = 86400000L;
 
     public static final java.lang.String METRICA_CANCEL_CHOOSE_STORE_CLICK = "storage: cancel choice";
+    public static final java.lang.String TRANSFER_DATA = "storage: transfer data";
 }
