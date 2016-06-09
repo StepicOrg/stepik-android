@@ -216,7 +216,7 @@ public class UserPreferences {
                 } else if (!isSd && i == 0) {
                     isChosen = true;
                 }
-                String info = formatOptionList(i, free, total, files[i]);
+                String info = formatOptionList(i, total, free, files[i]);
 
                 StorageOption option = new StorageOption(info, isChosen, total, free, files[i]);
                 list.add(option);
