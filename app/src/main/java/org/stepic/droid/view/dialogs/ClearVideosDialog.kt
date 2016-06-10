@@ -67,6 +67,7 @@ class ClearVideosDialog : DialogFragment() {
                     } else {
                         stepIds = null
                         FileUtil.cleanDirectory(userPreferences.userDownloadFolder);
+                        FileUtil.cleanDirectory(userPreferences.sdCardDownloadFolder)
                         mDatabaseFacade.dropDatabase();
                     }
 

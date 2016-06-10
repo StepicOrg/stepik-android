@@ -1,5 +1,7 @@
 package org.stepic.droid.util;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,7 +11,8 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class FileUtil {
-    public static void cleanDirectory(File fileOrDirectory) {
+    public static void cleanDirectory(@Nullable File fileOrDirectory) {
+        if (fileOrDirectory == null) return;
         if (fileOrDirectory.isDirectory())
             for (File child : fileOrDirectory.listFiles())
                 cleanDirectory(child);
