@@ -25,7 +25,7 @@
         android:icon="@mipmap/ic_app_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:manageSpaceActivity=".view.activities.SpaceManagementActivity"
+        android:manageSpaceActivity=".view.activities.StoreManagementActivity"
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup"
@@ -212,7 +212,7 @@
         </activity>
 
         <activity
-            android:name=".view.activities.SpaceManagementActivity"
+            android:name=".view.activities.StoreManagementActivity"
             android:launchMode="singleTop"
             android:label="@string/space_management_title"
             android:parentActivityName=".view.activities.SettingsActivity">

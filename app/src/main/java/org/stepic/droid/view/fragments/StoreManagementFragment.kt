@@ -21,12 +21,11 @@ import org.stepic.droid.util.StorageUtil
 import org.stepic.droid.view.custom.LoadingProgressDialog
 import org.stepic.droid.view.dialogs.ChooseStorageDialog
 import org.stepic.droid.view.dialogs.ClearVideosDialog
-import org.stepic.droid.view.dialogs.VideoQualityDialog
 
-class SpaceManagementFragment : FragmentBase() {
+class StoreManagementFragment : FragmentBase() {
     companion object {
         fun newInstance(): Fragment {
-            val fragment = SpaceManagementFragment()
+            val fragment = StoreManagementFragment()
             return fragment
         }
     }
