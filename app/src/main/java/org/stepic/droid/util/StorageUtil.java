@@ -3,15 +3,14 @@ package org.stepic.droid.util;
 import android.content.Context;
 import android.os.StatFs;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.base.MainApplication;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -72,13 +71,12 @@ public class StorageUtil {
         }
     }
 
-    public static void moveFile(String inputPath, String inputFile, String outputPath) {
+    public static void moveFile(String inputPath, String inputFile, String outputPath) throws IOException {
         inputPath+=File.separator;
         outputPath+=File.separator;
 
         InputStream in = null;
         OutputStream out = null;
-        try {
 
             //create output directory if it doesn't exist
             File dir = new File (outputPath);
@@ -107,15 +105,6 @@ public class StorageUtil {
             // delete the original file
             new File(inputPath + inputFile).delete();
 
-
-        }
-
-        catch (FileNotFoundException fnfe1) {
-            Log.e("tag", fnfe1.getMessage());
-        }
-        catch (Exception e) {
-            Log.e("tag", e.getMessage());
-        }
 
     }
 }

@@ -1,6 +1,5 @@
 package org.stepic.droid.view.fragments
 
-import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
@@ -8,14 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import com.squareup.otto.Subscribe
 import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.events.loading.FinishLoadEvent
 import org.stepic.droid.events.loading.StartLoadEvent
+import org.stepic.droid.events.video.FailToMoveFilesEvent
 import org.stepic.droid.util.*
-import org.stepic.droid.view.custom.LoadingProgressDialog
+import org.stepic.droid.view.custom.LoadingProgressDialogFragment
 import org.stepic.droid.view.dialogs.ChooseStorageDialog
 import org.stepic.droid.view.dialogs.ClearVideosDialog
 
@@ -30,7 +31,7 @@ class StoreManagementFragment : FragmentBase() {
     lateinit var clearCacheButton: View
     lateinit var clearCacheLabel: TextView
     private var mClearCacheDialogFragment: DialogFragment? = null
-    private var loadingProgressDialog: ProgressDialog? = null
+    private var loadingProgressDialog: DialogFragment? = null
 
     private lateinit var notMountExplanation: View
     private lateinit var mountExplanation: View
@@ -41,6 +42,7 @@ class StoreManagementFragment : FragmentBase() {
     private var mb: String? = null
     private var gb: String? = null
     private var empty: String? = null
+    val loadingTag = "loading_storemanagement"
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater?.inflate(R.layout.fragment_space_management, container, false)
@@ -54,7 +56,8 @@ class StoreManagementFragment : FragmentBase() {
             initClearCacheFeature(it)
             initAccordingToStoreState(it)
         }
-        loadingProgressDialog = LoadingProgressDialog(context)
+        loadingProgressDialog = LoadingProgressDialogFragment.newInstance()
+        bus.register(this)
     }
 
     private fun initAccordingToStoreState(view: View) {
@@ -98,15 +101,16 @@ class StoreManagementFragment : FragmentBase() {
 
     override fun onStart() {
         super.onStart()
-        bus.register(this)
+
     }
 
     override fun onStop() {
-        bus.unregister(this)
+
         super.onStop()
     }
 
     override fun onDestroyView() {
+        bus.unregister(this)
         clearCacheButton.setOnClickListener(null)
         chooseStorageButton.setOnClickListener(null)
         super.onDestroyView()
@@ -128,13 +132,13 @@ class StoreManagementFragment : FragmentBase() {
 
     @Subscribe
     fun onStartLoading(event: StartLoadEvent) {
-        ProgressHelper.activate(loadingProgressDialog)
+        ProgressHelper.activate(loadingProgressDialog, fragmentManager, loadingTag)
     }
 
     @Subscribe
     fun onFinishLoading(event: FinishLoadEvent) {
         setUpClearCacheButton()
-        ProgressHelper.dismiss(loadingProgressDialog)
+        ProgressHelper.dismiss(fragmentManager , loadingTag)
     }
 
     private fun setUpClearCacheButton() {
@@ -174,4 +178,11 @@ class StoreManagementFragment : FragmentBase() {
     }
 
 
+    @Subscribe
+    fun onStorageMovedFail(event: FailToMoveFilesEvent) {
+        ProgressHelper.dismiss(fragmentManager, loadingTag)
+        context?.let {
+            Toast.makeText(context, R.string.fail_move, Toast.LENGTH_SHORT).show()
+        }
+    }
 }

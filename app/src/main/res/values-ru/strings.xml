@@ -168,4 +168,5 @@
     <string name="free_title">свободно</string>
     <string name="move_data_explanation">Все ранее загруженные видео будут перенесены, новые видео будут сохраняться в выбранное место. Операция может занять несколько минут. Вы уверены?</string>
     <string name="sorry_moved">Извините, файл удален или перемещен</string>
+    <string name="fail_move">Извините, произошла ошибка, когда файлы перемещались</string>
 </resources>

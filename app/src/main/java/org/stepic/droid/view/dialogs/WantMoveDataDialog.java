@@ -13,8 +13,10 @@ import com.yandex.metrica.YandexMetrica;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.events.loading.FinishLoadEvent;
 import org.stepic.droid.events.loading.StartLoadEvent;
+import org.stepic.droid.events.video.FailToMoveFilesEvent;
 import org.stepic.droid.events.video.VideosMovedEvent;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.preferences.UserPreferences;
@@ -28,6 +30,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
+
 public class WantMoveDataDialog extends DialogFragment {
     public static DialogFragment newInstance() {
         return new WantMoveDataDialog();
@@ -39,6 +44,8 @@ public class WantMoveDataDialog extends DialogFragment {
     UserPreferences userPreferences;
     @Inject
     ThreadPoolExecutor threadPoolExecutor;
+    @Inject
+    IMainHandler mainHandler;
 
     @Inject
     Bus bus;
@@ -66,35 +73,59 @@ public class WantMoveDataDialog extends DialogFragment {
                             protected Void doInBackground(Void... params) {
                                 List<CachedVideo> cachedVideos = databaseFacade.getAllCachedVideos();
                                 String outputPath = null;
+                                File outputFile = null;
                                 if (userPreferences.isSdChosen()) {
                                     //sd WAS Chosen
-                                    outputPath = userPreferences.getUserDownloadFolder().getPath();
+                                    outputFile = userPreferences.getUserDownloadFolder();
                                 } else {
-                                    outputPath = userPreferences.getSdCardDownloadFolder().getPath();
+                                    outputFile = userPreferences.getSdCardDownloadFolder();
                                 }
+                                if (outputFile == null) {
+                                    mainHandler.post(new Function0<Unit>() {
+                                        @Override
+                                        public Unit invoke() {
+                                            bus.post(new FailToMoveFilesEvent());
+                                            return Unit.INSTANCE;
+                                        }
+                                    });
+                                    return null;
+                                }
+                                outputPath = outputFile.getPath();
 // FIXME: 09.06.16 if sd is not available -> post event with fail
 
-                                for (CachedVideo video : cachedVideos) {
-                                    if (video != null && video.getUrl() != null && video.getStepId() >= 0) {
-                                        String inputPath = (new File(video.getUrl())).getParent();
-                                        if (!inputPath.equals(outputPath)) {
-                                            StorageUtil.moveFile(inputPath, video.getVideoId() + "", outputPath);
-                                            StorageUtil.moveFile(inputPath, video.getVideoId() + AppConstants.THUMBNAIL_POSTFIX_EXTENSION, outputPath);
-                                            File newPathVideo = new File(outputPath, video.getVideoId() + "");
-                                            File newPathThumbnail = new File(outputPath, video.getVideoId() + AppConstants.THUMBNAIL_POSTFIX_EXTENSION);
-                                            String urlVideo = newPathVideo.getPath();
-                                            String urlThumbnail = newPathThumbnail.getPath();
-                                            video.setUrl(urlVideo);
-                                            video.setThumbnail(urlThumbnail);
-                                            databaseFacade.addVideo(video);
+                                try {
+                                    for (CachedVideo video : cachedVideos) {
+                                        if (video != null && video.getUrl() != null && video.getStepId() >= 0) {
+                                            String inputPath = (new File(video.getUrl())).getParent();
+                                            if (!inputPath.equals(outputPath)) {
+                                                StorageUtil.moveFile(inputPath, video.getVideoId() + "", outputPath);
+                                                StorageUtil.moveFile(inputPath, video.getVideoId() + AppConstants.THUMBNAIL_POSTFIX_EXTENSION, outputPath);
+                                                File newPathVideo = new File(outputPath, video.getVideoId() + "");
+                                                File newPathThumbnail = new File(outputPath, video.getVideoId() + AppConstants.THUMBNAIL_POSTFIX_EXTENSION);
+                                                String urlVideo = newPathVideo.getPath();
+                                                String urlThumbnail = newPathThumbnail.getPath();
+                                                video.setUrl(urlVideo);
+                                                video.setThumbnail(urlThumbnail);
+                                                databaseFacade.addVideo(video);
+                                            }
                                         }
                                     }
-                                }
 
-                                if (userPreferences.isSdChosen()) {
-                                    userPreferences.setSdChosen(false);
-                                } else {
-                                    userPreferences.setSdChosen(true);
+                                    if (userPreferences.isSdChosen()) {
+                                        userPreferences.setSdChosen(false);
+                                    } else {
+                                        userPreferences.setSdChosen(true);
+                                    }
+                                } catch (Exception ex) {
+                                    YandexMetrica.reportError(AppConstants.FAIL_TO_MOVE, ex);
+                                    mainHandler.post(new Function0<Unit>() {
+                                        @Override
+                                        public Unit invoke() {
+                                            bus.post(new FailToMoveFilesEvent());
+                                            return Unit.INSTANCE;
+                                        }
+                                    });
+
                                 }
 
                                 return null;

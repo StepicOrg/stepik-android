@@ -61,6 +61,7 @@ public class UserPreferences {
         File android = new File(Environment.getExternalStorageDirectory(), "Android");
         File downloadsDir = new File(android, "data");
         File packDir = new File(downloadsDir, mContext.getPackageName());
+        if (packDir == null) return null;
         File userStepicIdDir = new File(packDir, getUserId() + "");
         userStepicIdDir.mkdirs();
         try {
@@ -79,6 +80,7 @@ public class UserPreferences {
     public File getSdCardDownloadFolder() {
         try {
             File androidDataPackage = ContextCompat.getExternalFilesDirs(mContext, null)[1];
+            if (androidDataPackage == null) return null;
             File userStepicIdDir = new File(androidDataPackage, getUserId() + "");
             userStepicIdDir.mkdirs();
             try {

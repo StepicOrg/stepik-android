@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Handler;
 
 import com.squareup.otto.Bus;
+import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.video.VideoCachedOnDiskEvent;
@@ -103,12 +104,16 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     if (mUserPrefs.isSdChosen()) {
                         File sdFile = mUserPrefs.getSdCardDownloadFolder();
                         if (sdFile != null) {
-                            StorageUtil.moveFile(userDownloadFolder.getPath(), video_id + "", sdFile.getPath());
-                            StorageUtil.moveFile(userDownloadFolder.getPath(), video_id + AppConstants.THUMBNAIL_POSTFIX_EXTENSION, sdFile.getPath());
-                            downloadFolderAndFile = new File(sdFile, video_id + "");
-                            final File thumbnailFile = new File(sdFile, video_id + AppConstants.THUMBNAIL_POSTFIX_EXTENSION);
-                            path = Uri.fromFile(downloadFolderAndFile).getPath();
-                            thumbnail = Uri.fromFile(thumbnailFile).getPath();
+                            try {
+                                StorageUtil.moveFile(userDownloadFolder.getPath(), video_id + "", sdFile.getPath());
+                                StorageUtil.moveFile(userDownloadFolder.getPath(), video_id + AppConstants.THUMBNAIL_POSTFIX_EXTENSION, sdFile.getPath());
+                                downloadFolderAndFile = new File(sdFile, video_id + "");
+                                final File thumbnailFile = new File(sdFile, video_id + AppConstants.THUMBNAIL_POSTFIX_EXTENSION);
+                                path = Uri.fromFile(downloadFolderAndFile).getPath();
+                                thumbnail = Uri.fromFile(thumbnailFile).getPath();
+                            } catch (Exception er) {
+                                YandexMetrica.reportError(AppConstants.FAIL_TO_MOVE, er);
+                            }
                         }
 
                     }
