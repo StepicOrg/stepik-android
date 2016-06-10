@@ -63,6 +63,7 @@ public class FileUtil {
     }
 
     public static long getFileOrFolderSizeInKb(File f) {
+        if (f == null) return 0L;
         return getFileSize(f)/1024;
     }
 
