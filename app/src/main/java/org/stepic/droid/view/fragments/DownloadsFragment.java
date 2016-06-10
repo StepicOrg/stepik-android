@@ -30,6 +30,7 @@ import org.stepic.droid.events.steps.StepRemovedEvent;
 import org.stepic.droid.events.video.DownloadReportEvent;
 import org.stepic.droid.events.video.FinishDownloadCachedVideosEvent;
 import org.stepic.droid.events.video.VideoCachedOnDiskEvent;
+import org.stepic.droid.events.video.VideosMovedEvent;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.DownloadReportItem;
@@ -107,8 +108,8 @@ public class DownloadsFragment extends FragmentBase {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mDownloadAdapter = new DownloadsAdapter(mCachedVideoList, mStepIdToLesson, getActivity(), this, mDownloadingWithProgressList, cachedStepsSet);
         mDownloadsView.setAdapter(mDownloadAdapter);
@@ -373,6 +374,10 @@ public class DownloadsFragment extends FragmentBase {
         isLoaded = true;
         ProgressHelper.dismiss(mProgressBar);
         if (videosForShowing == null || map == null) return;
+
+        mStepIdToLesson.clear(); //when moved it is working
+        mCachedVideoList.clear();
+
         mStepIdToLesson.putAll(map);
         mCachedVideoList.addAll(videosForShowing);
         for (int i = 0; i < mCachedVideoList.size(); i++) {
@@ -552,5 +557,10 @@ public class DownloadsFragment extends FragmentBase {
             }
         };
         task.executeOnExecutor(mThreadPoolExecutor);
+    }
+
+    @Subscribe
+    public void onVideoMoved (VideosMovedEvent event){
+        updateCachedAsync();
     }
 }

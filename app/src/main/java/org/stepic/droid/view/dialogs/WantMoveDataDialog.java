@@ -15,6 +15,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.loading.FinishLoadEvent;
 import org.stepic.droid.events.loading.StartLoadEvent;
+import org.stepic.droid.events.video.VideosMovedEvent;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseFacade;
@@ -102,6 +103,7 @@ public class WantMoveDataDialog extends DialogFragment {
 
                             protected void onPostExecute(Void aVoid) {
                                 super.onPostExecute(aVoid);
+                                bus.post(new VideosMovedEvent());
                                 bus.post(new FinishLoadEvent());
                             }
 
