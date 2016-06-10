@@ -2,6 +2,7 @@ package org.stepic.droid.preferences;
 
 import android.content.Context;
 import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 
 import com.yandex.metrica.YandexMetrica;
 
@@ -77,7 +78,7 @@ public class UserPreferences {
     @Nullable
     public File getSdCardDownloadFolder() {
         try {
-            File androidDataPackage = getStorageOptionList().get(1).getFile().getParentFile();
+            File androidDataPackage = ContextCompat.getExternalFilesDirs(mContext, null)[1];
             File userStepicIdDir = new File(androidDataPackage, getUserId() + "");
             userStepicIdDir.mkdirs();
             try {
