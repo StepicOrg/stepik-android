@@ -49,7 +49,7 @@ public class VideoQualityDialog extends DialogFragment {
             initMaps();
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.video_quality)
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override

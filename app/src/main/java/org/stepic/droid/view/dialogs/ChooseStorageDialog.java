@@ -46,7 +46,7 @@ public class ChooseStorageDialog extends DialogFragment {
         final int finalIndexChosen = indexChosen;
         final DialogFragment youWantMoveDataDialog = WantMoveDataDialog.newInstance(); //// FIXME: 08.06.16 make new Dialog with are you sure
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.choose_storage_title)
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
