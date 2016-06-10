@@ -5,7 +5,6 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.util.Log;
 
 import com.squareup.otto.Bus;
 import com.yandex.metrica.YandexMetrica;
@@ -215,7 +214,7 @@ public class LoadService extends IntentService {
 
         if (step.getBlock().getVideo() != null) {
             Video video = step.getBlock().getVideo();
-            String uri = mResolver.resolveVideoUrl(video);
+            String uri = mResolver.resolveVideoUrl(video, step);
             long fileId = video.getId();
             addDownload(uri, fileId, lesson.getTitle(), step);
         } else {
@@ -275,6 +274,7 @@ public class LoadService extends IntentService {
                                 addStep(step, lesson);
                             }
                         }
+                        mStoreStateManager.updateUnitLessonState(lesson.getId()); //fixme DOUBLE CHECK, IF Unit state is loading, but steps are not cached.
                     } else {
                         mStoreStateManager.updateUnitLessonState(lesson.getId());
                     }
@@ -344,6 +344,7 @@ public class LoadService extends IntentService {
                         Lesson lesson = idToLessonMap.get(unit.getLesson());
                         addUnitLesson(unit, lesson);
                     }
+                    mStoreStateManager.updateSectionState(section.getId()); // FIXME DOUBLE CHECK, if all units were cached
                 }
             }
         } catch (UnknownHostException e) {

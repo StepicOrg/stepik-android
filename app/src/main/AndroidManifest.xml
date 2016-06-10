@@ -114,26 +114,26 @@
 
         <service
             android:name="org.stepic.droid.services.LoadService"
-            android:exported="true"/>
+            android:exported="true"> </service>
         <service
             android:name="org.stepic.droid.services.DeleteService"
-            android:exported="true"/>
+            android:exported="true"></service>
         <service
             android:name="org.stepic.droid.services.ViewPusher"
-            android:exported="true"/>
+            android:exported="true"></service>
 
         <service
             android:name="org.stepic.droid.services.CancelLoadingService"
-            android:exported="true"/>
+            android:exported="true"></service>
 
         <service
             android:name="org.stepic.droid.services.UpdateAppService"
-            android:exported="true"/>
+            android:exported="true"></service>
 
 
         <service
             android:name="org.stepic.droid.services.UpdateWithApkService"
-            android:exported="true"/>
+            android:exported="true"></service>
 
         <activity
             android:name=".view.activities.CourseSearchResultActivity"

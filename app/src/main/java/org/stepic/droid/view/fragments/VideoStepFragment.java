@@ -87,7 +87,7 @@ public class VideoStepFragment extends StepBaseFragment {
                         Step stepFromWeb = mShell.getApi().getSteps(stepArray).execute().body().getSteps().get(0);
                         Video video = stepFromWeb.getBlock().getVideo();
                         if (video != null) {
-                            return new VideoLoadedEvent(stepFromWeb.getBlock().getVideo().getThumbnail(), stepFromWeb.getId(), mVideoResolver.resolveVideoUrl(video));
+                            return new VideoLoadedEvent(stepFromWeb.getBlock().getVideo().getThumbnail(), stepFromWeb.getId(), mVideoResolver.resolveVideoUrl(video, step));
                         }
                         return null;
                     } catch (IOException e) {
@@ -122,7 +122,7 @@ public class VideoStepFragment extends StepBaseFragment {
                         if (video == null) {
                             return tempVideoUrl;
                         } else {
-                            return mVideoResolver.resolveVideoUrl(localStep.getBlock().getVideo());
+                            return mVideoResolver.resolveVideoUrl(localStep.getBlock().getVideo(), localStep);
                         }
                     }
 

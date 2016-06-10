@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.otto.Bus;
 import com.squareup.picasso.Picasso;
@@ -142,8 +143,20 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     public void onClick(int position) {
         //the position in list!
         if (position >= 0 && position < mCachedVideoList.size()) {
-            CachedVideo video = mCachedVideoList.get(position);
-            mScreenManager.showVideo(sourceActivity, video.getUrl());
+            final CachedVideo video = mCachedVideoList.get(position);
+            File file = new File(video.getUrl());
+            if (video.getUrl()!= null && file.exists()) {
+                mScreenManager.showVideo(sourceActivity, video.getUrl());
+            } else {
+                Toast.makeText(MainApplication.getAppContext(), R.string.sorry_moved, Toast.LENGTH_SHORT).show();
+                threadPoolExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Step step = mDatabaseFacade.getStepById(video.getStepId());
+                        mCleanManager.removeStep(step);
+                    }
+                });
+            }
         }
     }
 
@@ -524,7 +537,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         }
     }
 
-     abstract class GenericViewHolder extends RecyclerView.ViewHolder {
+    abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 
         public GenericViewHolder(View itemView) {
             super(itemView);
