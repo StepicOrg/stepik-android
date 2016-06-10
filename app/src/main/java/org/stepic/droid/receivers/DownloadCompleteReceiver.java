@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
-import android.util.Log;
 
 import com.squareup.otto.Bus;
 
@@ -21,7 +20,9 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.RWLocks;
+import org.stepic.droid.util.StorageUtil;
 
 import java.io.File;
 import java.util.concurrent.ExecutorService;
@@ -70,12 +71,10 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
 
             DownloadEntity downloadEntity = mDatabaseFacade.getDownloadEntityIfExist(referenceId);
             if (downloadEntity != null) {
-                long video_id = downloadEntity.getVideoId();
+                final long video_id = downloadEntity.getVideoId();
                 final long step_id = downloadEntity.getStepId();
                 mDatabaseFacade.deleteDownloadEntityByDownloadId(referenceId);
 
-                File downloadFolderAndFile = new File(mUserPrefs.getUserDownloadFolder(), video_id + "");
-                String path = Uri.fromFile(downloadFolderAndFile).getPath();
 
                 if (mCancelSniffer.isStepIdCanceled(step_id)) {
                     downloadManager.remove(referenceId);//remove notification (is it really work and need?)
@@ -96,7 +95,24 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     }
                 } else {
                     //is not canceled
-                    final CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, downloadEntity.getThumbnail());
+
+                    File userDownloadFolder = mUserPrefs.getUserDownloadFolder();
+                    File downloadFolderAndFile = new File(userDownloadFolder, video_id + "");
+                    String path = Uri.fromFile(downloadFolderAndFile).getPath();
+                    String thumbnail = downloadEntity.getThumbnail();
+                    if (mUserPrefs.isSdChosen()) {
+                        File sdFile = mUserPrefs.getSdCardDownloadFolder();
+                        if (sdFile != null) {
+                            StorageUtil.moveFile(userDownloadFolder.getPath(), video_id + "", sdFile.getPath());
+                            StorageUtil.moveFile(userDownloadFolder.getPath(), video_id + AppConstants.THUMBNAIL_POSTFIX_EXTENSION, sdFile.getPath());
+                            downloadFolderAndFile = new File(sdFile, video_id + "");
+                            final File thumbnailFile = new File(sdFile, video_id + AppConstants.THUMBNAIL_POSTFIX_EXTENSION);
+                            path = Uri.fromFile(downloadFolderAndFile).getPath();
+                            thumbnail = Uri.fromFile(thumbnailFile).getPath();
+                        }
+
+                    }
+                    final CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, thumbnail);
                     cachedVideo.setQuality(downloadEntity.getQuality());
                     mDatabaseFacade.addVideo(cachedVideo);
 
