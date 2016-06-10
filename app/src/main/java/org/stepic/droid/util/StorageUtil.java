@@ -49,17 +49,27 @@ public class StorageUtil {
     }
 
     public static long getAvailableMemorySize(File path) {
-        StatFs stat = new StatFs(path.getPath());
-        long blockSize = stat.getBlockSize();
-        long availableBlocks = stat.getAvailableBlocks();
-        return availableBlocks * blockSize;
+        try {
+            StatFs stat = new StatFs(path.getPath());
+            long blockSize = stat.getBlockSize();
+            long availableBlocks = stat.getAvailableBlocks();
+            return availableBlocks * blockSize;
+        }
+        catch (Exception ex){
+            return 0L;
+        }
     }
 
     public static long getTotalMemorySize(File path) {
-        StatFs stat = new StatFs(path.getPath());
-        long blockSize = stat.getBlockSize();
-        long totalBlocks = stat.getBlockCount();
-        return totalBlocks * blockSize;
+        try {
+            StatFs stat = new StatFs(path.getPath());
+            long blockSize = stat.getBlockSize();
+            long totalBlocks = stat.getBlockCount();
+            return totalBlocks * blockSize;
+        }
+        catch (Exception ex){
+            return 0L;
+        }
     }
 
     public static void moveFile(String inputPath, String inputFile, String outputPath) {
