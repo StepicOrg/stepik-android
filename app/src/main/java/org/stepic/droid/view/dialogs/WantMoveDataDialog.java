@@ -55,7 +55,7 @@ public class WantMoveDataDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         MainApplication.component().inject(this);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.title_confirmation)
                 .setMessage(R.string.move_data_explanation)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {

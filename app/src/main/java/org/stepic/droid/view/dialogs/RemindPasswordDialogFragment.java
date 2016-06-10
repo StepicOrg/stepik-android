@@ -67,7 +67,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
         mProgressLogin.setCancelable(false);
 
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.remind_password)
                 .setView(v)
                 .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {

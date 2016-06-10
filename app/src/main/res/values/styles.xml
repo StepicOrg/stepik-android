@@ -41,11 +41,6 @@
         <item name="windowActionBarOverlay">true</item>
     </style>
 
-    <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <!-- Used for the buttons -->
-        <item name="colorAccent">@color/stepic_brand_primary</item>
-    </style>
-
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorPrimary">@color/stepic_brand_primary</item>
         <item name="colorPrimaryDark">@color/stepic_brand_primary_dark</item>

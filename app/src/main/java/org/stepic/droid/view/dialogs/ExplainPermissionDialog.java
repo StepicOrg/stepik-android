@@ -20,7 +20,7 @@ public class ExplainPermissionDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 //        MainApplication.component().inject(this);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.allow_question)
                 .setMessage(R.string.explain_permission)
                 .setPositiveButton(R.string.allow, new DialogInterface.OnClickListener() {

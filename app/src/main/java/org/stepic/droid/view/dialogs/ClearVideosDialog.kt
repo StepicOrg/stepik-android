@@ -43,7 +43,7 @@ class ClearVideosDialog : DialogFragment() {
         val stringIds = bundle?.getString(KEY_STRING_IDS)
 
 
-        val builder = AlertDialog.Builder(activity, R.style.MyAlertDialogStyle)
+        val builder = AlertDialog.Builder(activity)
         builder.setTitle(R.string.title_confirmation).setMessage(R.string.clear_videos).setPositiveButton(R.string.yes) { dialog, which ->
             YandexMetrica.reportEvent(AppConstants.METRICA_YES_CLEAR_VIDEOS)
 
