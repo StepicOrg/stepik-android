@@ -14,10 +14,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.events.loading.FinishLoadEvent
 import org.stepic.droid.events.loading.StartLoadEvent
-import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.FileUtil
-import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.StorageUtil
+import org.stepic.droid.util.*
 import org.stepic.droid.view.custom.LoadingProgressDialog
 import org.stepic.droid.view.dialogs.ChooseStorageDialog
 import org.stepic.droid.view.dialogs.ClearVideosDialog
@@ -42,6 +39,7 @@ class StoreManagementFragment : FragmentBase() {
 
     private var kb: String? = null
     private var mb: String? = null
+    private var gb: String? = null
     private var empty: String? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -117,6 +115,7 @@ class StoreManagementFragment : FragmentBase() {
     private fun initResStrings() {
         kb = context?.getString(R.string.kb)
         mb = context?.getString(R.string.mb)
+        gb = context?.getString(R.string.gb)
         empty = context?.getString(R.string.empty)
     }
 
@@ -146,13 +145,22 @@ class StoreManagementFragment : FragmentBase() {
 
         val clearCacheStringBuilder = StringBuilder()
         var size = FileUtil.getFileOrFolderSizeInKb(mUserPreferences.userDownloadFolder)
-        size+= FileUtil.getFileOrFolderSizeInKb(mUserPreferences.sdCardDownloadFolder)
+        size += FileUtil.getFileOrFolderSizeInKb(mUserPreferences.sdCardDownloadFolder)
         if (size > 0) {
             clearCacheButton.isEnabled = true
             if (size > 1024) {
                 size /= 1024
-                clearCacheStringBuilder.append(size)
-                clearCacheStringBuilder.append(mb)
+                if (size > 1024) {
+                    val part = size % 1024
+                    size /= 1024
+                    val sizeInGb: Double = size + (part.toDouble() / 1024f)
+                    Double.toString()
+                    clearCacheStringBuilder.append(KotlinUtil.getNiceFormatOfDouble(sizeInGb))
+                    clearCacheStringBuilder.append(gb)
+                } else {
+                    clearCacheStringBuilder.append(size)
+                    clearCacheStringBuilder.append(mb)
+                }
             } else {
                 clearCacheStringBuilder.append(size)
                 clearCacheStringBuilder.append(kb)
