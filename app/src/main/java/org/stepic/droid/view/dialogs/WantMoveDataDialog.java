@@ -77,16 +77,17 @@ public class WantMoveDataDialog extends DialogFragment {
                                 for (CachedVideo video : cachedVideos) {
                                     if (video != null && video.getUrl() != null && video.getStepId() >= 0) {
                                         String inputPath = (new File(video.getUrl())).getParent();
-                                        StorageUtil.moveFile(inputPath, video.getVideoId() + "", outputPath);
-                                        StorageUtil.moveFile(inputPath, video.getVideoId() + AppConstants.THUMBNAIL_POSTFIX_EXTENSION, outputPath);
-                                        File newPathVideo = new File(outputPath, video.getVideoId() + "");
-                                        File newPathThumbnail = new File(outputPath, video.getVideoId() + AppConstants.THUMBNAIL_POSTFIX_EXTENSION);
-
-                                        String urlVideo = newPathVideo.getPath();
-                                        String urlThumbnail = newPathThumbnail.getPath();
-                                        video.setUrl(urlVideo);
-                                        video.setThumbnail(urlThumbnail);
-                                        databaseFacade.addVideo(video);
+                                        if (!inputPath.equals(outputPath)) {
+                                            StorageUtil.moveFile(inputPath, video.getVideoId() + "", outputPath);
+                                            StorageUtil.moveFile(inputPath, video.getVideoId() + AppConstants.THUMBNAIL_POSTFIX_EXTENSION, outputPath);
+                                            File newPathVideo = new File(outputPath, video.getVideoId() + "");
+                                            File newPathThumbnail = new File(outputPath, video.getVideoId() + AppConstants.THUMBNAIL_POSTFIX_EXTENSION);
+                                            String urlVideo = newPathVideo.getPath();
+                                            String urlThumbnail = newPathThumbnail.getPath();
+                                            video.setUrl(urlVideo);
+                                            video.setThumbnail(urlThumbnail);
+                                            databaseFacade.addVideo(video);
+                                        }
                                     }
                                 }
 
