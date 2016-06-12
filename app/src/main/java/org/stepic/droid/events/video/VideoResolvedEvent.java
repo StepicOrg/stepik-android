@@ -13,10 +13,6 @@ public class VideoResolvedEvent {
         this.stepId = stepId;
     }
 
-//    public Video getVideo() {
-//        return mVideo;
-//    }
-
     public String getPathToVideo() {
         return mPathToVideo;
     }

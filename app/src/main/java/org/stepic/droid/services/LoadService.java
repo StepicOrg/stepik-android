@@ -124,7 +124,7 @@ public class LoadService extends IntentService {
             return;
 
         url = url.trim();
-        if (url.length() == 0)
+        if (url.isEmpty())
             return;
 
         try {
@@ -208,11 +208,10 @@ public class LoadService extends IntentService {
                 Response<StepResponse> response = mApi.getSteps(lesson.getSteps()).execute();
                 if (response.isSuccess()) {
                     List<Step> steps = response.body().getSteps();
-                    if (steps != null && steps.size() != 0) {
+                    if (steps != null && !steps.isEmpty()) {
                         for (Step step : steps) {
                             mDb.addStep(step);
-                            boolean cached = mDb.isStepCached(step);
-                            step.setIs_cached(cached);
+                            step.setIs_cached(mDb.isStepCached(step));
                         }
                         for (Step step : steps) {
                             if (!step.is_cached()) {
@@ -313,7 +312,7 @@ public class LoadService extends IntentService {
         course.setIs_cached(false);
         mDb.updateOnlyCachedLoadingCourse(course, type);
 
-        Response<SectionsStepicResponse> response = null;
+        Response<SectionsStepicResponse> response;
         try {
             response = mApi.getSections(course.getSections()).execute();
             if (response.isSuccess()) {

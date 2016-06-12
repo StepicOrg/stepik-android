@@ -37,8 +37,5 @@ public interface IScreenManager {
 
     void pushToViewedQueue(ViewAssignment viewAssignmentWrapper);
 
-    @Deprecated
-    void showSocialLogin(Context context);
-
     void showCourseDescription(Activity sourceActivity, @NotNull Course course);
 }
