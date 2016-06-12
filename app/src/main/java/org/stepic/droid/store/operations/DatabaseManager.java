@@ -355,7 +355,6 @@ public class DatabaseManager extends DbManagerBase {
 				try {
 					cursor = database.rawQuery(query, null);
 					if (cursor.getCount() <= 0) {
-						cursor.close();
 						return false;
 					}
 					cursor.moveToFirst();
