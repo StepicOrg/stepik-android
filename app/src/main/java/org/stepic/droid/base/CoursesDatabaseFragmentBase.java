@@ -3,6 +3,7 @@ package org.stepic.droid.base;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
@@ -67,7 +68,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     protected void showCourses(List<Course> cachedCourses) {
         if (cachedCourses == null) return;
-        if (cachedCourses != null && !cachedCourses.isEmpty()) {
+        if (!cachedCourses.isEmpty()) {
             showEmptyScreen(false);
             mReportConnectionProblem.setVisibility(View.GONE);
         }
@@ -329,7 +330,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("result", "onActivityResult: ");
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == getActivity().RESULT_OK) {
+        if (resultCode == FragmentActivity.RESULT_OK) {
             if (requestCode == AppConstants.REQUEST_CODE_DETAIL) {
                 Log.i("result", "reaction in courses fragment base");
                 Course course = data.getParcelableExtra(AppConstants.COURSE_ID_KEY);

@@ -34,9 +34,7 @@ public class FromDbSectionTask extends StepicTask<Void, Void, List<Section>> {
 
     @Override
     protected List<Section> doInBackgroundBody(Void... params) throws Exception {
-        List<Section> fromCache = null;
-        fromCache = mDatabaseManager.getAllSectionsOfCourse(mCourse);
-        return fromCache;
+        return mDatabaseManager.getAllSectionsOfCourse(mCourse);
     }
 
     @Override
