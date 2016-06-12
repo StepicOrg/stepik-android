@@ -343,200 +343,125 @@ public class DatabaseManager extends DbManagerBase {
         }
     }
 
+	  private boolean getBooleanFieldForEntity(
+				@NotNull String tableName,
+				@NotNull String columnId,
+				long id,
+				@NotNull String columnField){
+			try {
+				open();
+				String query = "Select * from " + tableName + " where " + columnId + " = " + id;
+				Cursor cursor = null;
+				try {
+					cursor = database.rawQuery(query, null);
+					if (cursor.getCount() <= 0) {
+						cursor.close();
+						return false;
+					}
+					cursor.moveToFirst();
+					return cursor.getInt(cursor.getColumnIndex(columnField)) > 0;
+				} finally {
+					if(cursor != null){
+						cursor.close();
+					}
+				}
+			} finally {
+				close();
+			}
+		}
+
     public boolean isCourseLoading(Course course, DatabaseManager.Table type) {
         if (course == null) return false;//// FIXME: 18.11.15 investiagate why null
-        try {
-            open();
-            String query = "Select * from " + type.getStoreName() + " where " + DBStructureCourses.Column.COURSE_ID + " = " + course.getCourseId();
-            Cursor cursor = database.rawQuery(query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-            int indexIsLoading = cursor.getColumnIndex(DBStructureCourses.Column.IS_LOADING);
-            boolean isLoading = cursor.getInt(indexIsLoading) > 0;
-            cursor.close();
-            return isLoading;
-        } finally {
-            close();
-        }
+			  return getBooleanFieldForEntity(
+						type.getStoreName(),
+						DBStructureCourses.Column.COURSE_ID,
+						course.getCourseId(),
+						DBStructureCourses.Column.IS_LOADING
+				);
     }
 
     public boolean isCourseCached(Course course, DatabaseManager.Table type) {
-        try {
-            open();
-            String query = "Select * from " + type.getStoreName() + " where " + DBStructureCourses.Column.COURSE_ID + " = " + course.getCourseId();
-            Cursor cursor = database.rawQuery(query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-            int indexIsCached = cursor.getColumnIndex(DBStructureCourses.Column.IS_CACHED);
-            boolean isCached = cursor.getInt(indexIsCached) > 0;
-            cursor.close();
-            return isCached;
-        } finally {
-            close();
-        }
+			return getBooleanFieldForEntity(
+					type.getStoreName(),
+					DBStructureCourses.Column.COURSE_ID,
+					course.getCourseId(),
+					DBStructureCourses.Column.IS_CACHED
+			);
     }
 
     public boolean isSectionLoading(Section section) {
-        try {
-            open();
-            String query = "Select * from " + DbStructureSections.SECTIONS + " where " + DbStructureSections.Column.SECTION_ID + " = " + section.getId();
-            Cursor cursor = database.rawQuery(query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-            int indexIsLoading = cursor.getColumnIndex(DbStructureSections.Column.IS_LOADING);
-            boolean isLoading = cursor.getInt(indexIsLoading) > 0;
-            cursor.close();
-            return isLoading;
-        } finally {
-            close();
-        }
+			return getBooleanFieldForEntity(
+					DbStructureSections.SECTIONS,
+					DbStructureSections.Column.SECTION_ID,
+					section.getId(),
+					DbStructureSections.Column.IS_LOADING
+			);
     }
 
     public boolean isSectionCached(Section section) {
-        try {
-            open();
-            String query = "Select * from " + DbStructureSections.SECTIONS + " where " + DbStructureSections.Column.SECTION_ID + " = " + section.getId();
-            Cursor cursor = database.rawQuery(query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-            int indexIsCached = cursor.getColumnIndex(DbStructureSections.Column.IS_CACHED);
-            boolean isCached = cursor.getInt(indexIsCached) > 0;
-            cursor.close();
-            return isCached;
-        } finally {
-            close();
-        }
+			return getBooleanFieldForEntity(
+					DbStructureSections.SECTIONS,
+					DbStructureSections.Column.SECTION_ID,
+					section.getId(),
+					DbStructureSections.Column.IS_CACHED
+			);
     }
 
 
     public boolean isUnitLoading(Unit unit) {
-        try {
-            open();
-            String query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.UNIT_ID + " = " + unit.getId();
-            Cursor cursor = database.rawQuery(query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-            int indexIsLoading = cursor.getColumnIndex(DbStructureUnit.Column.IS_LOADING);
-            boolean isLoading = cursor.getInt(indexIsLoading) > 0;
-            cursor.close();
-            return isLoading;
-        } finally {
-            close();
-        }
+			return getBooleanFieldForEntity(
+					DbStructureUnit.UNITS,
+					DbStructureUnit.Column.UNIT_ID,
+					unit.getId(),
+					DbStructureUnit.Column.IS_LOADING
+			);
     }
 
     public boolean isUnitCached(Unit unit) {
-        try {
-            open();
-            String query = "Select * from " + DbStructureUnit.UNITS + " where " + DbStructureUnit.Column.UNIT_ID + " = " + unit.getId();
-            Cursor cursor = database.rawQuery(query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-
-            int indexIsCached = cursor.getColumnIndex(DbStructureUnit.Column.IS_CACHED);
-            boolean isCached = cursor.getInt(indexIsCached) > 0;
-            cursor.close();
-            return isCached;
-        } finally {
-            close();
-        }
+			return getBooleanFieldForEntity(
+					DbStructureUnit.UNITS,
+					DbStructureUnit.Column.UNIT_ID,
+					unit.getId(),
+					DbStructureUnit.Column.IS_CACHED
+			);
     }
 
 
     public boolean isLessonLoading(Lesson lesson) {
-        try {
-            open();
-            String query = "Select * from " + DbStructureLesson.LESSONS + " where " + DbStructureLesson.Column.LESSON_ID + " = " + lesson.getId();
-            Cursor cursor = database.rawQuery(query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-            int indexIsLoading = cursor.getColumnIndex(DbStructureLesson.Column.IS_LOADING);
-            boolean isLoading = cursor.getInt(indexIsLoading) > 0;
-            cursor.close();
-            return isLoading;
-        } finally {
-            close();
-        }
+			return getBooleanFieldForEntity(
+					DbStructureLesson.LESSONS,
+					DbStructureLesson.Column.LESSON_ID,
+					lesson.getId(),
+					DbStructureLesson.Column.IS_LOADING
+			);
     }
 
     public boolean isLessonCached(Lesson lesson) {
-        try {
-            open();
-            String query = "Select * from " + DbStructureLesson.LESSONS + " where " + DbStructureLesson.Column.LESSON_ID + " = " + lesson.getId();
-            Cursor cursor = database.rawQuery(query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-
-            int indexIsCached = cursor.getColumnIndex(DbStructureLesson.Column.IS_CACHED);
-            boolean isCached = cursor.getInt(indexIsCached) > 0;
-            cursor.close();
-            return isCached;
-        } finally {
-            close();
-        }
+			return getBooleanFieldForEntity(
+					DbStructureLesson.LESSONS,
+					DbStructureLesson.Column.LESSON_ID,
+					lesson.getId(),
+					DbStructureLesson.Column.IS_CACHED
+			);
     }
 
 
     public boolean isStepLoading(Step step) {
-        try {
-            open();
-            String query = "Select * from " + DbStructureStep.STEPS + " where " + DbStructureStep.Column.STEP_ID + " = " + step.getId();
-            Cursor cursor = database.rawQuery(query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-            int indexIsLoading = cursor.getColumnIndex(DbStructureStep.Column.IS_LOADING);
-            boolean isLoading = cursor.getInt(indexIsLoading) > 0;
-            cursor.close();
-            return isLoading;
-        } finally {
-            close();
-        }
+			return getBooleanFieldForEntity(
+					DbStructureStep.STEPS,
+					DbStructureStep.Column.STEP_ID,
+					step.getId(),
+					DbStructureStep.Column.IS_LOADING
+			);
     }
 
     public boolean isStepCached(Step step) {
-        try {
-            open();
-            String query = "Select * from " + DbStructureStep.STEPS + " where " + DbStructureStep.Column.STEP_ID + " = " + step.getId();
-            Cursor cursor = database.rawQuery(query, null);
-            if (cursor.getCount() <= 0) {
-                cursor.close();
-                return false;
-            }
-            cursor.moveToFirst();
-            int indexIsCached = cursor.getColumnIndex(DbStructureStep.Column.IS_CACHED);
-            boolean isCached = cursor.getInt(indexIsCached) > 0;
-            cursor.close();
-            return isCached;
-        } finally {
-            close();
-        }
+			return getBooleanFieldForEntity(
+					DbStructureStep.STEPS,
+					DbStructureStep.Column.STEP_ID,
+					step.getId(),
+					DbStructureStep.Column.IS_CACHED
+			);
     }
 
     public void updateOnlyCachedLoadingStep(Step step) {
