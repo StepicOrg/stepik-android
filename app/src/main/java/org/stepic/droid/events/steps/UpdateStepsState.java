@@ -1,7 +1,5 @@
 package org.stepic.droid.events.steps;
 
-import org.stepic.droid.model.Assignment;
-import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 

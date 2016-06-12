@@ -37,9 +37,7 @@ public class FromDbCoursesTask extends StepicTask<Void, Void, List<Course>> {
 
     @Override
     protected List<Course> doInBackgroundBody(Void... params) throws Exception {
-        List<Course> fromCache = null;
-        fromCache = dbOperationsCourses.getAllCourses(mCourseType);
-        return fromCache;
+        return dbOperationsCourses.getAllCourses(mCourseType);
     }
 
     @Override
