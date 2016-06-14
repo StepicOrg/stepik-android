@@ -1,6 +1,7 @@
 package org.stepic.droid.web;
 
 import org.stepic.droid.model.EnrollmentWrapper;
+import org.stepic.droid.model.comments.Vote;
 
 import retrofit.Call;
 import retrofit.http.Body;
@@ -104,4 +105,7 @@ public interface StepicRestLoggedService {
 
     @POST("api/comments")
     Call<CommentsResponse> postComment(@Body CommentRequest comment);
+
+    @POST("api/votes/{id}")
+    Call<VoteResponse> postVote(@Path("id") String voteId, Vote vote);
 }

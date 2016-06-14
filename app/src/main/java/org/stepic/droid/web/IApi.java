@@ -5,6 +5,7 @@ import android.content.Context;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Reply;
+import org.stepic.droid.model.comments.VoteValue;
 import org.stepic.droid.social.ISocialType;
 
 import java.io.IOException;
@@ -89,4 +90,6 @@ public interface IApi {
     Call<CommentsResponse> getCommentsByIds (long [] commentIds);
 
     Call<CommentsResponse> postComment(String text, long target /*for example, related step*/, @Nullable Long parent /*put if it is reply*/);
+
+    Call<VoteResponse> makeVote(String voteId, VoteValue voteValue);
 }
