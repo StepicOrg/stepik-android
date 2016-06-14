@@ -134,10 +134,10 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                 //it is not current user and vote is available
                 val vote = commentManager.getVoteByVoteId(comment.vote)
                 if (vote?.value != null && vote?.value == VoteValue.like) {
-                    //if we have like -> show like
-                    menu?.add(Menu.NONE, likeMenuId, Menu.NONE, R.string.like_label)
-                } else {
+                    //if we have like -> show suggest for unlike
                     menu?.add(Menu.NONE, unLikeMenuId, Menu.NONE, R.string.unlike_label)
+                } else {
+                    menu?.add(Menu.NONE, likeMenuId, Menu.NONE, R.string.like_label)
                 }
                 menu?.add(Menu.NONE, reportMenuId, Menu.NONE, R.string.report_label)
             }
