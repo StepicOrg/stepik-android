@@ -1,12 +1,14 @@
 package org.stepic.droid.view.adapters;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -20,6 +22,8 @@ import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.model.CommentAdapterItem;
 import org.stepic.droid.model.User;
 import org.stepic.droid.model.comments.Comment;
+import org.stepic.droid.model.comments.Vote;
+import org.stepic.droid.model.comments.VoteValue;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.RWLocks;
@@ -188,6 +192,15 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         @Bind(R.id.progress_load_more_comments)
         View progressLoadMoreComments;
 
+        @Bind(R.id.like_root)
+        View likeRoot;
+
+        @Bind(R.id.like_count)
+        TextView likeCount;
+
+        @Bind(R.id.like_image)
+        ImageView likeImage;
+
         @BindString(R.string.comment_is_deleted)
         String commentIsDeletedMessage;
 
@@ -260,6 +273,33 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                 }
             }
 
+            int epicCount = 0;
+            if (comment.getEpic_count() != null) {
+                epicCount = comment.getEpic_count();
+            }
+
+            String voteId = comment.getVote();
+            if (voteId != null) {
+                likeRoot.setVisibility(View.VISIBLE);
+
+                if (comment.getEpic_count() != null) {
+                    likeCount.setText(epicCount);
+                } else {
+                    likeCount.setText("");
+                }
+
+                Vote vote = commentManager.getVoteByVoteId(voteId);
+                if (vote == null) {
+                    showEmptyLikeState();
+                } else if (vote.getValue() == VoteValue.remove || vote.getValue() == VoteValue.dislike) {
+                    showEmptyLikeState();
+                } else if (vote.getValue() == VoteValue.like) {
+                    showLikedState();
+                }
+            } else {
+                likeRoot.setVisibility(View.GONE);
+            }
+
 
             User user = getUser(comment);
 
@@ -272,6 +312,14 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
             } else {
                 userName.setVisibility(View.GONE);
             }
+        }
+
+        private void showEmptyLikeState() {
+            likeImage.getDrawable().setColorFilter(ColorUtil.INSTANCE.getColorArgb(R.color.material_grey, context), PorterDuff.Mode.MULTIPLY);
+        }
+
+        private void showLikedState() {
+            likeImage.getDrawable().setColorFilter(ColorUtil.INSTANCE.getColorArgb(R.color.stepic_blue_ribbon, context), PorterDuff.Mode.MULTIPLY);
         }
 
         protected final User getUser(Comment comment) {
