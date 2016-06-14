@@ -171,4 +171,5 @@
     <string name="fail_move">Извините, произошла ошибка, когда файлы перемещались</string>
     <string name="like_label">Нравится</string>
     <string name="unlike_label">Больше не нравится</string>
+    <string name="report_label">Пожаловаться</string>
 </resources>

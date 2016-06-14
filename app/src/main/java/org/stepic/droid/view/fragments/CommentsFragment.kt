@@ -33,6 +33,13 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         private val discussionIdKey = "dis_id_key"
         private val stepIdKey = "stepId"
 
+
+        private val replyMenuId = 100
+        private val likeMenuId = 101
+        private val unLikeMenuId = 102
+        private val reportMenuId = 103
+
+
         fun newInstance(discussionId: String, stepId: Long): Fragment {
             val args = Bundle()
             args.putString(discussionIdKey, discussionId)
@@ -111,15 +118,21 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
         menu?.setHeaderTitle(R.string.one_comment_title)
-        val inflater = activity.menuInflater
-        inflater.inflate(R.menu.comment_context_menu, menu)
+
+        val info = menuInfo as ContextMenuRecyclerView.RecyclerViewContextMenuInfo
+        val position = info.position //resolve which should show
+
+        menu?.add(Menu.NONE, replyMenuId, Menu.NONE, R.string.reply_title)
+        menu?.add(Menu.NONE, likeMenuId, Menu.NONE, R.string.like_label)
+        menu?.add(Menu.NONE, unLikeMenuId, Menu.NONE, R.string.unlike_label)
+        menu?.add(Menu.NONE, reportMenuId, Menu.NONE, R.string.report_label)
     }
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
-        val info = item?.getMenuInfo() as ContextMenuRecyclerView.RecyclerViewContextMenuInfo
+        val info = item?.menuInfo as ContextMenuRecyclerView.RecyclerViewContextMenuInfo
         val position = info.position
         when (item?.itemId) {
-            R.id.menu_item_reply -> {
+            replyMenuId -> {
                 replyToComment(info.position)
                 return true
             }
