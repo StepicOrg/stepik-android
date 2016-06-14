@@ -9,6 +9,7 @@ import org.stepic.droid.model.CommentAdapterItem
 import org.stepic.droid.model.User
 import org.stepic.droid.model.comments.Comment
 import org.stepic.droid.model.comments.DiscussionProxy
+import org.stepic.droid.model.comments.Vote
 import org.stepic.droid.web.CommentsResponse
 import org.stepic.droid.web.IApi
 import retrofit.Callback
@@ -38,6 +39,7 @@ class CommentManager {
     private val parentIdToPositionInDiscussionMap: MutableMap<Long, Int> = HashMap()
     private val repliesIdIsLoading: MutableSet<Long> = HashSet()
     private val commentIdIsLoading: MutableSet<Long> = HashSet() //can be reply or comment (with 0 replies) for load more comments).
+    private val voteMap: MutableMap<String, Vote> = HashMap()
 
     @Inject
     constructor() {
@@ -126,6 +128,11 @@ class CommentManager {
                                         userSetMap.put(it.id, it)
                                     }
                                 }
+                        stepicResponse.votes?.forEach{
+                            if (it.id !in voteMap){
+                                voteMap.put(it.id, it)
+                            }
+                        }
                         //commentIdIsLoading = commentIdIsLoading.filterNot { cachedCommentsSetMap.containsKey(it) }.toHashSet()
                         if (fromReply) {
                             repliesIdIsLoading.clear()
@@ -226,6 +233,10 @@ class CommentManager {
         } else {
             return cachedCommentsSetMap.containsKey(commentId)
         }
+    }
+
+    fun getVoteByVoteId (voteId : String) : Vote?{
+        return voteMap[voteId]
     }
 
 }
