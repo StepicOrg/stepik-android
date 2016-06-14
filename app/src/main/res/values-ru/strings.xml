@@ -169,4 +169,6 @@
     <string name="move_data_explanation">Все ранее загруженные видео будут перенесены, новые видео будут сохраняться в выбранное место. Операция может занять несколько минут. Вы уверены?</string>
     <string name="sorry_moved">Извините, файл удален или перемещен</string>
     <string name="fail_move">Извините, произошла ошибка, когда файлы перемещались</string>
+    <string name="like_label">Нравится</string>
+    <string name="unlike_label">Больше не нравится</string>
 </resources>
