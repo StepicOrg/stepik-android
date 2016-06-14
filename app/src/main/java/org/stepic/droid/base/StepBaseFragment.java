@@ -48,7 +48,7 @@ public abstract class StepBaseFragment extends FragmentBase {
         if (step != null &&
                 step.getBlock() != null &&
                 step.getBlock().getText() != null &&
-                !step.getBlock().getText().equals("")) {
+                !step.getBlock().getText().isEmpty()) {
             headerWv.setText(step.getBlock().getText());
             headerWv.setVisibility(View.VISIBLE);
         } else {
@@ -103,7 +103,7 @@ public abstract class StepBaseFragment extends FragmentBase {
                 public void onResponse(Response<StepResponse> response, Retrofit retrofit) {
                     if (response.isSuccess()) {
                         StepResponse stepResponse = response.body();
-                        if (stepResponse != null && stepResponse.getSteps() != null && stepResponse.getSteps().size() > 0) {
+                        if (stepResponse != null && stepResponse.getSteps() != null && !stepResponse.getSteps().isEmpty()) {
                             final Step stepFromInternet = stepResponse.getSteps().get(0);
                             if (stepFromInternet != null) {
                                 mThreadPoolExecutor.execute(new Runnable() {
@@ -131,9 +131,10 @@ public abstract class StepBaseFragment extends FragmentBase {
 
     @Subscribe
     public void onStepWasUpdated(StepWasUpdatedEvent event){
-        if (event.getStep().getId() == step.getId()){
-            step.setDiscussion_proxy(event.getStep().getDiscussion_proxy()); //fixme do it in immutable way
-            step.setDiscussions_count(event.getStep().getDiscussions_count());
+        Step eventStep = event.getStep();
+        if (eventStep.getId() == step.getId()){
+            step.setDiscussion_proxy(eventStep.getDiscussion_proxy()); //fixme do it in immutable way
+            step.setDiscussions_count(eventStep.getDiscussions_count());
             updateCommentState();
         }
     }
