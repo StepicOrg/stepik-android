@@ -86,11 +86,13 @@ public class LoginManager implements ILoginManager {
         YandexMetrica.reportEvent(AppConstants.METRICA_FAIL_LOGIN);
         YandexMetrica.reportError(AppConstants.METRICA_FAIL_LOGIN, t);
         if (t != null) {
+            int errorTextResId;
             if (t instanceof ProtocolException) {
-                Toast.makeText(mContext, R.string.failLogin, Toast.LENGTH_LONG).show();
+                errorTextResId = R.string.failLogin;
             } else {
-                Toast.makeText(mContext, R.string.connectionProblems, Toast.LENGTH_LONG).show();
+                errorTextResId = R.string.connectionProblems;
             }
+            Toast.makeText(mContext, errorTextResId, Toast.LENGTH_LONG).show();
         }
     }
 
