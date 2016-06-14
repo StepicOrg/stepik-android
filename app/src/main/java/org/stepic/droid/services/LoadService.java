@@ -123,21 +123,25 @@ public class LoadService extends IntentService {
     }
 
     private void addDownload(String url, long fileId, String title, Step step) {
-        if (!isDownloadManagerEnabled() || url == null)
+        if (!isDownloadManagerEnabled() || url == null) {
+            mStoreStateManager.updateStepAfterDeleting(step);
             return;
+        }
 
         url = url.trim();
-        if (url.length() == 0)
+        if (url.length() == 0) {
+            mStoreStateManager.updateStepAfterDeleting(step);
             return;
+        }
 
         try {
-
             File downloadFolderAndFile = new File(mUserPrefs.getUserDownloadFolder(), fileId + "");
             if (downloadFolderAndFile.exists()) {
                 //we do not need download the file, because we already have it.
                 // FIXME: 20.10.15 this simple check doesn't work if file is loading and at this moment adding to Download manager Queue,
                 // FIXME: 20.10.15 but this is not useless, because, work if file exists on the disk.
                 // FIXME: 20.10.15 For 'singleton' file of Video (or Step) at storage use UI and Broadcasts.
+                mStoreStateManager.updateStepAfterDeleting(step);
                 return;
             }
 
@@ -154,7 +158,11 @@ public class LoadService extends IntentService {
             } else {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
             }
-            if (isNeedCancel(step)) return;
+            if (isNeedCancel(step)) {
+//                mStoreStateManager.updateStepAfterDeleting(step);
+                // we check it in need cancel
+                return;
+            }
 
             if (!mDb.isExistDownloadEntityByVideoId(fileId) && !downloadFolderAndFile.exists()) {
 
@@ -176,8 +184,10 @@ public class LoadService extends IntentService {
                 mDb.addDownloadEntity(newEntity);
             }
         } catch (SecurityException ex) {
+            mStoreStateManager.updateStepAfterDeleting(step);
             YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, ex);
         } catch (Exception ex) {
+            mStoreStateManager.updateStepAfterDeleting(step);
             YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, ex);
         }
 
@@ -226,12 +236,12 @@ public class LoadService extends IntentService {
         }
     }
 
-    private void addUnitLesson(Unit unit, Lesson lesson) {
+    private void addUnitLesson(Unit unitOut, Lesson lessonOut) {
         //if user click addUnitLesson, it is in db already.
         //make copies of objects.
-        unit = mDb.getUnitByLessonId(lesson.getId());
-        lesson = mDb.getLessonById(lesson.getId());
-        if (!unit.is_cached() && !lesson.is_cached() && unit.is_loading() && lesson.is_loading()) {
+        Unit unit = mDb.getUnitByLessonId(lessonOut.getId());
+        Lesson lesson = mDb.getLessonById(lessonOut.getId());
+        if (unit!=null && lesson!=null&&  !unit.is_cached() && !lesson.is_cached() && unit.is_loading() && lesson.is_loading()) {
 
             try {
                 List<Assignment> assignments = mApi.getAssignments(unit.getAssignments()).execute().body().getAssignments();
@@ -286,74 +296,80 @@ public class LoadService extends IntentService {
                 mStoreStateManager.updateUnitLessonAfterDeleting(lesson.getId());
             } catch (IOException e) {
                 YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, e);
-                e.printStackTrace();
-                mStoreStateManager.updateUnitLessonState(lesson.getId());
+                mStoreStateManager.updateUnitLessonAfterDeleting(lesson.getId());
             }
         } else {
-            mStoreStateManager.updateUnitLessonState(lesson.getId());
+            mStoreStateManager.updateUnitLessonAfterDeleting(lessonOut.getId());
         }
     }
 
-    private void addSection(Section section) {
+    private void addSection(Section sectionOut) {
         //if user click to removeSection, then section already in database.
-        section = mDb.getSectionById(section.getId());//make copy of section.
-        try {
-            Response<UnitStepicResponse> unitLessonResponse = mApi.getUnits(section.getUnits()).execute();
-            if (unitLessonResponse.isSuccess()) {
-                final List<Unit> units = unitLessonResponse.body().getUnits();
-                long[] lessonsIds = StepicLogicHelper.fromUnitsToLessonIds(units);
-                List<Progress> progresses = mApi.getProgresses(ProgressUtil.getAllProgresses(units)).execute().body().getProgresses();
-                for (Progress item : progresses) {
-                    mDb.addProgress(item);
-                }
-
-
-                Response<LessonStepicResponse> response = mApi.getLessons(lessonsIds).execute();
-                if (response.isSuccess()) {
-                    List<Lesson> lessons = response.body().getLessons();
-                    Map<Long, Lesson> idToLessonMap = new HashMap<>();
-                    for (Lesson lesson : lessons) {
-                        idToLessonMap.put(lesson.getId(), lesson);
+        Section section = mDb.getSectionById(sectionOut.getId());//make copy of section.
+        if (section!=null) {
+            try {
+                Response<UnitStepicResponse> unitLessonResponse = mApi.getUnits(section.getUnits()).execute();
+                if (unitLessonResponse.isSuccess()) {
+                    final List<Unit> units = unitLessonResponse.body().getUnits();
+                    long[] lessonsIds = StepicLogicHelper.fromUnitsToLessonIds(units);
+                    List<Progress> progresses = mApi.getProgresses(ProgressUtil.getAllProgresses(units)).execute().body().getProgresses();
+                    for (Progress item : progresses) {
+                        mDb.addProgress(item);
                     }
 
-                    for (Unit unit : units) {
-                        Lesson lesson = idToLessonMap.get(unit.getLesson());
 
-
-                        mDb.addUnit(unit);
-                        mDb.addLesson(lesson);
-
-                        if (!mDb.isUnitCached(unit) && !mDb.isLessonCached(lesson)) {
-                            //need to be load
-
-                            unit.set_loading(true);
-                            unit.set_cached(false);
-                            lesson.set_loading(true);
-                            lesson.set_cached(false);
-
-                            mDb.updateOnlyCachedLoadingLesson(lesson);
-                            mDb.updateOnlyCachedLoadingUnit(unit);
+                    Response<LessonStepicResponse> response = mApi.getLessons(lessonsIds).execute();
+                    if (response.isSuccess()) {
+                        List<Lesson> lessons = response.body().getLessons();
+                        Map<Long, Lesson> idToLessonMap = new HashMap<>();
+                        for (Lesson lesson : lessons) {
+                            idToLessonMap.put(lesson.getId(), lesson);
                         }
-                    }
-                    if (mCancelSniffer.isSectionIdIsCanceled(section.getId())) {
+
                         for (Unit unit : units) {
-                            mCancelSniffer.addUnitIdCancel(unit.getId());
-                        }
-                    }
-                    for (Unit unit : units) {
-                        Lesson lesson = idToLessonMap.get(unit.getLesson());
-                        addUnitLesson(unit, lesson);
-                    }
-                    mStoreStateManager.updateSectionState(section.getId()); // FIXME DOUBLE CHECK, if all units were cached
-                }
-            }
-        } catch (UnknownHostException e) {
-            //not internet
-            mStoreStateManager.updateSectionAfterDeleting(section.getId());
+                            Lesson lesson = idToLessonMap.get(unit.getLesson());
 
-        } catch (IOException e) {
-            YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, e);
-            mStoreStateManager.updateSectionAfterDeleting(section.getId());
+
+                            mDb.addUnit(unit);
+                            mDb.addLesson(lesson);
+
+                            if (!mDb.isUnitCached(unit) && !mDb.isLessonCached(lesson)) {
+                                //need to be load
+
+                                unit.set_loading(true);
+                                unit.set_cached(false);
+                                lesson.set_loading(true);
+                                lesson.set_cached(false);
+
+                                mDb.updateOnlyCachedLoadingLesson(lesson);
+                                mDb.updateOnlyCachedLoadingUnit(unit);
+                            }
+                        }
+                        if (mCancelSniffer.isSectionIdIsCanceled(section.getId())) {
+                            for (Unit unit : units) {
+                                mCancelSniffer.addUnitIdCancel(unit.getId());
+                            }
+                        }
+                        for (Unit unit : units) {
+                            Lesson lesson = idToLessonMap.get(unit.getLesson());
+                            addUnitLesson(unit, lesson);
+                        }
+                        mStoreStateManager.updateSectionState(section.getId()); // FIXME DOUBLE CHECK, if all units were cached
+                    }
+                }
+            } catch (UnknownHostException e) {
+                //not internet
+                mStoreStateManager.updateSectionAfterDeleting(section.getId());
+
+            } catch (IOException e) {
+                YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, e);
+                mStoreStateManager.updateSectionAfterDeleting(section.getId());
+            }
+        }
+        else{
+            if (sectionOut!=null) {
+                mStoreStateManager.updateSectionAfterDeleting(sectionOut.getId());
+            }
         }
     }
 
