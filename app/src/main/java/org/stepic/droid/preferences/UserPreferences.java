@@ -100,7 +100,7 @@ public class UserPreferences {
         }
     }
 
-    private long getUserId() {
+    public long getUserId() {
         Profile userProfile = mSharedPreferenceHelper.getProfile();
         long userId = -1; // default anonymous user id
         if (userProfile != null) {

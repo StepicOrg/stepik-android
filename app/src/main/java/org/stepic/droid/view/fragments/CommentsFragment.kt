@@ -18,10 +18,12 @@ import org.stepic.droid.base.MainApplication
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.events.comments.*
 import org.stepic.droid.model.comments.Comment
+import org.stepic.droid.model.comments.VoteValue
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.view.adapters.CommentsAdapter
 import org.stepic.droid.view.util.ContextMenuRecyclerView
 import org.stepic.droid.web.DiscussionProxyResponse
+import org.stepic.droid.web.VoteResponse
 import retrofit.Callback
 import retrofit.Response
 import retrofit.Retrofit
@@ -38,6 +40,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         private val likeMenuId = 101
         private val unLikeMenuId = 102
         private val reportMenuId = 103
+        private val cancelMenuId = 104
 
 
         fun newInstance(discussionId: String, stepId: Long): Fragment {
@@ -121,11 +124,27 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
         val info = menuInfo as ContextMenuRecyclerView.RecyclerViewContextMenuInfo
         val position = info.position //resolve which should show
+        val userId = mUserPreferences.userId
+        val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
+        if (userId > 0) {
+            //it is not anonymous
 
-        menu?.add(Menu.NONE, replyMenuId, Menu.NONE, R.string.reply_title)
-        menu?.add(Menu.NONE, likeMenuId, Menu.NONE, R.string.like_label)
-        menu?.add(Menu.NONE, unLikeMenuId, Menu.NONE, R.string.unlike_label)
-        menu?.add(Menu.NONE, reportMenuId, Menu.NONE, R.string.report_label)
+            menu?.add(Menu.NONE, replyMenuId, Menu.NONE, R.string.reply_title)
+            if (comment.user != null && comment.user.toLong() != userId && comment.vote != null) {
+                //it is not current user and vote is available
+                val vote = commentManager.getVoteByVoteId(comment.vote)
+                if (vote?.value != null && vote?.value == VoteValue.like) {
+                    //if we have like -> show like
+                    menu?.add(Menu.NONE, likeMenuId, Menu.NONE, R.string.like_label)
+                } else {
+                    menu?.add(Menu.NONE, unLikeMenuId, Menu.NONE, R.string.unlike_label)
+                }
+                menu?.add(Menu.NONE, reportMenuId, Menu.NONE, R.string.report_label)
+            }
+        } else {
+            //todo: Cancel only for anonymous?
+            menu?.add(Menu.NONE, cancelMenuId, Menu.NONE, R.string.cancel)
+        }
     }
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
@@ -136,6 +155,22 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                 replyToComment(info.position)
                 return true
             }
+
+            likeMenuId -> {
+                likeComment(info.position)
+                return true
+            }
+
+            unLikeMenuId -> {
+                unlikeComment(info.position)
+                return true
+            }
+
+            reportMenuId -> {
+                abuseComment(info.position)
+                return true
+            }
+
             else -> return super.onContextItemSelected(item)
         }
     }
@@ -145,6 +180,34 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         comment?.let {
             mShell.screenProvider.openNewCommentForm(activity, stepId, it.parent ?: it.id)
         }
+    }
+
+    private fun likeComment(position: Int) {
+        vote(position, VoteValue.like)
+    }
+
+    private fun unlikeComment(position: Int) {
+        vote(position, VoteValue.remove)
+    }
+
+    private fun abuseComment(position: Int) {
+        vote(position, VoteValue.dislike)
+    }
+
+    private fun vote(position: Int, voteValue: VoteValue) {
+        val voteId = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment.vote
+        voteId?.let {
+            mShell.api.makeVote(it, voteValue).enqueue(object : Callback<VoteResponse> {
+                override fun onResponse(response: Response<VoteResponse>?, retrofit: Retrofit?) {
+                    //todo event for update
+                }
+
+                override fun onFailure(t: Throwable?) {
+                    //todo event for fail
+                }
+            })
+        }
+
     }
 
 
@@ -236,8 +299,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             showEmptyState(false)
         }
         val needInsertLocal = needInsertLate
-        if (needInsertLocal != null && (!commentManager.isCommentCached(needInsertLocal.id) || ( needInsertLocal.parent != null && !commentManager.isCommentCached(needInsertLocal.parent)))) {
-            val longArr  = listOf(needInsertLocal.id, needInsertLocal.parent).filterNotNull().toLongArray()
+        if (needInsertLocal != null && (!commentManager.isCommentCached(needInsertLocal.id) || (needInsertLocal.parent != null && !commentManager.isCommentCached(needInsertLocal.parent)))) {
+            val longArr = listOf(needInsertLocal.id, needInsertLocal.parent).filterNotNull().toLongArray()
             commentManager.loadCommentsByIds(longArr)
         } else {
             needInsertLate = null

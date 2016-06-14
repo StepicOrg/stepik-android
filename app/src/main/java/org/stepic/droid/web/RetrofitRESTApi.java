@@ -598,7 +598,7 @@ public class RetrofitRESTApi implements IApi {
 
     @Override
     public Call<VoteResponse> makeVote(String voteId, VoteValue voteValue) {
-        Vote vote = new Vote(voteId, voteValue.getValue());
+        Vote vote = new Vote(voteId, voteValue);
         return mLoggedService.postVote(voteId, vote);
     }
 
