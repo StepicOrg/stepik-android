@@ -2,7 +2,9 @@ package org.stepic.droid.view.adapters;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -204,6 +206,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         @BindString(R.string.comment_is_deleted)
         String commentIsDeletedMessage;
 
+        Drawable likeActiveDrawable;
+        Drawable likeEmptyDrawable;
+
         public GenericViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -236,6 +241,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                 }
             });
 
+            likeActiveDrawable = ContextCompat.getDrawable(context, R.drawable.ic_thumb_up_white_24dp).mutate();
+            likeEmptyDrawable = ContextCompat.getDrawable(context, R.drawable.ic_thumb_up_white_24dp).mutate();
+
+            likeEmptyDrawable.setColorFilter(ColorUtil.INSTANCE.getColorArgb(R.color.material_grey, context), PorterDuff.Mode.MULTIPLY);
+            likeActiveDrawable.setColorFilter(ColorUtil.INSTANCE.getColorArgb(R.color.stepic_blue_ribbon, context), PorterDuff.Mode.MULTIPLY);
 
         }
 
@@ -283,7 +293,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                 likeRoot.setVisibility(View.VISIBLE);
 
                 if (comment.getEpic_count() != null) {
-                    likeCount.setText(epicCount);
+                    likeCount.setText(epicCount + "");
                 } else {
                     likeCount.setText("");
                 }
@@ -291,9 +301,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                 Vote vote = commentManager.getVoteByVoteId(voteId);
                 if (vote == null) {
                     showEmptyLikeState();
-                } else if (vote.getValue() == VoteValue.remove || vote.getValue() == VoteValue.dislike) {
+                } else if (vote.getValue() == null || vote.getValue().getValue() == null ||  vote.getValue().getValue().equals( VoteValue.remove.getValue()) || vote.getValue().getValue().equals(VoteValue.dislike.getValue())) {
                     showEmptyLikeState();
-                } else if (vote.getValue() == VoteValue.like) {
+                } else if (vote.getValue().getValue().equals(VoteValue.like.getValue())) {
                     showLikedState();
                 }
             } else {
@@ -315,11 +325,13 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         }
 
         private void showEmptyLikeState() {
-            likeImage.getDrawable().setColorFilter(ColorUtil.INSTANCE.getColorArgb(R.color.material_grey, context), PorterDuff.Mode.MULTIPLY);
+//            likeImage.getDrawable().setColorFilter(ColorUtil.INSTANCE.getColorArgb(R.color.material_grey, context), PorterDuff.Mode.MULTIPLY);
+            likeImage.setImageDrawable(likeEmptyDrawable);
         }
 
         private void showLikedState() {
-            likeImage.getDrawable().setColorFilter(ColorUtil.INSTANCE.getColorArgb(R.color.stepic_blue_ribbon, context), PorterDuff.Mode.MULTIPLY);
+            likeImage.setImageDrawable(likeActiveDrawable);
+//            likeImage.getDrawable().setColorFilter(ColorUtil.INSTANCE.getColorArgb(R.color.stepic_blue_ribbon, context), PorterDuff.Mode.MULTIPLY);
         }
 
         protected final User getUser(Comment comment) {
