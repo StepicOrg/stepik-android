@@ -12,6 +12,7 @@ import android.view.*
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.squareup.otto.Subscribe
+import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
@@ -195,19 +196,33 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun vote(position: Int, voteValue: VoteValue) {
-        val voteId = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment.vote
+
+        val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
+        val voteId = comment.vote
+        val commentId = comment.id
+        if (commentId == null){
+            YandexMetrica.reportEvent("comment: commentId null")
+            return
+        }
         voteId?.let {
             mShell.api.makeVote(it, voteValue).enqueue(object : Callback<VoteResponse> {
                 override fun onResponse(response: Response<VoteResponse>?, retrofit: Retrofit?) {
                     //todo event for update
+                    commentManager.loadCommentsByIds(longArrayOf(commentId))
                 }
 
                 override fun onFailure(t: Throwable?) {
                     //todo event for fail
+                    bus.post(LikeCommentFailEvent())
                 }
             })
         }
 
+    }
+
+    @Subscribe
+    fun onLikeCommentFail(event : LikeCommentFailEvent){
+        Toast.makeText(context, "Sorry", Toast.LENGTH_SHORT).show()
     }
 
 
