@@ -119,8 +119,8 @@ public class MainFeedActivity extends BackToExitActivityBase
             @Override
             public void onResponse(Response<StepicProfileResponse> response, Retrofit retrofit) {
                 if (!response.isSuccess()) {
-									  return;
-								}
+                    return;
+                }
 
                 Profile profile = response.body().getProfile();
                 final long[] emailIds = profile.getEmailAddresses();
@@ -129,10 +129,10 @@ public class MainFeedActivity extends BackToExitActivityBase
                         @Override
                         public void onResponse(Response<EmailAddressResponse> response, Retrofit retrofit) {
                             if (!response.isSuccess()) {
-															return;
-														}
+                                return;
+                            }
 
-													  EmailAddressResponse emailsResponse = response.body();
+                            EmailAddressResponse emailsResponse = response.body();
                             if (emailsResponse != null) {
                                 List<EmailAddress> emails = emailsResponse.getEmailAddresses();
                                 if (emails != null && !emails.isEmpty()) {
@@ -403,7 +403,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         }
     }
 
-    public static int getDownloadFragmentIndex(){
+    public static int getDownloadFragmentIndex() {
         return 2;
     }
 }

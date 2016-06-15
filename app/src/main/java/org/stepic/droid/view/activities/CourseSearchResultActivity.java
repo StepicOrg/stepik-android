@@ -44,8 +44,8 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-					actionBar.setDisplayHomeAsUpEnabled(true);
-				}
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
