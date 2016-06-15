@@ -12,7 +12,8 @@ enum class VideoPlaybackRate internal constructor(val index: Int, val rateFloat:
     x1_0(2, 1f, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_playbackrate_1_light)),
     x1_25(3, 1.25f, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_playbackrate_1_25_light)),
     x1_5(4, 1.5f, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_playbackrate_1_5_light)),
-    x2(5, 2f, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_playbackrate_2_0_light));
+    x1_75(5, 1.75f, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_playbackrate_1_5_light)),
+    x2(6, 2f, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_playbackrate_2_0_light));
 
     fun getAllOptions(): List<VideoPlaybackRate> {
         return Arrays.asList<VideoPlaybackRate>(*VideoPlaybackRate.values())

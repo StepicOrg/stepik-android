@@ -533,6 +533,10 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
                     handleRate(VideoPlaybackRate.x1_5)
                     true
                 }
+                R.id.x1_75 -> {
+                    handleRate(VideoPlaybackRate.x1_75)
+                    true
+                }
                 R.id.x2 -> {
                     handleRate(VideoPlaybackRate.x2)
                     true
