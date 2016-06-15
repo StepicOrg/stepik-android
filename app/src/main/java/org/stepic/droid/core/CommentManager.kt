@@ -128,9 +128,9 @@ class CommentManager {
                                         userSetMap.put(it.id, it)
                                     }
                                 }
-                        stepicResponse.votes?.forEach{
+                        stepicResponse.votes?.forEach {
                             //updating info
-                                voteMap.put(it.id, it)
+                            voteMap.put(it.id, it)
                         }
                         //commentIdIsLoading = commentIdIsLoading.filterNot { cachedCommentsSetMap.containsKey(it) }.toHashSet()
                         if (fromReply) {
@@ -226,7 +226,7 @@ class CommentManager {
         sumOfCachedParent = 0
     }
 
-    fun isCommentCached(commentId: Long?) : Boolean {
+    fun isCommentCached(commentId: Long?): Boolean {
         if (commentId == null) {
             return false
         } else {
@@ -234,8 +234,16 @@ class CommentManager {
         }
     }
 
-    fun getVoteByVoteId (voteId : String) : Vote?{
+    fun getVoteByVoteId(voteId: String): Vote? {
         return voteMap[voteId]
+    }
+
+    fun insertOrUpdateVote(vote: Vote) {
+        voteMap[vote.id] = vote
+    }
+
+    fun getPositionOfComment(commentId: Long): Int {
+        return cachedCommentsList.indexOfFirst { it.id == commentId }
     }
 
 }

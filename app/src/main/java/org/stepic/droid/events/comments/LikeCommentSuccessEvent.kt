@@ -1,4 +1,6 @@
 package org.stepic.droid.events.comments
 
-class LikeCommentSuccessEvent (val commentId : Long){
+import org.stepic.droid.model.comments.Vote
+
+class LikeCommentSuccessEvent (val commentId : Long, val vote : Vote){
 }

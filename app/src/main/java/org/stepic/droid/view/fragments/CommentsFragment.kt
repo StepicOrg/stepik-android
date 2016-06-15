@@ -21,6 +21,7 @@ import org.stepic.droid.base.MainApplication
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.events.comments.*
 import org.stepic.droid.model.comments.Comment
+import org.stepic.droid.model.comments.Vote
 import org.stepic.droid.model.comments.VoteValue
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
@@ -211,11 +212,12 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             return
         }
         voteId?.let {
+            val voteObject = Vote(voteId, voteValue)
             mShell.api.makeVote(it, voteValue).enqueue(object : Callback<VoteResponse> {
                 override fun onResponse(response: Response<VoteResponse>?, retrofit: Retrofit?) {
                     //todo event for update
                     if (response?.isSuccess ?: false) {
-                        bus.post(LikeCommentSuccessEvent(commentId))
+                        bus.post(LikeCommentSuccessEvent(commentId, voteObject))
                     } else {
                         YandexMetrica.reportEvent("comment: fail")
                         bus.post(LikeCommentFailEvent())
@@ -239,6 +241,13 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     @Subscribe
     fun onLikeCommentSuccess(event: LikeCommentSuccessEvent) {
+//        commentManager.insertOrUpdateVote(event.vote)
+//        val position : Int = commentManager.getPositionOfComment(event.commentId)
+//        if (position >= 0 && position< commentManager.getSize()){
+//            commentAdapter.notifyItemChanged(position)
+//        }
+        //SO, comment count is not updated
+
         commentManager.loadCommentsByIds(longArrayOf(event.commentId))
         Toast.makeText(context, R.string.done, Toast.LENGTH_SHORT).show()
 //        floatingActionButton?.let {
