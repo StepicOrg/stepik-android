@@ -1,5 +1,4 @@
 <LinearLayout
-    android:id="@+id/like_root"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,6 +6,22 @@
     android:orientation="horizontal"
     android:paddingBottom="8dp"
     android:paddingTop="8dp">
+
+    <TextView
+        android:layout_gravity="center_vertical"
+        android:padding="4dp"
+        android:id="@+id/comment_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="14.06.2016 10:30"/>
+
+    <LinearLayout
+        android:layout_marginLeft="4dp"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/like_root"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/like_image"
@@ -24,5 +39,6 @@
         android:layout_marginLeft="4dp"
         android:text="4"
         />
+    </LinearLayout>
 
 </LinearLayout>

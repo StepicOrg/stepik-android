@@ -19,6 +19,8 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeView;
 
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
 import org.stepic.droid.R;
 import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.model.CommentAdapterItem;
@@ -26,10 +28,14 @@ import org.stepic.droid.model.User;
 import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.model.comments.Vote;
 import org.stepic.droid.model.comments.VoteValue;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
+import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.view.custom.LatexSupportableWebView;
+
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.BindString;
@@ -43,9 +49,14 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
     private CommentManager commentManager;
     private Context context;
 
+    public DateTimeZone zone;
+    public Locale locale;
+
     public CommentsAdapter(CommentManager commentManager, Context context) {
         this.commentManager = commentManager;
         this.context = context;
+        zone = DateTimeZone.getDefault();
+        locale = Locale.getDefault();
     }
 
     @Override
@@ -203,6 +214,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         @Bind(R.id.like_image)
         ImageView likeImage;
 
+        @Bind(R.id.comment_time_tv)
+        TextView commentTimeTextView;
+
         @BindString(R.string.comment_is_deleted)
         String commentIsDeletedMessage;
 
@@ -283,6 +297,13 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                 }
             }
 
+            if (comment.getTime() != null && !comment.getTime().isEmpty()){
+                commentTimeTextView.setText(DateTimeHelper.INSTANCE.getPresentOfDate(comment.getTime(), DateTimeFormat.forPattern(AppConstants.COMMENT_DATE_TIME_PATTERN).withZone(zone).withLocale(locale)));
+            }
+            else{
+                commentTimeTextView.setText("");
+            }
+
             int epicCount = 0;
             if (comment.getEpic_count() != null) {
                 epicCount = comment.getEpic_count();
@@ -325,13 +346,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         }
 
         private void showEmptyLikeState() {
-//            likeImage.getDrawable().setColorFilter(ColorUtil.INSTANCE.getColorArgb(R.color.material_grey, context), PorterDuff.Mode.MULTIPLY);
             likeImage.setImageDrawable(likeEmptyDrawable);
         }
 
         private void showLikedState() {
             likeImage.setImageDrawable(likeActiveDrawable);
-//            likeImage.getDrawable().setColorFilter(ColorUtil.INSTANCE.getColorArgb(R.color.stepic_blue_ribbon, context), PorterDuff.Mode.MULTIPLY);
         }
 
         protected final User getUser(Comment comment) {

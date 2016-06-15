@@ -12,6 +12,7 @@ public class AppConstants {
     public static final String DEFAULT_QUALITY = "360";
     public static final String KEY_LOAD_TYPE = "KEY_LOAD_TYPE";
     public static final String KEY_TABLE_TYPE = "table_type";
+    public static final String COMMENT_DATE_TIME_PATTERN = "dd.MM.yyyy HH:mm";
 
 
     //Types of steps:
