@@ -35,7 +35,7 @@ public class StorageUtil {
             return SDState.sdCardNotAvailableOnDevice;
         } else {
             //files.length >= 2
-            if (files[1] == null) {
+            if (files[1] == null || getTotalMemorySize(files[1]) <= 0L) {
                 return SDState.sdCardNotMounted;
             } else {
                 return SDState.sdcardMounted;
