@@ -30,7 +30,7 @@
 
     <item
         android:id="@+id/x1_75"
-        android:icon="@drawable/ic_playbackrate_1_5_light"
+        android:icon="@drawable/ic_playbackrate_1_75_light"
         android:title="@string/x1_75"/>
 
     <item
