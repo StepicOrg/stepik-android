@@ -211,6 +211,10 @@ public class UserPreferences {
             if (files[i] != null) {
                 long free = StorageUtil.getAvailableMemorySize(files[i]);
                 long total = StorageUtil.getTotalMemorySize(files[i]);
+                if (total <= 0) {
+                    // not show fake storage
+                    continue;
+                }
 
                 boolean isChosen = false;
                 final boolean isSd = isSdChosen();
