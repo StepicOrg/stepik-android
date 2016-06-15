@@ -16,7 +16,7 @@ import org.stepic.droid.events.loading.FinishLoadEvent
 import org.stepic.droid.events.loading.StartLoadEvent
 import org.stepic.droid.events.video.FailToMoveFilesEvent
 import org.stepic.droid.util.*
-import org.stepic.droid.view.custom.LoadingProgressDialogFragment
+import org.stepic.droid.view.custom.MovingProgressDialogFragment
 import org.stepic.droid.view.dialogs.ChooseStorageDialog
 import org.stepic.droid.view.dialogs.ClearVideosDialog
 
@@ -56,7 +56,7 @@ class StoreManagementFragment : FragmentBase() {
             initClearCacheFeature(it)
             initAccordingToStoreState(it)
         }
-        loadingProgressDialog = LoadingProgressDialogFragment.newInstance()
+        loadingProgressDialog = MovingProgressDialogFragment.newInstance()
         bus.register(this)
     }
 

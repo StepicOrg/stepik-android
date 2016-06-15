@@ -2,16 +2,20 @@ package org.stepic.droid.view.custom;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.support.annotation.StringRes;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
 
 public class LoadingProgressDialog extends ProgressDialog {
-    public LoadingProgressDialog(Context context) {
+    public LoadingProgressDialog(Context context, @StringRes int titleRes) {
         super(context);
-        setTitle(MainApplication.getAppContext().getString(R.string.loading));
-        setMessage(MainApplication.getAppContext().getString(R.string.loading_message));
+        setTitle(context.getString(titleRes));
+        setMessage(context.getString(R.string.loading_message));
         setCancelable(false);
+    }
+
+    public LoadingProgressDialog(Context context) {
+        this(context, R.string.loading);
     }
 
 }
