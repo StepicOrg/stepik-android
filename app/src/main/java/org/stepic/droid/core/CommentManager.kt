@@ -129,9 +129,8 @@ class CommentManager {
                                     }
                                 }
                         stepicResponse.votes?.forEach{
-                            if (it.id !in voteMap){
+                            //updating info
                                 voteMap.put(it.id, it)
-                            }
                         }
                         //commentIdIsLoading = commentIdIsLoading.filterNot { cachedCommentsSetMap.containsKey(it) }.toHashSet()
                         if (fromReply) {

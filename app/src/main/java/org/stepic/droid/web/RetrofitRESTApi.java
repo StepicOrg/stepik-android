@@ -182,7 +182,9 @@ public class RetrofitRESTApi implements IApi {
     }
 
     private Converter.Factory generateGsonFactory() {
-        Gson gson = new GsonBuilder().registerTypeAdapter(DatasetWrapper.class, new DatasetDeserializer())
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(DatasetWrapper.class, new DatasetDeserializer())
+                .serializeNulls()
                 .create();
         return GsonConverterFactory.create(gson);
     }
@@ -597,9 +599,10 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
-    public Call<VoteResponse> makeVote(String voteId, VoteValue voteValue) {
+    public Call<VoteResponse> makeVote(String voteId, @Nullable VoteValue voteValue) {
         Vote vote = new Vote(voteId, voteValue);
-        return mLoggedService.postVote(voteId, vote);
+        VoteRequest request = new VoteRequest(vote);
+        return mLoggedService.postVote(voteId, request);
     }
 
     @Nullable

@@ -188,19 +188,19 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun unlikeComment(position: Int) {
-        vote(position, VoteValue.remove)
+        vote(position, null)
     }
 
     private fun abuseComment(position: Int) {
         vote(position, VoteValue.dislike)
     }
 
-    private fun vote(position: Int, voteValue: VoteValue) {
+    private fun vote(position: Int, voteValue: VoteValue?) {
 
         val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
         val voteId = comment.vote
         val commentId = comment.id
-        if (commentId == null){
+        if (commentId == null) {
             YandexMetrica.reportEvent("comment: commentId null")
             return
         }
@@ -208,7 +208,13 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             mShell.api.makeVote(it, voteValue).enqueue(object : Callback<VoteResponse> {
                 override fun onResponse(response: Response<VoteResponse>?, retrofit: Retrofit?) {
                     //todo event for update
-                    commentManager.loadCommentsByIds(longArrayOf(commentId))
+                    if (response?.isSuccess ?: false) {
+//                        commentManager.loadCommentsByIds(longArrayOf(commentId))
+                        bus.post(LikeCommentSuccessEvent(commentId))
+                    } else {
+                        bus.post(LikeCommentFailEvent())
+                    }
+
                 }
 
                 override fun onFailure(t: Throwable?) {
@@ -221,8 +227,14 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     @Subscribe
-    fun onLikeCommentFail(event : LikeCommentFailEvent){
+    fun onLikeCommentFail(event: LikeCommentFailEvent) {
         Toast.makeText(context, "Sorry", Toast.LENGTH_SHORT).show()
+    }
+
+    @Subscribe
+    fun onLikeCommentSuccess(event: LikeCommentSuccessEvent) {
+        commentManager.loadCommentsByIds(longArrayOf(event.commentId))
+        val i = 0
     }
 
 

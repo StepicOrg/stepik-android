@@ -301,7 +301,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                 Vote vote = commentManager.getVoteByVoteId(voteId);
                 if (vote == null) {
                     showEmptyLikeState();
-                } else if (vote.getValue() == null || vote.getValue().getValue() == null ||  vote.getValue().getValue().equals( VoteValue.remove.getValue()) || vote.getValue().getValue().equals(VoteValue.dislike.getValue())) {
+                } else if (vote.getValue() == null || vote.getValue().getValue() == null || vote.getValue().getValue().equals(VoteValue.dislike.getValue())) {
                     showEmptyLikeState();
                 } else if (vote.getValue().getValue().equals(VoteValue.like.getValue())) {
                     showLikedState();

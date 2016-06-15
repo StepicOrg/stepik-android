@@ -7,5 +7,4 @@ enum class VoteValue private constructor(val value: String?) {
     like("epic"),
     @SerializedName("abuse")
     dislike("abuse"),
-    remove(null)
 }
