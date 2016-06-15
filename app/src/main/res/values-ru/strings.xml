@@ -172,4 +172,6 @@
     <string name="like_label">Нравится</string>
     <string name="unlike_label">Больше не нравится</string>
     <string name="report_label">Пожаловаться</string>
+    <string name="done">Готово</string>
+
 </resources>

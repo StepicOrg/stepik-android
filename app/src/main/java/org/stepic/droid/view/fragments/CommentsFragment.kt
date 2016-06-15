@@ -1,7 +1,9 @@
 package org.stepic.droid.view.fragments
 
 import android.os.Bundle
+import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
@@ -20,7 +22,9 @@ import org.stepic.droid.core.CommentManager
 import org.stepic.droid.events.comments.*
 import org.stepic.droid.model.comments.Comment
 import org.stepic.droid.model.comments.VoteValue
+import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.setTextColor
 import org.stepic.droid.view.adapters.CommentsAdapter
 import org.stepic.droid.view.util.ContextMenuRecyclerView
 import org.stepic.droid.web.DiscussionProxyResponse
@@ -66,6 +70,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     lateinit var loadProgressBarOnCenter: ProgressBar
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var recyclerView: RecyclerView
+    lateinit var commentCoordinatorLayout: CoordinatorLayout
     var floatingActionButton: FloatingActionButton? = null
     lateinit var emptyStateView: View
     lateinit var errorView: View
@@ -91,6 +96,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             initAddCommentButton(v)
             initEmptyState(v)
             initConnectionError(v)
+            commentCoordinatorLayout = v.findViewById(R.id.comments_coordinator_layout) as CoordinatorLayout
         }
         return v
     }
@@ -209,9 +215,9 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                 override fun onResponse(response: Response<VoteResponse>?, retrofit: Retrofit?) {
                     //todo event for update
                     if (response?.isSuccess ?: false) {
-//                        commentManager.loadCommentsByIds(longArrayOf(commentId))
                         bus.post(LikeCommentSuccessEvent(commentId))
                     } else {
+                        YandexMetrica.reportEvent("comment: fail")
                         bus.post(LikeCommentFailEvent())
                     }
 
@@ -228,13 +234,18 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     @Subscribe
     fun onLikeCommentFail(event: LikeCommentFailEvent) {
-        Toast.makeText(context, "Sorry", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, R.string.feedback_internet_problem, Toast.LENGTH_SHORT).show()
     }
 
     @Subscribe
     fun onLikeCommentSuccess(event: LikeCommentSuccessEvent) {
         commentManager.loadCommentsByIds(longArrayOf(event.commentId))
-        val i = 0
+        Toast.makeText(context, R.string.done, Toast.LENGTH_SHORT).show()
+//        floatingActionButton?.let {
+//            Snackbar.make(it, "Success!", Snackbar.LENGTH_SHORT)
+//                    .setTextColor(ColorUtil.getColorArgb(R.color.white))
+//                    .show()
+//        }
     }
 
 
