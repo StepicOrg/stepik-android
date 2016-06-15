@@ -21,6 +21,7 @@ import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.core.ActivityFinisher;
 import org.stepic.droid.core.ProgressHandler;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.util.ValidatorUtil;
 import org.stepic.droid.web.RegistrationResponse;
 
@@ -112,12 +113,11 @@ public class RegisterActivity extends FragmentActivityBase {
         mPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
                     createAccount();
-                    handled = true;
+                    return true;
                 }
-                return handled;
+                return false;
             }
         });
 
@@ -150,62 +150,57 @@ public class RegisterActivity extends FragmentActivityBase {
         final String email = mEmailView.getText().toString().trim();
         final String password = mPassword.getText().toString();
 
-        boolean isOk = true;
-
         if (!ValidatorUtil.isPasswordValid(password)) {
             showError(mPasswordWrapper, mPasswordTooShortMessage);
-            isOk = false;
+            return;
         }
 
-        if (isOk) {
-            hideError(mFirstNameViewWrapper);
-            hideError(mSecondNameViewWrapper);
-            hideError(mEmailViewWrapper);
-            hideError(mPasswordWrapper);
+        hideError(mFirstNameViewWrapper);
+        hideError(mSecondNameViewWrapper);
+        hideError(mEmailViewWrapper);
+        hideError(mPasswordWrapper);
 
-            mShell.getApi().signUp(firstName, lastName, email, password).enqueue(new Callback<RegistrationResponse>() {
-                @Override
-                public void onResponse(Response<RegistrationResponse> response, Retrofit retrofit) {
-                    ProgressHelper.dismiss(mProgress);
-                    if (response.isSuccess()) {
-                        mLoginManager.login(email, password, new ProgressHandler() {
-                            @Override
-                            public void activate() {
-                                hideSoftKeypad();
-                                ProgressHelper.activate(mProgress);
-                            }
-
-                            @Override
-                            public void dismiss() {
-                                ProgressHelper.dismiss(mProgress);
-                            }
-                        }, new ActivityFinisher() {
-                            @Override
-                            public void onFinish() {
-                                finish();
-                            }
-                        });
-                    } else {
-                        Converter<ResponseBody, RegistrationResponse> errorConverter =
-                                retrofit.responseConverter(RegistrationResponse.class, new Annotation[0]);
-                        RegistrationResponse error = null;
-                        try {
-                            error = errorConverter.convert(response.errorBody());
-                        } catch (Exception e) {
-                            YandexMetrica.reportError("registration important error", e); //it is unknown response Expected BEGIN_OBJECT but was STRING at line 1 column 1 path
+        mShell.getApi().signUp(firstName, lastName, email, password).enqueue(new Callback<RegistrationResponse>() {
+            @Override
+            public void onResponse(Response<RegistrationResponse> response, Retrofit retrofit) {
+                ProgressHelper.dismiss(mProgress);
+                if (response.isSuccess()) {
+                    mLoginManager.login(email, password, new ProgressHandler() {
+                        @Override
+                        public void activate() {
+                            hideSoftKeypad();
+                            ProgressHelper.activate(mProgress);
                         }
-                        handleErrorRegistrationResponse(error);
+
+                        @Override
+                        public void dismiss() {
+                            ProgressHelper.dismiss(mProgress);
+                        }
+                    }, new ActivityFinisher() {
+                        @Override
+                        public void onFinish() {
+                            finish();
+                        }
+                    });
+                } else {
+                    Converter<ResponseBody, RegistrationResponse> errorConverter =
+                            retrofit.responseConverter(RegistrationResponse.class, new Annotation[0]);
+                    RegistrationResponse error = null;
+                    try {
+                        error = errorConverter.convert(response.errorBody());
+                    } catch (Exception e) {
+                        YandexMetrica.reportError("registration important error", e); //it is unknown response Expected BEGIN_OBJECT but was STRING at line 1 column 1 path
                     }
-
+                    handleErrorRegistrationResponse(error);
                 }
+            }
 
-                @Override
-                public void onFailure(Throwable t) {
-                    ProgressHelper.dismiss(mProgress);
-                    Toast.makeText(RegisterActivity.this, R.string.connectionProblems, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
+            @Override
+            public void onFailure(Throwable t) {
+                ProgressHelper.dismiss(mProgress);
+                Toast.makeText(RegisterActivity.this, R.string.connectionProblems, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -257,15 +252,7 @@ public class RegisterActivity extends FragmentActivityBase {
 
     @Nullable
     private String getErrorString(String[] values) {
-        if (values == null || values.length == 0) return null;
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < values.length; i++) {
-            sb.append(values[i]);
-            if (i != values.length - 1) {
-                sb.append(ERROR_DELIMITER);
-            }
-        }
-        return sb.toString();
+        return StringUtil.join(values, ERROR_DELIMITER);
     }
 
     @OnFocusChange({R.id.email_reg, R.id.first_name_reg, R.id.second_name_reg})
