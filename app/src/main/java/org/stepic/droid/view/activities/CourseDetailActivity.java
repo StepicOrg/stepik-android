@@ -14,7 +14,13 @@ public class CourseDetailActivity extends SingleFragmentActivity {
     @Override
     protected Fragment createFragment() {
         Course course = (Course) (getIntent().getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
-        return CourseDetailFragment.newInstance(course);
+        if (course == null) {
+            int i = 0;
+            String pathFromWeb = getIntent().getData().getPath(); //example: /course/Школьная-физика-Тепловые-и-электромагнитные-явления-432/
+            return CourseDetailFragment.newInstance(course); //// FIXME: 16.06.16 send id
+        } else {
+            return CourseDetailFragment.newInstance(course);
+        }
     }
 
     @Override

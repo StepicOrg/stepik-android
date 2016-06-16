@@ -72,6 +72,14 @@ public class CourseDetailFragment extends FragmentBase {
         return fragment;
     }
 
+    public static CourseDetailFragment newInstance (long courseId) {
+        Bundle args = new Bundle();
+        args.putLong(AppConstants.KEY_COURSE_LONG_ID, courseId);
+        CourseDetailFragment fragment = new CourseDetailFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     @Bind(R.id.root_view)
     View mRootView;
