@@ -72,6 +72,7 @@ public class CourseDetailFragment extends FragmentBase {
         return fragment;
     }
 
+    //can be -1 if address is incorrect
     public static CourseDetailFragment newInstance (long courseId) {
         Bundle args = new Bundle();
         args.putLong(AppConstants.KEY_COURSE_LONG_ID, courseId);

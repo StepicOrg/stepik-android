@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import org.stepic.droid.base.SingleFragmentActivity;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.view.fragments.CourseDetailFragment;
 
 public class CourseDetailActivity extends SingleFragmentActivity {
@@ -17,8 +18,15 @@ public class CourseDetailActivity extends SingleFragmentActivity {
         if (course == null) {
             int i = 0;
             //Warning: work only for pattern android:pathPattern="/course/.*/" NOT Working for /course/.*/.* !!!
-            String pathFromWeb = getIntent().getData().getLastPathSegment(); //example of last path segment: Школьная-физика-Тепловые-и-электромагнитные-явления-432/
-            return CourseDetailFragment.newInstance(course); //// FIXME: 16.06.16 send id
+            String pathFromWeb = getIntent().getData().getLastPathSegment(); //example of last path segment: Школьная-физика-Тепловые-и-электромагнитные-явления-432
+            Long id = HtmlHelper.parseIdFromSlug(pathFromWeb);
+            long simpleId;
+            if (id == null) {
+                simpleId = -1;
+            } else {
+                simpleId = id;
+            }
+            return CourseDetailFragment.newInstance(simpleId);
         } else {
             return CourseDetailFragment.newInstance(course);
         }
