@@ -16,7 +16,8 @@ public class CourseDetailActivity extends SingleFragmentActivity {
         Course course = (Course) (getIntent().getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
         if (course == null) {
             int i = 0;
-            String pathFromWeb = getIntent().getData().getPath(); //example: /course/Школьная-физика-Тепловые-и-электромагнитные-явления-432/
+            //Warning: work only for pattern android:pathPattern="/course/.*/" NOT Working for /course/.*/.* !!!
+            String pathFromWeb = getIntent().getData().getLastPathSegment(); //example of last path segment: Школьная-физика-Тепловые-и-электромагнитные-явления-432/
             return CourseDetailFragment.newInstance(course); //// FIXME: 16.06.16 send id
         } else {
             return CourseDetailFragment.newInstance(course);
