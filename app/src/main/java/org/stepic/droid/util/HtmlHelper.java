@@ -2,6 +2,8 @@ package org.stepic.droid.util;
 
 import android.text.Html;
 
+import com.yandex.metrica.YandexMetrica;
+
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.Source;
 
@@ -21,7 +23,8 @@ public class HtmlHelper {
         return Html.fromHtml(content);
     }
 
-    /** Trims trailing whitespace. Removes any of these characters:
+    /**
+     * Trims trailing whitespace. Removes any of these characters:
      * 0009, HORIZONTAL TABULATION
      * 000A, LINE FEED
      * 000B, VERTICAL TABULATION
@@ -31,20 +34,21 @@ public class HtmlHelper {
      * 001D, GROUP SEPARATOR
      * 001E, RECORD SEPARATOR
      * 001F, UNIT SEPARATOR
+     *
      * @return "" if source is null, otherwise string with all trailing whitespace removed
      */
     public static CharSequence trimTrailingWhitespace(CharSequence source) {
 
-        if(source == null)
+        if (source == null)
             return "";
 
         int i = source.length();
 
         // loop back to the first non-whitespace character
-        while(--i >= 0 && Character.isWhitespace(source.charAt(i))) {
+        while (--i >= 0 && Character.isWhitespace(source.charAt(i))) {
         }
 
-        return source.subSequence(0, i+1);
+        return source.subSequence(0, i + 1);
     }
 
     public static boolean isForWebView(@NotNull String text) {
@@ -80,6 +84,28 @@ public class HtmlHelper {
         String htmlRaw = notification.getHtmlText();
         if (htmlRaw == null) return null;
         return parseCourseIdFromNotification(htmlRaw);
+    }
+
+    @Nullable
+    public static Long parseIdFromSlug(String slug) {
+        Long id = null;
+        try {
+            id = Long.parseLong(slug);
+        } catch (NumberFormatException ignored) {
+            //often it is not number then it is "Some-Name-idNum" or just "-idNum"
+        }
+
+        int indexOfLastDash = slug.lastIndexOf("-");
+        if (indexOfLastDash < 0)
+            return null;
+
+        try {
+            String number = slug.substring(indexOfLastDash + 1, slug.length());
+            id = Long.parseLong(number);
+        } catch (NumberFormatException | IndexOutOfBoundsException notCorrectSlug) {
+            YandexMetrica.reportError(AppConstants.ERROR_PARSING_SLUG, notCorrectSlug);
+        }
+        return id;
     }
 
     private static Long parseCourseIdFromNotification(String htmlRaw) {
