@@ -95,6 +95,11 @@ public class HtmlHelper {
             //often it is not number then it is "Some-Name-idNum" or just "-idNum"
         }
 
+        if (id != null) {
+            //if, for example, -432 -> 432
+            return Math.abs(id);
+        }
+
         int indexOfLastDash = slug.lastIndexOf("-");
         if (indexOfLastDash < 0)
             return null;
