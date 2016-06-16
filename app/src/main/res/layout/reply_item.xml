@@ -85,6 +85,8 @@
                             tools:text="Long long text of comment Long long text of comment Long long text of commentLong long text of comment Long long text of comment"/>
                     </org.stepic.droid.view.custom.InterceptFrameLayout>
 
+                   <include layout="@layout/comment_state_view"/>
+
                     <TextView
                         android:id="@+id/load_more_reply"
                         android:layout_width="match_parent"

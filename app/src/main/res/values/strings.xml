@@ -72,6 +72,8 @@
     <string name="loading_message">Please wait…</string>
     <string name="kb">KB</string>
     <string name="mb">MB</string>
+    <string name="gb">GB</string>
+    <string name="empty">Empty</string>
     <string name="clear">Clear</string>
     <string name="clear_videos">Are you sure that want to delete all cached videos?</string>
     <string name="empty_downloading">No downloaded videos</string>
@@ -118,6 +120,7 @@
     <string name="x0_75" translatable="false">x0.75</string>
     <string name="x1_25" translatable="false">x1.25</string>
     <string name="x1_5" translatable="false">x1.5</string>
+    <string name="x1_75" translatable="false">x1.75</string>
     <string name="x2_0" translatable="false">x2.0</string>
     <string name="cant_drop">You can not drop course</string>
     <string name="open_in_external_player">Open in external player</string>
@@ -162,4 +165,21 @@
     <string name="reply_title">Reply</string>
     <string name="one_comment_title">Comment</string>
     <string name="comment_is_deleted">This comment was deleted</string>
+    <string name="space_management_title">Space management</string>
+    <string name="clear_cache_explanation">The App supports viewing videos online, but to view the lessons without Internet connection is necessary to keep them. Most of the space is taken by the video tutorials. Deleting all downloaded videos can take a few minutes.</string>
+    <string name="storage">Storage</string>
+    <string name="notMountExplanation">The SD card is not plugged in the device. To save the videos to the SD card, plug it in the phone and restart the App.</string>
+    <string name="mountExplanation">You can save lessons on SD-card or internal device memory. Please note that when saving on SD-card, lessons when removing the SD-card will no longer be available offline.</string>
+    <string name="choose_storage_title">Choose storage</string>
+    <string name="default_storage">Default</string>
+    <string name="secondary_storage">Secondary</string>
+    <string name="free_title">free</string>
+    <string name="move_data_explanation">All previously downloaded videos will be transferred and new videos will be loaded in new location. The operation may take a few minutes. Are you sure?</string>
+    <string name="sorry_moved">Sorry, this file was moved or deleted</string>
+    <string name="fail_move">Sorry, error has occurred, when files were moving</string>
+    <string name="like_label">Like</string>
+    <string name="unlike_label">Unlike</string>
+    <string name="report_label">Report</string>
+    <string name="done">Done</string>
+    <string name="moving">Moving</string>
 </resources>

@@ -51,7 +51,7 @@ public class LogoutAreYouSureDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         MainApplication.component().inject(this);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.title_confirmation)
                 .setMessage(R.string.are_you_sure_logout)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {

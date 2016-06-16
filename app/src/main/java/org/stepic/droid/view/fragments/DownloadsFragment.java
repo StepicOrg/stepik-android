@@ -23,13 +23,14 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.concurrency.DownloadPoster;
 import org.stepic.droid.events.CancelAllVideosEvent;
 import org.stepic.droid.events.DownloadingIsLoadedSuccessfullyEvent;
-import org.stepic.droid.events.loading.FinishDeletingLoadEvent;
-import org.stepic.droid.events.loading.StartDeletingLoadEvent;
+import org.stepic.droid.events.loading.FinishLoadEvent;
+import org.stepic.droid.events.loading.StartLoadEvent;
 import org.stepic.droid.events.steps.ClearAllDownloadWithoutAnimationEvent;
 import org.stepic.droid.events.steps.StepRemovedEvent;
 import org.stepic.droid.events.video.DownloadReportEvent;
 import org.stepic.droid.events.video.FinishDownloadCachedVideosEvent;
 import org.stepic.droid.events.video.VideoCachedOnDiskEvent;
+import org.stepic.droid.events.video.VideosMovedEvent;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.DownloadReportItem;
@@ -107,8 +108,8 @@ public class DownloadsFragment extends FragmentBase {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mDownloadAdapter = new DownloadsAdapter(mCachedVideoList, mStepIdToLesson, getActivity(), this, mDownloadingWithProgressList, cachedStepsSet);
         mDownloadsView.setAdapter(mDownloadAdapter);
@@ -373,6 +374,10 @@ public class DownloadsFragment extends FragmentBase {
         isLoaded = true;
         ProgressHelper.dismiss(mProgressBar);
         if (videosForShowing == null || map == null) return;
+
+        mStepIdToLesson.clear(); //when moved it is working
+        mCachedVideoList.clear();
+
         mStepIdToLesson.putAll(map);
         mCachedVideoList.addAll(videosForShowing);
         for (int i = 0; i < mCachedVideoList.size(); i++) {
@@ -475,12 +480,12 @@ public class DownloadsFragment extends FragmentBase {
     }
 
     @Subscribe
-    public void onShouldStartLoad(StartDeletingLoadEvent event) {
+    public void onShouldStartLoad(StartLoadEvent event) {
         ProgressHelper.activate(loadingProgressDialog);
     }
 
     @Subscribe
-    public void onShouldStopLoad(FinishDeletingLoadEvent event) {
+    public void onShouldStopLoad(FinishLoadEvent event) {
         ProgressHelper.dismiss(loadingProgressDialog);
     }
 
@@ -552,5 +557,10 @@ public class DownloadsFragment extends FragmentBase {
             }
         };
         task.executeOnExecutor(mThreadPoolExecutor);
+    }
+
+    @Subscribe
+    public void onVideoMoved (VideosMovedEvent event){
+        updateCachedAsync();
     }
 }

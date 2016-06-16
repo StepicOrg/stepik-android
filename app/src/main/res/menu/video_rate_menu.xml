@@ -29,6 +29,11 @@
         android:title="@string/x1_5"/>
 
     <item
+        android:id="@+id/x1_75"
+        android:icon="@drawable/ic_playbackrate_1_75_light"
+        android:title="@string/x1_75"/>
+
+    <item
         android:id="@+id/x2"
         android:icon="@drawable/ic_playbackrate_2_0_light"
         android:title="@string/x2_0"/>

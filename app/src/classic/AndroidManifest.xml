@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     package="org.stepic.droid"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:installLocation="auto">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <permission
         android:name="org.stepic.droid.permission.C2D_MESSAGE"

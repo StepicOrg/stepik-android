@@ -35,6 +35,7 @@ import org.stepic.droid.view.activities.NewCommentActivity;
 import org.stepic.droid.view.activities.RegisterActivity;
 import org.stepic.droid.view.activities.SectionActivity;
 import org.stepic.droid.view.activities.SettingsActivity;
+import org.stepic.droid.view.activities.StoreManagementActivity;
 import org.stepic.droid.view.activities.StepsActivity;
 import org.stepic.droid.view.activities.TextFeedbackActivity;
 import org.stepic.droid.view.activities.UnitsActivity;
@@ -193,6 +194,13 @@ public class ScreenManager implements IScreenManager {
         Intent intent = new Intent(sourceActivity, SettingsActivity.class);
         sourceActivity.startActivity(intent);
         sourceActivity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
+    }
+
+    @Override
+    public void showStorageManagement(Activity activity) {
+        Intent intent = new Intent(activity, StoreManagementActivity.class);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
     }
 
     @Override

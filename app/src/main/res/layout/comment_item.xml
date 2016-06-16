@@ -86,6 +86,8 @@
                             tools:text="Long long text of comment Long long text of comment Long long text of commentLong long text of comment Long long text of comment"/>
                     </org.stepic.droid.view.custom.InterceptFrameLayout>
 
+                    <include layout="@layout/comment_state_view"/>
+
                 </LinearLayout>
             </RelativeLayout>
 

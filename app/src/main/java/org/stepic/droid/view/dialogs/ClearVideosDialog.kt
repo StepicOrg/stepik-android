@@ -10,8 +10,8 @@ import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.concurrency.IMainHandler
-import org.stepic.droid.events.loading.FinishDeletingLoadEvent
-import org.stepic.droid.events.loading.StartDeletingLoadEvent
+import org.stepic.droid.events.loading.FinishLoadEvent
+import org.stepic.droid.events.loading.StartLoadEvent
 import org.stepic.droid.events.steps.ClearAllDownloadWithoutAnimationEvent
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.CleanManager
@@ -43,14 +43,14 @@ class ClearVideosDialog : DialogFragment() {
         val stringIds = bundle?.getString(KEY_STRING_IDS)
 
 
-        val builder = AlertDialog.Builder(activity, R.style.MyAlertDialogStyle)
+        val builder = AlertDialog.Builder(activity)
         builder.setTitle(R.string.title_confirmation).setMessage(R.string.clear_videos).setPositiveButton(R.string.yes) { dialog, which ->
             YandexMetrica.reportEvent(AppConstants.METRICA_YES_CLEAR_VIDEOS)
 
             val task = object : AsyncTask<Void, Void, Void>() {
                 override fun onPreExecute() {
                     super.onPreExecute()
-                    mBus.post(StartDeletingLoadEvent())
+                    mBus.post(StartLoadEvent())
 
                 }
 
@@ -67,6 +67,7 @@ class ClearVideosDialog : DialogFragment() {
                     } else {
                         stepIds = null
                         FileUtil.cleanDirectory(userPreferences.userDownloadFolder);
+                        FileUtil.cleanDirectory(userPreferences.sdCardDownloadFolder)
                         mDatabaseFacade.dropDatabase();
                     }
 
@@ -77,7 +78,7 @@ class ClearVideosDialog : DialogFragment() {
                 }
 
                 override fun onPostExecute(o: Void?) {
-                    mBus.post(FinishDeletingLoadEvent())
+                    mBus.post(FinishLoadEvent())
                 }
             }
             task.executeOnExecutor(threadPoolExecutor)

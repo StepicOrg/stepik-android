@@ -104,4 +104,7 @@ public interface StepicRestLoggedService {
 
     @POST("api/comments")
     Call<CommentsResponse> postComment(@Body CommentRequest comment);
+
+    @PUT("api/votes/{id}")
+    Call<VoteResponse> postVote(@Path("id") String voteId, @Body VoteRequest voteRequest);
 }

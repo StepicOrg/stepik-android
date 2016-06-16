@@ -45,7 +45,7 @@ class NeedUpdatingDialog : DialogFragment() {
         val link = arguments.getString(LINK_KEY)
         val isInGP = arguments.getBoolean(IS_IN_GP_KEY)
 
-        val builder = AlertDialog.Builder(activity, R.style.MyAlertDialogStyle)
+        val builder = AlertDialog.Builder(activity)
         builder.setTitle(R.string.update_available_title).setPositiveButton(R.string.update_now) { dialog, which ->
             YandexMetrica.reportEvent(AppConstants.UPDATING_MESSAGE_IS_APPROVED)
             if (isInGP) {

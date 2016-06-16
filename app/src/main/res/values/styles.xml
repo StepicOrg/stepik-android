@@ -15,6 +15,11 @@
         <item name="windowNoTitle">true</item>
         <item name="buttonStyle">@style/StepicButton</item>
         <item name="android:textAppearance">@style/TextAppearance.FontPath</item>
+
+        <item name="android:dialogTheme">@style/AppTheme.Dialog</item>
+        <item name="dialogTheme">@style/AppTheme.Dialog</item>
+        <item name="android:alertDialogTheme">@style/AppTheme.Dialog</item>
+        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
     </style>
 
     <style name="AppTheme.BrandedLaunch">
@@ -36,9 +41,10 @@
         <item name="windowActionBarOverlay">true</item>
     </style>
 
-    <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <!-- Used for the buttons -->
-        <item name="colorAccent">@color/stepic_brand_primary</item>
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/stepic_brand_primary</item>
+        <item name="colorPrimaryDark">@color/stepic_brand_primary_dark</item>
+        <item name="colorAccent">@color/stepic_blue_ribbon</item>
     </style>
 
     <style name="TextAppearance.FontPath" parent="android:TextAppearance">

@@ -5,16 +5,11 @@ import android.app.IntentService
 import android.app.Service
 import android.content.Intent
 import android.os.Handler
-
 import com.squareup.otto.Bus
 import com.yandex.metrica.YandexMetrica
-
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.events.steps.StepRemovedEvent
-import org.stepic.droid.model.Course
-import org.stepic.droid.model.Lesson
-import org.stepic.droid.model.Section
-import org.stepic.droid.model.Step
+import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.IStoreStateManager
@@ -22,10 +17,8 @@ import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.resolvers.IVideoResolver
 import org.stepic.droid.web.IApi
-
 import java.io.File
-import java.util.ArrayList
-
+import java.util.*
 import javax.inject.Inject
 
 class DeleteService : IntentService("delete_service") {
@@ -101,7 +94,10 @@ class DeleteService : IntentService("delete_service") {
             mDb.deleteVideo(it)
         }
         step?.let {
-            mDb.deleteStep(step) // remove steps
+            step.is_cached = false
+            step.is_loading = false
+            mDb.updateOnlyCachedLoadingStep(step)
+//            mDb.deleteStep(step) // remove steps FIXME: MAYBE NOT DELETE STEP?
             mStoreStateManager.updateStepAfterDeleting(step)
             val mainHandler = Handler(MainApplication.getAppContext().mainLooper)
             mainHandler.post { mBus.post(StepRemovedEvent(step.id)) }

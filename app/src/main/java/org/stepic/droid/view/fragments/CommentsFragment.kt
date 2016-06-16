@@ -1,7 +1,9 @@
 package org.stepic.droid.view.fragments
 
 import android.os.Bundle
+import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
@@ -12,16 +14,22 @@ import android.view.*
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.squareup.otto.Subscribe
+import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.events.comments.*
 import org.stepic.droid.model.comments.Comment
+import org.stepic.droid.model.comments.Vote
+import org.stepic.droid.model.comments.VoteValue
+import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.setTextColor
 import org.stepic.droid.view.adapters.CommentsAdapter
 import org.stepic.droid.view.util.ContextMenuRecyclerView
 import org.stepic.droid.web.DiscussionProxyResponse
+import org.stepic.droid.web.VoteResponse
 import retrofit.Callback
 import retrofit.Response
 import retrofit.Retrofit
@@ -32,6 +40,14 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     companion object {
         private val discussionIdKey = "dis_id_key"
         private val stepIdKey = "stepId"
+
+
+        private val replyMenuId = 100
+        private val likeMenuId = 101
+        private val unLikeMenuId = 102
+        private val reportMenuId = 103
+        private val cancelMenuId = 104
+
 
         fun newInstance(discussionId: String, stepId: Long): Fragment {
             val args = Bundle()
@@ -55,6 +71,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     lateinit var loadProgressBarOnCenter: ProgressBar
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var recyclerView: RecyclerView
+    lateinit var commentCoordinatorLayout: CoordinatorLayout
     var floatingActionButton: FloatingActionButton? = null
     lateinit var emptyStateView: View
     lateinit var errorView: View
@@ -80,6 +97,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             initAddCommentButton(v)
             initEmptyState(v)
             initConnectionError(v)
+            commentCoordinatorLayout = v.findViewById(R.id.comments_coordinator_layout) as CoordinatorLayout
         }
         return v
     }
@@ -111,18 +129,56 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
         menu?.setHeaderTitle(R.string.one_comment_title)
-        val inflater = activity.menuInflater
-        inflater.inflate(R.menu.comment_context_menu, menu)
+
+        val info = menuInfo as ContextMenuRecyclerView.RecyclerViewContextMenuInfo
+        val position = info.position //resolve which should show
+        val userId = mUserPreferences.userId
+        val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
+        if (userId > 0) {
+            //it is not anonymous
+
+            menu?.add(Menu.NONE, replyMenuId, Menu.NONE, R.string.reply_title)
+            if (comment.user != null && comment.user.toLong() != userId && comment.vote != null) {
+                //it is not current user and vote is available
+                val vote = commentManager.getVoteByVoteId(comment.vote)
+                if (vote?.value != null && vote?.value == VoteValue.like) {
+                    //if we have like -> show suggest for unlike
+                    menu?.add(Menu.NONE, unLikeMenuId, Menu.NONE, R.string.unlike_label)
+                } else {
+                    menu?.add(Menu.NONE, likeMenuId, Menu.NONE, R.string.like_label)
+                }
+                menu?.add(Menu.NONE, reportMenuId, Menu.NONE, R.string.report_label)
+            }
+        } else {
+            //todo: Cancel only for anonymous?
+            menu?.add(Menu.NONE, cancelMenuId, Menu.NONE, R.string.cancel)
+        }
     }
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
-        val info = item?.getMenuInfo() as ContextMenuRecyclerView.RecyclerViewContextMenuInfo
+        val info = item?.menuInfo as ContextMenuRecyclerView.RecyclerViewContextMenuInfo
         val position = info.position
         when (item?.itemId) {
-            R.id.menu_item_reply -> {
+            replyMenuId -> {
                 replyToComment(info.position)
                 return true
             }
+
+            likeMenuId -> {
+                likeComment(info.position)
+                return true
+            }
+
+            unLikeMenuId -> {
+                unlikeComment(info.position)
+                return true
+            }
+
+            reportMenuId -> {
+                abuseComment(info.position)
+                return true
+            }
+
             else -> return super.onContextItemSelected(item)
         }
     }
@@ -132,6 +188,73 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         comment?.let {
             mShell.screenProvider.openNewCommentForm(activity, stepId, it.parent ?: it.id)
         }
+    }
+
+    private fun likeComment(position: Int) {
+        vote(position, VoteValue.like)
+    }
+
+    private fun unlikeComment(position: Int) {
+        vote(position, null)
+    }
+
+    private fun abuseComment(position: Int) {
+        vote(position, VoteValue.dislike)
+    }
+
+    private fun vote(position: Int, voteValue: VoteValue?) {
+
+        val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
+        val voteId = comment.vote
+        val commentId = comment.id
+        if (commentId == null) {
+            YandexMetrica.reportEvent("comment: commentId null")
+            return
+        }
+        voteId?.let {
+            val voteObject = Vote(voteId, voteValue)
+            mShell.api.makeVote(it, voteValue).enqueue(object : Callback<VoteResponse> {
+                override fun onResponse(response: Response<VoteResponse>?, retrofit: Retrofit?) {
+                    //todo event for update
+                    if (response?.isSuccess ?: false) {
+                        bus.post(LikeCommentSuccessEvent(commentId, voteObject))
+                    } else {
+                        YandexMetrica.reportEvent("comment: fail")
+                        bus.post(LikeCommentFailEvent())
+                    }
+
+                }
+
+                override fun onFailure(t: Throwable?) {
+                    //todo event for fail
+                    bus.post(LikeCommentFailEvent())
+                }
+            })
+        }
+
+    }
+
+    @Subscribe
+    fun onLikeCommentFail(event: LikeCommentFailEvent) {
+        Toast.makeText(context, R.string.feedback_internet_problem, Toast.LENGTH_SHORT).show()
+    }
+
+    @Subscribe
+    fun onLikeCommentSuccess(event: LikeCommentSuccessEvent) {
+//        commentManager.insertOrUpdateVote(event.vote)
+//        val position : Int = commentManager.getPositionOfComment(event.commentId)
+//        if (position >= 0 && position< commentManager.getSize()){
+//            commentAdapter.notifyItemChanged(position)
+//        }
+        //SO, comment count is not updated
+
+        commentManager.loadCommentsByIds(longArrayOf(event.commentId))
+        Toast.makeText(context, R.string.done, Toast.LENGTH_SHORT).show()
+//        floatingActionButton?.let {
+//            Snackbar.make(it, "Success!", Snackbar.LENGTH_SHORT)
+//                    .setTextColor(ColorUtil.getColorArgb(R.color.white))
+//                    .show()
+//        }
     }
 
 
@@ -223,8 +346,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             showEmptyState(false)
         }
         val needInsertLocal = needInsertLate
-        if (needInsertLocal != null && (!commentManager.isCommentCached(needInsertLocal.id) || ( needInsertLocal.parent != null && !commentManager.isCommentCached(needInsertLocal.parent)))) {
-            val longArr  = listOf(needInsertLocal.id, needInsertLocal.parent).filterNotNull().toLongArray()
+        if (needInsertLocal != null && (!commentManager.isCommentCached(needInsertLocal.id) || (needInsertLocal.parent != null && !commentManager.isCommentCached(needInsertLocal.parent)))) {
+            val longArr = listOf(needInsertLocal.id, needInsertLocal.parent).filterNotNull().toLongArray()
             commentManager.loadCommentsByIds(longArr)
         } else {
             needInsertLate = null

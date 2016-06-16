@@ -133,8 +133,9 @@ public class StepicDefaultModule {
     public IVideoResolver provideVideoResolver(Context context,
                                                Bus bus,
                                                DatabaseFacade dbOperationsCachedVideo,
-                                               UserPreferences userPreferences) {
-        return new VideoResolver(context, bus, dbOperationsCachedVideo, userPreferences);
+                                               UserPreferences userPreferences,
+                                               CleanManager cleanManager) {
+        return new VideoResolver(context, bus, dbOperationsCachedVideo, userPreferences, cleanManager);
     }
 
     @Provides

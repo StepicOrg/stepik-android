@@ -24,7 +24,7 @@ public class AllowMobileDataDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         MainApplication.component().inject(this);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.allow_mobile_download_title)
                 .setMessage(R.string.allow_mobile_message)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {

@@ -1,6 +1,8 @@
 package org.stepic.droid.util;
 
 import android.app.ProgressDialog;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -39,6 +41,22 @@ public class ProgressHelper {
         if (progressDialog != null && progressDialog.isShowing()) {
             try {
                 progressDialog.dismiss();
+            } catch (Exception ex) {
+                YandexMetrica.reportError("progressDialog", ex);
+            }
+        }
+    }
+
+    public static void activate(DialogFragment progressDialog, FragmentManager fragmentManager, String tag) {
+        if (progressDialog != null && !progressDialog.isAdded())
+            progressDialog.show(fragmentManager, tag);
+    }
+
+    public static void dismiss(FragmentManager fragmentManager, String tag) {
+        if (fragmentManager != null) {
+            try {
+                DialogFragment fragment = (DialogFragment)  fragmentManager.findFragmentByTag(tag);
+                fragment.dismiss();
             } catch (Exception ex) {
                 YandexMetrica.reportError("progressDialog", ex);
             }

@@ -55,4 +55,5 @@ public interface IScreenManager {
 
     void showSettings(Activity sourceActivity);
 
+    void showStorageManagement(Activity activity);
 }

@@ -6,9 +6,11 @@ import com.squareup.otto.Bus;
 import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.Nullable;
+import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.model.VideoUrl;
 import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 
 import java.io.File;
@@ -21,12 +23,14 @@ public class VideoResolver implements IVideoResolver {
     private Bus mBus;
     private DatabaseFacade mDbOperations;
     private UserPreferences mUserPreferences;
+    private CleanManager cleanManager;
 
-    public VideoResolver(Context context, Bus bus, DatabaseFacade dbOperationsCachedVideo, UserPreferences userPreferences) {
+    public VideoResolver(Context context, Bus bus, DatabaseFacade dbOperationsCachedVideo, UserPreferences userPreferences, CleanManager cleanManager) {
         mContext = context;
         mBus = bus;
         mDbOperations = dbOperationsCachedVideo;
         mUserPreferences = userPreferences;
+        this.cleanManager = cleanManager;
     }
 
     /**
@@ -36,7 +40,7 @@ public class VideoResolver implements IVideoResolver {
      * @return path for video in web or local, null if video is incorrect or can't resolve
      */
     @Override
-    public String resolveVideoUrl(@Nullable final Video video) {
+    public String resolveVideoUrl(@Nullable final Video video, Step step) {
         //// TODO: 15.10.15 check in database by id, check availability of playing on the device, etc
 //// TODO: 15.10.15 log all "return" statements
 
@@ -44,7 +48,7 @@ public class VideoResolver implements IVideoResolver {
 
         String localPath = mDbOperations.getPathToVideoIfExist(video);
 
-        if (localPath != null && checkExistingOnDisk(localPath)) {
+        if (localPath != null && checkExistingOnDisk(localPath, step)) {
             return localPath;
         } else {
             List<VideoUrl> urlList = video.getUrls();
@@ -95,12 +99,12 @@ public class VideoResolver implements IVideoResolver {
 
     }
 
-    private boolean checkExistingOnDisk(String path) {
+    private boolean checkExistingOnDisk(String path, Step step) {
         File downloadFolderAndFile = new File(path);
         if (downloadFolderAndFile.exists()) {
             return true;
         } else {
-            mDbOperations.deleteVideoByUrl(path);
+            cleanManager.removeStep(step);
             return false;
         }
 

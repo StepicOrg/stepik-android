@@ -70,6 +70,7 @@
     <string name="loading_message">Пожалуйста, подождите…</string>
     <string name="kb">КБ</string>
     <string name="mb">МБ</string>
+    <string name="gb">ГБ</string>
     <string name="clear">Очистить</string>
     <string name="clear_videos">Вы уверены, что хотите удалить все закешированные видео?</string>
     <string name="empty_downloading">Нет загруженных видео</string>
@@ -155,4 +156,22 @@
     <string name="reply_title">Ответить</string>
     <string name="one_comment_title">Комментарий</string>
     <string name="comment_is_deleted">Этот комментарий был удален</string>
+    <string name="space_management_title">Управление памятью</string>
+    <string name="clear_cache_explanation">Приложение поддерживает просмотр видео онлайн, но для просмотра уроков без Интернет-подключения их необходимо сохранять. Большую часть памяти занимают видео-уроки. Удаление всех загруженных видео может занять несколько минут.</string>
+    <string name="empty">Пусто</string>
+    <string name="storage">Память</string>
+    <string name="notMountExplanation">Карта памяти не установлена на устройство. Для того, чтобы сохранять видео на карту памяти, вставьте ее в телефон и перезапустите приложение.</string>
+    <string name="mountExplanation">Вы можете сохранять уроки на SD-карту или на внутреннюю память устройства. Обратите внимание, что если уроки были записаны на SD-карту, то, при извлечении SD-карты, они перестанут быть доступны для прохождения офлайн.</string>
+    <string name="choose_storage_title">Место для хранения</string>
+    <string name="secondary_storage">Внешняя</string>
+    <string name="default_storage">Внутренняя</string>
+    <string name="free_title">свободно</string>
+    <string name="move_data_explanation">Все ранее загруженные видео будут перенесены, новые видео будут сохраняться в выбранное место. Операция может занять несколько минут. Вы уверены?</string>
+    <string name="sorry_moved">Извините, файл удален или перемещен</string>
+    <string name="fail_move">Извините, произошла ошибка, когда файлы перемещались</string>
+    <string name="like_label">Нравится</string>
+    <string name="unlike_label">Больше не нравится</string>
+    <string name="report_label">Пожаловаться</string>
+    <string name="done">Готово</string>
+    <string name="moving">Перенос</string>
 </resources>
