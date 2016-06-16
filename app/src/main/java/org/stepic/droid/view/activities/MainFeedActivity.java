@@ -118,34 +118,38 @@ public class MainFeedActivity extends BackToExitActivityBase
         mShell.getApi().getUserProfile().enqueue(new Callback<StepicProfileResponse>() {
             @Override
             public void onResponse(Response<StepicProfileResponse> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
-                    Profile profile = response.body().getProfile();
-                    final long[] emailIds = profile.getEmailAddresses();
-                    if (emailIds != null && emailIds.length != 0) {
-                        mShell.getApi().getEmailAddresses(emailIds).enqueue(new Callback<EmailAddressResponse>() {
-                            @Override
-                            public void onResponse(Response<EmailAddressResponse> response, Retrofit retrofit) {
-                                if (response.isSuccess()) {
-                                    EmailAddressResponse emailsResponse = response.body();
-                                    if (emailsResponse != null) {
-                                        List<EmailAddress> emails = emailsResponse.getEmailAddresses();
-                                        if (emails != null && !emails.isEmpty()) {
-                                            helper.storeEmailAddresses(emails);
-                                        }
-                                    }
+                if (!response.isSuccess()) {
+                    return;
+                }
+
+                Profile profile = response.body().getProfile();
+                final long[] emailIds = profile.getEmailAddresses();
+                if (emailIds != null && emailIds.length != 0) {
+                    mShell.getApi().getEmailAddresses(emailIds).enqueue(new Callback<EmailAddressResponse>() {
+                        @Override
+                        public void onResponse(Response<EmailAddressResponse> response, Retrofit retrofit) {
+                            if (!response.isSuccess()) {
+                                return;
+                            }
+
+                            EmailAddressResponse emailsResponse = response.body();
+                            if (emailsResponse != null) {
+                                List<EmailAddress> emails = emailsResponse.getEmailAddresses();
+                                if (emails != null && !emails.isEmpty()) {
+                                    helper.storeEmailAddresses(emails);
                                 }
                             }
+                        }
 
-                            @Override
-                            public void onFailure(Throwable t) {
+                        @Override
+                        public void onFailure(Throwable t) {
 
-                            }
-                        });
-                    }
-
-                    helper.storeProfile(profile);
-                    bus.post(new ProfileCanBeShownEvent(profile));//show if we can
+                        }
+                    });
                 }
+
+                helper.storeProfile(profile);
+                bus.post(new ProfileCanBeShownEvent(profile));//show if we can
             }
 
             @Override
@@ -399,7 +403,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         }
     }
 
-    public static int getDownloadFragmentIndex(){
+    public static int getDownloadFragmentIndex() {
         return 2;
     }
 }
