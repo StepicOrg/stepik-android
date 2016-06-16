@@ -28,5 +28,20 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".view.activities.CourseDetailActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
+                <data
+                    android:scheme="https"
+                    android:host="stepic.org"
+                    android:pathPattern="/course/.*/"/>
+            </intent-filter>
+        </activity>
+
     </application>
 </manifest>
