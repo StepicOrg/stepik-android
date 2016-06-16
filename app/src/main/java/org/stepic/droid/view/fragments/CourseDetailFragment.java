@@ -74,7 +74,7 @@ public class CourseDetailFragment extends FragmentBase {
     }
 
     //can be -1 if address is incorrect
-    public static CourseDetailFragment newInstance (long courseId) {
+    public static CourseDetailFragment newInstance(long courseId) {
         Bundle args = new Bundle();
         args.putLong(AppConstants.KEY_COURSE_LONG_ID, courseId);
         CourseDetailFragment fragment = new CourseDetailFragment();
@@ -128,6 +128,12 @@ public class CourseDetailFragment extends FragmentBase {
     private List<User> mUserList;
     private InstructorAdapter mInstructorAdapter;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        getActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
+        super.onCreate(savedInstanceState);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -140,11 +146,9 @@ public class CourseDetailFragment extends FragmentBase {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //VIEW:
+        mCoursePropertyList = new ArrayList<>();
         mJoinCourseSpinner = new LoadingProgressDialog(getActivity());
-
-        mCourse = (Course) (getArguments().getSerializable(AppConstants.KEY_COURSE_BUNDLE));
-        mCoursePropertyList = mCoursePropertyResolver.getSortedPropertyList(mCourse);
-
         View footer = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_footer, null, false);
         mCoursePropertyListView.addFooterView(footer);
         mInstructorsCarousel = ButterKnife.findById(footer, R.id.instructors_carousel);
@@ -152,15 +156,31 @@ public class CourseDetailFragment extends FragmentBase {
 
         View header = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_header, null, false);
         mCoursePropertyListView.addHeaderView(header);
+
         mIntroView = ButterKnife.findById(header, R.id.intro_video);
         mThumbnail = ButterKnife.findById(header, R.id.player_thumbnail);
         mPlayer = ButterKnife.findById(header, R.id.player_layout);
         mPlayer.setVisibility(View.GONE);
         mCourseNameView = ButterKnife.findById(header, R.id.course_name);
-
-
         mCoursePropertyListView.setAdapter(new CoursePropertyAdapter(getActivity(), mCoursePropertyList));
+        hideSoftKeypad();
+        mUserList = new ArrayList<>();
+        mInstructorAdapter = new InstructorAdapter(mUserList, getActivity());
+        mInstructorsCarousel.setAdapter(mInstructorAdapter);
 
+        RecyclerView.LayoutManager layoutManager =
+                new LinearLayoutManager(getActivity(),
+                        LinearLayoutManager.HORIZONTAL, false);//// TODO: 30.09.15 determine right-to-left-mode
+        mInstructorsCarousel.setLayoutManager(layoutManager);
+
+        //COURSE RELATED
+        mCourse = (Course) (getArguments().getSerializable(AppConstants.KEY_COURSE_BUNDLE));
+        initScreenByCourse();//ok if mCourse is not null;
+    }
+
+    public void initScreenByCourse() {
+        mCoursePropertyList.clear();
+        mCoursePropertyList.addAll(mCoursePropertyResolver.getSortedPropertyList(mCourse));
         if (mCourse.getTitle() != null && !mCourse.getTitle().equals("")) {
             mCourseNameView.setText(mCourse.getTitle());
         } else {
@@ -173,19 +193,7 @@ public class CourseDetailFragment extends FragmentBase {
         int width = size.x;
         mIntroView.getLayoutParams().width = width;
         mIntroView.getLayoutParams().height = (9 * width) / 16;
-
-        getActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
-        hideSoftKeypad();
         setUpIntroVideo();
-
-        mUserList = new ArrayList<>();
-        mInstructorAdapter = new InstructorAdapter(mUserList, getActivity());
-        mInstructorsCarousel.setAdapter(mInstructorAdapter);
-
-        RecyclerView.LayoutManager layoutManager =
-                new LinearLayoutManager(getActivity(),
-                        LinearLayoutManager.HORIZONTAL, false);//// TODO: 30.09.15 determine right-to-left-mode
-        mInstructorsCarousel.setLayoutManager(layoutManager);
     }
 
     @Override
@@ -212,7 +220,7 @@ public class CourseDetailFragment extends FragmentBase {
     }
 
     private void fetchInstructors() {
-        if (mCourse.getInstructors() != null && mCourse.getInstructors().length != 0) {
+        if (mCourse != null && mCourse.getInstructors() != null && mCourse.getInstructors().length != 0) {
             bus.post(new StartLoadingInstructorsEvent(mCourse));
             mShell.getApi().getUsers(mCourse.getInstructors()).enqueue(new Callback<UserStepicResponse>() {
                 @Override
