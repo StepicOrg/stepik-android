@@ -49,6 +49,7 @@ import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.ThumbnailParser;
 import org.stepic.droid.view.adapters.CoursePropertyAdapter;
 import org.stepic.droid.view.adapters.InstructorAdapter;
+import org.stepic.droid.view.custom.LoadingProgressDialog;
 import org.stepic.droid.web.UserStepicResponse;
 
 import java.util.ArrayList;
@@ -139,10 +140,7 @@ public class CourseDetailFragment extends FragmentBase {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mJoinCourseSpinner = new ProgressDialog(getActivity());
-        mJoinCourseSpinner.setTitle(getString(R.string.loading));
-        mJoinCourseSpinner.setMessage(getString(R.string.loading_message));
-        mJoinCourseSpinner.setCancelable(false);
+        mJoinCourseSpinner = new LoadingProgressDialog(getActivity());
 
         mCourse = (Course) (getArguments().getSerializable(AppConstants.KEY_COURSE_BUNDLE));
         mCoursePropertyList = mCoursePropertyResolver.getSortedPropertyList(mCourse);
