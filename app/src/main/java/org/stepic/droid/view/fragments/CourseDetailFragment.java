@@ -127,8 +127,8 @@ public class CourseDetailFragment extends FragmentBase {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mJoinCourseSpinner = new ProgressDialog(getActivity());
         mJoinCourseSpinner.setTitle(getString(R.string.loading));
