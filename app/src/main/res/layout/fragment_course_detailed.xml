@@ -32,4 +32,9 @@
         android:background="@drawable/bt_signin_active"
         android:contentDescription="@string/app_name"
         android:text="@string/join_course"/>
+
+    <include layout="@layout/internet_fail_clickable"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_centerInParent="true"/>
 </RelativeLayout>

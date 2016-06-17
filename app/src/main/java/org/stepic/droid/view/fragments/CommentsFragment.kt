@@ -236,7 +236,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     @Subscribe
     fun onLikeCommentFail(event: LikeCommentFailEvent) {
-        Toast.makeText(context, R.string.feedback_internet_problem, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, R.string.internet_problem, Toast.LENGTH_SHORT).show()
     }
 
     @Subscribe

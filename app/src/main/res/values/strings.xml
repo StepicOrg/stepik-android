@@ -112,7 +112,7 @@
     <string name="feedback_subject">Feedback about the Android app of Stepic.org</string>
     <string name="feedback_sent">Feedback is sent</string>
     <string name="feedback_fail">Sorry, service is not available. Try later</string>
-    <string name="feedback_internet_problem">Sorry, internet is not available. Try again later</string>
+    <string name="internet_problem">Sorry, internet is not available. Try again later</string>
     <string name="feedback_fill_fields">Fill empty fields</string>
     <string name="video_time_delimiter" translatable="false">/</string>
     <string name="x0_5" translatable="false">x0.5</string>

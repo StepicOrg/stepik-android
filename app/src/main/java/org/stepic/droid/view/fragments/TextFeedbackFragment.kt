@@ -180,7 +180,7 @@ class TextFeedbackFragment : FragmentBase() {
 
     @Subscribe
     fun onInternetProblems(event: FeedbackInternetProblemsEvent) {
-        Toast.makeText(context, R.string.feedback_internet_problem, Toast.LENGTH_LONG).show()
+        Toast.makeText(context, R.string.internet_problem, Toast.LENGTH_LONG).show()
         YandexMetrica.reportEvent("Feedback internet fail")
     }
 

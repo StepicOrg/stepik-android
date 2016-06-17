@@ -130,6 +130,9 @@ public class CourseDetailFragment extends FragmentBase {
     @BindDrawable(R.drawable.video_placeholder)
     Drawable mVideoPlaceholder;
 
+    @Bind(R.id.report_problem)
+    View reportInternetProblem;
+
 
     ImageView mThumbnail;
 
@@ -403,6 +406,7 @@ public class CourseDetailFragment extends FragmentBase {
     @Subscribe
     public void onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent event){
         //// FIXME: 17.06.16 internet problem and click to retry button (like in attempts)
+
     }
 
     @Subscribe
