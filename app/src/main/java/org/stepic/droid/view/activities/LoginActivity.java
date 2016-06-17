@@ -92,24 +92,22 @@ public class LoginActivity extends FragmentActivityBase {
         mLoginText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
                     mPasswordText.requestFocus();
-                    handled = true;
+                    return true;
                 }
-                return handled;
+                return false;
             }
         });
 
         mPasswordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
                     tryLogin();
-                    handled = true;
+                    return true;
                 }
-                return handled;
+                return false;
             }
         });
 

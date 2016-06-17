@@ -27,10 +27,17 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class CourseSearchFragment extends CourseListFragmentBase {
-    public final static String QUERY_KEY = "query_key";
+    private final static String QUERY_KEY = "query_key";
 
     private String mSearchQuery;
 
+    public static CourseSearchFragment newInstance(String query) {
+        Bundle args = new Bundle();
+        args.putString(CourseSearchFragment.QUERY_KEY, query);
+        CourseSearchFragment fragment = new CourseSearchFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Nullable
     @Override

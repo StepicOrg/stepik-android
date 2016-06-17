@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -103,12 +104,15 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         onNewIntent(getIntent());
     }
 
-    private void setUpToolbar(){
-        if (mCourse!=null && mCourse.getTitle()!=null && !mCourse.getTitle().isEmpty()) {
+    private void setUpToolbar() {
+        if (mCourse != null && mCourse.getTitle() != null && !mCourse.getTitle().isEmpty()) {
             setTitle(mCourse.getTitle());
         }
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override

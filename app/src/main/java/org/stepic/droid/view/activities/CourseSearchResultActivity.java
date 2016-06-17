@@ -6,8 +6,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -24,7 +24,6 @@ import butterknife.ButterKnife;
 public class CourseSearchResultActivity extends FragmentActivityBase {
 
     private final static String TAG = "SearchActivity";
-
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
@@ -43,7 +42,10 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
@@ -57,11 +59,7 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
     }
 
     private void initActivity(String query) {
-        Fragment fragment = new CourseSearchFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(CourseSearchFragment.QUERY_KEY, query);
-        fragment.setArguments(bundle);
-        setFragment(R.id.frame, fragment);
+        setFragment(R.id.frame, CourseSearchFragment.newInstance(query));
         bus.register(this);
     }
 
