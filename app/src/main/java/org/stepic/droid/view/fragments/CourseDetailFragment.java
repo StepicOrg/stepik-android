@@ -70,6 +70,7 @@ import retrofit.Retrofit;
 
 public class CourseDetailFragment extends FragmentBase {
 
+
     public static CourseDetailFragment newInstance(Course course) {
         Bundle args = new Bundle();
         args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
@@ -101,6 +102,8 @@ public class CourseDetailFragment extends FragmentBase {
     private RecyclerView mInstructorsCarousel;
 
     private ProgressBar mInstructorsProgressBar;
+
+    private View mInstructorsRootView;
 
     @Bind(R.id.join_course_layout)
     View mJoinCourseView;
@@ -158,6 +161,7 @@ public class CourseDetailFragment extends FragmentBase {
         mCoursePropertyListView.addFooterView(footer);
         mInstructorsCarousel = ButterKnife.findById(footer, R.id.instructors_carousel);
         mInstructorsProgressBar = ButterKnife.findById(footer, R.id.load_progressbar);
+        mInstructorsRootView = ButterKnife.findById(footer, R.id.instructors_root_view);
 
         View header = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_header, null, false);
         mCoursePropertyListView.addHeaderView(header);
@@ -292,7 +296,6 @@ public class CourseDetailFragment extends FragmentBase {
                         if (response.body() == null) {
                             bus.post(new FailureLoadInstructorsEvent(mCourse, null));
                         } else {
-
                             bus.post(new OnResponseLoadingInstructorsEvent(mCourse, response, retrofit));
                         }
                     } else {
@@ -305,6 +308,8 @@ public class CourseDetailFragment extends FragmentBase {
                     bus.post(new FailureLoadInstructorsEvent(mCourse, t));
                 }
             });
+        }else{
+            mInstructorsCarousel.setVisibility(View.GONE);
         }
     }
 
@@ -374,32 +379,23 @@ public class CourseDetailFragment extends FragmentBase {
         if (e.getCourse() != null && mCourse != null & e.getCourse().getCourseId() == mCourse.getCourseId()) {
 
             List<User> users = e.getResponse().body().getUsers();
+            if (users != null && !users.isEmpty()) {
+                mInstructorsRootView.setVisibility(View.VISIBLE);
 
-            mUserList.clear();
-            mUserList.addAll(users);
-            mInstructorAdapter.notifyDataSetChanged();
+                mUserList.clear();
+                mUserList.addAll(users);
+                mInstructorAdapter.notifyDataSetChanged();
 
-
-
-            mInstructorsCarousel.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                @Override
-                public boolean onPreDraw() {
-                    centeringRecycler(this);
-                    return true;
-                }
-            });
-
-//            mInstructorsCarousel.getViewTreeObserver().addOnDrawListener(new ViewTreeObserver.OnDrawListener() {
-//                @Override
-//                public void onDraw() {
-//                    mInstructorsCarousel.getViewTreeObserver().removeOnDrawListener(this);
-//                    centeringRecycler();
-////                    return true;
-//                }
-//            });
-
-
-
+                mInstructorsCarousel.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        centeringRecycler(this);
+                        return true;
+                    }
+                });
+            } else {
+                mInstructorsRootView.setVisibility(View.GONE);
+            }
             ProgressHelper.dismiss(mInstructorsProgressBar);
         }
     }
@@ -417,8 +413,7 @@ public class CourseDetailFragment extends FragmentBase {
         if (widthOfScreen > widthOfAllItems) {
             int padding = (int) (widthOfScreen - widthOfAllItems) / 2;
             mInstructorsCarousel.setPadding(padding, 0, padding, 0);
-        }
-        else{
+        } else {
             mInstructorsCarousel.setPadding(0, 0, 0, 0);
         }
     }
@@ -426,6 +421,7 @@ public class CourseDetailFragment extends FragmentBase {
     @Subscribe
     public void onFinishLoading(FailureLoadInstructorsEvent e) {
         if (e.getCourse() != null && mCourse != null & e.getCourse().getCourseId() == mCourse.getCourseId()) {
+            mInstructorsRootView.setVisibility(View.GONE);
             ProgressHelper.dismiss(mInstructorsProgressBar);
         }
     }
