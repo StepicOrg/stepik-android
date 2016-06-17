@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,12 +30,15 @@ import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
+import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.concurrency.tasks.UpdateCourseTask;
-import org.stepic.droid.events.courses.CourseFoundInDatabaseEvent;
+import org.stepic.droid.events.courses.CourseCantLoadEvent;
+import org.stepic.droid.events.courses.CourseFoundEvent;
 import org.stepic.droid.events.courses.CourseNotInDatabaseEvent;
+import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
 import org.stepic.droid.events.instructors.FailureLoadInstructorsEvent;
 import org.stepic.droid.events.instructors.OnResponseLoadingInstructorsEvent;
 import org.stepic.droid.events.instructors.StartLoadingInstructorsEvent;
@@ -48,11 +50,13 @@ import org.stepic.droid.model.User;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.ThumbnailParser;
 import org.stepic.droid.view.adapters.CoursePropertyAdapter;
 import org.stepic.droid.view.adapters.InstructorAdapter;
 import org.stepic.droid.view.custom.LoadingProgressDialog;
+import org.stepic.droid.web.CoursesStepicResponse;
 import org.stepic.droid.web.UserStepicResponse;
 
 import java.util.ArrayList;
@@ -101,7 +105,8 @@ public class CourseDetailFragment extends FragmentBase {
 
     private RecyclerView mInstructorsCarousel;
 
-    private ProgressBar mInstructorsProgressBar;
+    @Deprecated
+    private ProgressBar mInstructorsProgressBar; //useless
 
     private View mInstructorsRootView;
 
@@ -140,6 +145,7 @@ public class CourseDetailFragment extends FragmentBase {
     public void onCreate(Bundle savedInstanceState) {
         getActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         super.onCreate(savedInstanceState);
+        //// FIXME: 17.06.16 now on rotate instructors are reloading, we should use presenter or retain instance
     }
 
     @Nullable
@@ -183,6 +189,7 @@ public class CourseDetailFragment extends FragmentBase {
         mInstructorsCarousel.setLayoutManager(layoutManager);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mInstructorsRootView.setVisibility(View.GONE);//show only when is LOADED and EXIST!
 
         bus.register(this);
         //COURSE RELATED
@@ -192,10 +199,10 @@ public class CourseDetailFragment extends FragmentBase {
             long courseId = getArguments().getLong(AppConstants.KEY_COURSE_LONG_ID);
             if (courseId < 0) {
                 //// TODO: 16.06.16 SHOW ERROR: CAN'T OPEN COURSE, TRY TO FIND IN SEARCH (Link to featured)
+                bus.post(new CourseUnavailableForUserEvent());
             } else {
                 //todo SHOW LOADING.
                 //todo fetch course from database. if not exist, fetch from web, put course to arguments, init mCourse, initScreenByCourse()
-                Log.d("eee", "LOADING " + courseId);
                 findCourseById(courseId);
             }
 
@@ -218,7 +225,7 @@ public class CourseDetailFragment extends FragmentBase {
                     mMainHandler.post(new Function0<Unit>() {
                         @Override
                         public Unit invoke() {
-                            bus.post(new CourseFoundInDatabaseEvent(finalCourse));
+                            bus.post(new CourseFoundEvent(finalCourse));
                             return Unit.INSTANCE;
                         }
                     });
@@ -237,12 +244,11 @@ public class CourseDetailFragment extends FragmentBase {
     }
 
     @Subscribe
-    public void onCourseFoundInDatabase(CourseFoundInDatabaseEvent event) {
+    public void onCourseFound(CourseFoundEvent event) {
         if (mCourse == null) {
             mCourse = event.getCourse();
             Bundle args = getArguments();
             args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, mCourse);
-//            this.setArguments(args); // FIXME: 16.06.16 NEED TO SAVE ON ROTATE
             initScreenByCourse();
         }
     }
@@ -251,7 +257,22 @@ public class CourseDetailFragment extends FragmentBase {
     public void onCourseNotInDatabase(CourseNotInDatabaseEvent event) {
         if (mCourse == null) {
             //todo GET COURSE FROM INTERNET AND HANDLE IT. (FROM INTERNET SUCCESS -> DO NOT Save to db, just show.)
-            Log.d("eee", "try to find on the Internet " + event.getCourseId());
+            final long courseId = event.getCourseId();
+            mShell.getApi().getCourse(courseId).enqueue(new Callback<CoursesStepicResponse>() {
+                @Override
+                public void onResponse(Response<CoursesStepicResponse> response, Retrofit retrofit) {
+                    if (response.isSuccess() && !response.body().getCourses().isEmpty()) {
+                        bus.post(new CourseFoundEvent(response.body().getCourses().get(0)));
+                    } else {
+                        bus.post(new CourseUnavailableForUserEvent(courseId));
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    bus.post(new CourseCantLoadEvent());
+                }
+            });
         }
     }
 
@@ -372,6 +393,17 @@ public class CourseDetailFragment extends FragmentBase {
         }
     }
 
+    @Subscribe
+    public void onCourseUnavailable(CourseUnavailableForUserEvent event){
+        YandexMetrica.reportEvent(AppConstants.COURSE_USER_TRY_FAIL, JsonHelper.toJson(event));
+        int i = 0;
+        //// FIXME: 17.06.16 show message, that course is not available.
+    }
+
+    @Subscribe
+    public void onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent event){
+        //// FIXME: 17.06.16 internet problem and click to retry button (like in attempts)
+    }
 
     @Subscribe
     public void onStartLoadingInstructors(StartLoadingInstructorsEvent e) {
@@ -432,7 +464,6 @@ public class CourseDetailFragment extends FragmentBase {
         }
     }
 
-
     @Override
     public void onPause() {
         super.onPause();
@@ -463,7 +494,6 @@ public class CourseDetailFragment extends FragmentBase {
         getActivity().finish();
         getActivity().overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
     }
-
 
     private void joinCourse() {
         mJoinCourseView.setEnabled(false);

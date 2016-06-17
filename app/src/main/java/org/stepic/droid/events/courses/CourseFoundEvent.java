@@ -3,10 +3,10 @@ package org.stepic.droid.events.courses;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.model.Course;
 
-public class CourseFoundInDatabaseEvent {
+public class CourseFoundEvent {
     Course course;
 
-    public CourseFoundInDatabaseEvent(@NotNull Course course) {
+    public CourseFoundEvent(@NotNull Course course) {
         this.course = course;
     }
 

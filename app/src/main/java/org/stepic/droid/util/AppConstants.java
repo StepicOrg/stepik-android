@@ -95,4 +95,5 @@ public class AppConstants {
     public static final java.lang.String TRANSFER_DATA = "storage: transfer data";
     public static final String FAIL_TO_MOVE = "storage: fail to move";
     public static final String ERROR_PARSING_SLUG = "error parsing slug";
+    public static final java.lang.String COURSE_USER_TRY_FAIL = "course: user open failed for him course";
 }
