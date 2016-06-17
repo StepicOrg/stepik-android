@@ -224,7 +224,13 @@ public class CourseDetailFragment extends FragmentBase {
                     });
                 } else {
                     //fetch from internet
-                    bus.post(new CourseNotInDatabaseEvent(courseId));
+                    mMainHandler.post(new Function0<Unit>() {
+                        @Override
+                        public Unit invoke() {
+                            bus.post(new CourseNotInDatabaseEvent(courseId));
+                            return Unit.INSTANCE;
+                        }
+                    });
                 }
             }
         });
