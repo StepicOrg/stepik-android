@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,6 +75,8 @@ import retrofit.Retrofit;
 
 public class CourseDetailFragment extends FragmentBase {
 
+
+    private View.OnClickListener onClickReportListener;
 
     public static CourseDetailFragment newInstance(Course course) {
         Bundle args = new Bundle();
@@ -193,15 +196,28 @@ public class CourseDetailFragment extends FragmentBase {
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mInstructorsRootView.setVisibility(View.GONE);//show only when is LOADED and EXIST!
+        onClickReportListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setOnClickListener(null);
+                tryToShowCourse();
+            }
+        };
+        reportInternetProblem.setOnClickListener(onClickReportListener);
 
         bus.register(this);
         //COURSE RELATED
+        tryToShowCourse();
+    }
+
+    private void tryToShowCourse() {
+        Log.d("ttt", "try to show");
+        reportInternetProblem.setVisibility(View.GONE); // now we try show -> it is not visible
         mCourse = (Course) (getArguments().getSerializable(AppConstants.KEY_COURSE_BUNDLE));
         if (mCourse == null) {
             //it is not from our activity
             long courseId = getArguments().getLong(AppConstants.KEY_COURSE_LONG_ID);
             if (courseId < 0) {
-                //// TODO: 16.06.16 SHOW ERROR: CAN'T OPEN COURSE, TRY TO FIND IN SEARCH (Link to featured)
                 bus.post(new CourseUnavailableForUserEvent());
             } else {
                 //todo SHOW LOADING.
@@ -281,6 +297,8 @@ public class CourseDetailFragment extends FragmentBase {
 
     public void initScreenByCourse() {
         //todo HIDE LOADING AND ERRORS
+        reportInternetProblem.setVisibility(View.GONE);
+        //
         mCoursePropertyList.clear();
         mCoursePropertyList.addAll(mCoursePropertyResolver.getSortedPropertyList(mCourse));
         if (mCourse.getTitle() != null && !mCourse.getTitle().equals("")) {
@@ -398,6 +416,7 @@ public class CourseDetailFragment extends FragmentBase {
 
     @Subscribe
     public void onCourseUnavailable(CourseUnavailableForUserEvent event){
+        //// TODO: 16.06.16 SHOW ERROR: CAN'T OPEN COURSE, TRY TO FIND IN SEARCH (Link to featured)
         YandexMetrica.reportEvent(AppConstants.COURSE_USER_TRY_FAIL, JsonHelper.toJson(event));
         int i = 0;
         //// FIXME: 17.06.16 show message, that course is not available.
@@ -405,8 +424,9 @@ public class CourseDetailFragment extends FragmentBase {
 
     @Subscribe
     public void onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent event){
-        //// FIXME: 17.06.16 internet problem and click to retry button (like in attempts)
-
+        reportInternetProblem.setVisibility(View.VISIBLE);
+        reportInternetProblem.setOnClickListener(onClickReportListener);
+        Log.d("ttt", "fail -> set");
     }
 
     @Subscribe
@@ -483,6 +503,7 @@ public class CourseDetailFragment extends FragmentBase {
     @Override
     public void onDestroyView() {
         bus.unregister(this);
+        reportInternetProblem.setOnClickListener(null);
         mIntroView.destroy();
         mIntroView = null;
         mInstructorAdapter = null;
