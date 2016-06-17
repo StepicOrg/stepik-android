@@ -377,33 +377,49 @@ public class CourseDetailFragment extends FragmentBase {
 
             mUserList.clear();
             mUserList.addAll(users);
+            mInstructorAdapter.notifyDataSetChanged();
+
+
 
             mInstructorsCarousel.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
-                    mInstructorsCarousel.getViewTreeObserver().removeOnPreDrawListener(this);
-                    centeringRecycler();
+                    centeringRecycler(this);
                     return true;
                 }
             });
 
-            mInstructorAdapter.notifyDataSetChanged();
+//            mInstructorsCarousel.getViewTreeObserver().addOnDrawListener(new ViewTreeObserver.OnDrawListener() {
+//                @Override
+//                public void onDraw() {
+//                    mInstructorsCarousel.getViewTreeObserver().removeOnDrawListener(this);
+//                    centeringRecycler();
+////                    return true;
+//                }
+//            });
+
+
 
             ProgressHelper.dismiss(mInstructorsProgressBar);
         }
     }
 
-    private void centeringRecycler() {
+    private void centeringRecycler(ViewTreeObserver.OnPreDrawListener listener) {
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int widthOfScreen = size.x;
 
-
         int widthOfAllItems = mInstructorsCarousel.getMeasuredWidth();
+        if (widthOfAllItems != 0) {
+            mInstructorsCarousel.getViewTreeObserver().removeOnPreDrawListener(listener);
+        }
         if (widthOfScreen > widthOfAllItems) {
             int padding = (int) (widthOfScreen - widthOfAllItems) / 2;
             mInstructorsCarousel.setPadding(padding, 0, padding, 0);
+        }
+        else{
+            mInstructorsCarousel.setPadding(0, 0, 0, 0);
         }
     }
 
