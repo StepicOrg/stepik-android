@@ -44,14 +44,17 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
 
     @Override
     public GenericViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE_PARENT_COMMENT) {
-            View v = LayoutInflater.from(context).inflate(R.layout.comment_item, parent, false);
-            return new CommentsViewHolder(v);
-        } else if (viewType == TYPE_REPLY) {
-            View v = LayoutInflater.from(context).inflate(R.layout.reply_item, parent, false);
-            return new ReplyViewHolder(v);
-        } else {
-            return null;
+        switch (viewType) {
+            case TYPE_PARENT_COMMENT: {
+                View v = LayoutInflater.from(context).inflate(R.layout.comment_item, parent, false);
+                return new CommentsViewHolder(v);
+            }
+            case TYPE_REPLY: {
+                View v = LayoutInflater.from(context).inflate(R.layout.reply_item, parent, false);
+                return new ReplyViewHolder(v);
+            }
+            default:
+                return null;
         }
     }
 
@@ -86,21 +89,20 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         public void setDataOnView(int position) {
             CommentAdapterItem needUpdateAndComment = commentManager.getItemWithNeedUpdatingInfoByPosition(position);
             initialSetUp(needUpdateAndComment);
-            boolean needUpdate = needUpdateAndComment.isNeedUpdating();
-            Comment comment = needUpdateAndComment.getComment();
 
             if (needUpdateAndComment.isParentLoading()) {
                 loadMoreParentProgressState();
+                return;
+            }
+
+            boolean needUpdate = needUpdateAndComment.isNeedUpdating();
+            Comment comment = needUpdateAndComment.getComment();
+            if (comment.getReply_count() == 0 && needUpdate) {
+                loadMoreSuggestLoadingState();
             } else {
-                if (comment.getReply_count() == 0 && needUpdate) {
-                    loadMoreSuggestLoadingState();
-                } else {
-                    loadMoreHide();
-                }
+                loadMoreHide();
             }
         }
-
-
     }
 
     class ReplyViewHolder extends GenericViewHolder {
@@ -127,7 +129,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
             commentManager.addToLoading(comment.getId());
             notifyItemChanged(position);
             commentManager.loadExtraReplies(comment);
-
         }
 
         @Override
@@ -276,36 +277,32 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
 
         protected final User getUser(Comment comment) {
             if (comment.getUser() != null) {
-                User user = commentManager.getUserById(comment.getUser());
-                return user;
+                return commentManager.getUserById(comment.getUser());
             }
             return null;
         }
 
         protected final DraweeController getControllerForUserAvatar(User user) {
-            String userAvatar = null;
+            Uri userAvatarUri = null;
             if (user != null) {
-                userAvatar = user.getAvatar();
+                String userAvatar = user.getAvatar();
+                if (userAvatar != null && !userAvatar.isEmpty()) {
+                    userAvatarUri = Uri.parse(userAvatar);
+                }
             }
             DraweeController controller = null;
-            if (userAvatar != null) {
-                controller = Fresco.newDraweeControllerBuilder()
-                        .setUri(userAvatar)
-                        .setAutoPlayAnimations(true)
-                        .build();
-
-            } else {
+            if (userAvatarUri == null) {
                 //for empty cover:
-                Uri uri = new Uri.Builder()
+                userAvatarUri = new Uri.Builder()
                         .scheme(UriUtil.LOCAL_RESOURCE_SCHEME) // "res"
                         .path(String.valueOf(R.drawable.placeholder_icon))
                         .build();
-
-                controller = Fresco.newDraweeControllerBuilder()
-                        .setUri(uri)
-                        .setAutoPlayAnimations(true)
-                        .build();
             }
+
+            controller = Fresco.newDraweeControllerBuilder()
+                    .setUri(userAvatarUri)
+                    .setAutoPlayAnimations(true)
+                    .build();
             return controller;
         }
 
@@ -314,7 +311,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
             progressLoadMoreComments.setVisibility(View.VISIBLE);
             loadMoreTextView.setVisibility(View.GONE);
         }
-
 
         protected final void loadMoreSuggestLoadingState() {
             loadMoreView.setVisibility(View.VISIBLE);

@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.squareup.otto.Bus;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
@@ -134,8 +135,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Override
     public int getItemCount() {
-        final int countOnRecycler = mCachedVideoList.size() + mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList) + getTitleCount(mCachedVideoList);
-        return countOnRecycler;
+        return mCachedVideoList.size() + mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList) + getTitleCount(mCachedVideoList);
     }
 
     @Override
@@ -255,21 +255,18 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         public void setDataOnView(int position) {
             DownloadingVideoItem downloadingVideoItem = mDownloadingVideoList.get(position - 1);//here downloading list shoudn't be empty!
 
+            Picasso picasso = Picasso.with(MainApplication.getAppContext());
+            RequestCreator requestCreator;
             String thumbnail = downloadingVideoItem.getDownloadEntity().getThumbnail();
             if (thumbnail != null) {
                 Uri uriForThumbnail = ThumbnailParser.getUriForThumbnail(thumbnail);
-                Picasso.with(MainApplication.getAppContext())
-                        .load(uriForThumbnail)
-                        .placeholder(placeholder)
-                        .error(placeholder)
-                        .into(mVideoIcon);
+                requestCreator = picasso.load(uriForThumbnail);
             } else {
-                Picasso.with(MainApplication.getAppContext())
-                        .load(R.drawable.video_placeholder)
-                        .placeholder(placeholder)
-                        .error(placeholder)
-                        .into(mVideoIcon);
+                requestCreator = picasso.load(R.drawable.video_placeholder);
             }
+            requestCreator.placeholder(placeholder)
+                    .error(placeholder)
+                    .into(mVideoIcon);
 
             Lesson relatedLesson = mStepIdToLessonMap.get(downloadingVideoItem.getDownloadEntity().getStepId());
             if (relatedLesson != null) {
@@ -524,7 +521,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         }
     }
 
-     abstract class GenericViewHolder extends RecyclerView.ViewHolder {
+    abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 
         public GenericViewHolder(View itemView) {
             super(itemView);
