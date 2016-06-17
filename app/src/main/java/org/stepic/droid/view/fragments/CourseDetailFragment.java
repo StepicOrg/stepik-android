@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,8 @@ import com.squareup.picasso.Picasso;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.concurrency.tasks.UpdateCourseTask;
+import org.stepic.droid.events.courses.CourseFoundInDatabaseEvent;
+import org.stepic.droid.events.courses.CourseNotInDatabaseEvent;
 import org.stepic.droid.events.instructors.FailureLoadInstructorsEvent;
 import org.stepic.droid.events.instructors.OnResponseLoadingInstructorsEvent;
 import org.stepic.droid.events.instructors.StartLoadingInstructorsEvent;
@@ -59,6 +62,8 @@ import butterknife.Bind;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
@@ -172,13 +177,76 @@ public class CourseDetailFragment extends FragmentBase {
                 new LinearLayoutManager(getActivity(),
                         LinearLayoutManager.HORIZONTAL, false);//// TODO: 30.09.15 determine right-to-left-mode
         mInstructorsCarousel.setLayoutManager(layoutManager);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        bus.register(this);
         //COURSE RELATED
         mCourse = (Course) (getArguments().getSerializable(AppConstants.KEY_COURSE_BUNDLE));
-        initScreenByCourse();//ok if mCourse is not null;
+        if (mCourse == null) {
+            //it is not from our activity
+            long courseId = getArguments().getLong(AppConstants.KEY_COURSE_LONG_ID);
+            if (courseId < 0) {
+                //// TODO: 16.06.16 SHOW ERROR: CAN'T OPEN COURSE, TRY TO FIND IN SEARCH (Link to featured)
+            } else {
+                //todo SHOW LOADING.
+                //todo fetch course from database. if not exist, fetch from web, put course to arguments, init mCourse, initScreenByCourse()
+                Log.d("eee", "LOADING " + courseId);
+                findCourseById(courseId);
+            }
+
+        } else {
+            initScreenByCourse();//ok if mCourse is not null;
+        }
+    }
+
+    public void findCourseById(final long courseId) {
+        mThreadPoolExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Course course = mDatabaseFacade.getCourseById(courseId, DatabaseFacade.Table.featured);
+                if (course == null) {
+                    course = mDatabaseFacade.getCourseById(courseId, DatabaseFacade.Table.enrolled);
+                }
+
+                final Course finalCourse = course;
+                if (finalCourse != null) {
+                    mMainHandler.post(new Function0<Unit>() {
+                        @Override
+                        public Unit invoke() {
+                            bus.post(new CourseFoundInDatabaseEvent(finalCourse));
+                            return Unit.INSTANCE;
+                        }
+                    });
+                } else {
+                    //fetch from internet
+                    bus.post(new CourseNotInDatabaseEvent(courseId));
+                }
+            }
+        });
+    }
+
+    @Subscribe
+    public void onCourseFoundInDatabase(CourseFoundInDatabaseEvent event) {
+        if (mCourse == null) {
+            mCourse = event.getCourse();
+            Bundle args = getArguments();
+            args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, mCourse);
+//            this.setArguments(args); // FIXME: 16.06.16 NEED TO SAVE ON ROTATE
+            initScreenByCourse();
+        }
+    }
+
+    @Subscribe
+    public void onCourseNotInDatabase(CourseNotInDatabaseEvent event) {
+        if (mCourse == null) {
+            //todo GET COURSE FROM INTERNET AND HANDLE IT. (FROM INTERNET SUCCESS -> DO NOT Save to db, just show.)
+            Log.d("eee", "try to find on the Internet " + event.getCourseId());
+        }
     }
 
     public void initScreenByCourse() {
+        //todo HIDE LOADING AND ERRORS
         mCoursePropertyList.clear();
         mCoursePropertyList.addAll(mCoursePropertyResolver.getSortedPropertyList(mCourse));
         if (mCourse.getTitle() != null && !mCourse.getTitle().equals("")) {
@@ -194,14 +262,6 @@ public class CourseDetailFragment extends FragmentBase {
         mIntroView.getLayoutParams().width = width;
         mIntroView.getLayoutParams().height = (9 * width) / 16;
         setUpIntroVideo();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         if (mCourse.getEnrollment() != 0) {
             mJoinCourseView.setVisibility(View.GONE);
@@ -214,9 +274,12 @@ public class CourseDetailFragment extends FragmentBase {
                 }
             });
         }
-
-        bus.register(this);
         fetchInstructors();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     private void fetchInstructors() {
@@ -361,11 +424,12 @@ public class CourseDetailFragment extends FragmentBase {
     @Override
     public void onStop() {
         super.onStop();
-        bus.unregister(this);
+
     }
 
     @Override
     public void onDestroyView() {
+        bus.unregister(this);
         mIntroView.destroy();
         mIntroView = null;
         mInstructorAdapter = null;
