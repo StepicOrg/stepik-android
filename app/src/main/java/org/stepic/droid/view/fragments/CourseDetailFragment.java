@@ -29,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.DraweeView;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.yandex.metrica.YandexMetrica;
@@ -53,6 +54,7 @@ import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.ThumbnailParser;
 import org.stepic.droid.view.adapters.CoursePropertyAdapter;
 import org.stepic.droid.view.adapters.InstructorAdapter;
@@ -113,7 +115,6 @@ public class CourseDetailFragment extends FragmentBase {
 
     private View mInstructorsRootView;
 
-    @Bind(R.id.join_course_layout)
     View mJoinCourseView;
 
     ProgressDialog mJoinCourseSpinner;
@@ -136,6 +137,7 @@ public class CourseDetailFragment extends FragmentBase {
     @Bind(R.id.report_problem)
     View reportInternetProblem;
 
+    DraweeView courseIcon;
 
     ImageView mThumbnail;
 
@@ -178,6 +180,8 @@ public class CourseDetailFragment extends FragmentBase {
         View header = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_header, null, false);
         mCoursePropertyListView.addHeaderView(header);
 
+        courseIcon = ButterKnife.findById(header, R.id.courseIcon);
+        mJoinCourseView = ButterKnife.findById(header, R.id.join_course_layout);
         mIntroView = ButterKnife.findById(header, R.id.intro_video);
         mThumbnail = ButterKnife.findById(header, R.id.player_thumbnail);
         mPlayer = ButterKnife.findById(header, R.id.player_layout);
@@ -314,6 +318,8 @@ public class CourseDetailFragment extends FragmentBase {
         mIntroView.getLayoutParams().width = width;
         mIntroView.getLayoutParams().height = (9 * width) / 16;
         setUpIntroVideo();
+
+        courseIcon.setController(StepicLogicHelper.getControllerForCourse(mCourse, config));
 
         if (mCourse.getEnrollment() != 0) {
             mJoinCourseView.setVisibility(View.GONE);

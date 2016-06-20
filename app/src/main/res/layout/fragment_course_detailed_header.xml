@@ -1,32 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:fresco="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical">
 
     <WebView
-        android:focusableInTouchMode="false"
-        android:focusable="false"
         android:id="@+id/intro_video"
         android:layout_width="match_parent"
-        android:layout_height="100dp" />
+        android:layout_height="100dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        tools:visibility="gone"/>
 
 
     <include
         android:id="@+id/player_layout"
         layout="@layout/player_placeholder"/>
 
-    <TextView
-        android:layout_marginTop="8dp"
-        android:id="@+id/course_name"
-        style="@style/cv_text_title"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|start"
-        android:ellipsize="end"
-        android:gravity="center_horizontal"
-        android:paddingLeft="8dp"
-        tools:text="Course Name lalaCourse Name lalaCourse Name lala"/>
+        android:background="@color/white"
+        android:padding="16dp">
 
+        <RelativeLayout
+            android:id="@+id/main_info_course"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/courseIcon"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="start"
+                android:layout_marginRight="16dp"
+                fresco:failureImage="@drawable/ic_course_placeholder"
+                fresco:placeholderImage="@drawable/ic_course_placeholder"
+                />
+
+            <TextView
+                android:id="@+id/course_name"
+                style="@style/cv_text_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|start"
+                android:layout_marginBottom="8dp"
+                android:layout_toRightOf="@id/courseIcon"
+                android:textSize="20sp"
+                tools:text="Python the best course"/>
+        </RelativeLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:layout_marginTop="8dp"
+            android:layout_below="@+id/main_info_course"
+            android:id="@+id/join_course_layout"
+            style="@style/StepicSmallMaterialButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/join_course"/>
+    </RelativeLayout>
 </LinearLayout>

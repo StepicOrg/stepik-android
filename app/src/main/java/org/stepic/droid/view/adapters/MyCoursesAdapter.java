@@ -1,7 +1,6 @@
 package org.stepic.droid.view.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.facebook.common.util.UriUtil;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeView;
 
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +20,7 @@ import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.HtmlHelper;
+import org.stepic.droid.util.StepicLogicHelper;
 
 import java.util.List;
 
@@ -79,25 +76,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         }
         viewHolderItem.courseName.setText(course.getTitle());
         viewHolderItem.courseSummary.setText(HtmlHelper.fromHtml(course.getSummary()));
-        if (course.getCover() != null) {
-            DraweeController controller = Fresco.newDraweeControllerBuilder()
-                    .setUri(mConfig.getBaseUrl() + course.getCover())
-                    .setAutoPlayAnimations(true)
-                    .build();
-            viewHolderItem.courseIcon.setController(controller);
-        } else {
-            //for empty cover:
-            Uri uri = new Uri.Builder()
-                    .scheme(UriUtil.LOCAL_RESOURCE_SCHEME) // "res"
-                    .path(String.valueOf(R.drawable.ic_course_placeholder))
-                    .build();
-
-            DraweeController controller = Fresco.newDraweeControllerBuilder()
-                    .setUri(uri)
-                    .setAutoPlayAnimations(true)
-                    .build();
-            viewHolderItem.courseIcon.setController(controller);
-        }
+        viewHolderItem.courseIcon.setController(StepicLogicHelper.getControllerForCourse(course, mConfig));
         viewHolderItem.courseDateInterval.setText(course.getDateOfCourse());
 
         return view;

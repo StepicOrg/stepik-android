@@ -23,16 +23,6 @@
         android:scrollbarStyle="outsideOverlay"
         android:soundEffectsEnabled="true" />
 
-
-    <Button
-        android:id="@+id/join_course_layout"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/min_ux_touchable_size"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/bt_signin_active"
-        android:contentDescription="@string/app_name"
-        android:text="@string/join_course"/>
-
     <include layout="@layout/internet_fail_clickable"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"

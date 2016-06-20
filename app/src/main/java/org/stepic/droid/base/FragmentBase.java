@@ -11,14 +11,14 @@ import android.view.inputmethod.InputMethodManager;
 import com.squareup.leakcanary.RefWatcher;
 import com.squareup.otto.Bus;
 
+import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.AudioFocusHelper;
 import org.stepic.droid.core.ILessonSessionManager;
 import org.stepic.droid.core.ILocalProgressManager;
-import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.services.CancelLoadingService;
 import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
@@ -51,6 +51,9 @@ public class FragmentBase extends Fragment {
 
     @Inject
     public Bus bus;
+
+    @Inject
+    public IConfig config;
 
     @Inject
     public IShell mShell;
