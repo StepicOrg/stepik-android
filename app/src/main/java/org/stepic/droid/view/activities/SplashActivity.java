@@ -4,6 +4,7 @@ package org.stepic.droid.view.activities;
 import android.os.Bundle;
 import android.os.Handler;
 
+import org.stepic.droid.notifications.StepicInstanceIdService;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 
 
@@ -22,21 +23,32 @@ public class SplashActivity extends BackToExitActivityBase {
             return;
         }
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!isFinishing()) {
+        if (checkPlayServices() && !mSharedPreferenceHelper.isGcmTokenOk()) {
 
-                    SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
-                    if (helper.getAuthResponseFromStore() != null) {
-                        mShell.getScreenProvider().showMainFeed(SplashActivity.this);
-                    } else {
-                        mShell.getScreenProvider().showLaunchScreen(SplashActivity.this, false);
-                    }
-                    finish();
+            mThreadPoolExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    StepicInstanceIdService.Companion.updateAnywhere(mShell.getApi(), mSharedPreferenceHelper); //FU!
                 }
-            }
-        }, SPLASH_TIME_OUT);
+            });
+        } else {
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!isFinishing()) {
+
+                        SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
+                        if (helper.getAuthResponseFromStore() != null) {
+                            mShell.getScreenProvider().showMainFeed(SplashActivity.this);
+                        } else {
+                            mShell.getScreenProvider().showLaunchScreen(SplashActivity.this, false);
+                        }
+                        finish();
+                    }
+                }
+            }, SPLASH_TIME_OUT);
+        }
 
     }
 }
