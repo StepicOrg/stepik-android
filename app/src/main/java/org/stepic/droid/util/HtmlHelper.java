@@ -4,14 +4,12 @@ import android.text.Html;
 
 import com.yandex.metrica.YandexMetrica;
 
-import net.htmlparser.jericho.Element;
-import net.htmlparser.jericho.Source;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.stepic.droid.notifications.model.Notification;
-
-import java.util.List;
 
 public class HtmlHelper {
 
@@ -66,17 +64,13 @@ public class HtmlHelper {
      */
     @Nullable
     public static String getValueOfMetaOrNull(String htmlText, String metaKey) {
-        Source source = new Source(htmlText);
-        String strData = "";
-        List<Element> elements = source.getAllElements("meta");
-
-        for (Element element : elements) {
-            final String id = element.getAttributeValue("name"); // Get Attribute 'id'
-            if (id != null && id.equals(metaKey)) {
-                strData = element.getAttributeValue("content");
-            }
+        Document document = Jsoup.parse(htmlText);
+        Elements elements = document.select("meta");
+        try {
+            return elements.attr("name", metaKey).last().attr("content"); //WTF? first is csrf param, but jsoup can't handle
+        } catch (Exception ex) {
+            return "";
         }
-        return strData;
     }
 
     @Nullable

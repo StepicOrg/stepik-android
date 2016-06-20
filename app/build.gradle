@@ -132,12 +132,6 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-
-    compile files('libs/commons-logging-api-1.1.1.jar')
-    compile files('libs/jericho-html-3.4.jar')
-    compile files('libs/log4j-api-2.4.1.jar')
-    compile files('libs/slf4j-api-1.7.12.jar')
-
     compile 'de.mrmaffen:vlc-android-sdk:1.9.0'
 
     compile "com.google.android.gms:play-services-gcm:8.4.0"
