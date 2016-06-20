@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -59,9 +60,12 @@ import org.stepic.droid.util.ThumbnailParser;
 import org.stepic.droid.view.adapters.CoursePropertyAdapter;
 import org.stepic.droid.view.adapters.InstructorAdapter;
 import org.stepic.droid.view.custom.LoadingProgressDialog;
+import org.stepic.droid.view.dialogs.UnauthorizedDialogFragment;
+import org.stepic.droid.web.AuthenticationStepicResponse;
 import org.stepic.droid.web.CoursesStepicResponse;
 import org.stepic.droid.web.UserStepicResponse;
 
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,6 +85,7 @@ public class CourseDetailFragment extends FragmentBase {
     private View.OnClickListener onClickReportListener;
     private View header;
     private View footer;
+    private DialogFragment unauthorizedDialog;
 
     public static CourseDetailFragment newInstance(Course course) {
         Bundle args = new Bundle();
@@ -225,6 +230,8 @@ public class CourseDetailFragment extends FragmentBase {
 
         header.setVisibility(View.GONE); //hide while we don't have the course
         footer.setVisibility(View.GONE);
+
+        unauthorizedDialog = UnauthorizedDialogFragment.newInstance();
 
         bus.register(this);
         //COURSE RELATED
@@ -564,36 +571,39 @@ public class CourseDetailFragment extends FragmentBase {
 
     private void joinCourse() {
         mJoinCourseView.setEnabled(false);
-        ProgressHelper.activate(mJoinCourseSpinner);
-        mShell.getApi().tryJoinCourse(mCourse).enqueue(new Callback<Void>() {
+        AuthenticationStepicResponse response = mSharedPreferenceHelper.getAuthResponseFromStore();
+        if (response != null) {
+            ProgressHelper.activate(mJoinCourseSpinner);
+            mShell.getApi().tryJoinCourse(mCourse).enqueue(new Callback<Void>() {
+                private final Course localCopy = mCourse;
 
-            private final Course localCopy = mCourse;
+                @Override
+                public void onResponse(Response<Void> response, Retrofit retrofit) {
+                    if (response.isSuccess()) {
 
-            @Override
-            public void onResponse(Response<Void> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
+                        localCopy.setEnrollment((int) localCopy.getCourseId());
 
-                    localCopy.setEnrollment((int) localCopy.getCourseId());
+                        UpdateCourseTask updateCourseTask = new UpdateCourseTask(DatabaseFacade.Table.enrolled, localCopy);
+                        updateCourseTask.executeOnExecutor(mThreadPoolExecutor);
 
-                    UpdateCourseTask updateCourseTask = new UpdateCourseTask(DatabaseFacade.Table.enrolled, localCopy);
-                    updateCourseTask.executeOnExecutor(mThreadPoolExecutor);
+                        UpdateCourseTask updateCourseFeaturedTask = new UpdateCourseTask(DatabaseFacade.Table.featured, localCopy);
+                        updateCourseFeaturedTask.executeOnExecutor(mThreadPoolExecutor);
 
-                    UpdateCourseTask updateCourseFeaturedTask = new UpdateCourseTask(DatabaseFacade.Table.featured, localCopy);
-                    updateCourseFeaturedTask.executeOnExecutor(mThreadPoolExecutor);
+                        bus.post(new SuccessJoinEvent(localCopy));
 
-
-                    bus.post(new SuccessJoinEvent(localCopy));
-
-                } else {
-                    bus.post(new FailJoinEvent(response));
+                    } else {
+                        bus.post(new FailJoinEvent(response.code()));
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable t) {
-                bus.post(new FailJoinEvent());
-            }
-        });
+                @Override
+                public void onFailure(Throwable t) {
+                    bus.post(new FailJoinEvent());
+                }
+            });
+        } else {
+            bus.post(new FailJoinEvent(HttpURLConnection.HTTP_UNAUTHORIZED));
+        }
     }
 
     @Subscribe
@@ -606,13 +616,17 @@ public class CourseDetailFragment extends FragmentBase {
 
     @Subscribe
     public void onFailJoin(FailJoinEvent e) {
-        if (e.getResponse() != null && e.getResponse().code() == 403) {
+        if (e.getCode() == HttpURLConnection.HTTP_FORBIDDEN) {
             Toast.makeText(getActivity(), joinCourseWebException, Toast.LENGTH_LONG).show();
-
+        } else if (e.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+            //UNAUTHORIZED
+            //it is just for safety, we should detect no account before send request
+            if (!unauthorizedDialog.isAdded()) {
+                unauthorizedDialog.show(getFragmentManager(), null);
+            }
         } else {
             Toast.makeText(getActivity(), joinCourseException,
                     Toast.LENGTH_LONG).show();
-
         }
         ProgressHelper.dismiss(mJoinCourseSpinner);
         mJoinCourseView.setEnabled(true);

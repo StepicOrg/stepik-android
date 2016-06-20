@@ -184,4 +184,6 @@
     <string name="moving">Moving</string>
     <string name="go_to_learn">Continue</string>
     <string name="fail_to_parse">Sorry, course is not found. Tap to find other courses!</string>
+    <string name="authorization">Authorization</string>
+    <string name="unauthorization_detail">To continue, you should be authorized. Do you want to do this now?</string>
 </resources>
