@@ -79,6 +79,8 @@ public class CourseDetailFragment extends FragmentBase {
 
 
     private View.OnClickListener onClickReportListener;
+    private View header;
+    private View footer;
 
     public static CourseDetailFragment newInstance(Course course) {
         Bundle args = new Bundle();
@@ -172,13 +174,13 @@ public class CourseDetailFragment extends FragmentBase {
         //VIEW:
         mCoursePropertyList = new ArrayList<>();
         mJoinCourseSpinner = new LoadingProgressDialog(getActivity());
-        View footer = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_footer, null, false);
+        footer = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_footer, null, false);
         mCoursePropertyListView.addFooterView(footer);
         mInstructorsCarousel = ButterKnife.findById(footer, R.id.instructors_carousel);
         mInstructorsProgressBar = ButterKnife.findById(footer, R.id.load_progressbar);
         mInstructorsRootView = ButterKnife.findById(footer, R.id.instructors_root_view);
 
-        View header = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_header, null, false);
+        header = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_header, null, false);
         mCoursePropertyListView.addHeaderView(header);
 
         courseIcon = ButterKnife.findById(header, R.id.courseIcon);
@@ -210,6 +212,9 @@ public class CourseDetailFragment extends FragmentBase {
             }
         };
         reportInternetProblem.setOnClickListener(onClickReportListener);
+
+        header.setVisibility(View.GONE); //hide while we don't have the course
+        footer.setVisibility(View.GONE);
 
         bus.register(this);
         //COURSE RELATED
@@ -305,6 +310,9 @@ public class CourseDetailFragment extends FragmentBase {
         //todo HIDE LOADING AND ERRORS
         reportInternetProblem.setVisibility(View.GONE);
         //
+        header.setVisibility(View.VISIBLE);
+        footer.setVisibility(View.VISIBLE);
+
         mCoursePropertyList.clear();
         mCoursePropertyList.addAll(mCoursePropertyResolver.getSortedPropertyList(mCourse));
         if (mCourse.getTitle() != null && !mCourse.getTitle().equals("")) {
