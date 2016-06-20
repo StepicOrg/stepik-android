@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     package="org.stepic.droid"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <permission
         android:name="org.stepic.droid.permission.C2D_MESSAGE"
@@ -30,7 +31,7 @@
 
         <activity
             android:name=".view.activities.CourseDetailActivity">
-            <intent-filter>
+            <intent-filter android:autoVerify="true" tools:ignore="UnusedAttribute">
                 <action android:name="android.intent.action.VIEW"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
