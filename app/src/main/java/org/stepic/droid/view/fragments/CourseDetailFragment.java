@@ -116,6 +116,7 @@ public class CourseDetailFragment extends FragmentBase {
     private View mInstructorsRootView;
 
     View mJoinCourseView;
+    View continueCourseView;
 
     ProgressDialog mJoinCourseSpinner;
 
@@ -182,6 +183,7 @@ public class CourseDetailFragment extends FragmentBase {
 
         courseIcon = ButterKnife.findById(header, R.id.courseIcon);
         mJoinCourseView = ButterKnife.findById(header, R.id.join_course_layout);
+        continueCourseView = ButterKnife.findById(header, R.id.go_to_learn);
         mIntroView = ButterKnife.findById(header, R.id.intro_video);
         mThumbnail = ButterKnife.findById(header, R.id.player_thumbnail);
         mPlayer = ButterKnife.findById(header, R.id.player_layout);
@@ -323,7 +325,15 @@ public class CourseDetailFragment extends FragmentBase {
 
         if (mCourse.getEnrollment() != 0) {
             mJoinCourseView.setVisibility(View.GONE);
+            continueCourseView.setVisibility(View.VISIBLE);
+            continueCourseView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mShell.getScreenProvider().showSections(getActivity(), mCourse);
+                }
+            });
         } else {
+            continueCourseView.setVisibility(View.GONE);
             mJoinCourseView.setVisibility(View.VISIBLE);
             mJoinCourseView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -513,6 +523,8 @@ public class CourseDetailFragment extends FragmentBase {
         mIntroView.destroy();
         mIntroView = null;
         mInstructorAdapter = null;
+        mJoinCourseView.setOnClickListener(null);
+        continueCourseView.setOnClickListener(null);
         super.onDestroyView();
         mCourse = null;
     }

@@ -80,7 +80,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_section);
         ButterKnife.bind(this);
-        overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         hideSoftKeypad();
         isScreenEmpty = true;
         firstLoad = true;
@@ -114,6 +113,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         mCourse = (Course) (intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
 
         if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {

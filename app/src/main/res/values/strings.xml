@@ -182,4 +182,5 @@
     <string name="report_label">Report</string>
     <string name="done">Done</string>
     <string name="moving">Moving</string>
+    <string name="go_to_learn">Continue</string>
 </resources>

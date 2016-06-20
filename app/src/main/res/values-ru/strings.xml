@@ -174,4 +174,5 @@
     <string name="report_label">Пожаловаться</string>
     <string name="done">Готово</string>
     <string name="moving">Перенос</string>
+    <string name="go_to_learn">Продолжить</string>
 </resources>
