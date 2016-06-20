@@ -438,7 +438,7 @@ public class CourseDetailFragment extends FragmentBase {
 
     @Subscribe
     public void onResponseLoadingInstructors(OnResponseLoadingInstructorsEvent e) {
-        if (e.getCourse() != null && mCourse != null & e.getCourse().getCourseId() == mCourse.getCourseId()) {
+        if (e.getCourse() != null && mCourse != null && e.getCourse().getCourseId() == mCourse.getCourseId()) {
 
             List<User> users = e.getResponse().body().getUsers();
             if (users != null && !users.isEmpty()) {
