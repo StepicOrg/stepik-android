@@ -207,8 +207,14 @@ public class CourseDetailFragment extends FragmentBase {
         courseNotFoundView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mShell.getScreenProvider().showFindCourses(getContext());
-                finish();
+                if (mSharedPreferenceHelper.getAuthResponseFromStore() != null) {
+                    mShell.getScreenProvider().showFindCourses(getContext());
+                    finish();
+                } else {
+                    if (!unauthorizedDialog.isAdded()) {
+                        unauthorizedDialog.show(getFragmentManager(), null);
+                    }
+                }
             }
         });
 
