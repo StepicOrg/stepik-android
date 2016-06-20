@@ -134,7 +134,7 @@ dependencies {
 
     compile 'de.mrmaffen:vlc-android-sdk:1.9.0'
 
-    compile "com.google.android.gms:play-services-gcm:8.4.0"
+    compile 'com.google.firebase:firebase-messaging:9.0.2'
     compile 'org.jsoup:jsoup:1.8.3'
 }
 
