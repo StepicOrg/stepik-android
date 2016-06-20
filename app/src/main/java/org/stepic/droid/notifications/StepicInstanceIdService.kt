@@ -1,6 +1,5 @@
 package org.stepic.droid.notifications
 
-import android.util.Log
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.FirebaseInstanceIdService
 import com.yandex.metrica.YandexMetrica
@@ -19,9 +18,9 @@ class StepicInstanceIdService : FirebaseInstanceIdService() {
 
     companion object {
         fun updateAnywhere(mApi: IApi, mSharedPreferences: SharedPreferenceHelper) {
-            val token = FirebaseInstanceId.getInstance().getToken()
-            Log.d("ppp", "Refreshed token: " + token);
+            val tokenNullable : String? = FirebaseInstanceId.getInstance().token
             try {
+                val token = tokenNullable!!
                 mApi.registerDevice(token).execute()
                 mSharedPreferences.setIsGcmTokenOk(true)
                 YandexMetrica.reportEvent("notification gcm token is updated")

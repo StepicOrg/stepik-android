@@ -31,24 +31,24 @@ public class SplashActivity extends BackToExitActivityBase {
                     StepicInstanceIdService.Companion.updateAnywhere(mShell.getApi(), mSharedPreferenceHelper); //FU!
                 }
             });
-        } else {
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (!isFinishing()) {
-
-                        SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
-                        if (helper.getAuthResponseFromStore() != null) {
-                            mShell.getScreenProvider().showMainFeed(SplashActivity.this);
-                        } else {
-                            mShell.getScreenProvider().showLaunchScreen(SplashActivity.this, false);
-                        }
-                        finish();
-                    }
-                }
-            }, SPLASH_TIME_OUT);
         }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing()) {
+
+                    SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
+                    if (helper.getAuthResponseFromStore() != null) {
+                        mShell.getScreenProvider().showMainFeed(SplashActivity.this);
+                    } else {
+                        mShell.getScreenProvider().showLaunchScreen(SplashActivity.this, false);
+                    }
+                    finish();
+                }
+            }
+        }, SPLASH_TIME_OUT);
+
 
     }
 }
