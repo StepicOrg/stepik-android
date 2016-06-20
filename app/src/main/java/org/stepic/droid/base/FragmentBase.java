@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.squareup.leakcanary.RefWatcher;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.concurrency.IMainHandler;
@@ -153,8 +152,8 @@ public class FragmentBase extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        RefWatcher refWatcher = MainApplication.getRefWatcher(getActivity());
-        refWatcher.watch(this);
+//        RefWatcher refWatcher = MainApplication.getRefWatcher(getActivity());
+//        refWatcher.watch(this);
     }
 
     @Override

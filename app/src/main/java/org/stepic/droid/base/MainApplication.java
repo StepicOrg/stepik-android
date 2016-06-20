@@ -5,8 +5,6 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
@@ -21,7 +19,7 @@ public class MainApplication extends MultiDexApplication {
     protected static MainApplication application;
     private StepicCoreComponent component;
 
-    private RefWatcher refWatcher;
+//    private RefWatcher refWatcher;
 
     @Override
     public void onCreate() {
@@ -30,7 +28,7 @@ public class MainApplication extends MultiDexApplication {
     }
 
     private void init() {
-        refWatcher = LeakCanary.install(this);
+//        refWatcher = LeakCanary.install(this);
         application = this;
         Fresco.initialize(this);
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
@@ -48,10 +46,10 @@ public class MainApplication extends MultiDexApplication {
         YandexMetrica.enableActivityAutoTracking(this);
     }
 
-    public static RefWatcher getRefWatcher(Context context) {
-        MainApplication application = (MainApplication) context.getApplicationContext();
-        return application.refWatcher;
-    }
+//    public static RefWatcher getRefWatcher(Context context) {
+//        MainApplication application = (MainApplication) context.getApplicationContext();
+//        return application.refWatcher;
+//    }
 
     public static StepicCoreComponent component(Context context) {
         return ((MainApplication) context.getApplicationContext()).component;
