@@ -40,6 +40,11 @@
                     android:scheme="https"
                     android:host="stepic.org"
                     android:pathPattern="/course/.*/"/>
+
+                <data
+                    android:scheme="http"
+                    android:host="stepic.org"
+                    android:pathPattern="/course/.*/"/>
             </intent-filter>
         </activity>
 
