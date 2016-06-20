@@ -342,6 +342,10 @@ public class MainFeedActivity extends BackToExitActivityBase
         showCurrentFragment(mCurrentIndex);
     }
 
+    public static int getFindLessonIndex () {
+        return 1;
+    }
+
     /**
      * Check the device to make sure it has the Google Play Services APK. If
      * it doesn't, display a dialog that allows users to download the APK from

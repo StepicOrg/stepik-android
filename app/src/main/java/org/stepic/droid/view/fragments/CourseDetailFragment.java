@@ -106,6 +106,9 @@ public class CourseDetailFragment extends FragmentBase {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
+    @Bind(R.id.course_not_found)
+    View courseNotFoundView;
+
     private WebView mIntroView;
 
     private TextView mCourseNameView;
@@ -196,6 +199,13 @@ public class CourseDetailFragment extends FragmentBase {
         mUserList = new ArrayList<>();
         mInstructorAdapter = new InstructorAdapter(mUserList, getActivity());
         mInstructorsCarousel.setAdapter(mInstructorAdapter);
+        courseNotFoundView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mShell.getScreenProvider().showFindCourses(getContext());
+                finish();
+            }
+        });
 
         RecyclerView.LayoutManager layoutManager =
                 new LinearLayoutManager(getActivity(),
@@ -309,6 +319,7 @@ public class CourseDetailFragment extends FragmentBase {
     public void initScreenByCourse() {
         //todo HIDE LOADING AND ERRORS
         reportInternetProblem.setVisibility(View.GONE);
+        courseNotFoundView.setVisibility(View.GONE);
         //
         header.setVisibility(View.VISIBLE);
         footer.setVisibility(View.VISIBLE);
@@ -380,7 +391,7 @@ public class CourseDetailFragment extends FragmentBase {
                     bus.post(new FailureLoadInstructorsEvent(mCourse, t));
                 }
             });
-        }else{
+        } else {
             mInstructorsCarousel.setVisibility(View.GONE);
         }
     }
@@ -439,15 +450,17 @@ public class CourseDetailFragment extends FragmentBase {
     }
 
     @Subscribe
-    public void onCourseUnavailable(CourseUnavailableForUserEvent event){
+    public void onCourseUnavailable(CourseUnavailableForUserEvent event) {
         //// TODO: 16.06.16 SHOW ERROR: CAN'T OPEN COURSE, TRY TO FIND IN SEARCH (Link to featured)
         YandexMetrica.reportEvent(AppConstants.COURSE_USER_TRY_FAIL, JsonHelper.toJson(event));
         int i = 0;
-        //// FIXME: 17.06.16 show message, that course is not available.
+        reportInternetProblem.setVisibility(View.GONE);
+        courseNotFoundView.setVisibility(View.VISIBLE);
+
     }
 
     @Subscribe
-    public void onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent event){
+    public void onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent event) {
         reportInternetProblem.setVisibility(View.VISIBLE);
         reportInternetProblem.setOnClickListener(onClickReportListener);
         Log.d("ttt", "fail -> set");
@@ -528,6 +541,7 @@ public class CourseDetailFragment extends FragmentBase {
     public void onDestroyView() {
         bus.unregister(this);
         reportInternetProblem.setOnClickListener(null);
+        courseNotFoundView.setOnClickListener(null);
         mIntroView.destroy();
         mIntroView = null;
         mInstructorAdapter = null;
@@ -539,9 +553,11 @@ public class CourseDetailFragment extends FragmentBase {
 
     public void finish() {
         Intent intent = new Intent();
-        intent.putExtra(AppConstants.COURSE_ID_KEY, (Parcelable) mCourse);
-        intent.putExtra(AppConstants.ENROLLMENT_KEY, mCourse.getEnrollment());
-        getActivity().setResult(Activity.RESULT_OK, intent);
+        if (mCourse != null) {
+            intent.putExtra(AppConstants.COURSE_ID_KEY, (Parcelable) mCourse);
+            intent.putExtra(AppConstants.ENROLLMENT_KEY, mCourse.getEnrollment());
+            getActivity().setResult(Activity.RESULT_OK, intent);
+        }
         getActivity().finish();
         getActivity().overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
     }

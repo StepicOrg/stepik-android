@@ -150,10 +150,20 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showDownload(Context context) {
+        int index = MainFeedActivity.getDownloadFragmentIndex();
+        showFromMainActivity(context, index);
+    }
+
+    @Override
+    public void showFindCourses(Context context){
+        int index = MainFeedActivity.getFindLessonIndex();
+        showFromMainActivity(context, index);
+    }
+
+    private void showFromMainActivity(Context context, int index){
         Intent intent = new Intent(context, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Bundle bundle = new Bundle();
-        int index = MainFeedActivity.getDownloadFragmentIndex();
         bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
         intent.putExtras(bundle);
         context.startActivity(intent);

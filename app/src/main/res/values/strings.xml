@@ -183,4 +183,5 @@
     <string name="done">Done</string>
     <string name="moving">Moving</string>
     <string name="go_to_learn">Continue</string>
+    <string name="fail_to_parse">Sorry, course is not found. Tap to find other courses!</string>
 </resources>

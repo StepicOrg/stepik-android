@@ -51,6 +51,8 @@ public interface IScreenManager {
 
     void showDownload(Context context);
 
+    void showFindCourses(Context context);
+
     void showVideo(Activity sourceActivity, String source);
 
     void showSettings(Activity sourceActivity);

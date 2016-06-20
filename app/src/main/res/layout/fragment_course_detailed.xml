@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/root_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
     <include
         android:id="@+id/appBarLayout"
@@ -26,5 +27,15 @@
     <include layout="@layout/internet_fail_clickable"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
-             android:layout_centerInParent="true"/>
+             android:layout_centerInParent="true"
+        tools:visibility= "gone"/>
+
+    <include layout="@layout/fail_to_parse_course"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_centerInParent="true">
+
+    </include>
+
+
 </RelativeLayout>
