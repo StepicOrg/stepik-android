@@ -364,7 +364,7 @@ public class CourseDetailFragment extends FragmentBase {
 
         mTitle = mCourse.getTitle();
         mDescription = mCourse.getSummary();
-        mUrl = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getSlug()));
+        mUrl = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getCourseId()+""));
 
         mCoursePropertyList.clear();
         mCoursePropertyList.addAll(mCoursePropertyResolver.getSortedPropertyList(mCourse));

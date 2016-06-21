@@ -69,6 +69,14 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_SOUND_DISABLED, isDisabled);
     }
 
+    public boolean isFirstTime() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, FIRST_TIME_LAUNCH, true);
+    }
+
+    public void afterFirstTime(){
+        put(PreferenceType.DEVICE_SPECIFIC, FIRST_TIME_LAUNCH, false);
+    }
+
     public enum CommentsOrder {
         DISCUSSION_NEW_FIRST("discussion"),
         DISCUSSION_MOST_LIKED("discussions_most_liked"),
@@ -318,8 +326,12 @@ public class SharedPreferenceHelper {
     }
 
     private boolean getBoolean(PreferenceType preferenceType, String key) {
+        return getBoolean(preferenceType, key, false);
+    }
+
+    private boolean getBoolean(PreferenceType preferenceType, String key, boolean defaultValue) {
         return mContext.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
-                .getBoolean(key, false);
+                .getBoolean(key, defaultValue);
     }
 
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
@@ -337,4 +349,5 @@ public class SharedPreferenceHelper {
     private final String NOTIFICATION_DISABLED = "notification_disabled_by_user";
     private final String NOTIFICATION_VIBRATION_DISABLED = "not_vibrat_disabled";
     private final String SD_CHOSEN = "sd_chosen";
+    private final String FIRST_TIME_LAUNCH = "first_time_launch";
 }

@@ -54,6 +54,7 @@ public  class CourseDaoImpl extends DaoBase<Course> {
         int indexTargetAudience = cursor.getColumnIndex(DBStructureCourses.Column.TARGET_AUDIENCE);
         int indexCertificate = cursor.getColumnIndex(DBStructureCourses.Column.CERTIFICATE);
         int indexIntroVideoId = cursor.getColumnIndex(DBStructureCourses.Column.INTRO_VIDEO_ID);
+        int indexSlug = cursor.getColumnIndex(DBStructureCourses.Column.SLUG);
 
         course.setCertificate(cursor.getString(indexCertificate));
         course.setWorkload(cursor.getString(indexWorkload));
@@ -76,6 +77,7 @@ public  class CourseDaoImpl extends DaoBase<Course> {
         course.set_loading(cursor.getInt(indexIsLoading) > 0);
         course.setSections(DbParseHelper.INSTANCE.parseStringToLongArray(cursor.getString(indexSection)));
         course.setIntro_video_id(cursor.getLong(indexIntroVideoId));
+        course.setSlug(cursor.getString(indexSlug));
         return course;
     }
 
@@ -106,6 +108,7 @@ public  class CourseDaoImpl extends DaoBase<Course> {
         values.put(DBStructureCourses.Column.COURSE_FORMAT, course.getCourse_format());
         values.put(DBStructureCourses.Column.TARGET_AUDIENCE, course.getTarget_audience());
         values.put(DBStructureCourses.Column.CERTIFICATE, course.getCertificate());
+        values.put(DBStructureCourses.Column.SLUG, course.getSlug());
 
         Video video = course.getIntro_video();
         if (video != null) {

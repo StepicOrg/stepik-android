@@ -61,7 +61,8 @@ public final class DBStructureCourses extends DBStructureBase {
                     Column.COURSE_FORMAT,
                     Column.TARGET_AUDIENCE,
                     Column.CERTIFICATE,
-                    Column.INTRO_VIDEO_ID
+                    Column.INTRO_VIDEO_ID,
+                    Column.SLUG
             };
         }
         return mUsedColumns;
