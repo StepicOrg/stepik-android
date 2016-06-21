@@ -136,6 +136,7 @@ dependencies {
 
     compile 'com.google.firebase:firebase-messaging:9.0.2'
     compile 'org.jsoup:jsoup:1.8.3'
+    compile 'com.google.android.gms:play-services-appindexing:9.0.2'
 }
 
 repositories {
