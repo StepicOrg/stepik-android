@@ -161,8 +161,8 @@ public class CourseDetailFragment extends FragmentBase {
 //App indexing:
     private GoogleApiClient mClient;
     private Uri mUrl;
-    private String mTitle = "";
-    private String mDescription = "";
+    private String mTitle;
+    private String mDescription;
 
 
     private List<CourseProperty> mCoursePropertyList;
@@ -172,6 +172,7 @@ public class CourseDetailFragment extends FragmentBase {
 
     public Action getAction() {
         Thing object = new Thing.Builder()
+                .setId(mUrl.getEncodedPath())
                 .setName(mTitle)
                 .setDescription(mDescription)
                 .setUrl(mUrl)
@@ -370,6 +371,8 @@ public class CourseDetailFragment extends FragmentBase {
         else{
             mUrl = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getCourseId() + ""));
         }
+        wasIndexed = true;
+        AppIndex.AppIndexApi.start(mClient, getAction());
 
         mCoursePropertyList.clear();
         mCoursePropertyList.addAll(mCoursePropertyResolver.getSortedPropertyList(mCourse));
@@ -411,11 +414,16 @@ public class CourseDetailFragment extends FragmentBase {
         fetchInstructors();
     }
 
+    boolean wasIndexed =false;
+
     @Override
     public void onStart() {
         super.onStart();
         mClient.connect();
-        AppIndex.AppIndexApi.start(mClient, getAction());
+        if (mCourse!=null) {
+            wasIndexed = true;
+            AppIndex.AppIndexApi.start(mClient, getAction());
+        }
     }
 
 
@@ -583,7 +591,9 @@ public class CourseDetailFragment extends FragmentBase {
 
     @Override
     public void onStop() {
-        AppIndex.AppIndexApi.end(mClient, getAction());
+        if (wasIndexed) {
+            AppIndex.AppIndexApi.end(mClient, getAction());
+        }
         mClient.disconnect();
         super.onStop();
 
