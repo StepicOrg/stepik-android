@@ -13,6 +13,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.R;
+import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.core.ILessonSessionManager;
 import org.stepic.droid.core.ILoginManager;
 import org.stepic.droid.core.IShell;
@@ -48,6 +49,9 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     @Inject
     protected DatabaseFacade mDbManager;
+
+    @Inject
+    public IMainHandler mMainHandler;
 
     @Inject
     protected IShell mShell;

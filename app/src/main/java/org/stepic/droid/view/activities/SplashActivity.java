@@ -10,6 +10,9 @@ import org.stepic.droid.events.FirstTimeActionIsDoneEvent;
 import org.stepic.droid.notifications.StepicInstanceIdService;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
+
 
 public class SplashActivity extends BackToExitActivityBase {
 
@@ -43,7 +46,14 @@ public class SplashActivity extends BackToExitActivityBase {
                 public void run() {
                     mDbManager.dropOnlyCourseTable(); //v11 bug, when slug was not cached. We can remove it, when all users will have v1.11 or above. (flavour problem)
                     mSharedPreferenceHelper.afterFirstTime();
-                    bus.post(new FirstTimeActionIsDoneEvent());
+                    mMainHandler.post(new Function0<Unit>() {
+                        @Override
+                        public Unit invoke() {
+                            bus.post(new FirstTimeActionIsDoneEvent());
+                            return Unit.INSTANCE;
+                        }
+                    });
+
                 }
             });
 
