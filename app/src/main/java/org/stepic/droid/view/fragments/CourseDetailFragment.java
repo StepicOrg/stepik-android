@@ -266,9 +266,7 @@ public class CourseDetailFragment extends FragmentBase {
 
         unauthorizedDialog = UnauthorizedDialogFragment.newInstance();
 
-        bus.register(this);
-        //COURSE RELATED
-        tryToShowCourse();
+        //COURSE RELATED IN ON START
     }
 
     private void tryToShowCourse() {
@@ -419,6 +417,8 @@ public class CourseDetailFragment extends FragmentBase {
     @Override
     public void onStart() {
         super.onStart();
+        bus.register(this);
+        tryToShowCourse();
         mClient.connect();
         if (mCourse != null && !wasIndexed && mCourse.getSlug() != null) {
             wasIndexed = true;
@@ -591,6 +591,7 @@ public class CourseDetailFragment extends FragmentBase {
 
     @Override
     public void onStop() {
+        bus.unregister(this);
         if (wasIndexed) {
             AppIndex.AppIndexApi.end(mClient, getAction());
         }
@@ -601,7 +602,6 @@ public class CourseDetailFragment extends FragmentBase {
 
     @Override
     public void onDestroyView() {
-        bus.unregister(this);
         reportInternetProblem.setOnClickListener(null);
         courseNotFoundView.setOnClickListener(null);
         mIntroView.destroy();
