@@ -31,6 +31,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.DraweeView;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.yandex.metrica.YandexMetrica;
@@ -56,6 +60,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepicLogicHelper;
+import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.util.ThumbnailParser;
 import org.stepic.droid.view.adapters.CoursePropertyAdapter;
 import org.stepic.droid.view.adapters.InstructorAdapter;
@@ -78,7 +83,6 @@ import kotlin.jvm.functions.Function0;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
-
 public class CourseDetailFragment extends FragmentBase {
 
 
@@ -154,16 +158,37 @@ public class CourseDetailFragment extends FragmentBase {
 
     View mPlayer;
 
+//App indexing:
+    private GoogleApiClient mClient;
+    private Uri mUrl;
+    private String mTitle = "";
+    private String mDescription = "";
+
 
     private List<CourseProperty> mCoursePropertyList;
     private Course mCourse;
     private List<User> mUserList;
     private InstructorAdapter mInstructorAdapter;
 
+    public Action getAction() {
+        Thing object = new Thing.Builder()
+                .setName(mTitle)
+                .setDescription(mDescription)
+                .setUrl(mUrl)
+                .build();
+
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         getActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         super.onCreate(savedInstanceState);
+        mClient = new GoogleApiClient.Builder(getActivity()).addApi(AppIndex.API).build();
         //// FIXME: 17.06.16 now on rotate instructors are reloading, we should use presenter or retain instance
     }
 
@@ -337,6 +362,10 @@ public class CourseDetailFragment extends FragmentBase {
         header.setVisibility(View.VISIBLE);
         footer.setVisibility(View.VISIBLE);
 
+        mTitle = mCourse.getTitle();
+        mDescription = mCourse.getSummary();
+        mUrl = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getSlug()));
+
         mCoursePropertyList.clear();
         mCoursePropertyList.addAll(mCoursePropertyResolver.getSortedPropertyList(mCourse));
         if (mCourse.getTitle() != null && !mCourse.getTitle().equals("")) {
@@ -380,7 +409,10 @@ public class CourseDetailFragment extends FragmentBase {
     @Override
     public void onStart() {
         super.onStart();
+        mClient.connect();
+        AppIndex.AppIndexApi.start(mClient, getAction());
     }
+
 
     private void fetchInstructors() {
         if (mCourse != null && mCourse.getInstructors() != null && mCourse.getInstructors().length != 0) {
@@ -546,6 +578,8 @@ public class CourseDetailFragment extends FragmentBase {
 
     @Override
     public void onStop() {
+        AppIndex.AppIndexApi.end(mClient, getAction());
+        mClient.disconnect();
         super.onStop();
 
     }

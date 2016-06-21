@@ -14,7 +14,7 @@ class StepicFcmListenerService : FirebaseMessagingService() {
     val hacker = HackFcmListener()
 
     override fun onMessageReceived(message : RemoteMessage) {
-        val data = message.data
+         val data = message.data
         val notificationRawString: String? = data?.get("object")
         try {
             val userId = hacker.mShell.getSharedPreferenceHelper().profile.id

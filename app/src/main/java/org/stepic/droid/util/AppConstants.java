@@ -16,6 +16,9 @@ public class AppConstants {
     public static final String COMMENT_DATE_TIME_PATTERN = "dd.MM.yyyy HH:mm";
 
 
+    public static final String WEB_URI_SEPARATOR = "/";
+
+
     //Types of steps:
     public static final String TYPE_TEXT = "text";
     public static final String TYPE_VIDEO = "video";
