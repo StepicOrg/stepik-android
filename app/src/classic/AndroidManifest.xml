@@ -42,5 +42,22 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".view.activities.SectionActivity">
+            <intent-filter android:autoVerify="true" tools:ignore="UnusedAttribute">
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:scheme="https"
+                    android:host="stepic.org"
+                    android:pathPattern="/course/.*/syllabus.*"/>
+
+                <data
+                    android:scheme="http"
+                    android:host="stepic.org"
+                    android:pathPattern="/course/.*/syllabus.*"/>
+            </intent-filter>
+        </activity>
     </application>
 </manifest>
