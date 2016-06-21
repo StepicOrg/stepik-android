@@ -1,6 +1,7 @@
 package org.stepic.droid.view.activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
@@ -23,7 +24,11 @@ public class CourseDetailActivity extends SingleFragmentActivity {
     @NonNull
     @Override
     protected Fragment createFragment() {
-        Course course = (Course) (getIntent().getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
+        Bundle extras = getIntent().getExtras();
+        Course course = null;
+        if (extras != null) {
+            course = (Course) (extras.get(AppConstants.KEY_COURSE_BUNDLE));
+        }
         if (course == null) {
             int i = 0;
             //Warning: work only for pattern android:pathPattern="/course/.*/" NOT Working for /course/.*/.* !!!
