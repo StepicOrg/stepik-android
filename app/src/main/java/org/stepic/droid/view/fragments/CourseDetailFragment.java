@@ -366,10 +366,10 @@ public class CourseDetailFragment extends FragmentBase {
         mTitle = mCourse.getTitle();
         mDescription = mCourse.getSummary();
         if (mCourse.getSlug() == null) {
-            mUrl = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getSlug()));
+            mUrl = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getCourseId() + ""));
         }
         else{
-            mUrl = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getCourseId() + ""));
+            mUrl = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getSlug()));
         }
         wasIndexed = true;
         AppIndex.AppIndexApi.start(mClient, getAction());
