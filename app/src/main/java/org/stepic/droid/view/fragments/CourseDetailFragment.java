@@ -83,6 +83,7 @@ import kotlin.jvm.functions.Function0;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
+
 public class CourseDetailFragment extends FragmentBase {
 
 
@@ -158,7 +159,7 @@ public class CourseDetailFragment extends FragmentBase {
 
     View mPlayer;
 
-//App indexing:
+    //App indexing:
     private GoogleApiClient mClient;
     private Uri mUrl;
     private String mTitle;
@@ -365,14 +366,13 @@ public class CourseDetailFragment extends FragmentBase {
 
         mTitle = mCourse.getTitle();
         mDescription = mCourse.getSummary();
-        if (mCourse.getSlug() == null) {
-            mUrl = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getCourseId() + ""));
-        }
-        else{
+        if (mCourse.getSlug() != null && !wasIndexed) {
             mUrl = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getSlug()));
+            wasIndexed = true;
+            AppIndex.AppIndexApi.start(mClient, getAction());
+            YandexMetrica.reportEvent("appindexing", JsonHelper.toJson(mCourse.getCourseId()));
         }
-        wasIndexed = true;
-        AppIndex.AppIndexApi.start(mClient, getAction());
+
 
         mCoursePropertyList.clear();
         mCoursePropertyList.addAll(mCoursePropertyResolver.getSortedPropertyList(mCourse));
@@ -414,13 +414,13 @@ public class CourseDetailFragment extends FragmentBase {
         fetchInstructors();
     }
 
-    boolean wasIndexed =false;
+    boolean wasIndexed = false;
 
     @Override
     public void onStart() {
         super.onStart();
         mClient.connect();
-        if (mCourse!=null) {
+        if (mCourse != null && !wasIndexed && mCourse.getSlug() != null) {
             wasIndexed = true;
             AppIndex.AppIndexApi.start(mClient, getAction());
         }
