@@ -15,8 +15,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.DraweeView;
 import com.squareup.otto.Subscribe;
 import com.yandex.metrica.YandexMetrica;
 
@@ -25,6 +27,7 @@ import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.concurrency.tasks.FromDbSectionTask;
 import org.stepic.droid.concurrency.tasks.ToDbSectionTask;
+import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
 import org.stepic.droid.events.courses.CourseFoundEvent;
 import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
@@ -43,6 +46,7 @@ import org.stepic.droid.presenters.CourseFinderPresenter;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.view.abstraction.LoadCourseView;
 import org.stepic.droid.view.adapters.SectionAdapter;
 import org.stepic.droid.web.SectionsStepicResponse;
@@ -80,6 +84,18 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Bind(R.id.report_empty)
     protected View mReportEmptyView;
 
+    @Bind(R.id.join_course_root)
+    protected View joinCourseRoot; // default state is gone
+
+    @Bind(R.id.join_course_layout)
+    protected View joinCourseButton;
+
+    @Bind(R.id.courseIcon)
+    protected DraweeView courseIcon;
+
+    @Bind(R.id.course_name)
+    protected TextView courseName;
+
     private Course mCourse;
     private SectionAdapter mAdapter;
     private List<Section> mSectionList;
@@ -90,6 +106,9 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Inject
     @Named(AppConstants.SECTION_NAMED_INJECTION_COURSE_FINDER)
     CourseFinderPresenter courseFinderPresenter;
+
+    @Inject
+    IConfig mConfig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,8 +204,23 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     public void initScreenByCourse() {
         mAdapter.setCourse(mCourse);
+        resolveJoinCourseView();
         setUpToolbar();
         getAndShowSectionsFromCache();
+    }
+
+    public void resolveJoinCourseView () {
+        if (mCourse!= null && mCourse.getEnrollment() <= 0) {
+            joinCourseRoot.setVisibility(View.VISIBLE);
+            joinCourseButton.setVisibility(View.VISIBLE);
+            //todo join listener
+            courseName.setText(mCourse.getTitle());
+            courseIcon.setController(StepicLogicHelper.getControllerForCourse(mCourse, mConfig));
+        }
+        else{
+            joinCourseRoot.setVisibility(View.GONE);
+        }
+
     }
 
     @Subscribe
