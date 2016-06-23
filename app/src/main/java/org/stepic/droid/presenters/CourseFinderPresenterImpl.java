@@ -1,6 +1,7 @@
 package org.stepic.droid.presenters;
 
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
 import org.stepic.droid.events.courses.CourseFoundEvent;
 import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
@@ -14,6 +15,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
@@ -32,12 +35,15 @@ public class CourseFinderPresenterImpl implements CourseFinderPresenter {
     IApi api;
 
     @Inject
+    IMainHandler mainHandler;
+
+    @Inject
     public CourseFinderPresenterImpl() {
         MainApplication.component().inject(this);
     }
 
     @Override
-    public void onCreate(LoadCourseView view) {
+    public void onStart(LoadCourseView view) {
         this.view = view;
     }
 
@@ -59,7 +65,13 @@ public class CourseFinderPresenterImpl implements CourseFinderPresenter {
                 final Course finalCourse = course;
                 if (finalCourse != null) {
                     if (isViewAttached()) {
-                        view.onCourseFound(new CourseFoundEvent(finalCourse));
+                        mainHandler.post(new Function0<Unit>() {
+                            @Override
+                            public Unit invoke() {
+                                view.onCourseFound(new CourseFoundEvent(finalCourse));
+                                return Unit.INSTANCE;
+                            }
+                        });
                     }
                 } else {
                     api.getCourse(courseId).enqueue(new Callback<CoursesStepicResponse>() {

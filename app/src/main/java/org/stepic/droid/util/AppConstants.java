@@ -100,4 +100,6 @@ public class AppConstants {
     public static final String ERROR_PARSING_SLUG = "error parsing slug";
     public static final java.lang.String COURSE_USER_TRY_FAIL = "course: user open failed for him course";
     public static final java.lang.String AUTH_FROM_DIALOG = "Auth: yes from auth dialog";
+    public static final String ABOUT_NAME_INJECTION_COURSE_FINDER = "about";
+    public static final String SECTION_NAMED_INJECTION_COURSE_FINDER = "section";
 }

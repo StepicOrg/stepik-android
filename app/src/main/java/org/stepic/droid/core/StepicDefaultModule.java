@@ -26,6 +26,9 @@ import org.stepic.droid.notifications.NotificationManagerImpl;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.presenters.CourseFinderPresenter;
+import org.stepic.droid.presenters.CourseFinderPresenterForDetailScreen;
+import org.stepic.droid.presenters.CourseFinderPresenterForSectionScreen;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.ConcurrentCancelSniffer;
@@ -49,6 +52,7 @@ import org.stepic.droid.store.dao.StepDaoImpl;
 import org.stepic.droid.store.dao.UnitDaoImpl;
 import org.stepic.droid.store.dao.ViewAssignmentDaoImpl;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.ISearchResolver;
 import org.stepic.droid.util.resolvers.IStepResolver;
@@ -64,6 +68,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -325,5 +330,19 @@ public class StepicDefaultModule {
     @Provides
     public CommentManager provideCommentsManager() {
         return new CommentManager();
+    }
+
+    @Singleton
+    @Provides
+    @Named(AppConstants.SECTION_NAMED_INJECTION_COURSE_FINDER)
+    public CourseFinderPresenter provideCourseFinderPresenterForSections() {
+        return new CourseFinderPresenterForSectionScreen();
+    }
+
+    @Singleton
+    @Provides
+    @Named(AppConstants.ABOUT_NAME_INJECTION_COURSE_FINDER)
+    public CourseFinderPresenter provideCourseFinderPresenterForDetailScreen() {
+        return new CourseFinderPresenterForDetailScreen();
     }
 }

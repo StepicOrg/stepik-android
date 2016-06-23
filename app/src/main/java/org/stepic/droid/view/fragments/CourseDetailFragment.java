@@ -15,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,10 +40,10 @@ import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.concurrency.tasks.UpdateCourseTask;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
 import org.stepic.droid.events.courses.CourseFoundEvent;
-import org.stepic.droid.events.courses.CourseNotInDatabaseEvent;
 import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
 import org.stepic.droid.events.instructors.FailureLoadInstructorsEvent;
 import org.stepic.droid.events.instructors.OnResponseLoadingInstructorsEvent;
@@ -55,6 +54,7 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepic.droid.model.User;
 import org.stepic.droid.model.Video;
+import org.stepic.droid.presenters.CourseFinderPresenter;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
@@ -68,19 +68,19 @@ import org.stepic.droid.view.adapters.InstructorAdapter;
 import org.stepic.droid.view.custom.LoadingProgressDialog;
 import org.stepic.droid.view.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.web.AuthenticationStepicResponse;
-import org.stepic.droid.web.CoursesStepicResponse;
 import org.stepic.droid.web.UserStepicResponse;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import butterknife.Bind;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
@@ -186,9 +186,13 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
                 .build();
     }
 
+    @Inject
+    @Named(AppConstants.ABOUT_NAME_INJECTION_COURSE_FINDER)
+    CourseFinderPresenter courseFinderPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        MainApplication.component().inject(this);
         getActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         super.onCreate(savedInstanceState);
         mClient = new GoogleApiClient.Builder(getActivity()).addApi(AppIndex.API).build();
@@ -271,7 +275,6 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     }
 
     private void tryToShowCourse() {
-        Log.d("ttt", "try to show");
         reportInternetProblem.setVisibility(View.GONE); // now we try show -> it is not visible
         mCourse = (Course) (getArguments().getSerializable(AppConstants.KEY_COURSE_BUNDLE));
         if (mCourse == null) {
@@ -281,8 +284,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
                 bus.post(new CourseUnavailableForUserEvent());
             } else {
                 //todo SHOW LOADING.
-                //todo fetch course from database. if not exist, fetch from web, put course to arguments, init mCourse, initScreenByCourse()
-                findCourseById(courseId);
+                courseFinderPresenter.findCourseById(courseId);
             }
 
         } else {
@@ -290,68 +292,12 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         }
     }
 
-    public void findCourseById(final long courseId) {
-        mThreadPoolExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                Course course = mDatabaseFacade.getCourseById(courseId, DatabaseFacade.Table.featured);
-                if (course == null) {
-                    course = mDatabaseFacade.getCourseById(courseId, DatabaseFacade.Table.enrolled);
-                }
-
-                final Course finalCourse = course;
-                if (finalCourse != null) {
-                    mMainHandler.post(new Function0<Unit>() {
-                        @Override
-                        public Unit invoke() {
-                            bus.post(new CourseFoundEvent(finalCourse));
-                            return Unit.INSTANCE;
-                        }
-                    });
-                } else {
-                    //fetch from internet
-                    mMainHandler.post(new Function0<Unit>() {
-                        @Override
-                        public Unit invoke() {
-                            bus.post(new CourseNotInDatabaseEvent(courseId));
-                            return Unit.INSTANCE;
-                        }
-                    });
-                }
-            }
-        });
-    }
-
-    @Subscribe
     public void onCourseFound(CourseFoundEvent event) {
         if (mCourse == null) {
             mCourse = event.getCourse();
             Bundle args = getArguments();
             args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, mCourse);
             initScreenByCourse();
-        }
-    }
-
-    @Subscribe
-    public void onCourseNotInDatabase(CourseNotInDatabaseEvent event) {
-        if (mCourse == null) {
-            //todo GET COURSE FROM INTERNET AND HANDLE IT. (FROM INTERNET SUCCESS -> DO NOT Save to db, just show.)
-            final long courseId = event.getCourseId();
-            mShell.getApi().getCourse(courseId).enqueue(new Callback<CoursesStepicResponse>() {
-                @Override
-                public void onResponse(Response<CoursesStepicResponse> response, Retrofit retrofit) {
-                    if (response.isSuccess() && !response.body().getCourses().isEmpty()) {
-                        bus.post(new CourseFoundEvent(response.body().getCourses().get(0)));
-                    } else {
-                        bus.post(new CourseUnavailableForUserEvent(courseId));
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    bus.post(new CourseCantLoadEvent());
-                }
-            });
         }
     }
 
@@ -419,6 +365,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     public void onStart() {
         super.onStart();
         bus.register(this);
+        courseFinderPresenter.onStart(this);
         tryToShowCourse();
         mClient.connect();
         if (mCourse != null && !wasIndexed && mCourse.getSlug() != null) {
@@ -517,7 +464,6 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     }
 
-    @Subscribe
     public void onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent event) {
         reportInternetProblem.setVisibility(View.VISIBLE);
         reportInternetProblem.setOnClickListener(onClickReportListener);
@@ -601,6 +547,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @Override
     public void onDestroyView() {
+        courseFinderPresenter.onDestroy();
         reportInternetProblem.setOnClickListener(null);
         courseNotFoundView.setOnClickListener(null);
         mIntroView.destroy();

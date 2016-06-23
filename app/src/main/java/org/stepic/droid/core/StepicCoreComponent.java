@@ -45,6 +45,7 @@ import org.stepic.droid.view.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.view.dialogs.VideoQualityDialog;
 import org.stepic.droid.view.dialogs.WantMoveDataDialog;
 import org.stepic.droid.view.fragments.CommentsFragment;
+import org.stepic.droid.view.fragments.CourseDetailFragment;
 import org.stepic.droid.web.RetrofitRESTApi;
 
 import javax.inject.Singleton;
@@ -63,6 +64,8 @@ public interface StepicCoreComponent {
     void inject(Course adapter);
 
     void inject(FragmentBase baseFragment);
+
+    void inject(CourseDetailFragment courseDetailFragment);
 
     void inject(RetrofitRESTApi api);
 
