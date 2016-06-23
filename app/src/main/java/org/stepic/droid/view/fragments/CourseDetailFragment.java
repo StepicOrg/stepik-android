@@ -281,7 +281,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             //it is not from our activity
             long courseId = getArguments().getLong(AppConstants.KEY_COURSE_LONG_ID);
             if (courseId < 0) {
-                bus.post(new CourseUnavailableForUserEvent());
+                onCourseUnavailable(new CourseUnavailableForUserEvent());
             } else {
                 //todo SHOW LOADING.
                 courseFinderPresenter.findCourseById(courseId);
@@ -292,6 +292,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         }
     }
 
+    @Override
     public void onCourseFound(CourseFoundEvent event) {
         if (mCourse == null) {
             mCourse = event.getCourse();
@@ -454,7 +455,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         }
     }
 
-    @Subscribe
+    @Override
     public void onCourseUnavailable(CourseUnavailableForUserEvent event) {
         //// TODO: 16.06.16 SHOW ERROR: CAN'T OPEN COURSE, TRY TO FIND IN SEARCH (Link to featured)
         YandexMetrica.reportEvent(AppConstants.COURSE_USER_TRY_FAIL, JsonHelper.toJson(event));
@@ -464,6 +465,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     }
 
+    @Override
     public void onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent event) {
         reportInternetProblem.setVisibility(View.VISIBLE);
         reportInternetProblem.setOnClickListener(onClickReportListener);

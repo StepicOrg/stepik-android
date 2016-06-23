@@ -3,6 +3,7 @@ package org.stepic.droid.view.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,14 +15,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.concurrency.tasks.FromDbSectionTask;
 import org.stepic.droid.concurrency.tasks.ToDbSectionTask;
+import org.stepic.droid.events.courses.CourseCantLoadEvent;
+import org.stepic.droid.events.courses.CourseFoundEvent;
+import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
 import org.stepic.droid.events.notify_ui.NotifyUISectionsEvent;
 import org.stepic.droid.events.sections.FailureResponseSectionEvent;
 import org.stepic.droid.events.sections.FinishingGetSectionFromDbEvent;
@@ -33,8 +39,11 @@ import org.stepic.droid.events.sections.SuccessResponseSectionsEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.notifications.model.Notification;
+import org.stepic.droid.presenters.CourseFinderPresenter;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.view.abstraction.LoadCourseView;
 import org.stepic.droid.view.adapters.SectionAdapter;
 import org.stepic.droid.web.SectionsStepicResponse;
 
@@ -42,13 +51,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class SectionActivity extends FragmentActivityBase implements SwipeRefreshLayout.OnRefreshListener, OnRequestPermissionsResultCallback {
+public class SectionActivity extends FragmentActivityBase implements SwipeRefreshLayout.OnRefreshListener, OnRequestPermissionsResultCallback, LoadCourseView {
 
     @Bind(R.id.swipe_refresh_layout_units)
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -75,15 +87,19 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     boolean isScreenEmpty;
     boolean firstLoad;
 
+    @Inject
+    @Named(AppConstants.SECTION_NAMED_INJECTION_COURSE_FINDER)
+    CourseFinderPresenter courseFinderPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainApplication.component().inject(this);
         setContentView(R.layout.activity_section);
         ButterKnife.bind(this);
         hideSoftKeypad();
         isScreenEmpty = true;
         firstLoad = true;
-
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(
@@ -99,11 +115,12 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
         ProgressHelper.activate(mProgressBar);
         bus.register(this);
+        courseFinderPresenter.onStart(this);
         onNewIntent(getIntent());
     }
 
-    private void setUpToolbar(){
-        if (mCourse!=null && mCourse.getTitle()!=null && !mCourse.getTitle().isEmpty()) {
+    private void setUpToolbar() {
+        if (mCourse != null && mCourse.getTitle() != null && !mCourse.getTitle().isEmpty()) {
             setTitle(mCourse.getTitle());
         }
         setSupportActionBar(mToolbar);
@@ -114,29 +131,60 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
-        mCourse = (Course) (intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
 
-        if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
-            final long courseId = mCourse.getCourseId();
-            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    List<Notification> notifications = mDbManager.getAllNotificationsOfCourse(courseId);
-                    notificationManager.discardAllNotifications(courseId);
-                    for (Notification notificationItem : notifications) {
-                        if (notificationItem != null && notificationItem.getId() != null) {
-                            try {
-                                mShell.getApi().markNotificationAsRead(notificationItem.getId(), true).execute();
-                            } catch (IOException e) {
-                                YandexMetrica.reportError("notification is not posted", e);
+        if (intent.getExtras() != null) {
+            mCourse = (Course) (intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
+        }
+        if (mCourse != null) {
+            if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
+                final long courseId = mCourse.getCourseId();
+                AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        List<Notification> notifications = mDbManager.getAllNotificationsOfCourse(courseId);
+                        notificationManager.discardAllNotifications(courseId);
+                        for (Notification notificationItem : notifications) {
+                            if (notificationItem != null && notificationItem.getId() != null) {
+                                try {
+                                    mShell.getApi().markNotificationAsRead(notificationItem.getId(), true).execute();
+                                } catch (IOException e) {
+                                    YandexMetrica.reportError("notification is not posted", e);
+                                }
                             }
                         }
+                        return null;
                     }
-                    return null;
+                };
+                task.executeOnExecutor(mThreadPoolExecutor);
+            }
+
+            initScreenByCourse();
+        } else {
+            Uri fullUri = intent.getData();
+            List<String> pathSegments = fullUri.getPathSegments();
+            // 0 is "course", 1 is our slug
+            if (pathSegments.size() > 1) {
+                String pathFromWeb = pathSegments.get(1);
+                Long id = HtmlHelper.parseIdFromSlug(pathFromWeb);
+                long simpleId;
+                if (id == null) {
+                    simpleId = -1;
+                } else {
+                    simpleId = id;
                 }
-            };
-            task.executeOnExecutor(mThreadPoolExecutor);
+                if (simpleId < 0) {
+                    onCourseUnavailable(new CourseUnavailableForUserEvent());
+                } else {
+                    courseFinderPresenter.findCourseById(simpleId);
+                }
+            } else {
+                onCourseUnavailable(new CourseUnavailableForUserEvent());
+            }
         }
+    }
+
+    public void initScreenByCourse() {
+        mAdapter.setCourse(mCourse);
         setUpToolbar();
         getAndShowSectionsFromCache();
     }
@@ -151,7 +199,9 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_info:
-                mShell.getScreenProvider().showCourseDescription(this, mCourse);
+                if (mCourse != null) {
+                    mShell.getScreenProvider().showCourseDescription(this, mCourse);
+                }
                 return true;
 
             case android.R.id.home:
@@ -269,7 +319,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     }
 
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -278,6 +327,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Override
     protected void onDestroy() {
+        courseFinderPresenter.onDestroy();
         bus.unregister(this);
         super.onDestroy();
     }
@@ -300,7 +350,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         getAndShowSectionsFromCache();
     }
 
-
     @Subscribe
     public void onSectionCached(SectionCachedEvent e) {
         long sectionId = e.getSectionId();
@@ -312,7 +361,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         long sectionId = e.getSectionId();
         updateState(sectionId, false, false);
     }
-
 
     private void updateState(long sectionId, boolean isCached, boolean isLoading) {
 
@@ -332,7 +380,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         section.set_loading(isLoading);
         mAdapter.notifyItemChanged(position);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -357,5 +404,26 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                 }
             }
         }
+    }
+
+    @Override
+    public void onCourseFound(CourseFoundEvent event) {
+        if (mCourse == null) {
+            mCourse = event.getCourse();
+            Bundle args = getIntent().getExtras();
+            args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, mCourse);
+            getIntent().putExtras(args);
+            initScreenByCourse();
+        }
+    }
+
+    @Override
+    public void onCourseUnavailable(CourseUnavailableForUserEvent event) {
+        Toast.makeText(SectionActivity.this, "COURSE IS NOT AVAILABLE", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent event) {
+        Toast.makeText(SectionActivity.this, "INTERNET FAIL", Toast.LENGTH_SHORT).show();
     }
 }

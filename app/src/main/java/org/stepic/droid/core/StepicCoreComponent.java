@@ -28,6 +28,7 @@ import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.ImageOnDisk;
+import org.stepic.droid.view.activities.SectionActivity;
 import org.stepic.droid.view.adapters.CoursePropertyAdapter;
 import org.stepic.droid.view.adapters.DownloadsAdapter;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
@@ -56,6 +57,8 @@ import dagger.Component;
 @Component(modules = {StepicDefaultModule.class})
 public interface StepicCoreComponent {
     void inject(FragmentActivityBase someActivity);
+
+    void inject(SectionActivity someActivity);
 
     void inject(Shell injectAllToShell);
 
