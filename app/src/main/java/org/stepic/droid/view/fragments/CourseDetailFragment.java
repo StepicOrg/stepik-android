@@ -62,6 +62,7 @@ import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.util.ThumbnailParser;
+import org.stepic.droid.view.abstraction.LoadCourseView;
 import org.stepic.droid.view.adapters.CoursePropertyAdapter;
 import org.stepic.droid.view.adapters.InstructorAdapter;
 import org.stepic.droid.view.custom.LoadingProgressDialog;
@@ -84,7 +85,7 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class CourseDetailFragment extends FragmentBase {
+public class CourseDetailFragment extends FragmentBase implements LoadCourseView {
 
 
     private View.OnClickListener onClickReportListener;
@@ -426,7 +427,6 @@ public class CourseDetailFragment extends FragmentBase {
         }
     }
 
-
     private void fetchInstructors() {
         if (mCourse != null && mCourse.getInstructors() != null && mCourse.getInstructors().length != 0) {
             bus.post(new StartLoadingInstructorsEvent(mCourse));
@@ -521,7 +521,6 @@ public class CourseDetailFragment extends FragmentBase {
     public void onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent event) {
         reportInternetProblem.setVisibility(View.VISIBLE);
         reportInternetProblem.setOnClickListener(onClickReportListener);
-        Log.d("ttt", "fail -> set");
     }
 
     @Subscribe
