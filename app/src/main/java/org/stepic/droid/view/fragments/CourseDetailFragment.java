@@ -43,6 +43,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
 import org.stepic.droid.events.courses.CourseFoundEvent;
 import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
+import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.instructors.FailureLoadInstructorsEvent;
 import org.stepic.droid.events.instructors.OnResponseLoadingInstructorsEvent;
 import org.stepic.droid.events.instructors.StartLoadingInstructorsEvent;
@@ -271,6 +272,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
         unauthorizedDialog = UnauthorizedDialogFragment.newInstance();
 
+        bus.register(this);
         //COURSE RELATED IN ON START
     }
 
@@ -338,9 +340,15 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
         courseIcon.setController(StepicLogicHelper.getControllerForCourse(mCourse, config));
 
+        resolveJoinView();
+        fetchInstructors();
+    }
+
+    private void resolveJoinView() {
         if (mCourse.getEnrollment() != 0) {
             mJoinCourseView.setVisibility(View.GONE);
             continueCourseView.setVisibility(View.VISIBLE);
+            continueCourseView.setEnabled(true);
             continueCourseView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -350,6 +358,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         } else {
             continueCourseView.setVisibility(View.GONE);
             mJoinCourseView.setVisibility(View.VISIBLE);
+            mJoinCourseView.setEnabled(true);
             mJoinCourseView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -357,7 +366,6 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
                 }
             });
         }
-        fetchInstructors();
     }
 
     boolean wasIndexed = false;
@@ -365,7 +373,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @Override
     public void onStart() {
         super.onStart();
-        bus.register(this);
+
         courseFinderPresenter.onStart(this);
         courseJoinerPresenter.onStart(this);
         tryToShowCourse();
@@ -459,22 +467,27 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @Override
     public void onCourseUnavailable(CourseUnavailableForUserEvent event) {
         //// TODO: 16.06.16 SHOW ERROR: CAN'T OPEN COURSE, TRY TO FIND IN SEARCH (Link to featured)
-        YandexMetrica.reportEvent(AppConstants.COURSE_USER_TRY_FAIL, JsonHelper.toJson(event));
-        int i = 0;
-        reportInternetProblem.setVisibility(View.GONE);
-        courseNotFoundView.setVisibility(View.VISIBLE);
+        if (mCourse == null) {
+            YandexMetrica.reportEvent(AppConstants.COURSE_USER_TRY_FAIL, JsonHelper.toJson(event));
+            int i = 0;
+            reportInternetProblem.setVisibility(View.GONE);
+            courseNotFoundView.setVisibility(View.VISIBLE);
+        }
 
     }
 
     @Override
     public void onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent event) {
-        reportInternetProblem.setVisibility(View.VISIBLE);
-        reportInternetProblem.setOnClickListener(onClickReportListener);
+        if (mCourse == null) {
+            courseNotFoundView.setVisibility(View.GONE);
+            reportInternetProblem.setVisibility(View.VISIBLE);
+            reportInternetProblem.setOnClickListener(onClickReportListener);
+        }
     }
 
     @Subscribe
     public void onStartLoadingInstructors(StartLoadingInstructorsEvent e) {
-        if (e.getCourse() != null && mCourse != null & e.getCourse().getCourseId() == mCourse.getCourseId()) {
+        if (e.getCourse() != null && mCourse != null && e.getCourse().getCourseId() == mCourse.getCourseId()) {
             ProgressHelper.activate(mInstructorsProgressBar);
         }
     }
@@ -525,7 +538,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @Subscribe
     public void onFinishLoading(FailureLoadInstructorsEvent e) {
-        if (e.getCourse() != null && mCourse != null & e.getCourse().getCourseId() == mCourse.getCourseId()) {
+        if (e.getCourse() != null && mCourse != null && e.getCourse().getCourseId() == mCourse.getCourseId()) {
             mInstructorsRootView.setVisibility(View.GONE);
             ProgressHelper.dismiss(mInstructorsProgressBar);
         }
@@ -539,8 +552,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @Override
     public void onStop() {
-        bus.unregister(this);
-        courseJoinerPresenter.onStop();
+
         if (wasIndexed) {
             AppIndex.AppIndexApi.end(mClient, getAction());
         }
@@ -551,6 +563,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @Override
     public void onDestroyView() {
+        bus.unregister(this);
+        courseJoinerPresenter.onStop();
         courseFinderPresenter.onDestroy();
         reportInternetProblem.setOnClickListener(null);
         courseNotFoundView.setOnClickListener(null);
@@ -582,7 +596,6 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         }
     }
 
-    @Subscribe
     public void onSuccessJoin(SuccessJoinEvent e) {
         if (mCourse != null && e.getCourse() != null && e.getCourse().getCourseId() == mCourse.getCourseId()) {
             e.getCourse().setEnrollment((int) e.getCourse().getCourseId());
@@ -604,20 +617,22 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @Subscribe
     public void onFailJoin(FailJoinEvent e) {
-        if (e.getCode() == HttpURLConnection.HTTP_FORBIDDEN) {
-            Toast.makeText(getActivity(), joinCourseWebException, Toast.LENGTH_LONG).show();
-        } else if (e.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-            //UNAUTHORIZED
-            //it is just for safety, we should detect no account before send request
-            if (!unauthorizedDialog.isAdded()) {
-                unauthorizedDialog.show(getFragmentManager(), null);
+        if (mCourse != null) {
+            if (e.getCode() == HttpURLConnection.HTTP_FORBIDDEN) {
+                Toast.makeText(getActivity(), joinCourseWebException, Toast.LENGTH_LONG).show();
+            } else if (e.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                //UNAUTHORIZED
+                //it is just for safety, we should detect no account before send request
+                if (!unauthorizedDialog.isAdded()) {
+                    unauthorizedDialog.show(getFragmentManager(), null);
+                }
+            } else {
+                Toast.makeText(getActivity(), joinCourseException,
+                        Toast.LENGTH_LONG).show();
             }
-        } else {
-            Toast.makeText(getActivity(), joinCourseException,
-                    Toast.LENGTH_LONG).show();
+            ProgressHelper.dismiss(mJoinCourseSpinner);
+            mJoinCourseView.setEnabled(true);
         }
-        ProgressHelper.dismiss(mJoinCourseSpinner);
-        mJoinCourseView.setEnabled(true);
 
     }
 
@@ -628,5 +643,14 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
                 .placeholder(mVideoPlaceholder)
                 .error(mVideoPlaceholder)
                 .into(mThumbnail);
+    }
+
+
+    @Subscribe
+    public void onSuccessDrop(final SuccessDropCourseEvent e){
+        if (mCourse!=null && e.getCourse().getCourseId() == mCourse.getCourseId()){
+            mCourse.setEnrollment(0);
+            resolveJoinView();
+        }
     }
 }

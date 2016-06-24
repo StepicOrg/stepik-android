@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import com.facebook.drawee.view.DraweeView;
 import com.squareup.otto.Subscribe;
 import com.yandex.metrica.YandexMetrica;
 
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.MainApplication;
@@ -31,6 +33,9 @@ import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
 import org.stepic.droid.events.courses.CourseFoundEvent;
 import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
+import org.stepic.droid.events.courses.SuccessDropCourseEvent;
+import org.stepic.droid.events.joining_course.FailJoinEvent;
+import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.events.notify_ui.NotifyUISectionsEvent;
 import org.stepic.droid.events.sections.FailureResponseSectionEvent;
 import org.stepic.droid.events.sections.FinishingGetSectionFromDbEvent;
@@ -43,15 +48,20 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.presenters.course_finder.CourseFinderPresenter;
+import org.stepic.droid.presenters.course_joiner.CourseJoinerPresenter;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepicLogicHelper;
+import org.stepic.droid.view.abstraction.CourseJoinView;
 import org.stepic.droid.view.abstraction.LoadCourseView;
 import org.stepic.droid.view.adapters.SectionAdapter;
+import org.stepic.droid.view.custom.LoadingProgressDialog;
+import org.stepic.droid.view.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.web.SectionsStepicResponse;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +74,7 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class SectionActivity extends FragmentActivityBase implements SwipeRefreshLayout.OnRefreshListener, OnRequestPermissionsResultCallback, LoadCourseView {
+public class SectionActivity extends FragmentActivityBase implements SwipeRefreshLayout.OnRefreshListener, OnRequestPermissionsResultCallback, LoadCourseView, CourseJoinView {
 
     @Bind(R.id.swipe_refresh_layout_units)
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -96,6 +106,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Bind(R.id.course_name)
     protected TextView courseName;
 
+    @Nullable
     private Course mCourse;
     private SectionAdapter mAdapter;
     private List<Section> mSectionList;
@@ -103,9 +114,15 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     boolean isScreenEmpty;
     boolean firstLoad;
 
+    LoadingProgressDialog joinCourseProgressDialog;
+    private DialogFragment unauthorizedDialog;
+
     @Inject
     @Named(AppConstants.SECTION_NAMED_INJECTION_COURSE_FINDER)
     CourseFinderPresenter courseFinderPresenter;
+
+    @Inject
+    CourseJoinerPresenter courseJoinerPresenter;
 
     @Inject
     IConfig mConfig;
@@ -131,10 +148,12 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         mSectionList = new ArrayList<>();
         mAdapter = new SectionAdapter(mSectionList, this, this);
         mSectionsRecyclerView.setAdapter(mAdapter);
-
+        unauthorizedDialog = UnauthorizedDialogFragment.newInstance();
+        joinCourseProgressDialog = new LoadingProgressDialog(this);
         ProgressHelper.activate(mProgressBar);
         bus.register(this);
         courseFinderPresenter.onStart(this);
+        courseJoinerPresenter.onStart(this);
         onNewIntent(getIntent());
     }
 
@@ -209,15 +228,22 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         getAndShowSectionsFromCache();
     }
 
-    public void resolveJoinCourseView () {
-        if (mCourse!= null && mCourse.getEnrollment() <= 0) {
+    public void resolveJoinCourseView() {
+        if (mCourse != null && mCourse.getEnrollment() <= 0) {
             joinCourseRoot.setVisibility(View.VISIBLE);
             joinCourseButton.setVisibility(View.VISIBLE);
-            //todo join listener
+            joinCourseButton.setEnabled(true);
+            joinCourseButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mCourse != null) {
+                        courseJoinerPresenter.joinCourse(mCourse);
+                    }
+                }
+            });
             courseName.setText(mCourse.getTitle());
             courseIcon.setController(StepicLogicHelper.getControllerForCourse(mCourse, mConfig));
-        }
-        else{
+        } else {
             joinCourseRoot.setVisibility(View.GONE);
         }
 
@@ -327,7 +353,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Subscribe
     public void onFailureDownload(FailureResponseSectionEvent e) {
-        if (mCourse.getCourseId() == e.getCourse().getCourseId()) {
+        if (mCourse!=null && mCourse.getCourseId() == e.getCourse().getCourseId()) {
             if (mSectionList != null && mSectionList.size() == 0) {
                 mReportConnectionProblem.setVisibility(View.VISIBLE);
             }
@@ -337,7 +363,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Subscribe
     public void onGettingFromDb(FinishingGetSectionFromDbEvent event) {
-        if (event.getCourse().getCourseId() != mCourse.getCourseId()) return;
+        if (mCourse != null && event.getCourse().getCourseId() != mCourse.getCourseId()) return;
 
         List<Section> sections = event.getSectionList();
 
@@ -361,6 +387,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Override
     protected void onDestroy() {
+        courseJoinerPresenter.onStop();
         courseFinderPresenter.onDestroy();
         bus.unregister(this);
         super.onDestroy();
@@ -368,7 +395,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Subscribe
     public void onSuccessDownload(SuccessResponseSectionsEvent e) {
-        if (mCourse.getCourseId() == e.getCourse().getCourseId()) {
+        if (mCourse != null && mCourse.getCourseId() == e.getCourse().getCourseId()) {
             SectionsStepicResponse stepicResponse = e.getResponse().body();
             List<Section> sections = stepicResponse.getSections();
             saveDataToCache(sections);
@@ -459,5 +486,53 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Override
     public void onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent event) {
         Toast.makeText(SectionActivity.this, "INTERNET FAIL", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showProgress() {
+        ProgressHelper.activate(joinCourseProgressDialog);
+    }
+
+    @Override
+    public void setEnabledJoinButton(boolean isEnabled) {
+        joinCourseButton.setEnabled(false);
+    }
+
+    @Override
+    public void onFailJoin(FailJoinEvent e) {
+        if (e.getCode() == HttpURLConnection.HTTP_FORBIDDEN) {
+            Toast.makeText(this, getString(R.string.join_course_web_exception), Toast.LENGTH_LONG).show();
+        } else if (e.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+            //UNAUTHORIZED
+            //it is just for safety, we should detect no account before send request
+            if (!unauthorizedDialog.isAdded()) {
+                unauthorizedDialog.show(getSupportFragmentManager(), null);
+            }
+        } else {
+            Toast.makeText(this, getString(R.string.join_course_exception),
+                    Toast.LENGTH_SHORT).show();
+        }
+        ProgressHelper.dismiss(joinCourseProgressDialog);
+        setEnabledJoinButton(true);
+    }
+
+    @Override
+    public void onSuccessJoin(SuccessJoinEvent e) {
+        if (mCourse != null && e.getCourse() != null && e.getCourse().getCourseId() == mCourse.getCourseId() && mAdapter != null) {
+            mCourse = e.getCourse();
+            resolveJoinCourseView();
+            mAdapter.notifyDataSetChanged();
+        }
+        ProgressHelper.dismiss(joinCourseProgressDialog);
+    }
+
+
+
+    @Subscribe
+    public void onSuccessDrop(final SuccessDropCourseEvent e){
+        if (mCourse!=null && e.getCourse().getCourseId() == mCourse.getCourseId()){
+            mCourse.setEnrollment(0);
+            resolveJoinCourseView();
+        }
     }
 }

@@ -78,7 +78,10 @@ public class CourseJoinerPresenterImpl implements CourseJoinerPresenter {
                         UpdateCourseTask updateCourseFeaturedTask = new UpdateCourseTask(DatabaseFacade.Table.featured, localCopy);
                         updateCourseFeaturedTask.executeOnExecutor(mThreadPoolExecutor);
 
-                        bus.post(new SuccessJoinEvent(localCopy));
+                        bus.post(new SuccessJoinEvent(localCopy)); //todo reamke without bus
+                        if (isViewAttached()){
+                            view.onSuccessJoin(new SuccessJoinEvent(localCopy));
+                        }
 
                     } else {
                         if (isViewAttached()) {
