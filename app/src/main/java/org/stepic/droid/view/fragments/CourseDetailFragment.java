@@ -24,7 +24,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -125,10 +124,10 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     private RecyclerView mInstructorsCarousel;
 
-    @Deprecated
-    private ProgressBar mInstructorsProgressBar; //useless
+//    @Deprecated
+//    private ProgressBar mInstructorsProgressBar; //useless
 
-    private View mInstructorsRootView;
+//    private View mInstructorsRootView;
 
     View mJoinCourseView;
     View continueCourseView;
@@ -218,8 +217,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         footer = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_footer, null, false);
         mCoursePropertyListView.addFooterView(footer);
         mInstructorsCarousel = ButterKnife.findById(footer, R.id.instructors_carousel);
-        mInstructorsProgressBar = ButterKnife.findById(footer, R.id.load_progressbar);
-        mInstructorsRootView = ButterKnife.findById(footer, R.id.instructors_root_view);
+//        mInstructorsProgressBar = ButterKnife.findById(footer, R.id.load_progressbar);
+//        mInstructorsRootView = ButterKnife.findById(footer, R.id.instructors_root_view);
 
         header = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_header, null, false);
         mCoursePropertyListView.addHeaderView(header);
@@ -257,7 +256,6 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         mInstructorsCarousel.setLayoutManager(layoutManager);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mInstructorsRootView.setVisibility(View.GONE);//show only when is LOADED and EXIST!
         onClickReportListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -310,7 +308,6 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         courseNotFoundView.setVisibility(View.GONE);
         //
         header.setVisibility(View.VISIBLE);
-        footer.setVisibility(View.VISIBLE);
 
         mTitle = mCourse.getTitle();
         mDescription = mCourse.getSummary();
@@ -488,7 +485,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @Subscribe
     public void onStartLoadingInstructors(StartLoadingInstructorsEvent e) {
         if (e.getCourse() != null && mCourse != null && e.getCourse().getCourseId() == mCourse.getCourseId()) {
-            ProgressHelper.activate(mInstructorsProgressBar);
+//            ProgressHelper.activate(mInstructorsProgressBar);
+            //not react
         }
     }
 
@@ -498,7 +496,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
             List<User> users = e.getResponse().body().getUsers();
             if (users != null && !users.isEmpty()) {
-                mInstructorsRootView.setVisibility(View.VISIBLE);
+                footer.setVisibility(View.VISIBLE);
 
                 mUserList.clear();
                 mUserList.addAll(users);
@@ -512,9 +510,9 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
                     }
                 });
             } else {
-                mInstructorsRootView.setVisibility(View.GONE);
+                footer.setVisibility(View.GONE);
             }
-            ProgressHelper.dismiss(mInstructorsProgressBar);
+//            ProgressHelper.dismiss(mInstructorsProgressBar);
         }
     }
 
@@ -539,8 +537,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @Subscribe
     public void onFinishLoading(FailureLoadInstructorsEvent e) {
         if (e.getCourse() != null && mCourse != null && e.getCourse().getCourseId() == mCourse.getCourseId()) {
-            mInstructorsRootView.setVisibility(View.GONE);
-            ProgressHelper.dismiss(mInstructorsProgressBar);
+            footer.setVisibility(View.GONE);
         }
     }
 
