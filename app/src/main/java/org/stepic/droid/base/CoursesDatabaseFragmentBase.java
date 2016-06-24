@@ -299,7 +299,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     @Subscribe
     public void onFailDrop(FailDropCourseEvent e) {
         YandexMetrica.reportEvent(AppConstants.METRICA_DROP_COURSE + " fail", JsonHelper.toJson(e.getCourse()));
-        Toast.makeText(getContext(), R.string.try_in_web_drop, Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), R.string.internet_problem, Toast.LENGTH_LONG).show();
     }
 
     private void showInfo(int position) {
