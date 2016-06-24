@@ -54,6 +54,6 @@
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <include layout="@layout/progress_bar_on_empty_screen"/>
-
+        <include layout="@layout/fail_to_parse_course"/>
     </FrameLayout>
 </RelativeLayout>

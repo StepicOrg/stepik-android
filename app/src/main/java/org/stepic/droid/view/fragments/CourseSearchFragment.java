@@ -83,7 +83,7 @@ public class CourseSearchFragment extends CourseListFragmentBase {
 //        ProgressHelper.dismiss(mProgressBarOnEmptyScreen);
 //        mEmptySearch.setVisibility(View.GONE);
 //        mSwipeRefreshLayout.setVisibility(View.GONE);
-//        mReportConnectionProblem.setVisibility(View.VISIBLE);
+//        reportConnectionProblem.setVisibility(View.VISIBLE);
 //    }
 
     @Subscribe

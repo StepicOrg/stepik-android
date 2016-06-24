@@ -42,7 +42,6 @@ import org.stepic.droid.events.sections.FinishingGetSectionFromDbEvent;
 import org.stepic.droid.events.sections.FinishingSaveSectionToDbEvent;
 import org.stepic.droid.events.sections.NotCachedSectionEvent;
 import org.stepic.droid.events.sections.SectionCachedEvent;
-import org.stepic.droid.events.sections.StartingSaveSectionToDbEvent;
 import org.stepic.droid.events.sections.SuccessResponseSectionsEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
@@ -83,13 +82,16 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     RecyclerView mSectionsRecyclerView;
 
     @Bind(R.id.load_progressbar)
-    ProgressBar mProgressBar;
+    ProgressBar loadOnCenterProgressBar;
 
     @Bind(R.id.toolbar)
     android.support.v7.widget.Toolbar mToolbar;
 
     @Bind(R.id.report_problem)
-    protected View mReportConnectionProblem;
+    protected View reportConnectionProblem;
+
+    @Bind(R.id.course_not_found)
+    View courseNotParsedView;
 
     @Bind(R.id.report_empty)
     protected View mReportEmptyView;
@@ -150,19 +152,19 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         mSectionsRecyclerView.setAdapter(mAdapter);
         unauthorizedDialog = UnauthorizedDialogFragment.newInstance();
         joinCourseProgressDialog = new LoadingProgressDialog(this);
-        ProgressHelper.activate(mProgressBar);
+        ProgressHelper.activate(loadOnCenterProgressBar);
         bus.register(this);
         courseFinderPresenter.onStart(this);
         courseJoinerPresenter.onStart(this);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         onNewIntent(getIntent());
     }
 
-    private void setUpToolbar() {
+    private void setUpToolbarWithCourse() {
         if (mCourse != null && mCourse.getTitle() != null && !mCourse.getTitle().isEmpty()) {
             setTitle(mCourse.getTitle());
         }
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -222,9 +224,11 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     }
 
     public void initScreenByCourse() {
+        reportConnectionProblem.setVisibility(View.GONE);
+        courseNotParsedView.setVisibility(View.GONE);
         mAdapter.setCourse(mCourse);
         resolveJoinCourseView();
-        setUpToolbar();
+        setUpToolbarWithCourse();
         getAndShowSectionsFromCache();
     }
 
@@ -282,7 +286,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         long[] sections = mCourse.getSections();
         if (sections == null || sections.length == 0) {
             mReportEmptyView.setVisibility(View.VISIBLE);
-            ProgressHelper.dismiss(mProgressBar);
+            ProgressHelper.dismiss(loadOnCenterProgressBar);
             ProgressHelper.dismiss(mSwipeRefreshLayout);
         } else {
             mReportEmptyView.setVisibility(View.GONE);
@@ -320,7 +324,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     private void dismiss() {
         if (isScreenEmpty) {
-            ProgressHelper.dismiss(mProgressBar);
+            ProgressHelper.dismiss(loadOnCenterProgressBar);
             isScreenEmpty = false;
         } else {
             ProgressHelper.dismiss(mSwipeRefreshLayout);
@@ -329,7 +333,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     private void dismissReportView() {
         if (mSectionList != null && mSectionList.size() != 0) {
-            mReportConnectionProblem.setVisibility(View.GONE);
+            reportConnectionProblem.setVisibility(View.GONE);
         }
     }
 
@@ -342,7 +346,11 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Override
     public void onRefresh() {
         YandexMetrica.reportEvent(AppConstants.METRICA_REFRESH_SECTION);
-        updateSections();
+        if (mCourse != null) {
+            updateSections();
+        } else {
+            onNewIntent(getIntent());
+        }
     }
 
 
@@ -353,17 +361,21 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Subscribe
     public void onFailureDownload(FailureResponseSectionEvent e) {
-        if (mCourse!=null && mCourse.getCourseId() == e.getCourse().getCourseId()) {
-            if (mSectionList != null && mSectionList.size() == 0) {
-                mReportConnectionProblem.setVisibility(View.VISIBLE);
+        if (mCourse != null && mCourse.getCourseId() == e.getCourse().getCourseId()) {
+            if (mSectionList != null && mSectionList.size() == 0 && mCourse.getEnrollment() > 0) {
+                reportConnectionProblem.setVisibility(View.VISIBLE);
             }
+            if (mCourse.getEnrollment() <= 0) {
+                Toast.makeText(this, getString(R.string.internet_problem), Toast.LENGTH_SHORT).show();
+            }
+
             dismiss();
         }
     }
 
     @Subscribe
     public void onGettingFromDb(FinishingGetSectionFromDbEvent event) {
-        if (mCourse != null && event.getCourse().getCourseId() != mCourse.getCourseId()) return;
+        if (mCourse == null || event.getCourse().getCourseId() != mCourse.getCourseId()) return;
 
         List<Section> sections = event.getSectionList();
 
@@ -390,6 +402,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         courseJoinerPresenter.onStop();
         courseFinderPresenter.onDestroy();
         bus.unregister(this);
+        courseNotParsedView.setOnClickListener(null);
         super.onDestroy();
     }
 
@@ -400,10 +413,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
             List<Section> sections = stepicResponse.getSections();
             saveDataToCache(sections);
         }
-    }
-
-    @Subscribe
-    public void onStartSaveToDb(StartingSaveSectionToDbEvent e) {
     }
 
     @Subscribe
@@ -480,12 +489,29 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Override
     public void onCourseUnavailable(CourseUnavailableForUserEvent event) {
-        Toast.makeText(SectionActivity.this, "COURSE IS NOT AVAILABLE", Toast.LENGTH_SHORT).show();
+        if (mCourse == null) {
+            ProgressHelper.dismiss(mSwipeRefreshLayout);
+            ProgressHelper.dismiss(loadOnCenterProgressBar);
+            courseNotParsedView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mShell.getScreenProvider().showFindCourses(SectionActivity.this);
+                    finish();
+                }
+            });
+            courseNotParsedView.setVisibility(View.VISIBLE);
+            reportConnectionProblem.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent event) {
-        Toast.makeText(SectionActivity.this, "INTERNET FAIL", Toast.LENGTH_SHORT).show();
+        if (mCourse == null) {
+            ProgressHelper.dismiss(mSwipeRefreshLayout);
+            ProgressHelper.dismiss(loadOnCenterProgressBar);
+            courseNotParsedView.setVisibility(View.GONE);
+            reportConnectionProblem.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -527,10 +553,9 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     }
 
 
-
     @Subscribe
-    public void onSuccessDrop(final SuccessDropCourseEvent e){
-        if (mCourse!=null && e.getCourse().getCourseId() == mCourse.getCourseId()){
+    public void onSuccessDrop(final SuccessDropCourseEvent e) {
+        if (mCourse != null && e.getCourse().getCourseId() == mCourse.getCourseId()) {
             mCourse.setEnrollment(0);
             resolveJoinCourseView();
         }
