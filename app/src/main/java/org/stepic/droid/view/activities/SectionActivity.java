@@ -495,8 +495,14 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
             courseNotParsedView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mShell.getScreenProvider().showFindCourses(SectionActivity.this);
-                    finish();
+                    if (mSharedPreferenceHelper.getAuthResponseFromStore() != null) {
+                        mShell.getScreenProvider().showFindCourses(SectionActivity.this);
+                        finish();
+                    } else {
+                        if (!unauthorizedDialog.isAdded()) {
+                            unauthorizedDialog.show(getSupportFragmentManager(), null);
+                        }
+                    }
                 }
             });
             courseNotParsedView.setVisibility(View.VISIBLE);
@@ -521,22 +527,24 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Override
     public void setEnabledJoinButton(boolean isEnabled) {
-        joinCourseButton.setEnabled(false);
+        joinCourseButton.setEnabled(isEnabled);
     }
 
     @Override
     public void onFailJoin(FailJoinEvent e) {
-        if (e.getCode() == HttpURLConnection.HTTP_FORBIDDEN) {
-            Toast.makeText(this, getString(R.string.join_course_web_exception), Toast.LENGTH_LONG).show();
-        } else if (e.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-            //UNAUTHORIZED
-            //it is just for safety, we should detect no account before send request
-            if (!unauthorizedDialog.isAdded()) {
-                unauthorizedDialog.show(getSupportFragmentManager(), null);
+        if (mCourse != null) {
+            if (e.getCode() == HttpURLConnection.HTTP_FORBIDDEN) {
+                Toast.makeText(this, getString(R.string.join_course_web_exception), Toast.LENGTH_LONG).show();
+            } else if (e.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                //UNAUTHORIZED
+                //it is just for safety, we should detect no account before send request
+                if (!unauthorizedDialog.isAdded()) {
+                    unauthorizedDialog.show(getSupportFragmentManager(), null);
+                }
+            } else {
+                Toast.makeText(this, getString(R.string.join_course_exception),
+                        Toast.LENGTH_SHORT).show();
             }
-        } else {
-            Toast.makeText(this, getString(R.string.join_course_exception),
-                    Toast.LENGTH_SHORT).show();
         }
         ProgressHelper.dismiss(joinCourseProgressDialog);
         setEnabledJoinButton(true);

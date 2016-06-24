@@ -55,13 +55,11 @@ public class CourseJoinerPresenterImpl implements CourseJoinerPresenter {
 
     @Override
     public void joinCourse(@NotNull final Course mCourse) {
-        if (isViewAttached()) {
-            view.setEnabledJoinButton(false);
-        }
         AuthenticationStepicResponse response = mSharedPreferenceHelper.getAuthResponseFromStore();
         if (response != null) {
             if (isViewAttached()) {
                 view.showProgress();
+                view.setEnabledJoinButton(false);
             }
             api.tryJoinCourse(mCourse).enqueue(new Callback<Void>() {
                 private final Course localCopy = mCourse;
