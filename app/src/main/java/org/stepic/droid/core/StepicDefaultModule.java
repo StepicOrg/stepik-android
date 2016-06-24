@@ -29,6 +29,8 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.presenters.course_finder.CourseFinderPresenter;
 import org.stepic.droid.presenters.course_finder.CourseFinderPresenterForDetailScreen;
 import org.stepic.droid.presenters.course_finder.CourseFinderPresenterForSectionScreen;
+import org.stepic.droid.presenters.course_joiner.CourseJoinerPresenter;
+import org.stepic.droid.presenters.course_joiner.CourseJoinerPresenterImpl;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.ConcurrentCancelSniffer;
@@ -344,5 +346,10 @@ public class StepicDefaultModule {
     @Named(AppConstants.ABOUT_NAME_INJECTION_COURSE_FINDER)
     public CourseFinderPresenter provideCourseFinderPresenterForDetailScreen() {
         return new CourseFinderPresenterForDetailScreen();
+    }
+
+    @Provides
+    public CourseJoinerPresenter provideCourseJoiner (){
+        return new CourseJoinerPresenterImpl();
     }
 }

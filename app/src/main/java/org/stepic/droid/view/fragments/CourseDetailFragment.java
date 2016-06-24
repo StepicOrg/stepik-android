@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,7 +40,6 @@ import com.yandex.metrica.YandexMetrica;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.concurrency.tasks.UpdateCourseTask;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
 import org.stepic.droid.events.courses.CourseFoundEvent;
 import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
@@ -55,19 +53,19 @@ import org.stepic.droid.model.CourseProperty;
 import org.stepic.droid.model.User;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.presenters.course_finder.CourseFinderPresenter;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.presenters.course_joiner.CourseJoinerPresenter;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.util.ThumbnailParser;
+import org.stepic.droid.view.abstraction.CourseJoinView;
 import org.stepic.droid.view.abstraction.LoadCourseView;
 import org.stepic.droid.view.adapters.CoursePropertyAdapter;
 import org.stepic.droid.view.adapters.InstructorAdapter;
 import org.stepic.droid.view.custom.LoadingProgressDialog;
 import org.stepic.droid.view.dialogs.UnauthorizedDialogFragment;
-import org.stepic.droid.web.AuthenticationStepicResponse;
 import org.stepic.droid.web.UserStepicResponse;
 
 import java.net.HttpURLConnection;
@@ -85,7 +83,7 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class CourseDetailFragment extends FragmentBase implements LoadCourseView {
+public class CourseDetailFragment extends FragmentBase implements LoadCourseView, CourseJoinView {
 
 
     private View.OnClickListener onClickReportListener;
@@ -190,6 +188,9 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @Named(AppConstants.ABOUT_NAME_INJECTION_COURSE_FINDER)
     CourseFinderPresenter courseFinderPresenter;
 
+    @Inject
+    CourseJoinerPresenter courseJoinerPresenter;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         MainApplication.component().inject(this);
@@ -199,7 +200,6 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         //// FIXME: 17.06.16 now on rotate instructors are reloading, we should use presenter or retain instance
     }
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course_detailed, container, false);
@@ -208,7 +208,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         //VIEW:
@@ -367,6 +367,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         super.onStart();
         bus.register(this);
         courseFinderPresenter.onStart(this);
+        courseJoinerPresenter.onStart(this);
         tryToShowCourse();
         mClient.connect();
         if (mCourse != null && !wasIndexed && mCourse.getSlug() != null) {
@@ -539,6 +540,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @Override
     public void onStop() {
         bus.unregister(this);
+        courseJoinerPresenter.onStop();
         if (wasIndexed) {
             AppIndex.AppIndexApi.end(mClient, getAction());
         }
@@ -573,39 +575,10 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     }
 
     private void joinCourse() {
-        mJoinCourseView.setEnabled(false);
-        AuthenticationStepicResponse response = mSharedPreferenceHelper.getAuthResponseFromStore();
-        if (response != null) {
-            ProgressHelper.activate(mJoinCourseSpinner);
-            mShell.getApi().tryJoinCourse(mCourse).enqueue(new Callback<Void>() {
-                private final Course localCopy = mCourse;
-
-                @Override
-                public void onResponse(Response<Void> response, Retrofit retrofit) {
-                    if (response.isSuccess()) {
-
-                        localCopy.setEnrollment((int) localCopy.getCourseId());
-
-                        UpdateCourseTask updateCourseTask = new UpdateCourseTask(DatabaseFacade.Table.enrolled, localCopy);
-                        updateCourseTask.executeOnExecutor(mThreadPoolExecutor);
-
-                        UpdateCourseTask updateCourseFeaturedTask = new UpdateCourseTask(DatabaseFacade.Table.featured, localCopy);
-                        updateCourseFeaturedTask.executeOnExecutor(mThreadPoolExecutor);
-
-                        bus.post(new SuccessJoinEvent(localCopy));
-
-                    } else {
-                        bus.post(new FailJoinEvent(response.code()));
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    bus.post(new FailJoinEvent());
-                }
-            });
+        if (mCourse != null) {
+            courseJoinerPresenter.joinCourse(mCourse);
         } else {
-            bus.post(new FailJoinEvent(HttpURLConnection.HTTP_UNAUTHORIZED));
+            YandexMetrica.reportEvent("course is null when join, detail");
         }
     }
 
@@ -615,6 +588,16 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         mShell.getScreenProvider().showSections(getActivity(), mCourse);
         finish();
         ProgressHelper.dismiss(mJoinCourseSpinner);
+    }
+
+    @Override
+    public void showProgress() {
+        ProgressHelper.activate(mJoinCourseSpinner);
+    }
+
+    @Override
+    public void setEnabledJoinButton(boolean isEnabled) {
+        mJoinCourseView.setEnabled(isEnabled);
     }
 
     @Subscribe

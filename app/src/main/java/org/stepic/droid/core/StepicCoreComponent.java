@@ -17,6 +17,7 @@ import org.stepic.droid.notifications.HackFcmListener;
 import org.stepic.droid.notifications.HackerFcmInstanceId;
 import org.stepic.droid.notifications.NotificationBroadcastReceiver;
 import org.stepic.droid.presenters.course_finder.CourseFinderPresenterImpl;
+import org.stepic.droid.presenters.course_joiner.CourseJoinerPresenterImpl;
 import org.stepic.droid.receivers.DownloadClickReceiver;
 import org.stepic.droid.receivers.DownloadCompleteReceiver;
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver;
@@ -162,4 +163,6 @@ public interface StepicCoreComponent {
     void inject(UnauthorizedDialogFragment unauthorizedDialogFragment);
 
     void inject(CourseFinderPresenterImpl courseFinderPresenter);
+
+    void inject(CourseJoinerPresenterImpl courseJoinerPresenter);
 }
