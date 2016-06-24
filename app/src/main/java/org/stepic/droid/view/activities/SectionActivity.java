@@ -42,7 +42,7 @@ import org.stepic.droid.events.sections.SuccessResponseSectionsEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.notifications.model.Notification;
-import org.stepic.droid.presenters.CourseFinderPresenter;
+import org.stepic.droid.presenters.course_finder.CourseFinderPresenter;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;

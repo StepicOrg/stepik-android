@@ -54,7 +54,7 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepic.droid.model.User;
 import org.stepic.droid.model.Video;
-import org.stepic.droid.presenters.CourseFinderPresenter;
+import org.stepic.droid.presenters.course_finder.CourseFinderPresenter;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;

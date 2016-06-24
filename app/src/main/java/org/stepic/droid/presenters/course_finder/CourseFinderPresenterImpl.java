@@ -1,4 +1,4 @@
-package org.stepic.droid.presenters;
+package org.stepic.droid.presenters.course_finder;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.concurrency.IMainHandler;
@@ -100,8 +100,8 @@ public class CourseFinderPresenterImpl implements CourseFinderPresenter {
         });
     }
 
-
     private boolean isViewAttached() {
         return view != null;
     }
+
 }
