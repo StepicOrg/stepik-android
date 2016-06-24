@@ -229,6 +229,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         }
         if (getCourseType() == DatabaseFacade.Table.enrolled && !inList) {
             mCourses.add(courseForUpdate);
+            mCoursesAdapter.notifyDataSetChanged();;
         }
 
     }
