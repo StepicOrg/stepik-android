@@ -584,9 +584,11 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @Subscribe
     public void onSuccessJoin(SuccessJoinEvent e) {
-        e.getCourse().setEnrollment((int) e.getCourse().getCourseId());
-        mShell.getScreenProvider().showSections(getActivity(), mCourse);
-        finish();
+        if (mCourse != null && e.getCourse() != null && e.getCourse().getCourseId() == mCourse.getCourseId()) {
+            e.getCourse().setEnrollment((int) e.getCourse().getCourseId());
+            mShell.getScreenProvider().showSections(getActivity(), mCourse);
+            finish();
+        }
         ProgressHelper.dismiss(mJoinCourseSpinner);
     }
 
