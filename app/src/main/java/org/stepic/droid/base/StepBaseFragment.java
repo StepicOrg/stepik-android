@@ -14,7 +14,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.view.custom.LatexSupportableWebView;
+import org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.web.StepResponse;
 
 import butterknife.Bind;
@@ -24,8 +24,8 @@ import retrofit.Retrofit;
 
 public abstract class StepBaseFragment extends FragmentBase {
 
-    @Bind(R.id.text_header)
-    protected LatexSupportableWebView headerWv;
+    @Bind(R.id.text_header_enhanced)
+    protected LatexSupportableEnhancedFrameLayout headerWvEnhanced;
 
     @Bind(R.id.open_comments_root)
     protected View openCommentViewClickable;
@@ -49,10 +49,10 @@ public abstract class StepBaseFragment extends FragmentBase {
                 step.getBlock() != null &&
                 step.getBlock().getText() != null &&
                 !step.getBlock().getText().isEmpty()) {
-            headerWv.setText(step.getBlock().getText());
-            headerWv.setVisibility(View.VISIBLE);
+            headerWvEnhanced.setText(step.getBlock().getText());
+            headerWvEnhanced.setVisibility(View.VISIBLE);
         } else {
-            headerWv.setVisibility(View.GONE);
+            headerWvEnhanced.setVisibility(View.GONE);
         }
 
         updateCommentState();
