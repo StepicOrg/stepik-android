@@ -42,4 +42,8 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
             webView.setText(text);
         }
     }
+
+    public LatexSupportableWebView getWebView() {
+        return webView;
+    }
 }

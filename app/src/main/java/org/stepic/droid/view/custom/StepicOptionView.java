@@ -22,7 +22,7 @@ public abstract class StepicOptionView extends FrameLayout implements Checkable 
 
     private ImageView optionIcon;
 
-    private LatexSupportableWebView optionText;
+    private LatexSupportableEnhancedFrameLayout optionText;
 
     private ProgressBar progressBar;
 
@@ -52,7 +52,7 @@ public abstract class StepicOptionView extends FrameLayout implements Checkable 
 
         LayoutInflater.from(context).inflate(R.layout.stepic_compound_button, this, true);
         optionIcon = (ImageView) findViewById(R.id.image_compound_button);
-        optionText = (LatexSupportableWebView) findViewById(R.id.text_compound_button);
+        optionText = (LatexSupportableEnhancedFrameLayout) findViewById(R.id.text_compound_button);
         progressBar = (ProgressBar) findViewById(R.id.load_progressbar);
         rippleEffectFrameLayout = (FrameLayout) findViewById(R.id.rippleFrameLayoutInOption);
 
@@ -69,7 +69,7 @@ public abstract class StepicOptionView extends FrameLayout implements Checkable 
 
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        optionText.setWebViewClient(new WebViewClient() {
+        optionText.getWebView().setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
@@ -135,7 +135,7 @@ public abstract class StepicOptionView extends FrameLayout implements Checkable 
         setChecked(!isChecked);
     }
 
-    public void setText(CharSequence text) {
+    public void setText(String text) {
         optionText.setText(text);
     }
 
