@@ -60,6 +60,7 @@ public class StepTypeResolver implements IStepResolver {
         mapFromTypeToDrawable.put(AppConstants.TYPE_PYCHARM, getDrawable(context, R.drawable.ic_easy_quiz1));
         mapFromTypeToDrawable.put(AppConstants.TYPE_CODE, getDrawable(context, R.drawable.ic_hard_quiz1));
         mapFromTypeToDrawable.put(AppConstants.TYPE_ADMIN, getDrawable(context, R.drawable.ic_hard_quiz1));
+        mapFromTypeToDrawable.put(AppConstants.TYPE_SQL, getDrawable(context, R.drawable.ic_easy_quiz1));
 
 
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_TEXT, getDrawable(context, R.drawable.ic_theory));
@@ -80,6 +81,7 @@ public class StepTypeResolver implements IStepResolver {
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_PYCHARM, getDrawable(context, R.drawable.ic_easy_quiz));
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_CODE, getDrawable(context, R.drawable.ic_hard_quiz));
         mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_ADMIN, getDrawable(context, R.drawable.ic_hard_quiz));
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_SQL, getDrawable(context, R.drawable.ic_easy_quiz));
 
     }
 

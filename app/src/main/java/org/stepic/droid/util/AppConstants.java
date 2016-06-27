@@ -38,6 +38,7 @@ public class AppConstants {
     public static final String TYPE_PYCHARM = "pycharm";
     public static final String TYPE_CODE = "code";
     public static final String TYPE_ADMIN = "admin";
+    public static final String TYPE_SQL = "sql";
 
     //App Metrica:
     public static final String METRICA_CLICK_SIGN_IN = "click sign in on launch screen";
