@@ -52,7 +52,8 @@ public class HtmlHelper {
     public static boolean isForWebView(@NotNull String text) {
         boolean isContainsPicture = text.contains("<img");
         boolean isContainsLatex = text.contains("$");
-        return isContainsLatex || isContainsPicture;
+        boolean isContainsCode = text.contains("<pre><code>");
+        return isContainsLatex || isContainsPicture || isContainsCode;
     }
 
     /**

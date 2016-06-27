@@ -20,6 +20,7 @@
         android:paddingRight="4dp"
         android:paddingStart="4dp">
         <TextView
+            android:textColor="@color/black"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="80"
