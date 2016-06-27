@@ -25,6 +25,7 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.StepicUtil;
 import org.stepic.droid.view.activities.MainFeedActivity;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
 import org.stepic.droid.view.custom.TouchDispatchableFrameLayout;
@@ -124,8 +125,14 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (!isLoading && mHasNextPage && firstVisibleItem + visibleItemCount >= totalItemCount && userScrolled) {
-                    isLoading = true;
-                    downloadData();
+                    //check inside more expensive condition:
+                    if (StepicUtil.INSTANCE.isInternetAvailable()) {
+                        isLoading = true;
+                        downloadData();
+                    }
+                    else{
+//                        userScrolled =false;
+                    }
                 }
             }
         });
