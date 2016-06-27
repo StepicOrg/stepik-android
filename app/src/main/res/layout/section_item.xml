@@ -31,7 +31,7 @@
                 <TextView
                     android:paddingTop="2dp"
                     android:paddingBottom="2dp"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/text_header"
                     android:id="@+id/section_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

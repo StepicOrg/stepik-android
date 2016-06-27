@@ -72,7 +72,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_above="@id/video_downloading_progress_bar"
-                    android:textSize="@dimen/text_header"
+                    android:textColor="@color/stepic_weak_text"
+                    android:textSize="@dimen/text_height"
                     tools:text="9 of 45 MB" />
 
 
@@ -83,7 +84,8 @@
                     android:layout_above="@id/video_downloading_progress_bar"
                     android:layout_alignParentRight="true"
                     android:layout_toRightOf="@id/progress_text"
-                    android:textSize="@dimen/text_header"
+                    android:textColor="@color/stepic_weak_text"
+                    android:textSize="@dimen/text_height"
                     android:gravity="right"
                     tools:text="75%" />
 
