@@ -16,7 +16,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Option;
 import org.stepic.droid.util.HtmlHelper;
-import org.stepic.droid.view.custom.LatexSupportableWebView;
+import org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.view.custom.dragsortadapter.DragSortAdapter;
 import org.stepic.droid.view.custom.dragsortadapter.NoForegroundShadowBuilder;
 
@@ -98,7 +98,7 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
         }
 
         if (!isMatching) {
-            holder.enhancedText.setText(HtmlHelper.fromHtml(mItemIdOptionMap.get(itemId).getValue()).toString());
+            holder.enhancedText.setText(mItemIdOptionMap.get(itemId).getValue());
         } else {
             holder.mOptionText.setText(HtmlHelper.fromHtml(mItemIdOptionMap.get(itemId).getValue()).toString());
         }
@@ -143,7 +143,7 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
         @Bind(R.id.sort_icon)
         View mSortController;
 
-        LatexSupportableWebView enhancedText;
+        LatexSupportableEnhancedFrameLayout enhancedText;
 
 
         public OptionViewHolder(DragSortAdapter adapter, View itemView, boolean isMatching) {
@@ -154,7 +154,7 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
             if (mIsMatching) {
                 mOptionText = (TextView) itemView.findViewById(R.id.option_text);
             } else {
-                enhancedText = (LatexSupportableWebView) itemView.findViewById(R.id.option_text);
+                enhancedText = (LatexSupportableEnhancedFrameLayout) itemView.findViewById(R.id.option_text);
             }
             mSortController.setOnTouchListener(new View.OnTouchListener() {
                 @Override

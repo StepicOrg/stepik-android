@@ -9,6 +9,7 @@
     android:maxHeight="100dp"
     android:minHeight="@dimen/option_height"
     android:orientation="vertical"
+    android:padding="0dp"
     app:cardBackgroundColor="@color/default_option_color"
     app:cardUseCompatPadding="true">
 
@@ -27,18 +28,19 @@
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="80"
             android:scrollbarStyle="outsideOverlay">
 
-        <org.stepic.droid.view.custom.LatexSupportableWebView
-            android:id="@+id/option_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:layout_margin="8dp"
-            tools:text="option " />
+            <org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout
+                android:id="@+id/option_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                />
+
         </ScrollView>
 
         <FrameLayout
