@@ -31,9 +31,8 @@ import org.stepic.droid.model.comments.VoteValue;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.DateTimeHelper;
-import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.RWLocks;
-import org.stepic.droid.view.custom.LatexSupportableWebView;
+import org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout;
 
 import java.util.Locale;
 
@@ -181,11 +180,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
 
     abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.text_view_latex)
-        LatexSupportableWebView commentTextWebView;
-
-        @Bind(R.id.text_comment)
-        TextView commentText;
+        @Bind(R.id.enhanced_text_view)
+        LatexSupportableEnhancedFrameLayout commentTextEnhanced;
 
         @Bind(R.id.user_icon)
         DraweeView userIcon;
@@ -279,22 +275,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
 
             if (comment.is_deleted() != null && comment.is_deleted()) {
                 commentClickableRoot.setBackgroundColor(ColorUtil.INSTANCE.getColorArgb(R.color.wrong_answer_background, context));
-                commentText.setText(commentIsDeletedMessage);
+                commentTextEnhanced.setText(commentIsDeletedMessage);
             } else {
                 // not deleted
                 commentClickableRoot.setBackgroundColor(ColorUtil.INSTANCE.getColorArgb(R.color.white, context));
-
-                boolean needWebView = HtmlHelper.isForWebView(comment.getText());
-                if (!needWebView) {
-                    String str = HtmlHelper.trimTrailingWhitespace(HtmlHelper.fromHtml(comment.getText())).toString();
-                    commentText.setVisibility(View.VISIBLE);
-                    commentTextWebView.setVisibility(View.GONE);
-                    commentText.setText(str);
-                } else {
-                    commentTextWebView.setVisibility(View.VISIBLE);
-                    commentText.setVisibility(View.GONE);
-                    commentTextWebView.setText(comment.getText());
-                }
+                commentTextEnhanced.setText(comment.getText());
             }
 
             if (comment.getTime() != null && !comment.getTime().isEmpty()){

@@ -18,16 +18,8 @@ public class LatexSupportableEnhancedFrameLayout extends InterceptFrameLayout {
     TextView textView;
     LatexSupportableWebView webView;
 
-    public LatexSupportableEnhancedFrameLayout(Context context) {
-        this(context, null);
-    }
-
     public LatexSupportableEnhancedFrameLayout(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public LatexSupportableEnhancedFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        super(context, attrs);
         init();
     }
 
@@ -49,10 +41,10 @@ public class LatexSupportableEnhancedFrameLayout extends InterceptFrameLayout {
     }
 
     private void setLayoutParamForView(View targetView, int width, int height) {
-        ViewGroup.LayoutParams taggetViewLp = targetView.getLayoutParams();
-        taggetViewLp.width = width;
-        taggetViewLp.height = height;
-        targetView.setLayoutParams(taggetViewLp);
+//        ViewGroup.LayoutParams taggetViewLp = targetView.getLayoutParams();
+//        taggetViewLp.width = width;
+//        taggetViewLp.height = height;
+//        targetView.setLayoutParams(taggetViewLp);
     }
 
     public void setText(String text) {

@@ -61,29 +61,11 @@
                         tools:text="John Doe"
                         />
 
-                    <org.stepic.droid.view.custom.InterceptFrameLayout
+                    <org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout
+                        android:id="@+id/enhanced_text_view"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/text_comment"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/right_padding_comments"
-                            android:gravity="left"
-                            android:textColor="@color/black"
-                            tools:text="Long long text of comment Long long text of comment Long long text of commentLong long text of comment Long long text of comment"/>
-
-                        <org.stepic.droid.view.custom.LatexSupportableWebView
-                            android:id="@+id/text_view_latex"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/right_padding_comments"
-                            android:gravity="left"
-                            android:scrollbarStyle="outsideOverlay"
-                            android:textColor="@color/black"
-                            tools:text="Long long text of comment Long long text of comment Long long text of commentLong long text of comment Long long text of comment"/>
-                    </org.stepic.droid.view.custom.InterceptFrameLayout>
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/right_padding_comments"/>
 
                    <include layout="@layout/comment_state_view"/>
 

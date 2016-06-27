@@ -164,7 +164,9 @@ public class HtmlHelper {
 
             "%d" +
 
-            ", user-scalable=no\" />" +
+            ", user-scalable=no" +
+            ", target-densitydpi=medium-dpi" +
+            "\" />" +
             "</style>\n" +
             "</head>\n"
             + "<body style='margin:0;padding:0;'>";
