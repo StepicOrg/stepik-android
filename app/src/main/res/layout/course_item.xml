@@ -50,6 +50,8 @@
                         android:paddingBottom="1dp">
 
                         <TextView
+
+                            android:paddingRight="8dp"
                             android:id="@+id/course_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -62,6 +64,7 @@
                             android:textSize="@dimen/text_header" />
 
                         <TextView
+                            android:paddingRight="8dp"
                             android:id="@+id/course_info"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
