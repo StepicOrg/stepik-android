@@ -160,14 +160,16 @@ public class HtmlHelper {
             + "\nh3{font-size: 14pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
             + "\nimg { max-width: 100%%; }"
             + "\np{margin: 0px; padding: 0px; display: inline;}"
-            + "<meta name=\"viewport\" content=\"width=" +
+            + "</style>\n" +
+
+            "<meta name=\"viewport\" content=\"width=" +
 
             "%d" +
 
             ", user-scalable=no" +
             ", target-densitydpi=medium-dpi" +
             "\" />" +
-            "</style>\n" +
+
             "</head>\n"
             + "<body style='margin:0;padding:0;'>";
 
