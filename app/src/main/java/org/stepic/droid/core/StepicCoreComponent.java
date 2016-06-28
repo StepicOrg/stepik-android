@@ -40,6 +40,7 @@ import org.stepic.droid.view.adapters.UnitAdapter;
 import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
 import org.stepic.droid.view.dialogs.ChooseStorageDialog;
 import org.stepic.droid.view.dialogs.ClearVideosDialog;
+import org.stepic.droid.view.dialogs.DeleteCommentDialogFragment;
 import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
@@ -166,5 +167,5 @@ public interface StepicCoreComponent {
 
     void inject(CourseJoinerPresenterImpl courseJoinerPresenter);
 
-    void inject(CommentsFragment.DeleteCommentDialogFragment dialogFragment);
+    void inject(DeleteCommentDialogFragment dialogFragment);
 }
