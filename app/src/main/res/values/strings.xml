@@ -187,4 +187,5 @@
     <string name="fail_to_parse">Sorry, course is not found. Tap to find other courses!</string>
     <string name="authorization">Authorization</string>
     <string name="unauthorization_detail">To continue, you should be authorized. Do you want to do this now?</string>
+    <string name="delete_label">Delete</string>
 </resources>

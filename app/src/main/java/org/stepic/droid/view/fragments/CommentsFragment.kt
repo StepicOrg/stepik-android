@@ -3,13 +3,14 @@ package org.stepic.droid.view.fragments
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.*
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -25,7 +26,6 @@ import org.stepic.droid.model.comments.Vote
 import org.stepic.droid.model.comments.VoteValue
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.setTextColor
 import org.stepic.droid.view.adapters.CommentsAdapter
 import org.stepic.droid.view.util.ContextMenuRecyclerView
 import org.stepic.droid.web.DiscussionProxyResponse
@@ -47,6 +47,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         private val unLikeMenuId = 102
         private val reportMenuId = 103
         private val cancelMenuId = 104
+        private val deleteMenuId = 105
 
 
         fun newInstance(discussionId: String, stepId: Long): Fragment {
@@ -148,6 +149,12 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                     menu?.add(Menu.NONE, likeMenuId, Menu.NONE, R.string.like_label)
                 }
                 menu?.add(Menu.NONE, reportMenuId, Menu.NONE, R.string.report_label)
+            }
+            if (comment.actions?.delete ?: false || comment.can_delete ?: false) {
+                val deleteText = getString(R.string.delete_label)
+                val spannableString = SpannableString(deleteText);
+                spannableString.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.feedback_bad_color)), 0, spannableString.length, 0)
+                menu?.add(Menu.NONE, deleteMenuId, Menu.NONE, spannableString)
             }
         } else {
             //todo: Cancel only for anonymous?

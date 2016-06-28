@@ -179,4 +179,5 @@
     <string name="fail_to_parse">К сожалению, курс не найден. Нажмите, чтобы найти другие курсы!</string>
     <string name="authorization">Авторизация</string>
     <string name="unauthorization_detail">Для того, чтобы продолжить, необходимо войти или зарегестрироваться. Вы хотите сделать это сейчас?</string>
+    <string name="delete_label">Удалить</string>
 </resources>
