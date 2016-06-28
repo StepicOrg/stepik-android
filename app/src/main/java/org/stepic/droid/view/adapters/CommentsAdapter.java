@@ -138,6 +138,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         }
 
         void onClickLoadMoreReplies(int position) {
+            if (position < 0 && position >= commentManager.getSize()) return;
+
             CommentAdapterItem needUpdateAndComment = commentManager.getItemWithNeedUpdatingInfoByPosition(position);
             Comment comment = needUpdateAndComment.getComment();
             commentManager.addToLoading(comment.getId());
