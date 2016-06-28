@@ -156,8 +156,8 @@
     </plurals>
 
     <plurals name="open_comments">
-        <item quantity="one">Open comments (%d)</item>
-        <item quantity="other">Open comments (%d)</item>
+        <item quantity="one">Open %d comment</item>
+        <item quantity="other">Open %d comments</item>
     </plurals>
 
     <string name="open_comments_zero">No comments. Add your comment</string>
