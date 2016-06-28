@@ -457,9 +457,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     @Subscribe
-    fun onFailDeleteComment (event: FailDeleteCommentEvent) {
+    fun onFailDeleteComment(event: FailDeleteCommentEvent) {
         Toast.makeText(context, R.string.fail_delete_comment, Toast.LENGTH_SHORT).show()
-
     }
 
     class DeleteCommentDialogFragment : DialogFragment() {
@@ -501,12 +500,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                                     comment?.let {
                                         bus.post(NewCommentWasAddedOrUpdateEvent(it.target!!, it))
                                     }
-                                }
-                                else{
-                                    val comment = response?.body()?.comments?.firstOrNull()
-                                    comment?.let {
-                                        bus.post(FailDeleteCommentEvent())
-                                    }
+                                } else {
+                                    bus.post(FailDeleteCommentEvent())
                                 }
                             }
 
