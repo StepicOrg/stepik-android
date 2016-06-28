@@ -78,7 +78,7 @@ class CommentManager {
         }
     }
 
-    private  fun addComments(stepicResponse: CommentsResponse, fromReply: Boolean = false) {
+    private fun addComments(stepicResponse: CommentsResponse, fromReply: Boolean = false) {
         updateOnlyCommentsIfCachedSilent(stepicResponse.comments)
         stepicResponse.users
                 ?.forEach {
@@ -99,13 +99,13 @@ class CommentManager {
         bus.post(CommentsLoadedSuccessfullyEvent()) // notify UI
     }
 
-    fun updateOnlyCommentsIfCachedSilent ( comments:List<Comment>?) {
+    fun updateOnlyCommentsIfCachedSilent(comments: List<Comment>?) {
         comments
                 ?.forEach {
                     if (it.id != null) {
                         val previousValue: Comment? = cachedCommentsSetMap.put(it.id, it)
                         val parentId: Long? = it.parent
-                        if (parentId != null && previousValue == null) {
+                        if (parentId != null && (previousValue == null)) {
                             //first time
                             var numberOfCachedBefore: Int = parentCommentToSumOfCachedReplies[parentId] ?: 0
                             numberOfCachedBefore++
@@ -127,7 +127,7 @@ class CommentManager {
             val parentComment = cachedCommentsSetMap[parentCommentId] ?: break
             cachedCommentsList.add(parentComment)
             i++
-            if (parentCommentId!=null && parentComment.replies != null && !parentComment.replies.isEmpty()) {
+            if (parentCommentId != null && parentComment.replies != null && !parentComment.replies.isEmpty()) {
                 var childIndex = 0
                 if (parentCommentToSumOfCachedReplies[parentComment.id] ?: 0 > parentComment.reply_count ?: 0) {
                     parentCommentToSumOfCachedReplies.put(parentComment.id!!, parentComment.reply_count!!) //if we remove some reply
@@ -135,15 +135,17 @@ class CommentManager {
                 val cachedRepliesNumber = parentCommentToSumOfCachedReplies.get(parentComment.id) ?: 0
 
                 while (childIndex < cachedRepliesNumber/* && childIndex < parentComment.reply_count?:-1*/) {
-                    val childComment : Comment? = cachedCommentsSetMap [parentComment.replies[childIndex]]
-                    if (childComment!=null) {
+                    val childComment: Comment? = cachedCommentsSetMap [parentComment.replies[childIndex]]
+                    if (childComment != null) {
                         replyToPositionInParentMap.put(childComment.id!!, childIndex)
                         cachedCommentsList.add(childComment)
                         childIndex++
-                    }
-                    else{
+                    } else {
                         //reply childIndex not found
                         parentCommentToSumOfCachedReplies[parentCommentId] = childIndex
+                        for (indexForDelete in childIndex..parentComment.replies.size-1) {
+                            cachedCommentsSetMap.remove(parentComment.replies[indexForDelete])
+                        }
                         break
                     }
                 }
@@ -281,7 +283,7 @@ class CommentManager {
         voteMap.clear()
     }
 
-    fun getCommentById (commentId: Long?) : Comment?{
+    fun getCommentById(commentId: Long?): Comment? {
         return cachedCommentsSetMap[commentId]
     }
 
