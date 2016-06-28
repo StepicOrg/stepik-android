@@ -181,4 +181,5 @@
     <string name="unauthorization_detail">Для того, чтобы продолжить, необходимо войти или зарегестрироваться. Вы хотите сделать это сейчас?</string>
     <string name="delete_label">Удалить</string>
     <string name="delete_comment_detail">Удалить этот комментарий</string>
+    <string name="fail_delete_comment">Извините, не удалось удалить комментарий</string>
 </resources>
