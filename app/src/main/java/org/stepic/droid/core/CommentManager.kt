@@ -99,7 +99,9 @@ class CommentManager {
                                     }
                                 }
                         sumOfCachedParent = cachedCommentsSetMap.filter { it.value.parent == null }.size
-
+                        if (sumOfCachedParent > discussionProxy?.discussions?.size?:0){
+                            sumOfCachedParent = discussionProxy?.discussions?.size!!
+                        }
                         cachedCommentsList.clear()
                         var i = 0
                         var j = 0
@@ -112,8 +114,12 @@ class CommentManager {
                             i++
                             if (parentComment.replies != null && !parentComment.replies.isEmpty()) {
                                 var childIndex = 0
+                                if (parentCommentToSumOfCachedReplies[parentComment.id] ?: 0 > parentComment.reply_count ?: 0) {
+                                    parentCommentToSumOfCachedReplies.put(parentComment.id!!, parentComment.reply_count!!) //if we remove some reply
+                                }
                                 val cachedRepliesNumber = parentCommentToSumOfCachedReplies.get(parentComment.id) ?: 0
-                                while (childIndex < cachedRepliesNumber) {
+
+                                while (childIndex < cachedRepliesNumber/* && childIndex < parentComment.reply_count?:-1*/) {
                                     val childComment = cachedCommentsSetMap [parentComment.replies[childIndex]] ?: break
                                     replyToPositionInParentMap.put(childComment.id!!, childIndex)
                                     cachedCommentsList.add(childComment)
@@ -244,6 +250,20 @@ class CommentManager {
 
     fun getPositionOfComment(commentId: Long): Int {
         return cachedCommentsList.indexOfFirst { it.id == commentId }
+    }
+
+    fun resetAll(dP: DiscussionProxy?) {
+        sumOfCachedParent = 0
+        discussionProxy = dP
+        parentCommentToSumOfCachedReplies.clear()
+        cachedCommentsSetMap.clear()
+        cachedCommentsList.clear()
+        userSetMap.clear()
+        replyToPositionInParentMap.clear()
+        parentIdToPositionInDiscussionMap.clear()
+        repliesIdIsLoading.clear()
+        commentIdIsLoading.clear()
+        voteMap.clear()
     }
 
 }

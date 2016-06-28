@@ -329,7 +329,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                     if (discussionProxy != null && discussionProxy.discussions.isNotEmpty()) {
                         bus.post(DiscussionProxyLoadedSuccessfullyEvent(discussionProxy))
                     } else {
-                        bus.post(EmptyCommentsInDiscussionProxyEvent(id))
+                        bus.post(EmptyCommentsInDiscussionProxyEvent(id, discussionProxy))
                     }
                 } else {
                     bus.post(InternetConnectionProblemInCommentsEvent(discussionId))
@@ -357,10 +357,13 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     @Subscribe
     fun onEmptyComments(event: EmptyCommentsInDiscussionProxyEvent) {
-        if (event.discussionProxyId == discussionId && commentManager.isEmpty()) {
-            cancelSwipeRefresh()
-            showEmptyState()
+        cancelSwipeRefresh()
+        if (event.discussionProxyId != discussionId) return;
+        if (!commentManager.isEmpty()) {
+            commentManager.resetAll(event.discussionProxy)
+            commentAdapter.notifyDataSetChanged()
         }
+        showEmptyState()
     }
 
     @Subscribe
