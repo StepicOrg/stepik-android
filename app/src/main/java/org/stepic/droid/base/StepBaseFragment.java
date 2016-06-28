@@ -73,15 +73,18 @@ public abstract class StepBaseFragment extends FragmentBase {
         openCommentViewClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int discussionCount = step.getDiscussions_count();
                 mShell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+                if (discussionCount == 0) {
+                    mShell.getScreenProvider().openNewCommentForm(getActivity(), step.getId(), null); //show new form, but in back stack comment list is exist.
+                }
             }
         });
 
         int discussionCount = step.getDiscussions_count();
-        if (discussionCount > 0){
+        if (discussionCount > 0) {
             textForComment.setText(MainApplication.getAppContext().getResources().getQuantityString(R.plurals.open_comments, discussionCount, discussionCount));
-        }
-        else{
+        } else {
             textForComment.setText(MainApplication.getAppContext().getResources().getString(R.string.open_comments_zero));
         }
     }
@@ -120,7 +123,7 @@ public abstract class StepBaseFragment extends FragmentBase {
                                     }
                                 });
 
-                                 //fixme: it is so bad, we should be updated from model, not here =(
+                                //fixme: it is so bad, we should be updated from model, not here =(
                                 bus.post(new StepWasUpdatedEvent(stepFromInternet));
                             }
                         }
@@ -137,9 +140,9 @@ public abstract class StepBaseFragment extends FragmentBase {
     }
 
     @Subscribe
-    public void onStepWasUpdated(StepWasUpdatedEvent event){
+    public void onStepWasUpdated(StepWasUpdatedEvent event) {
         Step eventStep = event.getStep();
-        if (eventStep.getId() == step.getId()){
+        if (eventStep.getId() == step.getId()) {
             step.setDiscussion_proxy(eventStep.getDiscussion_proxy()); //fixme do it in immutable way
             step.setDiscussions_count(eventStep.getDiscussions_count());
             updateCommentState();
