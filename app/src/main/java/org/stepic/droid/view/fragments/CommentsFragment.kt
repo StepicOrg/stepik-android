@@ -186,8 +186,17 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                 return true
             }
 
+            deleteMenuId -> {
+                deleteComment(info.position)
+                return true
+            }
+
             else -> return super.onContextItemSelected(item)
         }
+    }
+
+    private fun deleteComment(position: Int) {
+
     }
 
     private fun replyToComment(position: Int) {
