@@ -152,7 +152,7 @@ class CommentManager {
                 if (response != null && response.isSuccess) {
                     val stepicResponse = response.body()
                     if (stepicResponse != null) {
-                        addComments(stepicResponse)
+                        addComments(stepicResponse, fromReply)
                     } else {
                         bus.post(InternetConnectionProblemInCommentsEvent(discussionProxy!!.id))
                     }
