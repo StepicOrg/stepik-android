@@ -160,6 +160,7 @@
         <item quantity="other">Open comments (%d)</item>
     </plurals>
 
+    <string name="open_comments_zero">No comments. Add your comment</string>
     <string name="comment_sent">Comment is sent successfully</string>
     <string name="comment_denied">Comments are not available for this lesson</string>
     <string name="reply_title">Reply</string>
