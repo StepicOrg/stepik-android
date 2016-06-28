@@ -76,7 +76,14 @@ public abstract class StepBaseFragment extends FragmentBase {
                 mShell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
             }
         });
-        textForComment.setText(MainApplication.getAppContext().getResources().getQuantityString(R.plurals.open_comments, step.getDiscussions_count(), step.getDiscussions_count()));
+
+        int discussionCount = step.getDiscussions_count();
+        if (discussionCount > 0){
+            textForComment.setText(MainApplication.getAppContext().getResources().getQuantityString(R.plurals.open_comments, discussionCount, discussionCount));
+        }
+        else{
+            textForComment.setText(MainApplication.getAppContext().getResources().getString(R.string.open_comments_zero));
+        }
     }
 
 
