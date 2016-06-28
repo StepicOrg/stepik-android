@@ -165,4 +165,6 @@ public interface StepicCoreComponent {
     void inject(CourseFinderPresenterImpl courseFinderPresenter);
 
     void inject(CourseJoinerPresenterImpl courseJoinerPresenter);
+
+    void inject(CommentsFragment.DeleteCommentDialogFragment dialogFragment);
 }

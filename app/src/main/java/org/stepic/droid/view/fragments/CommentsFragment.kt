@@ -1,10 +1,13 @@
 package org.stepic.droid.view.fragments
 
+import android.app.Dialog
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -14,6 +17,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.*
 import android.widget.ProgressBar
 import android.widget.Toast
+import com.squareup.otto.Bus
 import com.squareup.otto.Subscribe
 import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
@@ -24,11 +28,15 @@ import org.stepic.droid.events.comments.*
 import org.stepic.droid.model.comments.Comment
 import org.stepic.droid.model.comments.Vote
 import org.stepic.droid.model.comments.VoteValue
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.view.adapters.CommentsAdapter
+import org.stepic.droid.view.custom.LoadingProgressDialog
 import org.stepic.droid.view.util.ContextMenuRecyclerView
+import org.stepic.droid.web.CommentsResponse
 import org.stepic.droid.web.DiscussionProxyResponse
+import org.stepic.droid.web.IApi
 import org.stepic.droid.web.VoteResponse
 import retrofit.Callback
 import retrofit.Response
@@ -76,7 +84,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     var floatingActionButton: FloatingActionButton? = null
     lateinit var emptyStateView: View
     lateinit var errorView: View
-    var needInsertLate: Comment? = null
+    var needInsertOtUpdateLate: Comment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -150,7 +158,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                 }
                 menu?.add(Menu.NONE, reportMenuId, Menu.NONE, R.string.report_label)
             }
-            if (comment.actions?.delete ?: false || comment.can_delete ?: false) {
+            if (comment.actions?.delete ?: false) {
                 val deleteText = getString(R.string.delete_label)
                 val spannableString = SpannableString(deleteText);
                 spannableString.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.feedback_bad_color)), 0, spannableString.length, 0)
@@ -196,8 +204,15 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun deleteComment(position: Int) {
+        YandexMetrica.reportEvent(AppConstants.DELETE_COMMENT_TRIAL)
         val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
         val commentId = comment?.id
+        commentId?.let {
+            val dialog = DeleteCommentDialogFragment.Companion.newInstance(it)
+            if (!dialog.isAdded) {
+                dialog.show(fragmentManager, null)
+            }
+        }
 
     }
 
@@ -330,7 +345,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     @Subscribe
     fun onInternetConnectionProblem(event: InternetConnectionProblemInCommentsEvent) {
-        if (event.discussionProxyId == discussionId) {
+        if (event.discussionProxyId.isNullOrBlank() || event.discussionProxyId == discussionId) {
             cancelSwipeRefresh()
             if (commentManager.isEmpty()) {
                 showInternetConnectionProblem()
@@ -363,22 +378,22 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         if (!commentManager.isEmpty()) {
             showEmptyState(false)
         }
-        val needInsertLocal = needInsertLate
+        val needInsertLocal = needInsertOtUpdateLate
         if (needInsertLocal != null && (!commentManager.isCommentCached(needInsertLocal.id) || (needInsertLocal.parent != null && !commentManager.isCommentCached(needInsertLocal.parent)))) {
             val longArr = listOf(needInsertLocal.id, needInsertLocal.parent).filterNotNull().toLongArray()
             commentManager.loadCommentsByIds(longArr)
         } else {
-            needInsertLate = null
+            needInsertOtUpdateLate = null
             commentAdapter.notifyDataSetChanged()
         }
     }
 
     @Subscribe
-    fun onNeedUpdate(needUpdateEvent: NewCommentWasAdded) {
+    fun onNeedUpdate(needUpdateEvent: NewCommentWasAddedOrUpdateEvent) {
         if (needUpdateEvent.targetId == stepId) {
-            if (needUpdateEvent.newCommentInsert != null) {
+            if (needUpdateEvent.newCommentInsertOrUpdate != null) {
                 //share for updating:
-                needInsertLate = needUpdateEvent.newCommentInsert
+                needInsertOtUpdateLate = needUpdateEvent.newCommentInsertOrUpdate
             }
             //without animation.
             onRefresh() // it can be dangerous, when 10 or more comments was submit by another users.
@@ -439,6 +454,60 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun cancelSwipeRefresh() {
         ProgressHelper.dismiss(swipeRefreshLayout)
+    }
+
+    class DeleteCommentDialogFragment : DialogFragment() {
+
+        @Inject
+        lateinit var api: IApi;
+
+        @Inject
+        lateinit var bus: Bus;
+
+        companion object {
+            private val COMMENT_ID_KEY = "comment_id_key"
+            fun newInstance(commentId: Long): DialogFragment {
+
+                val args = Bundle()
+                args.putLong(COMMENT_ID_KEY, commentId)
+                val fragment = DeleteCommentDialogFragment()
+                fragment.arguments = args
+                return fragment
+            }
+        }
+
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            MainApplication.component().inject(this)
+            val loadingProgressDialog = LoadingProgressDialog(context)
+            val commentId = arguments.getLong(COMMENT_ID_KEY)
+            val builder = AlertDialog.Builder(activity)
+            builder
+                    .setTitle(R.string.title_confirmation)
+                    .setMessage(R.string.delete_comment_detail)
+                    .setPositiveButton(R.string.delete_label) { dialog, which ->
+                        ProgressHelper.activate(loadingProgressDialog)
+                        YandexMetrica.reportEvent(AppConstants.DELETE_COMMENT_CONFIRMATION)
+                        api.deleteComment(commentId).enqueue(object : Callback<CommentsResponse> {
+                            override fun onResponse(response: Response<CommentsResponse>?, retrofit: Retrofit?) {
+                                ProgressHelper.dismiss(loadingProgressDialog)
+                                if (response?.isSuccess ?: false) {
+                                    val comment = response?.body()?.comments?.firstOrNull()
+                                    comment?.let {
+                                        bus.post(NewCommentWasAddedOrUpdateEvent(it.target!!, it))
+                                    }
+                                }
+                            }
+
+                            override fun onFailure(t: Throwable?) {
+                                ProgressHelper.dismiss(loadingProgressDialog)
+                                bus.post(InternetConnectionProblemInCommentsEvent(null))
+                            }
+
+                        })
+                    }.setNegativeButton(R.string.cancel, null)
+
+            return builder.create()
+        }
     }
 
 }

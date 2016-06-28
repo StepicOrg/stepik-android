@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
-import org.stepic.droid.events.comments.NewCommentWasAdded;
+import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
@@ -104,7 +104,7 @@ public abstract class StepBaseFragment extends FragmentBase {
     }
 
     @Subscribe
-    public void onNewCommentWasAdded(NewCommentWasAdded event) {
+    public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
         if (step != null && event.getTargetId() == step.getId()) {
             long[] arr = new long[]{step.getId()};
 

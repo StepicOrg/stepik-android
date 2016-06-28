@@ -12,7 +12,7 @@ import com.squareup.otto.Subscribe;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.attempts.FailAttemptEvent;
 import org.stepic.droid.events.attempts.SuccessAttemptEvent;
-import org.stepic.droid.events.comments.NewCommentWasAdded;
+import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.events.submissions.FailGettingLastSubmissionEvent;
 import org.stepic.droid.events.submissions.FailSubmissionCreatedEvent;
@@ -88,7 +88,7 @@ public class NumberStepFragment extends SingleLineSendStepFragment {
     }
 
     @Subscribe
-    public void onNewCommentWasAdded(NewCommentWasAdded event) {
+    public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
         super.onNewCommentWasAdded(event);
 
     }

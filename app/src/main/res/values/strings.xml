@@ -188,4 +188,5 @@
     <string name="authorization">Authorization</string>
     <string name="unauthorization_detail">To continue, you should be authorized. Do you want to do this now?</string>
     <string name="delete_label">Delete</string>
+    <string name="delete_comment_detail">Delete this comment?</string>
 </resources>
