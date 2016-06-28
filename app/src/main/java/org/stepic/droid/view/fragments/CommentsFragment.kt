@@ -345,6 +345,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                 showInternetConnectionProblem()
             } else {
                 Toast.makeText(context, R.string.connectionProblems, Toast.LENGTH_SHORT).show()
+                commentManager.clearAllLoadings()
+                commentAdapter.notifyDataSetChanged()
             }
         }
     }

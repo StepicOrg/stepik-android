@@ -287,4 +287,9 @@ class CommentManager {
         return cachedCommentsSetMap[commentId]
     }
 
+    fun clearAllLoadings(){
+        commentIdIsLoading.clear()
+        repliesIdIsLoading.clear()
+    }
+
 }
