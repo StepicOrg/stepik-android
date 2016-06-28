@@ -107,4 +107,7 @@ public interface StepicRestLoggedService {
 
     @PUT("api/votes/{id}")
     Call<VoteResponse> postVote(@Path("id") String voteId, @Body VoteRequest voteRequest);
+
+    @DELETE("api/comments/{id}")
+    Call<CommentsResponse> deleteComment(@Path("id") long commentId);
 }

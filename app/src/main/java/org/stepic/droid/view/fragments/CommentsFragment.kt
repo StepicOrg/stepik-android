@@ -196,6 +196,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun deleteComment(position: Int) {
+        val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
+        val commentId = comment?.id
 
     }
 
