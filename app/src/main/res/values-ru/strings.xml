@@ -125,10 +125,10 @@
     </plurals>
 
     <plurals name="open_comments">
-        <item quantity="one">Открыть комментарии (%d)</item>
-        <item quantity="few">Открыть комментарии (%d)</item>
-        <item quantity="many">Открыть комментарии (%d)</item>
-        <item quantity="other">Открыть комментарии (%d)</item>
+        <item quantity="one">Открыть %d комментарий</item>
+        <item quantity="few">Открыть %d комментария</item>
+        <item quantity="many">Открыть %d комментариев</item>
+        <item quantity="other">Открыть %d комментариев</item>
     </plurals>
     <string name="open_comments_zero">Нет комментариев. Оставьте первый.</string>
     <string name="empty_try_later">Сейчас здесь пусто, попробуйте позже.</string>
