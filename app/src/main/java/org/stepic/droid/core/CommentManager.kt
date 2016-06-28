@@ -127,7 +127,7 @@ class CommentManager {
             val parentComment = cachedCommentsSetMap[parentCommentId] ?: break
             cachedCommentsList.add(parentComment)
             i++
-            if (parentComment.replies != null && !parentComment.replies.isEmpty()) {
+            if (parentCommentId!=null && parentComment.replies != null && !parentComment.replies.isEmpty()) {
                 var childIndex = 0
                 if (parentCommentToSumOfCachedReplies[parentComment.id] ?: 0 > parentComment.reply_count ?: 0) {
                     parentCommentToSumOfCachedReplies.put(parentComment.id!!, parentComment.reply_count!!) //if we remove some reply
@@ -135,10 +135,17 @@ class CommentManager {
                 val cachedRepliesNumber = parentCommentToSumOfCachedReplies.get(parentComment.id) ?: 0
 
                 while (childIndex < cachedRepliesNumber/* && childIndex < parentComment.reply_count?:-1*/) {
-                    val childComment = cachedCommentsSetMap [parentComment.replies[childIndex]] ?: break
-                    replyToPositionInParentMap.put(childComment.id!!, childIndex)
-                    cachedCommentsList.add(childComment)
-                    childIndex++
+                    val childComment : Comment? = cachedCommentsSetMap [parentComment.replies[childIndex]]
+                    if (childComment!=null) {
+                        replyToPositionInParentMap.put(childComment.id!!, childIndex)
+                        cachedCommentsList.add(childComment)
+                        childIndex++
+                    }
+                    else{
+                        //reply childIndex not found
+                        parentCommentToSumOfCachedReplies[parentCommentId] = childIndex
+                        break
+                    }
                 }
             }
         }
