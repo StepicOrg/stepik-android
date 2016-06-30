@@ -6,14 +6,22 @@
     android:layout_height="match_parent"
     android:layout_gravity="center">
 
-    <RelativeLayout
+    <ScrollView
+        android:layout_gravity="center_vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:scrollbars="none"
+        android:scrollbarStyle="outsideOverlay"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
 
     <include layout="@layout/step_text_header"/>
 
     <include
-        android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/player_layout"
@@ -23,9 +31,10 @@
                  android:layout_height="wrap_content"
                  android:layout_width="match_parent"
                  android:layout_marginBottom="8dp"
-            android:layout_alignParentBottom="true"/>
-    </RelativeLayout>
-
+                 android:layout_marginTop="8dp"
+            />
+    </LinearLayout>
+    </ScrollView>
     <include
         layout="@layout/drop_shadow_view"/>
 
