@@ -23,12 +23,14 @@ public class SplashActivity extends BackToExitActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        bus.register(this);
+
         //This stops from opening again from the Splash screen when minimized
         if (!isTaskRoot()) {
             finish();
             return;
         }
-        bus.register(this);
+
         if (checkPlayServices() && !mSharedPreferenceHelper.isGcmTokenOk()) {
 
             mThreadPoolExecutor.execute(new Runnable() {
