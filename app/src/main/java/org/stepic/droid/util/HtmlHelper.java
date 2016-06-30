@@ -17,8 +17,9 @@ public class HtmlHelper {
     public static CharSequence fromHtml(@Nullable String content) {
         if (content == null)
             return Html.fromHtml("");
+        String contentNew = content.replace("\n", "<br>");
 
-        return Html.fromHtml(content);
+        return Html.fromHtml(contentNew);
     }
 
     /**
