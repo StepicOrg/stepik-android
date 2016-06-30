@@ -281,7 +281,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                 if (comment.getText()!=null && !comment.getText().isEmpty()) {
                     int weakColorInt = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_weak_text, context);
                     String hexColor = String.format("#%06X", (0xFFFFFF & weakColorInt));
-                    String deletedCommentWithText = commentIsDeletedMessage +"<p></p>"+ "<font color='"+hexColor+"'>"+comment.getText()+"</font>";
+                    String deletedCommentWithText = commentIsDeletedMessage +"<br>"+ "<font color='"+hexColor+"'>"+comment.getText()+"</font>";
                     commentTextEnhanced.setText(deletedCommentWithText);
                 }
                 else{
