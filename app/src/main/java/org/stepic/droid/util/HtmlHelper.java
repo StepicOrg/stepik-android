@@ -17,9 +17,16 @@ public class HtmlHelper {
     public static CharSequence fromHtml(@Nullable String content) {
         if (content == null)
             return Html.fromHtml("");
-        String contentNew = content.replace("\n", "<br>");
+        String newContent = content.replace("\n", "<br>");
 
-        return Html.fromHtml(contentNew);
+        return Html.fromHtml(newContent);
+    }
+
+    @NotNull
+    public static String getHtmlWhiteSpaces(String content){
+        if (content == null) return "";
+        String newContent = content.replace("\n", "<br>");
+        return newContent;
     }
 
     /**

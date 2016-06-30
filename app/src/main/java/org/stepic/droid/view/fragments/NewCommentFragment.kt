@@ -15,6 +15,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent
+import org.stepic.droid.util.HtmlHelper
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.view.custom.LoadingProgressDialog
 import org.stepic.droid.web.CommentsResponse
@@ -118,7 +119,7 @@ class NewCommentFragment : FragmentBase() {
 
     private fun sendComment() {
         YandexMetrica.reportEvent("comments: click send comment")
-        val text: String = mTextBody.text.toString()
+        val text: String = HtmlHelper.getHtmlWhiteSpaces(mTextBody.text.toString())
         if (text.isEmpty()) {
             Toast.makeText(context, R.string.feedback_fill_fields, Toast.LENGTH_SHORT).show()
         } else {
