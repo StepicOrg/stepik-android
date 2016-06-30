@@ -481,6 +481,9 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         if (mCourse == null) {
             mCourse = event.getCourse();
             Bundle args = getIntent().getExtras();
+            if (args == null){
+                args = new Bundle();
+            }
             args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, mCourse);
             getIntent().putExtras(args);
             initScreenByCourse();
