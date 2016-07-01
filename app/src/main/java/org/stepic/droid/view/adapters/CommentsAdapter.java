@@ -218,6 +218,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         @Bind(R.id.pinned_indicator)
         View pinnedIndicator;
 
+        @Bind(R.id.user_role)
+        TextView userRole;
+
         @BindString(R.string.comment_is_deleted)
         String commentIsDeletedMessage;
 
@@ -281,13 +284,12 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
             if (comment.is_deleted() != null && comment.is_deleted()) {
                 commentClickableRoot.setBackgroundColor(ColorUtil.INSTANCE.getColorArgb(R.color.wrong_answer_background, context));
 
-                if (comment.getText()!=null && !comment.getText().isEmpty()) {
+                if (comment.getText() != null && !comment.getText().isEmpty()) {
                     int weakColorInt = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_weak_text, context);
                     String hexColor = String.format("#%06X", (0xFFFFFF & weakColorInt));
-                    String deletedCommentWithText = commentIsDeletedMessage +"<br>"+ "<font color='"+hexColor+"'>"+comment.getText()+"</font>";
+                    String deletedCommentWithText = commentIsDeletedMessage + "<br>" + "<font color='" + hexColor + "'>" + comment.getText() + "</font>";
                     commentTextEnhanced.setText(deletedCommentWithText);
-                }
-                else{
+                } else {
                     commentTextEnhanced.setText(commentIsDeletedMessage);
                 }
             } else {
@@ -296,10 +298,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                 commentTextEnhanced.setText(comment.getText());
             }
 
-            if (comment.getTime() != null && !comment.getTime().isEmpty()){
+            if (comment.getTime() != null && !comment.getTime().isEmpty()) {
                 commentTimeTextView.setText(DateTimeHelper.INSTANCE.getPresentOfDate(comment.getTime(), DateTimeFormat.forPattern(AppConstants.COMMENT_DATE_TIME_PATTERN).withZone(zone).withLocale(locale)));
-            }
-            else{
+            } else {
                 commentTimeTextView.setText("");
             }
 
@@ -343,11 +344,17 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                 userName.setVisibility(View.GONE);
             }
 
-            if (comment.is_pinned() != null && comment.is_pinned()){
+            if (comment.is_pinned() != null && comment.is_pinned()) {
                 pinnedIndicator.setVisibility(View.VISIBLE);
-            }
-            else{
+            } else {
                 pinnedIndicator.setVisibility(View.GONE);
+            }
+
+            if (comment.getUser_role() != null && comment.getUser_role().getResource() != null) {
+                userRole.setText(context.getString(comment.getUser_role().getResource()));
+                userRole.setVisibility(View.VISIBLE);
+            } else {
+                userRole.setVisibility(View.GONE);
             }
         }
 
