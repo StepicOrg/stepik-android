@@ -22,6 +22,7 @@ import org.stepic.droid.base.MainApplication
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.events.comments.*
 import org.stepic.droid.model.comments.Comment
+import org.stepic.droid.model.comments.DiscussionOrder
 import org.stepic.droid.model.comments.Vote
 import org.stepic.droid.model.comments.VoteValue
 import org.stepic.droid.util.AppConstants
@@ -378,7 +379,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         if (!commentManager.isEmpty()) {
             showEmptyState(false)
         }
-        val needInsertLocal : Comment?= needInsertOtUpdateLate
+        val needInsertLocal: Comment? = needInsertOtUpdateLate
         if (needInsertLocal != null && (!commentManager.isCommentCached(needInsertLocal.id) || (needInsertLocal.parent != null && !commentManager.isCommentCached(needInsertLocal.parent)))) {
             val longArr = listOf(needInsertLocal.id, needInsertLocal.parent).filterNotNull().toLongArray()
             commentManager.loadCommentsByIds(longArr)
@@ -468,9 +469,21 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.coment_list_menu, menu)
 
-        val defaultItem = menu?.findItem(R.id.menu_item_last_discussion)
-
+        val defaultItem = menu?.findItem(mSharedPreferenceHelper.discussionOrder.menuId)
         defaultItem?.isChecked = true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+        DiscussionOrder.values().forEach {
+            if (it.menuId.equals(item?.itemId)) {
+                mSharedPreferenceHelper.discussionOrder = it
+                item?.isChecked = true
+                //todo reload comments, set to comment manager, and resolve above by id from preferences.
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 }
