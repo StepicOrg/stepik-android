@@ -58,6 +58,7 @@ import org.stepic.droid.model.Video;
 import org.stepic.droid.presenters.course_finder.CourseFinderPresenter;
 import org.stepic.droid.presenters.course_joiner.CourseJoinerPresenter;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepicLogicHelper;
@@ -696,7 +697,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         }
 
         if (mCourse.getSummary()!=null && !mCourse.getSummary().isEmpty()){
-            sb.append(mCourse.getSummary());
+            sb.append(HtmlHelper.fromHtml(mCourse.getSummary()).toString());
             sb.append("\r\n");
             sb.append("\r\n");
         }
