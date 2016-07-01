@@ -1,13 +1,15 @@
-<LinearLayout
+
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:paddingBottom="8dp"
-    android:paddingTop="8dp">
+    android:paddingTop="8dp"
+    android:paddingRight="8dp">
 
     <TextView
+        android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
@@ -18,8 +20,10 @@
         tools:text="14.06.2016 10:30"/>
 
     <LinearLayout
+        android:layout_toLeftOf="@+id/pinned_indicator"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/comment_time_tv"
         android:layout_marginLeft="4dp"
-        android:layout_gravity="center_vertical"
         android:id="@+id/like_root"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,8 +43,21 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="4dp"
-        android:text="4"
+        tools:text="4"
         />
     </LinearLayout>
 
-</LinearLayout>
+    <ImageView
+
+        android:id="@+id/pinned_indicator"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="4dp"
+        android:src="@drawable/ic_cloud_download_grey600_24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"/>
+
+
+</RelativeLayout>
