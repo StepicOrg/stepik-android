@@ -89,6 +89,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater?.inflate(R.layout.fragment_comments, container, false)
+        setHasOptionsMenu(true)
         discussionId = arguments.getString(discussionIdKey)
         stepId = arguments.getLong(stepIdKey)
         setHasOptionsMenu(true)
@@ -462,6 +463,14 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     @Subscribe
     fun onFailDeleteComment(event: FailDeleteCommentEvent) {
         Toast.makeText(context, R.string.fail_delete_comment, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.coment_list_menu, menu)
+
+        val defaultItem = menu?.findItem(R.id.menu_item_last_discussion)
+
+        defaultItem?.isChecked = true
     }
 
 }

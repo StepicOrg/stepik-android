@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group
+        android:checkableBehavior="single">
+        <item
+            app:showAsAction="never"
+            android:id="@+id/menu_item_last_discussion"
+            android:title="@string/last_discussion" />
+
+        <item
+            app:showAsAction="never"
+            android:id="@+id/menu_item_most_liked"
+            android:title="@string/most_liked_discussion" />
+
+        <item
+            app:showAsAction="never"
+            android:id="@+id/menu_item_most_active"
+            android:title="@string/most_active_discussion" />
+
+        <item
+            app:showAsAction="never"
+            android:id="@+id/menu_item_recent_activity"
+            android:title="@string/recent_activity_discussion" />
+    </group>
+
+</menu>
