@@ -684,8 +684,27 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         if (mCourse == null) return;
 
         Intent shareIntent = new Intent();
+        StringBuilder sb = new StringBuilder();
+
+        if (mCourse.getTitle()!=null) {
+            sb.append(getString(R.string.course));
+            sb.append(" \"");
+            sb.append(mCourse.getTitle());
+            sb.append("\"");
+            sb.append("\r\n");
+            sb.append("\r\n");
+        }
+
+        if (mCourse.getSummary()!=null && !mCourse.getSummary().isEmpty()){
+            sb.append(mCourse.getSummary());
+            sb.append("\r\n");
+            sb.append("\r\n");
+        }
+
         String uriForSharing = Uri.parse(StringUtil.getDynamicLinkForCourse(config, mCourse.getSlug())).toString();
-        String textForSharing = mCourse.getTitle() + " " + uriForSharing;
+        sb.append(uriForSharing);
+
+        String textForSharing = sb.toString();
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_TEXT, textForSharing);
         shareIntent.setType("text/plain");
