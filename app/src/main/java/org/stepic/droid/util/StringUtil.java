@@ -41,7 +41,7 @@ public class StringUtil {
         stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
         stringBuilder.append(slug);
         stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
-
+        stringBuilder.append("&amv=650");
         stringBuilder.append("&apn=");
         String packageName = MainApplication.getAppContext().getPackageName();
         if (packageName == null){
@@ -50,8 +50,6 @@ public class StringUtil {
         stringBuilder.append(packageName);
 
 //        stringBuilder.append("&ibi=com.AlexKarpov.Stepic");
-
-        stringBuilder.append("&amv=650");
         return stringBuilder.toString();
     }
 
