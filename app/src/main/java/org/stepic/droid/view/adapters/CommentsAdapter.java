@@ -215,6 +215,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         @Bind(R.id.comment_time_tv)
         TextView commentTimeTextView;
 
+        @Bind(R.id.pinned_indicator)
+        View pinnedIndicator;
+
         @BindString(R.string.comment_is_deleted)
         String commentIsDeletedMessage;
 
@@ -338,6 +341,13 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                 userName.setText(user.getFirst_name() + " " + user.getLast_name());
             } else {
                 userName.setVisibility(View.GONE);
+            }
+
+            if (comment.is_pinned() != null && comment.is_pinned()){
+                pinnedIndicator.setVisibility(View.VISIBLE);
+            }
+            else{
+                pinnedIndicator.setVisibility(View.GONE);
             }
         }
 
