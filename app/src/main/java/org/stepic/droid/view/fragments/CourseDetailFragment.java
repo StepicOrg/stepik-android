@@ -688,10 +688,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         StringBuilder sb = new StringBuilder();
 
         if (mCourse.getTitle()!=null) {
-            sb.append(getString(R.string.course));
-            sb.append(" \"");
             sb.append(mCourse.getTitle());
-            sb.append("\"");
             sb.append("\r\n");
             sb.append("\r\n");
         }
