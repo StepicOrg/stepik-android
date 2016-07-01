@@ -187,4 +187,9 @@
 
     <string name="staff_label">Команда Stepic.org</string>
     <string name="teacher_label">Команда курса</string>
+
+    <string name="last_discussion">Новые обсуждения</string>
+    <string name="most_liked_discussion">Самые популярные</string>
+    <string name="most_active_discussion">Самые обсуждаемые</string>
+    <string name="recent_activity_discussion">Свежие обновления</string>
 </resources>
