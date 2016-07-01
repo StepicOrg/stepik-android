@@ -367,6 +367,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     @Subscribe
     fun onDiscussionProxyLoadedSuccessfully(successfullyEvent: DiscussionProxyLoadedSuccessfullyEvent) {
         commentManager.setDiscussionProxy(successfullyEvent.discussionProxy)
+        activity.invalidateOptionsMenu()
         commentManager.loadComments()
     }
 
@@ -467,10 +468,12 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.coment_list_menu, menu)
+        if (!commentManager?.isDiscussionProxyNull()) {
+            inflater?.inflate(R.menu.coment_list_menu, menu)
 
-        val defaultItem = menu?.findItem(mSharedPreferenceHelper.discussionOrder.menuId)
-        defaultItem?.isChecked = true
+            val defaultItem = menu?.findItem(mSharedPreferenceHelper.discussionOrder.menuId)
+            defaultItem?.isChecked = true
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -479,11 +482,19 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             if (it.menuId.equals(item?.itemId)) {
                 mSharedPreferenceHelper.discussionOrder = it
                 item?.isChecked = true
+
+                commentManager.resetAll()
+                commentAdapter.notifyDataSetChanged()
+
+
+                showEmptyProgressOnCenter()
+                commentManager.loadComments()
                 //todo reload comments, set to comment manager, and resolve above by id from preferences.
                 return true;
             }
         }
         return super.onOptionsItemSelected(item)
     }
+
 
 }
