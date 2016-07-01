@@ -190,4 +190,5 @@
     <string name="delete_label">Delete</string>
     <string name="delete_comment_detail">Delete this comment?</string>
     <string name="fail_delete_comment">Sorry, you cannot delete this comment</string>
+    <string name="share_link_title">Share link</string>
 </resources>
