@@ -10,7 +10,6 @@
 
     <TextView
         android:layout_centerVertical="true"
-        android:layout_gravity="center_vertical"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:paddingRight="4dp"
@@ -20,10 +19,12 @@
         tools:text="14.06.2016 10:30"/>
 
     <LinearLayout
-        android:layout_toLeftOf="@+id/pinned_indicator"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/comment_time_tv"
         android:layout_marginLeft="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginRight="4dp"
         android:id="@+id/like_root"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,12 +44,25 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="4dp"
-        tools:text="4"
+        tools:text="300000"
         />
     </LinearLayout>
 
-    <ImageView
+    <TextView
+        android:id="@+id/user_role"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_toLeftOf="@+id/pinned_indicator"
+        android:layout_toRightOf="@id/like_root"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Stepic.org team"
+        />
 
+    <ImageView
         android:id="@+id/pinned_indicator"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
