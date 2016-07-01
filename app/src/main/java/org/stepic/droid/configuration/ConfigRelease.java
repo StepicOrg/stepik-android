@@ -37,6 +37,7 @@ public class ConfigRelease implements IConfig {
     private static final String CUSTOM_UPDATE = "CUSTOM_UPDATE";
     private static final String UPDATE_ENDPOINT = "UPDATE_ENDPOINT";
     private static final String CUSTOM_UPDATING_VERSION = "CUSTOM_UPDATING_VERSION";
+    private static final String FIREBASE_DOMAIN = "FIREBASE_DOMAIN";
 
 
     @Inject
@@ -136,6 +137,11 @@ public class ConfigRelease implements IConfig {
     @Override
     public String getUpdateEndpoint() {
         return getString(UPDATE_ENDPOINT, "");
+    }
+
+    @Override
+    public String getFirebaseDomain() {
+        return getString(FIREBASE_DOMAIN, null);
     }
 
     private String getString(String key) {

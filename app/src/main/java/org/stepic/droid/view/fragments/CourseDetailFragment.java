@@ -681,10 +681,13 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     }
 
     private void createIntentForSharing() {
+        if (mCourse == null) return;
+
         Intent shareIntent = new Intent();
-        String uriForSharing = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getSlug())).toString();
+        String uriForSharing = Uri.parse(StringUtil.getDynamicLinkForCourse(config, mCourse.getSlug())).toString();
+        String textForSharing = mCourse.getTitle() + " " + uriForSharing;
         shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, uriForSharing);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, textForSharing);
         shareIntent.setType("text/plain");
         shareIntentWithChooser = Intent.createChooser(shareIntent, "Hello, it's intent title"); // FIXME: 01.07.16 add right title
     }
