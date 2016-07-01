@@ -3,6 +3,6 @@
     <item
         android:id="@+id/menu_item_share"
         android:icon="@drawable/ic_thumb_up_white_24dp"
-        android:title="@string/share_link_title"
+        android:title="@string/share_title"
         app:showAsAction="always"/>
 </menu>

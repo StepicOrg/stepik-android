@@ -183,5 +183,5 @@
     <string name="delete_label">Удалить</string>
     <string name="delete_comment_detail">Удалить этот комментарий</string>
     <string name="fail_delete_comment">Извините, не удалось удалить комментарий</string>
-    <string name="share_link_title">Поделиться ссылкой</string>
+    <string name="share_title">Поделиться</string>
 </resources>
