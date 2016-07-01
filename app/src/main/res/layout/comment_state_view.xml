@@ -55,7 +55,7 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="4dp"
-        android:src="@drawable/ic_cloud_download_grey600_24dp"
+        android:src="@drawable/ic_pinned"
         android:layout_width="wrap_content"
         android:layout_height="16dp"/>
 
