@@ -16,6 +16,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -90,6 +93,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     private View header;
     private View footer;
     private DialogFragment unauthorizedDialog;
+    private Intent shareIntentWithChooser;
 
     public static CourseDetailFragment newInstance(Course course) {
         Bundle args = new Bundle();
@@ -204,6 +208,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course_detailed, container, false);
         ButterKnife.bind(this, v);
+        setHasOptionsMenu(true);
         return v;
     }
 
@@ -339,6 +344,10 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
         resolveJoinView();
         fetchInstructors();
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.invalidateOptionsMenu();
+        }
     }
 
     private void resolveJoinView() {
@@ -644,10 +653,39 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
 
     @Subscribe
-    public void onSuccessDrop(final SuccessDropCourseEvent e){
-        if (mCourse!=null && e.getCourse().getCourseId() == mCourse.getCourseId()){
+    public void onSuccessDrop(final SuccessDropCourseEvent e) {
+        if (mCourse != null && e.getCourse().getCourseId() == mCourse.getCourseId()) {
             mCourse.setEnrollment(0);
             resolveJoinView();
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (mCourse != null) {
+            inflater.inflate(R.menu.course_detailed_menu, menu);
+            createIntentForSharing();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_share:
+                if (shareIntentWithChooser != null) {
+                    startActivity(shareIntentWithChooser);
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void createIntentForSharing() {
+        Intent shareIntent = new Intent();
+        String uriForSharing = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getSlug())).toString();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, uriForSharing);
+        shareIntent.setType("text/plain");
+        shareIntentWithChooser = Intent.createChooser(shareIntent, "Hello, it's intent title"); // FIXME: 01.07.16 add right title
     }
 }
