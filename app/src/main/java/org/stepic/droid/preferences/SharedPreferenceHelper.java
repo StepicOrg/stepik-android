@@ -14,6 +14,7 @@ import org.joda.time.DateTimeZone;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
+import org.stepic.droid.model.comments.DiscussionOrder;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.web.AuthenticationStepicResponse;
@@ -73,26 +74,26 @@ public class SharedPreferenceHelper {
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, FIRST_TIME_LAUNCH, true);
     }
 
-    public void afterFirstTime(){
+    public void afterFirstTime() {
         put(PreferenceType.DEVICE_SPECIFIC, FIRST_TIME_LAUNCH, false);
     }
 
-    public enum CommentsOrder {
-        DISCUSSION_NEW_FIRST("discussion"),
-        DISCUSSION_MOST_LIKED("discussions_most_liked"),
-        DISCUSSION_MOST_ACTIVE("discussions_most_active"),
-        DISCUSSION_RECENT_ACTIVITY("discussions_recent_activity");
-
-        private String description;
-
-        CommentsOrder(String description) {
-            this.description = description;
-        }
-
-        private String getStoreName() {
-            return description;
-        }
-    }
+//    public enum CommentsOrder {
+//        DISCUSSION_NEW_FIRST("discussion"),
+//        DISCUSSION_MOST_LIKED("discussions_most_liked"),
+//        DISCUSSION_MOST_ACTIVE("discussions_most_active"),
+//        DISCUSSION_RECENT_ACTIVITY("discussions_recent_activity");
+//
+//        private String description;
+//
+//        CommentsOrder(String description) {
+//            this.description = description;
+//        }
+//
+//        private String getStoreName() {
+//            return description;
+//        }
+//    }
 
     public enum PreferenceType {
         LOGIN("login preference"),
@@ -111,6 +112,15 @@ public class SharedPreferenceHelper {
         private String getStoreName() {
             return description;
         }
+    }
+
+    public DiscussionOrder getDiscussionOrder() {
+        int orderId = getInt(PreferenceType.LOGIN, DISCUSSION_ORDER);
+        return DiscussionOrder.Companion.getById(orderId);
+    }
+
+    public void setDiscussionOrder(DiscussionOrder disscussionOrder){
+        put(PreferenceType.LOGIN, DISCUSSION_ORDER, disscussionOrder.getId());
     }
 
     public void setIsGcmTokenOk(boolean isGcmTokenOk) {
@@ -202,7 +212,7 @@ public class SharedPreferenceHelper {
         put(PreferenceType.TEMP, TEMP_UPDATE_LINK, link);
     }
 
-    public String getTempLink () {
+    public String getTempLink() {
         return getString(PreferenceType.TEMP, TEMP_UPDATE_LINK);
     }
 
@@ -350,4 +360,5 @@ public class SharedPreferenceHelper {
     private final String NOTIFICATION_VIBRATION_DISABLED = "not_vibrat_disabled";
     private final String SD_CHOSEN = "sd_chosen";
     private final String FIRST_TIME_LAUNCH = "first_time_launch";
+    private final String DISCUSSION_ORDER = "discussion_order";
 }
