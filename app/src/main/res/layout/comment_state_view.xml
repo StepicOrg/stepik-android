@@ -1,15 +1,18 @@
-
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<LinearLayout
     android:paddingBottom="8dp"
     android:paddingTop="8dp"
-    android:paddingRight="8dp">
+    android:paddingRight="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <TextView
-        android:layout_centerVertical="true"
+
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:paddingRight="4dp"
@@ -21,6 +24,7 @@
     <LinearLayout
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/comment_time_tv"
+        android:layout_toLeftOf="@+id/pinned_indicator"
         android:layout_marginLeft="4dp"
         android:layout_marginEnd="4dp"
         android:layout_marginStart="4dp"
@@ -44,23 +48,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="4dp"
-        tools:text="300000"
+        tools:text="131"
         />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/user_role"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_toLeftOf="@+id/pinned_indicator"
-        android:layout_toRightOf="@id/like_root"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
-        android:layout_centerVertical="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Stepic.org team"
-        />
 
     <ImageView
         android:id="@+id/pinned_indicator"
@@ -75,3 +65,16 @@
 
 
 </RelativeLayout>
+
+
+<TextView
+
+android:id="@+id/user_role"
+android:layout_marginRight="4dp"
+android:paddingTop="4dp"
+android:paddingBottom="4dp"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+tools:text="Stepic.org team"
+    />
+</LinearLayout>
