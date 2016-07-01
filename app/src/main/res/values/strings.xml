@@ -192,6 +192,6 @@
     <string name="fail_delete_comment">Sorry, you cannot delete this comment</string>
     <string name="share_title">Share</string>
     <string name="course">Course</string>
-    <string name="stuff_label">Stepic.org Team</string>
+    <string name="staff_label">Stepic.org Team</string>
     <string name="teacher_label">Course Staff</string>
 </resources>
