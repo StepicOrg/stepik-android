@@ -16,8 +16,6 @@ import org.stepic.droid.util.HtmlHelper;
 public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     private final static String assetUrl = "file:///android_asset/";
     TextView textView;
-
-
     LatexSupportableWebView webView;
 
     @ColorInt
