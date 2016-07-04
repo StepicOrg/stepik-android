@@ -112,7 +112,7 @@
     <string name="feedback_subject">Feedback about the Android app of Stepic.org</string>
     <string name="feedback_sent">Feedback is sent</string>
     <string name="feedback_fail">Sorry, service is not available. Try later</string>
-    <string name="feedback_internet_problem">Sorry, internet is not available. Try again later</string>
+    <string name="internet_problem">Sorry, internet is not available. Try again later</string>
     <string name="feedback_fill_fields">Fill empty fields</string>
     <string name="video_time_delimiter" translatable="false">/</string>
     <string name="x0_5" translatable="false">x0.5</string>
@@ -156,10 +156,11 @@
     </plurals>
 
     <plurals name="open_comments">
-        <item quantity="one">Open comments (%d)</item>
-        <item quantity="other">Open comments (%d)</item>
+        <item quantity="one">Open %d comment</item>
+        <item quantity="other">Open %d comments</item>
     </plurals>
 
+    <string name="open_comments_zero">No comments. Add your comment</string>
     <string name="comment_sent">Comment is sent successfully</string>
     <string name="comment_denied">Comments are not available for this lesson</string>
     <string name="reply_title">Reply</string>
@@ -182,4 +183,11 @@
     <string name="report_label">Report</string>
     <string name="done">Done</string>
     <string name="moving">Moving</string>
+    <string name="go_to_learn">Continue</string>
+    <string name="fail_to_parse">Sorry, course is not found. Tap to find other courses!</string>
+    <string name="authorization">Authorization</string>
+    <string name="unauthorization_detail">To continue, you should be authorized. Do you want to do this now?</string>
+    <string name="delete_label">Delete</string>
+    <string name="delete_comment_detail">Delete this comment?</string>
+    <string name="fail_delete_comment">Sorry, you cannot delete this comment</string>
 </resources>

@@ -1,10 +1,13 @@
 package org.stepic.droid.util;
 
 
+import org.jetbrains.annotations.Nullable;
+
 public class AppConstants {
 
     public static final String USER_LOG_IN = "user_login_clicked";
     public static final String KEY_COURSE_BUNDLE = "course";
+    public static final String KEY_COURSE_LONG_ID = "course_id_key";
     public static final String KEY_SECTION_BUNDLE = "section";
     public static final String KEY_UNIT_BUNDLE = "unit";
     public static final String KEY_LESSON_BUNDLE = "lesson";
@@ -13,6 +16,9 @@ public class AppConstants {
     public static final String KEY_LOAD_TYPE = "KEY_LOAD_TYPE";
     public static final String KEY_TABLE_TYPE = "table_type";
     public static final String COMMENT_DATE_TIME_PATTERN = "dd.MM.yyyy HH:mm";
+
+
+    public static final String WEB_URI_SEPARATOR = "/";
 
 
     //Types of steps:
@@ -34,6 +40,7 @@ public class AppConstants {
     public static final String TYPE_PYCHARM = "pycharm";
     public static final String TYPE_CODE = "code";
     public static final String TYPE_ADMIN = "admin";
+    public static final String TYPE_SQL = "sql";
 
     //App Metrica:
     public static final String METRICA_CLICK_SIGN_IN = "click sign in on launch screen";
@@ -93,4 +100,11 @@ public class AppConstants {
     public static final java.lang.String METRICA_CANCEL_CHOOSE_STORE_CLICK = "storage: cancel choice";
     public static final java.lang.String TRANSFER_DATA = "storage: transfer data";
     public static final String FAIL_TO_MOVE = "storage: fail to move";
+    public static final String ERROR_PARSING_SLUG = "error parsing slug";
+    public static final java.lang.String COURSE_USER_TRY_FAIL = "course: user open failed for him course";
+    public static final java.lang.String AUTH_FROM_DIALOG = "Auth: yes from auth dialog";
+    public static final String ABOUT_NAME_INJECTION_COURSE_FINDER = "about";
+    public static final String SECTION_NAMED_INJECTION_COURSE_FINDER = "section";
+    public static final String DELETE_COMMENT_CONFIRMATION = "comment: delete comment confirmed";
+    public static final String DELETE_COMMENT_TRIAL = "comment: delete comment trial";
 }

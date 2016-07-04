@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="top">
-    <org.stepic.droid.view.custom.LatexSupportableWebView
-        android:layout_margin="16dp"
-        android:id="@+id/text_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:scrollbarStyle="outsideOverlay"
-        android:visibility="gone" />
-</FrameLayout>
+<org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout android:id="@+id/text_header_enhanced"
+                                                                  xmlns:android="http://schemas.android.com/apk/res/android"
+                                                                  android:layout_width="match_parent"
+                                                                  android:layout_height="wrap_content"
+                                                                  android:layout_gravity="top"
+                                                                  android:layout_margin="16dp"
+                                                                  android:visibility="gone">
+</org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout>

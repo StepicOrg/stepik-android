@@ -15,7 +15,6 @@
             android:orientation="vertical">
 
             <include
-                android:id="@+id/header"
                 layout="@layout/step_text_header"/>
 
 

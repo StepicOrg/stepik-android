@@ -18,7 +18,7 @@ import com.yandex.metrica.YandexMetrica;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.base.StepBaseFragment;
-import org.stepic.droid.events.comments.NewCommentWasAdded;
+import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.events.video.VideoLoadedEvent;
 import org.stepic.droid.events.video.VideoResolvedEvent;
@@ -58,7 +58,7 @@ public class VideoStepFragment extends StepBaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //// FIXME: 16.10.15 assert not null step, block, video
-        headerWv.setVisibility(View.GONE);
+        headerWvEnhanced.setVisibility(View.GONE);
 
         String thumbnail = "";
         if (step.getBlock() != null && step.getBlock().getVideo() != null && step.getBlock().getVideo().getThumbnail() != null) {
@@ -169,7 +169,7 @@ public class VideoStepFragment extends StepBaseFragment {
     }
 
     @Subscribe
-    public void onNewCommentWasAdded(NewCommentWasAdded event) {
+    public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
         super.onNewCommentWasAdded(event);
 
     }

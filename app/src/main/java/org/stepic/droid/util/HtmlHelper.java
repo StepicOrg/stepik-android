@@ -2,14 +2,14 @@ package org.stepic.droid.util;
 
 import android.text.Html;
 
-import net.htmlparser.jericho.Element;
-import net.htmlparser.jericho.Source;
+import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.stepic.droid.notifications.model.Notification;
-
-import java.util.List;
 
 public class HtmlHelper {
 
@@ -17,11 +17,20 @@ public class HtmlHelper {
     public static CharSequence fromHtml(@Nullable String content) {
         if (content == null)
             return Html.fromHtml("");
+        String newContent = content.replace("\n", "<br>");
 
-        return Html.fromHtml(content);
+        return Html.fromHtml(newContent);
     }
 
-    /** Trims trailing whitespace. Removes any of these characters:
+    @NotNull
+    public static String getHtmlWhiteSpaces(String content){
+        if (content == null) return "";
+        String newContent = content.replace("\n", "<br>");
+        return newContent;
+    }
+
+    /**
+     * Trims trailing whitespace. Removes any of these characters:
      * 0009, HORIZONTAL TABULATION
      * 000A, LINE FEED
      * 000B, VERTICAL TABULATION
@@ -31,26 +40,28 @@ public class HtmlHelper {
      * 001D, GROUP SEPARATOR
      * 001E, RECORD SEPARATOR
      * 001F, UNIT SEPARATOR
+     *
      * @return "" if source is null, otherwise string with all trailing whitespace removed
      */
     public static CharSequence trimTrailingWhitespace(CharSequence source) {
 
-        if(source == null)
+        if (source == null)
             return "";
 
         int i = source.length();
 
         // loop back to the first non-whitespace character
-        while(--i >= 0 && Character.isWhitespace(source.charAt(i))) {
+        while (--i >= 0 && Character.isWhitespace(source.charAt(i))) {
         }
 
-        return source.subSequence(0, i+1);
+        return source.subSequence(0, i + 1);
     }
 
     public static boolean isForWebView(@NotNull String text) {
         boolean isContainsPicture = text.contains("<img");
         boolean isContainsLatex = text.contains("$");
-        return isContainsLatex || isContainsPicture;
+        boolean isContainsCode = text.contains("<pre><code>");
+        return isContainsLatex || isContainsPicture || isContainsCode;
     }
 
     /**
@@ -62,17 +73,13 @@ public class HtmlHelper {
      */
     @Nullable
     public static String getValueOfMetaOrNull(String htmlText, String metaKey) {
-        Source source = new Source(htmlText);
-        String strData = "";
-        List<Element> elements = source.getAllElements("meta");
-
-        for (Element element : elements) {
-            final String id = element.getAttributeValue("name"); // Get Attribute 'id'
-            if (id != null && id.equals(metaKey)) {
-                strData = element.getAttributeValue("content");
-            }
+        Document document = Jsoup.parse(htmlText);
+        Elements elements = document.select("meta");
+        try {
+            return elements.attr("name", metaKey).last().attr("content"); //WTF? first is csrf param, but jsoup can't handle
+        } catch (Exception ex) {
+            return "";
         }
-        return strData;
     }
 
     @Nullable
@@ -80,6 +87,33 @@ public class HtmlHelper {
         String htmlRaw = notification.getHtmlText();
         if (htmlRaw == null) return null;
         return parseCourseIdFromNotification(htmlRaw);
+    }
+
+    @Nullable
+    public static Long parseIdFromSlug(String slug) {
+        Long id = null;
+        try {
+            id = Long.parseLong(slug);
+        } catch (NumberFormatException ignored) {
+            //often it is not number then it is "Some-Name-idNum" or just "-idNum"
+        }
+
+        if (id != null) {
+            //if, for example, -432 -> 432
+            return Math.abs(id);
+        }
+
+        int indexOfLastDash = slug.lastIndexOf("-");
+        if (indexOfLastDash < 0)
+            return null;
+
+        try {
+            String number = slug.substring(indexOfLastDash + 1, slug.length());
+            id = Long.parseLong(number);
+        } catch (NumberFormatException | IndexOutOfBoundsException notCorrectSlug) {
+            YandexMetrica.reportError(AppConstants.ERROR_PARSING_SLUG, notCorrectSlug);
+        }
+        return id;
     }
 
     private static Long parseCourseIdFromNotification(String htmlRaw) {
@@ -135,12 +169,16 @@ public class HtmlHelper {
             + "\nh3{font-size: 14pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
             + "\nimg { max-width: 100%%; }"
             + "\np{margin: 0px; padding: 0px; display: inline;}"
-            + "<meta name=\"viewport\" content=\"width=" +
+            + "</style>\n" +
+
+            "<meta name=\"viewport\" content=\"width=" +
 
             "%d" +
 
-            ", user-scalable=no\" />" +
-            "</style>\n" +
+            ", user-scalable=no" +
+            ", target-densitydpi=medium-dpi" +
+            "\" />" +
+
             "</head>\n"
             + "<body style='margin:0;padding:0;'>";
 

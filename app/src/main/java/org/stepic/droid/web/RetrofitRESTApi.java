@@ -605,6 +605,11 @@ public class RetrofitRESTApi implements IApi {
         return mLoggedService.postVote(voteId, request);
     }
 
+    @Override
+    public Call<CommentsResponse> deleteComment(long commentId) {
+        return mLoggedService.deleteComment(commentId);
+    }
+
     @Nullable
     private Response getZendeskResponse() throws IOException {
         OkHttpClient client = new OkHttpClient();

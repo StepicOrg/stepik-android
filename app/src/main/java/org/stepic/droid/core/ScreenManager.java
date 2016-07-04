@@ -105,22 +105,25 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showCourseDescription(Fragment sourceFragment, @NotNull Course course) {
-        YandexMetrica.reportEvent("Screen manager: show course description");
-        Intent intent = new Intent(sourceFragment.getActivity(), CourseDetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
-        intent.putExtras(bundle);
+        Intent intent = getIntentForDescription(sourceFragment.getActivity(), course);
         sourceFragment.startActivityForResult(intent, AppConstants.REQUEST_CODE_DETAIL);
     }
 
     @Override
     public void showCourseDescription(Activity sourceActivity, @NotNull Course course) {
+        Intent intent = getIntentForDescription(sourceActivity, course);
+        sourceActivity.startActivity(intent);
+    }
+
+    private Intent getIntentForDescription(Activity sourceActivity, @NotNull Course course){
         YandexMetrica.reportEvent("Screen manager: show course description");
         Intent intent = new Intent(sourceActivity, CourseDetailActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
         intent.putExtras(bundle);
-        sourceActivity.startActivity(intent);
+        return intent;
     }
 
     @Override
@@ -147,10 +150,20 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showDownload(Context context) {
+        int index = MainFeedActivity.getDownloadFragmentIndex();
+        showFromMainActivity(context, index);
+    }
+
+    @Override
+    public void showFindCourses(Context context){
+        int index = MainFeedActivity.getFindLessonIndex();
+        showFromMainActivity(context, index);
+    }
+
+    private void showFromMainActivity(Context context, int index){
         Intent intent = new Intent(context, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Bundle bundle = new Bundle();
-        int index = MainFeedActivity.getDownloadFragmentIndex();
         bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
         intent.putExtras(bundle);
         context.startActivity(intent);
@@ -238,6 +251,8 @@ public class ScreenManager implements IScreenManager {
     public void showSections(Context sourceActivity, @NotNull Course course) {
         YandexMetrica.reportEvent("Screen manager: show section", JsonHelper.toJson(course));
         Intent intent = new Intent(sourceActivity, SectionActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
         intent.putExtras(bundle);

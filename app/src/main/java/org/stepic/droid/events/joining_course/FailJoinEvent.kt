@@ -1,5 +1,3 @@
 package org.stepic.droid.events.joining_course
 
-import retrofit.Response
-
-class FailJoinEvent(val response: Response<Void>? = null)
+data class FailJoinEvent(val code : Int = 0)

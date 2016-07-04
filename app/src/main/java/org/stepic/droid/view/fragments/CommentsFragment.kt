@@ -3,13 +3,14 @@ package org.stepic.droid.view.fragments
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.*
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -23,10 +24,11 @@ import org.stepic.droid.events.comments.*
 import org.stepic.droid.model.comments.Comment
 import org.stepic.droid.model.comments.Vote
 import org.stepic.droid.model.comments.VoteValue
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.setTextColor
 import org.stepic.droid.view.adapters.CommentsAdapter
+import org.stepic.droid.view.dialogs.DeleteCommentDialogFragment
 import org.stepic.droid.view.util.ContextMenuRecyclerView
 import org.stepic.droid.web.DiscussionProxyResponse
 import org.stepic.droid.web.VoteResponse
@@ -47,6 +49,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         private val unLikeMenuId = 102
         private val reportMenuId = 103
         private val cancelMenuId = 104
+        private val deleteMenuId = 105
 
 
         fun newInstance(discussionId: String, stepId: Long): Fragment {
@@ -75,7 +78,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     var floatingActionButton: FloatingActionButton? = null
     lateinit var emptyStateView: View
     lateinit var errorView: View
-    var needInsertLate: Comment? = null
+    var needInsertOtUpdateLate: Comment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -149,6 +152,12 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                 }
                 menu?.add(Menu.NONE, reportMenuId, Menu.NONE, R.string.report_label)
             }
+            if (comment.actions?.delete ?: false) {
+                val deleteText = getString(R.string.delete_label)
+                val spannableString = SpannableString(deleteText);
+                spannableString.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.feedback_bad_color)), 0, spannableString.length, 0)
+                menu?.add(Menu.NONE, deleteMenuId, Menu.NONE, spannableString)
+            }
         } else {
             //todo: Cancel only for anonymous?
             menu?.add(Menu.NONE, cancelMenuId, Menu.NONE, R.string.cancel)
@@ -179,8 +188,26 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                 return true
             }
 
+            deleteMenuId -> {
+                deleteComment(info.position)
+                return true
+            }
+
             else -> return super.onContextItemSelected(item)
         }
+    }
+
+    private fun deleteComment(position: Int) {
+        YandexMetrica.reportEvent(AppConstants.DELETE_COMMENT_TRIAL)
+        val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
+        val commentId = comment?.id
+        commentId?.let {
+            val dialog = DeleteCommentDialogFragment.Companion.newInstance(it)
+            if (!dialog.isAdded) {
+                dialog.show(fragmentManager, null)
+            }
+        }
+
     }
 
     private fun replyToComment(position: Int) {
@@ -236,7 +263,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     @Subscribe
     fun onLikeCommentFail(event: LikeCommentFailEvent) {
-        Toast.makeText(context, R.string.feedback_internet_problem, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, R.string.internet_problem, Toast.LENGTH_SHORT).show()
     }
 
     @Subscribe
@@ -296,7 +323,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                     if (discussionProxy != null && discussionProxy.discussions.isNotEmpty()) {
                         bus.post(DiscussionProxyLoadedSuccessfullyEvent(discussionProxy))
                     } else {
-                        bus.post(EmptyCommentsInDiscussionProxyEvent(id))
+                        bus.post(EmptyCommentsInDiscussionProxyEvent(id, discussionProxy))
                     }
                 } else {
                     bus.post(InternetConnectionProblemInCommentsEvent(discussionId))
@@ -312,22 +339,27 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     @Subscribe
     fun onInternetConnectionProblem(event: InternetConnectionProblemInCommentsEvent) {
-        if (event.discussionProxyId == discussionId) {
+        if (event.discussionProxyId.isNullOrBlank() || event.discussionProxyId == discussionId) {
             cancelSwipeRefresh()
             if (commentManager.isEmpty()) {
                 showInternetConnectionProblem()
             } else {
                 Toast.makeText(context, R.string.connectionProblems, Toast.LENGTH_SHORT).show()
+                commentManager.clearAllLoadings()
+                commentAdapter.notifyDataSetChanged()
             }
         }
     }
 
     @Subscribe
     fun onEmptyComments(event: EmptyCommentsInDiscussionProxyEvent) {
-        if (event.discussionProxyId == discussionId && commentManager.isEmpty()) {
-            cancelSwipeRefresh()
-            showEmptyState()
+        cancelSwipeRefresh()
+        if (event.discussionProxyId != discussionId) return;
+        if (!commentManager.isEmpty()) {
+            commentManager.resetAll(event.discussionProxy)
+            commentAdapter.notifyDataSetChanged()
         }
+        showEmptyState()
     }
 
     @Subscribe
@@ -345,22 +377,26 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         if (!commentManager.isEmpty()) {
             showEmptyState(false)
         }
-        val needInsertLocal = needInsertLate
+        val needInsertLocal : Comment?= needInsertOtUpdateLate
         if (needInsertLocal != null && (!commentManager.isCommentCached(needInsertLocal.id) || (needInsertLocal.parent != null && !commentManager.isCommentCached(needInsertLocal.parent)))) {
             val longArr = listOf(needInsertLocal.id, needInsertLocal.parent).filterNotNull().toLongArray()
             commentManager.loadCommentsByIds(longArr)
         } else {
-            needInsertLate = null
+            //we have only our comment.
+            if (needInsertLocal != null) {
+                commentManager.updateOnlyCommentsIfCachedSilent(listOf(needInsertLocal))
+            }
+            needInsertOtUpdateLate = null
             commentAdapter.notifyDataSetChanged()
         }
     }
 
     @Subscribe
-    fun onNeedUpdate(needUpdateEvent: NewCommentWasAdded) {
+    fun onNeedUpdate(needUpdateEvent: NewCommentWasAddedOrUpdateEvent) {
         if (needUpdateEvent.targetId == stepId) {
-            if (needUpdateEvent.newCommentInsert != null) {
+            if (needUpdateEvent.newCommentInsertOrUpdate != null) {
                 //share for updating:
-                needInsertLate = needUpdateEvent.newCommentInsert
+                needInsertOtUpdateLate = needUpdateEvent.newCommentInsertOrUpdate
             }
             //without animation.
             onRefresh() // it can be dangerous, when 10 or more comments was submit by another users.
@@ -421,6 +457,11 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun cancelSwipeRefresh() {
         ProgressHelper.dismiss(swipeRefreshLayout)
+    }
+
+    @Subscribe
+    fun onFailDeleteComment(event: FailDeleteCommentEvent) {
+        Toast.makeText(context, R.string.fail_delete_comment, Toast.LENGTH_SHORT).show()
     }
 
 }

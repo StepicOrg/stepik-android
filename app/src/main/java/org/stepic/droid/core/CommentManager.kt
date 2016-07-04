@@ -78,6 +78,82 @@ class CommentManager {
         }
     }
 
+    private fun addComments(stepicResponse: CommentsResponse, fromReply: Boolean = false) {
+        updateOnlyCommentsIfCachedSilent(stepicResponse.comments)
+        stepicResponse.users
+                ?.forEach {
+                    if (it.id !in userSetMap) {
+                        userSetMap.put(it.id, it)
+                    }
+                }
+        stepicResponse.votes?.forEach {
+            //updating info
+            voteMap.put(it.id, it)
+        }
+        //commentIdIsLoading = commentIdIsLoading.filterNot { cachedCommentsSetMap.containsKey(it) }.toHashSet()
+        if (fromReply) {
+            repliesIdIsLoading.clear()
+        } else {
+            commentIdIsLoading.clear()
+        }
+        bus.post(CommentsLoadedSuccessfullyEvent()) // notify UI
+    }
+
+    fun updateOnlyCommentsIfCachedSilent(comments: List<Comment>?) {
+        comments
+                ?.forEach {
+                    if (it.id != null) {
+                        val previousValue: Comment? = cachedCommentsSetMap.put(it.id, it)
+                        val parentId: Long? = it.parent
+                        if (parentId != null && (previousValue == null)) {
+                            //first time
+                            var numberOfCachedBefore: Int = parentCommentToSumOfCachedReplies[parentId] ?: 0
+                            numberOfCachedBefore++
+                            parentCommentToSumOfCachedReplies[parentId] = numberOfCachedBefore
+                        }
+                    }
+                }
+        sumOfCachedParent = cachedCommentsSetMap.filter { it.value.parent == null }.size
+        if (sumOfCachedParent > discussionProxy?.discussions?.size ?: 0) {
+            sumOfCachedParent = discussionProxy?.discussions?.size!!
+        }
+        cachedCommentsList.clear()
+        var i = 0
+        var j = 0
+        while (i < sumOfCachedParent) {
+            val parentCommentId = discussionProxy?.discussions?.get(j)
+            j++
+
+            val parentComment = cachedCommentsSetMap[parentCommentId] ?: break
+            cachedCommentsList.add(parentComment)
+            i++
+            if (parentCommentId != null && parentComment.replies != null && !parentComment.replies.isEmpty()) {
+                var childIndex = 0
+                if (parentCommentToSumOfCachedReplies[parentComment.id] ?: 0 > parentComment.reply_count ?: 0) {
+                    parentCommentToSumOfCachedReplies.put(parentComment.id!!, parentComment.reply_count!!) //if we remove some reply
+                }
+                val cachedRepliesNumber = parentCommentToSumOfCachedReplies.get(parentComment.id) ?: 0
+
+                while (childIndex < cachedRepliesNumber/* && childIndex < parentComment.reply_count?:-1*/) {
+                    val childComment: Comment? = cachedCommentsSetMap [parentComment.replies[childIndex]]
+                    if (childComment != null) {
+                        replyToPositionInParentMap.put(childComment.id!!, childIndex)
+                        cachedCommentsList.add(childComment)
+                        childIndex++
+                    } else {
+                        //reply childIndex not found
+                        parentCommentToSumOfCachedReplies[parentCommentId] = childIndex
+                        for (indexForDelete in childIndex..parentComment.replies.size-1) {
+                            cachedCommentsSetMap.remove(parentComment.replies[indexForDelete])
+                        }
+                        break
+                    }
+                }
+            }
+        }
+
+    }
+
     fun loadCommentsByIds(idsForLoading: LongArray, fromReply: Boolean = false) {
         api.getCommentsByIds(idsForLoading).enqueue(object : Callback<CommentsResponse> {
             override fun onResponse(response: Response<CommentsResponse>?, retrofit: Retrofit?) {
@@ -85,60 +161,7 @@ class CommentManager {
                 if (response != null && response.isSuccess) {
                     val stepicResponse = response.body()
                     if (stepicResponse != null) {
-                        stepicResponse.comments
-                                ?.forEach {
-                                    if (it.id != null) {
-                                        val previousValue: Comment? = cachedCommentsSetMap.put(it.id, it)
-                                        val parentId: Long? = it.parent
-                                        if (parentId != null && previousValue == null) {
-                                            //first time
-                                            var numberOfCachedBefore: Int = parentCommentToSumOfCachedReplies[parentId] ?: 0
-                                            numberOfCachedBefore++
-                                            parentCommentToSumOfCachedReplies[parentId] = numberOfCachedBefore
-                                        }
-                                    }
-                                }
-                        sumOfCachedParent = cachedCommentsSetMap.filter { it.value.parent == null }.size
-
-                        cachedCommentsList.clear()
-                        var i = 0
-                        var j = 0
-                        while (i < sumOfCachedParent) {
-                            val parentCommentId = discussionProxy?.discussions?.get(j)
-                            j++
-
-                            val parentComment = cachedCommentsSetMap[parentCommentId] ?: break
-                            cachedCommentsList.add(parentComment)
-                            i++
-                            if (parentComment.replies != null && !parentComment.replies.isEmpty()) {
-                                var childIndex = 0
-                                val cachedRepliesNumber = parentCommentToSumOfCachedReplies.get(parentComment.id) ?: 0
-                                while (childIndex < cachedRepliesNumber) {
-                                    val childComment = cachedCommentsSetMap [parentComment.replies[childIndex]] ?: break
-                                    replyToPositionInParentMap.put(childComment.id!!, childIndex)
-                                    cachedCommentsList.add(childComment)
-                                    childIndex++
-                                }
-                            }
-                        }
-
-                        stepicResponse.users
-                                ?.forEach {
-                                    if (it.id !in userSetMap) {
-                                        userSetMap.put(it.id, it)
-                                    }
-                                }
-                        stepicResponse.votes?.forEach {
-                            //updating info
-                            voteMap.put(it.id, it)
-                        }
-                        //commentIdIsLoading = commentIdIsLoading.filterNot { cachedCommentsSetMap.containsKey(it) }.toHashSet()
-                        if (fromReply) {
-                            repliesIdIsLoading.clear()
-                        } else {
-                            commentIdIsLoading.clear()
-                        }
-                        bus.post(CommentsLoadedSuccessfullyEvent()) // notify UI
+                        addComments(stepicResponse, fromReply)
                     } else {
                         bus.post(InternetConnectionProblemInCommentsEvent(discussionProxy!!.id))
                     }
@@ -244,6 +267,29 @@ class CommentManager {
 
     fun getPositionOfComment(commentId: Long): Int {
         return cachedCommentsList.indexOfFirst { it.id == commentId }
+    }
+
+    fun resetAll(dP: DiscussionProxy?) {
+        sumOfCachedParent = 0
+        discussionProxy = dP
+        parentCommentToSumOfCachedReplies.clear()
+        cachedCommentsSetMap.clear()
+        cachedCommentsList.clear()
+        userSetMap.clear()
+        replyToPositionInParentMap.clear()
+        parentIdToPositionInDiscussionMap.clear()
+        repliesIdIsLoading.clear()
+        commentIdIsLoading.clear()
+        voteMap.clear()
+    }
+
+    fun getCommentById(commentId: Long?): Comment? {
+        return cachedCommentsSetMap[commentId]
+    }
+
+    fun clearAllLoadings(){
+        commentIdIsLoading.clear()
+        repliesIdIsLoading.clear()
     }
 
 }

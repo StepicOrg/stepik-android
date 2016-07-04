@@ -18,6 +18,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
@@ -57,6 +58,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
     private List<Section> mSections;
     private Context mContext;
     private Activity mActivity;
+    private Course course;
 
     public SectionAdapter(List<Section> sections, Context mContext, Activity activity) {
         this.mSections = sections;
@@ -109,7 +111,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             holder.hardDeadline.setVisibility(View.VISIBLE);
         }
 
-        if (section.is_active()) {
+        if (section.is_active() && course.getEnrollment() > 0) {
 
             int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, MainApplication.getAppContext());
 
@@ -145,7 +147,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
 
             }
         } else {
-            //Not active section
+            //Not active section or not enrollment
 
 
             holder.mLoadButton.setVisibility(View.GONE);
@@ -229,6 +231,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
 
     public void requestClickLoad(int position) {
         onClickLoad(position);
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     public static class SectionViewHolder extends RecyclerView.ViewHolder {

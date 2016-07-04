@@ -13,9 +13,11 @@ import org.stepic.droid.concurrency.tasks.ToDbUnitLessonTask;
 import org.stepic.droid.concurrency.tasks.UpdateCourseTask;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.notifications.HackFcmListener;
+import org.stepic.droid.notifications.HackerFcmInstanceId;
 import org.stepic.droid.notifications.NotificationBroadcastReceiver;
-import org.stepic.droid.notifications.RegistrationIntentService;
-import org.stepic.droid.notifications.StepicGcmListenerService;
+import org.stepic.droid.presenters.course_finder.CourseFinderPresenterImpl;
+import org.stepic.droid.presenters.course_joiner.CourseJoinerPresenterImpl;
 import org.stepic.droid.receivers.DownloadClickReceiver;
 import org.stepic.droid.receivers.DownloadCompleteReceiver;
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver;
@@ -27,6 +29,7 @@ import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.ImageOnDisk;
+import org.stepic.droid.view.activities.SectionActivity;
 import org.stepic.droid.view.adapters.CoursePropertyAdapter;
 import org.stepic.droid.view.adapters.DownloadsAdapter;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
@@ -37,12 +40,15 @@ import org.stepic.droid.view.adapters.UnitAdapter;
 import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
 import org.stepic.droid.view.dialogs.ChooseStorageDialog;
 import org.stepic.droid.view.dialogs.ClearVideosDialog;
+import org.stepic.droid.view.dialogs.DeleteCommentDialogFragment;
 import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
+import org.stepic.droid.view.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.view.dialogs.VideoQualityDialog;
 import org.stepic.droid.view.dialogs.WantMoveDataDialog;
 import org.stepic.droid.view.fragments.CommentsFragment;
+import org.stepic.droid.view.fragments.CourseDetailFragment;
 import org.stepic.droid.web.RetrofitRESTApi;
 
 import javax.inject.Singleton;
@@ -54,6 +60,8 @@ import dagger.Component;
 public interface StepicCoreComponent {
     void inject(FragmentActivityBase someActivity);
 
+    void inject(SectionActivity someActivity);
+
     void inject(Shell injectAllToShell);
 
     void inject(MyCoursesAdapter adapter);
@@ -61,6 +69,8 @@ public interface StepicCoreComponent {
     void inject(Course adapter);
 
     void inject(FragmentBase baseFragment);
+
+    void inject(CourseDetailFragment courseDetailFragment);
 
     void inject(RetrofitRESTApi api);
 
@@ -129,9 +139,9 @@ public interface StepicCoreComponent {
 
     void inject(MyPhoneStateListener receiver);
 
-    void inject(RegistrationIntentService service);
+    void inject(HackFcmListener service);
 
-    void inject(StepicGcmListenerService listenerService);
+    void inject(HackerFcmInstanceId instanceIdService);
 
     void inject (NotificationBroadcastReceiver receiver);
 
@@ -150,4 +160,12 @@ public interface StepicCoreComponent {
     void inject(ChooseStorageDialog chooseStorageDialog);
 
     void inject(WantMoveDataDialog wantMoveDataDialog);
+
+    void inject(UnauthorizedDialogFragment unauthorizedDialogFragment);
+
+    void inject(CourseFinderPresenterImpl courseFinderPresenter);
+
+    void inject(CourseJoinerPresenterImpl courseJoinerPresenter);
+
+    void inject(DeleteCommentDialogFragment dialogFragment);
 }

@@ -88,7 +88,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
 
     public void getAndShowDataFromCache() {
-        mDbFromCoursesTask = new FromDbCoursesTask(getCourseType()){
+        mDbFromCoursesTask = new FromDbCoursesTask(getCourseType()) {
             @Override
             protected void onSuccess(List<Course> courses) {
                 super.onSuccess(courses);
@@ -101,12 +101,11 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     @Subscribe
     public void onPreLoad(PreLoadCoursesEvent e) {
         isLoading = true;
-        if (mCurrentPage == 1) {
-            mFooterDownloadingView.setVisibility(View.GONE);
-        } else {
+        if (mCourses.isEmpty()) {
+            ProgressHelper.activate(mSwipeRefreshLayout);
+        } else if (mSwipeRefreshLayout != null && !mSwipeRefreshLayout.isRefreshing()) {
             mFooterDownloadingView.setVisibility(View.VISIBLE);
         }
-        ProgressHelper.activate(mSwipeRefreshLayout);
     }
 
     @Subscribe
@@ -142,7 +141,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Subscribe
     public void onStartingSaveToDb(StartingSaveCoursesToDbEvent e) {
-        ProgressHelper.activate(mSwipeRefreshLayout);
+//        ProgressHelper.activate(mSwipeRefreshLayout);
     }
 
     @Subscribe
@@ -153,7 +152,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Subscribe
     public void onStartingGetFromDb(StartingGetCoursesFromDbEvent e) {
-        ProgressHelper.activate(mSwipeRefreshLayout);
+//        ProgressHelper.activate(mSwipeRefreshLayout);
     }
 
     @Subscribe
@@ -249,7 +248,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         }
         Call<Void> drop = mShell.getApi().dropCourse(course.getCourseId());
         if (drop != null) {
-           drop.enqueue(new Callback<Void>() {
+            drop.enqueue(new Callback<Void>() {
                 Course localRef = course;
 
                 @Override
@@ -276,8 +275,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                     bus.post(new FailDropCourseEvent(getCourseType(), localRef));
                 }
             });
-        }
-        else{
+        } else {
             Toast.makeText(MainApplication.getAppContext(), R.string.cant_drop, Toast.LENGTH_SHORT).show();
         }
     }
@@ -299,7 +297,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     @Subscribe
     public void onFailDrop(FailDropCourseEvent e) {
         YandexMetrica.reportEvent(AppConstants.METRICA_DROP_COURSE + " fail", JsonHelper.toJson(e.getCourse()));
-        Toast.makeText(getContext(), R.string.try_in_web_drop, Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), R.string.internet_problem, Toast.LENGTH_LONG).show();
     }
 
     private void showInfo(int position) {

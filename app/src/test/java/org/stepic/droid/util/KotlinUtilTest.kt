@@ -3,6 +3,7 @@ package org.stepic.droid.util
 
 import org.junit.Assert
 import org.junit.Test
+import org.junit.Assert.*
 
 class KotlinUtilTest {
 

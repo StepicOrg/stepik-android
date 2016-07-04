@@ -9,7 +9,9 @@
 
     <TextView
         android:layout_gravity="center_vertical"
-        android:padding="4dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingRight="4dp"
         android:id="@+id/comment_time_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

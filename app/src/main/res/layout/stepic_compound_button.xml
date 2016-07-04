@@ -31,7 +31,7 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
-        <org.stepic.droid.view.custom.LatexSupportableWebView
+        <org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout
             android:id="@+id/text_compound_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,9 +41,7 @@
             android:layout_marginStart="@dimen/padding_left_right_list_item"
             android:layout_toRightOf="@id/image_compound_button"
             android:layout_marginTop="@dimen/margin_option_top_bot"
-            android:layout_marginBottom="@dimen/margin_option_top_bot"
-            tools:text="The first option" />
-
+            android:layout_marginBottom="@dimen/margin_option_top_bot"/>
 
     </RelativeLayout>
 

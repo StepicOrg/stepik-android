@@ -1,6 +1,15 @@
 package org.stepic.droid.util;
 
+import android.net.Uri;
+
+import com.facebook.common.util.UriUtil;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+
+import org.stepic.droid.R;
+import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.CachedVideo;
+import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Unit;
 
 import java.util.List;
@@ -28,4 +37,26 @@ public class StepicLogicHelper {
         return stepIds;
     }
 
+
+    public static DraweeController getControllerForCourse(Course course, IConfig mConfig){
+        if (course.getCover() != null) {
+            DraweeController controller = Fresco.newDraweeControllerBuilder()
+                    .setUri(mConfig.getBaseUrl() + course.getCover())
+                    .setAutoPlayAnimations(true)
+                    .build();
+            return controller;
+        } else {
+            //for empty cover:
+            Uri uri = new Uri.Builder()
+                    .scheme(UriUtil.LOCAL_RESOURCE_SCHEME) // "res"
+                    .path(String.valueOf(R.drawable.ic_course_placeholder))
+                    .build();
+
+            DraweeController controller = Fresco.newDraweeControllerBuilder()
+                    .setUri(uri)
+                    .setAutoPlayAnimations(true)
+                    .build();
+            return controller;
+        }
+    }
 }

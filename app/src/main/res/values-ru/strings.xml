@@ -109,7 +109,7 @@
     <string name="feedback_subject">Отзыв об Android приложении Stepic.org</string>
     <string name="feedback_sent">Сообщение отправлено</string>
     <string name="feedback_fail">Упс… что-то пошло не так. Попробуйте позже</string>
-    <string name="feedback_internet_problem">Интернет недоступен. Попробуйте позже</string>
+    <string name="internet_problem">Интернет недоступен. Попробуйте позже</string>
     <string name="feedback_fill_fields">Заполните пустые поля</string>
     <string name="cant_drop">Вы не можете покинуть курс</string>
     <string name="open_in_external_player">Открывать в системном плеере</string>
@@ -125,11 +125,12 @@
     </plurals>
 
     <plurals name="open_comments">
-        <item quantity="one">Открыть комментарии (%d)</item>
-        <item quantity="few">Открыть комментарии (%d)</item>
-        <item quantity="many">Открыть комментарии (%d)</item>
-        <item quantity="other">Открыть комментарии (%d)</item>
+        <item quantity="one">Открыть %d комментарий</item>
+        <item quantity="few">Открыть %d комментария</item>
+        <item quantity="many">Открыть %d комментариев</item>
+        <item quantity="other">Открыть %d комментариев</item>
     </plurals>
+    <string name="open_comments_zero">Нет комментариев. Оставьте первый.</string>
     <string name="empty_try_later">Сейчас здесь пусто, попробуйте позже.</string>
     <string name="sound_title">Звук</string>
     <string name="update_available_title">Доступна новая версия приложения</string>
@@ -174,4 +175,11 @@
     <string name="report_label">Пожаловаться</string>
     <string name="done">Готово</string>
     <string name="moving">Перенос</string>
+    <string name="go_to_learn">Продолжить</string>
+    <string name="fail_to_parse">К сожалению, курс не найден. Нажмите, чтобы найти другие курсы!</string>
+    <string name="authorization">Авторизация</string>
+    <string name="unauthorization_detail">Для того, чтобы продолжить, необходимо войти или зарегестрироваться. Вы хотите сделать это сейчас?</string>
+    <string name="delete_label">Удалить</string>
+    <string name="delete_comment_detail">Удалить этот комментарий</string>
+    <string name="fail_delete_comment">Извините, не удалось удалить комментарий</string>
 </resources>

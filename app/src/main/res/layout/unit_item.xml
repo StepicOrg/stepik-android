@@ -52,7 +52,8 @@
             android:ellipsize="end"
             android:paddingBottom="2dp"
             android:paddingTop="2dp"
-            android:textSize="16sp"
+            android:paddingRight="8dp"
+            android:textSize="@dimen/text_header"
             tools:text="1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit1.2 Super unit"/>
 
         <RelativeLayout

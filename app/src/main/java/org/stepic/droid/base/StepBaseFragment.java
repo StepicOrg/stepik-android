@@ -8,13 +8,13 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
-import org.stepic.droid.events.comments.NewCommentWasAdded;
+import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.view.custom.LatexSupportableWebView;
+import org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.web.StepResponse;
 
 import butterknife.Bind;
@@ -24,8 +24,8 @@ import retrofit.Retrofit;
 
 public abstract class StepBaseFragment extends FragmentBase {
 
-    @Bind(R.id.text_header)
-    protected LatexSupportableWebView headerWv;
+    @Bind(R.id.text_header_enhanced)
+    protected LatexSupportableEnhancedFrameLayout headerWvEnhanced;
 
     @Bind(R.id.open_comments_root)
     protected View openCommentViewClickable;
@@ -49,10 +49,10 @@ public abstract class StepBaseFragment extends FragmentBase {
                 step.getBlock() != null &&
                 step.getBlock().getText() != null &&
                 !step.getBlock().getText().isEmpty()) {
-            headerWv.setText(step.getBlock().getText());
-            headerWv.setVisibility(View.VISIBLE);
+            headerWvEnhanced.setText(step.getBlock().getText());
+            headerWvEnhanced.setVisibility(View.VISIBLE);
         } else {
-            headerWv.setVisibility(View.GONE);
+            headerWvEnhanced.setVisibility(View.GONE);
         }
 
         updateCommentState();
@@ -73,10 +73,20 @@ public abstract class StepBaseFragment extends FragmentBase {
         openCommentViewClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int discussionCount = step.getDiscussions_count();
                 mShell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+                if (discussionCount == 0) {
+                    mShell.getScreenProvider().openNewCommentForm(getActivity(), step.getId(), null); //show new form, but in back stack comment list is exist.
+                }
             }
         });
-        textForComment.setText(MainApplication.getAppContext().getResources().getQuantityString(R.plurals.open_comments, step.getDiscussions_count(), step.getDiscussions_count()));
+
+        int discussionCount = step.getDiscussions_count();
+        if (discussionCount > 0) {
+            textForComment.setText(MainApplication.getAppContext().getResources().getQuantityString(R.plurals.open_comments, discussionCount, discussionCount));
+        } else {
+            textForComment.setText(MainApplication.getAppContext().getResources().getString(R.string.open_comments_zero));
+        }
     }
 
 
@@ -94,7 +104,7 @@ public abstract class StepBaseFragment extends FragmentBase {
     }
 
     @Subscribe
-    public void onNewCommentWasAdded(NewCommentWasAdded event) {
+    public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
         if (step != null && event.getTargetId() == step.getId()) {
             long[] arr = new long[]{step.getId()};
 
@@ -113,7 +123,7 @@ public abstract class StepBaseFragment extends FragmentBase {
                                     }
                                 });
 
-                                 //fixme: it is so bad, we should be updated from model, not here =(
+                                //fixme: it is so bad, we should be updated from model, not here =(
                                 bus.post(new StepWasUpdatedEvent(stepFromInternet));
                             }
                         }
@@ -130,9 +140,9 @@ public abstract class StepBaseFragment extends FragmentBase {
     }
 
     @Subscribe
-    public void onStepWasUpdated(StepWasUpdatedEvent event){
+    public void onStepWasUpdated(StepWasUpdatedEvent event) {
         Step eventStep = event.getStep();
-        if (eventStep.getId() == step.getId()){
+        if (eventStep.getId() == step.getId()) {
             step.setDiscussion_proxy(eventStep.getDiscussion_proxy()); //fixme do it in immutable way
             step.setDiscussions_count(eventStep.getDiscussions_count());
             updateCommentState();

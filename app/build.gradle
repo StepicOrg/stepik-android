@@ -12,8 +12,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 61
-        versionName "1.10.2"
+        versionCode 65
+        versionName "1.11.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // Enabling multidex support.
         multiDexEnabled true
@@ -49,7 +49,7 @@ android {
             enable true
             reset()
             include 'armeabi-v7a', 'mips',  'x86' //select ABIs to build APKs for
-            universalApk true //generate an additional APK that contains all the ABIs
+            universalApk false //generate an additional APK that contains all the ABIs
         }
     }
 
@@ -67,6 +67,14 @@ android {
     packagingOptions {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
+    lintOptions {
+        abortOnError false
     }
 }
 
@@ -109,7 +117,7 @@ dependencies {
     compile 'com.squareup:otto:1.3.8'
 
     // AppMetrica from maven central. Protobuf will be included as dependency.
-    compile 'com.yandex.android:mobmetricalib:2.21@aar'
+    compile 'com.yandex.android:mobmetricalib:2.41'
 
     compile 'jp.wasabeef:recyclerview-animators:2.1.0'
 
@@ -122,21 +130,13 @@ dependencies {
     // Optional -- Mockito framework
     testCompile 'org.mockito:mockito-core:1.10.19'
 
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2' // or 1.3.1
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2' // or 1.3.1
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2' // or 1.3.1
-
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
-
-    compile files('libs/commons-logging-api-1.1.1.jar')
-    compile files('libs/jericho-html-3.4.jar')
-    compile files('libs/log4j-api-2.4.1.jar')
-    compile files('libs/slf4j-api-1.7.12.jar')
 
     compile 'de.mrmaffen:vlc-android-sdk:1.9.0'
 
-    compile "com.google.android.gms:play-services-gcm:8.4.0"
+    compile 'com.google.firebase:firebase-messaging:9.0.2'
+    compile 'org.jsoup:jsoup:1.8.3'
+    compile 'com.google.android.gms:play-services-appindexing:9.0.2'
 }
 
 repositories {

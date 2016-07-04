@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     package="org.stepic.droid"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <permission
-        android:name="org.stepic.droid.permission.C2D_MESSAGE"
-        android:protectionLevel="signature"/>
-
-    <uses-permission android:name="org.stepic.droid.permission.C2D_MESSAGE"/>
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:allowBackup="false">
@@ -28,5 +23,41 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".view.activities.CourseDetailActivity">
+            <intent-filter android:autoVerify="true" tools:ignore="UnusedAttribute">
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:scheme="https"
+                    android:host="stepic.org"
+                    android:pathPattern="/course/.*/"/>
+
+                <data
+                    android:scheme="http"
+                    android:host="stepic.org"
+                    android:pathPattern="/course/.*/"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.activities.SectionActivity">
+            <intent-filter android:autoVerify="true" tools:ignore="UnusedAttribute">
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:scheme="https"
+                    android:host="stepic.org"
+                    android:pathPattern="/course/.*/syllabus.*"/>
+
+                <data
+                    android:scheme="http"
+                    android:host="stepic.org"
+                    android:pathPattern="/course/.*/syllabus.*"/>
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

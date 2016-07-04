@@ -20,8 +20,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.yandex.metrica.YandexMetrica;
@@ -31,7 +29,7 @@ import org.stepic.droid.events.profile.ProfileCanBeShownEvent;
 import org.stepic.droid.events.updating.NeedUpdateEvent;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
-import org.stepic.droid.notifications.RegistrationIntentService;
+import org.stepic.droid.notifications.StepicInstanceIdService;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.services.UpdateWithApkService;
@@ -59,7 +57,6 @@ import retrofit.Retrofit;
 public class MainFeedActivity extends BackToExitActivityBase
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String KEY_CURRENT_INDEX = "Current_index";
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
@@ -158,9 +155,13 @@ public class MainFeedActivity extends BackToExitActivityBase
 
 
         if (checkPlayServices() && !mSharedPreferenceHelper.isGcmTokenOk()) {
-            // Start IntentService to register this application with GCM.
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
+
+            mThreadPoolExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    StepicInstanceIdService.Companion.updateAnywhere(mShell.getApi(), mSharedPreferenceHelper); //FU!
+                }
+            });
         }
 
         Intent updateIntent = new Intent(this, UpdateAppService.class);
@@ -342,26 +343,10 @@ public class MainFeedActivity extends BackToExitActivityBase
         showCurrentFragment(mCurrentIndex);
     }
 
-    /**
-     * Check the device to make sure it has the Google Play Services APK. If
-     * it doesn't, display a dialog that allows users to download the APK from
-     * the Google Play Store or enable it in the device's system settings.
-     */
-    private boolean checkPlayServices() {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
-                        .show();
-            } else {
-                //Log.i(TAG, "This device is not supported.");
-                return false;
-            }
-            return false;
-        }
-        return true;
+    public static int getFindLessonIndex () {
+        return 1;
     }
+
 
     @Subscribe
     public void needUpdateCallback(NeedUpdateEvent event) {

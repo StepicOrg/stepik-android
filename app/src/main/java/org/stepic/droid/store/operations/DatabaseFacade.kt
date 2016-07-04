@@ -361,4 +361,9 @@ class DatabaseFacade {
         val sectionIds = sections.map { it?.id}.filterNotNull()
         return sectionIds.toLongArray()
     }
+
+    fun dropOnlyCourseTable(){
+        mCoursesEnrolledDao.removeAll()
+        mCoursesFeaturedDao.removeAll()
+    }
 }

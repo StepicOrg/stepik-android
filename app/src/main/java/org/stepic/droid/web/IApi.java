@@ -92,4 +92,6 @@ public interface IApi {
     Call<CommentsResponse> postComment(String text, long target /*for example, related step*/, @Nullable Long parent /*put if it is reply*/);
 
     Call<VoteResponse> makeVote(String voteId, @Nullable VoteValue voteValue);
+
+    Call<CommentsResponse> deleteComment(long commentId);
 }
