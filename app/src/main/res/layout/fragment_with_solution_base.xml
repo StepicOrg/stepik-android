@@ -87,9 +87,8 @@
                 android:layout_width="match_parent"
                 android:background="@color/black"
                 android:textColor="@color/white"
-                android:visibility="gone"
-                android:padding="16dp">
-            </org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout>
+                android:padding="16dp"
+                android:visibility="gone"/>
 
             <include
                 android:id="@+id/progress_bar"
