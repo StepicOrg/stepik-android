@@ -15,10 +15,13 @@ import org.stepic.droid.util.HtmlHelper;
 
 public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     private final static String assetUrl = "file:///android_asset/";
-
-
     TextView textView;
+
+
     LatexSupportableWebView webView;
+
+    @ColorInt
+    private final int themeDefaultTextColor;
 
     @ColorInt
     int textColor;
@@ -27,12 +30,14 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     int backgroundColor;
 
     @ColorInt
-    int defaultColor;
+    int defaultTextColor;
 
     public LatexSupportableEnhancedFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, context);
+        defaultTextColor = ColorUtil.INSTANCE.getColorArgb(R.color.black, context);
+        themeDefaultTextColor = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, context);
+
 
         int[] set = {
                 android.R.attr.textColor,
@@ -41,10 +46,12 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
 
         TypedArray ta = context.obtainStyledAttributes(attrs, set);
         try {
-            textColor = ta.getColor(0, ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, context));
+            textColor = ta.getColor(0, defaultTextColor);
+            if (textColor == themeDefaultTextColor){
+                textColor = defaultTextColor;
+            }
             //noinspection ResourceType
             backgroundColor = ta.getColor(1, ColorUtil.INSTANCE.getColorArgb(R.color.transparent, context));
-            int j = 0;
         } finally {
             ta.recycle();
         }
@@ -84,7 +91,7 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     }
 
     private String applyColoredWebView(String text) {
-        if (defaultColor != textColor) {
+        if (defaultTextColor != textColor) {
             String hexColor = String.format("#%06X", (0xFFFFFF & textColor));
             return "<br>" + "<font color='" + hexColor + "'>" + text + "</font>";
         } else {
