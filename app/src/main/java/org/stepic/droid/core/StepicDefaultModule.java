@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.squareup.otto.Bus;
 
+import org.stepic.droid.analytic.Analytic;
+import org.stepic.droid.analytic.AnalyticImpl;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.concurrency.MainHandlerImpl;
 import org.stepic.droid.configuration.ConfigRelease;
@@ -351,5 +353,11 @@ public class StepicDefaultModule {
     @Provides
     public CourseJoinerPresenter provideCourseJoiner (){
         return new CourseJoinerPresenterImpl();
+    }
+
+    @Provides
+    @Singleton
+    public Analytic provideAnalytic(Context context){
+        return new AnalyticImpl(context);
     }
 }
