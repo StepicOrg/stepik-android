@@ -105,6 +105,9 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     @BindDrawable(R.drawable.ic_error)
     protected Drawable mWrongIcon;
 
+    @Bind(R.id.hint_text_view)
+    TextView hintTextView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -320,6 +323,14 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     protected final void fillSubmission(Submission submission) {
         if (submission == null || submission.getStatus() == null) {
             return;
+        }
+
+        if (submission.getHint() != null && !submission.getHint().isEmpty()){
+            hintTextView.setText(submission.getHint());
+            hintTextView.setVisibility(View.VISIBLE);
+        }
+        else{
+            hintTextView.setVisibility(View.GONE);
         }
 
         switch (submission.getStatus()) {
