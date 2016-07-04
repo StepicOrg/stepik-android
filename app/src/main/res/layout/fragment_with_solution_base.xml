@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <ScrollView
         android:id="@+id/root_scroll_view"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbarStyle="outsideOverlay">
@@ -81,6 +80,8 @@
             </FrameLayout>
 
             <TextView
+                android:textIsSelectable="true"
+                tools:visibility="visible"
                 android:id="@+id/hint_text_view"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
@@ -88,7 +89,7 @@
                 android:textColor="@color/white"
                 tools:text="hint hint hint"
                 android:visibility="gone"
-                android:padding="8dp">
+                android:padding="16dp">
             </TextView>
 
             <include
