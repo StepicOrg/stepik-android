@@ -408,6 +408,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         createNewAttempt();
         mSubmission = null;
 
+        hintTextView.setVisibility(View.GONE);
         mResultLine.setVisibility(View.GONE);
         mActionButton.setText(mSubmitText);
     }
