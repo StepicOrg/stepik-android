@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -28,12 +27,12 @@ public class LatexSupportableWebView extends WebView {
     }
 
     private void init() {
-        setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return true;
-            }
-        });
+//        setOnLongClickListener(new OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                return true;
+//            }
+//        });
     }
 
     public void setText(CharSequence text) {
