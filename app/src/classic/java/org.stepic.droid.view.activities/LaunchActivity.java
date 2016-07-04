@@ -10,6 +10,7 @@ import android.view.View;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.util.AppConstants;
 
 import butterknife.Bind;
@@ -43,7 +44,7 @@ public class LaunchActivity extends BackToExitActivityBase {
         mSignUpButton.setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_SIGN_UP);
+                YandexMetrica.reportEvent(Analytic.METRICA_CLICK_SIGN_UP);
                 mShell.getScreenProvider().showRegistration(LaunchActivity.this);
             }
         }));
@@ -52,7 +53,7 @@ public class LaunchActivity extends BackToExitActivityBase {
 
             @Override
             public void onClick(View v) {
-                YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_SIGN_IN);
+                YandexMetrica.reportEvent(Analytic.METRICA_CLICK_SIGN_IN);
                 mShell.getScreenProvider().showLogin(LaunchActivity.this);
             }
         });

@@ -25,6 +25,7 @@ import com.squareup.picasso.Picasso;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.events.profile.ProfileCanBeShownEvent;
 import org.stepic.droid.events.updating.NeedUpdateEvent;
 import org.stepic.droid.model.EmailAddress;
@@ -221,7 +222,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     public boolean onNavigationItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.logout_item:
-                YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_LOGOUT);
+                YandexMetrica.reportEvent(Analytic.METRICA_CLICK_LOGOUT);
 
                 LogoutAreYouSureDialog dialog = LogoutAreYouSureDialog.newInstance();
                 dialog.show(getSupportFragmentManager(), null);

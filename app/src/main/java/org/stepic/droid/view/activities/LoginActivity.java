@@ -16,11 +16,11 @@ import android.widget.TextView;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.core.ActivityFinisher;
 import org.stepic.droid.core.ProgressHandler;
 import org.stepic.droid.social.SocialManager;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.SocialAuthAdapter;
@@ -123,7 +123,7 @@ public class LoginActivity extends FragmentActivityBase {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_SIGN_IN_ON_SIGN_IN_SCREEN);
+                YandexMetrica.reportEvent(Analytic.METRICA_CLICK_SIGN_IN_ON_SIGN_IN_SCREEN);
                 tryLogin();
             }
         });

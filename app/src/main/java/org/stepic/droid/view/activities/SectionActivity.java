@@ -25,6 +25,7 @@ import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.concurrency.tasks.FromDbSectionTask;
@@ -345,7 +346,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Override
     public void onRefresh() {
-        YandexMetrica.reportEvent(AppConstants.METRICA_REFRESH_SECTION);
+        YandexMetrica.reportEvent(Analytic.METRICA_REFRESH_SECTION);
         if (mCourse != null) {
             updateSections();
         } else {

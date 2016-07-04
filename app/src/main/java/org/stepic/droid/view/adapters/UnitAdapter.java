@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.core.IShell;
@@ -239,7 +240,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
             if (unit.is_cached()) {
                 //delete
-                YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_DELETE_UNIT, JsonHelper.toJson(unit));
+                YandexMetrica.reportEvent(Analytic.METRICA_CLICK_DELETE_UNIT, JsonHelper.toJson(unit));
                 mCleaner.removeUnitLesson(unit, lesson);
                 unit.set_loading(false);
                 unit.set_cached(false);
@@ -255,7 +256,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
                 } else {
 
-                    YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CACHE_UNIT, JsonHelper.toJson(unit));
+                    YandexMetrica.reportEvent(Analytic.METRICA_CLICK_CACHE_UNIT, JsonHelper.toJson(unit));
                     unit.set_cached(false);
                     lesson.set_cached(false);
                     unit.set_loading(true);

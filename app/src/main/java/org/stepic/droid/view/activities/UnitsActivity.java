@@ -17,6 +17,7 @@ import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.concurrency.tasks.FromDbUnitLessonTask;
 import org.stepic.droid.concurrency.tasks.ToDbUnitLessonTask;
@@ -277,7 +278,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     @Override
     public void onRefresh() {
-        YandexMetrica.reportEvent(AppConstants.METRICA_REFRESH_UNIT);
+        YandexMetrica.reportEvent(Analytic.METRICA_REFRESH_UNIT);
         ProgressHelper.activate(mSwipeRefreshLayout);
         updateUnits();
     }

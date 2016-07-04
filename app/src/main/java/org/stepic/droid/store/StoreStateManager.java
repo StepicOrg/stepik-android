@@ -5,6 +5,7 @@ import android.os.Handler;
 import com.squareup.otto.Bus;
 import com.yandex.metrica.YandexMetrica;
 
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.sections.NotCachedSectionEvent;
 import org.stepic.droid.events.sections.SectionCachedEvent;
@@ -45,7 +46,7 @@ public class StoreStateManager implements IStoreStateManager {
         //all steps of lesson is cached
         Lesson lesson = mDatabaseFacade.getLessonById(lessonId);
         if (lesson == null) {
-            YandexMetrica.reportEvent(AppConstants.METRICA_LESSON_IN_STORE_STATE_NULL);
+            YandexMetrica.reportEvent(Analytic.METRICA_LESSON_IN_STORE_STATE_NULL);
             return;
         }
         lesson.set_loading(false);
@@ -54,7 +55,7 @@ public class StoreStateManager implements IStoreStateManager {
 
         final Unit unit = mDatabaseFacade.getUnitByLessonId(lessonId);
         if (unit == null) {
-            YandexMetrica.reportEvent(AppConstants.METRICA_UNIT_IN_STORE_STATE_NULL);
+            YandexMetrica.reportEvent(Analytic.METRICA_UNIT_IN_STORE_STATE_NULL);
             return;
         }
         if (unit.is_loading() || !unit.is_cached()) {

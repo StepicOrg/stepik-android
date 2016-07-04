@@ -12,13 +12,13 @@ import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.FileUtil;
 
 import java.io.File;
@@ -57,7 +57,7 @@ public class LogoutAreYouSureDialog extends DialogFragment {
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_YES_LOGOUT);
+                        YandexMetrica.reportEvent(Analytic.METRICA_CLICK_YES_LOGOUT);
 
                         final File directoryForClean = mUserPreferences.getUserDownloadFolder();
                         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {

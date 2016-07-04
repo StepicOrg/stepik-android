@@ -16,6 +16,7 @@ import com.squareup.otto.Subscribe;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
 import org.stepic.droid.events.courses.PreLoadCoursesEvent;
@@ -23,7 +24,6 @@ import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepicUtil;
 import org.stepic.droid.view.activities.MainFeedActivity;
@@ -204,7 +204,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
     @Override
     public void onRefresh() {
-        YandexMetrica.reportEvent(AppConstants.METRICA_REFRESH_COURSE);
+        YandexMetrica.reportEvent(Analytic.METRICA_REFRESH_COURSE);
         mCurrentPage = 1;
         mHasNextPage = true;
         downloadData();

@@ -11,11 +11,11 @@ import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.util.AppConstants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +54,7 @@ public class VideoQualityDialog extends DialogFragment {
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        YandexMetrica.reportEvent(AppConstants.METRICA_CANCEL_VIDEO_QUALITY);
+                        YandexMetrica.reportEvent(Analytic.METRICA_CANCEL_VIDEO_QUALITY);
                     }
                 })
                 .setSingleChoiceItems(R.array.video_quality,

@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog
 import com.squareup.otto.Bus
 import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.events.loading.FinishLoadEvent
@@ -45,7 +46,7 @@ class ClearVideosDialog : DialogFragment() {
 
         val builder = AlertDialog.Builder(activity)
         builder.setTitle(R.string.title_confirmation).setMessage(R.string.clear_videos).setPositiveButton(R.string.yes) { dialog, which ->
-            YandexMetrica.reportEvent(AppConstants.METRICA_YES_CLEAR_VIDEOS)
+            YandexMetrica.reportEvent(Analytic.METRICA_YES_CLEAR_VIDEOS)
 
             val task = object : AsyncTask<Void, Void, Void>() {
                 override fun onPreExecute() {

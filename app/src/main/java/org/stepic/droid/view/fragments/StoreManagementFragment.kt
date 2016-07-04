@@ -11,6 +11,7 @@ import android.widget.Toast
 import com.squareup.otto.Subscribe
 import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.events.loading.FinishLoadEvent
 import org.stepic.droid.events.loading.StartLoadEvent
@@ -143,7 +144,7 @@ class StoreManagementFragment : FragmentBase() {
 
     private fun setUpClearCacheButton() {
         clearCacheButton.setOnClickListener {
-            YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CLEAR_CACHE)
+            YandexMetrica.reportEvent(Analytic.METRICA_CLICK_CLEAR_CACHE)
             mClearCacheDialogFragment?.show(fragmentManager, null)
         }
 

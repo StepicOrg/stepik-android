@@ -6,8 +6,8 @@ import android.widget.Toast;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 import org.stepic.droid.web.IApi;
@@ -83,8 +83,8 @@ public class LoginManager implements ILoginManager {
     }
 
     private void failLogin(Throwable t) {
-        YandexMetrica.reportEvent(AppConstants.METRICA_FAIL_LOGIN);
-        YandexMetrica.reportError(AppConstants.METRICA_FAIL_LOGIN, t);
+        YandexMetrica.reportEvent(Analytic.METRICA_FAIL_LOGIN);
+        YandexMetrica.reportError(Analytic.METRICA_FAIL_LOGIN, t);
         if (t != null) {
             int errorTextResId;
             if (t instanceof ProtocolException) {
@@ -102,7 +102,7 @@ public class LoginManager implements ILoginManager {
         preferenceHelper.storeAuthInfo(authStepic);
 
         if (authStepic != null) {
-            YandexMetrica.reportEvent(AppConstants.METRICA_SUCCESS_LOGIN);
+            YandexMetrica.reportEvent(Analytic.METRICA_SUCCESS_LOGIN);
             mShell.getScreenProvider().showMainFeed(mContext);
             finisher.onFinish();
         } else {

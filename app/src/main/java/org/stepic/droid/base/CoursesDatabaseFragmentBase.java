@@ -15,6 +15,7 @@ import com.squareup.otto.Subscribe;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.tasks.FromDbCoursesTask;
 import org.stepic.droid.concurrency.tasks.ToDbCoursesTask;
 import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
@@ -221,7 +222,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        YandexMetrica.reportEvent(AppConstants.METRICA_LONG_TAP_COURSE);
+        YandexMetrica.reportEvent(Analytic.METRICA_LONG_TAP_COURSE);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int position = info.position;
         switch (item.getItemId()) {
@@ -282,7 +283,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Subscribe
     public void onSuccessDrop(final SuccessDropCourseEvent e) {
-        YandexMetrica.reportEvent(AppConstants.METRICA_DROP_COURSE + " successful", JsonHelper.toJson(e.getCourse()));
+        YandexMetrica.reportEvent(Analytic.METRICA_DROP_COURSE + " successful", JsonHelper.toJson(e.getCourse()));
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + e.getCourse().getTitle(), Toast.LENGTH_LONG).show();
         if (e.getType() == DatabaseFacade.Table.enrolled) {
             mCourses.remove(e.getCourse());
@@ -296,7 +297,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Subscribe
     public void onFailDrop(FailDropCourseEvent e) {
-        YandexMetrica.reportEvent(AppConstants.METRICA_DROP_COURSE + " fail", JsonHelper.toJson(e.getCourse()));
+        YandexMetrica.reportEvent(Analytic.METRICA_DROP_COURSE + " fail", JsonHelper.toJson(e.getCourse()));
         Toast.makeText(getContext(), R.string.internet_problem, Toast.LENGTH_LONG).show();
     }
 

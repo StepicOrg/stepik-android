@@ -10,6 +10,7 @@ import com.squareup.otto.Bus;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.Course;
@@ -117,7 +118,7 @@ public class LoadService extends IntentService {
             //possibly user click clear cache;
 //            throw ex;
 
-            YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, ex);
+            YandexMetrica.reportError(Analytic.METRICA_LOAD_SERVICE, ex);
             mDb.dropDatabase();
         }
     }
@@ -185,10 +186,10 @@ public class LoadService extends IntentService {
             }
         } catch (SecurityException ex) {
             mStoreStateManager.updateStepAfterDeleting(step);
-            YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, ex);
+            YandexMetrica.reportError(Analytic.METRICA_LOAD_SERVICE, ex);
         } catch (Exception ex) {
             mStoreStateManager.updateStepAfterDeleting(step);
-            YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, ex);
+            YandexMetrica.reportError(Analytic.METRICA_LOAD_SERVICE, ex);
         }
 
     }
@@ -295,7 +296,7 @@ public class LoadService extends IntentService {
                 //not internet
                 mStoreStateManager.updateUnitLessonAfterDeleting(lesson.getId());
             } catch (IOException e) {
-                YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, e);
+                YandexMetrica.reportError(Analytic.METRICA_LOAD_SERVICE, e);
                 mStoreStateManager.updateUnitLessonAfterDeleting(lesson.getId());
             }
         } else {
@@ -362,7 +363,7 @@ public class LoadService extends IntentService {
                 mStoreStateManager.updateSectionAfterDeleting(section.getId());
 
             } catch (IOException e) {
-                YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, e);
+                YandexMetrica.reportError(Analytic.METRICA_LOAD_SERVICE, e);
                 mStoreStateManager.updateSectionAfterDeleting(section.getId());
             }
         }
@@ -400,7 +401,7 @@ public class LoadService extends IntentService {
                 }
             }
         } catch (IOException e) {
-            YandexMetrica.reportError(AppConstants.METRICA_LOAD_SERVICE, e);
+            YandexMetrica.reportError(Analytic.METRICA_LOAD_SERVICE, e);
             e.printStackTrace();
         }
     }

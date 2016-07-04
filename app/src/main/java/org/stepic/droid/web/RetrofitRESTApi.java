@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.ScreenManager;
@@ -313,7 +314,7 @@ public class RetrofitRESTApi implements IApi {
     @Override
     public Call<Void> dropCourse(long courseId) {
         if (!mConfig.isUserCanDropCourse()) return null;
-        YandexMetrica.reportEvent("Api: " + AppConstants.METRICA_DROP_COURSE, JsonHelper.toJson(courseId));
+        YandexMetrica.reportEvent("Api: " + Analytic.METRICA_DROP_COURSE, JsonHelper.toJson(courseId));
         return mLoggedService.dropCourse(courseId);
     }
 
