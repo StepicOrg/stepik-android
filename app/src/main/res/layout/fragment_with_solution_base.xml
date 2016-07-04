@@ -79,7 +79,7 @@
 
             </FrameLayout>
 
-            <TextView
+            <org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout
                 android:textIsSelectable="true"
                 tools:visibility="visible"
                 android:id="@+id/hint_text_view"
@@ -87,10 +87,9 @@
                 android:layout_width="match_parent"
                 android:background="@color/black"
                 android:textColor="@color/white"
-                tools:text="hint hint hint"
                 android:visibility="gone"
                 android:padding="16dp">
-            </TextView>
+            </org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout>
 
             <include
                 android:id="@+id/progress_bar"

@@ -39,8 +39,6 @@ public class LatexSupportableWebView extends WebView {
 
         final String mimeType = "text/html";
         final String encoding = "UTF-8";
-        setBackgroundColor(0);
-
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         ((AppCompatActivity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);

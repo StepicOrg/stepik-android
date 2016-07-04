@@ -36,6 +36,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Submission;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.web.AttemptResponse;
 import org.stepic.droid.web.SubmissionResponse;
 
@@ -106,7 +107,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     protected Drawable mWrongIcon;
 
     @Bind(R.id.hint_text_view)
-    TextView hintTextView;
+    LatexSupportableEnhancedFrameLayout hintTextView;
 
     @Nullable
     @Override

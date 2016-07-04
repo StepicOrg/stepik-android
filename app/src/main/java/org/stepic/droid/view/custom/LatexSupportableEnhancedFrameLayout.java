@@ -1,6 +1,8 @@
 package org.stepic.droid.view.custom;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.support.annotation.ColorInt;
 import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -8,6 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.stepic.droid.R;
+import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.HtmlHelper;
 
 public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
@@ -17,9 +20,41 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     TextView textView;
     LatexSupportableWebView webView;
 
+    @ColorInt
+    int textColor;
+
+    @ColorInt
+    int backgroundColor;
+
+    @ColorInt
+    int defaultColor;
+
     public LatexSupportableEnhancedFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, context);
+
+        int[] set = {
+                android.R.attr.textColor,
+                android.R.attr.background
+        };
+
+        TypedArray ta = context.obtainStyledAttributes(attrs, set);
+        try {
+            textColor = ta.getColor(0, ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, context));
+            //noinspection ResourceType
+            backgroundColor = ta.getColor(1, ColorUtil.INSTANCE.getColorArgb(R.color.transparent, context));
+            int j = 0;
+        } finally {
+            ta.recycle();
+        }
+
         init(context);
+
+        textView.setTextColor(textColor);
+        textView.setBackgroundColor(backgroundColor);
+
+        webView.setBackgroundColor(backgroundColor);
     }
 
     private void init(Context context) {
@@ -37,13 +72,24 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
             textView.setVisibility(VISIBLE);
             textView.setText(str);
         } else {
+            String coloredText = applyColoredWebView(text);
             textView.setVisibility(GONE);
             webView.setVisibility(VISIBLE);
-            webView.setText(text);
+            webView.setText(coloredText);
         }
     }
 
     public LatexSupportableWebView getWebView() {
         return webView;
     }
+
+    private String applyColoredWebView(String text) {
+        if (defaultColor != textColor) {
+            String hexColor = String.format("#%06X", (0xFFFFFF & textColor));
+            return "<br>" + "<font color='" + hexColor + "'>" + text + "</font>";
+        } else {
+            return text;
+        }
+    }
+
 }
