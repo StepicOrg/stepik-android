@@ -277,7 +277,7 @@ public class ScreenManager implements IScreenManager {
     @Override
     public void openStepInWeb(Context context, Step step) {
         analytic.reportEventWithId(Analytic.Screens.OPEN_STEP_IN_WEB, step.getId()+"");
-        String url = mConfig.getBaseUrl() + "/lesson/" + step.getLesson() + "/step/" + step.getPosition(); //// FIXME: 05.07.16 from app arg
+        String url = mConfig.getBaseUrl() + "/lesson/" + step.getLesson() + "/step/" + step.getPosition() + "/?from_mobile_app=true";
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
         context.startActivity(intent);
     }
