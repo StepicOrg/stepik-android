@@ -15,9 +15,7 @@ public class AppConstants {
     public static final String KEY_TABLE_TYPE = "table_type";
     public static final String COMMENT_DATE_TIME_PATTERN = "dd.MM.yyyy HH:mm";
 
-
     public static final String WEB_URI_SEPARATOR = "/";
-
 
     //Types of steps:
     public static final String TYPE_TEXT = "text";
@@ -40,21 +38,12 @@ public class AppConstants {
     public static final String TYPE_ADMIN = "admin";
     public static final String TYPE_SQL = "sql";
 
-    public static final int REQUEST_WIFI = 1;
     public static final int REQUEST_EXTERNAL_STORAGE = 13;
-    public static final String IMAGE_ON_DISK = "Image on disk";
-    public static final String METRICA_GET_PROGRESSES = "Get progresses";
-    public static final String METRICA_GET_ASSIGNMENTS = "Get assignments";
     public static final String KEY_ASSIGNMENT_BUNDLE = "key_assignment";
     public static final String COURSE_ID_KEY = "course_id";
     public static final String ENROLLMENT_KEY = "is_enrolled";
 
     public static final int REQUEST_CODE_DETAIL = 1;
-    public static final String NOT_VALID_ACCESS_AND_REFRESH = "Not valid access, why?";
-    public static final String NOT_FOUND_VERSION = "Not found version of app";
-    public static final String NOT_SIGNIFICANT_ERROR = "Not significant error, app will continue to work";
-    public static final java.lang.String GET_OLD_ATTEMPT = "get attempt from server db, new is not creating";
-    public static final java.lang.String SEARCH = "search courses";
     public static final java.lang.String THUMBNAIL_POSTFIX_EXTENSION = ".png";
     public static final java.lang.String DELIMITER_TEXT_SCORE = "/";
     public static final java.lang.String NOTIFICATION_CANCELED = "notification_cancelled";
@@ -63,7 +52,6 @@ public class AppConstants {
     public static final String OPEN_NOTIFICATION = "Open_notification";
     public static final long MILLIS_IN_24HOURS = 86400000L;
 
-    public static final String ERROR_PARSING_SLUG = "error parsing slug";
     public static final String ABOUT_NAME_INJECTION_COURSE_FINDER = "about";
     public static final String SECTION_NAMED_INJECTION_COURSE_FINDER = "section";
 }
