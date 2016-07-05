@@ -2,8 +2,6 @@ package org.stepic.droid.util;
 
 import android.text.Html;
 
-import com.yandex.metrica.YandexMetrica;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
@@ -110,8 +108,7 @@ public class HtmlHelper {
         try {
             String number = slug.substring(indexOfLastDash + 1, slug.length());
             id = Long.parseLong(number);
-        } catch (NumberFormatException | IndexOutOfBoundsException notCorrectSlug) {
-            YandexMetrica.reportError(AppConstants.ERROR_PARSING_SLUG, notCorrectSlug);
+        } catch (NumberFormatException | IndexOutOfBoundsException ignored) {
         }
         return id;
     }

@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.preferences.UserPreferences;
@@ -40,9 +39,7 @@ public class ImageOnDisk implements Target {
                     FileOutputStream ostream = new FileOutputStream(downloadFolderAndFile);
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
                     ostream.close();
-                } catch (Exception e) {
-                    YandexMetrica.reportError(AppConstants.IMAGE_ON_DISK, e);
-                    e.printStackTrace();
+                } catch (Exception ignored) {
                 }
             }
         }).start();
