@@ -15,8 +15,8 @@ import android.view.*
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.squareup.otto.Subscribe
-import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.core.CommentManager
@@ -25,7 +25,6 @@ import org.stepic.droid.model.comments.Comment
 import org.stepic.droid.model.comments.DiscussionOrder
 import org.stepic.droid.model.comments.Vote
 import org.stepic.droid.model.comments.VoteValue
-import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.view.adapters.CommentsAdapter
@@ -200,7 +199,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun deleteComment(position: Int) {
-        YandexMetrica.reportEvent(AppConstants.DELETE_COMMENT_TRIAL)
+        analytic.reportEvent(Analytic.Interaction.DELETE_COMMENT_TRIAL)
         val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
         val commentId = comment?.id
         commentId?.let {
@@ -237,7 +236,6 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         val voteId = comment.vote
         val commentId = comment.id
         if (commentId == null) {
-            YandexMetrica.reportEvent("comment: commentId null")
             return
         }
         voteId?.let {
@@ -248,10 +246,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                     if (response?.isSuccess ?: false) {
                         bus.post(LikeCommentSuccessEvent(commentId, voteObject))
                     } else {
-                        YandexMetrica.reportEvent("comment: fail")
                         bus.post(LikeCommentFailEvent())
                     }
-
                 }
 
                 override fun onFailure(t: Throwable?) {

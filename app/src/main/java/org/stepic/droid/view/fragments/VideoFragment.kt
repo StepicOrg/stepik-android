@@ -16,8 +16,8 @@ import android.telephony.TelephonyManager
 import android.view.*
 import android.widget.*
 import com.squareup.otto.Subscribe
-import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.core.MyPhoneStateListener
@@ -46,7 +46,6 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         private val JUMP_MAX_DELTA = 3000L
         private val VIDEO_KEY = "video_key"
         private val DELTA_TIME = 0L
-        private val TAG = "video player: "
         fun newInstance(videoUri: String): VideoFragment {
             val args = Bundle()
             args.putString(VIDEO_KEY, videoUri)
@@ -197,7 +196,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
             mMediaPlayer?.rate = mUserPreferences.videoPlaybackRate.rateFloat
             isEndReached = false
         } catch (e: Exception) {
-            YandexMetrica.reportEvent(TAG + "Error creating player")
+            analytic.reportError(Analytic.Error.ERROR_CREATING_PLAYER, e)
         }
 
     }
@@ -217,7 +216,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
     }
 
     override fun onHardwareAccelerationError(vlcVout: IVLCVout?) {
-        YandexMetrica.reportEvent(TAG + "vlc error hardware")
+        analytic.reportEvent(Analytic.Video.VLC_HARDWARE_ERROR)
         activity?.finish()
     }
 
@@ -359,7 +358,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
 
         // sanity check
         if (w * h == 0.toDouble() || mVideoWidth * mVideoHeight == 0) {
-            YandexMetrica.reportEvent(TAG + "Invalid surface size")
+            analytic.reportEvent(Analytic.Video.INVALID_SURFACE_SIZE)
             return
         }
 
@@ -504,7 +503,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
     }
 
     private fun showChooseRateMenu(view: View) {
-        YandexMetrica.reportEvent(TAG + "showChooseRateMenu")
+        analytic.reportEvent(Analytic.Video.SHOW_CHOOSE_RATE)
         val popupMenu = PopupMenu(MainApplication.getAppContext(), view)
         popupMenu.inflate(R.menu.video_rate_menu)
         popupMenu.setOnMenuItemClickListener {
@@ -557,7 +556,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
     }
 
     private fun onJumpForward() {
-        YandexMetrica.reportEvent(TAG + "onJumpForward")
+        analytic.reportEvent(Analytic.Video.JUMP_FORWARD)
         var currentTime = mMediaPlayer?.time
         if (currentTime == 0L && mCurrentTimeInMillis > 0L) {
             currentTime = mCurrentTimeInMillis
@@ -580,7 +579,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
     }
 
     private fun onJumpBackward() {
-        YandexMetrica.reportEvent(TAG + "onJumpBackward")
+        analytic.reportEvent(Analytic.Video.JUMP_BACKWARD)
         if (mMediaPlayer == null) {
             val length: Long = mMaxTimeInMillis ?: 0L
             mCurrentTimeInMillis = Math.max(0L, length - JUMP_TIME_MILLIS)
@@ -857,7 +856,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         try {
             tmgr?.listen(myStatePhoneListener, PhoneStateListener.LISTEN_CALL_STATE)
         } catch (ex: Exception) {
-            YandexMetrica.reportError("initPhoneStateListener", ex)
+            analytic.reportError(Analytic.Error.INIT_PHONE_STATE, ex)
         }
     }
 
@@ -865,7 +864,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         try {
             tmgr?.listen(myStatePhoneListener, PhoneStateListener.LISTEN_NONE)
         } catch(ex: Exception) {
-            YandexMetrica.reportError("removePhoneStateCallbacks", ex)
+            analytic.reportError(Analytic.Error.REMOVE_PHONE_STATE, ex)
         }
     }
 
@@ -875,14 +874,14 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
     }
 
     fun startLoading() {
-        YandexMetrica.reportEvent(TAG + "startLoading")
+        analytic.reportEvent(Analytic.Video.START_LOADING)
         isLoading = true
         showController(false)
         mProgressBar?.visibility = View.VISIBLE
     }
 
     fun stopLoading() {
-        YandexMetrica.reportEvent(TAG + "stopLoading")
+        analytic.reportEvent(Analytic.Video.STOP_LOADING)
         mProgressBar?.visibility = View.GONE
         showController(true)
         isLoading = false

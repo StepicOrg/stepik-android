@@ -80,5 +80,4 @@ public class AppConstants {
     public static final String ABOUT_NAME_INJECTION_COURSE_FINDER = "about";
     public static final String SECTION_NAMED_INJECTION_COURSE_FINDER = "section";
     public static final String DELETE_COMMENT_CONFIRMATION = "comment: delete comment confirmed";
-    public static final String DELETE_COMMENT_TRIAL = "comment: delete comment trial";
 }

@@ -29,6 +29,7 @@ public interface Analytic {
         String CLICK_YES_LOGOUT = "Click accept logout";
         String CANCEL_VIDEO_QUALITY = "Cancel video quality dialog";
         String YES_CLEAR_VIDEOS = "clear videos from downloads";
+        String DELETE_COMMENT_TRIAL = "comment: delete comment trial";
     }
 
     interface Screens {
@@ -56,6 +57,13 @@ public interface Analytic {
         String OPEN_EXTERNAL = "video open external";
         String OPEN_NATIVE = "video open native";
         String NOT_COMPATIBLE = "video is not compatible";
+        String VLC_HARDWARE_ERROR = "video player: vlc error hardware";
+        String INVALID_SURFACE_SIZE = "video player: Invalid surface size";
+        String SHOW_CHOOSE_RATE = "video player: showChooseRateMenu";
+        String JUMP_FORWARD = "video player: onJumpForward";
+        String JUMP_BACKWARD = "video player: onJumpBackward";
+        String START_LOADING = "video player: startLoading";
+        String STOP_LOADING = "video player: stopLoading";
     }
 
     interface AppIndexing {
@@ -68,6 +76,9 @@ public interface Analytic {
         String VIDEO_RESOLVER_FAILED = "video resolver is failed";
         String CANT_UPDATE_TOKEN = "cant update token";
         String AUTH_ERROR = "retrofitAuth";
+        String ERROR_CREATING_PLAYER = "video player: Error creating player";
+        String INIT_PHONE_STATE = "initPhoneStateListener";
+        String REMOVE_PHONE_STATE = "removePhoneStateCallbacks";
     }
 
     interface Web {
@@ -76,7 +87,7 @@ public interface Analytic {
         String AUTH_SOCIAL = "Api:auth with social account";
         String TRY_REGISTER = "Api: try register";
         String TRY_JOIN_COURSE = "Api:try join to course";
-        String DROP_COURSE  = "Api: drop course";
+        String DROP_COURSE = "Api: drop course";
     }
 
     void reportEvent(String eventName, Bundle bundle);
