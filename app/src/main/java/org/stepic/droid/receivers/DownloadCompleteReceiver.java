@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Handler;
 
 import com.squareup.otto.Bus;
-import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
@@ -50,6 +49,9 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
 
     @Inject
     DownloadManager downloadManager;
+
+    @Inject
+    Analytic analytic;
 
     public DownloadCompleteReceiver() {
         MainApplication.component().inject(this);
@@ -113,7 +115,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                                 path = Uri.fromFile(downloadFolderAndFile).getPath();
                                 thumbnail = Uri.fromFile(thumbnailFile).getPath();
                             } catch (Exception er) {
-                                YandexMetrica.reportError(Analytic.Error.FAIL_TO_MOVE, er);
+                                analytic.reportError(Analytic.Error.FAIL_TO_MOVE, er);
                             }
                         }
 

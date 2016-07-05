@@ -9,8 +9,8 @@ import android.os.AsyncTask;
 import android.os.Handler;
 
 import com.squareup.otto.Bus;
-import com.yandex.metrica.YandexMetrica;
 
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.store.IStoreStateManager;
@@ -35,6 +35,9 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
     @Inject
     Bus bus;
+
+    @Inject
+    Analytic analytic;
 
     private volatile boolean inWork;
 
@@ -68,12 +71,10 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
                             mDatabaseFacade.removeFromQueue(item);
                         }
                     } catch (IOException e) {
-                        YandexMetrica.reportError("Push state exception", e);
-                        e.printStackTrace();
+                        analytic.reportError(Analytic.Error.PUSH_STATE_EXCEPTION, e);
                     }
                 }
                 inWork = false;
-
                 return null;
             }
         };

@@ -8,7 +8,6 @@ public interface Analytic {
     String METRICA_FAIL_LOGIN = "fail login";
     String METRICA_SUCCESS_LOGIN = "success login";
     String DROP_COURSE = "drop course";
-    String METRICA_LOAD_SERVICE = "Load Service";
     String METRICA_LONG_TAP_COURSE = "Long tap on course";
 
     interface Preferences {
@@ -103,6 +102,8 @@ public interface Analytic {
         String NULL_SECTION = "Null section is not expected";
         String LESSON_IN_STORE_STATE_NULL = "lesson was null in store state manager";
         String UNIT_IN_STORE_STATE_NULL = "unit was null in store state manager";
+        String LOAD_SERVICE = "Load Service";
+        String PUSH_STATE_EXCEPTION = "Push state exception";
     }
 
     interface Web {
