@@ -15,6 +15,7 @@ import com.yandex.metrica.YandexMetrica;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Course;
@@ -25,7 +26,6 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.view.activities.CommentsActivity;
 import org.stepic.droid.view.activities.CourseDetailActivity;
 import org.stepic.droid.view.activities.LaunchActivity;
@@ -35,8 +35,8 @@ import org.stepic.droid.view.activities.NewCommentActivity;
 import org.stepic.droid.view.activities.RegisterActivity;
 import org.stepic.droid.view.activities.SectionActivity;
 import org.stepic.droid.view.activities.SettingsActivity;
-import org.stepic.droid.view.activities.StoreManagementActivity;
 import org.stepic.droid.view.activities.StepsActivity;
+import org.stepic.droid.view.activities.StoreManagementActivity;
 import org.stepic.droid.view.activities.TextFeedbackActivity;
 import org.stepic.droid.view.activities.UnitsActivity;
 import org.stepic.droid.view.activities.VideoActivity;
@@ -51,16 +51,18 @@ import javax.inject.Singleton;
 public class ScreenManager implements IScreenManager {
     private IConfig mConfig;
     private UserPreferences mUserPreferences;
+    private Analytic analytic;
 
     @Inject
-    public ScreenManager(IConfig config, UserPreferences userPreferences) {
+    public ScreenManager(IConfig config, UserPreferences userPreferences, Analytic analytic) {
         this.mConfig = config;
         mUserPreferences = userPreferences;
+        this.analytic = analytic;
     }
 
     @Override
     public void showLaunchScreen(Context context, boolean overrideAnimation) {
-        YandexMetrica.reportEvent("Screen manager: show launch screen");
+        analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
         Intent launchIntent = new Intent(context, LaunchActivity.class);
         launchIntent.putExtra(LaunchActivity.OVERRIDE_ANIMATION_FLAG, overrideAnimation);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -70,37 +72,24 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showRegistration(Activity sourceActivity) {
-        YandexMetrica.reportEvent("Screen manager: show registration");
+        analytic.reportEvent(Analytic.Screens.SHOW_REGISTRATION);
         Intent launchIntent = new Intent(sourceActivity, RegisterActivity.class);
         sourceActivity.startActivity(launchIntent);
     }
 
     @Override
     public void showLogin(Context sourceActivity) {
-        YandexMetrica.reportEvent("Screen manager: show login");
+        analytic.reportEvent(Analytic.Screens.SHOW_LOGIN);
         Intent loginIntent = new Intent(sourceActivity, LoginActivity.class);
         sourceActivity.startActivity(loginIntent);
     }
 
     @Override
     public void showMainFeed(Context sourceActivity) {
-        YandexMetrica.reportEvent("Screen manager: show main feed");
-        //todo onFinish all activities which exist for login (launch, splash, etc).
+        analytic.reportEvent(Analytic.Screens.SHOW_MAIN_FEED);
         Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        /*
-        Using CLEAR_TOP flag, causes the activity to be re-created every time.
-        This reloads the list of courses. We don't want that.
-        Using REORDER_TO_FRONT solves this problem
-         */
-//        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         sourceActivity.startActivity(intent);
-
-        // let login screens be ended
-//        Intent loginIntent = new Intent();
-//        loginIntent.setAction(AppConstants.USER_LOG_IN);
-//        sourceActivity.sendBroadcast(loginIntent);
-
     }
 
     @Override
@@ -115,8 +104,8 @@ public class ScreenManager implements IScreenManager {
         sourceActivity.startActivity(intent);
     }
 
-    private Intent getIntentForDescription(Activity sourceActivity, @NotNull Course course){
-        YandexMetrica.reportEvent("Screen manager: show course description");
+    private Intent getIntentForDescription(Activity sourceActivity, @NotNull Course course) {
+        analytic.reportEvent(Analytic.Screens.SHOW_COURSE_DESCRIPTION);
         Intent intent = new Intent(sourceActivity, CourseDetailActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -128,12 +117,14 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showTextFeedback(Activity sourceActivity) {
+        analytic.reportEvent(Analytic.Screens.SHOW_TEXT_FEEDBACK);
         Intent launchIntent = new Intent(sourceActivity, TextFeedbackActivity.class);
         sourceActivity.startActivity(launchIntent);
     }
 
     @Override
     public void showStoreWithApp(@NotNull Activity sourceActivity) {
+        analytic.reportEvent(Analytic.Screens.OPEN_STORE);
         final String appPackageName = sourceActivity.getPackageName();
         try {
             sourceActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
@@ -155,12 +146,12 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
-    public void showFindCourses(Context context){
+    public void showFindCourses(Context context) {
         int index = MainFeedActivity.getFindLessonIndex();
         showFromMainActivity(context, index);
     }
 
-    private void showFromMainActivity(Context context, int index){
+    private void showFromMainActivity(Context context, int index) {
         Intent intent = new Intent(context, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Bundle bundle = new Bundle();
@@ -171,17 +162,17 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showVideo(Activity sourceActivity, String videoPath) {
-        YandexMetrica.reportEvent("video is tried to show");
+        analytic.reportEvent(Analytic.Screens.TRY_OPEN_VIDEO);
         boolean isOpenExternal = mUserPreferences.isOpenInExternal();
         if (isOpenExternal) {
-            YandexMetrica.reportEvent("video open external");
+            analytic.reportEvent(Analytic.Video.OPEN_EXTERNAL);
         } else {
-            YandexMetrica.reportEvent("video open native");
+            analytic.reportEvent(Analytic.Video.OPEN_NATIVE);
         }
 
         boolean isCompatible = VLCUtil.hasCompatibleCPU(MainApplication.getAppContext());
         if (!isCompatible) {
-            YandexMetrica.reportEvent("video is not compatible");
+            YandexMetrica.reportEvent(Analytic.Video.NOT_COMPATIBLE);
         }
 
 
@@ -196,7 +187,7 @@ public class ScreenManager implements IScreenManager {
             try {
                 sourceActivity.startActivity(intent);
             } catch (Exception ex) {
-                YandexMetrica.reportError("NotPlayer", ex);
+                analytic.reportError(Analytic.Error.NOT_PLAYER, ex);
                 Toast.makeText(sourceActivity, R.string.not_video_player_error, Toast.LENGTH_LONG).show();
             }
         }
@@ -204,6 +195,7 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showSettings(Activity sourceActivity) {
+        analytic.reportEvent(Analytic.Screens.SHOW_SETTINGS);
         Intent intent = new Intent(sourceActivity, SettingsActivity.class);
         sourceActivity.startActivity(intent);
         sourceActivity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
@@ -211,6 +203,7 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showStorageManagement(Activity activity) {
+        analytic.reportEvent(Analytic.Screens.SHOW_STORAGE_MANAGEMENT);
         Intent intent = new Intent(activity, StoreManagementActivity.class);
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
@@ -220,10 +213,10 @@ public class ScreenManager implements IScreenManager {
     public void openComments(Context context, @Nullable String discussionProxyId, long stepId) {
 
         if (discussionProxyId == null) {
-            YandexMetrica.reportEvent("comment: not available");
+            analytic.reportEvent(Analytic.Screens.OPEN_COMMENT_NOT_AVAILABLE);
             Toast.makeText(context, R.string.comment_denied, Toast.LENGTH_SHORT).show();
         } else {
-            YandexMetrica.reportEvent("comments: open list");
+            analytic.reportEvent(Analytic.Screens.OPEN_COMMENT);
             Intent intent = new Intent(context, CommentsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Bundle bundle = new Bundle();
@@ -236,7 +229,7 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void openNewCommentForm(Activity sourceActivity, Long target, @Nullable Long parent) {
-        YandexMetrica.reportEvent("comments: open write form");
+        analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT);
         Intent intent = new Intent(sourceActivity, NewCommentActivity.class);
         Bundle bundle = new Bundle();
         if (parent != null) {
@@ -249,7 +242,7 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showSections(Context sourceActivity, @NotNull Course course) {
-        YandexMetrica.reportEvent("Screen manager: show section", JsonHelper.toJson(course));
+        analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS, course.getCourseId() + "", course.getTitle());
         Intent intent = new Intent(sourceActivity, SectionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -261,7 +254,7 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showUnitsForSection(Context sourceActivity, @NotNull Section section) {
-        YandexMetrica.reportEvent("Screen manager: show units-lessons screen", JsonHelper.toJson(section));
+        analytic.reportEventWithId(Analytic.Screens.SHOW_UNITS, section.getId() + "");
         Intent intent = new Intent(sourceActivity, UnitsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_SECTION_BUNDLE, section);
@@ -271,7 +264,7 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showSteps(Context sourceActivity, Unit unit, Lesson lesson) {
-        YandexMetrica.reportEvent("Screen manager: show steps of lesson", JsonHelper.toJson(lesson));
+        analytic.reportEventWithIdName(Analytic.Screens.SHOW_STEP, lesson.getId() + "", lesson.getTitle());
         Intent intent = new Intent(sourceActivity, StepsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_UNIT_BUNDLE, unit);
@@ -283,15 +276,15 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void openStepInWeb(Context context, Step step) {
-        YandexMetrica.reportEvent("Screen manager: open Step in Web", JsonHelper.toJson(step));
-        String url = mConfig.getBaseUrl() + "/lesson/" + step.getLesson() + "/step/" + step.getPosition();
+        analytic.reportEventWithId(Analytic.Screens.OPEN_STEP_IN_WEB, step.getId()+"");
+        String url = mConfig.getBaseUrl() + "/lesson/" + step.getLesson() + "/step/" + step.getPosition(); //// FIXME: 05.07.16 from app arg
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
         context.startActivity(intent);
     }
 
     @Override
     public void openRemindPassword(AppCompatActivity context) {
-        YandexMetrica.reportEvent("Screen manager: remind password");
+        analytic.reportEvent(Analytic.Screens.REMIND_PASSWORD);
         android.support.v4.app.DialogFragment dialogFragment = RemindPasswordDialogFragment.newInstance();
         dialogFragment.show(context.getSupportFragmentManager(), null);
     }

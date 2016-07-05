@@ -90,8 +90,8 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public IScreenManager provideIScreenManager(IConfig config, UserPreferences userPreferences) {
-        return new ScreenManager(config, userPreferences);
+    public IScreenManager provideIScreenManager(IConfig config, UserPreferences userPreferences, Analytic analytic) {
+        return new ScreenManager(config, userPreferences, analytic);
     }
 
     @Provides

@@ -16,7 +16,7 @@ public interface Analytic {
     String METRICA_LESSON_IN_STORE_STATE_NULL = "lesson was null in store state manager";
     String METRICA_UNIT_IN_STORE_STATE_NULL = "unit was null in store state manager";
 
-    interface Interaction{
+    interface Interaction {
         String CLICK_SIGN_IN = "click sign in on launch screen";
         String CLICK_SIGN_UP = "click sign up";
         String CLICK_SIGN_IN_ON_SIGN_IN_SCREEN = "click sign in on sign in on sign-in screen";
@@ -31,12 +31,40 @@ public interface Analytic {
         String YES_CLEAR_VIDEOS = "clear videos from downloads";
     }
 
+    interface Screens {
+        String SHOW_LAUNCH = "Screen manager: show launch screen";
+        String SHOW_REGISTRATION = "Screen manager: show registration";
+        String SHOW_LOGIN = "Screen manager: show login";
+        String SHOW_MAIN_FEED = "Screen manager: show main feed";
+        String SHOW_COURSE_DESCRIPTION = "Screen manager: show course description";
+        String SHOW_TEXT_FEEDBACK = "show text feedback";
+        String OPEN_STORE = "Open google play, estimation";
+        String TRY_OPEN_VIDEO = "video is tried to show";
+        String SHOW_SETTINGS = "show settings";
+        String SHOW_STORAGE_MANAGEMENT = "show storage management";
+        String OPEN_COMMENT_NOT_AVAILABLE = "comment: not available";
+        String OPEN_COMMENT = "comments: open list";
+        String OPEN_WRITE_COMMENT = "comments: open write form";
+        String SHOW_SECTIONS = "Screen manager: show section";
+        String SHOW_UNITS = "Screen manager: show units-lessons screen";
+        String SHOW_STEP = "Screen manager: show steps of lesson";
+        String OPEN_STEP_IN_WEB = "Screen manager: open Step in Web";
+        String REMIND_PASSWORD = "Screen manager: remind password";
+    }
+
+    interface Video {
+        String OPEN_EXTERNAL = "video open external";
+        String OPEN_NATIVE = "video open native";
+        String NOT_COMPATIBLE = "video is not compatible";
+    }
+
     interface AppIndexing {
         String COURSE_DETAIL = "appindexing_course_detail";
     }
 
-    interface Error{
+    interface Error {
         String CALLBACK_SOCIAL = "callback_from_social_login";
+        String NOT_PLAYER = "NotPlayer";
     }
 
     void reportEvent(String eventName, Bundle bundle);
