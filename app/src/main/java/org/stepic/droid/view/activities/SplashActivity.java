@@ -36,7 +36,7 @@ public class SplashActivity extends BackToExitActivityBase {
             mThreadPoolExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    StepicInstanceIdService.Companion.updateAnywhere(mShell.getApi(), mSharedPreferenceHelper); //FU!
+                    StepicInstanceIdService.Companion.updateAnywhere(mShell.getApi(), mSharedPreferenceHelper, analytic); //FCM!
                 }
             });
         }

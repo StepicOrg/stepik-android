@@ -80,6 +80,7 @@ public interface Analytic {
         String ERROR_CREATING_PLAYER = "video player: Error creating player";
         String INIT_PHONE_STATE = "initPhoneStateListener";
         String REMOVE_PHONE_STATE = "removePhoneStateCallbacks";
+        String NOTIFICATION_ERROR_PARSE = "notification error parse";
     }
 
     interface Web {
@@ -99,6 +100,8 @@ public interface Analytic {
         String NOT_SUPPORT = "notification is not support";
         String LEARN_SHOWN = "notification learn is shown";
         String CANT_PARSE_COURSE_ID = "notification, cant parse courseId";
+        String TOKEN_UPDATED = "notification gcm token is updated";
+        String TOKEN_UPDATE_FAILED = "notification gcm token is not updated";
     }
 
     interface Feedback {
