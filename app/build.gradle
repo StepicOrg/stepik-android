@@ -85,8 +85,9 @@ dependencies {
     //<DI>
     apt 'com.google.dagger:dagger-compiler:2.0.1' //needed for source code generation
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.google.dagger:dagger:2.0.1' //dagger itself
-    provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'com.google.dagger:dagger:2.5'
+    apt 'com.google.dagger:dagger-compiler:2.5'
+    provided 'javax.annotation:jsr250-api:1.0'
     //needed to resolve compilation errors, thanks to tutplus.org for finding the dependency
     compile 'com.jakewharton:butterknife:7.0.1'
 
