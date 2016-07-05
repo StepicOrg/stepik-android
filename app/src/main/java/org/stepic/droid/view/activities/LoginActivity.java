@@ -13,8 +13,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.yandex.metrica.YandexMetrica;
-
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentActivityBase;
@@ -123,7 +121,7 @@ public class LoginActivity extends FragmentActivityBase {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                YandexMetrica.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_ON_SIGN_IN_SCREEN);
+                analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_ON_SIGN_IN_SCREEN);
                 tryLogin();
             }
         });
@@ -160,7 +158,7 @@ public class LoginActivity extends FragmentActivityBase {
                 }
             });
         } catch (Throwable t) {
-            YandexMetrica.reportError("callback_from_social_login", t);
+            analytic.reportError(Analytic.Error.CALLBACK_SOCIAL, t);
         }
     }
 

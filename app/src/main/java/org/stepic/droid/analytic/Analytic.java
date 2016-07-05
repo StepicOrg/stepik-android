@@ -32,7 +32,11 @@ public interface Analytic {
     }
 
     interface AppIndexing {
-        String courseDetail = "appindexing_course_detail";
+        String COURSE_DETAIL = "appindexing_course_detail";
+    }
+
+    interface Error{
+        String CALLBACK_SOCIAL = "callback_from_social_login";
     }
 
     void reportEvent(String eventName, Bundle bundle);

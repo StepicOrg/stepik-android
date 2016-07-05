@@ -322,7 +322,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             mUrl = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getSlug()));
             wasIndexed = true;
             AppIndex.AppIndexApi.start(mClient, getAction());
-            analytic.reportEventWithIdName(Analytic.AppIndexing.courseDetail, mCourse.getCourseId()+"", mCourse.getTitle());
+            analytic.reportEventWithIdName(Analytic.AppIndexing.COURSE_DETAIL, mCourse.getCourseId()+"", mCourse.getTitle());
         }
 
 
