@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 public interface Analytic {
     String METRICA_FAIL_LOGIN = "fail login";
     String METRICA_SUCCESS_LOGIN = "success login";
-    String METRICA_DROP_COURSE = "drop course";
+    String DROP_COURSE = "drop course";
     String METRICA_LOAD_SERVICE = "Load Service";
     String METRICA_REFRESH_COURSE = "Pull from top to refresh course";
     String METRICA_REFRESH_SECTION = "Pull from top to refresh section";
@@ -66,6 +66,17 @@ public interface Analytic {
         String CALLBACK_SOCIAL = "callback_from_social_login";
         String NOT_PLAYER = "NotPlayer";
         String VIDEO_RESOLVER_FAILED = "video resolver is failed";
+        String CANT_UPDATE_TOKEN = "cant update token";
+        String AUTH_ERROR = "retrofitAuth";
+    }
+
+    interface Web {
+        String UPDATE_TOKEN_FAILED = "update is failed";
+        String AUTH_LOGIN_PASSWORD = "Api:auth with login password";
+        String AUTH_SOCIAL = "Api:auth with social account";
+        String TRY_REGISTER = "Api: try register";
+        String TRY_JOIN_COURSE = "Api:try join to course";
+        String DROP_COURSE  = "Api: drop course";
     }
 
     void reportEvent(String eventName, Bundle bundle);

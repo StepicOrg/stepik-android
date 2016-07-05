@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Credentials;
@@ -14,7 +16,6 @@ import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,10 +41,8 @@ import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.HtmlHelper;
-import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.RWLocks;
 
 import java.io.IOException;
@@ -78,11 +77,12 @@ public class RetrofitRESTApi implements IApi {
     IConfig mConfig;
     @Inject
     UserPreferences mUserPreferences;
+    @Inject
+    Analytic analytic;
 
     private StepicRestLoggedService mLoggedService;
     private StepicRestOAuthService mOAuthService;
     private StepicEmptyAuthService mStepicEmptyAuthService;
-    private StepicZendeskEmptyAuthService mZendeskAuthService;
     private final OkHttpClient okHttpClient = new OkHttpClient();
 
 
@@ -127,12 +127,12 @@ public class RetrofitRESTApi implements IApi {
                         try {
                             response = mOAuthService.updateToken(mConfig.getRefreshGrantType(), response.getRefresh_token()).execute().body();
                         } catch (Exception e) {
-                            YandexMetrica.reportError("cant update token", e);
+                            analytic.reportError(Analytic.Error.CANT_UPDATE_TOKEN, e);
                             return chain.proceed(newRequest);
                         }
                         if (response == null || !response.isSuccess()) {
                             //it is worst case:
-                            YandexMetrica.reportEvent("update is failed");
+                            analytic.reportEvent(Analytic.Web.UPDATE_TOKEN_FAILED);
                             return chain.proceed(newRequest);
                         }
 
@@ -161,7 +161,7 @@ public class RetrofitRESTApi implements IApi {
     }
 
     private void makeOauthServiceWithNewAuthHeader(final TokenType type) {
-        mSharedPreference.storeLastTokenType(type == TokenType.social ? true : false);
+        mSharedPreference.storeLastTokenType(type == TokenType.social);
         Interceptor interceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
@@ -197,7 +197,7 @@ public class RetrofitRESTApi implements IApi {
 
     @Override
     public Call<AuthenticationStepicResponse> authWithLoginPassword(String login, String password) {
-        YandexMetrica.reportEvent("Api:auth with login password");
+        analytic.reportEvent(Analytic.Web.AUTH_LOGIN_PASSWORD);
         makeOauthServiceWithNewAuthHeader(TokenType.loginPassword);
         String encodedPassword = URLEncoder.encode(password);
         String encodedLogin = URLEncoder.encode(login);
@@ -206,14 +206,14 @@ public class RetrofitRESTApi implements IApi {
 
     @Override
     public Call<AuthenticationStepicResponse> authWithCode(String code) {
-        YandexMetrica.reportEvent("Api:auth with social account");
+        analytic.reportEvent(Analytic.Web.AUTH_SOCIAL);
         makeOauthServiceWithNewAuthHeader(TokenType.social);
         return mOAuthService.getTokenByCode(mConfig.getGrantType(TokenType.social), code, mConfig.getRedirectUri());
     }
 
     @Override
     public Call<RegistrationResponse> signUp(String firstName, String lastName, String email, String password) {
-        YandexMetrica.reportEvent("Api: try register");
+        analytic.reportEvent(Analytic.Web.TRY_REGISTER);
 
         OkHttpClient okHttpClient = new OkHttpClient();
         Interceptor interceptor = new Interceptor() {
@@ -234,6 +234,9 @@ public class RetrofitRESTApi implements IApi {
                     if (item.getName() != null && item.getName().equals("sessionid")) {
                         sessionId = item.getValue();
                     }
+                }
+                if (csrftoken == null){
+                    csrftoken = "";
                 }
 
                 String cookieResult = "csrftoken=" + csrftoken + "; " + "sessionid=" + sessionId;
@@ -259,74 +262,64 @@ public class RetrofitRESTApi implements IApi {
     }
 
     public Call<CoursesStepicResponse> getEnrolledCourses(int page) {
-        YandexMetrica.reportEvent("Api: get enrolled courses");
         return mLoggedService.getEnrolledCourses(true, page);
     }
 
     public Call<CoursesStepicResponse> getFeaturedCourses(int page) {
-        YandexMetrica.reportEvent("Api:get featured courses)");
         return mLoggedService.getFeaturedCourses(true, page);
     }
 
     @Override
     public Call<StepicProfileResponse> getUserProfile() {
-        YandexMetrica.reportEvent("Api:get user profile");
         return mLoggedService.getUserProfile();
     }
 
     @Override
     public Call<UserStepicResponse> getUsers(long[] userIds) {
-        YandexMetrica.reportEvent("Api:get users");
         return mLoggedService.getUsers(userIds);
     }
 
     @Override
-    public Call<Void> tryJoinCourse(Course course) {
-        YandexMetrica.reportEvent("Api:try join to course", JsonHelper.toJson(course));
+    public Call<Void> tryJoinCourse(@NotNull Course course) {
+        analytic.reportEventWithIdName(Analytic.Web.TRY_JOIN_COURSE, course.getCourseId() + "", course.getTitle());
         EnrollmentWrapper enrollmentWrapper = new EnrollmentWrapper(course.getCourseId());
         return mLoggedService.joinCourse(enrollmentWrapper);
     }
 
     @Override
     public Call<SectionsStepicResponse> getSections(long[] sectionsIds) {
-        YandexMetrica.reportEvent("Api:get sections", JsonHelper.toJson(sectionsIds));
         return mLoggedService.getSections(sectionsIds);
     }
 
     @Override
     public Call<UnitStepicResponse> getUnits(long[] units) {
-        YandexMetrica.reportEvent("Api:get units", JsonHelper.toJson(units));
         return mLoggedService.getUnits(units);
     }
 
     @Override
     public Call<LessonStepicResponse> getLessons(long[] lessons) {
-        YandexMetrica.reportEvent("Api:get lessons", JsonHelper.toJson(lessons));
         return mLoggedService.getLessons(lessons);
     }
 
     @Override
     public Call<StepResponse> getSteps(long[] steps) {
-        YandexMetrica.reportEvent("Api:get steps", JsonHelper.toJson(steps));
         return mLoggedService.getSteps(steps);
     }
 
     @Override
     public Call<Void> dropCourse(long courseId) {
         if (!mConfig.isUserCanDropCourse()) return null;
-        YandexMetrica.reportEvent("Api: " + Analytic.METRICA_DROP_COURSE, JsonHelper.toJson(courseId));
+        analytic.reportEventWithId(Analytic.Web.DROP_COURSE, courseId + "");
         return mLoggedService.dropCourse(courseId);
     }
 
     @Override
     public Call<ProgressesResponse> getProgresses(String[] progresses) {
-        YandexMetrica.reportEvent("Api: " + AppConstants.METRICA_GET_PROGRESSES);
         return mLoggedService.getProgresses(progresses);
     }
 
     @Override
     public Call<AssignmentResponse> getAssignments(long[] assignmentsIds) {
-        YandexMetrica.reportEvent("Api: " + AppConstants.METRICA_GET_ASSIGNMENTS);
         return mLoggedService.getAssignments(assignmentsIds);
     }
 
@@ -347,8 +340,11 @@ public class RetrofitRESTApi implements IApi {
     @Override
     public Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery) {
         String encodedQuery = URLEncoder.encode(rawQuery);
-//        String encodedQuery = rawQuery;
-        YandexMetrica.reportEvent(AppConstants.SEARCH, JsonHelper.toJson(rawQuery));
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SEARCH_TERM, rawQuery);
+        analytic.reportEvent(FirebaseAnalytics.Event.SEARCH, bundle);
+
         String type = "course";
         return mLoggedService.getSearchResults(page, encodedQuery, type);
     }
@@ -377,8 +373,9 @@ public class RetrofitRESTApi implements IApi {
     public Call<AttemptResponse> getExistingAttempts(long stepId) {
         Profile profile = mSharedPreference.getProfile();
         long userId = 0;
+        //noinspection StatementWithEmptyBody
         if (profile == null) {
-            YandexMetrica.reportEvent("profile is null, when attempt");
+            //practically it is not happens (yandex metrica)
         } else {
             userId = profile.getId();
         }
@@ -388,7 +385,6 @@ public class RetrofitRESTApi implements IApi {
     @Override
     public Call<SubmissionResponse> getSubmissions(long attemptId) {
         String order = "desc";
-
         return mLoggedService.getExistingSubmissions(attemptId, order);
     }
 
@@ -452,7 +448,6 @@ public class RetrofitRESTApi implements IApi {
 
     @Override
     public Call<Void> sendFeedback(String email, String rawDescription) {
-
 
         Interceptor interceptor = new Interceptor() {
             @Override
@@ -578,8 +573,7 @@ public class RetrofitRESTApi implements IApi {
         String jsonString = okHttpClient.newCall(request).execute().body().string();
 
         Gson gson = new Gson();
-        UpdateResponse response = gson.fromJson(jsonString, UpdateResponse.class);
-        return response;
+        return gson.fromJson(jsonString, UpdateResponse.class);
     }
 
     @Override
@@ -621,8 +615,7 @@ public class RetrofitRESTApi implements IApi {
                 .url(url)
                 .build();
 
-        Response response = client.newCall(request).execute();
-        return response;
+        return client.newCall(request).execute();
     }
 
     @Nullable
@@ -631,7 +624,7 @@ public class RetrofitRESTApi implements IApi {
         retrofit.Response ob = mStepicEmptyAuthService.getStepicForFun(lang).execute();
         Headers headers = ob.headers();
         CookieManager cookieManager = new CookieManager();
-        URI myUri = null;
+        URI myUri;
         try {
             myUri = new URI(mConfig.getBaseUrl());
         } catch (URISyntaxException e) {
@@ -645,15 +638,15 @@ public class RetrofitRESTApi implements IApi {
         try {
             AuthenticationStepicResponse resp = mSharedPreference.getAuthResponseFromStore();
             if (resp == null) {
-                YandexMetrica.reportEvent("resp null");
+                //not happen, look "resp null" in metrica before 07.2016
                 return "";
             }
             String access_token = resp.getAccess_token();
             String type = resp.getToken_type();
             return type + " " + access_token;
         } catch (Exception ex) {
-            YandexMetrica.reportError("retrofitAuth", ex);
-            // FIXME: 19.11.15 It not should happen
+            analytic.reportError(Analytic.Error.AUTH_ERROR, ex);
+            // FIXME: 19.11.15 It is not should happen
 
             mSharedPreference.deleteAuthInfo();
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {

@@ -283,7 +283,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Subscribe
     public void onSuccessDrop(final SuccessDropCourseEvent e) {
-        YandexMetrica.reportEvent(Analytic.METRICA_DROP_COURSE + " successful", JsonHelper.toJson(e.getCourse()));
+        YandexMetrica.reportEvent(Analytic.DROP_COURSE + " successful", JsonHelper.toJson(e.getCourse()));
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + e.getCourse().getTitle(), Toast.LENGTH_LONG).show();
         if (e.getType() == DatabaseFacade.Table.enrolled) {
             mCourses.remove(e.getCourse());
@@ -297,7 +297,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Subscribe
     public void onFailDrop(FailDropCourseEvent e) {
-        YandexMetrica.reportEvent(Analytic.METRICA_DROP_COURSE + " fail", JsonHelper.toJson(e.getCourse()));
+        YandexMetrica.reportEvent(Analytic.DROP_COURSE + " fail", JsonHelper.toJson(e.getCourse()));
         Toast.makeText(getContext(), R.string.internet_problem, Toast.LENGTH_LONG).show();
     }
 

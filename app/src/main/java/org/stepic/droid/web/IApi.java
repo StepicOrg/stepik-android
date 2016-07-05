@@ -2,6 +2,7 @@ package org.stepic.droid.web;
 
 import android.content.Context;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Reply;
@@ -32,7 +33,7 @@ public interface IApi {
 
     Call<UserStepicResponse> getUsers(long[] userIds);
 
-    Call<Void> tryJoinCourse(Course course);
+    Call<Void> tryJoinCourse(@NotNull Course course);
 
     Call<SectionsStepicResponse> getSections(long[] sectionsIds);
 
