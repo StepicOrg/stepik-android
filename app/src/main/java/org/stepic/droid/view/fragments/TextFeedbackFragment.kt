@@ -11,8 +11,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import com.squareup.otto.Subscribe
-import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.events.feedback.FeedbackFailedEvent
 import org.stepic.droid.events.feedback.FeedbackInternetProblemsEvent
@@ -175,13 +175,13 @@ class TextFeedbackFragment : FragmentBase() {
     @Subscribe
     fun onServerFail(event: FeedbackFailedEvent) {
         Toast.makeText(context, R.string.feedback_fail, Toast.LENGTH_LONG).show()
-        YandexMetrica.reportEvent("Feedback is failed due to server")
+        analytic.reportEvent(Analytic.Feedback.FAILED_ON_SERVER)
     }
 
     @Subscribe
     fun onInternetProblems(event: FeedbackInternetProblemsEvent) {
         Toast.makeText(context, R.string.internet_problem, Toast.LENGTH_LONG).show()
-        YandexMetrica.reportEvent("Feedback internet fail")
+        analytic.reportEvent(Analytic.Feedback.INTERNET_FAIL)
     }
 
     override fun onDestroyView() {

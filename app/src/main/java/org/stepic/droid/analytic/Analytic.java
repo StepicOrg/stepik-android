@@ -100,6 +100,11 @@ public interface Analytic {
         String CANT_PARSE_COURSE_ID = "notification, cant parse courseId";
     }
 
+    interface Feedback {
+        String FAILED_ON_SERVER = "Feedback is failed due to server";
+        String INTERNET_FAIL = "Feedback internet fail";
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEventWithId(String eventName, String id);
@@ -109,4 +114,6 @@ public interface Analytic {
     void reportEvent(String eventName);
 
     void reportError(String message, @NotNull Throwable throwable);
+
+
 }
