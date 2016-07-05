@@ -3,6 +3,7 @@ package org.stepic.droid.analytic;
 import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
     String METRICA_FAIL_LOGIN = "fail login";
@@ -103,6 +104,11 @@ public interface Analytic {
     interface Feedback {
         String FAILED_ON_SERVER = "Feedback is failed due to server";
         String INTERNET_FAIL = "Feedback internet fail";
+    }
+
+    interface Comments {
+        String CLICK_SEND_COMMENTS = "comments: click send comment";
+        String COMMENTS_SENT_SUCCESSFULLY = "comments: comment was sent successfully";
     }
 
     void reportEvent(String eventName, Bundle bundle);
