@@ -40,8 +40,6 @@ public class AppConstants {
     public static final String TYPE_ADMIN = "admin";
     public static final String TYPE_SQL = "sql";
 
-    public static final java.lang.String SHOW_DETAILED_INFO_CLICK = "Show detailed info click from context menu of course";
-
     public static final int REQUEST_WIFI = 1;
     public static final int REQUEST_EXTERNAL_STORAGE = 13;
     public static final String IMAGE_ON_DISK = "Image on disk";
@@ -56,7 +54,6 @@ public class AppConstants {
     public static final String NOT_FOUND_VERSION = "Not found version of app";
     public static final String NOT_SIGNIFICANT_ERROR = "Not significant error, app will continue to work";
     public static final java.lang.String GET_OLD_ATTEMPT = "get attempt from server db, new is not creating";
-    public static final java.lang.String SAVE_SESSION_FAIL = "save session was failed because of null attempt or submission";
     public static final java.lang.String SEARCH = "search courses";
     public static final java.lang.String THUMBNAIL_POSTFIX_EXTENSION = ".png";
     public static final java.lang.String DELIMITER_TEXT_SCORE = "/";

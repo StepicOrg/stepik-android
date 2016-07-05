@@ -5,10 +5,6 @@ import android.os.Bundle;
 import org.jetbrains.annotations.NotNull;
 
 public interface Analytic {
-    String METRICA_FAIL_LOGIN = "fail login";
-    String METRICA_SUCCESS_LOGIN = "success login";
-    String DROP_COURSE = "drop course";
-    String METRICA_LONG_TAP_COURSE = "Long tap on course";
 
     interface Preferences {
         String VIDEO_QUALITY = "video quality was chosen";
@@ -40,6 +36,9 @@ public interface Analytic {
         String UPDATING_MESSAGE_IS_SHOWN = "updating shown";
         String REFRESH_UNIT = "Pull from top to refresh section unit";
         String REFRESH_SECTION = "Pull from top to refresh section";
+        String SUCCESS_LOGIN = "success login";
+        String SHOW_DETAILED_INFO_CLICK = "Show detailed info click from context menu of course";
+        String LONG_TAP_COURSE = "Long tap on course";
     }
 
     interface Screens {
@@ -104,6 +103,9 @@ public interface Analytic {
         String UNIT_IN_STORE_STATE_NULL = "unit was null in store state manager";
         String LOAD_SERVICE = "Load Service";
         String PUSH_STATE_EXCEPTION = "Push state exception";
+        String CANT_CREATE_NOMEDIA = "can't create .nomedia";
+        String FAIL_LOGIN = "fail login";
+        String CONFIG_NOT_PARSED = "configRelease, config.json problem";
     }
 
     interface Web {
@@ -113,6 +115,8 @@ public interface Analytic {
         String TRY_REGISTER = "Api: try register";
         String TRY_JOIN_COURSE = "Api:try join to course";
         String DROP_COURSE = "Api: drop course";
+        String DROP_COURSE_SUCCESSFUL = "drop course successful";
+        String DROP_COURSE_FAIL = "drop course fail";
     }
 
     interface Notification {

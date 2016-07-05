@@ -10,8 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.yandex.metrica.YandexMetrica;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
@@ -172,7 +170,7 @@ public class ScreenManager implements IScreenManager {
 
         boolean isCompatible = VLCUtil.hasCompatibleCPU(MainApplication.getAppContext());
         if (!isCompatible) {
-            YandexMetrica.reportEvent(Analytic.Video.NOT_COMPATIBLE);
+            analytic.reportEvent(Analytic.Video.NOT_COMPATIBLE);
         }
 
 

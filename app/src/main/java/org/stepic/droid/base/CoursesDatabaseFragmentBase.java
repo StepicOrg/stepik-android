@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
-import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -32,7 +31,6 @@ import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.fragments.CourseListFragmentBase;
@@ -222,7 +220,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        YandexMetrica.reportEvent(Analytic.METRICA_LONG_TAP_COURSE);
+        analytic.reportEvent(Analytic.Interaction.LONG_TAP_COURSE);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int position = info.position;
         switch (item.getItemId()) {
@@ -283,7 +281,11 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Subscribe
     public void onSuccessDrop(final SuccessDropCourseEvent e) {
-        YandexMetrica.reportEvent(Analytic.DROP_COURSE + " successful", JsonHelper.toJson(e.getCourse()));
+        long courseId = -1L;
+        if (e.getCourse() != null) {
+            courseId = e.getCourse().getCourseId();
+        }
+        analytic.reportEvent(Analytic.Web.DROP_COURSE_SUCCESSFUL, courseId + "");
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + e.getCourse().getTitle(), Toast.LENGTH_LONG).show();
         if (e.getType() == DatabaseFacade.Table.enrolled) {
             mCourses.remove(e.getCourse());
@@ -297,12 +299,16 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Subscribe
     public void onFailDrop(FailDropCourseEvent e) {
-        YandexMetrica.reportEvent(Analytic.DROP_COURSE + " fail", JsonHelper.toJson(e.getCourse()));
+        long courseId = -1L;
+        if (e.getCourse() != null) {
+            courseId = e.getCourse().getCourseId();
+        }
+        analytic.reportEvent(Analytic.Web.DROP_COURSE_FAIL, courseId + "");
         Toast.makeText(getContext(), R.string.internet_problem, Toast.LENGTH_LONG).show();
     }
 
     private void showInfo(int position) {
-        YandexMetrica.reportEvent(AppConstants.SHOW_DETAILED_INFO_CLICK);
+        analytic.reportEvent(Analytic.Interaction.SHOW_DETAILED_INFO_CLICK);
         Course course = mCourses.get(position);
         mShell.getScreenProvider().showCourseDescription(this, course);
     }

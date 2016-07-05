@@ -3,8 +3,6 @@ package org.stepic.droid.core;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.yandex.metrica.YandexMetrica;
-
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -25,11 +23,13 @@ import retrofit.Retrofit;
 public class LoginManager implements ILoginManager {
     private final IShell mShell;
     private final Context mContext;
+    private Analytic analytic;
 
     @Inject
-    public LoginManager(IShell shell, Context appContext) {
+    public LoginManager(IShell shell, Context appContext, Analytic analytic) {
         mShell = shell;
         mContext = appContext;
+        this.analytic = analytic;
     }
 
 
@@ -83,8 +83,8 @@ public class LoginManager implements ILoginManager {
     }
 
     private void failLogin(Throwable t) {
-        YandexMetrica.reportEvent(Analytic.METRICA_FAIL_LOGIN);
-        YandexMetrica.reportError(Analytic.METRICA_FAIL_LOGIN, t);
+        analytic.reportEvent(Analytic.Error.FAIL_LOGIN);
+        analytic.reportError(Analytic.Error.FAIL_LOGIN, t);
         if (t != null) {
             int errorTextResId;
             if (t instanceof ProtocolException) {
@@ -102,7 +102,7 @@ public class LoginManager implements ILoginManager {
         preferenceHelper.storeAuthInfo(authStepic);
 
         if (authStepic != null) {
-            YandexMetrica.reportEvent(Analytic.METRICA_SUCCESS_LOGIN);
+            analytic.reportEvent(Analytic.Interaction.SUCCESS_LOGIN);
             mShell.getScreenProvider().showMainFeed(mContext);
             finisher.onFinish();
         } else {

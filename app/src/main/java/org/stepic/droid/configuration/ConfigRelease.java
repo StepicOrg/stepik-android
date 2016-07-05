@@ -5,8 +5,8 @@ import android.content.Context;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.yandex.metrica.YandexMetrica;
 
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.web.IApi;
 
 import java.io.InputStream;
@@ -41,14 +41,14 @@ public class ConfigRelease implements IConfig {
 
 
     @Inject
-    public ConfigRelease(Context context) {
+    public ConfigRelease(Context context, Analytic analytic) {
         try {
             InputStream in = context.getAssets().open("configs/config.json");
             JsonParser parser = new JsonParser();
             JsonElement config = parser.parse(new InputStreamReader(in));
             mProperties = config.getAsJsonObject();
         } catch (Exception e) {
-            YandexMetrica.reportError("configRelease, config.json problem", e);
+            analytic.reportError(Analytic.Error.CONFIG_NOT_PARSED, e);
             mProperties = new JsonObject();
         }
     }

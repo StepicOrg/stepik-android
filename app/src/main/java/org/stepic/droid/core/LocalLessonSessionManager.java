@@ -1,11 +1,8 @@
 package org.stepic.droid.core;
 
-import com.yandex.metrica.YandexMetrica;
-
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Submission;
-import org.stepic.droid.util.AppConstants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +37,6 @@ public class LocalLessonSessionManager implements ILessonSessionManager {
     @Override
     public void saveSession(long stepId, @Nullable Attempt attempt, @Nullable Submission submission) {
         if (attempt == null || submission == null) {
-            YandexMetrica.reportEvent(AppConstants.SAVE_SESSION_FAIL);
             return;
         }
 

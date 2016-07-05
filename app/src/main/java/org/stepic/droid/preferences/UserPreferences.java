@@ -4,11 +4,10 @@ import android.content.Context;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 
-import com.yandex.metrica.YandexMetrica;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.StorageOption;
@@ -27,6 +26,7 @@ public class UserPreferences {
 
     Context mContext;
     SharedPreferenceHelper mSharedPreferenceHelper;
+    private Analytic analytic;
 
     private String kb;
     private String mb;
@@ -37,9 +37,10 @@ public class UserPreferences {
 
 
     @Inject
-    public UserPreferences(Context context, SharedPreferenceHelper helper) {
+    public UserPreferences(Context context, SharedPreferenceHelper helper, Analytic analytic) {
         mContext = context;
         mSharedPreferenceHelper = helper;
+        this.analytic = analytic;
         kb = context.getString(R.string.kb);
         mb = context.getString(R.string.mb);
         gb = context.getString(R.string.gb);
@@ -70,7 +71,7 @@ public class UserPreferences {
             noMediaFile.createNewFile();
         } catch (IOException ioException) {
             // FIXME: 20.10.15 handle exception
-            YandexMetrica.reportError("can't create .nomedia", ioException);
+            analytic.reportError(Analytic.Error.CANT_CREATE_NOMEDIA, ioException);
         }
 
         return userStepicIdDir;
@@ -89,7 +90,7 @@ public class UserPreferences {
                 noMediaFile.createNewFile();
             } catch (IOException ioException) {
                 // FIXME: 20.10.15 handle exception
-                YandexMetrica.reportError("can't create .nomedia", ioException);
+                analytic.reportError(Analytic.Error.CANT_CREATE_NOMEDIA, ioException);
             }
 
             return userStepicIdDir;

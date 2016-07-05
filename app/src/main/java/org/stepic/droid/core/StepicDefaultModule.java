@@ -102,8 +102,8 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public IConfig provideIConfig(Context context) {
-        return new ConfigRelease(context);
+    public IConfig provideIConfig(Context context, Analytic analytic) {
+        return new ConfigRelease(context, analytic);
     }
 
 
@@ -148,8 +148,8 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public UserPreferences provideUserPrefs(Context context, SharedPreferenceHelper helper) {
-        return new UserPreferences(context, helper);
+    public UserPreferences provideUserPrefs(Context context, SharedPreferenceHelper helper, Analytic analytic) {
+        return new UserPreferences(context, helper, analytic);
     }
 
     @Provides
@@ -213,8 +213,8 @@ public class StepicDefaultModule {
 
     @Singleton
     @Provides
-    public ILoginManager provideLoginManager(IShell shell, Context context) {
-        return new LoginManager(shell, context);
+    public ILoginManager provideLoginManager(IShell shell, Context context, Analytic analytic) {
+        return new LoginManager(shell, context, analytic);
     }
 
     @Singleton
