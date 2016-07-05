@@ -326,8 +326,8 @@ public class StepicDefaultModule {
 
     @Singleton
     @Provides
-    public INotificationManager provideNotificationManager(SharedPreferenceHelper sp, IApi api, IConfig config, UserPreferences userPreferences, DatabaseFacade db) {
-        return new NotificationManagerImpl(sp, api, config, userPreferences, db);
+    public INotificationManager provideNotificationManager(SharedPreferenceHelper sp, IApi api, IConfig config, UserPreferences userPreferences, DatabaseFacade db, Analytic analytic) {
+        return new NotificationManagerImpl(sp, api, config, userPreferences, db, analytic);
     }
 
     @Provides

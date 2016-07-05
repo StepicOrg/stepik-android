@@ -90,6 +90,16 @@ public interface Analytic {
         String DROP_COURSE = "Api: drop course";
     }
 
+    interface Notification {
+        String DISABLED_BY_USER = "Notification is disabled by user in app";
+        String ACTION_NOT_SUPPORT = "notification action is not support";
+        String HTML_WAS_NULL = "notification action is not support";
+        String WAS_MUTED = "notification html text was muted";
+        String NOT_SUPPORT = "notification is not support";
+        String LEARN_SHOWN = "notification learn is shown";
+        String CANT_PARSE_COURSE_ID = "notification, cant parse courseId";
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEventWithId(String eventName, String id);

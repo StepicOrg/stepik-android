@@ -13,8 +13,8 @@ import android.support.annotation.DrawableRes
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import com.squareup.picasso.Picasso
-import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.model.Course
@@ -26,11 +26,10 @@ import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.HtmlHelper
-import org.stepic.droid.util.JsonHelper
 import org.stepic.droid.view.activities.SectionActivity
 import org.stepic.droid.web.IApi
 
-class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper, val api: IApi, val configs: IConfig, val userPreferences: UserPreferences, val databaseFacade: DatabaseFacade) : INotificationManager {
+class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper, val api: IApi, val configs: IConfig, val userPreferences: UserPreferences, val databaseFacade: DatabaseFacade, val analytic : Analytic) : INotificationManager {
     override fun showNotification(notification: Notification) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             throw RuntimeException("Can't create notification on main thread")
@@ -38,27 +37,27 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         if (userPreferences.isNotificationEnabled && sharedPreferenceHelper.isGcmTokenOk) {
             resolveAndSendNotification(notification)
         } else {
-            YandexMetrica.reportEvent("Notification is disabled by user in app")
+            analytic.reportEvent(Analytic.Notification.DISABLED_BY_USER)
         }
     }
 
     private fun resolveAndSendNotification(notification: Notification) {
         val htmlText = notification.htmlText
         if (!NotificationHelper.isNotificationValidByAction(notification.action)) {
-            YandexMetrica.reportEvent("notification action is not support", JsonHelper.toJson(notification))
+            analytic.reportEventWithIdName(Analytic.Notification.ACTION_NOT_SUPPORT, notification.id.toString(), notification.action)
             return
         } else if (htmlText == null || htmlText.isEmpty()) {
-            YandexMetrica.reportEvent("notification html text was null", JsonHelper.toJson(notification))
+            analytic.reportEventWithId(Analytic.Notification.HTML_WAS_NULL, notification.id.toString())
             return
         } else if (notification.isMuted ?: false) {
-            YandexMetrica.reportEvent("notification html text was muted", JsonHelper.toJson(notification))
+            analytic.reportEventWithId(Analytic.Notification.WAS_MUTED, notification.id.toString())
             return
         } else {
             //resolve which notification we should show
             when (notification.type) {
                 NotificationType.learn -> sendLearnNotification(notification, htmlText, notification.id ?: 0)
                 NotificationType.comments -> sendCommentNotification(notification, htmlText, notification.id ?: 0)
-                else -> YandexMetrica.reportEvent("notification is not support: " + notification.type)
+                else ->analytic.reportEventWithIdName(Analytic.Notification.NOT_SUPPORT, notification.id.toString(), notification.type.toString())
             }
         }
     }
@@ -67,11 +66,11 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     }
 
     private fun sendLearnNotification(stepicNotification: Notification, rawMessageHtml: String, id: Long) {
-        YandexMetrica.reportEvent("notification learn is shown")
+         analytic.reportEvent(Analytic.Notification.LEARN_SHOWN)
 
         val courseId: Long = HtmlHelper.parseCourseIdFromNotification(stepicNotification) ?: 0L
         if (courseId == 0L) {
-            YandexMetrica.reportEvent("notification, cant parse courseId")
+            analytic.reportEventWithId(Analytic.Notification.CANT_PARSE_COURSE_ID, stepicNotification.id.toString())
             return
         }
         stepicNotification.course_id = courseId
