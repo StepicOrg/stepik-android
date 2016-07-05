@@ -65,7 +65,6 @@ public class AppConstants {
     public static final java.lang.String DELIMITER_TEXT_SCORE = "/";
     public static final java.lang.String NOTIFICATION_CANCELED = "notification_cancelled";
     public static final java.lang.String UPDATING_MESSAGE_IS_SHOWN = "updating shown";
-    public static final java.lang.String UPDATING_MESSAGE_IS_APPROVED = "updating approved";
 
 
     public static final String OPEN_NOTIFICATION = "Open_notification";
@@ -79,5 +78,4 @@ public class AppConstants {
     public static final java.lang.String AUTH_FROM_DIALOG = "Auth: yes from auth dialog";
     public static final String ABOUT_NAME_INJECTION_COURSE_FINDER = "about";
     public static final String SECTION_NAMED_INJECTION_COURSE_FINDER = "section";
-    public static final String DELETE_COMMENT_CONFIRMATION = "comment: delete comment confirmed";
 }

@@ -3,7 +3,6 @@ package org.stepic.droid.analytic;
 import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
     String METRICA_FAIL_LOGIN = "fail login";
@@ -31,6 +30,7 @@ public interface Analytic {
         String CANCEL_VIDEO_QUALITY = "Cancel video quality dialog";
         String YES_CLEAR_VIDEOS = "clear videos from downloads";
         String DELETE_COMMENT_TRIAL = "comment: delete comment trial";
+        String UPDATING_MESSAGE_IS_APPROVED = "updating approved";
     }
 
     interface Screens {
@@ -109,6 +109,7 @@ public interface Analytic {
     interface Comments {
         String CLICK_SEND_COMMENTS = "comments: click send comment";
         String COMMENTS_SENT_SUCCESSFULLY = "comments: comment was sent successfully";
+        String DELETE_COMMENT_CONFIRMATION = "comment: delete comment confirmed";
     }
 
     void reportEvent(String eventName, Bundle bundle);

@@ -5,13 +5,12 @@ import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
 import com.squareup.otto.Bus
-import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.events.comments.FailDeleteCommentEvent
 import org.stepic.droid.events.comments.InternetConnectionProblemInCommentsEvent
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent
-import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.view.custom.LoadingProgressDialog
 import org.stepic.droid.web.CommentsResponse
@@ -28,6 +27,9 @@ class DeleteCommentDialogFragment : DialogFragment() {
 
     @Inject
     lateinit var bus: Bus;
+
+    @Inject
+    lateinit var analytic : Analytic
 
     companion object {
         private val COMMENT_ID_KEY = "comment_id_key"
@@ -51,7 +53,7 @@ class DeleteCommentDialogFragment : DialogFragment() {
                 .setMessage(R.string.delete_comment_detail)
                 .setPositiveButton(R.string.delete_label) { dialog, which ->
                     ProgressHelper.activate(loadingProgressDialog)
-                    YandexMetrica.reportEvent(AppConstants.DELETE_COMMENT_CONFIRMATION)
+                    analytic.reportEvent(Analytic.Comments.DELETE_COMMENT_CONFIRMATION)
                     api.deleteComment(commentId).enqueue(object : Callback<CommentsResponse> {
                         override fun onResponse(response: Response<CommentsResponse>?, retrofit: Retrofit?) {
                             ProgressHelper.dismiss(loadingProgressDialog)
