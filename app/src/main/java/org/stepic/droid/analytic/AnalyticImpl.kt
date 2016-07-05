@@ -21,16 +21,7 @@ class AnalyticImpl(context: Context) : Analytic {
 
     override fun reportEvent(eventName: String, bundle: Bundle?) {
         YandexMetrica.reportEvent(eventName)
-        var eventNameLocal = eventName
-
-        if (eventName.equals(Analytic.Interaction.SUCCESS_LOGIN)) {
-            eventNameLocal = FirebaseAnalytics.Event.LOGIN
-        }
-
-        if (eventNameLocal.length > 32L) {
-            eventNameLocal = eventName.substring(0, 32)
-        }
-
+        val eventNameLocal = castStringToFirebaseEvent(eventName)
         firebaseAnalytics.logEvent(eventNameLocal, bundle)
     }
 
@@ -54,5 +45,27 @@ class AnalyticImpl(context: Context) : Analytic {
             bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name)
         }
         reportEvent(eventName, bundle)
+    }
+
+    private fun castStringToFirebaseEvent(eventName: String): String {
+        var eventNameLocal = eventName
+        if (eventName.equals(Analytic.Interaction.SUCCESS_LOGIN)) {
+            eventNameLocal = FirebaseAnalytics.Event.LOGIN
+        }
+
+        val sb = StringBuilder()
+        eventNameLocal.forEach {
+            if (Character.isLetterOrDigit(it) && !Character.isWhitespace(it)) {
+                sb.append(it)
+            } else {
+                sb.append("_")
+            }
+        }
+        eventNameLocal = sb.toString()
+
+        if (eventNameLocal.length > 32L) {
+            eventNameLocal = eventName.substring(0, 32)
+        }
+        return eventNameLocal
     }
 }
