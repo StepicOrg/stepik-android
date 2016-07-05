@@ -22,7 +22,12 @@ class AnalyticImpl(context: Context) : Analytic {
     override fun reportEvent(eventName: String, bundle: Bundle?) {
         YandexMetrica.reportEvent(eventName)
         var eventNameLocal = eventName
-        if (eventNameLocal.length > 32L){
+
+        if (eventName.equals(Analytic.Interaction.SUCCESS_LOGIN)) {
+            eventNameLocal = FirebaseAnalytics.Event.LOGIN
+        }
+
+        if (eventNameLocal.length > 32L) {
             eventNameLocal = eventName.substring(0, 32)
         }
 

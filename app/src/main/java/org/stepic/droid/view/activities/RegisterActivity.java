@@ -12,8 +12,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.okhttp.ResponseBody;
-import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
@@ -169,6 +169,7 @@ public class RegisterActivity extends FragmentActivityBase {
                 public void onResponse(Response<RegistrationResponse> response, Retrofit retrofit) {
                     ProgressHelper.dismiss(mProgress);
                     if (response.isSuccess()) {
+                        analytic.reportEvent(FirebaseAnalytics.Event.SIGN_UP);
                         mLoginManager.login(email, password, new ProgressHandler() {
                             @Override
                             public void activate() {
