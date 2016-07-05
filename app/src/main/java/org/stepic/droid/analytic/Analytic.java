@@ -3,6 +3,7 @@ package org.stepic.droid.analytic;
 import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
     String METRICA_FAIL_LOGIN = "fail login";
@@ -81,6 +82,9 @@ public interface Analytic {
         String INIT_PHONE_STATE = "initPhoneStateListener";
         String REMOVE_PHONE_STATE = "removePhoneStateCallbacks";
         String NOTIFICATION_ERROR_PARSE = "notification error parse";
+        String DELETE_SERVICE_ERROR = "DeleteService nullptr";
+        String ERROR_UPDATE_CHECK_APP = "update check failed";
+        String UPDATE_FROM_APK_FAILED = "update apk is failed";
     }
 
     interface Web {

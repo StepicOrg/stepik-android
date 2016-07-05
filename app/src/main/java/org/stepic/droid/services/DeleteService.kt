@@ -6,7 +6,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.Handler
 import com.squareup.otto.Bus
-import com.yandex.metrica.YandexMetrica
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.events.steps.StepRemovedEvent
 import org.stepic.droid.model.*
@@ -36,6 +36,8 @@ class DeleteService : IntentService("delete_service") {
     lateinit var mDb: DatabaseFacade
     @Inject
     lateinit var mStoreStateManager: IStoreStateManager
+    @Inject
+    lateinit var analytic : Analytic
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         MainApplication.component().inject(this)
@@ -70,8 +72,7 @@ class DeleteService : IntentService("delete_service") {
         } catch (ex: NullPointerException) {
             //possibly user click clear cache;
             //            throw ex;
-            YandexMetrica.reportError("DeleteService nullptr", ex)
-
+            analytic.reportError(Analytic.Error.DELETE_SERVICE_ERROR, ex)
             mDb.dropDatabase()
         }
 
