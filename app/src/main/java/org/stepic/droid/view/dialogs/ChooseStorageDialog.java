@@ -6,14 +6,12 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
-import com.yandex.metrica.YandexMetrica;
-
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.StorageOption;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.util.AppConstants;
 
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -27,6 +25,9 @@ public class ChooseStorageDialog extends DialogFragment {
 
     @Inject
     UserPreferences mUserPreferences;
+
+    @Inject
+    Analytic analytic;
 
     @NotNull
     @Override
@@ -51,7 +52,7 @@ public class ChooseStorageDialog extends DialogFragment {
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        YandexMetrica.reportEvent(AppConstants.METRICA_CANCEL_CHOOSE_STORE_CLICK);
+                        analytic.reportEvent(Analytic.Interaction.CANCEL_CHOOSE_STORE_CLICK);
                     }
                 })
                 .setSingleChoiceItems(headers,

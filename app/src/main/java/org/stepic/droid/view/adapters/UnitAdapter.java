@@ -16,7 +16,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -62,6 +61,9 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
     @Inject
     CleanManager mCleaner;
+
+    @Inject
+    Analytic analytic;
 
 
     private final static String DELIMITER = ".";
@@ -240,7 +242,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
             if (unit.is_cached()) {
                 //delete
-                YandexMetrica.reportEvent(Analytic.Interaction.CLICK_DELETE_UNIT, JsonHelper.toJson(unit));
+                analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_UNIT, unit.getId()+"");
                 mCleaner.removeUnitLesson(unit, lesson);
                 unit.set_loading(false);
                 unit.set_cached(false);
@@ -252,11 +254,10 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             } else {
                 if (unit.is_loading()) {
                     //cancel loading
+                    analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_UNIT, unit.getId()+"");
                     mScreenManager.showDownload(mContext);
-
                 } else {
-
-                    YandexMetrica.reportEvent(Analytic.Interaction.CLICK_CACHE_UNIT, JsonHelper.toJson(unit));
+                    analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_UNIT, unit.getId()+"");
                     unit.set_cached(false);
                     lesson.set_cached(false);
                     unit.set_loading(true);

@@ -47,10 +47,10 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             analytic.reportEventWithIdName(Analytic.Notification.ACTION_NOT_SUPPORT, notification.id.toString(), notification.action)
             return
         } else if (htmlText == null || htmlText.isEmpty()) {
-            analytic.reportEventWithId(Analytic.Notification.HTML_WAS_NULL, notification.id.toString())
+            analytic.reportEvent(Analytic.Notification.HTML_WAS_NULL, notification.id.toString())
             return
         } else if (notification.isMuted ?: false) {
-            analytic.reportEventWithId(Analytic.Notification.WAS_MUTED, notification.id.toString())
+            analytic.reportEvent(Analytic.Notification.WAS_MUTED, notification.id.toString())
             return
         } else {
             //resolve which notification we should show
@@ -70,7 +70,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
         val courseId: Long = HtmlHelper.parseCourseIdFromNotification(stepicNotification) ?: 0L
         if (courseId == 0L) {
-            analytic.reportEventWithId(Analytic.Notification.CANT_PARSE_COURSE_ID, stepicNotification.id.toString())
+            analytic.reportEvent(Analytic.Notification.CANT_PARSE_COURSE_ID, stepicNotification.id.toString())
             return
         }
         stepicNotification.course_id = courseId

@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.facebook.drawee.view.DraweeView;
 import com.squareup.otto.Subscribe;
-import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
@@ -189,7 +188,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                                 try {
                                     mShell.getApi().markNotificationAsRead(notificationItem.getId(), true).execute();
                                 } catch (IOException e) {
-                                    YandexMetrica.reportError("notification is not posted", e);
+                                    analytic.reportError(Analytic.Error.NOTIFICATION_NOT_POSTED_ON_CLICK, e);
                                 }
                             }
                         }
@@ -346,7 +345,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Override
     public void onRefresh() {
-        YandexMetrica.reportEvent(Analytic.METRICA_REFRESH_SECTION);
+        analytic.reportEvent(Analytic.Interaction.REFRESH_SECTION);
         if (mCourse != null) {
             updateSections();
         } else {

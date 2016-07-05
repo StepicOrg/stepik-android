@@ -17,6 +17,7 @@ import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.core.ActivityFinisher;
 import org.stepic.droid.core.ProgressHandler;
@@ -192,7 +193,7 @@ public class RegisterActivity extends FragmentActivityBase {
                         try {
                             error = errorConverter.convert(response.errorBody());
                         } catch (Exception e) {
-                            YandexMetrica.reportError("registration important error", e); //it is unknown response Expected BEGIN_OBJECT but was STRING at line 1 column 1 path
+                            analytic.reportError(Analytic.Error.REGISTRATION_IMPORTANT_ERROR, e); //it is unknown response Expected BEGIN_OBJECT but was STRING at line 1 column 1 path
                         }
                         handleErrorRegistrationResponse(error);
                     }

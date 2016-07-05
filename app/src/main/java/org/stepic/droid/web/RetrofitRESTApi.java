@@ -309,7 +309,7 @@ public class RetrofitRESTApi implements IApi {
     @Override
     public Call<Void> dropCourse(long courseId) {
         if (!mConfig.isUserCanDropCourse()) return null;
-        analytic.reportEventWithId(Analytic.Web.DROP_COURSE, courseId + "");
+        analytic.reportEvent(Analytic.Web.DROP_COURSE, courseId + "");
         return mLoggedService.dropCourse(courseId);
     }
 

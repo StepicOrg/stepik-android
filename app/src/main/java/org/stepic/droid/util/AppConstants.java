@@ -44,7 +44,6 @@ public class AppConstants {
 
     public static final int REQUEST_WIFI = 1;
     public static final int REQUEST_EXTERNAL_STORAGE = 13;
-    public static final String NULL_SHOW_PROFILE = "Null profile is tried to show";
     public static final String IMAGE_ON_DISK = "Image on disk";
     public static final String METRICA_GET_PROGRESSES = "Get progresses";
     public static final String METRICA_GET_ASSIGNMENTS = "Get assignments";
@@ -64,18 +63,12 @@ public class AppConstants {
     public static final java.lang.String THUMBNAIL_POSTFIX_EXTENSION = ".png";
     public static final java.lang.String DELIMITER_TEXT_SCORE = "/";
     public static final java.lang.String NOTIFICATION_CANCELED = "notification_cancelled";
-    public static final java.lang.String UPDATING_MESSAGE_IS_SHOWN = "updating shown";
 
 
     public static final String OPEN_NOTIFICATION = "Open_notification";
     public static final long MILLIS_IN_24HOURS = 86400000L;
 
-    public static final java.lang.String METRICA_CANCEL_CHOOSE_STORE_CLICK = "storage: cancel choice";
-    public static final java.lang.String TRANSFER_DATA = "storage: transfer data";
-    public static final String FAIL_TO_MOVE = "storage: fail to move";
     public static final String ERROR_PARSING_SLUG = "error parsing slug";
-    public static final java.lang.String COURSE_USER_TRY_FAIL = "course: user open failed for him course";
-    public static final java.lang.String AUTH_FROM_DIALOG = "Auth: yes from auth dialog";
     public static final String ABOUT_NAME_INJECTION_COURSE_FINDER = "about";
     public static final String SECTION_NAMED_INJECTION_COURSE_FINDER = "section";
 }

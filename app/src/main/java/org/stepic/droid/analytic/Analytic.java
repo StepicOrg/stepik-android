@@ -3,19 +3,20 @@ package org.stepic.droid.analytic;
 import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
     String METRICA_FAIL_LOGIN = "fail login";
     String METRICA_SUCCESS_LOGIN = "success login";
     String DROP_COURSE = "drop course";
     String METRICA_LOAD_SERVICE = "Load Service";
-    String METRICA_REFRESH_COURSE = "Pull from top to refresh course";
-    String METRICA_REFRESH_SECTION = "Pull from top to refresh section";
-    String METRICA_REFRESH_UNIT = "Pull from top to refresh section unit";
     String METRICA_LONG_TAP_COURSE = "Long tap on course";
     String METRICA_LESSON_IN_STORE_STATE_NULL = "lesson was null in store state manager";
     String METRICA_UNIT_IN_STORE_STATE_NULL = "unit was null in store state manager";
+
+    interface Preferences {
+        String VIDEO_QUALITY = "video quality was chosen";
+
+    }
 
     interface Interaction {
         String CLICK_SIGN_IN = "click sign in on launch screen";
@@ -32,6 +33,17 @@ public interface Analytic {
         String YES_CLEAR_VIDEOS = "clear videos from downloads";
         String DELETE_COMMENT_TRIAL = "comment: delete comment trial";
         String UPDATING_MESSAGE_IS_APPROVED = "updating approved";
+        String PULL_TO_REFRESH_COURSE = "Pull from top to refresh course";
+        String COURSE_USER_TRY_FAIL = "course: user open failed for him course";
+        String JOIN_COURSE_NULL = "course is null when join, detail";
+        String CANCEL_CHOOSE_STORE_CLICK = "storage: cancel choice";
+        String AUTH_FROM_DIALOG_FOR_UNAUTHORIZED_USER = "Auth: yes from auth dialog";
+        String TRANSFER_DATA_YES = "storage: transfer data";
+        String CLICK_CANCEL_SECTION = "click cancel section";
+        String CLICK_CANCEL_UNIT = "click cancel unit";
+        String UPDATING_MESSAGE_IS_SHOWN = "updating shown";
+        String REFRESH_UNIT = "Pull from top to refresh section unit";
+        String REFRESH_SECTION = "Pull from top to refresh section";
     }
 
     interface Screens {
@@ -85,6 +97,11 @@ public interface Analytic {
         String DELETE_SERVICE_ERROR = "DeleteService nullptr";
         String ERROR_UPDATE_CHECK_APP = "update check failed";
         String UPDATE_FROM_APK_FAILED = "update apk is failed";
+        String CANT_RESOLVE_VIDEO = "can't Resolve video";
+        String FAIL_TO_MOVE = "storage: fail to move";
+        String NULL_SHOW_PROFILE = "Null profile is tried to show";
+        String REGISTRATION_IMPORTANT_ERROR = "registration important error";
+        String NOTIFICATION_NOT_POSTED_ON_CLICK = "notification is not posted";
     }
 
     interface Web {
@@ -121,7 +138,7 @@ public interface Analytic {
 
     void reportEvent(String eventName, Bundle bundle);
 
-    void reportEventWithId(String eventName, String id);
+    void reportEvent(String eventName, String id);
 
     void reportEventWithIdName(String eventName, String id, String name);
 

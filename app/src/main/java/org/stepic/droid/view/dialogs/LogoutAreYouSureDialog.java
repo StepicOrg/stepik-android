@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
-import com.yandex.metrica.YandexMetrica;
-
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -45,6 +43,8 @@ public class LogoutAreYouSureDialog extends DialogFragment {
     ThreadPoolExecutor mThreadPoolExecutor;
     @Inject
     SharedPreferenceHelper mSharedPreferenceHelper;
+    @Inject
+    Analytic analytic;
 
     @NotNull
     @Override
@@ -57,7 +57,7 @@ public class LogoutAreYouSureDialog extends DialogFragment {
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        YandexMetrica.reportEvent(Analytic.Interaction.CLICK_YES_LOGOUT);
+                        analytic.reportEvent(Analytic.Interaction.CLICK_YES_LOGOUT);
 
                         final File directoryForClean = mUserPreferences.getUserDownloadFolder();
                         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {

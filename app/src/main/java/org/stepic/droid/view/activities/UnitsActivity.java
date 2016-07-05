@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.squareup.otto.Subscribe;
-import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
@@ -278,7 +277,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     @Override
     public void onRefresh() {
-        YandexMetrica.reportEvent(Analytic.METRICA_REFRESH_UNIT);
+        analytic.reportEvent(Analytic.Interaction.REFRESH_UNIT);
         ProgressHelper.activate(mSwipeRefreshLayout);
         updateUnits();
     }

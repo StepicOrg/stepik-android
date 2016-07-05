@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
-import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -222,7 +221,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     public boolean onNavigationItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.logout_item:
-                YandexMetrica.reportEvent(Analytic.Interaction.CLICK_LOGOUT);
+                analytic.reportEvent(Analytic.Interaction.CLICK_LOGOUT);
 
                 LogoutAreYouSureDialog dialog = LogoutAreYouSureDialog.newInstance();
                 dialog.show(getSupportFragmentManager(), null);
@@ -317,7 +316,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     public void showProfile(ProfileCanBeShownEvent e) {
         Profile profile = e.getProfile();
         if (profile == null) {
-            YandexMetrica.reportError(AppConstants.NULL_SHOW_PROFILE, new NullPointerException());
+            analytic.reportError(Analytic.Error.NULL_SHOW_PROFILE, new NullPointerException());
             return;
         }
         mProfileImage.setVisibility(View.VISIBLE);
@@ -360,7 +359,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         if (!needUpdate) return;
 
         mSharedPreferenceHelper.storeLastShownUpdatingMessage();
-        YandexMetrica.reportEvent(AppConstants.UPDATING_MESSAGE_IS_SHOWN);
+        analytic.reportEvent(Analytic.Interaction.UPDATING_MESSAGE_IS_SHOWN);
         DialogFragment dialog = NeedUpdatingDialog.Companion.newInstance(event.getLinkForUpdate(), event.isAppInGp());
         dialog.show(getSupportFragmentManager(), null);
     }

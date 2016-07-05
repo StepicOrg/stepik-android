@@ -34,7 +34,7 @@ class AnalyticImpl(context: Context) : Analytic {
         YandexMetrica.reportError(message, throwable)
     }
 
-    override fun reportEventWithId(eventName: String, id: String) {
+    override fun reportEvent(eventName: String, id: String) {
         reportEventWithIdName(eventName, id, null)
     }
 

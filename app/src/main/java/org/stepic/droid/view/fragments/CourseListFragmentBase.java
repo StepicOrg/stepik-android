@@ -13,7 +13,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.squareup.otto.Subscribe;
-import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -204,7 +203,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
     @Override
     public void onRefresh() {
-        YandexMetrica.reportEvent(Analytic.METRICA_REFRESH_COURSE);
+        analytic.reportEvent(Analytic.Interaction.PULL_TO_REFRESH_COURSE);
         mCurrentPage = 1;
         mHasNextPage = true;
         downloadData();

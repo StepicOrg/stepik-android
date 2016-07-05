@@ -254,7 +254,7 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void showUnitsForSection(Context sourceActivity, @NotNull Section section) {
-        analytic.reportEventWithId(Analytic.Screens.SHOW_UNITS, section.getId() + "");
+        analytic.reportEvent(Analytic.Screens.SHOW_UNITS, section.getId() + "");
         Intent intent = new Intent(sourceActivity, UnitsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_SECTION_BUNDLE, section);
@@ -276,7 +276,7 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void openStepInWeb(Context context, Step step) {
-        analytic.reportEventWithId(Analytic.Screens.OPEN_STEP_IN_WEB, step.getId()+"");
+        analytic.reportEvent(Analytic.Screens.OPEN_STEP_IN_WEB, step.getId()+"");
         String url = mConfig.getBaseUrl() + "/lesson/" + step.getLesson() + "/step/" + step.getPosition() + "/?from_mobile_app=true";
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
         context.startActivity(intent);

@@ -37,7 +37,6 @@ import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
-import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -60,7 +59,6 @@ import org.stepic.droid.presenters.course_finder.CourseFinderPresenter;
 import org.stepic.droid.presenters.course_joiner.CourseJoinerPresenter;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.HtmlHelper;
-import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.StringUtil;
@@ -474,14 +472,11 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @Override
     public void onCourseUnavailable(CourseUnavailableForUserEvent event) {
-        //// TODO: 16.06.16 SHOW ERROR: CAN'T OPEN COURSE, TRY TO FIND IN SEARCH (Link to featured)
         if (mCourse == null) {
-            YandexMetrica.reportEvent(AppConstants.COURSE_USER_TRY_FAIL, JsonHelper.toJson(event));
-            int i = 0;
+            analytic.reportEvent(Analytic.Interaction.COURSE_USER_TRY_FAIL, event.getCourseId()+"");
             reportInternetProblem.setVisibility(View.GONE);
             courseNotFoundView.setVisibility(View.VISIBLE);
         }
-
     }
 
     @Override
@@ -600,7 +595,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         if (mCourse != null) {
             courseJoinerPresenter.joinCourse(mCourse);
         } else {
-            YandexMetrica.reportEvent("course is null when join, detail");
+            analytic.reportEvent(Analytic.Interaction.JOIN_COURSE_NULL);
         }
     }
 

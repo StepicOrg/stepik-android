@@ -12,8 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.yandex.metrica.YandexMetrica;
-
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
@@ -26,7 +24,6 @@ import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
-import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.view.dialogs.ExplainPermissionDialog;
 import org.stepic.droid.view.listeners.OnClickLoadListener;
 import org.stepic.droid.view.listeners.StepicOnClickItemListener;
@@ -55,6 +52,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
 
     @Inject
     CleanManager mCleaner;
+
+    @Inject
+    Analytic analytic;
 
     private List<Section> mSections;
     private Context mContext;
@@ -209,7 +209,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             }
 
             if (section.is_cached()) {
-                YandexMetrica.reportEvent(Analytic.Interaction.CLICK_DELETE_SECTION, JsonHelper.toJson(section));
+                analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_SECTION, section.getId()+"");
                 mCleaner.removeSection(section);
                 section.set_loading(false);
                 section.set_cached(false);
@@ -217,9 +217,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                 notifyItemChanged(position);
             } else {
                 if (section.is_loading()) {
+                    analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_SECTION, section.getId()+"");
                     mScreenManager.showDownload(mContext);
                 } else {
-                    YandexMetrica.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, JsonHelper.toJson(section));
+                    analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId()+"");
                     section.set_cached(false);
                     section.set_loading(true);
                     mDatabaseFacade.updateOnlyCachedLoadingSection(section);

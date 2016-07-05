@@ -16,7 +16,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
-import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepBaseFragment;
@@ -34,7 +33,6 @@ import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Submission;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.web.AttemptResponse;
@@ -201,7 +199,6 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
                     if (attemptList == null || attemptList.isEmpty() || !attemptList.get(0).getStatus().equals("active")) {
                         createNewAttempt();
                     } else {
-                        YandexMetrica.reportEvent(AppConstants.GET_OLD_ATTEMPT);
                         Attempt attempt = attemptList.get(0);
                         bus.post(new SuccessAttemptEvent(localStep.getId(), attempt, false));
                     }
