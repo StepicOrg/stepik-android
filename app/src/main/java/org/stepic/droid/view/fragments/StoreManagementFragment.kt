@@ -144,7 +144,7 @@ class StoreManagementFragment : FragmentBase() {
 
     private fun setUpClearCacheButton() {
         clearCacheButton.setOnClickListener {
-            YandexMetrica.reportEvent(Analytic.METRICA_CLICK_CLEAR_CACHE)
+            YandexMetrica.reportEvent(Analytic.Interaction.METRICA_CLICK_CLEAR_CACHE)
             mClearCacheDialogFragment?.show(fragmentManager, null)
         }
 

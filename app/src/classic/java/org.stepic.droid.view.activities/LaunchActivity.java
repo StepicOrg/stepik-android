@@ -44,7 +44,7 @@ public class LaunchActivity extends BackToExitActivityBase {
         mSignUpButton.setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                YandexMetrica.reportEvent(Analytic.METRICA_CLICK_SIGN_UP);
+                YandexMetrica.reportEvent(Analytic.Interaction.CLICK_SIGN_UP);
                 mShell.getScreenProvider().showRegistration(LaunchActivity.this);
             }
         }));
@@ -53,7 +53,7 @@ public class LaunchActivity extends BackToExitActivityBase {
 
             @Override
             public void onClick(View v) {
-                YandexMetrica.reportEvent(Analytic.METRICA_CLICK_SIGN_IN);
+                YandexMetrica.reportEvent(Analytic.Interaction.CLICK_SIGN_IN);
                 mShell.getScreenProvider().showLogin(LaunchActivity.this);
             }
         });

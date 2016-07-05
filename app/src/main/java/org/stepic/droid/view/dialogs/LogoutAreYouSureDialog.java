@@ -57,7 +57,7 @@ public class LogoutAreYouSureDialog extends DialogFragment {
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        YandexMetrica.reportEvent(Analytic.METRICA_CLICK_YES_LOGOUT);
+                        YandexMetrica.reportEvent(Analytic.Interaction.METRICA_CLICK_YES_LOGOUT);
 
                         final File directoryForClean = mUserPreferences.getUserDownloadFolder();
                         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {

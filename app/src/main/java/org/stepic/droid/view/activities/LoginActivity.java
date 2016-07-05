@@ -123,7 +123,7 @@ public class LoginActivity extends FragmentActivityBase {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                YandexMetrica.reportEvent(Analytic.METRICA_CLICK_SIGN_IN_ON_SIGN_IN_SCREEN);
+                YandexMetrica.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_ON_SIGN_IN_SCREEN);
                 tryLogin();
             }
         });

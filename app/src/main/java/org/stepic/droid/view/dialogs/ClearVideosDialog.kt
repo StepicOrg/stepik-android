@@ -46,7 +46,7 @@ class ClearVideosDialog : DialogFragment() {
 
         val builder = AlertDialog.Builder(activity)
         builder.setTitle(R.string.title_confirmation).setMessage(R.string.clear_videos).setPositiveButton(R.string.yes) { dialog, which ->
-            YandexMetrica.reportEvent(Analytic.METRICA_YES_CLEAR_VIDEOS)
+            YandexMetrica.reportEvent(Analytic.Interaction.METRICA_YES_CLEAR_VIDEOS)
 
             val task = object : AsyncTask<Void, Void, Void>() {
                 override fun onPreExecute() {
