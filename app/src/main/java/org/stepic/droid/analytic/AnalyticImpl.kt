@@ -2,12 +2,16 @@ package org.stepic.droid.analytic
 
 import android.content.Context
 import android.os.Bundle
-
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crash.FirebaseCrash
 import com.yandex.metrica.YandexMetrica
+import javax.inject.Singleton
 
+@Singleton
 class AnalyticImpl(context: Context) : Analytic {
+    override fun setUserId(userId: String) {
+        firebaseAnalytics.setUserId(userId)
+    }
 
     private val firebaseAnalytics: FirebaseAnalytics
 

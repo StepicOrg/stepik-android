@@ -152,5 +152,5 @@ public interface Analytic {
 
     void reportError(String message, @NotNull Throwable throwable);
 
-
+    void setUserId(@NotNull String userId);
 }

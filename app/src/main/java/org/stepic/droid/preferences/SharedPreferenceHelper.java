@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
@@ -29,9 +30,11 @@ public class SharedPreferenceHelper {
     private static final String NOTIFICATION_SOUND_DISABLED = "notification_sound";
     private static final String TEMP_UPDATE_LINK = "temp_update_link";
     private Context mContext;
+    private Analytic analytic;
 
     @Inject
-    public SharedPreferenceHelper() {
+    public SharedPreferenceHelper(Analytic analytic) {
+        this.analytic = analytic;
         mContext = MainApplication.getAppContext();
     }
 
@@ -159,6 +162,9 @@ public class SharedPreferenceHelper {
         //todo save picture of user profile
         //todo validate profile from the server with cached profile and make restore to cache. make
         //todo query when nav drawer is occurred?
+        if (profile!=null){
+            analytic.setUserId(profile.getId() + "");
+        }
         Gson gson = new Gson();
         String json = gson.toJson(profile);
         put(PreferenceType.LOGIN, PROFILE_JSON, json);
@@ -263,6 +269,12 @@ public class SharedPreferenceHelper {
     public void deleteAuthInfo() {
         RWLocks.AuthLock.writeLock().lock();
         try {
+            Profile profile = getProfile();
+            String userId = "anon_prev";
+            if (profile!=null){
+                userId += profile.getId();
+            }
+            analytic.setUserId(userId);
             clear(PreferenceType.LOGIN);
         } finally {
             RWLocks.AuthLock.writeLock().unlock();
