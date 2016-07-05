@@ -10,12 +10,9 @@ public interface Analytic {
     String DROP_COURSE = "drop course";
     String METRICA_LOAD_SERVICE = "Load Service";
     String METRICA_LONG_TAP_COURSE = "Long tap on course";
-    String METRICA_LESSON_IN_STORE_STATE_NULL = "lesson was null in store state manager";
-    String METRICA_UNIT_IN_STORE_STATE_NULL = "unit was null in store state manager";
 
     interface Preferences {
         String VIDEO_QUALITY = "video quality was chosen";
-
     }
 
     interface Interaction {
@@ -102,6 +99,10 @@ public interface Analytic {
         String NULL_SHOW_PROFILE = "Null profile is tried to show";
         String REGISTRATION_IMPORTANT_ERROR = "registration important error";
         String NOTIFICATION_NOT_POSTED_ON_CLICK = "notification is not posted";
+        String NULL_COURSE = "Null course is not expected";
+        String NULL_SECTION = "Null section is not expected";
+        String LESSON_IN_STORE_STATE_NULL = "lesson was null in store state manager";
+        String UNIT_IN_STORE_STATE_NULL = "unit was null in store state manager";
     }
 
     interface Web {

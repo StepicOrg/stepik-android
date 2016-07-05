@@ -3,7 +3,6 @@ package org.stepic.droid.store;
 import android.os.Handler;
 
 import com.squareup.otto.Bus;
-import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
@@ -17,7 +16,6 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.util.AppConstants;
 
 import java.util.List;
 
@@ -29,11 +27,13 @@ public class StoreStateManager implements IStoreStateManager {
 
     private DatabaseFacade mDatabaseFacade;
     private Bus bus;
+    private Analytic analytic;
 
     @Inject
-    public StoreStateManager(DatabaseFacade dbManager, Bus bus) {
+    public StoreStateManager(DatabaseFacade dbManager, Bus bus, Analytic analytic) {
         mDatabaseFacade = dbManager;
         this.bus = bus;
+        this.analytic = analytic;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class StoreStateManager implements IStoreStateManager {
         //all steps of lesson is cached
         Lesson lesson = mDatabaseFacade.getLessonById(lessonId);
         if (lesson == null) {
-            YandexMetrica.reportEvent(Analytic.METRICA_LESSON_IN_STORE_STATE_NULL);
+            analytic.reportError(Analytic.Error.LESSON_IN_STORE_STATE_NULL, new NullPointerException("lesson was null"));
             return;
         }
         lesson.set_loading(false);
@@ -55,7 +55,7 @@ public class StoreStateManager implements IStoreStateManager {
 
         final Unit unit = mDatabaseFacade.getUnitByLessonId(lessonId);
         if (unit == null) {
-            YandexMetrica.reportEvent(Analytic.METRICA_UNIT_IN_STORE_STATE_NULL);
+            analytic.reportError(Analytic.Error.UNIT_IN_STORE_STATE_NULL, new NullPointerException("unit is null"));
             return;
         }
         if (unit.is_loading() || !unit.is_cached()) {
@@ -126,7 +126,7 @@ public class StoreStateManager implements IStoreStateManager {
     public void updateSectionAfterDeleting(long sectionId) {
         final Section section = mDatabaseFacade.getSectionById(sectionId);
         if (section == null) {
-            YandexMetrica.reportError(AppConstants.NULL_SECTION, new Exception("update Section after deleting"));
+            analytic.reportError(Analytic.Error.NULL_SECTION, new Exception("update Section after deleting"));
             return;
         }
         if (section.is_cached() || section.is_loading()) {
@@ -152,7 +152,7 @@ public class StoreStateManager implements IStoreStateManager {
 
         Course course = mDatabaseFacade.getCourseById(courseId, DatabaseFacade.Table.enrolled);
         if (course == null) {
-            YandexMetrica.reportError(AppConstants.NULL_COURSE, new Exception("update Course after deleting"));
+            analytic.reportError(Analytic.Error.NULL_COURSE, new Exception("update Course after deleting"));
             return;
         }
         if (course.is_cached() || course.is_loading()) {
@@ -172,7 +172,7 @@ public class StoreStateManager implements IStoreStateManager {
         //all units, lessons, steps of sections are cached
         final Section section = mDatabaseFacade.getSectionById(sectionId);
         if (section == null) {
-            YandexMetrica.reportError(AppConstants.NULL_SECTION, new Exception("update section state"));
+            analytic.reportError(Analytic.Error.NULL_SECTION, new Exception("update section state"));
             return;
         }
         if (!section.is_cached() || section.is_loading()) {
@@ -206,7 +206,7 @@ public class StoreStateManager implements IStoreStateManager {
         }
 
         if (course == null) {
-            YandexMetrica.reportError(AppConstants.NULL_COURSE, new Exception("null course in update course state"));
+            analytic.reportError(Analytic.Error.NULL_COURSE, new Exception("null course in update course state"));
             return;
         }
 
