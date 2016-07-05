@@ -240,7 +240,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
             if (unit.is_cached()) {
                 //delete
-                YandexMetrica.reportEvent(Analytic.Interaction.METRICA_CLICK_DELETE_UNIT, JsonHelper.toJson(unit));
+                YandexMetrica.reportEvent(Analytic.Interaction.CLICK_DELETE_UNIT, JsonHelper.toJson(unit));
                 mCleaner.removeUnitLesson(unit, lesson);
                 unit.set_loading(false);
                 unit.set_cached(false);
@@ -256,7 +256,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
                 } else {
 
-                    YandexMetrica.reportEvent(Analytic.Interaction.METRICA_CLICK_CACHE_UNIT, JsonHelper.toJson(unit));
+                    YandexMetrica.reportEvent(Analytic.Interaction.CLICK_CACHE_UNIT, JsonHelper.toJson(unit));
                     unit.set_cached(false);
                     lesson.set_cached(false);
                     unit.set_loading(true);

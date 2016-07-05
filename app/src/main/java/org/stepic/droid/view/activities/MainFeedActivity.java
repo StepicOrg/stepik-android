@@ -222,7 +222,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     public boolean onNavigationItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.logout_item:
-                YandexMetrica.reportEvent(Analytic.Interaction.METRICA_CLICK_LOGOUT);
+                YandexMetrica.reportEvent(Analytic.Interaction.CLICK_LOGOUT);
 
                 LogoutAreYouSureDialog dialog = LogoutAreYouSureDialog.newInstance();
                 dialog.show(getSupportFragmentManager(), null);

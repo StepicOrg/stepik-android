@@ -209,7 +209,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             }
 
             if (section.is_cached()) {
-                YandexMetrica.reportEvent(Analytic.Interaction.METRICA_CLICK_DELETE_SECTION, JsonHelper.toJson(section));
+                YandexMetrica.reportEvent(Analytic.Interaction.CLICK_DELETE_SECTION, JsonHelper.toJson(section));
                 mCleaner.removeSection(section);
                 section.set_loading(false);
                 section.set_cached(false);
@@ -219,7 +219,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                 if (section.is_loading()) {
                     mScreenManager.showDownload(mContext);
                 } else {
-                    YandexMetrica.reportEvent(Analytic.Interaction.METRICA_CLICK_CACHE_SECTION, JsonHelper.toJson(section));
+                    YandexMetrica.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, JsonHelper.toJson(section));
                     section.set_cached(false);
                     section.set_loading(true);
                     mDatabaseFacade.updateOnlyCachedLoadingSection(section);

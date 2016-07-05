@@ -20,16 +20,15 @@ public interface Analytic {
         String CLICK_SIGN_IN = "click sign in on launch screen";
         String CLICK_SIGN_UP = "click sign up";
         String CLICK_SIGN_IN_ON_SIGN_IN_SCREEN = "click sign in on sign in on sign-in screen";
-        String METRICA_CLICK_DELETE_SECTION = "Click delete section from cache";
-        String METRICA_CLICK_CACHE_SECTION = "Click cache section";
-        String METRICA_CLICK_CACHE_UNIT = "Click cache unit";
-        String METRICA_CLICK_DELETE_UNIT = "Click delete unit from cache";
-        String METRICA_CLICK_LOGOUT = "Click logout";
-        String METRICA_CLICK_CLEAR_CACHE = "Click clear cache button";
-        String METRICA_CLICK_YES_CLEAR_CACHE = "Click Accept clear cache";
-        String METRICA_CLICK_YES_LOGOUT = "Click accept logout";
-        String METRICA_CANCEL_VIDEO_QUALITY = "Cancel video quality dialog";
-        String METRICA_YES_CLEAR_VIDEOS = "clear videos from downloads";
+        String CLICK_DELETE_SECTION = "Click delete section from cache";
+        String CLICK_CACHE_SECTION = "Click cache section";
+        String CLICK_CACHE_UNIT = "Click cache unit";
+        String CLICK_DELETE_UNIT = "Click delete unit from cache";
+        String CLICK_LOGOUT = "Click logout";
+        String CLICK_CLEAR_CACHE = "Click clear cache button";
+        String CLICK_YES_LOGOUT = "Click accept logout";
+        String CANCEL_VIDEO_QUALITY = "Cancel video quality dialog";
+        String YES_CLEAR_VIDEOS = "clear videos from downloads";
     }
 
     interface AppIndexing {

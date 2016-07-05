@@ -54,7 +54,7 @@ public class VideoQualityDialog extends DialogFragment {
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        YandexMetrica.reportEvent(Analytic.Interaction.METRICA_CANCEL_VIDEO_QUALITY);
+                        YandexMetrica.reportEvent(Analytic.Interaction.CANCEL_VIDEO_QUALITY);
                     }
                 })
                 .setSingleChoiceItems(R.array.video_quality,
