@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.squareup.otto.Bus;
 
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.AudioFocusHelper;
@@ -35,6 +36,9 @@ import butterknife.ButterKnife;
 public class FragmentBase extends Fragment {
 
 //    protected String TAG = "StepicFragment";
+
+    @Inject
+    protected Analytic analytic;
 
     @Inject
     public ThreadPoolExecutor mThreadPoolExecutor;
