@@ -139,12 +139,11 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public IVideoResolver provideVideoResolver(Context context,
-                                               Bus bus,
+    public IVideoResolver provideVideoResolver(Analytic analytic,
                                                DatabaseFacade dbOperationsCachedVideo,
                                                UserPreferences userPreferences,
                                                CleanManager cleanManager) {
-        return new VideoResolver(context, bus, dbOperationsCachedVideo, userPreferences, cleanManager);
+        return new VideoResolver(dbOperationsCachedVideo, userPreferences, cleanManager, analytic);
     }
 
     @Provides
@@ -351,13 +350,13 @@ public class StepicDefaultModule {
     }
 
     @Provides
-    public CourseJoinerPresenter provideCourseJoiner (){
+    public CourseJoinerPresenter provideCourseJoiner() {
         return new CourseJoinerPresenterImpl();
     }
 
     @Provides
     @Singleton
-    public Analytic provideAnalytic(Context context){
+    public Analytic provideAnalytic(Context context) {
         return new AnalyticImpl(context);
     }
 }

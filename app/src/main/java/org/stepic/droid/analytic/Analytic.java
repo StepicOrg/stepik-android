@@ -65,6 +65,7 @@ public interface Analytic {
     interface Error {
         String CALLBACK_SOCIAL = "callback_from_social_login";
         String NOT_PLAYER = "NotPlayer";
+        String VIDEO_RESOLVER_FAILED = "video resolver is failed";
     }
 
     void reportEvent(String eventName, Bundle bundle);

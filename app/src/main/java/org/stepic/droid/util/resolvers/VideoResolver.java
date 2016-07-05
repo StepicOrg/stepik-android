@@ -1,11 +1,7 @@
 package org.stepic.droid.util.resolvers;
 
-import android.content.Context;
-
-import com.squareup.otto.Bus;
-import com.yandex.metrica.YandexMetrica;
-
 import org.jetbrains.annotations.Nullable;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.model.VideoUrl;
@@ -19,18 +15,16 @@ import java.util.List;
 public class VideoResolver implements IVideoResolver {
 
 
-    private Context mContext;
-    private Bus mBus;
     private DatabaseFacade mDbOperations;
     private UserPreferences mUserPreferences;
     private CleanManager cleanManager;
+    private Analytic analytic;
 
-    public VideoResolver(Context context, Bus bus, DatabaseFacade dbOperationsCachedVideo, UserPreferences userPreferences, CleanManager cleanManager) {
-        mContext = context;
-        mBus = bus;
+    public VideoResolver(DatabaseFacade dbOperationsCachedVideo, UserPreferences userPreferences, CleanManager cleanManager, Analytic analytic) {
         mDbOperations = dbOperationsCachedVideo;
         mUserPreferences = userPreferences;
         this.cleanManager = cleanManager;
+        this.analytic = analytic;
     }
 
     /**
@@ -79,7 +73,7 @@ public class VideoResolver implements IVideoResolver {
             resolvedURL = urlList.get(bestIndex).getUrl();
         } catch (NumberFormatException e) {
             //this is approach in BAD case
-            YandexMetrica.reportError("video resolver is failed", e);
+            analytic.reportError(Analytic.Error.VIDEO_RESOLVER_FAILED, e);
             if (urlList == null || urlList.isEmpty()) return null;
             int upperBound = urlList.size() - 1;
             for (int i = upperBound; i >= 0; i--) {
