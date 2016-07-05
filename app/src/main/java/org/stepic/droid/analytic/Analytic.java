@@ -30,7 +30,17 @@ public interface Analytic {
     String METRICA_LESSON_IN_STORE_STATE_NULL = "lesson was null in store state manager";
     String METRICA_UNIT_IN_STORE_STATE_NULL = "unit was null in store state manager";
 
+    interface AppIndexing {
+        String courseDetail = "appindexing_course_detail";
+    }
+
     void reportEvent(String eventName, Bundle bundle);
+
+    void reportEventWithId(String eventName, String id);
+
+    void reportEventWithIdName(String eventName, String id, String name);
+
     void reportEvent(String eventName);
+
     void reportError(String message, @NotNull Throwable throwable);
 }

@@ -40,6 +40,7 @@ import com.squareup.picasso.Picasso;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
@@ -321,7 +322,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             mUrl = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getSlug()));
             wasIndexed = true;
             AppIndex.AppIndexApi.start(mClient, getAction());
-            YandexMetrica.reportEvent("appindexing", JsonHelper.toJson(mCourse.getCourseId()));
+            analytic.reportEventWithIdName(Analytic.AppIndexing.courseDetail, mCourse.getCourseId()+"", mCourse.getTitle());
         }
 
 
