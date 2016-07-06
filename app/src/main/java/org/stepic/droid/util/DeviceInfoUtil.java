@@ -21,6 +21,8 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.Display;
 
+import org.stepic.droid.base.MainApplication;
+
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -170,4 +172,8 @@ public class DeviceInfoUtil {
         return size;
     }
 
+
+    public static String getPackageName () {
+        return MainApplication.getAppContext().getPackageName();
+    }
 }
