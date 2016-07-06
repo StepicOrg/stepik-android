@@ -1,5 +1,8 @@
 package org.stepic.droid.view.fragments
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
@@ -26,6 +29,7 @@ import org.stepic.droid.model.comments.DiscussionOrder
 import org.stepic.droid.model.comments.Vote
 import org.stepic.droid.model.comments.VoteValue
 import org.stepic.droid.util.ColorUtil
+import org.stepic.droid.util.HtmlHelper
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.view.adapters.CommentsAdapter
 import org.stepic.droid.view.dialogs.DeleteCommentDialogFragment
@@ -50,6 +54,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         private val reportMenuId = 103
         private val cancelMenuId = 104
         private val deleteMenuId = 105
+        private val copyTextMenuId = 106;
 
 
         fun newInstance(discussionId: String, stepId: Long): Fragment {
@@ -142,6 +147,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             //it is not anonymous
 
             menu?.add(Menu.NONE, replyMenuId, Menu.NONE, R.string.reply_title)
+            menu?.add(Menu.NONE, copyTextMenuId, Menu.NONE, R.string.copy_text_label)
             if (comment.user != null && comment.user.toLong() != userId && comment.vote != null) {
                 //it is not current user and vote is available
                 val vote = commentManager.getVoteByVoteId(comment.vote)
@@ -194,7 +200,24 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                 return true
             }
 
+            copyTextMenuId -> {
+                copyTextToClipBoard(info.position)
+                return true
+            }
+
             else -> return super.onContextItemSelected(item)
+        }
+    }
+
+    private fun copyTextToClipBoard(position: Int) {
+        val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
+        comment?.text?.let {
+            val clipData = ClipData.newHtmlText(getString(R.string.copy_text_label), HtmlHelper.fromHtml(it), it)
+
+            val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            clipboardManager.primaryClip = clipData
+
+            Toast.makeText(context, R.string.done, Toast.LENGTH_SHORT).show()
         }
     }
 
