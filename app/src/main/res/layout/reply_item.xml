@@ -49,7 +49,7 @@
 
                     <TextView
                         android:id="@+id/user_name_comments"
-                        fontPath="fonts/NotoSans-Bold.ttf"
+                        style="@style/bold_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
@@ -57,7 +57,6 @@
                         android:paddingLeft="@dimen/left_padding_name_comments"
                         android:textColor="@color/black"
                         android:textSize="@dimen/name_size_comments"
-                        android:textStyle="bold"
                         tools:text="John Doe"
                         />
 
