@@ -3,6 +3,11 @@ package org.stepic.droid.util;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class StringUtil {
     public static Double safetyParseString(String str) {
         Double doubleScore = null;
@@ -51,6 +56,23 @@ public class StringUtil {
 
 //        stringBuilder.append("&ibi=com.AlexKarpov.Stepic");
         return stringBuilder.toString();
+    }
+
+    //Pull all links from the body for easy retrieval
+    public static List<String> pullLinks(String text) {
+        List<String> links = new ArrayList<>();
+
+        String regex = "\\(?\\b(http://|www[.])[-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(text);
+        while(m.find()) {
+            String urlStr = m.group();
+            if (urlStr.startsWith("(") && urlStr.endsWith(")")) {
+                urlStr = urlStr.substring(1, urlStr.length() - 1);
+            }
+            links.add(urlStr);
+        }
+        return links;
     }
 
 }
