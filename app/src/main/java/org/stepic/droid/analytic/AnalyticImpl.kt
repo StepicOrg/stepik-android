@@ -64,7 +64,7 @@ class AnalyticImpl(context: Context) : Analytic {
         eventNameLocal = sb.toString()
 
         if (eventNameLocal.length > 32L) {
-            eventNameLocal = eventName.substring(0, 32)
+            eventNameLocal = eventNameLocal.substring(0, 32)
         }
         return eventNameLocal
     }
