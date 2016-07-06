@@ -1,12 +1,13 @@
 package org.stepic.droid.util;
 
+import android.util.Patterns;
+
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class StringUtil {
     public static Double safetyParseString(String str) {
@@ -58,11 +59,11 @@ public class StringUtil {
         return stringBuilder.toString();
     }
 
-    private static final Pattern urlPattern = Pattern.compile(
-            "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
-                    + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
-                    + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
-            Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+//    private static final Pattern urlPattern = Pattern.compile(
+//            "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
+//                    + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
+//                    + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+//            Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 
 
     //Pull all links from the body for easy retrieval
@@ -70,7 +71,7 @@ public class StringUtil {
         String text = HtmlHelper.fromHtml(textHtml).toString();
         List<String> links = new ArrayList<>();
 
-        Matcher m = urlPattern.matcher(text);
+        Matcher m = Patterns.WEB_URL.matcher(text);
         while(m.find()) {
             String urlStr = m.group();
             if (urlStr.startsWith("(") && urlStr.endsWith(")")) {
