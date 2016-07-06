@@ -237,7 +237,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun clickLinkInComment(link: String) {
-        Toast.makeText(context, link, Toast.LENGTH_SHORT).show()
+        mShell.screenProvider.openInWeb(activity, link)
     }
 
     private fun copyTextToClipBoard(position: Int) {

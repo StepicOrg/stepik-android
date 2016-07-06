@@ -208,6 +208,13 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
+    public void openInWeb(Context context, String path) {
+        analytic.reportEventWithIdName(Analytic.Screens.OPEN_LINK_IN_WEB, "0", path);
+        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(path));
+        context.startActivity(intent);
+    }
+
+    @Override
     public void openComments(Context context, @Nullable String discussionProxyId, long stepId) {
 
         if (discussionProxyId == null) {

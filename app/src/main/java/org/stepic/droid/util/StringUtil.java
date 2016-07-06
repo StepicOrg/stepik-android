@@ -76,7 +76,8 @@ public class StringUtil {
             if (urlStr.startsWith("(") && urlStr.endsWith(")")) {
                 urlStr = urlStr.substring(1, urlStr.length() - 1);
             }
-            links.add(urlStr.trim());
+            urlStr = urlStr.trim();
+            links.add(urlStr);
         }
         return links;
     }

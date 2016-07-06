@@ -60,6 +60,7 @@ public interface Analytic {
         String SHOW_STEP = "Screen manager: show steps of lesson";
         String OPEN_STEP_IN_WEB = "Screen manager: open Step in Web";
         String REMIND_PASSWORD = "Screen manager: remind password";
+        String OPEN_LINK_IN_WEB = "open_link";
     }
 
     interface Video {
