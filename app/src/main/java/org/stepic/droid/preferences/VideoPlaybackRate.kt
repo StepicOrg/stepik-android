@@ -6,7 +6,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.MainApplication
 import java.util.*
 
-enum class VideoPlaybackRate internal constructor(val index: Int, val rateFloat: Float, val icon: Drawable) {
+enum class VideoPlaybackRate(val index: Int, val rateFloat: Float, val icon: Drawable) {
     x0_5(0, 0.5f, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_playbackrate_0_5_light)),
     x0_75(1, 0.75f, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_playbackrate_0_75_light)),
     x1_0(2, 1f, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_playbackrate_1_light)),
