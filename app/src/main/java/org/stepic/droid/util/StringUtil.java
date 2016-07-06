@@ -58,19 +58,25 @@ public class StringUtil {
         return stringBuilder.toString();
     }
 
+    private static final Pattern urlPattern = Pattern.compile(
+            "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
+                    + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
+                    + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+            Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+
+
     //Pull all links from the body for easy retrieval
-    public static List<String> pullLinks(String text) {
+    public static List<String> pullLinks(String textHtml) {
+        String text = HtmlHelper.fromHtml(textHtml).toString();
         List<String> links = new ArrayList<>();
 
-        String regex = "\\(?\\b(http://|www[.])[-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]";
-        Pattern p = Pattern.compile(regex);
-        Matcher m = p.matcher(text);
+        Matcher m = urlPattern.matcher(text);
         while(m.find()) {
             String urlStr = m.group();
             if (urlStr.startsWith("(") && urlStr.endsWith(")")) {
                 urlStr = urlStr.substring(1, urlStr.length() - 1);
             }
-            links.add(urlStr);
+            links.add(urlStr.trim());
         }
         return links;
     }

@@ -31,6 +31,7 @@ import org.stepic.droid.model.comments.VoteValue
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.HtmlHelper
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.StringUtil
 import org.stepic.droid.view.adapters.CommentsAdapter
 import org.stepic.droid.view.dialogs.DeleteCommentDialogFragment
 import org.stepic.droid.view.util.ContextMenuRecyclerView
@@ -39,6 +40,7 @@ import org.stepic.droid.web.VoteResponse
 import retrofit.Callback
 import retrofit.Response
 import retrofit.Retrofit
+import java.util.*
 import javax.inject.Inject
 
 class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
@@ -54,7 +56,9 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         private val reportMenuId = 103
         private val cancelMenuId = 104
         private val deleteMenuId = 105
-        private val copyTextMenuId = 106;
+        private val copyTextMenuId = 106
+        private val linksStartIndexId = 300 // inclusive
+        var firstLinkShift = 0
 
 
         fun newInstance(discussionId: String, stepId: Long): Fragment {
@@ -84,6 +88,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     lateinit var emptyStateView: View
     lateinit var errorView: View
     var needInsertOtUpdateLate: Comment? = null
+    val links = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -143,10 +148,23 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         val position = info.position //resolve which should show
         val userId = mUserPreferences.userId
         val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
+
         if (userId > 0) {
             //it is not anonymous
-
             menu?.add(Menu.NONE, replyMenuId, Menu.NONE, R.string.reply_title)
+        }
+
+        links.clear()
+        links.addAll(StringUtil.pullLinks(comment.text))
+        firstLinkShift = 0
+        if (links.isNotEmpty()) {
+            links.forEach {
+                menu?.add(Menu.NONE, firstLinkShift + linksStartIndexId, Menu.NONE, it)
+                firstLinkShift++
+            }
+        }
+
+        if (userId > 0) {
             menu?.add(Menu.NONE, copyTextMenuId, Menu.NONE, R.string.copy_text_label)
             if (comment.user != null && comment.user.toLong() != userId && comment.vote != null) {
                 //it is not current user and vote is available
@@ -174,6 +192,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     override fun onContextItemSelected(item: MenuItem?): Boolean {
         val info = item?.menuInfo as ContextMenuRecyclerView.RecyclerViewContextMenuInfo
         val position = info.position
+        val qq = item?.itemId
         when (item?.itemId) {
             replyMenuId -> {
                 replyToComment(info.position)
@@ -205,8 +224,20 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                 return true
             }
 
+            in linksStartIndexId..linksStartIndexId + firstLinkShift - 1 -> {
+                val index = item?.itemId
+                if (index != null) {
+                    clickLinkInComment(links[index - linksStartIndexId])
+                }
+                return true
+            }
+
             else -> return super.onContextItemSelected(item)
         }
+    }
+
+    private fun clickLinkInComment(link: String) {
+        Toast.makeText(context, link, Toast.LENGTH_SHORT).show()
     }
 
     private fun copyTextToClipBoard(position: Int) {
