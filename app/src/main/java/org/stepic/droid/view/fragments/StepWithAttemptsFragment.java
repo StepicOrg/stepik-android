@@ -124,7 +124,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         setListenerToActionButton(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                analytic.reportEvent(Analytic.Interaction.CLICK_SEND_SUBMISSION);
+                analytic.reportEvent(Analytic.Interaction.CLICK_SEND_SUBMISSION, 1L);//value
                 showLoadState(true);
                 if (mSubmission == null || mSubmission.getStatus() == Submission.Status.LOCAL) {
                     makeSubmission();
@@ -325,11 +325,10 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
             return;
         }
 
-        if (submission.getHint() != null && !submission.getHint().isEmpty()){
+        if (submission.getHint() != null && !submission.getHint().isEmpty()) {
             hintTextView.setText(submission.getHint());
             hintTextView.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             hintTextView.setVisibility(View.GONE);
         }
 
