@@ -200,6 +200,7 @@ public class HtmlHelper {
                 .append("users")
                 .append(AppConstants.WEB_URI_SEPARATOR)
                 .append(userId)
+                .append("/?from_mobile_app=true")
                 .toString();
     }
 
