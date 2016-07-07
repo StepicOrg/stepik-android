@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.attempts.FailAttemptEvent;
@@ -123,6 +124,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         setListenerToActionButton(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                analytic.reportEvent(Analytic.Interaction.CLICK_SEND_SUBMISSION);
                 showLoadState(true);
                 if (mSubmission == null || mSubmission.getStatus() == Submission.Status.LOCAL) {
                     makeSubmission();
