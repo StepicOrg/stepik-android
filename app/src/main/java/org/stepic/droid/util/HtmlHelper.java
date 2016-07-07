@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.notifications.model.Notification;
 
 public class HtmlHelper {
@@ -21,7 +22,7 @@ public class HtmlHelper {
     }
 
     @NotNull
-    public static String getHtmlWhiteSpaces(String content){
+    public static String getHtmlWhiteSpaces(String content) {
         if (content == null) return "";
         String newContent = content.replace("\n", "<br>");
         return newContent;
@@ -152,7 +153,7 @@ public class HtmlHelper {
     }
 
     //string with 2 format args
-    public static final String PRE_BODY = "<html>\n" +
+    private static final String PRE_BODY = "<html>\n" +
             "<head>\n" +
             "<title>Step</title>\n" +
 
@@ -179,10 +180,10 @@ public class HtmlHelper {
             "</head>\n"
             + "<body style='margin:0;padding:0;'>";
 
-    public static final String POST_BODY = "</body>\n" +
+    private static final String POST_BODY = "</body>\n" +
             "</html>";
 
-    public static final String MathJaxScript =
+    private static final String MathJaxScript =
             "<script type=\"text/x-mathjax-config\">\n" +
                     "  MathJax.Hub.Config({" +
                     "messageStyle: \"none\", " +
@@ -191,4 +192,15 @@ public class HtmlHelper {
                     "<script type=\"text/javascript\"\n" +
                     " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full\">\n" +
                     "</script>\n";
+
+    public static String getUserPath(IConfig config, long userId) {
+        return new StringBuilder()
+                .append(config.getBaseUrl())
+                .append(AppConstants.WEB_URI_SEPARATOR)
+                .append("users")
+                .append(AppConstants.WEB_URI_SEPARATOR)
+                .append(userId)
+                .toString();
+    }
+
 }
