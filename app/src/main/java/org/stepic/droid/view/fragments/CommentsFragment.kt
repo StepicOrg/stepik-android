@@ -166,15 +166,6 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             }
         }
 
-        val commentUser: User? = comment.user?.let { commentManager.getUserById(it) }
-
-        if (commentUser?.first_name?.isNotBlank() ?: false || commentUser?.last_name?.isNotBlank() ?: false) {
-            val userNameText: String? = commentUser?.first_name + " " + commentUser?.last_name
-            val spannableUserName = SpannableString(userNameText)
-            spannableUserName.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.black)), 0, spannableUserName.length, 0)
-            menu?.add(Menu.NONE, userMenuId, Menu.NONE, spannableUserName)
-        }
-
         if (userId > 0) {
             menu?.add(Menu.NONE, copyTextMenuId, Menu.NONE, R.string.copy_text_label)
             if (comment.user != null && comment.user.toLong() != userId && comment.vote != null) {
@@ -188,13 +179,25 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                 }
                 menu?.add(Menu.NONE, reportMenuId, Menu.NONE, R.string.report_label)
             }
+        }
+
+        val commentUser: User? = comment.user?.let { commentManager.getUserById(it) }
+        if (commentUser?.first_name?.isNotBlank() ?: false || commentUser?.last_name?.isNotBlank() ?: false) {
+            val userNameText: String? = commentUser?.first_name + " " + commentUser?.last_name
+            val spannableUserName = SpannableString(userNameText)
+            spannableUserName.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.black)), 0, spannableUserName.length, 0)
+            menu?.add(Menu.NONE, userMenuId, Menu.NONE, spannableUserName)
+        }
+
+        if (userId > 0) {
             if (comment.actions?.delete ?: false) {
                 val deleteText = getString(R.string.delete_label)
                 val spannableString = SpannableString(deleteText);
                 spannableString.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.feedback_bad_color)), 0, spannableString.length, 0)
                 menu?.add(Menu.NONE, deleteMenuId, Menu.NONE, spannableString)
             }
-        } else {
+        }
+        if (userId <= 0) {
             //todo: Cancel only for anonymous?
             menu?.add(Menu.NONE, cancelMenuId, Menu.NONE, R.string.cancel)
         }
