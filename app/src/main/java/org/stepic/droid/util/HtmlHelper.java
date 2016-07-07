@@ -193,7 +193,7 @@ public class HtmlHelper {
                     " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full\">\n" +
                     "</script>\n";
 
-    public static String getUserPath(IConfig config, long userId) {
+    public static String getUserPath(IConfig config, int userId) {
         return new StringBuilder()
                 .append(config.getBaseUrl())
                 .append(AppConstants.WEB_URI_SEPARATOR)

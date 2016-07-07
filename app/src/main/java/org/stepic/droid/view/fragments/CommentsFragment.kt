@@ -24,6 +24,7 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.events.comments.*
+import org.stepic.droid.model.User
 import org.stepic.droid.model.comments.Comment
 import org.stepic.droid.model.comments.DiscussionOrder
 import org.stepic.droid.model.comments.Vote
@@ -57,6 +58,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         private val cancelMenuId = 104
         private val deleteMenuId = 105
         private val copyTextMenuId = 106
+        private val userMenuId = 107
         private val linksStartIndexId = 300 // inclusive
         var firstLinkShift = 0
 
@@ -164,6 +166,15 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             }
         }
 
+        val commentUser: User? = comment.user?.let { commentManager.getUserById(it) }
+
+        if (commentUser?.first_name?.isNotBlank() ?: false || commentUser?.last_name?.isNotBlank() ?: false) {
+            val userNameText: String? = commentUser?.first_name + " " + commentUser?.last_name
+            val spannableUserName = SpannableString(userNameText)
+            spannableUserName.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.black)), 0, spannableUserName.length, 0)
+            menu?.add(Menu.NONE, userMenuId, Menu.NONE, spannableUserName)
+        }
+
         if (userId > 0) {
             menu?.add(Menu.NONE, copyTextMenuId, Menu.NONE, R.string.copy_text_label)
             if (comment.user != null && comment.user.toLong() != userId && comment.vote != null) {
@@ -224,6 +235,11 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                 return true
             }
 
+            userMenuId -> {
+                openUserProfile(info.position)
+                return true
+            }
+
             in linksStartIndexId..linksStartIndexId + firstLinkShift - 1 -> {
                 val index = item?.itemId
                 if (index != null) {
@@ -233,6 +249,18 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             }
 
             else -> return super.onContextItemSelected(item)
+        }
+    }
+
+    private fun openUserProfile(position: Int) {
+        if (position < 0 && position >= commentManager.getSize()) return
+
+        val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
+        if (comment.user != null) {
+            val userId = commentManager.getUserById(comment.user)?.id
+            if (userId != null) {
+                mShell.screenProvider.openInWeb(context, HtmlHelper.getUserPath(config, userId))
+            }
         }
     }
 
