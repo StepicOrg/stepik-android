@@ -151,6 +151,8 @@ public class RegisterActivity extends FragmentActivityBase {
         final String email = mEmailView.getText().toString().trim();
         final String password = mPassword.getText().toString();
 
+        analytic.reportEvent(Analytic.Interaction.CLICK_REGISTER_BUTTON);
+
         boolean isOk = true;
 
         if (!ValidatorUtil.isPasswordValid(password)) {

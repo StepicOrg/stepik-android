@@ -39,6 +39,7 @@ public interface Analytic {
         String SUCCESS_LOGIN = "success login";
         String SHOW_DETAILED_INFO_CLICK = "Show detailed info click from context menu of course";
         String LONG_TAP_COURSE = "Long tap on course";
+        String CLICK_REGISTER_BUTTON = "click_register_register_screen";
     }
 
     interface Screens {
