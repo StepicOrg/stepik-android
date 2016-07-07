@@ -42,6 +42,7 @@ public interface Analytic {
         String CLICK_REGISTER_BUTTON = "click_register_register_screen";
         String CLICK_SEND_SUBMISSION = "click_send_submission";
         String SHARE_COURSE = "share_course_detail";
+        String SHARE_COURSE_SECTION = "share_course_from_section";
     }
 
     interface Screens {

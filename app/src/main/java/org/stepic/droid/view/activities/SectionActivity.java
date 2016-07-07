@@ -30,6 +30,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.concurrency.tasks.FromDbSectionTask;
 import org.stepic.droid.concurrency.tasks.ToDbSectionTask;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
 import org.stepic.droid.events.courses.CourseFoundEvent;
 import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
@@ -125,6 +126,9 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Inject
     CourseJoinerPresenter courseJoinerPresenter;
+
+    @Inject
+    ShareHelper shareHelper;
 
     @Inject
     IConfig mConfig;
@@ -268,6 +272,16 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                 }
                 return true;
 
+            case R.id.menu_item_share:
+                if (mCourse != null) {
+                    if (mCourse.getTitle() != null) {
+                        analytic.reportEventWithIdName(Analytic.Interaction.SHARE_COURSE_SECTION, mCourse.getCourseId() + "", mCourse.getTitle());
+                    }
+                    Intent intent = shareHelper.getIntentForCourseSharing(mCourse);
+                    startActivity(intent);
+                }
+
+                return true;
             case android.R.id.home:
                 // Respond to the action bar's Up/Home button
                 finish();
@@ -481,7 +495,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         if (mCourse == null) {
             mCourse = event.getCourse();
             Bundle args = getIntent().getExtras();
-            if (args == null){
+            if (args == null) {
                 args = new Bundle();
             }
             args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, mCourse);
