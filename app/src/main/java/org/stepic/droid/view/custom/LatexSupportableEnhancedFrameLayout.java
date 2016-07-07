@@ -72,7 +72,7 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     public void setText(String text) {
         boolean needWebView = HtmlHelper.isForWebView(text); //text is raw text from response
         if (!needWebView) {
-            CharSequence str = HtmlHelper.trimTrailingWhitespace(HtmlHelper.fromHtml(text.trim().toString()).toString());
+            CharSequence str = HtmlHelper.trimTrailingWhitespace(HtmlHelper.fromHtml(text));
 
             webView.setVisibility(GONE);
             textView.setVisibility(VISIBLE);
