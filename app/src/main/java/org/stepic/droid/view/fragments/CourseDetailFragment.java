@@ -58,7 +58,6 @@ import org.stepic.droid.model.Video;
 import org.stepic.droid.presenters.course_finder.CourseFinderPresenter;
 import org.stepic.droid.presenters.course_joiner.CourseJoinerPresenter;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.StringUtil;
@@ -683,28 +682,6 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     private void createIntentForSharing() {
         if (mCourse == null) return;
 
-        Intent shareIntent = new Intent();
-        StringBuilder sb = new StringBuilder();
-
-        if (mCourse.getTitle() != null) {
-            sb.append(mCourse.getTitle());
-            sb.append("\r\n");
-            sb.append("\r\n");
-        }
-
-        if (mCourse.getSummary() != null && !mCourse.getSummary().isEmpty()) {
-            sb.append(HtmlHelper.fromHtml(mCourse.getSummary()).toString());
-            sb.append("\r\n");
-            sb.append("\r\n");
-        }
-
-        String uriForSharing = Uri.parse(StringUtil.getDynamicLinkForCourse(config, mCourse.getSlug())).toString();
-        sb.append(uriForSharing);
-
-        String textForSharing = sb.toString();
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, textForSharing);
-        shareIntent.setType("text/plain");
-        shareIntentWithChooser = Intent.createChooser(shareIntent, getString(R.string.share_title));
+        shareIntentWithChooser = shareHelper.getIntentForCourseSharing(mCourse);
     }
 }

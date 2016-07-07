@@ -359,4 +359,10 @@ public class StepicDefaultModule {
     public Analytic provideAnalytic(Context context) {
         return new AnalyticImpl(context);
     }
+
+    @Provides
+    @Singleton
+    public ShareHelper provideShareHelper() {
+        return new ShareHelperImpl();
+    }
 }
