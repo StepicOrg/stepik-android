@@ -320,7 +320,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             mUrl = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getSlug()));
             wasIndexed = true;
             AppIndex.AppIndexApi.start(mClient, getAction());
-            analytic.reportEventWithIdName(Analytic.AppIndexing.COURSE_DETAIL, mCourse.getCourseId()+"", mCourse.getTitle());
+            analytic.reportEventWithIdName(Analytic.AppIndexing.COURSE_DETAIL, mCourse.getCourseId() + "", mCourse.getTitle());
         }
 
 
@@ -473,7 +473,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @Override
     public void onCourseUnavailable(CourseUnavailableForUserEvent event) {
         if (mCourse == null) {
-            analytic.reportEvent(Analytic.Interaction.COURSE_USER_TRY_FAIL, event.getCourseId()+"");
+            analytic.reportEvent(Analytic.Interaction.COURSE_USER_TRY_FAIL, event.getCourseId() + "");
             reportInternetProblem.setVisibility(View.GONE);
             courseNotFoundView.setVisibility(View.VISIBLE);
         }
@@ -670,6 +670,9 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         switch (item.getItemId()) {
             case R.id.menu_item_share:
                 if (shareIntentWithChooser != null) {
+                    if (mCourse != null && mCourse.getTitle() != null) {
+                        analytic.reportEventWithIdName(Analytic.Interaction.SHARE_COURSE, mCourse.getCourseId() + "", mCourse.getTitle());
+                    }
                     startActivity(shareIntentWithChooser);
                 }
                 return true;
@@ -683,13 +686,13 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         Intent shareIntent = new Intent();
         StringBuilder sb = new StringBuilder();
 
-        if (mCourse.getTitle()!=null) {
+        if (mCourse.getTitle() != null) {
             sb.append(mCourse.getTitle());
             sb.append("\r\n");
             sb.append("\r\n");
         }
 
-        if (mCourse.getSummary()!=null && !mCourse.getSummary().isEmpty()){
+        if (mCourse.getSummary() != null && !mCourse.getSummary().isEmpty()) {
             sb.append(HtmlHelper.fromHtml(mCourse.getSummary()).toString());
             sb.append("\r\n");
             sb.append("\r\n");
