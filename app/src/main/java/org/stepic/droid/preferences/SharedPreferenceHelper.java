@@ -119,7 +119,9 @@ public class SharedPreferenceHelper {
 
     public DiscussionOrder getDiscussionOrder() {
         int orderId = getInt(PreferenceType.LOGIN, DISCUSSION_ORDER);
-        return DiscussionOrder.Companion.getById(orderId);
+        DiscussionOrder order = DiscussionOrder.Companion.getById(orderId);
+        analytic.reportEvent(Analytic.Comments.ORDER_TREND, order.toString());
+        return order;
     }
 
     public void setDiscussionOrder(DiscussionOrder disscussionOrder){
