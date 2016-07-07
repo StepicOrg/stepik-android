@@ -143,6 +143,7 @@ public interface Analytic {
         String CLICK_SEND_COMMENTS = "comments: click send comment";
         String COMMENTS_SENT_SUCCESSFULLY = "comments: comment was sent successfully";
         String DELETE_COMMENT_CONFIRMATION = "comment: delete comment confirmed";
+        String ORDER_TREND = "order_trend";
     }
 
     interface Steps {

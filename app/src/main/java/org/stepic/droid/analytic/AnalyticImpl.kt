@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crash.FirebaseCrash
 import com.yandex.metrica.YandexMetrica
+import java.util.*
 import javax.inject.Singleton
 
 @Singleton
@@ -26,7 +27,16 @@ class AnalyticImpl(context: Context) : Analytic {
     }
 
     override fun reportEvent(eventName: String, bundle: Bundle?) {
-        YandexMetrica.reportEvent(eventName)
+        val map: HashMap<String, Any> = HashMap()
+        bundle?.keySet()?.forEach {
+            map.put(it, bundle.get(it))
+        }
+        if (map.isEmpty()) {
+            YandexMetrica.reportEvent(eventName)
+        } else {
+            YandexMetrica.reportEvent(eventName, map)
+        }
+
         val eventNameLocal = castStringToFirebaseEvent(eventName)
         firebaseAnalytics.logEvent(eventNameLocal, bundle)
     }
