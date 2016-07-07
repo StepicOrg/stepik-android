@@ -145,6 +145,11 @@ public interface Analytic {
         String DELETE_COMMENT_CONFIRMATION = "comment: delete comment confirmed";
     }
 
+    interface Steps {
+        String CORRECT_SUBMISSION_FILL = "submission_correct_fill"; // it can be existing submission, use in chain.
+        String WRONG_SUBMISSION_FILL = "submission_wrong_fill";
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);
@@ -157,5 +162,5 @@ public interface Analytic {
 
     void setUserId(@NotNull String userId);
 
-    void reportEvent (String eventName, long value);
+    void reportEventValue(String eventName, long value);
 }

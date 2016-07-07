@@ -9,7 +9,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AnalyticImpl(context: Context) : Analytic {
-    override fun reportEvent(eventName: String, value: Long) {
+    override fun reportEventValue(eventName: String, value: Long) {
         val bundle = Bundle()
         bundle.putLong(FirebaseAnalytics.Param.VALUE, value)
         reportEvent(eventName, bundle)

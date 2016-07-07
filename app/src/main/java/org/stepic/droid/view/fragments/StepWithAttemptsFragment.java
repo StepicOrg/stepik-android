@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
@@ -124,7 +125,12 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         setListenerToActionButton(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                analytic.reportEvent(Analytic.Interaction.CLICK_SEND_SUBMISSION, 1L);//value
+
+                Bundle bundle = new Bundle();
+                bundle.putLong(FirebaseAnalytics.Param.VALUE, 1L);
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, step.getId() + "");
+                analytic.reportEvent(Analytic.Interaction.CLICK_SEND_SUBMISSION, bundle);//value
+
                 showLoadState(true);
                 if (mSubmission == null || mSubmission.getStatus() == Submission.Status.LOCAL) {
                     makeSubmission();
@@ -377,6 +383,9 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     }
 
     protected final void onWrongSubmission() {
+        if (step != null) {
+            analytic.reportEvent(Analytic.Steps.WRONG_SUBMISSION_FILL, step.getId() + "");
+        }
         mAttemptContainer.setBackgroundResource(R.color.wrong_answer_background);
         mStatusIcon.setImageDrawable(mWrongIcon);
         mStatusTextView.setText(mWrongString);
@@ -385,6 +394,9 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     }
 
     protected final void onCorrectSubmission(Submission submission) {
+        if (step != null) {
+            analytic.reportEvent(Analytic.Steps.CORRECT_SUBMISSION_FILL, step.getId() + "");
+        }
         markLocalProgressAsViewed(submission);
         mAttemptContainer.setBackgroundResource(R.color.correct_answer_background);
         mStatusIcon.setImageDrawable(mCorrectIcon);
