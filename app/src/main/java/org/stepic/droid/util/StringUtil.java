@@ -1,5 +1,6 @@
 package org.stepic.droid.util;
 
+import android.net.Uri;
 import android.util.Patterns;
 
 import org.stepic.droid.base.MainApplication;
@@ -83,4 +84,21 @@ public class StringUtil {
         return links;
     }
 
+    public static Uri getAppUriForCourse(String baseUrl, String slug) {
+        StringBuilder stringBuilder =new StringBuilder();
+        stringBuilder.append("android-app://");
+        stringBuilder.append(DeviceInfoUtil.getPackageName());
+        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
+        stringBuilder.append("https");
+        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
+        String host = Uri.parse(baseUrl).getHost();
+        stringBuilder.append(host);
+        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
+        stringBuilder.append("course");
+        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
+        stringBuilder.append(slug);
+        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
+        stringBuilder.append(AppConstants.APP_INDEXING_COURSE_DETAIL_MANIFEST_HACK);
+        return Uri.parse(stringBuilder.toString());
+    }
 }
