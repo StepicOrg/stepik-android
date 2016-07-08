@@ -32,12 +32,17 @@ public class StringUtil {
         return stringBuilder.toString();
     }
 
+    public static String getUriForSyllabus (String baseUrl, String slug){
+        StringBuilder stringBuilder =new StringBuilder();
+        stringBuilder.append(getUriForCourse(baseUrl, slug)).append(AppConstants.APP_INDEXING_SYLLABUS_MANIFEST);
+        return stringBuilder.toString();
+    }
+
     public static String getDynamicLinkForCourse(IConfig config, String slug){
         String firebaseDomain = config.getFirebaseDomain();
         if (firebaseDomain == null){
             return getUriForCourse(config.getBaseUrl(), slug);
         }
-
 
         StringBuilder stringBuilder =new StringBuilder();
         stringBuilder.append(firebaseDomain);
@@ -85,6 +90,15 @@ public class StringUtil {
     }
 
     public static Uri getAppUriForCourse(String baseUrl, String slug) {
+        StringBuilder stringBuilder = getAppUriStringBuilderForCourse(baseUrl, slug).append(AppConstants.APP_INDEXING_COURSE_DETAIL_MANIFEST_HACK);
+        return Uri.parse(stringBuilder.toString());
+    }
+    public static Uri getAppUriForCourseSyllabus(String baseUrl, String slug) {
+        StringBuilder stringBuilder = getAppUriStringBuilderForCourse(baseUrl, slug).append(AppConstants.APP_INDEXING_SYLLABUS_MANIFEST);
+        return Uri.parse(stringBuilder.toString());
+    }
+
+    private static StringBuilder getAppUriStringBuilderForCourse(String baseUrl, String slug){
         StringBuilder stringBuilder =new StringBuilder();
         stringBuilder.append("android-app://");
         stringBuilder.append(DeviceInfoUtil.getPackageName());
@@ -98,7 +112,6 @@ public class StringUtil {
         stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
         stringBuilder.append(slug);
         stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
-        stringBuilder.append(AppConstants.APP_INDEXING_COURSE_DETAIL_MANIFEST_HACK);
-        return Uri.parse(stringBuilder.toString());
+        return stringBuilder;
     }
 }

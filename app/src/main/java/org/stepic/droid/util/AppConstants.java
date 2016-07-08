@@ -56,4 +56,5 @@ public class AppConstants {
     public static final String SECTION_NAMED_INJECTION_COURSE_FINDER = "section";
 
     public static final String APP_INDEXING_COURSE_DETAIL_MANIFEST_HACK = "course_app";
+    public static final String APP_INDEXING_SYLLABUS_MANIFEST = "syllabus";
 }
