@@ -93,7 +93,6 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     private View footer;
     private DialogFragment unauthorizedDialog;
     private Intent shareIntentWithChooser;
-    private Uri mUrlInApp;
 
     public static CourseDetailFragment newInstance(Course course) {
         Bundle args = new Bundle();
@@ -164,6 +163,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     //App indexing:
     private GoogleApiClient mClient;
+    private Uri mUrlInApp;
     private Uri mUrlInWeb;
     private String mTitle;
     private String mDescription;
@@ -568,6 +568,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         if (mClient != null && mClient.isConnected() && mClient.isConnecting()) {
             mClient.disconnect();
         }
+        wasIndexed = false;
         super.onStop();
 
     }
