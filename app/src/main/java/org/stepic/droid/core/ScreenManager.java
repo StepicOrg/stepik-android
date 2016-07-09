@@ -210,7 +210,11 @@ public class ScreenManager implements IScreenManager {
     @Override
     public void openInWeb(Context context, String path) {
         analytic.reportEventWithIdName(Analytic.Screens.OPEN_LINK_IN_WEB, "0", path);
-        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(path));
+        if (!path.startsWith("https://") && !path.startsWith("http://")){
+            path = "http://" + path;
+        }
+        final Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(path));
         context.startActivity(intent);
     }
 
