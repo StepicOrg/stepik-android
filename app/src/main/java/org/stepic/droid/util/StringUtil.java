@@ -1,5 +1,6 @@
 package org.stepic.droid.util;
 
+import android.net.Uri;
 import android.util.Patterns;
 
 import org.stepic.droid.base.MainApplication;
@@ -31,12 +32,17 @@ public class StringUtil {
         return stringBuilder.toString();
     }
 
+    public static String getUriForSyllabus (String baseUrl, String slug){
+        StringBuilder stringBuilder =new StringBuilder();
+        stringBuilder.append(getUriForCourse(baseUrl, slug)).append(AppConstants.APP_INDEXING_SYLLABUS_MANIFEST);
+        return stringBuilder.toString();
+    }
+
     public static String getDynamicLinkForCourse(IConfig config, String slug){
         String firebaseDomain = config.getFirebaseDomain();
         if (firebaseDomain == null){
             return getUriForCourse(config.getBaseUrl(), slug);
         }
-
 
         StringBuilder stringBuilder =new StringBuilder();
         stringBuilder.append(firebaseDomain);
@@ -83,4 +89,29 @@ public class StringUtil {
         return links;
     }
 
+    public static Uri getAppUriForCourse(String baseUrl, String slug) {
+        StringBuilder stringBuilder = getAppUriStringBuilderForCourse(baseUrl, slug).append(AppConstants.APP_INDEXING_COURSE_DETAIL_MANIFEST_HACK);
+        return Uri.parse(stringBuilder.toString());
+    }
+    public static Uri getAppUriForCourseSyllabus(String baseUrl, String slug) {
+        StringBuilder stringBuilder = getAppUriStringBuilderForCourse(baseUrl, slug).append(AppConstants.APP_INDEXING_SYLLABUS_MANIFEST);
+        return Uri.parse(stringBuilder.toString());
+    }
+
+    private static StringBuilder getAppUriStringBuilderForCourse(String baseUrl, String slug){
+        StringBuilder stringBuilder =new StringBuilder();
+        stringBuilder.append("android-app://");
+        stringBuilder.append(DeviceInfoUtil.getPackageName());
+        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
+        stringBuilder.append("https");
+        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
+        String host = Uri.parse(baseUrl).getHost();
+        stringBuilder.append(host);
+        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
+        stringBuilder.append("course");
+        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
+        stringBuilder.append(slug);
+        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
+        return stringBuilder;
+    }
 }

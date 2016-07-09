@@ -163,7 +163,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     //App indexing:
     private GoogleApiClient mClient;
-    private Uri mUrl;
+    private Uri mUrlInApp;
+    private Uri mUrlInWeb;
     private String mTitle;
     private String mDescription;
 
@@ -175,10 +176,10 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     public Action getAction() {
         Thing object = new Thing.Builder()
-                .setId(mUrl.getEncodedPath())
+                .setId(mUrlInWeb.toString())
                 .setName(mTitle)
                 .setDescription(mDescription)
-                .setUrl(mUrl)
+                .setUrl(mUrlInApp)
                 .build();
 
         return new Action.Builder(Action.TYPE_VIEW)
@@ -316,10 +317,9 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         mTitle = mCourse.getTitle();
         mDescription = mCourse.getSummary();
         if (mCourse.getSlug() != null && !wasIndexed) {
-            mUrl = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getSlug()));
-            wasIndexed = true;
-            AppIndex.AppIndexApi.start(mClient, getAction());
-            analytic.reportEventWithIdName(Analytic.AppIndexing.COURSE_DETAIL, mCourse.getCourseId() + "", mCourse.getTitle());
+            mUrlInWeb = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getSlug()));
+            mUrlInApp = StringUtil.getAppUriForCourse(config.getBaseUrl(), mCourse.getSlug());
+            reportIndexToGoogle();
         }
 
 
@@ -346,6 +346,17 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         Activity activity = getActivity();
         if (activity != null) {
             activity.invalidateOptionsMenu();
+        }
+    }
+
+    private void reportIndexToGoogle() {
+        if (mCourse != null && !wasIndexed && mCourse.getSlug() != null) {
+            if (!mClient.isConnecting() && !mClient.isConnected()) {
+                mClient.connect();
+            }
+            wasIndexed = true;
+            AppIndex.AppIndexApi.start(mClient, getAction());
+            analytic.reportEventWithIdName(Analytic.AppIndexing.COURSE_DETAIL, mCourse.getCourseId() + "", mCourse.getTitle());
         }
     }
 
@@ -382,11 +393,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         courseFinderPresenter.onStart(this);
         courseJoinerPresenter.onStart(this);
         tryToShowCourse();
-        mClient.connect();
-        if (mCourse != null && !wasIndexed && mCourse.getSlug() != null) {
-            wasIndexed = true;
-            AppIndex.AppIndexApi.start(mClient, getAction());
-        }
+        reportIndexToGoogle();
     }
 
     private void fetchInstructors() {
@@ -558,7 +565,10 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         if (wasIndexed) {
             AppIndex.AppIndexApi.end(mClient, getAction());
         }
-        mClient.disconnect();
+        if (mClient != null && mClient.isConnected() && mClient.isConnecting()) {
+            mClient.disconnect();
+        }
+        wasIndexed = false;
         super.onStop();
 
     }
