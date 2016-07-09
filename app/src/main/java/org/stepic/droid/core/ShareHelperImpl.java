@@ -51,7 +51,7 @@ public class ShareHelperImpl implements ShareHelper {
         String uriForSharing = Uri.parse(StringUtil.getDynamicLinkForCourse(config, mCourse.getSlug())).toString();
         sb.append(uriForSharing);
 
-        String textForSharing = sb.toString();
+        String textForSharing = HtmlHelper.fromHtml(sb.toString()).toString();
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_TEXT, textForSharing);
         shareIntent.setType("text/plain");

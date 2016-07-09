@@ -46,20 +46,22 @@ public class StringUtil {
 
         StringBuilder stringBuilder =new StringBuilder();
         stringBuilder.append(firebaseDomain);
-        stringBuilder.append("?link=");
-        stringBuilder.append(config.getBaseUrl());
-        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
-        stringBuilder.append("course");
-        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
-        stringBuilder.append(slug);
-        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
-        stringBuilder.append("&amv=650");
+        stringBuilder.append("?amv=650");
         stringBuilder.append("&apn=");
         String packageName = MainApplication.getAppContext().getPackageName();
         if (packageName == null){
             return getUriForCourse(config.getBaseUrl(), slug);
         }
         stringBuilder.append(packageName);
+
+
+        stringBuilder.append("&link=");
+        stringBuilder.append(config.getBaseUrl());
+        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
+        stringBuilder.append("course");
+        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
+        stringBuilder.append(HtmlHelper.parseIdFromSlug(slug));
+        stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
 
 //        stringBuilder.append("&ibi=com.AlexKarpov.Stepic");
         return stringBuilder.toString();
