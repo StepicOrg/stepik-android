@@ -164,6 +164,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                 R.color.stepic_blue_ribbon);
 
 
+        mSectionsRecyclerView.setNestedScrollingEnabled(false);
         mSectionsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mSectionList = new ArrayList<>();
         mAdapter = new SectionAdapter(mSectionList, this, this);
