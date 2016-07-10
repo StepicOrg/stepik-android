@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/comments_coordinator_layout"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
-
-
+              android:layout_height="match_parent">
     <include
         android:id="@+id/appBarLayout"
         layout="@layout/appbar_only_toolbar"/>
     <FrameLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <android.support.design.widget.CoordinatorLayout
-            android:id="@+id/comments_coordinator_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
 
             <include layout="@layout/progress_bar_on_empty_screen"/>
             <include layout="@layout/empty_comments"/>
@@ -38,20 +31,19 @@
                     android:scrollbarStyle="outsideOverlay"
                     android:scrollbars="vertical"/>
             </android.support.v4.widget.SwipeRefreshLayout>
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/add_new_comment_button"
-                android:contentDescription="@string/new_comment_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
-                android:layout_margin="16dp"
-                android:clickable="true"
-                android:src="@drawable/ic_create_white_24dp"
-                app:layout_anchorGravity="bottom|right|end"
-                app:layout_behavior="org.stepic.droid.view.util.ScrollAwareFABBehavior"/>
-        </android.support.design.widget.CoordinatorLayout>
-
     </FrameLayout>
 
-</LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add_new_comment_button"
+        android:contentDescription="@string/new_comment_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:src="@drawable/ic_create_white_24dp"
+        app:layout_anchorGravity="bottom|right|end"
+        app:layout_behavior="org.stepic.droid.view.util.ScrollAwareFABBehavior"/>
+
+</android.support.design.widget.CoordinatorLayout>
