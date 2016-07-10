@@ -68,9 +68,10 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="4dp"
+        android:layout_marginRight="8dp"
         android:src="@drawable/ic_pinned"
         android:layout_width="wrap_content"
-        android:layout_height="16dp"/>
+        android:layout_height="@dimen/height_image_comment_state"/>
 
 
 </RelativeLayout>
