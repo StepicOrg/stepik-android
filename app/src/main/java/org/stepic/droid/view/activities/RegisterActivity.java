@@ -27,7 +27,7 @@ import org.stepic.droid.web.RegistrationResponse;
 
 import java.lang.annotation.Annotation;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 import butterknife.OnFocusChange;
@@ -41,37 +41,37 @@ public class RegisterActivity extends FragmentActivityBase {
 
     public static final String ERROR_DELIMITER = " ";
 
-    @Bind(R.id.root_view)
+    @BindView(R.id.root_view)
     View mRootView;
 
-    @Bind(R.id.sign_up_btn)
+    @BindView(R.id.sign_up_btn)
     Button mCreateAccountButton;
 
-    @Bind(R.id.actionbar_close_btn_layout)
+    @BindView(R.id.actionbar_close_btn_layout)
     View mCloseButton;
 
-    @Bind(R.id.first_name_reg)
+    @BindView(R.id.first_name_reg)
     TextView mFirstNameView;
 
-    @Bind(R.id.second_name_reg)
+    @BindView(R.id.second_name_reg)
     TextView mSecondNameView;
 
-    @Bind(R.id.email_reg)
+    @BindView(R.id.email_reg)
     TextView mEmailView;
 
-    @Bind(R.id.password_reg)
+    @BindView(R.id.password_reg)
     TextView mPassword;
 
-    @Bind(R.id.first_name_reg_wrapper)
+    @BindView(R.id.first_name_reg_wrapper)
     TextInputLayout mFirstNameViewWrapper;
 
-    @Bind(R.id.second_name_reg_wrapper)
+    @BindView(R.id.second_name_reg_wrapper)
     TextInputLayout mSecondNameViewWrapper;
 
-    @Bind(R.id.email_reg_wrapper)
+    @BindView(R.id.email_reg_wrapper)
     TextInputLayout mEmailViewWrapper;
 
-    @Bind(R.id.password_reg_wrapper)
+    @BindView(R.id.password_reg_wrapper)
     TextInputLayout mPasswordWrapper;
 
     @BindString(R.string.password_too_short)
@@ -86,7 +86,7 @@ public class RegisterActivity extends FragmentActivityBase {
         super.onCreate(savedInstanceState);
 
         setContentView(org.stepic.droid.R.layout.activity_register);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
         overridePendingTransition(org.stepic.droid.R.anim.slide_in_from_bottom, org.stepic.droid.R.anim.no_transition);
 
         hideSoftKeypad();

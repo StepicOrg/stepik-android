@@ -13,7 +13,7 @@ import org.stepic.droid.util.HtmlHelper;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CoursePropertyAdapter extends ArrayAdapter<CourseProperty> {
@@ -46,10 +46,10 @@ public class CoursePropertyAdapter extends ArrayAdapter<CourseProperty> {
 
     static class ViewHolderItem {
 
-        @Bind(R.id.course_property_title)
+        @BindView(R.id.course_property_title)
         TextView coursePropertyTitle;
 
-        @Bind(R.id.course_property_text_value)
+        @BindView(R.id.course_property_text_value)
         TextView getCoursePropertyValue;
 
         public ViewHolderItem(View view) {

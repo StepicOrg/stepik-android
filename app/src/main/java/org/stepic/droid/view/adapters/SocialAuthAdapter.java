@@ -18,7 +18,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.SocialViewHolder> implements StepicOnClickItemListener {
@@ -65,10 +65,10 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
     }
 
     public static class SocialViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.root_view)
+        @BindView(R.id.root_view)
         View rootView;
 
-        @Bind(R.id.social_item)
+        @BindView(R.id.social_item)
         ImageView imageView;
 
 

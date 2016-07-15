@@ -18,7 +18,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.view.fragments.CourseSearchFragment;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CourseSearchResultActivity extends FragmentActivityBase {
@@ -26,10 +26,10 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
     private final static String TAG = "SearchActivity";
 
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    @Bind(R.id.frame)
+    @BindView(R.id.frame)
     View mRootFrame;
 
     private MenuItem mMenuItem;
@@ -40,7 +40,7 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_courses);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

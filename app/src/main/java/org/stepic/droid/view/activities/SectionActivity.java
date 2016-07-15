@@ -73,7 +73,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
@@ -81,37 +81,37 @@ import retrofit.Retrofit;
 
 public class SectionActivity extends FragmentActivityBase implements SwipeRefreshLayout.OnRefreshListener, OnRequestPermissionsResultCallback, LoadCourseView, CourseJoinView {
 
-    @Bind(R.id.swipe_refresh_layout_units)
+    @BindView(R.id.swipe_refresh_layout_units)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
-    @Bind(R.id.sections_recycler_view)
+    @BindView(R.id.sections_recycler_view)
     RecyclerView mSectionsRecyclerView;
 
-    @Bind(R.id.load_progressbar)
+    @BindView(R.id.load_progressbar)
     ProgressBar loadOnCenterProgressBar;
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     android.support.v7.widget.Toolbar mToolbar;
 
-    @Bind(R.id.report_problem)
+    @BindView(R.id.report_problem)
     protected View reportConnectionProblem;
 
-    @Bind(R.id.course_not_found)
+    @BindView(R.id.course_not_found)
     View courseNotParsedView;
 
-    @Bind(R.id.report_empty)
+    @BindView(R.id.report_empty)
     protected View mReportEmptyView;
 
-    @Bind(R.id.join_course_root)
+    @BindView(R.id.join_course_root)
     protected View joinCourseRoot; // default state is gone
 
-    @Bind(R.id.join_course_layout)
+    @BindView(R.id.join_course_layout)
     protected View joinCourseButton;
 
-    @Bind(R.id.courseIcon)
+    @BindView(R.id.courseIcon)
     protected DraweeView courseIcon;
 
-    @Bind(R.id.course_name)
+    @BindView(R.id.course_name)
     protected TextView courseName;
 
     @Nullable
@@ -150,7 +150,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         super.onCreate(savedInstanceState);
         MainApplication.component().inject(this);
         setContentView(R.layout.activity_section);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
         hideSoftKeypad();
         isScreenEmpty = true;
         firstLoad = true;

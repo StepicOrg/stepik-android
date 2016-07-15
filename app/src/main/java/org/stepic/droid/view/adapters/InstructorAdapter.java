@@ -16,7 +16,7 @@ import org.stepic.droid.model.User;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.BindDrawable;
 import butterknife.ButterKnife;
 
@@ -58,13 +58,13 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
 
     public static class InstructorViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.instructor_icon)
+        @BindView(R.id.instructor_icon)
         ImageView instructorIcon;
 
-        @Bind(R.id.first_last_name)
+        @BindView(R.id.first_last_name)
         TextView firstLastName;
 
-        @Bind(R.id.course_short_bio)
+        @BindView(R.id.course_short_bio)
         TextView courseShortBio;
 
         @BindDrawable(R.drawable.placeholder_icon_trnsp)

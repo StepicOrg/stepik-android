@@ -32,7 +32,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -241,19 +241,19 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
 
     public static class SectionViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.cv)
+        @BindView(R.id.cv)
         View cv;
 
-        @Bind(R.id.section_title)
+        @BindView(R.id.section_title)
         TextView sectionTitle;
 
-        @Bind(R.id.start_date)
+        @BindView(R.id.start_date)
         TextView startDate;
 
-        @Bind(R.id.soft_deadline)
+        @BindView(R.id.soft_deadline)
         TextView softDeadline;
 
-        @Bind(R.id.hard_deadline)
+        @BindView(R.id.hard_deadline)
         TextView hardDeadline;
 
         @BindString(R.string.hard_deadline_section)
@@ -263,16 +263,16 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         @BindString(R.string.begin_date_section)
         String beginDateString;
 
-        @Bind(R.id.pre_load_iv)
+        @BindView(R.id.pre_load_iv)
         View preLoadIV;
 
-        @Bind(R.id.when_load_view)
+        @BindView(R.id.when_load_view)
         View whenLoad;
 
-        @Bind(R.id.after_load_iv)
+        @BindView(R.id.after_load_iv)
         View afterLoad;
 
-        @Bind(R.id.load_button)
+        @BindView(R.id.load_button)
         View mLoadButton;
 
 

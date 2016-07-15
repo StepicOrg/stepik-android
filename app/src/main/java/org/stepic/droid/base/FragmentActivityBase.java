@@ -29,12 +29,14 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class FragmentActivityBase extends AppCompatActivity {
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
+    protected Unbinder unbinder;
 
     @Inject
     protected Analytic analytic;
@@ -119,7 +121,9 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+        if( unbinder!=null) {
+            unbinder.unbind();
+        }
     }
 
     protected void setFragment(@IdRes int res, Fragment fragment) {

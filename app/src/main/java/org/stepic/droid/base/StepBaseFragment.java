@@ -17,20 +17,20 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.web.StepResponse;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
 public abstract class StepBaseFragment extends FragmentBase {
 
-    @Bind(R.id.text_header_enhanced)
+    @BindView(R.id.text_header_enhanced)
     protected LatexSupportableEnhancedFrameLayout headerWvEnhanced;
 
-    @Bind(R.id.open_comments_root)
+    @BindView(R.id.open_comments_root)
     protected View openCommentViewClickable;
 
-    @Bind(R.id.open_comments_text)
+    @BindView(R.id.open_comments_text)
     protected TextView textForComment;
 
     protected Step step;

@@ -42,7 +42,7 @@ public class PyCharmStepFragment extends StepWithAttemptsFragment {
         mMessageField = (TextView) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_py_step, mAttemptContainer, false);
         mMessageField.setMovementMethod(LinkMovementMethod.getInstance());
         mAttemptContainer.addView(mMessageField);
-        ButterKnife.bind(this, v);
+        unbinder = ButterKnife.bind(this, v);
         mActionButton.setVisibility(View.GONE);
         return v;
     }

@@ -32,11 +32,13 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class FragmentBase extends Fragment {
 
 //    protected String TAG = "StepicFragment";
+
+    protected Unbinder unbinder;
 
     @Inject
     protected ShareHelper shareHelper;
@@ -154,7 +156,10 @@ public class FragmentBase extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        if (unbinder != null) {
+            //in Kotlin, for example, butter knife is not used
+            unbinder.unbind();
+        }
     }
 
     @Override

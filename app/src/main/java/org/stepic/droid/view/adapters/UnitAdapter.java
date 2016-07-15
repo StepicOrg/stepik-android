@@ -40,7 +40,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.BindDrawable;
 import butterknife.ButterKnife;
 
@@ -279,35 +279,35 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
     public static class UnitViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.cv)
+        @BindView(R.id.cv)
         View cv;
 
-        @Bind(R.id.unit_title)
+        @BindView(R.id.unit_title)
         TextView unitTitle;
 
 
-        @Bind(R.id.pre_load_iv)
+        @BindView(R.id.pre_load_iv)
         View preLoadIV;
 
-        @Bind(R.id.when_load_view)
+        @BindView(R.id.when_load_view)
         View whenLoad;
 
-        @Bind(R.id.after_load_iv)
+        @BindView(R.id.after_load_iv)
         View afterLoad;
 
-        @Bind(R.id.load_button)
+        @BindView(R.id.load_button)
         View loadButton;
 
-        @Bind(R.id.viewed_item)
+        @BindView(R.id.viewed_item)
         View viewedItem;
 
-        @Bind(R.id.text_score)
+        @BindView(R.id.text_score)
         TextView mTextScore;
 
-        @Bind(R.id.student_progress_score_bar)
+        @BindView(R.id.student_progress_score_bar)
         ProgressBar mProgressScore;
 
-        @Bind(R.id.lesson_icon)
+        @BindView(R.id.lesson_icon)
         ImageView mLessonIcon;
 
         @BindDrawable(R.drawable.ic_lesson_cover)

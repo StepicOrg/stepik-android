@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewHolder> {
@@ -136,11 +136,11 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
             View.OnClickListener, View.OnLongClickListener, View.OnTouchListener {
 
         private final boolean mIsMatching;
-        @Bind(R.id.container)
+        @BindView(R.id.container)
         ViewGroup mContainer;
 
         TextView mOptionText;
-        @Bind(R.id.sort_icon)
+        @BindView(R.id.sort_icon)
         View mSortController;
 
         LatexSupportableEnhancedFrameLayout enhancedText;
