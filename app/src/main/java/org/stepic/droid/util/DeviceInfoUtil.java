@@ -21,7 +21,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.Display;
 
-import com.yandex.metrica.YandexMetrica;
+import org.stepic.droid.base.MainApplication;
 
 import java.util.Enumeration;
 import java.util.Properties;
@@ -71,7 +71,6 @@ public class DeviceInfoUtil {
                     a.getPackageName(), PackageManager.GET_META_DATA);
             return pInfo.versionCode;
         } catch (NameNotFoundException e) {
-            YandexMetrica.reportError("getBuildVersion", e);
             return Integer.MAX_VALUE;
         }
     }
@@ -173,4 +172,8 @@ public class DeviceInfoUtil {
         return size;
     }
 
+
+    public static String getPackageName () {
+        return MainApplication.getAppContext().getPackageName();
+    }
 }

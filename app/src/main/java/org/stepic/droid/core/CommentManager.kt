@@ -1,7 +1,6 @@
 package org.stepic.droid.core
 
 import com.squareup.otto.Bus
-
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.events.comments.CommentsLoadedSuccessfullyEvent
 import org.stepic.droid.events.comments.InternetConnectionProblemInCommentsEvent
@@ -10,13 +9,13 @@ import org.stepic.droid.model.User
 import org.stepic.droid.model.comments.Comment
 import org.stepic.droid.model.comments.DiscussionProxy
 import org.stepic.droid.model.comments.Vote
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.web.CommentsResponse
 import org.stepic.droid.web.IApi
 import retrofit.Callback
 import retrofit.Response
 import retrofit.Retrofit
 import java.util.*
-
 import javax.inject.Inject
 
 class CommentManager {
@@ -27,10 +26,16 @@ class CommentManager {
     @Inject
     lateinit var api: IApi
 
+    @Inject
+    lateinit var sharedPrefs : SharedPreferenceHelper
+
+    private var discussionProxy : DiscussionProxy? = null
+    private val discussionOrderList : MutableList<Long> = ArrayList()
+
     private val maxOfParentInQuery = 10 // server supports 20, but we can change it
     private val maxOfRepliesInQuery = 20 // we can't change it
     private var sumOfCachedParent: Int = 0;
-    private var discussionProxy: DiscussionProxy? = null
+    private var discussionProxyId: String? = null
     private val parentCommentToSumOfCachedReplies: MutableMap<Long, Int> = HashMap()
     private val cachedCommentsSetMap: MutableMap<Long, Comment> = HashMap()
     private val cachedCommentsList: MutableList<Comment> = ArrayList()
@@ -47,7 +52,8 @@ class CommentManager {
     }
 
     fun loadComments() {
-        val orderOfComments = discussionProxy?.discussions
+        val discussionProxyOrder = sharedPrefs.discussionOrder
+        val orderOfComments = discussionOrderList
         orderOfComments?.let {
             val sizeNeedLoad = Math.min((sumOfCachedParent + maxOfParentInQuery), orderOfComments.size)
             if (sizeNeedLoad == sumOfCachedParent || sizeNeedLoad == 0) {
@@ -114,14 +120,14 @@ class CommentManager {
                     }
                 }
         sumOfCachedParent = cachedCommentsSetMap.filter { it.value.parent == null }.size
-        if (sumOfCachedParent > discussionProxy?.discussions?.size ?: 0) {
-            sumOfCachedParent = discussionProxy?.discussions?.size!!
+        if (sumOfCachedParent > discussionOrderList.size ?: 0) {
+            sumOfCachedParent = discussionOrderList.size
         }
         cachedCommentsList.clear()
         var i = 0
         var j = 0
         while (i < sumOfCachedParent) {
-            val parentCommentId = discussionProxy?.discussions?.get(j)
+            val parentCommentId = discussionOrderList.get(j)
             j++
 
             val parentComment = cachedCommentsSetMap[parentCommentId] ?: break
@@ -163,15 +169,15 @@ class CommentManager {
                     if (stepicResponse != null) {
                         addComments(stepicResponse, fromReply)
                     } else {
-                        bus.post(InternetConnectionProblemInCommentsEvent(discussionProxy!!.id))
+                        bus.post(InternetConnectionProblemInCommentsEvent(discussionProxyId))
                     }
                 } else {
-                    bus.post(InternetConnectionProblemInCommentsEvent(discussionProxy!!.id))
+                    bus.post(InternetConnectionProblemInCommentsEvent(discussionProxyId))
                 }
             }
 
             override fun onFailure(t: Throwable?) {
-                bus.post(InternetConnectionProblemInCommentsEvent(discussionProxy!!.id))
+                bus.post(InternetConnectionProblemInCommentsEvent(discussionProxyId))
             }
         })
     }
@@ -190,7 +196,7 @@ class CommentManager {
         if (parentComment == null) {
             //comment is parent comment
             val positionInDiscussion = parentIdToPositionInDiscussionMap[comment.id]!!
-            if (discussionProxy!!.discussions.size > sumOfCachedParent && (positionInDiscussion + 1) == sumOfCachedParent) {
+            if (discussionOrderList.size > sumOfCachedParent && (positionInDiscussion + 1) == sumOfCachedParent) {
                 needUpdate = true
             }
 
@@ -216,7 +222,7 @@ class CommentManager {
 
     fun isNeedUpdateParentInReply(commentReply: Comment): Boolean {
         val positionInParent = replyToPositionInParentMap[commentReply.id]
-        if (discussionProxy!!.discussions.size > sumOfCachedParent) {
+        if (discussionOrderList.size > sumOfCachedParent) {
             //need update parent:
             //and it is last cached reply?
             val positionInParent = replyToPositionInParentMap[commentReply.id]
@@ -231,10 +237,13 @@ class CommentManager {
 
     fun setDiscussionProxy(dP: DiscussionProxy) {
         discussionProxy = dP
-        //todo: remove dp from manager, make only list in discussion proxy based on sorting and discussion id!
+        discussionProxyId = dP.id
         var i = 0
-        while (i < dP.discussions.size) {
-            parentIdToPositionInDiscussionMap.put(dP.discussions[i], i)
+        val list = sharedPrefs.discussionOrder.getOrder(dP)
+        discussionOrderList.clear()
+        discussionOrderList.addAll(list)
+        while (i < list.size) {
+            parentIdToPositionInDiscussionMap.put(list[i], i)
             i++
         }
     }
@@ -269,15 +278,20 @@ class CommentManager {
         return cachedCommentsList.indexOfFirst { it.id == commentId }
     }
 
-    fun resetAll(dP: DiscussionProxy?) {
+    fun resetAll(dP: DiscussionProxy? = null) {
+        parentIdToPositionInDiscussionMap.clear()
+        if (dP!=null) {
+            setDiscussionProxy(dP)
+        }
+        else{
+            setDiscussionProxy(discussionProxy!!)
+        }
         sumOfCachedParent = 0
-        discussionProxy = dP
         parentCommentToSumOfCachedReplies.clear()
         cachedCommentsSetMap.clear()
         cachedCommentsList.clear()
         userSetMap.clear()
         replyToPositionInParentMap.clear()
-        parentIdToPositionInDiscussionMap.clear()
         repliesIdIsLoading.clear()
         commentIdIsLoading.clear()
         voteMap.clear()
@@ -291,5 +305,7 @@ class CommentManager {
         commentIdIsLoading.clear()
         repliesIdIsLoading.clear()
     }
+
+    fun isDiscussionProxyNull() = (discussionProxyId == null)
 
 }

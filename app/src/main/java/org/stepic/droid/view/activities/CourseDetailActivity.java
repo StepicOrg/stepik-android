@@ -1,6 +1,7 @@
 package org.stepic.droid.view.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,8 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.view.fragments.CourseDetailFragment;
+
+import java.util.List;
 
 public class CourseDetailActivity extends SingleFragmentActivity {
 
@@ -32,7 +35,15 @@ public class CourseDetailActivity extends SingleFragmentActivity {
         if (course == null) {
             int i = 0;
             //Warning: work only for pattern android:pathPattern="/course/.*/" NOT Working for /course/.*/.* !!!
-            String pathFromWeb = getIntent().getData().getLastPathSegment(); //example of last path segment: Школьная-физика-Тепловые-и-электромагнитные-явления-432
+            Intent intent = getIntent();
+            Uri dataUri = intent.getData();
+            String pathFromWeb = dataUri.getLastPathSegment();//example of last path segment: Школьная-физика-Тепловые-и-электромагнитные-явления-432
+            if (pathFromWeb.equals(AppConstants.APP_INDEXING_COURSE_DETAIL_MANIFEST_HACK)) {
+                List<String> pathSegments = dataUri.getPathSegments();
+                if (pathSegments.size() - 2 >= 0) {
+                    pathFromWeb = pathSegments.get(pathSegments.size() - 2); //try hack android system, which cut "/" in path
+                }
+            }
             Long id = HtmlHelper.parseIdFromSlug(pathFromWeb);
             long simpleId;
             if (id == null) {

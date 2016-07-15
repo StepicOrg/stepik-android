@@ -17,4 +17,6 @@ public interface IConfig {
     boolean isUserCanDropCourse();
     boolean isCustomUpdateEnable();
     String getUpdateEndpoint();
+
+    String getFirebaseDomain();
 }

@@ -13,9 +13,9 @@ import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
-import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
@@ -91,9 +91,7 @@ public class VideoStepFragment extends StepBaseFragment {
                         }
                         return null;
                     } catch (IOException e) {
-
-                        YandexMetrica.reportError("can't Resolve video", e);
-                        e.printStackTrace();
+                        analytic.reportError(Analytic.Error.CANT_RESOLVE_VIDEO, e);
                         return null; // can't RESOLVE
                     }
                 }

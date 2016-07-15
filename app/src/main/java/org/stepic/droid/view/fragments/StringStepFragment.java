@@ -115,4 +115,10 @@ public class StringStepFragment extends StepWithAttemptsFragment {
     public void onStepWasUpdated(StepWasUpdatedEvent event) {
         super.onStepWasUpdated(event);
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mAnswerField.clearFocus();
+    }
 }

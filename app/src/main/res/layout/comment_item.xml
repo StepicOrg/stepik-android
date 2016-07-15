@@ -14,7 +14,7 @@
         android:clickable="true"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:foreground="@drawable/non_radius_foreground">
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,7 +49,7 @@
 
                     <TextView
                         android:id="@+id/user_name_comments"
-                        fontPath="fonts/NotoSans-Bold.ttf"
+                        style="@style/bold_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/bot_padding_name"

@@ -12,11 +12,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.okhttp.ResponseBody;
-import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.core.ActivityFinisher;
 import org.stepic.droid.core.ProgressHandler;
@@ -150,6 +151,8 @@ public class RegisterActivity extends FragmentActivityBase {
         final String email = mEmailView.getText().toString().trim();
         final String password = mPassword.getText().toString();
 
+        analytic.reportEvent(Analytic.Interaction.CLICK_REGISTER_BUTTON);
+
         boolean isOk = true;
 
         if (!ValidatorUtil.isPasswordValid(password)) {
@@ -168,6 +171,7 @@ public class RegisterActivity extends FragmentActivityBase {
                 public void onResponse(Response<RegistrationResponse> response, Retrofit retrofit) {
                     ProgressHelper.dismiss(mProgress);
                     if (response.isSuccess()) {
+                        analytic.reportEvent(FirebaseAnalytics.Event.SIGN_UP);
                         mLoginManager.login(email, password, new ProgressHandler() {
                             @Override
                             public void activate() {
@@ -192,7 +196,7 @@ public class RegisterActivity extends FragmentActivityBase {
                         try {
                             error = errorConverter.convert(response.errorBody());
                         } catch (Exception e) {
-                            YandexMetrica.reportError("registration important error", e); //it is unknown response Expected BEGIN_OBJECT but was STRING at line 1 column 1 path
+                            analytic.reportError(Analytic.Error.REGISTRATION_IMPORTANT_ERROR, e); //it is unknown response Expected BEGIN_OBJECT but was STRING at line 1 column 1 path
                         }
                         handleErrorRegistrationResponse(error);
                     }

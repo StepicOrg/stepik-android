@@ -20,16 +20,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.DraweeView;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.otto.Subscribe;
-import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.concurrency.tasks.FromDbSectionTask;
 import org.stepic.droid.concurrency.tasks.ToDbSectionTask;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
 import org.stepic.droid.events.courses.CourseFoundEvent;
 import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
@@ -52,6 +57,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepicLogicHelper;
+import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.view.abstraction.CourseJoinView;
 import org.stepic.droid.view.abstraction.LoadCourseView;
 import org.stepic.droid.view.adapters.SectionAdapter;
@@ -127,7 +133,17 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     CourseJoinerPresenter courseJoinerPresenter;
 
     @Inject
+    ShareHelper shareHelper;
+
+    @Inject
     IConfig mConfig;
+
+    private GoogleApiClient mClient;
+    private boolean wasIndexed;
+    private Uri mUrlInApp;
+    private Uri mUrlInWeb;
+    private String mTitle;
+    private String mDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +155,8 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         isScreenEmpty = true;
         firstLoad = true;
 
+        mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(
                 R.color.stepic_brand_primary,
@@ -146,6 +164,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                 R.color.stepic_blue_ribbon);
 
 
+        mSectionsRecyclerView.setNestedScrollingEnabled(false);
         mSectionsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mSectionList = new ArrayList<>();
         mAdapter = new SectionAdapter(mSectionList, this, this);
@@ -188,7 +207,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                                 try {
                                     mShell.getApi().markNotificationAsRead(notificationItem.getId(), true).execute();
                                 } catch (IOException e) {
-                                    YandexMetrica.reportError("notification is not posted", e);
+                                    analytic.reportError(Analytic.Error.NOTIFICATION_NOT_POSTED_ON_CLICK, e);
                                 }
                             }
                         }
@@ -230,6 +249,25 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         resolveJoinCourseView();
         setUpToolbarWithCourse();
         getAndShowSectionsFromCache();
+
+        if (mCourse!=null && mCourse.getSlug() != null && !wasIndexed) {
+            mTitle = getString(R.string.syllabus_title) + ": " + mCourse.getTitle();
+            mDescription = mCourse.getSummary();
+            mUrlInWeb = Uri.parse(StringUtil.getUriForSyllabus(mConfig.getBaseUrl(), mCourse.getSlug()));
+            mUrlInApp = StringUtil.getAppUriForCourseSyllabus(mConfig.getBaseUrl(), mCourse.getSlug());
+            reportIndexToGoogle();
+        }
+    }
+
+    private void reportIndexToGoogle() {
+        if (mCourse != null && !wasIndexed && mCourse.getSlug() != null) {
+            if (!mClient.isConnecting() && !mClient.isConnected()) {
+                mClient.connect();
+            }
+            wasIndexed = true;
+            AppIndex.AppIndexApi.start(mClient, getAction());
+            analytic.reportEventWithIdName(Analytic.AppIndexing.COURSE_SYLLABUS, mCourse.getCourseId() + "", mCourse.getTitle());
+        }
     }
 
     public void resolveJoinCourseView() {
@@ -268,6 +306,16 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                 }
                 return true;
 
+            case R.id.menu_item_share:
+                if (mCourse != null) {
+                    if (mCourse.getTitle() != null) {
+                        analytic.reportEventWithIdName(Analytic.Interaction.SHARE_COURSE_SECTION, mCourse.getCourseId() + "", mCourse.getTitle());
+                    }
+                    Intent intent = shareHelper.getIntentForCourseSharing(mCourse);
+                    startActivity(intent);
+                }
+
+                return true;
             case android.R.id.home:
                 // Respond to the action bar's Up/Home button
                 finish();
@@ -345,7 +393,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Override
     public void onRefresh() {
-        YandexMetrica.reportEvent(AppConstants.METRICA_REFRESH_SECTION);
+        analytic.reportEvent(Analytic.Interaction.REFRESH_SECTION);
         if (mCourse != null) {
             updateSections();
         } else {
@@ -392,9 +440,38 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        reportIndexToGoogle();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
+
+        if (wasIndexed) {
+            AppIndex.AppIndexApi.end(mClient, getAction());
+        }
+
+        if (mClient != null && mClient.isConnected() && mClient.isConnecting()) {
+            mClient.disconnect();
+        }
+        wasIndexed = false;
         ProgressHelper.dismiss(mSwipeRefreshLayout);
+    }
+
+    public Action getAction() {
+        Thing object = new Thing.Builder()
+                .setId(mUrlInWeb.toString())
+                .setName(mTitle)
+                .setDescription(mDescription)
+                .setUrl(mUrlInApp)
+                .build();
+
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
     }
 
     @Override
@@ -481,7 +558,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         if (mCourse == null) {
             mCourse = event.getCourse();
             Bundle args = getIntent().getExtras();
-            if (args == null){
+            if (args == null) {
                 args = new Bundle();
             }
             args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, mCourse);

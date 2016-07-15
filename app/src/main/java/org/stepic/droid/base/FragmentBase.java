@@ -10,12 +10,14 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.squareup.otto.Bus;
 
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.AudioFocusHelper;
 import org.stepic.droid.core.ILessonSessionManager;
 import org.stepic.droid.core.ILocalProgressManager;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.ICancelSniffer;
@@ -35,6 +37,12 @@ import butterknife.ButterKnife;
 public class FragmentBase extends Fragment {
 
 //    protected String TAG = "StepicFragment";
+
+    @Inject
+    protected ShareHelper shareHelper;
+
+    @Inject
+    protected Analytic analytic;
 
     @Inject
     public ThreadPoolExecutor mThreadPoolExecutor;

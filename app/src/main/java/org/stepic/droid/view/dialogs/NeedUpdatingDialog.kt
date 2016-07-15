@@ -9,8 +9,8 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.app.DialogFragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
-import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.core.IShell
 import org.stepic.droid.services.UpdateWithApkService
@@ -38,6 +38,9 @@ class NeedUpdatingDialog : DialogFragment() {
     @Inject
     lateinit var shell: IShell
 
+    @Inject
+    lateinit var analytic : Analytic
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
         MainApplication.component().inject(this)
@@ -47,7 +50,7 @@ class NeedUpdatingDialog : DialogFragment() {
 
         val builder = AlertDialog.Builder(activity)
         builder.setTitle(R.string.update_available_title).setPositiveButton(R.string.update_now) { dialog, which ->
-            YandexMetrica.reportEvent(AppConstants.UPDATING_MESSAGE_IS_APPROVED)
+            analytic.reportEvent(Analytic.Interaction.UPDATING_MESSAGE_IS_APPROVED)
             if (isInGP) {
                 shell.screenProvider.showStoreWithApp(activity)
             } else {

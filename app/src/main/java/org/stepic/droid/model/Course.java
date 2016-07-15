@@ -116,7 +116,6 @@ public class Course implements Serializable, Parcelable {
             try {
                 sb.append(getPresentOfDate(begin_date_source));
             } catch (Throwable throwable) {
-                YandexMetrica.reportError("present_date_course_begin", throwable);
                 return "";
             }
         } else if (begin_date_source != null) {
@@ -130,7 +129,6 @@ public class Course implements Serializable, Parcelable {
 
                 sb.append(getPresentOfDate(last_deadline));
             } catch (Throwable throwable) {
-                YandexMetrica.reportError("present_date_course_last", throwable);
                 return "";
             }
         }

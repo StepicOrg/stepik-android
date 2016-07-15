@@ -1,29 +1,40 @@
 package org.stepic.droid.util;
 
 import android.text.Html;
-
-import com.yandex.metrica.YandexMetrica;
+import android.text.Spanned;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.notifications.model.Notification;
 
 public class HtmlHelper {
 
-    @NotNull
-    public static CharSequence fromHtml(@Nullable String content) {
-        if (content == null)
-            return Html.fromHtml("");
-        String newContent = content.replace("\n", "<br>");
-
-        return Html.fromHtml(newContent);
+    private static Spanned fromHtmlLegacy (@Nullable String content){
+        Spanned result;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            result = Html.fromHtml(content,Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            result = Html.fromHtml(content);
+        }
+        return result;
     }
 
     @NotNull
-    public static String getHtmlWhiteSpaces(String content){
+    public static CharSequence fromHtml(@Nullable String content) {
+        if (content == null)
+            return fromHtmlLegacy("");
+        String newContent = content.trim().replace("\n", "<br>");
+
+        CharSequence htmlHandled = fromHtmlLegacy(newContent);
+        return trimTrailingWhitespace(htmlHandled);
+    }
+
+    @NotNull
+    public static String getHtmlWhiteSpaces(String content) {
         if (content == null) return "";
         String newContent = content.replace("\n", "<br>");
         return newContent;
@@ -110,8 +121,7 @@ public class HtmlHelper {
         try {
             String number = slug.substring(indexOfLastDash + 1, slug.length());
             id = Long.parseLong(number);
-        } catch (NumberFormatException | IndexOutOfBoundsException notCorrectSlug) {
-            YandexMetrica.reportError(AppConstants.ERROR_PARSING_SLUG, notCorrectSlug);
+        } catch (NumberFormatException | IndexOutOfBoundsException ignored) {
         }
         return id;
     }
@@ -155,7 +165,7 @@ public class HtmlHelper {
     }
 
     //string with 2 format args
-    public static final String PRE_BODY = "<html>\n" +
+    private static final String PRE_BODY = "<html>\n" +
             "<head>\n" +
             "<title>Step</title>\n" +
 
@@ -182,10 +192,10 @@ public class HtmlHelper {
             "</head>\n"
             + "<body style='margin:0;padding:0;'>";
 
-    public static final String POST_BODY = "</body>\n" +
+    private static final String POST_BODY = "</body>\n" +
             "</html>";
 
-    public static final String MathJaxScript =
+    private static final String MathJaxScript =
             "<script type=\"text/x-mathjax-config\">\n" +
                     "  MathJax.Hub.Config({" +
                     "messageStyle: \"none\", " +
@@ -194,4 +204,16 @@ public class HtmlHelper {
                     "<script type=\"text/javascript\"\n" +
                     " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full\">\n" +
                     "</script>\n";
+
+    public static String getUserPath(IConfig config, int userId) {
+        return new StringBuilder()
+                .append(config.getBaseUrl())
+                .append(AppConstants.WEB_URI_SEPARATOR)
+                .append("users")
+                .append(AppConstants.WEB_URI_SEPARATOR)
+                .append(userId)
+                .append("/?from_mobile_app=true")
+                .toString();
+    }
+
 }

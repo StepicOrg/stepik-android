@@ -15,10 +15,11 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.otto.Subscribe;
-import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.attempts.FailAttemptEvent;
@@ -34,8 +35,8 @@ import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Submission;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.web.AttemptResponse;
 import org.stepic.droid.web.SubmissionResponse;
 
@@ -105,6 +106,9 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     @BindDrawable(R.drawable.ic_error)
     protected Drawable mWrongIcon;
 
+    @Bind(R.id.hint_text_view)
+    LatexSupportableEnhancedFrameLayout hintTextView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -121,6 +125,12 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         setListenerToActionButton(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Bundle bundle = new Bundle();
+                bundle.putLong(FirebaseAnalytics.Param.VALUE, 1L);
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, step.getId() + "");
+                analytic.reportEvent(Analytic.Interaction.CLICK_SEND_SUBMISSION, bundle);//value
+
                 showLoadState(true);
                 if (mSubmission == null || mSubmission.getStatus() == Submission.Status.LOCAL) {
                     makeSubmission();
@@ -197,7 +207,6 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
                     if (attemptList == null || attemptList.isEmpty() || !attemptList.get(0).getStatus().equals("active")) {
                         createNewAttempt();
                     } else {
-                        YandexMetrica.reportEvent(AppConstants.GET_OLD_ATTEMPT);
                         Attempt attempt = attemptList.get(0);
                         bus.post(new SuccessAttemptEvent(localStep.getId(), attempt, false));
                     }
@@ -322,6 +331,13 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
             return;
         }
 
+        if (submission.getHint() != null && !submission.getHint().isEmpty()) {
+            hintTextView.setText(submission.getHint());
+            hintTextView.setVisibility(View.VISIBLE);
+        } else {
+            hintTextView.setVisibility(View.GONE);
+        }
+
         switch (submission.getStatus()) {
             case CORRECT:
                 onCorrectSubmission(submission);
@@ -367,6 +383,9 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     }
 
     protected final void onWrongSubmission() {
+        if (step != null) {
+            analytic.reportEvent(Analytic.Steps.WRONG_SUBMISSION_FILL, step.getId() + "");
+        }
         mAttemptContainer.setBackgroundResource(R.color.wrong_answer_background);
         mStatusIcon.setImageDrawable(mWrongIcon);
         mStatusTextView.setText(mWrongString);
@@ -375,6 +394,9 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     }
 
     protected final void onCorrectSubmission(Submission submission) {
+        if (step != null) {
+            analytic.reportEvent(Analytic.Steps.CORRECT_SUBMISSION_FILL, step.getId() + "");
+        }
         markLocalProgressAsViewed(submission);
         mAttemptContainer.setBackgroundResource(R.color.correct_answer_background);
         mStatusIcon.setImageDrawable(mCorrectIcon);
@@ -397,6 +419,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         createNewAttempt();
         mSubmission = null;
 
+        hintTextView.setVisibility(View.GONE);
         mResultLine.setVisibility(View.GONE);
         mActionButton.setText(mSubmitText);
     }

@@ -1,5 +1,8 @@
 package org.stepic.droid.view.fragments
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
@@ -15,18 +18,21 @@ import android.view.*
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.squareup.otto.Subscribe
-import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.events.comments.*
+import org.stepic.droid.model.User
 import org.stepic.droid.model.comments.Comment
+import org.stepic.droid.model.comments.DiscussionOrder
 import org.stepic.droid.model.comments.Vote
 import org.stepic.droid.model.comments.VoteValue
-import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ColorUtil
+import org.stepic.droid.util.HtmlHelper
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.StringUtil
 import org.stepic.droid.view.adapters.CommentsAdapter
 import org.stepic.droid.view.dialogs.DeleteCommentDialogFragment
 import org.stepic.droid.view.util.ContextMenuRecyclerView
@@ -35,6 +41,7 @@ import org.stepic.droid.web.VoteResponse
 import retrofit.Callback
 import retrofit.Response
 import retrofit.Retrofit
+import java.util.*
 import javax.inject.Inject
 
 class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
@@ -50,6 +57,10 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         private val reportMenuId = 103
         private val cancelMenuId = 104
         private val deleteMenuId = 105
+        private val copyTextMenuId = 106
+        private val userMenuId = 107
+        private val linksStartIndexId = 300 // inclusive
+        var firstLinkShift = 0
 
 
         fun newInstance(discussionId: String, stepId: Long): Fragment {
@@ -79,6 +90,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     lateinit var emptyStateView: View
     lateinit var errorView: View
     var needInsertOtUpdateLate: Comment? = null
+    val links = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,6 +101,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater?.inflate(R.layout.fragment_comments, container, false)
+        setHasOptionsMenu(true)
         discussionId = arguments.getString(discussionIdKey)
         stepId = arguments.getLong(stepIdKey)
         setHasOptionsMenu(true)
@@ -137,10 +150,24 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         val position = info.position //resolve which should show
         val userId = mUserPreferences.userId
         val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
+
         if (userId > 0) {
             //it is not anonymous
-
             menu?.add(Menu.NONE, replyMenuId, Menu.NONE, R.string.reply_title)
+        }
+
+        links.clear()
+        links.addAll(StringUtil.pullLinks(comment.text))
+        firstLinkShift = 0
+        if (links.isNotEmpty()) {
+            links.forEach {
+                menu?.add(Menu.NONE, firstLinkShift + linksStartIndexId, Menu.NONE, it)
+                firstLinkShift++
+            }
+        }
+
+        if (userId > 0) {
+            menu?.add(Menu.NONE, copyTextMenuId, Menu.NONE, R.string.copy_text_label)
             if (comment.user != null && comment.user.toLong() != userId && comment.vote != null) {
                 //it is not current user and vote is available
                 val vote = commentManager.getVoteByVoteId(comment.vote)
@@ -152,13 +179,25 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                 }
                 menu?.add(Menu.NONE, reportMenuId, Menu.NONE, R.string.report_label)
             }
+        }
+
+        val commentUser: User? = comment.user?.let { commentManager.getUserById(it) }
+        if (commentUser?.first_name?.isNotBlank() ?: false || commentUser?.last_name?.isNotBlank() ?: false) {
+            val userNameText: String? = commentUser?.first_name + " " + commentUser?.last_name
+            val spannableUserName = SpannableString(userNameText)
+            spannableUserName.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.black)), 0, spannableUserName.length, 0)
+            menu?.add(Menu.NONE, userMenuId, Menu.NONE, spannableUserName)
+        }
+
+        if (userId > 0) {
             if (comment.actions?.delete ?: false) {
                 val deleteText = getString(R.string.delete_label)
                 val spannableString = SpannableString(deleteText);
                 spannableString.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.feedback_bad_color)), 0, spannableString.length, 0)
                 menu?.add(Menu.NONE, deleteMenuId, Menu.NONE, spannableString)
             }
-        } else {
+        }
+        if (userId <= 0) {
             //todo: Cancel only for anonymous?
             menu?.add(Menu.NONE, cancelMenuId, Menu.NONE, R.string.cancel)
         }
@@ -167,6 +206,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     override fun onContextItemSelected(item: MenuItem?): Boolean {
         val info = item?.menuInfo as ContextMenuRecyclerView.RecyclerViewContextMenuInfo
         val position = info.position
+        val qq = item?.itemId
         when (item?.itemId) {
             replyMenuId -> {
                 replyToComment(info.position)
@@ -193,12 +233,58 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                 return true
             }
 
+            copyTextMenuId -> {
+                copyTextToClipBoard(info.position)
+                return true
+            }
+
+            userMenuId -> {
+                openUserProfile(info.position)
+                return true
+            }
+
+            in linksStartIndexId..linksStartIndexId + firstLinkShift - 1 -> {
+                val index = item?.itemId
+                if (index != null) {
+                    clickLinkInComment(links[index - linksStartIndexId])
+                }
+                return true
+            }
+
             else -> return super.onContextItemSelected(item)
         }
     }
 
+    private fun openUserProfile(position: Int) {
+        if (position < 0 && position >= commentManager.getSize()) return
+
+        val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
+        if (comment.user != null) {
+            val userId = commentManager.getUserById(comment.user)?.id
+            if (userId != null) {
+                mShell.screenProvider.openInWeb(context, HtmlHelper.getUserPath(config, userId))
+            }
+        }
+    }
+
+    private fun clickLinkInComment(link: String) {
+        mShell.screenProvider.openInWeb(activity, link)
+    }
+
+    private fun copyTextToClipBoard(position: Int) {
+        val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
+        comment?.text?.let {
+            val clipData = ClipData.newHtmlText(getString(R.string.copy_text_label), HtmlHelper.fromHtml(it), it)
+
+            val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            clipboardManager.primaryClip = clipData
+
+            Toast.makeText(context, R.string.done, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun deleteComment(position: Int) {
-        YandexMetrica.reportEvent(AppConstants.DELETE_COMMENT_TRIAL)
+        analytic.reportEvent(Analytic.Interaction.DELETE_COMMENT_TRIAL)
         val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
         val commentId = comment?.id
         commentId?.let {
@@ -235,7 +321,6 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         val voteId = comment.vote
         val commentId = comment.id
         if (commentId == null) {
-            YandexMetrica.reportEvent("comment: commentId null")
             return
         }
         voteId?.let {
@@ -246,10 +331,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                     if (response?.isSuccess ?: false) {
                         bus.post(LikeCommentSuccessEvent(commentId, voteObject))
                     } else {
-                        YandexMetrica.reportEvent("comment: fail")
                         bus.post(LikeCommentFailEvent())
                     }
-
                 }
 
                 override fun onFailure(t: Throwable?) {
@@ -365,6 +448,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     @Subscribe
     fun onDiscussionProxyLoadedSuccessfully(successfullyEvent: DiscussionProxyLoadedSuccessfullyEvent) {
         commentManager.setDiscussionProxy(successfullyEvent.discussionProxy)
+        activity.invalidateOptionsMenu()
         commentManager.loadComments()
     }
 
@@ -377,7 +461,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         if (!commentManager.isEmpty()) {
             showEmptyState(false)
         }
-        val needInsertLocal : Comment?= needInsertOtUpdateLate
+        val needInsertLocal: Comment? = needInsertOtUpdateLate
         if (needInsertLocal != null && (!commentManager.isCommentCached(needInsertLocal.id) || (needInsertLocal.parent != null && !commentManager.isCommentCached(needInsertLocal.parent)))) {
             val longArr = listOf(needInsertLocal.id, needInsertLocal.parent).filterNotNull().toLongArray()
             commentManager.loadCommentsByIds(longArr)
@@ -463,5 +547,35 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     fun onFailDeleteComment(event: FailDeleteCommentEvent) {
         Toast.makeText(context, R.string.fail_delete_comment, Toast.LENGTH_SHORT).show()
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        if (!commentManager?.isDiscussionProxyNull()) {
+            inflater?.inflate(R.menu.coment_list_menu, menu)
+
+            val defaultItem = menu?.findItem(mSharedPreferenceHelper.discussionOrder.menuId)
+            defaultItem?.isChecked = true
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+        DiscussionOrder.values().forEach {
+            if (it.menuId.equals(item?.itemId)) {
+                mSharedPreferenceHelper.discussionOrder = it
+                item?.isChecked = true
+
+                commentManager.resetAll()
+                commentAdapter.notifyDataSetChanged()
+
+
+                showEmptyProgressOnCenter()
+                commentManager.loadComments()
+                //todo reload comments, set to comment manager, and resolve above by id from preferences.
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 
 }

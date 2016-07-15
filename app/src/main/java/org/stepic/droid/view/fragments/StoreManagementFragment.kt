@@ -9,13 +9,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import com.squareup.otto.Subscribe
-import com.yandex.metrica.YandexMetrica
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.events.loading.FinishLoadEvent
 import org.stepic.droid.events.loading.StartLoadEvent
 import org.stepic.droid.events.video.FailToMoveFilesEvent
-import org.stepic.droid.util.*
+import org.stepic.droid.util.FileUtil
+import org.stepic.droid.util.KotlinUtil
+import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.StorageUtil
 import org.stepic.droid.view.custom.MovingProgressDialogFragment
 import org.stepic.droid.view.dialogs.ChooseStorageDialog
 import org.stepic.droid.view.dialogs.ClearVideosDialog
@@ -143,7 +146,7 @@ class StoreManagementFragment : FragmentBase() {
 
     private fun setUpClearCacheButton() {
         clearCacheButton.setOnClickListener {
-            YandexMetrica.reportEvent(AppConstants.METRICA_CLICK_CLEAR_CACHE)
+            analytic.reportEvent(Analytic.Interaction.CLICK_CLEAR_CACHE)
             mClearCacheDialogFragment?.show(fragmentManager, null)
         }
 

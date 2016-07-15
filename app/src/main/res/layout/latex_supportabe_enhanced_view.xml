@@ -4,6 +4,7 @@
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/textView"
+              android:autoLink="web"
               android:textSize="16sp"
               android:textColor="@color/black"
               android:layout_width="wrap_content"
@@ -11,6 +12,7 @@
 
     <org.stepic.droid.view.custom.LatexSupportableWebView
         android:id="@+id/webView"
+        android:overScrollMode="never"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </merge>

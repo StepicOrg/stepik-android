@@ -145,6 +145,7 @@ public class StepsFragment extends FragmentBase {
 
             @Override
             public void onPageSelected(int position) {
+                hideSoftKeypad();
                 pushState(position);
                 checkOptionsMenu(position);
             }

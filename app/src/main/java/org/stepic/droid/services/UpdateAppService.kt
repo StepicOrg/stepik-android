@@ -4,7 +4,7 @@ import android.app.IntentService
 import android.app.Service
 import android.content.Intent
 import com.squareup.otto.Bus
-import com.yandex.metrica.YandexMetrica
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
@@ -33,6 +33,9 @@ class UpdateAppService : IntentService("update_stepic") {
     @Inject
     lateinit var sharedPreferencesHelper: SharedPreferenceHelper
 
+    @Inject
+    lateinit var analytic: Analytic
+
     override fun onHandleIntent(intent: Intent?) {
         try {
             val lastShown = sharedPreferencesHelper.lastShownUpdatingMessageTimestamp
@@ -41,7 +44,7 @@ class UpdateAppService : IntentService("update_stepic") {
                 checkUpdateAndPushMessageOnMainFeed()
             }
         } catch (t: Throwable) {
-            YandexMetrica.reportError("update check failed", t)
+            analytic.reportError(Analytic.Error.ERROR_UPDATE_CHECK_APP, t)
         }
     }
 

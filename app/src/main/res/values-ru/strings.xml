@@ -22,6 +22,7 @@
     <string name="terms">Правилами</string>
     <string name="tap_to_see_more">развернуть…</string>
     <string name="summary">О курсе</string>
+    <string name="course">Курс</string>
     <string name="description">Описание</string>
     <string name="course_info_title">Информация о курсе</string>
     <string name="requirements">Требования</string>
@@ -182,4 +183,14 @@
     <string name="delete_label">Удалить</string>
     <string name="delete_comment_detail">Удалить этот комментарий</string>
     <string name="fail_delete_comment">Извините, не удалось удалить комментарий</string>
+    <string name="share_title">Поделиться</string>
+
+    <string name="staff_label">Команда Stepic.org</string>
+    <string name="teacher_label">Команда курса</string>
+
+    <string name="last_discussion">Новые обсуждения</string>
+    <string name="most_liked_discussion">Самые популярные</string>
+    <string name="most_active_discussion">Самые обсуждаемые</string>
+    <string name="recent_activity_discussion">Свежие обновления</string>
+    <string name="copy_text_label">Скопировать текст</string>
 </resources>

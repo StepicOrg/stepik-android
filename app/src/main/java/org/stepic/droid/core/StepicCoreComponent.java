@@ -168,4 +168,6 @@ public interface StepicCoreComponent {
     void inject(CourseJoinerPresenterImpl courseJoinerPresenter);
 
     void inject(DeleteCommentDialogFragment dialogFragment);
+
+    void inject(ShareHelperImpl shareHelper);
 }

@@ -190,4 +190,14 @@
     <string name="delete_label">Delete</string>
     <string name="delete_comment_detail">Delete this comment?</string>
     <string name="fail_delete_comment">Sorry, you cannot delete this comment</string>
+    <string name="share_title">Share</string>
+    <string name="course">Course</string>
+    <string name="staff_label">Stepic.org Team</string>
+    <string name="teacher_label">Course Staff</string>
+
+    <string name="last_discussion">Last discussion</string>
+    <string name="most_liked_discussion">Most liked</string>
+    <string name="most_active_discussion">Most active</string>
+    <string name="recent_activity_discussion">Recent activity</string>
+    <string name="copy_text_label">Copy text</string>
 </resources>

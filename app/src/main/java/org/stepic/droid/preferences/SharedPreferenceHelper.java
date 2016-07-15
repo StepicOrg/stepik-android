@@ -11,9 +11,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
+import org.stepic.droid.model.comments.DiscussionOrder;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.web.AuthenticationStepicResponse;
@@ -28,9 +30,11 @@ public class SharedPreferenceHelper {
     private static final String NOTIFICATION_SOUND_DISABLED = "notification_sound";
     private static final String TEMP_UPDATE_LINK = "temp_update_link";
     private Context mContext;
+    private Analytic analytic;
 
     @Inject
-    public SharedPreferenceHelper() {
+    public SharedPreferenceHelper(Analytic analytic) {
+        this.analytic = analytic;
         mContext = MainApplication.getAppContext();
     }
 
@@ -73,26 +77,26 @@ public class SharedPreferenceHelper {
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, FIRST_TIME_LAUNCH, true);
     }
 
-    public void afterFirstTime(){
+    public void afterFirstTime() {
         put(PreferenceType.DEVICE_SPECIFIC, FIRST_TIME_LAUNCH, false);
     }
 
-    public enum CommentsOrder {
-        DISCUSSION_NEW_FIRST("discussion"),
-        DISCUSSION_MOST_LIKED("discussions_most_liked"),
-        DISCUSSION_MOST_ACTIVE("discussions_most_active"),
-        DISCUSSION_RECENT_ACTIVITY("discussions_recent_activity");
-
-        private String description;
-
-        CommentsOrder(String description) {
-            this.description = description;
-        }
-
-        private String getStoreName() {
-            return description;
-        }
-    }
+//    public enum CommentsOrder {
+//        DISCUSSION_NEW_FIRST("discussion"),
+//        DISCUSSION_MOST_LIKED("discussions_most_liked"),
+//        DISCUSSION_MOST_ACTIVE("discussions_most_active"),
+//        DISCUSSION_RECENT_ACTIVITY("discussions_recent_activity");
+//
+//        private String description;
+//
+//        CommentsOrder(String description) {
+//            this.description = description;
+//        }
+//
+//        private String getStoreName() {
+//            return description;
+//        }
+//    }
 
     public enum PreferenceType {
         LOGIN("login preference"),
@@ -111,6 +115,17 @@ public class SharedPreferenceHelper {
         private String getStoreName() {
             return description;
         }
+    }
+
+    public DiscussionOrder getDiscussionOrder() {
+        int orderId = getInt(PreferenceType.LOGIN, DISCUSSION_ORDER);
+        DiscussionOrder order = DiscussionOrder.Companion.getById(orderId);
+        analytic.reportEvent(Analytic.Comments.ORDER_TREND, order.toString());
+        return order;
+    }
+
+    public void setDiscussionOrder(DiscussionOrder disscussionOrder){
+        put(PreferenceType.LOGIN, DISCUSSION_ORDER, disscussionOrder.getId());
     }
 
     public void setIsGcmTokenOk(boolean isGcmTokenOk) {
@@ -149,6 +164,9 @@ public class SharedPreferenceHelper {
         //todo save picture of user profile
         //todo validate profile from the server with cached profile and make restore to cache. make
         //todo query when nav drawer is occurred?
+        if (profile!=null){
+            analytic.setUserId(profile.getId() + "");
+        }
         Gson gson = new Gson();
         String json = gson.toJson(profile);
         put(PreferenceType.LOGIN, PROFILE_JSON, json);
@@ -202,7 +220,7 @@ public class SharedPreferenceHelper {
         put(PreferenceType.TEMP, TEMP_UPDATE_LINK, link);
     }
 
-    public String getTempLink () {
+    public String getTempLink() {
         return getString(PreferenceType.TEMP, TEMP_UPDATE_LINK);
     }
 
@@ -253,6 +271,12 @@ public class SharedPreferenceHelper {
     public void deleteAuthInfo() {
         RWLocks.AuthLock.writeLock().lock();
         try {
+            Profile profile = getProfile();
+            String userId = "anon_prev";
+            if (profile!=null){
+                userId += profile.getId();
+            }
+            analytic.setUserId(userId);
             clear(PreferenceType.LOGIN);
         } finally {
             RWLocks.AuthLock.writeLock().unlock();
@@ -350,4 +374,5 @@ public class SharedPreferenceHelper {
     private final String NOTIFICATION_VIBRATION_DISABLED = "not_vibrat_disabled";
     private final String SD_CHOSEN = "sd_chosen";
     private final String FIRST_TIME_LAUNCH = "first_time_launch";
+    private final String DISCUSSION_ORDER = "discussion_order";
 }

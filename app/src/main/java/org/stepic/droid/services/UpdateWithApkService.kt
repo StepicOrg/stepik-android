@@ -4,7 +4,7 @@ import android.app.IntentService
 import android.app.Service
 import android.content.Intent
 import android.net.Uri
-import com.yandex.metrica.YandexMetrica
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.FileUtil
@@ -19,12 +19,15 @@ class UpdateWithApkService : IntentService("update_with_apk") {
     @Inject
     lateinit var userPrefs: UserPreferences
 
+    @Inject
+    lateinit var analytic : Analytic
+
     override fun onHandleIntent(intent: Intent?) {
         try {
             val linkFromServer = intent?.getStringExtra(linkKey)
             updateFromRemoteApk(path = linkFromServer!!)
         } catch (e: Exception) {
-            YandexMetrica.reportError("update apk is failed", e)
+            analytic.reportError(Analytic.Error.UPDATE_FROM_APK_FAILED, e)
         }
 
     }

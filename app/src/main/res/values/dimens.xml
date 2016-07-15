@@ -48,4 +48,5 @@
     <dimen name="left_padding_name_comments">0dp</dimen>
     <dimen name="margin_option_text">12dp</dimen>
     <dimen name="margin_option_top_bot">4dp</dimen>
+    <dimen name="height_image_comment_state">16dp</dimen>
 </resources>

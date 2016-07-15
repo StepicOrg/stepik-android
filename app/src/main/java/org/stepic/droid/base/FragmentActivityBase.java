@@ -13,6 +13,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.core.ILessonSessionManager;
 import org.stepic.droid.core.ILoginManager;
@@ -34,6 +35,9 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public abstract class FragmentActivityBase extends AppCompatActivity {
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
+    @Inject
+    protected Analytic analytic;
 
     @Inject
     protected INotificationManager notificationManager;

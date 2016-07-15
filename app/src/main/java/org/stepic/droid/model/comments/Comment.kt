@@ -1,13 +1,14 @@
 package org.stepic.droid.model.comments
 
 import org.stepic.droid.model.Actions
+import org.stepic.droid.model.UserRole
 
 
 data class Comment(
         val id: Long? = null,
         var parent: Long? = null,
         val user: Int? = null,
-        val user_role: String? = null,
+        val user_role: UserRole? = null,
         val time: String? = null,
         var text: String = "",
         val reply_count: Int? = null,

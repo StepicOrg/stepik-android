@@ -3,7 +3,7 @@ package org.stepic.droid.notifications
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
-import com.yandex.metrica.YandexMetrica
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.core.IShell
 import org.stepic.droid.notifications.model.Notification
@@ -28,18 +28,21 @@ class StepicFcmListenerService : FirebaseMessagingService() {
                 hacker.notificationManager.showNotification(it)
             }
         } catch(e: Exception) {
-            YandexMetrica.reportError("notification error parse", e);
+            hacker.analytic.reportError(Analytic.Error.NOTIFICATION_ERROR_PARSE, e);
         }
     }
 
 }
 
 class HackFcmListener() {
-        @Inject
+    @Inject
     lateinit var notificationManager: INotificationManager
 
-        @Inject
+    @Inject
     lateinit var mShell : IShell
+
+    @Inject
+    lateinit var analytic : Analytic
 
     init {
         MainApplication.component().inject(this)

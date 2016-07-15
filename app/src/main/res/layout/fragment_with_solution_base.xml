@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <ScrollView
         android:id="@+id/root_scroll_view"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbarStyle="outsideOverlay">
@@ -79,6 +78,17 @@
                     android:text="@string/review_warning"/>
 
             </FrameLayout>
+
+            <org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout
+                android:textIsSelectable="true"
+                tools:visibility="visible"
+                android:id="@+id/hint_text_view"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:background="@color/black"
+                android:textColor="@color/white"
+                android:padding="16dp"
+                android:visibility="gone"/>
 
             <include
                 android:id="@+id/progress_bar"

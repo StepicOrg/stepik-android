@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @Singleton
 class DatabaseFacade {
 
-    enum class Table internal constructor(val storeName: String) {
+    enum class Table (val storeName: String) {
         enrolled(DBStructureCourses.ENROLLED_COURSES),
         featured(DBStructureCourses.FEATURED_COURSES)
     }
@@ -350,19 +350,19 @@ class DatabaseFacade {
 
     fun getDownloadEntityByStepId(stepId: Long) = mDownloadEntityDao.get(DbStructureSharedDownloads.Column.STEP_ID, stepId.toString())
 
-    fun getAllDownloadingUnits() : LongArray {
+    fun getAllDownloadingUnits(): LongArray {
         val units = mUnitDao.getAll(DbStructureUnit.Column.IS_LOADING, 1.toString())
         val unitIds = units.map { it?.id }.filterNotNull()
         return unitIds.toLongArray()
     }
 
-    fun getAllDownloadingSections() : LongArray{
+    fun getAllDownloadingSections(): LongArray {
         val sections = mSectionDao.getAll(DbStructureSections.Column.IS_LOADING, 1.toString())
-        val sectionIds = sections.map { it?.id}.filterNotNull()
+        val sectionIds = sections.map { it?.id }.filterNotNull()
         return sectionIds.toLongArray()
     }
 
-    fun dropOnlyCourseTable(){
+    fun dropOnlyCourseTable() {
         mCoursesEnrolledDao.removeAll()
         mCoursesFeaturedDao.removeAll()
     }

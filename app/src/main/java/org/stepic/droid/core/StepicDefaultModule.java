@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.squareup.otto.Bus;
 
+import org.stepic.droid.analytic.Analytic;
+import org.stepic.droid.analytic.AnalyticImpl;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.concurrency.MainHandlerImpl;
 import org.stepic.droid.configuration.ConfigRelease;
@@ -88,8 +90,8 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public IScreenManager provideIScreenManager(IConfig config, UserPreferences userPreferences) {
-        return new ScreenManager(config, userPreferences);
+    public IScreenManager provideIScreenManager(IConfig config, UserPreferences userPreferences, Analytic analytic) {
+        return new ScreenManager(config, userPreferences, analytic);
     }
 
     @Provides
@@ -100,8 +102,8 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public IConfig provideIConfig(Context context) {
-        return new ConfigRelease(context);
+    public IConfig provideIConfig(Context context, Analytic analytic) {
+        return new ConfigRelease(context, analytic);
     }
 
 
@@ -113,8 +115,8 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public SharedPreferenceHelper provideSharedPreferencesHelper() {
-        return new SharedPreferenceHelper();
+    public SharedPreferenceHelper provideSharedPreferencesHelper(Analytic analytic) {
+        return new SharedPreferenceHelper(analytic);
     }
 
     @Provides
@@ -137,18 +139,17 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public IVideoResolver provideVideoResolver(Context context,
-                                               Bus bus,
+    public IVideoResolver provideVideoResolver(Analytic analytic,
                                                DatabaseFacade dbOperationsCachedVideo,
                                                UserPreferences userPreferences,
                                                CleanManager cleanManager) {
-        return new VideoResolver(context, bus, dbOperationsCachedVideo, userPreferences, cleanManager);
+        return new VideoResolver(dbOperationsCachedVideo, userPreferences, cleanManager, analytic);
     }
 
     @Provides
     @Singleton
-    public UserPreferences provideUserPrefs(Context context, SharedPreferenceHelper helper) {
-        return new UserPreferences(context, helper);
+    public UserPreferences provideUserPrefs(Context context, SharedPreferenceHelper helper, Analytic analytic) {
+        return new UserPreferences(context, helper, analytic);
     }
 
     @Provides
@@ -170,8 +171,8 @@ public class StepicDefaultModule {
 
     @Singleton
     @Provides
-    public IStoreStateManager provideStoreManager(DatabaseFacade dbManager, Bus bus) {
-        return new StoreStateManager(dbManager, bus);
+    public IStoreStateManager provideStoreManager(DatabaseFacade dbManager, Bus bus, Analytic analytic) {
+        return new StoreStateManager(dbManager, bus, analytic);
     }
 
     @Singleton
@@ -212,8 +213,8 @@ public class StepicDefaultModule {
 
     @Singleton
     @Provides
-    public ILoginManager provideLoginManager(IShell shell, Context context) {
-        return new LoginManager(shell, context);
+    public ILoginManager provideLoginManager(IShell shell, Context context, Analytic analytic) {
+        return new LoginManager(shell, context, analytic);
     }
 
     @Singleton
@@ -325,8 +326,8 @@ public class StepicDefaultModule {
 
     @Singleton
     @Provides
-    public INotificationManager provideNotificationManager(SharedPreferenceHelper sp, IApi api, IConfig config, UserPreferences userPreferences, DatabaseFacade db) {
-        return new NotificationManagerImpl(sp, api, config, userPreferences, db);
+    public INotificationManager provideNotificationManager(SharedPreferenceHelper sp, IApi api, IConfig config, UserPreferences userPreferences, DatabaseFacade db, Analytic analytic) {
+        return new NotificationManagerImpl(sp, api, config, userPreferences, db, analytic);
     }
 
     @Provides
@@ -349,7 +350,19 @@ public class StepicDefaultModule {
     }
 
     @Provides
-    public CourseJoinerPresenter provideCourseJoiner (){
+    public CourseJoinerPresenter provideCourseJoiner() {
         return new CourseJoinerPresenterImpl();
+    }
+
+    @Provides
+    @Singleton
+    public Analytic provideAnalytic(Context context) {
+        return new AnalyticImpl(context);
+    }
+
+    @Provides
+    @Singleton
+    public ShareHelper provideShareHelper() {
+        return new ShareHelperImpl();
     }
 }

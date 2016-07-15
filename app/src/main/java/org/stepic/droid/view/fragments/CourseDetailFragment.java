@@ -16,6 +16,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -34,9 +37,9 @@ import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
-import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
@@ -55,7 +58,6 @@ import org.stepic.droid.model.Video;
 import org.stepic.droid.presenters.course_finder.CourseFinderPresenter;
 import org.stepic.droid.presenters.course_joiner.CourseJoinerPresenter;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.StringUtil;
@@ -90,6 +92,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     private View header;
     private View footer;
     private DialogFragment unauthorizedDialog;
+    private Intent shareIntentWithChooser;
 
     public static CourseDetailFragment newInstance(Course course) {
         Bundle args = new Bundle();
@@ -160,7 +163,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     //App indexing:
     private GoogleApiClient mClient;
-    private Uri mUrl;
+    private Uri mUrlInApp;
+    private Uri mUrlInWeb;
     private String mTitle;
     private String mDescription;
 
@@ -172,10 +176,10 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     public Action getAction() {
         Thing object = new Thing.Builder()
-                .setId(mUrl.getEncodedPath())
+                .setId(mUrlInWeb.toString())
                 .setName(mTitle)
                 .setDescription(mDescription)
-                .setUrl(mUrl)
+                .setUrl(mUrlInApp)
                 .build();
 
         return new Action.Builder(Action.TYPE_VIEW)
@@ -204,6 +208,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course_detailed, container, false);
         ButterKnife.bind(this, v);
+        setHasOptionsMenu(true);
         return v;
     }
 
@@ -312,10 +317,9 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         mTitle = mCourse.getTitle();
         mDescription = mCourse.getSummary();
         if (mCourse.getSlug() != null && !wasIndexed) {
-            mUrl = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getSlug()));
-            wasIndexed = true;
-            AppIndex.AppIndexApi.start(mClient, getAction());
-            YandexMetrica.reportEvent("appindexing", JsonHelper.toJson(mCourse.getCourseId()));
+            mUrlInWeb = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getSlug()));
+            mUrlInApp = StringUtil.getAppUriForCourse(config.getBaseUrl(), mCourse.getSlug());
+            reportIndexToGoogle();
         }
 
 
@@ -339,6 +343,21 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
         resolveJoinView();
         fetchInstructors();
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.invalidateOptionsMenu();
+        }
+    }
+
+    private void reportIndexToGoogle() {
+        if (mCourse != null && !wasIndexed && mCourse.getSlug() != null) {
+            if (!mClient.isConnecting() && !mClient.isConnected()) {
+                mClient.connect();
+            }
+            wasIndexed = true;
+            AppIndex.AppIndexApi.start(mClient, getAction());
+            analytic.reportEventWithIdName(Analytic.AppIndexing.COURSE_DETAIL, mCourse.getCourseId() + "", mCourse.getTitle());
+        }
     }
 
     private void resolveJoinView() {
@@ -374,11 +393,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         courseFinderPresenter.onStart(this);
         courseJoinerPresenter.onStart(this);
         tryToShowCourse();
-        mClient.connect();
-        if (mCourse != null && !wasIndexed && mCourse.getSlug() != null) {
-            wasIndexed = true;
-            AppIndex.AppIndexApi.start(mClient, getAction());
-        }
+        reportIndexToGoogle();
     }
 
     private void fetchInstructors() {
@@ -463,14 +478,11 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @Override
     public void onCourseUnavailable(CourseUnavailableForUserEvent event) {
-        //// TODO: 16.06.16 SHOW ERROR: CAN'T OPEN COURSE, TRY TO FIND IN SEARCH (Link to featured)
         if (mCourse == null) {
-            YandexMetrica.reportEvent(AppConstants.COURSE_USER_TRY_FAIL, JsonHelper.toJson(event));
-            int i = 0;
+            analytic.reportEvent(Analytic.Interaction.COURSE_USER_TRY_FAIL, event.getCourseId() + "");
             reportInternetProblem.setVisibility(View.GONE);
             courseNotFoundView.setVisibility(View.VISIBLE);
         }
-
     }
 
     @Override
@@ -553,7 +565,10 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         if (wasIndexed) {
             AppIndex.AppIndexApi.end(mClient, getAction());
         }
-        mClient.disconnect();
+        if (mClient != null && mClient.isConnected() && mClient.isConnecting()) {
+            mClient.disconnect();
+        }
+        wasIndexed = false;
         super.onStop();
 
     }
@@ -589,7 +604,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         if (mCourse != null) {
             courseJoinerPresenter.joinCourse(mCourse);
         } else {
-            YandexMetrica.reportEvent("course is null when join, detail");
+            analytic.reportEvent(Analytic.Interaction.JOIN_COURSE_NULL);
         }
     }
 
@@ -644,10 +659,39 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
 
     @Subscribe
-    public void onSuccessDrop(final SuccessDropCourseEvent e){
-        if (mCourse!=null && e.getCourse().getCourseId() == mCourse.getCourseId()){
+    public void onSuccessDrop(final SuccessDropCourseEvent e) {
+        if (mCourse != null && e.getCourse().getCourseId() == mCourse.getCourseId()) {
             mCourse.setEnrollment(0);
             resolveJoinView();
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (mCourse != null) {
+            inflater.inflate(R.menu.course_detailed_menu, menu);
+            createIntentForSharing();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_share:
+                if (shareIntentWithChooser != null) {
+                    if (mCourse != null && mCourse.getTitle() != null) {
+                        analytic.reportEventWithIdName(Analytic.Interaction.SHARE_COURSE, mCourse.getCourseId() + "", mCourse.getTitle());
+                    }
+                    startActivity(shareIntentWithChooser);
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void createIntentForSharing() {
+        if (mCourse == null) return;
+
+        shareIntentWithChooser = shareHelper.getIntentForCourseSharing(mCourse);
     }
 }

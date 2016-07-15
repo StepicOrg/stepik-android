@@ -14,5 +14,6 @@
   "ZENDESK_HOST": "https://stepic.zendesk.com",
   "COURSE_CLOSEABLE":true,
   "CUSTOM_UPDATE":true,
-  "UPDATE_ENDPOINT":"media/attachments/lesson/26968/custom_app_update.json"
+  "UPDATE_ENDPOINT":"media/attachments/lesson/26968/custom_app_update.json",
+  "FIREBASE_DOMAIN":"https://z9q9u.app.goo.gl/"
 }

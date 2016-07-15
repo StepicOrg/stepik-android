@@ -8,10 +8,10 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 import com.squareup.otto.Bus;
-import com.yandex.metrica.YandexMetrica;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.events.loading.FinishLoadEvent;
@@ -46,6 +46,8 @@ public class WantMoveDataDialog extends DialogFragment {
     ThreadPoolExecutor threadPoolExecutor;
     @Inject
     IMainHandler mainHandler;
+    @Inject
+    Analytic analytic;
 
     @Inject
     Bus bus;
@@ -61,7 +63,7 @@ public class WantMoveDataDialog extends DialogFragment {
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        YandexMetrica.reportEvent(AppConstants.TRANSFER_DATA);
+                        analytic.reportEvent(Analytic.Interaction.TRANSFER_DATA_YES);
                         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                             @Override
                             protected void onPreExecute() {
@@ -117,7 +119,7 @@ public class WantMoveDataDialog extends DialogFragment {
                                         userPreferences.setSdChosen(true);
                                     }
                                 } catch (Exception ex) {
-                                    YandexMetrica.reportError(AppConstants.FAIL_TO_MOVE, ex);
+                                    analytic.reportError(Analytic.Error.FAIL_TO_MOVE, ex);
                                     mainHandler.post(new Function0<Unit>() {
                                         @Override
                                         public Unit invoke() {
