@@ -54,6 +54,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom5To6(db);
         upgradeFrom6To7(db);
         upgradeFrom7To8(db);
+        upgradeFrom8To9(db);
+    }
+
+    private void upgradeFrom8To9(SQLiteDatabase db) {
+        alterColumn(db, DBStructureCourses.ENROLLED_COURSES, DBStructureCourses.Column.SCHEDULE_LINK, TEXT_TYPE);
+        alterColumn(db, DBStructureCourses.FEATURED_COURSES, DBStructureCourses.Column.SCHEDULE_LINK, TEXT_TYPE);
+
+        alterColumn(db, DBStructureCourses.ENROLLED_COURSES, DBStructureCourses.Column.SCHEDULE_LONG_LINK, TEXT_TYPE);
+        alterColumn(db, DBStructureCourses.FEATURED_COURSES, DBStructureCourses.Column.SCHEDULE_LONG_LINK, TEXT_TYPE);
     }
 
     private void upgradeFrom7To8(SQLiteDatabase db) {
