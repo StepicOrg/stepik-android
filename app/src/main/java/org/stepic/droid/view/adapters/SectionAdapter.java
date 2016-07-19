@@ -37,7 +37,7 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder>  implements  OnClickLoadListener{
+public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder> implements OnClickLoadListener {
     private final static String SECTION_TITLE_DELIMETER = ". ";
 
     public static final int TYPE_SECTION_ITEM = 1;
@@ -120,7 +120,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     }
 
     @Override
-    public  void onClickLoad(int adapterPosition) {
+    public void onClickLoad(int adapterPosition) {
         int sectionPosition = adapterPosition - SECTION_LIST_DELTA;
         if (sectionPosition >= 0 && sectionPosition < mSections.size()) {
             Section section = mSections.get(sectionPosition);
@@ -337,25 +337,43 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
         View rootView;
 
+        @BindView(R.id.export_calendar_button)
+        View addToCalendarButton;
+
         public CalendarViewHolder(View itemView) {
             super(itemView);
             rootView = itemView;
+            addToCalendarButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // TODO: 19.07.16 add to calendar
+                }
+            });
         }
 
         @Override
         public void setDataOnView(int position) {
             // TODO: 19.07.16 resolve showing of calendar depend on mCourse and mSections.
-//            hide();
+            if (shouldBeHidden()) {
+                hide();
+            } else {
+                show();
+            }
 
         }
 
-        private void hide(){
+        private boolean shouldBeHidden() {
+            // TODO: 19.07.16 ask resolver
+            return false;
+        }
+
+        private void hide() {
             ViewGroup.LayoutParams layoutParams = rootView.getLayoutParams();
             layoutParams.height = 0;
             rootView.setLayoutParams(layoutParams);
         }
 
-        private void show(){
+        private void show() {
             ViewGroup.LayoutParams layoutParams = rootView.getLayoutParams();
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             rootView.setLayoutParams(layoutParams);
