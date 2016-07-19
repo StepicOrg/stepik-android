@@ -368,7 +368,7 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public CalendarManager provideCalendarManager(){
-        return new CalendarManagerImpl();
+    public CalendarManager provideCalendarManager(IConfig config){
+        return new CalendarManagerImpl(config);
     }
 }

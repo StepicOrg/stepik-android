@@ -51,6 +51,7 @@ public class AppConstants {
 
     public static final String OPEN_NOTIFICATION = "Open_notification";
     public static final long MILLIS_IN_24HOURS = 86400000L;
+    public static final long MILLIS_IN_1HOUR = 3600000L;
 
     public static final String ABOUT_NAME_INJECTION_COURSE_FINDER = "about";
     public static final String SECTION_NAMED_INJECTION_COURSE_FINDER = "section";
