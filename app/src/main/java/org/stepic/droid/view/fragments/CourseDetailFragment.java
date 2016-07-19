@@ -66,7 +66,7 @@ import org.stepic.droid.view.abstraction.CourseJoinView;
 import org.stepic.droid.view.abstraction.LoadCourseView;
 import org.stepic.droid.view.adapters.CoursePropertyAdapter;
 import org.stepic.droid.view.adapters.InstructorAdapter;
-import org.stepic.droid.view.custom.LoadingProgressDialog;
+import org.stepic.droid.view.dialogs.LoadingProgressDialog;
 import org.stepic.droid.view.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.web.UserStepicResponse;
 

@@ -17,7 +17,7 @@ import org.stepic.droid.base.MainApplication
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent
 import org.stepic.droid.util.HtmlHelper
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.view.custom.LoadingProgressDialog
+import org.stepic.droid.view.dialogs.LoadingProgressDialog
 import org.stepic.droid.web.CommentsResponse
 import retrofit.Callback
 import retrofit.Response

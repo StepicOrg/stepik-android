@@ -22,7 +22,7 @@ import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.SocialAuthAdapter;
-import org.stepic.droid.view.custom.LoadingProgressDialog;
+import org.stepic.droid.view.dialogs.LoadingProgressDialog;
 import org.stepic.droid.view.decorators.SpacesItemDecorationHorizontal;
 
 import butterknife.BindView;

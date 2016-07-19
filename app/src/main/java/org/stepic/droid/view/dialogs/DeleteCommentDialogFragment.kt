@@ -12,7 +12,7 @@ import org.stepic.droid.events.comments.FailDeleteCommentEvent
 import org.stepic.droid.events.comments.InternetConnectionProblemInCommentsEvent
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.view.custom.LoadingProgressDialog
+import org.stepic.droid.view.dialogs.LoadingProgressDialog
 import org.stepic.droid.web.CommentsResponse
 import org.stepic.droid.web.IApi
 import retrofit.Callback

@@ -43,7 +43,7 @@ import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.view.adapters.DownloadsAdapter;
-import org.stepic.droid.view.custom.LoadingProgressDialog;
+import org.stepic.droid.view.dialogs.LoadingProgressDialog;
 
 import java.util.ArrayList;
 import java.util.HashSet;
