@@ -335,14 +335,30 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     class CalendarViewHolder extends GenericViewHolder {
 
+        View rootView;
 
         public CalendarViewHolder(View itemView) {
             super(itemView);
+            rootView = itemView;
         }
 
         @Override
         public void setDataOnView(int position) {
             // TODO: 19.07.16 resolve showing of calendar depend on mCourse and mSections.
+//            hide();
+
+        }
+
+        private void hide(){
+            ViewGroup.LayoutParams layoutParams = rootView.getLayoutParams();
+            layoutParams.height = 0;
+            rootView.setLayoutParams(layoutParams);
+        }
+
+        private void show(){
+            ViewGroup.LayoutParams layoutParams = rootView.getLayoutParams();
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            rootView.setLayoutParams(layoutParams);
         }
     }
 
