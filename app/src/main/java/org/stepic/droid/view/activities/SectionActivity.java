@@ -525,7 +525,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         //now we have not null section and correct position at list
         section.set_cached(isCached);
         section.set_loading(isLoading);
-        mAdapter.notifyItemChanged(position);
+        mAdapter.notifyItemChanged(position + SectionAdapter.SECTION_LIST_DELTA);
     }
 
     @Override

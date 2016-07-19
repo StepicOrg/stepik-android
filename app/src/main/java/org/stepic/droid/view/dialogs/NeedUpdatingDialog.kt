@@ -62,8 +62,10 @@ class NeedUpdatingDialog : DialogFragment() {
 
                     if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                        val dialog = ExplainPermissionDialog()
-                        dialog.show(activity.getFragmentManager(), null)
+                        val explainDialog = ExplainPermissionDialog.newInstance()
+                        if (!explainDialog.isAdded) {
+                            explainDialog.show(activity.supportFragmentManager, null)
+                        }
 
                     } else {
                         ActivityCompat.requestPermissions(activity,

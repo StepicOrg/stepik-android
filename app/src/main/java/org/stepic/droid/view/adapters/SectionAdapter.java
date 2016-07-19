@@ -1,11 +1,12 @@
 package org.stepic.droid.view.adapters;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,12 +33,17 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
 import butterknife.BindString;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionViewHolder> implements StepicOnClickItemListener, OnClickLoadListener {
+public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder>  implements  OnClickLoadListener{
     private final static String SECTION_TITLE_DELIMETER = ". ";
+
+    public static final int TYPE_SECTION_ITEM = 1;
+    public static final int TYPE_TITLE = 2;
+
+    public static final int SECTION_LIST_DELTA = 1;
 
     @Inject
     IScreenManager mScreenManager;
@@ -58,10 +64,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
 
     private List<Section> mSections;
     private Context mContext;
-    private Activity mActivity;
+    private AppCompatActivity mActivity;
     private Course course;
 
-    public SectionAdapter(List<Section> sections, Context mContext, Activity activity) {
+    public SectionAdapter(List<Section> sections, Context mContext, AppCompatActivity activity) {
         this.mSections = sections;
         this.mContext = mContext;
         mActivity = activity;
@@ -69,124 +75,61 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         MainApplication.component().inject(this);
     }
 
+
     @Override
-    public SectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.section_item, parent, false);
-        return new SectionViewHolder(v, this, this);
+    public GenericViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == TYPE_SECTION_ITEM) {
+            View v = LayoutInflater.from(mContext).inflate(R.layout.section_item, parent, false);
+            return new SectionViewHolder(v);
+        } else if (viewType == TYPE_TITLE) {
+            View v = LayoutInflater.from(mContext).inflate(R.layout.export_calendar_view, parent, false);
+            return new CalendarViewHolder(v);
+        } else {
+            return null;
+        }
     }
 
+
     @Override
-    public void onBindViewHolder(SectionViewHolder holder, int position) {
-        Section section = mSections.get(position);
-
-        String title = section.getTitle();
-        int positionOfSection = section.getPosition();
-        title = positionOfSection + SECTION_TITLE_DELIMETER + title;
-        holder.sectionTitle.setText(title);
-
-
-        String formattedBeginDate = section.getFormattedBeginDate();
-        if (formattedBeginDate.equals("")) {
-            holder.startDate.setText("");
-            holder.startDate.setVisibility(View.GONE);
+    public int getItemViewType(int position) {
+        if (position == 0) {
+            return TYPE_TITLE;
         } else {
-            holder.startDate.setText(holder.beginDateString + " " + formattedBeginDate);
-            holder.startDate.setVisibility(View.VISIBLE);
+            return TYPE_SECTION_ITEM;
         }
-
-        String formattedSoftDeadline = section.getFormattedSoftDeadline();
-        if (formattedSoftDeadline.equals("")) {
-            holder.softDeadline.setText("");
-            holder.softDeadline.setVisibility(View.GONE);
-        } else {
-            holder.softDeadline.setText(holder.softDeadlineString + " " + formattedSoftDeadline);
-            holder.softDeadline.setVisibility(View.VISIBLE);
-        }
-
-        String formattedHardDeadline = section.getFormattedHardDeadline();
-        if (formattedHardDeadline.equals("")) {
-            holder.hardDeadline.setText("");
-            holder.hardDeadline.setVisibility(View.GONE);
-        } else {
-            holder.hardDeadline.setText(holder.hardDeadlineString + " " + formattedHardDeadline);
-            holder.hardDeadline.setVisibility(View.VISIBLE);
-        }
-
-        if (section.is_active() && course.getEnrollment() > 0) {
-
-            int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, MainApplication.getAppContext());
-
-            holder.sectionTitle.setTextColor(strong_text_color);
-            holder.cv.setFocusable(false);
-            holder.cv.setClickable(true);
-            holder.cv.setFocusableInTouchMode(false);
-
-            holder.mLoadButton.setVisibility(View.VISIBLE);
-            if (section.is_cached()) {
-
-                // FIXME: 05.11.15 Delete course from cache. Set CLICK LISTENER.
-                //cached
-
-                holder.preLoadIV.setVisibility(View.GONE);
-                holder.whenLoad.setVisibility(View.INVISIBLE);
-                holder.afterLoad.setVisibility(View.VISIBLE); //can
-
-            } else {
-                if (section.is_loading()) {
-
-                    holder.preLoadIV.setVisibility(View.GONE);
-                    holder.whenLoad.setVisibility(View.VISIBLE);
-                    holder.afterLoad.setVisibility(View.GONE);
-
-                    //todo: add cancel of downloading
-                } else {
-                    //not cached not loading
-                    holder.preLoadIV.setVisibility(View.VISIBLE);
-                    holder.whenLoad.setVisibility(View.INVISIBLE);
-                    holder.afterLoad.setVisibility(View.GONE);
-                }
-
-            }
-        } else {
-            //Not active section or not enrollment
+    }
 
 
-            holder.mLoadButton.setVisibility(View.GONE);
-            holder.preLoadIV.setVisibility(View.GONE);
-            holder.whenLoad.setVisibility(View.INVISIBLE);
-            holder.afterLoad.setVisibility(View.GONE);
-
-            int weak_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_weak_text, MainApplication.getAppContext());
-            holder.sectionTitle.setTextColor(weak_text_color);
-            holder.cv.setFocusable(false);
-            holder.cv.setClickable(false);
-            holder.cv.setFocusableInTouchMode(false);
-        }
+    @Override
+    public void onBindViewHolder(GenericViewHolder holder, int position) {
+        holder.setDataOnView(position);
     }
 
     @Override
     public int getItemCount() {
-        return mSections.size();
+        return mSections.size() + SECTION_LIST_DELTA;
+    }
+
+
+    public void requestClickLoad(int position) {
+        onClickLoad(position);
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     @Override
-    public void onClick(int itemPosition) {
-        if (itemPosition >= 0 && itemPosition < mSections.size()) {
-
-            mScreenManager.showUnitsForSection(mContext, mSections.get(itemPosition));
-        }
-    }
-
-    @Override
-    public void onClickLoad(int position) {
-        if (position >= 0 && position < mSections.size()) {
-            Section section = mSections.get(position);
+    public  void onClickLoad(int adapterPosition) {
+        int sectionPosition = adapterPosition - SECTION_LIST_DELTA;
+        if (sectionPosition >= 0 && sectionPosition < mSections.size()) {
+            Section section = mSections.get(sectionPosition);
 
             int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                mShell.getSharedPreferenceHelper().storeTempPosition(position);
+                mShell.getSharedPreferenceHelper().storeTempPosition(adapterPosition);
                 if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
@@ -194,8 +137,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
                     // this thread waiting for the user's response! After the user
                     // sees the explanation, try again to request the permission.
 
-                    ExplainPermissionDialog dialog = new ExplainPermissionDialog();
-                    dialog.show(mActivity.getFragmentManager(), null);
+                    DialogFragment dialog = ExplainPermissionDialog.newInstance();
+                    if (!dialog.isAdded()) {
+                        dialog.show(mActivity.getSupportFragmentManager(), null);
+                    }
 
                 } else {
                     // No explanation needed, we can request the permission.
@@ -209,37 +154,29 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             }
 
             if (section.is_cached()) {
-                analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_SECTION, section.getId()+"");
+                analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_SECTION, section.getId() + "");
                 mCleaner.removeSection(section);
                 section.set_loading(false);
                 section.set_cached(false);
                 mDatabaseFacade.updateOnlyCachedLoadingSection(section);
-                notifyItemChanged(position);
+                notifyItemChanged(adapterPosition);
             } else {
                 if (section.is_loading()) {
-                    analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_SECTION, section.getId()+"");
+                    analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_SECTION, section.getId() + "");
                     mScreenManager.showDownload(mContext);
                 } else {
-                    analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId()+"");
+                    analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
                     section.set_cached(false);
                     section.set_loading(true);
                     mDatabaseFacade.updateOnlyCachedLoadingSection(section);
                     mDownloadManager.addSection(section);
-                    notifyItemChanged(position);
+                    notifyItemChanged(adapterPosition);
                 }
             }
         }
     }
 
-    public void requestClickLoad(int position) {
-        onClickLoad(position);
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-
-    public static class SectionViewHolder extends RecyclerView.ViewHolder {
+    class SectionViewHolder extends GenericViewHolder implements StepicOnClickItemListener {
 
         @BindView(R.id.cv)
         View cv;
@@ -276,23 +213,146 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         View mLoadButton;
 
 
-        public SectionViewHolder(View itemView, final StepicOnClickItemListener listener, final OnClickLoadListener loadSectionListener) {
+        public SectionViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-                    listener.onClick(getAdapterPosition());
+                    SectionViewHolder.this.onClick(getAdapterPosition());
                 }
+
             });
 
             mLoadButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    loadSectionListener.onClickLoad(getAdapterPosition());
+                    onClickLoad(getAdapterPosition());
                 }
             });
         }
+
+
+        @Override
+        public void onClick(int adapterPosition) {
+            int itemPosition = adapterPosition - SECTION_LIST_DELTA;
+            if (itemPosition >= 0 && itemPosition < mSections.size()) {
+                mScreenManager.showUnitsForSection(mContext, mSections.get(itemPosition));
+            }
+        }
+
+        @Override
+        public void setDataOnView(int positionInAdapter) {
+            // the 0 index always for calendar, we make its GONE, if calendar is not needed.
+            int position = positionInAdapter - SECTION_LIST_DELTA;
+            Section section = mSections.get(position);
+
+            String title = section.getTitle();
+            int positionOfSection = section.getPosition();
+            title = positionOfSection + SECTION_TITLE_DELIMETER + title;
+            sectionTitle.setText(title);
+
+
+            String formattedBeginDate = section.getFormattedBeginDate();
+            if (formattedBeginDate.equals("")) {
+                startDate.setText("");
+                startDate.setVisibility(View.GONE);
+            } else {
+                startDate.setText(beginDateString + " " + formattedBeginDate);
+                startDate.setVisibility(View.VISIBLE);
+            }
+
+            String formattedSoftDeadline = section.getFormattedSoftDeadline();
+            if (formattedSoftDeadline.equals("")) {
+                softDeadline.setText("");
+                softDeadline.setVisibility(View.GONE);
+            } else {
+                softDeadline.setText(softDeadlineString + " " + formattedSoftDeadline);
+                softDeadline.setVisibility(View.VISIBLE);
+            }
+
+            String formattedHardDeadline = section.getFormattedHardDeadline();
+            if (formattedHardDeadline.equals("")) {
+                hardDeadline.setText("");
+                hardDeadline.setVisibility(View.GONE);
+            } else {
+                hardDeadline.setText(hardDeadlineString + " " + formattedHardDeadline);
+                hardDeadline.setVisibility(View.VISIBLE);
+            }
+
+            if (section.is_active() && course.getEnrollment() > 0) {
+
+                int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, MainApplication.getAppContext());
+
+                sectionTitle.setTextColor(strong_text_color);
+                cv.setFocusable(false);
+                cv.setClickable(true);
+                cv.setFocusableInTouchMode(false);
+
+                mLoadButton.setVisibility(View.VISIBLE);
+                if (section.is_cached()) {
+
+                    // FIXME: 05.11.15 Delete course from cache. Set CLICK LISTENER.
+                    //cached
+
+                    preLoadIV.setVisibility(View.GONE);
+                    whenLoad.setVisibility(View.INVISIBLE);
+                    afterLoad.setVisibility(View.VISIBLE); //can
+
+                } else {
+                    if (section.is_loading()) {
+
+                        preLoadIV.setVisibility(View.GONE);
+                        whenLoad.setVisibility(View.VISIBLE);
+                        afterLoad.setVisibility(View.GONE);
+
+                        //todo: add cancel of downloading
+                    } else {
+                        //not cached not loading
+                        preLoadIV.setVisibility(View.VISIBLE);
+                        whenLoad.setVisibility(View.INVISIBLE);
+                        afterLoad.setVisibility(View.GONE);
+                    }
+
+                }
+            } else {
+                //Not active section or not enrollment
+
+                mLoadButton.setVisibility(View.GONE);
+                preLoadIV.setVisibility(View.GONE);
+                whenLoad.setVisibility(View.INVISIBLE);
+                afterLoad.setVisibility(View.GONE);
+
+                int weak_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_weak_text, MainApplication.getAppContext());
+                sectionTitle.setTextColor(weak_text_color);
+                cv.setFocusable(false);
+                cv.setClickable(false);
+                cv.setFocusableInTouchMode(false);
+            }
+        }
+    }
+
+
+    class CalendarViewHolder extends GenericViewHolder {
+
+
+        public CalendarViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void setDataOnView(int position) {
+            // TODO: 19.07.16 resolve showing of calendar depend on mCourse and mSections.
+        }
+    }
+
+    abstract class GenericViewHolder extends RecyclerView.ViewHolder {
+
+        public GenericViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+
+        public abstract void setDataOnView(int position);
     }
 }

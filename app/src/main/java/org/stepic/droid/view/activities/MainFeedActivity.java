@@ -224,7 +224,9 @@ public class MainFeedActivity extends BackToExitActivityBase
                 analytic.reportEvent(Analytic.Interaction.CLICK_LOGOUT);
 
                 LogoutAreYouSureDialog dialog = LogoutAreYouSureDialog.newInstance();
-                dialog.show(getSupportFragmentManager(), null);
+                if (!dialog.isAdded()) {
+                    dialog.show(getSupportFragmentManager(), null);
+                }
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
