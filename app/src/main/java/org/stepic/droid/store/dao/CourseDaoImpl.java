@@ -55,6 +55,8 @@ public  class CourseDaoImpl extends DaoBase<Course> {
         int indexCertificate = cursor.getColumnIndex(DBStructureCourses.Column.CERTIFICATE);
         int indexIntroVideoId = cursor.getColumnIndex(DBStructureCourses.Column.INTRO_VIDEO_ID);
         int indexSlug = cursor.getColumnIndex(DBStructureCourses.Column.SLUG);
+        int indexScheduleLink = cursor.getColumnIndex(DBStructureCourses.Column.SCHEDULE_LINK);
+        int indexScheduleLongLink = cursor.getColumnIndex(DBStructureCourses.Column.SCHEDULE_LONG_LINK);
 
         course.setCertificate(cursor.getString(indexCertificate));
         course.setWorkload(cursor.getString(indexWorkload));
@@ -78,6 +80,8 @@ public  class CourseDaoImpl extends DaoBase<Course> {
         course.setSections(DbParseHelper.INSTANCE.parseStringToLongArray(cursor.getString(indexSection)));
         course.setIntro_video_id(cursor.getLong(indexIntroVideoId));
         course.setSlug(cursor.getString(indexSlug));
+        course.setSchedule_link(cursor.getString(indexScheduleLink));
+        course.setSchedule_long_link(cursor.getString(indexScheduleLongLink));
         return course;
     }
 
@@ -109,6 +113,9 @@ public  class CourseDaoImpl extends DaoBase<Course> {
         values.put(DBStructureCourses.Column.TARGET_AUDIENCE, course.getTarget_audience());
         values.put(DBStructureCourses.Column.CERTIFICATE, course.getCertificate());
         values.put(DBStructureCourses.Column.SLUG, course.getSlug());
+
+        values.put(DBStructureCourses.Column.SCHEDULE_LINK, course.getSchedule_link());
+        values.put(DBStructureCourses.Column.SCHEDULE_LONG_LINK, course.getSchedule_long_link());
 
         Video video = course.getIntro_video();
         if (video != null) {

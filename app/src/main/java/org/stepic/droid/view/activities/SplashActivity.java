@@ -41,13 +41,20 @@ public class SplashActivity extends BackToExitActivityBase {
             });
         }
 
-        if (mSharedPreferenceHelper.isFirstTime()) {
+        if (mSharedPreferenceHelper.isFirstTime() || !mSharedPreferenceHelper.isScheduleAdded()) {
             //fix v11 bug:
             mThreadPoolExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    mDbManager.dropOnlyCourseTable(); //v11 bug, when slug was not cached. We can remove it, when all users will have v1.11 or above. (flavour problem)
-                    mSharedPreferenceHelper.afterFirstTime();
+                    if (mSharedPreferenceHelper.isFirstTime()) {
+                        mDbManager.dropOnlyCourseTable(); //v11 bug, when slug was not cached. We can remove it, when all users will have v1.11 or above. (flavour problem)
+                        mSharedPreferenceHelper.afterFirstTime();
+                        mSharedPreferenceHelper.afterScheduleAdded();
+                    } else if (!mSharedPreferenceHelper.isScheduleAdded()) {
+                        mDbManager.dropOnlyCourseTable();
+                        mSharedPreferenceHelper.afterScheduleAdded();
+                    }
+
                     mMainHandler.post(new Function0<Unit>() {
                         @Override
                         public Unit invoke() {

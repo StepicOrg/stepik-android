@@ -77,6 +77,14 @@ public class SharedPreferenceHelper {
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, FIRST_TIME_LAUNCH, true);
     }
 
+    public boolean isScheduleAdded(){
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, SCHEDULED_LINK_CACHED, false);
+    }
+
+    public void afterScheduleAdded(){
+        put(PreferenceType.DEVICE_SPECIFIC, SCHEDULED_LINK_CACHED, true);
+    }
+
     public void afterFirstTime() {
         put(PreferenceType.DEVICE_SPECIFIC, FIRST_TIME_LAUNCH, false);
     }
@@ -374,5 +382,6 @@ public class SharedPreferenceHelper {
     private final String NOTIFICATION_VIBRATION_DISABLED = "not_vibrat_disabled";
     private final String SD_CHOSEN = "sd_chosen";
     private final String FIRST_TIME_LAUNCH = "first_time_launch";
+    private final String SCHEDULED_LINK_CACHED = "scheduled_cached";
     private final String DISCUSSION_ORDER = "discussion_order";
 }
