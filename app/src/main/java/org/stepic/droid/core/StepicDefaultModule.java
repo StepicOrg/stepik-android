@@ -365,4 +365,10 @@ public class StepicDefaultModule {
     public ShareHelper provideShareHelper() {
         return new ShareHelperImpl();
     }
+
+    @Provides
+    @Singleton
+    public CalendarManager provideCalendarManager(){
+        return new CalendarManagerImpl();
+    }
 }
