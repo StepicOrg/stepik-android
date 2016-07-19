@@ -41,7 +41,6 @@ import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
 import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.joining_course.FailJoinEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
-import org.stepic.droid.events.notify_ui.NotifyUISectionsEvent;
 import org.stepic.droid.events.sections.FailureResponseSectionEvent;
 import org.stepic.droid.events.sections.FinishingGetSectionFromDbEvent;
 import org.stepic.droid.events.sections.FinishingSaveSectionToDbEvent;
@@ -163,7 +162,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                 R.color.stepic_orange_carrot,
                 R.color.stepic_blue_ribbon);
 
-
+        mSectionsRecyclerView.setVisibility(View.GONE);
         mSectionsRecyclerView.setNestedScrollingEnabled(false);
         mSectionsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mSectionList = new ArrayList<>();
@@ -291,12 +290,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     }
 
-    @Subscribe
-    public void onNotifyUI(NotifyUISectionsEvent event) {
-        dismissReportView();
-        mAdapter.notifyDataSetChanged();
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -366,6 +359,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         mSectionList.clear();
         mSectionList.addAll(sections);
         dismissReportView();
+        mSectionsRecyclerView.setVisibility(View.VISIBLE);
         mAdapter.notifyDataSetChanged();
         dismiss();
     }
