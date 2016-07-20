@@ -26,7 +26,7 @@ import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
-import org.stepic.droid.view.dialogs.ExplainPermissionDialog;
+import org.stepic.droid.view.dialogs.ExplainExternalStoragePermissionDialog;
 import org.stepic.droid.view.listeners.OnClickLoadListener;
 import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 
@@ -141,7 +141,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                     // this thread waiting for the user's response! After the user
                     // sees the explanation, try again to request the permission.
 
-                    DialogFragment dialog = ExplainPermissionDialog.newInstance();
+                    DialogFragment dialog = ExplainExternalStoragePermissionDialog.newInstance();
                     if (!dialog.isAdded()) {
                         dialog.show(mActivity.getSupportFragmentManager(), null);
                     }

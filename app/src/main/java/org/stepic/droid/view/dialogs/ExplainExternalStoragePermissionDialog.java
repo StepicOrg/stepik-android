@@ -12,18 +12,15 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.util.AppConstants;
 
-public class ExplainPermissionDialog extends DialogFragment {
+public class ExplainExternalStoragePermissionDialog extends DialogFragment {
 
     public static DialogFragment newInstance() {
-        return new ExplainPermissionDialog();
+        return new ExplainExternalStoragePermissionDialog();
     }
-
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-//        MainApplication.component().inject(this);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.allow_question)
                 .setMessage(R.string.explain_permission)
