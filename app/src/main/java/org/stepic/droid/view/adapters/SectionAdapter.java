@@ -271,7 +271,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 softDeadline.setText("");
                 softDeadline.setVisibility(View.GONE);
             } else {
-                softDeadline.setText(softDeadlineString + " " + formattedSoftDeadline);
+                softDeadline.setText(softDeadlineString + ": " + formattedSoftDeadline);
                 softDeadline.setVisibility(View.VISIBLE);
             }
 
@@ -280,7 +280,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 hardDeadline.setText("");
                 hardDeadline.setVisibility(View.GONE);
             } else {
-                hardDeadline.setText(hardDeadlineString + " " + formattedHardDeadline);
+                hardDeadline.setText(hardDeadlineString + ": " + formattedHardDeadline);
                 hardDeadline.setVisibility(View.VISIBLE);
             }
 
