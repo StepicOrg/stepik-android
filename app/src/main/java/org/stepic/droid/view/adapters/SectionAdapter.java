@@ -350,7 +350,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             addToCalendarButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // TODO: 19.07.16 add to calendar
+                    calendarPresenter.addDeadlinesToCalendar(SectionAdapter.this.mSections);
                 }
             });
         }

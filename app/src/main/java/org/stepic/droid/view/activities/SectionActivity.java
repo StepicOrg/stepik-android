@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -34,6 +35,8 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.concurrency.tasks.FromDbSectionTask;
 import org.stepic.droid.concurrency.tasks.ToDbSectionTask;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.core.CalendarExportableView;
+import org.stepic.droid.core.CalendarPresenter;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
 import org.stepic.droid.events.courses.CourseFoundEvent;
@@ -78,7 +81,7 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class SectionActivity extends FragmentActivityBase implements SwipeRefreshLayout.OnRefreshListener, OnRequestPermissionsResultCallback, LoadCourseView, CourseJoinView {
+public class SectionActivity extends FragmentActivityBase implements SwipeRefreshLayout.OnRefreshListener, OnRequestPermissionsResultCallback, LoadCourseView, CourseJoinView, CalendarExportableView {
 
     @BindView(R.id.swipe_refresh_layout_units)
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -137,6 +140,9 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Inject
     IConfig mConfig;
 
+    @Inject
+    CalendarPresenter calendarPresenter;
+
     private GoogleApiClient mClient;
     private boolean wasIndexed;
     private Uri mUrlInApp;
@@ -172,6 +178,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         joinCourseProgressDialog = new LoadingProgressDialog(this);
         ProgressHelper.activate(loadOnCenterProgressBar);
         bus.register(this);
+        calendarPresenter.onStart(this);
         courseFinderPresenter.onStart(this);
         courseJoinerPresenter.onStart(this);
         setSupportActionBar(mToolbar);
@@ -470,6 +477,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Override
     protected void onDestroy() {
+        calendarPresenter.onStop();
         courseJoinerPresenter.onStop();
         courseFinderPresenter.onDestroy();
         bus.unregister(this);
@@ -641,5 +649,19 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
             mCourse.setEnrollment(0);
             resolveJoinCourseView();
         }
+    }
+
+    @Override
+    public void permissionNotGranted() {
+        // FIXME: 20.07.16 implement
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.WRITE_CALENDAR},
+                1218);
+    }
+
+    @Override
+    public void successExported() {
+        // FIXME: 20.07.16 implement: hide widget.
+        Toast.makeText(this, "SUCCESS", Toast.LENGTH_SHORT).show();
     }
 }

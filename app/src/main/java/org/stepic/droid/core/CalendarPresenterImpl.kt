@@ -86,7 +86,7 @@ class CalendarPresenterImpl(val config: IConfig,
                 }
 
                 if (isDateGreaterNowMinus1Hour(it.hard_deadline, nowMinus1Hour)) {
-                    val deadline = it.soft_deadline
+                    val deadline = it.hard_deadline
                     if (deadline != null) {
                         addDeadlineEvent(it, deadline, DeadlineType.hardDeadline)
                     }
@@ -113,8 +113,9 @@ class CalendarPresenterImpl(val config: IConfig,
         contentValues.put(CalendarContract.Events.TITLE, calendarTitle);
         contentValues.put(CalendarContract.Events.DESCRIPTION, StringUtil.getAbsoluteUriForSection(config, section));
         contentValues.put(CalendarContract.Events.CALENDAR_ID, 1)
+        contentValues.put(CalendarContract.Events.EVENT_TIMEZONE, DateTimeZone.getDefault().id)
 
-        val uri = context.contentResolver.insert(CalendarContract.EventDays.CONTENT_URI, contentValues)
+        val uri = context.contentResolver.insert(CalendarContract.Events.CONTENT_URI, contentValues)
 
         val eventId: Long = (uri.lastPathSegment).toLong()
         Log.d("eee", "eventId = " + eventId)
