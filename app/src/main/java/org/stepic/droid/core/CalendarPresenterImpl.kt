@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
+import android.database.Cursor
+import android.net.Uri
 import android.provider.CalendarContract
 import android.support.annotation.WorkerThread
 import android.support.v4.content.ContextCompat
@@ -102,6 +104,22 @@ class CalendarPresenterImpl(val config: IConfig,
     @WorkerThread
     private fun addDeadlineEvent(section: Section, deadline: String, deadlineType: DeadlineType) {
 
+        //FIXME: change to calendar chooser
+        //
+        var cursor: Cursor? = null
+        val projection = arrayOf(CalendarContract.Calendars._ID, CalendarContract.Calendars.ACCOUNT_NAME)
+        val cr = context.getContentResolver()
+        cursor = cr.query(Uri.parse("content://com.android.calendar/calendars"), projection, null, null, null)
+        cursor!!.moveToFirst()
+        val calIds = IntArray(cursor!!.getCount())
+        val calNames = arrayOfNulls<String>(cursor!!.getCount())
+        for (i in calNames.indices) {
+            calIds[i] = cursor!!.getInt(0)
+            calNames[i] = cursor!!.getString(1)
+            cursor!!.moveToNext()
+        }
+        //^^^^^^^^^
+
         val dateEndInMillis = DateTime(deadline).millis
         val dateStartInMillis = dateEndInMillis - AppConstants.MILLIS_IN_1HOUR
 
@@ -114,10 +132,18 @@ class CalendarPresenterImpl(val config: IConfig,
         contentValues.put(CalendarContract.Events.DESCRIPTION, StringUtil.getAbsoluteUriForSection(config, section));
         contentValues.put(CalendarContract.Events.CALENDAR_ID, 1)
         contentValues.put(CalendarContract.Events.EVENT_TIMEZONE, DateTimeZone.getDefault().id)
+        contentValues.put(CalendarContract.Events.HAS_ALARM, 1)
 
         val uri = context.contentResolver.insert(CalendarContract.Events.CONTENT_URI, contentValues)
 
         val eventId: Long = (uri.lastPathSegment).toLong()
+//
+        val reminderValues = ContentValues()
+        reminderValues.put(CalendarContract.Reminders.EVENT_ID, eventId)
+        reminderValues.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_DEFAULT)
+        reminderValues.put(CalendarContract.Reminders.MINUTES, AppConstants.TWO_DAY_IN_MINUTES)
+        val uriReminder = context.contentResolver.insert(CalendarContract.Reminders.CONTENT_URI, reminderValues)
+
         Log.d("eee", "eventId = " + eventId)
     }
 
