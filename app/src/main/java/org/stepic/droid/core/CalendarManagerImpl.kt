@@ -1,13 +1,22 @@
 package org.stepic.droid.core
 
+import android.content.Context
+import com.squareup.otto.Bus
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Section
+import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.AppConstants
+import java.util.concurrent.ThreadPoolExecutor
 
-class CalendarManagerImpl(val config: IConfig) : CalendarManager {
+class CalendarManagerImpl(val config: IConfig,
+                          val mainHandler: IMainHandler,
+                          val context: Context,
+                          val threadPool: ThreadPoolExecutor,
+                          val userPreferences: UserPreferences) : CalendarManager {
     override fun shouldBeShownAsWidget(sectionList: List<Section>?): Boolean {
         //TODO: check preferences
         return shouldBeShown(sectionList)
