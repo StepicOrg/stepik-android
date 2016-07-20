@@ -368,11 +368,11 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public CalendarManager provideCalendarManager(IConfig config,
-                                                  IMainHandler mainHandler,
-                                                  Context context,
-                                                  ThreadPoolExecutor threadPoolExecutor,
-                                                  UserPreferences userPreferences) {
-        return new CalendarManagerImpl(config, mainHandler, context, threadPoolExecutor, userPreferences);
+    public CalendarPresenter provideCalendarManager(IConfig config,
+                                                    IMainHandler mainHandler,
+                                                    Context context,
+                                                    ThreadPoolExecutor threadPoolExecutor,
+                                                    UserPreferences userPreferences) {
+        return new CalendarPresenterImpl(config, mainHandler, context, threadPoolExecutor, userPreferences);
     }
 }

@@ -16,7 +16,7 @@ import android.widget.TextView;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.CalendarManager;
+import org.stepic.droid.core.CalendarPresenter;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.Course;
@@ -64,7 +64,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     Analytic analytic;
 
     @Inject
-    CalendarManager calendarManager;
+    CalendarPresenter calendarPresenter;
 
     private List<Section> mSections;
     private Context mContext;
@@ -367,7 +367,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         }
 
         private boolean shouldBeHidden() {
-            return !calendarManager.shouldBeShownAsWidget(SectionAdapter.this.mSections);
+            return !calendarPresenter.shouldBeShownAsWidget(SectionAdapter.this.mSections);
         }
 
         private void hide() {
