@@ -9,6 +9,7 @@ import org.stepic.droid.store.structure.DBStructureCourses;
 import org.stepic.droid.store.structure.DbStructureAssignment;
 import org.stepic.droid.store.structure.DbStructureBlock;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
+import org.stepic.droid.store.structure.DbStructureCalendarSection;
 import org.stepic.droid.store.structure.DbStructureLesson;
 import org.stepic.droid.store.structure.DbStructureNotification;
 import org.stepic.droid.store.structure.DbStructureProgress;
@@ -55,6 +56,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom6To7(db);
         upgradeFrom7To8(db);
         upgradeFrom8To9(db);
+        upgradeFrom9To10(db);
+    }
+
+    private void upgradeFrom9To10(SQLiteDatabase db) {
+        createCalendarSection(db, DbStructureCalendarSection.CALENDAR_SECTION);
     }
 
     private void upgradeFrom8To9(SQLiteDatabase db) {
@@ -146,6 +152,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 8) {
             upgradeFrom7To8(db);
+        }
+
+        if (oldVersion < 9) {
+            upgradeFrom8To9(db);
+        }
+
+        if (oldVersion < 10) {
+            upgradeFrom9To10(db);
         }
     }
 
@@ -393,6 +407,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureNotification.Column.HTML_TEXT + " TEXT, "
                 + DbStructureNotification.Column.ACTION + " TEXT, "
                 + DbStructureNotification.Column.COURSE_ID + " LONG "
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createCalendarSection(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureCalendarSection.Column.SECTION_ID + " LONG, "
+                + DbStructureCalendarSection.Column.EVENT_ID + " LONG, "
+                + DbStructureCalendarSection.Column.LAST_STORED_DEADLINE + " TEXT "
                 + ")";
         db.execSQL(sql);
     }
