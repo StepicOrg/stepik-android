@@ -382,4 +382,11 @@ class DatabaseFacade {
             return HashMap<Long, CalendarSection>()
         }
     }
+
+    fun addCalendarEvent(calendarSection: CalendarSection) {
+        calendarSectionDao.insertOrUpdate(calendarSection)
+    }
+
+    fun getCalendarEvent(sectionId: Long) = calendarSectionDao.get(DbStructureCalendarSection.Column.SECTION_ID, sectionId.toString())
+
 }

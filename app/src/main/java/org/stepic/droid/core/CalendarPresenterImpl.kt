@@ -1,6 +1,7 @@
 package org.stepic.droid.core
 
 import android.Manifest
+import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
@@ -9,6 +10,7 @@ import android.net.Uri
 import android.provider.CalendarContract
 import android.support.annotation.WorkerThread
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.stepic.droid.concurrency.IMainHandler
@@ -102,6 +104,13 @@ class CalendarPresenterImpl(val config: IConfig,
         val now: Long = DateTime.now(DateTimeZone.getDefault()).millis
         val nowMinus1Hour = now - AppConstants.MILLIS_IN_1HOUR
         threadPool.execute {
+
+            val ids = sectionList
+                    .map { it.id }
+                    .toLongArray()
+
+            val addedCalendarSectionsMap = database.getCalendarSectionsByIds(ids)
+
             sectionList.filterNotNull().forEach {
                 // We can choose soft_deadline or last_deadline of the Course, if section doesn't have it, but it will pollute calendar.
 
@@ -109,14 +118,14 @@ class CalendarPresenterImpl(val config: IConfig,
                 if (isDateGreaterThanOther(it.soft_deadline, nowMinus1Hour)) {
                     val deadline = it.soft_deadline
                     if (deadline != null) {
-                        addDeadlineEvent(it, deadline, DeadlineType.softDeadline)
+                        addDeadlineEvent(it, deadline, DeadlineType.softDeadline, addedCalendarSectionsMap[it.id])
                     }
                 }
 
                 if (isDateGreaterThanOther(it.hard_deadline, nowMinus1Hour)) {
                     val deadline = it.hard_deadline
                     if (deadline != null) {
-                        addDeadlineEvent(it, deadline, DeadlineType.hardDeadline)
+                        addDeadlineEvent(it, deadline, DeadlineType.hardDeadline, addedCalendarSectionsMap[it.id])
                     }
                 }
             }
@@ -128,7 +137,7 @@ class CalendarPresenterImpl(val config: IConfig,
     }
 
     @WorkerThread
-    private fun addDeadlineEvent(section: Section, deadline: String, deadlineType: DeadlineType) {
+    private fun addDeadlineEvent(section: Section, deadline: String, deadlineType: DeadlineType, calendarSection: CalendarSection?) {
 
         //FIXME: change to calendar chooser
         //
@@ -160,15 +169,44 @@ class CalendarPresenterImpl(val config: IConfig,
         contentValues.put(CalendarContract.Events.EVENT_TIMEZONE, DateTimeZone.getDefault().id)
         contentValues.put(CalendarContract.Events.HAS_ALARM, 1)
 
-        val uri = context.contentResolver.insert(CalendarContract.Events.CONTENT_URI, contentValues)
+        if (calendarSection != null) {
+            //FIXME: CHECK IF EVENT IS EXIST, otherwise -> it won't update
+            val uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, calendarSection.eventId)
+            val rowsUpdated = context.contentResolver.update(uri, contentValues, null, null)
+            Log.d("eee", "rows updated " + rowsUpdated)
+            addToDatabase(section, deadlineType, deadline, calendarSection.eventId)
+        } else {
+            val uri = context.contentResolver.insert(CalendarContract.Events.CONTENT_URI, contentValues)
 
-        val eventId: Long = (uri.lastPathSegment).toLong()
-//
-        val reminderValues = ContentValues()
-        reminderValues.put(CalendarContract.Reminders.EVENT_ID, eventId)
-        reminderValues.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_DEFAULT)
-        reminderValues.put(CalendarContract.Reminders.MINUTES, AppConstants.TWO_DAY_IN_MINUTES)
-        val uriReminder = context.contentResolver.insert(CalendarContract.Reminders.CONTENT_URI, reminderValues)
+            val eventId: Long = (uri.lastPathSegment).toLong()
+            Log.d("eee", "eventId " + eventId)
+
+            addToDatabase(section, deadlineType, deadline, eventId)
+
+            val reminderValues = ContentValues()
+            reminderValues.put(CalendarContract.Reminders.EVENT_ID, eventId)
+            reminderValues.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_DEFAULT)
+            reminderValues.put(CalendarContract.Reminders.MINUTES, AppConstants.TWO_DAY_IN_MINUTES)
+            val uriReminder = context.contentResolver.insert(CalendarContract.Reminders.CONTENT_URI, reminderValues)
+        }
+    }
+
+    fun addToDatabase(section: Section, deadlineType: DeadlineType, deadline: String, eventId: Long) {
+        if (deadlineType == DeadlineType.hardDeadline) {
+            database.addCalendarEvent(CalendarSection(section.id, eventId, deadline))
+        } else if (deadlineType == DeadlineType.softDeadline) {
+            val calendarSectionFromDatabase = database.getCalendarEvent(sectionId = section.id)
+            if (calendarSectionFromDatabase != null) {
+                val deadlineInCalendarInMillis = DateTime(calendarSectionFromDatabase.mostLastDeadline).millis
+                val dateEndInMillis = DateTime(deadline).millis
+                val isNeedUpdateDeadlineInDb = (dateEndInMillis - deadlineInCalendarInMillis) > 0
+                if (isNeedUpdateDeadlineInDb) {
+                    database.addCalendarEvent(CalendarSection(section.id, eventId, deadline))
+                }
+            } else {
+                database.addCalendarEvent(CalendarSection(section.id, eventId, deadline))
+            }
+        }
     }
 
     override fun onStart(view: CalendarExportableView) {
