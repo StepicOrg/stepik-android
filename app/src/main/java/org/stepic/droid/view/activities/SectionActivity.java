@@ -365,6 +365,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     private void showSections(List<Section> sections) {
         mSectionList.clear();
         mSectionList.addAll(sections);
+        calendarPresenter.checkToShowCalendar(mSectionList);
         dismissReportView();
         mSectionsRecyclerView.setVisibility(View.VISIBLE);
         mAdapter.notifyDataSetChanged();
@@ -663,5 +664,12 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     public void successExported() {
         // FIXME: 20.07.16 implement: hide widget.
         Toast.makeText(this, "SUCCESS", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onShouldBeShownCalendar(boolean needShow) {
+        //TODO: check preferences here
+        mAdapter.setNeedShowCalendarWidget(needShow);
+        //// TODO: 21.07.16 add in menu or hide from menu
     }
 }

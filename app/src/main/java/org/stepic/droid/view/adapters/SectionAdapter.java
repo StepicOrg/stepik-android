@@ -70,6 +70,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     private Context mContext;
     private AppCompatActivity mActivity;
     private Course course;
+    private boolean needShowCalendarWidget;
 
     public SectionAdapter(List<Section> sections, Context mContext, AppCompatActivity activity) {
         this.mSections = sections;
@@ -178,6 +179,17 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 }
             }
         }
+    }
+
+    public void setNeedShowCalendarWidget(boolean needShowCalendarWidget) {
+        if (this.needShowCalendarWidget != needShowCalendarWidget){
+            this.needShowCalendarWidget = needShowCalendarWidget;
+            notifyItemChanged(0);
+        }
+    }
+
+    public boolean isNeedShowCalendarWidget() {
+        return needShowCalendarWidget;
     }
 
     class SectionViewHolder extends GenericViewHolder implements StepicOnClickItemListener {
@@ -367,7 +379,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         }
 
         private boolean shouldBeHidden() {
-            return !calendarPresenter.shouldBeShownAsWidget(SectionAdapter.this.mSections);
+            return !SectionAdapter.this.needShowCalendarWidget;
         }
 
         private void hide() {

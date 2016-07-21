@@ -30,13 +30,11 @@ class CalendarPresenterImpl(val config: IConfig,
 
     private var view: CalendarExportableView? = null
 
-    override fun shouldBeShownAsWidget(sectionList: List<Section>?): Boolean {
-        //TODO: check preferences
-        return shouldBeShown(sectionList)
-    }
-
-    override fun shouldBeShown(sectionList: List<Section>?): Boolean {
-        if (sectionList == null || sectionList.isEmpty()) return false
+    override fun checkToShowCalendar(sectionList: List<Section>?) {
+        if (sectionList == null || sectionList.isEmpty()) {
+            view?.onShouldBeShownCalendar(false)
+            return
+        }
 
         val now: Long = DateTime.now(DateTimeZone.getDefault()).millis
         val nowMinus1Hour = now - AppConstants.MILLIS_IN_1HOUR
@@ -44,10 +42,11 @@ class CalendarPresenterImpl(val config: IConfig,
         sectionList.forEach {
             if (isDateGreaterNowMinus1Hour(it.soft_deadline, nowMinus1Hour)
                     || isDateGreaterNowMinus1Hour(it.hard_deadline, nowMinus1Hour)) {
-                return true;
+                view?.onShouldBeShownCalendar(true)
+                return
             }
         }
-        return false
+        view?.onShouldBeShownCalendar(false)
     }
 
     private fun isDateGreaterNowMinus1Hour(deadline: String?, nowMinus1Hour: Long): Boolean {
@@ -143,8 +142,6 @@ class CalendarPresenterImpl(val config: IConfig,
         reminderValues.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_DEFAULT)
         reminderValues.put(CalendarContract.Reminders.MINUTES, AppConstants.TWO_DAY_IN_MINUTES)
         val uriReminder = context.contentResolver.insert(CalendarContract.Reminders.CONTENT_URI, reminderValues)
-
-        Log.d("eee", "eventId = " + eventId)
     }
 
     override fun onStart(view: CalendarExportableView) {
