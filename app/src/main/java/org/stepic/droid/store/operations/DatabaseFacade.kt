@@ -7,6 +7,7 @@ import org.stepic.droid.model.Unit
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.store.dao.IDao
 import org.stepic.droid.store.structure.*
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.web.ViewAssignment
 import java.util.*
@@ -92,14 +93,14 @@ class DatabaseFacade {
         stepIds?.let {
             val lessonSet = HashSet<Long>()
 
-            DbParseHelper.parseLongArrayToString(stepIds, ",")?.let {
+            DbParseHelper.parseLongArrayToString(stepIds, AppConstants.COMMA)?.let {
                 val steps = mStepDao.getAllInRange(DbStructureStep.Column.STEP_ID, it)
                 for (step in steps) {
                     lessonSet.add(step.lesson)
                 }
 
                 val lessonIds = lessonSet.toLongArray()
-                val lessonIdsCommaSeparated = DbParseHelper.parseLongArrayToString(lessonIds, ",")
+                val lessonIdsCommaSeparated = DbParseHelper.parseLongArrayToString(lessonIds, AppConstants.COMMA)
                 lessonIdsCommaSeparated?.let {
                     val lessonCollection = mLessonDao.getAllInRange(DbStructureLesson.Column.LESSON_ID, lessonIdsCommaSeparated).toHashSet()
                     for (stepItem in steps) {
@@ -371,7 +372,7 @@ class DatabaseFacade {
     }
 
     fun getCalendarSectionsByIds(ids: LongArray): Map<Long, CalendarSection> {
-        val stringIds = DbParseHelper.parseLongArrayToString(ids)
+        val stringIds = DbParseHelper.parseLongArrayToString(ids, AppConstants.COMMA)
         if (stringIds != null) {
             return calendarSectionDao
                     .getAllInRange(DbStructureCalendarSection.Column.SECTION_ID, stringIds)
