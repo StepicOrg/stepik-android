@@ -9,7 +9,6 @@ import android.net.Uri
 import android.provider.CalendarContract
 import android.support.annotation.WorkerThread
 import android.support.v4.content.ContextCompat
-import android.util.Log
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.stepic.droid.concurrency.IMainHandler
@@ -36,17 +35,23 @@ class CalendarPresenterImpl(val config: IConfig,
             return
         }
 
-        val now: Long = DateTime.now(DateTimeZone.getDefault()).millis
-        val nowMinus1Hour = now - AppConstants.MILLIS_IN_1HOUR
+        threadPool.execute {
+            val now: Long = DateTime.now(DateTimeZone.getDefault()).millis
+            val nowMinus1Hour = now - AppConstants.MILLIS_IN_1HOUR
 
-        sectionList.forEach {
-            if (isDateGreaterNowMinus1Hour(it.soft_deadline, nowMinus1Hour)
-                    || isDateGreaterNowMinus1Hour(it.hard_deadline, nowMinus1Hour)) {
-                view?.onShouldBeShownCalendar(true)
-                return
+            sectionList.forEach {
+                if (isDateGreaterNowMinus1Hour(it.soft_deadline, nowMinus1Hour)
+                        || isDateGreaterNowMinus1Hour(it.hard_deadline, nowMinus1Hour)) {
+                    mainHandler.post {
+                        view?.onShouldBeShownCalendar(true)
+                    }
+                    return@execute
+                }
+            }
+            mainHandler.post {
+                view?.onShouldBeShownCalendar(false)
             }
         }
-        view?.onShouldBeShownCalendar(false)
     }
 
     private fun isDateGreaterNowMinus1Hour(deadline: String?, nowMinus1Hour: Long): Boolean {
