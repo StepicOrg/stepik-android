@@ -379,7 +379,7 @@ public class StepicDefaultModule {
                                                     IMainHandler mainHandler,
                                                     Context context,
                                                     ThreadPoolExecutor threadPoolExecutor,
-                                                    UserPreferences userPreferences) {
-        return new CalendarPresenterImpl(config, mainHandler, context, threadPoolExecutor, userPreferences);
+                                                    DatabaseFacade databaseFacade) {
+        return new CalendarPresenterImpl(config, mainHandler, context, threadPoolExecutor, databaseFacade);
     }
 }

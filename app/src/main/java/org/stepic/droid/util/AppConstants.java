@@ -59,4 +59,5 @@ public class AppConstants {
     public static final String APP_INDEXING_COURSE_DETAIL_MANIFEST_HACK = "course_app";
     public static final String APP_INDEXING_SYLLABUS_MANIFEST = "syllabus";
     public static final long TWO_DAY_IN_MINUTES = 2880L;
+    public static final long MILLIS_IN_1MONTH = 2592000000L;
 }

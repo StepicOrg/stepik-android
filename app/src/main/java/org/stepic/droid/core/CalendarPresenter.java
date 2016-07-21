@@ -9,9 +9,10 @@ import java.util.List;
 public interface CalendarPresenter {
 
     /**
-     * true, if any section in list have deadline (soft or hard) and the deadline is not happened.
+     * true, if any section in list have deadline (soft or hard) and the deadline is not happened
+     * and calendar was not added before. If course was restarted, than show (new_deadline - old_deadline > 1 month).
      * false, otherwise.
-     * The method does not check preferences
+     *
      */
     void checkToShowCalendar(@Nullable List<Section> sectionList);
 

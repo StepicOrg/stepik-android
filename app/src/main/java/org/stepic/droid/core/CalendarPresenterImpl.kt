@@ -13,8 +13,9 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
+import org.stepic.droid.model.CalendarSection
 import org.stepic.droid.model.Section
-import org.stepic.droid.preferences.UserPreferences
+import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.StringUtil
 import java.util.concurrent.ThreadPoolExecutor
@@ -25,7 +26,7 @@ class CalendarPresenterImpl(val config: IConfig,
                             val mainHandler: IMainHandler,
                             val context: Context,
                             val threadPool: ThreadPoolExecutor,
-                            val userPreferences: UserPreferences) : CalendarPresenter {
+                            val database: DatabaseFacade) : CalendarPresenter {
 
     private var view: CalendarExportableView? = null
 
@@ -39,26 +40,47 @@ class CalendarPresenterImpl(val config: IConfig,
             val now: Long = DateTime.now(DateTimeZone.getDefault()).millis
             val nowMinus1Hour = now - AppConstants.MILLIS_IN_1HOUR
 
+            val ids = sectionList
+                    .map { it.id }
+                    .toLongArray()
+
+            val addedCalendarSectionsMap = database.getCalendarSectionsByIds(ids)
+
             sectionList.forEach {
-                if (isDateGreaterNowMinus1Hour(it.soft_deadline, nowMinus1Hour)
-                        || isDateGreaterNowMinus1Hour(it.hard_deadline, nowMinus1Hour)) {
-                    mainHandler.post {
-                        view?.onShouldBeShownCalendar(true)
+                val calendarSection: CalendarSection? = addedCalendarSectionsMap[it.id]
+                // We can't check calendar permission, when we want to show widget
+                if (calendarSection == null) {
+                    if (isDateGreaterThanOther(it.soft_deadline, nowMinus1Hour)
+                            || isDateGreaterThanOther(it.hard_deadline, nowMinus1Hour)) {
+                        mainHandler.post {
+                            view?.onShouldBeShownCalendar(true)
+                        }
+                        return@execute
                     }
-                    return@execute
+                } else {
+                    // we already exported in calendar this section! Check if new date in future and greater that calendar date + 30 days
+                    val calendarDeadlineMillisPlusMonth = DateTime(calendarSection.mostLastDeadline).millis + AppConstants.MILLIS_IN_1MONTH
+                    if ((isDateGreaterThanOther(it.soft_deadline, calendarDeadlineMillisPlusMonth) || isDateGreaterThanOther(it.hard_deadline, calendarDeadlineMillisPlusMonth))
+                            && (isDateGreaterThanOther(it.soft_deadline, nowMinus1Hour) || isDateGreaterThanOther(it.hard_deadline, nowMinus1Hour))) {
+                        mainHandler.post {
+                            view?.onShouldBeShownCalendar(true)
+                        }
+                        return@execute
+                    }
                 }
             }
+
             mainHandler.post {
                 view?.onShouldBeShownCalendar(false)
             }
         }
     }
 
-    private fun isDateGreaterNowMinus1Hour(deadline: String?, nowMinus1Hour: Long): Boolean {
+    private fun isDateGreaterThanOther(deadline: String?, otherDate: Long): Boolean {
         if (deadline != null) {
             val deadlineDateTime = DateTime(deadline)
             val deadlineMillis = deadlineDateTime.millis
-            if (deadlineMillis - nowMinus1Hour > 0) {
+            if (deadlineMillis - otherDate > 0) {
                 return true
             } else {
                 return false
@@ -84,14 +106,14 @@ class CalendarPresenterImpl(val config: IConfig,
                 // We can choose soft_deadline or last_deadline of the Course, if section doesn't have it, but it will pollute calendar.
 
                 // Add upcoming deadlines of sections:
-                if (isDateGreaterNowMinus1Hour(it.soft_deadline, nowMinus1Hour)) {
+                if (isDateGreaterThanOther(it.soft_deadline, nowMinus1Hour)) {
                     val deadline = it.soft_deadline
                     if (deadline != null) {
                         addDeadlineEvent(it, deadline, DeadlineType.softDeadline)
                     }
                 }
 
-                if (isDateGreaterNowMinus1Hour(it.hard_deadline, nowMinus1Hour)) {
+                if (isDateGreaterThanOther(it.hard_deadline, nowMinus1Hour)) {
                     val deadline = it.hard_deadline
                     if (deadline != null) {
                         addDeadlineEvent(it, deadline, DeadlineType.hardDeadline)
