@@ -368,7 +368,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         calendarPresenter.checkToShowCalendar(mSectionList);
         dismissReportView();
         mSectionsRecyclerView.setVisibility(View.VISIBLE);
-        mAdapter.notifyDataSetChanged();
         dismiss();
     }
 
@@ -670,6 +669,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     public void onShouldBeShownCalendar(boolean needShow) {
         //TODO: check preferences here
         mAdapter.setNeedShowCalendarWidget(needShow);
+        mAdapter.notifyDataSetChanged();
         //// TODO: 21.07.16 add in menu or hide from menu
     }
 }

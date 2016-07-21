@@ -182,14 +182,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     }
 
     public void setNeedShowCalendarWidget(boolean needShowCalendarWidget) {
-        if (this.needShowCalendarWidget != needShowCalendarWidget){
-            this.needShowCalendarWidget = needShowCalendarWidget;
-            notifyItemChanged(0);
-        }
-    }
-
-    public boolean isNeedShowCalendarWidget() {
-        return needShowCalendarWidget;
+        this.needShowCalendarWidget = needShowCalendarWidget;
     }
 
     class SectionViewHolder extends GenericViewHolder implements StepicOnClickItemListener {
@@ -383,14 +376,16 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         }
 
         private void hide() {
-            ViewGroup.LayoutParams layoutParams = rootView.getLayoutParams();
-            layoutParams.height = 0;
-            rootView.setLayoutParams(layoutParams);
+            changeHeightOfRootView(0);
         }
 
         private void show() {
+            changeHeightOfRootView(ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        private void changeHeightOfRootView(int height) {
             ViewGroup.LayoutParams layoutParams = rootView.getLayoutParams();
-            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            layoutParams.height = height;
             rootView.setLayoutParams(layoutParams);
         }
     }
