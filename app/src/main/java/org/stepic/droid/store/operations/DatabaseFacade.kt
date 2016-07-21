@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @Singleton
 class DatabaseFacade {
 
-    enum class Table (val storeName: String) {
+    enum class Table(val storeName: String) {
         enrolled(DBStructureCourses.ENROLLED_COURSES),
         featured(DBStructureCourses.FEATURED_COURSES)
     }
@@ -47,6 +47,9 @@ class DatabaseFacade {
 
     @Inject
     lateinit var mNotificationDao: IDao<Notification>
+
+    @Inject
+    lateinit var calendarSectionDao: IDao<CalendarSection>
 
     init {
         MainApplication.component().inject(this)
@@ -365,5 +368,17 @@ class DatabaseFacade {
     fun dropOnlyCourseTable() {
         mCoursesEnrolledDao.removeAll()
         mCoursesFeaturedDao.removeAll()
+    }
+
+    fun getCalendarSectionsByIds(ids: LongArray): Map<Long, CalendarSection> {
+        val stringIds = DbParseHelper.parseLongArrayToString(ids)
+        if (stringIds != null) {
+            return calendarSectionDao
+                    .getAllInRange(DbStructureCalendarSection.Column.SECTION_ID, stringIds)
+                    .map { it.id to it }
+                    .toMap()
+        } else {
+            return HashMap<Long, CalendarSection>()
+        }
     }
 }
