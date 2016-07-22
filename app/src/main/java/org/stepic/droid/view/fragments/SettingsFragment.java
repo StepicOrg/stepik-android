@@ -45,6 +45,9 @@ public class SettingsFragment extends FragmentBase {
     @BindView(R.id.fragment_settings_notification_sound_switch)
     BetterSwitch notificationSound;
 
+    @BindView(R.id.fragment_settings_calendar_widget_switch)
+    BetterSwitch calendarWidgetSwitch;
+
     @BindView(R.id.storage_management_button)
     View storageManagementButton;
 
@@ -86,6 +89,15 @@ public class SettingsFragment extends FragmentBase {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mUserPreferences.setOpenInExternal(isChecked);
+            }
+        });
+
+        calendarWidgetSwitch.setChecked(mUserPreferences.isNeedToShowCalendarWidget());
+
+        calendarWidgetSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                mUserPreferences.setNeedToShowCalendarWidget(isChecked);
             }
         });
 
@@ -162,6 +174,7 @@ public class SettingsFragment extends FragmentBase {
 
     @Override
     public void onDestroyView() {
+        calendarWidgetSwitch.setOnCheckedChangeListener(null);
         mWifiLoadSwitch.setOnCheckedChangeListener(null);
         mExternalPlayerSwitch.setOnCheckedChangeListener(null);
         notificationLearnSwitch.setOnCheckedChangeListener(null);
@@ -170,7 +183,6 @@ public class SettingsFragment extends FragmentBase {
         storageManagementButton.setOnClickListener(null);
         super.onDestroyView();
     }
-
 
     @Subscribe
     public void onWifiChanged(WifiLoadIsChangedEvent e) {
