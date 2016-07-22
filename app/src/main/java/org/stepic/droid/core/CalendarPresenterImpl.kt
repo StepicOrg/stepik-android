@@ -29,7 +29,7 @@ class CalendarPresenterImpl(val config: IConfig,
                             val context: Context,
                             val threadPool: ThreadPoolExecutor,
                             val database: DatabaseFacade,
-                            val userPrefs : UserPreferences) : CalendarPresenter {
+                            val userPrefs: UserPreferences) : CalendarPresenter {
 
     private var view: CalendarExportableView? = null
 
@@ -48,25 +48,43 @@ class CalendarPresenterImpl(val config: IConfig,
                     .toLongArray()
 
             val addedCalendarSectionsMap = database.getCalendarSectionsByIds(ids)
-
+            var isShownInMenu = false
             sectionList.forEach {
                 val calendarSection: CalendarSection? = addedCalendarSectionsMap[it.id]
                 // We can't check calendar permission, when we want to show widget
+                val isDeadlineGreaterThanNow = isDateGreaterThanOther(it.soft_deadline, nowMinus1Hour) || isDateGreaterThanOther(it.hard_deadline, nowMinus1Hour)
+
                 if (calendarSection == null) {
-                    if (isDateGreaterThanOther(it.soft_deadline, nowMinus1Hour)
-                            || isDateGreaterThanOther(it.hard_deadline, nowMinus1Hour)) {
-                        mainHandler.post {
-                            view?.onShouldBeShownCalendar(true)
+                    if (isDeadlineGreaterThanNow) {
+                        if (userPrefs.isNeedToShowCalendarWidget) {
+                            mainHandler.post {
+                                view?.onShouldBeShownCalendar(true)
+                            }
+                        }
+                        if (!isShownInMenu) {
+                            isShownInMenu = true
+                            mainHandler.post {
+                                view?.onShouldBeShownCalendarInMenu()
+                            }
                         }
                         return@execute
                     }
                 } else {
                     // we already exported in calendar this section! Check if new date in future and greater that calendar date + 30 days
                     val calendarDeadlineMillisPlusMonth = DateTime(calendarSection.mostLastDeadline).millis + AppConstants.MILLIS_IN_1MONTH
-                    if ((isDateGreaterThanOther(it.soft_deadline, calendarDeadlineMillisPlusMonth) || isDateGreaterThanOther(it.hard_deadline, calendarDeadlineMillisPlusMonth))
-                            && (isDateGreaterThanOther(it.soft_deadline, nowMinus1Hour) || isDateGreaterThanOther(it.hard_deadline, nowMinus1Hour))) {
+                    if (isDeadlineGreaterThanNow && !isShownInMenu) {
+                        isShownInMenu = true
                         mainHandler.post {
-                            view?.onShouldBeShownCalendar(true)
+                            view?.onShouldBeShownCalendarInMenu()
+                        }
+                    }
+
+                    if ((isDateGreaterThanOther(it.soft_deadline, calendarDeadlineMillisPlusMonth) || isDateGreaterThanOther(it.hard_deadline, calendarDeadlineMillisPlusMonth))
+                            && isDeadlineGreaterThanNow) {
+                        if (userPrefs.isNeedToShowCalendarWidget) {
+                            mainHandler.post {
+                                view?.onShouldBeShownCalendar(true)
+                            }
                         }
                         return@execute
                     }
