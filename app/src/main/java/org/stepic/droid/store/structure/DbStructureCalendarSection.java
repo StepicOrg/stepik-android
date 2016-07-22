@@ -8,16 +8,19 @@ public class DbStructureCalendarSection extends DBStructureBase {
     public static final class Column {
 
         public static final String SECTION_ID = "section_id";
-        public static final String EVENT_ID = "event_id";
-        public static final String LAST_STORED_DEADLINE = "last_stored_deadline";
+        public static final String EVENT_ID_HARD = "event_id_hard";
+        public static final String EVENT_ID_SOFT = "event_id_soft";
+        public static final String HARD_DEADLINE = "hard_deadline";
+        public static final String SOFT_DEADLINE = "soft_deadline";
+
     }
 
     public static String[] getUsedColumns() {
         if (mUsedColumns == null) {
             mUsedColumns = new String[]{
                     Column.SECTION_ID,
-                    Column.EVENT_ID,
-                    Column.LAST_STORED_DEADLINE
+                    Column.EVENT_ID_HARD,
+                    Column.HARD_DEADLINE,
             };
         }
         return mUsedColumns;

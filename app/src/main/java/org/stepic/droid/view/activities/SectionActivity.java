@@ -27,6 +27,7 @@ import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.otto.Subscribe;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -38,6 +39,7 @@ import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.CalendarExportableView;
 import org.stepic.droid.core.CalendarPresenter;
 import org.stepic.droid.core.ShareHelper;
+import org.stepic.droid.events.CalendarChosenEvent;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
 import org.stepic.droid.events.courses.CourseFoundEvent;
 import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
@@ -50,6 +52,7 @@ import org.stepic.droid.events.sections.FinishingSaveSectionToDbEvent;
 import org.stepic.droid.events.sections.NotCachedSectionEvent;
 import org.stepic.droid.events.sections.SectionCachedEvent;
 import org.stepic.droid.events.sections.SuccessResponseSectionsEvent;
+import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.notifications.model.Notification;
@@ -63,6 +66,7 @@ import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.view.abstraction.CourseJoinView;
 import org.stepic.droid.view.abstraction.LoadCourseView;
 import org.stepic.droid.view.adapters.SectionAdapter;
+import org.stepic.droid.view.dialogs.ChooseCalendarDialog;
 import org.stepic.droid.view.dialogs.ExplainCalendarPermissionDialog;
 import org.stepic.droid.view.dialogs.LoadingProgressDialog;
 import org.stepic.droid.view.dialogs.UnauthorizedDialogFragment;
@@ -320,7 +324,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                 return true;
 
             case R.id.menu_item_calendar:
-                calendarPresenter.addDeadlinesToCalendar(mSectionList);
+                calendarPresenter.addDeadlinesToCalendar(mSectionList, null);
                 return true;
             case android.R.id.home:
                 // Respond to the action bar's Up/Home button
@@ -572,7 +576,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
             if (permissionExternalStorage.equals(Manifest.permission.WRITE_CALENDAR) &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                calendarPresenter.addDeadlinesToCalendar(mSectionList);
+                calendarPresenter.addDeadlinesToCalendar(mSectionList, null);
             }
         }
     }
@@ -711,4 +715,19 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
             invalidateOptionsMenu();
         }
     }
+
+    @Override
+    public void onNeedToChooseCalendar(@NotNull ArrayList<CalendarItem> primariesCalendars) {
+        DialogFragment chooseCalendarDialog = ChooseCalendarDialog.Companion.newInstance(primariesCalendars);
+        if (!chooseCalendarDialog.isAdded()) {
+            chooseCalendarDialog.show(getSupportFragmentManager(), null);
+        }
+    }
+
+    @Subscribe
+    public void onCalendarChosen(CalendarChosenEvent event) {
+        CalendarItem calendarItem = event.getCalendarItem();
+        calendarPresenter.addDeadlinesToCalendar(mSectionList, calendarItem);
+    }
+
 }

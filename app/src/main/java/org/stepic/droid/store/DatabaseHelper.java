@@ -415,8 +415,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String sql = "CREATE TABLE " + name
                 + " ("
                 + DbStructureCalendarSection.Column.SECTION_ID + " LONG, "
-                + DbStructureCalendarSection.Column.EVENT_ID + " LONG, "
-                + DbStructureCalendarSection.Column.LAST_STORED_DEADLINE + " TEXT "
+                + DbStructureCalendarSection.Column.EVENT_ID_HARD + " LONG, "
+                + DbStructureCalendarSection.Column.EVENT_ID_SOFT + " LONG, "
+                + DbStructureCalendarSection.Column.HARD_DEADLINE + " TEXT, "
+                + DbStructureCalendarSection.Column.SOFT_DEADLINE + " TEXT "
                 + ")";
         db.execSQL(sql);
     }

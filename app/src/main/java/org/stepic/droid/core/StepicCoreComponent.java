@@ -38,6 +38,7 @@ import org.stepic.droid.view.adapters.SocialAuthAdapter;
 import org.stepic.droid.view.adapters.StepFragmentAdapter;
 import org.stepic.droid.view.adapters.UnitAdapter;
 import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
+import org.stepic.droid.view.dialogs.ChooseCalendarDialog;
 import org.stepic.droid.view.dialogs.ChooseStorageDialog;
 import org.stepic.droid.view.dialogs.ClearVideosDialog;
 import org.stepic.droid.view.dialogs.DeleteCommentDialogFragment;
@@ -100,6 +101,8 @@ public interface StepicCoreComponent {
     void inject(FromDbUnitLessonTask stepicTask);
 
     void inject(ToDbUnitLessonTask stepicTask);
+
+    void inject(ChooseCalendarDialog calendarDialog);
 
     void inject(FromDbStepTask stepicTask);
 

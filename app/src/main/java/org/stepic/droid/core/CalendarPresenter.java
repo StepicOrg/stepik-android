@@ -2,6 +2,7 @@ package org.stepic.droid.core;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Section;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public interface CalendarPresenter {
      *
      * @param sectionList list of sections of course
      */
-    void addDeadlinesToCalendar(@NotNull List<Section> sectionList);
+    void addDeadlinesToCalendar(@NotNull List<Section> sectionList, @Nullable CalendarItem calendarItem);
 
     void onStart(CalendarExportableView view);
 

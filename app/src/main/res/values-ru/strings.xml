@@ -198,4 +198,6 @@
     <string name="add_to_the_calendar">Добавить в календарь</string>
     <string name="explain_calendar_permission">Для добавления дедлайнов в календарь приложение должно иметь доступ к календарю. Мы не изменяем и не просматриваем Ваши события, только добавляем дедлайны.</string>
     <string name="calendar_setting_description">Показывать виджет добавления в календарь</string>
+    <string name="ok">Ок</string>
+    <string name="choose_calendar_title">Выберите календарь</string>
 </resources>
