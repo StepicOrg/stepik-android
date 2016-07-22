@@ -169,8 +169,7 @@ class CalendarPresenterImpl(val config: IConfig,
         contentValues.put(CalendarContract.Events.EVENT_TIMEZONE, DateTimeZone.getDefault().id)
         contentValues.put(CalendarContract.Events.HAS_ALARM, 1)
 
-        if (calendarSection != null) {
-            //FIXME: CHECK IF EVENT IS EXIST, otherwise -> it won't update
+        if (calendarSection != null && isEventInCal(calendarSection.eventId)) {
             val uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, calendarSection.eventId)
             val rowsUpdated = context.contentResolver.update(uri, contentValues, null, null)
             Log.d("eee", "rows updated " + rowsUpdated)
@@ -190,6 +189,20 @@ class CalendarPresenterImpl(val config: IConfig,
             val uriReminder = context.contentResolver.insert(CalendarContract.Reminders.CONTENT_URI, reminderValues)
         }
     }
+
+
+    private fun isEventInCal(eventId: Long): Boolean {
+        context.contentResolver
+                .query(CalendarContract.Events.CONTENT_URI, arrayOf(CalendarContract.Events._ID), CalendarContract.Events._ID + " = ? ", arrayOf(eventId.toString()), null)
+                .use {
+                    if (it.moveToFirst()) {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+    }
+
 
     fun addToDatabase(section: Section, deadlineType: DeadlineType, deadline: String, eventId: Long) {
         if (deadlineType == DeadlineType.hardDeadline) {
