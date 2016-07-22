@@ -5,8 +5,6 @@ import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
-import android.database.Cursor
-import android.net.Uri
 import android.provider.CalendarContract
 import android.support.annotation.WorkerThread
 import android.support.v4.content.ContextCompat
@@ -129,7 +127,7 @@ class CalendarPresenterImpl(val config: IConfig,
                     .toLongArray()
 
             val addedCalendarSectionsMap = database.getCalendarSectionsByIds(ids)
-
+            val calId = getFirstPrimaryCalendar() // TODO: get primary by owner and show dialog for choose user
             sectionList.filterNotNull().forEach {
                 // We can choose soft_deadline or last_deadline of the Course, if section doesn't have it, but it will pollute calendar.
 
@@ -137,14 +135,14 @@ class CalendarPresenterImpl(val config: IConfig,
                 if (isDateGreaterThanOther(it.soft_deadline, nowMinus1Hour)) {
                     val deadline = it.soft_deadline
                     if (deadline != null) {
-                        addDeadlineEvent(it, deadline, DeadlineType.softDeadline, addedCalendarSectionsMap[it.id])
+                        addDeadlineEvent(it, deadline, DeadlineType.softDeadline, addedCalendarSectionsMap[it.id], calId)
                     }
                 }
 
                 if (isDateGreaterThanOther(it.hard_deadline, nowMinus1Hour)) {
                     val deadline = it.hard_deadline
                     if (deadline != null) {
-                        addDeadlineEvent(it, deadline, DeadlineType.hardDeadline, addedCalendarSectionsMap[it.id])
+                        addDeadlineEvent(it, deadline, DeadlineType.hardDeadline, addedCalendarSectionsMap[it.id], calId)
                     }
                 }
             }
@@ -155,24 +153,30 @@ class CalendarPresenterImpl(val config: IConfig,
         }
     }
 
-    @WorkerThread
-    private fun addDeadlineEvent(section: Section, deadline: String, deadlineType: DeadlineType, calendarSection: CalendarSection?) {
+    private fun getFirstPrimaryCalendar(): Long {
+        val projection = arrayOf(CalendarContract.Calendars._ID/*, CalendarContract.Calendars.ACCOUNT_NAME,  CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
+                CalendarContract.Calendars.OWNER_ACCOUNT */, CalendarContract.Calendars.IS_PRIMARY)
+        context.contentResolver.query(CalendarContract.Calendars.CONTENT_URI, projection, null, null, null).use {
+            it.moveToFirst()
+            while (!it.isAfterLast) {
+                val indexId = it.getColumnIndex(CalendarContract.Calendars._ID)
+                val indexIsPrimary = it.getColumnIndex(CalendarContract.Calendars.IS_PRIMARY)
 
-        //FIXME: change to calendar chooser
-        //
-        var cursor: Cursor? = null
-        val projection = arrayOf(CalendarContract.Calendars._ID, CalendarContract.Calendars.ACCOUNT_NAME)
-        val cr = context.getContentResolver()
-        cursor = cr.query(Uri.parse("content://com.android.calendar/calendars"), projection, null, null, null)
-        cursor!!.moveToFirst()
-        val calIds = IntArray(cursor!!.getCount())
-        val calNames = arrayOfNulls<String>(cursor!!.getCount())
-        for (i in calNames.indices) {
-            calIds[i] = cursor!!.getInt(0)
-            calNames[i] = cursor!!.getString(1)
-            cursor!!.moveToNext()
+                val isPrimary = it.getInt(indexIsPrimary) > 0
+                val calendarId = it.getLong(indexId)
+
+                if (isPrimary) {
+                    return calendarId
+                }
+
+                it.moveToNext()
+            }
         }
-        //^^^^^^^^^
+        return 1
+    }
+
+    @WorkerThread
+    private fun addDeadlineEvent(section: Section, deadline: String, deadlineType: DeadlineType, calendarSection: CalendarSection?, calendarId: Long) {
 
         val dateEndInMillis = DateTime(deadline).millis
         val dateStartInMillis = dateEndInMillis - AppConstants.MILLIS_IN_1HOUR
@@ -184,7 +188,7 @@ class CalendarPresenterImpl(val config: IConfig,
         val calendarTitle = section.title + " — " + context.getString(deadlineType.deadlineTitle)
         contentValues.put(CalendarContract.Events.TITLE, calendarTitle);
         contentValues.put(CalendarContract.Events.DESCRIPTION, StringUtil.getAbsoluteUriForSection(config, section));
-        contentValues.put(CalendarContract.Events.CALENDAR_ID, 1)
+        contentValues.put(CalendarContract.Events.CALENDAR_ID, calendarId)
         contentValues.put(CalendarContract.Events.EVENT_TIMEZONE, DateTimeZone.getDefault().id)
         contentValues.put(CalendarContract.Events.HAS_ALARM, 1)
 
