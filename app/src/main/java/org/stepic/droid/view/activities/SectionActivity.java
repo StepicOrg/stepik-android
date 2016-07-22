@@ -123,6 +123,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     boolean isScreenEmpty;
     boolean firstLoad;
+    boolean isNeedShowCalendarInMenu = false;
 
     LoadingProgressDialog joinCourseProgressDialog;
     private DialogFragment unauthorizedDialog;
@@ -256,7 +257,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         setUpToolbarWithCourse();
         getAndShowSectionsFromCache();
 
-        if (mCourse!=null && mCourse.getSlug() != null && !wasIndexed) {
+        if (mCourse != null && mCourse.getSlug() != null && !wasIndexed) {
             mTitle = getString(R.string.syllabus_title) + ": " + mCourse.getTitle();
             mDescription = mCourse.getSummary();
             mUrlInWeb = Uri.parse(StringUtil.getUriForSyllabus(mConfig.getBaseUrl(), mCourse.getSlug()));
@@ -315,6 +316,10 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                     startActivity(intent);
                 }
 
+                return true;
+
+            case R.id.menu_item_calendar:
+                calendarPresenter.addDeadlinesToCalendar(mSectionList);
                 return true;
             case android.R.id.home:
                 // Respond to the action bar's Up/Home button
@@ -533,6 +538,12 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.section_unit_menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.menu_item_calendar);
+        if (isNeedShowCalendarInMenu) {
+            menuItem.setVisible(true);
+        } else {
+            menuItem.setVisible(false);
+        }
         return true;
     }
 
@@ -661,7 +672,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Override
     public void successExported() {
-        // FIXME: 20.07.16 implement: hide widget.
         mAdapter.setNeedShowCalendarWidget(false);
         mAdapter.notifyItemChanged(0);
         Toast.makeText(this, "SUCCESS", Toast.LENGTH_SHORT).show();
@@ -675,7 +685,9 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Override
     public void onShouldBeShownCalendarInMenu() {
-        //add to menu
-        //// TODO: 21.07.16 add in menu or hide from menu
+        if (!isNeedShowCalendarInMenu) {
+            isNeedShowCalendarInMenu = true;
+            invalidateOptionsMenu();
+        }
     }
 }
