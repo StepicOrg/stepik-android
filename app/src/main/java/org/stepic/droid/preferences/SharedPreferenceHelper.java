@@ -77,16 +77,24 @@ public class SharedPreferenceHelper {
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, FIRST_TIME_LAUNCH, true);
     }
 
-    public boolean isScheduleAdded(){
+    public boolean isScheduleAdded() {
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, SCHEDULED_LINK_CACHED, false);
     }
 
-    public void afterScheduleAdded(){
+    public void afterScheduleAdded() {
         put(PreferenceType.DEVICE_SPECIFIC, SCHEDULED_LINK_CACHED, true);
     }
 
     public void afterFirstTime() {
         put(PreferenceType.DEVICE_SPECIFIC, FIRST_TIME_LAUNCH, false);
+    }
+
+    public boolean isNeedToShowCalendarWidget() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, CALENDAR_WIDGET, true);
+    }
+
+    public void setNeedToShowCalendarWidget(boolean needToShowCalendarWidget) {
+        put(PreferenceType.DEVICE_SPECIFIC, CALENDAR_WIDGET, needToShowCalendarWidget);
     }
 
 //    public enum CommentsOrder {
@@ -132,7 +140,7 @@ public class SharedPreferenceHelper {
         return order;
     }
 
-    public void setDiscussionOrder(DiscussionOrder disscussionOrder){
+    public void setDiscussionOrder(DiscussionOrder disscussionOrder) {
         put(PreferenceType.LOGIN, DISCUSSION_ORDER, disscussionOrder.getId());
     }
 
@@ -172,7 +180,7 @@ public class SharedPreferenceHelper {
         //todo save picture of user profile
         //todo validate profile from the server with cached profile and make restore to cache. make
         //todo query when nav drawer is occurred?
-        if (profile!=null){
+        if (profile != null) {
             analytic.setUserId(profile.getId() + "");
         }
         Gson gson = new Gson();
@@ -281,7 +289,7 @@ public class SharedPreferenceHelper {
         try {
             Profile profile = getProfile();
             String userId = "anon_prev";
-            if (profile!=null){
+            if (profile != null) {
                 userId += profile.getId();
             }
             analytic.setUserId(userId);
@@ -384,4 +392,5 @@ public class SharedPreferenceHelper {
     private final String FIRST_TIME_LAUNCH = "first_time_launch";
     private final String SCHEDULED_LINK_CACHED = "scheduled_cached";
     private final String DISCUSSION_ORDER = "discussion_order";
+    private final String CALENDAR_WIDGET = "calenda_widget";
 }

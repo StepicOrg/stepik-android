@@ -10,13 +10,13 @@ import android.net.Uri
 import android.provider.CalendarContract
 import android.support.annotation.WorkerThread
 import android.support.v4.content.ContextCompat
-import android.util.Log
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.model.CalendarSection
 import org.stepic.droid.model.Section
+import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.StringUtil
@@ -28,7 +28,8 @@ class CalendarPresenterImpl(val config: IConfig,
                             val mainHandler: IMainHandler,
                             val context: Context,
                             val threadPool: ThreadPoolExecutor,
-                            val database: DatabaseFacade) : CalendarPresenter {
+                            val database: DatabaseFacade,
+                            val userPrefs : UserPreferences) : CalendarPresenter {
 
     private var view: CalendarExportableView? = null
 

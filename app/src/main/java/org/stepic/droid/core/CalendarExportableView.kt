@@ -4,4 +4,5 @@ interface CalendarExportableView {
     fun permissionNotGranted()
     fun successExported()
     fun onShouldBeShownCalendar(needShow: Boolean)
+    fun onShouldBeShownCalendarInMenu()
 }

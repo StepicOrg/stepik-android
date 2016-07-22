@@ -662,14 +662,20 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Override
     public void successExported() {
         // FIXME: 20.07.16 implement: hide widget.
+        mAdapter.setNeedShowCalendarWidget(false);
+        mAdapter.notifyItemChanged(0);
         Toast.makeText(this, "SUCCESS", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onShouldBeShownCalendar(boolean needShow) {
-        //TODO: check preferences here
         mAdapter.setNeedShowCalendarWidget(needShow);
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onShouldBeShownCalendarInMenu() {
+        //add to menu
         //// TODO: 21.07.16 add in menu or hide from menu
     }
 }
