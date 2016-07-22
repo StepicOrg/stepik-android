@@ -10,4 +10,6 @@ interface CalendarExportableView {
     fun onShouldBeShownCalendarInMenu()
 
     fun onNeedToChooseCalendar(primariesCalendars: ArrayList<CalendarItem>)
+
+    fun onUserDoesntHaveCalendar()
 }

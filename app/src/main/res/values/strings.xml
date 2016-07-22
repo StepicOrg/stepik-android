@@ -209,4 +209,5 @@
     <string name="calendar_setting_description">Show calendar widget</string>
     <string name="choose_calendar_title">Choose calendar</string>
     <string name="calendar_added_message">Deadlines were added to calendar successfully</string>
+    <string name="user_not_have_calendar">Calendars are empty. Try to create account in calendar app</string>
 </resources>

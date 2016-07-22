@@ -736,4 +736,11 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         calendarPresenter.addDeadlinesToCalendar(mSectionList, calendarItem);
     }
 
+    @Override
+    public void onUserDoesntHaveCalendar() {
+        mUserPreferences.setNeedToShowCalendarWidget(false);
+        mAdapter.setNeedShowCalendarWidget(false);
+        mAdapter.notifyItemChanged(0);
+        SnackbarExtensionKt.setTextColor(Snackbar.make(rootView, R.string.user_not_have_calendar, Snackbar.LENGTH_LONG), ColorUtil.INSTANCE.getColorArgb(R.color.white, this)).show();
+    }
 }

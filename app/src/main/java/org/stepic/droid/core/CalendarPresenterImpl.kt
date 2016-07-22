@@ -142,6 +142,11 @@ class CalendarPresenterImpl(val config: IConfig,
                     }
                     return@execute
                 }
+                else if (primariesCalendars.isEmpty()){
+                    mainHandler.post {
+                        view?.onUserDoesntHaveCalendar()
+                    }
+                }
             } else {
                 calendarItem = calendarItemOut
             }

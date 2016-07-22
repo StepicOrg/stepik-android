@@ -201,4 +201,5 @@
     <string name="ok">Ок</string>
     <string name="choose_calendar_title">Выберите календарь</string>
     <string name="calendar_added_message">Дедлайны успешно добавлены в календарь</string>
+    <string name="user_not_have_calendar">Календарей нет. Попробуйте создать в приложении календаря</string>
 </resources>
