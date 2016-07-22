@@ -63,6 +63,7 @@ import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.view.abstraction.CourseJoinView;
 import org.stepic.droid.view.abstraction.LoadCourseView;
 import org.stepic.droid.view.adapters.SectionAdapter;
+import org.stepic.droid.view.dialogs.ExplainCalendarPermissionDialog;
 import org.stepic.droid.view.dialogs.LoadingProgressDialog;
 import org.stepic.droid.view.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.web.SectionsStepicResponse;
@@ -564,6 +565,16 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                 }
             }
         }
+
+        if (requestCode == AppConstants.REQUEST_CALENDAR_PERMISSION) {
+            String permissionExternalStorage = permissions[0];
+            if (permissionExternalStorage == null) return;
+
+            if (permissionExternalStorage.equals(Manifest.permission.WRITE_CALENDAR) &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                calendarPresenter.addDeadlinesToCalendar(mSectionList);
+            }
+        }
     }
 
     @Override
@@ -664,10 +675,20 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Override
     public void permissionNotGranted() {
-        // FIXME: 20.07.16 implement
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.WRITE_CALENDAR},
-                1218);
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.WRITE_CALENDAR)) {
+
+            DialogFragment dialog = ExplainCalendarPermissionDialog.newInstance();
+            if (!dialog.isAdded()) {
+                dialog.show(this.getSupportFragmentManager(), null);
+            }
+
+        } else {
+            // No explanation needed, we can request the permission.
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_CALENDAR},
+                    AppConstants.REQUEST_CALENDAR_PERMISSION);
+        }
     }
 
     @Override

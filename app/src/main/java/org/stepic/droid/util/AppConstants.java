@@ -61,4 +61,5 @@ public class AppConstants {
     public static final long TWO_DAY_IN_MINUTES = 2880L;
     public static final long MILLIS_IN_1MONTH = 2592000000L;
     public static final String COMMA = ",";
+    public static final int REQUEST_CALENDAR_PERMISSION = 1122;
 }
