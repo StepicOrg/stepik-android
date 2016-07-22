@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.DialogFragment;
@@ -59,8 +60,10 @@ import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.presenters.course_finder.CourseFinderPresenter;
 import org.stepic.droid.presenters.course_joiner.CourseJoinerPresenter;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.SnackbarExtensionKt;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.view.abstraction.CourseJoinView;
@@ -120,6 +123,9 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @BindView(R.id.course_name)
     protected TextView courseName;
+
+    @BindView(R.id.root_section_view)
+    protected View rootView;
 
     @Nullable
     private Course mCourse;
@@ -699,7 +705,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     public void successExported() {
         mAdapter.setNeedShowCalendarWidget(false);
         mAdapter.notifyItemChanged(0);
-        Toast.makeText(this, "SUCCESS", Toast.LENGTH_SHORT).show();
+        SnackbarExtensionKt.setTextColor(Snackbar.make(rootView, R.string.calendar_added_message, Snackbar.LENGTH_SHORT), ColorUtil.INSTANCE.getColorArgb(R.color.white, this)).show();
     }
 
     @Override
