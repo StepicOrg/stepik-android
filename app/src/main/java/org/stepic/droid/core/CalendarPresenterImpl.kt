@@ -172,13 +172,11 @@ class CalendarPresenterImpl(val config: IConfig,
         if (calendarSection != null && isEventInCal(calendarSection.eventId)) {
             val uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, calendarSection.eventId)
             val rowsUpdated = context.contentResolver.update(uri, contentValues, null, null)
-            Log.d("eee", "rows updated " + rowsUpdated)
             addToDatabase(section, deadlineType, deadline, calendarSection.eventId)
         } else {
             val uri = context.contentResolver.insert(CalendarContract.Events.CONTENT_URI, contentValues)
 
             val eventId: Long = (uri.lastPathSegment).toLong()
-            Log.d("eee", "eventId " + eventId)
 
             addToDatabase(section, deadlineType, deadline, eventId)
 
