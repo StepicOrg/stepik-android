@@ -204,4 +204,5 @@
     <string name="calendar_title">Calendar</string>
     <string name="calendar_detail">Modules in this course have deadlines. To complete this course and get certificate, add deadlines to your calendar and be reminded 2 days before due date. To manage the appearance of this message go to the app settings.</string>
     <string name="add_to_the_calendar">Add to the calendar</string>
+    <string name="calendar_setting_description">Show calendar widget</string>
 </resources>
