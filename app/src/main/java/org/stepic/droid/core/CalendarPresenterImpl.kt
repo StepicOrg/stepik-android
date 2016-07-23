@@ -185,10 +185,16 @@ class CalendarPresenterImpl(val config: IConfig,
             it.moveToFirst()
             while (!it.isAfterLast) {
                 val indexId = it.getColumnIndex(CalendarContract.Calendars._ID)
-                val indexIsPrimary = it.getColumnIndex(CalendarContract.Calendars.IS_PRIMARY)
+                var indexIsPrimary = it.getColumnIndex(CalendarContract.Calendars.IS_PRIMARY)
                 val indexOwner = it.getColumnIndex(CalendarContract.Calendars.OWNER_ACCOUNT)
-                //FIXME: if indexIsPrimary < 0 -> use http://stackoverflow.com/questions/25870556/check-if-calendar-is-primary
-                val isPrimary = it.getInt(indexIsPrimary) > 0
+                if (indexIsPrimary < 0){
+                    indexIsPrimary = it.getColumnIndex("COALESCE(isPrimary, ownerAccount = account_name)")//look at http://stackoverflow.com/questions/25870556/check-if-calendar-is-primary
+                }
+
+                var isPrimary = false
+                if (indexIsPrimary >= 0) {
+                     isPrimary = it.getInt(indexIsPrimary) > 0
+                }
                 val calendarId = it.getLong(indexId)
                 val owner = it.getString(indexOwner)
 
