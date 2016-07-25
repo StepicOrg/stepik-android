@@ -10,6 +10,7 @@ import android.support.annotation.WorkerThread
 import android.support.v4.content.ContextCompat
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.model.CalendarItem
@@ -29,7 +30,8 @@ class CalendarPresenterImpl(val config: IConfig,
                             val context: Context,
                             val threadPool: ThreadPoolExecutor,
                             val database: DatabaseFacade,
-                            val userPrefs: UserPreferences) : CalendarPresenter {
+                            val userPrefs: UserPreferences,
+                            val analytic : Analytic) : CalendarPresenter {
 
     private var view: CalendarExportableView? = null
 
@@ -57,11 +59,17 @@ class CalendarPresenterImpl(val config: IConfig,
                 if (calendarSection == null) {
                     if (isDeadlineGreaterThanNow) {
                         if (userPrefs.isNeedToShowCalendarWidget) {
+                            analytic.reportEvent(Analytic.Calendar.SHOW_CALENDAR_AS_WIDGET)
                             mainHandler.post {
                                 view?.onShouldBeShownCalendar(true)
                             }
                         }
+                        else{
+                            analytic.reportEvent(Analytic.Calendar.HIDE_WIDGET_FROM_PREFS)
+                        }
+
                         if (!isShownInMenu) {
+                            analytic.reportEvent(Analytic.Calendar.SHOW_CALENDAR)
                             isShownInMenu = true
                             mainHandler.post {
                                 view?.onShouldBeShownCalendarInMenu()
@@ -72,6 +80,7 @@ class CalendarPresenterImpl(val config: IConfig,
                 } else {
                     // we already exported in calendar this section! Check if new date in future and greater that calendar date + 30 days
                     if (isDeadlineGreaterThanNow && !isShownInMenu) {
+                        analytic.reportEvent(Analytic.Calendar.SHOW_CALENDAR)
                         isShownInMenu = true
                         mainHandler.post {
                             view?.onShouldBeShownCalendarInMenu()
@@ -87,9 +96,13 @@ class CalendarPresenterImpl(val config: IConfig,
                     if ((isDateGreaterThanOther(it.soft_deadline, calendarDeadlineMillisPlusMonth) || isDateGreaterThanOther(it.hard_deadline, calendarDeadlineMillisPlusMonth))
                             && isDeadlineGreaterThanNow) {
                         if (userPrefs.isNeedToShowCalendarWidget) {
+                            analytic.reportEvent(Analytic.Calendar.SHOW_CALENDAR_AS_WIDGET)
                             mainHandler.post {
                                 view?.onShouldBeShownCalendar(true)
                             }
+                        }
+                        else{
+                            analytic.reportEvent(Analytic.Calendar.HIDE_WIDGET_FROM_PREFS)
                         }
                         return@execute
                     }
@@ -143,6 +156,7 @@ class CalendarPresenterImpl(val config: IConfig,
                     return@execute
                 }
                 else if (primariesCalendars.isEmpty()){
+                    analytic.reportEvent(Analytic.Calendar.CALENDAR_ADDED_FAIL)
                     mainHandler.post {
                         view?.onUserDoesntHaveCalendar()
                     }
@@ -172,6 +186,7 @@ class CalendarPresenterImpl(val config: IConfig,
                 }
             }
 
+            analytic.reportEvent(Analytic.Calendar.CALENDAR_ADDED_SUCCESSFULLY)
             mainHandler.post {
                 view?.successExported()
             }

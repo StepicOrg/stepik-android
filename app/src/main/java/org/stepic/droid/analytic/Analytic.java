@@ -154,6 +154,16 @@ public interface Analytic {
         String WRONG_SUBMISSION_FILL = "submission_wrong_fill";
     }
 
+    interface Calendar{
+        String USER_CLICK_ADD_WIDGET = "calendar_click_add_widget";
+        String USER_CLICK_ADD_MENU = "calendar_click_add_menu";
+        String CALENDAR_ADDED_SUCCESSFULLY = "calendar_added_successfully";
+        String CALENDAR_ADDED_FAIL = "calendar_added_fail";
+        String SHOW_CALENDAR_AS_WIDGET = "calendar_shown_as_widget";
+        String SHOW_CALENDAR = "calendar_shown"; // course with deadlines in future
+        String HIDE_WIDGET_FROM_PREFS = "widget_hidden_from_prefs";
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);

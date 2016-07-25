@@ -330,6 +330,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                 return true;
 
             case R.id.menu_item_calendar:
+                analytic.reportEventWithIdName(Analytic.Calendar.USER_CLICK_ADD_MENU, mCourse.getCourseId() + "", mCourse.getTitle());
                 calendarPresenter.addDeadlinesToCalendar(mSectionList, null);
                 return true;
             case android.R.id.home:
