@@ -5,4 +5,4 @@ import org.stepic.droid.model.Meta
 
 data class CertificateResponse(
         val meta: Meta?,
-        val certificate: List<Certificate>)
+        val certificates: List<Certificate>)
