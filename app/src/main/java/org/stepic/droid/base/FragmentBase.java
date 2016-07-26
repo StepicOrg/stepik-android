@@ -104,6 +104,10 @@ public class FragmentBase extends Fragment {
     public ICancelSniffer cancelSniffer;
 
     public FragmentBase() {
+        injectComponent();
+    }
+
+    protected void injectComponent() {
         MainApplication.component(MainApplication.getAppContext()).inject(this);
     }
 

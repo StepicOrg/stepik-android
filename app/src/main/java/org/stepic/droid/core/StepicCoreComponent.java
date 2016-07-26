@@ -59,6 +59,9 @@ import dagger.Component;
 @Singleton
 @Component(modules = {StepicDefaultModule.class})
 public interface StepicCoreComponent {
+
+    CertificateComponent plusActModule(CertificateModule module);
+
     void inject(FragmentActivityBase someActivity);
 
     void inject(SectionActivity someActivity);
@@ -146,7 +149,7 @@ public interface StepicCoreComponent {
 
     void inject(HackerFcmInstanceId instanceIdService);
 
-    void inject (NotificationBroadcastReceiver receiver);
+    void inject(NotificationBroadcastReceiver receiver);
 
     void inject(NeedUpdatingDialog needUpdatingDialog);
 
@@ -171,6 +174,4 @@ public interface StepicCoreComponent {
     void inject(CourseJoinerPresenterImpl courseJoinerPresenter);
 
     void inject(DeleteCommentDialogFragment dialogFragment);
-
-    void inject(ShareHelperImpl shareHelper);
 }

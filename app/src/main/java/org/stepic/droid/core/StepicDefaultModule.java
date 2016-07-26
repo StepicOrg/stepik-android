@@ -231,16 +231,19 @@ public class StepicDefaultModule {
         return helper.getWritableDatabase();
     }
 
+    @Singleton
     @Provides
     public IDao<Section> provideSectionDao(SQLiteDatabase openHelper) {
         return new SectionDaoImpl(openHelper);
     }
 
+    @Singleton
     @Provides
     public IDao<Unit> provideUnitDao(SQLiteDatabase openHelper, IDao<Progress> progressDao) {
         return new UnitDaoImpl(openHelper, progressDao);
     }
 
+    @Singleton
     @Provides
     public IDao<Progress> provideProgressDao(SQLiteDatabase openHelper) {
         return new ProgressDaoImpl(openHelper);
@@ -256,31 +259,37 @@ public class StepicDefaultModule {
         return new LessonDaoImpl(openHelper);
     }
 
+    @Singleton
     @Provides
     public IDao<ViewAssignment> provideViewAssignment(SQLiteDatabase openHelper) {
         return new ViewAssignmentDaoImpl(openHelper);
     }
 
+    @Singleton
     @Provides
     public IDao<DownloadEntity> provideDownloadEntity(SQLiteDatabase openHelper) {
         return new DownloadEntityDaoImpl(openHelper);
     }
 
+    @Singleton
     @Provides
     public  IDao<CalendarSection> provideCalendarSection(SQLiteDatabase database){
         return new CalendarSectionDaoImpl(database);
     }
 
+    @Singleton
     @Provides
     public IDao<CachedVideo> provideCachedVideo(SQLiteDatabase openHelper) {
         return new PersistentVideoDaoImpl(openHelper);
     }
 
+    @Singleton
     @Provides
     public IDao<BlockPersistentWrapper> provideBlockWrapper(SQLiteDatabase openHelper, IDao<CachedVideo> daoCached) {
         return new BlockDaoImpl(openHelper, daoCached);
     }
 
+    @Singleton
     @Provides
     public IDao<Step> provideStep(SQLiteDatabase openHelper,
                                   IDao<BlockPersistentWrapper> blockDao,
@@ -289,11 +298,13 @@ public class StepicDefaultModule {
         return new StepDaoImpl(openHelper, blockDao, assignmentDao, progressDao);
     }
 
+    @Singleton
     @Provides
     public IDao<Course> provideCourse(SQLiteDatabase openHelper, IDao<CachedVideo> daoCached) {
         return new CourseDaoImpl(openHelper, daoCached);
     }
 
+    @Singleton
     @Provides
     public IDao<Notification> provideNotification(SQLiteDatabase openHelper) {
         return new NotificationDaoImpl(openHelper);
@@ -337,6 +348,7 @@ public class StepicDefaultModule {
         return new NotificationManagerImpl(sp, api, config, userPreferences, db, analytic);
     }
 
+    @Singleton
     @Provides
     public CommentManager provideCommentsManager() {
         return new CommentManager();
@@ -356,6 +368,7 @@ public class StepicDefaultModule {
         return new CourseFinderPresenterForDetailScreen();
     }
 
+    @Singleton
     @Provides
     public CourseJoinerPresenter provideCourseJoiner() {
         return new CourseJoinerPresenterImpl();
@@ -369,8 +382,8 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public ShareHelper provideShareHelper() {
-        return new ShareHelperImpl();
+    public ShareHelper provideShareHelper(IConfig config, Context context) {
+        return new ShareHelperImpl(config, context);
     }
 
     @Provides

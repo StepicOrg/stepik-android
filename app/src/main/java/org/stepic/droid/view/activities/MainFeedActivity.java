@@ -37,6 +37,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.dialogs.NeedUpdatingDialog;
+import org.stepic.droid.view.fragments.CertificateFragment;
 import org.stepic.droid.view.fragments.DownloadsFragment;
 import org.stepic.droid.view.fragments.FeedbackFragment;
 import org.stepic.droid.view.fragments.FindCoursesFragment;
@@ -244,7 +245,6 @@ public class MainFeedActivity extends BackToExitActivityBase
                 }, 0);
                 mShell.getScreenProvider().showSettings(this);
                 return true;
-
             default:
                 showCurrentFragment(menuItem);
                 break;
@@ -293,9 +293,12 @@ public class MainFeedActivity extends BackToExitActivityBase
                 shortLifetimeRef = DownloadsFragment.newInstance();
                 break;
             case R.id.feedback:
-                mCurrentIndex = 5;
+                mCurrentIndex = 6;
                 shortLifetimeRef = FeedbackFragment.Companion.newInstance();
                 break;
+            case R.id.certificates:
+                mCurrentIndex = 4;
+                shortLifetimeRef = CertificateFragment.newInstance();
         }
         if (isFragment) {
             mCurrentIndex--; // menu indices from 1

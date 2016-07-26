@@ -8,6 +8,8 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
+import org.stepic.droid.core.CertificateComponent;
+import org.stepic.droid.core.CertificateModule;
 import org.stepic.droid.core.DaggerStepicCoreComponent;
 import org.stepic.droid.core.StepicCoreComponent;
 import org.stepic.droid.core.StepicDefaultModule;
@@ -18,6 +20,7 @@ public class MainApplication extends MultiDexApplication {
 
     protected static MainApplication application;
     private StepicCoreComponent component;
+    private CertificateComponent certificateComponent;
 
 //    private RefWatcher refWatcher;
 
@@ -32,9 +35,9 @@ public class MainApplication extends MultiDexApplication {
         application = this;
         Fresco.initialize(this);
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                        .setDefaultFontPath("fonts/NotoSans-Regular.ttf")
-                        .setFontAttrId(R.attr.fontPath)
-                        .build()
+                .setDefaultFontPath("fonts/NotoSans-Regular.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
         );
 
         component = DaggerStepicCoreComponent.builder().
@@ -44,6 +47,8 @@ public class MainApplication extends MultiDexApplication {
         YandexMetrica.activate(getApplicationContext(), "fd479031-bdf4-419e-8d8f-6895aab23502");
         // Отслеживание активности пользователей
         YandexMetrica.enableActivityAutoTracking(this);
+
+        certificateComponent = component.plusActModule(new CertificateModule());
     }
 
 //    public static RefWatcher getRefWatcher(Context context) {
@@ -53,6 +58,10 @@ public class MainApplication extends MultiDexApplication {
 
     public static StepicCoreComponent component(Context context) {
         return ((MainApplication) context.getApplicationContext()).component;
+    }
+
+    public static CertificateComponent certificateComponent() {
+        return ((MainApplication) getAppContext()).certificateComponent;
     }
 
 

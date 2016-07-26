@@ -18,6 +18,11 @@
             android:icon="@drawable/ic_local_movies_black_24dp"
             />
 
+        <item
+            android:id="@+id/certificates"
+            android:title="Certificates"
+            android:icon="@drawable/ic_reply_material_24px"/>
+
     </group>
 
     <group
