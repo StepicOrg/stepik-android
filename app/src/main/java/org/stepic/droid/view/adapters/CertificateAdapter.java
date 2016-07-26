@@ -43,6 +43,12 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
         return certificateList.size();
     }
 
+    public void updateCertificates(List<CertificateViewItem> certificateViewItems) {
+        certificateList.clear();
+        certificateList.addAll(certificateViewItems);
+        notifyDataSetChanged();
+    }
+
     class CertificateViewHolder extends RecyclerView.ViewHolder implements CertificateClickListener {
 
         @BindView(R.id.certificate_title)

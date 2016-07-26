@@ -6,4 +6,6 @@ public interface CertificatePresenter {
     void onCreate(CertificateView view);
 
     void onDestroy();
+
+    void showCertificates();
 }
