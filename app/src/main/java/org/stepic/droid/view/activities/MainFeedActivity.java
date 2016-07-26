@@ -278,43 +278,57 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     private void setFragment(MenuItem menuItem) {
         Fragment shortLifetimeRef = null;
-        boolean isFragment = true;
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame);
+        String tag = null;
+        if (fragment != null) {
+            tag = fragment.getTag();
+        }
         switch (menuItem.getItemId()) {
             case R.id.my_courses:
                 mCurrentIndex = 1;
-                shortLifetimeRef = MyCoursesFragment.newInstance();
+                if (tag == null || !tag.equals(MyCoursesFragment.class.toString())) {
+                    shortLifetimeRef = MyCoursesFragment.newInstance();
+                }
                 break;
             case R.id.find_lessons:
                 mCurrentIndex = 2;
-                shortLifetimeRef = FindCoursesFragment.newInstance();
+                if (tag == null || !tag.equals(FindCoursesFragment.class.toString())) {
+                    shortLifetimeRef = FindCoursesFragment.newInstance();
+                }
                 break;
             case R.id.cached_videos:
                 mCurrentIndex = 3;
-                shortLifetimeRef = DownloadsFragment.newInstance();
+                if (tag == null || !tag.equals(DownloadsFragment.class.toString())) {
+                    shortLifetimeRef = DownloadsFragment.newInstance();
+                }
                 break;
             case R.id.feedback:
                 mCurrentIndex = 6;
-                shortLifetimeRef = FeedbackFragment.Companion.newInstance();
+                if (tag == null || !tag.equals(FeedbackFragment.class.toString())) {
+                    shortLifetimeRef = FeedbackFragment.Companion.newInstance();
+                }
                 break;
             case R.id.certificates:
                 mCurrentIndex = 4;
-                shortLifetimeRef = CertificateFragment.newInstance();
+                if (tag == null || !tag.equals(CertificateFragment.class.toString())) {
+                    shortLifetimeRef = CertificateFragment.newInstance();
+                }
+                break;
         }
-        if (isFragment) {
-            mCurrentIndex--; // menu indices from 1
-            if (shortLifetimeRef != null) {
-                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame);
-                if (fragment != null) {
-                    String before = fragment.getTag();
-                    String now = shortLifetimeRef.getClass().toString();
-                    if (!before.equals(now)) {
-                        setFragment(R.id.frame, shortLifetimeRef);
-                    }
-                } else {
+        mCurrentIndex--; // menu indices from 1
+        if (shortLifetimeRef != null) {
+
+            if (fragment != null) {
+                String before = fragment.getTag();
+                String now = shortLifetimeRef.getClass().toString();
+                if (!before.equals(now)) {
                     setFragment(R.id.frame, shortLifetimeRef);
                 }
+            } else {
+                setFragment(R.id.frame, shortLifetimeRef);
             }
         }
+
     }
 
     @Subscribe
@@ -348,7 +362,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         showCurrentFragment(mCurrentIndex);
     }
 
-    public static int getFindLessonIndex () {
+    public static int getFindLessonIndex() {
         return 1;
     }
 
@@ -389,7 +403,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         }
     }
 
-    public static int getDownloadFragmentIndex(){
+    public static int getDownloadFragmentIndex() {
         return 2;
     }
 }

@@ -18,7 +18,6 @@ import butterknife.ButterKnife;
 
 public class CertificateFragment extends FragmentBase {
 
-
     public static Fragment newInstance() {
         Bundle args = new Bundle();
         CertificateFragment fragment = new CertificateFragment();
