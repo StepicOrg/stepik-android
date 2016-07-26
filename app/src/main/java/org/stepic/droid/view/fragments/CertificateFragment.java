@@ -3,6 +3,7 @@ package org.stepic.droid.view.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +11,15 @@ import android.view.ViewGroup;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.core.CertificateView;
 import org.stepic.droid.presenters.certificate.CertificatePresenter;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CertificateFragment extends FragmentBase {
+public class CertificateFragment extends FragmentBase implements CertificateView {
 
     public static Fragment newInstance() {
         Bundle args = new Bundle();
@@ -25,8 +28,11 @@ public class CertificateFragment extends FragmentBase {
         return fragment;
     }
 
-        @Inject
+    @Inject
     CertificatePresenter certificatePresenter;
+
+    @BindView(R.id.certificates_recycler_view)
+    RecyclerView certificateRecyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,7 +52,13 @@ public class CertificateFragment extends FragmentBase {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        certificatePresenter.onCreate();
+        certificatePresenter.onCreate(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        certificatePresenter.onDestroy();
+        super.onDestroyView();
     }
 
     @Override
