@@ -95,4 +95,6 @@ public interface IApi {
     Call<VoteResponse> makeVote(String voteId, @Nullable VoteValue voteValue);
 
     Call<CommentsResponse> deleteComment(long commentId);
+
+    Call<CertificateResponse> getCertificates();
 }

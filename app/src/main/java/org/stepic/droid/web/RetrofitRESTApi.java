@@ -235,7 +235,7 @@ public class RetrofitRESTApi implements IApi {
                         sessionId = item.getValue();
                     }
                 }
-                if (csrftoken == null){
+                if (csrftoken == null) {
                     csrftoken = "";
                 }
 
@@ -603,6 +603,12 @@ public class RetrofitRESTApi implements IApi {
     @Override
     public Call<CommentsResponse> deleteComment(long commentId) {
         return mLoggedService.deleteComment(commentId);
+    }
+
+    @Override
+    public Call<CertificateResponse> getCertificates() {
+        long userId = mUserPreferences.getUserId();
+        return mLoggedService.getCertificates(userId);
     }
 
     @Nullable
