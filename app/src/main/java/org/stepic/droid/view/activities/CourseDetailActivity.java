@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.SingleFragmentActivity;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.util.AppConstants;
@@ -33,7 +34,6 @@ public class CourseDetailActivity extends SingleFragmentActivity {
             course = (Course) (extras.get(AppConstants.KEY_COURSE_BUNDLE));
         }
         if (course == null) {
-            int i = 0;
             //Warning: work only for pattern android:pathPattern="/course/.*/" NOT Working for /course/.*/.* !!!
             Intent intent = getIntent();
             Uri dataUri = intent.getData();
@@ -51,6 +51,7 @@ public class CourseDetailActivity extends SingleFragmentActivity {
             } else {
                 simpleId = id;
             }
+            analytic.reportEvent(Analytic.DeepLink.USER_OPEN_COURSE_DETAIL_LINK, simpleId+"");
             return CourseDetailFragment.newInstance(simpleId);
         } else {
             return CourseDetailFragment.newInstance(course);

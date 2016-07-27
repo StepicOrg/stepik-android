@@ -164,6 +164,11 @@ public interface Analytic {
         String HIDE_WIDGET_FROM_PREFS = "widget_hidden_from_prefs";
     }
 
+    interface DeepLink{
+        String USER_OPEN_SYLLABUS_LINK = "open_syllabus_by_link";
+        String USER_OPEN_COURSE_DETAIL_LINK = "open_detail_course_link";
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);

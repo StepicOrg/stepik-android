@@ -249,6 +249,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                 } else {
                     simpleId = id;
                 }
+                analytic.reportEvent(Analytic.DeepLink.USER_OPEN_SYLLABUS_LINK, simpleId + "");
                 if (simpleId < 0) {
                     onCourseUnavailable(new CourseUnavailableForUserEvent());
                 } else {
