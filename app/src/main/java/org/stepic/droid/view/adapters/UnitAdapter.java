@@ -1,12 +1,13 @@
 package org.stepic.droid.view.adapters;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,8 +31,7 @@ import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.JsonHelper;
-import org.stepic.droid.view.dialogs.ExplainPermissionDialog;
+import org.stepic.droid.view.dialogs.ExplainExternalStoragePermissionDialog;
 import org.stepic.droid.view.listeners.OnClickLoadListener;
 import org.stepic.droid.view.listeners.StepicOnClickItemListener;
 
@@ -40,8 +40,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
 import butterknife.BindDrawable;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements StepicOnClickItemListener, OnClickLoadListener {
@@ -71,12 +71,12 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     private final Context mContext;
     private final Section mParentSection;
     private final List<Lesson> mLessonList;
-    private Activity mActivity;
+    private AppCompatActivity mActivity;
     private final List<Unit> mUnitList;
     private RecyclerView mRecyclerView;
     private final Map<Long, Progress> mUnitProgressMap;
 
-    public UnitAdapter(Context context, Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, Activity activity) {
+    public UnitAdapter(Context context, Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, AppCompatActivity activity) {
 
         this.mContext = context;
         this.mParentSection = parentSection;
@@ -224,8 +224,10 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                     // this thread waiting for the user's response! After the user
                     // sees the explanation, try again to request the permission.
 
-                    ExplainPermissionDialog dialog = new ExplainPermissionDialog();
-                    dialog.show(mActivity.getFragmentManager(), null);
+                    DialogFragment dialog = ExplainExternalStoragePermissionDialog.newInstance();
+                    if (!dialog.isAdded()) {
+                        dialog.show(mActivity.getSupportFragmentManager(), null);
+                    }
 
                 } else {
 
@@ -279,35 +281,35 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
     public static class UnitViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.cv)
+        @BindView(R.id.cv)
         View cv;
 
-        @Bind(R.id.unit_title)
+        @BindView(R.id.unit_title)
         TextView unitTitle;
 
 
-        @Bind(R.id.pre_load_iv)
+        @BindView(R.id.pre_load_iv)
         View preLoadIV;
 
-        @Bind(R.id.when_load_view)
+        @BindView(R.id.when_load_view)
         View whenLoad;
 
-        @Bind(R.id.after_load_iv)
+        @BindView(R.id.after_load_iv)
         View afterLoad;
 
-        @Bind(R.id.load_button)
+        @BindView(R.id.load_button)
         View loadButton;
 
-        @Bind(R.id.viewed_item)
+        @BindView(R.id.viewed_item)
         View viewedItem;
 
-        @Bind(R.id.text_score)
+        @BindView(R.id.text_score)
         TextView mTextScore;
 
-        @Bind(R.id.student_progress_score_bar)
+        @BindView(R.id.student_progress_score_bar)
         ProgressBar mProgressScore;
 
-        @Bind(R.id.lesson_icon)
+        @BindView(R.id.lesson_icon)
         ImageView mLessonIcon;
 
         @BindDrawable(R.drawable.ic_lesson_cover)

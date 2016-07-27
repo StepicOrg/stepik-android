@@ -19,9 +19,10 @@ import org.stepic.droid.util.FileUtil
 import org.stepic.droid.util.KotlinUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StorageUtil
-import org.stepic.droid.view.custom.MovingProgressDialogFragment
 import org.stepic.droid.view.dialogs.ChooseStorageDialog
 import org.stepic.droid.view.dialogs.ClearVideosDialog
+import org.stepic.droid.view.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.view.dialogs.MovingProgressDialogFragment
 
 class StoreManagementFragment : FragmentBase() {
     companion object {
@@ -34,7 +35,7 @@ class StoreManagementFragment : FragmentBase() {
     lateinit var clearCacheButton: View
     lateinit var clearCacheLabel: TextView
     private var mClearCacheDialogFragment: DialogFragment? = null
-    private var loadingProgressDialog: DialogFragment? = null
+    private var loadingProgressDialogFragment: DialogFragment? = null
 
     private lateinit var notMountExplanation: View
     private lateinit var mountExplanation: View
@@ -59,7 +60,6 @@ class StoreManagementFragment : FragmentBase() {
             initClearCacheFeature(it)
             initAccordingToStoreState(it)
         }
-        loadingProgressDialog = MovingProgressDialogFragment.newInstance()
         bus.register(this)
     }
 
@@ -104,7 +104,6 @@ class StoreManagementFragment : FragmentBase() {
 
     override fun onStart() {
         super.onStart()
-
     }
 
     override fun onStop() {
@@ -129,25 +128,33 @@ class StoreManagementFragment : FragmentBase() {
     private fun initClearCacheFeature(v: View) {
         clearCacheButton = v.findViewById(R.id.clear_cache_button)
         clearCacheLabel = v.findViewById(R.id.clear_cache_label) as TextView
-        mClearCacheDialogFragment = ClearVideosDialog()
+        mClearCacheDialogFragment = ClearVideosDialog.newInstance()
         setUpClearCacheButton()
     }
 
     @Subscribe
     fun onStartLoading(event: StartLoadEvent) {
-        ProgressHelper.activate(loadingProgressDialog, fragmentManager, loadingTag)
+        if (event.isMove) {
+            loadingProgressDialogFragment = MovingProgressDialogFragment.newInstance()
+        } else {
+            loadingProgressDialogFragment = LoadingProgressDialogFragment.newInstance()
+        }
+        ProgressHelper.activate(loadingProgressDialogFragment, fragmentManager, loadingTag)
     }
 
     @Subscribe
     fun onFinishLoading(event: FinishLoadEvent) {
         setUpClearCacheButton()
-        ProgressHelper.dismiss(fragmentManager , loadingTag)
+        ProgressHelper.dismiss(fragmentManager, loadingTag)
     }
 
     private fun setUpClearCacheButton() {
         clearCacheButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_CLEAR_CACHE)
-            mClearCacheDialogFragment?.show(fragmentManager, null)
+
+            if (!(mClearCacheDialogFragment?.isAdded ?: true)) {
+                mClearCacheDialogFragment?.show(fragmentManager, null)
+            }
         }
 
         val clearCacheStringBuilder = StringBuilder()

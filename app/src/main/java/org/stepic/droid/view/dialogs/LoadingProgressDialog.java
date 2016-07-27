@@ -1,4 +1,4 @@
-package org.stepic.droid.view.custom;
+package org.stepic.droid.view.dialogs;
 
 import android.app.ProgressDialog;
 import android.content.Context;

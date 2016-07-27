@@ -42,7 +42,7 @@ import org.stepic.droid.web.SubmissionResponse;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
@@ -53,34 +53,34 @@ import retrofit.Retrofit;
 public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     protected final int FIRST_DELAY = 1000;
 
-    @Bind(R.id.root_view)
+    @BindView(R.id.root_view)
     ViewGroup mRootView;
 
-    @Bind(R.id.result_line)
+    @BindView(R.id.result_line)
     View mResultLine;
 
-    @Bind(R.id.answer_status_icon)
+    @BindView(R.id.answer_status_icon)
     ImageView mStatusIcon;
 
-    @Bind(R.id.answer_status_text)
+    @BindView(R.id.answer_status_text)
     TextView mStatusTextView;
 
-    @Bind(R.id.progress_bar)
+    @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
 
-    @Bind(R.id.report_problem)
+    @BindView(R.id.report_problem)
     View connectionProblem;
 
-    @Bind(R.id.root_scroll_view)
+    @BindView(R.id.root_scroll_view)
     protected ScrollView mRootScrollView;
 
-    @Bind(R.id.attempt_container)
+    @BindView(R.id.attempt_container)
     ViewGroup mAttemptContainer;
 
-    @Bind(R.id.submit_button)
+    @BindView(R.id.submit_button)
     Button mActionButton;
 
-    @Bind(R.id.peer_review_warning)
+    @BindView(R.id.peer_review_warning)
     View mPeerReviewIndicator;
 
     @BindString(R.string.correct)
@@ -106,14 +106,14 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     @BindDrawable(R.drawable.ic_error)
     protected Drawable mWrongIcon;
 
-    @Bind(R.id.hint_text_view)
+    @BindView(R.id.hint_text_view)
     LatexSupportableEnhancedFrameLayout hintTextView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_with_solution_base, container, false);
-        ButterKnife.bind(this, v);
+        unbinder = ButterKnife.bind(this, v);
         return v;
     }
 

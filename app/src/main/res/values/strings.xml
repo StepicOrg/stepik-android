@@ -33,8 +33,8 @@
     <string name="join_course_exception">Check your internet connection.</string>
     <string name="loading">Loading</string>
     <string name="begin_date_section">Start date:</string>
-    <string name="soft_deadline_section">Soft deadline:</string>
-    <string name="hard_deadline_section">Hard deadline:</string>
+    <string name="soft_deadline_section">Soft deadline</string>
+    <string name="hard_deadline_section">Hard deadline</string>
     <string name="syllabus_title">Syllabus</string>
     <string name="units_lessons_title">Lessons</string>
     <string name="steps_title">Steps</string>
@@ -60,7 +60,8 @@
     <string name="failLogin">Login/password was incorrect</string>
     <string name="connectionProblems">Internet connection was lost</string>
     <string name="are_you_sure">Are you sure?</string>
-    <string name="explain_permission">For cache course and watch video offline Stepic need permission to storage of phone.</string>
+    <string name="explain_permission">For cache course and watch video offline Stepic needs permission to storage of phone.</string>
+    <string name="explain_calendar_permission">For add deadlines to calendar the app needs permission to calendar. The app doesn\'t change and read your events.</string>
     <string name="allow_question">Allow?</string>
     <string name="video_quality">Video quality</string>
     <string name="sync_problem">There was a problem syncing the data, please try again later.</string>
@@ -195,9 +196,18 @@
     <string name="staff_label">Stepic.org Team</string>
     <string name="teacher_label">Course Staff</string>
 
+    <string name="ok">Ok</string>
+
     <string name="last_discussion">Last discussion</string>
     <string name="most_liked_discussion">Most liked</string>
     <string name="most_active_discussion">Most active</string>
     <string name="recent_activity_discussion">Recent activity</string>
     <string name="copy_text_label">Copy text</string>
+    <string name="calendar_title">Calendar</string>
+    <string name="calendar_detail">Modules in this course have deadlines. To complete this course and get certificate, add deadlines to your calendar and be reminded 2 days before due date. To manage the appearance of this message go to the app settings.</string>
+    <string name="add_to_the_calendar">Add to the calendar</string>
+    <string name="calendar_setting_description">Show calendar widget</string>
+    <string name="choose_calendar_title">Choose calendar</string>
+    <string name="calendar_added_message">Deadlines were added to calendar successfully</string>
+    <string name="user_not_have_calendar">Calendars are empty. Try to create account in calendar app</string>
 </resources>

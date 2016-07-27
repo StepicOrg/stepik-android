@@ -52,7 +52,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
@@ -213,22 +213,22 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     public class DownloadingViewHolder extends GenericViewHolder {
 
-        @Bind(R.id.cancel_load)
+        @BindView(R.id.cancel_load)
         View cancelLoad;
 
-        @Bind(R.id.video_header)
+        @BindView(R.id.video_header)
         TextView mVideoHeader;
 
-        @Bind(R.id.video_icon)
+        @BindView(R.id.video_icon)
         ImageView mVideoIcon;
 
         @BindDrawable(R.drawable.video_placeholder)
         Drawable placeholder;
 
-        @Bind(R.id.video_downloading_progress_bar)
+        @BindView(R.id.video_downloading_progress_bar)
         MaterialProgressBar downloadingProgressBar;
 
-        @Bind(R.id.progress_text)
+        @BindView(R.id.progress_text)
         TextView progressTextView;
 
         @BindString(R.string.kb)
@@ -237,7 +237,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         @BindString(R.string.mb)
         String mb;
 
-        @Bind(R.id.progress_percent)
+        @BindView(R.id.progress_percent)
         TextView progressPercent;
 
         @BindString(R.string.delimiter_for_download)
@@ -339,28 +339,28 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     public class DownloadsViewHolder extends GenericViewHolder {
 
-        @Bind(R.id.current_quality)
+        @BindView(R.id.current_quality)
         TextView mCurrentQuality;
 
-        @Bind(R.id.size_of_cached_video)
+        @BindView(R.id.size_of_cached_video)
         TextView mSize;
 
-        @Bind(R.id.video_icon)
+        @BindView(R.id.video_icon)
         ImageView mVideoIcon;
 
-        @Bind(R.id.video_header)
+        @BindView(R.id.video_header)
         TextView mVideoHeader;
 
         @BindDrawable(R.drawable.video_placeholder)
         Drawable placeholder;
 
-        @Bind(R.id.pre_load_iv)
+        @BindView(R.id.pre_load_iv)
         ImageView loadActionIcon;
 
-        @Bind(R.id.when_load_view)
+        @BindView(R.id.when_load_view)
         View progressIcon;
 
-        @Bind(R.id.after_load_iv)
+        @BindView(R.id.after_load_iv)
         ImageView deleteIcon;
 
         @BindString(R.string.kb)
@@ -369,7 +369,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         @BindString(R.string.mb)
         String mb;
 
-        @Bind(R.id.load_button)
+        @BindView(R.id.load_button)
         View mLoadRoot;
 
         public DownloadsViewHolder(View itemView, final StepicOnClickItemListener click, final OnClickLoadListener loadListener) {
@@ -448,10 +448,10 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     public class TitleViewHolder extends GenericViewHolder implements OnClickCancelListener {
 
-        @Bind(R.id.button_header_download_item)
+        @BindView(R.id.button_header_download_item)
         Button headerButton;
 
-        @Bind(R.id.text_header_download_item)
+        @BindView(R.id.text_header_download_item)
         TextView headerTextView;
 
         String titleDownloading;

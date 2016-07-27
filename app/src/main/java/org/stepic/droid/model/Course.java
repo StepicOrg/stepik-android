@@ -5,8 +5,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
-import com.yandex.metrica.YandexMetrica;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -61,6 +59,24 @@ public class Course implements Serializable, Parcelable {
     private boolean is_loading;
     private Video intro_video;
     private long intro_video_id;
+    private String schedule_link;
+    private String schedule_long_link;
+
+    public String getSchedule_link() {
+        return schedule_link;
+    }
+
+    public void setSchedule_link(String schedule_link) {
+        this.schedule_link = schedule_link;
+    }
+
+    public String getSchedule_long_link() {
+        return schedule_long_link;
+    }
+
+    public void setSchedule_long_link(String schedule_long_link) {
+        this.schedule_long_link = schedule_long_link;
+    }
 
     @Deprecated
     public boolean is_loading() {
@@ -459,6 +475,8 @@ public class Course implements Serializable, Parcelable {
         dest.writeSerializable(this.mBeginDateTime);
         dest.writeSerializable(this.mEndDateTime);
         dest.writeString(this.formatForView);
+        dest.writeString(schedule_link);
+        dest.writeString(schedule_long_link);
     }
 
     protected Course(Parcel in) {
@@ -497,6 +515,8 @@ public class Course implements Serializable, Parcelable {
         this.mBeginDateTime = (DateTime) in.readSerializable();
         this.mEndDateTime = (DateTime) in.readSerializable();
         this.formatForView = in.readString();
+        schedule_link = in.readString();
+        schedule_long_link = in.readString();
     }
 
     public static final Creator<Course> CREATOR = new Creator<Course>() {

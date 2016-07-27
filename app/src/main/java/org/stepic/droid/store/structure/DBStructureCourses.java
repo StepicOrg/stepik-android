@@ -36,6 +36,8 @@ public final class DBStructureCourses extends DBStructureBase {
         public static final String IS_LOADING = "is_loading";
         public static final String CERTIFICATE = "certificate";
         public static final String INTRO_VIDEO_ID = "intro_video_id";
+        public static final String SCHEDULE_LINK = "schedule_link";
+        public static final String SCHEDULE_LONG_LINK = "schedule_long_link";
     }
 
     public static String[] getUsedColumns() {

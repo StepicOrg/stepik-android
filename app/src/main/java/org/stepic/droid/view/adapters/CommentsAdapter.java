@@ -36,7 +36,7 @@ import org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout;
 
 import java.util.Locale;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -121,10 +121,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
 
     class ReplyViewHolder extends GenericViewHolder {
 
-        @Bind(R.id.load_more_reply)
+        @BindView(R.id.load_more_reply)
         View loadMoreReply;
 
-        @Bind(R.id.progress_load_more_replies)
+        @BindView(R.id.progress_load_more_replies)
         ProgressBar progressLoadMoreReplies;
 
         public ReplyViewHolder(View itemView) {
@@ -182,43 +182,43 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
 
     abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.enhanced_text_view)
+        @BindView(R.id.enhanced_text_view)
         LatexSupportableEnhancedFrameLayout commentTextEnhanced;
 
-        @Bind(R.id.user_icon)
+        @BindView(R.id.user_icon)
         DraweeView userIcon;
 
-        @Bind(R.id.comment_clickable_root)
+        @BindView(R.id.comment_clickable_root)
         ViewGroup commentClickableRoot;
 
-        @Bind(R.id.user_name_comments)
+        @BindView(R.id.user_name_comments)
         TextView userName;
 
-        @Bind(R.id.load_more_view)
+        @BindView(R.id.load_more_view)
         View loadMoreView;
 
-        @Bind(R.id.load_more_textview)
+        @BindView(R.id.load_more_textview)
         View loadMoreTextView;
 
-        @Bind(R.id.progress_load_more_comments)
+        @BindView(R.id.progress_load_more_comments)
         View progressLoadMoreComments;
 
-        @Bind(R.id.like_root)
+        @BindView(R.id.like_root)
         View likeRoot;
 
-        @Bind(R.id.like_count)
+        @BindView(R.id.like_count)
         TextView likeCount;
 
-        @Bind(R.id.like_image)
+        @BindView(R.id.like_image)
         ImageView likeImage;
 
-        @Bind(R.id.comment_time_tv)
+        @BindView(R.id.comment_time_tv)
         TextView commentTimeTextView;
 
-        @Bind(R.id.pinned_indicator)
+        @BindView(R.id.pinned_indicator)
         View pinnedIndicator;
 
-        @Bind(R.id.user_role)
+        @BindView(R.id.user_role)
         TextView userRole;
 
         @BindString(R.string.comment_is_deleted)

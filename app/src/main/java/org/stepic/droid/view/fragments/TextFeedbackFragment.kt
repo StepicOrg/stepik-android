@@ -19,7 +19,7 @@ import org.stepic.droid.events.feedback.FeedbackInternetProblemsEvent
 import org.stepic.droid.events.feedback.FeedbackSentEvent
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ValidatorUtil
-import org.stepic.droid.view.custom.LoadingProgressDialog
+import org.stepic.droid.view.dialogs.LoadingProgressDialog
 import retrofit.Callback
 import retrofit.Response
 import retrofit.Retrofit

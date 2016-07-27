@@ -279,4 +279,11 @@ public class UserPreferences {
         }
     }
 
+    public boolean isNeedToShowCalendarWidget() {
+        return mSharedPreferenceHelper.isNeedToShowCalendarWidget();
+    }
+
+    public void setNeedToShowCalendarWidget(boolean needToShowCalendarWidget) {
+        mSharedPreferenceHelper.setNeedToShowCalendarWidget(needToShowCalendarWidget);
+    }
 }

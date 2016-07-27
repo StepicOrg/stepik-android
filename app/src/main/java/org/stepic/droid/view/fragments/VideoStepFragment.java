@@ -29,20 +29,20 @@ import org.stepic.droid.util.ThumbnailParser;
 import java.io.IOException;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.BindDrawable;
 import butterknife.ButterKnife;
 
 public class VideoStepFragment extends StepBaseFragment {
     private static final String TAG = "video_fragment";
 
-    @Bind(R.id.player_thumbnail)
+    @BindView(R.id.player_thumbnail)
     ImageView mThumbnail;
 
     @BindDrawable(R.drawable.video_placeholder)
     Drawable mVideoPlaceholder;
 
-    @Bind(R.id.player_layout)
+    @BindView(R.id.player_layout)
     View mPlayer;
 
 
@@ -50,7 +50,7 @@ public class VideoStepFragment extends StepBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_video_step, container, false);
-        ButterKnife.bind(this, v);
+        unbinder = ButterKnife.bind(this, v);
         return v;
     }
 

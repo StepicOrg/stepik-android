@@ -68,7 +68,7 @@ public class WantMoveDataDialog extends DialogFragment {
                             @Override
                             protected void onPreExecute() {
                                 super.onPreExecute();
-                                bus.post(new StartLoadEvent());
+                                bus.post(new StartLoadEvent(true));
                             }
 
                             @Override

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/export_calendar_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/warning_light_yellow"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        style="@style/cv_text_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/padding_text_in_cv"
+        android:text="@string/calendar_title"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/padding_text_in_cv"
+        android:text="@string/calendar_detail"
+        />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/export_calendar_button"
+        style="@style/StepicSmallMaterialButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="@string/add_to_the_calendar"/>
+</LinearLayout>

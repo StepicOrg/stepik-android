@@ -46,7 +46,7 @@ import org.stepic.droid.web.ViewAssignment;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 import retrofit.Callback;
@@ -67,16 +67,16 @@ public class StepsFragment extends FragmentBase {
     }
 
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    @Bind(R.id.viewpager)
+    @BindView(R.id.viewpager)
     ViewPager mViewPager;
 
-    @Bind(R.id.tabs)
+    @BindView(R.id.tabs)
     TabLayout mTabLayout;
 
-    @Bind(R.id.load_progressbar)
+    @BindView(R.id.load_progressbar)
     ProgressBar mProgressBar;
 
     @BindString(R.string.not_available_lesson)
@@ -97,7 +97,7 @@ public class StepsFragment extends FragmentBase {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_steps, container, false);
         setHasOptionsMenu(true);
-        ButterKnife.bind(this, v);
+        unbinder = ButterKnife.bind(this, v);
         return v;
     }
 

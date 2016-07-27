@@ -22,6 +22,15 @@ import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
 class ClearVideosDialog : DialogFragment() {
+
+    companion object {
+        val KEY_STRING_IDS = "step_ids"
+
+        fun newInstance(): DialogFragment {
+            return ClearVideosDialog()
+        }
+    }
+
     @Inject
     lateinit var mDatabaseFacade: DatabaseFacade
     @Inject
@@ -37,7 +46,7 @@ class ClearVideosDialog : DialogFragment() {
     lateinit var userPreferences: UserPreferences
 
     @Inject
-    lateinit var analytic : Analytic
+    lateinit var analytic: Analytic
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         MainApplication.component().inject(this)
@@ -53,7 +62,6 @@ class ClearVideosDialog : DialogFragment() {
                 override fun onPreExecute() {
                     super.onPreExecute()
                     mBus.post(StartLoadEvent())
-
                 }
 
                 override fun doInBackground(params: Array<Void>): Void? {
@@ -89,7 +97,4 @@ class ClearVideosDialog : DialogFragment() {
         return builder.create()
     }
 
-    companion object {
-        val KEY_STRING_IDS = "step_ids"
-    }
 }

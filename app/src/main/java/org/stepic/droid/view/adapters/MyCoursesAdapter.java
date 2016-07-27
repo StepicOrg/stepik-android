@@ -26,7 +26,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MyCoursesAdapter extends ArrayAdapter<Course> {
@@ -84,19 +84,19 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 
     static class ViewHolderItem {
 
-        @Bind(R.id.course_name)
+        @BindView(R.id.course_name)
         TextView courseName;
 
-        @Bind(R.id.course_info)
+        @BindView(R.id.course_info)
         TextView courseSummary;
 
-        @Bind(R.id.video_icon)
+        @BindView(R.id.video_icon)
         DraweeView courseIcon;
 
-        @Bind(R.id.course_date_interval)
+        @BindView(R.id.course_date_interval)
         TextView courseDateInterval;
 
-        @Bind(R.id.cv)
+        @BindView(R.id.cv)
         View cardView;
 
         public ViewHolderItem(View view) {

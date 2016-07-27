@@ -14,19 +14,19 @@ import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class NotSupportedYetStepFragment extends StepBaseFragment {
 
-    @Bind(R.id.open_web)
+    @BindView(R.id.open_web)
     Button mOpenWebBtn;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_unsupported, container, false);
-        ButterKnife.bind(this, v);
+        unbinder = ButterKnife.bind(this, v);
         return v;
     }
 

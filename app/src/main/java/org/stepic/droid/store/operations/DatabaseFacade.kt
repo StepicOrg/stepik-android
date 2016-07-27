@@ -7,6 +7,7 @@ import org.stepic.droid.model.Unit
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.store.dao.IDao
 import org.stepic.droid.store.structure.*
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.web.ViewAssignment
 import java.util.*
@@ -16,7 +17,7 @@ import javax.inject.Singleton
 @Singleton
 class DatabaseFacade {
 
-    enum class Table (val storeName: String) {
+    enum class Table(val storeName: String) {
         enrolled(DBStructureCourses.ENROLLED_COURSES),
         featured(DBStructureCourses.FEATURED_COURSES)
     }
@@ -47,6 +48,9 @@ class DatabaseFacade {
 
     @Inject
     lateinit var mNotificationDao: IDao<Notification>
+
+    @Inject
+    lateinit var calendarSectionDao: IDao<CalendarSection>
 
     init {
         MainApplication.component().inject(this)
@@ -89,14 +93,14 @@ class DatabaseFacade {
         stepIds?.let {
             val lessonSet = HashSet<Long>()
 
-            DbParseHelper.parseLongArrayToString(stepIds, ",")?.let {
+            DbParseHelper.parseLongArrayToString(stepIds, AppConstants.COMMA)?.let {
                 val steps = mStepDao.getAllInRange(DbStructureStep.Column.STEP_ID, it)
                 for (step in steps) {
                     lessonSet.add(step.lesson)
                 }
 
                 val lessonIds = lessonSet.toLongArray()
-                val lessonIdsCommaSeparated = DbParseHelper.parseLongArrayToString(lessonIds, ",")
+                val lessonIdsCommaSeparated = DbParseHelper.parseLongArrayToString(lessonIds, AppConstants.COMMA)
                 lessonIdsCommaSeparated?.let {
                     val lessonCollection = mLessonDao.getAllInRange(DbStructureLesson.Column.LESSON_ID, lessonIdsCommaSeparated).toHashSet()
                     for (stepItem in steps) {
@@ -366,4 +370,23 @@ class DatabaseFacade {
         mCoursesEnrolledDao.removeAll()
         mCoursesFeaturedDao.removeAll()
     }
+
+    fun getCalendarSectionsByIds(ids: LongArray): Map<Long, CalendarSection> {
+        val stringIds = DbParseHelper.parseLongArrayToString(ids, AppConstants.COMMA)
+        if (stringIds != null) {
+            return calendarSectionDao
+                    .getAllInRange(DbStructureCalendarSection.Column.SECTION_ID, stringIds)
+                    .map { it.id to it }
+                    .toMap()
+        } else {
+            return HashMap<Long, CalendarSection>()
+        }
+    }
+
+    fun addCalendarEvent(calendarSection: CalendarSection) {
+        calendarSectionDao.insertOrUpdate(calendarSection)
+    }
+
+    fun getCalendarEvent(sectionId: Long) = calendarSectionDao.get(DbStructureCalendarSection.Column.SECTION_ID, sectionId.toString())
+
 }

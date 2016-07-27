@@ -66,7 +66,7 @@ import org.stepic.droid.view.abstraction.CourseJoinView;
 import org.stepic.droid.view.abstraction.LoadCourseView;
 import org.stepic.droid.view.adapters.CoursePropertyAdapter;
 import org.stepic.droid.view.adapters.InstructorAdapter;
-import org.stepic.droid.view.custom.LoadingProgressDialog;
+import org.stepic.droid.view.dialogs.LoadingProgressDialog;
 import org.stepic.droid.view.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.web.UserStepicResponse;
 
@@ -77,7 +77,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
@@ -112,13 +112,13 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     }
 
 
-    @Bind(R.id.root_view)
+    @BindView(R.id.root_view)
     View mRootView;
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    @Bind(R.id.course_not_found)
+    @BindView(R.id.course_not_found)
     View courseNotFoundView;
 
     private WebView mIntroView;
@@ -146,13 +146,13 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @BindString(R.string.join_course_web_exception)
     String joinCourseWebException;
 
-    @Bind(R.id.list_of_course_property)
+    @BindView(R.id.list_of_course_property)
     ListView mCoursePropertyListView;
 
     @BindDrawable(R.drawable.video_placeholder)
     Drawable mVideoPlaceholder;
 
-    @Bind(R.id.report_problem)
+    @BindView(R.id.report_problem)
     View reportInternetProblem;
 
     DraweeView courseIcon;
@@ -207,7 +207,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course_detailed, container, false);
-        ButterKnife.bind(this, v);
+        unbinder = ButterKnife.bind(this, v);
         setHasOptionsMenu(true);
         return v;
     }

@@ -3,8 +3,10 @@ package org.stepic.droid.util;
 import android.net.Uri;
 import android.util.Patterns;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.model.Section;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +103,7 @@ public class StringUtil {
     }
 
     private static StringBuilder getAppUriStringBuilderForCourse(String baseUrl, String slug){
-        StringBuilder stringBuilder =new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("android-app://");
         stringBuilder.append(DeviceInfoUtil.getPackageName());
         stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
@@ -115,5 +117,20 @@ public class StringUtil {
         stringBuilder.append(slug);
         stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
         return stringBuilder;
+    }
+
+    public static String getAbsoluteUriForSection(IConfig config, @NotNull Section section){
+        StringBuilder sb;
+        sb = new StringBuilder();
+        sb.append(config.getBaseUrl());
+        sb.append(AppConstants.WEB_URI_SEPARATOR);
+        sb.append("course");
+        sb.append(AppConstants.WEB_URI_SEPARATOR);
+        sb.append(section.getCourse());
+        sb.append(AppConstants.WEB_URI_SEPARATOR);
+        sb.append("syllabus");
+        sb.append("?module=");
+        sb.append(section.getPosition());
+        return sb.toString();
     }
 }

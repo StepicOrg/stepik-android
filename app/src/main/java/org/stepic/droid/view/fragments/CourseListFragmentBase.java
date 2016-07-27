@@ -34,32 +34,32 @@ import org.stepic.droid.web.IApi;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit.Response;
 import retrofit.Retrofit;
 
 public abstract class CourseListFragmentBase extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener {
 
-    @Bind(R.id.swipe_refresh_layout_mycourses)
+    @BindView(R.id.swipe_refresh_layout_mycourses)
     protected SwipeRefreshLayout mSwipeRefreshLayout;
 
-    @Bind(R.id.list_of_courses)
+    @BindView(R.id.list_of_courses)
     protected ListView mListOfCourses;
 
-    @Bind(R.id.report_problem)
+    @BindView(R.id.report_problem)
     protected View mReportConnectionProblem;
 
-    @Bind(R.id.empty_courses)
+    @BindView(R.id.empty_courses)
     protected View mEmptyCoursesView;
 
-    @Bind(R.id.root_fragment_view)
+    @BindView(R.id.root_fragment_view)
     protected TouchDispatchableFrameLayout mRootView;
 
-    @Bind(R.id.load_progressbar)
+    @BindView(R.id.load_progressbar)
     protected ProgressBar mProgressBarOnEmptyScreen;
 
-    @Bind(R.id.empty_search)
+    @BindView(R.id.empty_search)
     protected ViewGroup mEmptySearch;
 
     protected List<Course> mCourses;
@@ -78,7 +78,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_courses, container, false);
-        ButterKnife.bind(this, v);
+        unbinder = ButterKnife.bind(this, v);
         return v;
     }
 

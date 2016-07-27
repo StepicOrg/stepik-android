@@ -11,7 +11,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.util.AppConstants;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
@@ -19,17 +19,17 @@ public class LaunchActivity extends BackToExitActivityBase {
 
     public static final String OVERRIDE_ANIMATION_FLAG = "override_animation_flag";
 
-    @Bind(R.id.sign_up_btn_activity_launch)
+    @BindView(R.id.sign_up_btn_activity_launch)
     View mSignUpButton;
 
-    @Bind(R.id.sign_in_tv)
+    @BindView(R.id.sign_in_tv)
     View mSignInTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
         enableLoginCallback();
 

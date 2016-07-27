@@ -17,7 +17,7 @@ import org.stepic.droid.view.custom.BetterSwitch;
 import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
 import org.stepic.droid.view.dialogs.VideoQualityDialog;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -27,25 +27,28 @@ public class SettingsFragment extends FragmentBase {
         return new SettingsFragment();
     }
 
-    @Bind(R.id.fragment_settings_wifi_enable_switch)
+    @BindView(R.id.fragment_settings_wifi_enable_switch)
     BetterSwitch mWifiLoadSwitch;
 
-    @Bind(R.id.fragment_settings_external_player_switch)
+    @BindView(R.id.fragment_settings_external_player_switch)
     BetterSwitch mExternalPlayerSwitch;
 
-    @Bind(R.id.video_quality_view)
+    @BindView(R.id.video_quality_view)
     View mVideoQuality;
 
-    @Bind(R.id.fragment_settings_notification_learn_switch)
+    @BindView(R.id.fragment_settings_notification_learn_switch)
     BetterSwitch notificationLearnSwitch;
 
-    @Bind(R.id.fragment_settings_notification_vibration_switch)
+    @BindView(R.id.fragment_settings_notification_vibration_switch)
     BetterSwitch notificationVibration;
 
-    @Bind(R.id.fragment_settings_notification_sound_switch)
+    @BindView(R.id.fragment_settings_notification_sound_switch)
     BetterSwitch notificationSound;
 
-    @Bind(R.id.storage_management_button)
+    @BindView(R.id.fragment_settings_calendar_widget_switch)
+    BetterSwitch calendarWidgetSwitch;
+
+    @BindView(R.id.storage_management_button)
     View storageManagementButton;
 
     @BindString(R.string.version)
@@ -64,7 +67,7 @@ public class SettingsFragment extends FragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_settings, container, false);
-        ButterKnife.bind(this, v);
+        unbinder = ButterKnife.bind(this, v);
         return v;
     }
 
@@ -86,6 +89,15 @@ public class SettingsFragment extends FragmentBase {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mUserPreferences.setOpenInExternal(isChecked);
+            }
+        });
+
+        calendarWidgetSwitch.setChecked(mUserPreferences.isNeedToShowCalendarWidget());
+
+        calendarWidgetSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                mUserPreferences.setNeedToShowCalendarWidget(isChecked);
             }
         });
 
@@ -162,6 +174,7 @@ public class SettingsFragment extends FragmentBase {
 
     @Override
     public void onDestroyView() {
+        calendarWidgetSwitch.setOnCheckedChangeListener(null);
         mWifiLoadSwitch.setOnCheckedChangeListener(null);
         mExternalPlayerSwitch.setOnCheckedChangeListener(null);
         notificationLearnSwitch.setOnCheckedChangeListener(null);
@@ -170,7 +183,6 @@ public class SettingsFragment extends FragmentBase {
         storageManagementButton.setOnClickListener(null);
         super.onDestroyView();
     }
-
 
     @Subscribe
     public void onWifiChanged(WifiLoadIsChangedEvent e) {

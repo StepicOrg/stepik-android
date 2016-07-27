@@ -48,7 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
@@ -56,22 +56,22 @@ import retrofit.Retrofit;
 
 public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshLayout.OnRefreshListener {
 
-    @Bind(R.id.swipe_refresh_layout_units)
+    @BindView(R.id.swipe_refresh_layout_units)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
-    @Bind(R.id.units_recycler_view)
+    @BindView(R.id.units_recycler_view)
     RecyclerView mUnitsRecyclerView;
 
-    @Bind(R.id.load_progressbar)
+    @BindView(R.id.load_progressbar)
     ProgressBar mProgressBar;
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     android.support.v7.widget.Toolbar mToolbar;
 
-    @Bind(R.id.report_problem)
+    @BindView(R.id.report_problem)
     protected View mReportConnectionProblem;
 
-    @Bind(R.id.report_empty)
+    @BindView(R.id.report_empty)
     protected View mReportEmpty;
 
 
@@ -91,7 +91,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_units);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
         overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         hideSoftKeypad();
         isScreenEmpty = true;

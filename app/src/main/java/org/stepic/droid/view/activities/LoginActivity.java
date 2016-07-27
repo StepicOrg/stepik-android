@@ -22,34 +22,34 @@ import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.SocialAuthAdapter;
-import org.stepic.droid.view.custom.LoadingProgressDialog;
+import org.stepic.droid.view.dialogs.LoadingProgressDialog;
 import org.stepic.droid.view.decorators.SpacesItemDecorationHorizontal;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends FragmentActivityBase {
 
-    @Bind(R.id.actionbar_close_btn_layout)
+    @BindView(R.id.actionbar_close_btn_layout)
     View mCloseButton;
 
-    @Bind(org.stepic.droid.R.id.login_button_layout)
+    @BindView(org.stepic.droid.R.id.login_button_layout)
     View mLoginBtn;
 
-    @Bind(org.stepic.droid.R.id.email_et)
+    @BindView(org.stepic.droid.R.id.email_et)
     EditText mLoginText;
 
-    @Bind(org.stepic.droid.R.id.password_et)
+    @BindView(org.stepic.droid.R.id.password_et)
     EditText mPasswordText;
 
-    @Bind(R.id.forgot_password_tv)
+    @BindView(R.id.forgot_password_tv)
     TextView mForgotPassword;
 
-    @Bind(R.id.root_view)
+    @BindView(R.id.root_view)
     View mRootView;
 
-    @Bind(R.id.social_list)
+    @BindView(R.id.social_list)
     RecyclerView mSocialRecyclerView;
 
     private ProgressDialog mProgressLogin;
@@ -59,7 +59,7 @@ public class LoginActivity extends FragmentActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(org.stepic.droid.R.layout.activity_login);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
         overridePendingTransition(org.stepic.droid.R.anim.slide_in_from_bottom, org.stepic.droid.R.anim.no_transition);
 
         hideSoftKeypad();
