@@ -7,6 +7,6 @@ class Certificate {
     var issue_date: String? = null
     var update_date: String? = null
     var grade: String? = null
-    var type: String? = null
+    var type: CertificateType? = null
     var url: String? = null
 }

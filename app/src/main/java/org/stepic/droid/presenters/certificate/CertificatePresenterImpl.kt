@@ -1,6 +1,8 @@
 package org.stepic.droid.presenters.certificate
 
+import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.core.CertificateView
+import org.stepic.droid.model.Certificate
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.web.CertificateResponse
 import org.stepic.droid.web.CoursesStepicResponse
@@ -11,7 +13,7 @@ import retrofit.Response
 import retrofit.Retrofit
 import java.util.*
 
-class CertificatePresenterImpl(val api: IApi) : CertificatePresenter {
+class CertificatePresenterImpl(val api: IApi, val config : IConfig) : CertificatePresenter {
 
     private var certificateView: CertificateView? = null
 
@@ -68,6 +70,10 @@ class CertificatePresenterImpl(val api: IApi) : CertificatePresenter {
                     if (courseIds.isEmpty()) {
                         certificateView?.onInternetProblem()
                     } else {
+                        val courseIdToCertificateMap: Map<Long, Certificate> = certificateList
+                                .filterNot { it.course == null }
+                                .associateBy { it.course!! }
+                        val baseUrl = config.baseUrl
                         api.getCourses(1, courseIds).enqueue(object : Callback<CoursesStepicResponse> {
                             override fun onFailure(t: Throwable?) {
                                 certificateView?.onInternetProblem()
@@ -75,9 +81,22 @@ class CertificatePresenterImpl(val api: IApi) : CertificatePresenter {
 
                             override fun onResponse(response: Response<CoursesStepicResponse>?, retrofit: Retrofit?) {
                                 if (response?.isSuccess ?: false) {
-                                    val listOfCourseIdAndTitle: List<Pair<Long, String>> = response?.body()?.courses?.mapNotNull { Pair(it.courseId, it.title) }?.orEmpty()!!
+                                    val localCertificateViewItems: List<CertificateViewItem> = response
+                                            ?.body()
+                                            ?.courses
+                                            ?.mapNotNull {
+                                                val certificateRelatedToCourse = courseIdToCertificateMap[it.courseId]
+                                                CertificateViewItem(
+                                                        certificateRelatedToCourse?.id,
+                                                        it.title,
+                                                        baseUrl + it.cover,
+                                                        certificateRelatedToCourse?.type,
+                                                        certificateRelatedToCourse?.url
+                                                )
+                                            }
+                                            ?.orEmpty()!!
                                     certificateViewItemList?.clear()
-                                    certificateViewItemList?.addAll(listOfCourseIdAndTitle.map { CertificateViewItem(it.second) })
+                                    certificateViewItemList?.addAll(localCertificateViewItems)
 
                                     certificateView?.onDataLoaded(certificateViewItemList)
                                 } else {
