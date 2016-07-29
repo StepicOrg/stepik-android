@@ -13,7 +13,7 @@ import retrofit.Response
 import retrofit.Retrofit
 import java.util.*
 
-class CertificatePresenterImpl(val api: IApi, val config : IConfig) : CertificatePresenter {
+class CertificatePresenterImpl(val api: IApi, val config: IConfig) : CertificatePresenter {
 
     private var certificateView: CertificateView? = null
 
@@ -86,10 +86,14 @@ class CertificatePresenterImpl(val api: IApi, val config : IConfig) : Certificat
                                             ?.courses
                                             ?.mapNotNull {
                                                 val certificateRelatedToCourse = courseIdToCertificateMap[it.courseId]
+                                                var cover: String? = null
+                                                if (it.cover != null) {
+                                                    cover = baseUrl + it.cover
+                                                }
                                                 CertificateViewItem(
                                                         certificateRelatedToCourse?.id,
                                                         it.title,
-                                                        baseUrl + it.cover,
+                                                        cover,
                                                         certificateRelatedToCourse?.type,
                                                         certificateRelatedToCourse?.url
                                                 )
