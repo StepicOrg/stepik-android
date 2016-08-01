@@ -25,6 +25,8 @@ public interface IScreenManager {
 
     void showCourseDescription(Fragment sourceActivity, @NotNull Course course);
 
+    void showPdfInBrowserByGoogleDocs(Activity activity, String fullPath);
+
     void openComments(Context context, String discussionProxyId, long stepId);
 
     void openNewCommentForm(Activity sourceActivity, Long target, @Nullable Long parent);

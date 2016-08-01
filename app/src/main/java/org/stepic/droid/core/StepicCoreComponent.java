@@ -30,6 +30,7 @@ import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.ImageOnDisk;
 import org.stepic.droid.view.activities.SectionActivity;
+import org.stepic.droid.view.adapters.CertificateAdapter;
 import org.stepic.droid.view.adapters.CoursePropertyAdapter;
 import org.stepic.droid.view.adapters.DownloadsAdapter;
 import org.stepic.droid.view.adapters.MyCoursesAdapter;
@@ -174,4 +175,6 @@ public interface StepicCoreComponent {
     void inject(CourseJoinerPresenterImpl courseJoinerPresenter);
 
     void inject(DeleteCommentDialogFragment dialogFragment);
+
+    void inject(CertificateAdapter certificateAdapter);
 }

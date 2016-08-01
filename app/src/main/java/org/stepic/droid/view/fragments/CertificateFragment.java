@@ -60,7 +60,7 @@ public class CertificateFragment extends FragmentBase implements CertificateView
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        adapter = new CertificateAdapter(getContext(), new ArrayList<CertificateViewItem>());
+        adapter = new CertificateAdapter(getActivity(), new ArrayList<CertificateViewItem>());
         certificateRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         certificateRecyclerView.setAdapter(adapter);
 
