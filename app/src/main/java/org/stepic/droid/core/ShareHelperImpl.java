@@ -7,6 +7,7 @@ import android.net.Uri;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.StringUtil;
@@ -55,4 +56,10 @@ public class ShareHelperImpl implements ShareHelper {
         shareIntent.setType("text/plain");
         return Intent.createChooser(shareIntent, context.getString(R.string.share_title));
     }
+
+    @Override
+    public Intent getIntentForShareCertificate(@NotNull CertificateViewItem certificateViewItem) {
+        return null;
+    }
+
 }

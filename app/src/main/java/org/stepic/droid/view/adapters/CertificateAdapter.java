@@ -1,6 +1,6 @@
 package org.stepic.droid.view.adapters;
 
-import android.content.Context;
+import android.app.Activity;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,10 +15,14 @@ import com.facebook.drawee.view.DraweeView;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
+import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.model.CertificateType;
 import org.stepic.droid.model.CertificateViewItem;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -26,10 +30,14 @@ import butterknife.ButterKnife;
 
 public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.CertificateViewHolder> {
 
-    private Context context;
+    private Activity context;
     private List<CertificateViewItem> certificateList;
 
-    public CertificateAdapter(Context context, @NotNull List<CertificateViewItem> certificateList) {
+    @Inject
+    IScreenManager screenManager;
+
+    public CertificateAdapter(Activity context, @NotNull List<CertificateViewItem> certificateList) {
+        MainApplication.component().inject(this);
         this.context = context;
         this.certificateList = certificateList;
     }
@@ -71,6 +79,9 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
         @BindView(R.id.certificate_description)
         TextView certificateDescriptionView;
 
+        @BindView(R.id.certificate_share_button)
+        View certificateShareButton;
+
         @BindString(R.string.certificate_result_with_substitution)
         String certificateResultString;
 
@@ -87,6 +98,14 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
                 @Override
                 public void onClick(View view) {
                     CertificateViewHolder.this.onClick(CertificateAdapter.this.certificateList.get(getAdapterPosition()));
+                }
+            });
+
+            certificateShareButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    CertificateViewItem certificateViewItem = CertificateAdapter.this.certificateList.get(getAdapterPosition());
+//                    BottomSheetDialogFragment
                 }
             });
         }
@@ -119,7 +138,7 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
 
         @Override
         public void onClick(CertificateViewItem certificate) {
-            // TODO: 26.07.16 open certificate
+            screenManager.showPdfInBrowserByGoogleDocs(context, certificate.getFullPath());
         }
 
     }

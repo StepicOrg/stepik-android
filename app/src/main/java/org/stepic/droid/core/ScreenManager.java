@@ -210,12 +210,18 @@ public class ScreenManager implements IScreenManager {
     @Override
     public void openInWeb(Context context, String path) {
         analytic.reportEventWithIdName(Analytic.Screens.OPEN_LINK_IN_WEB, "0", path);
-        if (!path.startsWith("https://") && !path.startsWith("http://")){
+        if (!path.startsWith("https://") && !path.startsWith("http://")) {
             path = "http://" + path;
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(path));
         context.startActivity(intent);
+    }
+
+    @Override
+    public void showPdfInBrowserByGoogleDocs(Activity activity, String fullPath) {
+        String googleDocsUrl = "https://docs.google.com/viewer?url=";
+        openInWeb(activity, googleDocsUrl + fullPath);
     }
 
     @Override
@@ -285,7 +291,7 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void openStepInWeb(Context context, Step step) {
-        analytic.reportEvent(Analytic.Screens.OPEN_STEP_IN_WEB, step.getId()+"");
+        analytic.reportEvent(Analytic.Screens.OPEN_STEP_IN_WEB, step.getId() + "");
         String url = mConfig.getBaseUrl() + "/lesson/" + step.getLesson() + "/step/" + step.getPosition() + "/?from_mobile_app=true";
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
         context.startActivity(intent);
