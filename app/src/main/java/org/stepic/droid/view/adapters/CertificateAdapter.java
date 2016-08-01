@@ -15,14 +15,11 @@ import com.facebook.drawee.view.DraweeView;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.model.CertificateType;
 import org.stepic.droid.model.CertificateViewItem;
+import org.stepic.droid.presenters.certificate.CertificatePresenter;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -30,38 +27,32 @@ import butterknife.ButterKnife;
 
 public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.CertificateViewHolder> {
 
-    private Activity context;
-    private List<CertificateViewItem> certificateList;
+    private CertificatePresenter certificatePresenter;
+    private Activity activity;
 
-    @Inject
-    IScreenManager screenManager;
-
-    public CertificateAdapter(Activity context, @NotNull List<CertificateViewItem> certificateList) {
-        MainApplication.component().inject(this);
-        this.context = context;
-        this.certificateList = certificateList;
+    public CertificateAdapter(@NotNull CertificatePresenter certificatePresenter, @NotNull Activity activity) {
+        this.certificatePresenter = certificatePresenter;
+        this.activity = activity;
     }
 
     @Override
     public CertificateViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.certificate_item, null);
+        View v = LayoutInflater.from(activity).inflate(R.layout.certificate_item, null);
         return new CertificateViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(CertificateViewHolder holder, int position) {
-        CertificateViewItem certificate = certificateList.get(position);
+        CertificateViewItem certificate = certificatePresenter.get(position);
         holder.setData(certificate);
     }
 
     @Override
     public int getItemCount() {
-        return certificateList.size();
+        return certificatePresenter.size();
     }
 
     public void updateCertificates(List<CertificateViewItem> certificateViewItems) {
-        certificateList.clear();
-        certificateList.addAll(certificateViewItems);
         notifyDataSetChanged();
     }
 
@@ -97,14 +88,14 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    CertificateViewHolder.this.onClick(CertificateAdapter.this.certificateList.get(getAdapterPosition()));
+                    CertificateViewHolder.this.onClick(CertificateAdapter.this.certificatePresenter.get(getAdapterPosition()));
                 }
             });
 
             certificateShareButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    CertificateViewItem certificateViewItem = CertificateAdapter.this.certificateList.get(getAdapterPosition());
+                    CertificateViewItem certificateViewItem = CertificateAdapter.this.certificatePresenter.get(getAdapterPosition());
 //                    BottomSheetDialogFragment
                 }
             });
@@ -138,7 +129,7 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
 
         @Override
         public void onClick(CertificateViewItem certificate) {
-            screenManager.showPdfInBrowserByGoogleDocs(context, certificate.getFullPath());
+            certificatePresenter.showCertificateAsPdf(activity, certificate.getFullPath());
         }
 
     }

@@ -17,7 +17,6 @@ import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.presenters.certificate.CertificatePresenter;
 import org.stepic.droid.view.adapters.CertificateAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -60,7 +59,7 @@ public class CertificateFragment extends FragmentBase implements CertificateView
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        adapter = new CertificateAdapter(getActivity(), new ArrayList<CertificateViewItem>());
+        adapter = new CertificateAdapter(certificatePresenter, getActivity());
         certificateRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         certificateRecyclerView.setAdapter(adapter);
 

@@ -1,7 +1,9 @@
 package org.stepic.droid.presenters.certificate
 
+import android.app.Activity
 import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.core.CertificateView
+import org.stepic.droid.core.IScreenManager
 import org.stepic.droid.model.Certificate
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.web.CertificateResponse
@@ -13,7 +15,15 @@ import retrofit.Response
 import retrofit.Retrofit
 import java.util.*
 
-class CertificatePresenterImpl(val api: IApi, val config: IConfig) : CertificatePresenter {
+class CertificatePresenterImpl(val api: IApi, val config: IConfig, val screenManager: IScreenManager) : CertificatePresenter {
+    override fun showCertificateAsPdf(activity: Activity, fullPath: String) {
+        screenManager.showPdfInBrowserByGoogleDocs(activity,  fullPath)
+    }
+
+    override fun get(position: Int) = certificateViewItemList?.get(position)
+
+
+    override fun size() = certificateViewItemList?.size ?: 0
 
     private var certificateView: CertificateView? = null
 

@@ -11,7 +11,7 @@ import dagger.Provides;
 @Module
 public class CertificateModule {
     @Provides
-    public CertificatePresenter providePresenter(IApi api, IConfig config) {
-        return new CertificatePresenterImpl(api, config);
+    public CertificatePresenter providePresenter(IApi api, IConfig config, IScreenManager screenManager) {
+        return new CertificatePresenterImpl(api, config, screenManager);
     }
 }
