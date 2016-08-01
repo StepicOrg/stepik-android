@@ -95,7 +95,8 @@ class CertificatePresenterImpl(val api: IApi, val config: IConfig) : Certificate
                                                         it.title,
                                                         cover,
                                                         certificateRelatedToCourse?.type,
-                                                        certificateRelatedToCourse?.url
+                                                        certificateRelatedToCourse?.url,
+                                                        grade = certificateRelatedToCourse?.grade
                                                 )
                                             }
                                             ?.orEmpty()!!

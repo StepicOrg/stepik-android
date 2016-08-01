@@ -6,7 +6,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:foreground="@drawable/card_foreground"
+    android:clickable="true"
     app:cardUseCompatPadding="true">
 
     <RelativeLayout
@@ -31,24 +32,27 @@
                 android:layout_marginTop="8dp"
                 android:layout_toLeftOf="@+id/certificate_icon"
                 android:layout_toStartOf="@+id/certificate_icon"
+                android:ellipsize="end"
+                android:paddingEnd="8dp"
+                android:paddingRight="8dp"
                 android:textSize="@dimen/text_size_title"
-                tools:text="Certificate for completing Python for beginners"/>
+                tools:text="Программирование на Python"/>
 
             <TextView
-                android:id="@+id/certificate_grade"
+                android:id="@+id/certificate_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/certificate_title"
                 android:layout_marginTop="8dp"
                 android:layout_toLeftOf="@+id/certificate_icon"
                 android:layout_toStartOf="@+id/certificate_icon"
+                android:paddingEnd="8dp"
+                android:paddingRight="8dp"
                 android:textColor="@color/stepic_weak_text"
                 android:textSize="14sp"
-                tools:text="Result: 100%"/>
+                tools:text="Сертификат с отличием за курс Безопасность в интернете"/>
 
             <com.facebook.drawee.view.SimpleDraweeView
-                android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp"
                 android:id="@+id/certificate_icon"
                 android:layout_width="@dimen/certificate_image_size"
                 android:layout_height="@dimen/certificate_image_size"
@@ -59,32 +63,38 @@
         </RelativeLayout>
 
         <Button
-            android:background="@color/transparent"
-            android:padding="0dp"
-            android:textColor="@color/stepic_blue_ribbon"
-            android:id="@+id/certificate_open_button"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/certificate_content_layout"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="8dp"
-            android:text="open"/>
-
-        <Button
-            android:background="@color/transparent"
-            android:padding="0dp"
-            android:textColor="@color/stepic_blue_ribbon"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:id="@+id/certificate_share_button"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:background="@drawable/abc_btn_borderless_material"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_below="@+id/certificate_content_layout"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_toRightOf="@+id/certificate_open_button"
-            android:text="share"/>
+            android:text="@string/share_title"
+            android:textColor="@color/stepic_blue_ribbon"/>
+
+        <TextView
+            android:id="@+id/certificate_grade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/certificate_share_button"
+            android:layout_alignBottom="@+id/certificate_share_button"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/certificate_share_button"
+            android:layout_toStartOf="@+id/certificate_share_button"
+            android:paddingEnd="@dimen/padding_text_in_cv"
+            android:paddingLeft="@dimen/padding_text_in_cv"
+            android:paddingRight="@dimen/padding_text_in_cv"
+            android:paddingStart="@dimen/padding_text_in_cv"
+            android:textSize="14sp"
+            tools:text="Результат: 100%"/>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

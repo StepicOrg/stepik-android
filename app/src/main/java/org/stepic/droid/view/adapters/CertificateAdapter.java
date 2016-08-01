@@ -15,10 +15,12 @@ import com.facebook.drawee.view.DraweeView;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
+import org.stepic.droid.model.CertificateType;
 import org.stepic.droid.model.CertificateViewItem;
 
 import java.util.List;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -66,6 +68,18 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
         @BindView(R.id.certificate_grade)
         TextView certificateGradeView;
 
+        @BindView(R.id.certificate_description)
+        TextView certificateDescriptionView;
+
+        @BindString(R.string.certificate_result_with_substitution)
+        String certificateResultString;
+
+        @BindString(R.string.certificate_distinction_with_substitution)
+        String certificateDistinctionString;
+
+        @BindString(R.string.certificate_regular_with_substitution)
+        String certificateRegularString;
+
         CertificateViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -78,12 +92,27 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
         }
 
         public void setData(CertificateViewItem certificate) {
-            String prefix = "Сертификат с отличием за курс"; // FIXME: 29.07.16 FROM RESOURCES, resolve distinct
 
-            String certificateName = prefix + " " + certificate.getTitle();
             certificateTitleView.setText(certificate.getTitle());
-            certificateGradeView.setText(certificateName + "\n\n Result: 146%"); // FIXME: 29.07.16 throw in certificateviewitem result and show here
-//            certificateGradeView.setText("Result: 146%"); // FIXME: 29.07.16 throw in certificateviewitem result and show here
+
+            String certificateDescriptionLocal = null;
+            if (certificate.getType() == CertificateType.distinction) {
+                certificateDescriptionLocal = String.format(certificateDistinctionString, certificate.getTitle());
+            } else if (certificate.getType() == CertificateType.regular) {
+                certificateDescriptionLocal = String.format(certificateRegularString, certificate.getTitle());
+            }
+
+            if (certificateDescriptionLocal != null) {
+                certificateDescriptionView.setText(certificateDescriptionLocal);
+            } else {
+                certificateDescriptionView.setText("");
+            }
+
+            if (certificate.getGrade() != null) {
+                certificateGradeView.setText(String.format(certificateResultString, certificate.getGrade()));
+            } else {
+                certificateGradeView.setText("");
+            }
             certificateIcon.setController(getControllerForCertificateCover(certificate.getCoverFullPath()));
         }
 

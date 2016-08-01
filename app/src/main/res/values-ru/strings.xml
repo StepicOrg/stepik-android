@@ -203,4 +203,7 @@
     <string name="calendar_added_message">Дедлайны успешно добавлены в календарь</string>
     <string name="user_not_have_calendar">Календарей нет. Попробуйте создать в приложении календаря</string>
     <string name="certificates_title">Сертификаты</string>
+    <string name="certificate_regular_with_substitution">Сертификат за курс %s</string>
+    <string name="certificate_distinction_with_substitution">Сертификат с отличием за курс %s</string>
+    <string name="certificate_result_with_substitution">Результат: %s%%</string>
 </resources>

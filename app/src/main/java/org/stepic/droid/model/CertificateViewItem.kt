@@ -4,5 +4,6 @@ class CertificateViewItem(val certificateId: Long?,
                           val title: String,
                           val coverFullPath: String?,
                           val type: CertificateType?,
-                          val fullPath: String?) {
+                          val fullPath: String?,
+                          val grade : String?) {
 }

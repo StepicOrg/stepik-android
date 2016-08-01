@@ -15,7 +15,6 @@
         <item name="windowNoTitle">true</item>
         <item name="buttonStyle">@style/StepicButton</item>
         <item name="android:textAppearance">@style/TextAppearance.FontPath</item>
-
         <item name="android:dialogTheme">@style/AppTheme.Dialog</item>
         <item name="dialogTheme">@style/AppTheme.Dialog</item>
         <item name="android:alertDialogTheme">@style/AppTheme.Dialog</item>
