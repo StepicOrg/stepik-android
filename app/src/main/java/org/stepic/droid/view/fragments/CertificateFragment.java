@@ -16,8 +16,8 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.CertificateView;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.presenters.certificate.CertificatePresenter;
+import org.stepic.droid.view.dialogs.CertificateShareDialogFragment;
 import org.stepic.droid.view.adapters.CertificateAdapter;
-import org.stepic.droid.view.dialogs.CertificateShareDialog;
 
 import java.util.List;
 
@@ -112,7 +112,9 @@ public class CertificateFragment extends FragmentBase implements CertificateView
             return;
         }
 
-        DialogFragment bottomSheetDialogFragment = CertificateShareDialog.newInstance();
+//        CertificateShareDialog dialog = new CertificateShareDialog(getContext());
+//        dialog.show();
+        DialogFragment bottomSheetDialogFragment = CertificateShareDialogFragment.newInstance();
         if (bottomSheetDialogFragment != null && !bottomSheetDialogFragment.isAdded()) {
             bottomSheetDialogFragment.show(getFragmentManager(), null);
         }
