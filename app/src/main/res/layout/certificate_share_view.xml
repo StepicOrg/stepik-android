@@ -24,7 +24,7 @@
         android:foreground="@drawable/non_radius_foreground"
         android:gravity="center_vertical"
         android:padding="16dp"
-        android:text="Добавить в  LinkedIn"/>
+        android:text="@string/add_to_linkedin"/>
 
 
     <TextView

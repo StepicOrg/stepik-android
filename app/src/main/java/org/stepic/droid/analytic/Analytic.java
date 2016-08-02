@@ -154,7 +154,7 @@ public interface Analytic {
         String WRONG_SUBMISSION_FILL = "submission_wrong_fill";
     }
 
-    interface Calendar{
+    interface Calendar {
         String USER_CLICK_ADD_WIDGET = "calendar_click_add_widget";
         String USER_CLICK_ADD_MENU = "calendar_click_add_menu";
         String CALENDAR_ADDED_SUCCESSFULLY = "calendar_added_successfully";
@@ -164,7 +164,7 @@ public interface Analytic {
         String HIDE_WIDGET_FROM_PREFS = "widget_hidden_from_prefs";
     }
 
-    interface DeepLink{
+    interface DeepLink {
         String USER_OPEN_SYLLABUS_LINK = "open_syllabus_by_link";
         String USER_OPEN_COURSE_DETAIL_LINK = "open_detail_course_link";
     }
@@ -172,6 +172,7 @@ public interface Analytic {
     interface Certificate {
         String COPY_LINK_CERTIFICATE = "certificate_copy_link";
         String SHARE_LINK_CERTIFICATE = "certificate_share";
+        String ADD_LINKEDIN = "certificate_add_linkeding";
     }
 
     void reportEvent(String eventName, Bundle bundle);

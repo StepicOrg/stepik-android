@@ -62,8 +62,9 @@ public class CertificateShareDialog extends BottomSheetDialog {
         addLinkedIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "ADD LINKEDIN " + certificateViewItem.getTitle(), Toast.LENGTH_SHORT).show();
                 dismiss();
+                analytic.reportEvent(Analytic.Certificate.ADD_LINKEDIN);
+                screenManager.addCertificateToLinkedIn(certificateViewItem);
             }
         });
 

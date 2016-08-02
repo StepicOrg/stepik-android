@@ -16,6 +16,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
@@ -41,6 +42,8 @@ import org.stepic.droid.view.activities.VideoActivity;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.web.ViewAssignment;
 import org.videolan.libvlc.util.VLCUtil;
+
+import java.net.URLEncoder;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -216,6 +219,23 @@ public class ScreenManager implements IScreenManager {
         final Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(path));
         context.startActivity(intent);
+    }
+
+    @Override
+    public void addCertificateToLinkedIn(CertificateViewItem certificateViewItem) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(AppConstants.LINKEDIN_ADD_URL);
+        sb.append("_ed=");//linkedin id parameter
+        sb.append(AppConstants.LINKEDIN_ED_ID);
+        sb.append("&pfCertificationName="); // linkedin cert name
+        sb.append(URLEncoder.encode(certificateViewItem.getTitle()));
+        sb.append("&pfCertificationUrl=");//linkedin certificate url
+        sb.append(certificateViewItem.getFullPath());
+
+        final Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setData(Uri.parse(sb.toString()));
+        MainApplication.getAppContext().startActivity(intent);
     }
 
     @Override

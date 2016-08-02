@@ -217,4 +217,5 @@
     <string name="certificate_share_copy_link">Copy Link</string>
     <string name="certificate_share_copy_link_success">Link Copied</string>
     <string name="certificate_share_share_link">Share via…</string>
+    <string name="add_to_linkedin">Add to LinkedIn</string>
 </resources>
