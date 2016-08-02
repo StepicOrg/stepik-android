@@ -103,4 +103,14 @@ public class CertificateFragment extends FragmentBase implements CertificateView
         // TODO: 26.07.16 hide all, except recycler
         adapter.updateCertificates(certificateViewItems);
     }
+
+    @Override
+    public void onNeedShowShareDialog(@org.jetbrains.annotations.Nullable CertificateViewItem certificateViewItem) {
+        if (certificateViewItem == null) {
+            return;
+        }
+
+
+
+    }
 }

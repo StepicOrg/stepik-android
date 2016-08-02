@@ -14,9 +14,11 @@ public interface CertificatePresenter {
     void showCertificates();
 
     @Nullable
-    CertificateViewItem get (int position);
+    CertificateViewItem get(int position);
 
     int size();
 
     void showCertificateAsPdf(Activity activity, String fullPath);
+
+    void showShareDialogForCertificate(CertificateViewItem certificateViewItem);
 }

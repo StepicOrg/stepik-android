@@ -96,7 +96,7 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
                 @Override
                 public void onClick(View view) {
                     CertificateViewItem certificateViewItem = CertificateAdapter.this.certificatePresenter.get(getAdapterPosition());
-//                    BottomSheetDialogFragment
+                    certificatePresenter.showShareDialogForCertificate(certificateViewItem);
                 }
             });
         }

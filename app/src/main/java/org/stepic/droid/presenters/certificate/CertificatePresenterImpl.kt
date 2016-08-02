@@ -16,6 +16,10 @@ import retrofit.Retrofit
 import java.util.*
 
 class CertificatePresenterImpl(val api: IApi, val config: IConfig, val screenManager: IScreenManager) : CertificatePresenter {
+    override fun showShareDialogForCertificate(certificateViewItem: CertificateViewItem?) {
+        view?.onNeedShowShareDialog(certificateViewItem)
+    }
+
     override fun showCertificateAsPdf(activity: Activity, fullPath: String) {
         screenManager.showPdfInBrowserByGoogleDocs(activity,  fullPath)
     }
@@ -25,18 +29,18 @@ class CertificatePresenterImpl(val api: IApi, val config: IConfig, val screenMan
 
     override fun size() = certificateViewItemList?.size ?: 0
 
-    private var certificateView: CertificateView? = null
+    private var view: CertificateView? = null
 
     private var certificateViewItemList: ArrayList<CertificateViewItem>? = null
 
     override fun onCreate(certificateView: CertificateView) {
-        this.certificateView = certificateView
+        this.view = certificateView
     }
 
     override fun onDestroy() {
         certificatesCall?.cancel()
         coursesCall?.cancel()
-        certificateView = null
+        view = null
     }
 
     private var certificatesCall: Call<CertificateResponse>? = null
@@ -45,12 +49,12 @@ class CertificatePresenterImpl(val api: IApi, val config: IConfig, val screenMan
     override fun showCertificates() {
         if (certificateViewItemList == null) {
             //need load from internet
-            certificateView?.onLoading()
+            view?.onLoading()
             loadCertificatesSilent()
         } else if (certificateViewItemList?.isEmpty() ?: false) {
-            certificateView?.showEmptyState()
+            view?.showEmptyState()
         } else if (certificateViewItemList?.isNotEmpty() ?: false) {
-            certificateView?.onDataLoaded(certificateViewItemList)
+            view?.onDataLoaded(certificateViewItemList)
         }
     }
 
@@ -67,18 +71,18 @@ class CertificatePresenterImpl(val api: IApi, val config: IConfig, val screenMan
 
                     val certificateList = response?.body()?.certificates
                     if (certificateList == null) {
-                        certificateView?.onInternetProblem()
+                        view?.onInternetProblem()
                         return
                     }
                     if (certificateList.isEmpty()) {
-                        certificateView?.showEmptyState()
+                        view?.showEmptyState()
                         return
                     }
 
                     //certificate list is not empty:
                     val courseIds: LongArray = certificateList.mapNotNull { it.course }.toLongArray()
                     if (courseIds.isEmpty()) {
-                        certificateView?.onInternetProblem()
+                        view?.onInternetProblem()
                     } else {
                         val courseIdToCertificateMap: Map<Long, Certificate> = certificateList
                                 .filterNot { it.course == null }
@@ -86,7 +90,7 @@ class CertificatePresenterImpl(val api: IApi, val config: IConfig, val screenMan
                         val baseUrl = config.baseUrl
                         api.getCourses(1, courseIds).enqueue(object : Callback<CoursesStepicResponse> {
                             override fun onFailure(t: Throwable?) {
-                                certificateView?.onInternetProblem()
+                                view?.onInternetProblem()
                             }
 
                             override fun onResponse(response: Response<CoursesStepicResponse>?, retrofit: Retrofit?) {
@@ -113,9 +117,9 @@ class CertificatePresenterImpl(val api: IApi, val config: IConfig, val screenMan
                                     certificateViewItemList?.clear()
                                     certificateViewItemList?.addAll(localCertificateViewItems)
 
-                                    certificateView?.onDataLoaded(certificateViewItemList)
+                                    view?.onDataLoaded(certificateViewItemList)
                                 } else {
-                                    certificateView?.onInternetProblem()
+                                    view?.onInternetProblem()
                                 }
                             }
 
@@ -123,12 +127,12 @@ class CertificatePresenterImpl(val api: IApi, val config: IConfig, val screenMan
                     }
 
                 } else {
-                    certificateView?.onInternetProblem()
+                    view?.onInternetProblem()
                 }
             }
 
             override fun onFailure(t: Throwable?) {
-                certificateView?.onInternetProblem()
+                view?.onInternetProblem()
             }
 
         })
