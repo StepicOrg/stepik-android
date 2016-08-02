@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
@@ -16,6 +17,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.CertificateView;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.presenters.certificate.CertificatePresenter;
+import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.dialogs.CertificateShareDialogFragment;
 import org.stepic.droid.view.adapters.CertificateAdapter;
 
@@ -42,6 +44,9 @@ public class CertificateFragment extends FragmentBase implements CertificateView
 
     @BindView(R.id.certificates_recycler_view)
     RecyclerView certificateRecyclerView;
+
+    @BindView(R.id.load_progressbar)
+    ProgressBar progressBarOnCenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,22 +92,39 @@ public class CertificateFragment extends FragmentBase implements CertificateView
 
     @Override
     public void onLoading() {
+        if (certificatePresenter.size() <= 0) {
+            certificateRecyclerView.setVisibility(View.INVISIBLE);
+            ProgressHelper.activate(progressBarOnCenter);
 // TODO: 26.07.16 hide all, show loading
+
+        }
     }
 
     @Override
     public void showEmptyState() {
 // TODO: 26.07.16 hide all show empty
+        ProgressHelper.dismiss(progressBarOnCenter);
+        if (certificatePresenter.size() <= 0) {
+            //show empty
+        }
     }
 
     @Override
     public void onInternetProblem() {
+        ProgressHelper.dismiss(progressBarOnCenter);
+        if (certificatePresenter.size() <= 0) {
 // TODO: 26.07.16 hide all show internet problem
+        } else {
+
+            //todo: toast
+        }
     }
 
     @Override
     public void onDataLoaded(List<CertificateViewItem> certificateViewItems) {
         // TODO: 26.07.16 hide all, except recycler
+        ProgressHelper.dismiss(progressBarOnCenter);
+        certificateRecyclerView.setVisibility(View.VISIBLE);
         adapter.updateCertificates(certificateViewItems);
     }
 
