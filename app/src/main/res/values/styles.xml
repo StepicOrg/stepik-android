@@ -28,6 +28,7 @@
     </style>
 
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7"/>
+
     <style name="AppTheme.VideoPlayer.7" parent="Theme.AppCompat">
         <item name="colorAccent">@color/stepic_blue_ribbon</item>
         <item name="colorPrimary">@color/stepic_brand_primary</item>
@@ -70,6 +71,16 @@
         <item name="android:textSize">14sp</item>
         <item name="android:background">@drawable/btn_color_selector_accent</item>
         <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="BottomSheetShareItem">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:clickable">true</item>
+        <item name="android:drawablePadding">@dimen/share_item_padding</item>
+        <item name="android:padding">@dimen/share_item_padding</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:foreground">@drawable/non_radius_foreground</item>
     </style>
 
 
