@@ -8,7 +8,8 @@ class CertificateViewItem(val certificateId: Long?,
                           val coverFullPath: String?,
                           val type: CertificateType?,
                           val fullPath: String?,
-                          val grade: String?) : Parcelable {
+                          val grade: String?,
+                          val issue_date : String?) : Parcelable {
 
     override fun describeContents() = 0
 
@@ -19,6 +20,7 @@ class CertificateViewItem(val certificateId: Long?,
         dest.writeInt(type?.ordinal ?: -1)
         dest.writeString(fullPath)
         dest.writeString(grade)
+        dest.writeString(issue_date)
     }
 
     protected constructor(input: Parcel) : this(
@@ -26,6 +28,7 @@ class CertificateViewItem(val certificateId: Long?,
             input.readString(),
             input.readString(),
             getCertificateTypeByParcel(input),
+            input.readString(),
             input.readString(),
             input.readString()
     )

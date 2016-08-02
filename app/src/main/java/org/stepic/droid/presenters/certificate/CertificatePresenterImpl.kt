@@ -110,7 +110,8 @@ class CertificatePresenterImpl(val api: IApi, val config: IConfig, val screenMan
                                                         cover,
                                                         certificateRelatedToCourse?.type,
                                                         certificateRelatedToCourse?.url,
-                                                        grade = certificateRelatedToCourse?.grade
+                                                        certificateRelatedToCourse?.grade,
+                                                        certificateRelatedToCourse?.issue_date
                                                 )
                                             }
                                             ?.orEmpty()!!

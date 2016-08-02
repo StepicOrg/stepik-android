@@ -12,6 +12,10 @@ import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
@@ -44,6 +48,7 @@ import org.stepic.droid.web.ViewAssignment;
 import org.videolan.libvlc.util.VLCUtil;
 
 import java.net.URLEncoder;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -231,6 +236,16 @@ public class ScreenManager implements IScreenManager {
         sb.append(URLEncoder.encode(certificateViewItem.getTitle()));
         sb.append("&pfCertificationUrl=");//linkedin certificate url
         sb.append(certificateViewItem.getFullPath());
+
+        String issueDate = certificateViewItem.getIssue_date();
+        if (issueDate != null) {
+            sb.append("&pfCertStartDate=");
+            DateTime issueDateTime = new DateTime(issueDate);
+            DateTimeFormatter formatter = DateTimeFormat.forPattern("YYYYMM").withZone(DateTimeZone.getDefault()).withLocale(Locale.getDefault());
+            String issueDateInLinkedinFormat = formatter.print(issueDateTime);
+            sb.append(issueDateInLinkedinFormat);
+        }
+
 
         final Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
