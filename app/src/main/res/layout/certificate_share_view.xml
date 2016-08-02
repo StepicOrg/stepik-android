@@ -19,33 +19,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:drawableLeft="@drawable/ic_cloud_download_grey600_24dp"
+        android:drawableLeft="@drawable/ic_linkedin"
         android:drawablePadding="16dp"
         android:foreground="@drawable/non_radius_foreground"
         android:gravity="center_vertical"
         android:padding="16dp"
         android:text="@string/add_to_linkedin"/>
 
-
     <TextView
         android:id="@+id/share_certificate_copy_link"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:drawableLeft="@drawable/ic_cloud_download_grey600_24dp"
+        android:drawableLeft="@drawable/ic_content_copy_material_24"
         android:drawablePadding="16dp"
         android:foreground="@drawable/non_radius_foreground"
         android:gravity="center_vertical"
         android:padding="16dp"
         android:text="@string/certificate_share_copy_link"/>
 
-
     <TextView
         android:id="@+id/share_certificate_all"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:drawableLeft="@drawable/ic_cloud_download_grey600_24dp"
+        android:drawableLeft="@drawable/ic_share_material_24px"
         android:drawablePadding="16dp"
         android:foreground="@drawable/non_radius_foreground"
         android:gravity="center_vertical"
