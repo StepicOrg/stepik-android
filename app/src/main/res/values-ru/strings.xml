@@ -208,4 +208,5 @@
     <string name="certificate_result_with_substitution">Результат: %s%%</string>
     <string name="certificate_share_copy_link">Копировать ссылку</string>
     <string name="certificate_share_copy_link_success">Ссылка скопирована</string>
+    <string name="certificate_share_share_link">Поделиться…</string>
 </resources>

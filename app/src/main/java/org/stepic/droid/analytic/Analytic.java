@@ -170,7 +170,8 @@ public interface Analytic {
     }
 
     interface Certificate {
-        String COPY_LINK_CERITIFICATE = "certificate_copy_link";
+        String COPY_LINK_CERTIFICATE = "certificate_copy_link";
+        String SHARE_LINK_CERTIFICATE = "certificate_share";
     }
 
     void reportEvent(String eventName, Bundle bundle);

@@ -50,6 +50,6 @@
         android:foreground="@drawable/non_radius_foreground"
         android:gravity="center_vertical"
         android:padding="16dp"
-        android:text="Поделиться..."/>
+        android:text="@string/certificate_share_share_link"/>
 
 </LinearLayout>

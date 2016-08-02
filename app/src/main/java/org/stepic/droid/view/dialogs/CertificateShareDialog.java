@@ -3,6 +3,7 @@ package org.stepic.droid.view.dialogs;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
@@ -70,7 +71,7 @@ public class CertificateShareDialog extends BottomSheetDialog {
             @Override
             public void onClick(View view) {
                 dismiss();
-                analytic.reportEvent(Analytic.Certificate.COPY_LINK_CERITIFICATE);
+                analytic.reportEvent(Analytic.Certificate.COPY_LINK_CERTIFICATE);
                 ClipData clipData = ClipData.newPlainText(MainApplication.getAppContext().getString(R.string.certificate_share_copy_link), certificateViewItem.getFullPath());
                 ClipboardManager clipboardManager = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                 clipboardManager.setPrimaryClip(clipData);
@@ -81,8 +82,10 @@ public class CertificateShareDialog extends BottomSheetDialog {
         shareAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "SHARE ALL " + certificateViewItem.getTitle(), Toast.LENGTH_SHORT).show();
                 dismiss();
+                analytic.reportEvent(Analytic.Certificate.SHARE_LINK_CERTIFICATE);
+                Intent intent = shareHelper.getIntentForShareCertificate(certificateViewItem);
+                getContext().startActivity(intent);
             }
         });
     }

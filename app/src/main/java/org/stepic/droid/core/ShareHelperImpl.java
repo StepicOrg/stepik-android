@@ -59,7 +59,11 @@ public class ShareHelperImpl implements ShareHelper {
 
     @Override
     public Intent getIntentForShareCertificate(@NotNull CertificateViewItem certificateViewItem) {
-        return null;
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, certificateViewItem.getFullPath());
+        shareIntent.setType("text/plain");
+        return Intent.createChooser(shareIntent, context.getString(R.string.share_title));
     }
 
 }
