@@ -169,6 +169,10 @@ public interface Analytic {
         String USER_OPEN_COURSE_DETAIL_LINK = "open_detail_course_link";
     }
 
+    interface Certificate {
+        String COPY_LINK_CERITIFICATE = "certificate_copy_link";
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);

@@ -15,30 +15,39 @@
         />
 
     <TextView
+        android:id="@+id/share_certificate_add_linkedin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:drawableLeft="@drawable/ic_cloud_download_grey600_24dp"
         android:drawablePadding="16dp"
+        android:foreground="@drawable/non_radius_foreground"
         android:gravity="center_vertical"
         android:padding="16dp"
         android:text="Добавить в  LinkedIn"/>
 
 
     <TextView
+        android:id="@+id/share_certificate_copy_link"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:drawableLeft="@drawable/ic_cloud_download_grey600_24dp"
         android:drawablePadding="16dp"
+        android:foreground="@drawable/non_radius_foreground"
         android:gravity="center_vertical"
         android:padding="16dp"
-        android:text="Копировать ссылку"/>
+        android:text="@string/certificate_share_copy_link"/>
 
 
     <TextView
+        android:id="@+id/share_certificate_all"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:drawableLeft="@drawable/ic_cloud_download_grey600_24dp"
         android:drawablePadding="16dp"
+        android:foreground="@drawable/non_radius_foreground"
         android:gravity="center_vertical"
         android:padding="16dp"
         android:text="Поделиться..."/>

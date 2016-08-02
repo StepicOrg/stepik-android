@@ -111,10 +111,7 @@ public class CertificateFragment extends FragmentBase implements CertificateView
         if (certificateViewItem == null) {
             return;
         }
-
-//        CertificateShareDialog dialog = new CertificateShareDialog(getContext());
-//        dialog.show();
-        DialogFragment bottomSheetDialogFragment = CertificateShareDialogFragment.newInstance();
+        DialogFragment bottomSheetDialogFragment = CertificateShareDialogFragment.newInstance(certificateViewItem);
         if (bottomSheetDialogFragment != null && !bottomSheetDialogFragment.isAdded()) {
             bottomSheetDialogFragment.show(getFragmentManager(), null);
         }

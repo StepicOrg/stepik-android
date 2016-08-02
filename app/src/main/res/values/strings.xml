@@ -214,4 +214,6 @@
     <string name="certificate_distinction_with_substitution">Certificate with distinction for completing %s</string>
     <string name="certificate_regular_with_substitution">Certificate for completing %s</string>
     <string name="certificate_result_with_substitution">Result: %s%%</string>
+    <string name="certificate_share_copy_link">Copy Link</string>
+    <string name="certificate_share_copy_link_success">Link Copied</string>
 </resources>
