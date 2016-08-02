@@ -3,8 +3,6 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <include layout="@layout/progress_bar_on_empty_screen"/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/certificates_recycler_view"
         android:layout_width="match_parent"
@@ -13,4 +11,7 @@
         android:divider="@color/transparent"
         android:scrollbarStyle="outsideOverlay"
         />
+    <include layout="@layout/progress_bar_on_empty_screen"/>
+    <include layout="@layout/report_problem_layout"/>
+    <include layout="@layout/report_empty_layout"/>
 </FrameLayout>

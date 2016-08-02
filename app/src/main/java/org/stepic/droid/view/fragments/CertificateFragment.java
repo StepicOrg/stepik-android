@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
@@ -47,6 +48,12 @@ public class CertificateFragment extends FragmentBase implements CertificateView
 
     @BindView(R.id.load_progressbar)
     ProgressBar progressBarOnCenter;
+
+    @BindView(R.id.report_problem)
+    View reportInternetProblem;
+
+    @BindView(R.id.report_empty)
+    View reportEmpty;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,30 +100,30 @@ public class CertificateFragment extends FragmentBase implements CertificateView
     @Override
     public void onLoading() {
         if (certificatePresenter.size() <= 0) {
+            reportInternetProblem.setVisibility(View.GONE);
             certificateRecyclerView.setVisibility(View.INVISIBLE);
+            reportEmpty.setVisibility(View.GONE);
             ProgressHelper.activate(progressBarOnCenter);
-// TODO: 26.07.16 hide all, show loading
-
         }
     }
 
     @Override
     public void showEmptyState() {
-// TODO: 26.07.16 hide all show empty
         ProgressHelper.dismiss(progressBarOnCenter);
+        reportInternetProblem.setVisibility(View.GONE);
         if (certificatePresenter.size() <= 0) {
-            //show empty
+            reportEmpty.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void onInternetProblem() {
         ProgressHelper.dismiss(progressBarOnCenter);
+        reportEmpty.setVisibility(View.GONE);
         if (certificatePresenter.size() <= 0) {
-// TODO: 26.07.16 hide all show internet problem
+            reportInternetProblem.setVisibility(View.VISIBLE);
         } else {
-
-            //todo: toast
+            Toast.makeText(getContext(), R.string.connectionProblems, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -124,6 +131,8 @@ public class CertificateFragment extends FragmentBase implements CertificateView
     public void onDataLoaded(List<CertificateViewItem> certificateViewItems) {
         // TODO: 26.07.16 hide all, except recycler
         ProgressHelper.dismiss(progressBarOnCenter);
+        reportEmpty.setVisibility(View.GONE);
+        reportInternetProblem.setVisibility(View.GONE);
         certificateRecyclerView.setVisibility(View.VISIBLE);
         adapter.updateCertificates(certificateViewItems);
     }
