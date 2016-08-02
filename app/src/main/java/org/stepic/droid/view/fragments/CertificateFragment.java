@@ -129,7 +129,6 @@ public class CertificateFragment extends FragmentBase implements CertificateView
 
     @Override
     public void onDataLoaded(List<CertificateViewItem> certificateViewItems) {
-        // TODO: 26.07.16 hide all, except recycler
         ProgressHelper.dismiss(progressBarOnCenter);
         reportEmpty.setVisibility(View.GONE);
         reportInternetProblem.setVisibility(View.GONE);
