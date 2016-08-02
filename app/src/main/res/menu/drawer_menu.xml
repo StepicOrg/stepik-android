@@ -21,7 +21,7 @@
         <item
             android:id="@+id/certificates"
             android:title="@string/certificates_title"
-            android:icon="@drawable/ic_medal_1"/>
+            android:icon="@drawable/ic_certificate_menu"/>
 
     </group>
 
