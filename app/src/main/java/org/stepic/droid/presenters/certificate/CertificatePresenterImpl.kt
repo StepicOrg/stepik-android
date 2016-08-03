@@ -1,11 +1,13 @@
 package org.stepic.droid.presenters.certificate
 
 import android.app.Activity
+import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.core.CertificateView
 import org.stepic.droid.core.IScreenManager
 import org.stepic.droid.model.Certificate
 import org.stepic.droid.model.CertificateViewItem
+import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.web.CertificateResponse
 import org.stepic.droid.web.CoursesStepicResponse
 import org.stepic.droid.web.IApi
@@ -14,14 +16,15 @@ import retrofit.Callback
 import retrofit.Response
 import retrofit.Retrofit
 import java.util.*
+import java.util.concurrent.ThreadPoolExecutor
 
-class CertificatePresenterImpl(val api: IApi, val config: IConfig, val screenManager: IScreenManager) : CertificatePresenter {
+class CertificatePresenterImpl(val api: IApi, val config: IConfig, val screenManager: IScreenManager, val database: DatabaseFacade, val threadPoolExecutor: ThreadPoolExecutor, val mainHandler: IMainHandler) : CertificatePresenter {
     override fun showShareDialogForCertificate(certificateViewItem: CertificateViewItem?) {
         view?.onNeedShowShareDialog(certificateViewItem)
     }
 
     override fun showCertificateAsPdf(activity: Activity, fullPath: String) {
-        screenManager.showPdfInBrowserByGoogleDocs(activity,  fullPath)
+        screenManager.showPdfInBrowserByGoogleDocs(activity, fullPath)
     }
 
     override fun get(position: Int) = certificateViewItemList?.get(position)
@@ -48,8 +51,19 @@ class CertificatePresenterImpl(val api: IApi, val config: IConfig, val screenMan
 
     override fun showCertificates() {
         if (certificateViewItemList == null) {
+            database.getAllCertificates()
             //need load from internet
             view?.onLoading()
+            threadPoolExecutor.execute {
+                certificateViewItemList = database.getAllCertificates()?.filterNotNull() as? ArrayList<CertificateViewItem>
+                mainHandler.post {
+                    if (certificateViewItemList != null) {
+                        view?.onDataLoaded(certificateViewItemList)
+                    }
+
+                    loadCertificatesSilent()
+                }
+            }
             loadCertificatesSilent()
         } else if (certificateViewItemList?.isEmpty() ?: false) {
             view?.showEmptyState()
@@ -119,6 +133,9 @@ class CertificatePresenterImpl(val api: IApi, val config: IConfig, val screenMan
                                     certificateViewItemList?.addAll(localCertificateViewItems)
 
                                     view?.onDataLoaded(certificateViewItemList)
+                                    threadPoolExecutor.execute {
+                                        database.addCertificateViewItems(localCertificateViewItems)
+                                    }
                                 } else {
                                     view?.onInternetProblem()
                                 }

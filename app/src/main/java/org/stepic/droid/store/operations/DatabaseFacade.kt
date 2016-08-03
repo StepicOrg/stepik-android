@@ -73,6 +73,7 @@ class DatabaseFacade {
         mCoursesEnrolledDao.removeAll()
         mCoursesFeaturedDao.removeAll()
         mNotificationDao.removeAll()
+        certificateViewItemDao.removeAll()
     }
 
     fun getCourseDao(table: Table) =
