@@ -17,6 +17,7 @@ import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.BlockPersistentWrapper;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.CalendarSection;
+import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
@@ -46,6 +47,7 @@ import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.dao.AssignmentDaoImpl;
 import org.stepic.droid.store.dao.BlockDaoImpl;
 import org.stepic.droid.store.dao.CalendarSectionDaoImpl;
+import org.stepic.droid.store.dao.CertificateViewItemDaoImpl;
 import org.stepic.droid.store.dao.CourseDaoImpl;
 import org.stepic.droid.store.dao.DownloadEntityDaoImpl;
 import org.stepic.droid.store.dao.IDao;
@@ -255,6 +257,11 @@ public class StepicDefaultModule {
     }
 
     @Provides
+    public IDao<CertificateViewItem> provideCertificateDao(SQLiteDatabase openHelper) {
+        return new CertificateViewItemDaoImpl(openHelper);
+    }
+
+    @Provides
     public IDao<Lesson> provideLessonDao(SQLiteDatabase openHelper) {
         return new LessonDaoImpl(openHelper);
     }
@@ -273,7 +280,7 @@ public class StepicDefaultModule {
 
     @Singleton
     @Provides
-    public  IDao<CalendarSection> provideCalendarSection(SQLiteDatabase database){
+    public IDao<CalendarSection> provideCalendarSection(SQLiteDatabase database) {
         return new CalendarSectionDaoImpl(database);
     }
 

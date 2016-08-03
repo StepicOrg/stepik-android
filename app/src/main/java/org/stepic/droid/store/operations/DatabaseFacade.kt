@@ -52,6 +52,9 @@ class DatabaseFacade {
     @Inject
     lateinit var calendarSectionDao: IDao<CalendarSection>
 
+    @Inject
+    lateinit var certificateViewItemDao: IDao<CertificateViewItem>
+
     init {
         MainApplication.component().inject(this)
         mCoursesEnrolledDao.setTableName(Table.enrolled.storeName)
@@ -388,5 +391,23 @@ class DatabaseFacade {
     }
 
     fun getCalendarEvent(sectionId: Long) = calendarSectionDao.get(DbStructureCalendarSection.Column.SECTION_ID, sectionId.toString())
+
+    fun addCertificateViewItems(certificates: List<CertificateViewItem?>) {
+        certificates
+                .filterNotNull()
+                .forEach { certificateViewItemDao.insertOrUpdate(it) } //todo change to insertAll
+    }
+
+    /**
+     * null or not empty list
+     */
+    fun getAllCertificates(): List<CertificateViewItem?>? {
+        val list = certificateViewItemDao.getAll()
+        if (list.isEmpty()) {
+            return null
+        } else {
+            return list
+        }
+    }
 
 }
