@@ -49,11 +49,13 @@ class CertificatePresenterImpl(val api: IApi, val config: IConfig, val screenMan
     private var certificatesCall: Call<CertificateResponse>? = null
     private var coursesCall: Call<CoursesStepicResponse>? = null
 
-    override fun showCertificates() {
+    override fun showCertificates(isRefreshing: Boolean) {
         if (certificateViewItemList == null) {
             database.getAllCertificates()
             //need load from internet
-            view?.onLoading()
+            if (!isRefreshing) {
+                view?.onLoading()
+            }
             threadPoolExecutor.execute {
                 certificateViewItemList = database.getAllCertificates()?.filterNotNull() as? ArrayList<CertificateViewItem>
                 mainHandler.post {

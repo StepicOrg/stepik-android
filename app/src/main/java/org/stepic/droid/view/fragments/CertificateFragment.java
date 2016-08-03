@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,8 +20,8 @@ import org.stepic.droid.core.CertificateView;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.presenters.certificate.CertificatePresenter;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.view.dialogs.CertificateShareDialogFragment;
 import org.stepic.droid.view.adapters.CertificateAdapter;
+import org.stepic.droid.view.dialogs.CertificateShareDialogFragment;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CertificateFragment extends FragmentBase implements CertificateView {
+public class CertificateFragment extends FragmentBase implements CertificateView, SwipeRefreshLayout.OnRefreshListener {
 
     private CertificateAdapter adapter;
 
@@ -55,6 +56,9 @@ public class CertificateFragment extends FragmentBase implements CertificateView
     @BindView(R.id.report_empty)
     View reportEmpty;
 
+    @BindView(R.id.certificate_swipe_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +81,12 @@ public class CertificateFragment extends FragmentBase implements CertificateView
         certificateRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         certificateRecyclerView.setAdapter(adapter);
 
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.stepic_brand_primary,
+                R.color.stepic_orange_carrot,
+                R.color.stepic_blue_ribbon);
+
         certificatePresenter.onCreate(this);
 
         loadAndShowCertificates();
@@ -89,7 +99,7 @@ public class CertificateFragment extends FragmentBase implements CertificateView
     }
 
     private void loadAndShowCertificates() {
-        certificatePresenter.showCertificates();
+        certificatePresenter.showCertificates(false);
     }
 
     @Override
@@ -101,7 +111,6 @@ public class CertificateFragment extends FragmentBase implements CertificateView
     public void onLoading() {
         if (certificatePresenter.size() <= 0) {
             reportInternetProblem.setVisibility(View.GONE);
-            certificateRecyclerView.setVisibility(View.INVISIBLE);
             reportEmpty.setVisibility(View.GONE);
             ProgressHelper.activate(progressBarOnCenter);
         }
@@ -109,6 +118,7 @@ public class CertificateFragment extends FragmentBase implements CertificateView
 
     @Override
     public void showEmptyState() {
+        ProgressHelper.dismiss(swipeRefreshLayout);
         ProgressHelper.dismiss(progressBarOnCenter);
         reportInternetProblem.setVisibility(View.GONE);
         if (certificatePresenter.size() <= 0) {
@@ -118,6 +128,7 @@ public class CertificateFragment extends FragmentBase implements CertificateView
 
     @Override
     public void onInternetProblem() {
+        ProgressHelper.dismiss(swipeRefreshLayout);
         ProgressHelper.dismiss(progressBarOnCenter);
         reportEmpty.setVisibility(View.GONE);
         if (certificatePresenter.size() <= 0) {
@@ -130,6 +141,7 @@ public class CertificateFragment extends FragmentBase implements CertificateView
     @Override
     public void onDataLoaded(List<CertificateViewItem> certificateViewItems) {
         ProgressHelper.dismiss(progressBarOnCenter);
+        ProgressHelper.dismiss(swipeRefreshLayout);
         reportEmpty.setVisibility(View.GONE);
         reportInternetProblem.setVisibility(View.GONE);
         certificateRecyclerView.setVisibility(View.VISIBLE);
@@ -146,5 +158,10 @@ public class CertificateFragment extends FragmentBase implements CertificateView
             bottomSheetDialogFragment.show(getFragmentManager(), null);
         }
 
+    }
+
+    @Override
+    public void onRefresh() {
+        certificatePresenter.showCertificates(true);
     }
 }

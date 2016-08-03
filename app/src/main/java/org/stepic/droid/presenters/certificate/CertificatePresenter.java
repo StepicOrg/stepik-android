@@ -11,7 +11,7 @@ public interface CertificatePresenter {
 
     void onDestroy();
 
-    void showCertificates();
+    void showCertificates(boolean isRefreshing);
 
     @Nullable
     CertificateViewItem get(int position);
