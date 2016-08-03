@@ -10,6 +10,7 @@ import org.stepic.droid.store.structure.DbStructureAssignment;
 import org.stepic.droid.store.structure.DbStructureBlock;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
 import org.stepic.droid.store.structure.DbStructureCalendarSection;
+import org.stepic.droid.store.structure.DbStructureCertificateViewItem;
 import org.stepic.droid.store.structure.DbStructureLesson;
 import org.stepic.droid.store.structure.DbStructureNotification;
 import org.stepic.droid.store.structure.DbStructureProgress;
@@ -57,6 +58,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom7To8(db);
         upgradeFrom8To9(db);
         upgradeFrom9To10(db);
+        upgradeFrom10To11(db);
+    }
+
+    private void upgradeFrom10To11(SQLiteDatabase db) {
+        createCertificateView(db, DbStructureCertificateViewItem.CERTIFICATE_VIEW_ITEM);
     }
 
     private void upgradeFrom9To10(SQLiteDatabase db) {
@@ -160,6 +166,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 10) {
             upgradeFrom9To10(db);
+        }
+
+        if (oldVersion < 11) {
+            upgradeFrom10To11(db);
         }
     }
 
@@ -423,4 +433,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
+
+    private void createCertificateView(SQLiteDatabase db, String name) {
+        String sql = "CREATE TABLE " + name
+                + " ("
+                + DbStructureCertificateViewItem.Column.CERTIFICATE_ID + " LONG, "
+                + DbStructureCertificateViewItem.Column.TITLE + " TEXT, "
+                + DbStructureCertificateViewItem.Column.COVER_FULL_PATH + " TEXT, "
+                + DbStructureCertificateViewItem.Column.TYPE + " INTEGER, "
+                + DbStructureCertificateViewItem.Column.FULL_PATH + " TEXT, "
+                + DbStructureCertificateViewItem.Column.GRADE + " TEXT, "
+                + DbStructureCertificateViewItem.Column.ISSUE_DATE + " TEXT "
+                + ")";
+        db.execSQL(sql);
+    }
 }
