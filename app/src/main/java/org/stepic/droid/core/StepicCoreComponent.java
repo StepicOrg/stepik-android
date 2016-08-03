@@ -1,5 +1,6 @@
 package org.stepic.droid.core;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.concurrency.DownloadPoster;
@@ -43,6 +44,7 @@ import org.stepic.droid.view.dialogs.ChooseCalendarDialog;
 import org.stepic.droid.view.dialogs.ChooseStorageDialog;
 import org.stepic.droid.view.dialogs.ClearVideosDialog;
 import org.stepic.droid.view.dialogs.DeleteCommentDialogFragment;
+import org.stepic.droid.view.dialogs.DiscardTextDialogFragment;
 import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.view.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;

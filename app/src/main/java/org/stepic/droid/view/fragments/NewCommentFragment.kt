@@ -1,7 +1,9 @@
 package org.stepic.droid.view.fragments
 
+import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -17,15 +19,19 @@ import org.stepic.droid.base.MainApplication
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent
 import org.stepic.droid.util.HtmlHelper
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.view.dialogs.DiscardTextDialogFragment
 import org.stepic.droid.view.dialogs.LoadingProgressDialog
+import org.stepic.droid.view.util.BackButtonHandler
+import org.stepic.droid.view.util.OnBackClickListener
 import org.stepic.droid.web.CommentsResponse
 import retrofit.Callback
 import retrofit.Response
 import retrofit.Retrofit
 
-class NewCommentFragment : FragmentBase() {
+class NewCommentFragment : FragmentBase(), OnBackClickListener {
 
     companion object {
+        private val requestDiscardText = 913;
         private val targetKey = "targetKey"
         private val parentKey = "parentKey"
 
@@ -48,6 +54,20 @@ class NewCommentFragment : FragmentBase() {
     var isCommentSending: Boolean = false
     lateinit var loadingProgressDialog: ProgressDialog
     private var sendMenuItem: MenuItem? = null
+
+    private var backButtonHandler: BackButtonHandler? = null
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        (activity as? BackButtonHandler)?.setBackClickListener(this)
+    }
+
+    override fun onDetach() {
+        backButtonHandler?.removeBackClickListener(this)
+        backButtonHandler = null
+        super.onDetach()
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -166,6 +186,29 @@ class NewCommentFragment : FragmentBase() {
                     }
 
                 })
+            }
+        }
+    }
+
+    override fun onBackClick(): Boolean {
+        if (mTextBody.text?.isNotBlank() ?: false) {
+            val dialog = DiscardTextDialogFragment.newInstance()
+            dialog.setTargetFragment(this, requestDiscardText)
+            if (!dialog.isAdded) {
+                analytic.reportEvent(Analytic.Comments.SHOW_CONFIRM_DISCARD_TEXT_DIALOG)
+                dialog.show(fragmentManager, null)
+            }
+            return true
+        } else {
+            return false
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == requestDiscardText) {
+                analytic.reportEvent(Analytic.Comments.SHOW_CONFIRM_DISCARD_TEXT_DIALOG_SUCCESS)
+                activity?.finish()
             }
         }
     }

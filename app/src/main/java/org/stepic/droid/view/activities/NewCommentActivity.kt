@@ -4,8 +4,20 @@ import android.support.v4.app.Fragment
 import android.view.MenuItem
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.view.fragments.NewCommentFragment
+import org.stepic.droid.view.util.BackButtonHandler
+import org.stepic.droid.view.util.OnBackClickListener
+import java.lang.ref.WeakReference
 
-class NewCommentActivity : SingleFragmentActivity() {
+class NewCommentActivity : SingleFragmentActivity(), BackButtonHandler {
+    var onBackClickListener: WeakReference<OnBackClickListener>? = null
+
+    override fun setBackClickListener(onBackClickListener: OnBackClickListener) {
+        this.onBackClickListener = WeakReference(onBackClickListener)
+    }
+
+    override fun removeBackClickListener(onBackClickListener: OnBackClickListener) {
+        this.onBackClickListener = null
+    }
 
     companion object {
         val keyTarget = "KEY_target_id"
@@ -24,11 +36,12 @@ class NewCommentActivity : SingleFragmentActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
-                if (mSharedPreferenceHelper.authResponseFromStore == null) {
+                if (fragmentBackKeyIntercept()) {
+                    return true
+                }
+                else {
                     finish();
                     return true
-                } else {
-                    return super.onOptionsItemSelected(item)
                 }
             }
         }
@@ -40,4 +53,13 @@ class NewCommentActivity : SingleFragmentActivity() {
         overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
     }
 
+    override fun onBackPressed() {
+        if (!fragmentBackKeyIntercept()) {
+            super.onBackPressed()
+        }
+    }
+
+    private fun fragmentBackKeyIntercept(): Boolean {
+        return onBackClickListener?.get()?.onBackClick() ?: false
+    }
 }

@@ -147,6 +147,8 @@ public interface Analytic {
         String COMMENTS_SENT_SUCCESSFULLY = "comments: comment was sent successfully";
         String DELETE_COMMENT_CONFIRMATION = "comment: delete comment confirmed";
         String ORDER_TREND = "order_trend";
+        String SHOW_CONFIRM_DISCARD_TEXT_DIALOG = "comment_discard_dialog_show";
+        String SHOW_CONFIRM_DISCARD_TEXT_DIALOG_SUCCESS = "comment_discard_ok";
     }
 
     interface Steps {
