@@ -1,6 +1,7 @@
 package org.stepic.droid.view.custom.dragsortadapter;
 
 import android.graphics.PointF;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.DragEvent;
@@ -137,7 +138,9 @@ final class DragManager implements View.OnDragListener {
                                     });
                                 } else {
                                     //it can be in scroll -> do nothing
-                                    YandexMetrica.reportEvent("drag manager strange notify");
+                                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+                                        YandexMetrica.reportEvent("drag manager strange notify");
+                                    }
                                     adapter.notifyDataSetChanged();
 //                                    adapter.notifyItemChanged(adapter.getPositionForId(itemId)); // it produced to crashes
                                 }
