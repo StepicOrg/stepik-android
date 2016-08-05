@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
@@ -36,8 +35,8 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.SocialAuthAdapter;
-import org.stepic.droid.view.dialogs.LoadingProgressDialog;
 import org.stepic.droid.view.decorators.SpacesItemDecorationHorizontal;
+import org.stepic.droid.view.dialogs.LoadingProgressDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -250,13 +249,13 @@ public class LoginActivity extends FragmentActivityBase {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            Log.d("PPP", "onActivityResult:GET_AUTH_CODE:success:" + result.getStatus().isSuccess());
-
             if (result.isSuccess()) {
-                // [START get_auth_code]
-                GoogleSignInAccount acct = result.getSignInAccount();
-                String authCode = acct.getServerAuthCode();
-                Log.d("PPP", authCode);
+                GoogleSignInAccount account = result.getSignInAccount();
+                if (account == null) {
+                    onInternetProblems();
+                    return;
+                }
+                String authCode = account.getServerAuthCode();
 
                 mLoginManager.loginWithNativeProviderCode(authCode,
                         SocialManager.SocialType.google,
@@ -267,12 +266,14 @@ public class LoginActivity extends FragmentActivityBase {
                                 finish();
                             }
                         });
-                // [END get_auth_code]
             } else {
-                // Show signed-out UI.
-                Log.d("PPP", "fail");
+                onInternetProblems();
             }
         }
+    }
+
+    private void onInternetProblems() {
+        Toast.makeText(this, R.string.connectionProblems, Toast.LENGTH_SHORT).show();
     }
 
 }
