@@ -1,11 +1,13 @@
 package org.stepic.droid.view.adapters;
 
-import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
@@ -31,11 +33,13 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
 
 
     List<? extends ISocialType> mSocialList;
-    private Activity activity;
+    private FragmentActivity activity;
+    private GoogleApiClient client;
 
-    public SocialAuthAdapter(Activity context) {
+    public SocialAuthAdapter(FragmentActivity activity, GoogleApiClient client) {
+        this.client = client;
         MainApplication.component().inject(this);
-        activity = context;
+        this.activity = activity;
         mSocialList = mSocialManager.getAllSocial();
     }
 
@@ -61,7 +65,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
     @Override
     public void onClick(int position) {
         ISocialType type = mSocialList.get(position);
-        mApi.loginWithSocial(activity, type);
+        mApi.loginWithSocial(activity, type, client);
     }
 
     public static class SocialViewHolder extends RecyclerView.ViewHolder {
