@@ -8,6 +8,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.util.JsonHelper;
+import org.stepic.droid.view.util.FailLoginSupplementaryHandler;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 import org.stepic.droid.web.IApi;
 
@@ -68,8 +69,8 @@ public class LoginManager implements ILoginManager {
             @Override
             public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
                 progressHandler.dismiss();
-                if (response.isSuccess()) {
-                    successLogin(response, finisher);
+                if (response.code() == 401) {
+                    failLogin(new LoginAlreadyUsedException("already used login"));
                 } else {
                     failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())));
                 }
@@ -84,7 +85,7 @@ public class LoginManager implements ILoginManager {
     }
 
     @Override
-    public void loginWithNativeProviderCode(String nativeCode, SocialManager.SocialType type, final ProgressHandler progressHandler, final ActivityFinisher finisher) {
+    public void loginWithNativeProviderCode(String nativeCode, SocialManager.SocialType type, final ProgressHandler progressHandler, final ActivityFinisher finisher, final FailLoginSupplementaryHandler failLoginSupplementaryHandler) {
         String code = nativeCode.trim();
         progressHandler.activate();
         mShell.getApi().authWithNativeCode(code, type).enqueue(new Callback<AuthenticationStepicResponse>() {
@@ -94,30 +95,43 @@ public class LoginManager implements ILoginManager {
                 if (response.isSuccess()) {
                     successLogin(response, finisher);
                 } else {
-                    failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())));
+                    if (response.code() == 401) {
+                        failLogin(new LoginAlreadyUsedException("already used login"), failLoginSupplementaryHandler);
+                    } else {
+                        failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())), failLoginSupplementaryHandler);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
                 progressHandler.dismiss();
-                failLogin(t);
+                failLogin(t, failLoginSupplementaryHandler);
             }
         });
     }
 
-    private void failLogin(Throwable t) {
+    private void failLogin(Throwable t, final FailLoginSupplementaryHandler failLoginSupplementaryHandler) {
         analytic.reportEvent(Analytic.Error.FAIL_LOGIN);
         analytic.reportError(Analytic.Error.FAIL_LOGIN, t);
         if (t != null) {
             int errorTextResId;
             if (t instanceof ProtocolException) {
                 errorTextResId = R.string.failLogin;
+            } else if (t instanceof LoginAlreadyUsedException) {
+                errorTextResId = R.string.email_already_used;
             } else {
                 errorTextResId = R.string.connectionProblems;
             }
             Toast.makeText(mContext, errorTextResId, Toast.LENGTH_LONG).show();
+            if (failLoginSupplementaryHandler != null){
+                failLoginSupplementaryHandler.onFailLogin(t);
+            }
         }
+    }
+
+    private void failLogin(Throwable t) {
+        failLogin(t, null);
     }
 
     private void successLogin(Response<AuthenticationStepicResponse> response, ActivityFinisher finisher) {
@@ -134,5 +148,10 @@ public class LoginManager implements ILoginManager {
         }
     }
 
+    public static class LoginAlreadyUsedException extends RuntimeException {
+        LoginAlreadyUsedException(String message) {
+            super(message);
+        }
+    }
 
 }

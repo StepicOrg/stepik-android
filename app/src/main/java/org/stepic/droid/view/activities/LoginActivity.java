@@ -37,6 +37,7 @@ import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.view.adapters.SocialAuthAdapter;
 import org.stepic.droid.view.decorators.SpacesItemDecorationHorizontal;
 import org.stepic.droid.view.dialogs.LoadingProgressDialog;
+import org.stepic.droid.view.util.FailLoginSupplementaryHandler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,6 +70,8 @@ public class LoginActivity extends FragmentActivityBase {
 
     ProgressHandler progressHandler;
 
+    GoogleApiClient mGoogleApiClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +89,7 @@ public class LoginActivity extends FragmentActivityBase {
                 .build();
 
         // Build GoogleAPIClient with the Google Sign-In API and the above options.
-        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -264,6 +267,12 @@ public class LoginActivity extends FragmentActivityBase {
                             @Override
                             public void onFinish() {
                                 finish();
+                            }
+                        },
+                        new FailLoginSupplementaryHandler() {
+                            @Override
+                            public void onFailLogin(Throwable t) {
+                                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                             }
                         });
             } else {

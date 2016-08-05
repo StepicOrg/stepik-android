@@ -212,4 +212,5 @@
     <string name="add_to_linkedin">Добавить в профиль LinkedIn</string>
     <string name="empty_certificates">Пока вы не получили ни одного сертификата</string>
     <string name="are_you_sure_remove_comment_text">Если Вы выйдите, эта запись будет потеряна</string>
+    <string name="email_already_used">Данный e-mail используется в другом аккаунте</string>
 </resources>
