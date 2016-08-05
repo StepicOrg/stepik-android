@@ -38,6 +38,7 @@ public class ConfigRelease implements IConfig {
     private static final String UPDATE_ENDPOINT = "UPDATE_ENDPOINT";
     private static final String CUSTOM_UPDATING_VERSION = "CUSTOM_UPDATING_VERSION";
     private static final String FIREBASE_DOMAIN = "FIREBASE_DOMAIN";
+    private static final String GOOGLE_SERVER_CLIENT_ID = "GOOGLE_SERVER_CLIENT_ID";
 
 
     @Inject
@@ -142,6 +143,11 @@ public class ConfigRelease implements IConfig {
     @Override
     public String getFirebaseDomain() {
         return getString(FIREBASE_DOMAIN, null);
+    }
+
+    @Override
+    public String getGoogleServerClientId() {
+        return getString(GOOGLE_SERVER_CLIENT_ID, null);
     }
 
     private String getString(String key) {

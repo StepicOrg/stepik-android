@@ -15,5 +15,6 @@
   "COURSE_CLOSEABLE":true,
   "CUSTOM_UPDATE":true,
   "UPDATE_ENDPOINT":"media/attachments/lesson/26968/custom_app_update.json",
-  "FIREBASE_DOMAIN":"https://z9q9u.app.goo.gl/"
+  "FIREBASE_DOMAIN":"https://z9q9u.app.goo.gl/",
+  "GOOGLE_SERVER_CLIENT_ID" : "174828861963.apps.googleusercontent.com"
 }
