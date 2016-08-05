@@ -18,6 +18,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.FileUtil;
+import org.stepic.droid.view.util.LogoutSuccess;
 
 import java.io.File;
 import java.util.List;
@@ -76,8 +77,7 @@ public class LogoutAreYouSureDialog extends DialogFragment {
                         };
                         task.executeOnExecutor(mThreadPoolExecutor);
 
-                        mSharedPreferenceHelper.deleteAuthInfo();
-                        mShell.getScreenProvider().showLaunchScreen(MainApplication.getAppContext(), false);
+                        ((LogoutSuccess) getActivity()).onLogout();
                     }
                 })
                 .setNegativeButton(R.string.no, null);

@@ -19,12 +19,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.events.profile.ProfileCanBeShownEvent;
 import org.stepic.droid.events.updating.NeedUpdateEvent;
 import org.stepic.droid.model.EmailAddress;
@@ -42,21 +50,22 @@ import org.stepic.droid.view.fragments.DownloadsFragment;
 import org.stepic.droid.view.fragments.FeedbackFragment;
 import org.stepic.droid.view.fragments.FindCoursesFragment;
 import org.stepic.droid.view.fragments.MyCoursesFragment;
+import org.stepic.droid.view.util.LogoutSuccess;
 import org.stepic.droid.web.EmailAddressResponse;
 import org.stepic.droid.web.StepicProfileResponse;
 
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.BindDrawable;
 import butterknife.BindString;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
 public class MainFeedActivity extends BackToExitActivityBase
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, LogoutSuccess {
     public static final String KEY_CURRENT_INDEX = "Current_index";
 
     @BindView(R.id.toolbar)
@@ -81,6 +90,8 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     private int mCurrentIndex;
 
+    GoogleApiClient mGoogleApiClient;
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -96,6 +107,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         setContentView(R.layout.activity_main_feed);
         unbinder = ButterKnife.bind(this);
 
+        initGoogleApiClient();
         initDrawerHeader();
         setUpToolbar();
         setUpDrawerLayout();
@@ -167,6 +179,24 @@ public class MainFeedActivity extends BackToExitActivityBase
 
         Intent updateIntent = new Intent(this, UpdateAppService.class);
         startService(updateIntent);
+    }
+
+    private void initGoogleApiClient() {
+        String serverClientId = mConfig.getGoogleServerClientId();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestScopes(new Scope(Scopes.EMAIL), new Scope(Scopes.PROFILE))
+                .requestServerAuthCode(serverClientId)
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        Toast.makeText(MainApplication.getAppContext(), R.string.connectionProblems, Toast.LENGTH_SHORT).show();
+                    }
+                } /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
     }
 
     private void initDrawerHeader() {
@@ -405,5 +435,12 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     public static int getDownloadFragmentIndex() {
         return 2;
+    }
+
+    @Override
+    public void onLogout() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+        mSharedPreferenceHelper.deleteAuthInfo();
+        mShell.getScreenProvider().showLaunchScreen(MainApplication.getAppContext(), false);
     }
 }
