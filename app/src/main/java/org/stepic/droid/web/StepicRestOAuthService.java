@@ -26,6 +26,13 @@ public interface StepicRestOAuthService {
                                                       @Query("code") String code,
                                                       @Query("redirect_uri") String redirect_uri);
 
+    @POST("/oauth2/social-token/")
+    Call<AuthenticationStepicResponse> getTokenByNativeCode(@Query("provider") String providerName,
+                                                            @Query("code") String providerCode,
+                                                            @Query("grant_type") String grant_type,
+                                                            @Query("redirect_uri") String redirect_uri);
+
+
     @POST("/api/users")
     Call<RegistrationResponse> createAccount(@Body UserRegistrationRequest user);
 

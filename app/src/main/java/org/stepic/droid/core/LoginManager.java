@@ -6,6 +6,7 @@ import android.widget.Toast;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
+import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 import org.stepic.droid.web.IApi;
@@ -64,6 +65,29 @@ public class LoginManager implements ILoginManager {
         String code = rawCode.trim();
         progressHandler.activate();
         mShell.getApi().authWithCode(code).enqueue(new Callback<AuthenticationStepicResponse>() {
+            @Override
+            public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
+                progressHandler.dismiss();
+                if (response.isSuccess()) {
+                    successLogin(response, finisher);
+                } else {
+                    failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())));
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                progressHandler.dismiss();
+                failLogin(t);
+            }
+        });
+    }
+
+    @Override
+    public void loginWithNativeProviderCode(String nativeCode, SocialManager.SocialType type, final ProgressHandler progressHandler, final ActivityFinisher finisher) {
+        String code = nativeCode.trim();
+        progressHandler.activate();
+        mShell.getApi().authWithNativeCode(code, type).enqueue(new Callback<AuthenticationStepicResponse>() {
             @Override
             public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
                 progressHandler.dismiss();

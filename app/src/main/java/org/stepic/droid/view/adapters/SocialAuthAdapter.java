@@ -31,18 +31,18 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
 
 
     List<? extends ISocialType> mSocialList;
-    private Activity mContext;
+    private Activity activity;
 
     public SocialAuthAdapter(Activity context) {
         MainApplication.component().inject(this);
-        mContext = context;
+        activity = context;
         mSocialList = mSocialManager.getAllSocial();
     }
 
 
     @Override
     public SocialViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.social_item, null);
+        View v = LayoutInflater.from(activity).inflate(R.layout.social_item, null);
         return new SocialViewHolder(v, this);
     }
 
@@ -61,7 +61,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
     @Override
     public void onClick(int position) {
         ISocialType type = mSocialList.get(position);
-        mApi.loginWithSocial(mContext, type);
+        mApi.loginWithSocial(activity, type);
     }
 
     public static class SocialViewHolder extends RecyclerView.ViewHolder {

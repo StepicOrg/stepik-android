@@ -1,6 +1,8 @@
 package org.stepic.droid.web;
 
-import android.content.Context;
+import android.support.v4.app.FragmentActivity;
+
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -8,6 +10,7 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.comments.VoteValue;
 import org.stepic.droid.social.ISocialType;
+import org.stepic.droid.social.SocialManager;
 
 import java.io.IOException;
 
@@ -15,9 +18,12 @@ import retrofit.Call;
 
 
 public interface IApi {
+
     enum TokenType {
         social, loginPassword
     }
+
+    Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type);
 
     Call<AuthenticationStepicResponse> authWithLoginPassword(String login, String password);
 
@@ -52,7 +58,7 @@ public interface IApi {
 
     Call<Void> postViewed(ViewAssignment stepAssignment);
 
-    void loginWithSocial(Context context, ISocialType type);
+    void loginWithSocial(FragmentActivity activity, ISocialType type, GoogleApiClient mGoogleApiClient); /*bad dependency with this client TODO: remove it*/
 
     Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery);
 
@@ -72,23 +78,23 @@ public interface IApi {
 
     Call<Void> sendFeedback(String email, String rawDescription);
 
-    Call<DeviceResponse> getDevices ();
+    Call<DeviceResponse> getDevices();
 
     Call<DeviceResponse> registerDevice(String token);
 
     Call<CoursesStepicResponse> getCourse(long id);
 
-    Call<Void> markNotificationAsRead (long notificationId, boolean isRead);
+    Call<Void> markNotificationAsRead(long notificationId, boolean isRead);
 
     Call<Void> removeDevice(long deviceId);
 
-    Call<DiscussionProxyResponse> getDiscussionProxies (String discussionProxyId);
+    Call<DiscussionProxyResponse> getDiscussionProxies(String discussionProxyId);
 
     UpdateResponse getInfoForUpdating() throws IOException;
 
-    Call<CommentsResponse> getCommentAnd20Replies (long commentId);
+    Call<CommentsResponse> getCommentAnd20Replies(long commentId);
 
-    Call<CommentsResponse> getCommentsByIds (long [] commentIds);
+    Call<CommentsResponse> getCommentsByIds(long[] commentIds);
 
     Call<CommentsResponse> postComment(String text, long target /*for example, related step*/, @Nullable Long parent /*put if it is reply*/);
 

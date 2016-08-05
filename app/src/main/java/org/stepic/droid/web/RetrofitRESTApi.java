@@ -1,11 +1,13 @@
 package org.stepic.droid.web;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -40,7 +42,9 @@ import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.ISocialType;
+import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.RWLocks;
@@ -196,6 +200,13 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
+    public Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type) {
+        analytic.reportEvent(Analytic.Web.AUTH_SOCIAL);
+        makeOauthServiceWithNewAuthHeader(TokenType.social);
+        return mOAuthService.getTokenByNativeCode(type.getIdentifier(), code, mConfig.getGrantType(TokenType.social), mConfig.getRedirectUri());
+    }
+
+    @Override
     public Call<AuthenticationStepicResponse> authWithLoginPassword(String login, String password) {
         analytic.reportEvent(Analytic.Web.AUTH_LOGIN_PASSWORD);
         makeOauthServiceWithNewAuthHeader(TokenType.loginPassword);
@@ -328,13 +339,24 @@ public class RetrofitRESTApi implements IApi {
         return mLoggedService.postViewed(new ViewAssignmentWrapper(stepAssignment.getAssignment(), stepAssignment.getStep()));
     }
 
-    public void loginWithSocial(Context context, ISocialType type) {
+    @Override
+    public void loginWithSocial(FragmentActivity activity, ISocialType type, GoogleApiClient googleApiClient) {
+        if (type == SocialManager.SocialType.google) {
 
-        String socialIdentifier = type.getIdentifier();
-        String url = mConfig.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + mConfig.getOAuthClientId(TokenType.social) + "&response_type=code");
-        Uri uri = Uri.parse(url);
-        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
-        context.startActivity(intent);
+
+            // Start the retrieval process for a server auth code.  If requested, ask for a refresh
+            // token.  Otherwise, only get an access token if a refresh token has been previously
+            // retrieved.  Getting a new access token for an existing grant does not require
+            // user consent.
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+            activity.startActivityForResult(signInIntent, AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN);
+        } else {
+            String socialIdentifier = type.getIdentifier();
+            String url = mConfig.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + mConfig.getOAuthClientId(TokenType.social) + "&response_type=code");
+            Uri uri = Uri.parse(url);
+            final Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
+            activity.startActivity(intent);
+        }
     }
 
     @Override
