@@ -1,5 +1,6 @@
 package org.stepic.droid.view.activities;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Point;
@@ -71,7 +72,6 @@ public class LoginActivity extends FragmentActivityBase {
     ProgressHandler progressHandler;
 
     GoogleApiClient mGoogleApiClient;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -250,7 +250,7 @@ public class LoginActivity extends FragmentActivityBase {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN) {
+        if (requestCode == AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN && resultCode == Activity.RESULT_OK) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
