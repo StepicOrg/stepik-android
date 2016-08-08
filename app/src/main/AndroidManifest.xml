@@ -59,7 +59,7 @@
 
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".view.activities.CourseSearchResultActivity"/>
+                android:value=".ui.activities.CourseSearchResultActivity"/>
         </activity>
 
         <activity
