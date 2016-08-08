@@ -390,8 +390,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     public void onStart() {
         super.onStart();
 
-        courseFinderPresenter.onStart(this);
-        courseJoinerPresenter.onStart(this);
+        courseFinderPresenter.attachView(this);
+        courseJoinerPresenter.attachView(this);
         tryToShowCourse();
         reportIndexToGoogle();
     }
@@ -576,8 +576,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @Override
     public void onDestroyView() {
         bus.unregister(this);
-        courseJoinerPresenter.onStop();
-        courseFinderPresenter.onDestroy();
+        courseJoinerPresenter.detachView();
+        courseFinderPresenter.detachView();
         reportInternetProblem.setOnClickListener(null);
         courseNotFoundView.setOnClickListener(null);
         mIntroView.destroy();

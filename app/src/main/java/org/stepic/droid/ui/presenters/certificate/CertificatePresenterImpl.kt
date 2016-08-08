@@ -8,6 +8,7 @@ import org.stepic.droid.core.IScreenManager
 import org.stepic.droid.model.Certificate
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.ui.presenters.PresenterImpl
 import org.stepic.droid.web.CertificateResponse
 import org.stepic.droid.web.CoursesStepicResponse
 import org.stepic.droid.web.IApi
@@ -18,34 +19,14 @@ import retrofit.Retrofit
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 
-class CertificatePresenterImpl(val api: IApi, val config: IConfig, val screenManager: IScreenManager, val database: DatabaseFacade, val threadPoolExecutor: ThreadPoolExecutor, val mainHandler: IMainHandler) : CertificatePresenter {
-    override fun showShareDialogForCertificate(certificateViewItem: CertificateViewItem?) {
-        view?.onNeedShowShareDialog(certificateViewItem)
-    }
-
-    override fun showCertificateAsPdf(activity: Activity, fullPath: String) {
-        screenManager.showPdfInBrowserByGoogleDocs(activity, fullPath)
-    }
-
-    override fun get(position: Int) = certificateViewItemList?.get(position)
-
-
-    override fun size() = certificateViewItemList?.size ?: 0
-
-    private var view: CertificateView? = null
+class CertificatePresenterImpl(val api: IApi,
+                               val config: IConfig,
+                               val screenManager: IScreenManager,
+                               val database: DatabaseFacade,
+                               val threadPoolExecutor: ThreadPoolExecutor,
+                               val mainHandler: IMainHandler) : PresenterImpl<CertificateView>(), CertificatePresenter {
 
     private var certificateViewItemList: ArrayList<CertificateViewItem>? = null
-
-    override fun onCreate(certificateView: CertificateView) {
-        this.view = certificateView
-    }
-
-    override fun onDestroy() {
-        certificatesCall?.cancel()
-        coursesCall?.cancel()
-        view = null
-    }
-
     private var certificatesCall: Call<CertificateResponse>? = null
     private var coursesCall: Call<CoursesStepicResponse>? = null
 
@@ -74,7 +55,7 @@ class CertificatePresenterImpl(val api: IApi, val config: IConfig, val screenMan
         }
     }
 
-    //if you reuse this function, you need handle view's callbacks carefully
+    //if you reuse this function, you need handle getView's callbacks carefully
     private fun loadCertificatesSilent() {
         certificatesCall = api.certificates
         certificatesCall?.enqueue(object : Callback<CertificateResponse> {
@@ -104,7 +85,8 @@ class CertificatePresenterImpl(val api: IApi, val config: IConfig, val screenMan
                                 .filterNot { it.course == null }
                                 .associateBy { it.course!! }
                         val baseUrl = config.baseUrl
-                        api.getCourses(1, courseIds).enqueue(object : Callback<CoursesStepicResponse> {
+                        coursesCall = api.getCourses(1, courseIds)
+                        coursesCall?.enqueue(object : Callback<CoursesStepicResponse> {
                             override fun onFailure(t: Throwable?) {
                                 view?.onInternetProblem()
                             }
@@ -156,5 +138,23 @@ class CertificatePresenterImpl(val api: IApi, val config: IConfig, val screenMan
             }
 
         })
+    }
+
+    override fun size() = certificateViewItemList?.size ?: 0
+
+    override fun showShareDialogForCertificate(certificateViewItem: CertificateViewItem?) {
+        view?.onNeedShowShareDialog(certificateViewItem)
+    }
+
+    override fun showCertificateAsPdf(activity: Activity, fullPath: String) {
+        screenManager.showPdfInBrowserByGoogleDocs(activity, fullPath)
+    }
+
+    override fun get(position: Int) = certificateViewItemList?.get(position)
+
+    override fun detachView(view: CertificateView) {
+        super.detachView(view)
+        certificatesCall?.cancel()
+        coursesCall?.cancel()
     }
 }

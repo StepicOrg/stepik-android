@@ -5,11 +5,9 @@ import android.app.Activity;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.core.CertificateView;
 import org.stepic.droid.model.CertificateViewItem;
+import org.stepic.droid.ui.presenters.Presenter;
 
-public interface CertificatePresenter {
-    void onCreate(CertificateView view);
-
-    void onDestroy();
+public interface CertificatePresenter extends Presenter<CertificateView> {
 
     void showCertificates(boolean isRefreshing);
 

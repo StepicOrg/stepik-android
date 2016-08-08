@@ -44,12 +44,12 @@ public class CourseJoinerPresenterImpl implements CourseJoinerPresenter {
     }
 
     @Override
-    public void onStart(CourseJoinView view) {
+    public void attachView(CourseJoinView view) {
         this.view = view;
     }
 
     @Override
-    public void onStop() {
+    public void detachView() {
         view = null;
     }
 

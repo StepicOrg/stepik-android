@@ -43,12 +43,12 @@ public class CourseFinderPresenterImpl implements CourseFinderPresenter {
     }
 
     @Override
-    public void onStart(LoadCourseView view) {
+    public void attachView(LoadCourseView view) {
         this.view = view;
     }
 
     @Override
-    public void onDestroy() {
+    public void detachView() {
         view = null;
     }
 

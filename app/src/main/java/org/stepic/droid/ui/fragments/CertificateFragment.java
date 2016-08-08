@@ -87,14 +87,14 @@ public class CertificateFragment extends FragmentBase implements CertificateView
                 R.color.stepic_orange_carrot,
                 R.color.stepic_blue_ribbon);
 
-        certificatePresenter.onCreate(this);
+        certificatePresenter.attachView(this);
 
         loadAndShowCertificates();
     }
 
     @Override
     public void onDestroyView() {
-        certificatePresenter.onDestroy();
+        certificatePresenter.detachView(this);
         super.onDestroyView();
     }
 

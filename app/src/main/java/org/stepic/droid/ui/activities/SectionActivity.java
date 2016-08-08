@@ -191,8 +191,8 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         ProgressHelper.activate(loadOnCenterProgressBar);
         bus.register(this);
         calendarPresenter.onStart(this);
-        courseFinderPresenter.onStart(this);
-        courseJoinerPresenter.onStart(this);
+        courseFinderPresenter.attachView(this);
+        courseJoinerPresenter.attachView(this);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         onNewIntent(getIntent());
@@ -496,8 +496,8 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Override
     protected void onDestroy() {
         calendarPresenter.onStop();
-        courseJoinerPresenter.onStop();
-        courseFinderPresenter.onDestroy();
+        courseJoinerPresenter.detachView();
+        courseFinderPresenter.detachView();
         bus.unregister(this);
         courseNotParsedView.setOnClickListener(null);
         super.onDestroy();
