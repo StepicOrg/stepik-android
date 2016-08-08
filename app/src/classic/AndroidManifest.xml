@@ -8,7 +8,7 @@
         android:allowBackup="false">
 
         <activity
-            android:name="org.stepic.droid.view.activities.LoginActivity">
+            android:name="org.stepic.droid.ui.activities.LoginActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -24,7 +24,7 @@
         </activity>
 
         <activity
-            android:name=".view.activities.CourseDetailActivity">
+            android:name=".ui.activities.CourseDetailActivity">
             <intent-filter android:autoVerify="true" tools:ignore="UnusedAttribute">
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -52,7 +52,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.activities.SectionActivity">
+        <activity android:name=".ui.activities.SectionActivity">
             <intent-filter android:autoVerify="true" tools:ignore="UnusedAttribute">
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>

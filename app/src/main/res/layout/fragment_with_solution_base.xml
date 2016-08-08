@@ -79,7 +79,7 @@
 
             </FrameLayout>
 
-            <org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout
+            <org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
                 android:textIsSelectable="true"
                 tools:visibility="visible"
                 android:id="@+id/hint_text_view"

@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <org.stepic.droid.view.util.ContextMenuRecyclerView
+                <org.stepic.droid.ui.util.ContextMenuRecyclerView
                     android:id="@+id/recycler_view_comments"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

@@ -1,7 +1,7 @@
 package org.stepic.droid.core;
 
 
-import org.stepic.droid.view.fragments.CertificateFragment;
+import org.stepic.droid.ui.fragments.CertificateFragment;
 
 import dagger.Subcomponent;
 

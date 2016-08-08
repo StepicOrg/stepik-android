@@ -33,7 +33,7 @@ import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.view.fragments.CourseListFragmentBase;
+import org.stepic.droid.ui.fragments.CourseListFragmentBase;
 import org.stepic.droid.web.CoursesStepicResponse;
 
 import java.util.List;

@@ -7,7 +7,7 @@ import org.stepic.droid.events.courses.CourseFoundEvent;
 import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.view.abstraction.LoadCourseView;
+import org.stepic.droid.ui.abstraction.LoadCourseView;
 import org.stepic.droid.web.CoursesStepicResponse;
 import org.stepic.droid.web.IApi;
 

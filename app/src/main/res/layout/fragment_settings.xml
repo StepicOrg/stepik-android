@@ -37,7 +37,7 @@
                     android:textSize="16sp"
                     android:textStyle="bold"/>
 
-                <org.stepic.droid.view.custom.BetterSwitch
+                <org.stepic.droid.ui.custom.BetterSwitch
                     android:id="@+id/fragment_settings_external_player_switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
                     android:textColor="@color/stepic_regular_text"
                     android:textSize="16sp"/>
 
-                <org.stepic.droid.view.custom.BetterSwitch
+                <org.stepic.droid.ui.custom.BetterSwitch
                     android:id="@+id/fragment_settings_wifi_enable_switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -118,7 +118,7 @@
                     android:textSize="16sp"
                     android:textStyle="bold"/>
 
-                <org.stepic.droid.view.custom.BetterSwitch
+                <org.stepic.droid.ui.custom.BetterSwitch
                     android:id="@+id/fragment_settings_notification_sound_switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -130,7 +130,7 @@
                     android:textSize="16sp"/>
 
 
-                <org.stepic.droid.view.custom.BetterSwitch
+                <org.stepic.droid.ui.custom.BetterSwitch
                     android:id="@+id/fragment_settings_notification_vibration_switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -141,7 +141,7 @@
                     android:textColor="@color/stepic_regular_text"
                     android:textSize="16sp"/>
 
-                <org.stepic.droid.view.custom.BetterSwitch
+                <org.stepic.droid.ui.custom.BetterSwitch
                     android:id="@+id/fragment_settings_notification_learn_switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -182,7 +182,7 @@
                     android:textSize="16sp"
                     android:textStyle="bold"/>
 
-                <org.stepic.droid.view.custom.BetterSwitch
+                <org.stepic.droid.ui.custom.BetterSwitch
                     android:id="@+id/fragment_settings_calendar_widget_switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

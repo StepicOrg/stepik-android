@@ -2,7 +2,7 @@ package org.stepic.droid.util;
 
 import android.widget.RadioGroup;
 
-import org.stepic.droid.view.custom.StepicRadioGroup;
+import org.stepic.droid.ui.custom.StepicRadioGroup;
 
 public class RadioGroupHelper {
     public static void setEnabled(RadioGroup testRadioGroup, boolean isEnabled) {

@@ -14,7 +14,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout;
+import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.web.StepResponse;
 
 import butterknife.BindView;

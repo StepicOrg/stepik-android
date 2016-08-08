@@ -10,7 +10,7 @@ import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.view.abstraction.CourseJoinView;
+import org.stepic.droid.ui.abstraction.CourseJoinView;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 import org.stepic.droid.web.IApi;
 

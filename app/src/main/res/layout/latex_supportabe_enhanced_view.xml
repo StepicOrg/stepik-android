@@ -10,7 +10,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"/>
 
-    <org.stepic.droid.view.custom.LatexSupportableWebView
+    <org.stepic.droid.ui.custom.LatexSupportableWebView
         android:id="@+id/webView"
         android:overScrollMode="never"
         android:layout_width="wrap_content"
