@@ -1,22 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
+    android:clickable="true"
+    android:foreground="@drawable/non_radius_foreground"
     android:id="@+id/report_problem"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:clickable="true"
-    android:foreground="@drawable/non_radius_foreground"
     android:visibility="gone"
     tools:visibility="visible">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:visibility="visible">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_report_problem_silver"/>
 
     <TextView
-        style="@style/PlaceholderTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:drawableTop="@drawable/ic_no_wifi"
+        android:layout_marginTop="6dp"
+        android:gravity="center"
+        android:padding="2dp"
         android:text="@string/step_only_online"
-        />
+        android:textSize="18sp"/>
+</LinearLayout>
 </FrameLayout>
