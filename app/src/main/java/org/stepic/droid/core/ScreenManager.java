@@ -270,7 +270,7 @@ public class ScreenManager implements IScreenManager {
             Intent intent = new Intent(context, CommentsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Bundle bundle = new Bundle();
-            bundle.putString(CommentsActivity.Companion.getKeyDiscusionProxyId(), discussionProxyId);
+            bundle.putString(CommentsActivity.Companion.getKeyDiscussionProxyId(), discussionProxyId);
             bundle.putLong(CommentsActivity.Companion.getKeyStepId(), stepId);
             intent.putExtras(bundle);
             context.startActivity(intent);

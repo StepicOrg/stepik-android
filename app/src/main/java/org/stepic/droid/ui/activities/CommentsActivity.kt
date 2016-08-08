@@ -9,12 +9,12 @@ import org.stepic.droid.ui.fragments.CommentsFragment
 class CommentsActivity : SingleFragmentActivity() {
 
     companion object {
-        val keyDiscusionProxyId = "KEY_DISCUSSION_PROXY_ID"
+        val keyDiscussionProxyId = "KEY_DISCUSSION_PROXY_ID"
         val keyStepId = "KEY_step_id"
     }
 
     override fun createFragment(): Fragment {
-        val discussionId: String = intent.extras.getString(keyDiscusionProxyId)
+        val discussionId: String = intent.extras.getString(keyDiscussionProxyId)
         val stepId: Long = intent.extras.getLong(keyStepId)
         return CommentsFragment.newInstance(discussionId,stepId )
     }
