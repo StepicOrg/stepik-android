@@ -33,6 +33,6 @@
             android:gravity="center"
             android:padding="2dp"
             android:text="@string/fail_to_parse"
-            android:textSize="24sp"/>
+            android:textSize="@dimen/text_size_placeholders"/>
     </LinearLayout>
 </FrameLayout>
