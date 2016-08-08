@@ -1,29 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     android:id="@+id/report_empty"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:orientation="vertical"
+    android:layout_height="match_parent"
     android:visibility="gone"
-    android:padding="10dp"
     tools:visibility="visible">
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_report_problem_silver"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="6dp"
+        android:drawablePadding="40dp"
+        android:drawableTop="@drawable/ic_nocertificates"
         android:gravity="center"
-        android:padding="2dp"
+        android:padding="16dp"
+        android:textColor="@color/stepic_weak_text"
         android:text="@string/empty_certificates"
-        android:textSize="24sp"/>
-</LinearLayout>
+        android:textSize="20sp"/>
+</FrameLayout>
