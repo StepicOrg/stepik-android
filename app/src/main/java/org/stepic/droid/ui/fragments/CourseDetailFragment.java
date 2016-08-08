@@ -275,6 +275,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
         unauthorizedDialog = UnauthorizedDialogFragment.newInstance();
 
+        courseFinderPresenter.attachView(this);
+        courseJoinerPresenter.attachView(this);
         bus.register(this);
         //COURSE RELATED IN ON START
     }
@@ -389,9 +391,6 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @Override
     public void onStart() {
         super.onStart();
-
-        courseFinderPresenter.attachView(this);
-        courseJoinerPresenter.attachView(this);
         tryToShowCourse();
         reportIndexToGoogle();
     }
@@ -576,8 +575,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @Override
     public void onDestroyView() {
         bus.unregister(this);
-        courseJoinerPresenter.detachView();
-        courseFinderPresenter.detachView();
+        courseJoinerPresenter.detachView(this);
+        courseFinderPresenter.detachView(this);
         reportInternetProblem.setOnClickListener(null);
         courseNotFoundView.setOnClickListener(null);
         mIntroView.destroy();
