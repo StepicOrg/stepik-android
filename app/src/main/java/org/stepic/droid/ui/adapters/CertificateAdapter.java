@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.model.CertificateType;
 import org.stepic.droid.model.CertificateViewItem;
-import org.stepic.droid.presenters.certificate.CertificatePresenter;
+import org.stepic.droid.ui.presenters.certificate.CertificatePresenter;
 
 import java.util.List;
 

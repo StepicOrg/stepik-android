@@ -1,4 +1,4 @@
-package org.stepic.droid.presenters.course_joiner;
+package org.stepic.droid.ui.presenters.course_joiner;
 
 import com.squareup.otto.Bus;
 

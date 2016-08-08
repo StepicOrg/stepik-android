@@ -18,7 +18,7 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.CertificateView;
 import org.stepic.droid.model.CertificateViewItem;
-import org.stepic.droid.presenters.certificate.CertificatePresenter;
+import org.stepic.droid.ui.presenters.certificate.CertificatePresenter;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.ui.adapters.CertificateAdapter;
 import org.stepic.droid.ui.dialogs.CertificateShareDialogFragment;

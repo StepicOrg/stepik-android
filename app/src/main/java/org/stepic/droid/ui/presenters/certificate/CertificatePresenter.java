@@ -1,4 +1,4 @@
-package org.stepic.droid.presenters.certificate;
+package org.stepic.droid.ui.presenters.certificate;
 
 import android.app.Activity;
 

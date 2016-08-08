@@ -1,4 +1,4 @@
-package org.stepic.droid.presenters.course_finder;
+package org.stepic.droid.ui.presenters.course_finder;
 
 import org.stepic.droid.ui.abstraction.LoadCourseView;
 
