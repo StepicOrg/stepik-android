@@ -375,7 +375,6 @@ public class StepicDefaultModule {
         return new CourseFinderPresenterForDetailScreen();
     }
 
-    @Singleton
     @Provides
     public CourseJoinerPresenter provideCourseJoiner() {
         return new CourseJoinerPresenterImpl();

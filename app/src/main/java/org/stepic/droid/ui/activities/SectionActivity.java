@@ -496,7 +496,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Override
     protected void onDestroy() {
         calendarPresenter.onStop();
-        courseJoinerPresenter.detachView();
+        courseJoinerPresenter.detachView(this);
         courseFinderPresenter.detachView(this);
         bus.unregister(this);
         courseNotParsedView.setOnClickListener(null);

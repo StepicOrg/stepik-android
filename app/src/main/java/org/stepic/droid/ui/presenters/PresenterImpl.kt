@@ -25,7 +25,7 @@ abstract class PresenterImpl<V> : Presenter<V>{
         if (previousView === view) {
             this.view = null
         } else {
-            throw IllegalStateException("Unexpected getView! previousView = $previousView, getView to unbind = $view")
+            throw IllegalStateException("Unexpected view! previousView = $previousView, getView to unbind = $view")
         }
     }
 
