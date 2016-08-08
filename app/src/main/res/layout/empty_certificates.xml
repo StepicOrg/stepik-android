@@ -9,14 +9,11 @@
     tools:visibility="visible">
 
     <TextView
+        style="@style/PlaceholderTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:drawablePadding="40dp"
-        android:drawableTop="@drawable/ic_nocertificates"
-        android:gravity="center"
-        android:padding="16dp"
-        android:textColor="@color/stepic_weak_text"
-        android:text="@string/empty_certificates"
-        android:textSize="20sp"/>
+        android:drawableTop="@drawable/ic_nocertificates_125"
+        android:text="@string/empty_certificates"/>
+
 </FrameLayout>

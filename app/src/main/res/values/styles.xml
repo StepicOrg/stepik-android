@@ -83,5 +83,14 @@
         <item name="android:foreground">@drawable/non_radius_foreground</item>
     </style>
 
+    <style name="PlaceholderTextViewStyle">
+        <item name="android:textSize">@dimen/text_size_placeholders</item>
+        <item name="android:padding">@dimen/padding_placeholders</item>
+        <item name="android:lineSpacingMultiplier">1.15</item>
+        <item name="android:gravity">center</item>
+        <item name="android:drawablePadding">@dimen/drawable_padding_placeholders</item>
+        <item name="android:textColor">@color/stepic_weak_text</item>
+    </style>
+
 
 </resources>
