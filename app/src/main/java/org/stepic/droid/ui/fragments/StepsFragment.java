@@ -57,7 +57,6 @@ public class StepsFragment extends FragmentBase {
     private static final String TAG = "StepsFragment";
 
     public static StepsFragment newInstance(Unit unit, Lesson lesson) {
-
         Bundle args = new Bundle();
         args.putParcelable(AppConstants.KEY_UNIT_BUNDLE, unit);
         args.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lesson);
@@ -68,24 +67,24 @@ public class StepsFragment extends FragmentBase {
 
 
     @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    Toolbar toolbar;
 
     @BindView(R.id.viewpager)
-    ViewPager mViewPager;
+    ViewPager viewPager;
 
     @BindView(R.id.tabs)
-    TabLayout mTabLayout;
+    TabLayout tabLayout;
 
     @BindView(R.id.load_progressbar)
-    ProgressBar mProgressBar;
+    ProgressBar progressBar;
 
     @BindString(R.string.not_available_lesson)
-    String notAvailable;
+    String notAvailableLessonString;
 
 
-    StepFragmentAdapter mStepAdapter;
-    private List<Step> mStepList;
-    private Unit mUnit;
+    StepFragmentAdapter stepAdapter;
+    private List<Step> stepList;
+    private Unit unit;
     private Lesson mLesson;
     private boolean isLoaded;
     private String qualityForView;
@@ -108,10 +107,10 @@ public class StepsFragment extends FragmentBase {
 
         getActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
 
-        mUnit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
+        unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
         mLesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
 
-        mStepList = new ArrayList<>();
+        stepList = new ArrayList<>();
     }
 
     @Override
@@ -124,20 +123,20 @@ public class StepsFragment extends FragmentBase {
         if (mLesson != null && mLesson.getSteps() != null && mLesson.getSteps().length != 0 && !isLoaded) {
             updateSteps();
         } else {
-            ArrayList<Step> newList = new ArrayList<>(mStepList);
+            ArrayList<Step> newList = new ArrayList<>(stepList);
             showSteps(newList);
         }
     }
 
     private  void init(){
-        mStepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), mStepList, mLesson, mUnit);
-        mViewPager.setAdapter(mStepAdapter);
+        stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepList, mLesson, unit);
+        viewPager.setAdapter(stepAdapter);
 
         getActivity().setTitle(mLesson.getTitle());
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -176,8 +175,8 @@ public class StepsFragment extends FragmentBase {
 
 
     private void checkOptionsMenu(int position) {
-        if (mStepList.size() <= position) return;
-        final Step step = mStepList.get(position);
+        if (stepList.size() <= position) return;
+        final Step step = stepList.get(position);
 
         if (step.getBlock() == null || step.getBlock().getVideo() == null) {
             bus.post(new VideoQualityEvent(null, step.getId()));
@@ -234,8 +233,8 @@ public class StepsFragment extends FragmentBase {
     }
 
     private void pushState(int position) {
-        if (mStepList.size() <= position) return;
-        final Step step = mStepList.get(position);
+        if (stepList.size() <= position) return;
+        final Step step = stepList.get(position);
 
         final int local = position;
         if (mStepResolver.isViewedStatePost(step) && !step.is_custom_passed()) {
@@ -257,7 +256,7 @@ public class StepsFragment extends FragmentBase {
 
 
     private void updateSteps() {
-        ProgressHelper.activate(mProgressBar);
+        ProgressHelper.activate(progressBar);
         getFromDbStepsTask = new FromDbStepTask(mLesson);
         getFromDbStepsTask.executeOnExecutor(mThreadPoolExecutor);
     }
@@ -316,7 +315,7 @@ public class StepsFragment extends FragmentBase {
 //            ToDbStepTask task = new ToDbStepTask(lesson, steps);
 //            task.execute();
 
-            mShell.getApi().getAssignments(mUnit.getAssignments()).enqueue(new Callback<AssignmentResponse>() {
+            mShell.getApi().getAssignments(unit.getAssignments()).enqueue(new Callback<AssignmentResponse>() {
                 @Override
                 public void onResponse(Response<AssignmentResponse> response, Retrofit retrofit) {
                     if (response.isSuccess()) {
@@ -334,7 +333,7 @@ public class StepsFragment extends FragmentBase {
 
                         final String[] progressIds = ProgressUtil.getAllProgresses(assignments);
                         mShell.getApi().getProgresses(progressIds).enqueue(new Callback<ProgressesResponse>() {
-                            Unit localUnit = mUnit;
+                            Unit localUnit = unit;
 
                             @Override
                             public void onResponse(final Response<ProgressesResponse> response, Retrofit retrofit) {
@@ -363,8 +362,8 @@ public class StepsFragment extends FragmentBase {
 
                             @Override
                             public void onFailure(Throwable t) {
-                                if (steps != null && mUnit != null)
-                                    bus.post(new UpdateStepsState(mUnit, steps));
+                                if (steps != null && unit != null)
+                                    bus.post(new UpdateStepsState(unit, steps));
                             }
                         });
 
@@ -373,8 +372,8 @@ public class StepsFragment extends FragmentBase {
 
                 @Override
                 public void onFailure(Throwable t) {
-                    if (steps != null && mUnit != null)
-                        bus.post(new UpdateStepsState(mUnit, steps));
+                    if (steps != null && unit != null)
+                        bus.post(new UpdateStepsState(unit, steps));
                 }
             });
 
@@ -385,7 +384,7 @@ public class StepsFragment extends FragmentBase {
 
     @Subscribe
     public void onUpdateStepsState(final UpdateStepsState e) {
-        if (e.getUnit().getId() != mUnit.getId()) return;
+        if (e.getUnit().getId() != unit.getId()) return;
 
         final List<Step> localSteps = e.getSteps();
 
@@ -402,7 +401,7 @@ public class StepsFragment extends FragmentBase {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                if (mStepList != null && mStepAdapter != null && mTabLayout != null) {
+                if (stepList != null && stepAdapter != null && tabLayout != null) {
                     showSteps(localSteps);
                 }
             }
@@ -414,8 +413,8 @@ public class StepsFragment extends FragmentBase {
     public void onUpdateOneStep(UpdateStepEvent e) {
         long stepId = e.getStepId();
         Step step = null;
-        if (mStepList != null) {
-            for (Step item : mStepList) {
+        if (stepList != null) {
+            for (Step item : stepList) {
                 if (item.getId() == stepId) {
                     step = item;
                     break;
@@ -425,46 +424,46 @@ public class StepsFragment extends FragmentBase {
 
         if (step != null) {
             step.set_custom_passed(true);
-            int pos = mViewPager.getCurrentItem();
+            int pos = viewPager.getCurrentItem();
 
-            for (int i = 0; i < mTabLayout.getTabCount(); i++) {
-                TabLayout.Tab tab = mTabLayout.getTabAt(i);
-                tab.setIcon(mStepAdapter.getTabDrawable(i));
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                TabLayout.Tab tab = tabLayout.getTabAt(i);
+                tab.setIcon(stepAdapter.getTabDrawable(i));
             }
         }
     }
 
     private void showSteps(List<Step> steps) {
-        mStepList.clear();
-        mStepList.addAll(steps);
+        stepList.clear();
+        stepList.addAll(steps);
 
-        mStepAdapter.notifyDataSetChanged();
+        stepAdapter.notifyDataSetChanged();
         updateTabs();
-        mTabLayout.setVisibility(View.VISIBLE);
-        ProgressHelper.dismiss(mProgressBar);
+        tabLayout.setVisibility(View.VISIBLE);
+        ProgressHelper.dismiss(progressBar);
         isLoaded = true;
-        pushState(mViewPager.getCurrentItem());
-        checkOptionsMenu(mViewPager.getCurrentItem());
+        pushState(viewPager.getCurrentItem());
+        checkOptionsMenu(viewPager.getCurrentItem());
 
     }
 
     @Subscribe
     public void onFailLoad(FailLoadStepEvent e) {
-        Toast.makeText(getActivity(), notAvailable, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), notAvailableLessonString, Toast.LENGTH_LONG).show();
         isLoaded = false;
-        ProgressHelper.dismiss(mProgressBar);
+        ProgressHelper.dismiss(progressBar);
     }
 
     private void updateTabs() {
-        if (mTabLayout.getTabCount() == 0) {
-            mTabLayout.setupWithViewPager(mViewPager);
+        if (tabLayout.getTabCount() == 0) {
+            tabLayout.setupWithViewPager(viewPager);
         }
 
-        for (int i = 0; i < mStepAdapter.getCount(); i++) {
-            if (i < mTabLayout.getTabCount() && i >= 0 && mStepAdapter != null) {
-                TabLayout.Tab tab = mTabLayout.getTabAt(i);
+        for (int i = 0; i < stepAdapter.getCount(); i++) {
+            if (i < tabLayout.getTabCount() && i >= 0 && stepAdapter != null) {
+                TabLayout.Tab tab = tabLayout.getTabAt(i);
                 if (tab != null) {
-                    tab.setIcon(mStepAdapter.getTabDrawable(i));
+                    tab.setIcon(stepAdapter.getTabDrawable(i));
                 }
             }
         }
@@ -472,9 +471,9 @@ public class StepsFragment extends FragmentBase {
 
     @Subscribe
     public void onQualityDetermined(VideoQualityEvent e) {
-        int currentPosition = mViewPager.getCurrentItem();
-        if (currentPosition < 0 || currentPosition >= mStepList.size()) return;
-        long stepId = mStepList.get(currentPosition).getId();
+        int currentPosition = viewPager.getCurrentItem();
+        if (currentPosition < 0 || currentPosition >= stepList.size()) return;
+        long stepId = stepList.get(currentPosition).getId();
         if (e.getStepId() != stepId) return;
         qualityForView = e.getQuality();
         getActivity().invalidateOptionsMenu();
@@ -492,7 +491,7 @@ public class StepsFragment extends FragmentBase {
         }
 
         MenuItem comments = menu.findItem(R.id.action_comments);
-        if (mStepList.isEmpty()) {
+        if (stepList.isEmpty()) {
             comments.setVisible(false);
         } else {
             comments.setVisible(true);
@@ -503,12 +502,12 @@ public class StepsFragment extends FragmentBase {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_comments:
-                int position = mViewPager.getCurrentItem();
-                if (position < 0 || position >= mStepList.size()) {
+                int position = viewPager.getCurrentItem();
+                if (position < 0 || position >= stepList.size()) {
                     return super.onOptionsItemSelected(item);
                 }
 
-                Step step = mStepList.get(position);
+                Step step = stepList.get(position);
                 mShell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
                 break;
             default:
