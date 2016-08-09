@@ -355,7 +355,6 @@ public class StepicDefaultModule {
         return new NotificationManagerImpl(sp, api, config, userPreferences, db, analytic);
     }
 
-    @Singleton
     @Provides
     public CommentManager provideCommentsManager() {
         return new CommentManager();

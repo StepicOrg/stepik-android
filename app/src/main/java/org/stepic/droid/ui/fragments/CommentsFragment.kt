@@ -29,13 +29,13 @@ import org.stepic.droid.model.comments.Comment
 import org.stepic.droid.model.comments.DiscussionOrder
 import org.stepic.droid.model.comments.Vote
 import org.stepic.droid.model.comments.VoteValue
+import org.stepic.droid.ui.adapters.CommentsAdapter
+import org.stepic.droid.ui.dialogs.DeleteCommentDialogFragment
+import org.stepic.droid.ui.util.ContextMenuRecyclerView
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.HtmlHelper
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StringUtil
-import org.stepic.droid.ui.adapters.CommentsAdapter
-import org.stepic.droid.ui.dialogs.DeleteCommentDialogFragment
-import org.stepic.droid.ui.util.ContextMenuRecyclerView
 import org.stepic.droid.web.DiscussionProxyResponse
 import org.stepic.droid.web.VoteResponse
 import retrofit.Callback
