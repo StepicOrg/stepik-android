@@ -1,22 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout android:id="@+id/empty_courses"
-             xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:clickable="true"
-             android:focusable="true"
-             android:foreground="@drawable/non_radius_foreground"
-             android:visibility="gone"
-             tools:visibility="visible">
+<FrameLayout
+    android:id="@+id/empty_courses"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:visibility="gone"
+    tools:visibility="visible">
 
-    <TextView
-        android:id="@+id/text"
-        style="@style/PlaceholderTextViewStyle"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:drawableTop="@drawable/ic_empty_courses_3"
-        android:text="@string/empty_courses"
-        />
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/text"
+                style="@style/PlaceholderTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_empty_courses_3"
+                android:text="@string/empty_courses"/>
+
+            <Button
+                android:id="@+id/empty_courses_button"
+                style="@style/StepicSmallMaterialButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_below="@id/text"
+                android:layout_centerHorizontal="true"
+                android:text="@string/find_courses_title"/>
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
 </FrameLayout>

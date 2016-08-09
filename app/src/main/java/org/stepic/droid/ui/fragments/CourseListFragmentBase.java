@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -23,11 +24,11 @@ import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.util.StepicUtil;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.adapters.MyCoursesAdapter;
 import org.stepic.droid.ui.custom.TouchDispatchableFrameLayout;
+import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.StepicUtil;
 import org.stepic.droid.web.CoursesStepicResponse;
 import org.stepic.droid.web.IApi;
 
@@ -52,6 +53,9 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
     @BindView(R.id.empty_courses)
     protected View mEmptyCoursesView;
+
+    @BindView(R.id.empty_courses_button)
+    protected Button findCourseButton;
 
     @BindView(R.id.root_fragment_view)
     protected TouchDispatchableFrameLayout mRootView;
@@ -128,8 +132,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
                     if (StepicUtil.INSTANCE.isInternetAvailable()) {
                         isLoading = true;
                         downloadData();
-                    }
-                    else{
+                    } else {
 //                        userScrolled =false;
                     }
                 }
@@ -149,7 +152,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
             }
         });
 
-        mEmptyCoursesView.setOnClickListener(new View.OnClickListener() {
+        findCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MainFeedActivity parent = (MainFeedActivity) getActivity();
@@ -163,7 +166,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
     @Override
     public void onDestroyView() {
-        if (mListOfCourses!= null){
+        if (mListOfCourses != null) {
             mListOfCourses.setAdapter(null);
             mListOfCourses.setOnScrollListener(null);
             mListOfCourses.setOnItemClickListener(null);
@@ -235,7 +238,8 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         }
         if (getCourseType() == DatabaseFacade.Table.enrolled && !inList) {
             mCourses.add(courseForUpdate);
-            mCoursesAdapter.notifyDataSetChanged();;
+            mCoursesAdapter.notifyDataSetChanged();
+            ;
         }
 
     }
