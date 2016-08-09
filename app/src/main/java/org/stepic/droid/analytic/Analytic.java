@@ -43,6 +43,7 @@ public interface Analytic {
         String CLICK_SEND_SUBMISSION = "click_send_submission";
         String SHARE_COURSE = "share_course_detail";
         String SHARE_COURSE_SECTION = "share_course_from_section";
+        String CLICK_FIND_COURSE_EMPTY_SCREEN = "click_find_courses_empty_screen";
     }
 
     interface Screens {

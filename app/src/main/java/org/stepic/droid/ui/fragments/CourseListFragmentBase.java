@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -155,10 +156,11 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         findCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainFeedActivity parent = (MainFeedActivity) getActivity();
+                Activity parent = getActivity();
                 if (parent == null || !(parent instanceof MainFeedActivity)) return;
 
-                parent.showFindLesson();
+                analytic.reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_EMPTY_SCREEN);
+                ((MainFeedActivity) parent).showFindLesson();
             }
         });
 
