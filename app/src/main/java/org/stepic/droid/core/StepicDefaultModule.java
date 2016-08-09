@@ -305,7 +305,6 @@ public class StepicDefaultModule {
         return new StepDaoImpl(openHelper, blockDao, assignmentDao, progressDao);
     }
 
-    @Singleton
     @Provides
     public IDao<Course> provideCourse(SQLiteDatabase openHelper, IDao<CachedVideo> daoCached) {
         return new CourseDaoImpl(openHelper, daoCached);
