@@ -65,7 +65,6 @@ public class StepsFragment extends FragmentBase {
         return fragment;
     }
 
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -90,16 +89,6 @@ public class StepsFragment extends FragmentBase {
     private String qualityForView;
     private FromDbStepTask getFromDbStepsTask;
 
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.activity_steps, container, false);
-        setHasOptionsMenu(true);
-        unbinder = ButterKnife.bind(this, v);
-        return v;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,9 +102,18 @@ public class StepsFragment extends FragmentBase {
         stepList = new ArrayList<>();
     }
 
+    @Nullable
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.activity_steps, container, false);
+        setHasOptionsMenu(true);
+        unbinder = ButterKnife.bind(this, v);
+        return v;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         init();
         bus.register(this);
         //isLoaded is retained and stepList too, but this method should be in onStart due to user can rotate device, when
@@ -128,7 +126,7 @@ public class StepsFragment extends FragmentBase {
         }
     }
 
-    private  void init(){
+    private void init() {
         stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepList, mLesson, unit);
         viewPager.setAdapter(stepAdapter);
 
@@ -157,22 +155,10 @@ public class StepsFragment extends FragmentBase {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public void onDestroyView() {
-        super.onDestroyView();
         bus.unregister(this);
+        super.onDestroyView();
     }
-
 
     private void checkOptionsMenu(int position) {
         if (stepList.size() <= position) return;
@@ -253,7 +239,6 @@ public class StepsFragment extends FragmentBase {
 
         }
     }
-
 
     private void updateSteps() {
         ProgressHelper.activate(progressBar);
@@ -380,7 +365,6 @@ public class StepsFragment extends FragmentBase {
 
         }
     }
-
 
     @Subscribe
     public void onUpdateStepsState(final UpdateStepsState e) {
