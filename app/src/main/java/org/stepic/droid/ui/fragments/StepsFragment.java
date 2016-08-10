@@ -80,7 +80,6 @@ public class StepsFragment extends FragmentBase {
     @BindString(R.string.not_available_lesson)
     String notAvailableLessonString;
 
-
     StepFragmentAdapter stepAdapter;
     private List<Step> stepList;
     private Unit unit;
@@ -252,22 +251,21 @@ public class StepsFragment extends FragmentBase {
             return;
         }
 
-        if (e.getStepList() != null && !e.getStepList().isEmpty() && e.getStepList().size() == mLesson.getSteps().length) {
+        if (e.getStepList() != null && !e.getStepList().isEmpty() && mLesson.getSteps() != null && e.getStepList().size() == mLesson.getSteps().length) {
 
             final List<Step> stepsFromDB = e.getStepList();
+            showSteps(stepsFromDB);
             mShell.getApi().getSteps(mLesson.getSteps()).enqueue(new Callback<StepResponse>() {
                 @Override
                 public void onResponse(Response<StepResponse> response, Retrofit retrofit) {
                     if (response.isSuccess()) {
                         bus.post(new SuccessLoadStepEvent(response.body().getSteps()));//update if we can
-                    } else {
-                        bus.post(new SuccessLoadStepEvent(stepsFromDB)); //if fail -> get from db
                     }
                 }
 
                 @Override
                 public void onFailure(Throwable t) {
-                    bus.post(new SuccessLoadStepEvent(stepsFromDB));//if fail -> get from db
+                    //already show cached
                 }
             });
         } else {
@@ -314,7 +312,7 @@ public class StepsFragment extends FragmentBase {
                                 return null;
                             }
                         };
-                        task.execute();
+                        task.executeOnExecutor(mThreadPoolExecutor);
 
                         final String[] progressIds = ProgressUtil.getAllProgresses(assignments);
                         mShell.getApi().getProgresses(progressIds).enqueue(new Callback<ProgressesResponse>() {
@@ -341,7 +339,7 @@ public class StepsFragment extends FragmentBase {
                                             bus.post(new UpdateStepsState(localUnit, steps));
                                         }
                                     };
-                                    task1.execute();
+                                    task1.executeOnExecutor(mThreadPoolExecutor);
                                 }
                             }
 
@@ -390,7 +388,7 @@ public class StepsFragment extends FragmentBase {
                 }
             }
         };
-        task.execute();
+        task.executeOnExecutor(mThreadPoolExecutor);
     }
 
     @Subscribe
@@ -428,7 +426,6 @@ public class StepsFragment extends FragmentBase {
         isLoaded = true;
         pushState(viewPager.getCurrentItem());
         checkOptionsMenu(viewPager.getCurrentItem());
-
     }
 
     @Subscribe
