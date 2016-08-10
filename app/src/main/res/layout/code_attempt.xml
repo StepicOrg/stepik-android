@@ -31,6 +31,7 @@
         android:gravity="top|start"
         android:hint="@string/hint_for_type_answer"
         android:inputType="textMultiLine"
+        android:imeOptions="flagNoFullscreen"
         android:maxLines="9000"
         android:minLines="5"
         android:padding="8dp"

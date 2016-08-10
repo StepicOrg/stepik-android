@@ -8,7 +8,7 @@
     android:minLines="1"
     android:maxLines="9000"
     android:inputType="text|textCapSentences"
-    android:imeOptions="actionSend"
+    android:imeOptions="flagNoFullscreen|actionSend"
     android:scrollbarStyle="outsideOverlay"
     android:scrollbars="vertical"
     android:padding="8dp"

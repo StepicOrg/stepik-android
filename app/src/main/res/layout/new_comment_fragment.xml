@@ -23,6 +23,7 @@
             android:background="@android:color/transparent"
             android:hint="@string/hint_for_new_comment"
             android:inputType="textMultiLine|textCapSentences"
+            android:imeOptions="flagNoFullscreen"
             android:paddingBottom="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
