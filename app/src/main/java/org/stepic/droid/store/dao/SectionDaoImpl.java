@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.stepic.droid.model.Actions;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.store.structure.DbStructureSections;
 import org.stepic.droid.util.DbParseHelper;
@@ -31,8 +32,7 @@ public class SectionDaoImpl extends DaoBase<Section> {
         int columnIndexUnits = cursor.getColumnIndex(DbStructureSections.Column.UNITS);
         int indexIsCached = cursor.getColumnIndex(DbStructureSections.Column.IS_CACHED);
         int indexIsLoading = cursor.getColumnIndex(DbStructureSections.Column.IS_LOADING);
-
-        int isCacheddd = cursor.getInt(indexIsCached);
+        int indexTestSection = cursor.getColumnIndex(DbStructureSections.Column.TEST_SECTION);
 
         section.setId(cursor.getLong(columnIndexId));
         section.setTitle(cursor.getString(columnIndexTitle));
@@ -46,6 +46,11 @@ public class SectionDaoImpl extends DaoBase<Section> {
         section.set_cached(cursor.getInt(indexIsCached) > 0);
         section.set_loading(cursor.getInt(indexIsLoading) > 0);
         section.setUnits(DbParseHelper.INSTANCE.parseStringToLongArray(cursor.getString(columnIndexUnits)));
+
+        String test_section = cursor.getString(indexTestSection);
+        Actions actions = new Actions();
+        actions.setTest_section(test_section);
+        section.setActions(actions);
 
         return section;
     }
@@ -69,6 +74,10 @@ public class SectionDaoImpl extends DaoBase<Section> {
         values.put(DbStructureSections.Column.COURSE, section.getCourse());
         values.put(DbStructureSections.Column.POSITION, section.getPosition());
         values.put(DbStructureSections.Column.UNITS, DbParseHelper.parseLongArrayToString(section.getUnits()));
+
+        if (section.getActions() != null && section.getActions().getTest_section()!=null){
+            values.put(DbStructureSections.Column.TEST_SECTION, section.getActions().getTest_section());
+        }
 
         return values;
     }

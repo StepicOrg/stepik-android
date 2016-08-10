@@ -26,6 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TEXT_TYPE = "TEXT";
     private static final String LONG_TYPE = "LONG";
     private static final String INT_TYPE = "INTEGER";
+    private static final String BOOLEAN_TYPE = "BOOLEAN";
 
     @Inject
     public DatabaseHelper(Context context) {
@@ -59,6 +60,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom8To9(db);
         upgradeFrom9To10(db);
         upgradeFrom10To11(db);
+        upgradeFrom11To12(db);
+    }
+
+    private void upgradeFrom11To12(SQLiteDatabase db) {
+        alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.TEST_SECTION, BOOLEAN_TYPE);
     }
 
     private void upgradeFrom10To11(SQLiteDatabase db) {
@@ -170,6 +176,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 11) {
             upgradeFrom10To11(db);
+        }
+
+        if (oldVersion < 12) {
+            upgradeFrom11To12(db);
         }
     }
 

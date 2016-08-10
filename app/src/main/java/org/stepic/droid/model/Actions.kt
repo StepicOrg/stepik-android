@@ -3,11 +3,18 @@ package org.stepic.droid.model
 import android.os.Parcel
 import android.os.Parcelable
 
-class Actions(
-        val vote: Boolean?,
-        val delete: Boolean?,
-        val test_section: String?
-) : Parcelable {
+class Actions() : Parcelable {
+
+    var vote: Boolean? = null
+    var delete: Boolean? = null
+    var test_section: String? = null
+
+    constructor(vote: Boolean?, delete: Boolean?, test_section: String?) : this() {
+        this.vote = vote
+        this.delete = delete
+        this.test_section = test_section
+    }
+
 
     override fun describeContents() = 0
 

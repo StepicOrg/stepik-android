@@ -122,7 +122,7 @@ class Section : Serializable, Parcelable {
         this.formatted_begin_date = input.readString()
         this.formatted_soft_deadline = input.readString()
         this.formatted_hard_deadline = input.readString()
-        this.actions = input.readParcelable<Actions>(Actions::class.java.classLoader)
+        this.actions = input.readParcelnable<Actions>(Actions::class.java.classLoader)
     }
 
     companion object {
