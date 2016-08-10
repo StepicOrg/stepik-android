@@ -289,7 +289,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 hardDeadline.setVisibility(View.VISIBLE);
             }
 
-            if (section.is_active() && course.getEnrollment() > 0) {
+            if ((section.is_active() || (section.getActions() != null && section.getActions().getTest_section()!=null)) && course.getEnrollment() > 0) {
 
                 int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, MainApplication.getAppContext());
 
