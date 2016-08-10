@@ -48,7 +48,8 @@ public class LatexSupportableWebView extends WebView {
 
 
         getSettings().setDomStorageEnabled(true);
-        if (text.toString().contains("$")) {
+        String textString = text.toString();
+        if (textString.contains("$") || textString.contains("\\[")) {
             WebSettings webSettings = getSettings();
             webSettings.setJavaScriptEnabled(true);
             final String html = HtmlHelper.buildMathPage(text, width);
