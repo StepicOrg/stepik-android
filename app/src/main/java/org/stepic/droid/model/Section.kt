@@ -42,6 +42,7 @@ class Section : Serializable, Parcelable {
     var update_date: String? = null
     var is_cached: Boolean = false
     var is_loading: Boolean = false
+    var actions: Actions? = null
 
     private var formatted_begin_date: String? = null
     private var formatted_soft_deadline: String? = null
@@ -92,6 +93,7 @@ class Section : Serializable, Parcelable {
         dest.writeString(this.formatted_begin_date)
         dest.writeString(this.formatted_soft_deadline)
         dest.writeString(this.formatted_hard_deadline)
+        dest.writeParcelable(this.actions, flags)
     }
 
     protected constructor(input: Parcel) : this() {
@@ -120,6 +122,7 @@ class Section : Serializable, Parcelable {
         this.formatted_begin_date = input.readString()
         this.formatted_soft_deadline = input.readString()
         this.formatted_hard_deadline = input.readString()
+        this.actions = input.readParcelable<Actions>(Actions::class.java.classLoader)
     }
 
     companion object {
