@@ -41,7 +41,7 @@ public class SplashActivity extends BackToExitActivityBase {
             });
         }
 
-        if (mSharedPreferenceHelper.isFirstTime() || !mSharedPreferenceHelper.isScheduleAdded()) {
+        if (mSharedPreferenceHelper.isFirstTime() || !mSharedPreferenceHelper.isScheduleAdded() || mSharedPreferenceHelper.isNeedDropCoursesIn114()) {
             //fix v11 bug:
             mThreadPoolExecutor.execute(new Runnable() {
                 @Override
@@ -50,9 +50,14 @@ public class SplashActivity extends BackToExitActivityBase {
                         mDbManager.dropOnlyCourseTable(); //v11 bug, when slug was not cached. We can remove it, when all users will have v1.11 or above. (flavour problem)
                         mSharedPreferenceHelper.afterFirstTime();
                         mSharedPreferenceHelper.afterScheduleAdded();
+                        mSharedPreferenceHelper.afterNeedDropCoursesIn114();
                     } else if (!mSharedPreferenceHelper.isScheduleAdded()) {
                         mDbManager.dropOnlyCourseTable();
                         mSharedPreferenceHelper.afterScheduleAdded();
+                        mSharedPreferenceHelper.afterNeedDropCoursesIn114();
+                    } else if (mSharedPreferenceHelper.isNeedDropCoursesIn114()){
+                        mDbManager.dropOnlyCourseTable();
+                        mSharedPreferenceHelper.afterNeedDropCoursesIn114();
                     }
 
                     mMainHandler.post(new Function0<Unit>() {
