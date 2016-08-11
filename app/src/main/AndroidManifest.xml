@@ -12,12 +12,12 @@
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.STORAGE" />
+    <uses-permission android:name="android.permission.STORAGE"/>
     <uses-permission
         android:name="android.permission.READ_PHONE_STATE"
         android:maxSdkVersion="22"/>
-    <uses-permission android:name="android.permission.READ_CALENDAR" />
-    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
 
     <uses-permission android:name="android.permission.VIBRATE"/>
 
@@ -36,12 +36,16 @@
         <activity
             android:name="org.stepic.droid.ui.activities.SplashActivity"
             android:theme="@style/AppTheme.BrandedLaunch">
+        </activity>
+
+        <activity-alias
+            android:name="org.stepic.droid.view.activities.SplashActivity"
+            android:targetActivity="org.stepic.droid.ui.activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-
+        </activity-alias>
 
         <activity
             android:name="org.stepic.droid.ui.activities.LaunchActivity"/>
@@ -115,7 +119,7 @@
 
         <service
             android:name="org.stepic.droid.services.LoadService"
-            android:exported="true"> </service>
+            android:exported="true"></service>
         <service
             android:name="org.stepic.droid.services.DeleteService"
             android:exported="true"></service>
@@ -168,13 +172,13 @@
         <service
             android:name=".notifications.StepicFcmListenerService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
         <service
             android:name=".notifications.StepicInstanceIdService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
 
@@ -196,8 +200,8 @@
 
         <activity
             android:name=".ui.activities.StoreManagementActivity"
-            android:launchMode="singleTop"
             android:label="@string/space_management_title"
+            android:launchMode="singleTop"
             android:parentActivityName=".ui.activities.SettingsActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
