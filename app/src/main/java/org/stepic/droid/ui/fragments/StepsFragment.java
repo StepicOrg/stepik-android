@@ -416,22 +416,25 @@ public class StepsFragment extends FragmentBase {
     }
 
     private void showSteps(List<Step> steps) {
-        boolean isNumEquals = steps.size() == stepList.size(); // hack for need updating view?
+        boolean isNumEquals = !stepList.isEmpty() &&  steps.size() == stepList.size(); // hack for need updating view?
         stepList.clear();
         stepList.addAll(steps);
 
         if (!isLoaded) {
             stepAdapter.notifyDataSetChanged();
-            updateTabs();
-            isLoaded = true;
-            tabLayout.setVisibility(View.VISIBLE);
-            ProgressHelper.dismiss(progressBar);
-            pushState(viewPager.getCurrentItem());
-            checkOptionsMenu(viewPager.getCurrentItem());
-        } else if (!isNumEquals) {
+        }
+        updateTabs();
+        isLoaded = true;
+        tabLayout.setVisibility(View.VISIBLE);
+        ProgressHelper.dismiss(progressBar);
+        pushState(viewPager.getCurrentItem());
+        checkOptionsMenu(viewPager.getCurrentItem());
+
+
+        if (isLoaded && !isNumEquals) {
             //it is working only if teacher add steps in lesson and user has not cached new steps, but cached old.
             stepAdapter.notifyDataSetChanged();
-            tabLayout.setupWithViewPager(viewPager);
+            updateTabs();
         }
     }
 
