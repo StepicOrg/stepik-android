@@ -1,158 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:focusableInTouchMode="true"
-    android:splitMotionEvents="false">
+<RelativeLayout android:id="@+id/root_view"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusableInTouchMode="true"
+                android:splitMotionEvents="false">
 
     <ScrollView
-        android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
         android:background="@android:color/white"
         android:fillViewport="true">
 
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/top_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:splitMotionEvents="false">
+
+            <ImageView
+                android:id="@+id/login_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="125dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="20dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/stepic_logo"/>
 
             <LinearLayout
-                android:id="@+id/top_layout"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_gravity="center_horizontal"
+                android:maxWidth="@dimen/min_max_width_for_tablets"
+                android:minWidth="@dimen/min_max_width_for_tablets"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/padding_registration_left_right"
+                android:paddingRight="@dimen/padding_registration_left_right"
+                android:splitMotionEvents="false">
 
-                <RelativeLayout
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="125dp"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginLeft="@dimen/padding_registration_left_right"
-                    android:layout_marginRight="@dimen/padding_registration_left_right"
-                    android:layout_marginTop="20dp">
+                    android:layout_height="match_parent"
+                    android:paddingBottom="@dimen/half_padding_between_textinput"
+                    android:paddingTop="@dimen/half_padding_between_textinput">
 
-                    <ImageView
-                        android:id="@+id/login_logo"
-                        android:layout_width="150dp"
-                        android:layout_height="150dp"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@string/app_name"
-                        android:src="@drawable/stepic_logo" />
-                </RelativeLayout>
+                    <EditText
+                        android:id="@+id/email_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/email"
+                        android:imeOptions="flagNoFullscreen|actionNext"
+                        android:inputType="textEmailAddress"
+                        android:maxLength="100"
+                        android:maxLines="1"/>
 
-                <LinearLayout
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="@dimen/half_padding_between_textinput"
+                    android:paddingTop="@dimen/half_padding_between_textinput">
+
+                    <EditText
+                        android:id="@+id/password_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:hint="@string/password_hint"
+                        android:imeOptions="flagNoFullscreen|actionSend"
+                        android:inputType="textPassword"
+                        android:maxLength="@integer/max_length_of_password"
+                        android:maxLines="1"/>
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/forgot_password_tv"
+                    style="@style/bold_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:maxWidth="@dimen/min_max_width_for_tablets"
-                    android:minWidth="@dimen/min_max_width_for_tablets"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/padding_registration_left_right"
-                    android:paddingRight="@dimen/padding_registration_left_right">
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:text="@string/remind_password"
+                    android:textColor="?attr/colorAccent"
+                    android:textSize="12sp"/>
 
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingBottom="@dimen/half_padding_between_textinput"
-                        android:paddingTop="@dimen/half_padding_between_textinput">
-
-                        <EditText
-                            android:id="@+id/email_et"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/email"
-                            android:imeOptions="actionNext"
-                            android:inputType="textEmailAddress"
-                            android:maxLength="100"
-                            android:singleLine="true" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingBottom="@dimen/half_padding_between_textinput"
-                        android:paddingTop="@dimen/half_padding_between_textinput">
-
-                        <EditText
-                            android:id="@+id/password_et"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-
-                            android:hint="@string/password_hint"
-                            android:imeOptions="actionSend"
-                            android:inputType="textPassword"
-                            android:maxLength="@integer/max_length_of_password"
-                            android:singleLine="true" />
-                    </android.support.design.widget.TextInputLayout>
-
-                    <TextView
-                        android:id="@+id/forgot_password_tv"
-                        style="@style/bold_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:padding="12dp"
-                        android:text="@string/remind_password"
-                        android:textColor="?attr/colorAccent"
-                        android:textSize="12sp" />
-
-                    <Button
-                        android:id="@+id/login_button_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/min_ux_touchable_size"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginBottom="20dp"
-                        android:layout_marginTop="15dp"
-                        android:contentDescription="@string/app_name"
-                        android:text="@string/sign_in" />
-
-
-                    <TextView
-                        android:id="@+id/by_signing_up_tv"
-                        style="@style/regular_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="7dp"
-                        android:gravity="center"
-                        android:maxWidth="@dimen/min_max_width_for_tablets"
-                        android:text="@string/by_creating_you_agree"
-                        android:textSize="11sp"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:id="@+id/end_user_agreement_tv"
-                        style="@style/regular_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:linksClickable="true"
-                        android:text="@string/terms"
-                        android:textColor="?attr/colorAccent"
-                        android:textSize="11sp"
-                        android:visibility="gone" />
-
-                    <include layout="@layout/sign_in_title" />
-
-                </LinearLayout>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/social_list"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/height_of_social"
+                <Button
+                    android:id="@+id/login_button_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/min_ux_touchable_size"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="20dp"
                     android:layout_marginTop="15dp"
-                    android:scrollbarStyle="outsideOverlay"
-                    android:stretchColumns="0"
-                    android:layout_marginBottom="50dp" />
+                    android:contentDescription="@string/app_name"
+                    android:text="@string/sign_in"/>
+
+                <TextView
+                    android:id="@+id/by_signing_up_tv"
+                    style="@style/regular_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:gravity="center"
+                    android:maxWidth="@dimen/min_max_width_for_tablets"
+                    android:text="@string/by_creating_you_agree"
+                    android:textSize="11sp"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/end_user_agreement_tv"
+                    style="@style/regular_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:linksClickable="true"
+                    android:text="@string/terms"
+                    android:textColor="?attr/colorAccent"
+                    android:textSize="11sp"
+                    android:visibility="gone"/>
+
+                <include layout="@layout/sign_in_title"/>
 
             </LinearLayout>
 
-        </RelativeLayout>
+            <android.support.v7.widget.RecyclerView
+                android:splitMotionEvents="false"
+                android:id="@+id/social_list"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/height_of_social"
+                android:layout_marginBottom="50dp"
+                android:layout_marginTop="15dp"
+                android:scrollbarStyle="outsideOverlay"
+                android:stretchColumns="0"/>
+
+        </LinearLayout>
+
     </ScrollView>
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/panel_custom_action_bar" />
+        layout="@layout/panel_custom_action_bar"/>
 
 </RelativeLayout>

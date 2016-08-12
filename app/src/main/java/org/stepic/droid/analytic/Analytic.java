@@ -43,6 +43,7 @@ public interface Analytic {
         String CLICK_SEND_SUBMISSION = "click_send_submission";
         String SHARE_COURSE = "share_course_detail";
         String SHARE_COURSE_SECTION = "share_course_from_section";
+        String CLICK_FIND_COURSE_EMPTY_SCREEN = "click_find_courses_empty_screen";
     }
 
     interface Screens {
@@ -147,6 +148,8 @@ public interface Analytic {
         String COMMENTS_SENT_SUCCESSFULLY = "comments: comment was sent successfully";
         String DELETE_COMMENT_CONFIRMATION = "comment: delete comment confirmed";
         String ORDER_TREND = "order_trend";
+        String SHOW_CONFIRM_DISCARD_TEXT_DIALOG = "comment_discard_dialog_show";
+        String SHOW_CONFIRM_DISCARD_TEXT_DIALOG_SUCCESS = "comment_discard_ok";
     }
 
     interface Steps {
@@ -154,7 +157,7 @@ public interface Analytic {
         String WRONG_SUBMISSION_FILL = "submission_wrong_fill";
     }
 
-    interface Calendar{
+    interface Calendar {
         String USER_CLICK_ADD_WIDGET = "calendar_click_add_widget";
         String USER_CLICK_ADD_MENU = "calendar_click_add_menu";
         String CALENDAR_ADDED_SUCCESSFULLY = "calendar_added_successfully";
@@ -164,9 +167,15 @@ public interface Analytic {
         String HIDE_WIDGET_FROM_PREFS = "widget_hidden_from_prefs";
     }
 
-    interface DeepLink{
+    interface DeepLink {
         String USER_OPEN_SYLLABUS_LINK = "open_syllabus_by_link";
         String USER_OPEN_COURSE_DETAIL_LINK = "open_detail_course_link";
+    }
+
+    interface Certificate {
+        String COPY_LINK_CERTIFICATE = "certificate_copy_link";
+        String SHARE_LINK_CERTIFICATE = "certificate_share";
+        String ADD_LINKEDIN = "certificate_add_linkeding";
     }
 
     void reportEvent(String eventName, Bundle bundle);

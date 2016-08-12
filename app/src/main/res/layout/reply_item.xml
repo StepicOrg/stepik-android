@@ -60,7 +60,7 @@
                         tools:text="John Doe"
                         />
 
-                    <org.stepic.droid.view.custom.LatexInterceptFrameLayout
+                    <org.stepic.droid.ui.custom.LatexInterceptFrameLayout
                         android:id="@+id/enhanced_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

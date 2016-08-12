@@ -34,7 +34,7 @@
         android:animateLayoutChanges="true"
         android:fitsSystemWindows="true">
 
-        <org.stepic.droid.view.custom.TouchDispatchableFrameLayout
+        <org.stepic.droid.ui.custom.TouchDispatchableFrameLayout
             android:id="@+id/player_controller"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -174,7 +174,7 @@
 
             </LinearLayout>
 
-        </org.stepic.droid.view.custom.TouchDispatchableFrameLayout>
+        </org.stepic.droid.ui.custom.TouchDispatchableFrameLayout>
     </FrameLayout>
 
     <me.zhanghai.android.materialprogressbar.MaterialProgressBar

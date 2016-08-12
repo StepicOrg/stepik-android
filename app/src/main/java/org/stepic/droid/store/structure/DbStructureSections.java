@@ -31,6 +31,8 @@ public final class DbStructureSections extends DBStructureBase {
         public static final String UPDATE_DATE = "update_date";
         public static final String IS_CACHED = "is_cached";
         public static final String IS_LOADING = "is_loading";
+        public static final String TEST_SECTION = "can_test_section";
+
     }
 
     public static String[] getUsedColumns() {
@@ -49,6 +51,7 @@ public final class DbStructureSections extends DBStructureBase {
                     Column.UNITS,
                     Column.IS_CACHED,
                     Column.IS_LOADING,
+                    Column.TEST_SECTION
             };
         }
         return mUsedColumns;

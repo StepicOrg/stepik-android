@@ -3,6 +3,7 @@ package org.stepic.droid.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+//// TODO: 10.08.16 merge to class "Actions"
 public class ActionsContainer implements Parcelable {
     private String do_review;
     private String edit_instructions;

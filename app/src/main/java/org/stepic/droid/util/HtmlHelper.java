@@ -72,7 +72,8 @@ public class HtmlHelper {
         boolean isContainsPicture = text.contains("<img");
         boolean isContainsLatex = text.contains("$");
         boolean isContainsCode = text.contains("<pre><code>");
-        return isContainsLatex || isContainsPicture || isContainsCode;
+        boolean isContainsBigMath = text.contains("\\[");
+        return isContainsLatex || isContainsPicture || isContainsCode || isContainsBigMath;
     }
 
     /**
@@ -200,6 +201,7 @@ public class HtmlHelper {
                     "  MathJax.Hub.Config({" +
                     "messageStyle: \"none\", " +
                     "tex2jax: {preview: \"none\", inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
+                    "displayMath: [ ['$$','$$'], ['\\[','\\]'] ]"+
                     "</script>\n" +
                     "<script type=\"text/javascript\"\n" +
                     " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full\">\n" +

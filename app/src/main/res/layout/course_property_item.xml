@@ -40,7 +40,7 @@
                 android:paddingBottom="@dimen/padding_text_in_cv"
                 android:text="@string/summary" />
 
-            <org.stepic.droid.view.custom.ExpandableTextView
+            <org.stepic.droid.ui.custom.ExpandableTextView
                 android:id="@+id/course_property_text_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

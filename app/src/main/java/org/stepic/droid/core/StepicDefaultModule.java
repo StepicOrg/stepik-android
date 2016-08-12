@@ -17,6 +17,7 @@ import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.BlockPersistentWrapper;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.CalendarSection;
+import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
@@ -29,11 +30,11 @@ import org.stepic.droid.notifications.NotificationManagerImpl;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.presenters.course_finder.CourseFinderPresenter;
-import org.stepic.droid.presenters.course_finder.CourseFinderPresenterForDetailScreen;
-import org.stepic.droid.presenters.course_finder.CourseFinderPresenterForSectionScreen;
-import org.stepic.droid.presenters.course_joiner.CourseJoinerPresenter;
-import org.stepic.droid.presenters.course_joiner.CourseJoinerPresenterImpl;
+import org.stepic.droid.ui.presenters.course_finder.CourseFinderPresenter;
+import org.stepic.droid.ui.presenters.course_finder.CourseFinderPresenterForDetailScreen;
+import org.stepic.droid.ui.presenters.course_finder.CourseFinderPresenterForSectionScreen;
+import org.stepic.droid.ui.presenters.course_joiner.CourseJoinerPresenter;
+import org.stepic.droid.ui.presenters.course_joiner.CourseJoinerPresenterImpl;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.ConcurrentCancelSniffer;
@@ -46,6 +47,7 @@ import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.dao.AssignmentDaoImpl;
 import org.stepic.droid.store.dao.BlockDaoImpl;
 import org.stepic.droid.store.dao.CalendarSectionDaoImpl;
+import org.stepic.droid.store.dao.CertificateViewItemDaoImpl;
 import org.stepic.droid.store.dao.CourseDaoImpl;
 import org.stepic.droid.store.dao.DownloadEntityDaoImpl;
 import org.stepic.droid.store.dao.IDao;
@@ -231,16 +233,19 @@ public class StepicDefaultModule {
         return helper.getWritableDatabase();
     }
 
+    @Singleton
     @Provides
     public IDao<Section> provideSectionDao(SQLiteDatabase openHelper) {
         return new SectionDaoImpl(openHelper);
     }
 
+    @Singleton
     @Provides
     public IDao<Unit> provideUnitDao(SQLiteDatabase openHelper, IDao<Progress> progressDao) {
         return new UnitDaoImpl(openHelper, progressDao);
     }
 
+    @Singleton
     @Provides
     public IDao<Progress> provideProgressDao(SQLiteDatabase openHelper) {
         return new ProgressDaoImpl(openHelper);
@@ -252,35 +257,46 @@ public class StepicDefaultModule {
     }
 
     @Provides
+    public IDao<CertificateViewItem> provideCertificateDao(SQLiteDatabase openHelper) {
+        return new CertificateViewItemDaoImpl(openHelper);
+    }
+
+    @Provides
     public IDao<Lesson> provideLessonDao(SQLiteDatabase openHelper) {
         return new LessonDaoImpl(openHelper);
     }
 
+    @Singleton
     @Provides
     public IDao<ViewAssignment> provideViewAssignment(SQLiteDatabase openHelper) {
         return new ViewAssignmentDaoImpl(openHelper);
     }
 
+    @Singleton
     @Provides
     public IDao<DownloadEntity> provideDownloadEntity(SQLiteDatabase openHelper) {
         return new DownloadEntityDaoImpl(openHelper);
     }
 
+    @Singleton
     @Provides
-    public  IDao<CalendarSection> provideCalendarSection(SQLiteDatabase database){
+    public IDao<CalendarSection> provideCalendarSection(SQLiteDatabase database) {
         return new CalendarSectionDaoImpl(database);
     }
 
+    @Singleton
     @Provides
     public IDao<CachedVideo> provideCachedVideo(SQLiteDatabase openHelper) {
         return new PersistentVideoDaoImpl(openHelper);
     }
 
+    @Singleton
     @Provides
     public IDao<BlockPersistentWrapper> provideBlockWrapper(SQLiteDatabase openHelper, IDao<CachedVideo> daoCached) {
         return new BlockDaoImpl(openHelper, daoCached);
     }
 
+    @Singleton
     @Provides
     public IDao<Step> provideStep(SQLiteDatabase openHelper,
                                   IDao<BlockPersistentWrapper> blockDao,
@@ -294,6 +310,7 @@ public class StepicDefaultModule {
         return new CourseDaoImpl(openHelper, daoCached);
     }
 
+    @Singleton
     @Provides
     public IDao<Notification> provideNotification(SQLiteDatabase openHelper) {
         return new NotificationDaoImpl(openHelper);
@@ -369,8 +386,8 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public ShareHelper provideShareHelper() {
-        return new ShareHelperImpl();
+    public ShareHelper provideShareHelper(IConfig config, Context context) {
+        return new ShareHelperImpl(config, context);
     }
 
     @Provides

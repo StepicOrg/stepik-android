@@ -63,7 +63,7 @@
     <string name="connectionProblems">Отсутствует подключение к Интернету</string>
     <string name="video_quality">Качество видео</string>
     <string name="sync_problem">Возникли проблемы с синхронизацией данных, пожалуйста, повторите попытку позже.</string>
-    <string name="empty_courses">Похоже, что Вы не записаны ни на один курс. Кликните, чтобы найти свой первый курс!</string>
+    <string name="empty_courses">Похоже, что Вы не записаны ни на один курс</string>
     <string name="cache_cleared">Кэш успешно очищен!</string>
     <string name="join_course_web_exception">Попробуйте записаться на курс в веб версии</string>
     <string name="downloads">Загрузки</string>
@@ -202,4 +202,15 @@
     <string name="choose_calendar_title">Выберите календарь</string>
     <string name="calendar_added_message">Дедлайны успешно добавлены в календарь</string>
     <string name="user_not_have_calendar">Календарей нет. Попробуйте создать в приложении календаря</string>
+    <string name="certificates_title">Сертификаты</string>
+    <string name="certificate_regular_with_substitution">Сертификат за курс %s</string>
+    <string name="certificate_distinction_with_substitution">Сертификат с отличием за курс %s</string>
+    <string name="certificate_result_with_substitution">Результат: %s%%</string>
+    <string name="certificate_share_copy_link">Копировать ссылку</string>
+    <string name="certificate_share_copy_link_success">Ссылка скопирована</string>
+    <string name="certificate_share_share_link">Поделиться…</string>
+    <string name="add_to_linkedin">Добавить в профиль LinkedIn</string>
+    <string name="empty_certificates">Пока вы не получили ни одного сертификата</string>
+    <string name="are_you_sure_remove_comment_text">Если Вы выйдите, эта запись будет потеряна</string>
+    <string name="email_already_used">Данный e-mail используется в другом аккаунте</string>
 </resources>

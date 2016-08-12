@@ -26,7 +26,7 @@ import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.HtmlHelper
-import org.stepic.droid.view.activities.SectionActivity
+import org.stepic.droid.ui.activities.SectionActivity
 import org.stepic.droid.web.IApi
 
 class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper, val api: IApi, val configs: IConfig, val userPreferences: UserPreferences, val databaseFacade: DatabaseFacade, val analytic : Analytic) : INotificationManager {

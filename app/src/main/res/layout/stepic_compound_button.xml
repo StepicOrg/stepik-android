@@ -31,7 +31,7 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
-        <org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout
+        <org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
             android:id="@+id/text_compound_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

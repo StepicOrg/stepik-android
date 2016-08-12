@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
@@ -24,6 +25,8 @@ public interface IScreenManager {
     void showMainFeed(Context sourceActivity);
 
     void showCourseDescription(Fragment sourceActivity, @NotNull Course course);
+
+    void showPdfInBrowserByGoogleDocs(Activity activity, String fullPath);
 
     void openComments(Context context, String discussionProxyId, long stepId);
 
@@ -60,4 +63,6 @@ public interface IScreenManager {
     void showStorageManagement(Activity activity);
 
     void openInWeb(Context context, String path);
+
+    void addCertificateToLinkedIn(CertificateViewItem certificateViewItem);
 }

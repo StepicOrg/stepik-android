@@ -16,8 +16,8 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.notifications.HackFcmListener;
 import org.stepic.droid.notifications.HackerFcmInstanceId;
 import org.stepic.droid.notifications.NotificationBroadcastReceiver;
-import org.stepic.droid.presenters.course_finder.CourseFinderPresenterImpl;
-import org.stepic.droid.presenters.course_joiner.CourseJoinerPresenterImpl;
+import org.stepic.droid.ui.presenters.course_finder.CourseFinderPresenterImpl;
+import org.stepic.droid.ui.presenters.course_joiner.CourseJoinerPresenterImpl;
 import org.stepic.droid.receivers.DownloadClickReceiver;
 import org.stepic.droid.receivers.DownloadCompleteReceiver;
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver;
@@ -29,27 +29,28 @@ import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.ImageOnDisk;
-import org.stepic.droid.view.activities.SectionActivity;
-import org.stepic.droid.view.adapters.CoursePropertyAdapter;
-import org.stepic.droid.view.adapters.DownloadsAdapter;
-import org.stepic.droid.view.adapters.MyCoursesAdapter;
-import org.stepic.droid.view.adapters.SectionAdapter;
-import org.stepic.droid.view.adapters.SocialAuthAdapter;
-import org.stepic.droid.view.adapters.StepFragmentAdapter;
-import org.stepic.droid.view.adapters.UnitAdapter;
-import org.stepic.droid.view.dialogs.AllowMobileDataDialogFragment;
-import org.stepic.droid.view.dialogs.ChooseCalendarDialog;
-import org.stepic.droid.view.dialogs.ChooseStorageDialog;
-import org.stepic.droid.view.dialogs.ClearVideosDialog;
-import org.stepic.droid.view.dialogs.DeleteCommentDialogFragment;
-import org.stepic.droid.view.dialogs.LogoutAreYouSureDialog;
-import org.stepic.droid.view.dialogs.NeedUpdatingDialog;
-import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
-import org.stepic.droid.view.dialogs.UnauthorizedDialogFragment;
-import org.stepic.droid.view.dialogs.VideoQualityDialog;
-import org.stepic.droid.view.dialogs.WantMoveDataDialog;
-import org.stepic.droid.view.fragments.CommentsFragment;
-import org.stepic.droid.view.fragments.CourseDetailFragment;
+import org.stepic.droid.ui.activities.SectionActivity;
+import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
+import org.stepic.droid.ui.adapters.DownloadsAdapter;
+import org.stepic.droid.ui.adapters.MyCoursesAdapter;
+import org.stepic.droid.ui.adapters.SectionAdapter;
+import org.stepic.droid.ui.adapters.SocialAuthAdapter;
+import org.stepic.droid.ui.adapters.StepFragmentAdapter;
+import org.stepic.droid.ui.adapters.UnitAdapter;
+import org.stepic.droid.ui.dialogs.AllowMobileDataDialogFragment;
+import org.stepic.droid.ui.dialogs.CertificateShareDialog;
+import org.stepic.droid.ui.dialogs.ChooseCalendarDialog;
+import org.stepic.droid.ui.dialogs.ChooseStorageDialog;
+import org.stepic.droid.ui.dialogs.ClearVideosDialog;
+import org.stepic.droid.ui.dialogs.DeleteCommentDialogFragment;
+import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog;
+import org.stepic.droid.ui.dialogs.NeedUpdatingDialog;
+import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
+import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
+import org.stepic.droid.ui.dialogs.VideoQualityDialog;
+import org.stepic.droid.ui.dialogs.WantMoveDataDialog;
+import org.stepic.droid.ui.fragments.CommentsFragment;
+import org.stepic.droid.ui.fragments.CourseDetailFragment;
 import org.stepic.droid.web.RetrofitRESTApi;
 
 import javax.inject.Singleton;
@@ -59,6 +60,9 @@ import dagger.Component;
 @Singleton
 @Component(modules = {StepicDefaultModule.class})
 public interface StepicCoreComponent {
+
+    CertificateComponent plusActModule(CertificateModule module);
+
     void inject(FragmentActivityBase someActivity);
 
     void inject(SectionActivity someActivity);
@@ -146,7 +150,7 @@ public interface StepicCoreComponent {
 
     void inject(HackerFcmInstanceId instanceIdService);
 
-    void inject (NotificationBroadcastReceiver receiver);
+    void inject(NotificationBroadcastReceiver receiver);
 
     void inject(NeedUpdatingDialog needUpdatingDialog);
 
@@ -172,5 +176,5 @@ public interface StepicCoreComponent {
 
     void inject(DeleteCommentDialogFragment dialogFragment);
 
-    void inject(ShareHelperImpl shareHelper);
+    void inject(CertificateShareDialog certificateShareDialog);
 }

@@ -14,7 +14,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout;
+import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.web.StepResponse;
 
 import butterknife.BindView;
@@ -37,20 +37,27 @@ public abstract class StepBaseFragment extends FragmentBase {
     protected Lesson lesson;
     protected Unit unit;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        step = (Step) getArguments().getSerializable(AppConstants.KEY_STEP_BUNDLE);
+        lesson = (Lesson) getArguments().getSerializable(AppConstants.KEY_LESSON_BUNDLE);
+        unit = (Unit) getArguments().getSerializable(AppConstants.KEY_UNIT_BUNDLE);
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        step = (Step) getArguments().getSerializable(AppConstants.KEY_STEP_BUNDLE);
-        lesson = (Lesson) getArguments().getSerializable(AppConstants.KEY_LESSON_BUNDLE);
-        unit = (Unit) getArguments().getSerializable(AppConstants.KEY_UNIT_BUNDLE);
 
         if (step != null &&
                 step.getBlock() != null &&
                 step.getBlock().getText() != null &&
                 !step.getBlock().getText().isEmpty()) {
+
             headerWvEnhanced.setText(step.getBlock().getText());
             headerWvEnhanced.setVisibility(View.VISIBLE);
+
         } else {
             headerWvEnhanced.setVisibility(View.GONE);
         }

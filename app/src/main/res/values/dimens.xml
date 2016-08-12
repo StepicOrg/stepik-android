@@ -49,4 +49,9 @@
     <dimen name="margin_option_text">12dp</dimen>
     <dimen name="margin_option_top_bot">4dp</dimen>
     <dimen name="height_image_comment_state">16dp</dimen>
+    <dimen name="certificate_image_size">80dp</dimen>
+    <dimen name="share_item_padding">16dp</dimen>
+    <dimen name="text_size_placeholders">20sp</dimen>
+    <dimen name="padding_placeholders">16dp</dimen>
+    <dimen name="drawable_padding_placeholders">40dp</dimen>
 </resources>

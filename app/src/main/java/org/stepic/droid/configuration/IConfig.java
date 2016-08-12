@@ -19,4 +19,6 @@ public interface IConfig {
     String getUpdateEndpoint();
 
     String getFirebaseDomain();
+
+    String getGoogleServerClientId();
 }

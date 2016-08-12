@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+
+    <include layout="@layout/progress_bar_on_empty_screen"/>
+
+    <include layout="@layout/report_problem_layout"/>
+
+    <include layout="@layout/empty_certificates"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/certificate_swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/certificates_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:divider="@color/transparent"
+            android:scrollbarStyle="outsideOverlay"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+</FrameLayout>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.stepic.droid.view.custom.TouchDispatchableFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root_fragment_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<org.stepic.droid.ui.custom.TouchDispatchableFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                         android:id="@+id/root_fragment_view"
+                                                         android:layout_width="match_parent"
+                                                         android:layout_height="match_parent">
 
     <include layout="@layout/progress_bar_on_empty_screen" />
 
@@ -30,4 +30,4 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
 
-</org.stepic.droid.view.custom.TouchDispatchableFrameLayout>
+</org.stepic.droid.ui.custom.TouchDispatchableFrameLayout>

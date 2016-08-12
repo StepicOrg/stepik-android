@@ -41,7 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/first_name"
-                    android:imeOptions="actionNext"
+                    android:imeOptions="flagNoFullscreen|actionNext"
                     android:inputType="textPersonName|textAutoCorrect|textCapWords"
                     android:maxLength="100"
                     android:singleLine="true"/>
@@ -60,7 +60,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/second_name"
-                    android:imeOptions="actionNext"
+                    android:imeOptions="flagNoFullscreen|actionNext"
                     android:inputType="textPersonName|textAutoCorrect|textCapWords"
                     android:maxLength="100"
                     android:singleLine="true"/>
@@ -79,7 +79,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/email"
-                    android:imeOptions="actionNext"
+                    android:imeOptions="flagNoFullscreen|actionNext"
                     android:inputType="textEmailAddress"
                     android:maxLength="100"
                     android:singleLine="true"/>
@@ -98,10 +98,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/password_hint"
-                    android:imeOptions="actionSend"
+                    android:imeOptions="flagNoFullscreen|actionSend"
                     android:inputType="textPassword"
                     android:maxLength="@integer/max_length_of_password"
-                    android:singleLine="true"/>
+                    android:maxLines="1"/>
 
             </android.support.design.widget.TextInputLayout>
 

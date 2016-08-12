@@ -32,7 +32,7 @@
             android:layout_weight="80"
             android:scrollbarStyle="outsideOverlay">
 
-            <org.stepic.droid.view.custom.LatexSupportableEnhancedFrameLayout
+            <org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
                 android:id="@+id/option_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

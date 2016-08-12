@@ -15,7 +15,6 @@
         <item name="windowNoTitle">true</item>
         <item name="buttonStyle">@style/StepicButton</item>
         <item name="android:textAppearance">@style/TextAppearance.FontPath</item>
-
         <item name="android:dialogTheme">@style/AppTheme.Dialog</item>
         <item name="dialogTheme">@style/AppTheme.Dialog</item>
         <item name="android:alertDialogTheme">@style/AppTheme.Dialog</item>
@@ -29,6 +28,7 @@
     </style>
 
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7"/>
+
     <style name="AppTheme.VideoPlayer.7" parent="Theme.AppCompat">
         <item name="colorAccent">@color/stepic_blue_ribbon</item>
         <item name="colorPrimary">@color/stepic_brand_primary</item>
@@ -71,6 +71,25 @@
         <item name="android:textSize">14sp</item>
         <item name="android:background">@drawable/btn_color_selector_accent</item>
         <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="BottomSheetShareItem">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:clickable">true</item>
+        <item name="android:drawablePadding">@dimen/share_item_padding</item>
+        <item name="android:padding">@dimen/share_item_padding</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:foreground">@drawable/non_radius_foreground</item>
+    </style>
+
+    <style name="PlaceholderTextViewStyle">
+        <item name="android:textSize">@dimen/text_size_placeholders</item>
+        <item name="android:padding">@dimen/padding_placeholders</item>
+        <item name="android:lineSpacingMultiplier">1.15</item>
+        <item name="android:gravity">center</item>
+        <item name="android:drawablePadding">@dimen/drawable_padding_placeholders</item>
+        <item name="android:textColor">@color/stepic_weak_text</item>
     </style>
 
 

@@ -12,10 +12,15 @@ import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
@@ -24,23 +29,26 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.view.activities.CommentsActivity;
-import org.stepic.droid.view.activities.CourseDetailActivity;
-import org.stepic.droid.view.activities.LaunchActivity;
-import org.stepic.droid.view.activities.LoginActivity;
-import org.stepic.droid.view.activities.MainFeedActivity;
-import org.stepic.droid.view.activities.NewCommentActivity;
-import org.stepic.droid.view.activities.RegisterActivity;
-import org.stepic.droid.view.activities.SectionActivity;
-import org.stepic.droid.view.activities.SettingsActivity;
-import org.stepic.droid.view.activities.StepsActivity;
-import org.stepic.droid.view.activities.StoreManagementActivity;
-import org.stepic.droid.view.activities.TextFeedbackActivity;
-import org.stepic.droid.view.activities.UnitsActivity;
-import org.stepic.droid.view.activities.VideoActivity;
-import org.stepic.droid.view.dialogs.RemindPasswordDialogFragment;
+import org.stepic.droid.ui.activities.CommentsActivity;
+import org.stepic.droid.ui.activities.CourseDetailActivity;
+import org.stepic.droid.ui.activities.LaunchActivity;
+import org.stepic.droid.ui.activities.LoginActivity;
+import org.stepic.droid.ui.activities.MainFeedActivity;
+import org.stepic.droid.ui.activities.NewCommentActivity;
+import org.stepic.droid.ui.activities.RegisterActivity;
+import org.stepic.droid.ui.activities.SectionActivity;
+import org.stepic.droid.ui.activities.SettingsActivity;
+import org.stepic.droid.ui.activities.StepsActivity;
+import org.stepic.droid.ui.activities.StoreManagementActivity;
+import org.stepic.droid.ui.activities.TextFeedbackActivity;
+import org.stepic.droid.ui.activities.UnitsActivity;
+import org.stepic.droid.ui.activities.VideoActivity;
+import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.web.ViewAssignment;
 import org.videolan.libvlc.util.VLCUtil;
+
+import java.net.URLEncoder;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -210,12 +218,45 @@ public class ScreenManager implements IScreenManager {
     @Override
     public void openInWeb(Context context, String path) {
         analytic.reportEventWithIdName(Analytic.Screens.OPEN_LINK_IN_WEB, "0", path);
-        if (!path.startsWith("https://") && !path.startsWith("http://")){
+        if (!path.startsWith("https://") && !path.startsWith("http://")) {
             path = "http://" + path;
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(path));
         context.startActivity(intent);
+    }
+
+    @Override
+    public void addCertificateToLinkedIn(CertificateViewItem certificateViewItem) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(AppConstants.LINKEDIN_ADD_URL);
+        sb.append("_ed=");//linkedin id parameter
+        sb.append(AppConstants.LINKEDIN_ED_ID);
+        sb.append("&pfCertificationName="); // linkedin cert name
+        sb.append(URLEncoder.encode(certificateViewItem.getTitle()));
+        sb.append("&pfCertificationUrl=");//linkedin certificate url
+        sb.append(certificateViewItem.getFullPath());
+
+        String issueDate = certificateViewItem.getIssue_date();
+        if (issueDate != null) {
+            sb.append("&pfCertStartDate=");
+            DateTime issueDateTime = new DateTime(issueDate);
+            DateTimeFormatter formatter = DateTimeFormat.forPattern("YYYYMM").withZone(DateTimeZone.getDefault()).withLocale(Locale.getDefault());
+            String issueDateInLinkedinFormat = formatter.print(issueDateTime);
+            sb.append(issueDateInLinkedinFormat);
+        }
+
+
+        final Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setData(Uri.parse(sb.toString()));
+        MainApplication.getAppContext().startActivity(intent);
+    }
+
+    @Override
+    public void showPdfInBrowserByGoogleDocs(Activity activity, String fullPath) {
+        String googleDocsUrl = "https://docs.google.com/viewer?url=";
+        openInWeb(activity, googleDocsUrl + fullPath);
     }
 
     @Override
@@ -229,7 +270,7 @@ public class ScreenManager implements IScreenManager {
             Intent intent = new Intent(context, CommentsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Bundle bundle = new Bundle();
-            bundle.putString(CommentsActivity.Companion.getKeyDiscusionProxyId(), discussionProxyId);
+            bundle.putString(CommentsActivity.Companion.getKeyDiscussionProxyId(), discussionProxyId);
             bundle.putLong(CommentsActivity.Companion.getKeyStepId(), stepId);
             intent.putExtras(bundle);
             context.startActivity(intent);
@@ -285,7 +326,7 @@ public class ScreenManager implements IScreenManager {
 
     @Override
     public void openStepInWeb(Context context, Step step) {
-        analytic.reportEvent(Analytic.Screens.OPEN_STEP_IN_WEB, step.getId()+"");
+        analytic.reportEvent(Analytic.Screens.OPEN_STEP_IN_WEB, step.getId() + "");
         String url = mConfig.getBaseUrl() + "/lesson/" + step.getLesson() + "/step/" + step.getPosition() + "/?from_mobile_app=true";
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
         context.startActivity(intent);

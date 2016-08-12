@@ -21,7 +21,7 @@ class CalendarSectionDaoImpl(writableDatabase: SQLiteDatabase) : DaoBase<Calenda
         return persistentObject.id.toString()
     }
 
-    public override fun getContentValues(persistentObject: CalendarSection): ContentValues? {
+    public override fun getContentValues(persistentObject: CalendarSection): ContentValues {
         val contentValues = ContentValues()
         contentValues.put(DbStructureCalendarSection.Column.SECTION_ID, persistentObject.id)
         contentValues.put(DbStructureCalendarSection.Column.EVENT_ID_HARD, persistentObject.eventIdHardDeadline)
@@ -31,7 +31,7 @@ class CalendarSectionDaoImpl(writableDatabase: SQLiteDatabase) : DaoBase<Calenda
         return contentValues
     }
 
-    public override fun parsePersistentObject(cursor: Cursor): CalendarSection? {
+    public override fun parsePersistentObject(cursor: Cursor): CalendarSection {
         val indexSection = cursor.getColumnIndex(DbStructureCalendarSection.Column.SECTION_ID)
         val indexHardDeadlineEvent = cursor.getColumnIndex(DbStructureCalendarSection.Column.EVENT_ID_HARD)
         val indexSoftDeadlineEvent = cursor.getColumnIndex(DbStructureCalendarSection.Column.EVENT_ID_SOFT)

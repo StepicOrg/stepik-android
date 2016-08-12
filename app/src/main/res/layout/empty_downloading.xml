@@ -1,35 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="50dp"
-    android:layout_marginTop="50dp"
-    android:visibility="gone">
+<FrameLayout android:id="@+id/empty_downloading"
+             xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:visibility="gone"
+             tools:visibility="visible">
 
-    <LinearLayout
-        android:id="@+id/empty_downloading"
+    <TextView
+        style="@style/PlaceholderTextViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="2"
-            android:padding="8dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_empty_downloads" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="6dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:padding="2dp"
-            android:text="@string/empty_downloading"
-            android:textSize="20sp" />
-    </LinearLayout>
-</merge>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawableTop="@drawable/ic_empty_downloads_2"
+        android:text="@string/empty_downloading"/>
+</FrameLayout>

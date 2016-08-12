@@ -110,4 +110,7 @@ public interface StepicRestLoggedService {
 
     @DELETE("api/comments/{id}")
     Call<CommentsResponse> deleteComment(@Path("id") long commentId);
+
+    @GET("api/certificates")
+    Call<CertificateResponse> getCertificates(@Query("user") long userId);
 }

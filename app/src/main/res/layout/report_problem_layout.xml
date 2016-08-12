@@ -1,29 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     android:id="@+id/report_problem"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:orientation="vertical"
     android:visibility="gone"
-    android:padding="10dp"
     tools:visibility="visible">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_report_problem_silver"/>
-
     <TextView
+        style="@style/PlaceholderTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="6dp"
-        android:gravity="center"
-        android:padding="2dp"
-        android:text="@string/sync_problem"
-        android:textSize="24sp"/>
-</LinearLayout>
+        android:drawableTop="@drawable/ic_no_wifi"
+        android:text="@string/internet_problem"/>
+</FrameLayout>

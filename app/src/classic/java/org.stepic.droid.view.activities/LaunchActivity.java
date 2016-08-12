@@ -1,4 +1,4 @@
-package org.stepic.droid.view.activities;
+package org.stepic.droid.ui.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

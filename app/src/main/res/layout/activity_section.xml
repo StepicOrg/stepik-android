@@ -46,6 +46,7 @@
                         tools:visibility='visible'/>
 
                     <android.support.v7.widget.RecyclerView
+                        android:splitMotionEvents="false"
                         android:id="@+id/sections_recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

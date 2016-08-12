@@ -97,6 +97,14 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, CALENDAR_WIDGET, needToShowCalendarWidget);
     }
 
+    public boolean isNeedDropCoursesIn114() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, NEED_DROP_114, true);
+    }
+
+    public void afterNeedDropCoursesIn114() {
+        put(PreferenceType.DEVICE_SPECIFIC, NEED_DROP_114, false);
+    }
+
 //    public enum CommentsOrder {
 //        DISCUSSION_NEW_FIRST("discussion"),
 //        DISCUSSION_MOST_LIKED("discussions_most_liked"),
@@ -393,4 +401,5 @@ public class SharedPreferenceHelper {
     private final String SCHEDULED_LINK_CACHED = "scheduled_cached";
     private final String DISCUSSION_ORDER = "discussion_order";
     private final String CALENDAR_WIDGET = "calenda_widget";
+    private final String NEED_DROP_114 = "need_drop_114";
 }
