@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.squareup.otto.Subscribe;
-import com.squareup.picasso.Picasso;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -29,8 +29,8 @@ import org.stepic.droid.util.ThumbnailParser;
 import java.io.IOException;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.BindDrawable;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class VideoStepFragment extends StepBaseFragment {
@@ -66,10 +66,9 @@ public class VideoStepFragment extends StepBaseFragment {
             setThumbnail(thumbnail);
 
         } else {
-            Picasso.with(getContext())
-                    .load(R.drawable.video_placeholder)
-                    .placeholder(mVideoPlaceholder)
-                    .error(mVideoPlaceholder)
+            Glide.with(getContext())
+                    .load("")
+                    .placeholder(R.drawable.video_placeholder)
                     .into(mThumbnail);
         }
 
@@ -153,10 +152,9 @@ public class VideoStepFragment extends StepBaseFragment {
 
     private void setThumbnail(String thumbnail) {
         Uri uri = ThumbnailParser.getUriForThumbnail(thumbnail);
-        Picasso.with(getContext())
+        Glide.with(getContext())
                 .load(uri)
                 .placeholder(mVideoPlaceholder)
-                .error(mVideoPlaceholder)
                 .into(mThumbnail);
     }
 

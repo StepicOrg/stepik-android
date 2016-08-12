@@ -30,13 +30,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.facebook.drawee.view.DraweeView;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.otto.Subscribe;
-import com.squareup.picasso.Picasso;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -55,6 +55,12 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepic.droid.model.User;
 import org.stepic.droid.model.Video;
+import org.stepic.droid.ui.abstraction.CourseJoinView;
+import org.stepic.droid.ui.abstraction.LoadCourseView;
+import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
+import org.stepic.droid.ui.adapters.InstructorAdapter;
+import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
+import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.ui.presenters.course_finder.CourseFinderPresenter;
 import org.stepic.droid.ui.presenters.course_joiner.CourseJoinerPresenter;
 import org.stepic.droid.util.AppConstants;
@@ -62,12 +68,6 @@ import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.util.ThumbnailParser;
-import org.stepic.droid.ui.abstraction.CourseJoinView;
-import org.stepic.droid.ui.abstraction.LoadCourseView;
-import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
-import org.stepic.droid.ui.adapters.InstructorAdapter;
-import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
-import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.web.UserStepicResponse;
 
 import java.net.HttpURLConnection;
@@ -77,9 +77,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import butterknife.BindView;
 import butterknife.BindDrawable;
 import butterknife.BindString;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
@@ -649,7 +649,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     private void setThumbnail(String thumbnail) {
         Uri uri = ThumbnailParser.getUriForThumbnail(thumbnail);
-        Picasso.with(getActivity())
+        Glide.with(getActivity())
                 .load(uri)
                 .placeholder(mVideoPlaceholder)
                 .error(mVideoPlaceholder)

@@ -43,7 +43,7 @@
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
-            android:src="@drawable/placeholder_icon"
+            tools:src="@drawable/placeholder_icon"
             app:border_color="#FF000000" />
     </RelativeLayout>
 </FrameLayout>

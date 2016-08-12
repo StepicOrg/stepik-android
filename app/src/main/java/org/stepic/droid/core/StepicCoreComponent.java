@@ -16,8 +16,6 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.notifications.HackFcmListener;
 import org.stepic.droid.notifications.HackerFcmInstanceId;
 import org.stepic.droid.notifications.NotificationBroadcastReceiver;
-import org.stepic.droid.ui.presenters.course_finder.CourseFinderPresenterImpl;
-import org.stepic.droid.ui.presenters.course_joiner.CourseJoinerPresenterImpl;
 import org.stepic.droid.receivers.DownloadClickReceiver;
 import org.stepic.droid.receivers.DownloadCompleteReceiver;
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver;
@@ -28,7 +26,6 @@ import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.util.ImageOnDisk;
 import org.stepic.droid.ui.activities.SectionActivity;
 import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
 import org.stepic.droid.ui.adapters.DownloadsAdapter;
@@ -51,6 +48,8 @@ import org.stepic.droid.ui.dialogs.VideoQualityDialog;
 import org.stepic.droid.ui.dialogs.WantMoveDataDialog;
 import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.ui.fragments.CourseDetailFragment;
+import org.stepic.droid.ui.presenters.course_finder.CourseFinderPresenterImpl;
+import org.stepic.droid.ui.presenters.course_joiner.CourseJoinerPresenterImpl;
 import org.stepic.droid.web.RetrofitRESTApi;
 
 import javax.inject.Singleton;
@@ -119,8 +118,6 @@ public interface StepicCoreComponent {
     void inject(UpdateAppService updateAppService);
 
     void inject(DownloadCompleteReceiver downloadCompleteReceiver);
-
-    void inject(ImageOnDisk imageOnDisk);
 
     void inject(ViewPusher viewPusher);
 

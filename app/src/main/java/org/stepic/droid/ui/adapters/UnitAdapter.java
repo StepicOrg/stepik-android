@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -30,10 +30,10 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
 import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
+import org.stepic.droid.util.AppConstants;
 
 import java.util.List;
 import java.util.Map;
@@ -138,10 +138,9 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             }
         }
 
-        Picasso.with(MainApplication.getAppContext())
+        Glide.with(MainApplication.getAppContext())
                 .load(lesson.getCover_url())
                 .placeholder(holder.mLessonPlaceholderDrawable)
-                .error(holder.mLessonPlaceholderDrawable)
                 .into(holder.mLessonIcon);
 
         if (cost != 0) {
