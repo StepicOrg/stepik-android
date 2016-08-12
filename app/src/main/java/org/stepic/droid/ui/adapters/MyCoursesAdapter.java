@@ -1,14 +1,19 @@
 package org.stepic.droid.ui.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.DraweeView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
@@ -20,7 +25,6 @@ import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.HtmlHelper;
-import org.stepic.droid.util.StepicLogicHelper;
 
 import java.util.List;
 
@@ -46,20 +50,22 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
     @Inject
     CleanManager mCleaner;
 
+    private Drawable coursePlaceholder;
+
     @Nullable
     private final DatabaseFacade.Table type;
     private LayoutInflater mInflater;
 
     public MyCoursesAdapter(Fragment fragment, List<Course> courses, @Nullable DatabaseFacade.Table type) {
         super(fragment.getActivity(), 0, courses);
-        Fragment mFragment = fragment;
         this.type = type;
-        mInflater = (LayoutInflater) mFragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = (LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         MainApplication.component().inject(this);
-
+        coursePlaceholder = ContextCompat.getDrawable(fragment.getContext(), R.drawable.ic_course_placeholder);
     }
 
+    @NonNull
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final Course course = getItem(position);
@@ -76,9 +82,20 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         }
         viewHolderItem.courseName.setText(course.getTitle());
         viewHolderItem.courseSummary.setText(HtmlHelper.fromHtml(course.getSummary()));
-        viewHolderItem.courseIcon.setController(StepicLogicHelper.getControllerForCourse(course, mConfig));
-        viewHolderItem.courseDateInterval.setText(course.getDateOfCourse());
-
+        if (course.getCover() == null) {
+            Glide
+                    .with(getContext())
+                    .load("")
+                    .placeholder(coursePlaceholder)
+                    .into(viewHolderItem.courseIcon);
+        } else {
+            String path = mConfig.getBaseUrl() + course.getCover();
+            Glide
+                    .with(getContext())
+                    .load(path)
+                    .placeholder(coursePlaceholder)
+                    .into(viewHolderItem.imageViewTarget);
+        }
         return view;
     }
 
@@ -90,8 +107,8 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         @BindView(R.id.course_info)
         TextView courseSummary;
 
-        @BindView(R.id.video_icon)
-        DraweeView courseIcon;
+        @BindView(R.id.course_icon)
+        ImageView courseIcon;
 
         @BindView(R.id.course_date_interval)
         TextView courseDateInterval;
@@ -99,8 +116,11 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         @BindView(R.id.cv)
         View cardView;
 
+        GlideDrawableImageViewTarget imageViewTarget;
+
         public ViewHolderItem(View view) {
             ButterKnife.bind(this, view);
+            imageViewTarget = new GlideDrawableImageViewTarget(courseIcon);
         }
     }
 }
