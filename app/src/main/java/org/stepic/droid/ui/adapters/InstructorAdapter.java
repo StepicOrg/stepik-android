@@ -48,6 +48,7 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
         holder.courseShortBio.setText(instructor.getShort_bio());
         Glide.with(mContext)
                 .load(instructor.getAvatar())
+                .asBitmap()
                 .placeholder(placeholder)
                 .into(holder.instructorIcon);
     }

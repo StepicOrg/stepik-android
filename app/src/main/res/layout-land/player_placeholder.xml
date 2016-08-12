@@ -3,23 +3,21 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
-             xmlns:fresco="http://schemas.android.com/apk/res-auto"
              android:layout_gravity="center">
 
-
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:scaleType="centerCrop"
+    <ImageView
         android:id="@+id/player_thumbnail"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/video_height"
         android:layout_gravity="center"
-        tools:src = "@drawable/video_placeholder"/>
+        tools:src="@drawable/video_placeholder"/>
+
 
     <ImageView
         android:id="@+id/player_button"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="center"
-        android:src="@drawable/ic_media_play_active" />
+        android:src="@drawable/ic_media_play_active"/>
 
 </FrameLayout>

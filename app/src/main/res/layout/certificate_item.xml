@@ -2,7 +2,6 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -52,14 +51,13 @@
                 android:textSize="14sp"
                 tools:text="Сертификат с отличием за курс Безопасность в интернете"/>
 
-            <com.facebook.drawee.view.SimpleDraweeView
+            <ImageView
                 android:id="@+id/certificate_icon"
                 android:layout_width="@dimen/certificate_image_size"
                 android:layout_height="@dimen/certificate_image_size"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                fresco:failureImage="@drawable/ic_course_placeholder"
-                fresco:placeholderImage="@drawable/ic_course_placeholder"/>
+                tools:src="@drawable/ic_course_placeholder"/>
         </RelativeLayout>
 
         <Button

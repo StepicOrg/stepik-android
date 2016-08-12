@@ -17,11 +17,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.drawee.view.DraweeView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -119,7 +121,9 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     protected View joinCourseButton;
 
     @BindView(R.id.courseIcon)
-    protected DraweeView courseIcon;
+    protected ImageView courseIcon;
+
+    GlideDrawableImageViewTarget imageViewTarget;
 
     @BindView(R.id.course_name)
     protected TextView courseName;
@@ -168,6 +172,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         MainApplication.component().inject(this);
         setContentView(R.layout.activity_section);
         unbinder = ButterKnife.bind(this);
+        imageViewTarget = new GlideDrawableImageViewTarget(courseIcon);
         hideSoftKeypad();
         isScreenEmpty = true;
         firstLoad = true;
@@ -303,7 +308,10 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                 }
             });
             courseName.setText(mCourse.getTitle());
-            courseIcon.setController(StepicLogicHelper.getControllerForCourse(mCourse, mConfig));
+            Glide.with(this)
+                    .load(StepicLogicHelper.getPathForCourseOrEmpty(mCourse, mConfig))
+                    .placeholder(R.drawable.ic_course_placeholder)
+                    .into(imageViewTarget);
         } else {
             joinCourseRoot.setVisibility(View.GONE);
         }

@@ -31,7 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.facebook.drawee.view.DraweeView;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -87,12 +87,12 @@ import retrofit.Retrofit;
 
 public class CourseDetailFragment extends FragmentBase implements LoadCourseView, CourseJoinView {
 
-
     private View.OnClickListener onClickReportListener;
     private View header;
     private View footer;
     private DialogFragment unauthorizedDialog;
     private Intent shareIntentWithChooser;
+    private GlideDrawableImageViewTarget courseTargetFigSupported;
 
     public static CourseDetailFragment newInstance(Course course) {
         Bundle args = new Bundle();
@@ -120,6 +120,9 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @BindView(R.id.course_not_found)
     View courseNotFoundView;
+
+    @BindDrawable(R.drawable.ic_course_placeholder)
+    Drawable coursePlaceholder;
 
     private WebView mIntroView;
 
@@ -155,7 +158,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @BindView(R.id.report_problem)
     View reportInternetProblem;
 
-    DraweeView courseIcon;
+    ImageView courseIcon;
 
     ImageView mThumbnail;
 
@@ -234,6 +237,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         mIntroView = ButterKnife.findById(header, R.id.intro_video);
         mThumbnail = ButterKnife.findById(header, R.id.player_thumbnail);
         mPlayer = ButterKnife.findById(header, R.id.player_layout);
+        courseTargetFigSupported = new GlideDrawableImageViewTarget(courseIcon);
         mPlayer.setVisibility(View.GONE);
         mCourseNameView = ButterKnife.findById(header, R.id.course_name);
         mCoursePropertyListView.setAdapter(new CoursePropertyAdapter(getActivity(), mCoursePropertyList));
@@ -341,7 +345,10 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         mIntroView.getLayoutParams().height = (9 * width) / 16;
         setUpIntroVideo();
 
-        courseIcon.setController(StepicLogicHelper.getControllerForCourse(mCourse, config));
+        Glide.with(MainApplication.getAppContext())
+                .load(StepicLogicHelper.getPathForCourseOrEmpty(mCourse, config))
+                .placeholder(coursePlaceholder)
+                .into(courseTargetFigSupported);
 
         resolveJoinView();
         fetchInstructors();

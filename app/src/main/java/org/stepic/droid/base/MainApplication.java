@@ -5,7 +5,6 @@ import android.os.Build;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
@@ -34,7 +33,6 @@ public class MainApplication extends MultiDexApplication {
     private void init() {
 //        refWatcher = LeakCanary.install(this);
         application = this;
-        Fresco.initialize(this);
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/NotoSans-Regular.ttf")
                 .setFontAttrId(R.attr.fontPath)

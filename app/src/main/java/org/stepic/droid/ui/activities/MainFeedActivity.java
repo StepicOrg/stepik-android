@@ -373,6 +373,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         Glide
                 .with(MainFeedActivity.this)
                 .load(profile.getAvatar())
+                .asBitmap()
                 .placeholder(mUserPlaceholder)
                 .into(mProfileImage);
         mUserNameTextView.setText(profile.getFirst_name() + " " + profile.getLast_name());

@@ -25,6 +25,7 @@ import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.HtmlHelper;
+import org.stepic.droid.util.StepicLogicHelper;
 
 import java.util.List;
 
@@ -82,20 +83,12 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
         }
         viewHolderItem.courseName.setText(course.getTitle());
         viewHolderItem.courseSummary.setText(HtmlHelper.fromHtml(course.getSummary()));
-        if (course.getCover() == null) {
-            Glide
-                    .with(getContext())
-                    .load("")
-                    .placeholder(coursePlaceholder)
-                    .into(viewHolderItem.courseIcon);
-        } else {
-            String path = mConfig.getBaseUrl() + course.getCover();
-            Glide
-                    .with(getContext())
-                    .load(path)
-                    .placeholder(coursePlaceholder)
-                    .into(viewHolderItem.imageViewTarget);
-        }
+
+        Glide
+                .with(getContext())
+                .load(StepicLogicHelper.getPathForCourseOrEmpty(course, mConfig))
+                .placeholder(coursePlaceholder)
+                .into(viewHolderItem.imageViewTarget);
         return view;
     }
 

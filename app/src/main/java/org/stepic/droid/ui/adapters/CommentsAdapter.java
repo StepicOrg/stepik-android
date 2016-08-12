@@ -3,7 +3,6 @@ package org.stepic.droid.ui.adapters;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.HapticFeedbackConstants;
@@ -14,30 +13,29 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.facebook.common.util.UriUtil;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.DraweeView;
+import com.bumptech.glide.Glide;
 
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.stepic.droid.R;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.model.CommentAdapterItem;
 import org.stepic.droid.model.User;
 import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.model.comments.Vote;
 import org.stepic.droid.model.comments.VoteValue;
+import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.RWLocks;
-import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 
 import java.util.Locale;
 
-import butterknife.BindView;
 import butterknife.BindString;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.GenericViewHolder> {
@@ -51,11 +49,14 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
     public DateTimeZone zone;
     public Locale locale;
 
+    Drawable placeholderUserIcon;
+
     public CommentsAdapter(CommentManager commentManager, Context context) {
         this.commentManager = commentManager;
         this.context = context;
         zone = DateTimeZone.getDefault();
         locale = Locale.getDefault();
+        placeholderUserIcon = ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.placeholder_icon);
     }
 
     @Override
@@ -186,7 +187,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         LatexSupportableEnhancedFrameLayout commentTextEnhanced;
 
         @BindView(R.id.user_icon)
-        DraweeView userIcon;
+        ImageView userIcon;
 
         @BindView(R.id.comment_clickable_root)
         ViewGroup commentClickableRoot;
@@ -333,9 +334,17 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
 
 
             User user = getUser(comment);
+            @NotNull
+            String userAvatar = "";
+            if (user != null) {
+                userAvatar = user.getAvatar() == null ? "" : user.getAvatar();
+            }
 
-            DraweeController controller = getControllerForUserAvatar(user);
-            userIcon.setController(controller);
+            Glide.with(MainApplication.getAppContext())
+                    .load(userAvatar)
+                    .asBitmap()
+                    .placeholder(placeholderUserIcon)
+                    .into(userIcon);
 
             if (user != null) {
                 userName.setVisibility(View.VISIBLE);
@@ -372,33 +381,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                 return user;
             }
             return null;
-        }
-
-        protected final DraweeController getControllerForUserAvatar(User user) {
-            String userAvatar = null;
-            if (user != null) {
-                userAvatar = user.getAvatar();
-            }
-            DraweeController controller = null;
-            if (userAvatar != null) {
-                controller = Fresco.newDraweeControllerBuilder()
-                        .setUri(userAvatar)
-                        .setAutoPlayAnimations(true)
-                        .build();
-
-            } else {
-                //for empty cover:
-                Uri uri = new Uri.Builder()
-                        .scheme(UriUtil.LOCAL_RESOURCE_SCHEME) // "res"
-                        .path(String.valueOf(R.drawable.placeholder_icon))
-                        .build();
-
-                controller = Fresco.newDraweeControllerBuilder()
-                        .setUri(uri)
-                        .setAutoPlayAnimations(true)
-                        .build();
-            }
-            return controller;
         }
 
         protected final void loadMoreParentProgressState() {
