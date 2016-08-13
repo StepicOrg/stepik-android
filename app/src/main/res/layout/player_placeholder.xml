@@ -10,8 +10,7 @@
         android:scaleType="centerCrop"
         android:id="@+id/player_thumbnail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
+        android:layout_height="@dimen/video_height"
         tools:src = "@drawable/video_placeholder"/>
 
     <ImageView

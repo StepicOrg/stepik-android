@@ -55,4 +55,5 @@
     <dimen name="padding_placeholders">16dp</dimen>
     <dimen name="drawable_padding_placeholders">40dp</dimen>
     <dimen name="video_height">200dp</dimen>
+    <dimen name="video_height_portrait">200dp</dimen>
 </resources>
