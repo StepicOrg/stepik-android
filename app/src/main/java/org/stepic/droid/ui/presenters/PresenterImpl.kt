@@ -12,7 +12,7 @@ abstract class PresenterImpl<V> : Presenter<V>{
         val previousView = this.view
 
         if (previousView != null) {
-            throw IllegalStateException("Previous getView is not detached! previousView = " + previousView)
+            throw IllegalStateException("Previous view is not detached! previousView = " + previousView)
         }
 
         this.view = view
