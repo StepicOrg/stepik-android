@@ -33,6 +33,9 @@ public abstract class StepBaseFragment extends FragmentBase {
     @BindView(R.id.open_comments_text)
     protected TextView textForComment;
 
+    @BindView(R.id.next_lesson_root)
+    protected View nextLessonRoot;
+
     protected Step step;
     protected Lesson lesson;
     protected Unit unit;
@@ -49,6 +52,15 @@ public abstract class StepBaseFragment extends FragmentBase {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        nextLessonRoot.setVisibility(View.GONE);
+        long[] stepIds = lesson.getSteps();
+        if (stepIds != null && stepIds.length != 0) {
+            long lastStepId = stepIds[stepIds.length - 1];
+            if (lastStepId == step.getId()) {
+                nextLessonRoot.setVisibility(View.VISIBLE);
+            }
+        }
 
         if (step != null &&
                 step.getBlock() != null &&

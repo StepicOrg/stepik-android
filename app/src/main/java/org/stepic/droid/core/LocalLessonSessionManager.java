@@ -19,7 +19,6 @@ public class LocalLessonSessionManager implements ILessonSessionManager {
     public LocalLessonSessionManager() {
         mStepIdToAttemptMap = new HashMap<>();
         mStepIdToSubmissionMap = new HashMap<>();
-
     }
 
     @Nullable
