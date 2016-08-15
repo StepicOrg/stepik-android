@@ -30,7 +30,7 @@
 
 
             <include layout="@layout/open_comment_view"/>
-
+            <include layout="@layout/next_lesson_view"/>
         </LinearLayout>
     </ScrollView>
 

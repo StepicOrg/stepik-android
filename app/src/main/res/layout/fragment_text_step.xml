@@ -19,6 +19,7 @@
                 layout="@layout/step_text_header"/>
 
             <include layout="@layout/open_comment_view"/>
+            <include layout="@layout/next_lesson_view"/>
         </LinearLayout>
     </ScrollView>
     <include layout="@layout/drop_shadow_view"/>

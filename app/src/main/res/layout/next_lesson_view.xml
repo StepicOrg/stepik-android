@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    android:id="@+id/next_lesson_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="end"
+    android:clickable="true"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:foreground="@drawable/non_radius_foreground">
+
+    <TextView
+        android:id="@+id/open_comments_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/ic_navigate_next_black_24px"
+        android:drawablePadding="8dp"
+        android:drawableRight="@drawable/ic_navigate_next_black_24px"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="@string/go_to_the_next_lesson"
+        android:textColor="?colorAccent"
+        android:textSize="16sp"/>
+</FrameLayout>
