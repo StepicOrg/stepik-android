@@ -84,7 +84,7 @@ public abstract class StepBaseFragment extends FragmentBase implements NextStepV
         if (savedInstanceState == null) {
             //not hide on rotate
             nextLessonRoot.setVisibility(View.GONE);
-            nextStepPresenter.checkStepForLast(step.getId(), lesson);
+            nextStepPresenter.checkStepForLast(step.getId(), lesson, unit);
         }
 
         bus.register(this);
