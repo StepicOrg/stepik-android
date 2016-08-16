@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.activities;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
@@ -30,5 +31,10 @@ public class StepsActivity extends SingleFragmentActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
     }
 }

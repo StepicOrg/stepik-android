@@ -2,8 +2,10 @@ package org.stepic.droid.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
@@ -16,8 +18,10 @@ import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
+import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.web.StepResponse;
 
 import javax.inject.Inject;
@@ -44,6 +48,8 @@ public abstract class StepBaseFragment extends FragmentBase implements NextStepV
     protected Step step;
     protected Lesson lesson;
     protected Unit unit;
+
+    private final String LOAD_DIALOG_TAG = "stepBaseFragmentLoad";
 
     @Inject
     NextStepPresenter nextStepPresenter;
@@ -81,6 +87,12 @@ public abstract class StepBaseFragment extends FragmentBase implements NextStepV
         updateCommentState();
 
         nextStepPresenter.attachView(this);
+        nextLessonRoot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nextStepPresenter.clickNextLesson(lesson, unit);
+            }
+        });
         if (savedInstanceState == null) {
             //not hide on rotate
             nextLessonRoot.setVisibility(View.GONE);
@@ -131,6 +143,7 @@ public abstract class StepBaseFragment extends FragmentBase implements NextStepV
         bus.unregister(this);
         openCommentViewClickable.setOnClickListener(null);
         nextStepPresenter.detachView(this);
+        nextLessonRoot.setOnClickListener(null);
         super.onDestroyView();
     }
 
@@ -187,6 +200,21 @@ public abstract class StepBaseFragment extends FragmentBase implements NextStepV
 
     @Override
     public final void openNextLesson(Unit nextUnit, Lesson nextLesson) {
-        // TODO: 16.08.16 implement with overiding animation
+        mShell.getScreenProvider().showSteps(getActivity(), nextUnit, nextLesson);
+//        getActivity().finish();
+    }
+
+    @Override
+    public void showLoadDialog() {
+        DialogFragment dialogFragment = LoadingProgressDialogFragment.Companion.newInstance();
+        if (!dialogFragment.isAdded()) {
+            dialogFragment.show(getFragmentManager(), LOAD_DIALOG_TAG);
+        }
+    }
+
+    @Override
+    public void showCantGoNext() {
+        ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
+        Toast.makeText(getContext(), R.string.cant_show_next_step, Toast.LENGTH_SHORT).show();
     }
 }

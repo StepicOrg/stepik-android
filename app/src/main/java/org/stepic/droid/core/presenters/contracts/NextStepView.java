@@ -7,4 +7,8 @@ public interface NextStepView {
     void showNextLessonView();
 
     void openNextLesson(Unit nextUnit, Lesson nextLesson);
+
+    void showLoadDialog();
+
+    void showCantGoNext();
 }

@@ -1,5 +1,6 @@
 package org.stepic.droid.core;
 
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.core.presenters.NextStepPresenter;
 import org.stepic.droid.store.operations.DatabaseFacade;
@@ -15,8 +16,9 @@ public class StepModule {
     public NextStepPresenter provideNextStepPresenter(
             ThreadPoolExecutor threadPoolExecutor,
             IMainHandler mainHandler,
-            DatabaseFacade databaseFacade) {
-        return new NextStepPresenter(threadPoolExecutor, mainHandler, databaseFacade);
+            DatabaseFacade databaseFacade,
+            Analytic analytic) {
+        return new NextStepPresenter(threadPoolExecutor, mainHandler, databaseFacade, analytic);
     }
 
 }
