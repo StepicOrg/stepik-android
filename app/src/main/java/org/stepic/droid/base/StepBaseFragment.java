@@ -200,7 +200,10 @@ public abstract class StepBaseFragment extends FragmentBase implements NextStepV
 
     @Override
     public final void openNextLesson(Unit nextUnit, Lesson nextLesson) {
+        ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
         mShell.getScreenProvider().showSteps(getActivity(), nextUnit, nextLesson);
+        getActivity().overridePendingTransition(R.anim.slide_out_to_start, R.anim.slide_in_from_end);
+        getActivity().finish();
 //        getActivity().finish();
     }
 

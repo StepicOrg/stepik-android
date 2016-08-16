@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
 import org.jetbrains.annotations.NotNull;
+import org.stepic.droid.R;
 import org.stepic.droid.base.SingleFragmentActivity;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Unit;
@@ -35,6 +36,7 @@ public class StepsActivity extends SingleFragmentActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
+        overridePendingTransition(R.anim.slide_out_to_start, R.anim.slide_in_from_end);
         super.onNewIntent(intent);
     }
 }

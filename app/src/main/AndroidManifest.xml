@@ -90,8 +90,7 @@
         <activity
             android:name=".ui.activities.StepsActivity"
             android:hardwareAccelerated="false"
-            android:label="@string/steps_title"
-            android:launchMode="singleTop"/>
+            android:label="@string/steps_title"/>
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadCompleteReceiver"

@@ -59,7 +59,7 @@ class NextStepPresenter(
             if (nextUnitId != null) {
                 val nextUnit = databaseFacade.getUnitById(nextUnitId!!)
                 if (nextUnit != null) {
-                    val nextLesson = databaseFacade.getLessonById(unit.lesson)
+                    val nextLesson = databaseFacade.getLessonById(nextUnit.lesson)
                     if (nextLesson != null) {
                         mainHandler.post {
                             view?.openNextLesson(nextUnit, nextLesson)
