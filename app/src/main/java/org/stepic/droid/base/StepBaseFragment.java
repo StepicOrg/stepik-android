@@ -9,6 +9,8 @@ import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.core.StepModule;
+import org.stepic.droid.core.presenters.NextStepPresenter;
+import org.stepic.droid.core.presenters.contracts.NextStepView;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Lesson;
@@ -18,12 +20,14 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.web.StepResponse;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public abstract class StepBaseFragment extends FragmentBase {
+public abstract class StepBaseFragment extends FragmentBase implements NextStepView {
 
     @BindView(R.id.text_header_enhanced)
     protected LatexSupportableEnhancedFrameLayout headerWvEnhanced;
@@ -40,6 +44,9 @@ public abstract class StepBaseFragment extends FragmentBase {
     protected Step step;
     protected Lesson lesson;
     protected Unit unit;
+
+    @Inject
+    NextStepPresenter nextStepPresenter;
 
     @Override
     protected void injectComponent() {
@@ -59,15 +66,6 @@ public abstract class StepBaseFragment extends FragmentBase {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        nextLessonRoot.setVisibility(View.GONE);
-        long[] stepIds = lesson.getSteps();
-        if (stepIds != null && stepIds.length != 0) {
-            long lastStepId = stepIds[stepIds.length - 1];
-            if (lastStepId == step.getId()) {
-                nextLessonRoot.setVisibility(View.VISIBLE);
-            }
-        }
-
         if (step != null &&
                 step.getBlock() != null &&
                 step.getBlock().getText() != null &&
@@ -81,6 +79,13 @@ public abstract class StepBaseFragment extends FragmentBase {
         }
 
         updateCommentState();
+
+        nextStepPresenter.attachView(this);
+        if (savedInstanceState == null) {
+            //not hide on rotate
+            nextLessonRoot.setVisibility(View.GONE);
+            nextStepPresenter.checkStepForLast(step.getId(), lesson);
+        }
 
         bus.register(this);
     }
@@ -125,6 +130,7 @@ public abstract class StepBaseFragment extends FragmentBase {
     public void onDestroyView() {
         bus.unregister(this);
         openCommentViewClickable.setOnClickListener(null);
+        nextStepPresenter.detachView(this);
         super.onDestroyView();
     }
 
@@ -172,5 +178,15 @@ public abstract class StepBaseFragment extends FragmentBase {
             step.setDiscussions_count(eventStep.getDiscussions_count());
             updateCommentState();
         }
+    }
+
+    @Override
+    public final void showNextLessonView() {
+        nextLessonRoot.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public final void openNextLesson(Unit nextUnit, Lesson nextLesson) {
+        // TODO: 16.08.16 implement with overiding animation
     }
 }
