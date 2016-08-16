@@ -1,4 +1,4 @@
-package org.stepic.droid.ui.presenters
+package org.stepic.droid.core.presenters
 
 import android.support.annotation.CallSuper
 

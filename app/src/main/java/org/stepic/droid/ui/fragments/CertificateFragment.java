@@ -17,11 +17,11 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.CertificateModule;
-import org.stepic.droid.core.CertificateView;
+import org.stepic.droid.core.presenters.CertificatePresenter;
+import org.stepic.droid.core.presenters.contracts.CertificateView;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.ui.adapters.CertificateAdapter;
 import org.stepic.droid.ui.dialogs.CertificateShareDialogFragment;
-import org.stepic.droid.ui.presenters.certificate.CertificatePresenter;
 import org.stepic.droid.util.ProgressHelper;
 
 import java.util.List;

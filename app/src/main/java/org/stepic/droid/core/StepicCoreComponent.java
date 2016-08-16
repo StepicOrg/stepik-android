@@ -63,6 +63,8 @@ public interface StepicCoreComponent {
 
     CertificateComponent plus(CertificateModule module);
 
+    StepComponent plus(StepModule module);
+
     void inject(FragmentActivityBase someActivity);
 
     void inject(SectionActivity someActivity);

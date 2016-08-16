@@ -1,14 +1,13 @@
-package org.stepic.droid.ui.presenters.certificate
+package org.stepic.droid.core.presenters
 
 import android.app.Activity
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
-import org.stepic.droid.core.CertificateView
 import org.stepic.droid.core.IScreenManager
+import org.stepic.droid.core.presenters.contracts.CertificateView
 import org.stepic.droid.model.Certificate
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.store.operations.DatabaseFacade
-import org.stepic.droid.ui.presenters.PresenterBase
 import org.stepic.droid.web.CertificateResponse
 import org.stepic.droid.web.CoursesStepicResponse
 import org.stepic.droid.web.IApi
@@ -20,11 +19,11 @@ import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 
 class CertificatePresenter(val api: IApi,
-                               val config: IConfig,
-                               val screenManager: IScreenManager,
-                               val database: DatabaseFacade,
-                               val threadPoolExecutor: ThreadPoolExecutor,
-                               val mainHandler: IMainHandler) : PresenterBase<CertificateView>() {
+                           val config: IConfig,
+                           val screenManager: IScreenManager,
+                           val database: DatabaseFacade,
+                           val threadPoolExecutor: ThreadPoolExecutor,
+                           val mainHandler: IMainHandler) : PresenterBase<CertificateView>() {
 
     private var certificateViewItemList: ArrayList<CertificateViewItem>? = null
     private var certificatesCall: Call<CertificateResponse>? = null

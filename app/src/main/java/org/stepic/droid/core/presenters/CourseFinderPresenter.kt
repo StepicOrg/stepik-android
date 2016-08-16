@@ -1,12 +1,11 @@
-package org.stepic.droid.ui.presenters.course_finder
+package org.stepic.droid.core.presenters
 
 import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.core.presenters.contracts.LoadCourseView
 import org.stepic.droid.events.courses.CourseCantLoadEvent
 import org.stepic.droid.events.courses.CourseFoundEvent
 import org.stepic.droid.events.courses.CourseUnavailableForUserEvent
 import org.stepic.droid.store.operations.DatabaseFacade
-import org.stepic.droid.ui.abstraction.LoadCourseView
-import org.stepic.droid.ui.presenters.PresenterBase
 import org.stepic.droid.web.CoursesStepicResponse
 import org.stepic.droid.web.IApi
 import retrofit.Callback
@@ -14,7 +13,7 @@ import retrofit.Response
 import retrofit.Retrofit
 import java.util.concurrent.ThreadPoolExecutor
 
-open class CourseFinderPresenter(
+class CourseFinderPresenter(
         val threadPoolExecutor: ThreadPoolExecutor,
         val databaseFacade: DatabaseFacade,
         var api: IApi,

@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
+import org.stepic.droid.core.StepModule;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Lesson;
@@ -39,6 +40,11 @@ public abstract class StepBaseFragment extends FragmentBase {
     protected Step step;
     protected Lesson lesson;
     protected Unit unit;
+
+    @Override
+    protected void injectComponent() {
+        MainApplication.component().plus(new StepModule()).inject(this);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

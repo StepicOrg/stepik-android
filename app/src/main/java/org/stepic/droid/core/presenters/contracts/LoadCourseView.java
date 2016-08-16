@@ -1,4 +1,4 @@
-package org.stepic.droid.ui.abstraction;
+package org.stepic.droid.core.presenters.contracts;
 
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
 import org.stepic.droid.events.courses.CourseFoundEvent;

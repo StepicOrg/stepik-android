@@ -1,4 +1,4 @@
-package org.stepic.droid.ui.abstraction;
+package org.stepic.droid.core.presenters.contracts;
 
 import org.stepic.droid.events.joining_course.FailJoinEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;

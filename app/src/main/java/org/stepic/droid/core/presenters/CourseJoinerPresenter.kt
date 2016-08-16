@@ -1,14 +1,13 @@
-package org.stepic.droid.ui.presenters.course_joiner
+package org.stepic.droid.core.presenters
 
 import com.squareup.otto.Bus
 import org.stepic.droid.concurrency.tasks.UpdateCourseTask
+import org.stepic.droid.core.presenters.contracts.CourseJoinView
 import org.stepic.droid.events.joining_course.FailJoinEvent
 import org.stepic.droid.events.joining_course.SuccessJoinEvent
 import org.stepic.droid.model.Course
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.store.operations.DatabaseFacade
-import org.stepic.droid.ui.abstraction.CourseJoinView
-import org.stepic.droid.ui.presenters.PresenterBase
 import org.stepic.droid.web.IApi
 import retrofit.Callback
 import retrofit.Response

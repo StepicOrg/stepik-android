@@ -1,4 +1,4 @@
-package org.stepic.droid.core;
+package org.stepic.droid.core.presenters.contracts;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CertificateViewItem;

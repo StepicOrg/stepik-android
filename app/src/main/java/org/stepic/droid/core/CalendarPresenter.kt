@@ -18,7 +18,7 @@ import org.stepic.droid.model.CalendarSection
 import org.stepic.droid.model.Section
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.operations.DatabaseFacade
-import org.stepic.droid.ui.presenters.PresenterBase
+import org.stepic.droid.core.presenters.PresenterBase
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.StringUtil
 import java.util.*

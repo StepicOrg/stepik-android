@@ -3,7 +3,7 @@ package org.stepic.droid.core;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.ui.presenters.certificate.CertificatePresenter;
+import org.stepic.droid.core.presenters.CertificatePresenter;
 import org.stepic.droid.web.IApi;
 
 import java.util.concurrent.ThreadPoolExecutor;
