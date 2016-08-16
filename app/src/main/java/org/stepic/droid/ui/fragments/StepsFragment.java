@@ -115,7 +115,7 @@ public class StepsFragment extends FragmentBase {
         super.onViewCreated(view, savedInstanceState);
         init();
         bus.register(this);
-        //isLoaded is retained and stepList too, but this method should be in onStart due to user can rotate device, when
+        //isLoaded is retained and stepList too, but this method should be in attachView due to user can rotate device, when
         //loading is not finished. it can produce many requests, but it will be happen when user rotates device many times per second.
         if (mLesson != null && mLesson.getSteps() != null && mLesson.getSteps().length != 0 && !isLoaded) {
             updateSteps();

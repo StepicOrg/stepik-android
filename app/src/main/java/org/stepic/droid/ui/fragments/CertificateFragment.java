@@ -16,12 +16,13 @@ import android.widget.Toast;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.core.CertificateModule;
 import org.stepic.droid.core.CertificateView;
 import org.stepic.droid.model.CertificateViewItem;
-import org.stepic.droid.ui.presenters.certificate.CertificatePresenter;
-import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.ui.adapters.CertificateAdapter;
 import org.stepic.droid.ui.dialogs.CertificateShareDialogFragment;
+import org.stepic.droid.ui.presenters.certificate.CertificatePresenter;
+import org.stepic.droid.util.ProgressHelper;
 
 import java.util.List;
 
@@ -58,6 +59,11 @@ public class CertificateFragment extends FragmentBase implements CertificateView
 
     @BindView(R.id.certificate_swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
+
+    @Override
+    protected void injectComponent() {
+        MainApplication.component().plus(new CertificateModule()).inject(this);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,11 +106,6 @@ public class CertificateFragment extends FragmentBase implements CertificateView
 
     private void loadAndShowCertificates() {
         certificatePresenter.showCertificates(false);
-    }
-
-    @Override
-    protected void injectComponent() {
-        MainApplication.certificateComponent().inject(this);
     }
 
     @Override

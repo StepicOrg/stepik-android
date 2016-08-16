@@ -32,7 +32,7 @@ public interface IScreenManager {
 
     void openNewCommentForm(Activity sourceActivity, Long target, @Nullable Long parent);
 
-    void showSections(Context sourceActivity, @NotNull Course course);
+    void showSections(Activity sourceActivity, @NotNull Course course);
 
     void showUnitsForSection(Context sourceActivity, @NotNull Section section);
 

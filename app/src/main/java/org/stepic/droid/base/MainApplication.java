@@ -8,8 +8,6 @@ import android.support.multidex.MultiDexApplication;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
-import org.stepic.droid.core.CertificateComponent;
-import org.stepic.droid.core.CertificateModule;
 import org.stepic.droid.core.DaggerStepicCoreComponent;
 import org.stepic.droid.core.StepicCoreComponent;
 import org.stepic.droid.core.StepicDefaultModule;
@@ -20,8 +18,6 @@ public class MainApplication extends MultiDexApplication {
 
     protected static MainApplication application;
     private StepicCoreComponent component;
-    private CertificateComponent certificateComponent;
-
 //    private RefWatcher refWatcher;
 
     @Override
@@ -48,10 +44,7 @@ public class MainApplication extends MultiDexApplication {
             // Отслеживание активности пользователей
             YandexMetrica.enableActivityAutoTracking(this);
         }
-
-        certificateComponent = component.plusActModule(new CertificateModule());
     }
-
 //    public static RefWatcher getRefWatcher(Context context) {
 //        MainApplication application = (MainApplication) context.getApplicationContext();
 //        return application.refWatcher;
@@ -59,10 +52,6 @@ public class MainApplication extends MultiDexApplication {
 
     public static StepicCoreComponent component(Context context) {
         return ((MainApplication) context.getApplicationContext()).component;
-    }
-
-    public static CertificateComponent certificateComponent() {
-        return ((MainApplication) getAppContext()).certificateComponent;
     }
 
 

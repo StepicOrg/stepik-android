@@ -291,7 +291,7 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
-    public void showSections(Context sourceActivity, @NotNull Course course) {
+    public void showSections(Activity sourceActivity, @NotNull Course course) {
         analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS, course.getCourseId() + "", course.getTitle());
         Intent intent = new Intent(sourceActivity, SectionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -300,6 +300,7 @@ public class ScreenManager implements IScreenManager {
         bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
         intent.putExtras(bundle);
         sourceActivity.startActivity(intent);
+        sourceActivity.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
     }
 
     @Override

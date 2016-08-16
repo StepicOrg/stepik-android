@@ -1,4 +1,4 @@
-package org.stepic.droid.ui.activities;
+package org.stepic.droid.ui.fragments;
 
 import android.Manifest;
 import android.content.Intent;
@@ -9,14 +9,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -34,13 +37,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.FragmentActivityBase;
+import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.concurrency.tasks.FromDbSectionTask;
 import org.stepic.droid.concurrency.tasks.ToDbSectionTask;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.CalendarExportableView;
 import org.stepic.droid.core.CalendarPresenter;
+import org.stepic.droid.core.SectionModule;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.events.CalendarChosenEvent;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
@@ -58,7 +62,15 @@ import org.stepic.droid.events.sections.SuccessResponseSectionsEvent;
 import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.notifications.model.Notification;
+import org.stepic.droid.ui.abstraction.CourseJoinView;
+import org.stepic.droid.ui.abstraction.LoadCourseView;
+import org.stepic.droid.ui.adapters.SectionAdapter;
+import org.stepic.droid.ui.dialogs.ChooseCalendarDialog;
+import org.stepic.droid.ui.dialogs.ExplainCalendarPermissionDialog;
+import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
+import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.ui.presenters.course_finder.CourseFinderPresenter;
 import org.stepic.droid.ui.presenters.course_joiner.CourseJoinerPresenter;
 import org.stepic.droid.util.AppConstants;
@@ -68,13 +80,6 @@ import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.SnackbarExtensionKt;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.StringUtil;
-import org.stepic.droid.ui.abstraction.CourseJoinView;
-import org.stepic.droid.ui.abstraction.LoadCourseView;
-import org.stepic.droid.ui.adapters.SectionAdapter;
-import org.stepic.droid.ui.dialogs.ChooseCalendarDialog;
-import org.stepic.droid.ui.dialogs.ExplainCalendarPermissionDialog;
-import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
-import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.web.SectionsStepicResponse;
 
 import java.io.IOException;
@@ -83,7 +88,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,7 +95,16 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public class SectionActivity extends FragmentActivityBase implements SwipeRefreshLayout.OnRefreshListener, OnRequestPermissionsResultCallback, LoadCourseView, CourseJoinView, CalendarExportableView {
+public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, ActivityCompat.OnRequestPermissionsResultCallback, LoadCourseView, CourseJoinView, CalendarExportableView {
+
+    public static SectionFragment newInstance() {
+        Bundle args = new Bundle();
+
+        SectionFragment fragment = new SectionFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     @BindView(R.id.swipe_refresh_layout_units)
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -144,7 +157,6 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     private DialogFragment unauthorizedDialog;
 
     @Inject
-    @Named(AppConstants.SECTION_NAMED_INJECTION_COURSE_FINDER)
     CourseFinderPresenter courseFinderPresenter;
 
     @Inject
@@ -159,6 +171,9 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     @Inject
     CalendarPresenter calendarPresenter;
 
+    @Inject
+    INotificationManager notificationManager;
+
     private GoogleApiClient mClient;
     private boolean wasIndexed;
     private Uri mUrlInApp;
@@ -167,17 +182,34 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     private String mDescription;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void injectComponent() {
+        MainApplication.component().plus(new SectionModule()).inject(this);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainApplication.component().inject(this);
-        setContentView(R.layout.activity_section);
-        unbinder = ButterKnife.bind(this);
+        setRetainInstance(true);
+        setHasOptionsMenu(true);
+    }
+
+    @android.support.annotation.Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @android.support.annotation.Nullable ViewGroup container, @android.support.annotation.Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_section, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @android.support.annotation.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        unbinder = ButterKnife.bind(this, view);
         imageViewTarget = new GlideDrawableImageViewTarget(courseIcon);
         hideSoftKeypad();
         isScreenEmpty = true;
         firstLoad = true;
 
-        mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        mClient = new GoogleApiClient.Builder(getActivity()).addApi(AppIndex.API).build();
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(
@@ -187,82 +219,25 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
         mSectionsRecyclerView.setVisibility(View.GONE);
         mSectionsRecyclerView.setNestedScrollingEnabled(false);
-        mSectionsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mSectionsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mSectionList = new ArrayList<>();
-        mAdapter = new SectionAdapter(mSectionList, this, this);
+        mAdapter = new SectionAdapter(mSectionList, getContext(), ((AppCompatActivity) getActivity()), calendarPresenter);
         mSectionsRecyclerView.setAdapter(mAdapter);
         unauthorizedDialog = UnauthorizedDialogFragment.newInstance();
-        joinCourseProgressDialog = new LoadingProgressDialog(this);
+        joinCourseProgressDialog = new LoadingProgressDialog(getContext());
         ProgressHelper.activate(loadOnCenterProgressBar);
         bus.register(this);
-        calendarPresenter.onStart(this);
+        calendarPresenter.attachView(this);
         courseFinderPresenter.attachView(this);
         courseJoinerPresenter.attachView(this);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        onNewIntent(getIntent());
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        onNewIntent(((AppCompatActivity) getActivity()).getIntent());
     }
 
     private void setUpToolbarWithCourse() {
         if (mCourse != null && mCourse.getTitle() != null && !mCourse.getTitle().isEmpty()) {
-            setTitle(mCourse.getTitle());
-        }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
-
-        if (intent.getExtras() != null) {
-            mCourse = (Course) (intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
-        }
-        if (mCourse != null) {
-            if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
-                final long courseId = mCourse.getCourseId();
-                AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        List<Notification> notifications = mDbManager.getAllNotificationsOfCourse(courseId);
-                        notificationManager.discardAllNotifications(courseId);
-                        for (Notification notificationItem : notifications) {
-                            if (notificationItem != null && notificationItem.getId() != null) {
-                                try {
-                                    mShell.getApi().markNotificationAsRead(notificationItem.getId(), true).execute();
-                                } catch (IOException e) {
-                                    analytic.reportError(Analytic.Error.NOTIFICATION_NOT_POSTED_ON_CLICK, e);
-                                }
-                            }
-                        }
-                        return null;
-                    }
-                };
-                task.executeOnExecutor(mThreadPoolExecutor);
-            }
-
-            initScreenByCourse();
-        } else {
-            Uri fullUri = intent.getData();
-            List<String> pathSegments = fullUri.getPathSegments();
-            // 0 is "course", 1 is our slug
-            if (pathSegments.size() > 1) {
-                String pathFromWeb = pathSegments.get(1);
-                Long id = HtmlHelper.parseIdFromSlug(pathFromWeb);
-                long simpleId;
-                if (id == null) {
-                    simpleId = -1;
-                } else {
-                    simpleId = id;
-                }
-                analytic.reportEvent(Analytic.DeepLink.USER_OPEN_SYLLABUS_LINK, simpleId + "");
-                if (simpleId < 0) {
-                    onCourseUnavailable(new CourseUnavailableForUserEvent());
-                } else {
-                    courseFinderPresenter.findCourseById(simpleId);
-                }
-            } else {
-                onCourseUnavailable(new CourseUnavailableForUserEvent());
-            }
+            getActivity().setTitle(mCourse.getTitle());
         }
     }
 
@@ -344,16 +319,10 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                 return true;
             case android.R.id.home:
                 // Respond to the action bar's Up/Home button
-                finish();
+                getActivity().finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 
     private void updateSections() {
@@ -413,18 +382,12 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
-    }
-
-    @Override
     public void onRefresh() {
         analytic.reportEvent(Analytic.Interaction.REFRESH_SECTION);
         if (mCourse != null) {
             updateSections();
         } else {
-            onNewIntent(getIntent());
+            onNewIntent(getActivity().getIntent());
         }
     }
 
@@ -441,7 +404,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                 reportConnectionProblem.setVisibility(View.VISIBLE);
             }
             if (mCourse.getEnrollment() <= 0) {
-                Toast.makeText(this, getString(R.string.internet_problem), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.internet_problem), Toast.LENGTH_SHORT).show();
             }
 
             dismiss();
@@ -467,13 +430,13 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         reportIndexToGoogle();
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
 
         if (wasIndexed) {
@@ -502,13 +465,13 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     }
 
     @Override
-    protected void onDestroy() {
-        calendarPresenter.onStop();
+    public void onDestroyView() {
+        calendarPresenter.detachView(this);
         courseJoinerPresenter.detachView(this);
         courseFinderPresenter.detachView(this);
         bus.unregister(this);
         courseNotParsedView.setOnClickListener(null);
-        super.onDestroy();
+        super.onDestroyView();
     }
 
     @Subscribe
@@ -556,16 +519,16 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         mAdapter.notifyItemChanged(position + SectionAdapter.SECTION_LIST_DELTA);
     }
 
+
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.section_unit_menu, menu);
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.section_unit_menu, menu);
         MenuItem menuItem = menu.findItem(R.id.menu_item_calendar);
         if (isNeedShowCalendarInMenu) {
             menuItem.setVisible(true);
         } else {
             menuItem.setVisible(false);
         }
-        return true;
     }
 
     @Override
@@ -601,12 +564,12 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     public void onCourseFound(CourseFoundEvent event) {
         if (mCourse == null) {
             mCourse = event.getCourse();
-            Bundle args = getIntent().getExtras();
+            Bundle args = getActivity().getIntent().getExtras();
             if (args == null) {
                 args = new Bundle();
             }
             args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, mCourse);
-            getIntent().putExtras(args);
+            getActivity().getIntent().putExtras(args);
             initScreenByCourse();
         }
     }
@@ -620,11 +583,11 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
                 @Override
                 public void onClick(View v) {
                     if (mSharedPreferenceHelper.getAuthResponseFromStore() != null) {
-                        mShell.getScreenProvider().showFindCourses(SectionActivity.this);
-                        finish();
+                        mShell.getScreenProvider().showFindCourses(getActivity());
+                        getActivity().finish();
                     } else {
                         if (!unauthorizedDialog.isAdded()) {
-                            unauthorizedDialog.show(getSupportFragmentManager(), null);
+                            unauthorizedDialog.show(getFragmentManager(), null);
                         }
                     }
                 }
@@ -658,15 +621,15 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     public void onFailJoin(FailJoinEvent e) {
         if (mCourse != null) {
             if (e.getCode() == HttpURLConnection.HTTP_FORBIDDEN) {
-                Toast.makeText(this, getString(R.string.join_course_web_exception), Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), getString(R.string.join_course_web_exception), Toast.LENGTH_LONG).show();
             } else if (e.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
                 //UNAUTHORIZED
                 //it is just for safety, we should detect no account before send request
                 if (!unauthorizedDialog.isAdded()) {
-                    unauthorizedDialog.show(getSupportFragmentManager(), null);
+                    unauthorizedDialog.show(getFragmentManager(), null);
                 }
             } else {
-                Toast.makeText(this, getString(R.string.join_course_exception),
+                Toast.makeText(getContext(), getString(R.string.join_course_exception),
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -695,17 +658,17 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
 
     @Override
     public void permissionNotGranted() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                 Manifest.permission.WRITE_CALENDAR)) {
 
             DialogFragment dialog = ExplainCalendarPermissionDialog.newInstance();
             if (!dialog.isAdded()) {
-                dialog.show(this.getSupportFragmentManager(), null);
+                dialog.show(this.getFragmentManager(), null);
             }
 
         } else {
             // No explanation needed, we can request the permission.
-            ActivityCompat.requestPermissions(this,
+            ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.WRITE_CALENDAR},
                     AppConstants.REQUEST_CALENDAR_PERMISSION);
         }
@@ -715,7 +678,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     public void successExported() {
         mAdapter.setNeedShowCalendarWidget(false);
         mAdapter.notifyItemChanged(0);
-        SnackbarExtensionKt.setTextColor(Snackbar.make(rootView, R.string.calendar_added_message, Snackbar.LENGTH_SHORT), ColorUtil.INSTANCE.getColorArgb(R.color.white, this)).show();
+        SnackbarExtensionKt.setTextColor(Snackbar.make(rootView, R.string.calendar_added_message, Snackbar.LENGTH_SHORT), ColorUtil.INSTANCE.getColorArgb(R.color.white, getContext())).show();
     }
 
     @Override
@@ -728,7 +691,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     public void onShouldBeShownCalendarInMenu() {
         if (!isNeedShowCalendarInMenu) {
             isNeedShowCalendarInMenu = true;
-            invalidateOptionsMenu();
+            getActivity().invalidateOptionsMenu();
         }
     }
 
@@ -736,7 +699,7 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
     public void onNeedToChooseCalendar(@NotNull ArrayList<CalendarItem> primariesCalendars) {
         DialogFragment chooseCalendarDialog = ChooseCalendarDialog.Companion.newInstance(primariesCalendars);
         if (!chooseCalendarDialog.isAdded()) {
-            chooseCalendarDialog.show(getSupportFragmentManager(), null);
+            chooseCalendarDialog.show(getFragmentManager(), null);
         }
     }
 
@@ -751,6 +714,61 @@ public class SectionActivity extends FragmentActivityBase implements SwipeRefres
         mUserPreferences.setNeedToShowCalendarWidget(false);
         mAdapter.setNeedShowCalendarWidget(false);
         mAdapter.notifyItemChanged(0);
-        SnackbarExtensionKt.setTextColor(Snackbar.make(rootView, R.string.user_not_have_calendar, Snackbar.LENGTH_LONG), ColorUtil.INSTANCE.getColorArgb(R.color.white, this)).show();
+        SnackbarExtensionKt.setTextColor(Snackbar.make(rootView, R.string.user_not_have_calendar, Snackbar.LENGTH_LONG), ColorUtil.INSTANCE.getColorArgb(R.color.white, getContext())).show();
     }
+
+
+    public void onNewIntent(Intent intent) {
+        if (intent.getExtras() != null) {
+            mCourse = (Course) (intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
+        }
+        if (mCourse != null) {
+            if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
+                final long courseId = mCourse.getCourseId();
+                AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        List<Notification> notifications = mDatabaseFacade.getAllNotificationsOfCourse(courseId);
+                        notificationManager.discardAllNotifications(courseId);
+                        for (Notification notificationItem : notifications) {
+                            if (notificationItem != null && notificationItem.getId() != null) {
+                                try {
+                                    mShell.getApi().markNotificationAsRead(notificationItem.getId(), true).execute();
+                                } catch (IOException e) {
+                                    analytic.reportError(Analytic.Error.NOTIFICATION_NOT_POSTED_ON_CLICK, e);
+                                }
+                            }
+                        }
+                        return null;
+                    }
+                };
+                task.executeOnExecutor(mThreadPoolExecutor);
+            }
+
+            initScreenByCourse();
+        } else {
+            Uri fullUri = intent.getData();
+            List<String> pathSegments = fullUri.getPathSegments();
+            // 0 is "course", 1 is our slug
+            if (pathSegments.size() > 1) {
+                String pathFromWeb = pathSegments.get(1);
+                Long id = HtmlHelper.parseIdFromSlug(pathFromWeb);
+                long simpleId;
+                if (id == null) {
+                    simpleId = -1;
+                } else {
+                    simpleId = id;
+                }
+                analytic.reportEvent(Analytic.DeepLink.USER_OPEN_SYLLABUS_LINK, simpleId + "");
+                if (simpleId < 0) {
+                    onCourseUnavailable(new CourseUnavailableForUserEvent());
+                } else {
+                    courseFinderPresenter.findCourseById(simpleId);
+                }
+            } else {
+                onCourseUnavailable(new CourseUnavailableForUserEvent());
+            }
+        }
+    }
+
 }

@@ -42,6 +42,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.core.CourseDetailModule;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
 import org.stepic.droid.events.courses.CourseFoundEvent;
 import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
@@ -75,7 +76,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import butterknife.BindDrawable;
 import butterknife.BindString;
@@ -174,7 +174,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     private List<CourseProperty> mCoursePropertyList;
     private Course mCourse;
-    private List<User> mUserList;
+    private List<User> instructorsList;
     private InstructorAdapter mInstructorAdapter;
 
     public Action getAction() {
@@ -192,19 +192,23 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     }
 
     @Inject
-    @Named(AppConstants.ABOUT_NAME_INJECTION_COURSE_FINDER)
     CourseFinderPresenter courseFinderPresenter;
 
     @Inject
     CourseJoinerPresenter courseJoinerPresenter;
 
     @Override
+    protected void injectComponent() {
+        MainApplication.component().plus(new CourseDetailModule()).inject(this);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
-        MainApplication.component().inject(this);
         getActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         super.onCreate(savedInstanceState);
         mClient = new GoogleApiClient.Builder(getActivity()).addApi(AppIndex.API).build();
-        //// FIXME: 17.06.16 now on rotate instructors are reloading, we should use presenter or retain instance
+        setRetainInstance(true);
+        instructorsList = new ArrayList<>();
     }
 
     @Override
@@ -242,8 +246,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         mCourseNameView = ButterKnife.findById(header, R.id.course_name);
         mCoursePropertyListView.setAdapter(new CoursePropertyAdapter(getActivity(), mCoursePropertyList));
         hideSoftKeypad();
-        mUserList = new ArrayList<>();
-        mInstructorAdapter = new InstructorAdapter(mUserList, getActivity());
+        mInstructorAdapter = new InstructorAdapter(instructorsList, getActivity());
         mInstructorsCarousel.setAdapter(mInstructorAdapter);
         courseNotFoundView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -351,7 +354,12 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
                 .into(courseTargetFigSupported);
 
         resolveJoinView();
-        fetchInstructors();
+        if (instructorsList.isEmpty()) {
+            fetchInstructors();
+        }
+        else{
+            showCurrentInstructors();
+        }
         Activity activity = getActivity();
         if (activity != null) {
             activity.invalidateOptionsMenu();
@@ -514,25 +522,30 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
             List<User> users = e.getResponse().body().getUsers();
             if (users != null && !users.isEmpty()) {
-                footer.setVisibility(View.VISIBLE);
+                instructorsList.clear();
+                instructorsList.addAll(users);
 
-                mUserList.clear();
-                mUserList.addAll(users);
-                mInstructorAdapter.notifyDataSetChanged();
-
-                mInstructorsCarousel.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-                        centeringRecycler(this);
-                        return true;
-                    }
-                });
+                showCurrentInstructors();
             } else {
                 footer.setVisibility(View.GONE);
             }
 //            ProgressHelper.dismiss(mInstructorsProgressBar);
         }
     }
+
+    private void showCurrentInstructors() {
+        footer.setVisibility(View.VISIBLE);
+        mInstructorAdapter.notifyDataSetChanged();
+
+        mInstructorsCarousel.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                centeringRecycler(this);
+                return true;
+            }
+        });
+    }
+
 
     private void centeringRecycler(ViewTreeObserver.OnPreDrawListener listener) {
         Display display = getActivity().getWindowManager().getDefaultDisplay();

@@ -2,9 +2,8 @@ package org.stepic.droid.core;
 
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
-import org.stepic.droid.ui.presenters.certificate.CertificatePresenter;
-import org.stepic.droid.ui.presenters.certificate.CertificatePresenterImpl;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.ui.presenters.certificate.CertificatePresenter;
 import org.stepic.droid.web.IApi;
 
 import java.util.concurrent.ThreadPoolExecutor;
@@ -21,6 +20,6 @@ public class CertificateModule {
                                                  DatabaseFacade databaseFacade,
                                                  ThreadPoolExecutor threadPoolExecutor,
                                                  IMainHandler mainHandler) {
-        return new CertificatePresenterImpl(api, config, screenManager, databaseFacade, threadPoolExecutor, mainHandler);
+        return new CertificatePresenter (api, config, screenManager, databaseFacade, threadPoolExecutor, mainHandler);
     }
 }

@@ -47,9 +47,6 @@ import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.ui.dialogs.VideoQualityDialog;
 import org.stepic.droid.ui.dialogs.WantMoveDataDialog;
 import org.stepic.droid.ui.fragments.CommentsFragment;
-import org.stepic.droid.ui.fragments.CourseDetailFragment;
-import org.stepic.droid.ui.presenters.course_finder.CourseFinderPresenterImpl;
-import org.stepic.droid.ui.presenters.course_joiner.CourseJoinerPresenterImpl;
 import org.stepic.droid.web.RetrofitRESTApi;
 
 import javax.inject.Singleton;
@@ -60,7 +57,11 @@ import dagger.Component;
 @Component(modules = {StepicDefaultModule.class})
 public interface StepicCoreComponent {
 
-    CertificateComponent plusActModule(CertificateModule module);
+    SectionComponent plus(SectionModule module);
+
+    CourseDetailComponent plus(CourseDetailModule module);
+
+    CertificateComponent plus(CertificateModule module);
 
     void inject(FragmentActivityBase someActivity);
 
@@ -74,13 +75,9 @@ public interface StepicCoreComponent {
 
     void inject(FragmentBase baseFragment);
 
-    void inject(CourseDetailFragment courseDetailFragment);
-
     void inject(RetrofitRESTApi api);
 
     void inject(Section section);
-
-    void inject(SectionAdapter adapter);
 
     void inject(UnitAdapter adapter);
 
@@ -167,11 +164,9 @@ public interface StepicCoreComponent {
 
     void inject(UnauthorizedDialogFragment unauthorizedDialogFragment);
 
-    void inject(CourseFinderPresenterImpl courseFinderPresenter);
-
-    void inject(CourseJoinerPresenterImpl courseJoinerPresenter);
-
     void inject(DeleteCommentDialogFragment dialogFragment);
 
     void inject(CertificateShareDialog certificateShareDialog);
+
+    void inject(SectionAdapter sectionAdapter);
 }

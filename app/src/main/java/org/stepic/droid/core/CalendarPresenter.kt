@@ -18,6 +18,7 @@ import org.stepic.droid.model.CalendarSection
 import org.stepic.droid.model.Section
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.ui.presenters.PresenterBase
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.StringUtil
 import java.util.*
@@ -25,17 +26,21 @@ import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Singleton
 
 @Singleton
-class CalendarPresenterImpl(val config: IConfig,
+class CalendarPresenter(val config: IConfig,
                             val mainHandler: IMainHandler,
                             val context: Context,
                             val threadPool: ThreadPoolExecutor,
                             val database: DatabaseFacade,
                             val userPrefs: UserPreferences,
-                            val analytic : Analytic) : CalendarPresenter {
+                            val analytic : Analytic) : PresenterBase<CalendarExportableView>() {
 
-    private var view: CalendarExportableView? = null
-
-    override fun checkToShowCalendar(sectionList: List<Section>?) {
+    /**
+     * true, if any section in list have deadline (soft or hard) and the deadline is not happened
+     * and calendar was not added before. If course was restarted, than show (new_deadline - old_deadline > 1 month).
+     * false, otherwise.
+     *
+     */
+    fun checkToShowCalendar(sectionList: List<Section>?) {
         if (sectionList == null || sectionList.isEmpty()) {
             view?.onShouldBeShownCalendar(false)
             return
@@ -129,7 +134,12 @@ class CalendarPresenterImpl(val config: IConfig,
         }
     }
 
-    override fun addDeadlinesToCalendar(sectionList: List<Section>, calendarItemOut: CalendarItem?) {
+    /**
+     * add soft and hard deadline to calendar, if permission not granted put it to {@code exportableView}
+     *
+     * @param sectionList list of sections of course
+     */
+    fun addDeadlinesToCalendar(sectionList: List<Section>, calendarItemOut: CalendarItem?) {
         val permissionCheck = ContextCompat.checkSelfPermission(context,
                 Manifest.permission.WRITE_CALENDAR)
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
@@ -283,13 +293,5 @@ class CalendarPresenterImpl(val config: IConfig,
         } else {
             database.addCalendarEvent(CalendarSection(section.id, eventId, infoFromDb?.eventIdSoftDeadline, section.hard_deadline, infoFromDb?.softDeadline))
         }
-    }
-
-    override fun onStart(view: CalendarExportableView) {
-        this.view = view
-    }
-
-    override fun onStop() {
-        view = null
     }
 }

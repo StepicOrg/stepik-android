@@ -8,7 +8,7 @@ import org.stepic.droid.core.IScreenManager
 import org.stepic.droid.model.Certificate
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.store.operations.DatabaseFacade
-import org.stepic.droid.ui.presenters.PresenterImpl
+import org.stepic.droid.ui.presenters.PresenterBase
 import org.stepic.droid.web.CertificateResponse
 import org.stepic.droid.web.CoursesStepicResponse
 import org.stepic.droid.web.IApi
@@ -19,18 +19,18 @@ import retrofit.Retrofit
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 
-class CertificatePresenterImpl(val api: IApi,
+class CertificatePresenter(val api: IApi,
                                val config: IConfig,
                                val screenManager: IScreenManager,
                                val database: DatabaseFacade,
                                val threadPoolExecutor: ThreadPoolExecutor,
-                               val mainHandler: IMainHandler) : PresenterImpl<CertificateView>(), CertificatePresenter {
+                               val mainHandler: IMainHandler) : PresenterBase<CertificateView>() {
 
     private var certificateViewItemList: ArrayList<CertificateViewItem>? = null
     private var certificatesCall: Call<CertificateResponse>? = null
     private var coursesCall: Call<CoursesStepicResponse>? = null
 
-    override fun showCertificates(isRefreshing: Boolean) {
+    fun showCertificates(isRefreshing: Boolean) {
         if (certificateViewItemList == null) {
             database.getAllCertificates()
             //need load from internet
@@ -140,17 +140,17 @@ class CertificatePresenterImpl(val api: IApi,
         })
     }
 
-    override fun size() = certificateViewItemList?.size ?: 0
+    fun size() = certificateViewItemList?.size ?: 0
 
-    override fun showShareDialogForCertificate(certificateViewItem: CertificateViewItem?) {
+    fun showShareDialogForCertificate(certificateViewItem: CertificateViewItem?) {
         view?.onNeedShowShareDialog(certificateViewItem)
     }
 
-    override fun showCertificateAsPdf(activity: Activity, fullPath: String) {
+    fun showCertificateAsPdf(activity: Activity, fullPath: String) {
         screenManager.showPdfInBrowserByGoogleDocs(activity, fullPath)
     }
 
-    override fun get(position: Int) = certificateViewItemList?.get(position)
+    fun get(position: Int) = certificateViewItemList?.get(position)
 
     override fun detachView(view: CertificateView) {
         super.detachView(view)

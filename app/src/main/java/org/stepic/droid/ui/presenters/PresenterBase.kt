@@ -2,13 +2,13 @@ package org.stepic.droid.ui.presenters
 
 import android.support.annotation.CallSuper
 
-abstract class PresenterImpl<V> : Presenter<V>{
+abstract class PresenterBase<V> {
     @Volatile
-    public var view: V? = null
+    var view: V? = null
         private set
 
     @CallSuper
-    override fun attachView(view: V) {
+    open fun attachView(view: V) {
         val previousView = this.view
 
         if (previousView != null) {
@@ -19,7 +19,7 @@ abstract class PresenterImpl<V> : Presenter<V>{
     }
 
     @CallSuper
-    override fun detachView(view: V) {
+    open fun detachView(view: V) {
         val previousView = this.view
 
         if (previousView === view) {
