@@ -38,7 +38,7 @@ public interface IScreenManager {
 
     void showSteps(Activity sourceActivity, Unit unit, Lesson lesson);
 
-    void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, boolean noAnimation);
+    void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, boolean backAnimation);
 
     void openStepInWeb(Context context, Step step);
 

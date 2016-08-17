@@ -236,7 +236,6 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
         ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
         mShell.getScreenProvider().showSteps(getActivity(), nextUnit, nextLesson);
         getActivity().finish();
-        getActivity().overridePendingTransition(R.anim.slide_out_to_start, R.anim.slide_in_from_end);
     }
 
     @Override
@@ -263,7 +262,6 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     public void openPreviousLesson(Unit previousUnit, Lesson previousLesson) {
         ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
         mShell.getScreenProvider().showSteps(getActivity(), previousUnit, previousLesson, true);
-        getActivity().overridePendingTransition(R.anim.slide_out_to_end, R.anim.slide_in_from_start);
         getActivity().finish();
     }
 

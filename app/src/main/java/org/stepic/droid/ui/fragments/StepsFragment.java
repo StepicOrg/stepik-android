@@ -55,11 +55,13 @@ import retrofit.Retrofit;
 
 public class StepsFragment extends FragmentBase {
     private static final String TAG = "StepsFragment";
+    private static final String FROM_PREVIOUS_KEY = "fromPrevKey";
 
-    public static StepsFragment newInstance(Unit unit, Lesson lesson) {
+    public static StepsFragment newInstance(Unit unit, Lesson lesson, boolean fromPreviousLesson) {
         Bundle args = new Bundle();
         args.putParcelable(AppConstants.KEY_UNIT_BUNDLE, unit);
         args.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lesson);
+        args.putBoolean(FROM_PREVIOUS_KEY, fromPreviousLesson);
         StepsFragment fragment = new StepsFragment();
         fragment.setArguments(args);
         return fragment;
@@ -88,6 +90,8 @@ public class StepsFragment extends FragmentBase {
     private String qualityForView;
     private FromDbStepTask getFromDbStepsTask;
 
+    private boolean fromPreviousLesson = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +99,7 @@ public class StepsFragment extends FragmentBase {
 
         unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
         mLesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
-
+        fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
         stepList = new ArrayList<>();
     }
 
@@ -414,7 +418,7 @@ public class StepsFragment extends FragmentBase {
     }
 
     private void showSteps(List<Step> steps) {
-        boolean isNumEquals = !stepList.isEmpty() &&  steps.size() == stepList.size(); // hack for need updating view?
+        boolean isNumEquals = !stepList.isEmpty() && steps.size() == stepList.size(); // hack for need updating view?
         stepList.clear();
         stepList.addAll(steps);
 
