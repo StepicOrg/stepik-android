@@ -119,16 +119,10 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
                 routeStepPresenter.clickPreviousLesson(unit);
             }
         });
-        if (savedInstanceState == null) {
-            //not hide on rotate
-            routeStepPresenter.checkStepForFirst(step.getId(), lesson, unit);
-            routeStepPresenter.checkStepForLast(step.getId(), lesson, unit);
-        } else {
-            //restore visibility
-            routeLessonRoot.setVisibility(savedInstanceState.getBoolean(ROUTER_ROOT_VISIBILITY_KEY) ? View.VISIBLE : View.GONE);
-            nextLessonView.setVisibility(savedInstanceState.getBoolean(NEXT_LESSON_VISIBILITY_KEY) ? View.VISIBLE : View.INVISIBLE);
-            previousLessonView.setVisibility(savedInstanceState.getBoolean(PREVIOUS_LESSON_VISIBILITY_KEY) ? View.VISIBLE : View.INVISIBLE);
-        }
+
+
+        routeStepPresenter.checkStepForFirst(step.getId(), lesson, unit);
+        routeStepPresenter.checkStepForLast(step.getId(), lesson, unit);
 
         bus.register(this);
     }
