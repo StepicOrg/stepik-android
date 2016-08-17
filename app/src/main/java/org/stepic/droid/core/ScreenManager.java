@@ -314,16 +314,31 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
-    public void showSteps(Context sourceActivity, Unit unit, Lesson lesson) {
+    public void showSteps(Activity sourceActivity, Unit unit, Lesson lesson) {
+        showSteps(sourceActivity, unit, lesson, false);
+    }
+
+    @Override
+    public void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, boolean noAnimation) {
         analytic.reportEventWithIdName(Analytic.Screens.SHOW_STEP, lesson.getId() + "", lesson.getTitle());
         Intent intent = new Intent(sourceActivity, StepsActivity.class);
+        if (noAnimation) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        }
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_UNIT_BUNDLE, unit);
         bundle.putSerializable(AppConstants.KEY_LESSON_BUNDLE, lesson);
-
         intent.putExtras(bundle);
         sourceActivity.startActivity(intent);
+        if(noAnimation){
+            sourceActivity.overridePendingTransition(0, 0);
+        }
+        else {
+            sourceActivity.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
+        }
+
     }
+
 
     @Override
     public void openStepInWeb(Context context, Step step) {

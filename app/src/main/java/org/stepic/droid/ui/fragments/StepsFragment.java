@@ -93,8 +93,6 @@ public class StepsFragment extends FragmentBase {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        getActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
-
         unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
         mLesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
 

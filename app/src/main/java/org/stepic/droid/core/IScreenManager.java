@@ -36,7 +36,9 @@ public interface IScreenManager {
 
     void showUnitsForSection(Context sourceActivity, @NotNull Section section);
 
-    void showSteps(Context sourceActivity, Unit unit, Lesson lesson);
+    void showSteps(Activity sourceActivity, Unit unit, Lesson lesson);
+
+    void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, boolean noAnimation);
 
     void openStepInWeb(Context context, Step step);
 

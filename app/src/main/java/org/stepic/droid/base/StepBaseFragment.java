@@ -11,8 +11,8 @@ import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.core.StepModule;
-import org.stepic.droid.core.presenters.NextStepPresenter;
-import org.stepic.droid.core.presenters.contracts.NextStepView;
+import org.stepic.droid.core.presenters.RouteStepPresenter;
+import org.stepic.droid.core.presenters.contracts.RouteStepView;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Lesson;
@@ -31,7 +31,7 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public abstract class StepBaseFragment extends FragmentBase implements NextStepView {
+public abstract class StepBaseFragment extends FragmentBase implements RouteStepView {
 
     @BindView(R.id.text_header_enhanced)
     protected LatexSupportableEnhancedFrameLayout headerWvEnhanced;
@@ -42,17 +42,37 @@ public abstract class StepBaseFragment extends FragmentBase implements NextStepV
     @BindView(R.id.open_comments_text)
     protected TextView textForComment;
 
-    @BindView(R.id.next_lesson_root)
-    protected View nextLessonRoot;
+    /**
+     * default: Gone
+     */
+    @BindView(R.id.route_lesson_root)
+    protected View routeLessonRoot;
+
+    /**
+     * do not make it gone, only invisible. Default: invisible
+     */
+    @BindView(R.id.next_lesson_view)
+    protected View nextLessonView;
+
+    /**
+     * do not make it gone, only invisible. Default: invisible
+     */
+    @BindView(R.id.previous_lesson_view)
+    protected View previousLessonView;
 
     protected Step step;
     protected Lesson lesson;
     protected Unit unit;
 
-    private final String LOAD_DIALOG_TAG = "stepBaseFragmentLoad";
+    private final static String LOAD_DIALOG_TAG = "stepBaseFragmentLoad";
+
+    private final static String ROUTER_ROOT_VISIBILITY_KEY = "visibility_router_root";
+    private final static String NEXT_LESSON_VISIBILITY_KEY = "visibility_next_lesson";
+    private final static String PREVIOUS_LESSON_VISIBILITY_KEY = "visibility_previous_lesson";
+
 
     @Inject
-    NextStepPresenter nextStepPresenter;
+    RouteStepPresenter routeStepPresenter;
 
     @Override
     protected void injectComponent() {
@@ -86,17 +106,28 @@ public abstract class StepBaseFragment extends FragmentBase implements NextStepV
 
         updateCommentState();
 
-        nextStepPresenter.attachView(this);
-        nextLessonRoot.setOnClickListener(new View.OnClickListener() {
+        routeStepPresenter.attachView(this);
+        nextLessonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                nextStepPresenter.clickNextLesson(lesson, unit);
+                routeStepPresenter.clickNextLesson(unit);
+            }
+        });
+        previousLessonView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                routeStepPresenter.clickPreviousLesson(unit);
             }
         });
         if (savedInstanceState == null) {
             //not hide on rotate
-            nextLessonRoot.setVisibility(View.GONE);
-            nextStepPresenter.checkStepForLast(step.getId(), lesson, unit);
+            routeStepPresenter.checkStepForFirst(step.getId(), lesson, unit);
+            routeStepPresenter.checkStepForLast(step.getId(), lesson, unit);
+        } else {
+            //restore visibility
+            routeLessonRoot.setVisibility(savedInstanceState.getBoolean(ROUTER_ROOT_VISIBILITY_KEY) ? View.VISIBLE : View.GONE);
+            nextLessonView.setVisibility(savedInstanceState.getBoolean(NEXT_LESSON_VISIBILITY_KEY) ? View.VISIBLE : View.INVISIBLE);
+            previousLessonView.setVisibility(savedInstanceState.getBoolean(PREVIOUS_LESSON_VISIBILITY_KEY) ? View.VISIBLE : View.INVISIBLE);
         }
 
         bus.register(this);
@@ -142,8 +173,9 @@ public abstract class StepBaseFragment extends FragmentBase implements NextStepV
     public void onDestroyView() {
         bus.unregister(this);
         openCommentViewClickable.setOnClickListener(null);
-        nextStepPresenter.detachView(this);
-        nextLessonRoot.setOnClickListener(null);
+        routeStepPresenter.detachView(this);
+        nextLessonView.setOnClickListener(null);
+        previousLessonView.setOnClickListener(null);
         super.onDestroyView();
     }
 
@@ -195,16 +227,16 @@ public abstract class StepBaseFragment extends FragmentBase implements NextStepV
 
     @Override
     public final void showNextLessonView() {
-        nextLessonRoot.setVisibility(View.VISIBLE);
+        routeLessonRoot.setVisibility(View.VISIBLE);
+        nextLessonView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public final void openNextLesson(Unit nextUnit, Lesson nextLesson) {
         ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
         mShell.getScreenProvider().showSteps(getActivity(), nextUnit, nextLesson);
-        getActivity().overridePendingTransition(R.anim.slide_out_to_start, R.anim.slide_in_from_end);
         getActivity().finish();
-//        getActivity().finish();
+        getActivity().overridePendingTransition(R.anim.slide_out_to_start, R.anim.slide_in_from_end);
     }
 
     @Override
@@ -220,4 +252,33 @@ public abstract class StepBaseFragment extends FragmentBase implements NextStepV
         ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
         Toast.makeText(getContext(), R.string.cant_show_next_step, Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void showPreviousLessonView() {
+        routeLessonRoot.setVisibility(View.VISIBLE);
+        previousLessonView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void openPreviousLesson(Unit previousUnit, Lesson previousLesson) {
+        ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
+        mShell.getScreenProvider().showSteps(getActivity(), previousUnit, previousLesson, true);
+        getActivity().overridePendingTransition(R.anim.slide_out_to_end, R.anim.slide_in_from_start);
+        getActivity().finish();
+    }
+
+    @Override
+    public void showCantGoPrevious() {
+        ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
+        Toast.makeText(getContext(), R.string.cant_show_previous_step, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(ROUTER_ROOT_VISIBILITY_KEY, routeLessonRoot.getVisibility() == View.VISIBLE);
+        outState.putBoolean(NEXT_LESSON_VISIBILITY_KEY, nextLessonView.getVisibility() == View.VISIBLE);
+        outState.putBoolean(PREVIOUS_LESSON_VISIBILITY_KEY, previousLessonView.getVisibility() == View.VISIBLE);
+    }
+
 }
