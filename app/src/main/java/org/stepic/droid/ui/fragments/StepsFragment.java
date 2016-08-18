@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -34,10 +35,10 @@ import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.VideoUrl;
+import org.stepic.droid.ui.adapters.StepFragmentAdapter;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.ProgressUtil;
-import org.stepic.droid.ui.adapters.StepFragmentAdapter;
 import org.stepic.droid.web.AssignmentResponse;
 import org.stepic.droid.web.ProgressesResponse;
 import org.stepic.droid.web.StepResponse;
@@ -46,8 +47,8 @@ import org.stepic.droid.web.ViewAssignment;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.BindString;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
@@ -223,7 +224,6 @@ public class StepsFragment extends FragmentBase {
         if (stepList.size() <= position) return;
         final Step step = stepList.get(position);
 
-        final int local = position;
         if (mStepResolver.isViewedStatePost(step) && !step.is_custom_passed()) {
             //try to push viewed state to the server
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
@@ -418,7 +418,7 @@ public class StepsFragment extends FragmentBase {
     }
 
     private void showSteps(List<Step> steps) {
-        boolean isNumEquals = !stepList.isEmpty() && steps.size() == stepList.size(); // hack for need updating view?
+        boolean isNumEquals = stepList.isEmpty() || steps.size() == stepList.size(); // hack for need updating view?
         stepList.clear();
         stepList.addAll(steps);
 
@@ -426,6 +426,19 @@ public class StepsFragment extends FragmentBase {
             stepAdapter.notifyDataSetChanged();
         }
         updateTabs();
+        if (fromPreviousLesson && !isLoaded) {
+            viewPager.setCurrentItem(stepList.size() - 1, false);
+//            int tabLayoutWidth = tabLayout.getMeasuredWidth();
+            tabLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    scrollTabLayoutToEnd(this);
+                    return true;
+                }
+            });
+//            tabLayout.setScrollX(tabLayoutWidth);
+            fromPreviousLesson = false;
+        }
         isLoaded = true;
         tabLayout.setVisibility(View.VISIBLE);
         ProgressHelper.dismiss(progressBar);
@@ -437,6 +450,14 @@ public class StepsFragment extends FragmentBase {
             //it is working only if teacher add steps in lesson and user has not cached new steps, but cached old.
             stepAdapter.notifyDataSetChanged();
             updateTabs();
+        }
+    }
+
+    private void scrollTabLayoutToEnd(ViewTreeObserver.OnPreDrawListener listener) {
+        int tabWidth = tabLayout.getMeasuredWidth();
+        if (tabWidth != 0) {
+            tabLayout.getViewTreeObserver().removeOnPreDrawListener(listener);
+            tabLayout.setScrollX(tabWidth);
         }
     }
 
