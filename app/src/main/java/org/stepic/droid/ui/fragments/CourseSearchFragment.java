@@ -103,7 +103,11 @@ public class CourseSearchFragment extends CourseListFragmentBase {
 
     public void downloadCoursesById(final long[] mCourseIdsForSearch) {
         if (mCourseIdsForSearch == null || mCourseIdsForSearch.length == 0) {
-            bus.post(new FailCoursesDownloadEvent(null));
+            if (mCourses.isEmpty()) {
+                showEmptyState();
+            } else {
+                bus.post(new FailCoursesDownloadEvent(null));
+            }
             return;
         }
         mShell.getApi().getCourses(1, mCourseIdsForSearch).enqueue(new Callback<CoursesStepicResponse>() {
@@ -181,13 +185,18 @@ public class CourseSearchFragment extends CourseListFragmentBase {
             }
             showCourses(sortedCopy);
         } else {
-            mReportConnectionProblem.setVisibility(View.GONE);
-            showEmptyScreen(true);
-
-            mFooterDownloadingView.setVisibility(View.GONE);
-            ProgressHelper.dismiss(mSwipeRefreshLayout);
+            showEmptyState();
         }
         isLoading = false;
+    }
+
+    //local helper method todo refactor
+    private void showEmptyState() {
+        mReportConnectionProblem.setVisibility(View.GONE);
+        showEmptyScreen(true);
+
+        mFooterDownloadingView.setVisibility(View.GONE);
+        ProgressHelper.dismiss(mSwipeRefreshLayout);
     }
 
     protected void showCourses(List<Course> cachedCourses) {
