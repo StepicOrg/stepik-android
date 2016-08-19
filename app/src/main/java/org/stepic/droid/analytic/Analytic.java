@@ -46,6 +46,7 @@ public interface Analytic {
         String CLICK_FIND_COURSE_EMPTY_SCREEN = "click_find_courses_empty_screen";
         String CLICK_NEXT_LESSON_IN_STEPS = "click_next_lesson_in_steps";
         String CLICK_PREVIOUS_LESSON_IN_STEPS = "click_previous_lesson_in_steps";
+        String CLICK_SIGN_IN_SOCIAL = "social_login";
     }
 
     interface Screens {
