@@ -110,7 +110,7 @@
     <string name="feedback_description">Send us your suggestions, comments or idea</string>
     <string name="feedback_contacts_description">Contacts for feedback:</string>
     <string name="email_incorrect">E-mail is incorrect</string>
-    <string name="feedback_subject">Feedback about the Android app of Stepic.org</string>
+    <string name="feedback_subject">Feedback about the Android app of Stepik.org</string>
     <string name="feedback_sent">Feedback is sent</string>
     <string name="feedback_fail">Sorry, service is not available. Try later</string>
     <string name="internet_problem">Sorry, internet is not available. Try again later</string>
@@ -193,7 +193,7 @@
     <string name="fail_delete_comment">Sorry, you cannot delete this comment</string>
     <string name="share_title">Share</string>
     <string name="course">Course</string>
-    <string name="staff_label">Stepic.org Team</string>
+    <string name="staff_label">Stepik.org Team</string>
     <string name="teacher_label">Course Staff</string>
 
     <string name="ok">Ok</string>

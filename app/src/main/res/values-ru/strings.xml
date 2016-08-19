@@ -107,7 +107,7 @@
     <string name="feedback_description">Напишите нам свое предложение, замечание или идею</string>
     <string name="feedback_contacts_description">Контакты для обратной связи:</string>
     <string name="email_incorrect">Введен некоррентный e-mail</string>
-    <string name="feedback_subject">Отзыв об Android приложении Stepic.org</string>
+    <string name="feedback_subject">Отзыв об Android приложении Stepik.org</string>
     <string name="feedback_sent">Сообщение отправлено</string>
     <string name="feedback_fail">Упс… что-то пошло не так. Попробуйте позже</string>
     <string name="internet_problem">Интернет недоступен. Попробуйте позже</string>
@@ -185,7 +185,7 @@
     <string name="fail_delete_comment">Извините, не удалось удалить комментарий</string>
     <string name="share_title">Поделиться</string>
 
-    <string name="staff_label">Команда Stepic.org</string>
+    <string name="staff_label">Команда Stepik.org</string>
     <string name="teacher_label">Команда курса</string>
 
     <string name="last_discussion">Новые обсуждения</string>
