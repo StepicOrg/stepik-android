@@ -93,9 +93,6 @@ public class CourseSearchFragment extends CourseListFragmentBase {
         List<SearchResult> searchResultList = e.getResponse().body().getSearchResultList();
         long[] courseIdsForSearch = mSearchResolver.getCourseIdsFromSearchResults(searchResultList);
 
-        if (mCurrentPage == 1) {
-            mCourses.clear();
-        }
         mHasNextPage = e.getResponse().body().getMeta().getHas_next();
         mCurrentPage++;
 
@@ -105,8 +102,10 @@ public class CourseSearchFragment extends CourseListFragmentBase {
 
 
     public void downloadCoursesById(final long[] mCourseIdsForSearch) {
-        if (mCourseIdsForSearch == null)
+        if (mCourseIdsForSearch == null || mCourseIdsForSearch.length == 0) {
             bus.post(new FailCoursesDownloadEvent(null));
+            return;
+        }
         mShell.getApi().getCourses(1, mCourseIdsForSearch).enqueue(new Callback<CoursesStepicResponse>() {
             @Override
             public void onResponse(Response<CoursesStepicResponse> response, Retrofit retrofit) {
