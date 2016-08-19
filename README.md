@@ -1,6 +1,6 @@
 #Stepic for Android
 
-Mobile application of [Stepic.org][1].
+Mobile application of [Stepik.org][1].
 
 ##Store
 New version of Stepic App is now available on Google Play
@@ -16,7 +16,7 @@ New version of Stepic App is now available on Google Play
 
 ##License
 
-    Copyright 2016 Stepic.org.
+    Copyright 2016 Stepik.org.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -31,5 +31,5 @@ New version of Stepic App is now available on Google Play
     limitations under the License.
 
 
- [1]: htts://stepic.org
+ [1]: htts://stepik.org
  [2]: https://play.google.com/store/apps/details?id=org.stepic.droid
