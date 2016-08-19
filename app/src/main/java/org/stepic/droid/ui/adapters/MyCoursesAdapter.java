@@ -88,6 +88,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
                 .with(getContext())
                 .load(StepicLogicHelper.getPathForCourseOrEmpty(course, mConfig))
                 .placeholder(coursePlaceholder)
+                .centerCrop()
                 .into(viewHolderItem.imageViewTarget);
         return view;
     }
