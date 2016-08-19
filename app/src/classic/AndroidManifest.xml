@@ -20,6 +20,12 @@
                     android:host="stepic.org"
                     android:pathPattern="/oauth"
                     android:scheme="stepic"/>
+
+                <data
+                    android:host="stepik.org"
+                    android:pathPattern="/oauth"
+                    android:scheme="stepic"/>
+
             </intent-filter>
         </activity>
 
@@ -49,6 +55,26 @@
                     android:host="stepic.org"
                     android:pathPattern="/course/.*/course_app"/>
 
+                <data
+                    android:scheme="https"
+                    android:host="stepik.org"
+                    android:pathPattern="/course/.*/"/>
+
+                <data
+                    android:scheme="http"
+                    android:host="stepik.org"
+                    android:pathPattern="/course/.*/"/>
+
+                <data
+                    android:scheme="https"
+                    android:host="stepik.org"
+                    android:pathPattern="/course/.*/course_app"/>
+
+                <data
+                    android:scheme="http"
+                    android:host="stepik.org"
+                    android:pathPattern="/course/.*/course_app"/>
+
             </intent-filter>
         </activity>
 
@@ -65,6 +91,16 @@
                 <data
                     android:scheme="http"
                     android:host="stepic.org"
+                    android:pathPattern="/course/.*/syllabus.*"/>
+
+                <data
+                    android:scheme="https"
+                    android:host="stepik.org"
+                    android:pathPattern="/course/.*/syllabus.*"/>
+
+                <data
+                    android:scheme="http"
+                    android:host="stepik.org"
                     android:pathPattern="/course/.*/syllabus.*"/>
             </intent-filter>
         </activity>
