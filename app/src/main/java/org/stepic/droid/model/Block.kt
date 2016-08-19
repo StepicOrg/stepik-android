@@ -8,7 +8,7 @@ import org.stepic.droid.base.MainApplication
 import java.io.Serializable
 
 class Block : Parcelable, Serializable {
-    //more fields look at stepic.org/api/steps/14671
+    //more fields look at stepik.org/api/steps/14671
 
     var name: String? = null
     var text: String? = null
