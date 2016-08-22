@@ -225,4 +225,7 @@
     <string name="cant_show_previous_step">Sorry, the previous lesson is not available</string>
     <string name="previous_lesson">Previous lesson</string>
     <string name="filter_title">Filters</string>
+    <string name="language_ru_filter">Russian</string>
+    <string name="language_en_filter">English</string>
+    <string name="course_language_title">Language of course</string>
 </resources>
