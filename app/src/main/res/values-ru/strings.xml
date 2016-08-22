@@ -217,5 +217,5 @@
     <string name="cant_show_next_step">Извините, следующий урок недоступен</string>
     <string name="previous_lesson">Предыдущий урок</string>
     <string name="cant_show_previous_step">Извините, предыдущий урок недоступен</string>
-    <string name="filter_title">Фильтр</string>
+    <string name="filter_title">Фильтры</string>
 </resources>

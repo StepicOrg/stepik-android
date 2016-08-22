@@ -28,6 +28,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
+import org.stepic.droid.ui.activities.FilterActivity;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.ui.activities.CommentsActivity;
 import org.stepic.droid.ui.activities.CourseDetailActivity;
@@ -251,6 +252,12 @@ public class ScreenManager implements IScreenManager {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setData(Uri.parse(sb.toString()));
         MainApplication.getAppContext().startActivity(intent);
+    }
+
+    @Override
+    public void showFilterScreen(Fragment sourceFragment, int requestCode){
+        Intent intent = new Intent(sourceFragment.getContext(), FilterActivity.class);
+        sourceFragment.startActivityForResult(intent, requestCode);
     }
 
     @Override

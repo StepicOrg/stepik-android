@@ -47,6 +47,7 @@ import retrofit.Retrofit;
 public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase {
     protected ToDbCoursesTask mDbSaveCoursesTask;
     protected FromDbCoursesTask mDbFromCoursesTask;
+    private static final int FILTER_REQUEST_CODE = 776;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_filter_menu:
-                Toast.makeText(getContext(), "Hello, it is fitler", Toast.LENGTH_SHORT).show(); // FIXME: 19.08.16 FIX THIS
+                mShell.getScreenProvider().showFilterScreen(this, FILTER_REQUEST_CODE);
                 return true;
         }
 

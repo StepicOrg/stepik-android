@@ -67,4 +67,6 @@ public interface IScreenManager {
     void openInWeb(Context context, String path);
 
     void addCertificateToLinkedIn(CertificateViewItem certificateViewItem);
+
+    void showFilterScreen(Fragment sourceFragment, int requestCode);
 }

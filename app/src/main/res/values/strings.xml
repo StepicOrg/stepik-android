@@ -224,5 +224,5 @@
     <string name="cant_show_next_step">Sorry, the next lesson is not available</string>
     <string name="cant_show_previous_step">Sorry, the previous lesson is not available</string>
     <string name="previous_lesson">Previous lesson</string>
-    <string name="filter_title">Filter</string>
+    <string name="filter_title">Filters</string>
 </resources>
