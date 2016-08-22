@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +47,28 @@ import retrofit.Retrofit;
 public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase {
     protected ToDbCoursesTask mDbSaveCoursesTask;
     protected FromDbCoursesTask mDbFromCoursesTask;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.my_courses_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_filter_menu:
+                Toast.makeText(getContext(), "Hello, it is fitler", Toast.LENGTH_SHORT).show(); // FIXME: 19.08.16 FIX THIS
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
