@@ -47,7 +47,7 @@ public class ShareHelperImpl implements ShareHelper {
             sb.append("\r\n");
         }
 
-        String uriForSharing = Uri.parse(StringUtil.getDynamicLinkForCourse(config, mCourse.getSlug())).toString();
+        String uriForSharing = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getSlug())).toString();
         sb.append(uriForSharing);
 
         String textForSharing = HtmlHelper.fromHtml(sb.toString()).toString();
