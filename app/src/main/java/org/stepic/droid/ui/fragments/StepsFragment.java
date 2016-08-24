@@ -455,9 +455,14 @@ public class StepsFragment extends FragmentBase {
 
     private void scrollTabLayoutToEnd(ViewTreeObserver.OnPreDrawListener listener) {
         int tabWidth = tabLayout.getMeasuredWidth();
-        if (tabWidth != 0) {
+        if (tabWidth > 0) {
             tabLayout.getViewTreeObserver().removeOnPreDrawListener(listener);
-            tabLayout.setScrollX(tabWidth);
+
+            int tabCount = tabLayout.getTabCount();
+            int right = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(tabCount - 1).getRight(); //workaround to get really last element
+            if (right >= tabWidth) {
+                tabLayout.setScrollX(right);
+            }
         }
     }
 
