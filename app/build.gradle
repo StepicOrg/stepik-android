@@ -3,10 +3,27 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.neenbedankt.android-apt' //needed for source code generation
 
+def globalConf = rootProject.ext
 android {
 
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
+
+    signingConfigs {
+        debug {
+            storeFile file(globalConf.debugKeystore)
+            storePassword globalConf.debugKeystorePass
+            keyAlias globalConf.debugAlias
+            keyPassword globalConf.debugAliasPass
+        }
+
+        release {
+            storeFile file(globalConf.keystore)
+            storePassword globalConf.keystorePass
+            keyAlias globalConf.alias
+            keyPassword globalConf.aliasPass
+        }
+    }
 
     defaultConfig {
         applicationId "org.stepic.droid"
@@ -71,11 +88,13 @@ android {
 
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro'
         }
         debug {
+            signingConfig signingConfigs.debug
             versionNameSuffix "DEV"
         }
     }
