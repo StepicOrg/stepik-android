@@ -1,23 +1,24 @@
 package org.stepic.droid.ui.adapters;
 
 import android.app.Activity;
-import android.net.Uri;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.common.util.UriUtil;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.DraweeView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.CertificateType;
 import org.stepic.droid.model.CertificateViewItem;
-import org.stepic.droid.ui.presenters.certificate.CertificatePresenter;
+import org.stepic.droid.core.presenters.CertificatePresenter;
 
 import java.util.List;
 
@@ -29,10 +30,12 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
 
     private CertificatePresenter certificatePresenter;
     private Activity activity;
+    private Drawable certificatePlaceholder;
 
     public CertificateAdapter(@NotNull CertificatePresenter certificatePresenter, @NotNull Activity activity) {
         this.certificatePresenter = certificatePresenter;
         this.activity = activity;
+        certificatePlaceholder = ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_course_placeholder);
     }
 
     @Override
@@ -62,7 +65,7 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
         TextView certificateTitleView;
 
         @BindView(R.id.certificate_icon)
-        DraweeView certificateIcon;
+        ImageView certificateIcon;
 
         @BindView(R.id.certificate_grade)
         TextView certificateGradeView;
@@ -82,9 +85,12 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
         @BindString(R.string.certificate_regular_with_substitution)
         String certificateRegularString;
 
+        GlideDrawableImageViewTarget imageViewTarget;
+
         CertificateViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            imageViewTarget = new GlideDrawableImageViewTarget(certificateIcon);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -123,7 +129,13 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
             } else {
                 certificateGradeView.setText("");
             }
-            certificateIcon.setController(getControllerForCertificateCover(certificate.getCoverFullPath()));
+
+            @NotNull
+            final String coverFullPath = certificate.getCoverFullPath() == null ? "" : certificate.getCoverFullPath();
+            Glide.with(MainApplication.getAppContext())
+                    .load(coverFullPath)
+                    .placeholder(certificatePlaceholder)
+                    .into(imageViewTarget);
         }
 
 
@@ -134,25 +146,6 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
 
     }
 
-    private DraweeController getControllerForCertificateCover(String coverFullPath) {
-        if (coverFullPath != null) {
-            return Fresco.newDraweeControllerBuilder()
-                    .setUri(coverFullPath)
-                    .setAutoPlayAnimations(true)
-                    .build();
-        } else {
-            //for empty cover:
-            Uri uri = new Uri.Builder()
-                    .scheme(UriUtil.LOCAL_RESOURCE_SCHEME) // "res"
-                    .path(String.valueOf(R.drawable.ic_course_placeholder))
-                    .build();
-
-            return Fresco.newDraweeControllerBuilder()
-                    .setUri(uri)
-                    .setAutoPlayAnimations(true)
-                    .build();
-        }
-    }
 
     private interface CertificateClickListener {
         void onClick(CertificateViewItem certificate);

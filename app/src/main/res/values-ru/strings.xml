@@ -107,7 +107,7 @@
     <string name="feedback_description">Напишите нам свое предложение, замечание или идею</string>
     <string name="feedback_contacts_description">Контакты для обратной связи:</string>
     <string name="email_incorrect">Введен некоррентный e-mail</string>
-    <string name="feedback_subject">Отзыв об Android приложении Stepic.org</string>
+    <string name="feedback_subject">Отзыв об Android приложении Stepik.org</string>
     <string name="feedback_sent">Сообщение отправлено</string>
     <string name="feedback_fail">Упс… что-то пошло не так. Попробуйте позже</string>
     <string name="internet_problem">Интернет недоступен. Попробуйте позже</string>
@@ -185,7 +185,7 @@
     <string name="fail_delete_comment">Извините, не удалось удалить комментарий</string>
     <string name="share_title">Поделиться</string>
 
-    <string name="staff_label">Команда Stepic.org</string>
+    <string name="staff_label">Команда Stepik.org</string>
     <string name="teacher_label">Команда курса</string>
 
     <string name="last_discussion">Новые обсуждения</string>
@@ -213,4 +213,12 @@
     <string name="empty_certificates">Пока вы не получили ни одного сертификата</string>
     <string name="are_you_sure_remove_comment_text">Если Вы выйдите, эта запись будет потеряна</string>
     <string name="email_already_used">Данный e-mail используется в другом аккаунте</string>
+    <string name="go_to_the_next_lesson">Следующий урок</string>
+    <string name="cant_show_next_step">Извините, следующий урок недоступен</string>
+    <string name="previous_lesson">Предыдущий урок</string>
+    <string name="cant_show_previous_step">Извините, предыдущий урок недоступен</string>
+    <string name="filter_title">Фильтры</string>
+    <string name="language_en_filter">Английский</string>
+    <string name="language_ru_filter">Русский</string>
+    <string name="course_language_title">Язык курса</string>
 </resources>

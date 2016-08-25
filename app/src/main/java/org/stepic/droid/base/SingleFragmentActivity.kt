@@ -9,18 +9,22 @@ abstract class SingleFragmentActivity : FragmentActivityBase() {
     protected abstract fun createFragment(): Fragment?
     open fun getLayoutResId() = R.layout.activity_fragment
 
+    protected var fragment: Fragment? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(getLayoutResId())
 
         val fm = supportFragmentManager
-        var fragment: Fragment? = fm.findFragmentById(R.id.fragmentContainer)
+        fragment = fm.findFragmentById(R.id.fragmentContainer)
 
         if (fragment == null) {
             fragment = createFragment()
-            fm.beginTransaction().add(R.id.fragmentContainer, fragment).commit()
+            fm.beginTransaction()
+                    .add(R.id.fragmentContainer, fragment)
+//                    .addToBackStack(fragment?.javaClass?.simpleName?:"default")
+                    .commit()
         }
-
     }
 
 }

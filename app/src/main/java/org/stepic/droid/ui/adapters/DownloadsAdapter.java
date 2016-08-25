@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,9 +20,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.squareup.otto.Bus;
-import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IScreenManager;
@@ -34,14 +36,14 @@ import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.util.DbParseHelper;
-import org.stepic.droid.util.FileUtil;
-import org.stepic.droid.util.ThumbnailParser;
 import org.stepic.droid.ui.dialogs.ClearVideosDialog;
 import org.stepic.droid.ui.fragments.DownloadsFragment;
 import org.stepic.droid.ui.listeners.OnClickCancelListener;
 import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
+import org.stepic.droid.util.DbParseHelper;
+import org.stepic.droid.util.FileUtil;
+import org.stepic.droid.util.ThumbnailParser;
 
 import java.io.File;
 import java.util.Collection;
@@ -52,9 +54,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.BindDrawable;
 import butterknife.BindString;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.zhanghai.android.materialprogressbar.HorizontalProgressDrawable;
 import me.zhanghai.android.materialprogressbar.IndeterminateHorizontalProgressDrawable;
@@ -88,6 +89,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     @Inject
     IDownloadManager downloadManager;
 
+    @NotNull
+    private Drawable placeholder;
+
     private DownloadsFragment downloadsFragment;
     private Set<Long> cachedStepsSet;
 
@@ -99,6 +103,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         mStepIdToLessonMap = videoIdToStepMap;
         mDownloadingVideoList = downloadingList;
         this.cachedStepsSet = cachedStepsSet;
+        placeholder = ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.video_placeholder);
     }
 
     @Override
@@ -222,9 +227,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         @BindView(R.id.video_icon)
         ImageView mVideoIcon;
 
-        @BindDrawable(R.drawable.video_placeholder)
-        Drawable placeholder;
-
         @BindView(R.id.video_downloading_progress_bar)
         MaterialProgressBar downloadingProgressBar;
 
@@ -271,16 +273,14 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             String thumbnail = downloadingVideoItem.getDownloadEntity().getThumbnail();
             if (thumbnail != null) {
                 Uri uriForThumbnail = ThumbnailParser.getUriForThumbnail(thumbnail);
-                Picasso.with(MainApplication.getAppContext())
+                Glide.with(MainApplication.getAppContext())
                         .load(uriForThumbnail)
                         .placeholder(placeholder)
-                        .error(placeholder)
                         .into(mVideoIcon);
             } else {
-                Picasso.with(MainApplication.getAppContext())
-                        .load(R.drawable.video_placeholder)
+                Glide.with(MainApplication.getAppContext())
+                        .load("")
                         .placeholder(placeholder)
-                        .error(placeholder)
                         .into(mVideoIcon);
             }
 
@@ -351,8 +351,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         @BindView(R.id.video_header)
         TextView mVideoHeader;
 
-        @BindDrawable(R.drawable.video_placeholder)
-        Drawable placeholder;
 
         @BindView(R.id.pre_load_iv)
         ImageView loadActionIcon;
@@ -403,16 +401,14 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             String thumbnail = cachedVideo.getThumbnail();
             if (thumbnail != null) {
                 Uri uriForThumbnail = ThumbnailParser.getUriForThumbnail(thumbnail);
-                Picasso.with(MainApplication.getAppContext())
+                Glide.with(MainApplication.getAppContext())
                         .load(uriForThumbnail)
                         .placeholder(placeholder)
-                        .error(placeholder)
                         .into(mVideoIcon);
             } else {
-                Picasso.with(MainApplication.getAppContext())
-                        .load(R.drawable.video_placeholder)
+                Glide.with(MainApplication.getAppContext())
+                        .load("")
                         .placeholder(placeholder)
-                        .error(placeholder)
                         .into(mVideoIcon);
             }
 

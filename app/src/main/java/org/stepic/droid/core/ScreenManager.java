@@ -28,6 +28,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
+import org.stepic.droid.ui.activities.FilterActivity;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.ui.activities.CommentsActivity;
 import org.stepic.droid.ui.activities.CourseDetailActivity;
@@ -254,6 +255,12 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
+    public void showFilterScreen(Fragment sourceFragment, int requestCode){
+        Intent intent = new Intent(sourceFragment.getContext(), FilterActivity.class);
+        sourceFragment.startActivityForResult(intent, requestCode);
+    }
+
+    @Override
     public void showPdfInBrowserByGoogleDocs(Activity activity, String fullPath) {
         String googleDocsUrl = "https://docs.google.com/viewer?url=";
         openInWeb(activity, googleDocsUrl + fullPath);
@@ -291,7 +298,7 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
-    public void showSections(Context sourceActivity, @NotNull Course course) {
+    public void showSections(Activity sourceActivity, @NotNull Course course) {
         analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS, course.getCourseId() + "", course.getTitle());
         Intent intent = new Intent(sourceActivity, SectionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -300,6 +307,7 @@ public class ScreenManager implements IScreenManager {
         bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
         intent.putExtras(bundle);
         sourceActivity.startActivity(intent);
+        sourceActivity.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
     }
 
     @Override
@@ -313,16 +321,24 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
-    public void showSteps(Context sourceActivity, Unit unit, Lesson lesson) {
+    public void showSteps(Activity sourceActivity, Unit unit, Lesson lesson) {
+        showSteps(sourceActivity, unit, lesson, false);
+    }
+
+    @Override
+    public void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, boolean backAnimation) {
         analytic.reportEventWithIdName(Analytic.Screens.SHOW_STEP, lesson.getId() + "", lesson.getTitle());
         Intent intent = new Intent(sourceActivity, StepsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_UNIT_BUNDLE, unit);
         bundle.putSerializable(AppConstants.KEY_LESSON_BUNDLE, lesson);
-
+        if (backAnimation) {
+            bundle.putBoolean(StepsActivity.Companion.getNeedReverseAnimationKey(), true);
+        }
         intent.putExtras(bundle);
         sourceActivity.startActivity(intent);
     }
+
 
     @Override
     public void openStepInWeb(Context context, Step step) {

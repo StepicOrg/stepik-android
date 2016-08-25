@@ -51,7 +51,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         createViewQueue(db, DbStructureViewQueue.VIEW_QUEUE);
 
 
-//Use new manner for upgrade, it is more safety and maintainability (but may be less effective in onStart) :
+//Use new manner for upgrade, it is more safety and maintainability (but may be less effective in attachView) :
         upgradeFrom3To4(db);
         upgradeFrom4To5(db);
         upgradeFrom5To6(db);

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +47,29 @@ import retrofit.Retrofit;
 public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase {
     protected ToDbCoursesTask mDbSaveCoursesTask;
     protected FromDbCoursesTask mDbFromCoursesTask;
+    private static final int FILTER_REQUEST_CODE = 776;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        inflater.inflate(R.menu.my_courses_menu, menu); //hide in 1.15
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_filter_menu:
+                mShell.getScreenProvider().showFilterScreen(this, FILTER_REQUEST_CODE);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

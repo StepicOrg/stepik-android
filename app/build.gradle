@@ -3,17 +3,34 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.neenbedankt.android-apt' //needed for source code generation
 
+def globalConf = rootProject.ext
 android {
 
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
 
+    signingConfigs {
+        debug {
+            storeFile file(globalConf.debugKeystore)
+            storePassword globalConf.debugKeystorePass
+            keyAlias globalConf.debugAlias
+            keyPassword globalConf.debugAliasPass
+        }
+
+        release {
+            storeFile file(globalConf.keystore)
+            storePassword globalConf.keystorePass
+            keyAlias globalConf.alias
+            keyPassword globalConf.aliasPass
+        }
+    }
+
     defaultConfig {
         applicationId "org.stepic.droid"
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 74
-        versionName "1.14.3"
+        versionCode 76
+        versionName "1.15.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // Enabling multidex support.
         multiDexEnabled true
@@ -56,6 +73,20 @@ android {
         }
     }
 
+    // delete unaligned files
+    android.applicationVariants.all { variant ->
+        variant.assemble.doLast {
+            variant.outputs.each { output ->
+                File unaligned = output.packageApplication.outputFile;
+                File aligned = output.outputFile
+                if (!unaligned.getName().equalsIgnoreCase(aligned.getName())) {
+                    println "deleting " + unaligned.getName()
+                    unaligned.delete()
+                }
+            }
+        }
+    }
+
     packagingOptions {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
@@ -71,11 +102,13 @@ android {
 
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro'
         }
         debug {
+            signingConfig signingConfigs.debug
             versionNameSuffix "DEV"
         }
     }
@@ -103,10 +136,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.1.1'
     compile 'com.android.support:cardview-v7:24.1.1'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.facebook.fresco:fresco:0.10.0'
-    compile 'com.facebook.fresco:animated-gif:0.10.0'
 
     compile 'joda-time:joda-time:2.8'
 
@@ -140,6 +169,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:9.4.0'
     compile 'com.google.firebase:firebase-core:9.4.0'
     compile 'com.google.firebase:firebase-crash:9.4.0'
+
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 }
 
 repositories {

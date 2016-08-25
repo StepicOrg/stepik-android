@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -34,10 +35,10 @@ import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.VideoUrl;
+import org.stepic.droid.ui.adapters.StepFragmentAdapter;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.ProgressUtil;
-import org.stepic.droid.ui.adapters.StepFragmentAdapter;
 import org.stepic.droid.web.AssignmentResponse;
 import org.stepic.droid.web.ProgressesResponse;
 import org.stepic.droid.web.StepResponse;
@@ -46,8 +47,8 @@ import org.stepic.droid.web.ViewAssignment;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.BindString;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
@@ -55,11 +56,13 @@ import retrofit.Retrofit;
 
 public class StepsFragment extends FragmentBase {
     private static final String TAG = "StepsFragment";
+    private static final String FROM_PREVIOUS_KEY = "fromPrevKey";
 
-    public static StepsFragment newInstance(Unit unit, Lesson lesson) {
+    public static StepsFragment newInstance(Unit unit, Lesson lesson, boolean fromPreviousLesson) {
         Bundle args = new Bundle();
         args.putParcelable(AppConstants.KEY_UNIT_BUNDLE, unit);
         args.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lesson);
+        args.putBoolean(FROM_PREVIOUS_KEY, fromPreviousLesson);
         StepsFragment fragment = new StepsFragment();
         fragment.setArguments(args);
         return fragment;
@@ -88,16 +91,16 @@ public class StepsFragment extends FragmentBase {
     private String qualityForView;
     private FromDbStepTask getFromDbStepsTask;
 
+    private boolean fromPreviousLesson = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        getActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
-
         unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
         mLesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
-
+        fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
         stepList = new ArrayList<>();
     }
 
@@ -115,7 +118,7 @@ public class StepsFragment extends FragmentBase {
         super.onViewCreated(view, savedInstanceState);
         init();
         bus.register(this);
-        //isLoaded is retained and stepList too, but this method should be in onStart due to user can rotate device, when
+        //isLoaded is retained and stepList too, but this method should be in attachView due to user can rotate device, when
         //loading is not finished. it can produce many requests, but it will be happen when user rotates device many times per second.
         if (mLesson != null && mLesson.getSteps() != null && mLesson.getSteps().length != 0 && !isLoaded) {
             updateSteps();
@@ -221,7 +224,6 @@ public class StepsFragment extends FragmentBase {
         if (stepList.size() <= position) return;
         final Step step = stepList.get(position);
 
-        final int local = position;
         if (mStepResolver.isViewedStatePost(step) && !step.is_custom_passed()) {
             //try to push viewed state to the server
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
@@ -416,7 +418,7 @@ public class StepsFragment extends FragmentBase {
     }
 
     private void showSteps(List<Step> steps) {
-        boolean isNumEquals = !stepList.isEmpty() &&  steps.size() == stepList.size(); // hack for need updating view?
+        boolean isNumEquals = stepList.isEmpty() || steps.size() == stepList.size(); // hack for need updating view?
         stepList.clear();
         stepList.addAll(steps);
 
@@ -424,6 +426,19 @@ public class StepsFragment extends FragmentBase {
             stepAdapter.notifyDataSetChanged();
         }
         updateTabs();
+        if (fromPreviousLesson && !isLoaded) {
+            viewPager.setCurrentItem(stepList.size() - 1, false);
+//            int tabLayoutWidth = tabLayout.getMeasuredWidth();
+            tabLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    scrollTabLayoutToEnd(this);
+                    return true;
+                }
+            });
+//            tabLayout.setScrollX(tabLayoutWidth);
+            fromPreviousLesson = false;
+        }
         isLoaded = true;
         tabLayout.setVisibility(View.VISIBLE);
         ProgressHelper.dismiss(progressBar);
@@ -435,6 +450,19 @@ public class StepsFragment extends FragmentBase {
             //it is working only if teacher add steps in lesson and user has not cached new steps, but cached old.
             stepAdapter.notifyDataSetChanged();
             updateTabs();
+        }
+    }
+
+    private void scrollTabLayoutToEnd(ViewTreeObserver.OnPreDrawListener listener) {
+        int tabWidth = tabLayout.getMeasuredWidth();
+        if (tabWidth > 0) {
+            tabLayout.getViewTreeObserver().removeOnPreDrawListener(listener);
+
+            int tabCount = tabLayout.getTabCount();
+            int right = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(tabCount - 1).getRight(); //workaround to get really last element
+            if (right >= tabWidth) {
+                tabLayout.setScrollX(right);
+            }
         }
     }
 

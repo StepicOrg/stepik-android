@@ -30,18 +30,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.drawee.view.DraweeView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.otto.Subscribe;
-import com.squareup.picasso.Picasso;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.core.CourseDetailModule;
+import org.stepic.droid.core.presenters.CourseFinderPresenter;
+import org.stepic.droid.core.presenters.contracts.CourseJoinView;
+import org.stepic.droid.core.presenters.CourseJoinerPresenter;
+import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
 import org.stepic.droid.events.courses.CourseFoundEvent;
 import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
@@ -55,19 +60,15 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CourseProperty;
 import org.stepic.droid.model.User;
 import org.stepic.droid.model.Video;
-import org.stepic.droid.ui.presenters.course_finder.CourseFinderPresenter;
-import org.stepic.droid.ui.presenters.course_joiner.CourseJoinerPresenter;
+import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
+import org.stepic.droid.ui.adapters.InstructorAdapter;
+import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
+import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.util.ThumbnailParser;
-import org.stepic.droid.ui.abstraction.CourseJoinView;
-import org.stepic.droid.ui.abstraction.LoadCourseView;
-import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
-import org.stepic.droid.ui.adapters.InstructorAdapter;
-import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
-import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.web.UserStepicResponse;
 
 import java.net.HttpURLConnection;
@@ -75,11 +76,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
-import butterknife.BindView;
 import butterknife.BindDrawable;
 import butterknife.BindString;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
@@ -87,12 +87,12 @@ import retrofit.Retrofit;
 
 public class CourseDetailFragment extends FragmentBase implements LoadCourseView, CourseJoinView {
 
-
     private View.OnClickListener onClickReportListener;
     private View header;
     private View footer;
     private DialogFragment unauthorizedDialog;
     private Intent shareIntentWithChooser;
+    private GlideDrawableImageViewTarget courseTargetFigSupported;
 
     public static CourseDetailFragment newInstance(Course course) {
         Bundle args = new Bundle();
@@ -120,6 +120,9 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @BindView(R.id.course_not_found)
     View courseNotFoundView;
+
+    @BindDrawable(R.drawable.ic_course_placeholder)
+    Drawable coursePlaceholder;
 
     private WebView mIntroView;
 
@@ -155,7 +158,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @BindView(R.id.report_problem)
     View reportInternetProblem;
 
-    DraweeView courseIcon;
+    ImageView courseIcon;
 
     ImageView mThumbnail;
 
@@ -171,7 +174,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     private List<CourseProperty> mCoursePropertyList;
     private Course mCourse;
-    private List<User> mUserList;
+    private List<User> instructorsList;
     private InstructorAdapter mInstructorAdapter;
 
     public Action getAction() {
@@ -189,19 +192,23 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     }
 
     @Inject
-    @Named(AppConstants.ABOUT_NAME_INJECTION_COURSE_FINDER)
     CourseFinderPresenter courseFinderPresenter;
 
     @Inject
     CourseJoinerPresenter courseJoinerPresenter;
 
     @Override
+    protected void injectComponent() {
+        MainApplication.component().plus(new CourseDetailModule()).inject(this);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
-        MainApplication.component().inject(this);
         getActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         super.onCreate(savedInstanceState);
         mClient = new GoogleApiClient.Builder(getActivity()).addApi(AppIndex.API).build();
-        //// FIXME: 17.06.16 now on rotate instructors are reloading, we should use presenter or retain instance
+        setRetainInstance(true);
+        instructorsList = new ArrayList<>();
     }
 
     @Override
@@ -234,12 +241,12 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         mIntroView = ButterKnife.findById(header, R.id.intro_video);
         mThumbnail = ButterKnife.findById(header, R.id.player_thumbnail);
         mPlayer = ButterKnife.findById(header, R.id.player_layout);
+        courseTargetFigSupported = new GlideDrawableImageViewTarget(courseIcon);
         mPlayer.setVisibility(View.GONE);
         mCourseNameView = ButterKnife.findById(header, R.id.course_name);
         mCoursePropertyListView.setAdapter(new CoursePropertyAdapter(getActivity(), mCoursePropertyList));
         hideSoftKeypad();
-        mUserList = new ArrayList<>();
-        mInstructorAdapter = new InstructorAdapter(mUserList, getActivity());
+        mInstructorAdapter = new InstructorAdapter(instructorsList, getActivity());
         mInstructorsCarousel.setAdapter(mInstructorAdapter);
         courseNotFoundView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -341,10 +348,18 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         mIntroView.getLayoutParams().height = (9 * width) / 16;
         setUpIntroVideo();
 
-        courseIcon.setController(StepicLogicHelper.getControllerForCourse(mCourse, config));
+        Glide.with(MainApplication.getAppContext())
+                .load(StepicLogicHelper.getPathForCourseOrEmpty(mCourse, config))
+                .placeholder(coursePlaceholder)
+                .into(courseTargetFigSupported);
 
         resolveJoinView();
-        fetchInstructors();
+        if (instructorsList.isEmpty()) {
+            fetchInstructors();
+        }
+        else{
+            showCurrentInstructors();
+        }
         Activity activity = getActivity();
         if (activity != null) {
             activity.invalidateOptionsMenu();
@@ -507,25 +522,30 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
             List<User> users = e.getResponse().body().getUsers();
             if (users != null && !users.isEmpty()) {
-                footer.setVisibility(View.VISIBLE);
+                instructorsList.clear();
+                instructorsList.addAll(users);
 
-                mUserList.clear();
-                mUserList.addAll(users);
-                mInstructorAdapter.notifyDataSetChanged();
-
-                mInstructorsCarousel.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-                        centeringRecycler(this);
-                        return true;
-                    }
-                });
+                showCurrentInstructors();
             } else {
                 footer.setVisibility(View.GONE);
             }
 //            ProgressHelper.dismiss(mInstructorsProgressBar);
         }
     }
+
+    private void showCurrentInstructors() {
+        footer.setVisibility(View.VISIBLE);
+        mInstructorAdapter.notifyDataSetChanged();
+
+        mInstructorsCarousel.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                centeringRecycler(this);
+                return true;
+            }
+        });
+    }
+
 
     private void centeringRecycler(ViewTreeObserver.OnPreDrawListener listener) {
         Display display = getActivity().getWindowManager().getDefaultDisplay();
@@ -649,7 +669,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     private void setThumbnail(String thumbnail) {
         Uri uri = ThumbnailParser.getUriForThumbnail(thumbnail);
-        Picasso.with(getActivity())
+        Glide.with(getActivity())
                 .load(uri)
                 .placeholder(mVideoPlaceholder)
                 .error(mVideoPlaceholder)

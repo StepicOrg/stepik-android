@@ -44,6 +44,9 @@ public interface Analytic {
         String SHARE_COURSE = "share_course_detail";
         String SHARE_COURSE_SECTION = "share_course_from_section";
         String CLICK_FIND_COURSE_EMPTY_SCREEN = "click_find_courses_empty_screen";
+        String CLICK_NEXT_LESSON_IN_STEPS = "click_next_lesson_in_steps";
+        String CLICK_PREVIOUS_LESSON_IN_STEPS = "click_previous_lesson_in_steps";
+        String CLICK_SIGN_IN_SOCIAL = "social_login";
     }
 
     interface Screens {
@@ -113,6 +116,8 @@ public interface Analytic {
         String CANT_CREATE_NOMEDIA = "can't create .nomedia";
         String FAIL_LOGIN = "fail login";
         String CONFIG_NOT_PARSED = "configRelease, config.json problem";
+        String ILLEGAL_STATE_NEXT_LESSON = "cant_show_next_lesson";
+        String ILLEGAL_STATE_PREVIOUS_LESSON = "cant_show_previous_lesson";
     }
 
     interface Web {

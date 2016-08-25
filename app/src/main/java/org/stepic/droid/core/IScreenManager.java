@@ -32,11 +32,13 @@ public interface IScreenManager {
 
     void openNewCommentForm(Activity sourceActivity, Long target, @Nullable Long parent);
 
-    void showSections(Context sourceActivity, @NotNull Course course);
+    void showSections(Activity sourceActivity, @NotNull Course course);
 
     void showUnitsForSection(Context sourceActivity, @NotNull Section section);
 
-    void showSteps(Context sourceActivity, Unit unit, Lesson lesson);
+    void showSteps(Activity sourceActivity, Unit unit, Lesson lesson);
+
+    void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, boolean backAnimation);
 
     void openStepInWeb(Context context, Step step);
 
@@ -65,4 +67,6 @@ public interface IScreenManager {
     void openInWeb(Context context, String path);
 
     void addCertificateToLinkedIn(CertificateViewItem certificateViewItem);
+
+    void showFilterScreen(Fragment sourceFragment, int requestCode);
 }

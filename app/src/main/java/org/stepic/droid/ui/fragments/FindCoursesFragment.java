@@ -169,13 +169,10 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
         super.onFailDrop(e);
     }
 
-    String TAG = "searchView";
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
         inflater.inflate(R.menu.search_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
 
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         mMenuItem = menu.findItem(R.id.action_search);
@@ -184,7 +181,7 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
         ComponentName componentName = getActivity().getComponentName();
         SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
         mSearchView.setSearchableInfo(searchableInfo);
-        mSearchView.setMaxWidth(20000);//it is dirty hack for expand in landscape
+        mSearchView.setMaxWidth(20000);//it is dirty workaround for expand in landscape
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

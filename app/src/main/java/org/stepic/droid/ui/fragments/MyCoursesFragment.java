@@ -18,7 +18,7 @@ import org.stepic.droid.store.operations.DatabaseFacade;
 
 public class MyCoursesFragment extends CoursesDatabaseFragmentBase {
 
-    public  static MyCoursesFragment newInstance(){
+    public static MyCoursesFragment newInstance() {
         return new MyCoursesFragment();
     }
 
