@@ -206,8 +206,7 @@ class CalendarPresenter(val config: IConfig,
 
     private fun getListOfPrimariesCalendars(): ArrayList<CalendarItem> {
         val listOfCalendarItems = ArrayList<CalendarItem>()
-        val projection = arrayOf(CalendarContract.Calendars._ID, CalendarContract.Calendars.OWNER_ACCOUNT, CalendarContract.Calendars.IS_PRIMARY)
-        context.contentResolver.query(CalendarContract.Calendars.CONTENT_URI, projection, null, null, null).use {
+        context.contentResolver.query(CalendarContract.Calendars.CONTENT_URI, null, null, null, null).use {
             it.moveToFirst()
             while (!it.isAfterLast) {
                 val indexId = it.getColumnIndex(CalendarContract.Calendars._ID)
