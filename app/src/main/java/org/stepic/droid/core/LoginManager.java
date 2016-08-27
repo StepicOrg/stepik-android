@@ -68,12 +68,7 @@ public class LoginManager implements ILoginManager {
         mShell.getApi().authWithCode(code).enqueue(new Callback<AuthenticationStepicResponse>() {
             @Override
             public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
-                progressHandler.dismiss();
-                if (response.code() == 401) {
-                    failLogin(new LoginAlreadyUsedException("already used login"));
-                } else {
-                    failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())));
-                }
+                handleSuccess(progressHandler, response, finisher);
             }
 
             @Override
@@ -84,6 +79,19 @@ public class LoginManager implements ILoginManager {
         });
     }
 
+    private void handleSuccess(ProgressHandler progressHandler, Response<AuthenticationStepicResponse> response, ActivityFinisher finisher) {
+        progressHandler.dismiss();
+        if (response.isSuccess()) {
+            successLogin(response, finisher);
+        } else {
+            if (response.code() == 401) {
+                failLogin(new LoginAlreadyUsedException("already used login"));
+            } else {
+                failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())));
+            }
+        }
+    }
+
     @Override
     public void loginWithNativeProviderCode(String nativeCode, SocialManager.SocialType type, final ProgressHandler progressHandler, final ActivityFinisher finisher, final FailLoginSupplementaryHandler failLoginSupplementaryHandler) {
         String code = nativeCode.trim();
@@ -91,16 +99,7 @@ public class LoginManager implements ILoginManager {
         mShell.getApi().authWithNativeCode(code, type).enqueue(new Callback<AuthenticationStepicResponse>() {
             @Override
             public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
-                progressHandler.dismiss();
-                if (response.isSuccess()) {
-                    successLogin(response, finisher);
-                } else {
-                    if (response.code() == 401) {
-                        failLogin(new LoginAlreadyUsedException("already used login"), failLoginSupplementaryHandler);
-                    } else {
-                        failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())), failLoginSupplementaryHandler);
-                    }
-                }
+                handleSuccess(progressHandler, response, finisher);
             }
 
             @Override
@@ -124,7 +123,7 @@ public class LoginManager implements ILoginManager {
                 errorTextResId = R.string.connectionProblems;
             }
             Toast.makeText(mContext, errorTextResId, Toast.LENGTH_LONG).show();
-            if (failLoginSupplementaryHandler != null){
+            if (failLoginSupplementaryHandler != null) {
                 failLoginSupplementaryHandler.onFailLogin(t);
             }
         }

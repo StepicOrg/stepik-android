@@ -12,7 +12,7 @@ import android.os.Looper
 import android.support.annotation.DrawableRes
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
-import com.squareup.picasso.Picasso
+import com.bumptech.glide.Glide
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
@@ -23,10 +23,10 @@ import org.stepic.droid.notifications.model.NotificationType
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.ui.activities.SectionActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.HtmlHelper
-import org.stepic.droid.ui.activities.SectionActivity
 import org.stepic.droid.web.IApi
 
 class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper, val api: IApi, val configs: IConfig, val userPreferences: UserPreferences, val databaseFacade: DatabaseFacade, val analytic : Analytic) : INotificationManager {
@@ -170,11 +170,11 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         if (cover == null) {
             return BitmapFactory.decodeResource(MainApplication.getAppContext().getResources(), notificationPlaceholder);
         } else {
-            return Picasso.with(MainApplication.getAppContext())
+            return Glide.with(MainApplication.getAppContext())
                     .load(configs.baseUrl + cover)
-                    .resize(200, 200) //pixels
+                    .asBitmap()
                     .placeholder(notificationPlaceholder)
-                    .error(notificationPlaceholder)
+                    .into(200, 200)//pixels
                     .get()
         }
     }

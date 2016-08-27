@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
@@ -28,7 +29,6 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.squareup.otto.Subscribe;
-import com.squareup.picasso.Picasso;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -41,8 +41,6 @@ import org.stepic.droid.notifications.StepicInstanceIdService;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.services.UpdateWithApkService;
-import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.ui.fragments.CertificateFragment;
@@ -51,6 +49,8 @@ import org.stepic.droid.ui.fragments.FeedbackFragment;
 import org.stepic.droid.ui.fragments.FindCoursesFragment;
 import org.stepic.droid.ui.fragments.MyCoursesFragment;
 import org.stepic.droid.ui.util.LogoutSuccess;
+import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.web.EmailAddressResponse;
 import org.stepic.droid.web.StepicProfileResponse;
 
@@ -370,8 +370,12 @@ public class MainFeedActivity extends BackToExitActivityBase
         }
         mProfileImage.setVisibility(View.VISIBLE);
         mUserNameTextView.setVisibility(View.VISIBLE);
-        Picasso.with(MainFeedActivity.this).load(profile.getAvatar()).
-                placeholder(mUserPlaceholder).error(mUserPlaceholder).into(mProfileImage);
+        Glide
+                .with(MainFeedActivity.this)
+                .load(profile.getAvatar())
+                .asBitmap()
+                .placeholder(mUserPlaceholder)
+                .into(mProfileImage);
         mUserNameTextView.setText(profile.getFirst_name() + " " + profile.getLast_name());
     }
 

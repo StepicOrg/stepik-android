@@ -63,19 +63,18 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     @Inject
     Analytic analytic;
 
-    @Inject
-    CalendarPresenter calendarPresenter;
-
     private List<Section> mSections;
     private Context mContext;
     private AppCompatActivity mActivity;
+    private CalendarPresenter calendarPresenter;
     private Course course;
     private boolean needShowCalendarWidget;
 
-    public SectionAdapter(List<Section> sections, Context mContext, AppCompatActivity activity) {
+    public SectionAdapter(List<Section> sections, Context mContext, AppCompatActivity activity, CalendarPresenter calendarPresenter) {
         this.mSections = sections;
         this.mContext = mContext;
         mActivity = activity;
+        this.calendarPresenter = calendarPresenter;
 
         MainApplication.component().inject(this);
     }

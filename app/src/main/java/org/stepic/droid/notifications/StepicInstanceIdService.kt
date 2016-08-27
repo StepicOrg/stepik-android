@@ -24,7 +24,7 @@ class StepicInstanceIdService : FirebaseInstanceIdService() {
                 val profile : Profile = mSharedPreferences.profile!!
                 val token = tokenNullable!!
                 val response = mApi.registerDevice(token).execute()
-                if (!response.isSuccess) {
+                if (!response.isSuccess && response.code() != 400) { //400 -- device already registered
                     throw Exception("response was failed. it is ok. code: " + response.code())
                 }
                 mSharedPreferences.setIsGcmTokenOk(true)

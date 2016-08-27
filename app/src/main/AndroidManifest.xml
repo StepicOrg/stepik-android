@@ -90,8 +90,7 @@
         <activity
             android:name=".ui.activities.StepsActivity"
             android:hardwareAccelerated="false"
-            android:label="@string/steps_title"
-            android:launchMode="singleTop"/>
+            android:label="@string/steps_title"/>
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadCompleteReceiver"
@@ -235,6 +234,17 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.CommentsActivity"/>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.FilterActivity"
+            android:label="@string/filter_title"
+            android:parentActivityName=".ui.activities.MainFeedActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainFeedActivity"/>
         </activity>
     </application>
 </manifest>

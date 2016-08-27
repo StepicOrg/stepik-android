@@ -1,7 +1,6 @@
 package org.stepic.droid.ui.adapters;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.ActivityCompat;
@@ -16,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -30,10 +29,10 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
 import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
+import org.stepic.droid.util.AppConstants;
 
 import java.util.List;
 import java.util.Map;
@@ -68,21 +67,18 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
     private final static String DELIMITER = ".";
 
-    private final Context mContext;
     private final Section mParentSection;
     private final List<Lesson> mLessonList;
-    private AppCompatActivity mActivity;
+    private AppCompatActivity activity;
     private final List<Unit> mUnitList;
     private RecyclerView mRecyclerView;
     private final Map<Long, Progress> mUnitProgressMap;
 
-    public UnitAdapter(Context context, Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, AppCompatActivity activity) {
-
-        this.mContext = context;
+    public UnitAdapter(Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, AppCompatActivity activity) {
+        this.activity = activity;
         this.mParentSection = parentSection;
         this.mUnitList = unitList;
         this.mLessonList = lessonList;
-        mActivity = activity;
         mUnitProgressMap = unitProgressMap;
         MainApplication.component().inject(this);
     }
@@ -91,19 +87,17 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         mRecyclerView = recyclerView;
-
     }
 
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
         mRecyclerView = null;
-
     }
 
     @Override
     public UnitViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.unit_item, parent, false);
+        View v = LayoutInflater.from(activity).inflate(R.layout.unit_item, parent, false);
         return new UnitViewHolder(v, this, this);
     }
 
@@ -138,10 +132,9 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             }
         }
 
-        Picasso.with(MainApplication.getAppContext())
+        Glide.with(MainApplication.getAppContext())
                 .load(lesson.getCover_url())
                 .placeholder(holder.mLessonPlaceholderDrawable)
-                .error(holder.mLessonPlaceholderDrawable)
                 .into(holder.mLessonIcon);
 
         if (cost != 0) {
@@ -202,7 +195,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     @Override
     public void onClick(int itemPosition) {
         if (itemPosition >= 0 && itemPosition < mUnitList.size()) {
-            mScreenManager.showSteps(mContext, mUnitList.get(itemPosition), mLessonList.get(itemPosition));
+            mScreenManager.showSteps(activity, mUnitList.get(itemPosition), mLessonList.get(itemPosition));
         }
     }
 
@@ -217,7 +210,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                 mShell.getSharedPreferenceHelper().storeTempPosition(position);
-                if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
+                if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
                     // Show an explanation to the user *asynchronously* -- don't block
@@ -226,14 +219,14 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
                     DialogFragment dialog = ExplainExternalStoragePermissionDialog.newInstance();
                     if (!dialog.isAdded()) {
-                        dialog.show(mActivity.getSupportFragmentManager(), null);
+                        dialog.show(activity.getSupportFragmentManager(), null);
                     }
 
                 } else {
 
                     // No explanation needed, we can request the permission.
 
-                    ActivityCompat.requestPermissions(mActivity,
+                    ActivityCompat.requestPermissions(activity,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             AppConstants.REQUEST_EXTERNAL_STORAGE);
 
@@ -257,7 +250,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 if (unit.is_loading()) {
                     //cancel loading
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_UNIT, unit.getId()+"");
-                    mScreenManager.showDownload(mContext);
+                    mScreenManager.showDownload(activity);
                 } else {
                     analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_UNIT, unit.getId()+"");
                     unit.set_cached(false);

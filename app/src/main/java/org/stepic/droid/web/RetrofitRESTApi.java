@@ -341,6 +341,7 @@ public class RetrofitRESTApi implements IApi {
 
     @Override
     public void loginWithSocial(FragmentActivity activity, ISocialType type, GoogleApiClient googleApiClient) {
+        analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_SOCIAL, type.getIdentifier());
         if (type == SocialManager.SocialType.google) {
 
 

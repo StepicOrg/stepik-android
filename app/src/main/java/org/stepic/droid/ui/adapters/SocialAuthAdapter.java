@@ -75,7 +75,6 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
         @BindView(R.id.social_item)
         ImageView imageView;
 
-
         public SocialViewHolder(View itemView, final StepicOnClickItemListener clickItemListener) {
             super(itemView);
             ButterKnife.bind(this, itemView);

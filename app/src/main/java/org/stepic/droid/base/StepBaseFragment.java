@@ -2,27 +2,36 @@ package org.stepic.droid.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
+import org.stepic.droid.core.StepModule;
+import org.stepic.droid.core.presenters.RouteStepPresenter;
+import org.stepic.droid.core.presenters.contracts.RouteStepView;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
+import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.web.StepResponse;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public abstract class StepBaseFragment extends FragmentBase {
+public abstract class StepBaseFragment extends FragmentBase implements RouteStepView {
 
     @BindView(R.id.text_header_enhanced)
     protected LatexSupportableEnhancedFrameLayout headerWvEnhanced;
@@ -33,9 +42,42 @@ public abstract class StepBaseFragment extends FragmentBase {
     @BindView(R.id.open_comments_text)
     protected TextView textForComment;
 
+    /**
+     * default: Gone
+     */
+    @BindView(R.id.route_lesson_root)
+    protected View routeLessonRoot;
+
+    /**
+     * do not make it gone, only invisible. Default: invisible
+     */
+    @BindView(R.id.next_lesson_view)
+    protected View nextLessonView;
+
+    /**
+     * do not make it gone, only invisible. Default: invisible
+     */
+    @BindView(R.id.previous_lesson_view)
+    protected View previousLessonView;
+
     protected Step step;
     protected Lesson lesson;
     protected Unit unit;
+
+    private final static String LOAD_DIALOG_TAG = "stepBaseFragmentLoad";
+
+    private final static String ROUTER_ROOT_VISIBILITY_KEY = "visibility_router_root";
+    private final static String NEXT_LESSON_VISIBILITY_KEY = "visibility_next_lesson";
+    private final static String PREVIOUS_LESSON_VISIBILITY_KEY = "visibility_previous_lesson";
+
+
+    @Inject
+    RouteStepPresenter routeStepPresenter;
+
+    @Override
+    protected void injectComponent() {
+        MainApplication.component().plus(new StepModule()).inject(this);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +105,24 @@ public abstract class StepBaseFragment extends FragmentBase {
         }
 
         updateCommentState();
+
+        routeStepPresenter.attachView(this);
+        nextLessonView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                routeStepPresenter.clickNextLesson(unit);
+            }
+        });
+        previousLessonView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                routeStepPresenter.clickPreviousLesson(unit);
+            }
+        });
+
+
+        routeStepPresenter.checkStepForFirst(step.getId(), lesson, unit);
+        routeStepPresenter.checkStepForLast(step.getId(), lesson, unit);
 
         bus.register(this);
     }
@@ -107,6 +167,9 @@ public abstract class StepBaseFragment extends FragmentBase {
     public void onDestroyView() {
         bus.unregister(this);
         openCommentViewClickable.setOnClickListener(null);
+        routeStepPresenter.detachView(this);
+        nextLessonView.setOnClickListener(null);
+        previousLessonView.setOnClickListener(null);
         super.onDestroyView();
     }
 
@@ -155,4 +218,59 @@ public abstract class StepBaseFragment extends FragmentBase {
             updateCommentState();
         }
     }
+
+    @Override
+    public final void showNextLessonView() {
+        routeLessonRoot.setVisibility(View.VISIBLE);
+        nextLessonView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public final void openNextLesson(Unit nextUnit, Lesson nextLesson) {
+        ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
+        mShell.getScreenProvider().showSteps(getActivity(), nextUnit, nextLesson);
+        getActivity().finish();
+    }
+
+    @Override
+    public void showLoadDialog() {
+        DialogFragment dialogFragment = LoadingProgressDialogFragment.Companion.newInstance();
+        if (!dialogFragment.isAdded()) {
+            dialogFragment.show(getFragmentManager(), LOAD_DIALOG_TAG);
+        }
+    }
+
+    @Override
+    public void showCantGoNext() {
+        ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
+        Toast.makeText(getContext(), R.string.cant_show_next_step, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showPreviousLessonView() {
+        routeLessonRoot.setVisibility(View.VISIBLE);
+        previousLessonView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void openPreviousLesson(Unit previousUnit, Lesson previousLesson) {
+        ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
+        mShell.getScreenProvider().showSteps(getActivity(), previousUnit, previousLesson, true);
+        getActivity().finish();
+    }
+
+    @Override
+    public void showCantGoPrevious() {
+        ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
+        Toast.makeText(getContext(), R.string.cant_show_previous_step, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(ROUTER_ROOT_VISIBILITY_KEY, routeLessonRoot.getVisibility() == View.VISIBLE);
+        outState.putBoolean(NEXT_LESSON_VISIBILITY_KEY, nextLessonView.getVisibility() == View.VISIBLE);
+        outState.putBoolean(PREVIOUS_LESSON_VISIBILITY_KEY, previousLessonView.getVisibility() == View.VISIBLE);
+    }
+
 }

@@ -106,7 +106,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     }
 
 
-    private void applyTransitionPrev() {
+    public void applyTransitionPrev() {
         // apply slide transition animation
         overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
     }

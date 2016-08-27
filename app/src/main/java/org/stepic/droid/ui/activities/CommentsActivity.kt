@@ -27,12 +27,8 @@ class CommentsActivity : SingleFragmentActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
-                if (mSharedPreferenceHelper.authResponseFromStore == null) {
-                    finish();
-                    return true
-                } else {
-                    return super.onOptionsItemSelected(item)
-                }
+                finish();
+                return true
             }
         }
         return super.onOptionsItemSelected(item)
