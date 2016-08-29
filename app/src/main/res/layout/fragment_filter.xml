@@ -111,16 +111,12 @@
                         android:layout_height="wrap_content"
                         android:text="@string/title_confirmation"/>
 
-                    <org.stepic.droid.ui.custom.BetterSwitch
-                        android:layout_marginLeft="0dp"
-                        android:layout_marginStart="0dp"
-                        android:paddingLeft="@dimen/guideline_standard_padding"
+                    <CheckBox
                         android:id="@+id/filter_persistent_switch"
                         style="@style/SettingCompoundButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/filter_persistent_header"
-                        android:foreground="@drawable/non_radius_foreground"
                         android:text="@string/save_filter_title"/>
 
                     <Button

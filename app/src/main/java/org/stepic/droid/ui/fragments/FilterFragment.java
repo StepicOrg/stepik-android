@@ -4,9 +4,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,7 @@ public class FilterFragment extends FragmentBase {
     CheckBox pastCheckBox;
 
     @BindView(R.id.filter_persistent_switch)
-    SwitchCompat persistentSwitch;
+    CheckBox persistentCheckBox;
 
     private boolean isInitiated = false; //todo move to presenter
 
@@ -61,6 +62,7 @@ public class FilterFragment extends FragmentBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -85,7 +87,6 @@ public class FilterFragment extends FragmentBase {
             @Override
             public void onClick(View view) {
                 acceptFilter();
-                getActivity().finish();
             }
         });
 
@@ -103,11 +104,20 @@ public class FilterFragment extends FragmentBase {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.filter_accept_menu, menu);
+    }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // Respond to the action bar's Up/Home button
                 getActivity().finish();
+                return true;
+            case R.id.accept_action:
+                acceptFilter();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -119,7 +129,7 @@ public class FilterFragment extends FragmentBase {
         applyFilterToView(filters, StepikFilter.UPCOMING, upcomingCheckBox);
         applyFilterToView(filters, StepikFilter.ACTIVE, activeCheckBox);
         applyFilterToView(filters, StepikFilter.PAST, pastCheckBox);
-        applyFilterToView(filters, StepikFilter.PERSISTENT, persistentSwitch);
+        applyFilterToView(filters, StepikFilter.PERSISTENT, persistentCheckBox);
     }
 
     private void applyFilterToView(EnumSet<StepikFilter> filters, StepikFilter stepikFilterValue, Checkable checkable) {
@@ -132,6 +142,7 @@ public class FilterFragment extends FragmentBase {
     private void acceptFilter() {
         mSharedPreferenceHelper.saveFilter(getCurrentFilterFromUI());//todo move to presenter
         getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
     }
 
     private EnumSet<StepikFilter> getCurrentFilterFromUI() {
@@ -141,7 +152,7 @@ public class FilterFragment extends FragmentBase {
         appendToFilter(filter, StepikFilter.UPCOMING, upcomingCheckBox.isChecked());
         appendToFilter(filter, StepikFilter.ACTIVE, activeCheckBox.isChecked());
         appendToFilter(filter, StepikFilter.PAST, pastCheckBox.isChecked());
-        appendToFilter(filter, StepikFilter.PERSISTENT, persistentSwitch.isChecked());
+        appendToFilter(filter, StepikFilter.PERSISTENT, persistentCheckBox.isChecked());
         return filter;
     }
 
