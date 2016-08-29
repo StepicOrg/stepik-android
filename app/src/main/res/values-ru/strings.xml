@@ -221,4 +221,10 @@
     <string name="language_en_filter">Английский</string>
     <string name="language_ru_filter">Русский</string>
     <string name="course_language_title">Язык курса</string>
+    <string name="timing_active_title">Активные</string>
+    <string name="timing_upcoming_title">Ближайшие</string>
+    <string name="timing_title">Время проведения</string>
+    <string name="timing_past_title">Прошедшие</string>
+    <string name="save_filter_title">Сохранить фильтр для следующих запусков</string>
+    <string name="accept">Принять</string>
 </resources>

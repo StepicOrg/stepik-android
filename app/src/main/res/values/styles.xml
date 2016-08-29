@@ -68,7 +68,7 @@
     <style name="StepicSmallMaterialButton" parent="Theme.AppCompat.Light">
         <item name="android:minHeight">@dimen/height_of_small_button</item>
         <item name="android:maxHeight">@dimen/height_of_small_button</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/stepik_text_size_in_button</item>
         <item name="android:background">@drawable/btn_color_selector_accent</item>
         <item name="android:textAllCaps">true</item>
     </style>
@@ -105,5 +105,25 @@
         <item name="android:visibility">invisible</item>
     </style>
 
+    <style name="SettingHeaderTextView">
+        <item name="android:textSize">@dimen/text_header</item>
+        <item name="android:textColor">?colorAccent</item>
+        <item name="android:paddingLeft">@dimen/guideline_standard_padding</item>
+        <item name="android:paddingRight">@dimen/guideline_standard_padding</item>
+        <item name="android:paddingTop">@dimen/guideline_standard_padding</item>
+    </style>
 
+    <style name="SettingCardStyle">
+        <item name="android:layout_marginBottom">@dimen/card_bottom_margin</item>
+    </style>
+
+    <style name="SettingCompoundButton">
+        <item name="android:textColor">@color/stepic_regular_text</item>
+        <item name="android:textSize">@dimen/text_header</item>
+        <item name="android:layout_marginLeft">@dimen/guideline_standard_padding</item>
+        <item name="android:paddingBottom">@dimen/guideline_standard_padding</item>
+        <item name="android:paddingLeft">@dimen/half_padding</item>
+        <item name="android:paddingTop">@dimen/guideline_standard_padding</item>
+        <item name="android:paddingRight">@dimen/guideline_standard_padding</item>
+    </style>
 </resources>

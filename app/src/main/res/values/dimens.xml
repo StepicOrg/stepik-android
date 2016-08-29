@@ -15,7 +15,7 @@
     <dimen name="height_of_social">75dp</dimen>
     <dimen name="space_for_text">8dp</dimen>
     <dimen name="min_max_width_for_tablets">600dp</dimen>
-    <dimen name="half_padding_between_textinput">8dp</dimen>
+    <dimen name="half_padding">8dp</dimen>
     <dimen name="padding_text_in_cv">16dp</dimen>
     <dimen name="padding_left_right_list_item">16dp</dimen>
     <dimen name="padding_bot_top_cv">24dp</dimen>
@@ -56,4 +56,7 @@
     <dimen name="drawable_padding_placeholders">40dp</dimen>
     <dimen name="video_height">200dp</dimen>
     <dimen name="video_height_portrait">200dp</dimen>
+    <dimen name="guideline_standard_padding">16dp</dimen>
+    <dimen name="card_bottom_margin">10dp</dimen>
+    <dimen name="stepik_text_size_in_button">14sp</dimen>
 </resources>

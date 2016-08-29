@@ -44,8 +44,8 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingBottom="@dimen/half_padding_between_textinput"
-                    android:paddingTop="@dimen/half_padding_between_textinput">
+                    android:paddingBottom="@dimen/half_padding"
+                    android:paddingTop="@dimen/half_padding">
 
                     <EditText
                         android:id="@+id/email_et"
@@ -62,8 +62,8 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingBottom="@dimen/half_padding_between_textinput"
-                    android:paddingTop="@dimen/half_padding_between_textinput">
+                    android:paddingBottom="@dimen/half_padding"
+                    android:paddingTop="@dimen/half_padding">
 
                     <EditText
                         android:id="@+id/password_et"
