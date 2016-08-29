@@ -347,7 +347,15 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                 if (course != null && enrollment != 0) {
                     updateEnrollment(course, enrollment);
                 }
+            }
 
+            if (requestCode == FILTER_REQUEST_CODE) {
+                if (mSharedPreferenceHelper.isFilterChangedFromLastCall()){
+                    Toast.makeText(getContext(), "FILTER CODE OK AND CHANGED", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(getContext(), "Nope, not changed", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

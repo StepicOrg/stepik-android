@@ -2,6 +2,7 @@ package org.stepic.droid.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,12 +16,15 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
+import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.model.comments.DiscussionOrder;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -122,13 +126,74 @@ public class SharedPreferenceHelper {
 //        }
 //    }
 
+    private boolean isFilterChangedFromLastCall = false;
+
+    public EnumSet<StepikFilter> getFilterAndClearNotPersistent() {
+        if (!getBoolean(PreferenceType.FILTER, FILTER_PERSISTENT, false)) {
+            clear(PreferenceType.FILTER);
+        }
+        return getFilter();
+    }
+
+    public EnumSet<StepikFilter> getFilter() {
+        EnumSet<StepikFilter> filter = EnumSet.noneOf(StepikFilter.class);
+        appendValueForFilter(filter, FILTER_RUSSIAN_LANGUAGE, StepikFilter.RUSSIAN, isNeedRussian());
+        appendValueForFilter(filter, FILTER_ENGLISH_LANGUAGE, StepikFilter.ENGLISH, true);
+        appendValueForFilter(filter, FILTER_UPCOMING, StepikFilter.UPCOMING, true);
+        appendValueForFilter(filter, FILTER_ACTIVE, StepikFilter.ACTIVE, true);
+        appendValueForFilter(filter, FILTER_PAST, StepikFilter.PAST, true);
+        appendValueForFilter(filter, FILTER_PERSISTENT, StepikFilter.PERSISTENT, false);
+        return filter;
+    }
+
+    private boolean isNeedRussian() {
+        Locale locale;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            locale = MainApplication.getAppContext().getResources().getConfiguration().getLocales().get(0);
+        } else {
+            locale = MainApplication.getAppContext().getResources().getConfiguration().locale;
+        }
+
+        return locale.getLanguage().equals(new Locale("ru").getLanguage());
+    }
+
+    private void appendValueForFilter(EnumSet<StepikFilter> filter, String key, StepikFilter value, boolean defaultValue) {
+        if (getBoolean(PreferenceType.FILTER, key, defaultValue)) {
+            filter.add(value);
+        }
+    }
+
+    public void saveFilter(EnumSet<StepikFilter> filter) {
+        EnumSet<StepikFilter> oldValues = getFilter();
+        saveValueFromFilterIfExist(filter, FILTER_RUSSIAN_LANGUAGE, StepikFilter.RUSSIAN);
+        saveValueFromFilterIfExist(filter, FILTER_ENGLISH_LANGUAGE, StepikFilter.ENGLISH);
+        saveValueFromFilterIfExist(filter, FILTER_UPCOMING, StepikFilter.UPCOMING);
+        saveValueFromFilterIfExist(filter, FILTER_ACTIVE, StepikFilter.ACTIVE);
+        saveValueFromFilterIfExist(filter, FILTER_PAST, StepikFilter.PAST);
+        saveValueFromFilterIfExist(filter, FILTER_PERSISTENT, StepikFilter.PERSISTENT);
+
+         isFilterChangedFromLastCall = !oldValues.equals(filter);
+    }
+
+    private void saveValueFromFilterIfExist(EnumSet<StepikFilter> filter, String key, StepikFilter value) {
+        put(PreferenceType.FILTER, key, filter.contains(value));
+    }
+
+    public boolean isFilterChangedFromLastCall() {
+        boolean result = isFilterChangedFromLastCall;
+        isFilterChangedFromLastCall = false;
+        return result;
+    }
+
+
     public enum PreferenceType {
         LOGIN("login preference"),
         WIFI("wifi_preference"),
         VIDEO_QUALITY("video_quality_preference"),
         TEMP("temporary"),
         VIDEO_SETTINGS("video_settings"),
-        DEVICE_SPECIFIC("device_specific");
+        DEVICE_SPECIFIC("device_specific"),
+        FILTER("filter_prefs");
 
         private String description;
 
@@ -402,4 +467,11 @@ public class SharedPreferenceHelper {
     private final String DISCUSSION_ORDER = "discussion_order";
     private final String CALENDAR_WIDGET = "calenda_widget";
     private final String NEED_DROP_114 = "need_drop_114";
+
+    private final String FILTER_PERSISTENT = "filter_persistent";
+    private final String FILTER_RUSSIAN_LANGUAGE = "russian_lang";
+    private final String FILTER_ENGLISH_LANGUAGE = "english_lang";
+    private final String FILTER_UPCOMING = "filter_upcoming";
+    private final String FILTER_ACTIVE = "filter_active";
+    private final String FILTER_PAST = "filter_past";
 }
