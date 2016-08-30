@@ -15,15 +15,22 @@ import android.widget.CheckBox;
 import android.widget.Checkable;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.core.FilterModule;
+import org.stepic.droid.core.presenters.FilterPresenter;
+import org.stepic.droid.core.presenters.contracts.FilterView;
 import org.stepic.droid.model.StepikFilter;
 
 import java.util.EnumSet;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FilterFragment extends FragmentBase {
+public class FilterFragment extends FragmentBase implements FilterView {
 
     public static FilterFragment newInstance() {
         return new FilterFragment();
@@ -56,13 +63,19 @@ public class FilterFragment extends FragmentBase {
     @BindView(R.id.filter_persistent_switch)
     CheckBox persistentCheckBox;
 
-    private boolean isInitiated = false; //todo move to presenter
+    @Inject
+    FilterPresenter filterPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         setHasOptionsMenu(true);
+
+        MainApplication
+                .component()
+                .plus(new FilterModule())
+                .inject(this);
     }
 
     @Nullable
@@ -77,16 +90,11 @@ public class FilterFragment extends FragmentBase {
         ButterKnife.bind(this, view);
         initToolbar();
 
-        //todo Move to presenter:
-        if (!isInitiated) {
-            initFilter(mSharedPreferenceHelper.getFilterAndClearNotPersistent());
-            isInitiated = true;
-        }
-
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                acceptFilter();
+                analytic.reportEvent(Analytic.Interaction.CLICK_ACCEPT_FILTER_BUTTON);
+                filterPresenter.acceptFilter(getCurrentFilterFromUI());
             }
         });
 
@@ -96,6 +104,8 @@ public class FilterFragment extends FragmentBase {
                 getActivity().finish();
             }
         });
+        filterPresenter.attachView(this);
+        filterPresenter.initFiltersIfNeed();
     }
 
     private void initToolbar() {
@@ -117,32 +127,21 @@ public class FilterFragment extends FragmentBase {
                 getActivity().finish();
                 return true;
             case R.id.accept_action:
-                acceptFilter();
+                filterPresenter.acceptFilter(getCurrentFilterFromUI());
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void initFilter(EnumSet<StepikFilter> filters) {
-        applyFilterToView(filters, StepikFilter.RUSSIAN, languageRuCheckBox);
-        applyFilterToView(filters, StepikFilter.ENGLISH, languageEnCheckBox);
-        applyFilterToView(filters, StepikFilter.UPCOMING, upcomingCheckBox);
-        applyFilterToView(filters, StepikFilter.ACTIVE, activeCheckBox);
-        applyFilterToView(filters, StepikFilter.PAST, pastCheckBox);
-        applyFilterToView(filters, StepikFilter.PERSISTENT, persistentCheckBox);
+
+    @Override
+    public void onDestroyView() {
+        filterPresenter.detachView(this);
+        super.onDestroyView();
     }
 
     private void applyFilterToView(EnumSet<StepikFilter> filters, StepikFilter stepikFilterValue, Checkable checkable) {
-        if (filters.contains(stepikFilterValue)) {
-            checkable.setChecked(true);
-        }
-    }
-
-    //todo move method to presenter
-    private void acceptFilter() {
-        mSharedPreferenceHelper.saveFilter(getCurrentFilterFromUI());//todo move to presenter
-        getActivity().setResult(Activity.RESULT_OK);
-        getActivity().finish();
+        checkable.setChecked(filters.contains(stepikFilterValue));
     }
 
     private EnumSet<StepikFilter> getCurrentFilterFromUI() {
@@ -160,5 +159,23 @@ public class FilterFragment extends FragmentBase {
         if (needAppend) {
             filter.add(stepikFilterValue);
         }
+    }
+
+    @Override
+    public void onFilterAccepted() {
+        //filter is accepted, close
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
+    }
+
+    @Override
+    public void onFiltersPreparedForView(EnumSet<StepikFilter> filters) {
+        //set filter, when it is prepared:
+        applyFilterToView(filters, StepikFilter.RUSSIAN, languageRuCheckBox);
+        applyFilterToView(filters, StepikFilter.ENGLISH, languageEnCheckBox);
+        applyFilterToView(filters, StepikFilter.UPCOMING, upcomingCheckBox);
+        applyFilterToView(filters, StepikFilter.ACTIVE, activeCheckBox);
+        applyFilterToView(filters, StepikFilter.PAST, pastCheckBox);
+        applyFilterToView(filters, StepikFilter.PERSISTENT, persistentCheckBox);
     }
 }

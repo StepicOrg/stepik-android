@@ -163,8 +163,7 @@ public class SharedPreferenceHelper {
         }
     }
 
-    public void saveFilter(EnumSet<StepikFilter> filter) {
-        EnumSet<StepikFilter> oldValues = getFilter();
+    public void saveFilter(EnumSet<StepikFilter> filter, EnumSet<StepikFilter> oldValues) {
         saveValueFromFilterIfExist(filter, FILTER_RUSSIAN_LANGUAGE, StepikFilter.RUSSIAN);
         saveValueFromFilterIfExist(filter, FILTER_ENGLISH_LANGUAGE, StepikFilter.ENGLISH);
         saveValueFromFilterIfExist(filter, FILTER_UPCOMING, StepikFilter.UPCOMING);
