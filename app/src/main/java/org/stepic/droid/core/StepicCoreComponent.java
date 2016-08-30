@@ -67,6 +67,8 @@ public interface StepicCoreComponent {
 
     FilterComponent plus(FilterModule module);
 
+    CourseListComponent plus(CourseListModule module);
+
     void inject(FragmentActivityBase someActivity);
 
     void inject(SectionActivity someActivity);
