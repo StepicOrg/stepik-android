@@ -3,6 +3,7 @@ package org.stepic.droid.base;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -14,10 +15,14 @@ import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.tasks.FromDbCoursesTask;
 import org.stepic.droid.concurrency.tasks.ToDbCoursesTask;
+import org.stepic.droid.core.CourseListModule;
+import org.stepic.droid.core.presenters.FilterForCoursesPresenter;
+import org.stepic.droid.core.presenters.contracts.FilterForCoursesView;
 import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
 import org.stepic.droid.events.courses.FailDropCourseEvent;
 import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
@@ -31,28 +36,38 @@ import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.ui.fragments.CourseListFragmentBase;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.ui.fragments.CourseListFragmentBase;
 import org.stepic.droid.web.CoursesStepicResponse;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase {
+public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase implements FilterForCoursesView {
     protected ToDbCoursesTask mDbSaveCoursesTask;
     protected FromDbCoursesTask mDbFromCoursesTask;
     private static final int FILTER_REQUEST_CODE = 776;
+
+    @Inject
+    FilterForCoursesPresenter filterForCoursesPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
+
+        MainApplication.component()
+                .plus(new CourseListModule())
+                .inject(this);
     }
 
     @Override
@@ -201,30 +216,21 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        filterForCoursesPresenter.attachView(this);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public void onDestroyView() {
         bus.unregister(this);
+        filterForCoursesPresenter.detachView(this);
         super.onDestroyView();
     }
 
@@ -350,12 +356,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             }
 
             if (requestCode == FILTER_REQUEST_CODE) {
-                if (mSharedPreferenceHelper.isFilterChangedFromLastCall()){
-                    Toast.makeText(getContext(), "FILTER CODE OK AND CHANGED", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(getContext(), "Nope, not changed", Toast.LENGTH_SHORT).show();
-                }
+                filterForCoursesPresenter.tryApplyFilters(getCourseType());
             }
         }
     }
@@ -370,5 +371,22 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             mSwipeRefreshLayout.setVisibility(View.VISIBLE);
 
         }
+    }
+
+    @Override
+    public void clearAndShowLoading() {
+        mCourses.clear();
+        mCoursesAdapter.notifyDataSetChanged();
+        isLoading = true;
+        ProgressHelper.activate(mSwipeRefreshLayout);
+    }
+
+    @Override
+    public void showFilteredCourses(@NotNull List<Course> filteredList) {
+        isLoading = false;
+        ProgressHelper.dismiss(mSwipeRefreshLayout);
+        mCourses.clear();///
+        mCourses.addAll(filteredList);
+        mCoursesAdapter.notifyDataSetChanged();
     }
 }

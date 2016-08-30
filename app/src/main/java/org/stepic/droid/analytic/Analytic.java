@@ -184,6 +184,11 @@ public interface Analytic {
         String ADD_LINKEDIN = "certificate_add_linkeding";
     }
 
+    interface Filters {
+        String FILTERS_NOT_CHANGED = "filters_not_changed";
+        String FILTERS_NEED_UPDATED = "filters_need_update";
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);

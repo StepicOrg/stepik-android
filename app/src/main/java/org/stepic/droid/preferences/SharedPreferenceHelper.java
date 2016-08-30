@@ -33,6 +33,7 @@ import javax.inject.Singleton;
 public class SharedPreferenceHelper {
     private static final String NOTIFICATION_SOUND_DISABLED = "notification_sound";
     private static final String TEMP_UPDATE_LINK = "temp_update_link";
+    private static final java.lang.String NEED_DROP_116 = "need_drop_116";
     private Context mContext;
     private Analytic analytic;
 
@@ -102,11 +103,12 @@ public class SharedPreferenceHelper {
     }
 
     public boolean isNeedDropCoursesIn114() {
-        return getBoolean(PreferenceType.DEVICE_SPECIFIC, NEED_DROP_114, true);
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, NEED_DROP_114, true) || getBoolean(PreferenceType.DEVICE_SPECIFIC, NEED_DROP_116, true);
     }
 
     public void afterNeedDropCoursesIn114() {
         put(PreferenceType.DEVICE_SPECIFIC, NEED_DROP_114, false);
+        put(PreferenceType.DEVICE_SPECIFIC, NEED_DROP_116, false);
     }
 
 //    public enum CommentsOrder {
