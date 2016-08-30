@@ -61,6 +61,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom9To10(db);
         upgradeFrom10To11(db);
         upgradeFrom11To12(db);
+        upgradeFrom12To13(db);
+    }
+
+    private void upgradeFrom12To13(SQLiteDatabase db) {
+        alterColumn(db, DBStructureCourses.ENROLLED_COURSES, DBStructureCourses.Column.BEGIN_DATE, TEXT_TYPE);
+        alterColumn(db, DBStructureCourses.FEATURED_COURSES, DBStructureCourses.Column.BEGIN_DATE, TEXT_TYPE);
+
+        alterColumn(db, DBStructureCourses.ENROLLED_COURSES, DBStructureCourses.Column.END_DATE, TEXT_TYPE);
+        alterColumn(db, DBStructureCourses.FEATURED_COURSES, DBStructureCourses.Column.END_DATE, TEXT_TYPE);
     }
 
     private void upgradeFrom11To12(SQLiteDatabase db) {
@@ -180,6 +189,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 12) {
             upgradeFrom11To12(db);
+        }
+
+
+        if (oldVersion < 13) {
+            upgradeFrom12To13(db);
         }
     }
 
