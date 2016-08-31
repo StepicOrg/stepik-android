@@ -98,8 +98,10 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         });
     }
 
-    protected void showCourses(List<Course> cachedCourses) {
-        if (cachedCourses == null) return;
+    protected void showCourses(List<Course> outCachedCourses) {
+        if (outCachedCourses == null) return;
+        List<Course> cachedCourses = filterForCoursesPresenter.applyFiltersImmediate (outCachedCourses);
+
         if (!cachedCourses.isEmpty()) {
             showEmptyScreen(false);
             mReportConnectionProblem.setVisibility(View.GONE);
