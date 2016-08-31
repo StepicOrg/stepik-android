@@ -153,7 +153,8 @@ class CertificatePresenter(val api: IApi,
 
     override fun detachView(view: CertificateView) {
         super.detachView(view)
-        certificatesCall?.cancel()
-        coursesCall?.cancel()
+        // cancel should work not on main thread for com.squareup.retrofit:retrofit:2.0.0-beta2 (look https://github.com/square/okhttp/issues/1592)
+//        certificatesCall?.cancel()
+//        coursesCall?.cancel()
     }
 }
