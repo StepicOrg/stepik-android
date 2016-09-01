@@ -2,6 +2,7 @@ package org.stepic.droid.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,15 @@ import org.stepic.droid.store.operations.DatabaseFacade;
 import javax.inject.Inject;
 
 public class CourseSearchFragment extends CourseListFragmentBase {
-    public final static String QUERY_KEY = "query_key";
+    public static Fragment newInstance(String query) {
+        Fragment fragment = new CourseSearchFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(CourseSearchFragment.QUERY_KEY, query);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    private final static String QUERY_KEY = "query_key";
 
     private String searchQuery;
 
