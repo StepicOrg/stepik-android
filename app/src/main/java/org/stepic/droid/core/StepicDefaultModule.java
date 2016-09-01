@@ -103,7 +103,6 @@ public class StepicDefaultModule {
         return new ConfigRelease(context, analytic);
     }
 
-
     @Provides
     @Singleton
     public IApi provideIApi() {
@@ -362,5 +361,11 @@ public class StepicDefaultModule {
     @Singleton
     public ShareHelper provideShareHelper(IConfig config, Context context) {
         return new ShareHelperImpl(config, context);
+    }
+
+    @Provides
+    @Singleton
+    public DefaultFilter provideDefaultFilter (){
+        return new DefaultFilterImpl(mContext);
     }
 }
