@@ -40,14 +40,15 @@ class PersistentCourseListPresenter(
         if (isLoading.get() || !hasNextPage.get()) return
         isLoading.set(true)
 
-        view?.showLoading()
-
         threadPoolExecutor.execute {
             val coursesBeforeLoading = databaseFacade.getAllCourses(courseType).filterNotNull()
             if (coursesBeforeLoading.isNotEmpty() && currentPage.get() == 1) {
                 mainHandler.post {
                     view?.showCourses(coursesBeforeLoading)
                 }
+            }
+            else {
+                mainHandler.post { view?.showLoading() }
             }
 
             val response: Response<CoursesStepicResponse>?
