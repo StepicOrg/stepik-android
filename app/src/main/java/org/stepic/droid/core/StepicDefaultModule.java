@@ -111,8 +111,8 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public SharedPreferenceHelper provideSharedPreferencesHelper(Analytic analytic) {
-        return new SharedPreferenceHelper(analytic);
+    public SharedPreferenceHelper provideSharedPreferencesHelper(Analytic analytic, DefaultFilter defaultFilter) {
+        return new SharedPreferenceHelper(analytic, defaultFilter);
     }
 
     @Provides

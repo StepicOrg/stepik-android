@@ -2,7 +2,6 @@ package org.stepic.droid.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,6 +13,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.StepikFilter;
@@ -24,7 +24,6 @@ import org.stepic.droid.web.AuthenticationStepicResponse;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -36,10 +35,12 @@ public class SharedPreferenceHelper {
     private static final java.lang.String NEED_DROP_116 = "need_drop_116";
     private Context mContext;
     private Analytic analytic;
+    private DefaultFilter defaultFilter;
 
     @Inject
-    public SharedPreferenceHelper(Analytic analytic) {
+    public SharedPreferenceHelper(Analytic analytic, DefaultFilter defaultFilter) {
         this.analytic = analytic;
+        this.defaultFilter = defaultFilter;
         mContext = MainApplication.getAppContext();
     }
 
@@ -111,22 +112,6 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, NEED_DROP_116, false);
     }
 
-//    public enum CommentsOrder {
-//        DISCUSSION_NEW_FIRST("discussion"),
-//        DISCUSSION_MOST_LIKED("discussions_most_liked"),
-//        DISCUSSION_MOST_ACTIVE("discussions_most_active"),
-//        DISCUSSION_RECENT_ACTIVITY("discussions_recent_activity");
-//
-//        private String description;
-//
-//        CommentsOrder(String description) {
-//            this.description = description;
-//        }
-//
-//        private String getStoreName() {
-//            return description;
-//        }
-//    }
 
     private boolean isFilterChangedFromLastCall = false;
 
@@ -139,24 +124,13 @@ public class SharedPreferenceHelper {
 
     public EnumSet<StepikFilter> getFilter() {
         EnumSet<StepikFilter> filter = EnumSet.noneOf(StepikFilter.class);
-        appendValueForFilter(filter, FILTER_RUSSIAN_LANGUAGE, StepikFilter.RUSSIAN, isNeedRussian());
-        appendValueForFilter(filter, FILTER_ENGLISH_LANGUAGE, StepikFilter.ENGLISH, true);
-        appendValueForFilter(filter, FILTER_UPCOMING, StepikFilter.UPCOMING, true);
-        appendValueForFilter(filter, FILTER_ACTIVE, StepikFilter.ACTIVE, true);
-        appendValueForFilter(filter, FILTER_PAST, StepikFilter.PAST, true);
-        appendValueForFilter(filter, FILTER_PERSISTENT, StepikFilter.PERSISTENT, false);
+        appendValueForFilter(filter, FILTER_RUSSIAN_LANGUAGE, StepikFilter.RUSSIAN, defaultFilter.getDefaultEnrolled(StepikFilter.RUSSIAN));
+        appendValueForFilter(filter, FILTER_ENGLISH_LANGUAGE, StepikFilter.ENGLISH, defaultFilter.getDefaultEnrolled(StepikFilter.ENGLISH));
+        appendValueForFilter(filter, FILTER_UPCOMING, StepikFilter.UPCOMING, defaultFilter.getDefaultEnrolled(StepikFilter.UPCOMING));
+        appendValueForFilter(filter, FILTER_ACTIVE, StepikFilter.ACTIVE, defaultFilter.getDefaultEnrolled(StepikFilter.ACTIVE));
+        appendValueForFilter(filter, FILTER_PAST, StepikFilter.PAST, defaultFilter.getDefaultEnrolled(StepikFilter.PAST));
+        appendValueForFilter(filter, FILTER_PERSISTENT, StepikFilter.PERSISTENT, defaultFilter.getDefaultEnrolled(StepikFilter.PERSISTENT));
         return filter;
-    }
-
-    private boolean isNeedRussian() {
-        Locale locale;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            locale = MainApplication.getAppContext().getResources().getConfiguration().getLocales().get(0);
-        } else {
-            locale = MainApplication.getAppContext().getResources().getConfiguration().locale;
-        }
-
-        return locale.getLanguage().equals(new Locale("ru").getLanguage());
     }
 
     private void appendValueForFilter(EnumSet<StepikFilter> filter, String key, StepikFilter value, boolean defaultValue) {
