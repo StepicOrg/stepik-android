@@ -42,9 +42,10 @@ import retrofit.Retrofit;
 public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase implements FilterForCoursesView {
     private static final int FILTER_REQUEST_CODE = 776;
 
+    private boolean needFilter = false;
+
     @Inject
     PersistentCourseListPresenter courseListPresenter;
-
 
     @Inject
     FilterForCoursesPresenter filterForCoursesPresenter;
@@ -93,7 +94,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
-                courseListPresenter.downloadData(getCourseType());
+                courseListPresenter.downloadData(getCourseType(), needFilter);
             }
         });
         courseListPresenter.restoreState();
@@ -234,6 +235,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             }
 
             if (requestCode == FILTER_REQUEST_CODE) {
+                needFilter = true; // not last filter? check it
                 filterForCoursesPresenter.tryApplyFilters(getCourseType());
             }
         }
@@ -253,7 +255,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void onNeedDownloadNextPage() {
-        courseListPresenter.downloadData(getCourseType());
+        courseListPresenter.downloadData(getCourseType(), needFilter);
     }
 
     @Override
@@ -271,7 +273,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void onRefresh() {
-        courseListPresenter.refreshData(getCourseType());
+        courseListPresenter.refreshData(getCourseType(), needFilter);
     }
 
 }

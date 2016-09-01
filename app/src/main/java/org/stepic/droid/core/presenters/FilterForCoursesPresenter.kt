@@ -1,12 +1,10 @@
 package org.stepic.droid.core.presenters
 
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.core.FilterApplicator
 import org.stepic.droid.core.presenters.contracts.FilterForCoursesView
 import org.stepic.droid.model.Course
-import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.store.operations.DatabaseFacade
 import java.util.concurrent.ThreadPoolExecutor
@@ -16,7 +14,8 @@ class FilterForCoursesPresenter(
         val analytic: Analytic,
         val threadPoolExecutor: ThreadPoolExecutor,
         val mainHandler: IMainHandler,
-        val databaseFacade: DatabaseFacade) : PresenterBase<FilterForCoursesView>() {
+        val databaseFacade: DatabaseFacade,
+        val filterApplicator: FilterApplicator) : PresenterBase<FilterForCoursesView>() {
 
     fun applyFiltersImmediate(courses: List<Course?>): List<Course> {
         //todo: it can be too long, make with callback
@@ -43,46 +42,11 @@ class FilterForCoursesPresenter(
             mainHandler.post {
                 view?.showFilteredCourses(filteredList)
             }
-
         }
-
     }
 
     private fun getListFilteredBySharedPrefs(courseList: List<Course?>): List<Course> {
-        val filters = sharedPreferenceHelper.filter
-        val now: Long = DateTime.now(DateTimeZone.getDefault()).millis
-
-        val filteredList = courseList.filterNotNull().filter { course ->
-            var beginDate: Long? = null
-            course.begin_date?.let {
-                beginDate = DateTime(it).millis
-            }
-
-            var endDate: Long? = null
-            course.end_date?.let {
-                endDate = DateTime(it).millis
-            }
-
-            var isEnded: Boolean = false
-            course.last_deadline?.let {
-                val lastDeadlineMillis = DateTime(it).millis
-                if (now > lastDeadlineMillis) {
-                    isEnded = true
-                }
-            }
-
-            val isBeginDateInFuture: Boolean = beginDate?.compareTo(now) ?: -1 > 0
-            val isEndDateInFuture: Boolean = endDate?.compareTo(now) ?: -1 > 0
-
-
-            (filters.contains(StepikFilter.RUSSIAN) && course.language?.equals("ru") ?: false
-                    || filters.contains(StepikFilter.ENGLISH) && course.language?.equals("en") ?: false)
-                    &&
-                    (filters.contains(StepikFilter.UPCOMING) && isBeginDateInFuture
-                            || filters.contains(StepikFilter.ACTIVE) && !isEnded && (beginDate != null && !isBeginDateInFuture || beginDate == null && endDate == null)
-                            || filters.contains(StepikFilter.PAST) && (endDate == null && isEnded || endDate != null && !isEndDateInFuture))
-        }
-        return filteredList
+        return filterApplicator.getFilteredFromSharedPrefs(courseList, DatabaseFacade.Table.enrolled)//change resolving of enrolled
     }
 
     private fun onFiltersNotChanged() {

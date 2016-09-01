@@ -23,13 +23,15 @@ public class CourseListModule {
                                                                      Analytic analytic,
                                                                      ThreadPoolExecutor executor,
                                                                      IMainHandler mainHandler,
-                                                                     DatabaseFacade databaseFacade) {
+                                                                     DatabaseFacade databaseFacade,
+                                                                     FilterApplicator filterApplicator) {
         return new FilterForCoursesPresenter(
                 sharedPreferenceHelper,
                 analytic,
                 executor,
                 mainHandler,
-                databaseFacade);
+                databaseFacade,
+                filterApplicator);
     }
 
     @PerFragment
@@ -38,13 +40,17 @@ public class CourseListModule {
                                                                               DatabaseFacade databaseFacade,
                                                                               ThreadPoolExecutor threadPoolExecutor,
                                                                               IMainHandler mainHandler,
-                                                                              IApi api) {
+                                                                              IApi api,
+                                                                              FilterApplicator filterApplicator,
+                                                                              SharedPreferenceHelper sharedPreferenceHelper) {
         return new PersistentCourseListPresenter(
                 analytic,
                 databaseFacade,
                 threadPoolExecutor,
                 mainHandler,
-                api);
+                api,
+                filterApplicator,
+                sharedPreferenceHelper);
     }
 
 

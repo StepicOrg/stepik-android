@@ -365,7 +365,13 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public DefaultFilter provideDefaultFilter (){
+    public DefaultFilter provideDefaultFilter() {
         return new DefaultFilterImpl(mContext);
+    }
+
+    @Provides
+    @Singleton
+    public FilterApplicator provideFilterApplicator(DefaultFilter defaultFilter, SharedPreferenceHelper sharedPreferenceHelper) {
+        return new FilterApplicatorImpl(defaultFilter, sharedPreferenceHelper);
     }
 }

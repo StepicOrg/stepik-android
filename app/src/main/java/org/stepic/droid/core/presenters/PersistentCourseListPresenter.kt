@@ -2,7 +2,11 @@ package org.stepic.droid.core.presenters
 
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.core.FilterApplicator
 import org.stepic.droid.core.presenters.contracts.CoursesView
+import org.stepic.droid.model.Course
+import org.stepic.droid.model.StepikFilter
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.web.CoursesStepicResponse
 import org.stepic.droid.web.IApi
@@ -16,7 +20,9 @@ class PersistentCourseListPresenter(
         val databaseFacade: DatabaseFacade,
         val threadPoolExecutor: ThreadPoolExecutor,
         val mainHandler: IMainHandler,
-        val api: IApi
+        val api: IApi,
+        val filterApplicator: FilterApplicator,
+        val sharedPreferenceHelper: SharedPreferenceHelper
 ) : PresenterBase<CoursesView>() {
 
     var currentPage = AtomicInteger(1);
@@ -36,18 +42,23 @@ class PersistentCourseListPresenter(
      * 3) Save to db
      * 4) show from cache. (all states)
      */
-    fun downloadData(courseType: DatabaseFacade.Table) {
+    fun downloadData(courseType: DatabaseFacade.Table, applyFilter: Boolean) {
         if (isLoading.get() || !hasNextPage.get()) return
         isLoading.set(true)
 
         threadPoolExecutor.execute {
             val coursesBeforeLoading = databaseFacade.getAllCourses(courseType).filterNotNull()
             if (coursesBeforeLoading.isNotEmpty() && currentPage.get() == 1) {
-                mainHandler.post {
-                    view?.showCourses(coursesBeforeLoading)
+                val filteredCourseList: List<Course>
+                if (!applyFilter && !sharedPreferenceHelper.filter.contains(StepikFilter.PERSISTENT)) {
+                    filteredCourseList = filterApplicator.getFilteredFromDefault(coursesBeforeLoading, courseType)
+                } else {
+                    filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(coursesBeforeLoading, courseType)
                 }
-            }
-            else {
+                mainHandler.post {
+                    view?.showCourses(filteredCourseList)
+                }
+            } else {
                 mainHandler.post { view?.showLoading() }
             }
 
@@ -75,12 +86,20 @@ class PersistentCourseListPresenter(
                 }
 
                 val allCourses = databaseFacade.getAllCourses(courseType)
+
+                val filteredCourseList: List<Course>
+                if (!applyFilter && !sharedPreferenceHelper.filter.contains(StepikFilter.PERSISTENT)) {
+                    filteredCourseList = filterApplicator.getFilteredFromDefault(allCourses, courseType)
+                } else {
+                    filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(allCourses, courseType)
+                }
+
                 mainHandler.post {
                     if (allCourses.isEmpty()) {
                         isEmptyCourses.set(true)
                         view?.showEmptyCourses()
                     } else {
-                        view?.showCourses(allCourses)
+                        view?.showCourses(filteredCourseList)
                     }
                 }
             } else {
@@ -93,12 +112,12 @@ class PersistentCourseListPresenter(
 
     }
 
-    fun refreshData(courseType: DatabaseFacade.Table) {
+    fun refreshData(courseType: DatabaseFacade.Table, applyFilter: Boolean) {
         analytic.reportEvent(Analytic.Interaction.PULL_TO_REFRESH_COURSE)
         if (isLoading.get()) return
         currentPage.set(1);
         hasNextPage.set(true)
-        downloadData(courseType)
+        downloadData(courseType, applyFilter)
     }
 
 
