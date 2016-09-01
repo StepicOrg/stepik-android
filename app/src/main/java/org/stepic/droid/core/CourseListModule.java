@@ -3,6 +3,7 @@ package org.stepic.droid.core;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.core.presenters.FilterForCoursesPresenter;
+import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.store.operations.DatabaseFacade;
 
@@ -26,5 +27,11 @@ public class CourseListModule {
                         executor,
                         mainHandler,
                         databaseFacade);
+    }
+
+    @PerFragment
+    @Provides
+    public PersistentCourseListPresenter providePersistentCourseListPresenter (){
+        return new PersistentCourseListPresenter();
     }
 }
