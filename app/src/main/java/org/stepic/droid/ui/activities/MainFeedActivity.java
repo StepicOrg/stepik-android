@@ -215,7 +215,9 @@ public class MainFeedActivity extends BackToExitActivityBase
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             FragmentManager fragmentManager = getSupportFragmentManager();
+            Fragment fragment = fragmentManager.findFragmentById(R.id.frame);
             fragmentManager.popBackStackImmediate();
+            fragmentManager.beginTransaction().remove(fragment).commit();
             if (mCurrentIndex == 0) {
                 finish();
             } else {
@@ -358,7 +360,7 @@ public class MainFeedActivity extends BackToExitActivityBase
 
             if (fragment != null) {
                 String before = fragment.getTag();
-                String now = shortLifetimeRef.getClass().toString();
+                String now = shortLifetimeRef.getClass().getSimpleName();
                 if (!before.equals(now)) {
                     setFragment(R.id.frame, shortLifetimeRef);
                 }
