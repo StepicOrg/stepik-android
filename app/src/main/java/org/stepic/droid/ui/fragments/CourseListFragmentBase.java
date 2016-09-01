@@ -88,8 +88,8 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mProgressBarOnEmptyScreen.setVisibility(View.GONE);
 

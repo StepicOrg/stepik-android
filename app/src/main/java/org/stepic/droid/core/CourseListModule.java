@@ -31,7 +31,7 @@ public class CourseListModule {
 
     @PerFragment
     @Provides
-    public PersistentCourseListPresenter providePersistentCourseListPresenter (){
+    public PersistentCourseListPresenter providePersistentCourseListPresenter() {
         return new PersistentCourseListPresenter();
     }
 }

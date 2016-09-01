@@ -40,11 +40,10 @@ public class CourseSearchFragment extends CourseListFragmentBase {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mEmptySearch.setClickable(false);
         mEmptySearch.setFocusable(false);
-//        mProgressBarOnEmptyScreen.setVisibility(View.VISIBLE);
         bus.register(this);
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
@@ -75,16 +74,6 @@ public class CourseSearchFragment extends CourseListFragmentBase {
             }
         });
     }
-//
-//    @Subscribe
-//    public void onFailSearch(FailSearchEvent e) {
-//        if (!e.getQuery().equals(mSearchQuery)) return;
-//
-//        ProgressHelper.dismiss(mProgressBarOnEmptyScreen);
-//        mEmptySearch.setVisibility(View.GONE);
-//        mSwipeRefreshLayout.setVisibility(View.GONE);
-//        reportConnectionProblem.setVisibility(View.VISIBLE);
-//    }
 
     @Subscribe
     public void onSuccessSearchResult(SuccessSearchEvent e) {

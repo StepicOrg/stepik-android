@@ -51,9 +51,8 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mRootView.setParentTouchEvent(new OnRootTouchedListener() {
             @Override
             public void makeBeforeChildren() {

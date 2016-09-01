@@ -86,18 +86,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         return super.onOptionsItemSelected(item);
     }
 
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        bus.register(this);
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                getAndShowDataFromCache();
-            }
-        });
-    }
-
     protected void showCourses(List<Course> outCachedCourses) {
         if (outCachedCourses == null) return;
         List<Course> cachedCourses = filterForCoursesPresenter.applyFiltersImmediate (outCachedCourses);
@@ -220,6 +208,13 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        bus.register(this);
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                getAndShowDataFromCache();
+            }
+        });
         filterForCoursesPresenter.attachView(this);
     }
 
