@@ -6,4 +6,6 @@ public interface DefaultFilter {
     boolean getDefaultFeatured(StepikFilter filterValue);
 
     boolean getDefaultEnrolled(StepikFilter filterValue);
+
+    void setNeedResolveLanguage();
 }

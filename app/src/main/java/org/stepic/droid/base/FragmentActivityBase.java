@@ -17,6 +17,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.core.ILessonSessionManager;
 import org.stepic.droid.core.ILoginManager;
 import org.stepic.droid.core.IShell;
@@ -40,6 +41,9 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     protected Unbinder unbinder;
+
+    @Inject
+    protected DefaultFilter defaultFilter;
 
     @Inject
     protected IConfig mConfig;
