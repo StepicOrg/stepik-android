@@ -44,6 +44,9 @@ public class SharedPreferenceHelper {
         this.analytic = analytic;
         this.defaultFilter = defaultFilter;
         mContext = MainApplication.getAppContext();
+
+        resetFilters(Table.enrolled); //reset on app recreating and on destroy course's Fragments
+        resetFilters(Table.featured);
     }
 
     public void onTryDiscardFilters(Table type) {
@@ -141,8 +144,7 @@ public class SharedPreferenceHelper {
             appendValueForFilter(type, filter, FILTER_ACTIVE, StepikFilter.ACTIVE, defaultFilter.getDefaultEnrolled(StepikFilter.ACTIVE));
             appendValueForFilter(type, filter, FILTER_PAST, StepikFilter.PAST, defaultFilter.getDefaultEnrolled(StepikFilter.PAST));
             appendValueForFilter(type, filter, FILTER_PERSISTENT, StepikFilter.PERSISTENT, defaultFilter.getDefaultEnrolled(StepikFilter.PERSISTENT));
-        }
-        else {
+        } else {
             appendValueForFilter(type, filter, FILTER_RUSSIAN_LANGUAGE, StepikFilter.RUSSIAN, defaultFilter.getDefaultFeatured(StepikFilter.RUSSIAN));
             appendValueForFilter(type, filter, FILTER_ENGLISH_LANGUAGE, StepikFilter.ENGLISH, defaultFilter.getDefaultFeatured(StepikFilter.ENGLISH));
             appendValueForFilter(type, filter, FILTER_UPCOMING, StepikFilter.UPCOMING, defaultFilter.getDefaultFeatured(StepikFilter.UPCOMING));
