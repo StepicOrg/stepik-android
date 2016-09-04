@@ -1,5 +1,6 @@
 package org.stepic.droid.core.presenters
 
+import android.os.Bundle
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.core.FilterApplicator
@@ -124,8 +125,18 @@ class PersistentCourseListPresenter(
 
     }
 
+    fun reportCurrentFiltersToAnalytic(courseType: Table) {
+        threadPoolExecutor.execute {
+            val enumSetOfFilters = sharedPreferenceHelper.getFilter(courseType)
+            val bundle = Bundle()
+            enumSetOfFilters.forEach {
+                bundle.putBoolean(it.toString(), true)
+            }
+            analytic.reportEvent(Analytic.Filters.FILTER_APPLIED_IN_INTERFACE_WITH_PARAMS)
+        }
+    }
+
     fun refreshData(courseType: Table, applyFilter: Boolean) {
-        analytic.reportEvent(Analytic.Interaction.PULL_TO_REFRESH_COURSE)
         if (isLoading.get()) return
         currentPage.set(1);
         hasNextPage.set(true)

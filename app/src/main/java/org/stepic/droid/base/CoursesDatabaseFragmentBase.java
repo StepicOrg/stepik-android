@@ -229,10 +229,18 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             }
 
             if (requestCode == FILTER_REQUEST_CODE) {
+                analytic.reportEvent(Analytic.Filters.FILTERS_NEED_UPDATE);
                 needFilter = true; // not last filter? check it
                 mCourses.clear();
                 mCoursesAdapter.notifyDataSetChanged();
+                courseListPresenter.reportCurrentFiltersToAnalytic(getCourseType());
                 courseListPresenter.refreshData(getCourseType(), needFilter);
+            }
+        }
+
+        if (resultCode == FragmentActivity.RESULT_CANCELED) {
+            if (requestCode == FILTER_REQUEST_CODE) {
+                analytic.reportEvent(Analytic.Filters.FILTERS_NOT_CHANGED);
             }
         }
     }
@@ -275,6 +283,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void onRefresh() {
+        analytic.reportEvent(Analytic.Interaction.PULL_TO_REFRESH_COURSE);
         courseListPresenter.refreshData(getCourseType(), needFilter);
     }
 
