@@ -240,7 +240,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
         if (resultCode == FragmentActivity.RESULT_CANCELED) {
             if (requestCode == FILTER_REQUEST_CODE) {
-                analytic.reportEvent(Analytic.Filters.FILTERS_NOT_CHANGED);
+                analytic.reportEvent(Analytic.Filters.FILTERS_CANCELED);
             }
         }
     }

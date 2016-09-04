@@ -2,7 +2,6 @@ package org.stepic.droid.core;
 
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
-import org.stepic.droid.core.presenters.FilterForCoursesPresenter;
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
 import org.stepic.droid.core.presenters.SearchCoursesPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -17,23 +16,6 @@ import dagger.Provides;
 
 @Module
 public class CourseListModule {
-    @PerFragment
-    @Provides
-    public FilterForCoursesPresenter provideFilterForCoursePresenter(SharedPreferenceHelper sharedPreferenceHelper,
-                                                                     Analytic analytic,
-                                                                     ThreadPoolExecutor executor,
-                                                                     IMainHandler mainHandler,
-                                                                     DatabaseFacade databaseFacade,
-                                                                     FilterApplicator filterApplicator) {
-        return new FilterForCoursesPresenter(
-                sharedPreferenceHelper,
-                analytic,
-                executor,
-                mainHandler,
-                databaseFacade,
-                filterApplicator);
-    }
-
     @PerFragment
     @Provides
     public PersistentCourseListPresenter providePersistentCourseListPresenter(Analytic analytic,

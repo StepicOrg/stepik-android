@@ -122,7 +122,6 @@ public class FilterFragment extends FragmentBase implements FilterView {
             }
         });
         filterPresenter.attachView(this);
-        filterPresenter.savePreviousValues(courseType);
         filterPresenter.initFiltersIfNeed(courseType);
     }
 

@@ -121,9 +121,6 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, NEED_DROP_116, false);
     }
 
-
-    private boolean isFilterChangedFromLastCall = false;
-
     private void resetFilters(Table type) {
         if (!getBoolean(PreferenceType.ENROLLED_FILTER, FILTER_PERSISTENT, false)) {
             if (type == Table.enrolled) {
@@ -174,28 +171,19 @@ public class SharedPreferenceHelper {
         return preferenceType;
     }
 
-    public void saveFilter(Table type, EnumSet<StepikFilter> filter, EnumSet<StepikFilter> oldValues) {
+    public void saveFilter(Table type, EnumSet<StepikFilter> filter) {
         saveValueFromFilterIfExist(type, filter, FILTER_RUSSIAN_LANGUAGE, StepikFilter.RUSSIAN);
         saveValueFromFilterIfExist(type, filter, FILTER_ENGLISH_LANGUAGE, StepikFilter.ENGLISH);
         saveValueFromFilterIfExist(type, filter, FILTER_UPCOMING, StepikFilter.UPCOMING);
         saveValueFromFilterIfExist(type, filter, FILTER_ACTIVE, StepikFilter.ACTIVE);
         saveValueFromFilterIfExist(type, filter, FILTER_PAST, StepikFilter.PAST);
         saveValueFromFilterIfExist(type, filter, FILTER_PERSISTENT, StepikFilter.PERSISTENT);
-
-        isFilterChangedFromLastCall = !oldValues.equals(filter);
     }
 
     private void saveValueFromFilterIfExist(Table type, EnumSet<StepikFilter> filter, String key, StepikFilter value) {
         PreferenceType preferenceType = resolvePreferenceType(type);
         put(preferenceType, key, filter.contains(value));
     }
-
-    public boolean isFilterChangedFromLastCall() {
-        boolean result = isFilterChangedFromLastCall;
-        isFilterChangedFromLastCall = false;
-        return result;
-    }
-
 
     public enum PreferenceType {
         LOGIN("login preference"),
