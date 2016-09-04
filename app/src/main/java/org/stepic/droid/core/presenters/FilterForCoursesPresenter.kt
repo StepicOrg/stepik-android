@@ -9,6 +9,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.store.operations.DatabaseFacade
 import java.util.concurrent.ThreadPoolExecutor
 
+@Deprecated("This class is useless or need remaking")
 class FilterForCoursesPresenter(
         val sharedPreferenceHelper: SharedPreferenceHelper,
         val analytic: Analytic,
@@ -31,7 +32,7 @@ class FilterForCoursesPresenter(
     }
 
     private fun onNeedUpdateFilters(type: DatabaseFacade.Table) {
-        analytic.reportEvent(Analytic.Filters.FILTERS_NOT_CHANGED)
+        analytic.reportEvent(Analytic.Filters.FILTERS_NEED_UPDATE)
         view?.clearAndShowLoading()
         threadPoolExecutor.execute {
             //todo optimization: change to specific sql query

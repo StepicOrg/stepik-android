@@ -55,56 +55,67 @@ class PersistentCourseListPresenter(
                 } else {
                     filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(coursesBeforeLoading, courseType)
                 }
-                mainHandler.post {
-                    view?.showCourses(filteredCourseList)
+                if (filteredCourseList.isNotEmpty()) {
+                    mainHandler.post {
+                        view?.showCourses(filteredCourseList)
+                    }
+                } else {
+                    mainHandler.post { view?.showLoading() }
                 }
             } else {
                 mainHandler.post { view?.showLoading() }
             }
 
-            val response: Response<CoursesStepicResponse>?
-            try {
-                if (courseType == DatabaseFacade.Table.featured) {
-                    response = api.getFeaturedCourses(currentPage.get()).execute()
-                } else {
-                    response = api.getEnrolledCourses(currentPage.get()).execute()
-                }
-            } catch (ex: Exception) {
-                response = null
-            }
-
-            if (response != null && response.isSuccess) {
-                val coursesFromInternet = response.body().courses
-
-                coursesFromInternet.filterNotNull().forEach {
-                    databaseFacade.addCourse(it, courseType)
-                }
-
-                hasNextPage.set(response.body().meta.has_next)
-                if (hasNextPage.get()) {
-                    currentPage.set(response.body().meta.page + 1) // page for next loading
-                }
-
-                val allCourses = databaseFacade.getAllCourses(courseType)
-
-                val filteredCourseList: List<Course>
-                if (!applyFilter && !sharedPreferenceHelper.filter.contains(StepikFilter.PERSISTENT)) {
-                    filteredCourseList = filterApplicator.getFilteredFromDefault(allCourses, courseType)
-                } else {
-                    filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(allCourses, courseType)
-                }
-
-                mainHandler.post {
-                    if (allCourses.isEmpty()) {
-                        isEmptyCourses.set(true)
-                        view?.showEmptyCourses()
+            while (hasNextPage.get()) {
+                val response: Response<CoursesStepicResponse>?
+                try {
+                    if (courseType == DatabaseFacade.Table.featured) {
+                        response = api.getFeaturedCourses(currentPage.get()).execute()
                     } else {
-                        view?.showCourses(filteredCourseList)
+                        response = api.getEnrolledCourses(currentPage.get()).execute()
                     }
+                } catch (ex: Exception) {
+                    response = null
                 }
-            } else {
-                mainHandler.post {
-                    view?.showConnectionProblem()
+
+                if (response != null && response.isSuccess) {
+                    val coursesFromInternet = response.body().courses
+
+                    coursesFromInternet.filterNotNull().forEach {
+                        databaseFacade.addCourse(it, courseType)
+                    }
+
+                    hasNextPage.set(response.body().meta.has_next)
+                    if (hasNextPage.get()) {
+                        currentPage.set(response.body().meta.page + 1) // page for next loading
+                    }
+
+                    val allCourses = databaseFacade.getAllCourses(courseType)
+
+                    val filteredCourseList: List<Course>
+                    if (!applyFilter && !sharedPreferenceHelper.filter.contains(StepikFilter.PERSISTENT)) {
+                        filteredCourseList = filterApplicator.getFilteredFromDefault(allCourses, courseType)
+                    } else {
+                        filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(allCourses, courseType)
+                    }
+                    if (filteredCourseList.isEmpty() && hasNextPage.get()) {
+                        //try to load next in loop
+                    } else {
+                        mainHandler.post {
+                            if (filteredCourseList.isEmpty()) {
+                                isEmptyCourses.set(true)
+                                view?.showEmptyCourses()
+                            } else {
+                                view?.showCourses(filteredCourseList)
+                            }
+                        }
+                        break;
+                    }
+                } else {
+                    mainHandler.post {
+                        view?.showConnectionProblem()
+                    }
+                    break;
                 }
             }
             isLoading.set(false)

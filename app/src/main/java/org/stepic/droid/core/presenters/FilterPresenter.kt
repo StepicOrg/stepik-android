@@ -19,7 +19,7 @@ class FilterPresenter(
     fun initFiltersIfNeed() {
         if (!isInitiated) {
             isInitiated = true
-            val filters = sharedPreferenceHelper.getFilterAndClearNotPersistent()
+            val filters = sharedPreferenceHelper.filter
             view?.onFiltersPreparedForView(filters)
         }
     }

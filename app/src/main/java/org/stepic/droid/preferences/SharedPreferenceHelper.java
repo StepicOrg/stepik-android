@@ -42,6 +42,7 @@ public class SharedPreferenceHelper {
         this.analytic = analytic;
         this.defaultFilter = defaultFilter;
         mContext = MainApplication.getAppContext();
+        initFiltersOnCreate();
     }
 
     public boolean isSDChosen() {
@@ -115,11 +116,10 @@ public class SharedPreferenceHelper {
 
     private boolean isFilterChangedFromLastCall = false;
 
-    public EnumSet<StepikFilter> getFilterAndClearNotPersistent() {
+    private void initFiltersOnCreate() {
         if (!getBoolean(PreferenceType.FILTER, FILTER_PERSISTENT, false)) {
             clear(PreferenceType.FILTER);
         }
-        return getFilter();
     }
 
     public EnumSet<StepikFilter> getFilter() {
@@ -147,7 +147,7 @@ public class SharedPreferenceHelper {
         saveValueFromFilterIfExist(filter, FILTER_PAST, StepikFilter.PAST);
         saveValueFromFilterIfExist(filter, FILTER_PERSISTENT, StepikFilter.PERSISTENT);
 
-         isFilterChangedFromLastCall = !oldValues.equals(filter);
+        isFilterChangedFromLastCall = !oldValues.equals(filter);
     }
 
     private void saveValueFromFilterIfExist(EnumSet<StepikFilter> filter, String key, StepikFilter value) {

@@ -186,7 +186,7 @@ public interface Analytic {
 
     interface Filters {
         String FILTERS_NOT_CHANGED = "filters_not_changed";
-        String FILTERS_NEED_UPDATED = "filters_need_update";
+        String FILTERS_NEED_UPDATE = "filters_need_update";
     }
 
     void reportEvent(String eventName, Bundle bundle);

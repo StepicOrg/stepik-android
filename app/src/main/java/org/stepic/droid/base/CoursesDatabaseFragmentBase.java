@@ -44,6 +44,8 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     private boolean needFilter = false;
 
+    private static final int MAX_COURSES_ON_SCREEN = 10;
+
     @Inject
     PersistentCourseListPresenter courseListPresenter;
 
@@ -236,7 +238,9 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
             if (requestCode == FILTER_REQUEST_CODE) {
                 needFilter = true; // not last filter? check it
-                filterForCoursesPresenter.tryApplyFilters(getCourseType());
+                mCourses.clear();
+                mCoursesAdapter.notifyDataSetChanged();
+                courseListPresenter.refreshData(getCourseType(), needFilter);
             }
         }
     }
@@ -267,7 +271,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void showFilteredCourses(@NotNull List<Course> filteredList) {
-//        isLoading = false;
         showCourses(filteredList);
     }
 
