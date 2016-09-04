@@ -253,7 +253,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         } else {
             mEmptyCoursesView.setVisibility(View.GONE);
             mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-
         }
     }
 
@@ -279,4 +278,9 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         courseListPresenter.refreshData(getCourseType(), needFilter);
     }
 
+    @Override
+    public void onDestroy() {
+        mSharedPreferenceHelper.onTryDiscardFilters(getCourseType());
+        super.onDestroy();
+    }
 }

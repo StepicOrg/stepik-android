@@ -18,6 +18,7 @@ import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.model.comments.DiscussionOrder;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.web.AuthenticationStepicResponse;
@@ -42,7 +43,10 @@ public class SharedPreferenceHelper {
         this.analytic = analytic;
         this.defaultFilter = defaultFilter;
         mContext = MainApplication.getAppContext();
-        initFiltersOnCreate();
+    }
+
+    public void onTryDiscardFilters(DatabaseFacade.Table type) {
+        resetFilters(type);
     }
 
     public boolean isSDChosen() {
@@ -116,7 +120,7 @@ public class SharedPreferenceHelper {
 
     private boolean isFilterChangedFromLastCall = false;
 
-    private void initFiltersOnCreate() {
+    private void resetFilters(DatabaseFacade.Table type) {
         if (!getBoolean(PreferenceType.FILTER, FILTER_PERSISTENT, false)) {
             clear(PreferenceType.FILTER);
         }
