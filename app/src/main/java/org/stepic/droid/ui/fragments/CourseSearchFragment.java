@@ -13,7 +13,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.CourseListModule;
 import org.stepic.droid.core.presenters.SearchCoursesPresenter;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.store.operations.Table;
 
 import javax.inject.Inject;
 
@@ -72,7 +72,7 @@ public class CourseSearchFragment extends CourseListFragmentBase {
     }
 
     @Override
-    protected DatabaseFacade.Table getCourseType() {
+    protected Table getCourseType() {
         return null;
     }
 

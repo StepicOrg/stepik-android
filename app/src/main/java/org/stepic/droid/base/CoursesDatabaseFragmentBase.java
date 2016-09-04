@@ -19,14 +19,13 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.CourseListModule;
-import org.stepic.droid.core.presenters.FilterForCoursesPresenter;
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
 import org.stepic.droid.core.presenters.contracts.FilterForCoursesView;
 import org.stepic.droid.events.courses.FailDropCourseEvent;
 import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.ui.fragments.CourseListFragmentBase;
 import org.stepic.droid.util.AppConstants;
 
@@ -44,13 +43,8 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     private boolean needFilter = false;
 
-    private static final int MAX_COURSES_ON_SCREEN = 10;
-
     @Inject
     PersistentCourseListPresenter courseListPresenter;
-
-    @Inject
-    FilterForCoursesPresenter filterForCoursesPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,7 +66,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_filter_menu:
-                mShell.getScreenProvider().showFilterScreen(this, FILTER_REQUEST_CODE);
+                mShell.getScreenProvider().showFilterScreen(this, FILTER_REQUEST_CODE, getCourseType());
                 return true;
         }
 
@@ -92,7 +86,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         super.onViewCreated(view, savedInstanceState);
         bus.register(this);
         courseListPresenter.attachView(this);
-        filterForCoursesPresenter.attachView(this);
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -111,7 +104,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     @Override
     public void onDestroyView() {
         bus.unregister(this);
-        filterForCoursesPresenter.detachView(this);
         courseListPresenter.detachView(this);
         super.onDestroyView();
     }
@@ -167,11 +159,11 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                     new Handler().post(new Runnable() {
                         @Override
                         public void run() {
-                            mDatabaseFacade.deleteCourse(localRef, DatabaseFacade.Table.enrolled);
+                            mDatabaseFacade.deleteCourse(localRef, Table.enrolled);
 
-                            if (mDatabaseFacade.getCourseById(course.getCourseId(), DatabaseFacade.Table.featured) != null) {
+                            if (mDatabaseFacade.getCourseById(course.getCourseId(), Table.featured) != null) {
                                 localRef.setEnrollment(0);
-                                mDatabaseFacade.addCourse(localRef, DatabaseFacade.Table.featured);
+                                mDatabaseFacade.addCourse(localRef, Table.featured);
                             }
 
                         }
@@ -198,7 +190,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         }
         analytic.reportEvent(Analytic.Web.DROP_COURSE_SUCCESSFUL, courseId + "");
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + e.getCourse().getTitle(), Toast.LENGTH_LONG).show();
-        if (e.getType() == DatabaseFacade.Table.enrolled) {
+        if (e.getType() == Table.enrolled) {
             mCourses.remove(e.getCourse());
             mCoursesAdapter.notifyDataSetChanged();
         }

@@ -7,6 +7,7 @@ import org.stepic.droid.core.presenters.contracts.FilterForCoursesView
 import org.stepic.droid.model.Course
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.store.operations.Table
 import java.util.concurrent.ThreadPoolExecutor
 
 @Deprecated("This class is useless or need remaking")
@@ -23,7 +24,7 @@ class FilterForCoursesPresenter(
         return getListFilteredBySharedPrefs(courses)
     }
 
-    fun tryApplyFilters(type: DatabaseFacade.Table) {
+    fun tryApplyFilters(type: Table) {
         if (sharedPreferenceHelper.isFilterChangedFromLastCall) {
             onNeedUpdateFilters(type)
         } else {
@@ -31,7 +32,7 @@ class FilterForCoursesPresenter(
         }
     }
 
-    private fun onNeedUpdateFilters(type: DatabaseFacade.Table) {
+    private fun onNeedUpdateFilters(type: Table) {
         analytic.reportEvent(Analytic.Filters.FILTERS_NEED_UPDATE)
         view?.clearAndShowLoading()
         threadPoolExecutor.execute {
@@ -47,7 +48,7 @@ class FilterForCoursesPresenter(
     }
 
     private fun getListFilteredBySharedPrefs(courseList: List<Course?>): List<Course> {
-        return filterApplicator.getFilteredFromSharedPrefs(courseList, DatabaseFacade.Table.enrolled)//change resolving of enrolled
+        return filterApplicator.getFilteredFromSharedPrefs(courseList, Table.enrolled)//change resolving of enrolled
     }
 
     private fun onFiltersNotChanged() {

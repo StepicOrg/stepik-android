@@ -6,7 +6,7 @@ import org.stepic.droid.base.CoursesDatabaseFragmentBase;
 import org.stepic.droid.events.courses.FailDropCourseEvent;
 import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.store.operations.Table;
 
 public class MyCoursesFragment extends CoursesDatabaseFragmentBase {
 
@@ -15,8 +15,8 @@ public class MyCoursesFragment extends CoursesDatabaseFragmentBase {
     }
 
     @Override
-    protected DatabaseFacade.Table getCourseType() {
-        return DatabaseFacade.Table.enrolled;
+    protected Table getCourseType() {
+        return Table.enrolled;
     }
 
     @Subscribe

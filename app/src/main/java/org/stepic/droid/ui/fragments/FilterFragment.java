@@ -22,6 +22,8 @@ import org.stepic.droid.core.FilterModule;
 import org.stepic.droid.core.presenters.FilterPresenter;
 import org.stepic.droid.core.presenters.contracts.FilterView;
 import org.stepic.droid.model.StepikFilter;
+import org.stepic.droid.store.operations.Table;
+import org.stepic.droid.util.AppConstants;
 
 import java.util.EnumSet;
 
@@ -32,8 +34,14 @@ import butterknife.ButterKnife;
 
 public class FilterFragment extends FragmentBase implements FilterView {
 
-    public static FilterFragment newInstance() {
-        return new FilterFragment();
+    private static final String filterCourseTypeKey = "filter_course_type";
+
+    public static FilterFragment newInstance(int filterCourseTypeCode) {
+        Bundle args = new Bundle();
+        args.putInt(filterCourseTypeKey, filterCourseTypeCode);
+        FilterFragment fragment = new FilterFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @BindView(R.id.toolbar)
@@ -66,11 +74,20 @@ public class FilterFragment extends FragmentBase implements FilterView {
     @Inject
     FilterPresenter filterPresenter;
 
+    Table courseType;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         setHasOptionsMenu(true);
+
+        int filterCode = getArguments().getInt(filterCourseTypeKey);
+        if (filterCode == AppConstants.ENROLLED_FILTER) {
+            courseType = Table.enrolled;
+        } else if (filterCode == AppConstants.FEATURED_FILTER) {
+            courseType = Table.featured;
+        }
 
         MainApplication
                 .component()
@@ -94,7 +111,7 @@ public class FilterFragment extends FragmentBase implements FilterView {
             @Override
             public void onClick(View view) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_ACCEPT_FILTER_BUTTON);
-                filterPresenter.acceptFilter(getCurrentFilterFromUI());
+                filterPresenter.acceptFilter(getCurrentFilterFromUI(), courseType);
             }
         });
 
@@ -105,7 +122,8 @@ public class FilterFragment extends FragmentBase implements FilterView {
             }
         });
         filterPresenter.attachView(this);
-        filterPresenter.initFiltersIfNeed();
+        filterPresenter.savePreviousValues(courseType);
+        filterPresenter.initFiltersIfNeed(courseType);
     }
 
     private void initToolbar() {
@@ -127,7 +145,7 @@ public class FilterFragment extends FragmentBase implements FilterView {
                 getActivity().finish();
                 return true;
             case R.id.accept_action:
-                filterPresenter.acceptFilter(getCurrentFilterFromUI());
+                filterPresenter.acceptFilter(getCurrentFilterFromUI(), courseType);
                 return true;
         }
         return super.onOptionsItemSelected(item);

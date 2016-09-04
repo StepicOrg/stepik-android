@@ -6,13 +6,14 @@ import org.stepic.droid.model.Course
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.store.operations.Table
 
 class FilterApplicatorImpl(
         val defaultFilter: DefaultFilter,
         val sharedPreferenceHelper: SharedPreferenceHelper) : FilterApplicator {
 
-    override fun getFilteredFromSharedPrefs(sourceCourses: List<Course>, filterType: DatabaseFacade.Table): List<Course> {
-        val filters = sharedPreferenceHelper.filter
+    override fun getFilteredFromSharedPrefs(sourceCourses: List<Course>, courseType: Table): List<Course> {
+        val filters = sharedPreferenceHelper.getFilter(courseType)
         val now: Long = DateTime.now(DateTimeZone.getDefault()).millis
 
         val filteredList = sourceCourses.filterNotNull().filter { course ->
@@ -49,7 +50,7 @@ class FilterApplicatorImpl(
 
     }
 
-    override fun getFilteredFromDefault(sourceCourses: List<Course>, filterType: DatabaseFacade.Table): List<Course>? {
+    override fun getFilteredFromDefault(sourceCourses: List<Course>, courseType: Table): List<Course>? {
         val now: Long = DateTime.now(DateTimeZone.getDefault()).millis
 
         val filteredList = sourceCourses.filterNotNull().filter { course ->
@@ -74,8 +75,8 @@ class FilterApplicatorImpl(
             val isBeginDateInFuture: Boolean = beginDate?.compareTo(now) ?: -1 > 0
             val isEndDateInFuture: Boolean = endDate?.compareTo(now) ?: -1 > 0
 
-            //todo refactor
-            if (filterType == DatabaseFacade.Table.enrolled) {
+            //todo refactor: the 1st key is default for enrolled, the 2nd is default for featured
+            if (courseType == Table.enrolled) {
                 (defaultFilter.getDefaultEnrolled(StepikFilter.RUSSIAN) && course.language?.equals("ru") ?: false
                         || defaultFilter.getDefaultEnrolled(StepikFilter.ENGLISH) && course.language?.equals("en") ?: false)
                         &&

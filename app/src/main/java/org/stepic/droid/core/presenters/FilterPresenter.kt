@@ -3,31 +3,32 @@ package org.stepic.droid.core.presenters
 import org.stepic.droid.core.presenters.contracts.FilterView
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.store.operations.Table
 import java.util.*
 
 class FilterPresenter(
         val sharedPreferenceHelper: SharedPreferenceHelper) : PresenterBase<FilterView>() {
 
     private var isInitiated: Boolean = false
-    private var oldValues : EnumSet<StepikFilter>? = null
+    private var oldValues: EnumSet<StepikFilter>? = null
 
-    fun acceptFilter(uiFilters: EnumSet<StepikFilter>) {
-        sharedPreferenceHelper.saveFilter(uiFilters, oldValues)
+    fun acceptFilter(uiFilters: EnumSet<StepikFilter>, courseType: Table) {
+        sharedPreferenceHelper.saveFilter(courseType, uiFilters, oldValues)
         view?.onFilterAccepted()
     }
 
-    fun initFiltersIfNeed() {
+    fun initFiltersIfNeed(courseType: Table) {
         if (!isInitiated) {
             isInitiated = true
-            val filters = sharedPreferenceHelper.filter
+            val filters = sharedPreferenceHelper.getFilter(courseType)
             view?.onFiltersPreparedForView(filters)
         }
     }
 
-    override fun attachView(view: FilterView) {
-        super.attachView(view)
+    fun savePreviousValues(courseType: Table) {
         if (oldValues == null) {
-            oldValues = sharedPreferenceHelper.filter
+            oldValues = sharedPreferenceHelper.getFilter(courseType)
         }
     }
 

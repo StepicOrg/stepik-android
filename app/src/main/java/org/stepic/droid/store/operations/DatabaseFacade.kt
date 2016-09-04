@@ -17,11 +17,6 @@ import javax.inject.Singleton
 @Singleton
 class DatabaseFacade {
 
-    enum class Table(val storeName: String) {
-        enrolled(DBStructureCourses.ENROLLED_COURSES),
-        featured(DBStructureCourses.FEATURED_COURSES)
-    }
-
     @Inject
     lateinit var mSectionDao: IDao<Section>
     @Inject
@@ -274,7 +269,7 @@ class DatabaseFacade {
         return mDownloadEntityDao.get(DbStructureSharedDownloads.Column.DOWNLOAD_ID, downloadId.toString())
     }
 
-    fun clearCacheCourses(type: DatabaseFacade.Table) {
+    fun clearCacheCourses(type: Table) {
         val courses = getAllCourses(type)
 
         for (courseItem in courses) {

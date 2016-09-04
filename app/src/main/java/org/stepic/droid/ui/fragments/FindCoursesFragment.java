@@ -22,7 +22,7 @@ import org.stepic.droid.base.CoursesDatabaseFragmentBase;
 import org.stepic.droid.events.courses.FailDropCourseEvent;
 import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.ui.listeners.OnRootTouchedListener;
 
 public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
@@ -83,8 +83,8 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
     }
 
     @Override
-    protected DatabaseFacade.Table getCourseType() {
-        return DatabaseFacade.Table.featured;
+    protected Table getCourseType() {
+        return Table.featured;
     }
 
     @Subscribe

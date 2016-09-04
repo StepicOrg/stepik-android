@@ -25,6 +25,7 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ProgressUtil;
@@ -97,7 +98,7 @@ public class LoadService extends IntentService {
             switch (type) {
                 case Course:
                     Course course = (Course) intent.getSerializableExtra(AppConstants.KEY_COURSE_BUNDLE);
-                    DatabaseFacade.Table tableType = (DatabaseFacade.Table) intent.getSerializableExtra(AppConstants.KEY_TABLE_TYPE);
+                    Table tableType = (Table) intent.getSerializableExtra(AppConstants.KEY_TABLE_TYPE);
                     addCourse(course, tableType);
                     break;
                 case Section:
@@ -375,7 +376,7 @@ public class LoadService extends IntentService {
     }
 
     @Deprecated
-    private void addCourse(Course course, DatabaseFacade.Table type) {
+    private void addCourse(Course course, Table type) {
         mDb.addCourse(course, type);
         course = mDb.getCourseById(course.getCourseId(), type); //make copy of course.
 

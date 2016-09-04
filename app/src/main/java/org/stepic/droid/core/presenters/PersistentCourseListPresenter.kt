@@ -8,6 +8,7 @@ import org.stepic.droid.model.Course
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.store.operations.Table
 import org.stepic.droid.web.CoursesStepicResponse
 import org.stepic.droid.web.IApi
 import retrofit.Response
@@ -42,7 +43,7 @@ class PersistentCourseListPresenter(
      * 3) Save to db
      * 4) show from cache. (all states)
      */
-    fun downloadData(courseType: DatabaseFacade.Table, applyFilter: Boolean) {
+    fun downloadData(courseType: Table, applyFilter: Boolean) {
         if (isLoading.get() || !hasNextPage.get()) return
         isLoading.set(true)
 
@@ -50,7 +51,7 @@ class PersistentCourseListPresenter(
             val coursesBeforeLoading = databaseFacade.getAllCourses(courseType).filterNotNull()
             if (coursesBeforeLoading.isNotEmpty() && currentPage.get() == 1) {
                 val filteredCourseList: List<Course>
-                if (!applyFilter && !sharedPreferenceHelper.filter.contains(StepikFilter.PERSISTENT)) {
+                if (!applyFilter && !sharedPreferenceHelper.getFilter(courseType).contains(StepikFilter.PERSISTENT)) {
                     filteredCourseList = filterApplicator.getFilteredFromDefault(coursesBeforeLoading, courseType)
                 } else {
                     filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(coursesBeforeLoading, courseType)
@@ -69,7 +70,7 @@ class PersistentCourseListPresenter(
             while (hasNextPage.get()) {
                 val response: Response<CoursesStepicResponse>?
                 try {
-                    if (courseType == DatabaseFacade.Table.featured) {
+                    if (courseType == Table.featured) {
                         response = api.getFeaturedCourses(currentPage.get()).execute()
                     } else {
                         response = api.getEnrolledCourses(currentPage.get()).execute()
@@ -93,7 +94,7 @@ class PersistentCourseListPresenter(
                     val allCourses = databaseFacade.getAllCourses(courseType)
 
                     val filteredCourseList: List<Course>
-                    if (!applyFilter && !sharedPreferenceHelper.filter.contains(StepikFilter.PERSISTENT)) {
+                    if (!applyFilter && !sharedPreferenceHelper.getFilter(courseType).contains(StepikFilter.PERSISTENT)) {
                         filteredCourseList = filterApplicator.getFilteredFromDefault(allCourses, courseType)
                     } else {
                         filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(allCourses, courseType)
@@ -123,13 +124,12 @@ class PersistentCourseListPresenter(
 
     }
 
-    fun refreshData(courseType: DatabaseFacade.Table, applyFilter: Boolean) {
+    fun refreshData(courseType: Table, applyFilter: Boolean) {
         analytic.reportEvent(Analytic.Interaction.PULL_TO_REFRESH_COURSE)
         if (isLoading.get()) return
         currentPage.set(1);
         hasNextPage.set(true)
         downloadData(courseType, applyFilter)
     }
-
 
 }
