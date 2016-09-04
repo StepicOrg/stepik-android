@@ -11,10 +11,6 @@ class DefaultFilterImpl(private val context: Context) : DefaultFilter {
     private var isNeedRussian: Boolean? = null
 
     override fun getDefaultFeatured(filterValue: StepikFilter): Boolean {
-        return getDefaultEnrolled(filterValue) //if we want to divide in the future
-    }
-
-    override fun getDefaultEnrolled(filterValue: StepikFilter): Boolean {
         when (filterValue) {
             StepikFilter.RUSSIAN -> return isNeedRussian()
             StepikFilter.ENGLISH -> return true
@@ -22,6 +18,19 @@ class DefaultFilterImpl(private val context: Context) : DefaultFilter {
             StepikFilter.ACTIVE -> return true
             StepikFilter.PAST -> return true
             StepikFilter.PERSISTENT -> return false
+            else -> return false
+        }
+    }
+
+    override fun getDefaultEnrolled(filterValue: StepikFilter): Boolean {
+        //my courses is persistent by default
+        when (filterValue) {
+            StepikFilter.RUSSIAN -> return isNeedRussian()
+            StepikFilter.ENGLISH -> return true
+            StepikFilter.UPCOMING -> return true
+            StepikFilter.ACTIVE -> return true
+            StepikFilter.PAST -> return true
+            StepikFilter.PERSISTENT -> return true
             else -> return false
         }
     }
