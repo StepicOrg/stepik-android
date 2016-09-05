@@ -1,39 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:scrollbarStyle="outsideOverlay"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbarStyle="outsideOverlay">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <include
+            layout="@layout/step_text_header"/>
+
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/open_web"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <include
-                layout="@layout/step_text_header"/>
-
-
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/open_web"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/min_ux_touchable_size"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:text="@string/open_web_to_solve"/>
+            android:layout_height="@dimen/min_ux_touchable_size"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/open_web_to_solve"/>
 
 
-            <include layout="@layout/open_comment_view"/>
-            <include layout="@layout/next_lesson_view"/>
-        </LinearLayout>
-    </ScrollView>
+        <include layout="@layout/open_comment_view"/>
 
-    <include
-        layout="@layout/drop_shadow_view"/>
-</FrameLayout>
+        <include layout="@layout/next_lesson_view"/>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
