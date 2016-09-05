@@ -13,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -21,40 +20,32 @@ import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.concurrency.tasks.FromDbStepTask;
-import org.stepic.droid.events.steps.FailLoadStepEvent;
-import org.stepic.droid.events.steps.FromDbStepEvent;
-import org.stepic.droid.events.steps.SuccessLoadStepEvent;
+import org.stepic.droid.core.StepModule;
+import org.stepic.droid.core.presenters.StepsPresenter;
+import org.stepic.droid.core.presenters.contracts.StepsView;
 import org.stepic.droid.events.steps.UpdateStepEvent;
-import org.stepic.droid.events.steps.UpdateStepsState;
 import org.stepic.droid.events.video.VideoQualityEvent;
-import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Lesson;
-import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.VideoUrl;
 import org.stepic.droid.ui.adapters.StepFragmentAdapter;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.util.ProgressUtil;
-import org.stepic.droid.web.AssignmentResponse;
-import org.stepic.droid.web.ProgressesResponse;
-import org.stepic.droid.web.StepResponse;
 import org.stepic.droid.web.ViewAssignment;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
 
-public class StepsFragment extends FragmentBase {
+public class StepsFragment extends FragmentBase implements StepsView {
     private static final String TAG = "StepsFragment";
     private static final String FROM_PREVIOUS_KEY = "fromPrevKey";
     private static final String SIMPLE_UNIT_ID_KEY = "simpleUnitId";
@@ -100,45 +91,29 @@ public class StepsFragment extends FragmentBase {
     StepFragmentAdapter stepAdapter;
     private List<Step> stepList;
 
-    @Nullable
-    private Unit unit;
-    private Lesson lesson;
     private boolean isLoaded;
     private String qualityForView;
     private FromDbStepTask getFromDbStepsTask;
 
     private boolean fromPreviousLesson = false;
 
+    @Inject
+    StepsPresenter stepsPresenter;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
-        lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
-        fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
+        MainApplication
+                .component()
+                .plus(new StepModule())
+                .inject(this);
 
-        if (lesson == null) {
-            long lessonId = getArguments().getLong(SIMPLE_LESSON_ID_KEY);
-            if (lessonId < 0) {
-                onLessonCorrupted(); //// FIXME: 05.09.16 presenter?
-            } else {
-                //load...
-                Toast.makeText(getContext(), "Load " + lessonId, Toast.LENGTH_SHORT).show();
-            }
-            //todo move to onCreate and presenter
-            //todo add parsing of unit and default step position, after that run presenter for loading missing data
-            long unitId = getArguments().getLong(SIMPLE_UNIT_ID_KEY);
-            long defaultStepPos = getArguments().getLong(SIMPLE_STEP_POSITION_KEY);
-            Toast.makeText(getContext(), "data is parsed", Toast.LENGTH_SHORT).show();;
-        }
+        fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
         stepList = new ArrayList<>();
     }
 
-    private void onLessonCorrupted() {
-        // FIXME: 05.09.16 show placeholder
-        Toast.makeText(getContext(), "Sorry, link was broken", Toast.LENGTH_SHORT).show();
-    }
 
     @Nullable
     @Override
@@ -149,29 +124,43 @@ public class StepsFragment extends FragmentBase {
         return v;
     }
 
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        init();
+        initIndependentUI();
+        stepsPresenter.attachView(this);
+        if (stepsPresenter.getLesson() != null) {
+            Lesson lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
+            Unit unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
+            long unitId = getArguments().getLong(SIMPLE_UNIT_ID_KEY);
+            long defaultStepPos = getArguments().getLong(SIMPLE_STEP_POSITION_KEY);
+            long lessonId = getArguments().getLong(SIMPLE_LESSON_ID_KEY);
+            stepsPresenter.init(lesson, unit, unitId, defaultStepPos, lessonId);
+        }
         bus.register(this);
         //isLoaded is retained and stepList too, but this method should be in attachView due to user can rotate device, when
         //loading is not finished. it can produce many requests, but it will be happen when user rotates device many times per second.
-        if (lesson != null && lesson.getSteps() != null && lesson.getSteps().length != 0 && !isLoaded) {
-            updateSteps();
-        } else {
-            ArrayList<Step> newList = new ArrayList<>(stepList);
-            showSteps(newList);
-        }
+//        if (lesson != null && lesson.getSteps() != null && lesson.getSteps().length != 0 && !isLoaded) {
+//            updateSteps();
+//        } else {
+//            ArrayList<Step> newList = new ArrayList<>(stepList);
+//            showSteps(newList);
+//        }
     }
 
-    private void init() {
-        stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepList, lesson, unit);
-        viewPager.setAdapter(stepAdapter);
+    @Override
+    public void onLessonCorrupted() {
+        // FIXME: 05.09.16 show placeholder
+        Toast.makeText(getContext(), "Sorry, link was broken", Toast.LENGTH_SHORT).show();
+    }
 
-        getActivity().setTitle(lesson.getTitle());
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    @Override
+    public void onLessonUnitPrepared(Lesson lesson, @org.jetbrains.annotations.Nullable Unit unit) {
+        init(lesson, unit);
+    }
 
+    private void initIndependentUI() {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -192,9 +181,19 @@ public class StepsFragment extends FragmentBase {
         });
     }
 
+    private void init(Lesson lesson, Unit unit) {
+        stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepList, lesson, unit);
+        viewPager.setAdapter(stepAdapter);
+
+        getActivity().setTitle(lesson.getTitle());
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
     @Override
     public void onDestroyView() {
         bus.unregister(this);
+        stepsPresenter.detachView(this);
         super.onDestroyView();
     }
 
@@ -250,10 +249,8 @@ public class StepsFragment extends FragmentBase {
                     }
                 }
             };
-            task.execute();
+            task.executeOnExecutor(mThreadPoolExecutor);
         }
-
-
     }
 
     private void pushState(int position) {
@@ -273,158 +270,157 @@ public class StepsFragment extends FragmentBase {
                 }
             };
             task.execute();
-
         }
     }
 
-    private void updateSteps() {
-        ProgressHelper.activate(progressBar);
-        getFromDbStepsTask = new FromDbStepTask(lesson);
-        getFromDbStepsTask.executeOnExecutor(mThreadPoolExecutor);
-    }
+//    private void updateSteps() {
+//        ProgressHelper.activate(progressBar);
+//        getFromDbStepsTask = new FromDbStepTask(lesson);
+//        getFromDbStepsTask.executeOnExecutor(mThreadPoolExecutor);
+//    }
 
-    @Subscribe
-    public void onFromDbStepEvent(FromDbStepEvent e) {
-        if (e.getLesson() == null || e.getLesson().getId() != lesson.getId()) {
-            return;
-        }
+//    @Subscribe
+//    public void onFromDbStepEvent(FromDbStepEvent e) {
+//        if (e.getLesson() == null || e.getLesson().getId() != lesson.getId()) {
+//            return;
+//        }
+//
+//        if (e.getStepList() != null && !e.getStepList().isEmpty() && lesson.getSteps() != null && e.getStepList().size() == lesson.getSteps().length) {
+//
+//            final List<Step> stepsFromDB = e.getStepList();
+//            showSteps(stepsFromDB);
+//            mShell.getApi().getSteps(lesson.getSteps()).enqueue(new Callback<StepResponse>() {
+//                @Override
+//                public void onResponse(Response<StepResponse> response, Retrofit retrofit) {
+//                    if (response.isSuccess()) {
+//                        bus.post(new SuccessLoadStepEvent(response.body().getSteps()));//update if we can
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Throwable t) {
+//                    //already show cached
+//                }
+//            });
+//        } else {
+//            mShell.getApi().getSteps(lesson.getSteps()).enqueue(new Callback<StepResponse>() {
+//                @Override
+//                public void onResponse(Response<StepResponse> response, Retrofit retrofit) {
+//                    if (response.isSuccess()) {
+//                        bus.post(new SuccessLoadStepEvent(response.body().getSteps()));
+//                    } else {
+//                        bus.post(new FailLoadStepEvent());
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Throwable t) {
+//                    bus.post(new FailLoadStepEvent());
+//                }
+//            });
+//        }
+//    }
 
-        if (e.getStepList() != null && !e.getStepList().isEmpty() && lesson.getSteps() != null && e.getStepList().size() == lesson.getSteps().length) {
-
-            final List<Step> stepsFromDB = e.getStepList();
-            showSteps(stepsFromDB);
-            mShell.getApi().getSteps(lesson.getSteps()).enqueue(new Callback<StepResponse>() {
-                @Override
-                public void onResponse(Response<StepResponse> response, Retrofit retrofit) {
-                    if (response.isSuccess()) {
-                        bus.post(new SuccessLoadStepEvent(response.body().getSteps()));//update if we can
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    //already show cached
-                }
-            });
-        } else {
-            mShell.getApi().getSteps(lesson.getSteps()).enqueue(new Callback<StepResponse>() {
-                @Override
-                public void onResponse(Response<StepResponse> response, Retrofit retrofit) {
-                    if (response.isSuccess()) {
-                        bus.post(new SuccessLoadStepEvent(response.body().getSteps()));
-                    } else {
-                        bus.post(new FailLoadStepEvent());
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    bus.post(new FailLoadStepEvent());
-                }
-            });
-        }
-    }
-
-    @Subscribe
-    public void onSuccessLoad(SuccessLoadStepEvent e) {
-        //// FIXME: 10.10.15 check right lesson ?? is it need?
-        final List<Step> steps = e.getSteps();
-
-        if (steps.isEmpty()) {
-            bus.post(new FailLoadStepEvent());
-        } else {
-            mShell.getApi().getAssignments(unit.getAssignments()).enqueue(new Callback<AssignmentResponse>() {
-                @Override
-                public void onResponse(Response<AssignmentResponse> response, Retrofit retrofit) {
-                    if (response.isSuccess()) {
-                        final List<Assignment> assignments = response.body().getAssignments();
-                        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                            @Override
-                            protected Void doInBackground(Void... params) {
-                                for (Assignment item : assignments) {
-                                    mDatabaseFacade.addAssignment(item);
-                                }
-                                return null;
-                            }
-                        };
-                        task.executeOnExecutor(mThreadPoolExecutor);
-
-                        final String[] progressIds = ProgressUtil.getAllProgresses(assignments);
-                        mShell.getApi().getProgresses(progressIds).enqueue(new Callback<ProgressesResponse>() {
-                            Unit localUnit = unit;
-
-                            @Override
-                            public void onResponse(final Response<ProgressesResponse> response, Retrofit retrofit) {
-                                if (response.isSuccess()) {
-                                    AsyncTask<Void, Void, Void> task1 = new AsyncTask<Void, Void, Void>() {
-                                        List<Progress> progresses;
-
-                                        @Override
-                                        protected Void doInBackground(Void... params) {
-                                            progresses = response.body().getProgresses();
-                                            for (Progress item : progresses) {
-                                                mDatabaseFacade.addProgress(item);
-                                            }
-                                            return null;
-                                        }
-
-                                        @Override
-                                        protected void onPostExecute(Void aVoid) {
-                                            super.onPostExecute(aVoid);
-                                            bus.post(new UpdateStepsState(localUnit, steps));
-                                        }
-                                    };
-                                    task1.executeOnExecutor(mThreadPoolExecutor);
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Throwable t) {
-                                if (steps != null && unit != null)
-                                    bus.post(new UpdateStepsState(unit, steps));
-                            }
-                        });
-
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    if (steps != null && unit != null)
-                        bus.post(new UpdateStepsState(unit, steps));
-                }
-            });
-
-
-        }
-    }
-
-    @Subscribe
-    public void onUpdateStepsState(final UpdateStepsState e) {
-        if (e.getUnit().getId() != unit.getId()) return;
-
-        final List<Step> localSteps = e.getSteps();
-
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                for (Step item : localSteps) {
-                    item.set_custom_passed(mDatabaseFacade.isStepPassed(item.getId()));
-                    mDatabaseFacade.addStep(item); // FIXME: 26.01.16 WARNING, this line is dangerous
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                if (stepList != null && stepAdapter != null && tabLayout != null) {
-                    showSteps(localSteps);
-                }
-            }
-        };
-        task.executeOnExecutor(mThreadPoolExecutor);
-    }
+//    @Subscribe
+//    public void onSuccessLoad(SuccessLoadStepEvent e) {
+//        //// FIXME: 10.10.15 check right lesson ?? is it need?
+//        final List<Step> steps = e.getSteps();
+//
+//        if (steps.isEmpty()) {
+//            bus.post(new FailLoadStepEvent());
+//        } else {
+//            mShell.getApi().getAssignments(unit.getAssignments()).enqueue(new Callback<AssignmentResponse>() {
+//                @Override
+//                public void onResponse(Response<AssignmentResponse> response, Retrofit retrofit) {
+//                    if (response.isSuccess()) {
+//                        final List<Assignment> assignments = response.body().getAssignments();
+//                        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+//                            @Override
+//                            protected Void doInBackground(Void... params) {
+//                                for (Assignment item : assignments) {
+//                                    mDatabaseFacade.addAssignment(item);
+//                                }
+//                                return null;
+//                            }
+//                        };
+//                        task.executeOnExecutor(mThreadPoolExecutor);
+//
+//                        final String[] progressIds = ProgressUtil.getAllProgresses(assignments);
+//                        mShell.getApi().getProgresses(progressIds).enqueue(new Callback<ProgressesResponse>() {
+//                            Unit localUnit = unit;
+//
+//                            @Override
+//                            public void onResponse(final Response<ProgressesResponse> response, Retrofit retrofit) {
+//                                if (response.isSuccess()) {
+//                                    AsyncTask<Void, Void, Void> task1 = new AsyncTask<Void, Void, Void>() {
+//                                        List<Progress> progresses;
+//
+//                                        @Override
+//                                        protected Void doInBackground(Void... params) {
+//                                            progresses = response.body().getProgresses();
+//                                            for (Progress item : progresses) {
+//                                                mDatabaseFacade.addProgress(item);
+//                                            }
+//                                            return null;
+//                                        }
+//
+//                                        @Override
+//                                        protected void onPostExecute(Void aVoid) {
+//                                            super.onPostExecute(aVoid);
+//                                            bus.post(new UpdateStepsState(localUnit, steps));
+//                                        }
+//                                    };
+//                                    task1.executeOnExecutor(mThreadPoolExecutor);
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Throwable t) {
+//                                if (steps != null && unit != null)
+//                                    bus.post(new UpdateStepsState(unit, steps));
+//                            }
+//                        });
+//
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Throwable t) {
+//                    if (steps != null && unit != null)
+//                        bus.post(new UpdateStepsState(unit, steps));
+//                }
+//            });
+//
+//
+//        }
+//    }
+//
+//    @Subscribe
+//    public void onUpdateStepsState(final UpdateStepsState e) {
+//        if (e.getUnit().getId() != unit.getId()) return;
+//
+//        final List<Step> localSteps = e.getSteps();
+//
+//        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Void... params) {
+//                for (Step item : localSteps) {
+//                    item.set_custom_passed(mDatabaseFacade.isStepPassed(item.getId()));
+//                    mDatabaseFacade.addStep(item); // FIXME: 26.01.16 WARNING, this line is dangerous
+//                }
+//                return null;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Void aVoid) {
+//                super.onPostExecute(aVoid);
+//                if (stepList != null && stepAdapter != null && tabLayout != null) {
+//                    showSteps(localSteps);
+//                }
+//            }
+//        };
+//        task.executeOnExecutor(mThreadPoolExecutor);
+//    }
 
     @Subscribe
     public void onUpdateOneStep(UpdateStepEvent e) {
@@ -450,76 +446,76 @@ public class StepsFragment extends FragmentBase {
         }
     }
 
-    private void showSteps(List<Step> steps) {
-        boolean isNumEquals = stepList.isEmpty() || steps.size() == stepList.size(); // hack for need updating view?
-        stepList.clear();
-        stepList.addAll(steps);
+//    private void showSteps(List<Step> steps) {
+//        boolean isNumEquals = stepList.isEmpty() || steps.size() == stepList.size(); // hack for need updating view?
+//        stepList.clear();
+//        stepList.addAll(steps);
+//
+//        if (!isLoaded) {
+//            stepAdapter.notifyDataSetChanged();
+//        }
+//        updateTabs();
+//        if (fromPreviousLesson && !isLoaded) {
+//            viewPager.setCurrentItem(stepList.size() - 1, false);
+////            int tabLayoutWidth = tabLayout.getMeasuredWidth();
+//            tabLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//                @Override
+//                public boolean onPreDraw() {
+//                    scrollTabLayoutToEnd(this);
+//                    return true;
+//                }
+//            });
+////            tabLayout.setScrollX(tabLayoutWidth);
+//            fromPreviousLesson = false;
+//        }
+//        isLoaded = true;
+//        tabLayout.setVisibility(View.VISIBLE);
+//        ProgressHelper.dismiss(progressBar);
+//        pushState(viewPager.getCurrentItem());
+//        checkOptionsMenu(viewPager.getCurrentItem());
+//
+//
+//        if (isLoaded && !isNumEquals) {
+//            //it is working only if teacher add steps in lesson and user has not cached new steps, but cached old.
+//            stepAdapter.notifyDataSetChanged();
+//            updateTabs();
+//        }
+//    }
+//
+//    private void scrollTabLayoutToEnd(ViewTreeObserver.OnPreDrawListener listener) {
+//        int tabWidth = tabLayout.getMeasuredWidth();
+//        if (tabWidth > 0) {
+//            tabLayout.getViewTreeObserver().removeOnPreDrawListener(listener);
+//
+//            int tabCount = tabLayout.getTabCount();
+//            int right = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(tabCount - 1).getRight(); //workaround to get really last element
+//            if (right >= tabWidth) {
+//                tabLayout.setScrollX(right);
+//            }
+//        }
+//    }
 
-        if (!isLoaded) {
-            stepAdapter.notifyDataSetChanged();
-        }
-        updateTabs();
-        if (fromPreviousLesson && !isLoaded) {
-            viewPager.setCurrentItem(stepList.size() - 1, false);
-//            int tabLayoutWidth = tabLayout.getMeasuredWidth();
-            tabLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                @Override
-                public boolean onPreDraw() {
-                    scrollTabLayoutToEnd(this);
-                    return true;
-                }
-            });
-//            tabLayout.setScrollX(tabLayoutWidth);
-            fromPreviousLesson = false;
-        }
-        isLoaded = true;
-        tabLayout.setVisibility(View.VISIBLE);
-        ProgressHelper.dismiss(progressBar);
-        pushState(viewPager.getCurrentItem());
-        checkOptionsMenu(viewPager.getCurrentItem());
-
-
-        if (isLoaded && !isNumEquals) {
-            //it is working only if teacher add steps in lesson and user has not cached new steps, but cached old.
-            stepAdapter.notifyDataSetChanged();
-            updateTabs();
-        }
-    }
-
-    private void scrollTabLayoutToEnd(ViewTreeObserver.OnPreDrawListener listener) {
-        int tabWidth = tabLayout.getMeasuredWidth();
-        if (tabWidth > 0) {
-            tabLayout.getViewTreeObserver().removeOnPreDrawListener(listener);
-
-            int tabCount = tabLayout.getTabCount();
-            int right = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(tabCount - 1).getRight(); //workaround to get really last element
-            if (right >= tabWidth) {
-                tabLayout.setScrollX(right);
-            }
-        }
-    }
-
-    @Subscribe
-    public void onFailLoad(FailLoadStepEvent e) {
-        Toast.makeText(getActivity(), notAvailableLessonString, Toast.LENGTH_LONG).show();
-        isLoaded = false;
-        ProgressHelper.dismiss(progressBar);
-    }
-
-    private void updateTabs() {
-        if (tabLayout.getTabCount() == 0) {
-            tabLayout.setupWithViewPager(viewPager);
-        }
-
-        for (int i = 0; i < stepAdapter.getCount(); i++) {
-            if (i < tabLayout.getTabCount() && i >= 0 && stepAdapter != null) {
-                TabLayout.Tab tab = tabLayout.getTabAt(i);
-                if (tab != null) {
-                    tab.setIcon(stepAdapter.getTabDrawable(i));
-                }
-            }
-        }
-    }
+//    @Subscribe
+//    public void onFailLoad(FailLoadStepEvent e) {
+//        Toast.makeText(getActivity(), notAvailableLessonString, Toast.LENGTH_LONG).show();
+//        isLoaded = false;
+//        ProgressHelper.dismiss(progressBar);
+//    }
+//
+//    private void updateTabs() {
+//        if (tabLayout.getTabCount() == 0) {
+//            tabLayout.setupWithViewPager(viewPager);
+//        }
+//
+//        for (int i = 0; i < stepAdapter.getCount(); i++) {
+//            if (i < tabLayout.getTabCount() && i >= 0 && stepAdapter != null) {
+//                TabLayout.Tab tab = tabLayout.getTabAt(i);
+//                if (tab != null) {
+//                    tab.setIcon(stepAdapter.getTabDrawable(i));
+//                }
+//            }
+//        }
+//    }
 
     @Subscribe
     public void onQualityDetermined(VideoQualityEvent e) {
