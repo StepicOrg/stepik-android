@@ -57,12 +57,26 @@ import retrofit.Retrofit;
 public class StepsFragment extends FragmentBase {
     private static final String TAG = "StepsFragment";
     private static final String FROM_PREVIOUS_KEY = "fromPrevKey";
+    private static final String SIMPLE_UNIT_ID_KEY = "simpleUnitId";
+    private static final String SIMPLE_LESSON_ID_KEY = "simpleLessonId";
+    private static final String SIMPLE_STEP_POSITION_KEY = "simpleStepPosition";
 
-    public static StepsFragment newInstance(Unit unit, Lesson lesson, boolean fromPreviousLesson) {
+    public static StepsFragment newInstance(@org.jetbrains.annotations.Nullable Unit unit, Lesson lesson, boolean fromPreviousLesson) {
         Bundle args = new Bundle();
         args.putParcelable(AppConstants.KEY_UNIT_BUNDLE, unit);
         args.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lesson);
         args.putBoolean(FROM_PREVIOUS_KEY, fromPreviousLesson);
+        StepsFragment fragment = new StepsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
+    public static StepsFragment newInstance(long simpleUnitId, long simpleLessonId, long simpleStepPosition) {
+        Bundle args = new Bundle();
+        args.putLong(SIMPLE_UNIT_ID_KEY, simpleUnitId);
+        args.putLong(SIMPLE_LESSON_ID_KEY, simpleLessonId);
+        args.putLong(SIMPLE_STEP_POSITION_KEY, simpleStepPosition);
         StepsFragment fragment = new StepsFragment();
         fragment.setArguments(args);
         return fragment;
@@ -85,8 +99,10 @@ public class StepsFragment extends FragmentBase {
 
     StepFragmentAdapter stepAdapter;
     private List<Step> stepList;
+
+    @Nullable
     private Unit unit;
-    private Lesson mLesson;
+    private Lesson lesson;
     private boolean isLoaded;
     private String qualityForView;
     private FromDbStepTask getFromDbStepsTask;
@@ -99,9 +115,29 @@ public class StepsFragment extends FragmentBase {
         setRetainInstance(true);
 
         unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
-        mLesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
+        lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
         fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
+
+        if (lesson == null) {
+            long lessonId = getArguments().getLong(SIMPLE_LESSON_ID_KEY);
+            if (lessonId < 0) {
+                onLessonCorrupted(); //// FIXME: 05.09.16 presenter?
+            } else {
+                //load...
+                Toast.makeText(getContext(), "Load " + lessonId, Toast.LENGTH_SHORT).show();
+            }
+            //todo move to onCreate and presenter
+            //todo add parsing of unit and default step position, after that run presenter for loading missing data
+            long unitId = getArguments().getLong(SIMPLE_UNIT_ID_KEY);
+            long defaultStepPos = getArguments().getLong(SIMPLE_STEP_POSITION_KEY);
+            Toast.makeText(getContext(), "data is parsed", Toast.LENGTH_SHORT).show();;
+        }
         stepList = new ArrayList<>();
+    }
+
+    private void onLessonCorrupted() {
+        // FIXME: 05.09.16 show placeholder
+        Toast.makeText(getContext(), "Sorry, link was broken", Toast.LENGTH_SHORT).show();
     }
 
     @Nullable
@@ -120,7 +156,7 @@ public class StepsFragment extends FragmentBase {
         bus.register(this);
         //isLoaded is retained and stepList too, but this method should be in attachView due to user can rotate device, when
         //loading is not finished. it can produce many requests, but it will be happen when user rotates device many times per second.
-        if (mLesson != null && mLesson.getSteps() != null && mLesson.getSteps().length != 0 && !isLoaded) {
+        if (lesson != null && lesson.getSteps() != null && lesson.getSteps().length != 0 && !isLoaded) {
             updateSteps();
         } else {
             ArrayList<Step> newList = new ArrayList<>(stepList);
@@ -129,10 +165,10 @@ public class StepsFragment extends FragmentBase {
     }
 
     private void init() {
-        stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepList, mLesson, unit);
+        stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepList, lesson, unit);
         viewPager.setAdapter(stepAdapter);
 
-        getActivity().setTitle(mLesson.getTitle());
+        getActivity().setTitle(lesson.getTitle());
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -243,21 +279,21 @@ public class StepsFragment extends FragmentBase {
 
     private void updateSteps() {
         ProgressHelper.activate(progressBar);
-        getFromDbStepsTask = new FromDbStepTask(mLesson);
+        getFromDbStepsTask = new FromDbStepTask(lesson);
         getFromDbStepsTask.executeOnExecutor(mThreadPoolExecutor);
     }
 
     @Subscribe
     public void onFromDbStepEvent(FromDbStepEvent e) {
-        if (e.getLesson() == null || e.getLesson().getId() != mLesson.getId()) {
+        if (e.getLesson() == null || e.getLesson().getId() != lesson.getId()) {
             return;
         }
 
-        if (e.getStepList() != null && !e.getStepList().isEmpty() && mLesson.getSteps() != null && e.getStepList().size() == mLesson.getSteps().length) {
+        if (e.getStepList() != null && !e.getStepList().isEmpty() && lesson.getSteps() != null && e.getStepList().size() == lesson.getSteps().length) {
 
             final List<Step> stepsFromDB = e.getStepList();
             showSteps(stepsFromDB);
-            mShell.getApi().getSteps(mLesson.getSteps()).enqueue(new Callback<StepResponse>() {
+            mShell.getApi().getSteps(lesson.getSteps()).enqueue(new Callback<StepResponse>() {
                 @Override
                 public void onResponse(Response<StepResponse> response, Retrofit retrofit) {
                     if (response.isSuccess()) {
@@ -271,7 +307,7 @@ public class StepsFragment extends FragmentBase {
                 }
             });
         } else {
-            mShell.getApi().getSteps(mLesson.getSteps()).enqueue(new Callback<StepResponse>() {
+            mShell.getApi().getSteps(lesson.getSteps()).enqueue(new Callback<StepResponse>() {
                 @Override
                 public void onResponse(Response<StepResponse> response, Retrofit retrofit) {
                     if (response.isSuccess()) {
@@ -297,9 +333,6 @@ public class StepsFragment extends FragmentBase {
         if (steps.isEmpty()) {
             bus.post(new FailLoadStepEvent());
         } else {
-//            ToDbStepTask task = new ToDbStepTask(lesson, steps);
-//            task.execute();
-
             mShell.getApi().getAssignments(unit.getAssignments()).enqueue(new Callback<AssignmentResponse>() {
                 @Override
                 public void onResponse(Response<AssignmentResponse> response, Retrofit retrofit) {

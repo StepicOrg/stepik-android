@@ -62,6 +62,8 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
 
     protected Step step;
     protected Lesson lesson;
+
+    @Nullable
     protected Unit unit;
 
     private final static String LOAD_DIALOG_TAG = "stepBaseFragmentLoad";
@@ -107,22 +109,24 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
         updateCommentState();
 
         routeStepPresenter.attachView(this);
-        nextLessonView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                routeStepPresenter.clickNextLesson(unit);
-            }
-        });
-        previousLessonView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                routeStepPresenter.clickPreviousLesson(unit);
-            }
-        });
+        if (unit != null) {
+            nextLessonView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    routeStepPresenter.clickNextLesson(unit);
+                }
+            });
+            previousLessonView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    routeStepPresenter.clickPreviousLesson(unit);
+                }
+            });
 
 
-        routeStepPresenter.checkStepForFirst(step.getId(), lesson, unit);
-        routeStepPresenter.checkStepForLast(step.getId(), lesson, unit);
+            routeStepPresenter.checkStepForFirst(step.getId(), lesson, unit);
+            routeStepPresenter.checkStepForLast(step.getId(), lesson, unit);
+        }
 
         bus.register(this);
     }
