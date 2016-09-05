@@ -104,5 +104,38 @@
                     android:pathPattern="/course/.*/syllabus.*"/>
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.activities.StepsActivity"
+            android:hardwareAccelerated="false"
+            android:label="@string/steps_title">
+
+            <intent-filter android:autoVerify="true" tools:ignore="UnusedAttribute">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:scheme="https"
+                    android:host="stepic.org"
+                    android:pathPattern="/lesson/.*/step/.*"/>
+
+                <data
+                    android:scheme="http"
+                    android:host="stepic.org"
+                    android:pathPattern="/lesson/.*/step/.*"/>
+
+                <data
+                    android:scheme="https"
+                    android:host="stepik.org"
+                    android:pathPattern="/lesson/.*/step/.*"/>
+
+                <data
+                    android:scheme="http"
+                    android:host="stepik.org"
+                    android:pathPattern="/lesson/.*/step/.*"/>
+            </intent-filter>
+
+        </activity>
+
     </application>
 </manifest>
