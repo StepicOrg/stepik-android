@@ -103,4 +103,6 @@ public interface IApi {
     Call<CommentsResponse> deleteComment(long commentId);
 
     Call<CertificateResponse> getCertificates();
+
+    Call<UnitStepicResponse> getUnitByLessonId (long lessonId);
 }

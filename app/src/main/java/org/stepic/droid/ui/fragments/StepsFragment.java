@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.VideoUrl;
 import org.stepic.droid.ui.adapters.StepFragmentAdapter;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.web.ViewAssignment;
 
 import java.util.ArrayList;
@@ -158,6 +160,11 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @Override
     public void onLessonUnitPrepared(Lesson lesson, @org.jetbrains.annotations.Nullable Unit unit) {
         init(lesson, unit);
+    }
+
+    @Override
+    public void onConnectionProblem() {
+
     }
 
     private void initIndependentUI() {
@@ -446,54 +453,54 @@ public class StepsFragment extends FragmentBase implements StepsView {
         }
     }
 
-//    private void showSteps(List<Step> steps) {
-//        boolean isNumEquals = stepList.isEmpty() || steps.size() == stepList.size(); // hack for need updating view?
-//        stepList.clear();
-//        stepList.addAll(steps);
-//
-//        if (!isLoaded) {
-//            stepAdapter.notifyDataSetChanged();
-//        }
-//        updateTabs();
-//        if (fromPreviousLesson && !isLoaded) {
-//            viewPager.setCurrentItem(stepList.size() - 1, false);
-////            int tabLayoutWidth = tabLayout.getMeasuredWidth();
-//            tabLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-//                @Override
-//                public boolean onPreDraw() {
-//                    scrollTabLayoutToEnd(this);
-//                    return true;
-//                }
-//            });
-////            tabLayout.setScrollX(tabLayoutWidth);
-//            fromPreviousLesson = false;
-//        }
-//        isLoaded = true;
-//        tabLayout.setVisibility(View.VISIBLE);
-//        ProgressHelper.dismiss(progressBar);
-//        pushState(viewPager.getCurrentItem());
-//        checkOptionsMenu(viewPager.getCurrentItem());
-//
-//
-//        if (isLoaded && !isNumEquals) {
-//            //it is working only if teacher add steps in lesson and user has not cached new steps, but cached old.
-//            stepAdapter.notifyDataSetChanged();
-//            updateTabs();
-//        }
-//    }
-//
-//    private void scrollTabLayoutToEnd(ViewTreeObserver.OnPreDrawListener listener) {
-//        int tabWidth = tabLayout.getMeasuredWidth();
-//        if (tabWidth > 0) {
-//            tabLayout.getViewTreeObserver().removeOnPreDrawListener(listener);
-//
-//            int tabCount = tabLayout.getTabCount();
-//            int right = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(tabCount - 1).getRight(); //workaround to get really last element
-//            if (right >= tabWidth) {
-//                tabLayout.setScrollX(right);
-//            }
-//        }
-//    }
+    private void showSteps(List<Step> steps) {
+        boolean isNumEquals = stepList.isEmpty() || steps.size() == stepList.size(); // hack for need updating view?
+        stepList.clear();
+        stepList.addAll(steps);
+
+        if (!isLoaded) {
+            stepAdapter.notifyDataSetChanged();
+        }
+        updateTabs();
+        if (fromPreviousLesson && !isLoaded) {
+            viewPager.setCurrentItem(stepList.size() - 1, false);
+//            int tabLayoutWidth = tabLayout.getMeasuredWidth();
+            tabLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    scrollTabLayoutToEnd(this);
+                    return true;
+                }
+            });
+//            tabLayout.setScrollX(tabLayoutWidth);
+            fromPreviousLesson = false;
+        }
+        isLoaded = true;
+        tabLayout.setVisibility(View.VISIBLE);
+        ProgressHelper.dismiss(progressBar);
+        pushState(viewPager.getCurrentItem());
+        checkOptionsMenu(viewPager.getCurrentItem());
+
+
+        if (isLoaded && !isNumEquals) {
+            //it is working only if teacher add steps in lesson and user has not cached new steps, but cached old.
+            stepAdapter.notifyDataSetChanged();
+            updateTabs();
+        }
+    }
+
+    private void scrollTabLayoutToEnd(ViewTreeObserver.OnPreDrawListener listener) {
+        int tabWidth = tabLayout.getMeasuredWidth();
+        if (tabWidth > 0) {
+            tabLayout.getViewTreeObserver().removeOnPreDrawListener(listener);
+
+            int tabCount = tabLayout.getTabCount();
+            int right = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(tabCount - 1).getRight(); //workaround to get really last element
+            if (right >= tabWidth) {
+                tabLayout.setScrollX(right);
+            }
+        }
+    }
 
 //    @Subscribe
 //    public void onFailLoad(FailLoadStepEvent e) {
@@ -502,20 +509,20 @@ public class StepsFragment extends FragmentBase implements StepsView {
 //        ProgressHelper.dismiss(progressBar);
 //    }
 //
-//    private void updateTabs() {
-//        if (tabLayout.getTabCount() == 0) {
-//            tabLayout.setupWithViewPager(viewPager);
-//        }
-//
-//        for (int i = 0; i < stepAdapter.getCount(); i++) {
-//            if (i < tabLayout.getTabCount() && i >= 0 && stepAdapter != null) {
-//                TabLayout.Tab tab = tabLayout.getTabAt(i);
-//                if (tab != null) {
-//                    tab.setIcon(stepAdapter.getTabDrawable(i));
-//                }
-//            }
-//        }
-//    }
+    private void updateTabs() {
+        if (tabLayout.getTabCount() == 0) {
+            tabLayout.setupWithViewPager(viewPager);
+        }
+
+        for (int i = 0; i < stepAdapter.getCount(); i++) {
+            if (i < tabLayout.getTabCount() && i >= 0 && stepAdapter != null) {
+                TabLayout.Tab tab = tabLayout.getTabAt(i);
+                if (tab != null) {
+                    tab.setIcon(stepAdapter.getTabDrawable(i));
+                }
+            }
+        }
+    }
 
     @Subscribe
     public void onQualityDetermined(VideoQualityEvent e) {

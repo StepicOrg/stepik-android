@@ -8,4 +8,6 @@ public interface StepsView {
     void onLessonCorrupted();
 
     void onLessonUnitPrepared(Lesson lesson, @Nullable Unit unit);
+
+    void onConnectionProblem();
 }

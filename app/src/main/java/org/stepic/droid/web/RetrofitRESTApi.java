@@ -635,6 +635,11 @@ public class RetrofitRESTApi implements IApi {
         return mLoggedService.getCertificates(userId);
     }
 
+    @Override
+    public Call<UnitStepicResponse> getUnitByLessonId(long lessonId) {
+        return mLoggedService.getUnitByLessonId(lessonId);
+    }
+
     @Nullable
     private Response getZendeskResponse() throws IOException {
         OkHttpClient client = new OkHttpClient();
