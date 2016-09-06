@@ -94,6 +94,8 @@ public class StepsFragment extends FragmentBase implements StepsView {
     private String qualityForView;
 
     private boolean fromPreviousLesson = false;
+    private boolean isFromPreviousLessonWorkaroundDoubleUpdate;
+
 
     @Inject
     StepsPresenter stepsPresenter;
@@ -138,6 +140,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
             init(stepsPresenter.getLesson(), stepsPresenter.getUnit());
             showSteps(stepList);
         }
+        isFromPreviousLessonWorkaroundDoubleUpdate = false;
         bus.register(this);
     }
 
@@ -392,7 +395,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         stepAdapter.notifyDataSetChanged();
 
         updateTabs();
-        if (fromPreviousLesson) {
+        if (fromPreviousLesson || isFromPreviousLessonWorkaroundDoubleUpdate) {
             viewPager.setCurrentItem(stepList.size() - 1, false);
             tabLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
@@ -402,6 +405,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
                 }
             });
             fromPreviousLesson = false;
+            isFromPreviousLessonWorkaroundDoubleUpdate = !isFromPreviousLessonWorkaroundDoubleUpdate;
         }
         tabLayout.setVisibility(View.VISIBLE);
         ProgressHelper.dismiss(progressBar);
