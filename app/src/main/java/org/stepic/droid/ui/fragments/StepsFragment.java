@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.StepModule;
@@ -38,7 +39,6 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.web.ViewAssignment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -52,6 +52,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
     private static final String SIMPLE_UNIT_ID_KEY = "simpleUnitId";
     private static final String SIMPLE_LESSON_ID_KEY = "simpleLessonId";
     private static final String SIMPLE_STEP_POSITION_KEY = "simpleStepPosition";
+    private boolean fromPreviousLesson;
 
     public static StepsFragment newInstance(@org.jetbrains.annotations.Nullable Unit unit, Lesson lesson, boolean fromPreviousLesson) {
         Bundle args = new Bundle();
@@ -89,13 +90,8 @@ public class StepsFragment extends FragmentBase implements StepsView {
     String notAvailableLessonString;
 
     StepFragmentAdapter stepAdapter;
-    private List<Step> stepList;
 
     private String qualityForView;
-
-    private boolean fromPreviousLesson = false;
-    private boolean isFromPreviousLessonWorkaroundDoubleUpdate;
-
 
     @Inject
     StepsPresenter stepsPresenter;
@@ -104,14 +100,12 @@ public class StepsFragment extends FragmentBase implements StepsView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
 
         MainApplication
                 .component()
                 .plus(new StepModule())
                 .inject(this);
-
-        fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
-        stepList = new ArrayList<>();
     }
 
     @Nullable
@@ -135,12 +129,11 @@ public class StepsFragment extends FragmentBase implements StepsView {
             long unitId = getArguments().getLong(SIMPLE_UNIT_ID_KEY);
             long defaultStepPos = getArguments().getLong(SIMPLE_STEP_POSITION_KEY);
             long lessonId = getArguments().getLong(SIMPLE_LESSON_ID_KEY);
-            stepsPresenter.init(lesson, unit, lessonId, unitId, defaultStepPos);
+            stepsPresenter.init(lesson, unit, lessonId, unitId, defaultStepPos, fromPreviousLesson);
+            fromPreviousLesson = false;
         } else {
-            init(stepsPresenter.getLesson(), stepsPresenter.getUnit());
-            showSteps(stepList);
+            stepsPresenter.init(null, null, -1, -1, -1, false);
         }
-        isFromPreviousLessonWorkaroundDoubleUpdate = false;
         bus.register(this);
     }
 
@@ -167,7 +160,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
     }
 
     private void init(Lesson lesson, Unit unit) {
-        stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepList, lesson, unit);
+        stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepsPresenter.getStepList(), lesson, unit);
         viewPager.setAdapter(stepAdapter);
 
         getActivity().setTitle(lesson.getTitle());
@@ -183,8 +176,8 @@ public class StepsFragment extends FragmentBase implements StepsView {
     }
 
     private void checkOptionsMenu(int position) {
-        if (stepList.size() <= position) return;
-        final Step step = stepList.get(position);
+        if (stepsPresenter.getStepList().size() <= position) return;
+        final Step step = stepsPresenter.getStepList().get(position);
 
         if (step.getBlock() == null || step.getBlock().getVideo() == null) {
             bus.post(new VideoQualityEvent(null, step.getId()));
@@ -239,22 +232,34 @@ public class StepsFragment extends FragmentBase implements StepsView {
     }
 
     private void pushState(int position) {
-        if (stepList.size() <= position) return;
-        final Step step = stepList.get(position);
+        if (stepsPresenter.getStepList().size() <= position) return;
+        final Step step = stepsPresenter.getStepList().get(position);
 
         if (mStepResolver.isViewedStatePost(step) && !step.is_custom_passed()) {
+            step.set_custom_passed(true);
+            if (position <= tabLayout.getTabCount()) {
+                TabLayout.Tab tab = tabLayout.getTabAt(position);
+                if (tab != null) {
+                    tab.setIcon(stepAdapter.getTabDrawable(position));
+                }
+            }
+
             //try to push viewed state to the server
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 long stepId = step.getId();
 
                 protected Void doInBackground(Void... params) {
-                    long assignmentID = mDatabaseFacade.getAssignmentIdByStepId(stepId);
+                    try {
+                        long assignmentID = mDatabaseFacade.getAssignmentIdByStepId(stepId);
 
-                    mShell.getScreenProvider().pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
+                        mShell.getScreenProvider().pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
+                    } catch (Exception exception) {
+                        analytic.reportError(Analytic.Error.FAIL_PUSH_STEP_VIEW, exception);
+                    }
                     return null;
                 }
             };
-            task.execute();
+            task.executeOnExecutor(mThreadPoolExecutor);
         }
     }
 
@@ -262,29 +267,24 @@ public class StepsFragment extends FragmentBase implements StepsView {
     public void onUpdateOneStep(UpdateStepEvent e) {
         long stepId = e.getStepId();
         Step step = null;
-        if (stepList != null) {
-            for (Step item : stepList) {
-                if (item.getId() == stepId) {
-                    step = item;
-                    break;
-                }
+        for (Step item : stepsPresenter.getStepList()) {
+            if (item.getId() == stepId) {
+                step = item;
+                break;
             }
         }
 
-        if (step != null) {
+        if (step != null && step.is_custom_passed()) {
+            // if not passed yet
             step.set_custom_passed(true);
             for (int i = 0; i < tabLayout.getTabCount(); i++) {
                 TabLayout.Tab tab = tabLayout.getTabAt(i);
-                tab.setIcon(stepAdapter.getTabDrawable(i));
+                if (tab != null) {
+                    tab.setIcon(stepAdapter.getTabDrawable(i));
+                }
             }
         }
     }
-
-    @Override
-    public void onEmptySteps() {
-        Toast.makeText(getContext(), "Empty steps", Toast.LENGTH_SHORT).show();
-    }
-
 
     private void scrollTabLayoutToEnd(ViewTreeObserver.OnPreDrawListener listener) {
         int tabWidth = tabLayout.getMeasuredWidth();
@@ -299,7 +299,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         }
     }
 
-    private void updateTabs() {
+    private void updateTabState() {
         if (tabLayout.getTabCount() == 0) {
             tabLayout.setupWithViewPager(viewPager);
         }
@@ -317,8 +317,8 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @Subscribe
     public void onQualityDetermined(VideoQualityEvent e) {
         int currentPosition = viewPager.getCurrentItem();
-        if (currentPosition < 0 || currentPosition >= stepList.size()) return;
-        long stepId = stepList.get(currentPosition).getId();
+        if (currentPosition < 0 || currentPosition >= stepsPresenter.getStepList().size()) return;
+        long stepId = stepsPresenter.getStepList().get(currentPosition).getId();
         if (e.getStepId() != stepId) return;
         qualityForView = e.getQuality();
         getActivity().invalidateOptionsMenu();
@@ -336,7 +336,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         }
 
         MenuItem comments = menu.findItem(R.id.action_comments);
-        if (stepList.isEmpty()) {
+        if (stepsPresenter.getStepList().isEmpty()) {
             comments.setVisible(false);
         } else {
             comments.setVisible(true);
@@ -348,11 +348,11 @@ public class StepsFragment extends FragmentBase implements StepsView {
         switch (item.getItemId()) {
             case R.id.action_comments:
                 int position = viewPager.getCurrentItem();
-                if (position < 0 || position >= stepList.size()) {
+                if (position < 0 || position >= stepsPresenter.getStepList().size()) {
                     return super.onOptionsItemSelected(item);
                 }
 
-                Step step = stepList.get(position);
+                Step step = stepsPresenter.getStepList().get(position);
                 mShell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
                 break;
             default:
@@ -380,23 +380,11 @@ public class StepsFragment extends FragmentBase implements StepsView {
     }
 
     @Override
-    public void updateTabState(List<Step> stepList) {
-        showSteps(stepList);
-    }
-
-    @Override
-    public void showSteps(List<Step> steps) {
-        boolean isNumEquals = stepList.isEmpty() || steps.size() == stepList.size(); // hack for need updating view?
-        if (steps != stepList) { // compae references
-            stepList.clear();
-            stepList.addAll(steps);
-        }
-
+    public void showSteps(boolean fromPreviousLesson, long defaultStepPosition) {
         stepAdapter.notifyDataSetChanged();
-
-        updateTabs();
-        if (fromPreviousLesson || isFromPreviousLessonWorkaroundDoubleUpdate) {
-            viewPager.setCurrentItem(stepList.size() - 1, false);
+        updateTabState();
+        if (fromPreviousLesson) {
+            viewPager.setCurrentItem(stepsPresenter.getStepList().size() - 1, false);
             tabLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
@@ -404,20 +392,20 @@ public class StepsFragment extends FragmentBase implements StepsView {
                     return true;
                 }
             });
-            fromPreviousLesson = false;
-            isFromPreviousLessonWorkaroundDoubleUpdate = !isFromPreviousLessonWorkaroundDoubleUpdate;
         }
         tabLayout.setVisibility(View.VISIBLE);
         ProgressHelper.dismiss(progressBar);
         pushState(viewPager.getCurrentItem());
         checkOptionsMenu(viewPager.getCurrentItem());
-
-
-        if (!isNumEquals) {
-            //it is working only if teacher add steps in lesson and user has not cached new steps, but cached old.
-            stepAdapter.notifyDataSetChanged();
-            updateTabs();
-        }
     }
 
+    @Override
+    public void onEmptySteps() {
+        Toast.makeText(getContext(), "Empty steps", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLoading() {
+        Toast.makeText(getContext(), "Loading...", Toast.LENGTH_SHORT).show();
+    }
 }

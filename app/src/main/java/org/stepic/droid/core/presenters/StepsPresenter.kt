@@ -27,18 +27,23 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
 
     var unit: Unit? = null
 
+    val stepList = ArrayList<Step>()
 
-    fun init(outLesson: Lesson?, outUnit: Unit?, simpleLessonId: Long, simpleUnitId: Long, defaultStepPositionStartWithOne: Long) {
-        if (this.lesson != null) {
-            //already loaded if THIS.Lesson != null
-            return
-        }
 
+    fun init(outLesson: Lesson?, outUnit: Unit?, simpleLessonId: Long, simpleUnitId: Long, defaultStepPositionStartWithOne: Long = -1, fromPreviousLesson: Boolean = false) {
         if (isLoading.get()) {
             return
         }
 
+        if (this.lesson != null) {
+            //already loaded if THIS.Lesson != null -> show
+            view?.onLessonUnitPrepared(lesson, unit)
+            view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
+            return
+        }
+
         isLoading.set(true)
+        view?.onLoading()
         lesson = outLesson
         unit = outUnit
         threadPoolExecutor.execute {
@@ -56,7 +61,7 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                 }
 
                 lesson?.let {
-                    val stepList = databaseFacade.getStepsOfLesson(it.id)
+                    val stepList: MutableList<Step> = databaseFacade.getStepsOfLesson(it.id).filterNotNull().toMutableList()
                     stepList.sortWith(Comparator { lhs, rhs ->
                         if (lhs == null || rhs == null) {
                             0.toInt()
@@ -69,9 +74,14 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
 
                     var isStepsShown = false
                     if (stepList.isNotEmpty() && it.steps?.size ?: -1 == stepList.size) {
+                        stepList.forEach {
+                            it.is_custom_passed = databaseFacade.isStepPassed(it)
+                        }
                         isStepsShown = true
                         mainHandler.post {
-                            view?.showSteps(stepList)
+                            this.stepList.clear()
+                            this.stepList.addAll(stepList)
+                            view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
                         }
                     }
 
@@ -102,15 +112,12 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                             }
                             return@execute
                         } else {
-                            //todo if shown?
-                            if (!isStepsShown) {
-                                isStepsShown = true
-                                mainHandler.post {
-                                    view?.showSteps(stepListFromInternet)
-                                }
-                            }
-
                             updateAssignmentsAndProgresses(stepListFromInternet, unit)
+                            mainHandler.post {
+                                this.stepList.clear()
+                                this.stepList.addAll(stepListFromInternet)
+                                view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
+                            }
                         }
                     }
                 }
@@ -145,11 +152,6 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                 it.is_custom_passed = databaseFacade.isStepPassed(it)
                 databaseFacade.addStep(it) // update step in db
             }
-
-            mainHandler.post {
-                view?.updateTabState(stepListFromInternet)
-            }
-
         } catch (exception: Exception) {
             //we already show steps, and we don't need onConnectionError
             //just return

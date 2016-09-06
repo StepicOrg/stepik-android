@@ -139,7 +139,15 @@ public class StepDaoImpl extends DaoBase<Step> {
             if (progress != null) {
                 step.set_custom_passed(progress.is_passed());
             }
+        } else {
+            if (step.getProgressId() != null) {
+                Progress progress = mProgressDao.get(DbStructureProgress.Column.ID, step.getProgressId());
+                if (progress != null) {
+                    step.set_custom_passed(progress.is_passed());
+                }
+            }
         }
+
     }
 
     @Override

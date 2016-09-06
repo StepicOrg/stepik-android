@@ -119,6 +119,7 @@ public interface Analytic {
         String CONFIG_NOT_PARSED = "configRelease, config.json problem";
         String ILLEGAL_STATE_NEXT_LESSON = "cant_show_next_lesson";
         String ILLEGAL_STATE_PREVIOUS_LESSON = "cant_show_previous_lesson";
+        String FAIL_PUSH_STEP_VIEW = "fail_push_step_view";
     }
 
     interface Web {

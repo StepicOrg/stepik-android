@@ -58,7 +58,6 @@ public class LocalProgressOfUnitManager implements ILocalProgressManager {
             }
         };
         mainHandler.post(myRunnable);
-
     }
 
     @Override
