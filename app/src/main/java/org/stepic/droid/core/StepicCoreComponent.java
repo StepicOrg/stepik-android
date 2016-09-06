@@ -4,7 +4,6 @@ import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.concurrency.DownloadPoster;
 import org.stepic.droid.concurrency.tasks.FromDbSectionTask;
-import org.stepic.droid.concurrency.tasks.FromDbStepTask;
 import org.stepic.droid.concurrency.tasks.FromDbUnitLessonTask;
 import org.stepic.droid.concurrency.tasks.ToDbSectionTask;
 import org.stepic.droid.concurrency.tasks.ToDbUnitLessonTask;
@@ -105,8 +104,6 @@ public interface StepicCoreComponent {
     void inject(ToDbUnitLessonTask stepicTask);
 
     void inject(ChooseCalendarDialog calendarDialog);
-
-    void inject(FromDbStepTask stepicTask);
 
     void inject(AllowMobileDataDialogFragment allowMobileDataDialogFragment);
 
