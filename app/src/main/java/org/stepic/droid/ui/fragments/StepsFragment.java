@@ -134,6 +134,9 @@ public class StepsFragment extends FragmentBase implements StepsView {
             long defaultStepPos = getArguments().getLong(SIMPLE_STEP_POSITION_KEY);
             long lessonId = getArguments().getLong(SIMPLE_LESSON_ID_KEY);
             stepsPresenter.init(lesson, unit, lessonId, unitId, defaultStepPos);
+        } else {
+            init(stepsPresenter.getLesson(), stepsPresenter.getUnit());
+            showSteps(stepList);
         }
         bus.register(this);
     }
@@ -381,8 +384,10 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @Override
     public void showSteps(List<Step> steps) {
         boolean isNumEquals = stepList.isEmpty() || steps.size() == stepList.size(); // hack for need updating view?
-        stepList.clear();
-        stepList.addAll(steps);
+        if (steps != stepList) { // compae references
+            stepList.clear();
+            stepList.addAll(steps);
+        }
 
         stepAdapter.notifyDataSetChanged();
 
