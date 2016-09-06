@@ -133,7 +133,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
             long unitId = getArguments().getLong(SIMPLE_UNIT_ID_KEY);
             long defaultStepPos = getArguments().getLong(SIMPLE_STEP_POSITION_KEY);
             long lessonId = getArguments().getLong(SIMPLE_LESSON_ID_KEY);
-            stepsPresenter.init(lesson, unit, unitId, defaultStepPos, lessonId);
+            stepsPresenter.init(lesson, unit, lessonId, unitId, defaultStepPos);
         }
         bus.register(this);
     }
