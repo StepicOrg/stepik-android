@@ -43,12 +43,12 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
         unit = outUnit
         threadPoolExecutor.execute {
             try {
-                if (lesson == null || unit == null) {
+                if (lesson == null) {
                     initUnitLessonWithIds(simpleLessonId, simpleUnitId)
                 }
 
                 //after that Lesson should be not null
-                if (lesson == null || unit == null) {
+                if (lesson == null) {
                     return@execute
                 }
                 mainHandler.post {
@@ -110,7 +110,7 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                                 }
                             }
 
-                            updateAssignmentsAndProgresses(stepListFromInternet, unit!!)
+                            updateAssignmentsAndProgresses(stepListFromInternet, unit)
                         }
                     }
                 }
@@ -121,14 +121,20 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
         }
     }
 
-    private fun updateAssignmentsAndProgresses(stepListFromInternet: List<Step>, unit: Unit) {
+    private fun updateAssignmentsAndProgresses(stepListFromInternet: List<Step>, unit: Unit?) {
         try {
-            val assignments = api.getAssignments(unit.assignments).execute().body().assignments
-            assignments.filterNotNull().forEach {
-                databaseFacade.addAssignment(assignment = it)
+            val progressIds: Array<out String?>
+            if (unit != null) {
+                val assignments = api.getAssignments(unit.assignments).execute().body().assignments
+                assignments.filterNotNull().forEach {
+                    databaseFacade.addAssignment(assignment = it)
+                }
+                progressIds = ProgressUtil.getAllProgresses(assignments)
+            } else {
+                progressIds = ProgressUtil.getAllProgresses(stepListFromInternet)
             }
 
-            val progressIds = ProgressUtil.getAllProgresses(assignments)
+
             val progresses = api.getProgresses(progressIds).execute().body().progresses
             progresses.filterNotNull().forEach {
                 databaseFacade.addProgress(progress = it)
@@ -136,7 +142,7 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
 
             //FIXME: Warning, it is mutable objects, which we show on StepsFragment and change here or not show, if we shown from database
             stepListFromInternet.forEach {
-                it.is_custom_passed = databaseFacade.isStepPassed(it.id)
+                it.is_custom_passed = databaseFacade.isStepPassed(it)
                 databaseFacade.addStep(it) // update step in db
             }
 
@@ -206,10 +212,7 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                 try {
                     unit = api.getUnits(longArrayOf(simpleUnitId)).execute()?.body()?.units?.firstOrNull()
                 } catch (ignored: Exception) {
-                    mainHandler.post {
-                        view?.onLessonCorrupted()
-                    }
-                    return
+                    // unit can be null for lesson, which is not in Course
                 }
                 if (!(unit?.lesson?.equals(simpleLessonId) ?: false)) {
                     //if lesson is not equal unit.lesson or something null
@@ -221,10 +224,6 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
 
             if (!(unit?.lesson?.equals(simpleLessonId) ?: false)) {
                 unit = null
-                mainHandler.post {
-                    view?.onLessonCorrupted()
-                }
-                return
             }
         }
     }
@@ -233,10 +232,7 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
         try {
             unit = api.getUnitByLessonId(simpleLessonId).execute()?.body()?.units?.firstOrNull()
         } catch (ignored: Exception) {
-            mainHandler.post {
-                view?.onLessonCorrupted()
-            }
-            return
+            // unit can be null for lesson, which is not in Course
         }
     }
 

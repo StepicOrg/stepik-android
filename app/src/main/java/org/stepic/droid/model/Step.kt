@@ -5,7 +5,11 @@ import android.os.Parcelable
 
 import java.io.Serializable
 
-class Step : Parcelable, Serializable {
+class Step : Parcelable, Serializable, IProgressable {
+    override fun getProgressId(): String? {
+        return progress
+    }
+
     var id: Long = 0
     var lesson: Long = 0
     var position: Long = 0

@@ -341,9 +341,14 @@ class DatabaseFacade {
         return progress?.is_passed ?: false
     }
 
-    fun isStepPassed(stepId: Long): Boolean {
-        val assignment = mAssignmentDao.get(DbStructureAssignment.Column.STEP_ID, stepId.toString()) ?: return false
-        val progressId = assignment.progress
+    fun isStepPassed(step: Step): Boolean {
+        val assignment = mAssignmentDao.get(DbStructureAssignment.Column.STEP_ID, step.id.toString())
+        val progressId: String?
+        if (assignment != null) {
+            progressId = assignment.progress
+        } else {
+            progressId = step.progress
+        }
         return isProgressViewed(progressId)
     }
 
