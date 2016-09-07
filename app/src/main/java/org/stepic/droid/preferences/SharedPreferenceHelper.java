@@ -367,6 +367,8 @@ public class SharedPreferenceHelper {
             }
             analytic.setUserId(userId);
             clear(PreferenceType.LOGIN);
+            clear(PreferenceType.FEATURED_FILTER);
+            clear(PreferenceType.ENROLLED_FILTER);
         } finally {
             RWLocks.AuthLock.writeLock().unlock();
         }
