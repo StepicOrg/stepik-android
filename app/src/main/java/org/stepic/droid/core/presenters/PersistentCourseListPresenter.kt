@@ -32,6 +32,9 @@ class PersistentCourseListPresenter(
     var isLoading = AtomicBoolean(false)
     var isEmptyCourses = AtomicBoolean(false)
 
+    //if hasNextPage & <MIN_COURSES_ON_SCREEN -> load next page
+    val MIN_COURSES_ON_SCREEN = 5
+
     fun restoreState() {
         if (isEmptyCourses.get() && !hasNextPage.get()) {
             view?.showEmptyCourses()
@@ -49,24 +52,7 @@ class PersistentCourseListPresenter(
         isLoading.set(true)
 
         threadPoolExecutor.execute {
-            val coursesBeforeLoading = databaseFacade.getAllCourses(courseType).filterNotNull()
-            if (coursesBeforeLoading.isNotEmpty() && currentPage.get() == 1) {
-                val filteredCourseList: List<Course>
-                if (!applyFilter && !sharedPreferenceHelper.getFilter(courseType).contains(StepikFilter.PERSISTENT)) {
-                    filteredCourseList = filterApplicator.getFilteredFromDefault(coursesBeforeLoading, courseType)
-                } else {
-                    filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(coursesBeforeLoading, courseType)
-                }
-                if (filteredCourseList.isNotEmpty()) {
-                    mainHandler.post {
-                        view?.showCourses(filteredCourseList)
-                    }
-                } else {
-                    mainHandler.post { view?.showLoading() }
-                }
-            } else {
-                mainHandler.post { view?.showLoading() }
-            }
+            getFromDatabaseAndShow(applyFilter, courseType)
 
             while (hasNextPage.get()) {
                 val response: Response<CoursesStepicResponse>?
@@ -100,7 +86,7 @@ class PersistentCourseListPresenter(
                     } else {
                         filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(allCourses, courseType)
                     }
-                    if (filteredCourseList.isEmpty() && hasNextPage.get()) {
+                    if (filteredCourseList.size < MIN_COURSES_ON_SCREEN && hasNextPage.get()) {
                         //try to load next in loop
                     } else {
                         mainHandler.post {
@@ -123,6 +109,27 @@ class PersistentCourseListPresenter(
             isLoading.set(false)
         }
 
+    }
+
+    private fun getFromDatabaseAndShow(applyFilter: Boolean, courseType: Table) {
+        val coursesBeforeLoading = databaseFacade.getAllCourses(courseType).filterNotNull()
+        if (coursesBeforeLoading.isNotEmpty() && currentPage.get() == 1) {
+            val filteredCourseList: List<Course>
+            if (!applyFilter && !sharedPreferenceHelper.getFilter(courseType).contains(StepikFilter.PERSISTENT)) {
+                filteredCourseList = filterApplicator.getFilteredFromDefault(coursesBeforeLoading, courseType)
+            } else {
+                filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(coursesBeforeLoading, courseType)
+            }
+            if (filteredCourseList.isNotEmpty()) {
+                mainHandler.post {
+                    view?.showCourses(filteredCourseList)
+                }
+            } else {
+                mainHandler.post { view?.showLoading() }
+            }
+        } else {
+            mainHandler.post { view?.showLoading() }
+        }
     }
 
     fun reportCurrentFiltersToAnalytic(courseType: Table) {
