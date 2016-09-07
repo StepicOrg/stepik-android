@@ -11,7 +11,7 @@
         android:id="@+id/player_thumbnail"
         android:layout_width="match_parent"
         android:layout_height="@dimen/video_height"
-        tools:src = "@drawable/video_placeholder"/>
+        tools:src = "@drawable/video_placeholder_color"/>
 
     <ImageView
         android:id="@+id/player_button"

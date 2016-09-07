@@ -37,13 +37,13 @@ public class VideoStepFragment extends StepBaseFragment {
     private static final String TAG = "video_fragment";
 
     @BindView(R.id.player_thumbnail)
-    ImageView mThumbnail;
+    ImageView thumbnail;
 
-    @BindDrawable(R.drawable.video_placeholder)
-    Drawable mVideoPlaceholder;
+    @BindDrawable(R.drawable.video_placeholder_color)
+    Drawable videoPlaceholder;
 
     @BindView(R.id.player_layout)
-    View mPlayer;
+    View player;
 
 
     @Nullable
@@ -69,7 +69,7 @@ public class VideoStepFragment extends StepBaseFragment {
             Glide.with(getContext())
                     .load("")
                     .placeholder(R.drawable.video_placeholder)
-                    .into(mThumbnail);
+                    .into(this.thumbnail);
         }
 
         if (step.getBlock().getVideo() == null) {
@@ -106,7 +106,7 @@ public class VideoStepFragment extends StepBaseFragment {
             resolveTask.execute();
 
         }
-        mPlayer.setOnClickListener(new View.OnClickListener() {
+        player.setOnClickListener(new View.OnClickListener() {
             Step localStep = step;
 
             @Override
@@ -154,8 +154,8 @@ public class VideoStepFragment extends StepBaseFragment {
         Uri uri = ThumbnailParser.getUriForThumbnail(thumbnail);
         Glide.with(getContext())
                 .load(uri)
-                .placeholder(mVideoPlaceholder)
-                .into(mThumbnail);
+                .placeholder(videoPlaceholder)
+                .into(this.thumbnail);
     }
 
     @Subscribe
