@@ -49,6 +49,8 @@
         <include layout="@layout/progress_bar_on_empty_screen"/>
 
         <include layout="@layout/drop_shadow_view"/>
+
+        <include layout="@layout/internet_fail_clickable"/>
     </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -60,72 +60,98 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                     view?.onLessonUnitPrepared(lesson, unit)
                 }
 
-                lesson?.let {
-                    val stepList: MutableList<Step> = databaseFacade.getStepsOfLesson(it.id).filterNotNull().toMutableList()
-                    stepList.sortWith(Comparator { lhs, rhs ->
-                        if (lhs == null || rhs == null) {
-                            0.toInt()
-                        } else {
-                            val lhsPos = lhs.position
-                            val rhsPos = rhs.position
-                            (lhsPos - rhsPos).toInt()
-                        }
-                    })
-
-                    var isStepsShown = false
-                    if (stepList.isNotEmpty() && it.steps?.size ?: -1 == stepList.size) {
-                        stepList.forEach {
-                            it.is_custom_passed = databaseFacade.isStepPassed(it)
-                        }
-                        isStepsShown = true
-                        mainHandler.post {
-                            this.stepList.clear()
-                            this.stepList.addAll(stepList)
-                            view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
-                        }
-                    }
-
-                    // and try to update from internet
-                    var response: Response<StepResponse>? = null
-                    try {
-                        response = api.getStepsByLessonId(it.id).execute()
-                    } catch (ex: Exception) {
-                        if (!isStepsShown) {
-                            mainHandler.post {
-                                view?.onConnectionProblem()
-                            }
-                            return@execute
-                        }
-                    }
-                    if (response == null) {
-                        if (!isStepsShown) {
-                            mainHandler.post {
-                                view?.onConnectionProblem()
-                            }
-                        }
-                        return@execute
-                    } else {
-                        val stepListFromInternet = response.body().steps
-                        if (stepListFromInternet.isEmpty()) {
-                            mainHandler.post {
-                                view?.onEmptySteps()
-                            }
-                            return@execute
-                        } else {
-                            updateAssignmentsAndProgresses(stepListFromInternet, unit)
-                            mainHandler.post {
-                                this.stepList.clear()
-                                this.stepList.addAll(stepListFromInternet)
-                                view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
-                            }
-                        }
-                    }
-                }
+                loadSteps(defaultStepPositionStartWithOne, fromPreviousLesson)
 
             } finally {
                 isLoading.set(false)
             }
         }
+    }
+
+    private fun loadSteps(defaultStepPositionStartWithOne: Long, fromPreviousLesson: Boolean) {
+        lesson?.let {
+            val stepList: MutableList<Step> = databaseFacade.getStepsOfLesson(it.id).filterNotNull().toMutableList()
+            stepList.sortWith(Comparator { lhs, rhs ->
+                if (lhs == null || rhs == null) {
+                    0.toInt()
+                } else {
+                    val lhsPos = lhs.position
+                    val rhsPos = rhs.position
+                    (lhsPos - rhsPos).toInt()
+                }
+            })
+
+            var isStepsShown = false
+            if (stepList.isNotEmpty() && it.steps?.size ?: -1 == stepList.size) {
+                stepList.forEach {
+                    it.is_custom_passed = databaseFacade.isStepPassed(it)
+                }
+                isStepsShown = true
+                mainHandler.post {
+                    this.stepList.clear()
+                    this.stepList.addAll(stepList)
+                    view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
+                }
+            }
+
+            // and try to update from internet
+            var response: Response<StepResponse>? = null
+            try {
+                response = api.getStepsByLessonId(it.id).execute()
+            } catch (ex: Exception) {
+                if (!isStepsShown) {
+                    mainHandler.post {
+                        view?.onConnectionProblem()
+                    }
+                    return
+                }
+            }
+            if (response == null) {
+                if (!isStepsShown) {
+                    mainHandler.post {
+                        view?.onConnectionProblem()
+                    }
+                }
+                return
+            } else {
+                val stepListFromInternet = response.body().steps
+                if (stepListFromInternet.isEmpty()) {
+                    mainHandler.post {
+                        view?.onEmptySteps()
+                    }
+                    return
+                } else {
+                    updateAssignmentsAndProgresses(stepListFromInternet, unit)
+                    mainHandler.post {
+                        this.stepList.clear()
+                        this.stepList.addAll(stepListFromInternet)
+                        view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
+                    }
+                }
+            }
+        }
+    }
+
+    fun refreshWhenOnConnectionProblem(outLesson: Lesson?, outUnit: Unit?, simpleLessonId: Long, simpleUnitId: Long, defaultStepPositionStartWithOne: Long = -1, fromPreviousLesson: Boolean = false) {
+        if (isLoading.get()) {
+            return
+        }
+
+        if (lesson == null) {
+            init(outLesson, outUnit, simpleLessonId, simpleUnitId, defaultStepPositionStartWithOne, fromPreviousLesson)
+
+        } else {
+            isLoading.set(true)
+            view?.onLoading()
+            threadPoolExecutor.execute {
+                try {
+                    loadSteps(defaultStepPositionStartWithOne, fromPreviousLesson)
+                } finally {
+                    isLoading.set(false)
+                }
+            }
+        }
+
     }
 
     private fun updateAssignmentsAndProgresses(stepListFromInternet: List<Step>, unit: Unit?) {

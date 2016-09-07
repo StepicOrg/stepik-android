@@ -25,7 +25,7 @@ public interface Analytic {
         String YES_CLEAR_VIDEOS = "clear videos from downloads";
         String DELETE_COMMENT_TRIAL = "comment: delete comment trial";
         String UPDATING_MESSAGE_IS_APPROVED = "updating approved";
-        String PULL_TO_REFRESH_COURSE = "Pull from top to refresh course";
+        String PULL_TO_REFRESH_COURSE = "Pull from top to refreshWhenOnConnectionProblem course";
         String COURSE_USER_TRY_FAIL = "course: user open failed for him course";
         String JOIN_COURSE_NULL = "course is null when join, detail";
         String CANCEL_CHOOSE_STORE_CLICK = "storage: cancel choice";
@@ -34,8 +34,8 @@ public interface Analytic {
         String CLICK_CANCEL_SECTION = "click cancel section";
         String CLICK_CANCEL_UNIT = "click cancel unit";
         String UPDATING_MESSAGE_IS_SHOWN = "updating shown";
-        String REFRESH_UNIT = "Pull from top to refresh section unit";
-        String REFRESH_SECTION = "Pull from top to refresh section";
+        String REFRESH_UNIT = "Pull from top to refreshWhenOnConnectionProblem section unit";
+        String REFRESH_SECTION = "Pull from top to refreshWhenOnConnectionProblem section";
         String SUCCESS_LOGIN = "success login";
         String SHOW_DETAILED_INFO_CLICK = "Show detailed info click from context menu of course";
         String LONG_TAP_COURSE = "Long tap on course";

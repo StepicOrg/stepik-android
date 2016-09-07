@@ -105,8 +105,11 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @BindView(R.id.load_progressbar)
     ProgressBar progressBar;
 
-    @BindString(R.string.not_available_lesson)
-    String notAvailableLessonString;
+    @BindView(R.id.report_problem)
+    View reportProblem;
+
+    @BindString(R.string.connectionProblems)
+    String connectioinProblemString;
 
     StepFragmentAdapter stepAdapter;
 
@@ -159,6 +162,19 @@ public class StepsFragment extends FragmentBase implements StepsView {
 
     private void initIndependentUI() {
         viewPager.addOnPageChangeListener(pageChangeListener);
+        reportProblem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Lesson lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
+                Unit unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
+                long unitId = getArguments().getLong(SIMPLE_UNIT_ID_KEY);
+                long defaultStepPos = getArguments().getLong(SIMPLE_STEP_POSITION_KEY);
+                long lessonId = getArguments().getLong(SIMPLE_LESSON_ID_KEY);
+                fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
+                stepsPresenter.refreshWhenOnConnectionProblem(lesson, unit, lessonId, unitId, defaultStepPos, fromPreviousLesson);
+                fromPreviousLesson = false;
+            }
+        });
     }
 
     private void init(Lesson lesson, Unit unit) {
@@ -177,6 +193,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         if (pageChangeListener != null) {
             viewPager.removeOnPageChangeListener(pageChangeListener);
         }
+        reportProblem.setOnClickListener(null);
         super.onDestroyView();
     }
 
@@ -369,6 +386,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @Override
     public void onLessonCorrupted() {
         ProgressHelper.dismiss(progressBar);
+        reportProblem.setVisibility(View.GONE);
         // FIXME: 05.09.16 show placeholder
         Toast.makeText(getContext(), "Sorry, link was broken", Toast.LENGTH_SHORT).show();
     }
@@ -381,12 +399,17 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @Override
     public void onConnectionProblem() {
         ProgressHelper.dismiss(progressBar);
-        Toast.makeText(getActivity(), notAvailableLessonString, Toast.LENGTH_LONG).show();
+        if (stepsPresenter.getStepList().isEmpty()) {
+            reportProblem.setVisibility(View.VISIBLE);
+        } else {
+            Toast.makeText(getActivity(), connectioinProblemString, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     public void showSteps(boolean fromPreviousLesson, long defaultStepPosition) {
         ProgressHelper.dismiss(progressBar);
+        reportProblem.setVisibility(View.GONE);
         stepAdapter.notifyDataSetChanged();
         updateTabState();
         if (fromPreviousLesson) {
@@ -407,6 +430,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @Override
     public void onEmptySteps() {
         ProgressHelper.dismiss(progressBar);
+        reportProblem.setVisibility(View.GONE);
         Toast.makeText(getContext(), "Empty steps", Toast.LENGTH_SHORT).show();
     }
 
@@ -415,5 +439,6 @@ public class StepsFragment extends FragmentBase implements StepsView {
         if (stepsPresenter.getStepList().isEmpty()) {
             ProgressHelper.activate(progressBar);
         }
+        reportProblem.setVisibility(View.GONE);
     }
 }

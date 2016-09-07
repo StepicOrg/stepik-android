@@ -346,8 +346,8 @@ public class RetrofitRESTApi implements IApi {
         if (type == SocialManager.SocialType.google) {
 
 
-            // Start the retrieval process for a server auth code.  If requested, ask for a refresh
-            // token.  Otherwise, only get an access token if a refresh token has been previously
+            // Start the retrieval process for a server auth code.  If requested, ask for a refreshWhenOnConnectionProblem
+            // token.  Otherwise, only get an access token if a refreshWhenOnConnectionProblem token has been previously
             // retrieved.  Getting a new access token for an existing grant does not require
             // user consent.
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
