@@ -54,6 +54,25 @@ public class StepsFragment extends FragmentBase implements StepsView {
     private static final String SIMPLE_STEP_POSITION_KEY = "simpleStepPosition";
     private boolean fromPreviousLesson;
 
+    private final ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            hideSoftKeypad();
+            pushState(position);
+            checkOptionsMenu(position);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
+
     public static StepsFragment newInstance(@org.jetbrains.annotations.Nullable Unit unit, Lesson lesson, boolean fromPreviousLesson) {
         Bundle args = new Bundle();
         args.putParcelable(AppConstants.KEY_UNIT_BUNDLE, unit);
@@ -139,24 +158,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
 
 
     private void initIndependentUI() {
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                hideSoftKeypad();
-                pushState(position);
-                checkOptionsMenu(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+        viewPager.addOnPageChangeListener(pageChangeListener);
     }
 
     private void init(Lesson lesson, Unit unit) {
@@ -172,6 +174,9 @@ public class StepsFragment extends FragmentBase implements StepsView {
     public void onDestroyView() {
         bus.unregister(this);
         stepsPresenter.detachView(this);
+        if (pageChangeListener != null) {
+            viewPager.removeOnPageChangeListener(pageChangeListener);
+        }
         super.onDestroyView();
     }
 
@@ -361,9 +366,9 @@ public class StepsFragment extends FragmentBase implements StepsView {
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     public void onLessonCorrupted() {
+        ProgressHelper.dismiss(progressBar);
         // FIXME: 05.09.16 show placeholder
         Toast.makeText(getContext(), "Sorry, link was broken", Toast.LENGTH_SHORT).show();
     }
@@ -375,12 +380,13 @@ public class StepsFragment extends FragmentBase implements StepsView {
 
     @Override
     public void onConnectionProblem() {
-        Toast.makeText(getActivity(), notAvailableLessonString, Toast.LENGTH_LONG).show();
         ProgressHelper.dismiss(progressBar);
+        Toast.makeText(getActivity(), notAvailableLessonString, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void showSteps(boolean fromPreviousLesson, long defaultStepPosition) {
+        ProgressHelper.dismiss(progressBar);
         stepAdapter.notifyDataSetChanged();
         updateTabState();
         if (fromPreviousLesson) {
@@ -394,18 +400,20 @@ public class StepsFragment extends FragmentBase implements StepsView {
             });
         }
         tabLayout.setVisibility(View.VISIBLE);
-        ProgressHelper.dismiss(progressBar);
         pushState(viewPager.getCurrentItem());
         checkOptionsMenu(viewPager.getCurrentItem());
     }
 
     @Override
     public void onEmptySteps() {
+        ProgressHelper.dismiss(progressBar);
         Toast.makeText(getContext(), "Empty steps", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onLoading() {
-        Toast.makeText(getContext(), "Loading...", Toast.LENGTH_SHORT).show();
+        if (stepsPresenter.getStepList().isEmpty()) {
+            ProgressHelper.activate(progressBar);
+        }
     }
 }
