@@ -218,7 +218,7 @@ public class MainFeedActivity extends BackToExitActivityBase
             Fragment fragment = fragmentManager.findFragmentById(R.id.frame);
             fragmentManager.popBackStackImmediate();
             fragmentManager.beginTransaction().remove(fragment).commit();
-            if (mCurrentIndex == 0) {
+            if (mCurrentIndex == 0 || fragmentManager.getBackStackEntryCount() <= 0) {
                 finish();
             } else {
                 mCurrentIndex = 0;
