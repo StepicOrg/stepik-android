@@ -86,12 +86,24 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         super.onViewCreated(view, savedInstanceState);
         bus.register(this);
         courseListPresenter.attachView(this);
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                courseListPresenter.downloadData(getCourseType(), needFilter);
-            }
-        });
+
+        if (savedInstanceState == null) {
+            //reset all data
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    courseListPresenter.refreshData(getCourseType(), needFilter);
+                }
+            });
+        } else {
+            //load if not
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    courseListPresenter.downloadData(getCourseType(), needFilter);
+                }
+            });
+        }
         courseListPresenter.restoreState();
     }
 
