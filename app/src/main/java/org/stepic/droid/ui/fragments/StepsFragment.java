@@ -328,13 +328,12 @@ public class StepsFragment extends FragmentBase implements StepsView {
         }
     }
 
-    private void scrollTabLayoutToEnd(ViewTreeObserver.OnPreDrawListener listener) {
+    private void scrollTabLayoutToPosition(ViewTreeObserver.OnPreDrawListener listener, int finalPosition) {
         int tabWidth = tabLayout.getMeasuredWidth();
         if (tabWidth > 0) {
             tabLayout.getViewTreeObserver().removeOnPreDrawListener(listener);
 
-            int tabCount = tabLayout.getTabCount();
-            int right = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(tabCount - 1).getRight(); //workaround to get really last element
+            int right = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(finalPosition).getRight(); //workaround to get really last element
             if (right >= tabWidth) {
                 tabLayout.setScrollX(right);
             }
@@ -439,12 +438,22 @@ public class StepsFragment extends FragmentBase implements StepsView {
         emptySteps.setVisibility(View.GONE);
         stepAdapter.notifyDataSetChanged();
         updateTabState();
+
+        int position = -1;
+
         if (fromPreviousLesson) {
-            viewPager.setCurrentItem(stepsPresenter.getStepList().size() - 1, false);
+            position = stepsPresenter.getStepList().size() - 1;
+        } else {
+            position = (int) defaultStepPosition - 1; //default step position is number for steps steps[0] is 1st stepPosition
+        }
+
+        if (position > 0 && position < stepsPresenter.getStepList().size()) { //0 is default, if more -> scroll
+            viewPager.setCurrentItem(position, false);
+            final int finalPosition = position;
             tabLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
-                    scrollTabLayoutToEnd(this);
+                    scrollTabLayoutToPosition(this, finalPosition);
                     return true;
                 }
             });
