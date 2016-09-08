@@ -47,7 +47,7 @@ class StepsActivity : SingleFragmentActivity() {
             val simpleLessonId: Long = getSimpleLessonId(dataUri)
             val simpleStepPosition: Long = getStepPosition(dataUri)
             val simpleUnitId: Long = getUnitSimpleId(dataUri)
-            return  StepsFragment.newInstance(simpleUnitId, simpleLessonId, simpleStepPosition)
+            return StepsFragment.newInstance(simpleUnitId, simpleLessonId, simpleStepPosition)
 
         } else {
             return StepsFragment.newInstance(unit, lesson, fromPrevious)
@@ -76,13 +76,11 @@ class StepsActivity : SingleFragmentActivity() {
         if (raw == null) {
             return -1L;
         } else {
-            var result = -1L
             try {
-                result = java.lang.Long.parseLong(raw)
+                return java.lang.Long.parseLong(raw)
             } catch (numberFormatException: NumberFormatException) {
                 return -1L
             }
-            return result
         }
     }
 
