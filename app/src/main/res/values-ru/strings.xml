@@ -227,4 +227,5 @@
     <string name="timing_past_title">Прошедшие</string>
     <string name="save_filter_title">Применять этот фильтр всегда</string>
     <string name="accept">Принять</string>
+    <string name="lesson_not_found_or_not_access">Урок не существует или у Вас нет прав на его просмотр</string>
 </resources>

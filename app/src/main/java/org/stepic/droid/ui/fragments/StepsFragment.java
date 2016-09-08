@@ -108,6 +108,9 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @BindView(R.id.report_problem)
     View reportProblem;
 
+    @BindView(R.id.corrupted_lesson)
+    View corruptedLesson;
+
     @BindString(R.string.connectionProblems)
     String connectioinProblemString;
 
@@ -387,8 +390,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
     public void onLessonCorrupted() {
         ProgressHelper.dismiss(progressBar);
         reportProblem.setVisibility(View.GONE);
-        // FIXME: 05.09.16 show placeholder
-        Toast.makeText(getContext(), "Sorry, link was broken", Toast.LENGTH_SHORT).show();
+        corruptedLesson.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -399,6 +401,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @Override
     public void onConnectionProblem() {
         ProgressHelper.dismiss(progressBar);
+        corruptedLesson.setVisibility(View.GONE);
         if (stepsPresenter.getStepList().isEmpty()) {
             reportProblem.setVisibility(View.VISIBLE);
         } else {
@@ -410,6 +413,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
     public void showSteps(boolean fromPreviousLesson, long defaultStepPosition) {
         ProgressHelper.dismiss(progressBar);
         reportProblem.setVisibility(View.GONE);
+        corruptedLesson.setVisibility(View.GONE);
         stepAdapter.notifyDataSetChanged();
         updateTabState();
         if (fromPreviousLesson) {
@@ -431,6 +435,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
     public void onEmptySteps() {
         ProgressHelper.dismiss(progressBar);
         reportProblem.setVisibility(View.GONE);
+        corruptedLesson.setVisibility(View.GONE);
         Toast.makeText(getContext(), "Empty steps", Toast.LENGTH_SHORT).show();
     }
 
@@ -440,5 +445,6 @@ public class StepsFragment extends FragmentBase implements StepsView {
             ProgressHelper.activate(progressBar);
         }
         reportProblem.setVisibility(View.GONE);
+        corruptedLesson.setVisibility(View.GONE);
     }
 }
