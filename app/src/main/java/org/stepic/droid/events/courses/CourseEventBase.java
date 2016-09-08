@@ -1,15 +1,15 @@
 package org.stepic.droid.events.courses;
 
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.store.operations.Table;
 
 public abstract class CourseEventBase {
-    private DatabaseFacade.Table mType;
+    private Table mType;
 
-    CourseEventBase(DatabaseFacade.Table type) {
+    CourseEventBase(Table type) {
         mType = type;
     }
 
-    public final DatabaseFacade.Table getType() {
+    public final Table getType() {
         return mType;
     }
 }

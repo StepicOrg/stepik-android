@@ -47,6 +47,7 @@ public interface Analytic {
         String CLICK_NEXT_LESSON_IN_STEPS = "click_next_lesson_in_steps";
         String CLICK_PREVIOUS_LESSON_IN_STEPS = "click_previous_lesson_in_steps";
         String CLICK_SIGN_IN_SOCIAL = "social_login";
+        String CLICK_ACCEPT_FILTER_BUTTON = "click_accept_filter_btn";
     }
 
     interface Screens {
@@ -181,6 +182,12 @@ public interface Analytic {
         String COPY_LINK_CERTIFICATE = "certificate_copy_link";
         String SHARE_LINK_CERTIFICATE = "certificate_share";
         String ADD_LINKEDIN = "certificate_add_linkeding";
+    }
+
+    interface Filters {
+        String FILTERS_CANCELED = "filters_canceled";
+        String FILTERS_NEED_UPDATE = "filters_need_update";
+        String FILTER_APPLIED_IN_INTERFACE_WITH_PARAMS = "filters_params";
     }
 
     void reportEvent(String eventName, Bundle bundle);

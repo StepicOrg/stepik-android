@@ -41,6 +41,8 @@ public  class CourseDaoImpl extends DaoBase<Course> {
         int indexTitle = cursor.getColumnIndex(DBStructureCourses.Column.TITLE);
         int indexLanguage = cursor.getColumnIndex(DBStructureCourses.Column.LANGUAGE);
         int indexBeginDateSource = cursor.getColumnIndex(DBStructureCourses.Column.BEGIN_DATE_SOURCE);
+        int indexBeginDate = cursor.getColumnIndex(DBStructureCourses.Column.BEGIN_DATE);
+        int indexEndDate = cursor.getColumnIndex(DBStructureCourses.Column.END_DATE);
         int indexLastDeadline = cursor.getColumnIndex(DBStructureCourses.Column.LAST_DEADLINE);
         int indexDescription = cursor.getColumnIndex(DBStructureCourses.Column.DESCRIPTION);
         int indexInstructors = cursor.getColumnIndex(DBStructureCourses.Column.INSTRUCTORS);
@@ -82,6 +84,8 @@ public  class CourseDaoImpl extends DaoBase<Course> {
         course.setSlug(cursor.getString(indexSlug));
         course.setSchedule_link(cursor.getString(indexScheduleLink));
         course.setSchedule_long_link(cursor.getString(indexScheduleLongLink));
+        course.setBegin_date(cursor.getString(indexBeginDate));
+        course.setEnd_date(cursor.getString(indexEndDate));
         return course;
     }
 
@@ -116,6 +120,9 @@ public  class CourseDaoImpl extends DaoBase<Course> {
 
         values.put(DBStructureCourses.Column.SCHEDULE_LINK, course.getSchedule_link());
         values.put(DBStructureCourses.Column.SCHEDULE_LONG_LINK, course.getSchedule_long_link());
+
+        values.put(DBStructureCourses.Column.BEGIN_DATE, course.getBegin_date());
+        values.put(DBStructureCourses.Column.END_DATE, course.getEnd_date());
 
         Video video = course.getIntro_video();
         if (video != null) {

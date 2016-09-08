@@ -8,6 +8,7 @@ import org.stepic.droid.events.joining_course.SuccessJoinEvent
 import org.stepic.droid.model.Course
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.store.operations.Table
 import org.stepic.droid.web.IApi
 import retrofit.Callback
 import retrofit.Response
@@ -36,10 +37,10 @@ class CourseJoinerPresenter(
 
                         localCopy.enrollment = localCopy.courseId.toInt()
 
-                        val updateCourseTask = UpdateCourseTask(DatabaseFacade.Table.enrolled, localCopy)
+                        val updateCourseTask = UpdateCourseTask(Table.enrolled, localCopy)
                         updateCourseTask.executeOnExecutor(threadPoolExecutor)
 
-                        val updateCourseFeaturedTask = UpdateCourseTask(DatabaseFacade.Table.featured, localCopy)
+                        val updateCourseFeaturedTask = UpdateCourseTask(Table.featured, localCopy)
                         updateCourseFeaturedTask.executeOnExecutor(threadPoolExecutor)
 
                         bus.post(SuccessJoinEvent(localCopy)) //todo reamke without bus

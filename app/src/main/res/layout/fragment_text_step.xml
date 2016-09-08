@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:scrollbarStyle="outsideOverlay"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbarStyle="outsideOverlay">
+        <include
+            layout="@layout/step_text_header"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        <include layout="@layout/open_comment_view"/>
 
-            <include
-                layout="@layout/step_text_header"/>
-
-            <include layout="@layout/open_comment_view"/>
-            <include layout="@layout/next_lesson_view"/>
-        </LinearLayout>
-    </ScrollView>
-    <include layout="@layout/drop_shadow_view"/>
-</FrameLayout>
+        <include layout="@layout/next_lesson_view"/>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

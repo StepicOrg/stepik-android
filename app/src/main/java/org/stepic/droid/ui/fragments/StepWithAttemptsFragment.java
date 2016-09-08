@@ -6,13 +6,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -35,16 +35,16 @@ import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Submission;
-import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
+import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.web.AttemptResponse;
 import org.stepic.droid.web.SubmissionResponse;
 
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.BindDrawable;
 import butterknife.BindString;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
@@ -72,7 +72,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     View connectionProblem;
 
     @BindView(R.id.root_scroll_view)
-    protected ScrollView mRootScrollView;
+    protected NestedScrollView mRootScrollView;
 
     @BindView(R.id.attempt_container)
     ViewGroup mAttemptContainer;

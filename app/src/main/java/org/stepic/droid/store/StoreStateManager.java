@@ -16,6 +16,7 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.store.operations.Table;
 
 import java.util.List;
 
@@ -150,7 +151,7 @@ public class StoreStateManager implements IStoreStateManager {
     @Deprecated
     private void updateCourseAfterDeleting(long courseId) {
 
-        Course course = mDatabaseFacade.getCourseById(courseId, DatabaseFacade.Table.enrolled);
+        Course course = mDatabaseFacade.getCourseById(courseId, Table.enrolled);
         if (course == null) {
             analytic.reportError(Analytic.Error.NULL_COURSE, new Exception("update Course after deleting"));
             return;
@@ -158,7 +159,7 @@ public class StoreStateManager implements IStoreStateManager {
         if (course.is_cached() || course.is_loading()) {
             course.set_cached(false);
             course.set_loading(false);
-            mDatabaseFacade.updateOnlyCachedLoadingCourse(course, DatabaseFacade.Table.enrolled);
+            mDatabaseFacade.updateOnlyCachedLoadingCourse(course, Table.enrolled);
         }
     }
 
@@ -195,10 +196,10 @@ public class StoreStateManager implements IStoreStateManager {
 
     @Deprecated
     private void updateCourseState(long courseId) {
-        Course course = mDatabaseFacade.getCourseById(courseId, DatabaseFacade.Table.enrolled);
+        Course course = mDatabaseFacade.getCourseById(courseId, Table.enrolled);
         if (course == null) {
-            course = mDatabaseFacade.getCourseById(courseId, DatabaseFacade.Table.featured);
-            mDatabaseFacade.addCourse(course, DatabaseFacade.Table.enrolled);
+            course = mDatabaseFacade.getCourseById(courseId, Table.featured);
+            mDatabaseFacade.addCourse(course, Table.enrolled);
         }
         List<Section> sections = mDatabaseFacade.getAllSectionsOfCourse(course);
         for (Section section : sections) {
@@ -212,6 +213,6 @@ public class StoreStateManager implements IStoreStateManager {
 
         course.set_loading(false);
         course.set_cached(true);
-        mDatabaseFacade.updateOnlyCachedLoadingCourse(course, DatabaseFacade.Table.enrolled);
+        mDatabaseFacade.updateOnlyCachedLoadingCourse(course, Table.enrolled);
     }
 }

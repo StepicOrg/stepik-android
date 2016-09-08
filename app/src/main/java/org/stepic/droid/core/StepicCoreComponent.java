@@ -3,11 +3,9 @@ package org.stepic.droid.core;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.concurrency.DownloadPoster;
-import org.stepic.droid.concurrency.tasks.FromDbCoursesTask;
 import org.stepic.droid.concurrency.tasks.FromDbSectionTask;
 import org.stepic.droid.concurrency.tasks.FromDbStepTask;
 import org.stepic.droid.concurrency.tasks.FromDbUnitLessonTask;
-import org.stepic.droid.concurrency.tasks.ToDbCoursesTask;
 import org.stepic.droid.concurrency.tasks.ToDbSectionTask;
 import org.stepic.droid.concurrency.tasks.ToDbUnitLessonTask;
 import org.stepic.droid.concurrency.tasks.UpdateCourseTask;
@@ -65,6 +63,10 @@ public interface StepicCoreComponent {
 
     StepComponent plus(StepModule module);
 
+    FilterComponent plus(FilterModule module);
+
+    CourseListComponent plus(CourseListModule module);
+
     void inject(FragmentActivityBase someActivity);
 
     void inject(SectionActivity someActivity);
@@ -91,8 +93,6 @@ public interface StepicCoreComponent {
 
 
     //All Tasks:
-
-    void inject(ToDbCoursesTask stepicTask);
 
     void inject(UpdateCourseTask stepicTask);
 
@@ -137,8 +137,6 @@ public interface StepicCoreComponent {
     void inject(CancelLoadingService service);
 
     void inject(DownloadClickReceiver downloadClickReceiver);
-
-    void inject(FromDbCoursesTask fromDbCoursesTask);
 
     void inject(MyPhoneStateListener receiver);
 

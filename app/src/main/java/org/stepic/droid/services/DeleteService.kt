@@ -14,6 +14,7 @@ import org.stepic.droid.model.Unit
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.IStoreStateManager
 import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.store.operations.Table
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.resolvers.IVideoResolver
 import org.stepic.droid.web.IApi
@@ -52,7 +53,7 @@ class DeleteService : IntentService("delete_service") {
             when (type) {
                 LoadService.LoadTypeKey.Course -> {
                     val course = intent.getSerializableExtra(AppConstants.KEY_COURSE_BUNDLE) as? Course
-                    val tableType = intent.getSerializableExtra(AppConstants.KEY_TABLE_TYPE) as? DatabaseFacade.Table
+                    val tableType = intent.getSerializableExtra(AppConstants.KEY_TABLE_TYPE) as? Table
                     removeFromDisk(course)
                 }
                 LoadService.LoadTypeKey.Section -> {

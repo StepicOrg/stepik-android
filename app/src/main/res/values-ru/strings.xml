@@ -194,7 +194,7 @@
     <string name="recent_activity_discussion">Свежие обновления</string>
     <string name="copy_text_label">Скопировать текст</string>
     <string name="calendar_title">Календарь</string>
-    <string name="calendar_detail">У заданий в данном курсе есть крайний срок сдачи. Для того, чтобы пройти задание вовремя и получить сертификат, мы рекомендуем, добавить в календарь крайние сроки сдачи и получать напоминания за 2 дня до их наступления. Управлять появлением данного сообщения можно в настройках приложения. </string>
+    <string name="calendar_detail">У заданий в данном курсе есть крайний срок сдачи. Для того, чтобы пройти задание вовремя и получить сертификат, мы рекомендуем добавить в календарь крайние сроки сдачи и получать напоминания за 2 дня до их наступления. Управлять появлением данного сообщения можно в настройках приложения. </string>
     <string name="add_to_the_calendar">Добавить в календарь</string>
     <string name="explain_calendar_permission">Для добавления дедлайнов в календарь приложение должно иметь доступ к календарю. Мы не изменяем и не просматриваем Ваши события, только добавляем дедлайны.</string>
     <string name="calendar_setting_description">Показывать виджет добавления в календарь</string>
@@ -221,4 +221,10 @@
     <string name="language_en_filter">Английский</string>
     <string name="language_ru_filter">Русский</string>
     <string name="course_language_title">Язык курса</string>
+    <string name="timing_active_title">Активные</string>
+    <string name="timing_upcoming_title">Ближайшие</string>
+    <string name="timing_title">Время проведения</string>
+    <string name="timing_past_title">Прошедшие</string>
+    <string name="save_filter_title">Применять этот фильтр всегда</string>
+    <string name="accept">Принять</string>
 </resources>

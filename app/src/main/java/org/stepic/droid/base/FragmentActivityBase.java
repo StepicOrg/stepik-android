@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -16,6 +17,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.core.ILessonSessionManager;
 import org.stepic.droid.core.ILoginManager;
 import org.stepic.droid.core.IShell;
@@ -23,6 +25,7 @@ import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.ui.fragments.MyCoursesFragment;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.IStepResolver;
 
@@ -38,6 +41,9 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     protected Unbinder unbinder;
+
+    @Inject
+    protected DefaultFilter defaultFilter;
 
     @Inject
     protected IConfig mConfig;
@@ -115,14 +121,20 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if( unbinder!=null) {
+        if (unbinder != null) {
             unbinder.unbind();
         }
     }
 
     protected void setFragment(@IdRes int res, Fragment fragment) {
-        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(res, fragment, fragment.getClass().toString());
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(res, fragment, fragment.getClass().getSimpleName());
+        int countInBackStack = fragmentManager.getBackStackEntryCount();
+        boolean isRootScreen = MyCoursesFragment.class.getSimpleName().equals(fragment.getClass().getSimpleName());
+        if ((isRootScreen && countInBackStack < 1) || (!isRootScreen && countInBackStack < 2)) {
+            fragmentTransaction.addToBackStack(fragment.getClass().getSimpleName());
+        }
         fragmentTransaction.commit();
     }
 

@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -30,6 +31,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.squareup.otto.Subscribe;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
@@ -48,12 +50,17 @@ import org.stepic.droid.ui.fragments.DownloadsFragment;
 import org.stepic.droid.ui.fragments.FeedbackFragment;
 import org.stepic.droid.ui.fragments.FindCoursesFragment;
 import org.stepic.droid.ui.fragments.MyCoursesFragment;
+import org.stepic.droid.ui.util.BackButtonHandler;
 import org.stepic.droid.ui.util.LogoutSuccess;
+import org.stepic.droid.ui.util.OnBackClickListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.web.EmailAddressResponse;
 import org.stepic.droid.web.StepicProfileResponse;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindDrawable;
@@ -65,7 +72,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class MainFeedActivity extends BackToExitActivityBase
-        implements NavigationView.OnNavigationItemSelectedListener, LogoutSuccess {
+        implements NavigationView.OnNavigationItemSelectedListener, LogoutSuccess, BackButtonHandler {
     public static final String KEY_CURRENT_INDEX = "Current_index";
 
     @BindView(R.id.toolbar)
@@ -81,7 +88,6 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     TextView mUserNameTextView;
 
-
     @BindString(R.string.my_courses_title)
     String mCoursesTitle;
 
@@ -91,6 +97,8 @@ public class MainFeedActivity extends BackToExitActivityBase
     private int mCurrentIndex;
 
     GoogleApiClient mGoogleApiClient;
+
+    private List<WeakReference<OnBackClickListener>> onBackClickListenerList = new ArrayList<>(4);
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -214,7 +222,18 @@ public class MainFeedActivity extends BackToExitActivityBase
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            fragmentBackKeyIntercept();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Fragment fragment = fragmentManager.findFragmentById(R.id.frame);
+            fragmentManager.popBackStackImmediate();
+            fragmentManager.beginTransaction().remove(fragment).commit();
+            if (mCurrentIndex == 0 || fragmentManager.getBackStackEntryCount() <= 0) {
+                finish();
+            } else {
+                mCurrentIndex = 0;
+                mNavigationView.setCheckedItem(R.id.my_courses);
+                setTitle(R.string.my_courses_title);
+            }
         }
     }
 
@@ -307,6 +326,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     }
 
     private void setFragment(MenuItem menuItem) {
+        fragmentBackKeyIntercept(); //on back when fragment is changed (work for filter feature)
         Fragment shortLifetimeRef = null;
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame);
         String tag = null;
@@ -350,7 +370,7 @@ public class MainFeedActivity extends BackToExitActivityBase
 
             if (fragment != null) {
                 String before = fragment.getTag();
-                String now = shortLifetimeRef.getClass().toString();
+                String now = shortLifetimeRef.getClass().getSimpleName();
                 if (!before.equals(now)) {
                     setFragment(R.id.frame, shortLifetimeRef);
                 }
@@ -446,5 +466,35 @@ public class MainFeedActivity extends BackToExitActivityBase
         Auth.GoogleSignInApi.signOut(mGoogleApiClient);
         mSharedPreferenceHelper.deleteAuthInfo();
         mShell.getScreenProvider().showLaunchScreen(MainApplication.getAppContext(), false);
+    }
+
+    private boolean fragmentBackKeyIntercept() {
+        if (onBackClickListenerList != null) {
+            for (WeakReference<OnBackClickListener> weakReference : onBackClickListenerList) {
+                if (weakReference != null) {
+                    OnBackClickListener listener = weakReference.get();
+                    if (listener != null) {
+                        listener.onBackClick();
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void setBackClickListener(@NotNull OnBackClickListener onBackClickListener) {
+        this.onBackClickListenerList.add(new WeakReference<>(onBackClickListener));
+    }
+
+    @Override
+    public void removeBackClickListener(@NotNull OnBackClickListener onBackClickListener) {
+        for (Iterator<WeakReference<OnBackClickListener>> iterator = onBackClickListenerList.iterator();
+             iterator.hasNext(); ) {
+            WeakReference<OnBackClickListener> weakRef = iterator.next();
+            if (weakRef.get() == onBackClickListener) {
+                iterator.remove();
+            }
+        }
     }
 }

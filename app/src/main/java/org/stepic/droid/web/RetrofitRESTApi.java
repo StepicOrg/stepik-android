@@ -44,6 +44,7 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.HtmlHelper;
@@ -681,7 +682,7 @@ public class RetrofitRESTApi implements IApi {
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
-                    mDbManager.clearCacheCourses(DatabaseFacade.Table.enrolled);
+                    mDbManager.clearCacheCourses(Table.enrolled);
                     return null;
                 }
             };

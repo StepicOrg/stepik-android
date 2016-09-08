@@ -1,8 +1,11 @@
 package org.stepic.droid.base;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -14,182 +17,77 @@ import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.concurrency.tasks.FromDbCoursesTask;
-import org.stepic.droid.concurrency.tasks.ToDbCoursesTask;
-import org.stepic.droid.events.courses.FailCoursesDownloadEvent;
+import org.stepic.droid.core.CourseListModule;
+import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
+import org.stepic.droid.core.presenters.contracts.FilterForCoursesView;
 import org.stepic.droid.events.courses.FailDropCourseEvent;
-import org.stepic.droid.events.courses.FinishingGetCoursesFromDbEvent;
-import org.stepic.droid.events.courses.FinishingSaveCoursesToDbEvent;
-import org.stepic.droid.events.courses.GettingCoursesFromDbSuccessEvent;
-import org.stepic.droid.events.courses.PreLoadCoursesEvent;
-import org.stepic.droid.events.courses.StartingGetCoursesFromDbEvent;
-import org.stepic.droid.events.courses.StartingSaveCoursesToDbEvent;
-import org.stepic.droid.events.courses.SuccessCoursesDownloadEvent;
 import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.KotlinUtil;
-import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.ui.fragments.CourseListFragmentBase;
-import org.stepic.droid.web.CoursesStepicResponse;
+import org.stepic.droid.ui.util.BackButtonHandler;
+import org.stepic.droid.ui.util.OnBackClickListener;
+import org.stepic.droid.util.AppConstants;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase {
-    protected ToDbCoursesTask mDbSaveCoursesTask;
-    protected FromDbCoursesTask mDbFromCoursesTask;
+public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase implements FilterForCoursesView, OnBackClickListener {
     private static final int FILTER_REQUEST_CODE = 776;
+
+    private boolean needFilter = false;
+
+    @Inject
+    PersistentCourseListPresenter courseListPresenter;
+
+    BackButtonHandler backButtonHandler = null;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        Activity rootActivity = getActivity();
+        if (rootActivity != null && rootActivity instanceof BackButtonHandler) {
+            backButtonHandler = ((BackButtonHandler) rootActivity);
+            backButtonHandler.setBackClickListener(this);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
+
+        MainApplication.component()
+                .plus(new CourseListModule())
+                .inject(this);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.my_courses_menu, menu); //hide in 1.15
+        inflater.inflate(R.menu.my_courses_menu, menu); //hide in 1.15
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_filter_menu:
-                mShell.getScreenProvider().showFilterScreen(this, FILTER_REQUEST_CODE);
+                mShell.getScreenProvider().showFilterScreen(this, FILTER_REQUEST_CODE, getCourseType());
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        bus.register(this);
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                getAndShowDataFromCache();
-            }
-        });
-    }
-
-    protected void showCourses(List<Course> cachedCourses) {
-        if (cachedCourses == null) return;
-        if (!cachedCourses.isEmpty()) {
-            showEmptyScreen(false);
-            mReportConnectionProblem.setVisibility(View.GONE);
-        }
-
-        mCourses.clear();
-        cachedCourses = KotlinUtil.INSTANCE.filterIfNotUnique(cachedCourses);
-        if (getCourseType() == DatabaseFacade.Table.enrolled) {
-            for (Course course : cachedCourses) {
-                if (course.getEnrollment() != 0)
-                    mCourses.add(course);
-            }
-        } else {
-            mCourses.addAll(cachedCourses);
-        }
-
-        mCoursesAdapter.notifyDataSetChanged();
-    }
-
-    private void saveDataToCache(List<Course> courses) {
-        mDbSaveCoursesTask = new ToDbCoursesTask(courses, getCourseType(), mCurrentPage);
-        mDbSaveCoursesTask.executeOnExecutor(mThreadPoolExecutor);
-    }
-
-
-    public void getAndShowDataFromCache() {
-        mDbFromCoursesTask = new FromDbCoursesTask(getCourseType()) {
-            @Override
-            protected void onSuccess(List<Course> courses) {
-                super.onSuccess(courses);
-                bus.post(new GettingCoursesFromDbSuccessEvent(getCourseType(), courses));
-            }
-        };
-        mDbFromCoursesTask.executeOnExecutor(mThreadPoolExecutor);
-    }
-
-    @Subscribe
-    public void onPreLoad(PreLoadCoursesEvent e) {
-        isLoading = true;
-        if (mCourses.isEmpty()) {
-            ProgressHelper.activate(mSwipeRefreshLayout);
-        } else if (mSwipeRefreshLayout != null && !mSwipeRefreshLayout.isRefreshing()) {
-            mFooterDownloadingView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Subscribe
-    public void onSuccessDataLoad(SuccessCoursesDownloadEvent e) {
-        Response<CoursesStepicResponse> response = e.getResponse();
-        if (response.body() != null &&
-                response.body().getCourses() != null &&
-                response.body().getCourses().size() != 0) {
-            CoursesStepicResponse coursesStepicResponse = response.body();
-            ProgressHelper.dismiss(mSwipeRefreshLayout);
-            saveDataToCache(coursesStepicResponse.getCourses());
-
-            mHasNextPage = coursesStepicResponse.getMeta().getHas_next();
-            if (mHasNextPage) {
-                mCurrentPage = coursesStepicResponse.getMeta().getPage() + 1;
-            }
-        } else {
-            mHasNextPage = false;
-            mReportConnectionProblem.setVisibility(View.GONE);
-            showEmptyScreen(true);
-
-            mFooterDownloadingView.setVisibility(View.GONE);
-            ProgressHelper.dismiss(mSwipeRefreshLayout);
-        }
-        isLoading = false;
-    }
-
-    @Subscribe
-    public void onFailureDataLoad(FailCoursesDownloadEvent e) {
-        super.onFailureDataLoad(e);
-    }
-
-
-    @Subscribe
-    public void onStartingSaveToDb(StartingSaveCoursesToDbEvent e) {
-//        ProgressHelper.activate(mSwipeRefreshLayout);
-    }
-
-    @Subscribe
-    public void onFinishingSaveToDb(FinishingSaveCoursesToDbEvent e) {
-        ProgressHelper.dismiss(mSwipeRefreshLayout);
-        getAndShowDataFromCache();
-    }
-
-    @Subscribe
-    public void onStartingGetFromDb(StartingGetCoursesFromDbEvent e) {
-//        ProgressHelper.activate(mSwipeRefreshLayout);
-    }
-
-    @Subscribe
-    public void onFinishingGetFromDb(FinishingGetCoursesFromDbEvent e) {
-        ProgressHelper.dismiss(mSwipeRefreshLayout);
-        if (mFooterDownloadingView != null) mFooterDownloadingView.setVisibility(View.GONE);
-
-        if (e.getResult() != null && e.getResult().size() == 0)
-            downloadData();
-    }
-
-    @Subscribe
-    public void onGettingFromDbSuccess(GettingCoursesFromDbSuccessEvent e) {
-        showCourses(e.getCourses());
     }
 
     @Override
@@ -201,35 +99,49 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        bus.register(this);
+        courseListPresenter.attachView(this);
+
+        if (savedInstanceState == null) {
+            //reset all data
+            needFilter = false;
+            mCourses.clear();
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    courseListPresenter.refreshData(getCourseType(), needFilter);
+                }
+            });
+        } else {
+            //load if not
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    courseListPresenter.downloadData(getCourseType(), needFilter);
+                }
+            });
+        }
+        courseListPresenter.restoreState();
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public void onDestroyView() {
         bus.unregister(this);
+        courseListPresenter.detachView(this);
         super.onDestroyView();
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo
+            menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
@@ -246,7 +158,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     public boolean onContextItemSelected(MenuItem item) {
         analytic.reportEvent(Analytic.Interaction.LONG_TAP_COURSE);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int position = info.position;
         switch (item.getItemId()) {
             case R.id.menu_item_info:
                 showInfo(info.position);
@@ -280,11 +191,11 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                     new Handler().post(new Runnable() {
                         @Override
                         public void run() {
-                            mDatabaseFacade.deleteCourse(localRef, DatabaseFacade.Table.enrolled);
+                            mDatabaseFacade.deleteCourse(localRef, Table.enrolled);
 
-                            if (mDatabaseFacade.getCourseById(course.getCourseId(), DatabaseFacade.Table.featured) != null) {
+                            if (mDatabaseFacade.getCourseById(course.getCourseId(), Table.featured) != null) {
                                 localRef.setEnrollment(0);
-                                mDatabaseFacade.addCourse(localRef, DatabaseFacade.Table.featured);
+                                mDatabaseFacade.addCourse(localRef, Table.featured);
                             }
 
                         }
@@ -311,7 +222,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         }
         analytic.reportEvent(Analytic.Web.DROP_COURSE_SUCCESSFUL, courseId + "");
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + e.getCourse().getTitle(), Toast.LENGTH_LONG).show();
-        if (e.getType() == DatabaseFacade.Table.enrolled) {
+        if (e.getType() == Table.enrolled) {
             mCourses.remove(e.getCourse());
             mCoursesAdapter.notifyDataSetChanged();
         }
@@ -347,20 +258,85 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                 if (course != null && enrollment != 0) {
                     updateEnrollment(course, enrollment);
                 }
+            }
 
+            if (requestCode == FILTER_REQUEST_CODE) {
+                analytic.reportEvent(Analytic.Filters.FILTERS_NEED_UPDATE);
+                needFilter = true; // not last filter? check it
+                mCourses.clear();
+                mCoursesAdapter.notifyDataSetChanged();
+                courseListPresenter.reportCurrentFiltersToAnalytic(getCourseType());
+                courseListPresenter.refreshData(getCourseType(), needFilter);
+            }
+        }
+
+        if (resultCode == FragmentActivity.RESULT_CANCELED) {
+            if (requestCode == FILTER_REQUEST_CODE) {
+                analytic.reportEvent(Analytic.Filters.FILTERS_CANCELED);
             }
         }
     }
 
     @Override
     public void showEmptyScreen(boolean isShowed) {
+
         if (isShowed) {
-            mEmptyCoursesView.setVisibility(View.VISIBLE);
+            if (getCourseType() == Table.enrolled) {
+                mEmptyCoursesView.setVisibility(View.VISIBLE);
+                mEmptySearch.setVisibility(View.GONE);
+            } else {
+                mEmptyCoursesView.setVisibility(View.GONE);
+                mEmptySearch.setVisibility(View.VISIBLE);
+            }
             mSwipeRefreshLayout.setVisibility(View.GONE);
         } else {
+            mEmptySearch.setVisibility(View.GONE);
             mEmptyCoursesView.setVisibility(View.GONE);
             mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-
         }
+    }
+
+    @Override
+    public void onNeedDownloadNextPage() {
+        courseListPresenter.downloadData(getCourseType(), needFilter);
+    }
+
+    @Override
+    public void clearAndShowLoading() {
+        mCourses.clear();
+        mCoursesAdapter.notifyDataSetChanged();
+        showLoading();
+    }
+
+    @Override
+    public void showFilteredCourses(@NotNull List<Course> filteredList) {
+        showCourses(filteredList);
+    }
+
+    @Override
+    public void onRefresh() {
+        analytic.reportEvent(Analytic.Interaction.PULL_TO_REFRESH_COURSE);
+        courseListPresenter.refreshData(getCourseType(), needFilter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public boolean onBackClick() {
+        mSharedPreferenceHelper.onTryDiscardFilters(getCourseType());
+        return false;
+    }
+
+
+    @Override
+    public void onDetach() {
+        if (backButtonHandler != null) {
+            backButtonHandler.removeBackClickListener(this);
+            backButtonHandler = null;
+        }
+        super.onDetach();
     }
 }
