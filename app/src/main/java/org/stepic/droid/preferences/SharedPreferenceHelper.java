@@ -122,12 +122,12 @@ public class SharedPreferenceHelper {
     }
 
     private void resetFilters(Table type) {
-        if (!getBoolean(PreferenceType.ENROLLED_FILTER, FILTER_PERSISTENT, false)) {
-            if (type == Table.enrolled) {
-                clear(PreferenceType.ENROLLED_FILTER);
-            } else {
-                clear(PreferenceType.FEATURED_FILTER);
-            }
+        if (type == Table.enrolled && !getBoolean(PreferenceType.ENROLLED_FILTER, FILTER_PERSISTENT, defaultFilter.getDefaultEnrolled(StepikFilter.PERSISTENT))) {
+            clear(PreferenceType.ENROLLED_FILTER);
+        }
+
+        if (type == Table.featured && !getBoolean(PreferenceType.FEATURED_FILTER, FILTER_PERSISTENT, defaultFilter.getDefaultFeatured(StepikFilter.PERSISTENT))) {
+            clear(PreferenceType.FEATURED_FILTER);
         }
     }
 
