@@ -120,6 +120,9 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @BindString(R.string.connectionProblems)
     String connectioinProblemString;
 
+    @BindView(R.id.empty_steps)
+    View emptySteps;
+
     StepFragmentAdapter stepAdapter;
 
     private String qualityForView;
@@ -405,6 +408,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         ProgressHelper.dismiss(progressBar);
         reportProblem.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
+        emptySteps.setVisibility(View.GONE);
         corruptedLesson.setVisibility(View.VISIBLE);
     }
 
@@ -418,6 +422,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         ProgressHelper.dismiss(progressBar);
         corruptedLesson.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
+        emptySteps.setVisibility(View.GONE);
         if (stepsPresenter.getStepList().isEmpty()) {
             reportProblem.setVisibility(View.VISIBLE);
         } else {
@@ -431,6 +436,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         reportProblem.setVisibility(View.GONE);
         corruptedLesson.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
+        emptySteps.setVisibility(View.GONE);
         stepAdapter.notifyDataSetChanged();
         updateTabState();
         if (fromPreviousLesson) {
@@ -454,7 +460,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         reportProblem.setVisibility(View.GONE);
         corruptedLesson.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
-        Toast.makeText(getContext(), "Empty steps", Toast.LENGTH_SHORT).show();
+        emptySteps.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -465,6 +471,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         reportProblem.setVisibility(View.GONE);
         corruptedLesson.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
+        emptySteps.setVisibility(View.GONE);
     }
 
     @Override
@@ -472,6 +479,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         ProgressHelper.dismiss(progressBar);
         reportProblem.setVisibility(View.GONE);
         corruptedLesson.setVisibility(View.GONE);
+        emptySteps.setVisibility(View.GONE);
         authView.setVisibility(View.VISIBLE);
     }
 }

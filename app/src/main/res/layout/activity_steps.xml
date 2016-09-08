@@ -56,6 +56,8 @@
 
         <include layout="@layout/need_auth_placeholder"/>
 
+        <include layout="@layout/empty_steps"/>
+
     </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

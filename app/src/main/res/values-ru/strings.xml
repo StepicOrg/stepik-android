@@ -230,4 +230,5 @@
     <string name="lesson_not_found_or_not_access">Урок не существует или у Вас нет прав на его просмотр</string>
     <string name="not_auth_message">Войдите, чтобы продолжить</string>
     <string name="auth_action_title">Войти</string>
+    <string name="empty_steps_title">В данном уроке еще нет шагов</string>
 </resources>
