@@ -232,6 +232,6 @@
     <string name="timing_upcoming_title">Upcoming</string>
     <string name="timing_active_title">Active</string>
     <string name="timing_past_title">Past</string>
-    <string name="save_filter_title">Accept the filter always</string>
+    <string name="save_filter_title">Always accept the filters</string>
     <string name="accept">Accept</string>
 </resources>

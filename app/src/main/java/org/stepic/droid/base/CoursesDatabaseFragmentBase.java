@@ -1,5 +1,7 @@
 package org.stepic.droid.base;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +29,8 @@ import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.ui.fragments.CourseListFragmentBase;
+import org.stepic.droid.ui.util.BackButtonHandler;
+import org.stepic.droid.ui.util.OnBackClickListener;
 import org.stepic.droid.util.AppConstants;
 
 import java.util.List;
@@ -38,13 +42,26 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase implements FilterForCoursesView {
+public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase implements FilterForCoursesView, OnBackClickListener {
     private static final int FILTER_REQUEST_CODE = 776;
 
     private boolean needFilter = false;
 
     @Inject
     PersistentCourseListPresenter courseListPresenter;
+
+    BackButtonHandler backButtonHandler = null;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        Activity rootActivity = getActivity();
+        if (rootActivity != null && rootActivity instanceof BackButtonHandler) {
+            backButtonHandler = ((BackButtonHandler) rootActivity);
+            backButtonHandler.setBackClickListener(this);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,12 +103,26 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         super.onViewCreated(view, savedInstanceState);
         bus.register(this);
         courseListPresenter.attachView(this);
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                courseListPresenter.downloadData(getCourseType(), needFilter);
-            }
-        });
+
+        if (savedInstanceState == null) {
+            //reset all data
+            needFilter = false;
+            mCourses.clear();
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    courseListPresenter.refreshData(getCourseType(), needFilter);
+                }
+            });
+        } else {
+            //load if not
+            mSwipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    courseListPresenter.downloadData(getCourseType(), needFilter);
+                }
+            });
+        }
         courseListPresenter.restoreState();
     }
 
@@ -109,7 +140,8 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo
+            menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
@@ -289,7 +321,22 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void onDestroy() {
-        mSharedPreferenceHelper.onTryDiscardFilters(getCourseType());
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onBackClick() {
+        mSharedPreferenceHelper.onTryDiscardFilters(getCourseType());
+        return false;
+    }
+
+
+    @Override
+    public void onDetach() {
+        if (backButtonHandler != null) {
+            backButtonHandler.removeBackClickListener(this);
+            backButtonHandler = null;
+        }
+        super.onDetach();
     }
 }
