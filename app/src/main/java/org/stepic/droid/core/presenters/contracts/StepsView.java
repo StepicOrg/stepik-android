@@ -15,4 +15,6 @@ public interface StepsView {
     void onEmptySteps();
 
     void onLoading();
+
+    void onUserNotAuth();
 }

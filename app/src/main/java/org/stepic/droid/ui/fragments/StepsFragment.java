@@ -111,6 +111,12 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @BindView(R.id.corrupted_lesson)
     View corruptedLesson;
 
+    @BindView(R.id.auth_action)
+    View authActionView;
+
+    @BindView(R.id.need_auth_view)
+    View authView;
+
     @BindString(R.string.connectionProblems)
     String connectioinProblemString;
 
@@ -176,6 +182,14 @@ public class StepsFragment extends FragmentBase implements StepsView {
                 fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
                 stepsPresenter.refreshWhenOnConnectionProblem(lesson, unit, lessonId, unitId, defaultStepPos, fromPreviousLesson);
                 fromPreviousLesson = false;
+            }
+        });
+        authActionView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analytic.reportEvent(Analytic.Interaction.CLICK_AUTH_FROM_STEPS);
+                mShell.getScreenProvider().showLaunchScreen(getContext(), false);
+                getActivity().finish();
             }
         });
     }
@@ -390,6 +404,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
     public void onLessonCorrupted() {
         ProgressHelper.dismiss(progressBar);
         reportProblem.setVisibility(View.GONE);
+        authView.setVisibility(View.GONE);
         corruptedLesson.setVisibility(View.VISIBLE);
     }
 
@@ -402,6 +417,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
     public void onConnectionProblem() {
         ProgressHelper.dismiss(progressBar);
         corruptedLesson.setVisibility(View.GONE);
+        authView.setVisibility(View.GONE);
         if (stepsPresenter.getStepList().isEmpty()) {
             reportProblem.setVisibility(View.VISIBLE);
         } else {
@@ -414,6 +430,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         ProgressHelper.dismiss(progressBar);
         reportProblem.setVisibility(View.GONE);
         corruptedLesson.setVisibility(View.GONE);
+        authView.setVisibility(View.GONE);
         stepAdapter.notifyDataSetChanged();
         updateTabState();
         if (fromPreviousLesson) {
@@ -436,6 +453,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         ProgressHelper.dismiss(progressBar);
         reportProblem.setVisibility(View.GONE);
         corruptedLesson.setVisibility(View.GONE);
+        authView.setVisibility(View.GONE);
         Toast.makeText(getContext(), "Empty steps", Toast.LENGTH_SHORT).show();
     }
 
@@ -446,5 +464,14 @@ public class StepsFragment extends FragmentBase implements StepsView {
         }
         reportProblem.setVisibility(View.GONE);
         corruptedLesson.setVisibility(View.GONE);
+        authView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onUserNotAuth() {
+        ProgressHelper.dismiss(progressBar);
+        reportProblem.setVisibility(View.GONE);
+        corruptedLesson.setVisibility(View.GONE);
+        authView.setVisibility(View.VISIBLE);
     }
 }

@@ -53,6 +53,9 @@
         <include layout="@layout/internet_fail_clickable"/>
 
         <include layout="@layout/corrupted_lesson"/>
+
+        <include layout="@layout/need_auth_placeholder"/>
+
     </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -5,6 +5,7 @@ import org.stepic.droid.core.presenters.contracts.StepsView
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Step
 import org.stepic.droid.model.Unit
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.ProgressUtil
 import org.stepic.droid.web.IApi
@@ -18,7 +19,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                      val mainHandler: IMainHandler,
                      val databaseFacade: DatabaseFacade,
-                     val api: IApi) : PresenterBase<StepsView>() {
+                     val api: IApi,
+                     val sharedPreferenceHelper: SharedPreferenceHelper) : PresenterBase<StepsView>() {
 
     var lesson: Lesson? = null
         private set
@@ -48,6 +50,14 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
         unit = outUnit
         threadPoolExecutor.execute {
             try {
+                val profileResponse = sharedPreferenceHelper.authResponseFromStore
+                if (profileResponse == null) {
+                    mainHandler.post {
+                        view?.onUserNotAuth()
+                    }
+                    return@execute
+                }
+
                 if (lesson == null) {
                     initUnitLessonWithIds(simpleLessonId, simpleUnitId)
                 }

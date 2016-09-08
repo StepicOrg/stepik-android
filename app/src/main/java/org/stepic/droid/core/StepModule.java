@@ -4,6 +4,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.StepsPresenter;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.web.IApi;
 
@@ -28,11 +29,13 @@ public class StepModule {
     public StepsPresenter provideStepPresenter(ThreadPoolExecutor threadPoolExecutor,
                                                IMainHandler mainHandler,
                                                DatabaseFacade databaseFacade,
-                                               IApi api) {
+                                               IApi api,
+                                               SharedPreferenceHelper sharedPreferenceHelper) {
         return new StepsPresenter
                 (threadPoolExecutor,
                         mainHandler,
                         databaseFacade,
-                        api);
+                        api,
+                        sharedPreferenceHelper);
     }
 }

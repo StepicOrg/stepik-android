@@ -235,4 +235,6 @@
     <string name="save_filter_title">Always accept the filters</string>
     <string name="accept">Accept</string>
     <string name="lesson_not_found_or_not_access">The lesson does not exist or you don\'t have the permission</string>
+    <string name="not_auth_message">Sign in for continue</string>
+    <string name="auth_action_title">Sign in</string>
 </resources>
