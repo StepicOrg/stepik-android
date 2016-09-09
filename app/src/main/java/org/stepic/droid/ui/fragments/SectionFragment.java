@@ -183,6 +183,8 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
 
     LinearLayoutManager linearLayoutManager;
 
+    private int modulePosition;
+
     @Override
     protected void injectComponent() {
         MainApplication.component().plus(new SectionModule()).inject(this);
@@ -687,7 +689,11 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
     public void onShouldBeShownCalendar(boolean needShow) {
         mAdapter.setNeedShowCalendarWidget(needShow);
         mAdapter.notifyDataSetChanged();
-        //            linearLayoutManager.scrollToPositionWithOffset(6, 11); // FIXME: 09.09.16 SCROLL HERE TO POSITION, ONLY ONCE, ok?
+        if (modulePosition > 0) {
+            int scrollTo = modulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
+            linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0); //// FIXME: 09.09.16 NOT ACTION BAR HIDE LAST ELEMENT
+            modulePosition = -1;
+        }
     }
 
     @Override
@@ -762,6 +768,15 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
                 } else {
                     simpleId = id;
                 }
+
+
+                try {
+                    String rawSectionPosition = fullUri.getQueryParameter("module");
+                    modulePosition = Integer.parseInt(rawSectionPosition);
+                } catch (Exception ex) {
+                    modulePosition = -1;
+                }
+
                 analytic.reportEvent(Analytic.DeepLink.USER_OPEN_SYLLABUS_LINK, simpleId + "");
                 if (simpleId < 0) {
                     onCourseUnavailable(new CourseUnavailableForUserEvent());
