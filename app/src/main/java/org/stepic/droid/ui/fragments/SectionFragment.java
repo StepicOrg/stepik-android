@@ -47,8 +47,8 @@ import org.stepic.droid.core.CalendarPresenter;
 import org.stepic.droid.core.SectionModule;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
-import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
+import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.events.CalendarChosenEvent;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
@@ -181,6 +181,8 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
     private String mTitle;
     private String mDescription;
 
+    LinearLayoutManager linearLayoutManager;
+
     @Override
     protected void injectComponent() {
         MainApplication.component().plus(new SectionModule()).inject(this);
@@ -218,8 +220,8 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
                 R.color.stepic_blue_ribbon);
 
         mSectionsRecyclerView.setVisibility(View.GONE);
-        mSectionsRecyclerView.setNestedScrollingEnabled(false);
-        mSectionsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        mSectionsRecyclerView.setLayoutManager(linearLayoutManager);
         mSectionList = new ArrayList<>();
         mAdapter = new SectionAdapter(mSectionList, getContext(), ((AppCompatActivity) getActivity()), calendarPresenter);
         mSectionsRecyclerView.setAdapter(mAdapter);
@@ -685,6 +687,7 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
     public void onShouldBeShownCalendar(boolean needShow) {
         mAdapter.setNeedShowCalendarWidget(needShow);
         mAdapter.notifyDataSetChanged();
+        //            linearLayoutManager.scrollToPositionWithOffset(6, 11); // FIXME: 09.09.16 SCROLL HERE TO POSITION, ONLY ONCE, ok?
     }
 
     @Override
