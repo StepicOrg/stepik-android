@@ -84,6 +84,7 @@ public interface Analytic {
         String JUMP_BACKWARD = "video player: onJumpBackward";
         String START_LOADING = "video player: startLoading";
         String STOP_LOADING = "video player: stopLoading";
+        String QUALITY_NOT_DETERMINATED = "video_quality_failed";
     }
 
     interface AppIndexing {

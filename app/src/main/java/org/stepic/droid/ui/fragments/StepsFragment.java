@@ -28,18 +28,13 @@ import org.stepic.droid.core.StepModule;
 import org.stepic.droid.core.presenters.StepsPresenter;
 import org.stepic.droid.core.presenters.contracts.StepsView;
 import org.stepic.droid.events.steps.UpdateStepEvent;
-import org.stepic.droid.events.video.VideoQualityEvent;
-import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.model.VideoUrl;
 import org.stepic.droid.ui.adapters.StepFragmentAdapter;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.web.ViewAssignment;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -64,7 +59,6 @@ public class StepsFragment extends FragmentBase implements StepsView {
         public void onPageSelected(int position) {
             hideSoftKeypad();
             pushState(position);
-            checkOptionsMenu(position);
         }
 
         @Override
@@ -124,8 +118,6 @@ public class StepsFragment extends FragmentBase implements StepsView {
     View emptySteps;
 
     StepFragmentAdapter stepAdapter;
-
-    private String qualityForView;
 
     @Inject
     StepsPresenter stepsPresenter;
@@ -217,62 +209,6 @@ public class StepsFragment extends FragmentBase implements StepsView {
         super.onDestroyView();
     }
 
-    private void checkOptionsMenu(int position) {
-        if (stepsPresenter.getStepList().size() <= position) return;
-        final Step step = stepsPresenter.getStepList().get(position);
-
-        if (step.getBlock() == null || step.getBlock().getVideo() == null) {
-            bus.post(new VideoQualityEvent(null, step.getId()));
-        } else {
-            AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
-                @Override
-                protected String doInBackground(Void... params) {
-                    CachedVideo video = mDatabaseFacade.getCachedVideoById(step.getBlock().getVideo().getId());
-                    String quality;
-                    if (video == null) {
-                        String resultQuality = mUserPreferences.getQualityVideo();
-                        try {
-
-                            int weWant = Integer.parseInt(mUserPreferences.getQualityVideo());
-                            final List<VideoUrl> urls = step.getBlock().getVideo().getUrls();
-                            int bestDelta = Integer.MAX_VALUE;
-                            int bestIndex = 0;
-                            for (int i = 0; i < urls.size(); i++) {
-                                int current = Integer.parseInt(urls.get(i).getQuality());
-                                int delta = Math.abs(current - weWant);
-                                if (delta < bestDelta) {
-                                    bestDelta = delta;
-                                    bestIndex = i;
-                                }
-
-                            }
-                            resultQuality = urls.get(bestIndex).getQuality();
-                        } catch (NumberFormatException e) {
-                            resultQuality = mUserPreferences.getQualityVideo();
-                        }
-
-
-                        quality = resultQuality;
-                    } else {
-                        quality = video.getQuality();
-                    }
-                    return quality;
-                }
-
-                @Override
-                protected void onPostExecute(String s) {
-                    super.onPostExecute(s);
-                    if (s == null) {
-                        bus.post(new VideoQualityEvent(s, step.getId()));
-                    } else {
-                        bus.post(new VideoQualityEvent(s + "p", step.getId()));
-                    }
-                }
-            };
-            task.executeOnExecutor(mThreadPoolExecutor);
-        }
-    }
-
     private void pushState(int position) {
         if (stepsPresenter.getStepList().size() <= position) return;
         final Step step = stepsPresenter.getStepList().get(position);
@@ -355,26 +291,10 @@ public class StepsFragment extends FragmentBase implements StepsView {
         }
     }
 
-    @Subscribe
-    public void onQualityDetermined(VideoQualityEvent e) {
-        int currentPosition = viewPager.getCurrentItem();
-        if (currentPosition < 0 || currentPosition >= stepsPresenter.getStepList().size()) return;
-        long stepId = stepsPresenter.getStepList().get(currentPosition).getId();
-        if (e.getStepId() != stepId) return;
-        qualityForView = e.getQuality();
-        getActivity().invalidateOptionsMenu();
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.video_step_menu, menu);
-        MenuItem quality = menu.findItem(R.id.action_quality);
-        if (qualityForView != null) {
-            quality.setTitle(qualityForView);
-        } else {
-            quality.setVisible(false);
-        }
+        inflater.inflate(R.menu.steps_menu, menu);
 
         MenuItem comments = menu.findItem(R.id.action_comments);
         if (stepsPresenter.getStepList().isEmpty()) {
@@ -460,7 +380,6 @@ public class StepsFragment extends FragmentBase implements StepsView {
         }
         tabLayout.setVisibility(View.VISIBLE);
         pushState(viewPager.getCurrentItem());
-        checkOptionsMenu(viewPager.getCurrentItem());
     }
 
     @Override
