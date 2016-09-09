@@ -11,6 +11,7 @@ import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.HtmlHelper;
@@ -75,6 +76,16 @@ public class ShareHelperImpl implements ShareHelper {
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
         String textForSharing = Uri.parse(StringUtil.getUriForStep(config.getBaseUrl(), lesson, unit, step)).toString();
+        shareIntent.putExtra(Intent.EXTRA_TEXT, textForSharing);
+        shareIntent.setType("text/plain");
+        return Intent.createChooser(shareIntent, context.getString(R.string.share_title));
+    }
+
+    @Override
+    public Intent getIntentForSectionSharing(@NotNull Section section) {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        String textForSharing = Uri.parse(StringUtil.getAbsoluteUriForSection(config, section)).toString();
         shareIntent.putExtra(Intent.EXTRA_TEXT, textForSharing);
         shareIntent.setType("text/plain");
         return Intent.createChooser(shareIntent, context.getString(R.string.share_title));

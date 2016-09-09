@@ -21,6 +21,7 @@ import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.core.ILessonSessionManager;
 import org.stepic.droid.core.ILoginManager;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
@@ -41,6 +42,9 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     protected Unbinder unbinder;
+
+    @Inject
+    protected ShareHelper shareHelper;
 
     @Inject
     protected DefaultFilter defaultFilter;
