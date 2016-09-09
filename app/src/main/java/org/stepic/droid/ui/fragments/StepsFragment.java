@@ -117,6 +117,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @BindView(R.id.empty_steps)
     View emptySteps;
 
+
     StepFragmentAdapter stepAdapter;
 
     @Inject
@@ -328,6 +329,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         reportProblem.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
         emptySteps.setVisibility(View.GONE);
+        viewPager.setVisibility(View.INVISIBLE);
         corruptedLesson.setVisibility(View.VISIBLE);
     }
 
@@ -342,6 +344,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         corruptedLesson.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
         emptySteps.setVisibility(View.GONE);
+        viewPager.setVisibility(View.INVISIBLE);
         if (stepsPresenter.getStepList().isEmpty()) {
             reportProblem.setVisibility(View.VISIBLE);
         } else {
@@ -356,6 +359,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         corruptedLesson.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
         emptySteps.setVisibility(View.GONE);
+        viewPager.setVisibility(View.VISIBLE);
         stepAdapter.notifyDataSetChanged();
         updateTabState();
 
@@ -389,6 +393,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         corruptedLesson.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
         emptySteps.setVisibility(View.VISIBLE);
+        viewPager.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -400,6 +405,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         corruptedLesson.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
         emptySteps.setVisibility(View.GONE);
+        viewPager.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -409,5 +415,6 @@ public class StepsFragment extends FragmentBase implements StepsView {
         corruptedLesson.setVisibility(View.GONE);
         emptySteps.setVisibility(View.GONE);
         authView.setVisibility(View.VISIBLE);
+        viewPager.setVisibility(View.INVISIBLE);
     }
 }
