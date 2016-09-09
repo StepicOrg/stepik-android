@@ -1,5 +1,6 @@
 package org.stepic.droid.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.StepModule;
 import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.contracts.RouteStepView;
@@ -175,7 +177,9 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_share:
-                Toast.makeText(getContext(), "SHARE", Toast.LENGTH_SHORT).show();
+                analytic.reportEvent(Analytic.Interaction.SHARE_STEP_CLICK);
+                Intent shareIntent = shareHelper.getIntentForStepSharing (step, lesson, unit);
+                startActivity(shareIntent);
                 return true;
         }
         return super.onOptionsItemSelected(item);

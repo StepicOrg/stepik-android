@@ -49,6 +49,7 @@ public interface Analytic {
         String CLICK_SIGN_IN_SOCIAL = "social_login";
         String CLICK_ACCEPT_FILTER_BUTTON = "click_accept_filter_btn";
         String CLICK_AUTH_FROM_STEPS = "click_auth_from_steps";
+        String SHARE_STEP_CLICK = "share_step_click";
     }
 
     interface Screens {
