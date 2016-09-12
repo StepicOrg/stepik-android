@@ -692,6 +692,7 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
         if (modulePosition > 0) {
             int scrollTo = modulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
             linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
+            
             modulePosition = -1;
         }
     }
