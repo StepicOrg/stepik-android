@@ -39,45 +39,13 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data
-                    android:host="stepic.org"
-                    android:pathPattern="/course/.*/"
-                    android:scheme="https"/>
+                <data android:scheme="https"/>
+                <data android:scheme="http"/>
+                <data android:host="stepic.org"/>
+                <data android:host="stepik.org"/>
 
-                <data
-                    android:host="stepic.org"
-                    android:pathPattern="/course/.*/"
-                    android:scheme="http"/>
-
-                <data
-                    android:host="stepic.org"
-                    android:pathPattern="/course/.*/course_app"
-                    android:scheme="https"/>
-
-                <data
-                    android:host="stepic.org"
-                    android:pathPattern="/course/.*/course_app"
-                    android:scheme="http"/>
-
-                <data
-                    android:host="stepik.org"
-                    android:pathPattern="/course/.*/"
-                    android:scheme="https"/>
-
-                <data
-                    android:host="stepik.org"
-                    android:pathPattern="/course/.*/"
-                    android:scheme="http"/>
-
-                <data
-                    android:host="stepik.org"
-                    android:pathPattern="/course/.*/course_app"
-                    android:scheme="https"/>
-
-                <data
-                    android:host="stepik.org"
-                    android:pathPattern="/course/.*/course_app"
-                    android:scheme="http"/>
+                <data android:pathPattern="/course/.*/"/>
+                <data android:pathPattern="/course/.*/course_app"/>
 
             </intent-filter>
         </activity>
