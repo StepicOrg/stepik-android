@@ -47,11 +47,17 @@ class StepsActivity : SingleFragmentActivity() {
             val simpleLessonId: Long = getSimpleLessonId(dataUri)
             val simpleStepPosition: Long = getStepPosition(dataUri)
             val simpleUnitId: Long = getUnitSimpleId(dataUri)
-            return StepsFragment.newInstance(simpleUnitId, simpleLessonId, simpleStepPosition)
+            val discussionSampleId = getDiscussionSampleId(dataUri)
+            return StepsFragment.newInstance(simpleUnitId, simpleLessonId, simpleStepPosition, discussionSampleId)
 
         } else {
             return StepsFragment.newInstance(unit, lesson, fromPrevious)
         }
+    }
+
+    private fun getDiscussionSampleId(dataUri: Uri): Long {
+        val rawQuery = dataUri.getQueryParameter("discussion");
+        return parseLong(rawQuery)
     }
 
     private fun getUnitSimpleId(dataUri: Uri): Long {
