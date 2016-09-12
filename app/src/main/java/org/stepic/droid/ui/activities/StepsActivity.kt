@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.MenuItem
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Unit
@@ -41,8 +42,7 @@ class StepsActivity : SingleFragmentActivity() {
         val dataUri = intent?.data
 
         if (lesson == null && dataUri != null) {
-            //todo Add analytic for opening step from web
-
+            analytic.reportEvent(Analytic.DeepLink.USER_OPEN_STEPS_LINK);
             //All can be -1
             val simpleLessonId: Long = getSimpleLessonId(dataUri)
             val simpleStepPosition: Long = getStepPosition(dataUri)

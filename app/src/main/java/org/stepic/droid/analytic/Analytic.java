@@ -180,6 +180,7 @@ public interface Analytic {
     interface DeepLink {
         String USER_OPEN_SYLLABUS_LINK = "open_syllabus_by_link";
         String USER_OPEN_COURSE_DETAIL_LINK = "open_detail_course_link";
+        String USER_OPEN_STEPS_LINK = "open_step_link";
     }
 
     interface Certificate {
