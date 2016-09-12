@@ -47,7 +47,9 @@ public class StepsFragment extends FragmentBase implements StepsView {
     private static final String SIMPLE_UNIT_ID_KEY = "simpleUnitId";
     private static final String SIMPLE_LESSON_ID_KEY = "simpleLessonId";
     private static final String SIMPLE_STEP_POSITION_KEY = "simpleStepPosition";
+    private static final String SIMPLE_DISCUSSION_ID_KEY = "simpleDiscussionPos";
     private boolean fromPreviousLesson;
+    private long disscussionId = -1;
 
     private final ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -77,11 +79,12 @@ public class StepsFragment extends FragmentBase implements StepsView {
         return fragment;
     }
 
-    public static StepsFragment newInstance(long simpleUnitId, long simpleLessonId, long simpleStepPosition) {
+    public static StepsFragment newInstance(long simpleUnitId, long simpleLessonId, long simpleStepPosition, long discussionSampleId) {
         Bundle args = new Bundle();
         args.putLong(SIMPLE_UNIT_ID_KEY, simpleUnitId);
         args.putLong(SIMPLE_LESSON_ID_KEY, simpleLessonId);
         args.putLong(SIMPLE_STEP_POSITION_KEY, simpleStepPosition);
+        args.putLong(SIMPLE_DISCUSSION_ID_KEY, discussionSampleId);
         StepsFragment fragment = new StepsFragment();
         fragment.setArguments(args);
         return fragment;
@@ -128,6 +131,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
+        disscussionId = getArguments().getLong(SIMPLE_DISCUSSION_ID_KEY);
 
         MainApplication
                 .component()
@@ -384,6 +388,12 @@ public class StepsFragment extends FragmentBase implements StepsView {
         }
         tabLayout.setVisibility(View.VISIBLE);
         pushState(viewPager.getCurrentItem());
+
+        if (disscussionId >= 0 && position >= 0 && position < stepsPresenter.getStepList().size()) {
+            Step step = stepsPresenter.getStepList().get(position);
+            mShell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+            disscussionId = -1;
+        }
     }
 
     @Override
