@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -227,6 +228,9 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
         mSectionList = new ArrayList<>();
         mAdapter = new SectionAdapter(mSectionList, getContext(), ((AppCompatActivity) getActivity()), calendarPresenter);
         mSectionsRecyclerView.setAdapter(mAdapter);
+
+        mSectionsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
         unauthorizedDialog = UnauthorizedDialogFragment.newInstance();
         joinCourseProgressDialog = new LoadingProgressDialog(getContext());
         ProgressHelper.activate(loadOnCenterProgressBar);
@@ -422,7 +426,9 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
         List<Section> sections = event.getSectionList();
 
         if (sections != null && sections.size() != 0) {
-            showSections(sections);
+            if (mSectionList.isEmpty()) {
+                showSections(sections);
+            }
             if (firstLoad) {
                 firstLoad = false;
                 updateSections();
@@ -688,11 +694,13 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
     @Override
     public void onShouldBeShownCalendar(boolean needShow) {
         mAdapter.setNeedShowCalendarWidget(needShow);
+        if (modulePosition > 0) {
+            mAdapter.setDefaultHighlightPosition(modulePosition - 1);
+        }
         mAdapter.notifyDataSetChanged();
         if (modulePosition > 0) {
             int scrollTo = modulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
             linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
-            
             modulePosition = -1;
         }
     }

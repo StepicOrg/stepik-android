@@ -4,8 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
-import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
@@ -14,6 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import org.stepic.droid.R;
@@ -48,9 +48,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     public static final int TYPE_TITLE = 2;
 
     public static final int SECTION_LIST_DELTA = 1;
-    private final int COLOR_TRANSITION_DURATION = 5000;
 
-    int defaultHighlightPosition = 0;
+    int defaultHighlightPosition = -1;
 
     @Inject
     IScreenManager mScreenManager;
@@ -76,6 +75,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     private Course course;
     private boolean needShowCalendarWidget;
     private Drawable highlightDrawable;
+
+    public void setDefaultHighlightPosition(int defaultHighlightPosition) {
+        this.defaultHighlightPosition = defaultHighlightPosition;
+    }
 
     public SectionAdapter(List<Section> sections, Context mContext, AppCompatActivity activity, CalendarPresenter calendarPresenter) {
         this.mSections = sections;
@@ -346,16 +349,19 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             }
 
             if (defaultHighlightPosition >= 0 && defaultHighlightPosition == position) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    cv.setBackground(highlightDrawable);
-                } else {
-                    cv.setBackgroundDrawable(highlightDrawable);
-                }
-
-                TransitionDrawable transitionDrawable = (TransitionDrawable) highlightDrawable;
-                transitionDrawable.startTransition(COLOR_TRANSITION_DURATION);
-                defaultHighlightPosition = -1;
+                setAnimation(cv);
             }
+        }
+
+        @Override
+        public void clearAnimation() {
+            cv.clearAnimation();
+        }
+
+        private void setAnimation(View viewToAnimate) {
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.shake_animation);
+            viewToAnimate.startAnimation(animation);
+            defaultHighlightPosition = -1;
         }
     }
 
@@ -389,6 +395,11 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
         }
 
+        @Override
+        public void clearAnimation() {
+            rootView.clearAnimation();
+        }
+
         private boolean shouldBeHidden() {
             return !SectionAdapter.this.needShowCalendarWidget;
         }
@@ -416,5 +427,13 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         }
 
         public abstract void setDataOnView(int position);
+
+        public abstract void clearAnimation();
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(GenericViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        ((GenericViewHolder)holder).clearAnimation();
     }
 }
