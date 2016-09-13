@@ -39,6 +39,6 @@ class StepFragmentAdapter(fm: FragmentManager, val mStepList: List<Step?>, val m
     fun getTabDrawable(position: Int): Drawable? {
         if (position >= mStepList.size) return null
         val step = mStepList[position]
-        return mResolver.getDrawableForType(step?.block?.name, step?.is_custom_passed ?: false, step?.actions?.do_review ?: null == null)
+        return mResolver.getDrawableForType(step?.block?.name, step?.is_custom_passed ?: false, step?.actions?.do_review ?: null != null)
     }
 }
