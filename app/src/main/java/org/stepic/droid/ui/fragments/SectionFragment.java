@@ -372,6 +372,14 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
         dismissReportView();
         mSectionsRecyclerView.setVisibility(View.VISIBLE);
         dismiss();
+        if (modulePosition > 0) {
+            mAdapter.setDefaultHighlightPosition(modulePosition - 1);
+        }
+        if (modulePosition > 0) {
+            int scrollTo = modulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
+            linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
+            modulePosition = -1;
+        }
     }
 
     private void dismiss() {
@@ -694,15 +702,7 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
     @Override
     public void onShouldBeShownCalendar(boolean needShow) {
         mAdapter.setNeedShowCalendarWidget(needShow);
-        if (modulePosition > 0) {
-            mAdapter.setDefaultHighlightPosition(modulePosition - 1);
-        }
-        mAdapter.notifyDataSetChanged();
-        if (modulePosition > 0) {
-            int scrollTo = modulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
-            linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
-            modulePosition = -1;
-        }
+        mAdapter.notifyItemChanged(0);
     }
 
     @Override
