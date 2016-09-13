@@ -85,7 +85,7 @@ public class StepTypeResolver implements IStepResolver {
 
     }
 
-    public Drawable getDrawableForType(String type, boolean viewed) {
+    public Drawable getDrawableForType(String type, boolean viewed, boolean isPeerReview) {
         //todo:two maps for viewed and not, if viewed 1st map, not viewed the second?
         if (viewed) {
             Drawable drawable = mapFromTypeToDrawable.get(type);
