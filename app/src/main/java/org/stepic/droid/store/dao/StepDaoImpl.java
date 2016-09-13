@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.jetbrains.annotations.Nullable;
+import org.stepic.droid.model.ActionsContainer;
 import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.BlockPersistentWrapper;
 import org.stepic.droid.model.Progress;
@@ -52,6 +53,7 @@ public class StepDaoImpl extends DaoBase<Step> {
         int columnIndexIsLoading = cursor.getColumnIndex(DbStructureStep.Column.IS_LOADING);
         int columnIndexDiscussionCount = cursor.getColumnIndex(DbStructureStep.Column.DISCUSSION_COUNT);
         int columnIndexDiscussionId = cursor.getColumnIndex(DbStructureStep.Column.DISCUSSION_ID);
+        int columnIndexPeerReview = cursor.getColumnIndex(DbStructureStep.Column.PEER_REVIEW);
 
 
         step.setDiscussions_count(cursor.getInt(columnIndexDiscussionCount));
@@ -68,6 +70,12 @@ public class StepDaoImpl extends DaoBase<Step> {
         step.setPosition(cursor.getLong(columnIndexPosition));
         step.set_cached(cursor.getInt(columnIndexIsCached) > 0);
         step.set_loading(cursor.getInt(columnIndexIsLoading) > 0);
+
+        String review = cursor.getString(columnIndexPeerReview);
+
+        ActionsContainer actionsContainer = new ActionsContainer();
+        actionsContainer.setDo_review(review);
+        step.setActions(actionsContainer);
 
 //        step.setIs_custom_passed(isAssignmentByStepViewed(step.getId()));
         return step;
@@ -89,6 +97,10 @@ public class StepDaoImpl extends DaoBase<Step> {
         values.put(DbStructureStep.Column.POSITION, step.getPosition());
         values.put(DbStructureStep.Column.DISCUSSION_COUNT, step.getDiscussions_count());
         values.put(DbStructureStep.Column.DISCUSSION_ID, step.getDiscussion_proxy());
+
+        if (step.getActions() != null) {
+            values.put(DbStructureStep.Column.PEER_REVIEW, step.getActions().getDo_review());
+        }
 
         return values;
     }
