@@ -1,7 +1,6 @@
 package org.stepic.droid.util.resolvers;
 
-import android.support.annotation.NonNull;
-
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.model.SearchResult;
 
 import java.util.ArrayList;
@@ -9,7 +8,7 @@ import java.util.List;
 
 public class SearchResolver implements ISearchResolver {
 
-    @NonNull
+    @NotNull
     @Override
     public long[] getCourseIdsFromSearchResults(List<SearchResult> searchResultList) {
         List<Long> courseIds = new ArrayList<>();

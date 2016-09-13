@@ -5,9 +5,9 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.util.AppConstants;
@@ -33,14 +33,19 @@ public class StepTypeResolver implements IStepResolver {
 
     private Map<String, Drawable> mapFromTypeToDrawable;
     private Map<String, Drawable> mapFromTypeToDrawableNotViewed;
-    private Context mContext;
+    private Context context;
+    private Drawable peerReviewDrawable;
+    private Drawable peerReviewDrawableNotViewed;
 
 
     public StepTypeResolver(Context context) {
 
-        mContext = context;
+        this.context = context;
         mapFromTypeToDrawable = new HashMap<>();
         mapFromTypeToDrawableNotViewed = new HashMap<>();
+
+        peerReviewDrawableNotViewed = getDrawable(context, R.drawable.ic_peer_review);
+        peerReviewDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_peer_review).mutate());
 
         mapFromTypeToDrawable.put(AppConstants.TYPE_TEXT, getDrawable(context, R.drawable.ic_theory1));
         mapFromTypeToDrawable.put(AppConstants.TYPE_VIDEO, getDrawable(context, R.drawable.ic_video_pin1));
@@ -85,22 +90,22 @@ public class StepTypeResolver implements IStepResolver {
 
     }
 
-    public Drawable getDrawableForType(String type, boolean viewed) {
+    public Drawable getDrawableForType(String type, boolean viewed, boolean isPeerReview) {
         //todo:two maps for viewed and not, if viewed 1st map, not viewed the second?
+        if (isPeerReview) {
+            if (viewed) {
+                return peerReviewDrawable;
+            } else {
+                return peerReviewDrawableNotViewed;
+            }
+        }
+
         if (viewed) {
             Drawable drawable = mapFromTypeToDrawable.get(type);
             if (drawable == null)
                 drawable = mapFromTypeToDrawable.get(AppConstants.TYPE_TEXT);
 
-            int COLOR2 = 0;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                COLOR2 = MainApplication.getAppContext().getColor(R.color.stepic_viewed_steps);
-            } else {
-                COLOR2 = MainApplication.getAppContext().getResources().getColor(R.color.stepic_viewed_steps);
-            }
-            PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
-            drawable.setColorFilter(COLOR2, mMode);
-            return drawable;
+            return getViewedDrawable(drawable);
         } else {
             Drawable drawable = mapFromTypeToDrawableNotViewed.get(type);
             if (drawable != null)
@@ -108,6 +113,19 @@ public class StepTypeResolver implements IStepResolver {
             else
                 return mapFromTypeToDrawableNotViewed.get(AppConstants.TYPE_TEXT);
         }
+    }
+
+    @NonNull
+    private Drawable getViewedDrawable(Drawable drawable) {
+        int COLOR2 = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            COLOR2 = context.getColor(R.color.stepic_viewed_steps);
+        } else {
+            COLOR2 = context.getResources().getColor(R.color.stepic_viewed_steps);
+        }
+        PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
+        drawable.setColorFilter(COLOR2, mMode);
+        return drawable;
     }
 
     @Override

@@ -3,6 +3,10 @@ package org.stepic.droid.ui.adapters;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
+import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
@@ -24,11 +28,11 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
 import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
+import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.ColorUtil;
 
 import java.util.List;
 
@@ -45,6 +49,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     public static final int TYPE_TITLE = 2;
 
     public static final int SECTION_LIST_DELTA = 1;
+
+    int defaultHighlightPosition = -1;
 
     @Inject
     IScreenManager mScreenManager;
@@ -69,13 +75,22 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     private CalendarPresenter calendarPresenter;
     private Course course;
     private boolean needShowCalendarWidget;
+    private Drawable highlightDrawable;
+    @ColorInt
+    private int defaultColor;
+    private final int durationMillis = 3000;
+
+    public void setDefaultHighlightPosition(int defaultHighlightPosition) {
+        this.defaultHighlightPosition = defaultHighlightPosition;
+    }
 
     public SectionAdapter(List<Section> sections, Context mContext, AppCompatActivity activity, CalendarPresenter calendarPresenter) {
         this.mSections = sections;
         this.mContext = mContext;
         mActivity = activity;
         this.calendarPresenter = calendarPresenter;
-
+        highlightDrawable = ContextCompat.getDrawable(mContext, R.drawable.section_background);
+        defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_white, mContext);
         MainApplication.component().inject(this);
     }
 
@@ -187,7 +202,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     class SectionViewHolder extends GenericViewHolder implements StepicOnClickItemListener {
 
         @BindView(R.id.cv)
-        View cv;
+        ViewGroup cv;
 
         @BindView(R.id.section_title)
         TextView sectionTitle;
@@ -288,7 +303,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 hardDeadline.setVisibility(View.VISIBLE);
             }
 
-            if ((section.is_active() || (section.getActions() != null && section.getActions().getTest_section()!=null)) && course.getEnrollment() > 0) {
+            if ((section.is_active() || (section.getActions() != null && section.getActions().getTest_section() != null)) && course.getEnrollment() > 0) {
 
                 int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, MainApplication.getAppContext());
 
@@ -337,9 +352,30 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 cv.setClickable(false);
                 cv.setFocusableInTouchMode(false);
             }
+
+            if (defaultHighlightPosition >= 0 && defaultHighlightPosition == position) {
+                setAnimation(cv);
+            } else {
+                cv.setBackgroundColor(defaultColor);
+            }
+        }
+
+        @Override
+        public void clearAnimation() {
+            cv.clearAnimation();
+        }
+
+        private void setAnimation(View viewToAnimate) {
+            TransitionDrawable drawable = (TransitionDrawable) highlightDrawable;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                viewToAnimate.setBackground(highlightDrawable);
+            } else {
+                viewToAnimate.setBackgroundDrawable(highlightDrawable);
+            }
+            drawable.startTransition(durationMillis);
+            defaultHighlightPosition = -1;
         }
     }
-
 
     class CalendarViewHolder extends GenericViewHolder {
 
@@ -371,6 +407,11 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
         }
 
+        @Override
+        public void clearAnimation() {
+            rootView.clearAnimation();
+        }
+
         private boolean shouldBeHidden() {
             return !SectionAdapter.this.needShowCalendarWidget;
         }
@@ -398,5 +439,13 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         }
 
         public abstract void setDataOnView(int position);
+
+        public abstract void clearAnimation();
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(GenericViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        ((GenericViewHolder) holder).clearAnimation();
     }
 }

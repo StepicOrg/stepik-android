@@ -688,7 +688,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if (mCourse != null) {
-            inflater.inflate(R.menu.course_detailed_menu, menu);
+            inflater.inflate(R.menu.share_menu, menu);
             createIntentForSharing();
         }
     }

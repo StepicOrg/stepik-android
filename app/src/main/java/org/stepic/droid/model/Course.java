@@ -52,6 +52,8 @@ public class Course implements Serializable, Parcelable {
     private String title;
     private String begin_date_source;
     private String last_deadline;
+    private String begin_date;
+    private String end_date;
     private String language;
     private boolean is_public;
     private String slug; //link to ../course/#slug#
@@ -61,6 +63,22 @@ public class Course implements Serializable, Parcelable {
     private long intro_video_id;
     private String schedule_link;
     private String schedule_long_link;
+
+    public String getEnd_date() {
+        return end_date;
+    }
+
+    public void setEnd_date(String end_date) {
+        this.end_date = end_date;
+    }
+
+    public String getBegin_date() {
+        return begin_date;
+    }
+
+    public void setBegin_date(String begin_date) {
+        this.begin_date = begin_date;
+    }
 
     public String getSchedule_link() {
         return schedule_link;
@@ -477,6 +495,8 @@ public class Course implements Serializable, Parcelable {
         dest.writeString(this.formatForView);
         dest.writeString(schedule_link);
         dest.writeString(schedule_long_link);
+        dest.writeString(begin_date);
+        dest.writeString(end_date);
     }
 
     protected Course(Parcel in) {
@@ -517,6 +537,8 @@ public class Course implements Serializable, Parcelable {
         this.formatForView = in.readString();
         schedule_link = in.readString();
         schedule_long_link = in.readString();
+        begin_date = in.readString();
+        end_date = in.readString();
     }
 
     public static final Creator<Course> CREATOR = new Creator<Course>() {

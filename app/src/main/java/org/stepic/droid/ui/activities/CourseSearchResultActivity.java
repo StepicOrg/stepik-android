@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -24,7 +25,6 @@ import butterknife.ButterKnife;
 public class CourseSearchResultActivity extends FragmentActivityBase {
 
     private final static String TAG = "SearchActivity";
-
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -44,26 +44,46 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        bus.register(this);
 
-        // Get the intent, verify the action and get the query
-        Intent intent = getIntent();
-        handleIntent(intent);
+        query = getIntent().getStringExtra(SearchManager.QUERY);
+        initOrTryRestoreFragment();
+        if (mSearchView != null) {
+            invalidateOptionsMenu();
+        }
+    }
+
+    private void initOrTryRestoreFragment() {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.frame);
+
+        if (fragment == null) {
+            fragment = createFragment();
+            fm.beginTransaction()
+                    .add(R.id.frame, fragment)
+                    .commit();
+        }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
+        //add new fragment
         setIntent(intent);
-        handleIntent(intent);
+        query = intent.getStringExtra(SearchManager.QUERY);
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = createFragment();
+        fm.beginTransaction()
+                .replace(R.id.frame, fragment)
+                .commit();
+        if (mSearchView != null) {
+            invalidateOptionsMenu();
+        }
     }
 
-    private void initActivity(String query) {
-        Fragment fragment = new CourseSearchFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(CourseSearchFragment.QUERY_KEY, query);
-        fragment.setArguments(bundle);
-        setFragment(R.id.frame, fragment);
-        bus.register(this);
+    Fragment createFragment() {
+        return CourseSearchFragment.newInstance(query);
     }
+
 
     @Override
     protected void onDestroy() {
@@ -121,14 +141,4 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
         overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
     }
 
-    private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            query = intent.getStringExtra(SearchManager.QUERY);
-            initActivity(query);
-            if (mSearchView != null) {
-                //// TODO: 09.01.16 optimize it: need just clear focus
-                invalidateOptionsMenu();
-            }
-        }
-    }
 }

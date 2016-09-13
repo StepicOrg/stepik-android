@@ -1,8 +1,12 @@
 package org.stepic.droid.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -10,6 +14,7 @@ import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.StepModule;
 import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.contracts.RouteStepView;
@@ -62,6 +67,8 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
 
     protected Step step;
     protected Lesson lesson;
+
+    @Nullable
     protected Unit unit;
 
     private final static String LOAD_DIALOG_TAG = "stepBaseFragmentLoad";
@@ -92,6 +99,8 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        setHasOptionsMenu(true);
+
         if (step != null &&
                 step.getBlock() != null &&
                 step.getBlock().getText() != null &&
@@ -107,22 +116,24 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
         updateCommentState();
 
         routeStepPresenter.attachView(this);
-        nextLessonView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                routeStepPresenter.clickNextLesson(unit);
-            }
-        });
-        previousLessonView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                routeStepPresenter.clickPreviousLesson(unit);
-            }
-        });
+        if (unit != null) {
+            nextLessonView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    routeStepPresenter.clickNextLesson(unit);
+                }
+            });
+            previousLessonView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    routeStepPresenter.clickPreviousLesson(unit);
+                }
+            });
 
 
-        routeStepPresenter.checkStepForFirst(step.getId(), lesson, unit);
-        routeStepPresenter.checkStepForLast(step.getId(), lesson, unit);
+            routeStepPresenter.checkStepForFirst(step.getId(), lesson, unit);
+            routeStepPresenter.checkStepForLast(step.getId(), lesson, unit);
+        }
 
         bus.register(this);
     }
@@ -156,6 +167,23 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.share_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_share:
+                analytic.reportEvent(Analytic.Interaction.SHARE_STEP_CLICK);
+                Intent shareIntent = shareHelper.getIntentForStepSharing (step, lesson, unit);
+                startActivity(shareIntent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onResume() {

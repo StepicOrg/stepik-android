@@ -4,9 +4,13 @@ import android.net.Uri;
 import android.util.Patterns;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.model.Step;
+import org.stepic.droid.model.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +27,8 @@ public class StringUtil {
         return doubleScore;
     }
 
-    public static String getUriForCourse(String baseUrl, String slug){
-        StringBuilder stringBuilder =new StringBuilder();
+    public static String getUriForCourse(String baseUrl, String slug) {
+        StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(baseUrl);
         stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
         stringBuilder.append("course");
@@ -34,24 +38,24 @@ public class StringUtil {
         return stringBuilder.toString();
     }
 
-    public static String getUriForSyllabus (String baseUrl, String slug){
-        StringBuilder stringBuilder =new StringBuilder();
+    public static String getUriForSyllabus(String baseUrl, String slug) {
+        StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(getUriForCourse(baseUrl, slug)).append(AppConstants.APP_INDEXING_SYLLABUS_MANIFEST);
         return stringBuilder.toString();
     }
 
-    public static String getDynamicLinkForCourse(IConfig config, String slug){
+    public static String getDynamicLinkForCourse(IConfig config, String slug) {
         String firebaseDomain = config.getFirebaseDomain();
-        if (firebaseDomain == null){
+        if (firebaseDomain == null) {
             return getUriForCourse(config.getBaseUrl(), slug);
         }
 
-        StringBuilder stringBuilder =new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(firebaseDomain);
         stringBuilder.append("?amv=650");
         stringBuilder.append("&apn=");
         String packageName = MainApplication.getAppContext().getPackageName();
-        if (packageName == null){
+        if (packageName == null) {
             return getUriForCourse(config.getBaseUrl(), slug);
         }
         stringBuilder.append(packageName);
@@ -82,7 +86,7 @@ public class StringUtil {
         List<String> links = new ArrayList<>();
 
         Matcher m = Patterns.WEB_URL.matcher(text);
-        while(m.find()) {
+        while (m.find()) {
             String urlStr = m.group();
             if (urlStr.startsWith("(") && urlStr.endsWith(")")) {
                 urlStr = urlStr.substring(1, urlStr.length() - 1);
@@ -97,12 +101,13 @@ public class StringUtil {
         StringBuilder stringBuilder = getAppUriStringBuilderForCourse(baseUrl, slug).append(AppConstants.APP_INDEXING_COURSE_DETAIL_MANIFEST_HACK);
         return Uri.parse(stringBuilder.toString());
     }
+
     public static Uri getAppUriForCourseSyllabus(String baseUrl, String slug) {
         StringBuilder stringBuilder = getAppUriStringBuilderForCourse(baseUrl, slug).append(AppConstants.APP_INDEXING_SYLLABUS_MANIFEST);
         return Uri.parse(stringBuilder.toString());
     }
 
-    private static StringBuilder getAppUriStringBuilderForCourse(String baseUrl, String slug){
+    private static StringBuilder getAppUriStringBuilderForCourse(String baseUrl, String slug) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("android-app://");
         stringBuilder.append(DeviceInfoUtil.getPackageName());
@@ -119,7 +124,7 @@ public class StringUtil {
         return stringBuilder;
     }
 
-    public static String getAbsoluteUriForSection(IConfig config, @NotNull Section section){
+    public static String getAbsoluteUriForSection(IConfig config, @NotNull Section section) {
         StringBuilder sb;
         sb = new StringBuilder();
         sb.append(config.getBaseUrl());
@@ -131,6 +136,30 @@ public class StringUtil {
         sb.append("syllabus");
         sb.append("?module=");
         sb.append(section.getPosition());
+        return sb.toString();
+    }
+
+    public static String getUriForStep(@NotNull String baseUrl, @NotNull Lesson lesson, @Nullable Unit unit, @NotNull Step step) {
+        StringBuilder sb;
+        sb = new StringBuilder();
+        sb.append(baseUrl);
+        sb.append(AppConstants.WEB_URI_SEPARATOR);
+        sb.append("lesson");
+        sb.append(AppConstants.WEB_URI_SEPARATOR);
+        if (lesson.getSlug() != null && !lesson.getSlug().isEmpty()) {
+            sb.append(lesson.getSlug());
+        } else {
+            sb.append(lesson.getId());
+        }
+        sb.append(AppConstants.WEB_URI_SEPARATOR);
+
+        sb.append("step");
+        sb.append(AppConstants.WEB_URI_SEPARATOR);
+        sb.append(step.getPosition());
+        if (unit != null) {
+            sb.append("?unit=");
+            sb.append(unit.getId());
+        }
         return sb.toString();
     }
 }

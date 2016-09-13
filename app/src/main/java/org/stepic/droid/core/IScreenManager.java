@@ -13,6 +13,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.web.ViewAssignment;
 
 public interface IScreenManager {
@@ -68,5 +69,5 @@ public interface IScreenManager {
 
     void addCertificateToLinkedIn(CertificateViewItem certificateViewItem);
 
-    void showFilterScreen(Fragment sourceFragment, int requestCode);
+    void showFilterScreen(Fragment sourceFragment, int requestCode, Table courseType);
 }

@@ -44,6 +44,7 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.HtmlHelper;
@@ -345,8 +346,8 @@ public class RetrofitRESTApi implements IApi {
         if (type == SocialManager.SocialType.google) {
 
 
-            // Start the retrieval process for a server auth code.  If requested, ask for a refresh
-            // token.  Otherwise, only get an access token if a refresh token has been previously
+            // Start the retrieval process for a server auth code.  If requested, ask for a refreshWhenOnConnectionProblem
+            // token.  Otherwise, only get an access token if a refreshWhenOnConnectionProblem token has been previously
             // retrieved.  Getting a new access token for an existing grant does not require
             // user consent.
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
@@ -634,6 +635,16 @@ public class RetrofitRESTApi implements IApi {
         return mLoggedService.getCertificates(userId);
     }
 
+    @Override
+    public Call<UnitStepicResponse> getUnitByLessonId(long lessonId) {
+        return mLoggedService.getUnitByLessonId(lessonId);
+    }
+
+    @Override
+    public Call<StepResponse> getStepsByLessonId(long lessonId) {
+        return mLoggedService.geStepsByLessonId(lessonId);
+    }
+
     @Nullable
     private Response getZendeskResponse() throws IOException {
         OkHttpClient client = new OkHttpClient();
@@ -681,7 +692,7 @@ public class RetrofitRESTApi implements IApi {
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
-                    mDbManager.clearCacheCourses(DatabaseFacade.Table.enrolled);
+                    mDbManager.clearCacheCourses(Table.enrolled);
                     return null;
                 }
             };

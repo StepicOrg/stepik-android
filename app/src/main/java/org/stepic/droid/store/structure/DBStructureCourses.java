@@ -31,6 +31,7 @@ public final class DBStructureCourses extends DBStructureBase {
         public static final String TITLE = "title";
         public static final String SLUG = "slug";
         public static final String BEGIN_DATE_SOURCE = "begin_date_source";
+        public static final String BEGIN_DATE = "begin_date";
         public static final String LAST_DEADLINE = "last_deadline";
         public static final String IS_CACHED = "is_cached";
         public static final String IS_LOADING = "is_loading";
@@ -38,6 +39,7 @@ public final class DBStructureCourses extends DBStructureBase {
         public static final String INTRO_VIDEO_ID = "intro_video_id";
         public static final String SCHEDULE_LINK = "schedule_link";
         public static final String SCHEDULE_LONG_LINK = "schedule_long_link";
+        public static final String END_DATE = "end_date";
     }
 
     public static String[] getUsedColumns() {
@@ -64,7 +66,9 @@ public final class DBStructureCourses extends DBStructureBase {
                     Column.TARGET_AUDIENCE,
                     Column.CERTIFICATE,
                     Column.INTRO_VIDEO_ID,
-                    Column.SLUG
+                    Column.SLUG,
+                    Column.BEGIN_DATE,
+                    Column.END_DATE
             };
         }
         return mUsedColumns;

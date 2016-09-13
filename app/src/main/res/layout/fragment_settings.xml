@@ -6,17 +6,16 @@
             android:layout_height="match_parent"
             android:scrollbarStyle="outsideOverlay">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="50dp">
+        android:orientation="vertical">
 
         <android.support.v7.widget.CardView
-            android:id="@+id/video_settings"
+            style="@style/SettingCardStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/settingsLeft_RightMargin"
-            app:cardCornerRadius="2dp">
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -25,17 +24,10 @@
 
                 <TextView
                     android:id="@+id/fragment_settings_wifi_title"
+                    style="@style/SettingHeaderTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/video_title"
-                    android:textColor="@color/stepic_blue_ribbon"
-                    android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:text="@string/video_title"/>
 
                 <org.stepic.droid.ui.custom.BetterSwitch
                     android:id="@+id/fragment_settings_external_player_switch"
@@ -92,12 +84,9 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            android:id="@+id/notification_settings"
+            style="@style/SettingCardStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/video_settings"
-            android:layout_margin="@dimen/settingsLeft_RightMargin"
-            app:cardCornerRadius="2dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -106,17 +95,10 @@
 
                 <TextView
                     android:id="@+id/fragment_settings_notification_title"
+                    style="@style/SettingHeaderTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/notification_title"
-                    android:textColor="@color/stepic_blue_ribbon"
-                    android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:text="@string/notification_title"/>
 
                 <org.stepic.droid.ui.custom.BetterSwitch
                     android:id="@+id/fragment_settings_notification_sound_switch"
@@ -156,12 +138,9 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            android:id="@+id/calendar_settings"
+            style="@style/SettingCardStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/notification_settings"
-            android:layout_margin="@dimen/settingsLeft_RightMargin"
-            app:cardCornerRadius="2dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -170,17 +149,10 @@
 
                 <TextView
                     android:id="@+id/fragment_settings_calendar_title"
+                    style="@style/SettingHeaderTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/calendar_title"
-                    android:textColor="@color/stepic_blue_ribbon"
-                    android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:text="@string/calendar_title"/>
 
                 <org.stepic.droid.ui.custom.BetterSwitch
                     android:id="@+id/fragment_settings_calendar_widget_switch"
@@ -197,12 +169,9 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            android:id="@+id/memory_management_settings"
+            style="@style/SettingCardStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/calendar_settings"
-            android:layout_margin="@dimen/settingsLeft_RightMargin"
-            app:cardCornerRadius="2dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -210,17 +179,10 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/SettingHeaderTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/storage"
-                    android:textColor="@color/stepic_blue_ribbon"
-                    android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:text="@string/storage"/>
 
                 <FrameLayout
                     android:id="@+id/storage_management_button"
@@ -230,15 +192,16 @@
                     android:focusable="true"
                     android:foreground="@drawable/non_radius_foreground"
                     android:padding="16dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/space_management_title"
-                            android:textSize="16sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/space_management_title"
+                        android:textSize="16sp"/>
                 </FrameLayout>
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-    </RelativeLayout>
+    </LinearLayout>
 </ScrollView>

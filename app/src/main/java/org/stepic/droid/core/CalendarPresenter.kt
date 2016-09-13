@@ -13,19 +13,17 @@ import org.joda.time.DateTimeZone
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
+import org.stepic.droid.core.presenters.PresenterBase
 import org.stepic.droid.model.CalendarItem
 import org.stepic.droid.model.CalendarSection
 import org.stepic.droid.model.Section
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.operations.DatabaseFacade
-import org.stepic.droid.core.presenters.PresenterBase
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.StringUtil
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
-import javax.inject.Singleton
 
-@Singleton
 class CalendarPresenter(val config: IConfig,
                             val mainHandler: IMainHandler,
                             val context: Context,
@@ -40,11 +38,12 @@ class CalendarPresenter(val config: IConfig,
      * false, otherwise.
      *
      */
-    fun checkToShowCalendar(sectionList: List<Section>?) {
-        if (sectionList == null || sectionList.isEmpty()) {
+    fun checkToShowCalendar(outSectionList: List<Section>?) {
+        if (outSectionList == null || outSectionList.isEmpty()) {
             view?.onShouldBeShownCalendar(false)
             return
         }
+        val sectionList = ArrayList(outSectionList)
 
         threadPool.execute {
             val now: Long = DateTime.now(DateTimeZone.getDefault()).millis
@@ -139,13 +138,15 @@ class CalendarPresenter(val config: IConfig,
      *
      * @param sectionList list of sections of course
      */
-    fun addDeadlinesToCalendar(sectionList: List<Section>, calendarItemOut: CalendarItem?) {
+    fun addDeadlinesToCalendar(outSectionList: List<Section>, calendarItemOut: CalendarItem?) {
         val permissionCheck = ContextCompat.checkSelfPermission(context,
                 Manifest.permission.WRITE_CALENDAR)
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
             view?.permissionNotGranted()
             return
         }
+        val sectionList = ArrayList(outSectionList)
+
         threadPool.execute {
             val now: Long = DateTime.now(DateTimeZone.getDefault()).millis
             val nowMinus1Hour = now - AppConstants.MILLIS_IN_1HOUR
@@ -205,8 +206,7 @@ class CalendarPresenter(val config: IConfig,
 
     private fun getListOfPrimariesCalendars(): ArrayList<CalendarItem> {
         val listOfCalendarItems = ArrayList<CalendarItem>()
-        val projection = arrayOf(CalendarContract.Calendars._ID, CalendarContract.Calendars.OWNER_ACCOUNT, CalendarContract.Calendars.IS_PRIMARY)
-        context.contentResolver.query(CalendarContract.Calendars.CONTENT_URI, projection, null, null, null).use {
+        context.contentResolver.query(CalendarContract.Calendars.CONTENT_URI, null, null, null, null).use {
             it.moveToFirst()
             while (!it.isAfterLast) {
                 val indexId = it.getColumnIndex(CalendarContract.Calendars._ID)

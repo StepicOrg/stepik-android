@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +9,8 @@ import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -34,11 +37,11 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.ui.adapters.UnitAdapter;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.ProgressUtil;
 import org.stepic.droid.util.StepicLogicHelper;
-import org.stepic.droid.ui.adapters.UnitAdapter;
 import org.stepic.droid.web.LessonStepicResponse;
 import org.stepic.droid.web.ProgressesResponse;
 import org.stepic.droid.web.UnitStepicResponse;
@@ -153,6 +156,12 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.share_menu, menu);
+        return true;
+    }
 
     @Subscribe
     public void onSuccessLoadUnits(SuccessLoadUnitsEvent e) {
@@ -258,8 +267,18 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.menu_item_share:
+                shareSection();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void shareSection() {
+        if (mSection != null) {
+            Intent intent = shareHelper.getIntentForSectionSharing(mSection);
+            startActivity(intent);
+        }
     }
 
     @Override

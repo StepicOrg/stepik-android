@@ -103,7 +103,6 @@ public class StepicDefaultModule {
         return new ConfigRelease(context, analytic);
     }
 
-
     @Provides
     @Singleton
     public IApi provideIApi() {
@@ -112,8 +111,8 @@ public class StepicDefaultModule {
 
     @Provides
     @Singleton
-    public SharedPreferenceHelper provideSharedPreferencesHelper(Analytic analytic) {
-        return new SharedPreferenceHelper(analytic);
+    public SharedPreferenceHelper provideSharedPreferencesHelper(Analytic analytic, DefaultFilter defaultFilter) {
+        return new SharedPreferenceHelper(analytic, defaultFilter);
     }
 
     @Provides
@@ -362,5 +361,17 @@ public class StepicDefaultModule {
     @Singleton
     public ShareHelper provideShareHelper(IConfig config, Context context) {
         return new ShareHelperImpl(config, context);
+    }
+
+    @Provides
+    @Singleton
+    public DefaultFilter provideDefaultFilter() {
+        return new DefaultFilterImpl(mContext);
+    }
+
+    @Provides
+    @Singleton
+    public FilterApplicator provideFilterApplicator(DefaultFilter defaultFilter, SharedPreferenceHelper sharedPreferenceHelper) {
+        return new FilterApplicatorImpl(defaultFilter, sharedPreferenceHelper);
     }
 }

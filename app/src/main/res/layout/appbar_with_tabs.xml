@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.AppBarLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+        layout="@layout/toolbar"
+        app:layout_scrollFlags="scroll|enterAlways"/>
 
     <include
         android:id="@+id/tabs"
-        layout="@layout/tablayout_steps" />
+        layout="@layout/tablayout_steps"
+        />
 </android.support.design.widget.AppBarLayout>

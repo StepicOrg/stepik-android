@@ -1,25 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true"
-    android:orientation="vertical">
+    android:keepScreenOn="true">
 
-    <include
-        android:id="@+id/appBarLayout"
-        layout="@layout/appbar_with_tabs" />
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/abc_action_bar_default_height_material"
+            android:background="@color/stepic_brand_primary"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:clipToPadding="false"
+            android:paddingEnd="@dimen/padding_tab_bar"
+            android:paddingLeft="@dimen/padding_tab_bar"
+            android:paddingRight="@dimen/padding_tab_bar"
+            android:paddingStart="@dimen/padding_tab_bar"
+            android:visibility="gone"
+            app:tabIndicatorColor="@android:color/white"
+            app:tabIndicatorHeight="@dimen/guideline_tab_indicator_height"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextColor="@color/white70percent"/>
+    </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        >
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <include
             android:id="@+id/viewpager"
-            layout="@layout/viewpager_steps" />
+            layout="@layout/viewpager_steps"/>
 
-        <include layout="@layout/progress_bar_on_empty_screen" />
+        <include layout="@layout/progress_bar_on_empty_screen"/>
+
+        <include layout="@layout/drop_shadow_view"/>
+
+        <include layout="@layout/internet_fail_clickable"/>
+
+        <include layout="@layout/corrupted_lesson"/>
+
+        <include layout="@layout/need_auth_placeholder"/>
+
+        <include layout="@layout/empty_steps"/>
+
     </FrameLayout>
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

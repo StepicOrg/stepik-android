@@ -24,6 +24,7 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.StepicLogicHelper;
 
@@ -54,10 +55,10 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
     private Drawable coursePlaceholder;
 
     @Nullable
-    private final DatabaseFacade.Table type;
+    private final Table type;
     private LayoutInflater mInflater;
 
-    public MyCoursesAdapter(Fragment fragment, List<Course> courses, @Nullable DatabaseFacade.Table type) {
+    public MyCoursesAdapter(Fragment fragment, List<Course> courses, @Nullable Table type) {
         super(fragment.getActivity(), 0, courses);
         this.type = type;
         mInflater = (LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -6,6 +6,7 @@ import org.stepic.droid.events.courses.CourseCantLoadEvent
 import org.stepic.droid.events.courses.CourseFoundEvent
 import org.stepic.droid.events.courses.CourseUnavailableForUserEvent
 import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.store.operations.Table
 import org.stepic.droid.web.CoursesStepicResponse
 import org.stepic.droid.web.IApi
 import retrofit.Callback
@@ -21,9 +22,9 @@ class CourseFinderPresenter(
 
     fun findCourseById(courseId: Long) {
         threadPoolExecutor.execute {
-            var course = databaseFacade.getCourseById(courseId, DatabaseFacade.Table.featured)
+            var course = databaseFacade.getCourseById(courseId, Table.featured)
             if (course == null) {
-                course = databaseFacade.getCourseById(courseId, DatabaseFacade.Table.enrolled)
+                course = databaseFacade.getCourseById(courseId, Table.enrolled)
             }
 
             val finalCourse = course

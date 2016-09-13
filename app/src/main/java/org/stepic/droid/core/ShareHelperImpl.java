@@ -5,10 +5,15 @@ import android.content.Intent;
 import android.net.Uri;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.Section;
+import org.stepic.droid.model.Step;
+import org.stepic.droid.model.Unit;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.StringUtil;
 
@@ -62,6 +67,26 @@ public class ShareHelperImpl implements ShareHelper {
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_TEXT, certificateViewItem.getFullPath());
+        shareIntent.setType("text/plain");
+        return Intent.createChooser(shareIntent, context.getString(R.string.share_title));
+    }
+
+    @Override
+    public Intent getIntentForStepSharing(Step step, Lesson lesson, @Nullable Unit unit) {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        String textForSharing = Uri.parse(StringUtil.getUriForStep(config.getBaseUrl(), lesson, unit, step)).toString();
+        shareIntent.putExtra(Intent.EXTRA_TEXT, textForSharing);
+        shareIntent.setType("text/plain");
+        return Intent.createChooser(shareIntent, context.getString(R.string.share_title));
+    }
+
+    @Override
+    public Intent getIntentForSectionSharing(@NotNull Section section) {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        String textForSharing = Uri.parse(StringUtil.getAbsoluteUriForSection(config, section)).toString();
+        shareIntent.putExtra(Intent.EXTRA_TEXT, textForSharing);
         shareIntent.setType("text/plain");
         return Intent.createChooser(shareIntent, context.getString(R.string.share_title));
     }

@@ -2,6 +2,7 @@ package org.stepic.droid.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,13 +14,17 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
+import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.model.comments.DiscussionOrder;
+import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -29,13 +34,23 @@ import javax.inject.Singleton;
 public class SharedPreferenceHelper {
     private static final String NOTIFICATION_SOUND_DISABLED = "notification_sound";
     private static final String TEMP_UPDATE_LINK = "temp_update_link";
+    private static final java.lang.String NEED_DROP_116 = "need_drop_116";
     private Context mContext;
     private Analytic analytic;
+    private DefaultFilter defaultFilter;
 
     @Inject
-    public SharedPreferenceHelper(Analytic analytic) {
+    public SharedPreferenceHelper(Analytic analytic, DefaultFilter defaultFilter) {
         this.analytic = analytic;
+        this.defaultFilter = defaultFilter;
         mContext = MainApplication.getAppContext();
+
+        resetFilters(Table.enrolled); //reset on app recreating and on destroy course's Fragments
+        resetFilters(Table.featured);
+    }
+
+    public void onTryDiscardFilters(Table type) {
+        resetFilters(type);
     }
 
     public boolean isSDChosen() {
@@ -98,29 +113,77 @@ public class SharedPreferenceHelper {
     }
 
     public boolean isNeedDropCoursesIn114() {
-        return getBoolean(PreferenceType.DEVICE_SPECIFIC, NEED_DROP_114, true);
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, NEED_DROP_114, true) || getBoolean(PreferenceType.DEVICE_SPECIFIC, NEED_DROP_116, true);
     }
 
     public void afterNeedDropCoursesIn114() {
         put(PreferenceType.DEVICE_SPECIFIC, NEED_DROP_114, false);
+        put(PreferenceType.DEVICE_SPECIFIC, NEED_DROP_116, false);
     }
 
-//    public enum CommentsOrder {
-//        DISCUSSION_NEW_FIRST("discussion"),
-//        DISCUSSION_MOST_LIKED("discussions_most_liked"),
-//        DISCUSSION_MOST_ACTIVE("discussions_most_active"),
-//        DISCUSSION_RECENT_ACTIVITY("discussions_recent_activity");
-//
-//        private String description;
-//
-//        CommentsOrder(String description) {
-//            this.description = description;
-//        }
-//
-//        private String getStoreName() {
-//            return description;
-//        }
-//    }
+    private void resetFilters(Table type) {
+        if (type == Table.enrolled && !getBoolean(PreferenceType.ENROLLED_FILTER, FILTER_PERSISTENT, defaultFilter.getDefaultEnrolled(StepikFilter.PERSISTENT))) {
+            clear(PreferenceType.ENROLLED_FILTER);
+        }
+
+        if (type == Table.featured && !getBoolean(PreferenceType.FEATURED_FILTER, FILTER_PERSISTENT, defaultFilter.getDefaultFeatured(StepikFilter.PERSISTENT))) {
+            clear(PreferenceType.FEATURED_FILTER);
+        }
+    }
+
+    public EnumSet<StepikFilter> getFilter(Table type) {
+        EnumSet<StepikFilter> filter = EnumSet.noneOf(StepikFilter.class);
+        // TODO: 04.09.16 refactor
+        if (type == Table.enrolled) {
+            appendValueForFilter(type, filter, FILTER_RUSSIAN_LANGUAGE, StepikFilter.RUSSIAN, defaultFilter.getDefaultEnrolled(StepikFilter.RUSSIAN));
+            appendValueForFilter(type, filter, FILTER_ENGLISH_LANGUAGE, StepikFilter.ENGLISH, defaultFilter.getDefaultEnrolled(StepikFilter.ENGLISH));
+            appendValueForFilter(type, filter, FILTER_UPCOMING, StepikFilter.UPCOMING, defaultFilter.getDefaultEnrolled(StepikFilter.UPCOMING));
+            appendValueForFilter(type, filter, FILTER_ACTIVE, StepikFilter.ACTIVE, defaultFilter.getDefaultEnrolled(StepikFilter.ACTIVE));
+            appendValueForFilter(type, filter, FILTER_PAST, StepikFilter.PAST, defaultFilter.getDefaultEnrolled(StepikFilter.PAST));
+            appendValueForFilter(type, filter, FILTER_PERSISTENT, StepikFilter.PERSISTENT, defaultFilter.getDefaultEnrolled(StepikFilter.PERSISTENT));
+        } else {
+            appendValueForFilter(type, filter, FILTER_RUSSIAN_LANGUAGE, StepikFilter.RUSSIAN, defaultFilter.getDefaultFeatured(StepikFilter.RUSSIAN));
+            appendValueForFilter(type, filter, FILTER_ENGLISH_LANGUAGE, StepikFilter.ENGLISH, defaultFilter.getDefaultFeatured(StepikFilter.ENGLISH));
+            appendValueForFilter(type, filter, FILTER_UPCOMING, StepikFilter.UPCOMING, defaultFilter.getDefaultFeatured(StepikFilter.UPCOMING));
+            appendValueForFilter(type, filter, FILTER_ACTIVE, StepikFilter.ACTIVE, defaultFilter.getDefaultFeatured(StepikFilter.ACTIVE));
+            appendValueForFilter(type, filter, FILTER_PAST, StepikFilter.PAST, defaultFilter.getDefaultFeatured(StepikFilter.PAST));
+            appendValueForFilter(type, filter, FILTER_PERSISTENT, StepikFilter.PERSISTENT, defaultFilter.getDefaultFeatured(StepikFilter.PERSISTENT));
+
+        }
+        return filter;
+    }
+
+    private void appendValueForFilter(Table type, EnumSet<StepikFilter> filter, String key, StepikFilter value, boolean defaultValue) {
+        PreferenceType preferenceType = resolvePreferenceType(type);
+        if (getBoolean(preferenceType, key, defaultValue)) {
+            filter.add(value);
+        }
+    }
+
+    @NonNull
+    private PreferenceType resolvePreferenceType(Table type) {
+        PreferenceType preferenceType;
+        if (type == Table.enrolled) {
+            preferenceType = PreferenceType.ENROLLED_FILTER;
+        } else {
+            preferenceType = PreferenceType.FEATURED_FILTER;
+        }
+        return preferenceType;
+    }
+
+    public void saveFilter(Table type, EnumSet<StepikFilter> filter) {
+        saveValueFromFilterIfExist(type, filter, FILTER_RUSSIAN_LANGUAGE, StepikFilter.RUSSIAN);
+        saveValueFromFilterIfExist(type, filter, FILTER_ENGLISH_LANGUAGE, StepikFilter.ENGLISH);
+        saveValueFromFilterIfExist(type, filter, FILTER_UPCOMING, StepikFilter.UPCOMING);
+        saveValueFromFilterIfExist(type, filter, FILTER_ACTIVE, StepikFilter.ACTIVE);
+        saveValueFromFilterIfExist(type, filter, FILTER_PAST, StepikFilter.PAST);
+        saveValueFromFilterIfExist(type, filter, FILTER_PERSISTENT, StepikFilter.PERSISTENT);
+    }
+
+    private void saveValueFromFilterIfExist(Table type, EnumSet<StepikFilter> filter, String key, StepikFilter value) {
+        PreferenceType preferenceType = resolvePreferenceType(type);
+        put(preferenceType, key, filter.contains(value));
+    }
 
     public enum PreferenceType {
         LOGIN("login preference"),
@@ -128,7 +191,9 @@ public class SharedPreferenceHelper {
         VIDEO_QUALITY("video_quality_preference"),
         TEMP("temporary"),
         VIDEO_SETTINGS("video_settings"),
-        DEVICE_SPECIFIC("device_specific");
+        DEVICE_SPECIFIC("device_specific"),
+        ENROLLED_FILTER("filter_prefs"),
+        FEATURED_FILTER("featured_filter_prefs");
 
         private String description;
 
@@ -136,7 +201,7 @@ public class SharedPreferenceHelper {
             this.description = description;
         }
 
-        private String getStoreName() {
+        public String getStoreName() {
             return description;
         }
     }
@@ -302,6 +367,8 @@ public class SharedPreferenceHelper {
             }
             analytic.setUserId(userId);
             clear(PreferenceType.LOGIN);
+            clear(PreferenceType.FEATURED_FILTER);
+            clear(PreferenceType.ENROLLED_FILTER);
         } finally {
             RWLocks.AuthLock.writeLock().unlock();
         }
@@ -402,4 +469,11 @@ public class SharedPreferenceHelper {
     private final String DISCUSSION_ORDER = "discussion_order";
     private final String CALENDAR_WIDGET = "calenda_widget";
     private final String NEED_DROP_114 = "need_drop_114";
+
+    private final String FILTER_PERSISTENT = "filter_persistent";
+    private final String FILTER_RUSSIAN_LANGUAGE = "russian_lang";
+    private final String FILTER_ENGLISH_LANGUAGE = "english_lang";
+    private final String FILTER_UPCOMING = "filter_upcoming";
+    private final String FILTER_ACTIVE = "filter_active";
+    private final String FILTER_PAST = "filter_past";
 }

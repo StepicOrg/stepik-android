@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -47,8 +48,8 @@ import org.stepic.droid.core.CalendarPresenter;
 import org.stepic.droid.core.SectionModule;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
-import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
+import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.events.CalendarChosenEvent;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
@@ -181,6 +182,10 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
     private String mTitle;
     private String mDescription;
 
+    LinearLayoutManager linearLayoutManager;
+
+    private int modulePosition;
+
     @Override
     protected void injectComponent() {
         MainApplication.component().plus(new SectionModule()).inject(this);
@@ -218,11 +223,14 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
                 R.color.stepic_blue_ribbon);
 
         mSectionsRecyclerView.setVisibility(View.GONE);
-        mSectionsRecyclerView.setNestedScrollingEnabled(false);
-        mSectionsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        mSectionsRecyclerView.setLayoutManager(linearLayoutManager);
         mSectionList = new ArrayList<>();
         mAdapter = new SectionAdapter(mSectionList, getContext(), ((AppCompatActivity) getActivity()), calendarPresenter);
         mSectionsRecyclerView.setAdapter(mAdapter);
+
+        mSectionsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
         unauthorizedDialog = UnauthorizedDialogFragment.newInstance();
         joinCourseProgressDialog = new LoadingProgressDialog(getContext());
         ProgressHelper.activate(loadOnCenterProgressBar);
@@ -364,6 +372,14 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
         dismissReportView();
         mSectionsRecyclerView.setVisibility(View.VISIBLE);
         dismiss();
+        if (modulePosition > 0) {
+            mAdapter.setDefaultHighlightPosition(modulePosition - 1);
+        }
+        if (modulePosition > 0) {
+            int scrollTo = modulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
+            linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
+            modulePosition = -1;
+        }
     }
 
     private void dismiss() {
@@ -418,7 +434,9 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
         List<Section> sections = event.getSectionList();
 
         if (sections != null && sections.size() != 0) {
-            showSections(sections);
+            if (mSectionList.isEmpty()) {
+                showSections(sections);
+            }
             if (firstLoad) {
                 firstLoad = false;
                 updateSections();
@@ -684,7 +702,7 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
     @Override
     public void onShouldBeShownCalendar(boolean needShow) {
         mAdapter.setNeedShowCalendarWidget(needShow);
-        mAdapter.notifyDataSetChanged();
+        mAdapter.notifyItemChanged(0);
     }
 
     @Override
@@ -759,6 +777,15 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
                 } else {
                     simpleId = id;
                 }
+
+
+                try {
+                    String rawSectionPosition = fullUri.getQueryParameter("module");
+                    modulePosition = Integer.parseInt(rawSectionPosition);
+                } catch (Exception ex) {
+                    modulePosition = -1;
+                }
+
                 analytic.reportEvent(Analytic.DeepLink.USER_OPEN_SYLLABUS_LINK, simpleId + "");
                 if (simpleId < 0) {
                     onCourseUnavailable(new CourseUnavailableForUserEvent());

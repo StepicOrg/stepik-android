@@ -28,6 +28,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
+import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.ui.activities.FilterActivity;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.ui.activities.CommentsActivity;
@@ -255,8 +256,15 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
-    public void showFilterScreen(Fragment sourceFragment, int requestCode){
+    public void showFilterScreen(Fragment sourceFragment, int requestCode, Table courseType) {
         Intent intent = new Intent(sourceFragment.getContext(), FilterActivity.class);
+        int code;
+        if (courseType == Table.enrolled) {
+            code = AppConstants.ENROLLED_FILTER;
+        } else {
+            code = AppConstants.FEATURED_FILTER;
+        }
+        intent.putExtra(FilterActivity.FILTER_TYPE_KEY, code);
         sourceFragment.startActivityForResult(intent, requestCode);
     }
 
