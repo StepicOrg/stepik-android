@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -352,6 +353,8 @@ public class RetrofitRESTApi implements IApi {
             // user consent.
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
             activity.startActivityForResult(signInIntent, AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN);
+        } else if (type == SocialManager.SocialType.facebook) {
+            Toast.makeText(activity, "facebook", Toast.LENGTH_SHORT).show();
         } else {
             String socialIdentifier = type.getIdentifier();
             String url = mConfig.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + mConfig.getOAuthClientId(TokenType.social) + "&response_type=code");
