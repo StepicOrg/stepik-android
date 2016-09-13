@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">Stepik</string>
+    <string name="facebook_app_id" translatable="false">833165293450447</string>
     <string name="yet_have_not_account">"Don\'t have an account yet? Sign up"</string>
     <string name="or_sign_up_with_email">or sign up with e-mail</string>
     <string name="sign_up">Sign up</string>

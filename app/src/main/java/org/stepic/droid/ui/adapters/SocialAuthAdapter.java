@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.stepic.droid.R;
@@ -16,6 +18,7 @@ import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.web.IApi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -65,7 +68,14 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
     @Override
     public void onClick(int position) {
         ISocialType type = mSocialList.get(position);
-        mApi.loginWithSocial(activity, type, client);
+        if (type == SocialManager.SocialType.facebook) {
+            List<String> permissions = new ArrayList<>();
+            permissions.add("email");
+            Toast.makeText(activity, "facebook", Toast.LENGTH_SHORT).show();
+            LoginManager.getInstance().logInWithReadPermissions(activity, permissions);
+        } else {
+            mApi.loginWithSocial(activity, type, client);
+        }
     }
 
     public static class SocialViewHolder extends RecyclerView.ViewHolder {
