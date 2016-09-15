@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/root_view"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:focusableInTouchMode="true"
-                android:splitMotionEvents="false">
+<LinearLayout android:id="@+id/root_view"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:focusableInTouchMode="true"
+              android:orientation="vertical"
+              android:splitMotionEvents="false">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/panel_custom_action_bar"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
         android:background="@android:color/white"
         android:fillViewport="true">
 
@@ -128,21 +132,17 @@
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
-                android:splitMotionEvents="false"
                 android:id="@+id/social_list"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/height_of_social"
                 android:layout_marginBottom="50dp"
                 android:layout_marginTop="15dp"
                 android:scrollbarStyle="outsideOverlay"
+                android:splitMotionEvents="false"
                 android:stretchColumns="0"/>
 
         </LinearLayout>
 
     </ScrollView>
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/panel_custom_action_bar"/>
-
-</RelativeLayout>
+</LinearLayout>
