@@ -7,6 +7,7 @@ import android.support.multidex.MultiDexApplication;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.vk.sdk.VKSdk;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.R;
@@ -38,6 +39,7 @@ public class MainApplication extends MultiDexApplication {
         );
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
+        VKSdk.initialize(this);
 
         component = DaggerStepicCoreComponent.builder().
                 stepicDefaultModule(new StepicDefaultModule(application)).build();

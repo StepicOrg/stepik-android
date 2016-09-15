@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.vk.sdk.VKScope;
+import com.vk.sdk.VKSdk;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
@@ -73,6 +75,10 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
             permissions.add("email");
             Toast.makeText(activity, "facebook", Toast.LENGTH_SHORT).show();
             LoginManager.getInstance().logInWithReadPermissions(activity, permissions);
+        } else if (type == SocialManager.SocialType.vk) {
+            Toast.makeText(activity, "vk", Toast.LENGTH_SHORT).show();
+            String[] scopes = {VKScope.EMAIL};
+            VKSdk.login(activity, scopes);
         } else {
             mApi.loginWithSocial(activity, type, client);
         }
