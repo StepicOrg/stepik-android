@@ -21,4 +21,7 @@ public interface IConfig {
     String getFirebaseDomain();
 
     String getGoogleServerClientId();
+
+    String getTwitterKey();
+    String getTwitterSecret();
 }

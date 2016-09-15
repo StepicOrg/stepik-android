@@ -33,6 +33,13 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKSdk;
@@ -56,6 +63,7 @@ import org.stepic.droid.util.ProgressHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.fabric.sdk.android.Fabric;
 
 public class LoginActivity extends FragmentActivityBase {
 
@@ -86,6 +94,7 @@ public class LoginActivity extends FragmentActivityBase {
 
     GoogleApiClient mGoogleApiClient;
     private CallbackManager callbackManager;
+    private TwitterAuthClient twitterAuthClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +104,9 @@ public class LoginActivity extends FragmentActivityBase {
         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition);
 
         hideSoftKeypad();
+
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(mConfig.getTwitterKey(), mConfig.getTwitterSecret());
+        Fabric.with(this, new Twitter(authConfig));
 
         String serverClientId = mConfig.getGoogleServerClientId();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -114,7 +126,6 @@ public class LoginActivity extends FragmentActivityBase {
                 } /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .addApi(AppIndex.API).build();
-
 
         progressHandler = new ProgressHandler() {
             @Override
@@ -166,7 +177,19 @@ public class LoginActivity extends FragmentActivityBase {
                 Toast.makeText(LoginActivity.this, "onError", Toast.LENGTH_SHORT).show();
             }
         });
-        mSocialRecyclerView.setAdapter(new SocialAuthAdapter(this, mGoogleApiClient));
+        twitterAuthClient = new TwitterAuthClient();
+        Callback<TwitterSession> twitterSessionCallback = new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+                Toast.makeText(LoginActivity.this, "twitter_success", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void failure(TwitterException exception) {
+                Toast.makeText(LoginActivity.this, "twitter_failure", Toast.LENGTH_SHORT).show();
+            }
+        };
+        mSocialRecyclerView.setAdapter(new SocialAuthAdapter(this, mGoogleApiClient, twitterAuthClient, twitterSessionCallback));
 
         mProgressLogin = new LoadingProgressDialog(this);
 
@@ -257,7 +280,6 @@ public class LoginActivity extends FragmentActivityBase {
         mGoogleApiClient.disconnect();
     }
 
-
     @Override
     public void finish() {
         super.finish();
@@ -278,7 +300,6 @@ public class LoginActivity extends FragmentActivityBase {
                 });
     }
 
-
     @Override
     protected void onDestroy() {
         mCloseButton.setOnClickListener(null);
@@ -293,6 +314,7 @@ public class LoginActivity extends FragmentActivityBase {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        twitterAuthClient.onActivityResult(requestCode, resultCode, data);
         if (VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
             @Override
             public void onResult(VKAccessToken res) {

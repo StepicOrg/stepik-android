@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.adapters;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,15 +10,21 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.web.IApi;
 
 import java.util.ArrayList;
@@ -36,13 +43,20 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
     @Inject
     IApi mApi;
 
+    @Inject
+    Analytic analytic;
+
 
     List<? extends ISocialType> mSocialList;
     private FragmentActivity activity;
     private GoogleApiClient client;
+    private TwitterAuthClient twitterAuthClient;
+    private Callback<TwitterSession> twitterSessionCallback;
 
-    public SocialAuthAdapter(FragmentActivity activity, GoogleApiClient client) {
+    public SocialAuthAdapter(FragmentActivity activity, GoogleApiClient client, TwitterAuthClient twitterAuthClient, Callback<TwitterSession> twitterSessionCallback) {
         this.client = client;
+        this.twitterAuthClient = twitterAuthClient;
+        this.twitterSessionCallback = twitterSessionCallback;
         MainApplication.component().inject(this);
         this.activity = activity;
         mSocialList = mSocialManager.getAllSocial();
@@ -70,7 +84,15 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
     @Override
     public void onClick(int position) {
         ISocialType type = mSocialList.get(position);
-        if (type == SocialManager.SocialType.facebook) {
+        analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_SOCIAL, type.getIdentifier());
+        if (type == SocialManager.SocialType.google) {
+            // Start the retrieval process for a server auth code.  If requested, ask for a refreshWhenOnConnectionProblem
+            // token.  Otherwise, only get an access token if a refreshWhenOnConnectionProblem token has been previously
+            // retrieved.  Getting a new access token for an existing grant does not require
+            // user consent.
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(client);
+            activity.startActivityForResult(signInIntent, AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN);
+        } else if (type == SocialManager.SocialType.facebook) {
             List<String> permissions = new ArrayList<>();
             permissions.add("email");
             Toast.makeText(activity, "facebook", Toast.LENGTH_SHORT).show();
@@ -79,8 +101,11 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
             Toast.makeText(activity, "vk", Toast.LENGTH_SHORT).show();
             String[] scopes = {VKScope.EMAIL};
             VKSdk.login(activity, scopes);
+        } else if (type == SocialManager.SocialType.twitter) {
+            Toast.makeText(activity, "twitter", Toast.LENGTH_SHORT).show();
+            twitterAuthClient.authorize(activity, twitterSessionCallback);
         } else {
-            mApi.loginWithSocial(activity, type, client);
+            mApi.loginWithSocial(activity, type);
         }
     }
 

@@ -59,7 +59,7 @@ public interface IApi {
 
     Call<Void> postViewed(ViewAssignment stepAssignment);
 
-    void loginWithSocial(FragmentActivity activity, ISocialType type, GoogleApiClient mGoogleApiClient); /*bad dependency with this client TODO: remove it*/
+    void loginWithSocial(FragmentActivity activity, ISocialType type);
 
     Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery);
 
