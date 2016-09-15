@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
@@ -30,6 +31,8 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.squareup.otto.Subscribe;
+import com.twitter.sdk.android.Twitter;
+import com.vk.sdk.VKSdk;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -463,6 +466,10 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     @Override
     public void onLogout() {
+        Twitter.getSessionManager().clearActiveSession();
+        Twitter.logOut();
+        LoginManager.getInstance().logOut();
+        VKSdk.logout();
         Auth.GoogleSignInApi.signOut(mGoogleApiClient);
         mSharedPreferenceHelper.deleteAuthInfo();
         mShell.getScreenProvider().showLaunchScreen(MainApplication.getAppContext(), false);
