@@ -24,7 +24,9 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
+import org.stepic.droid.ui.dialogs.CertificateShareDialogFragment;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
+import org.stepic.droid.ui.dialogs.StepShareDialogFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.web.StepResponse;
@@ -178,8 +180,10 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
         switch (item.getItemId()) {
             case R.id.menu_item_share:
                 analytic.reportEvent(Analytic.Interaction.SHARE_STEP_CLICK);
-                Intent shareIntent = shareHelper.getIntentForStepSharing (step, lesson, unit);
-                startActivity(shareIntent);
+                DialogFragment bottomSheetDialogFragment = StepShareDialogFragment.newInstance(step, lesson, unit);
+                if (bottomSheetDialogFragment != null && !bottomSheetDialogFragment.isAdded()) {
+                    bottomSheetDialogFragment.show(getFragmentManager(), null);
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);

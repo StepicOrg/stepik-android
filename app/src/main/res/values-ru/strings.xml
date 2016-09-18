@@ -206,8 +206,8 @@
     <string name="certificate_regular_with_substitution">Сертификат за курс %s</string>
     <string name="certificate_distinction_with_substitution">Сертификат с отличием за курс %s</string>
     <string name="certificate_result_with_substitution">Результат: %s%%</string>
-    <string name="certificate_share_copy_link">Копировать ссылку</string>
-    <string name="certificate_share_copy_link_success">Ссылка скопирована</string>
+    <string name="copy_link_title">Копировать ссылку</string>
+    <string name="link_copied_title">Ссылка скопирована</string>
     <string name="certificate_share_share_link">Поделиться…</string>
     <string name="add_to_linkedin">Добавить в профиль LinkedIn</string>
     <string name="empty_certificates">Пока вы не получили ни одного сертификата</string>
@@ -231,4 +231,5 @@
     <string name="not_auth_message">Войдите, чтобы продолжить</string>
     <string name="auth_action_title">Войти</string>
     <string name="empty_steps_title">В данном уроке еще нет шагов</string>
+    <string name="open_in_browser">Открыть в Браузере</string>
 </resources>

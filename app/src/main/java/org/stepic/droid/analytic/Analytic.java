@@ -165,6 +165,9 @@ public interface Analytic {
     interface Steps {
         String CORRECT_SUBMISSION_FILL = "submission_correct_fill"; // it can be existing submission, use in chain.
         String WRONG_SUBMISSION_FILL = "submission_wrong_fill";
+        java.lang.String SHARE_OPEN_IN_BROWSER = "step_share_open_in_browser";
+        java.lang.String COPY_LINK = "step_share_copy";
+        java.lang.String SHARE_ALL = "steps_share_all";
     }
 
     interface Calendar {

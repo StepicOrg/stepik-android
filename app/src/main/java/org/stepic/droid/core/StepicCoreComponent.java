@@ -40,6 +40,7 @@ import org.stepic.droid.ui.dialogs.DeleteCommentDialogFragment;
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
+import org.stepic.droid.ui.dialogs.StepShareDialog;
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.ui.dialogs.VideoQualityDialog;
 import org.stepic.droid.ui.dialogs.WantMoveDataDialog;
@@ -166,4 +167,6 @@ public interface StepicCoreComponent {
     void inject(CertificateShareDialog certificateShareDialog);
 
     void inject(SectionAdapter sectionAdapter);
+
+    void inject(StepShareDialog stepShareDialog);
 }

@@ -14,11 +14,11 @@
         android:textColor="@color/stepic_weak_text"/>
 
     <TextView
-        android:id="@+id/share_certificate_add_linkedin"
+        android:id="@+id/share_open_in_browser"
         style="@style/BottomSheetShareItem"
-        android:drawableLeft="@drawable/ic_linkedin"
-        android:drawableStart="@drawable/ic_linkedin"
-        android:text="@string/add_to_linkedin"
+        android:drawableLeft="@drawable/ic_open_in_browser_material_24px"
+        android:drawableStart="@drawable/ic_open_in_browser_material_24px"
+        android:text="@string/open_in_browser"
         />
 
     <TextView
