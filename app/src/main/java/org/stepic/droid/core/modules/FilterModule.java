@@ -1,4 +1,4 @@
-package org.stepic.droid.core;
+package org.stepic.droid.core.modules;
 
 import org.stepic.droid.core.presenters.FilterPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -9,7 +9,7 @@ import dagger.Provides;
 @Module
 public class FilterModule {
     @Provides
-    public FilterPresenter provideFilterPresenter(SharedPreferenceHelper sharedPreferenceHelper) {
+    FilterPresenter provideFilterPresenter(SharedPreferenceHelper sharedPreferenceHelper) {
         return new FilterPresenter(sharedPreferenceHelper);
     }
 }

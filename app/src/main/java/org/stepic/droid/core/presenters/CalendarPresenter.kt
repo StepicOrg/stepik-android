@@ -1,4 +1,4 @@
-package org.stepic.droid.core
+package org.stepic.droid.core.presenters
 
 import android.Manifest
 import android.content.ContentUris
@@ -13,7 +13,8 @@ import org.joda.time.DateTimeZone
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
-import org.stepic.droid.core.presenters.PresenterBase
+import org.stepic.droid.core.DeadlineType
+import org.stepic.droid.core.presenters.contracts.CalendarExportableView
 import org.stepic.droid.model.CalendarItem
 import org.stepic.droid.model.CalendarSection
 import org.stepic.droid.model.Section

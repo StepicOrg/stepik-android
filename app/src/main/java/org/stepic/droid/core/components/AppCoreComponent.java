@@ -1,13 +1,20 @@
-package org.stepic.droid.core;
+package org.stepic.droid.core.components;
 
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.concurrency.DownloadPoster;
-import org.stepic.droid.concurrency.tasks.FromDbSectionTask;
 import org.stepic.droid.concurrency.tasks.FromDbUnitLessonTask;
-import org.stepic.droid.concurrency.tasks.ToDbSectionTask;
 import org.stepic.droid.concurrency.tasks.ToDbUnitLessonTask;
-import org.stepic.droid.concurrency.tasks.UpdateCourseTask;
+import org.stepic.droid.core.CommentManager;
+import org.stepic.droid.core.MyPhoneStateListener;
+import org.stepic.droid.core.Shell;
+import org.stepic.droid.core.modules.AppCoreModule;
+import org.stepic.droid.core.modules.CertificateModule;
+import org.stepic.droid.core.modules.CourseDetailModule;
+import org.stepic.droid.core.modules.CourseListModule;
+import org.stepic.droid.core.modules.FilterModule;
+import org.stepic.droid.core.modules.SectionModule;
+import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.notifications.HackFcmListener;
@@ -22,7 +29,6 @@ import org.stepic.droid.services.LoadService;
 import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.services.ViewPusher;
-import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.ui.activities.SectionActivity;
 import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
 import org.stepic.droid.ui.adapters.DownloadsAdapter;
@@ -52,8 +58,8 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = {StepicDefaultModule.class})
-public interface StepicCoreComponent {
+@Component(modules = {AppCoreModule.class})
+public interface AppCoreComponent {
 
     SectionComponent plus(SectionModule module);
 
@@ -94,17 +100,12 @@ public interface StepicCoreComponent {
 
     //All Tasks:
 
-    void inject(UpdateCourseTask stepicTask);
-
-    void inject(FromDbSectionTask stepicTask);
-
-    void inject(ToDbSectionTask stepicTask);
-
     void inject(FromDbUnitLessonTask stepicTask);
 
     void inject(ToDbUnitLessonTask stepicTask);
 
     void inject(ChooseCalendarDialog calendarDialog);
+
 
     void inject(AllowMobileDataDialogFragment allowMobileDataDialogFragment);
 
@@ -129,8 +130,6 @@ public interface StepicCoreComponent {
     void inject(CoursePropertyAdapter coursePropertyAdapter);
 
     void inject(RemindPasswordDialogFragment remindPasswordDialogFragment);
-
-    void inject(DatabaseFacade databaseFacade);
 
     void inject(CancelLoadingService service);
 

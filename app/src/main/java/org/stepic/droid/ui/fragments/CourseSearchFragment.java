@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.CourseListModule;
+import org.stepic.droid.core.modules.CourseListModule;
 import org.stepic.droid.core.presenters.SearchCoursesPresenter;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.store.operations.Table;

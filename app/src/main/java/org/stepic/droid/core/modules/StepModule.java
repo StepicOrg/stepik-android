@@ -1,7 +1,8 @@
-package org.stepic.droid.core;
+package org.stepic.droid.core.modules;
 
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.StepQualityPresenter;
 import org.stepic.droid.core.presenters.StepsPresenter;
@@ -18,7 +19,7 @@ import dagger.Provides;
 @Module
 public class StepModule {
     @Provides
-    public RouteStepPresenter provideNextStepPresenter(
+    RouteStepPresenter provideNextStepPresenter(
             ThreadPoolExecutor threadPoolExecutor,
             IMainHandler mainHandler,
             DatabaseFacade databaseFacade,
@@ -28,11 +29,11 @@ public class StepModule {
 
     @Provides
     @PerFragment
-    public StepsPresenter provideStepPresenter(ThreadPoolExecutor threadPoolExecutor,
-                                               IMainHandler mainHandler,
-                                               DatabaseFacade databaseFacade,
-                                               IApi api,
-                                               SharedPreferenceHelper sharedPreferenceHelper) {
+    StepsPresenter provideStepPresenter(ThreadPoolExecutor threadPoolExecutor,
+                                        IMainHandler mainHandler,
+                                        DatabaseFacade databaseFacade,
+                                        IApi api,
+                                        SharedPreferenceHelper sharedPreferenceHelper) {
         return new StepsPresenter
                 (threadPoolExecutor,
                         mainHandler,
@@ -43,11 +44,11 @@ public class StepModule {
 
     @Provides
     @PerFragment
-    public StepQualityPresenter provideStepQualityPresenter(ThreadPoolExecutor executor,
-                                                            IMainHandler mainHandler,
-                                                            DatabaseFacade databaseFacade,
-                                                            UserPreferences userPreferences,
-                                                            Analytic analytic) {
+    StepQualityPresenter provideStepQualityPresenter(ThreadPoolExecutor executor,
+                                                     IMainHandler mainHandler,
+                                                     DatabaseFacade databaseFacade,
+                                                     UserPreferences userPreferences,
+                                                     Analytic analytic) {
         return new StepQualityPresenter(executor,
                 mainHandler,
                 databaseFacade,

@@ -24,7 +24,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.StepModule;
+import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.presenters.StepsPresenter;
 import org.stepic.droid.core.presenters.contracts.StepsView;
 import org.stepic.droid.events.steps.UpdateStepEvent;

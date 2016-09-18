@@ -51,7 +51,7 @@ class DatabaseFacade {
     lateinit var certificateViewItemDao: IDao<CertificateViewItem>
 
     init {
-        MainApplication.component().inject(this)
+        MainApplication.storageComponent().inject(this)
         mCoursesEnrolledDao.setTableName(Table.enrolled.storeName)
         mCoursesFeaturedDao.setTableName(Table.featured.storeName)
     }

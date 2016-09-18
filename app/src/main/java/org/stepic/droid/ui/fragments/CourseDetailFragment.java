@@ -42,7 +42,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.CourseDetailModule;
+import org.stepic.droid.core.modules.CourseDetailModule;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;

@@ -15,7 +15,7 @@ import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.core.StepModule;
+import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.contracts.RouteStepView;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;

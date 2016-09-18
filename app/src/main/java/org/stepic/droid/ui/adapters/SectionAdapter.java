@@ -20,7 +20,7 @@ import android.widget.TextView;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.CalendarPresenter;
+import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.Course;

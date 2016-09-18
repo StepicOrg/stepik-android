@@ -18,7 +18,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.FilterModule;
+import org.stepic.droid.core.modules.FilterModule;
 import org.stepic.droid.core.presenters.FilterPresenter;
 import org.stepic.droid.core.presenters.contracts.FilterView;
 import org.stepic.droid.model.StepikFilter;

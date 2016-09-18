@@ -22,7 +22,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.base.StepBaseFragment;
-import org.stepic.droid.core.StepModule;
+import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.presenters.StepQualityPresenter;
 import org.stepic.droid.core.presenters.contracts.StepQualityView;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;

@@ -32,19 +32,22 @@
     </android.support.design.widget.AppBarLayout>
 
 
-    <FrameLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout_sections"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
 
-        <include layout="@layout/report_problem_layout"/>
-
-        <include layout="@layout/report_empty_layout"/>
-
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout_units"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <include layout="@layout/report_problem_layout"/>
+
+            <include layout="@layout/report_empty_layout"/>
+
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/sections_recycler_view"
@@ -54,12 +57,12 @@
                 android:divider="@color/transparent"
                 android:overScrollMode="never"
                 android:scrollbarStyle="outsideOverlay"
-                android:splitMotionEvents="false"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-        </android.support.v4.widget.SwipeRefreshLayout>
+                android:splitMotionEvents="false"/>
 
-        <include layout="@layout/progress_bar_on_empty_screen"/>
 
-        <include layout="@layout/fail_to_parse_course"/>
-    </FrameLayout>
+            <include layout="@layout/progress_bar_on_empty_screen"/>
+
+            <include layout="@layout/fail_to_parse_course"/>
+        </FrameLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </android.support.design.widget.CoordinatorLayout>

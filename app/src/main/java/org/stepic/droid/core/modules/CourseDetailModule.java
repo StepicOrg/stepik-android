@@ -1,9 +1,10 @@
-package org.stepic.droid.core;
+package org.stepic.droid.core.modules;
 
 
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
@@ -20,17 +21,18 @@ public class CourseDetailModule {
 
     @PerFragment
     @Provides
-    public CourseJoinerPresenter provideCourseJoiner(
+    CourseJoinerPresenter provideCourseJoiner(
             SharedPreferenceHelper sharedPreferenceHelper,
             IApi api,
             ThreadPoolExecutor threadPoolExecutor,
-            Bus bus) {
-        return new CourseJoinerPresenter(sharedPreferenceHelper, api, threadPoolExecutor, bus);
+            Bus bus,
+            DatabaseFacade databaseFacade) {
+        return new CourseJoinerPresenter(sharedPreferenceHelper, api, threadPoolExecutor, bus, databaseFacade);
     }
 
     @PerFragment
     @Provides
-    public CourseFinderPresenter provideCourseFinderPresenter(
+    CourseFinderPresenter provideCourseFinderPresenter(
             ThreadPoolExecutor threadPoolExecutor,
             DatabaseFacade databaseFacade,
             IApi api,

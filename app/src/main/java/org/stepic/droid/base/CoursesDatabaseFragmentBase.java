@@ -20,7 +20,7 @@ import com.squareup.otto.Subscribe;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.core.CourseListModule;
+import org.stepic.droid.core.modules.CourseListModule;
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
 import org.stepic.droid.core.presenters.contracts.FilterForCoursesView;
 import org.stepic.droid.events.courses.FailDropCourseEvent;

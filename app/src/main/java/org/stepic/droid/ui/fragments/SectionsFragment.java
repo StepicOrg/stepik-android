@@ -40,17 +40,17 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.concurrency.tasks.FromDbSectionTask;
-import org.stepic.droid.concurrency.tasks.ToDbSectionTask;
 import org.stepic.droid.configuration.IConfig;
-import org.stepic.droid.core.CalendarExportableView;
-import org.stepic.droid.core.CalendarPresenter;
-import org.stepic.droid.core.SectionModule;
 import org.stepic.droid.core.ShareHelper;
+import org.stepic.droid.core.modules.SectionModule;
+import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
+import org.stepic.droid.core.presenters.SectionsPresenter;
+import org.stepic.droid.core.presenters.contracts.CalendarExportableView;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
+import org.stepic.droid.core.presenters.contracts.SectionsView;
 import org.stepic.droid.events.CalendarChosenEvent;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
 import org.stepic.droid.events.courses.CourseFoundEvent;
@@ -58,12 +58,8 @@ import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
 import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.joining_course.FailJoinEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
-import org.stepic.droid.events.sections.FailureResponseSectionEvent;
-import org.stepic.droid.events.sections.FinishingGetSectionFromDbEvent;
-import org.stepic.droid.events.sections.FinishingSaveSectionToDbEvent;
 import org.stepic.droid.events.sections.NotCachedSectionEvent;
 import org.stepic.droid.events.sections.SectionCachedEvent;
-import org.stepic.droid.events.sections.SuccessResponseSectionsEvent;
 import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
@@ -81,7 +77,6 @@ import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.SnackbarExtensionKt;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.StringUtil;
-import org.stepic.droid.web.SectionsStepicResponse;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -92,22 +87,25 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
 
-public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, ActivityCompat.OnRequestPermissionsResultCallback, LoadCourseView, CourseJoinView, CalendarExportableView {
+public class SectionsFragment
+        extends FragmentBase
+        implements SwipeRefreshLayout.OnRefreshListener,
+        ActivityCompat.OnRequestPermissionsResultCallback,
+        LoadCourseView, CourseJoinView,
+        CalendarExportableView,
+        SectionsView {
 
-    public static SectionFragment newInstance() {
+    public static SectionsFragment newInstance() {
         Bundle args = new Bundle();
 
-        SectionFragment fragment = new SectionFragment();
+        SectionsFragment fragment = new SectionsFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
 
-    @BindView(R.id.swipe_refresh_layout_units)
+    @BindView(R.id.swipe_refresh_layout_sections)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
     @BindView(R.id.sections_recycler_view)
@@ -146,11 +144,10 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
     protected View rootView;
 
     @Nullable
-    private Course mCourse;
+    private Course course;
     private SectionAdapter mAdapter;
     private List<Section> mSectionList;
 
-    boolean isScreenEmpty;
     boolean firstLoad;
     boolean isNeedShowCalendarInMenu = false;
 
@@ -171,6 +168,9 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
 
     @Inject
     CalendarPresenter calendarPresenter;
+
+    @Inject
+    SectionsPresenter sectionsPresenter;
 
     @Inject
     INotificationManager notificationManager;
@@ -201,7 +201,7 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
     @android.support.annotation.Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @android.support.annotation.Nullable ViewGroup container, @android.support.annotation.Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_section, container, false);
+        return inflater.inflate(R.layout.fragment_sections, container, false);
     }
 
     @Override
@@ -211,7 +211,6 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
         unbinder = ButterKnife.bind(this, view);
         imageViewTarget = new GlideDrawableImageViewTarget(courseIcon);
         hideSoftKeypad();
-        isScreenEmpty = true;
         firstLoad = true;
 
         mClient = new GoogleApiClient.Builder(getActivity()).addApi(AppIndex.API).build();
@@ -238,61 +237,62 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
         calendarPresenter.attachView(this);
         courseFinderPresenter.attachView(this);
         courseJoinerPresenter.attachView(this);
+        sectionsPresenter.attachView(this);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         onNewIntent(((AppCompatActivity) getActivity()).getIntent());
     }
 
     private void setUpToolbarWithCourse() {
-        if (mCourse != null && mCourse.getTitle() != null && !mCourse.getTitle().isEmpty()) {
-            getActivity().setTitle(mCourse.getTitle());
+        if (course != null && course.getTitle() != null && !course.getTitle().isEmpty()) {
+            getActivity().setTitle(course.getTitle());
         }
     }
 
     public void initScreenByCourse() {
         reportConnectionProblem.setVisibility(View.GONE);
         courseNotParsedView.setVisibility(View.GONE);
-        mAdapter.setCourse(mCourse);
+        mAdapter.setCourse(course);
         resolveJoinCourseView();
         setUpToolbarWithCourse();
-        getAndShowSectionsFromCache();
+        sectionsPresenter.showSections(course, false);
 
-        if (mCourse != null && mCourse.getSlug() != null && !wasIndexed) {
-            mTitle = getString(R.string.syllabus_title) + ": " + mCourse.getTitle();
-            mDescription = mCourse.getSummary();
-            mUrlInWeb = Uri.parse(StringUtil.getUriForSyllabus(mConfig.getBaseUrl(), mCourse.getSlug()));
-            mUrlInApp = StringUtil.getAppUriForCourseSyllabus(mConfig.getBaseUrl(), mCourse.getSlug());
+        if (course != null && course.getSlug() != null && !wasIndexed) {
+            mTitle = getString(R.string.syllabus_title) + ": " + course.getTitle();
+            mDescription = course.getSummary();
+            mUrlInWeb = Uri.parse(StringUtil.getUriForSyllabus(mConfig.getBaseUrl(), course.getSlug()));
+            mUrlInApp = StringUtil.getAppUriForCourseSyllabus(mConfig.getBaseUrl(), course.getSlug());
             reportIndexToGoogle();
         }
     }
 
     private void reportIndexToGoogle() {
-        if (mCourse != null && !wasIndexed && mCourse.getSlug() != null) {
+        if (course != null && !wasIndexed && course.getSlug() != null) {
             if (!mClient.isConnecting() && !mClient.isConnected()) {
                 mClient.connect();
             }
             wasIndexed = true;
             AppIndex.AppIndexApi.start(mClient, getAction());
-            analytic.reportEventWithIdName(Analytic.AppIndexing.COURSE_SYLLABUS, mCourse.getCourseId() + "", mCourse.getTitle());
+            analytic.reportEventWithIdName(Analytic.AppIndexing.COURSE_SYLLABUS, course.getCourseId() + "", course.getTitle());
         }
     }
 
     public void resolveJoinCourseView() {
-        if (mCourse != null && mCourse.getEnrollment() <= 0) {
+        if (course != null && course.getEnrollment() <= 0) {
             joinCourseRoot.setVisibility(View.VISIBLE);
             joinCourseButton.setVisibility(View.VISIBLE);
             joinCourseButton.setEnabled(true);
             joinCourseButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mCourse != null) {
-                        courseJoinerPresenter.joinCourse(mCourse);
+                    if (course != null) {
+                        courseJoinerPresenter.joinCourse(course);
                     }
                 }
             });
-            courseName.setText(mCourse.getTitle());
+            courseName.setText(course.getTitle());
             Glide.with(this)
-                    .load(StepicLogicHelper.getPathForCourseOrEmpty(mCourse, mConfig))
+                    .load(StepicLogicHelper.getPathForCourseOrEmpty(course, mConfig))
                     .placeholder(R.drawable.ic_course_placeholder)
                     .into(imageViewTarget);
         } else {
@@ -305,24 +305,24 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_info:
-                if (mCourse != null) {
-                    mShell.getScreenProvider().showCourseDescription(this, mCourse);
+                if (course != null) {
+                    mShell.getScreenProvider().showCourseDescription(this, course);
                 }
                 return true;
 
             case R.id.menu_item_share:
-                if (mCourse != null) {
-                    if (mCourse.getTitle() != null) {
-                        analytic.reportEventWithIdName(Analytic.Interaction.SHARE_COURSE_SECTION, mCourse.getCourseId() + "", mCourse.getTitle());
+                if (course != null) {
+                    if (course.getTitle() != null) {
+                        analytic.reportEventWithIdName(Analytic.Interaction.SHARE_COURSE_SECTION, course.getCourseId() + "", course.getTitle());
                     }
-                    Intent intent = shareHelper.getIntentForCourseSharing(mCourse);
+                    Intent intent = shareHelper.getIntentForCourseSharing(course);
                     startActivity(intent);
                 }
 
                 return true;
 
             case R.id.menu_item_calendar:
-                analytic.reportEventWithIdName(Analytic.Calendar.USER_CLICK_ADD_MENU, mCourse.getCourseId() + "", mCourse.getTitle());
+                analytic.reportEventWithIdName(Analytic.Calendar.USER_CLICK_ADD_MENU, course.getCourseId() + "", course.getTitle());
                 calendarPresenter.addDeadlinesToCalendar(mSectionList, null);
                 return true;
             case android.R.id.home:
@@ -333,45 +333,30 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
         return super.onOptionsItemSelected(item);
     }
 
-    private void updateSections() {
-        long[] sections = mCourse.getSections();
-        if (sections == null || sections.length == 0) {
+
+    @Override
+    public void onEmptySections() {
+        if (mSectionList.isEmpty()) {
+            dismissLoadState();
             mReportEmptyView.setVisibility(View.VISIBLE);
-            ProgressHelper.dismiss(loadOnCenterProgressBar);
-            ProgressHelper.dismiss(mSwipeRefreshLayout);
-        } else {
-            mReportEmptyView.setVisibility(View.GONE);
-            mShell.getApi().getSections(mCourse.getSections()).enqueue(new Callback<SectionsStepicResponse>() {
-                @Override
-                public void onResponse(Response<SectionsStepicResponse> response, Retrofit retrofit) {
-                    if (response.isSuccess()) {
-                        bus.post(new SuccessResponseSectionsEvent(mCourse, response, retrofit));
-                    } else {
-                        bus.post(new FailureResponseSectionEvent(mCourse));
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    bus.post(new FailureResponseSectionEvent(mCourse));
-                }
-            });
         }
     }
 
-    private void getAndShowSectionsFromCache() {
-        FromDbSectionTask fromDbSectionTask = new FromDbSectionTask(mCourse);
-        fromDbSectionTask.executeOnExecutor(mThreadPoolExecutor);
+    @Override
+    public void onConnectionProblem() {
+        if (mSectionList.isEmpty()) {
+            dismissLoadState();
+            reportConnectionProblem.setVisibility(View.VISIBLE);
+        }
     }
 
-    private void showSections(List<Section> sections) {
+    public void onNeedShowSections(List<Section> sections) {
         mSectionList.clear();
         mSectionList.addAll(sections);
         calendarPresenter.checkToShowCalendar(mSectionList);
         dismissReportView();
         mSectionsRecyclerView.setVisibility(View.VISIBLE);
-        dismiss();
+        dismissLoadState();
         if (modulePosition > 0) {
             mAdapter.setDefaultHighlightPosition(modulePosition - 1);
         }
@@ -382,13 +367,18 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
         }
     }
 
-    private void dismiss() {
-        if (isScreenEmpty) {
-            ProgressHelper.dismiss(loadOnCenterProgressBar);
-            isScreenEmpty = false;
-        } else {
-            ProgressHelper.dismiss(mSwipeRefreshLayout);
+    @Override
+    public void onLoading() {
+        mReportEmptyView.setVisibility(View.GONE);
+        reportConnectionProblem.setVisibility(View.GONE);
+        if (mSectionList.isEmpty()){
+            ProgressHelper.activate(loadOnCenterProgressBar);
         }
+    }
+
+    private void dismissLoadState() {
+        ProgressHelper.dismiss(loadOnCenterProgressBar);
+        ProgressHelper.dismiss(mSwipeRefreshLayout);
     }
 
     private void dismissReportView() {
@@ -400,51 +390,11 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
     @Override
     public void onRefresh() {
         analytic.reportEvent(Analytic.Interaction.REFRESH_SECTION);
-        if (mCourse != null) {
-            updateSections();
+        if (course != null) {
+            sectionsPresenter.showSections(course, true);
         } else {
             onNewIntent(getActivity().getIntent());
         }
-    }
-
-
-    private void saveDataToCache(List<Section> sections) {
-        ToDbSectionTask toDbSectionTask = new ToDbSectionTask(sections);
-        toDbSectionTask.executeOnExecutor(mThreadPoolExecutor);
-    }
-
-    @Subscribe
-    public void onFailureDownload(FailureResponseSectionEvent e) {
-        if (mCourse != null && mCourse.getCourseId() == e.getCourse().getCourseId()) {
-            if (mSectionList != null && mSectionList.size() == 0 && mCourse.getEnrollment() > 0) {
-                reportConnectionProblem.setVisibility(View.VISIBLE);
-            }
-            if (mCourse.getEnrollment() <= 0) {
-                Toast.makeText(getContext(), getString(R.string.internet_problem), Toast.LENGTH_SHORT).show();
-            }
-
-            dismiss();
-        }
-    }
-
-    @Subscribe
-    public void onGettingFromDb(FinishingGetSectionFromDbEvent event) {
-        if (mCourse == null || event.getCourse().getCourseId() != mCourse.getCourseId()) return;
-
-        List<Section> sections = event.getSectionList();
-
-        if (sections != null && sections.size() != 0) {
-            if (mSectionList.isEmpty()) {
-                showSections(sections);
-            }
-            if (firstLoad) {
-                firstLoad = false;
-                updateSections();
-            }
-        } else {
-            updateSections();
-        }
-
     }
 
     @Override
@@ -487,23 +437,10 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
         calendarPresenter.detachView(this);
         courseJoinerPresenter.detachView(this);
         courseFinderPresenter.detachView(this);
+        sectionsPresenter.detachView(this);
         bus.unregister(this);
         courseNotParsedView.setOnClickListener(null);
         super.onDestroyView();
-    }
-
-    @Subscribe
-    public void onSuccessDownload(SuccessResponseSectionsEvent e) {
-        if (mCourse != null && mCourse.getCourseId() == e.getCourse().getCourseId()) {
-            SectionsStepicResponse stepicResponse = e.getResponse().body();
-            List<Section> sections = stepicResponse.getSections();
-            saveDataToCache(sections);
-        }
-    }
-
-    @Subscribe
-    public void onFinishSaveToDb(FinishingSaveSectionToDbEvent e) {
-        getAndShowSectionsFromCache();
     }
 
     @Subscribe
@@ -580,13 +517,13 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
 
     @Override
     public void onCourseFound(CourseFoundEvent event) {
-        if (mCourse == null) {
-            mCourse = event.getCourse();
+        if (course == null) {
+            course = event.getCourse();
             Bundle args = getActivity().getIntent().getExtras();
             if (args == null) {
                 args = new Bundle();
             }
-            args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, mCourse);
+            args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
             getActivity().getIntent().putExtras(args);
             initScreenByCourse();
         }
@@ -594,7 +531,7 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
 
     @Override
     public void onCourseUnavailable(CourseUnavailableForUserEvent event) {
-        if (mCourse == null) {
+        if (course == null) {
             ProgressHelper.dismiss(mSwipeRefreshLayout);
             ProgressHelper.dismiss(loadOnCenterProgressBar);
             courseNotParsedView.setOnClickListener(new View.OnClickListener() {
@@ -617,7 +554,7 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
 
     @Override
     public void onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent event) {
-        if (mCourse == null) {
+        if (course == null) {
             ProgressHelper.dismiss(mSwipeRefreshLayout);
             ProgressHelper.dismiss(loadOnCenterProgressBar);
             courseNotParsedView.setVisibility(View.GONE);
@@ -637,7 +574,7 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
 
     @Override
     public void onFailJoin(FailJoinEvent e) {
-        if (mCourse != null) {
+        if (course != null) {
             if (e.getCode() == HttpURLConnection.HTTP_FORBIDDEN) {
                 Toast.makeText(getContext(), getString(R.string.join_course_web_exception), Toast.LENGTH_LONG).show();
             } else if (e.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
@@ -657,8 +594,8 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
 
     @Override
     public void onSuccessJoin(SuccessJoinEvent e) {
-        if (mCourse != null && e.getCourse() != null && e.getCourse().getCourseId() == mCourse.getCourseId() && mAdapter != null) {
-            mCourse = e.getCourse();
+        if (course != null && e.getCourse() != null && e.getCourse().getCourseId() == course.getCourseId() && mAdapter != null) {
+            course = e.getCourse();
             resolveJoinCourseView();
             mAdapter.notifyDataSetChanged();
         }
@@ -668,8 +605,8 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
 
     @Subscribe
     public void onSuccessDrop(final SuccessDropCourseEvent e) {
-        if (mCourse != null && e.getCourse().getCourseId() == mCourse.getCourseId()) {
-            mCourse.setEnrollment(0);
+        if (course != null && e.getCourse().getCourseId() == course.getCourseId()) {
+            course.setEnrollment(0);
             resolveJoinCourseView();
         }
     }
@@ -738,11 +675,11 @@ public class SectionFragment extends FragmentBase implements SwipeRefreshLayout.
 
     public void onNewIntent(Intent intent) {
         if (intent.getExtras() != null) {
-            mCourse = (Course) (intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
+            course = (Course) (intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
         }
-        if (mCourse != null) {
+        if (course != null) {
             if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
-                final long courseId = mCourse.getCourseId();
+                final long courseId = course.getCourseId();
                 AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                     @Override
                     protected Void doInBackground(Void... params) {
