@@ -18,12 +18,12 @@ import org.stepic.droid.core.DefaultFilterImpl;
 import org.stepic.droid.core.FilterApplicator;
 import org.stepic.droid.core.FilterApplicatorImpl;
 import org.stepic.droid.core.ILessonSessionManager;
-import org.stepic.droid.core.LocalProgressImpl;
-import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.ILoginManager;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.core.LocalLessonSessionManager;
+import org.stepic.droid.core.LocalProgressImpl;
+import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.LoginManager;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
@@ -44,10 +44,8 @@ import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.ISearchResolver;
-import org.stepic.droid.util.resolvers.IStepResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.util.resolvers.SearchResolver;
-import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.RetrofitRESTApi;
@@ -111,12 +109,6 @@ public class AppCoreModule {
     @Singleton
     Bus provideBus() {
         return new Bus();
-    }
-
-    @Provides
-    @Singleton
-    IStepResolver provideStepResolver(Context context) {
-        return new StepTypeResolver(context);
     }
 
     @Provides

@@ -15,8 +15,8 @@ import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.AudioFocusHelper;
 import org.stepic.droid.core.ILessonSessionManager;
-import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
@@ -25,7 +25,6 @@ import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.ISearchResolver;
-import org.stepic.droid.util.resolvers.IStepResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 
 import java.util.concurrent.ThreadPoolExecutor;
@@ -87,9 +86,6 @@ public class FragmentBase extends Fragment {
 
     @Inject
     public CoursePropertyResolver mCoursePropertyResolver;
-
-    @Inject
-    public IStepResolver mStepResolver;
 
     @Inject
     public IMainHandler mMainHandler;

@@ -28,7 +28,6 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.ui.fragments.MyCoursesFragment;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
-import org.stepic.droid.util.resolvers.IStepResolver;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -81,8 +80,6 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     @Inject
     protected UserPreferences mUserPreferences;
-    @Inject
-    protected IStepResolver mStepResolver;
 
     @Inject
     protected ILoginManager mLoginManager;
