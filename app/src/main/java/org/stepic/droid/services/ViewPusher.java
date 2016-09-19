@@ -26,23 +26,24 @@ import javax.inject.Inject;
 import retrofit.Response;
 
 public class ViewPusher extends IntentService {
-    @Inject
-    DownloadManager mSystemDownloadManager;
-    @Inject
-    UserPreferences mUserPrefs;
-    @Inject
-    Bus mBus;
-    @Inject
-    IVideoResolver mResolver;
-    @Inject
-    IApi mApi;
-    @Inject
-    DatabaseFacade mDb;
-    @Inject
-    IStoreStateManager mStoreStateManager;
 
     @Inject
-    LocalProgressManager mUnitProgressManager;
+    DownloadManager systemDownloadManager;
+    @Inject
+    UserPreferences userPrefs;
+    @Inject
+    Bus bus;
+    @Inject
+    IVideoResolver resolver;
+    @Inject
+    IApi api;
+    @Inject
+    DatabaseFacade database;
+    @Inject
+    IStoreStateManager storeStateManager;
+
+    @Inject
+    LocalProgressManager unitProgressManager;
 
 
     /**
@@ -72,32 +73,32 @@ public class ViewPusher extends IntentService {
         }
 
         try {
-            Response<Void> response = mApi.postViewed(new ViewAssignment(assignmentId, stepId)).execute();
+            Response<Void> response = api.postViewed(new ViewAssignment(assignmentId, stepId)).execute();
             if (!response.isSuccess()) {
                 throw new IOException("response is not success");
             }
         } catch (IOException e) {
             //if we not push:
-            mDb.addToQueueViewedState(new ViewAssignment(assignmentId, stepId));
+            database.addToQueueViewedState(new ViewAssignment(assignmentId, stepId));
         }
 
         //anyway check in db as viewed:
         if (assignmentId != null) {
-            mDb.markProgressAsPassed(assignmentId);
+            database.markProgressAsPassed(assignmentId);
         } else {
-            Step step = mDb.getStepById(stepId);
+            Step step = database.getStepById(stepId);
             if (step != null && step.getProgressId() != null) {
-                mDb.markProgressAsPassedIfInDb(step.getProgressId());
+                database.markProgressAsPassedIfInDb(step.getProgressId());
             }
         }
-        mUnitProgressManager.checkUnitAsPassed(stepId);
+        unitProgressManager.checkUnitAsPassed(stepId);
         // Get a handler that can be used to post to the main thread
         Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
 
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                mBus.post(new UpdateStepEvent(stepId));
+                bus.post(new UpdateStepEvent(stepId));
             } // This is your code
         };
         mainHandler.post(myRunnable);

@@ -161,7 +161,7 @@ public class LoadService extends IntentService {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
             }
             if (isNeedCancel(step)) {
-//                mStoreStateManager.updateStepAfterDeleting(step);
+//                storeStateManager.updateStepAfterDeleting(step);
                 // we check it in need cancel
                 return;
             }

@@ -99,7 +99,7 @@ class DeleteService : IntentService("delete_service") {
             step.is_cached = false
             step.is_loading = false
             mDb.updateOnlyCachedLoadingStep(step)
-//            mDb.deleteStep(step) // remove steps FIXME: MAYBE NOT DELETE STEP?
+//            database.deleteStep(step) // remove steps FIXME: MAYBE NOT DELETE STEP?
             mStoreStateManager.updateStepAfterDeleting(step)
             val mainHandler = Handler(MainApplication.getAppContext().mainLooper)
             mainHandler.post { mBus.post(StepRemovedEvent(step.id)) }
