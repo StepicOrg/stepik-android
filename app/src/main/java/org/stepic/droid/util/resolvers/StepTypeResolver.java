@@ -6,6 +6,7 @@ import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.model.Step;
 
 public interface StepTypeResolver {
+
     Drawable getDrawableForType(String type, boolean viewed, boolean isPeerReview);
 
     StepBaseFragment getFragment(Step step);
