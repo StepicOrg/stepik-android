@@ -44,10 +44,10 @@ import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.ISearchResolver;
-import org.stepic.droid.util.resolvers.IStepResolver;
+import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.util.resolvers.SearchResolver;
-import org.stepic.droid.util.resolvers.StepTypeResolver;
+import org.stepic.droid.util.resolvers.StepTypeResolverImpl;
 import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.RetrofitRESTApi;
@@ -115,8 +115,8 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    IStepResolver provideStepResolver(Context context) {
-        return new StepTypeResolver(context);
+    StepTypeResolver provideStepResolver(Context context) {
+        return new StepTypeResolverImpl(context);
     }
 
     @Provides

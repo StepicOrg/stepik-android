@@ -25,7 +25,7 @@ import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.ISearchResolver;
-import org.stepic.droid.util.resolvers.IStepResolver;
+import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 
 import java.util.concurrent.ThreadPoolExecutor;
@@ -89,7 +89,7 @@ public class FragmentBase extends Fragment {
     public CoursePropertyResolver mCoursePropertyResolver;
 
     @Inject
-    public IStepResolver mStepResolver;
+    public StepTypeResolver mStepResolver;
 
     @Inject
     public IMainHandler mMainHandler;
