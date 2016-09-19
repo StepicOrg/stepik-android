@@ -8,7 +8,8 @@ import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
 import org.stepic.droid.core.presenters.SearchCoursesPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.util.resolvers.ISearchResolver;
+import org.stepic.droid.util.resolvers.SearchResolver;
+import org.stepic.droid.util.resolvers.SearchResolverImpl;
 import org.stepic.droid.web.IApi;
 
 import java.util.concurrent.ThreadPoolExecutor;
@@ -18,6 +19,13 @@ import dagger.Provides;
 
 @Module
 public class CourseListModule {
+
+    @PerFragment
+    @Provides
+    SearchResolver provideSearchResolver() {
+        return new SearchResolverImpl();
+    }
+
     @PerFragment
     @Provides
     PersistentCourseListPresenter providePersistentCourseListPresenter(Analytic analytic,
@@ -43,7 +51,7 @@ public class CourseListModule {
     SearchCoursesPresenter provideSearchCoursePresenter(IApi api,
                                                         ThreadPoolExecutor threadPoolExecutor,
                                                         IMainHandler mainHandler,
-                                                        ISearchResolver searchResolver) {
+                                                        SearchResolver searchResolver) {
         return new SearchCoursesPresenter(api,
                 threadPoolExecutor,
                 mainHandler,
