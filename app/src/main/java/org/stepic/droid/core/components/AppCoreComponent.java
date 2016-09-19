@@ -35,7 +35,6 @@ import org.stepic.droid.ui.adapters.DownloadsAdapter;
 import org.stepic.droid.ui.adapters.MyCoursesAdapter;
 import org.stepic.droid.ui.adapters.SectionAdapter;
 import org.stepic.droid.ui.adapters.SocialAuthAdapter;
-import org.stepic.droid.ui.adapters.StepFragmentAdapter;
 import org.stepic.droid.ui.adapters.UnitAdapter;
 import org.stepic.droid.ui.dialogs.AllowMobileDataDialogFragment;
 import org.stepic.droid.ui.dialogs.CertificateShareDialog;
@@ -90,8 +89,6 @@ public interface AppCoreComponent {
     void inject(Section section);
 
     void inject(UnitAdapter adapter);
-
-    void inject(StepFragmentAdapter adapter);
 
     void inject(LogoutAreYouSureDialog dialogFragment);
 

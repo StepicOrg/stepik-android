@@ -32,7 +32,7 @@ public class StepicLogicHelper {
     }
 
     @NotNull
-    public static String getPathForCourseOrEmpty(Course course, IConfig mConfig) {
-        return course.getCover() == null ? "" : mConfig.getBaseUrl() + course.getCover();
+    public static String getPathForCourseOrEmpty(Course course, IConfig config) {
+        return course.getCover() == null ? "" : config.getBaseUrl() + course.getCover();
     }
 }

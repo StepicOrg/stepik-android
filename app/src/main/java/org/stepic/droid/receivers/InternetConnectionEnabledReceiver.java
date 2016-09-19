@@ -27,11 +27,11 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
 
     @Inject
-    IApi mApi;
+    IApi api;
     @Inject
-    DatabaseFacade mDatabaseFacade;
+    DatabaseFacade databaseFacade;
     @Inject
-    IStoreStateManager mStoreStateManager;
+    IStoreStateManager storeStateManager;
 
     @Inject
     Bus bus;
@@ -63,12 +63,12 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                List<ViewAssignment> list = mDatabaseFacade.getAllInQueue();
+                List<ViewAssignment> list = databaseFacade.getAllInQueue();
                 for (ViewAssignment item : list) {
                     try {
-                        retrofit.Response<Void> response = mApi.postViewed(item).execute();
+                        retrofit.Response<Void> response = api.postViewed(item).execute();
                         if (response.isSuccess()) {
-                            mDatabaseFacade.removeFromQueue(item);
+                            databaseFacade.removeFromQueue(item);
                         }
                     } catch (IOException e) {
                         analytic.reportError(Analytic.Error.PUSH_STATE_EXCEPTION, e);

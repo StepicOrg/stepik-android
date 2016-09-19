@@ -32,11 +32,11 @@ class ClearVideosDialog : DialogFragment() {
     }
 
     @Inject
-    lateinit var mDatabaseFacade: DatabaseFacade
+    lateinit var databaseFacade: DatabaseFacade
     @Inject
-    lateinit var mCleanManager: CleanManager
+    lateinit var cleanManager: CleanManager
     @Inject
-    lateinit var mBus: Bus
+    lateinit var bus: Bus
     @Inject
     lateinit var threadPoolExecutor: ThreadPoolExecutor
     @Inject
@@ -61,7 +61,7 @@ class ClearVideosDialog : DialogFragment() {
             val task = object : AsyncTask<Void, Void, Void>() {
                 override fun onPreExecute() {
                     super.onPreExecute()
-                    mBus.post(StartLoadEvent())
+                    bus.post(StartLoadEvent())
                 }
 
                 override fun doInBackground(params: Array<Void>): Void? {
@@ -71,24 +71,24 @@ class ClearVideosDialog : DialogFragment() {
                         stepIds = DbParseHelper.parseStringToLongArray(stringIds)
                         if (stepIds == null) return null
                         for (stepId in stepIds) {
-                            val step = mDatabaseFacade.getStepById(stepId)
-                            mCleanManager.removeStep(step)
+                            val step = databaseFacade.getStepById(stepId)
+                            cleanManager.removeStep(step)
                         }
                     } else {
                         stepIds = null
                         FileUtil.cleanDirectory(userPreferences.userDownloadFolder);
                         FileUtil.cleanDirectory(userPreferences.sdCardDownloadFolder)
-                        mDatabaseFacade.dropDatabase();
+                        databaseFacade.dropDatabase();
                     }
 
                     mainHandler.post {
-                        mBus.post(ClearAllDownloadWithoutAnimationEvent(stepIds))
+                        bus.post(ClearAllDownloadWithoutAnimationEvent(stepIds))
                     }
                     return null
                 }
 
                 override fun onPostExecute(o: Void?) {
-                    mBus.post(FinishLoadEvent())
+                    bus.post(FinishLoadEvent())
                 }
             }
             task.executeOnExecutor(threadPoolExecutor)

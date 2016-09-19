@@ -57,14 +57,14 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ScreenManager implements IScreenManager {
-    private IConfig mConfig;
-    private UserPreferences mUserPreferences;
+    private IConfig config;
+    private UserPreferences userPreferences;
     private Analytic analytic;
 
     @Inject
     public ScreenManager(IConfig config, UserPreferences userPreferences, Analytic analytic) {
-        this.mConfig = config;
-        mUserPreferences = userPreferences;
+        this.config = config;
+        this.userPreferences = userPreferences;
         this.analytic = analytic;
     }
 
@@ -171,7 +171,7 @@ public class ScreenManager implements IScreenManager {
     @Override
     public void showVideo(Activity sourceActivity, String videoPath) {
         analytic.reportEvent(Analytic.Screens.TRY_OPEN_VIDEO);
-        boolean isOpenExternal = mUserPreferences.isOpenInExternal();
+        boolean isOpenExternal = userPreferences.isOpenInExternal();
         if (isOpenExternal) {
             analytic.reportEvent(Analytic.Video.OPEN_EXTERNAL);
         } else {
@@ -351,7 +351,7 @@ public class ScreenManager implements IScreenManager {
     @Override
     public void openStepInWeb(Context context, Step step) {
         analytic.reportEvent(Analytic.Screens.OPEN_STEP_IN_WEB, step.getId() + "");
-        String url = mConfig.getBaseUrl() + "/lesson/" + step.getLesson() + "/step/" + step.getPosition() + "/?from_mobile_app=true";
+        String url = config.getBaseUrl() + "/lesson/" + step.getLesson() + "/step/" + step.getPosition() + "/?from_mobile_app=true";
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
         context.startActivity(intent);
     }

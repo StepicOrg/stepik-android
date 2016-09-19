@@ -106,10 +106,10 @@ public class SectionsFragment
 
 
     @BindView(R.id.swipe_refresh_layout_sections)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @BindView(R.id.sections_recycler_view)
-    RecyclerView mSectionsRecyclerView;
+    RecyclerView sectionsRecyclerView;
 
     @BindView(R.id.load_progressbar)
     ProgressBar loadOnCenterProgressBar;
@@ -124,7 +124,7 @@ public class SectionsFragment
     View courseNotParsedView;
 
     @BindView(R.id.report_empty)
-    protected View mReportEmptyView;
+    protected View reportEmptyView;
 
     @BindView(R.id.join_course_root)
     protected View joinCourseRoot; // default state is gone
@@ -145,8 +145,8 @@ public class SectionsFragment
 
     @Nullable
     private Course course;
-    private SectionAdapter mAdapter;
-    private List<Section> mSectionList;
+    private SectionAdapter adapter;
+    private List<Section> sectionList;
 
     boolean firstLoad;
     boolean isNeedShowCalendarInMenu = false;
@@ -175,12 +175,12 @@ public class SectionsFragment
     @Inject
     INotificationManager notificationManager;
 
-    private GoogleApiClient mClient;
+    private GoogleApiClient googleClient;
     private boolean wasIndexed;
-    private Uri mUrlInApp;
-    private Uri mUrlInWeb;
-    private String mTitle;
-    private String mDescription;
+    private Uri urlInApp;
+    private Uri urlInWeb;
+    private String title;
+    private String description;
 
     LinearLayoutManager linearLayoutManager;
 
@@ -213,22 +213,22 @@ public class SectionsFragment
         hideSoftKeypad();
         firstLoad = true;
 
-        mClient = new GoogleApiClient.Builder(getActivity()).addApi(AppIndex.API).build();
+        googleClient = new GoogleApiClient.Builder(getActivity()).addApi(AppIndex.API).build();
 
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeResources(
                 R.color.stepic_brand_primary,
                 R.color.stepic_orange_carrot,
                 R.color.stepic_blue_ribbon);
 
-        mSectionsRecyclerView.setVisibility(View.GONE);
+        sectionsRecyclerView.setVisibility(View.GONE);
         linearLayoutManager = new LinearLayoutManager(getActivity());
-        mSectionsRecyclerView.setLayoutManager(linearLayoutManager);
-        mSectionList = new ArrayList<>();
-        mAdapter = new SectionAdapter(mSectionList, getContext(), ((AppCompatActivity) getActivity()), calendarPresenter);
-        mSectionsRecyclerView.setAdapter(mAdapter);
+        sectionsRecyclerView.setLayoutManager(linearLayoutManager);
+        sectionList = new ArrayList<>();
+        adapter = new SectionAdapter(sectionList, getContext(), ((AppCompatActivity) getActivity()), calendarPresenter);
+        sectionsRecyclerView.setAdapter(adapter);
 
-        mSectionsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        sectionsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         unauthorizedDialog = UnauthorizedDialogFragment.newInstance();
         joinCourseProgressDialog = new LoadingProgressDialog(getContext());
@@ -252,27 +252,27 @@ public class SectionsFragment
     public void initScreenByCourse() {
         reportConnectionProblem.setVisibility(View.GONE);
         courseNotParsedView.setVisibility(View.GONE);
-        mAdapter.setCourse(course);
+        adapter.setCourse(course);
         resolveJoinCourseView();
         setUpToolbarWithCourse();
         sectionsPresenter.showSections(course, false);
 
         if (course != null && course.getSlug() != null && !wasIndexed) {
-            mTitle = getString(R.string.syllabus_title) + ": " + course.getTitle();
-            mDescription = course.getSummary();
-            mUrlInWeb = Uri.parse(StringUtil.getUriForSyllabus(mConfig.getBaseUrl(), course.getSlug()));
-            mUrlInApp = StringUtil.getAppUriForCourseSyllabus(mConfig.getBaseUrl(), course.getSlug());
+            title = getString(R.string.syllabus_title) + ": " + course.getTitle();
+            description = course.getSummary();
+            urlInWeb = Uri.parse(StringUtil.getUriForSyllabus(mConfig.getBaseUrl(), course.getSlug()));
+            urlInApp = StringUtil.getAppUriForCourseSyllabus(mConfig.getBaseUrl(), course.getSlug());
             reportIndexToGoogle();
         }
     }
 
     private void reportIndexToGoogle() {
         if (course != null && !wasIndexed && course.getSlug() != null) {
-            if (!mClient.isConnecting() && !mClient.isConnected()) {
-                mClient.connect();
+            if (!googleClient.isConnecting() && !googleClient.isConnected()) {
+                googleClient.connect();
             }
             wasIndexed = true;
-            AppIndex.AppIndexApi.start(mClient, getAction());
+            AppIndex.AppIndexApi.start(googleClient, getAction());
             analytic.reportEventWithIdName(Analytic.AppIndexing.COURSE_SYLLABUS, course.getCourseId() + "", course.getTitle());
         }
     }
@@ -306,7 +306,7 @@ public class SectionsFragment
         switch (item.getItemId()) {
             case R.id.action_info:
                 if (course != null) {
-                    mShell.getScreenProvider().showCourseDescription(this, course);
+                    shell.getScreenProvider().showCourseDescription(this, course);
                 }
                 return true;
 
@@ -323,7 +323,7 @@ public class SectionsFragment
 
             case R.id.menu_item_calendar:
                 analytic.reportEventWithIdName(Analytic.Calendar.USER_CLICK_ADD_MENU, course.getCourseId() + "", course.getTitle());
-                calendarPresenter.addDeadlinesToCalendar(mSectionList, null);
+                calendarPresenter.addDeadlinesToCalendar(sectionList, null);
                 return true;
             case android.R.id.home:
                 // Respond to the action bar's Up/Home button
@@ -336,29 +336,29 @@ public class SectionsFragment
 
     @Override
     public void onEmptySections() {
-        if (mSectionList.isEmpty()) {
+        if (sectionList.isEmpty()) {
             dismissLoadState();
-            mReportEmptyView.setVisibility(View.VISIBLE);
+            reportEmptyView.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void onConnectionProblem() {
-        if (mSectionList.isEmpty()) {
+        if (sectionList.isEmpty()) {
             dismissLoadState();
             reportConnectionProblem.setVisibility(View.VISIBLE);
         }
     }
 
     public void onNeedShowSections(List<Section> sections) {
-        mSectionList.clear();
-        mSectionList.addAll(sections);
-        calendarPresenter.checkToShowCalendar(mSectionList);
+        sectionList.clear();
+        sectionList.addAll(sections);
+        calendarPresenter.checkToShowCalendar(sectionList);
         dismissReportView();
-        mSectionsRecyclerView.setVisibility(View.VISIBLE);
+        sectionsRecyclerView.setVisibility(View.VISIBLE);
         dismissLoadState();
         if (modulePosition > 0) {
-            mAdapter.setDefaultHighlightPosition(modulePosition - 1);
+            adapter.setDefaultHighlightPosition(modulePosition - 1);
         }
         if (modulePosition > 0) {
             int scrollTo = modulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
@@ -369,20 +369,20 @@ public class SectionsFragment
 
     @Override
     public void onLoading() {
-        mReportEmptyView.setVisibility(View.GONE);
+        reportEmptyView.setVisibility(View.GONE);
         reportConnectionProblem.setVisibility(View.GONE);
-        if (mSectionList.isEmpty()){
+        if (sectionList.isEmpty()){
             ProgressHelper.activate(loadOnCenterProgressBar);
         }
     }
 
     private void dismissLoadState() {
         ProgressHelper.dismiss(loadOnCenterProgressBar);
-        ProgressHelper.dismiss(mSwipeRefreshLayout);
+        ProgressHelper.dismiss(swipeRefreshLayout);
     }
 
     private void dismissReportView() {
-        if (mSectionList != null && mSectionList.size() != 0) {
+        if (sectionList != null && sectionList.size() != 0) {
             reportConnectionProblem.setVisibility(View.GONE);
         }
     }
@@ -408,22 +408,22 @@ public class SectionsFragment
         super.onStop();
 
         if (wasIndexed) {
-            AppIndex.AppIndexApi.end(mClient, getAction());
+            AppIndex.AppIndexApi.end(googleClient, getAction());
         }
 
-        if (mClient != null && mClient.isConnected() && mClient.isConnecting()) {
-            mClient.disconnect();
+        if (googleClient != null && googleClient.isConnected() && googleClient.isConnecting()) {
+            googleClient.disconnect();
         }
         wasIndexed = false;
-        ProgressHelper.dismiss(mSwipeRefreshLayout);
+        ProgressHelper.dismiss(swipeRefreshLayout);
     }
 
     public Action getAction() {
         Thing object = new Thing.Builder()
-                .setId(mUrlInWeb.toString())
-                .setName(mTitle)
-                .setDescription(mDescription)
-                .setUrl(mUrlInApp)
+                .setId(urlInWeb.toString())
+                .setName(title)
+                .setDescription(description)
+                .setUrl(urlInApp)
                 .build();
 
         return new Action.Builder(Action.TYPE_VIEW)
@@ -459,19 +459,19 @@ public class SectionsFragment
 
         int position = -1;
         Section section = null;
-        for (int i = 0; i < mSectionList.size(); i++) {
-            if (mSectionList.get(i).getId() == sectionId) {
+        for (int i = 0; i < sectionList.size(); i++) {
+            if (sectionList.get(i).getId() == sectionId) {
                 position = i;
-                section = mSectionList.get(i);
+                section = sectionList.get(i);
                 break;
             }
         }
-        if (section == null || position == -1 || position >= mSectionList.size()) return;
+        if (section == null || position == -1 || position >= sectionList.size()) return;
 
         //now we have not null section and correct position at list
         section.set_cached(isCached);
         section.set_loading(isLoading);
-        mAdapter.notifyItemChanged(position + SectionAdapter.SECTION_LIST_DELTA);
+        adapter.notifyItemChanged(position + SectionAdapter.SECTION_LIST_DELTA);
     }
 
 
@@ -497,9 +497,9 @@ public class SectionsFragment
             if (permissionExternalStorage.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                int position = mShell.getSharedPreferenceHelper().getTempPosition();
-                if (mAdapter != null) {
-                    mAdapter.requestClickLoad(position);
+                int position = shell.getSharedPreferenceHelper().getTempPosition();
+                if (adapter != null) {
+                    adapter.requestClickLoad(position);
                 }
             }
         }
@@ -510,7 +510,7 @@ public class SectionsFragment
 
             if (permissionExternalStorage.equals(Manifest.permission.WRITE_CALENDAR) &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                calendarPresenter.addDeadlinesToCalendar(mSectionList, null);
+                calendarPresenter.addDeadlinesToCalendar(sectionList, null);
             }
         }
     }
@@ -532,13 +532,13 @@ public class SectionsFragment
     @Override
     public void onCourseUnavailable(CourseUnavailableForUserEvent event) {
         if (course == null) {
-            ProgressHelper.dismiss(mSwipeRefreshLayout);
+            ProgressHelper.dismiss(swipeRefreshLayout);
             ProgressHelper.dismiss(loadOnCenterProgressBar);
             courseNotParsedView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mSharedPreferenceHelper.getAuthResponseFromStore() != null) {
-                        mShell.getScreenProvider().showFindCourses(getActivity());
+                    if (sharedPreferenceHelper.getAuthResponseFromStore() != null) {
+                        shell.getScreenProvider().showFindCourses(getActivity());
                         getActivity().finish();
                     } else {
                         if (!unauthorizedDialog.isAdded()) {
@@ -555,7 +555,7 @@ public class SectionsFragment
     @Override
     public void onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent event) {
         if (course == null) {
-            ProgressHelper.dismiss(mSwipeRefreshLayout);
+            ProgressHelper.dismiss(swipeRefreshLayout);
             ProgressHelper.dismiss(loadOnCenterProgressBar);
             courseNotParsedView.setVisibility(View.GONE);
             reportConnectionProblem.setVisibility(View.VISIBLE);
@@ -594,10 +594,10 @@ public class SectionsFragment
 
     @Override
     public void onSuccessJoin(SuccessJoinEvent e) {
-        if (course != null && e.getCourse() != null && e.getCourse().getCourseId() == course.getCourseId() && mAdapter != null) {
+        if (course != null && e.getCourse() != null && e.getCourse().getCourseId() == course.getCourseId() && adapter != null) {
             course = e.getCourse();
             resolveJoinCourseView();
-            mAdapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
         }
         ProgressHelper.dismiss(joinCourseProgressDialog);
     }
@@ -631,15 +631,15 @@ public class SectionsFragment
 
     @Override
     public void successExported() {
-        mAdapter.setNeedShowCalendarWidget(false);
-        mAdapter.notifyItemChanged(0);
+        adapter.setNeedShowCalendarWidget(false);
+        adapter.notifyItemChanged(0);
         SnackbarExtensionKt.setTextColor(Snackbar.make(rootView, R.string.calendar_added_message, Snackbar.LENGTH_SHORT), ColorUtil.INSTANCE.getColorArgb(R.color.white, getContext())).show();
     }
 
     @Override
     public void onShouldBeShownCalendar(boolean needShow) {
-        mAdapter.setNeedShowCalendarWidget(needShow);
-        mAdapter.notifyItemChanged(0);
+        adapter.setNeedShowCalendarWidget(needShow);
+        adapter.notifyItemChanged(0);
     }
 
     @Override
@@ -661,14 +661,14 @@ public class SectionsFragment
     @Subscribe
     public void onCalendarChosen(CalendarChosenEvent event) {
         CalendarItem calendarItem = event.getCalendarItem();
-        calendarPresenter.addDeadlinesToCalendar(mSectionList, calendarItem);
+        calendarPresenter.addDeadlinesToCalendar(sectionList, calendarItem);
     }
 
     @Override
     public void onUserDoesntHaveCalendar() {
-        mUserPreferences.setNeedToShowCalendarWidget(false);
-        mAdapter.setNeedShowCalendarWidget(false);
-        mAdapter.notifyItemChanged(0);
+        userPreferences.setNeedToShowCalendarWidget(false);
+        adapter.setNeedShowCalendarWidget(false);
+        adapter.notifyItemChanged(0);
         SnackbarExtensionKt.setTextColor(Snackbar.make(rootView, R.string.user_not_have_calendar, Snackbar.LENGTH_LONG), ColorUtil.INSTANCE.getColorArgb(R.color.white, getContext())).show();
     }
 
@@ -683,12 +683,12 @@ public class SectionsFragment
                 AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                     @Override
                     protected Void doInBackground(Void... params) {
-                        List<Notification> notifications = mDatabaseFacade.getAllNotificationsOfCourse(courseId);
+                        List<Notification> notifications = databaseFacade.getAllNotificationsOfCourse(courseId);
                         notificationManager.discardAllNotifications(courseId);
                         for (Notification notificationItem : notifications) {
                             if (notificationItem != null && notificationItem.getId() != null) {
                                 try {
-                                    mShell.getApi().markNotificationAsRead(notificationItem.getId(), true).execute();
+                                    shell.getApi().markNotificationAsRead(notificationItem.getId(), true).execute();
                                 } catch (IOException e) {
                                     analytic.reportError(Analytic.Error.NOTIFICATION_NOT_POSTED_ON_CLICK, e);
                                 }
@@ -697,7 +697,7 @@ public class SectionsFragment
                         return null;
                     }
                 };
-                task.executeOnExecutor(mThreadPoolExecutor);
+                task.executeOnExecutor(threadPoolExecutor);
             }
 
             initScreenByCourse();

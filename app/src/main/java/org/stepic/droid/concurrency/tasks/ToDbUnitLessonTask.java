@@ -21,12 +21,12 @@ public class ToDbUnitLessonTask extends StepicTask<Void, Void, Void> {
     private final List<Lesson> lessonList;
     private List<Progress> progresses;
     @Inject
-    DatabaseFacade mDatabaseFacade;
+    DatabaseFacade databaseFacade;
 
     @Inject
     Bus mBus;
 
-    Section mSection;
+    Section section;
 
     public ToDbUnitLessonTask(Section section, List<Unit> unitList, List<Lesson> lessonList, List<Progress> progresses) {
         super(MainApplication.getAppContext());
@@ -34,7 +34,7 @@ public class ToDbUnitLessonTask extends StepicTask<Void, Void, Void> {
         this.lessonList = lessonList;
         this.progresses = progresses;
         MainApplication.component().inject(this);
-        mSection = section;
+        this.section = section;
 
     }
 
@@ -46,21 +46,21 @@ public class ToDbUnitLessonTask extends StepicTask<Void, Void, Void> {
         lessonList = new ArrayList<>();
         lessonList.add(lesson);
         MainApplication.component().inject(this);
-        mSection = null;
+        section = null;
 
     }
 
     @Override
     protected Void doInBackgroundBody(Void... params) throws Exception {
         for (Progress item : progresses) {
-            mDatabaseFacade.addProgress(item);
+            databaseFacade.addProgress(item);
         }
         
         for (Unit unitItem : unitList) {
-            mDatabaseFacade.addUnit(unitItem);
+            databaseFacade.addUnit(unitItem);
         }
         for (Lesson lessonItem : lessonList) {
-            mDatabaseFacade.addLesson(lessonItem);
+            databaseFacade.addLesson(lessonItem);
         }
 
         return null;
@@ -69,6 +69,6 @@ public class ToDbUnitLessonTask extends StepicTask<Void, Void, Void> {
     @Override
     protected void onSuccess(Void aVoid) {
         super.onSuccess(aVoid);
-        mBus.post(new UnitLessonSavedEvent(mSection, unitList, lessonList));
+        mBus.post(new UnitLessonSavedEvent(section, unitList, lessonList));
     }
 }

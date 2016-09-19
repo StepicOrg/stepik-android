@@ -7,14 +7,14 @@ import org.stepic.droid.model.Unit;
 import java.util.List;
 
 public class UnitLessonSavedEvent {
-    private Section mSection;
+    private Section section;
     private final List<Unit> units;
     private final List<Lesson> lessons;
 
-    public UnitLessonSavedEvent(Section mSection, List<Unit> units, List<Lesson> lessons) {
+    public UnitLessonSavedEvent(Section section, List<Unit> units, List<Lesson> lessons) {
 
 
-        this.mSection = mSection;
+        this.section = section;
         this.units = units;
         this.lessons = lessons;
     }
@@ -28,6 +28,6 @@ public class UnitLessonSavedEvent {
     }
 
     public Section getSection() {
-        return mSection;
+        return section;
     }
 }

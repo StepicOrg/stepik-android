@@ -2,11 +2,11 @@ package org.stepic.droid.events.units;
 
 public class UnitScoreUpdateEvent {
 
-    long mUnitId;
+    long unitId;
     double newScore;
 
     public UnitScoreUpdateEvent(long unitId, double score) {
-        this.mUnitId = unitId;
+        this.unitId = unitId;
         newScore = score;
     }
 
@@ -15,6 +15,6 @@ public class UnitScoreUpdateEvent {
     }
 
     public long getUnitId() {
-        return mUnitId;
+        return unitId;
     }
 }

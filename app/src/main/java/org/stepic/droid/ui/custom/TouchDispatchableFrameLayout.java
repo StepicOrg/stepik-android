@@ -9,7 +9,7 @@ import org.stepic.droid.ui.listeners.OnRootTouchedListener;
 
 public class TouchDispatchableFrameLayout extends FrameLayout {
 
-    private OnRootTouchedListener mListener = null;
+    private OnRootTouchedListener listener = null;
 
     public TouchDispatchableFrameLayout(Context context) {
         super(context);
@@ -25,14 +25,14 @@ public class TouchDispatchableFrameLayout extends FrameLayout {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (mListener != null) {
-            mListener.makeBeforeChildren();
+        if (listener != null) {
+            listener.makeBeforeChildren();
         }
         return super.dispatchTouchEvent(ev);
     }
 
     public void setParentTouchEvent(OnRootTouchedListener listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
 }

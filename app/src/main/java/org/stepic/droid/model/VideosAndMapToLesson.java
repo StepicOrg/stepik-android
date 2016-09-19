@@ -5,11 +5,11 @@ import java.util.Map;
 
 public class VideosAndMapToLesson {
     private final List<CachedVideo> cachedVideoList;
-    private final Map<Long, Lesson> mStepIdToLesson;
+    private final Map<Long, Lesson> stepIdToLesson;
 
-    public VideosAndMapToLesson(List<CachedVideo> cachedVideoList, Map<Long, Lesson> mStepIdToLesson) {
+    public VideosAndMapToLesson(List<CachedVideo> cachedVideoList, Map<Long, Lesson> stepIdToLesson) {
         this.cachedVideoList = cachedVideoList;
-        this.mStepIdToLesson = mStepIdToLesson;
+        this.stepIdToLesson = stepIdToLesson;
     }
 
     public List<CachedVideo> getCachedVideoList() {
@@ -17,6 +17,6 @@ public class VideosAndMapToLesson {
     }
 
     public Map<Long, Lesson> getStepIdToLesson() {
-        return mStepIdToLesson;
+        return stepIdToLesson;
     }
 }

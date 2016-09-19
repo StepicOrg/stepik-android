@@ -27,13 +27,13 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
     private final static String TAG = "SearchActivity";
 
     @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    Toolbar toolbar;
 
     @BindView(R.id.frame)
-    View mRootFrame;
+    View rootFrame;
 
-    private MenuItem mMenuItem;
-    private SearchView mSearchView;
+    private MenuItem menuItem;
+    private SearchView searchView;
     private String query;
 
     @Override
@@ -42,13 +42,13 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
         setContentView(R.layout.activity_search_courses);
         unbinder = ButterKnife.bind(this);
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         bus.register(this);
 
         query = getIntent().getStringExtra(SearchManager.QUERY);
         initOrTryRestoreFragment();
-        if (mSearchView != null) {
+        if (searchView != null) {
             invalidateOptionsMenu();
         }
     }
@@ -75,7 +75,7 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
         fm.beginTransaction()
                 .replace(R.id.frame, fragment)
                 .commit();
-        if (mSearchView != null) {
+        if (searchView != null) {
             invalidateOptionsMenu();
         }
     }
@@ -108,20 +108,20 @@ public class CourseSearchResultActivity extends FragmentActivityBase {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        mMenuItem = menu.findItem(R.id.action_search);
-        mSearchView = (SearchView) mMenuItem.getActionView();
+        menuItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) menuItem.getActionView();
 
         ComponentName componentName = getComponentName();
         SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
-        mSearchView.setSearchableInfo(searchableInfo);
-        mSearchView.setMaxWidth(20000);//it is dirty hack for expand in landscape
-        mMenuItem.expandActionView();
+        searchView.setSearchableInfo(searchableInfo);
+        searchView.setMaxWidth(20000);//it is dirty hack for expand in landscape
+        menuItem.expandActionView();
         if (query != null) {
-            mSearchView.setQuery(query, false);
+            searchView.setQuery(query, false);
         }
-        mSearchView.clearFocus();
+        searchView.clearFocus();
 
-        MenuItemCompat.setOnActionExpandListener(mMenuItem, new MenuItemCompat.OnActionExpandListener() {
+        MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 return true;

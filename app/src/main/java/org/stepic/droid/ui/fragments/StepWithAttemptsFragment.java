@@ -54,51 +54,51 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     protected final int FIRST_DELAY = 1000;
 
     @BindView(R.id.root_view)
-    ViewGroup mRootView;
+    ViewGroup rootView;
 
     @BindView(R.id.result_line)
-    View mResultLine;
+    View resultLine;
 
     @BindView(R.id.answer_status_icon)
-    ImageView mStatusIcon;
+    ImageView statusIcon;
 
     @BindView(R.id.answer_status_text)
-    TextView mStatusTextView;
+    TextView statusTextView;
 
     @BindView(R.id.progress_bar)
-    ProgressBar mProgressBar;
+    ProgressBar progressBar;
 
     @BindView(R.id.report_problem)
     View connectionProblem;
 
     @BindView(R.id.root_scroll_view)
-    protected NestedScrollView mRootScrollView;
+    protected NestedScrollView rootScrollView;
 
     @BindView(R.id.attempt_container)
-    ViewGroup mAttemptContainer;
+    ViewGroup attemptContainer;
 
     @BindView(R.id.submit_button)
-    Button mActionButton;
+    Button actionButton;
 
     @BindView(R.id.peer_review_warning)
-    View mPeerReviewIndicator;
+    View peerReviewIndicator;
 
     @BindString(R.string.correct)
-    String mCorrectString;
+    String correctString;
 
     @BindString(R.string.wrong)
-    protected String mWrongString;
+    protected String wrongString;
 
     @BindString(R.string.submit)
-    protected String mSubmitText;
+    protected String submitText;
 
     @BindString(R.string.try_again)
-    protected String mTryAgainText;
+    protected String tryAgainText;
 
-    protected Attempt mAttempt = null;
-    protected Submission mSubmission = null;
+    protected Attempt attempt = null;
+    protected Submission submission = null;
 
-    protected Handler mHandler;
+    protected Handler handler;
 
     @BindDrawable(R.drawable.ic_correct)
     protected Drawable mCorrectIcon;
@@ -121,7 +121,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     @Override
     public final void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mHandler = new Handler();
+        handler = new Handler();
         setListenerToActionButton(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,7 +132,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
                 analytic.reportEvent(Analytic.Interaction.CLICK_SEND_SUBMISSION, bundle);//value
 
                 showLoadState(true);
-                if (mSubmission == null || mSubmission.getStatus() == Submission.Status.LOCAL) {
+                if (submission == null || submission.getStatus() == Submission.Status.LOCAL) {
                     makeSubmission();
                 } else {
                     tryAgain();
@@ -158,18 +158,18 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
             getExistingAttempts();
         }
 
-        if (mSubmission == null || mSubmission.getStatus() == Submission.Status.LOCAL) {
-            setTextToActionButton(mSubmitText);
+        if (submission == null || submission.getStatus() == Submission.Status.LOCAL) {
+            setTextToActionButton(submitText);
         } else {
-            setTextToActionButton(mTryAgainText);
+            setTextToActionButton(tryAgainText);
         }
 
         if (step.getActions() != null && step.getActions().getDo_review() != null) {
-            mPeerReviewIndicator.setVisibility(View.VISIBLE);
-            mPeerReviewIndicator.setOnClickListener(new View.OnClickListener() {
+            peerReviewIndicator.setVisibility(View.VISIBLE);
+            peerReviewIndicator.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mShell.getScreenProvider().openStepInWeb(getContext(), step);
+                    shell.getScreenProvider().openStepInWeb(getContext(), step);
                 }
             });
         }
@@ -180,17 +180,17 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
      * @return false if restore was failed;
      */
     protected final boolean tryRestoreState() {
-        mAttempt = mLessonManager.restoreAttemptForStep(step.getId());
-        mSubmission = mLessonManager.restoreSubmissionForStep(step.getId());
-        if (mSubmission == null || mAttempt == null) return false;
+        attempt = lessonManager.restoreAttemptForStep(step.getId());
+        submission = lessonManager.restoreSubmissionForStep(step.getId());
+        if (submission == null || attempt == null) return false;
 
-        showAttemptAbstractWrapMethod(mAttempt, true);
-        fillSubmission(mSubmission);
+        showAttemptAbstractWrapMethod(attempt, true);
+        fillSubmission(submission);
         return true;
     }
 
     protected final void getExistingAttempts() {
-        mShell.getApi().getExistingAttempts(step.getId()).enqueue(new Callback<AttemptResponse>() {
+        shell.getApi().getExistingAttempts(step.getId()).enqueue(new Callback<AttemptResponse>() {
             Step localStep = step;
 
             @Override
@@ -225,7 +225,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     protected final void createNewAttempt() {
         if (step == null) return;
-        mShell.getApi().createNewAttempt(step.getId()).enqueue(new Callback<AttemptResponse>() {
+        shell.getApi().createNewAttempt(step.getId()).enqueue(new Callback<AttemptResponse>() {
             Step localStep = step;
 
             @Override
@@ -252,11 +252,11 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     }
 
     protected void makeSubmission() {
-        if (mAttempt == null || mAttempt.getId() <= 0) return;
+        if (attempt == null || attempt.getId() <= 0) return;
         blockUIBeforeSubmit(true);
-        final long attemptId = mAttempt.getId();
+        final long attemptId = attempt.getId();
         final Reply reply = generateReply();
-        mShell.getApi().createNewSubmission(reply, attemptId).enqueue(new Callback<SubmissionResponse>() {
+        shell.getApi().createNewSubmission(reply, attemptId).enqueue(new Callback<SubmissionResponse>() {
             @Override
             public void onResponse(Response<SubmissionResponse> response, Retrofit retrofit) {
                 if (response.isSuccess()) {
@@ -279,19 +279,19 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     }
 
     protected final void getStatusOfSubmission(final long attemptId, final int numberOfTry) {
-        if (mHandler == null) return;
-        mHandler.postDelayed(new Runnable() {
+        if (handler == null) return;
+        handler.postDelayed(new Runnable() {
             long localAttemptId = attemptId;
 
             @Override
             public void run() {
-                mShell.getApi().getSubmissions(localAttemptId).enqueue(new Callback<SubmissionResponse>() {
+                shell.getApi().getSubmissions(localAttemptId).enqueue(new Callback<SubmissionResponse>() {
                     @Override
                     public void onResponse(Response<SubmissionResponse> response, Retrofit retrofit) {
                         if (response.isSuccess()) {
                             List<Submission> submissionList = response.body().getSubmissions();
                             if (submissionList == null || submissionList.isEmpty()) {
-                                bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId, null));
+                                bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId, null)); // FIXME: 19.09.16 why?
                                 return;
                             }
 
@@ -341,12 +341,12 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         switch (submission.getStatus()) {
             case CORRECT:
                 onCorrectSubmission(submission);
-                setTextToActionButton(mTryAgainText);
+                setTextToActionButton(tryAgainText);
                 blockUIBeforeSubmit(true);
                 break;
             case WRONG:
                 onWrongSubmission();
-                setTextToActionButton(mTryAgainText);
+                setTextToActionButton(tryAgainText);
                 blockUIBeforeSubmit(true);
                 break;
         }
@@ -356,53 +356,53 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     }
 
     protected final void saveSession() {
-        if (mAttempt == null) return;
+        if (attempt == null) return;
 
-        if (mSubmission == null) {
+        if (submission == null) {
             Reply reply = generateReply();
-            mSubmission = new Submission(reply, mAttempt.getId(), Submission.Status.LOCAL);
+            submission = new Submission(reply, attempt.getId(), Submission.Status.LOCAL);
         }
 
-        mLessonManager.saveSession(step.getId(), mAttempt, mSubmission);
+        lessonManager.saveSession(step.getId(), attempt, submission);
     }
 
     protected final void showOnlyInternetProblem(boolean isNeedShow) {
         showLoadState(!isNeedShow);
         if (isNeedShow) {
             //// FIXME: 17.01.16 it is bad way, because this class don't know about the button
-            mActionButton.setVisibility(View.GONE);
+            actionButton.setVisibility(View.GONE);
         } else {
-            mActionButton.setVisibility(View.VISIBLE);
+            actionButton.setVisibility(View.VISIBLE);
         }
         showAnswerField(!isNeedShow);
         enableInternetMessage(isNeedShow);
     }
 
     private void setTextToActionButton(String text) {
-        mActionButton.setText(text);
+        actionButton.setText(text);
     }
 
     protected final void onWrongSubmission() {
         if (step != null) {
             analytic.reportEvent(Analytic.Steps.WRONG_SUBMISSION_FILL, step.getId() + "");
         }
-        mAttemptContainer.setBackgroundResource(R.color.wrong_answer_background);
-        mStatusIcon.setImageDrawable(mWrongIcon);
-        mStatusTextView.setText(mWrongString);
-        mResultLine.setBackgroundResource(R.color.wrong_answer_background);
-        mResultLine.setVisibility(View.VISIBLE);
+        attemptContainer.setBackgroundResource(R.color.wrong_answer_background);
+        statusIcon.setImageDrawable(mWrongIcon);
+        statusTextView.setText(wrongString);
+        resultLine.setBackgroundResource(R.color.wrong_answer_background);
+        resultLine.setVisibility(View.VISIBLE);
     }
 
     protected final void onCorrectSubmission(Submission submission) {
         if (step != null) {
             analytic.reportEvent(Analytic.Steps.CORRECT_SUBMISSION_FILL, step.getId() + "");
         }
-        markLocalProgressAsViewed(submission);
-        mAttemptContainer.setBackgroundResource(R.color.correct_answer_background);
-        mStatusIcon.setImageDrawable(mCorrectIcon);
-        mStatusTextView.setText(getCorrectString());
-        mResultLine.setBackgroundResource(R.color.correct_answer_background);
-        mResultLine.setVisibility(View.VISIBLE);
+        markLocalProgressAsViewed();
+        attemptContainer.setBackgroundResource(R.color.correct_answer_background);
+        statusIcon.setImageDrawable(mCorrectIcon);
+        statusTextView.setText(getCorrectString());
+        resultLine.setBackgroundResource(R.color.correct_answer_background);
+        resultLine.setVisibility(View.VISIBLE);
     }
 
 
@@ -411,36 +411,36 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
         // FIXME: 17.01.16 refactor
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            mAttemptContainer.setBackground(mRootView.getBackground());
+            attemptContainer.setBackground(rootView.getBackground());
         } else {
-            mAttemptContainer.setBackgroundDrawable(mRootView.getBackground());
+            attemptContainer.setBackgroundDrawable(rootView.getBackground());
         }
 
         createNewAttempt();
-        mSubmission = null;
+        submission = null;
 
         hintTextView.setVisibility(View.GONE);
-        mResultLine.setVisibility(View.GONE);
-        mActionButton.setText(mSubmitText);
+        resultLine.setVisibility(View.GONE);
+        actionButton.setText(submitText);
     }
 
 
     private void setListenerToActionButton(View.OnClickListener l) {
-        mActionButton.setOnClickListener(l);
+        actionButton.setOnClickListener(l);
     }
 
 
-    protected final void markLocalProgressAsViewed(final Submission submission) {
+    protected final void markLocalProgressAsViewed() {
         bus.post(new UpdateStepEvent(step.getId()));
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             long stepId = step.getId();
 
             protected Void doInBackground(Void... params) {
-                long assignmentId = mDatabaseFacade.getAssignmentIdByStepId(stepId);
-                mDatabaseFacade.markProgressAsPassed(assignmentId);
-                mLocalProgressManager.checkUnitAsPassed(stepId);
+                long assignmentId = databaseFacade.getAssignmentIdByStepId(stepId);
+                databaseFacade.markProgressAsPassed(assignmentId);
+                localProgressManager.checkUnitAsPassed(stepId);
                 if (unit != null) {
-                    mLocalProgressManager.updateUnitProgress(unit.getId()); //// FIXME: 05.09.16 update lesson progress
+                    localProgressManager.updateUnitProgress(unit.getId()); //// FIXME: 05.09.16 update lesson progress
                 }
                 return null;
             }
@@ -459,20 +459,20 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     protected final void showAnswerField(boolean needShow) {
         if (needShow) {
-            mAttemptContainer.setVisibility(View.VISIBLE);
+            attemptContainer.setVisibility(View.VISIBLE);
         } else {
-            mAttemptContainer.setVisibility(View.GONE);
+            attemptContainer.setVisibility(View.GONE);
         }
     }
 
 
     protected void showLoadState(boolean isLoading) {
         if (isLoading) {
-            mActionButton.setVisibility(View.GONE);
-            ProgressHelper.activate(mProgressBar);
+            actionButton.setVisibility(View.GONE);
+            ProgressHelper.activate(progressBar);
         } else {
-            ProgressHelper.dismiss(mProgressBar);
-            mActionButton.setVisibility(View.VISIBLE);
+            ProgressHelper.dismiss(progressBar);
+            actionButton.setVisibility(View.VISIBLE);
             showAnswerField(true);
         }
 
@@ -480,7 +480,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     private void showAttemptAbstractWrapMethod(Attempt attempt, boolean isCreatedAttempt) {
         showAttempt(attempt);
-        if (mLessonManager.restoreSubmissionForStep(step.getId()) == null && !isCreatedAttempt) {
+        if (lessonManager.restoreSubmissionForStep(step.getId()) == null && !isCreatedAttempt) {
             getStatusOfSubmission(attempt.getId());//fill last server submission if exist
         } else {
             showLoadState(false);
@@ -489,13 +489,13 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     @Subscribe
     public void onSuccessCreateSubmission(SubmissionCreatedEvent e) {
-        if (mAttempt == null || e.getAttemptId() != mAttempt.getId()) return;
-        getStatusOfSubmission(mAttempt.getId());
+        if (attempt == null || e.getAttemptId() != attempt.getId()) return;
+        getStatusOfSubmission(attempt.getId());
     }
 
     @Subscribe
     public void onFailGettingSubmission(FailGettingLastSubmissionEvent e) {
-        if (mAttempt == null || e.getAttemptId() != mAttempt.getId()) return;
+        if (attempt == null || e.getAttemptId() != attempt.getId()) return;
 
         int nextTry = e.getTryNumber() + 1;
 
@@ -504,15 +504,15 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     @Subscribe
     public void onGettingSubmission(SuccessGettingLastSubmissionEvent e) {
-        if (mAttempt == null || e.getAttemptId() != mAttempt.getId()) return;
+        if (attempt == null || e.getAttemptId() != attempt.getId()) return;
         if (e.getSubmission() == null || e.getSubmission().getStatus() == null) {
             showLoadState(false);
             return;
         }
 
-        mSubmission = e.getSubmission();
+        submission = e.getSubmission();
         saveSession();
-        fillSubmission(mSubmission);
+        fillSubmission(submission);
     }
 
     @Subscribe
@@ -528,7 +528,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         if (step == null || e.getStepId() != step.getId() || e.getAttempt() == null) return;
 
         showAttemptAbstractWrapMethod(e.getAttempt(), e.isJustCreated());
-        mAttempt = e.getAttempt();
+        attempt = e.getAttempt();
     }
 
     @Subscribe
@@ -539,7 +539,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     @Subscribe
     public void onFailCreateSubmission(FailSubmissionCreatedEvent event) {
-        if (mAttempt == null || event.getAttemptId() != mAttempt.getId()) return;
+        if (attempt == null || event.getAttemptId() != attempt.getId()) return;
         showOnlyInternetProblem(true);
     }
 
@@ -552,7 +552,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     protected abstract void onRestoreSubmission();
 
     protected String getCorrectString() {
-        return mCorrectString;
+        return correctString;
     }
 
     @Subscribe

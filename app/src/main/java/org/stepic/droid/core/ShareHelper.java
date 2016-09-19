@@ -15,7 +15,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public interface ShareHelper {
-    Intent getIntentForCourseSharing(@NotNull Course mCourse);
+    Intent getIntentForCourseSharing(@NotNull Course course);
 
     Intent getIntentForShareCertificate(@NotNull CertificateViewItem certificateViewItem);
 

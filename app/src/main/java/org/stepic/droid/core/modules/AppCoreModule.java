@@ -18,12 +18,12 @@ import org.stepic.droid.core.DefaultFilterImpl;
 import org.stepic.droid.core.FilterApplicator;
 import org.stepic.droid.core.FilterApplicatorImpl;
 import org.stepic.droid.core.ILessonSessionManager;
-import org.stepic.droid.core.ILocalProgressManager;
 import org.stepic.droid.core.ILoginManager;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.core.LocalLessonSessionManager;
-import org.stepic.droid.core.LocalProgressOfUnitManager;
+import org.stepic.droid.core.LocalProgressImpl;
+import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.LoginManager;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
@@ -43,11 +43,7 @@ import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
-import org.stepic.droid.util.resolvers.ISearchResolver;
-import org.stepic.droid.util.resolvers.IStepResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
-import org.stepic.droid.util.resolvers.SearchResolver;
-import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.RetrofitRESTApi;
@@ -97,8 +93,8 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    SharedPreferenceHelper provideSharedPreferencesHelper(Analytic analytic, DefaultFilter defaultFilter) {
-        return new SharedPreferenceHelper(analytic, defaultFilter);
+    SharedPreferenceHelper provideSharedPreferencesHelper(Analytic analytic, DefaultFilter defaultFilter, Context context) {
+        return new SharedPreferenceHelper(analytic, defaultFilter, context);
     }
 
     @Provides
@@ -111,12 +107,6 @@ public class AppCoreModule {
     @Singleton
     Bus provideBus() {
         return new Bus();
-    }
-
-    @Provides
-    @Singleton
-    IStepResolver provideStepResolver(Context context) {
-        return new StepTypeResolver(context);
     }
 
     @Provides
@@ -171,20 +161,14 @@ public class AppCoreModule {
 
     @Singleton
     @Provides
-    ISearchResolver provideSearchResolver() {
-        return new SearchResolver();
-    }
-
-    @Singleton
-    @Provides
     ILessonSessionManager provideLessonSessionManager() {
         return new LocalLessonSessionManager();
     }
 
     @Singleton
     @Provides
-    ILocalProgressManager provideProgressManager(DatabaseFacade databaseFacade, Bus bus, IApi api) {
-        return new LocalProgressOfUnitManager(databaseFacade, bus, api);
+    LocalProgressManager provideProgressManager(DatabaseFacade databaseFacade, Bus bus, IApi api) {
+        return new LocalProgressImpl(databaseFacade, bus, api);
     }
 
     @Singleton

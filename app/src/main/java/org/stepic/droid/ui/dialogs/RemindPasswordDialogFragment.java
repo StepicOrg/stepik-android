@@ -36,18 +36,18 @@ public class RemindPasswordDialogFragment extends DialogFragment {
     private static final String ERROR_TEXT_KEY = "Error_Text_Key";
 
     @Inject
-    IApi mApi;
+    IApi api;
 
     public static RemindPasswordDialogFragment newInstance() {
         return new RemindPasswordDialogFragment();
     }
 
-    private TextInputLayout mEmailTextWrapper;
-    private ProgressDialog mProgressLogin;
-    private View mRootView;
+    private TextInputLayout emailTextWrapper;
+    private ProgressDialog progressLogin;
+    private View rootView;
 
     @BindString(R.string.email_wrong)
-    String mEmailWrong;
+    String emailWrong;
 
 
     @NotNull
@@ -57,14 +57,14 @@ public class RemindPasswordDialogFragment extends DialogFragment {
 
 
         View v = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_remind_password, null, false);
-        mEmailTextWrapper = ButterKnife.findById(v, R.id.email_reg_wrapper);
-        mRootView = ButterKnife.findById(v, R.id.root_view_dialog);
-        mRootView.requestFocus();
+        emailTextWrapper = ButterKnife.findById(v, R.id.email_reg_wrapper);
+        rootView = ButterKnife.findById(v, R.id.root_view_dialog);
+        rootView.requestFocus();
 
-        mProgressLogin = new ProgressDialog(getContext());
-        mProgressLogin.setTitle(getString(R.string.loading));
-        mProgressLogin.setMessage(getString(R.string.loading_message));
-        mProgressLogin.setCancelable(false);
+        progressLogin = new ProgressDialog(getContext());
+        progressLogin.setTitle(getString(R.string.loading));
+        progressLogin.setMessage(getString(R.string.loading_message));
+        progressLogin.setCancelable(false);
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -91,8 +91,8 @@ public class RemindPasswordDialogFragment extends DialogFragment {
             }
         });
 
-        if (mEmailTextWrapper.getEditText() != null) {
-            mEmailTextWrapper.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        if (emailTextWrapper.getEditText() != null) {
+            emailTextWrapper.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     boolean handled = false;
@@ -104,11 +104,11 @@ public class RemindPasswordDialogFragment extends DialogFragment {
                 }
             });
 
-            mEmailTextWrapper.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            emailTextWrapper.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     if (hasFocus) {
-                        hideError(mEmailTextWrapper);
+                        hideError(emailTextWrapper);
                     }
                 }
             });
@@ -119,7 +119,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
         if (savedInstanceState != null) {
             String errorText = savedInstanceState.getString(ERROR_TEXT_KEY);
             if (errorText != null) {
-                showError(mEmailTextWrapper, errorText);
+                showError(emailTextWrapper, errorText);
             }
         }
 
@@ -127,28 +127,28 @@ public class RemindPasswordDialogFragment extends DialogFragment {
     }
 
     private void sendEmail(final AlertDialog alertDialog) {
-        ProgressHelper.activate(mProgressLogin);
-        safetyHideKeypad(mEmailTextWrapper.getEditText());
+        ProgressHelper.activate(progressLogin);
+        safetyHideKeypad(emailTextWrapper.getEditText());
         String email;
         try {
-            email = mEmailTextWrapper.getEditText().getText().toString().trim();
+            email = emailTextWrapper.getEditText().getText().toString().trim();
         } catch (NullPointerException e) {
-            ProgressHelper.dismiss(mProgressLogin);
+            ProgressHelper.dismiss(progressLogin);
             return;
         }
         if (!email.isEmpty()) {
-            mApi.remindPassword(email).enqueue(new Callback<Void>() {
+            api.remindPassword(email).enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Response<Void> response, Retrofit retrofit) {
-                    ProgressHelper.dismiss(mProgressLogin);
+                    ProgressHelper.dismiss(progressLogin);
                     com.squareup.okhttp.Response rawResponse = response.raw();
                     if (rawResponse.priorResponse() != null && rawResponse.priorResponse().code() == 302) {
                         alertDialog.dismiss();
                         Toast.makeText(getContext(), R.string.email_sent, Toast.LENGTH_SHORT).show();
                     } else if (response.code() == 200) {
-                        if (mRootView != null)
-                            mRootView.requestFocus();
-                        showError(mEmailTextWrapper, mEmailWrong);
+                        if (rootView != null)
+                            rootView.requestFocus();
+                        showError(emailTextWrapper, emailWrong);
                     } else {
                         final Context context = getContext();
                         if (context != null) {
@@ -160,7 +160,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
 
                 @Override
                 public void onFailure(Throwable t) {
-                    ProgressHelper.dismiss(mProgressLogin);
+                    ProgressHelper.dismiss(progressLogin);
 
                     final Context context = getContext();
                     if (context != null) {
@@ -174,16 +174,16 @@ public class RemindPasswordDialogFragment extends DialogFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mEmailTextWrapper != null && mEmailTextWrapper.getError() != null)
-            outState.putString(ERROR_TEXT_KEY, mEmailTextWrapper.getError().toString());
+        if (emailTextWrapper != null && emailTextWrapper.getError() != null)
+            outState.putString(ERROR_TEXT_KEY, emailTextWrapper.getError().toString());
 
     }
 
     @Override
     public void onDestroyView() {
-        if (mEmailTextWrapper != null && mEmailTextWrapper.getEditText() != null) {
-            mEmailTextWrapper.getEditText().setOnFocusChangeListener(null);
-            mEmailTextWrapper.getEditText().setOnEditorActionListener(null);
+        if (emailTextWrapper != null && emailTextWrapper.getEditText() != null) {
+            emailTextWrapper.getEditText().setOnFocusChangeListener(null);
+            emailTextWrapper.getEditText().setOnEditorActionListener(null);
         }
         super.onDestroyView();
     }

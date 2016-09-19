@@ -26,35 +26,35 @@ import javax.inject.Singleton;
 @Singleton
 public class StoreStateManager implements IStoreStateManager {
 
-    private DatabaseFacade mDatabaseFacade;
+    private DatabaseFacade databaseFacade;
     private Bus bus;
     private Analytic analytic;
 
     @Inject
     public StoreStateManager(DatabaseFacade dbManager, Bus bus, Analytic analytic) {
-        mDatabaseFacade = dbManager;
+        databaseFacade = dbManager;
         this.bus = bus;
         this.analytic = analytic;
     }
 
     @Override
     public void updateUnitLessonState(long lessonId) {
-        List<Step> steps = mDatabaseFacade.getStepsOfLesson(lessonId);
+        List<Step> steps = databaseFacade.getStepsOfLesson(lessonId);
         for (Step step : steps) {
             if (!step.is_cached()) return;
         }
 
         //all steps of lesson is cached
-        Lesson lesson = mDatabaseFacade.getLessonById(lessonId);
+        Lesson lesson = databaseFacade.getLessonById(lessonId);
         if (lesson == null) {
             analytic.reportError(Analytic.Error.LESSON_IN_STORE_STATE_NULL, new NullPointerException("lesson was null"));
             return;
         }
         lesson.set_loading(false);
         lesson.set_cached(true);
-        mDatabaseFacade.updateOnlyCachedLoadingLesson(lesson);
+        databaseFacade.updateOnlyCachedLoadingLesson(lesson);
 
-        final Unit unit = mDatabaseFacade.getUnitByLessonId(lessonId);
+        final Unit unit = databaseFacade.getUnitByLessonId(lessonId);
         if (unit == null) {
             analytic.reportError(Analytic.Error.UNIT_IN_STORE_STATE_NULL, new NullPointerException("unit is null"));
             return;
@@ -62,7 +62,7 @@ public class StoreStateManager implements IStoreStateManager {
         if (unit.is_loading() || !unit.is_cached()) {
             unit.set_loading(false);
             unit.set_cached(true);
-            mDatabaseFacade.updateOnlyCachedLoadingUnit(unit);
+            databaseFacade.updateOnlyCachedLoadingUnit(unit);
 
             Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
             //Say to ui that ui is cached now
@@ -86,20 +86,20 @@ public class StoreStateManager implements IStoreStateManager {
         //just make for parents
         //// FIXME: 14.12.15 it is not true, see related commit. Now we can delete one step.
 
-        Lesson lesson = mDatabaseFacade.getLessonById(lessonId);
-        final Unit unit = mDatabaseFacade.getUnitByLessonId(lessonId);
+        Lesson lesson = databaseFacade.getLessonById(lessonId);
+        final Unit unit = databaseFacade.getUnitByLessonId(lessonId);
 
         if (lesson.is_cached() || lesson.is_loading()) {
             lesson.set_loading(false);
             lesson.set_cached(false);
-            mDatabaseFacade.updateOnlyCachedLoadingLesson(lesson);
+            databaseFacade.updateOnlyCachedLoadingLesson(lesson);
         }
 
 
         if (unit.is_cached() || unit.is_loading()) {
             unit.set_loading(false);
             unit.set_cached(false);
-            mDatabaseFacade.updateOnlyCachedLoadingUnit(unit);
+            databaseFacade.updateOnlyCachedLoadingUnit(unit);
 
             Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
             //Say to ui that ui is cached now
@@ -125,7 +125,7 @@ public class StoreStateManager implements IStoreStateManager {
 
     @Override
     public void updateSectionAfterDeleting(long sectionId) {
-        final Section section = mDatabaseFacade.getSectionById(sectionId);
+        final Section section = databaseFacade.getSectionById(sectionId);
         if (section == null) {
             analytic.reportError(Analytic.Error.NULL_SECTION, new Exception("update Section after deleting"));
             return;
@@ -133,7 +133,7 @@ public class StoreStateManager implements IStoreStateManager {
         if (section.is_cached() || section.is_loading()) {
             section.set_cached(false);
             section.set_loading(false);
-            mDatabaseFacade.updateOnlyCachedLoadingSection(section);
+            databaseFacade.updateOnlyCachedLoadingSection(section);
             Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
             //Say to ui that ui is cached now
             Runnable myRunnable = new Runnable() {
@@ -151,7 +151,7 @@ public class StoreStateManager implements IStoreStateManager {
     @Deprecated
     private void updateCourseAfterDeleting(long courseId) {
 
-        Course course = mDatabaseFacade.getCourseById(courseId, Table.enrolled);
+        Course course = databaseFacade.getCourseById(courseId, Table.enrolled);
         if (course == null) {
             analytic.reportError(Analytic.Error.NULL_COURSE, new Exception("update Course after deleting"));
             return;
@@ -159,19 +159,19 @@ public class StoreStateManager implements IStoreStateManager {
         if (course.is_cached() || course.is_loading()) {
             course.set_cached(false);
             course.set_loading(false);
-            mDatabaseFacade.updateOnlyCachedLoadingCourse(course, Table.enrolled);
+            databaseFacade.updateOnlyCachedLoadingCourse(course, Table.enrolled);
         }
     }
 
     @Override
     public void updateSectionState(long sectionId) {
-        List<Unit> units = mDatabaseFacade.getAllUnitsOfSection(sectionId);
+        List<Unit> units = databaseFacade.getAllUnitsOfSection(sectionId);
         for (Unit unit : units) {
             if (!unit.is_cached()) return;
         }
 
         //all units, lessons, steps of sections are cached
-        final Section section = mDatabaseFacade.getSectionById(sectionId);
+        final Section section = databaseFacade.getSectionById(sectionId);
         if (section == null) {
             analytic.reportError(Analytic.Error.NULL_SECTION, new Exception("update section state"));
             return;
@@ -179,7 +179,7 @@ public class StoreStateManager implements IStoreStateManager {
         if (!section.is_cached() || section.is_loading()) {
             section.set_cached(true);
             section.set_loading(false);
-            mDatabaseFacade.updateOnlyCachedLoadingSection(section);
+            databaseFacade.updateOnlyCachedLoadingSection(section);
             Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
             //Say to ui that ui is cached now
             Runnable myRunnable = new Runnable() {
@@ -196,12 +196,12 @@ public class StoreStateManager implements IStoreStateManager {
 
     @Deprecated
     private void updateCourseState(long courseId) {
-        Course course = mDatabaseFacade.getCourseById(courseId, Table.enrolled);
+        Course course = databaseFacade.getCourseById(courseId, Table.enrolled);
         if (course == null) {
-            course = mDatabaseFacade.getCourseById(courseId, Table.featured);
-            mDatabaseFacade.addCourse(course, Table.enrolled);
+            course = databaseFacade.getCourseById(courseId, Table.featured);
+            databaseFacade.addCourse(course, Table.enrolled);
         }
-        List<Section> sections = mDatabaseFacade.getAllSectionsOfCourse(course);
+        List<Section> sections = databaseFacade.getAllSectionsOfCourse(course);
         for (Section section : sections) {
             if (!section.is_cached()) return;
         }
@@ -213,6 +213,6 @@ public class StoreStateManager implements IStoreStateManager {
 
         course.set_loading(false);
         course.set_cached(true);
-        mDatabaseFacade.updateOnlyCachedLoadingCourse(course, Table.enrolled);
+        databaseFacade.updateOnlyCachedLoadingCourse(course, Table.enrolled);
     }
 }

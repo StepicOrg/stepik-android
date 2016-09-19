@@ -1,5 +1,7 @@
 package org.stepic.droid.core.modules;
 
+import android.content.Context;
+
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.core.PerFragment;
@@ -9,9 +11,13 @@ import org.stepic.droid.core.presenters.StepsPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.util.resolvers.StepTypeResolver;
+import org.stepic.droid.util.resolvers.StepTypeResolverImpl;
 import org.stepic.droid.web.IApi;
 
 import java.util.concurrent.ThreadPoolExecutor;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -54,5 +60,11 @@ public class StepModule {
                 databaseFacade,
                 userPreferences,
                 analytic);
+    }
+
+
+    @Provides
+    StepTypeResolver provideStepResolver(Context context) {
+        return new StepTypeResolverImpl(context);
     }
 }

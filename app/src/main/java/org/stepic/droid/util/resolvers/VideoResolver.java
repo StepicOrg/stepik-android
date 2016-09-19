@@ -15,14 +15,14 @@ import java.util.List;
 public class VideoResolver implements IVideoResolver {
 
 
-    private DatabaseFacade mDbOperations;
-    private UserPreferences mUserPreferences;
+    private DatabaseFacade databaseFacade;
+    private UserPreferences userPreferences;
     private CleanManager cleanManager;
     private Analytic analytic;
 
     public VideoResolver(DatabaseFacade dbOperationsCachedVideo, UserPreferences userPreferences, CleanManager cleanManager, Analytic analytic) {
-        mDbOperations = dbOperationsCachedVideo;
-        mUserPreferences = userPreferences;
+        databaseFacade = dbOperationsCachedVideo;
+        this.userPreferences = userPreferences;
         this.cleanManager = cleanManager;
         this.analytic = analytic;
     }
@@ -40,7 +40,7 @@ public class VideoResolver implements IVideoResolver {
 
         if (video == null) return null;
 
-        String localPath = mDbOperations.getPathToVideoIfExist(video);
+        String localPath = databaseFacade.getPathToVideoIfExist(video);
 
         if (localPath != null && checkExistingOnDisk(localPath, step)) {
             return localPath;
@@ -58,7 +58,7 @@ public class VideoResolver implements IVideoResolver {
 
 
         try {
-            int weWant = Integer.parseInt(mUserPreferences.getQualityVideo());
+            int weWant = Integer.parseInt(userPreferences.getQualityVideo());
             int bestDelta = Integer.MAX_VALUE;
             int bestIndex = 0;
             for (int i = 0; i < urlList.size(); i++) {
@@ -81,7 +81,7 @@ public class VideoResolver implements IVideoResolver {
                 if (tempLink != null) {
                     String quality = tempLink.getQuality();
                     if (quality != null &&
-                            (quality.equals(mUserPreferences.getQualityVideo()))) {
+                            (quality.equals(userPreferences.getQualityVideo()))) {
                         resolvedURL = tempLink.getUrl();
                         break;
                     }

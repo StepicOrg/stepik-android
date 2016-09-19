@@ -1,19 +1,19 @@
 package org.stepic.droid.model;
 
 public class BlockPersistentWrapper {
-    Block mBlock;
+    Block block;
     long stepId;
 
     public BlockPersistentWrapper() {
     }
 
     public BlockPersistentWrapper(Block block, long stepId) {
-        mBlock = block;
+        this.block = block;
         this.stepId = stepId;
     }
 
     public Block getBlock() {
-        return mBlock;
+        return block;
     }
 
     public long getStepId() {
@@ -21,7 +21,7 @@ public class BlockPersistentWrapper {
     }
 
     public void setBlock(Block block) {
-        mBlock = block;
+        this.block = block;
     }
 
     public void setStepId(long stepId) {

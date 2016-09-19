@@ -2,7 +2,7 @@ package org.stepic.droid.store.structure;
 
 public final class DbStructureStep extends DBStructureBase {
 
-    private static String[] mUsedColumns = null;
+    private static String[] usedColumns = null;
 
     public static final String STEPS = "steps";
 
@@ -25,8 +25,8 @@ public final class DbStructureStep extends DBStructureBase {
     }
 
     public static String[] getUsedColumns() {
-        if (mUsedColumns == null) {
-            mUsedColumns = new String[]{
+        if (usedColumns == null) {
+            usedColumns = new String[]{
                     Column.STEP_ID,
                     Column.LESSON_ID,
                     Column.STATUS,
@@ -44,6 +44,6 @@ public final class DbStructureStep extends DBStructureBase {
                     Column.PEER_REVIEW
             };
         }
-        return mUsedColumns;
+        return usedColumns;
     }
 }

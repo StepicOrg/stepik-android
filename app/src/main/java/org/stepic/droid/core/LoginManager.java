@@ -23,14 +23,14 @@ import retrofit.Retrofit;
 
 @Singleton
 public class LoginManager implements ILoginManager {
-    private final IShell mShell;
-    private final Context mContext;
+    private final IShell shell;
+    private final Context context;
     private Analytic analytic;
 
     @Inject
     public LoginManager(IShell shell, Context appContext, Analytic analytic) {
-        mShell = shell;
-        mContext = appContext;
+        this.shell = shell;
+        context = appContext;
         this.analytic = analytic;
     }
 
@@ -41,7 +41,7 @@ public class LoginManager implements ILoginManager {
 
         String login = rawLogin.trim();
 
-        IApi api = mShell.getApi();
+        IApi api = shell.getApi();
         api.authWithLoginPassword(login, rawPassword).enqueue(new Callback<AuthenticationStepicResponse>() {
             @Override
             public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
@@ -65,7 +65,7 @@ public class LoginManager implements ILoginManager {
     public void loginWithCode(String rawCode, final ProgressHandler progressHandler, final ActivityFinisher finisher) {
         String code = rawCode.trim();
         progressHandler.activate();
-        mShell.getApi().authWithCode(code).enqueue(new Callback<AuthenticationStepicResponse>() {
+        shell.getApi().authWithCode(code).enqueue(new Callback<AuthenticationStepicResponse>() {
             @Override
             public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
                 handleSuccess(progressHandler, response, finisher);
@@ -96,7 +96,7 @@ public class LoginManager implements ILoginManager {
     public void loginWithNativeProviderCode(String nativeCode, SocialManager.SocialType type, final ProgressHandler progressHandler, final ActivityFinisher finisher, final FailLoginSupplementaryHandler failLoginSupplementaryHandler) {
         String code = nativeCode.trim();
         progressHandler.activate();
-        mShell.getApi().authWithNativeCode(code, type).enqueue(new Callback<AuthenticationStepicResponse>() {
+        shell.getApi().authWithNativeCode(code, type).enqueue(new Callback<AuthenticationStepicResponse>() {
             @Override
             public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
                 handleSuccess(progressHandler, response, finisher);
@@ -122,7 +122,7 @@ public class LoginManager implements ILoginManager {
             } else {
                 errorTextResId = R.string.connectionProblems;
             }
-            Toast.makeText(mContext, errorTextResId, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, errorTextResId, Toast.LENGTH_LONG).show();
             if (failLoginSupplementaryHandler != null) {
                 failLoginSupplementaryHandler.onFailLogin(t);
             }
@@ -134,13 +134,13 @@ public class LoginManager implements ILoginManager {
     }
 
     private void successLogin(Response<AuthenticationStepicResponse> response, ActivityFinisher finisher) {
-        SharedPreferenceHelper preferenceHelper = mShell.getSharedPreferenceHelper();
+        SharedPreferenceHelper preferenceHelper = shell.getSharedPreferenceHelper();
         AuthenticationStepicResponse authStepic = response.body();
         preferenceHelper.storeAuthInfo(authStepic);
 
         if (authStepic != null) {
             analytic.reportEvent(Analytic.Interaction.SUCCESS_LOGIN);
-            mShell.getScreenProvider().showMainFeed(mContext);
+            shell.getScreenProvider().showMainFeed(context);
             finisher.onFinish();
         } else {
             failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())));

@@ -17,17 +17,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public  class CourseDaoImpl extends DaoBase<Course> {
-    private final IDao<CachedVideo> mCachedVideoDao;
-    private String mTableName;
+    private final IDao<CachedVideo> cachedVideoDao;
+    private String tableName;
 
     public CourseDaoImpl(SQLiteDatabase openHelper, IDao<CachedVideo> cachedVideoDao) {
         super(openHelper);
-        mCachedVideoDao = cachedVideoDao;
+        this.cachedVideoDao = cachedVideoDao;
     }
 
     @Override
     public void setTableName(String tableName){
-        mTableName = tableName;
+        this.tableName = tableName;
     }
 
     @Override
@@ -133,7 +133,7 @@ public  class CourseDaoImpl extends DaoBase<Course> {
 
     @Override
     public String getDbName() {
-        return mTableName;
+        return tableName;
     }
 
     @Override
@@ -165,7 +165,7 @@ public  class CourseDaoImpl extends DaoBase<Course> {
 
     private void addInnerObjects(Course course) {
         if (course == null) return;
-        CachedVideo video = mCachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, course.getIntro_video_id() + "");
+        CachedVideo video = cachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, course.getIntro_video_id() + "");
         if (video != null){
             course.setIntro_video(transformCachedVideoToRealVideo(video));
         }
@@ -185,7 +185,7 @@ public  class CourseDaoImpl extends DaoBase<Course> {
                 storedVideo.setQuality(videoUrl.getQuality());
                 storedVideo.setUrl(videoUrl.getUrl());
             }
-            mCachedVideoDao.insertOrUpdate(storedVideo);
+            cachedVideoDao.insertOrUpdate(storedVideo);
         }
     }
 

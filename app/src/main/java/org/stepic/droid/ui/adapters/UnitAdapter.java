@@ -47,19 +47,19 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
 
     @Inject
-    IScreenManager mScreenManager;
+    IScreenManager screenManager;
 
     @Inject
-    IDownloadManager mDownloadManager;
+    IDownloadManager downloadManager;
 
     @Inject
-    DatabaseFacade mDbManager;
+    DatabaseFacade databaseFacade;
 
     @Inject
-    IShell mShell;
+    IShell shell;
 
     @Inject
-    CleanManager mCleaner;
+    CleanManager cleanManager;
 
     @Inject
     Analytic analytic;
@@ -67,18 +67,18 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
     private final static String DELIMITER = ".";
 
-    private final Section mParentSection;
-    private final List<Lesson> mLessonList;
+    private final Section parentSection;
+    private final List<Lesson> lessonList;
     private AppCompatActivity activity;
-    private final List<Unit> mUnitList;
-    private RecyclerView mRecyclerView;
+    private final List<Unit> unitList;
+    private RecyclerView recyclerView;
     private final Map<Long, Progress> mUnitProgressMap;
 
     public UnitAdapter(Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, AppCompatActivity activity) {
         this.activity = activity;
-        this.mParentSection = parentSection;
-        this.mUnitList = unitList;
-        this.mLessonList = lessonList;
+        this.parentSection = parentSection;
+        this.unitList = unitList;
+        this.lessonList = lessonList;
         mUnitProgressMap = unitProgressMap;
         MainApplication.component().inject(this);
     }
@@ -86,13 +86,13 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-        mRecyclerView = recyclerView;
+        this.recyclerView = recyclerView;
     }
 
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
-        mRecyclerView = null;
+        this.recyclerView = null;
     }
 
     @Override
@@ -103,11 +103,11 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
     @Override
     public void onBindViewHolder(UnitViewHolder holder, int position) {
-        Unit unit = mUnitList.get(position);
-        Lesson lesson = mLessonList.get(position);
+        Unit unit = unitList.get(position);
+        Lesson lesson = lessonList.get(position);
 
         StringBuilder titleBuilder = new StringBuilder();
-        titleBuilder.append(mParentSection.getPosition());
+        titleBuilder.append(parentSection.getPosition());
         titleBuilder.append(DELIMITER);
         titleBuilder.append(unit.getPosition());
         titleBuilder.append(" ");
@@ -188,28 +188,28 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
     @Override
     public int getItemCount() {
-        return mUnitList.size();
+        return unitList.size();
     }
 
 
     @Override
     public void onClick(int itemPosition) {
-        if (itemPosition >= 0 && itemPosition < mUnitList.size()) {
-            mScreenManager.showSteps(activity, mUnitList.get(itemPosition), mLessonList.get(itemPosition));
+        if (itemPosition >= 0 && itemPosition < unitList.size()) {
+            screenManager.showSteps(activity, unitList.get(itemPosition), lessonList.get(itemPosition));
         }
     }
 
     @Override
     public void onClickLoad(int position) {
-        if (position >= 0 && position < mUnitList.size()) {
-            Unit unit = mUnitList.get(position);
-            Lesson lesson = mLessonList.get(position);
+        if (position >= 0 && position < unitList.size()) {
+            Unit unit = unitList.get(position);
+            Lesson lesson = lessonList.get(position);
 
             int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                mShell.getSharedPreferenceHelper().storeTempPosition(position);
+                shell.getSharedPreferenceHelper().storeTempPosition(position);
                 if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
@@ -238,28 +238,28 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             if (unit.is_cached()) {
                 //delete
                 analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_UNIT, unit.getId()+"");
-                mCleaner.removeUnitLesson(unit, lesson);
+                cleanManager.removeUnitLesson(unit, lesson);
                 unit.set_loading(false);
                 unit.set_cached(false);
                 lesson.set_loading(false);
                 lesson.set_cached(false);
-                mDbManager.updateOnlyCachedLoadingLesson(lesson);
-                mDbManager.updateOnlyCachedLoadingUnit(unit);
+                databaseFacade.updateOnlyCachedLoadingLesson(lesson);
+                databaseFacade.updateOnlyCachedLoadingUnit(unit);
                 notifyItemChanged(position);
             } else {
                 if (unit.is_loading()) {
                     //cancel loading
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_UNIT, unit.getId()+"");
-                    mScreenManager.showDownload(activity);
+                    screenManager.showDownload(activity);
                 } else {
                     analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_UNIT, unit.getId()+"");
                     unit.set_cached(false);
                     lesson.set_cached(false);
                     unit.set_loading(true);
                     lesson.set_loading(true);
-                    mDbManager.updateOnlyCachedLoadingLesson(lesson);
-                    mDbManager.updateOnlyCachedLoadingUnit(unit);
-                    mDownloadManager.addUnitLesson(unit, lesson);
+                    databaseFacade.updateOnlyCachedLoadingLesson(lesson);
+                    databaseFacade.updateOnlyCachedLoadingUnit(unit);
+                    downloadManager.addUnitLesson(unit, lesson);
                     notifyItemChanged(position);
                 }
             }

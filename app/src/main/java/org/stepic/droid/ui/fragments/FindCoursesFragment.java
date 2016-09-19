@@ -31,8 +31,8 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
         return new FindCoursesFragment();
     }
 
-    SearchView mSearchView = null;
-    MenuItem mMenuItem = null;
+    SearchView searchView = null;
+    MenuItem menuItem = null;
     private boolean handledByRoot = false;
 
     @Nullable
@@ -45,14 +45,14 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mRootView.setParentTouchEvent(new OnRootTouchedListener() {
+        rootView.setParentTouchEvent(new OnRootTouchedListener() {
             @Override
             public void makeBeforeChildren() {
                 collapseAndHide(true);
             }
         });
 
-        mListOfCourses.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        listOfCoursesView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
@@ -68,17 +68,17 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
 
     @Override
     public void onDestroyView() {
-        if (mListOfCourses != null) {
-            mListOfCourses.setOnFocusChangeListener(null);
+        if (listOfCoursesView != null) {
+            listOfCoursesView.setOnFocusChangeListener(null);
         }
         super.onDestroyView();
     }
 
     private void collapseAndHide(boolean rootHandle) {
-        if (mSearchView != null && mMenuItem != null && mMenuItem.isActionViewExpanded()) {
+        if (searchView != null && menuItem != null && menuItem.isActionViewExpanded()) {
             if (rootHandle) handledByRoot = true;
             hideSoftKeypad();//in collapse action view keypad going to invisible after animation
-            MenuItemCompat.collapseActionView(mMenuItem);
+            MenuItemCompat.collapseActionView(menuItem);
         }
     }
 
@@ -111,14 +111,14 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
         super.onCreateOptionsMenu(menu, inflater);
 
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        mMenuItem = menu.findItem(R.id.action_search);
-        mSearchView = (SearchView) mMenuItem.getActionView();
+        menuItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) menuItem.getActionView();
 
         ComponentName componentName = getActivity().getComponentName();
         SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
-        mSearchView.setSearchableInfo(searchableInfo);
-        mSearchView.setMaxWidth(20000);//it is dirty workaround for expand in landscape
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView.setSearchableInfo(searchableInfo);
+        searchView.setMaxWidth(20000);//it is dirty workaround for expand in landscape
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 collapseAndHide(false);
@@ -135,8 +135,8 @@ public class FindCoursesFragment extends CoursesDatabaseFragmentBase {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mSearchView != null) {
-            mSearchView.setOnQueryTextListener(null);
+        if (searchView != null) {
+            searchView.setOnQueryTextListener(null);
         }
     }
 }

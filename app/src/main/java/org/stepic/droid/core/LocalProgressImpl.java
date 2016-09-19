@@ -19,34 +19,34 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class LocalProgressOfUnitManager implements ILocalProgressManager {
-    private DatabaseFacade mDatabaseFacade;
-    private Bus mBus;
-    private IApi mApi;
+public class LocalProgressImpl implements LocalProgressManager {
+    private DatabaseFacade databaseFacade;
+    private Bus bus;
+    private IApi api;
 
     @Inject
-    public LocalProgressOfUnitManager(DatabaseFacade databaseFacade, Bus bus, IApi api) {
-        mDatabaseFacade = databaseFacade;
-        mBus = bus;
-        mApi = api;
+    public LocalProgressImpl(DatabaseFacade databaseFacade, Bus bus, IApi api) {
+        this.databaseFacade = databaseFacade;
+        this.bus = bus;
+        this.api = api;
     }
 
 
     @Override
     public void checkUnitAsPassed(final long stepId) {
-        Step step = mDatabaseFacade.getStepById(stepId);
+        Step step = databaseFacade.getStepById(stepId);
         if (step == null) return;
-        List<Step> stepList = mDatabaseFacade.getStepsOfLesson(step.getLesson());
+        List<Step> stepList = databaseFacade.getStepsOfLesson(step.getLesson());
         for (Step stepItem : stepList) {
             if (!stepItem.is_custom_passed()) return;
         }
 
-        Unit unit = mDatabaseFacade.getUnitByLessonId(step.getLesson());
+        Unit unit = databaseFacade.getUnitByLessonId(step.getLesson());
         if (unit == null) return;
 
 //        unit.set_viewed_custom(true);
 //        mDatabaseFacade.addUnit(unit); //// TODO: 26.01.16 progress is not saved
-        mDatabaseFacade.markProgressAsPassedIfInDb(unit.getProgressId());
+        databaseFacade.markProgressAsPassedIfInDb(unit.getProgressId());
 
         final long unitId = unit.getId();
         Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
@@ -54,7 +54,7 @@ public class LocalProgressOfUnitManager implements ILocalProgressManager {
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                mBus.post(new UnitProgressUpdateEvent(unitId));
+                bus.post(new UnitProgressUpdateEvent(unitId));
             }
         };
         mainHandler.post(myRunnable);
@@ -63,18 +63,18 @@ public class LocalProgressOfUnitManager implements ILocalProgressManager {
     @Override
     public void updateUnitProgress(final long unitId) {
 
-        Unit unit = mDatabaseFacade.getUnitById(unitId);
+        Unit unit = databaseFacade.getUnitById(unitId);
         if (unit == null) return;
         Progress updatedUnitProgress;
         try {
-            updatedUnitProgress = mApi.getProgresses(new String[]{unit.getProgressId()}).execute().body().getProgresses().get(0);
+            updatedUnitProgress = api.getProgresses(new String[]{unit.getProgressId()}).execute().body().getProgresses().get(0);
         } catch (IOException e) {
             e.printStackTrace();
             return;
         }
         if (updatedUnitProgress == null)
             return;
-        mDatabaseFacade.addProgress(updatedUnitProgress);
+        databaseFacade.addProgress(updatedUnitProgress);
 
         final Double finalScoreInUnit = getScoreOfProgress(updatedUnitProgress);
         if (finalScoreInUnit == null) {
@@ -84,7 +84,7 @@ public class LocalProgressOfUnitManager implements ILocalProgressManager {
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                mBus.post(new UnitScoreUpdateEvent(unitId, finalScoreInUnit));
+                bus.post(new UnitScoreUpdateEvent(unitId, finalScoreInUnit));
             }
         };
         mainHandler.post(myRunnable);

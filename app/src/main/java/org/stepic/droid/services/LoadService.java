@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 
-import com.squareup.otto.Bus;
-
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
@@ -52,21 +50,19 @@ import retrofit.Response;
 
 public class LoadService extends IntentService {
     @Inject
-    DownloadManager mSystemDownloadManager;
+    DownloadManager systemDownloadManager;
     @Inject
-    UserPreferences mUserPrefs;
+    UserPreferences userPrefs;
     @Inject
-    Bus mBus;
+    IVideoResolver resolver;
     @Inject
-    IVideoResolver mResolver;
+    IApi api;
     @Inject
-    IApi mApi;
+    DatabaseFacade databaseFacade;
     @Inject
-    DatabaseFacade mDb;
+    IStoreStateManager storeStateManager;
     @Inject
-    IStoreStateManager mStoreStateManager;
-    @Inject
-    ICancelSniffer mCancelSniffer;
+    ICancelSniffer cancelSniffer;
     @Inject
     Analytic analytic;
 
@@ -120,30 +116,30 @@ public class LoadService extends IntentService {
             //possibly user click clear cache;
 //            throw ex;
             analytic.reportError(Analytic.Error.LOAD_SERVICE, ex);
-            mDb.dropDatabase();
+            databaseFacade.dropDatabase();
         }
     }
 
     private void addDownload(String url, long fileId, String title, Step step) {
         if (!isDownloadManagerEnabled() || url == null) {
-            mStoreStateManager.updateStepAfterDeleting(step);
+            storeStateManager.updateStepAfterDeleting(step);
             return;
         }
 
         url = url.trim();
         if (url.length() == 0) {
-            mStoreStateManager.updateStepAfterDeleting(step);
+            storeStateManager.updateStepAfterDeleting(step);
             return;
         }
 
         try {
-            File downloadFolderAndFile = new File(mUserPrefs.getUserDownloadFolder(), fileId + "");
+            File downloadFolderAndFile = new File(userPrefs.getUserDownloadFolder(), fileId + "");
             if (downloadFolderAndFile.exists()) {
                 //we do not need download the file, because we already have it.
                 // FIXME: 20.10.15 this simple check doesn't work if file is loading and at this moment adding to Download manager Queue,
                 // FIXME: 20.10.15 but this is not useless, because, work if file exists on the disk.
                 // FIXME: 20.10.15 For 'singleton' file of Video (or Step) at storage use UI and Broadcasts.
-                mStoreStateManager.updateStepAfterDeleting(step);
+                storeStateManager.updateStepAfterDeleting(step);
                 return;
             }
 
@@ -155,18 +151,18 @@ public class LoadService extends IntentService {
             request.setVisibleInDownloadsUi(false);
             request.setTitle(title + "-" + fileId).setDescription(MainApplication.getAppContext().getString(R.string.description_download));
 
-            if (mUserPrefs.isNetworkMobileAllowed()) {
+            if (userPrefs.isNetworkMobileAllowed()) {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
             } else {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
             }
             if (isNeedCancel(step)) {
-//                mStoreStateManager.updateStepAfterDeleting(step);
+//                storeStateManager.updateStepAfterDeleting(step);
                 // we check it in need cancel
                 return;
             }
 
-            if (!mDb.isExistDownloadEntityByVideoId(fileId) && !downloadFolderAndFile.exists()) {
+            if (!databaseFacade.isExistDownloadEntityByVideoId(fileId) && !downloadFolderAndFile.exists()) {
 
                 String videoQuality = null;
                 try {
@@ -177,19 +173,19 @@ public class LoadService extends IntentService {
                         }
                     }
                 } catch (NullPointerException npe) {
-                    videoQuality = mUserPrefs.getQualityVideo();
+                    videoQuality = userPrefs.getQualityVideo();
                 }
-                long downloadId = mSystemDownloadManager.enqueue(request);
+                long downloadId = systemDownloadManager.enqueue(request);
                 String local_thumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
-                String thumbnailsPath = FileUtil.saveFileToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), mUserPrefs.getUserDownloadFolder());
+                String thumbnailsPath = FileUtil.saveFileToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), userPrefs.getUserDownloadFolder());
                 final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, videoQuality);
-                mDb.addDownloadEntity(newEntity);
+                databaseFacade.addDownloadEntity(newEntity);
             }
         } catch (SecurityException ex) {
-            mStoreStateManager.updateStepAfterDeleting(step);
+            storeStateManager.updateStepAfterDeleting(step);
             analytic.reportError(Analytic.Error.LOAD_SERVICE, ex);
         } catch (Exception ex) {
-            mStoreStateManager.updateStepAfterDeleting(step);
+            storeStateManager.updateStepAfterDeleting(step);
             analytic.reportError(Analytic.Error.LOAD_SERVICE, ex);
         }
 
@@ -198,17 +194,17 @@ public class LoadService extends IntentService {
     private boolean isNeedCancel(Step step) {
         try {
             RWLocks.CancelLock.writeLock().lock();
-            if (mCancelSniffer.isStepIdCanceled(step.getId())) {
-                mCancelSniffer.removeStepIdCancel(step.getId());
-                Lesson lesson = mDb.getLessonById(step.getLesson());
+            if (cancelSniffer.isStepIdCanceled(step.getId())) {
+                cancelSniffer.removeStepIdCancel(step.getId());
+                Lesson lesson = databaseFacade.getLessonById(step.getLesson());
                 if (lesson != null) {
-                    Unit unit = mDb.getUnitByLessonId(lesson.getId());
-                    if (unit != null && mCancelSniffer.isUnitIdIsCanceled(unit.getId())) {
-                        mStoreStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
-                        mCancelSniffer.removeUnitIdCancel(unit.getId());
+                    Unit unit = databaseFacade.getUnitByLessonId(lesson.getId());
+                    if (unit != null && cancelSniffer.isUnitIdIsCanceled(unit.getId())) {
+                        storeStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
+                        cancelSniffer.removeUnitIdCancel(unit.getId());
 
-                        if (mCancelSniffer.isSectionIdIsCanceled(unit.getSection())) {
-                            mCancelSniffer.removeSectionIdCancel(unit.getSection());
+                        if (cancelSniffer.isSectionIdIsCanceled(unit.getSection())) {
+                            cancelSniffer.removeSectionIdCancel(unit.getSection());
                         }
                     }
 
@@ -226,14 +222,14 @@ public class LoadService extends IntentService {
 
         if (step.getBlock().getVideo() != null) {
             Video video = step.getBlock().getVideo();
-            String uri = mResolver.resolveVideoUrl(video, step);
+            String uri = resolver.resolveVideoUrl(video, step);
             long fileId = video.getId();
             addDownload(uri, fileId, lesson.getTitle(), step);
         } else {
             step.set_loading(false);
             step.set_cached(true);
-            mDb.updateOnlyCachedLoadingStep(step);
-            mStoreStateManager.updateUnitLessonState(step.getLesson());
+            databaseFacade.updateOnlyCachedLoadingStep(step);
+            storeStateManager.updateUnitLessonState(step.getLesson());
             isNeedCancel(step);
         }
     }
@@ -241,43 +237,43 @@ public class LoadService extends IntentService {
     private void addUnitLesson(Unit unitOut, Lesson lessonOut) {
         //if user click addUnitLesson, it is in db already.
         //make copies of objects.
-        Unit unit = mDb.getUnitByLessonId(lessonOut.getId());
-        Lesson lesson = mDb.getLessonById(lessonOut.getId());
+        Unit unit = databaseFacade.getUnitByLessonId(lessonOut.getId());
+        Lesson lesson = databaseFacade.getLessonById(lessonOut.getId());
         if (unit!=null && lesson!=null&&  !unit.is_cached() && !lesson.is_cached() && unit.is_loading() && lesson.is_loading()) {
 
             try {
-                List<Assignment> assignments = mApi.getAssignments(unit.getAssignments()).execute().body().getAssignments();
+                List<Assignment> assignments = api.getAssignments(unit.getAssignments()).execute().body().getAssignments();
                 for (Assignment item : assignments) {
-                    mDb.addAssignment(item);
+                    databaseFacade.addAssignment(item);
 
                 }
 
                 String[] ids = ProgressUtil.getAllProgresses(assignments);
-                List<Progress> progresses = mApi.getProgresses(ids).execute().body().getProgresses();
+                List<Progress> progresses = api.getProgresses(ids).execute().body().getProgresses();
                 for (Progress item : progresses) {
-                    mDb.addProgress(item);
+                    databaseFacade.addProgress(item);
                 }
-                Response<StepResponse> response = mApi.getSteps(lesson.getSteps()).execute();
+                Response<StepResponse> response = api.getSteps(lesson.getSteps()).execute();
                 if (response.isSuccess()) {
                     List<Step> steps = response.body().getSteps();
                     if (steps != null && !steps.isEmpty()) {
 
 
                         for (Step step : steps) {
-                            mDb.addStep(step);
-                            boolean cached = mDb.isStepCached(step);
+                            databaseFacade.addStep(step);
+                            boolean cached = databaseFacade.isStepCached(step);
                             step.set_cached(cached);
                         }
                         for (Step step : steps) {
                             if (!step.is_cached()) {
                                 step.set_loading(true);
                                 step.set_cached(false);
-                                mDb.updateOnlyCachedLoadingStep(step);
+                                databaseFacade.updateOnlyCachedLoadingStep(step);
                             }
                         }
-                        if (mCancelSniffer.isUnitIdIsCanceled(unit.getId())) {
+                        if (cancelSniffer.isUnitIdIsCanceled(unit.getId())) {
                             for (Step step : steps) {
-                                mCancelSniffer.addStepIdCancel(step.getId());
+                                cancelSniffer.addStepIdCancel(step.getId());
                             }
                         }
 
@@ -286,41 +282,41 @@ public class LoadService extends IntentService {
                                 addStep(step, lesson);
                             }
                         }
-                        mStoreStateManager.updateUnitLessonState(lesson.getId()); //fixme DOUBLE CHECK, IF Unit state is loading, but steps are not cached.
+                        storeStateManager.updateUnitLessonState(lesson.getId()); //fixme DOUBLE CHECK, IF Unit state is loading, but steps are not cached.
                     } else {
-                        mStoreStateManager.updateUnitLessonState(lesson.getId());
+                        storeStateManager.updateUnitLessonState(lesson.getId());
                     }
                 } else {
-                    mStoreStateManager.updateUnitLessonState(lesson.getId());
+                    storeStateManager.updateUnitLessonState(lesson.getId());
                 }
             } catch (UnknownHostException e) {
                 //not internet
-                mStoreStateManager.updateUnitLessonAfterDeleting(lesson.getId());
+                storeStateManager.updateUnitLessonAfterDeleting(lesson.getId());
             } catch (IOException e) {
                 analytic.reportError(Analytic.Error.LOAD_SERVICE, e);
-                mStoreStateManager.updateUnitLessonAfterDeleting(lesson.getId());
+                storeStateManager.updateUnitLessonAfterDeleting(lesson.getId());
             }
         } else {
-            mStoreStateManager.updateUnitLessonAfterDeleting(lessonOut.getId());
+            storeStateManager.updateUnitLessonAfterDeleting(lessonOut.getId());
         }
     }
 
     private void addSection(Section sectionOut) {
         //if user click to removeSection, then section already in database.
-        Section section = mDb.getSectionById(sectionOut.getId());//make copy of section.
+        Section section = databaseFacade.getSectionById(sectionOut.getId());//make copy of section.
         if (section!=null) {
             try {
-                Response<UnitStepicResponse> unitLessonResponse = mApi.getUnits(section.getUnits()).execute();
+                Response<UnitStepicResponse> unitLessonResponse = api.getUnits(section.getUnits()).execute();
                 if (unitLessonResponse.isSuccess()) {
                     final List<Unit> units = unitLessonResponse.body().getUnits();
                     long[] lessonsIds = StepicLogicHelper.fromUnitsToLessonIds(units);
-                    List<Progress> progresses = mApi.getProgresses(ProgressUtil.getAllProgresses(units)).execute().body().getProgresses();
+                    List<Progress> progresses = api.getProgresses(ProgressUtil.getAllProgresses(units)).execute().body().getProgresses();
                     for (Progress item : progresses) {
-                        mDb.addProgress(item);
+                        databaseFacade.addProgress(item);
                     }
 
 
-                    Response<LessonStepicResponse> response = mApi.getLessons(lessonsIds).execute();
+                    Response<LessonStepicResponse> response = api.getLessons(lessonsIds).execute();
                     if (response.isSuccess()) {
                         List<Lesson> lessons = response.body().getLessons();
                         Map<Long, Lesson> idToLessonMap = new HashMap<>();
@@ -332,10 +328,10 @@ public class LoadService extends IntentService {
                             Lesson lesson = idToLessonMap.get(unit.getLesson());
 
 
-                            mDb.addUnit(unit);
-                            mDb.addLesson(lesson);
+                            databaseFacade.addUnit(unit);
+                            databaseFacade.addLesson(lesson);
 
-                            if (!mDb.isUnitCached(unit) && !mDb.isLessonCached(lesson)) {
+                            if (!databaseFacade.isUnitCached(unit) && !databaseFacade.isLessonCached(lesson)) {
                                 //need to be load
 
                                 unit.set_loading(true);
@@ -343,58 +339,58 @@ public class LoadService extends IntentService {
                                 lesson.set_loading(true);
                                 lesson.set_cached(false);
 
-                                mDb.updateOnlyCachedLoadingLesson(lesson);
-                                mDb.updateOnlyCachedLoadingUnit(unit);
+                                databaseFacade.updateOnlyCachedLoadingLesson(lesson);
+                                databaseFacade.updateOnlyCachedLoadingUnit(unit);
                             }
                         }
-                        if (mCancelSniffer.isSectionIdIsCanceled(section.getId())) {
+                        if (cancelSniffer.isSectionIdIsCanceled(section.getId())) {
                             for (Unit unit : units) {
-                                mCancelSniffer.addUnitIdCancel(unit.getId());
+                                cancelSniffer.addUnitIdCancel(unit.getId());
                             }
                         }
                         for (Unit unit : units) {
                             Lesson lesson = idToLessonMap.get(unit.getLesson());
                             addUnitLesson(unit, lesson);
                         }
-                        mStoreStateManager.updateSectionState(section.getId()); // FIXME DOUBLE CHECK, if all units were cached
+                        storeStateManager.updateSectionState(section.getId()); // FIXME DOUBLE CHECK, if all units were cached
                     }
                 }
             } catch (UnknownHostException e) {
                 //not internet
-                mStoreStateManager.updateSectionAfterDeleting(section.getId());
+                storeStateManager.updateSectionAfterDeleting(section.getId());
 
             } catch (IOException e) {
                 analytic.reportError(Analytic.Error.LOAD_SERVICE, e);
-                mStoreStateManager.updateSectionAfterDeleting(section.getId());
+                storeStateManager.updateSectionAfterDeleting(section.getId());
             }
         }
         else{
             if (sectionOut!=null) {
-                mStoreStateManager.updateSectionAfterDeleting(sectionOut.getId());
+                storeStateManager.updateSectionAfterDeleting(sectionOut.getId());
             }
         }
     }
 
     @Deprecated
     private void addCourse(Course course, Table type) {
-        mDb.addCourse(course, type);
-        course = mDb.getCourseById(course.getCourseId(), type); //make copy of course.
+        databaseFacade.addCourse(course, type);
+        course = databaseFacade.getCourseById(course.getCourseId(), type); //make copy of course.
 
         course.set_loading(true);
         course.set_cached(false);
-        mDb.updateOnlyCachedLoadingCourse(course, type);
+        databaseFacade.updateOnlyCachedLoadingCourse(course, type);
 
         Response<SectionsStepicResponse> response;
         try {
-            response = mApi.getSections(course.getSections()).execute();
+            response = api.getSections(course.getSections()).execute();
             if (response.isSuccess()) {
                 List<Section> sections = response.body().getSections();
 
                 for (Section section : sections) {
-                    mDb.addSection(section);
+                    databaseFacade.addSection(section);
                     section.set_cached(false);
                     section.set_loading(true);
-                    mDb.updateOnlyCachedLoadingSection(section);
+                    databaseFacade.updateOnlyCachedLoadingSection(section);
                 }
 
                 for (Section section : sections) {

@@ -50,26 +50,26 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     public static final int SECTION_LIST_DELTA = 1;
 
-    int defaultHighlightPosition = -1;
+    private int defaultHighlightPosition = -1;
 
     @Inject
-    IScreenManager mScreenManager;
+    IScreenManager screenManager;
     @Inject
-    IDownloadManager mDownloadManager;
+    IDownloadManager downloadManager;
 
     @Inject
-    DatabaseFacade mDatabaseFacade;
+    DatabaseFacade databaseFacade;
 
     @Inject
-    IShell mShell;
+    IShell shell;
 
     @Inject
-    CleanManager mCleaner;
+    CleanManager cleaner;
 
     @Inject
     Analytic analytic;
 
-    private List<Section> mSections;
+    private List<Section> sections;
     private Context mContext;
     private AppCompatActivity mActivity;
     private CalendarPresenter calendarPresenter;
@@ -85,7 +85,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     }
 
     public SectionAdapter(List<Section> sections, Context mContext, AppCompatActivity activity, CalendarPresenter calendarPresenter) {
-        this.mSections = sections;
+        this.sections = sections;
         this.mContext = mContext;
         mActivity = activity;
         this.calendarPresenter = calendarPresenter;
@@ -126,7 +126,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     @Override
     public int getItemCount() {
-        return mSections.size() + SECTION_LIST_DELTA;
+        return sections.size() + SECTION_LIST_DELTA;
     }
 
 
@@ -141,14 +141,14 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     @Override
     public void onClickLoad(int adapterPosition) {
         int sectionPosition = adapterPosition - SECTION_LIST_DELTA;
-        if (sectionPosition >= 0 && sectionPosition < mSections.size()) {
-            Section section = mSections.get(sectionPosition);
+        if (sectionPosition >= 0 && sectionPosition < sections.size()) {
+            Section section = sections.get(sectionPosition);
 
             int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                mShell.getSharedPreferenceHelper().storeTempPosition(adapterPosition);
+                shell.getSharedPreferenceHelper().storeTempPosition(adapterPosition);
                 if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
@@ -174,21 +174,21 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
             if (section.is_cached()) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_SECTION, section.getId() + "");
-                mCleaner.removeSection(section);
+                cleaner.removeSection(section);
                 section.set_loading(false);
                 section.set_cached(false);
-                mDatabaseFacade.updateOnlyCachedLoadingSection(section);
+                databaseFacade.updateOnlyCachedLoadingSection(section);
                 notifyItemChanged(adapterPosition);
             } else {
                 if (section.is_loading()) {
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_SECTION, section.getId() + "");
-                    mScreenManager.showDownload(mContext);
+                    screenManager.showDownload(mContext);
                 } else {
                     analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
                     section.set_cached(false);
                     section.set_loading(true);
-                    mDatabaseFacade.updateOnlyCachedLoadingSection(section);
-                    mDownloadManager.addSection(section);
+                    databaseFacade.updateOnlyCachedLoadingSection(section);
+                    downloadManager.addSection(section);
                     notifyItemChanged(adapterPosition);
                 }
             }
@@ -233,7 +233,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         View afterLoad;
 
         @BindView(R.id.load_button)
-        View mLoadButton;
+        View loadButton;
 
 
         public SectionViewHolder(View itemView) {
@@ -247,7 +247,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
             });
 
-            mLoadButton.setOnClickListener(new View.OnClickListener() {
+            loadButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onClickLoad(getAdapterPosition());
@@ -259,8 +259,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         @Override
         public void onClick(int adapterPosition) {
             int itemPosition = adapterPosition - SECTION_LIST_DELTA;
-            if (itemPosition >= 0 && itemPosition < mSections.size()) {
-                mScreenManager.showUnitsForSection(mContext, mSections.get(itemPosition));
+            if (itemPosition >= 0 && itemPosition < sections.size()) {
+                screenManager.showUnitsForSection(mContext, sections.get(itemPosition));
             }
         }
 
@@ -268,7 +268,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         public void setDataOnView(int positionInAdapter) {
             // the 0 index always for calendar, we make its GONE, if calendar is not needed.
             int position = positionInAdapter - SECTION_LIST_DELTA;
-            Section section = mSections.get(position);
+            Section section = sections.get(position);
 
             String title = section.getTitle();
             int positionOfSection = section.getPosition();
@@ -312,7 +312,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 cv.setClickable(true);
                 cv.setFocusableInTouchMode(false);
 
-                mLoadButton.setVisibility(View.VISIBLE);
+                loadButton.setVisibility(View.VISIBLE);
                 if (section.is_cached()) {
 
                     // FIXME: 05.11.15 Delete course from cache. Set CLICK LISTENER.
@@ -341,7 +341,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             } else {
                 //Not active section or not enrollment
 
-                mLoadButton.setVisibility(View.GONE);
+                loadButton.setVisibility(View.GONE);
                 preLoadIV.setVisibility(View.GONE);
                 whenLoad.setVisibility(View.INVISIBLE);
                 afterLoad.setVisibility(View.GONE);
@@ -391,7 +391,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 @Override
                 public void onClick(View view) {
                     analytic.reportEventWithIdName(Analytic.Calendar.USER_CLICK_ADD_WIDGET, course.getCourseId() + "", course.getTitle());
-                    calendarPresenter.addDeadlinesToCalendar(SectionAdapter.this.mSections, null);
+                    calendarPresenter.addDeadlinesToCalendar(SectionAdapter.this.sections, null);
                 }
             });
         }

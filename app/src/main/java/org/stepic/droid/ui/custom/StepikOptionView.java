@@ -18,7 +18,7 @@ import android.widget.ProgressBar;
 
 import org.stepic.droid.R;
 
-public abstract class StepicOptionView extends FrameLayout implements Checkable {
+public abstract class StepikOptionView extends FrameLayout implements Checkable {
 
     private ImageView optionIcon;
 
@@ -26,10 +26,10 @@ public abstract class StepicOptionView extends FrameLayout implements Checkable 
 
     private ProgressBar progressBar;
 
-    private boolean mBroadcasting;
+    private boolean broadcasting;
 
-    private OnCheckedChangeListener mOnCheckedChangeListener;
-    private OnCheckedChangeListener mOnCheckedChangeWidgetListener;
+    private OnCheckedChangeListener onCheckedChangeListener;
+    private OnCheckedChangeListener onCheckedChangeWidgetListener;
 
 
     private static final int[] CHECKED_STATE_SET = {
@@ -39,15 +39,15 @@ public abstract class StepicOptionView extends FrameLayout implements Checkable 
     private boolean isChecked;
     private FrameLayout rippleEffectFrameLayout;
 
-    public StepicOptionView(Context context) {
+    public StepikOptionView(Context context) {
         this(context, null);
     }
 
-    public StepicOptionView(Context context, AttributeSet attrs) {
+    public StepikOptionView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public StepicOptionView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public StepikOptionView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         LayoutInflater.from(context).inflate(R.layout.stepic_compound_button, this, true);
@@ -94,19 +94,19 @@ public abstract class StepicOptionView extends FrameLayout implements Checkable 
             refreshDrawableState();
 
             // Avoid infinite recursions if setChecked() is called from a listener
-            if (mBroadcasting) {
+            if (broadcasting) {
                 return;
             }
 
-            mBroadcasting = true;
-            if (mOnCheckedChangeListener != null) {
-                mOnCheckedChangeListener.onCheckedChanged(this, isChecked);
+            broadcasting = true;
+            if (onCheckedChangeListener != null) {
+                onCheckedChangeListener.onCheckedChanged(this, isChecked);
             }
-            if (mOnCheckedChangeWidgetListener != null) {
-                mOnCheckedChangeWidgetListener.onCheckedChanged(this, isChecked);
+            if (onCheckedChangeWidgetListener != null) {
+                onCheckedChangeWidgetListener.onCheckedChanged(this, isChecked);
             }
 
-            mBroadcasting = false;
+            broadcasting = false;
         }
 
     }
@@ -118,11 +118,11 @@ public abstract class StepicOptionView extends FrameLayout implements Checkable 
     }
 
     public void setOnCheckedChangeListener(OnCheckedChangeListener listener) {
-        mOnCheckedChangeListener = listener;
+        onCheckedChangeListener = listener;
     }
 
     void setOnCheckedChangeWidgetListener(OnCheckedChangeListener listener) {
-        mOnCheckedChangeWidgetListener = listener;
+        onCheckedChangeWidgetListener = listener;
     }
 
     @Override
@@ -226,6 +226,6 @@ public abstract class StepicOptionView extends FrameLayout implements Checkable 
          * @param buttonView The compound button view whose state has changed.
          * @param isChecked  The new checked state of buttonView.
          */
-        void onCheckedChanged(StepicOptionView buttonView, boolean isChecked);
+        void onCheckedChanged(StepikOptionView buttonView, boolean isChecked);
     }
 }
