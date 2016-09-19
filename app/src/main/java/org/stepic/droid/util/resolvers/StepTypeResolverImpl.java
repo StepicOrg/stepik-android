@@ -47,46 +47,82 @@ public class StepTypeResolverImpl implements StepTypeResolver {
         peerReviewDrawableNotViewed = getDrawable(context, R.drawable.ic_peer_review);
         peerReviewDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_peer_review).mutate());
 
-        mapFromTypeToDrawable.put(AppConstants.TYPE_TEXT, getDrawable(context, R.drawable.ic_theory1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_VIDEO, getDrawable(context, R.drawable.ic_video_pin1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_MATCHING, getDrawable(context, R.drawable.ic_easy_quiz1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_SORTING, getDrawable(context, R.drawable.ic_easy_quiz1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_MATH, getDrawable(context, R.drawable.ic_easy_quiz1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_FREE_ANSWER, getDrawable(context, R.drawable.ic_easy_quiz1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_TABLE, getDrawable(context, R.drawable.ic_easy_quiz1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_STRING, getDrawable(context, R.drawable.ic_easy_quiz1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_CHOICE, getDrawable(context, R.drawable.ic_easy_quiz1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_NUMBER, getDrawable(context, R.drawable.ic_easy_quiz1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_DATASET, getDrawable(context, R.drawable.ic_hard_quiz1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_ANIMATION, getDrawable(context, R.drawable.ic_animation1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_CHEMICAL, getDrawable(context, R.drawable.ic_easy_quiz1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_FILL_BLANKS, getDrawable(context, R.drawable.ic_easy_quiz1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_PUZZLE, getDrawable(context, R.drawable.ic_easy_quiz1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_PYCHARM, getDrawable(context, R.drawable.ic_easy_quiz1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_CODE, getDrawable(context, R.drawable.ic_hard_quiz1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_ADMIN, getDrawable(context, R.drawable.ic_hard_quiz1));
-        mapFromTypeToDrawable.put(AppConstants.TYPE_SQL, getDrawable(context, R.drawable.ic_easy_quiz1));
+        Drawable simpleQuestionDrawableNotViewed = getDrawable(context, R.drawable.ic_easy_quiz);
+        Drawable simpleQuestionDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_easy_quiz).mutate());
+
+        Drawable videoDrawableNotViewed = getDrawable(context, R.drawable.ic_video_pin);
+        Drawable videoDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_video_pin).mutate());
+
+        Drawable animationDrawableNotViewed = getDrawable(context, R.drawable.ic_animation);
+        Drawable animationDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_animation).mutate());
+
+        Drawable hardQuizDrawableNotViewed = getDrawable(context, R.drawable.ic_hard_quiz);
+        Drawable hardQuizDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_hard_quiz).mutate());
+
+        Drawable theoryDrawableNotViewed = getDrawable(context, R.drawable.ic_theory);
+        Drawable theoryQuizDrawable = getViewedDrawable(getDrawable(context, R.drawable.ic_theory).mutate());
 
 
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_TEXT, getDrawable(context, R.drawable.ic_theory));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_VIDEO, getDrawable(context, R.drawable.ic_video_pin));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_MATCHING, getDrawable(context, R.drawable.ic_easy_quiz));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_SORTING, getDrawable(context, R.drawable.ic_easy_quiz));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_MATH, getDrawable(context, R.drawable.ic_easy_quiz));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_FREE_ANSWER, getDrawable(context, R.drawable.ic_easy_quiz));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_TABLE, getDrawable(context, R.drawable.ic_easy_quiz));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_STRING, getDrawable(context, R.drawable.ic_easy_quiz));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_CHOICE, getDrawable(context, R.drawable.ic_easy_quiz));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_NUMBER, getDrawable(context, R.drawable.ic_easy_quiz));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_DATASET, getDrawable(context, R.drawable.ic_hard_quiz));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_ANIMATION, getDrawable(context, R.drawable.ic_animation));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_CHEMICAL, getDrawable(context, R.drawable.ic_easy_quiz));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_FILL_BLANKS, getDrawable(context, R.drawable.ic_easy_quiz));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_PUZZLE, getDrawable(context, R.drawable.ic_easy_quiz));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_PYCHARM, getDrawable(context, R.drawable.ic_easy_quiz));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_CODE, getDrawable(context, R.drawable.ic_hard_quiz));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_ADMIN, getDrawable(context, R.drawable.ic_hard_quiz));
-        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_SQL, getDrawable(context, R.drawable.ic_easy_quiz));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_TEXT, getDrawable(context, R.drawable.ic_theory1));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_VIDEO, getDrawable(context, R.drawable.ic_video_pin1));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_MATCHING, getDrawable(context, R.drawable.ic_easy_quiz1));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_SORTING, getDrawable(context, R.drawable.ic_easy_quiz1));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_MATH, getDrawable(context, R.drawable.ic_easy_quiz1));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_FREE_ANSWER, getDrawable(context, R.drawable.ic_easy_quiz1));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_TABLE, getDrawable(context, R.drawable.ic_easy_quiz1));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_STRING, getDrawable(context, R.drawable.ic_easy_quiz1));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_CHOICE, getDrawable(context, R.drawable.ic_easy_quiz1));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_NUMBER, getDrawable(context, R.drawable.ic_easy_quiz1));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_DATASET, getDrawable(context, R.drawable.ic_hard_quiz1));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_ANIMATION, getDrawable(context, R.drawable.ic_animation1));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_CHEMICAL, getDrawable(context, R.drawable.ic_easy_quiz1));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_FILL_BLANKS, getDrawable(context, R.drawable.ic_easy_quiz1));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_PUZZLE, getDrawable(context, R.drawable.ic_easy_quiz1));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_PYCHARM, getDrawable(context, R.drawable.ic_easy_quiz1));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_CODE, getDrawable(context, R.drawable.ic_hard_quiz1));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_ADMIN, getDrawable(context, R.drawable.ic_hard_quiz1));
+//        mapFromTypeToDrawable.put(AppConstants.TYPE_SQL, getDrawable(context, R.drawable.ic_easy_quiz1));
+
+        mapFromTypeToDrawable.put(AppConstants.TYPE_TEXT, theoryQuizDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_VIDEO, videoDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_MATCHING, simpleQuestionDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_SORTING, simpleQuestionDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_MATH, simpleQuestionDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_FREE_ANSWER, simpleQuestionDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_TABLE, simpleQuestionDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_STRING, simpleQuestionDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_CHOICE, simpleQuestionDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_NUMBER, simpleQuestionDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_DATASET, hardQuizDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_ANIMATION, animationDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_CHEMICAL, simpleQuestionDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_FILL_BLANKS, simpleQuestionDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_PUZZLE, simpleQuestionDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_PYCHARM, simpleQuestionDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_CODE, hardQuizDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_ADMIN, hardQuizDrawable);
+        mapFromTypeToDrawable.put(AppConstants.TYPE_SQL, simpleQuestionDrawable);
+
+
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_TEXT, theoryDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_VIDEO, videoDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_MATCHING, simpleQuestionDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_SORTING, simpleQuestionDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_MATH, simpleQuestionDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_FREE_ANSWER, simpleQuestionDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_TABLE, simpleQuestionDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_STRING, simpleQuestionDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_CHOICE, simpleQuestionDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_NUMBER, simpleQuestionDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_DATASET, simpleQuestionDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_ANIMATION, animationDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_CHEMICAL, simpleQuestionDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_FILL_BLANKS, simpleQuestionDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_PUZZLE, simpleQuestionDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_PYCHARM, simpleQuestionDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_CODE, hardQuizDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_ADMIN, hardQuizDrawableNotViewed);
+        mapFromTypeToDrawableNotViewed.put(AppConstants.TYPE_SQL, simpleQuestionDrawableNotViewed);
 
     }
 
@@ -102,16 +138,17 @@ public class StepTypeResolverImpl implements StepTypeResolver {
 
         if (viewed) {
             Drawable drawable = mapFromTypeToDrawable.get(type);
-            if (drawable == null)
+            if (drawable == null) {
                 drawable = mapFromTypeToDrawable.get(AppConstants.TYPE_TEXT);
+            }
 
-            return getViewedDrawable(drawable);
+            return drawable;
         } else {
             Drawable drawable = mapFromTypeToDrawableNotViewed.get(type);
-            if (drawable != null)
-                return drawable;
-            else
-                return mapFromTypeToDrawableNotViewed.get(AppConstants.TYPE_TEXT);
+            if (drawable == null) {
+                drawable = mapFromTypeToDrawableNotViewed.get(AppConstants.TYPE_TEXT);
+            }
+            return drawable;
         }
     }
 
