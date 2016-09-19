@@ -254,20 +254,23 @@ public class StepsFragment extends FragmentBase implements StepsView {
     public void onUpdateOneStep(UpdateStepEvent e) {
         long stepId = e.getStepId();
         Step step = null;
-        for (Step item : stepsPresenter.getStepList()) {
-            if (item.getId() == stepId) {
-                step = item;
+        int position = -1;
+        for (int i = 0; i < stepsPresenter.getStepList().size(); i++) {
+            Step stepInList = stepsPresenter.getStepList().get(i);
+            if (stepInList.getId() == stepId) {
+                position = i;
+                step = stepInList;
                 break;
             }
         }
 
-        if (step != null && step.is_custom_passed()) {
+        if (step != null && !step.is_custom_passed()) {
             // if not passed yet
             step.set_custom_passed(true);
-            for (int i = 0; i < tabLayout.getTabCount(); i++) {
-                TabLayout.Tab tab = tabLayout.getTabAt(i);
+            if (position >= 0 && position < tabLayout.getTabCount()) {
+                TabLayout.Tab tab = tabLayout.getTabAt(position);
                 if (tab != null) {
-                    tab.setIcon(stepAdapter.getTabDrawable(i));
+                    tab.setIcon(stepAdapter.getTabDrawable(position));
                 }
             }
         }

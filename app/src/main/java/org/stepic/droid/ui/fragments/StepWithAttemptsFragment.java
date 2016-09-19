@@ -291,7 +291,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
                         if (response.isSuccess()) {
                             List<Submission> submissionList = response.body().getSubmissions();
                             if (submissionList == null || submissionList.isEmpty()) {
-                                bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId, null));
+                                bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId, null)); // FIXME: 19.09.16 why?
                                 return;
                             }
 
@@ -397,7 +397,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         if (step != null) {
             analytic.reportEvent(Analytic.Steps.CORRECT_SUBMISSION_FILL, step.getId() + "");
         }
-        markLocalProgressAsViewed(submission);
+        markLocalProgressAsViewed();
         mAttemptContainer.setBackgroundResource(R.color.correct_answer_background);
         mStatusIcon.setImageDrawable(mCorrectIcon);
         mStatusTextView.setText(getCorrectString());
@@ -430,7 +430,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     }
 
 
-    protected final void markLocalProgressAsViewed(final Submission submission) {
+    protected final void markLocalProgressAsViewed() {
         bus.post(new UpdateStepEvent(step.getId()));
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             long stepId = step.getId();
