@@ -17,6 +17,8 @@ import org.stepic.droid.web.IApi;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 
