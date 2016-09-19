@@ -19,13 +19,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class LocalProgressOfUnitManager implements ILocalProgressManager {
+public class LocalProgressImpl implements LocalProgressManager {
     private DatabaseFacade mDatabaseFacade;
     private Bus mBus;
     private IApi mApi;
 
     @Inject
-    public LocalProgressOfUnitManager(DatabaseFacade databaseFacade, Bus bus, IApi api) {
+    public LocalProgressImpl(DatabaseFacade databaseFacade, Bus bus, IApi api) {
         mDatabaseFacade = databaseFacade;
         mBus = bus;
         mApi = api;

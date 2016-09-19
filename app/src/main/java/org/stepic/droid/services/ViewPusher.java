@@ -8,7 +8,7 @@ import android.os.Handler;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.ILocalProgressManager;
+import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.preferences.UserPreferences;
@@ -42,7 +42,7 @@ public class ViewPusher extends IntentService {
     IStoreStateManager mStoreStateManager;
 
     @Inject
-    ILocalProgressManager mUnitProgressManager;
+    LocalProgressManager mUnitProgressManager;
 
 
     /**

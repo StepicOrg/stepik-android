@@ -18,12 +18,12 @@ import org.stepic.droid.core.DefaultFilterImpl;
 import org.stepic.droid.core.FilterApplicator;
 import org.stepic.droid.core.FilterApplicatorImpl;
 import org.stepic.droid.core.ILessonSessionManager;
-import org.stepic.droid.core.ILocalProgressManager;
+import org.stepic.droid.core.LocalProgressImpl;
+import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.ILoginManager;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.core.LocalLessonSessionManager;
-import org.stepic.droid.core.LocalProgressOfUnitManager;
 import org.stepic.droid.core.LoginManager;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
@@ -183,8 +183,8 @@ public class AppCoreModule {
 
     @Singleton
     @Provides
-    ILocalProgressManager provideProgressManager(DatabaseFacade databaseFacade, Bus bus, IApi api) {
-        return new LocalProgressOfUnitManager(databaseFacade, bus, api);
+    LocalProgressManager provideProgressManager(DatabaseFacade databaseFacade, Bus bus, IApi api) {
+        return new LocalProgressImpl(databaseFacade, bus, api);
     }
 
     @Singleton

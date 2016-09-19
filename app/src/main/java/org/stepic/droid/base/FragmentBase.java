@@ -15,7 +15,7 @@ import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.AudioFocusHelper;
 import org.stepic.droid.core.ILessonSessionManager;
-import org.stepic.droid.core.ILocalProgressManager;
+import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -68,7 +68,7 @@ public class FragmentBase extends Fragment {
     public IShell mShell;
 
     @Inject
-    public ILocalProgressManager mLocalProgressManager;
+    public LocalProgressManager mLocalProgressManager;
 
 
     @Inject
