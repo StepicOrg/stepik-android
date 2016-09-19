@@ -17,8 +17,6 @@ import org.stepic.droid.web.IApi;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 
@@ -64,7 +62,6 @@ public class StepModule {
 
 
     @Provides
-    @Singleton
     StepTypeResolver provideStepResolver(Context context) {
         return new StepTypeResolverImpl(context);
     }

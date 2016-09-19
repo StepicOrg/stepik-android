@@ -5,26 +5,13 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
-import org.stepic.droid.base.MainApplication
-import org.stepic.droid.core.modules.StepModule
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Step
 import org.stepic.droid.model.Unit
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.resolvers.StepTypeResolver
-import javax.inject.Inject
 
-class StepFragmentAdapter(fm: FragmentManager, val mStepList: List<Step?>, val mLesson: Lesson?, val mUnit: Unit?) : FragmentStatePagerAdapter(fm) {
-
-    @Inject
-    lateinit var stepTypeResolver: StepTypeResolver
-
-    init {
-        MainApplication
-                .component()
-                .plus(StepModule())
-                .inject(this)
-    }
+class StepFragmentAdapter(fm: FragmentManager, val mStepList: List<Step?>, val mLesson: Lesson?, val mUnit: Unit?, val stepTypeResolver: StepTypeResolver) : FragmentStatePagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
         val step = mStepList[position]

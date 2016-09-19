@@ -199,7 +199,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
     }
 
     private void init(Lesson lesson, Unit unit) {
-        stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepsPresenter.getStepList(), lesson, unit);
+        stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepsPresenter.getStepList(), lesson, unit, stepTypeResolver);
         viewPager.setAdapter(stepAdapter);
 
         getActivity().setTitle(lesson.getTitle());
