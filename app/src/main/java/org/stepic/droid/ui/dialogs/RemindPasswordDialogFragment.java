@@ -36,7 +36,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
     private static final String ERROR_TEXT_KEY = "Error_Text_Key";
 
     @Inject
-    IApi mApi;
+    IApi api;
 
     public static RemindPasswordDialogFragment newInstance() {
         return new RemindPasswordDialogFragment();
@@ -137,7 +137,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
             return;
         }
         if (!email.isEmpty()) {
-            mApi.remindPassword(email).enqueue(new Callback<Void>() {
+            api.remindPassword(email).enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Response<Void> response, Retrofit retrofit) {
                     ProgressHelper.dismiss(mProgressLogin);

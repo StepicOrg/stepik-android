@@ -24,13 +24,13 @@ public class VideoQualityDialog extends DialogFragment {
 
 
     @Inject
-    IShell mShell;
+    IShell shell;
 
     @Inject
-    DatabaseFacade mDbManager;
+    DatabaseFacade databaseFacade;
 
     @Inject
-    UserPreferences mUserPreferences;
+    UserPreferences userPreferences;
 
     @Inject
     Analytic analytic;
@@ -59,7 +59,7 @@ public class VideoQualityDialog extends DialogFragment {
                     }
                 })
                 .setSingleChoiceItems(R.array.video_quality,
-                        mQualityToPositionMap.get(mUserPreferences.getQualityVideo()),
+                        mQualityToPositionMap.get(userPreferences.getQualityVideo()),
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, final int which) {
@@ -67,7 +67,7 @@ public class VideoQualityDialog extends DialogFragment {
                                 AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                                     @Override
                                     protected Void doInBackground(Void... params) {
-                                        mUserPreferences.storeQualityVideo(mPositionToQualityMap.get(which));
+                                        userPreferences.storeQualityVideo(mPositionToQualityMap.get(which));
                                         return null;
                                     }
                                 };
