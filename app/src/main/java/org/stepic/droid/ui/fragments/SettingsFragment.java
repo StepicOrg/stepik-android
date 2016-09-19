@@ -28,13 +28,13 @@ public class SettingsFragment extends FragmentBase {
     }
 
     @BindView(R.id.fragment_settings_wifi_enable_switch)
-    BetterSwitch mWifiLoadSwitch;
+    BetterSwitch wifiLoadSwitch;
 
     @BindView(R.id.fragment_settings_external_player_switch)
-    BetterSwitch mExternalPlayerSwitch;
+    BetterSwitch externalPlayerSwitch;
 
     @BindView(R.id.video_quality_view)
-    View mVideoQuality;
+    View videoQuality;
 
     @BindView(R.id.fragment_settings_notification_learn_switch)
     BetterSwitch notificationLearnSwitch;
@@ -55,7 +55,7 @@ public class SettingsFragment extends FragmentBase {
     String versionPrefix;
 
     @BindString(R.string.clear_cache_title)
-    String mClearCacheTitle;
+    String clearCacheTitle;
 
     @BindString(R.string.kb)
     String kb;
@@ -81,37 +81,37 @@ public class SettingsFragment extends FragmentBase {
 
         setUpSound();
 
-        mWifiLoadSwitch.setChecked(!mSharedPreferenceHelper.isMobileInternetAlsoAllowed());//if first time it is true
+        wifiLoadSwitch.setChecked(!sharedPreferenceHelper.isMobileInternetAlsoAllowed());//if first time it is true
 
-        mExternalPlayerSwitch.setChecked(mUserPreferences.isOpenInExternal());
+        externalPlayerSwitch.setChecked(userPreferences.isOpenInExternal());
 
-        mExternalPlayerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        externalPlayerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mUserPreferences.setOpenInExternal(isChecked);
+                userPreferences.setOpenInExternal(isChecked);
             }
         });
 
-        calendarWidgetSwitch.setChecked(mUserPreferences.isNeedToShowCalendarWidget());
+        calendarWidgetSwitch.setChecked(userPreferences.isNeedToShowCalendarWidget());
 
         calendarWidgetSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                mUserPreferences.setNeedToShowCalendarWidget(isChecked);
+                userPreferences.setNeedToShowCalendarWidget(isChecked);
             }
         });
 
 
-        mWifiLoadSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        wifiLoadSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean newCheckedState) {
-                if (mWifiLoadSwitch.isUserTriggered()) {
+                if (wifiLoadSwitch.isUserTriggered()) {
                     if (newCheckedState) {
                         //wifi only
                         bus.post(new WifiLoadIsChangedEvent(false));
                     } else {
                         //wifi and mobile internet
-                        mWifiLoadSwitch.setChecked(true);
+                        wifiLoadSwitch.setChecked(true);
                         AllowMobileDataDialogFragment dialogFragment = new AllowMobileDataDialogFragment();
                         dialogFragment.show(getFragmentManager(), null);
                     }
@@ -122,7 +122,7 @@ public class SettingsFragment extends FragmentBase {
 
 
         final DialogFragment videoDialog = new VideoQualityDialog();
-        mVideoQuality.setOnClickListener(new View.OnClickListener() {
+        videoQuality.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!videoDialog.isAdded()) {
@@ -134,28 +134,28 @@ public class SettingsFragment extends FragmentBase {
         storageManagementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mShell.getScreenProvider().showStorageManagement(getActivity());
+                shell.getScreenProvider().showStorageManagement(getActivity());
             }
         });
 
     }
 
     private void setUpNotificationVibration() {
-        notificationVibration.setChecked(mUserPreferences.isVibrateNotificationEnabled());
+        notificationVibration.setChecked(userPreferences.isVibrateNotificationEnabled());
         notificationVibration.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mUserPreferences.setVibrateNotificationEnabled(isChecked);
+                userPreferences.setVibrateNotificationEnabled(isChecked);
             }
         });
     }
 
     private void setUpSound() {
-        notificationSound.setChecked(mUserPreferences.isSoundNotificationEnabled());
+        notificationSound.setChecked(userPreferences.isSoundNotificationEnabled());
         notificationSound.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mUserPreferences.setNotificationSoundEnabled(isChecked);
+                userPreferences.setNotificationSoundEnabled(isChecked);
             }
         });
     }
@@ -175,8 +175,8 @@ public class SettingsFragment extends FragmentBase {
     @Override
     public void onDestroyView() {
         calendarWidgetSwitch.setOnCheckedChangeListener(null);
-        mWifiLoadSwitch.setOnCheckedChangeListener(null);
-        mExternalPlayerSwitch.setOnCheckedChangeListener(null);
+        wifiLoadSwitch.setOnCheckedChangeListener(null);
+        externalPlayerSwitch.setOnCheckedChangeListener(null);
         notificationLearnSwitch.setOnCheckedChangeListener(null);
         notificationVibration.setOnCheckedChangeListener(null);
         notificationSound.setOnCheckedChangeListener(null);
@@ -186,20 +186,20 @@ public class SettingsFragment extends FragmentBase {
 
     @Subscribe
     public void onWifiChanged(WifiLoadIsChangedEvent e) {
-        mWifiLoadSwitch.setChecked(!e.isNewStateMobileAllowed());
+        wifiLoadSwitch.setChecked(!e.isNewStateMobileAllowed());
         storeMobileState(e.isNewStateMobileAllowed());
     }
 
     private void storeMobileState(boolean isMobileAllowed) {
-        mSharedPreferenceHelper.setMobileInternetAndWifiAllowed(isMobileAllowed);
+        sharedPreferenceHelper.setMobileInternetAndWifiAllowed(isMobileAllowed);
     }
 
     private void setUpNotificationLearn() {
-        notificationLearnSwitch.setChecked(mUserPreferences.isNotificationEnabled());
+        notificationLearnSwitch.setChecked(userPreferences.isNotificationEnabled());
         notificationLearnSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mUserPreferences.setNotificationEnabled(isChecked);
+                userPreferences.setNotificationEnabled(isChecked);
             }
         });
     }

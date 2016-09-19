@@ -3,13 +3,13 @@ package org.stepic.droid.events.video;
 import org.stepic.droid.model.Video;
 
 public class VideoResolvedEvent {
-    Video mVideo;
-    private String mPathToVideo;
+    Video video;
+    private String pathToVideo;
     private final long stepId;
 
     public VideoResolvedEvent(Video video, String pathToVideo, long stepId) {
-        this.mVideo = video;
-        mPathToVideo = pathToVideo;
+        this.video = video;
+        this.pathToVideo = pathToVideo;
         this.stepId = stepId;
     }
 
@@ -18,7 +18,7 @@ public class VideoResolvedEvent {
 //    }
 
     public String getPathToVideo() {
-        return mPathToVideo;
+        return pathToVideo;
     }
 
     public long getStepId() {

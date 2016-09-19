@@ -5,16 +5,16 @@ import android.util.AttributeSet;
 
 import org.stepic.droid.R;
 
-public class StepicCheckBox extends StepicOptionView {
-    public StepicCheckBox(Context context) {
+public class StepikCheckBox extends StepikOptionView {
+    public StepikCheckBox(Context context) {
         super(context, null);
     }
 
-    public StepicCheckBox(Context context, AttributeSet attrs) {
+    public StepikCheckBox(Context context, AttributeSet attrs) {
         super(context, attrs, 0);
     }
 
-    public StepicCheckBox(Context context, AttributeSet attrs, int defStyleAttr) {
+    public StepikCheckBox(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

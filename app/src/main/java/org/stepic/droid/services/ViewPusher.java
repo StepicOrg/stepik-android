@@ -3,11 +3,11 @@ package org.stepic.droid.services;
 import android.app.DownloadManager;
 import android.app.IntentService;
 import android.content.Intent;
-import android.os.Handler;
 
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.model.Step;
@@ -23,6 +23,8 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 import retrofit.Response;
 
 public class ViewPusher extends IntentService {
@@ -44,6 +46,9 @@ public class ViewPusher extends IntentService {
 
     @Inject
     LocalProgressManager unitProgressManager;
+
+    @Inject
+    IMainHandler mainHandler;
 
 
     /**
@@ -93,15 +98,14 @@ public class ViewPusher extends IntentService {
         }
         unitProgressManager.checkUnitAsPassed(stepId);
         // Get a handler that can be used to post to the main thread
-        Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
 
-        Runnable myRunnable = new Runnable() {
+        mainHandler.post(new Function0<Unit>() {
             @Override
-            public void run() {
+            public Unit invoke() {
                 bus.post(new UpdateStepEvent(stepId));
-            } // This is your code
-        };
-        mainHandler.post(myRunnable);
+                return Unit.INSTANCE;
+            }
+        });
     }
 }
 

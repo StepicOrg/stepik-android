@@ -18,7 +18,7 @@ import javax.inject.Singleton;
 @Singleton
 public class ConfigRelease implements IConfig {
 
-    private JsonObject mProperties;
+    private JsonObject properties;
 
     private static final String API_HOST_URL = "API_HOST_URL";
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
@@ -47,10 +47,10 @@ public class ConfigRelease implements IConfig {
             InputStream in = context.getAssets().open("configs/config.json");
             JsonParser parser = new JsonParser();
             JsonElement config = parser.parse(new InputStreamReader(in));
-            mProperties = config.getAsJsonObject();
+            properties = config.getAsJsonObject();
         } catch (Exception e) {
             analytic.reportError(Analytic.Error.CONFIG_NOT_PARSED, e);
-            mProperties = new JsonObject();
+            properties = new JsonObject();
         }
     }
 
@@ -182,6 +182,6 @@ public class ConfigRelease implements IConfig {
     }
 
     private JsonElement getObject(String key) {
-        return mProperties.get(key);
+        return properties.get(key);
     }
 }

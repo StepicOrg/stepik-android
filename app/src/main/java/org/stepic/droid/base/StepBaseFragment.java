@@ -1,6 +1,5 @@
 package org.stepic.droid.base;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -24,7 +23,6 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
-import org.stepic.droid.ui.dialogs.CertificateShareDialogFragment;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.ui.dialogs.StepShareDialogFragment;
 import org.stepic.droid.util.AppConstants;
@@ -154,9 +152,9 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
             @Override
             public void onClick(View v) {
                 int discussionCount = step.getDiscussions_count();
-                mShell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+                shell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
                 if (discussionCount == 0) {
-                    mShell.getScreenProvider().openNewCommentForm(getActivity(), step.getId(), null); //show new form, but in back stack comment list is exist.
+                    shell.getScreenProvider().openNewCommentForm(getActivity(), step.getId(), null); //show new form, but in back stack comment list is exist.
                 }
             }
         });
@@ -210,7 +208,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
         if (step != null && event.getTargetId() == step.getId()) {
             long[] arr = new long[]{step.getId()};
 
-            mShell.getApi().getSteps(arr).enqueue(new Callback<StepResponse>() {
+            shell.getApi().getSteps(arr).enqueue(new Callback<StepResponse>() {
                 @Override
                 public void onResponse(Response<StepResponse> response, Retrofit retrofit) {
                     if (response.isSuccess()) {
@@ -218,10 +216,10 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
                         if (stepResponse != null && stepResponse.getSteps() != null && !stepResponse.getSteps().isEmpty()) {
                             final Step stepFromInternet = stepResponse.getSteps().get(0);
                             if (stepFromInternet != null) {
-                                mThreadPoolExecutor.execute(new Runnable() {
+                                threadPoolExecutor.execute(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mDatabaseFacade.addStep(stepFromInternet); //fixme: fragment in closure -> leak
+                                        databaseFacade.addStep(stepFromInternet); //fixme: fragment in closure -> leak
                                     }
                                 });
 
@@ -260,7 +258,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     @Override
     public final void openNextLesson(Unit nextUnit, Lesson nextLesson) {
         ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
-        mShell.getScreenProvider().showSteps(getActivity(), nextUnit, nextLesson);
+        shell.getScreenProvider().showSteps(getActivity(), nextUnit, nextLesson);
         getActivity().finish();
     }
 
@@ -287,7 +285,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     @Override
     public void openPreviousLesson(Unit previousUnit, Lesson previousLesson) {
         ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
-        mShell.getScreenProvider().showSteps(getActivity(), previousUnit, previousLesson, true);
+        shell.getScreenProvider().showSteps(getActivity(), previousUnit, previousLesson, true);
         getActivity().finish();
     }
 

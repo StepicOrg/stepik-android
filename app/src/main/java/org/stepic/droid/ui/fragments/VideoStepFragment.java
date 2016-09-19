@@ -110,12 +110,12 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
                     long stepId = step.getId();
                     long stepArray[] = new long[]{stepId};
                     try {
-                        List<Step> steps = mShell.getApi().getSteps(stepArray).execute().body().getSteps();
+                        List<Step> steps = shell.getApi().getSteps(stepArray).execute().body().getSteps();
                         if (steps == null || steps.size() == 0) return null;
-                        Step stepFromWeb = mShell.getApi().getSteps(stepArray).execute().body().getSteps().get(0);
+                        Step stepFromWeb = shell.getApi().getSteps(stepArray).execute().body().getSteps().get(0);
                         Video video = stepFromWeb.getBlock().getVideo();
                         if (video != null) {
-                            return new VideoLoadedEvent(stepFromWeb.getBlock().getVideo(), stepFromWeb.getId(), mVideoResolver.resolveVideoUrl(video, step));
+                            return new VideoLoadedEvent(stepFromWeb.getBlock().getVideo(), stepFromWeb.getId(), videoResolver.resolveVideoUrl(video, step));
                         }
                         return null;
                     } catch (IOException e) {
@@ -148,7 +148,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
                         if (video == null) {
                             return tempVideoUrl;
                         } else {
-                            return mVideoResolver.resolveVideoUrl(localStep.getBlock().getVideo(), localStep);
+                            return videoResolver.resolveVideoUrl(localStep.getBlock().getVideo(), localStep);
                         }
                     }
 
@@ -163,7 +163,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
                         }
                     }
                 };
-                resolveTask.executeOnExecutor(mThreadPoolExecutor);
+                resolveTask.executeOnExecutor(threadPoolExecutor);
             }
         });
         stepQualityPresenter.attachView(this);
@@ -213,7 +213,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
     @Subscribe
     public void onVideoResolved(VideoResolvedEvent e) {
         if (e.getStepId() != step.getId()) return;
-        mShell.getScreenProvider().showVideo(getActivity(), e.getPathToVideo());
+        shell.getScreenProvider().showVideo(getActivity(), e.getPathToVideo());
     }
 
     @Subscribe

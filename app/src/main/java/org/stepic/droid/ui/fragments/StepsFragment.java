@@ -192,7 +192,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
             @Override
             public void onClick(View v) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_AUTH_FROM_STEPS);
-                mShell.getScreenProvider().showLaunchScreen(getContext(), false);
+                shell.getScreenProvider().showLaunchScreen(getContext(), false);
                 getActivity().finish();
             }
         });
@@ -237,16 +237,16 @@ public class StepsFragment extends FragmentBase implements StepsView {
 
                 protected Void doInBackground(Void... params) {
                     try {
-                        long assignmentID = mDatabaseFacade.getAssignmentIdByStepId(stepId);
+                        long assignmentID = databaseFacade.getAssignmentIdByStepId(stepId);
 
-                        mShell.getScreenProvider().pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
+                        shell.getScreenProvider().pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
                     } catch (Exception exception) {
                         analytic.reportError(Analytic.Error.FAIL_PUSH_STEP_VIEW, exception);
                     }
                     return null;
                 }
             };
-            task.executeOnExecutor(mThreadPoolExecutor);
+            task.executeOnExecutor(threadPoolExecutor);
         }
     }
 
@@ -326,7 +326,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
                 }
 
                 Step step = stepsPresenter.getStepList().get(position);
-                mShell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+                shell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -398,7 +398,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
 
         if (disscussionId >= 0 && position >= 0 && position < stepsPresenter.getStepList().size()) {
             Step step = stepsPresenter.getStepList().get(position);
-            mShell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+            shell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
             disscussionId = -1;
         }
     }

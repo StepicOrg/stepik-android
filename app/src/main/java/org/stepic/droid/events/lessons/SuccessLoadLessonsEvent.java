@@ -10,13 +10,13 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class SuccessLoadLessonsEvent {
-    Section mSection;
+    Section section;
     private final Response<LessonStepicResponse> response;
     private final Retrofit retrofit;
     private List<Unit> units;
 
     public SuccessLoadLessonsEvent(Section section, Response<LessonStepicResponse> response, Retrofit retrofit, List<Unit> units) {
-        mSection = section;
+        this.section = section;
         this.response = response;
         this.retrofit = retrofit;
         this.units = units;
@@ -27,7 +27,7 @@ public class SuccessLoadLessonsEvent {
     }
 
     public Section getSection() {
-        return mSection;
+        return section;
     }
 
     public Response<LessonStepicResponse> getResponse() {

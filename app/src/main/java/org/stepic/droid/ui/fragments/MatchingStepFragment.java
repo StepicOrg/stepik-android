@@ -43,29 +43,29 @@ import butterknife.ButterKnife;
 
 public class MatchingStepFragment extends StepWithAttemptsFragment {
 
-    RecyclerView mRecyclerView;
-    LinearLayout mLeftLinearLayout;
+    RecyclerView recyclerView;
+    LinearLayout leftLinearLayout;
 
-    private List<Option> mOptionList;
-    private List<String> mFirstList;
-    private int mMaxWidth;
+    private List<Option> optionList;
+    private List<String> firstList;
+    private int maxWidth;
     private int halfScreen;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_matching, mAttemptContainer, false);
-        mAttemptContainer.addView(view);
-        mRecyclerView = ButterKnife.findById(view, R.id.recycler);
-        mLeftLinearLayout = ButterKnife.findById(view, R.id.leftColumn);
+        View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_matching, attemptContainer, false);
+        attemptContainer.addView(view);
+        recyclerView = ButterKnife.findById(view, R.id.recycler);
+        leftLinearLayout = ButterKnife.findById(view, R.id.leftColumn);
 
-        mRecyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setNestedScrollingEnabled(false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         layoutManager.setSmoothScrollbarEnabled(true);
 
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         WindowManager wm = (WindowManager) MainApplication.getAppContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
@@ -81,27 +81,27 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
     protected void showAttempt(Attempt attempt) {
         List<Pair> options = attempt.getDataset().getPairs();
         if (options == null) return;
-        mOptionList = new ArrayList<>(options.size());
-        mFirstList = new ArrayList<>(options.size());
+        optionList = new ArrayList<>(options.size());
+        firstList = new ArrayList<>(options.size());
         for (int i = 0; i < options.size(); i++) {
-            mOptionList.add(new Option(options.get(i).getSecond(), i));
-            mFirstList.add(options.get(i).getFirst());
+            optionList.add(new Option(options.get(i).getSecond(), i));
+            firstList.add(options.get(i).getFirst());
         }
-        mMaxWidth = getMaxWidthOfLines();
+        maxWidth = getMaxWidthOfLines();
 
-        buildFirstColumn(mFirstList);
-        mRecyclerView.setAdapter(new SortStepAdapter(mRecyclerView, mOptionList, mMaxWidth, true));
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+        buildFirstColumn(firstList);
+        recyclerView.setAdapter(new SortStepAdapter(recyclerView, optionList, maxWidth, true));
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     // TODO: 25.01.16 refactor
     @Override
     protected Reply generateReply() {
-        if (mOptionList == null) return new Reply.Builder().build();
+        if (optionList == null) return new Reply.Builder().build();
 
-        List<Integer> ordering = new ArrayList<>(mOptionList.size());
-        for (int i = 0; i < mOptionList.size(); i++) {
-            ordering.add(i, mOptionList.get(i).getPositionId());
+        List<Integer> ordering = new ArrayList<>(optionList.size());
+        for (int i = 0; i < optionList.size(); i++) {
+            ordering.add(i, optionList.get(i).getPositionId());
         }
 
         return new Reply.Builder()
@@ -113,12 +113,12 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
     @Override
     protected void blockUIBeforeSubmit(boolean needBlock) {
 //        mAttemptContainer.setEnabled(!needBlock);
-        mRecyclerView.setEnabled(!needBlock);
+        recyclerView.setEnabled(!needBlock);
     }
 
     @Override
     protected void onRestoreSubmission() {
-        Reply reply = mSubmission.getReply();
+        Reply reply = submission.getReply();
         if (reply == null) return;
 
         List<Integer> ordering = reply.getOrdering();
@@ -126,7 +126,7 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
 
         SortStepAdapter adapter;
         try {
-            adapter = (SortStepAdapter) mRecyclerView.getAdapter();
+            adapter = (SortStepAdapter) recyclerView.getAdapter();
         } catch (Exception e) {
             return;
         }
@@ -135,55 +135,55 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
 //        buildFirstColumn(mFirstList);
 
 
-        mOptionList = adapter.getData();
-        mOptionList.clear();
+        optionList = adapter.getData();
+        optionList.clear();
         Map<Integer, Option> itemIdToOption = adapter.getItemIdOptionMap();
         int i = 0;
         for (Integer itemId : ordering) {
-            mOptionList.add(i, itemIdToOption.get(itemId));
+            optionList.add(i, itemIdToOption.get(itemId));
             i++;
         }
         adapter.notifyDataSetChanged();
     }
 
     private void buildFirstColumn(List<String> firstList) {
-        if (firstList == null || firstList.isEmpty() || mMaxWidth <= 0) return;
-        mLeftLinearLayout.removeAllViews();
+        if (firstList == null || firstList.isEmpty() || maxWidth <= 0) return;
+        leftLinearLayout.removeAllViews();
         for (String value : firstList) {
-            View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_matching_first_option, mLeftLinearLayout, false);
+            View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_matching_first_option, leftLinearLayout, false);
             TextView header = ButterKnife.findById(view, R.id.option_text);
             header.setText(HtmlHelper.fromHtml(value).toString());
-            int lines = (mMaxWidth / halfScreen) + 1;
+            int lines = (maxWidth / halfScreen) + 1;
             int height = (int) MainApplication.getAppContext().getResources().getDimension(R.dimen.option_height);
             height = lines * height;
             view.getLayoutParams().height = height;
-            mLeftLinearLayout.addView(view);
+            leftLinearLayout.addView(view);
         }
     }
 
 
     private int getMaxWidthOfLines() {
         // TODO: 25.01.16 dirty hack, try to find less dirty
-        View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_matching_second_option, mLeftLinearLayout, false);
+        View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_matching_second_option, leftLinearLayout, false);
         final TextView header = ButterKnife.findById(view, R.id.option_text);
 
 
         int maxWidth = 0;
-        List<String> allTextList = new ArrayList<>(mFirstList);
-        for (Option option : mOptionList) {
+        List<String> allTextList = new ArrayList<>(firstList);
+        for (Option option : optionList) {
             allTextList.add(option.getValue());
         }
         for (String text : allTextList) {
             header.setText(HtmlHelper.fromHtml(text));
             header.setVisibility(View.INVISIBLE);
-            mLeftLinearLayout.addView(view);
+            leftLinearLayout.addView(view);
 
             view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
             int measuredWidth = view.getMeasuredWidth();
             if (measuredWidth > maxWidth) {
                 maxWidth = measuredWidth;
             }
-            mLeftLinearLayout.removeView(view);
+            leftLinearLayout.removeView(view);
         }
 
         return maxWidth;

@@ -35,24 +35,24 @@ import butterknife.ButterKnife;
 
 public class SortingStepFragment extends StepWithAttemptsFragment {
 
-    RecyclerView mRecyclerView;
+    RecyclerView recyclerView;
 
-    private List<Option> mOptionList;
+    private List<Option> optionList;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_sorting, mAttemptContainer, false);
-        mAttemptContainer.addView(view);
-        mRecyclerView = ButterKnife.findById(view, R.id.recycler);
+        View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_sorting, attemptContainer, false);
+        attemptContainer.addView(view);
+        recyclerView = ButterKnife.findById(view, R.id.recycler);
 
-        mRecyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setNestedScrollingEnabled(false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         layoutManager.setSmoothScrollbarEnabled(true);
 
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         return v;
     }
@@ -60,21 +60,21 @@ public class SortingStepFragment extends StepWithAttemptsFragment {
     @Override
     protected void showAttempt(Attempt attempt) {
         List<String> options = attempt.getDataset().getOptions();
-        mOptionList = new ArrayList<>(options.size());
+        optionList = new ArrayList<>(options.size());
         for (int i = 0; i < options.size(); i++) {
-            mOptionList.add(new Option(options.get(i), i));
+            optionList.add(new Option(options.get(i), i));
         }
-        mRecyclerView.setAdapter(new SortStepAdapter(mRecyclerView, mOptionList));
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.setAdapter(new SortStepAdapter(recyclerView, optionList));
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
     protected Reply generateReply() {
-        if (mOptionList == null) return new Reply.Builder().build();
+        if (optionList == null) return new Reply.Builder().build();
 
-        List<Integer> ordering = new ArrayList<>(mOptionList.size());
-        for (int i = 0; i < mOptionList.size(); i++) {
-            ordering.add(i, mOptionList.get(i).getPositionId());
+        List<Integer> ordering = new ArrayList<>(optionList.size());
+        for (int i = 0; i < optionList.size(); i++) {
+            ordering.add(i, optionList.get(i).getPositionId());
         }
 
         return new Reply.Builder()
@@ -84,13 +84,13 @@ public class SortingStepFragment extends StepWithAttemptsFragment {
 
     @Override
     protected void blockUIBeforeSubmit(boolean needBlock) {
-        mRecyclerView.setEnabled(!needBlock);
+        recyclerView.setEnabled(!needBlock);
 
     }
 
     @Override
     protected void onRestoreSubmission() {
-        Reply reply = mSubmission.getReply();
+        Reply reply = submission.getReply();
         if (reply == null) return;
 
         List<Integer> ordering = reply.getOrdering();
@@ -98,18 +98,18 @@ public class SortingStepFragment extends StepWithAttemptsFragment {
 
         SortStepAdapter adapter;
         try {
-            adapter = (SortStepAdapter) mRecyclerView.getAdapter();
+            adapter = (SortStepAdapter) recyclerView.getAdapter();
         } catch (Exception e) {
             return;
         }
 
 
-        mOptionList = adapter.getData();
-        mOptionList.clear();
+        optionList = adapter.getData();
+        optionList.clear();
         Map<Integer, Option> itemIdToOption = adapter.getItemIdOptionMap();
         int i = 0;
         for (Integer itemId : ordering) {
-            mOptionList.add(i, itemIdToOption.get(itemId));
+            optionList.add(i, itemIdToOption.get(itemId));
             i++;
         }
         adapter.notifyDataSetChanged();

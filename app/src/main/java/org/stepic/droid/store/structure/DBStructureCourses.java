@@ -2,7 +2,7 @@ package org.stepic.droid.store.structure;
 
 public final class DBStructureCourses extends DBStructureBase {
 
-    private static String[] mUsedColumns = null;
+    private static String[] usedColumns = null;
 
     public static final String ENROLLED_COURSES = "courses";
     public static final String FEATURED_COURSES = "featured_courses";
@@ -43,8 +43,8 @@ public final class DBStructureCourses extends DBStructureBase {
     }
 
     public static String[] getUsedColumns() {
-        if (mUsedColumns == null) {
-            mUsedColumns = new String[]{
+        if (usedColumns == null) {
+            usedColumns = new String[]{
                     Column.ID,
                     Column.COURSE_ID,
                     Column.SUMMARY,
@@ -71,6 +71,6 @@ public final class DBStructureCourses extends DBStructureBase {
                     Column.END_DATE
             };
         }
-        return mUsedColumns;
+        return usedColumns;
     }
 }

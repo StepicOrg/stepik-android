@@ -2,7 +2,7 @@ package org.stepic.droid.store.structure;
 
 public final class DbStructureCachedVideo extends DBStructureBase {
 
-    private static String[] mUsedColumns = null;
+    private static String[] usedColumns = null;
 
     public static final String CACHED_VIDEO = "cached_video";
 
@@ -16,8 +16,8 @@ public final class DbStructureCachedVideo extends DBStructureBase {
     }
 
     public static String[] getUsedColumns() {
-        if (mUsedColumns == null) {
-            mUsedColumns = new String[]{
+        if (usedColumns == null) {
+            usedColumns = new String[]{
                     Column.VIDEO_ID,
                     Column.URL,
                     Column.STEP_ID,
@@ -25,7 +25,7 @@ public final class DbStructureCachedVideo extends DBStructureBase {
                     Column.QUALITY
             };
         }
-        return mUsedColumns;
+        return usedColumns;
     }
 
 }

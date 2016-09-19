@@ -23,19 +23,19 @@ import butterknife.ButterKnife;
 public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.InstructorViewHolder> {
 
     private List<User> instructors;
-    private Context mContext;
+    private Context context;
     private Drawable placeholder;
 
     public InstructorAdapter(List<User> instructors, Context context) {
         this.instructors = instructors;
-        mContext = context;
+        this.context = context;
         placeholder = ContextCompat.getDrawable(context, R.drawable.placeholder_icon_trnsp);
     }
 
 
     @Override
     public InstructorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.instructor_item, null);
+        View v = LayoutInflater.from(context).inflate(R.layout.instructor_item, null);
         return new InstructorViewHolder(v);
     }
 
@@ -46,7 +46,7 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
         String firstLastNameString = instructor.getFirst_name() + " " + instructor.getLast_name();
         holder.firstLastName.setText(firstLastNameString);
         holder.courseShortBio.setText(instructor.getShort_bio());
-        Glide.with(mContext)
+        Glide.with(context)
                 .load(instructor.getAvatar())
                 .asBitmap()
                 .placeholder(placeholder)

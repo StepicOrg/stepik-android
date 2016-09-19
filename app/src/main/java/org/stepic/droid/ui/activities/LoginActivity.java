@@ -82,7 +82,7 @@ public class LoginActivity extends FragmentActivityBase {
 
         hideSoftKeypad();
 
-        String serverClientId = mConfig.getGoogleServerClientId();
+        String serverClientId = config.getGoogleServerClientId();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestScopes(new Scope(Scopes.EMAIL), new Scope(Scopes.PROFILE))
                 .requestServerAuthCode(serverClientId)
@@ -190,7 +190,7 @@ public class LoginActivity extends FragmentActivityBase {
         try {
             String code = intent.getData().getQueryParameter("code");
 
-            mLoginManager.loginWithCode(code, progressHandler, new ActivityFinisher() {
+            loginManager.loginWithCode(code, progressHandler, new ActivityFinisher() {
                 @Override
                 public void onFinish() {
                     finish();
@@ -224,7 +224,7 @@ public class LoginActivity extends FragmentActivityBase {
         String login = mLoginText.getText().toString();
         String password = mPasswordText.getText().toString();
 
-        mLoginManager.login(login, password,
+        loginManager.login(login, password,
                 progressHandler,
                 new ActivityFinisher() {
                     @Override
@@ -244,7 +244,7 @@ public class LoginActivity extends FragmentActivityBase {
 
     @OnClick(R.id.forgot_password_tv)
     public void OnClickForgotPassword() {
-        mShell.getScreenProvider().openRemindPassword(LoginActivity.this);
+        shell.getScreenProvider().openRemindPassword(LoginActivity.this);
     }
 
     @Override
@@ -260,7 +260,7 @@ public class LoginActivity extends FragmentActivityBase {
                 }
                 String authCode = account.getServerAuthCode();
 
-                mLoginManager.loginWithNativeProviderCode(authCode,
+                loginManager.loginWithNativeProviderCode(authCode,
                         SocialManager.SocialType.google,
                         progressHandler,
                         new ActivityFinisher() {

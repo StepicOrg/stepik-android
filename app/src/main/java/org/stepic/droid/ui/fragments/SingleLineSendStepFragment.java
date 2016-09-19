@@ -20,20 +20,20 @@ import org.stepic.droid.model.Attempt;
 
 public abstract class SingleLineSendStepFragment extends StepWithAttemptsFragment {
 
-    protected EditText mAnswerField;
+    protected EditText answerField;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        mAnswerField = (EditText) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_single_line_attempt, mAttemptContainer, false);
-        mAttemptContainer.addView(mAnswerField);
-        mAnswerField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        answerField = (EditText) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_single_line_attempt, attemptContainer, false);
+        attemptContainer.addView(answerField);
+        answerField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
-                    mActionButton.performClick();
+                    actionButton.performClick();
                     handled = true;
                 }
                 return handled;
@@ -45,12 +45,12 @@ public abstract class SingleLineSendStepFragment extends StepWithAttemptsFragmen
 
     @Override
     protected final void showAttempt(Attempt attempt) {
-        mAnswerField.getText().clear();
+        answerField.getText().clear();
     }
 
     @Override
     protected final void blockUIBeforeSubmit(boolean needBlock) {
-        mAnswerField.setEnabled(!needBlock);
+        answerField.setEnabled(!needBlock);
     }
 
     @Subscribe

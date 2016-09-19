@@ -21,18 +21,18 @@ import java.util.List;
 public class StepDaoImpl extends DaoBase<Step> {
 
 
-    private final IDao<BlockPersistentWrapper> mBlockWrapperDao;
-    private final IDao<Assignment> mAssignmentDao;
-    private final IDao<Progress> mProgressDao;
+    private final IDao<BlockPersistentWrapper> blockWrapperDao;
+    private final IDao<Assignment> assignmentDao;
+    private final IDao<Progress> progressDao;
 
     public StepDaoImpl(SQLiteDatabase openHelper,
                        IDao<BlockPersistentWrapper> blockWrapperDao,
                        IDao<Assignment> assignmentDao,
                        IDao<Progress> progressDao) {
         super(openHelper);
-        mBlockWrapperDao = blockWrapperDao;
-        mAssignmentDao = assignmentDao;
-        mProgressDao = progressDao;
+        this.blockWrapperDao = blockWrapperDao;
+        this.assignmentDao = assignmentDao;
+        this.progressDao = progressDao;
     }
 
     @Override
@@ -140,20 +140,20 @@ public class StepDaoImpl extends DaoBase<Step> {
     private void addInnerObjects(Step step) {
         if (step == null) return;
         BlockPersistentWrapper blockPersistentWrapper =
-                mBlockWrapperDao.get(DbStructureBlock.Column.STEP_ID, step.getId() + "");
+                blockWrapperDao.get(DbStructureBlock.Column.STEP_ID, step.getId() + "");
         if (blockPersistentWrapper != null && blockPersistentWrapper.getBlock() != null) {
             step.setBlock(blockPersistentWrapper.getBlock());
         }
 
-        Assignment assignment = mAssignmentDao.get(DbStructureAssignment.Column.STEP_ID, step.getId() + "");
+        Assignment assignment = assignmentDao.get(DbStructureAssignment.Column.STEP_ID, step.getId() + "");
         if (assignment != null && assignment.getProgressId() != null) {
-            Progress progress = mProgressDao.get(DbStructureProgress.Column.ID, assignment.getProgressId());
+            Progress progress = progressDao.get(DbStructureProgress.Column.ID, assignment.getProgressId());
             if (progress != null) {
                 step.set_custom_passed(progress.is_passed());
             }
         } else {
             if (step.getProgressId() != null) {
-                Progress progress = mProgressDao.get(DbStructureProgress.Column.ID, step.getProgressId());
+                Progress progress = progressDao.get(DbStructureProgress.Column.ID, step.getProgressId());
                 if (progress != null) {
                     step.set_custom_passed(progress.is_passed());
                 }
@@ -166,7 +166,7 @@ public class StepDaoImpl extends DaoBase<Step> {
     public void insertOrUpdate(Step persistentObject) {
         super.insertOrUpdate(persistentObject);
         if (persistentObject != null) {
-            mBlockWrapperDao.insertOrUpdate(new BlockPersistentWrapper(persistentObject.getBlock(), persistentObject.getId()));
+            blockWrapperDao.insertOrUpdate(new BlockPersistentWrapper(persistentObject.getBlock(), persistentObject.getId()));
         }
     }
 

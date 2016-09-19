@@ -7,19 +7,19 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class SuccessLoadUnitsEvent {
-    private final Section mSection;
+    private final Section section;
     private final Response<UnitStepicResponse> response;
     private final Retrofit retrofit;
 
-    public SuccessLoadUnitsEvent(Section mSection, Response<UnitStepicResponse> response, Retrofit retrofit) {
+    public SuccessLoadUnitsEvent(Section section, Response<UnitStepicResponse> response, Retrofit retrofit) {
 
-        this.mSection = mSection;
+        this.section = section;
         this.response = response;
         this.retrofit = retrofit;
     }
 
     public Section getSection() {
-        return mSection;
+        return section;
     }
 
     public Response<UnitStepicResponse> getResponse() {

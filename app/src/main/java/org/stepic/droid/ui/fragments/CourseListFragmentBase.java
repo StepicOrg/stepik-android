@@ -39,35 +39,35 @@ import butterknife.ButterKnife;
 public abstract class CourseListFragmentBase extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, CoursesView {
 
     @BindView(R.id.swipe_refresh_layout_mycourses)
-    protected SwipeRefreshLayout mSwipeRefreshLayout;
+    protected SwipeRefreshLayout swipeRefreshLayout;
 
     @BindView(R.id.list_of_courses)
-    protected ListView mListOfCourses;
+    protected ListView listOfCoursesView;
 
     @BindView(R.id.report_problem)
-    protected View mReportConnectionProblem;
+    protected View reportConnectionProblem;
 
     @BindView(R.id.empty_courses)
-    protected View mEmptyCoursesView;
+    protected View emptyCoursesView;
 
     @BindView(R.id.empty_courses_button)
     protected Button findCourseButton;
 
     @BindView(R.id.root_fragment_view)
-    protected TouchDispatchableFrameLayout mRootView;
+    protected TouchDispatchableFrameLayout rootView;
 
     @BindView(R.id.load_progressbar)
-    protected ProgressBar mProgressBarOnEmptyScreen;
+    protected ProgressBar progressBarOnEmptyScreen;
 
     @BindView(R.id.empty_search)
-    protected ViewGroup mEmptySearch;
+    protected ViewGroup emptySearch;
 
-    protected List<Course> mCourses;
-    protected MyCoursesAdapter mCoursesAdapter;
+    protected List<Course> courses;
+    protected MyCoursesAdapter coursesAdapter;
 
     protected boolean userScrolled;
 
-    protected View mFooterDownloadingView;
+    protected View footerDownloadingView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,26 +87,26 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mProgressBarOnEmptyScreen.setVisibility(View.GONE);
+        progressBarOnEmptyScreen.setVisibility(View.GONE);
 
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeResources(
                 R.color.stepic_brand_primary,
                 R.color.stepic_orange_carrot,
                 R.color.stepic_blue_ribbon);
 
-        if (mCourses == null) mCourses = new ArrayList<>();
+        if (courses == null) courses = new ArrayList<>();
 
-        mFooterDownloadingView = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.loading_view, null, false);
-        mFooterDownloadingView.setVisibility(View.GONE);
-        mListOfCourses.addFooterView(mFooterDownloadingView);
+        footerDownloadingView = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.loading_view, null, false);
+        footerDownloadingView.setVisibility(View.GONE);
+        listOfCoursesView.addFooterView(footerDownloadingView);
 
-        registerForContextMenu(mListOfCourses);
+        registerForContextMenu(listOfCoursesView);
 
-        mCoursesAdapter = new MyCoursesAdapter(this, mCourses, getCourseType());
-        mListOfCourses.setAdapter(mCoursesAdapter);
+        coursesAdapter = new MyCoursesAdapter(this, courses, getCourseType());
+        listOfCoursesView.setAdapter(coursesAdapter);
 
-        mListOfCourses.setOnScrollListener(new AbsListView.OnScrollListener() {
+        listOfCoursesView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -124,15 +124,15 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
             }
         });
 
-        mListOfCourses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listOfCoursesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position >= mCourses.size() || position < 0) return;
-                Course course = mCourses.get(position);
+                if (position >= courses.size() || position < 0) return;
+                Course course = courses.get(position);
                 if (course.getEnrollment() != 0) {
-                    mShell.getScreenProvider().showSections(getActivity(), course);
+                    shell.getScreenProvider().showSections(getActivity(), course);
                 } else {
-                    mShell.getScreenProvider().showCourseDescription(CourseListFragmentBase.this, course);
+                    shell.getScreenProvider().showCourseDescription(CourseListFragmentBase.this, course);
                 }
             }
         });
@@ -151,10 +151,10 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
     @Override
     public void onDestroyView() {
-        if (mListOfCourses != null) {
-            mListOfCourses.setAdapter(null);
-            mListOfCourses.setOnScrollListener(null);
-            mListOfCourses.setOnItemClickListener(null);
+        if (listOfCoursesView != null) {
+            listOfCoursesView.setAdapter(null);
+            listOfCoursesView.setOnScrollListener(null);
+            listOfCoursesView.setOnItemClickListener(null);
         }
         super.onDestroyView();
     }
@@ -163,7 +163,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
     public final void updateEnrollment(Course courseForUpdate, long enrollment) {
         boolean inList = false;
-        for (Course courseItem : mCourses) {
+        for (Course courseItem : courses) {
             if (courseItem.getCourseId() == courseForUpdate.getCourseId()) {
                 courseItem.setEnrollment((int) courseItem.getCourseId());
                 courseForUpdate = courseItem;
@@ -172,8 +172,8 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
             }
         }
         if (getCourseType() == Table.enrolled && !inList) {
-            mCourses.add(courseForUpdate);
-            mCoursesAdapter.notifyDataSetChanged();
+            courses.add(courseForUpdate);
+            coursesAdapter.notifyDataSetChanged();
         }
 
     }
@@ -185,55 +185,55 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
     @Override
     public void showLoading() {
-        ProgressHelper.dismiss(mProgressBarOnEmptyScreen);
-        ProgressHelper.dismiss(mSwipeRefreshLayout);
-        mFooterDownloadingView.setVisibility(View.GONE);
-        mReportConnectionProblem.setVisibility(View.GONE);
+        ProgressHelper.dismiss(progressBarOnEmptyScreen);
+        ProgressHelper.dismiss(swipeRefreshLayout);
+        footerDownloadingView.setVisibility(View.GONE);
+        reportConnectionProblem.setVisibility(View.GONE);
 
-        if (mCourses.isEmpty()) {
-            ProgressHelper.activate(mSwipeRefreshLayout);
-        } else if (mSwipeRefreshLayout != null && !mSwipeRefreshLayout.isRefreshing()) {
-            mFooterDownloadingView.setVisibility(View.VISIBLE);
+        if (courses.isEmpty()) {
+            ProgressHelper.activate(swipeRefreshLayout);
+        } else if (swipeRefreshLayout != null && !swipeRefreshLayout.isRefreshing()) {
+            footerDownloadingView.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void showEmptyCourses() {
-        ProgressHelper.dismiss(mProgressBarOnEmptyScreen);
-        ProgressHelper.dismiss(mSwipeRefreshLayout);
-        mFooterDownloadingView.setVisibility(View.GONE);
-        mReportConnectionProblem.setVisibility(View.GONE);
-        if (mCourses.isEmpty()) {
+        ProgressHelper.dismiss(progressBarOnEmptyScreen);
+        ProgressHelper.dismiss(swipeRefreshLayout);
+        footerDownloadingView.setVisibility(View.GONE);
+        reportConnectionProblem.setVisibility(View.GONE);
+        if (courses.isEmpty()) {
             showEmptyScreen(true);
         }
     }
 
     @Override
     public void showConnectionProblem() {
-        ProgressHelper.dismiss(mProgressBarOnEmptyScreen);
-        ProgressHelper.dismiss(mSwipeRefreshLayout);
-        mFooterDownloadingView.setVisibility(View.GONE);
+        ProgressHelper.dismiss(progressBarOnEmptyScreen);
+        ProgressHelper.dismiss(swipeRefreshLayout);
+        footerDownloadingView.setVisibility(View.GONE);
 
-        if (mCourses == null || mCourses.isEmpty()) {
+        if (courses == null || courses.isEmpty()) {
             //screen is clear due to error connection
             showEmptyScreen(false);
-            mReportConnectionProblem.setVisibility(View.VISIBLE);
+            reportConnectionProblem.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void showCourses(List<Course> courses) {
-        ProgressHelper.dismiss(mProgressBarOnEmptyScreen);
-        ProgressHelper.dismiss(mSwipeRefreshLayout);
-        mFooterDownloadingView.setVisibility(View.GONE);
-        mReportConnectionProblem.setVisibility(View.GONE);
+        ProgressHelper.dismiss(progressBarOnEmptyScreen);
+        ProgressHelper.dismiss(swipeRefreshLayout);
+        footerDownloadingView.setVisibility(View.GONE);
+        reportConnectionProblem.setVisibility(View.GONE);
         showEmptyScreen(false);
-        List<Course> localList = new ArrayList<>(mCourses);
+        List<Course> localList = new ArrayList<>(this.courses);
         localList.addAll(courses);
         List<Course> finalCourses = KotlinUtil.INSTANCE.filterIfNotUnique(localList);
-        mCourses.clear();
-        mCourses.addAll(finalCourses);
-        mCoursesAdapter.notifyDataSetChanged();
+        this.courses.clear();
+        this.courses.addAll(finalCourses);
+        coursesAdapter.notifyDataSetChanged();
     }
 
     protected abstract void onNeedDownloadNextPage();

@@ -50,12 +50,12 @@ public class CourseSearchFragment extends CourseListFragmentBase {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mEmptySearch.setClickable(false);
-        mEmptySearch.setFocusable(false);
+        emptySearch.setClickable(false);
+        emptySearch.setFocusable(false);
         bus.register(this);
         searchCoursesPresenter.attachView(this);
         searchCoursesPresenter.restoreState();
-        mSwipeRefreshLayout.post(new Runnable() {
+        swipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
                 searchCoursesPresenter.downloadData(searchQuery);
@@ -79,11 +79,11 @@ public class CourseSearchFragment extends CourseListFragmentBase {
     @Override
     public void showEmptyScreen(boolean isShowed) {
         if (isShowed) {
-            mEmptySearch.setVisibility(View.VISIBLE);
-            mSwipeRefreshLayout.setVisibility(View.GONE);
+            emptySearch.setVisibility(View.VISIBLE);
+            swipeRefreshLayout.setVisibility(View.GONE);
         } else {
-            mEmptySearch.setVisibility(View.GONE);
-            mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+            emptySearch.setVisibility(View.GONE);
+            swipeRefreshLayout.setVisibility(View.VISIBLE);
 
         }
     }

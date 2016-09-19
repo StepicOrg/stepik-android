@@ -1,7 +1,7 @@
 package org.stepic.droid.store.structure;
 
 public final class DbStructureProgress extends DBStructureBase{
-    private static String[] mUsedColumns = null;
+    private static String[] usedColumns = null;
 
     public static final String PROGRESS = "progress";
 
@@ -17,8 +17,8 @@ public final class DbStructureProgress extends DBStructureBase{
     }
 
     public static String[] getUsedColumns() {
-        if (mUsedColumns == null) {
-            mUsedColumns = new String[]{
+        if (usedColumns == null) {
+            usedColumns = new String[]{
                     Column.ID,
                     Column.LAST_VIEWED,
                     Column.SCORE,
@@ -28,6 +28,6 @@ public final class DbStructureProgress extends DBStructureBase{
                     Column.IS_PASSED,
             };
         }
-        return mUsedColumns;
+        return usedColumns;
     }
 }

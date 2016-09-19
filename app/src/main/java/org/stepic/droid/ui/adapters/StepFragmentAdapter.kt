@@ -11,26 +11,26 @@ import org.stepic.droid.model.Unit
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.resolvers.StepTypeResolver
 
-class StepFragmentAdapter(fm: FragmentManager, val mStepList: List<Step?>, val mLesson: Lesson?, val mUnit: Unit?, val stepTypeResolver: StepTypeResolver) : FragmentStatePagerAdapter(fm) {
+class StepFragmentAdapter(fm: FragmentManager, val stepList: List<Step?>, val lesson: Lesson?, val unit: Unit?, val stepTypeResolver: StepTypeResolver) : FragmentStatePagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
-        val step = mStepList[position]
+        val step = stepList[position]
         val fragment = stepTypeResolver.getFragment(step)
         val args = Bundle()
         args.putParcelable(AppConstants.KEY_STEP_BUNDLE, step)
-        args.putParcelable(AppConstants.KEY_LESSON_BUNDLE, mLesson)
-        args.putParcelable(AppConstants.KEY_UNIT_BUNDLE, mUnit)
+        args.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lesson)
+        args.putParcelable(AppConstants.KEY_UNIT_BUNDLE, unit)
         fragment.arguments = args
         return fragment
     }
 
     override fun getCount(): Int {
-        return mStepList.size
+        return stepList.size
     }
 
     fun getTabDrawable(position: Int): Drawable? {
-        if (position >= mStepList.size) return null
-        val step = mStepList[position]
+        if (position >= stepList.size) return null
+        val step = stepList[position]
         return stepTypeResolver.getDrawableForType(step?.block?.name, step?.is_custom_passed ?: false, step?.actions?.do_review ?: null != null)
     }
 }

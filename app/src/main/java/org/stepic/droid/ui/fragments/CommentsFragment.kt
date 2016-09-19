@@ -81,7 +81,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     lateinit var discussionId: String
     var stepId: Long? = null
 
-    lateinit var mToolbar: Toolbar
+    lateinit var toolbar: Toolbar
     lateinit var loadProgressBarOnCenter: ProgressBar
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var recyclerView: RecyclerView
@@ -130,7 +130,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         floatingActionButton = v.findViewById(R.id.add_new_comment_button) as FloatingActionButton
         floatingActionButton!!.setOnClickListener {
             if (stepId != null) {
-                mShell.screenProvider.openNewCommentForm(activity, stepId, null)
+                shell.screenProvider.openNewCommentForm(activity, stepId, null)
             }
         }
     }
@@ -148,7 +148,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
         val info = menuInfo as ContextMenuRecyclerView.RecyclerViewContextMenuInfo
         val position = info.position //resolve which should show
-        val userId = mUserPreferences.userId
+        val userId = userPreferences.userId
         val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
 
         if (userId > 0) {
@@ -262,13 +262,13 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         if (comment.user != null) {
             val userId = commentManager.getUserById(comment.user)?.id
             if (userId != null) {
-                mShell.screenProvider.openInWeb(context, HtmlHelper.getUserPath(config, userId))
+                shell.screenProvider.openInWeb(context, HtmlHelper.getUserPath(config, userId))
             }
         }
     }
 
     private fun clickLinkInComment(link: String) {
-        mShell.screenProvider.openInWeb(activity, link)
+        shell.screenProvider.openInWeb(activity, link)
     }
 
     private fun copyTextToClipBoard(position: Int) {
@@ -299,7 +299,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     private fun replyToComment(position: Int) {
         val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
         comment?.let {
-            mShell.screenProvider.openNewCommentForm(activity, stepId, it.parent ?: it.id)
+            shell.screenProvider.openNewCommentForm(activity, stepId, it.parent ?: it.id)
         }
     }
 
@@ -325,7 +325,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         }
         voteId?.let {
             val voteObject = Vote(voteId, voteValue)
-            mShell.api.makeVote(it, voteValue).enqueue(object : Callback<VoteResponse> {
+            shell.api.makeVote(it, voteValue).enqueue(object : Callback<VoteResponse> {
                 override fun onResponse(response: Response<VoteResponse>?, retrofit: Retrofit?) {
                     //todo event for update
                     if (response?.isSuccess ?: false) {
@@ -393,13 +393,13 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     fun initToolbar(v: View) {
-        mToolbar = v.findViewById(R.id.toolbar) as Toolbar
-        (activity as AppCompatActivity).setSupportActionBar(mToolbar)
+        toolbar = v.findViewById(R.id.toolbar) as Toolbar
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun loadDiscussionProxyById(id: String = discussionId) {
-        mShell.api.getDiscussionProxies(id).enqueue(object : Callback<DiscussionProxyResponse> {
+        shell.api.getDiscussionProxies(id).enqueue(object : Callback<DiscussionProxyResponse> {
             override fun onResponse(response: Response<DiscussionProxyResponse>?, retrofit: Retrofit?) {
                 if (response != null && response.isSuccess) {
                     val discussionProxy = response.body().discussionProxies.firstOrNull()
@@ -552,7 +552,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         if (!commentManager?.isDiscussionProxyNull()) {
             inflater?.inflate(R.menu.coment_list_menu, menu)
 
-            val defaultItem = menu?.findItem(mSharedPreferenceHelper.discussionOrder.menuId)
+            val defaultItem = menu?.findItem(sharedPreferenceHelper.discussionOrder.menuId)
             defaultItem?.isChecked = true
         }
     }
@@ -561,7 +561,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
         DiscussionOrder.values().forEach {
             if (it.menuId.equals(item?.itemId)) {
-                mSharedPreferenceHelper.discussionOrder = it
+                sharedPreferenceHelper.discussionOrder = it
                 item?.isChecked = true
 
                 commentManager.resetAll()

@@ -49,7 +49,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected DefaultFilter defaultFilter;
 
     @Inject
-    protected IConfig mConfig;
+    protected IConfig config;
 
     @Inject
     protected Analytic analytic;
@@ -58,34 +58,34 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected INotificationManager notificationManager;
 
     @Inject
-    protected SharedPreferenceHelper mSharedPreferenceHelper;
+    protected SharedPreferenceHelper sharedPreferenceHelper;
 
     @Inject
-    protected ILessonSessionManager mLessonManager;
+    protected ILessonSessionManager lessonManager;
 
     @Inject
-    protected CoursePropertyResolver mCoursePropertyResolver;
+    protected CoursePropertyResolver coursePropertyResolver;
 
     @Inject
-    protected DatabaseFacade mDbManager;
+    protected DatabaseFacade databaseFacade;
 
     @Inject
-    public IMainHandler mMainHandler;
+    public IMainHandler mainHandler;
 
     @Inject
-    protected IShell mShell;
+    protected IShell shell;
 
     @Inject
     protected Bus bus;
 
     @Inject
-    protected UserPreferences mUserPreferences;
+    protected UserPreferences userPreferences;
 
     @Inject
-    protected ILoginManager mLoginManager;
+    protected ILoginManager loginManager;
 
     @Inject
-    protected ThreadPoolExecutor mThreadPoolExecutor;
+    protected ThreadPoolExecutor threadPoolExecutor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

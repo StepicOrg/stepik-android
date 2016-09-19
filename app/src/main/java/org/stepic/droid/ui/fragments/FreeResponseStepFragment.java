@@ -32,7 +32,7 @@ import butterknife.BindString;
 public class FreeResponseStepFragment extends StepWithAttemptsFragment {
 
     @BindString(R.string.correct_free_response)
-    String mCorrectString;
+    String correctString;
 
     EditText mAnswerField;
 
@@ -40,8 +40,8 @@ public class FreeResponseStepFragment extends StepWithAttemptsFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        mAnswerField = (EditText) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_free_answer_attempt, mAttemptContainer, false);
-        mAttemptContainer.addView(mAnswerField);
+        mAnswerField = (EditText) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_free_answer_attempt, attemptContainer, false);
+        attemptContainer.addView(mAnswerField);
         return v;
     }
 
@@ -66,7 +66,7 @@ public class FreeResponseStepFragment extends StepWithAttemptsFragment {
 
     @Override
     protected void onRestoreSubmission() {
-        Reply reply = mSubmission.getReply();
+        Reply reply = submission.getReply();
         if (reply == null) return;
 
         String text = reply.getText();
@@ -75,7 +75,7 @@ public class FreeResponseStepFragment extends StepWithAttemptsFragment {
 
     @Override
     protected String getCorrectString() {
-        return mCorrectString;
+        return correctString;
     }
 
     @Subscribe

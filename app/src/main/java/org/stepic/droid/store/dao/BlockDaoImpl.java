@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockDaoImpl extends DaoBase<BlockPersistentWrapper> {
-    private final IDao<CachedVideo> mVideoDao;
+    private final IDao<CachedVideo> videoDao;
 
     public BlockDaoImpl(SQLiteDatabase openHelper, IDao<CachedVideo> videoDao) {
         super(openHelper);
-        mVideoDao = videoDao;
+        this.videoDao = videoDao;
     }
 
     @Override
@@ -88,7 +88,7 @@ public class BlockDaoImpl extends DaoBase<BlockPersistentWrapper> {
 
     private void addVideoToBlockWrapper(BlockPersistentWrapper blockWrapper){
         if (blockWrapper != null && blockWrapper.getBlock() != null) {
-            CachedVideo video = mVideoDao.get(DbStructureCachedVideo.Column.STEP_ID, blockWrapper.getStepId() + "");
+            CachedVideo video = videoDao.get(DbStructureCachedVideo.Column.STEP_ID, blockWrapper.getStepId() + "");
             blockWrapper.getBlock().setVideo(transformCachedVideoToRealVideo(video));
         }
     }

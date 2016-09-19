@@ -31,17 +31,17 @@ public class CodeStepFragment extends StepWithAttemptsFragment{
 
 
     @BindString(R.string.correct)
-    String mCorrectString;
+    String correctString;
 
-    EditText mAnswerField;
+    EditText answerField;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        ViewGroup viewGroup = (ViewGroup) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.code_attempt, mAttemptContainer, false);
-        mAnswerField = ButterKnife.findById(viewGroup, R.id.answer_edit_text);
-        mAttemptContainer.addView(viewGroup);
+        ViewGroup viewGroup = (ViewGroup) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.code_attempt, attemptContainer, false);
+        answerField = ButterKnife.findById(viewGroup, R.id.answer_edit_text);
+        attemptContainer.addView(viewGroup);
         return v;
     }
 
@@ -49,35 +49,35 @@ public class CodeStepFragment extends StepWithAttemptsFragment{
     protected void showAttempt(Attempt attempt) {
         //do nothing, because this attempt doesn't have any specific.
         // TODO: 29.03.16 we need render code for showing
-        mAnswerField.getText().clear();
-        mAnswerField.setText(HtmlHelper.fromHtml("#include <iostream> int main() { // put your code here return 0; }")); // TODO: 29.03.16  choose and after that get from step.block.options.code_templates
+        answerField.getText().clear();
+        answerField.setText(HtmlHelper.fromHtml("#include <iostream> int main() { // put your code here return 0; }")); // TODO: 29.03.16  choose and after that get from step.block.options.code_templates
     }
 
     @Override
     protected Reply generateReply() {
         return new Reply.Builder()
                 .setLanguage("c++11") // TODO: 29.03.16 choose and after that get from step.block.options.limits 
-                .setCode(mAnswerField.getText().toString())
+                .setCode(answerField.getText().toString())
                 .build();
     }
 
     @Override
     protected void blockUIBeforeSubmit(boolean needBlock) {
-        mAnswerField.setEnabled(!needBlock);
+        answerField.setEnabled(!needBlock);
     }
 
     @Override
     protected void onRestoreSubmission() {
-        Reply reply = mSubmission.getReply();
+        Reply reply = submission.getReply();
         if (reply == null) return;
 
         String text = reply.getCode();
-        mAnswerField.setText(HtmlHelper.fromHtml(text)); // TODO: 29.03.16 render code
+        answerField.setText(HtmlHelper.fromHtml(text)); // TODO: 29.03.16 render code
     }
 
     @Override
     protected String getCorrectString() {
-        return mCorrectString;
+        return correctString;
     }
 
     @Subscribe

@@ -45,13 +45,13 @@ public class FragmentBase extends Fragment {
     protected Analytic analytic;
 
     @Inject
-    public ThreadPoolExecutor mThreadPoolExecutor;
+    public ThreadPoolExecutor threadPoolExecutor;
 
     @Inject
-    public ILessonSessionManager mLessonManager;
+    public ILessonSessionManager lessonManager;
 
     @Inject
-    public DatabaseFacade mDatabaseFacade;
+    public DatabaseFacade databaseFacade;
 
     @Inject
     public Bus bus;
@@ -60,37 +60,37 @@ public class FragmentBase extends Fragment {
     public IConfig config;
 
     @Inject
-    public IShell mShell;
+    public IShell shell;
 
     @Inject
-    public LocalProgressManager mLocalProgressManager;
-
-
-    @Inject
-    public IDownloadManager mDownloadManager;
+    public LocalProgressManager localProgressManager;
 
 
     @Inject
-    public IVideoResolver mVideoResolver;
+    public IDownloadManager downloadManager;
 
 
     @Inject
-    public SharedPreferenceHelper mSharedPreferenceHelper;
+    public IVideoResolver videoResolver;
+
 
     @Inject
-    public UserPreferences mUserPreferences;
+    public SharedPreferenceHelper sharedPreferenceHelper;
 
     @Inject
-    public CoursePropertyResolver mCoursePropertyResolver;
+    public UserPreferences userPreferences;
 
     @Inject
-    public IMainHandler mMainHandler;
+    public CoursePropertyResolver coursePropertyResolver;
 
     @Inject
-    public AudioFocusHelper mAudioFocusHelper;
+    public IMainHandler mainHandler;
 
     @Inject
-    public DownloadManager mSystemDownloadManager;
+    public AudioFocusHelper audioFocusHelper;
+
+    @Inject
+    public DownloadManager systemDownloadManager;
 
     @Inject
     public ICancelSniffer cancelSniffer;

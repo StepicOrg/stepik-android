@@ -5,16 +5,16 @@ import android.util.AttributeSet;
 
 import org.stepic.droid.R;
 
-public class StepicRadioButton extends StepicOptionView {
-    public StepicRadioButton(Context context) {
+public class StepikRadioButton extends StepikOptionView {
+    public StepikRadioButton(Context context) {
         super(context, null);
     }
 
-    public StepicRadioButton(Context context, AttributeSet attrs) {
+    public StepikRadioButton(Context context, AttributeSet attrs) {
         super(context, attrs, 0);
     }
 
-    public StepicRadioButton(Context context, AttributeSet attrs, int defStyleAttr) {
+    public StepikRadioButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

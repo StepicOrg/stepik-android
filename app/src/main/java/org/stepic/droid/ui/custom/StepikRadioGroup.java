@@ -11,21 +11,21 @@ import android.widget.RadioGroup;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class StepicRadioGroup extends LinearLayout {
+public class StepikRadioGroup extends LinearLayout {
 
     // holds the checked id; the selection is empty by default
-    private int mCheckedId = -1;
+    private int checkedId = -1;
     // tracks children radio buttons checked state
-    private StepicOptionView.OnCheckedChangeListener mChildOnCheckedChangeListener;
+    private StepikOptionView.OnCheckedChangeListener childOnCheckedChangeListener;
     // when true, mOnCheckedChangeListener discards events
-    private boolean mProtectFromCheckedChange = false;
-    private OnCheckedChangeListener mOnCheckedChangeListener;
-    private PassThroughHierarchyChangeListener mPassThroughListener;
+    private boolean protectFromCheckedChange = false;
+    private OnCheckedChangeListener onCheckedChangeListener;
+    private PassThroughHierarchyChangeListener passThroughListener;
 
     /**
      * {@inheritDoc}
      */
-    public StepicRadioGroup(Context context) {
+    public StepikRadioGroup(Context context) {
         super(context);
         setOrientation(VERTICAL);
         init();
@@ -34,7 +34,7 @@ public class StepicRadioGroup extends LinearLayout {
     /**
      * {@inheritDoc}
      */
-    public StepicRadioGroup(Context context, AttributeSet attrs) {
+    public StepikRadioGroup(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         setOrientation(VERTICAL);
@@ -42,9 +42,9 @@ public class StepicRadioGroup extends LinearLayout {
     }
 
     private void init() {
-        mChildOnCheckedChangeListener = new CheckedStateTracker();
-        mPassThroughListener = new PassThroughHierarchyChangeListener();
-        super.setOnHierarchyChangeListener(mPassThroughListener);
+        childOnCheckedChangeListener = new CheckedStateTracker();
+        passThroughListener = new PassThroughHierarchyChangeListener();
+        super.setOnHierarchyChangeListener(passThroughListener);
     }
 
     /**
@@ -53,7 +53,7 @@ public class StepicRadioGroup extends LinearLayout {
     @Override
     public void setOnHierarchyChangeListener(OnHierarchyChangeListener listener) {
         // the user listener is delegated to our pass-through listener
-        mPassThroughListener.mOnHierarchyChangeListener = listener;
+        passThroughListener.onHierarchyChangeListener = listener;
     }
 
     /**
@@ -64,24 +64,24 @@ public class StepicRadioGroup extends LinearLayout {
         super.onFinishInflate();
 
         // checks the appropriate radio button as requested in the XML file
-        if (mCheckedId != -1) {
-            mProtectFromCheckedChange = true;
-            setCheckedStateForView(mCheckedId, true);
-            mProtectFromCheckedChange = false;
-            setCheckedId(mCheckedId);
+        if (checkedId != -1) {
+            protectFromCheckedChange = true;
+            setCheckedStateForView(checkedId, true);
+            protectFromCheckedChange = false;
+            setCheckedId(checkedId);
         }
     }
 
     @Override
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
-        if (child instanceof StepicRadioButton) {
-            final StepicRadioButton button = (StepicRadioButton) child;
+        if (child instanceof StepikRadioButton) {
+            final StepikRadioButton button = (StepikRadioButton) child;
             if (button.isChecked()) {
-                mProtectFromCheckedChange = true;
-                if (mCheckedId != -1) {
-                    setCheckedStateForView(mCheckedId, false);
+                protectFromCheckedChange = true;
+                if (checkedId != -1) {
+                    setCheckedStateForView(checkedId, false);
                 }
-                mProtectFromCheckedChange = false;
+                protectFromCheckedChange = false;
                 setCheckedId(button.getId());
             }
         }
@@ -100,12 +100,12 @@ public class StepicRadioGroup extends LinearLayout {
      */
     public void check(@IdRes int id) {
         // don't even bother
-        if (id != -1 && (id == mCheckedId)) {
+        if (id != -1 && (id == checkedId)) {
             return;
         }
 
-        if (mCheckedId != -1) {
-            setCheckedStateForView(mCheckedId, false);
+        if (checkedId != -1) {
+            setCheckedStateForView(checkedId, false);
         }
 
         if (id != -1) {
@@ -116,16 +116,16 @@ public class StepicRadioGroup extends LinearLayout {
     }
 
     private void setCheckedId(@IdRes int id) {
-        mCheckedId = id;
-        if (mOnCheckedChangeListener != null) {
-            mOnCheckedChangeListener.onCheckedChanged(this, mCheckedId);
+        checkedId = id;
+        if (onCheckedChangeListener != null) {
+            onCheckedChangeListener.onCheckedChanged(this, checkedId);
         }
     }
 
     private void setCheckedStateForView(int viewId, boolean checked) {
         View checkedView = findViewById(viewId);
-        if (checkedView != null && checkedView instanceof StepicRadioButton) {
-            ((StepicRadioButton) checkedView).setChecked(checked);
+        if (checkedView != null && checkedView instanceof StepikRadioButton) {
+            ((StepikRadioButton) checkedView).setChecked(checked);
         }
     }
 
@@ -140,7 +140,7 @@ public class StepicRadioGroup extends LinearLayout {
      */
     @IdRes
     public int getCheckedRadioButtonId() {
-        return mCheckedId;
+        return checkedId;
     }
 
     /**
@@ -162,15 +162,15 @@ public class StepicRadioGroup extends LinearLayout {
      * @param listener the callback to call on checked state change
      */
     public void setOnCheckedChangeListener(OnCheckedChangeListener listener) {
-        mOnCheckedChangeListener = listener;
+        onCheckedChangeListener = listener;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public StepicRadioGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
-        return new StepicRadioGroup.LayoutParams(getContext(), attrs);
+    public StepikRadioGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
+        return new StepikRadioGroup.LayoutParams(getContext(), attrs);
     }
 
     /**
@@ -178,7 +178,7 @@ public class StepicRadioGroup extends LinearLayout {
      */
     @Override
     protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
-        return p instanceof StepicRadioGroup.LayoutParams;
+        return p instanceof StepikRadioGroup.LayoutParams;
     }
 
     @Override
@@ -267,21 +267,21 @@ public class StepicRadioGroup extends LinearLayout {
          * @param group     the group in which the checked radio button has changed
          * @param checkedId the unique identifier of the newly checked radio button
          */
-        public void onCheckedChanged(StepicRadioGroup group, @IdRes int checkedId);
+        public void onCheckedChanged(StepikRadioGroup group, @IdRes int checkedId);
     }
 
-    private class CheckedStateTracker implements StepicOptionView.OnCheckedChangeListener {
-        public void onCheckedChanged(StepicOptionView buttonView, boolean isChecked) {
+    private class CheckedStateTracker implements StepikOptionView.OnCheckedChangeListener {
+        public void onCheckedChanged(StepikOptionView buttonView, boolean isChecked) {
             // prevents from infinite recursion
-            if (mProtectFromCheckedChange) {
+            if (protectFromCheckedChange) {
                 return;
             }
 
-            mProtectFromCheckedChange = true;
-            if (mCheckedId != -1) {
-                setCheckedStateForView(mCheckedId, false);
+            protectFromCheckedChange = true;
+            if (checkedId != -1) {
+                setCheckedStateForView(checkedId, false);
             }
-            mProtectFromCheckedChange = false;
+            protectFromCheckedChange = false;
 
             int id = buttonView.getId();
             setCheckedId(id);
@@ -295,25 +295,25 @@ public class StepicRadioGroup extends LinearLayout {
      */
     private class PassThroughHierarchyChangeListener implements
             ViewGroup.OnHierarchyChangeListener {
-        private ViewGroup.OnHierarchyChangeListener mOnHierarchyChangeListener;
+        private ViewGroup.OnHierarchyChangeListener onHierarchyChangeListener;
 
         /**
          * {@inheritDoc}
          */
         public void onChildViewAdded(View parent, View child) {
-            if (parent == StepicRadioGroup.this && child instanceof StepicRadioButton) {
+            if (parent == StepikRadioGroup.this && child instanceof StepikRadioButton) {
                 int id = child.getId();
                 // generates an id if it's missing
                 if (id == View.NO_ID) {
                     id = generateViewId();
                     child.setId(id);
                 }
-                ((StepicRadioButton) child).setOnCheckedChangeWidgetListener(
-                        mChildOnCheckedChangeListener);
+                ((StepikRadioButton) child).setOnCheckedChangeWidgetListener(
+                        childOnCheckedChangeListener);
             }
 
-            if (mOnHierarchyChangeListener != null) {
-                mOnHierarchyChangeListener.onChildViewAdded(parent, child);
+            if (onHierarchyChangeListener != null) {
+                onHierarchyChangeListener.onChildViewAdded(parent, child);
             }
         }
 
@@ -321,12 +321,12 @@ public class StepicRadioGroup extends LinearLayout {
          * {@inheritDoc}
          */
         public void onChildViewRemoved(View parent, View child) {
-            if (parent == StepicRadioGroup.this && child instanceof StepicRadioButton) {
-                ((StepicRadioButton) child).setOnCheckedChangeWidgetListener(null);
+            if (parent == StepikRadioGroup.this && child instanceof StepikRadioButton) {
+                ((StepikRadioButton) child).setOnCheckedChangeWidgetListener(null);
             }
 
-            if (mOnHierarchyChangeListener != null) {
-                mOnHierarchyChangeListener.onChildViewRemoved(parent, child);
+            if (onHierarchyChangeListener != null) {
+                onHierarchyChangeListener.onChildViewRemoved(parent, child);
             }
         }
     }

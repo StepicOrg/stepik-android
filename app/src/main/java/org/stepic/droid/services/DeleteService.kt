@@ -11,34 +11,25 @@ import org.stepic.droid.base.MainApplication
 import org.stepic.droid.events.steps.StepRemovedEvent
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
-import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.IStoreStateManager
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.store.operations.Table
 import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.resolvers.IVideoResolver
-import org.stepic.droid.web.IApi
 import java.io.File
 import java.util.*
 import javax.inject.Inject
 
 class DeleteService : IntentService("delete_service") {
     @Inject
-    lateinit var mSystemDownloadManager: DownloadManager
+    lateinit var systemDownloadManager: DownloadManager
     @Inject
-    lateinit var mUserPrefs: UserPreferences
+    lateinit var bus: Bus
     @Inject
-    lateinit var mBus: Bus
+    lateinit var databaseFacade: DatabaseFacade
     @Inject
-    lateinit var mResolver: IVideoResolver
+    lateinit var storeStateManager: IStoreStateManager
     @Inject
-    lateinit var mApi: IApi
-    @Inject
-    lateinit var mDb: DatabaseFacade
-    @Inject
-    lateinit var mStoreStateManager: IStoreStateManager
-    @Inject
-    lateinit var analytic : Analytic
+    lateinit var analytic: Analytic
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         MainApplication.component().inject(this)
@@ -74,14 +65,14 @@ class DeleteService : IntentService("delete_service") {
             //possibly user click clear cache;
             //            throw ex;
             analytic.reportError(Analytic.Error.DELETE_SERVICE_ERROR, ex)
-            mDb.dropDatabase()
+            databaseFacade.dropDatabase()
         }
 
     }
 
     private fun removeFromDisk(step: Step?) {
         step?.block?.video?.let {
-            val path = mDb.getPathToVideoIfExist(it)
+            val path = databaseFacade.getPathToVideoIfExist(it)
             var file = File(path)
             if (file.exists()) {
                 file.delete()
@@ -93,22 +84,22 @@ class DeleteService : IntentService("delete_service") {
                 file.delete()
             }
 
-            mDb.deleteVideo(it)
+            databaseFacade.deleteVideo(it)
         }
         step?.let {
             step.is_cached = false
             step.is_loading = false
-            mDb.updateOnlyCachedLoadingStep(step)
+            databaseFacade.updateOnlyCachedLoadingStep(step)
 //            database.deleteStep(step) // remove steps FIXME: MAYBE NOT DELETE STEP?
-            mStoreStateManager.updateStepAfterDeleting(step)
+            storeStateManager.updateStepAfterDeleting(step)
             val mainHandler = Handler(MainApplication.getAppContext().mainLooper)
-            mainHandler.post { mBus.post(StepRemovedEvent(step.id)) }
+            mainHandler.post { bus.post(StepRemovedEvent(step.id)) }
         }
     }
 
     private fun removeFromDisk(lesson: Lesson?) {
         lesson?.let {
-            val steps = mDb.getStepsOfLesson(lesson.id)
+            val steps = databaseFacade.getStepsOfLesson(lesson.id)
             for (step in steps) {
                 removeFromDisk(step)
             }
@@ -117,10 +108,10 @@ class DeleteService : IntentService("delete_service") {
 
     private fun removeFromDisk(section: Section?) {
         section?.let {
-            val units = mDb.getAllUnitsOfSection(section.id)
+            val units = databaseFacade.getAllUnitsOfSection(section.id)
             val lessons = ArrayList<Lesson>()
             for (unit in units) {
-                val lesson = mDb.getLessonOfUnit(unit)
+                val lesson = databaseFacade.getLessonOfUnit(unit)
                 if (lesson != null) {
                     lessons.add(lesson)
                 }
@@ -134,7 +125,7 @@ class DeleteService : IntentService("delete_service") {
 
     private fun removeFromDisk(course: Course?) {
         course?.let {
-            val sections = mDb.getAllSectionsOfCourse(course)
+            val sections = databaseFacade.getAllSectionsOfCourse(course)
             for (section in sections) {
                 removeFromDisk(section)
             }

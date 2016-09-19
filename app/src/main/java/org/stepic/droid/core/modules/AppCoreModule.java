@@ -93,8 +93,8 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    SharedPreferenceHelper provideSharedPreferencesHelper(Analytic analytic, DefaultFilter defaultFilter) {
-        return new SharedPreferenceHelper(analytic, defaultFilter);
+    SharedPreferenceHelper provideSharedPreferencesHelper(Analytic analytic, DefaultFilter defaultFilter, Context context) {
+        return new SharedPreferenceHelper(analytic, defaultFilter, context);
     }
 
     @Provides
