@@ -373,7 +373,9 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         int position = unitPairPosition.second;
 
         Progress progress = progressMap.get(unitId);
-        progress.setScore(event.getNewScore() + "");
+        if (progress != null) {
+            progress.setScore(event.getNewScore() + "");
+        }
 
         adapter.notifyItemChanged(position);
     }

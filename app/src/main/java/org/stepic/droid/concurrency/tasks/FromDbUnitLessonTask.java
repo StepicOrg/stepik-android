@@ -48,10 +48,12 @@ public class FromDbUnitLessonTask extends StepicTask<Void, Void, UnitLessonProgr
             String progressId = unit.getProgressId();
             unit.set_viewed_custom(databaseFacade.isProgressViewed(progressId));
 
-            //new api:
-            Progress progress = databaseFacade.getProgressById(progressId);
-            if (progress != null) {
-                unitProgressMap.put(unit.getId(), progress);
+            if (progressId != null) {
+                //new api:
+                Progress progress = databaseFacade.getProgressById(progressId);
+                if (progress != null) {
+                    unitProgressMap.put(unit.getId(), progress);
+                }
             }
         }
 

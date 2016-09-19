@@ -357,12 +357,18 @@ public class SectionsFragment
         dismissReportView();
         sectionsRecyclerView.setVisibility(View.VISIBLE);
         dismissLoadState();
-        if (modulePosition > 0) {
-            adapter.setDefaultHighlightPosition(modulePosition - 1);
-        }
-        if (modulePosition > 0) {
-            int scrollTo = modulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
-            linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
+
+        if (modulePosition > 0 && modulePosition < sections.size()) {
+            Section section = sections.get(modulePosition);
+
+            boolean userHasAccess = (section.is_active() || (section.getActions() != null && section.getActions().getTest_section() != null)) && course != null && course.getEnrollment() > 0;
+            if (userHasAccess) {
+                shell.getScreenProvider().showUnitsForSection(getContext(), sections.get(modulePosition));
+            } else {
+                adapter.setDefaultHighlightPosition(modulePosition - 1);
+                int scrollTo = modulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
+                linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
+            }
             modulePosition = -1;
         }
     }
@@ -371,7 +377,7 @@ public class SectionsFragment
     public void onLoading() {
         reportEmptyView.setVisibility(View.GONE);
         reportConnectionProblem.setVisibility(View.GONE);
-        if (sectionList.isEmpty()){
+        if (sectionList.isEmpty()) {
             ProgressHelper.activate(loadOnCenterProgressBar);
         }
     }
