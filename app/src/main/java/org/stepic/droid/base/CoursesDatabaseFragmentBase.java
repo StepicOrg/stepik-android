@@ -111,7 +111,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             swipeRefreshLayout.post(new Runnable() {
                 @Override
                 public void run() {
-                    courseListPresenter.refreshData(getCourseType(), needFilter);
+                    courseListPresenter.refreshData(getCourseType(), needFilter, false);
                 }
             });
         } else {
@@ -266,7 +266,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                 courses.clear();
                 coursesAdapter.notifyDataSetChanged();
                 courseListPresenter.reportCurrentFiltersToAnalytic(getCourseType());
-                courseListPresenter.refreshData(getCourseType(), needFilter);
+                courseListPresenter.refreshData(getCourseType(), needFilter, false);
             }
         }
 
@@ -316,7 +316,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     @Override
     public void onRefresh() {
         analytic.reportEvent(Analytic.Interaction.PULL_TO_REFRESH_COURSE);
-        courseListPresenter.refreshData(getCourseType(), needFilter);
+        courseListPresenter.refreshData(getCourseType(), needFilter, true);
     }
 
     @Override
