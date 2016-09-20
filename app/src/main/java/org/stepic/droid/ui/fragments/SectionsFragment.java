@@ -363,7 +363,7 @@ public class SectionsFragment
         if (wasEmpty) {
 
             if (modulePosition > 0 && modulePosition <= sections.size()) {
-                Section section = sections.get(modulePosition);
+                Section section = sections.get(modulePosition - 1);
 
                 boolean userHasAccess = (section.is_active() || (section.getActions() != null && section.getActions().getTest_section() != null)) && course != null && course.getEnrollment() > 0;
                 if (userHasAccess) {
