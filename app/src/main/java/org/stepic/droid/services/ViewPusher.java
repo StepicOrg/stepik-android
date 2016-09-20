@@ -102,7 +102,7 @@ public class ViewPusher extends IntentService {
         mainHandler.post(new Function0<Unit>() {
             @Override
             public Unit invoke() {
-                bus.post(new UpdateStepEvent(stepId));
+                bus.post(new UpdateStepEvent(stepId, false));
                 return Unit.INSTANCE;
             }
         });

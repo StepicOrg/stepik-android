@@ -219,6 +219,11 @@ public class StepsFragment extends FragmentBase implements StepsView {
     }
 
     private void pushState(int position) {
+        boolean isTryToPushFirstStep = position == 0;
+        if (isTryToPushFirstStep && fromPreviousLesson && stepsPresenter.getStepList().size() != 1) {
+            //if from previous lesson --> not mark as viewed
+            return;
+        }
         if (stepsPresenter.getStepList().size() <= position) return;
         final Step step = stepsPresenter.getStepList().get(position);
 
@@ -230,15 +235,17 @@ public class StepsFragment extends FragmentBase implements StepsView {
                     tab.setIcon(stepAdapter.getTabDrawable(position));
                 }
             }
+        }
 
-            //try to push viewed state to the server
+        //try to push viewed state to the server
+        if (step != null) {
+            //always push view to server
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 long stepId = step.getId();
 
                 protected Void doInBackground(Void... params) {
                     try {
                         long assignmentID = databaseFacade.getAssignmentIdByStepId(stepId);
-
                         shell.getScreenProvider().pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
                     } catch (Exception exception) {
                         analytic.reportError(Analytic.Error.FAIL_PUSH_STEP_VIEW, exception);
@@ -264,7 +271,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
             }
         }
 
-        if (step != null && !step.is_custom_passed()) {
+        if (step != null && !step.is_custom_passed() && (stepTypeResolver.isViewedStatePost(step) || e.isSuccessAttempt())) {
             // if not passed yet
             step.set_custom_passed(true);
             if (position >= 0 && position < tabLayout.getTabCount()) {
@@ -392,11 +399,12 @@ public class StepsFragment extends FragmentBase implements StepsView {
                     return true;
                 }
             });
+        } else {
+            pushState(viewPager.getCurrentItem());
         }
         tabLayout.setVisibility(View.VISIBLE);
-        pushState(viewPager.getCurrentItem());
 
-        if (disscussionId >= 0 && position >= 0 && position < stepsPresenter.getStepList().size()) {
+        if (disscussionId > 0 && position >= 0 && position < stepsPresenter.getStepList().size()) {
             Step step = stepsPresenter.getStepList().get(position);
             shell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
             disscussionId = -1;
