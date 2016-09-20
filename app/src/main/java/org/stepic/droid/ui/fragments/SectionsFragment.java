@@ -372,16 +372,15 @@ public class SectionsFragment
                     adapter.setDefaultHighlightPosition(modulePosition - 1);
                     int scrollTo = modulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
                     linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
+                    afterUpdateModulePosition = modulePosition;
                 }
-                afterUpdateModulePosition = modulePosition;
                 modulePosition = -1;
-
             }
         } else {
+            adapter.notifyDataSetChanged();
             adapter.setDefaultHighlightPosition(afterUpdateModulePosition - 1);
             int scrollTo = afterUpdateModulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
             linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
-            adapter.notifyDataSetChanged();
             afterUpdateModulePosition = -1;
         }
     }

@@ -354,6 +354,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             }
 
             if (defaultHighlightPosition >= 0 && defaultHighlightPosition == position) {
+                cv.clearAnimation();
                 setAnimation(cv);
             } else {
                 cv.setBackgroundColor(defaultColor);
@@ -362,6 +363,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
         @Override
         public void clearAnimation() {
+            Drawable backgroundDrawable = cv.getBackground();
+            if (backgroundDrawable != null && backgroundDrawable instanceof TransitionDrawable) {
+                cv.setBackgroundColor(defaultColor);
+            }
             cv.clearAnimation();
         }
 
