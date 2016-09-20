@@ -358,12 +358,12 @@ public class SectionsFragment
         sectionsRecyclerView.setVisibility(View.VISIBLE);
         dismissLoadState();
 
-        if (modulePosition > 0 && modulePosition < sections.size()) {
+        if (modulePosition > 0 && modulePosition <= sections.size()) {
             Section section = sections.get(modulePosition);
 
             boolean userHasAccess = (section.is_active() || (section.getActions() != null && section.getActions().getTest_section() != null)) && course != null && course.getEnrollment() > 0;
             if (userHasAccess) {
-                shell.getScreenProvider().showUnitsForSection(getContext(), sections.get(modulePosition));
+                shell.getScreenProvider().showUnitsForSection(getContext(), sections.get(modulePosition - 1));
             } else {
                 adapter.setDefaultHighlightPosition(modulePosition - 1);
                 int scrollTo = modulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
