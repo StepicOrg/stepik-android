@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Handler;
 
 import com.squareup.otto.Bus;
@@ -20,6 +19,8 @@ import org.stepic.droid.web.ViewAssignment;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
 
@@ -39,7 +40,10 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
     @Inject
     Analytic analytic;
 
-    private volatile boolean inWork;
+    @Inject
+    ThreadPoolExecutor threadPoolExecutor;
+
+    private AtomicBoolean inWork = new AtomicBoolean(false);
 
 
     public InternetConnectionEnabledReceiver() {
@@ -48,8 +52,8 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (!isOnline(MainApplication.getAppContext()) || inWork) return;
-        inWork = true;
+        if (!isOnline(MainApplication.getAppContext()) || inWork.get()) return;
+        inWork.set(true);
 
         Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
         Runnable myRunnable = new Runnable() {
@@ -60,9 +64,10 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
         };
         mainHandler.post(myRunnable);
 
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+
+        threadPoolExecutor.execute(new Runnable() {
             @Override
-            protected Void doInBackground(Void... params) {
+            public void run() {
                 List<ViewAssignment> list = databaseFacade.getAllInQueue();
                 for (ViewAssignment item : list) {
                     try {
@@ -74,12 +79,9 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
                         analytic.reportError(Analytic.Error.PUSH_STATE_EXCEPTION, e);
                     }
                 }
-                inWork = false;
-                return null;
+                inWork.set(false);
             }
-        };
-        task.execute();
-
+        });
     }
 
     private boolean isOnline(Context context) {
