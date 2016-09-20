@@ -63,6 +63,11 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                         val response = api.getSections(sectionIds).execute()
                         if (response.isSuccess || response.body()?.sections?.isNotEmpty() ?: false) {
                             val sections = response.body().sections
+                            databaseFacade.removeSectionsOfCourse(course.courseId)
+                            sections.forEach {
+                                databaseFacade.addSection(it)
+                            }
+
                             mainHandler.post {
                                 sectionList.clear()
                                 sectionList.addAll(sections)

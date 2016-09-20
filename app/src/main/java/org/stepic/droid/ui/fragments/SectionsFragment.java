@@ -184,6 +184,7 @@ public class SectionsFragment
 
     LinearLayoutManager linearLayoutManager;
 
+    private int afterUpdateModulePosition = -1;
     private int modulePosition;
 
     @Override
@@ -351,25 +352,37 @@ public class SectionsFragment
     }
 
     public void onNeedShowSections(List<Section> sections) {
+        boolean wasEmpty = sectionList.isEmpty();
         sectionList.clear();
         sectionList.addAll(sections);
-        calendarPresenter.checkToShowCalendar(sectionList);
         dismissReportView();
         sectionsRecyclerView.setVisibility(View.VISIBLE);
         dismissLoadState();
 
-        if (modulePosition > 0 && modulePosition <= sections.size()) {
-            Section section = sections.get(modulePosition);
+        calendarPresenter.checkToShowCalendar(sectionList);
+        if (wasEmpty) {
 
-            boolean userHasAccess = (section.is_active() || (section.getActions() != null && section.getActions().getTest_section() != null)) && course != null && course.getEnrollment() > 0;
-            if (userHasAccess) {
-                shell.getScreenProvider().showUnitsForSection(getContext(), sections.get(modulePosition - 1));
-            } else {
-                adapter.setDefaultHighlightPosition(modulePosition - 1);
-                int scrollTo = modulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
-                linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
+            if (modulePosition > 0 && modulePosition <= sections.size()) {
+                Section section = sections.get(modulePosition);
+
+                boolean userHasAccess = (section.is_active() || (section.getActions() != null && section.getActions().getTest_section() != null)) && course != null && course.getEnrollment() > 0;
+                if (userHasAccess) {
+                    shell.getScreenProvider().showUnitsForSection(getContext(), sections.get(modulePosition - 1));
+                } else {
+                    adapter.setDefaultHighlightPosition(modulePosition - 1);
+                    int scrollTo = modulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
+                    linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
+                }
+                afterUpdateModulePosition = modulePosition;
+                modulePosition = -1;
+
             }
-            modulePosition = -1;
+        } else {
+            adapter.setDefaultHighlightPosition(afterUpdateModulePosition - 1);
+            int scrollTo = afterUpdateModulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
+            linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
+            adapter.notifyDataSetChanged();
+            afterUpdateModulePosition = -1;
         }
     }
 

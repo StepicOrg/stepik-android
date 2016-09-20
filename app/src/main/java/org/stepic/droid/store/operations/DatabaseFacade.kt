@@ -411,4 +411,8 @@ class DatabaseFacade {
         }
     }
 
+    fun removeSectionsOfCourse(courseId: Long) {
+        sectionDao.delete(DbStructureSections.Column.COURSE, courseId.toString());
+    }
+
 }
