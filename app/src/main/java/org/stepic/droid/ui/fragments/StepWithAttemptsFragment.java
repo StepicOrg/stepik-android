@@ -431,7 +431,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
 
     protected final void markLocalProgressAsViewed() {
-        bus.post(new UpdateStepEvent(step.getId()));
+        bus.post(new UpdateStepEvent(step.getId(), true));
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
             long stepId = step.getId();
 
