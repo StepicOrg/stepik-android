@@ -138,7 +138,9 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     private fun initRecyclerView(v: View) {
         recyclerView = v.findViewById(R.id.recycler_view_comments) as RecyclerView
         recyclerView.adapter = commentAdapter
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        val linearLayoutManager = LinearLayoutManager(context)
+        linearLayoutManager.isSmoothScrollbarEnabled = false
+        recyclerView.layoutManager = linearLayoutManager
         registerForContextMenu(recyclerView)
     }
 
