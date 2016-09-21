@@ -10,6 +10,4 @@ public interface StepTypeResolver {
     Drawable getDrawableForType(String type, boolean viewed, boolean isPeerReview);
 
     StepBaseFragment getFragment(Step step);
-
-    boolean isViewedStatePost(Step step);
 }

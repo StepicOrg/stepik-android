@@ -287,7 +287,7 @@ class DatabaseFacade {
 
     fun addToQueueViewedState(viewState: ViewAssignment) = viewAssignmentDao.insertOrUpdate(viewState)
 
-    val allInQueue: List<ViewAssignment?> = viewAssignmentDao.getAll()
+    fun getAllInQueue() = viewAssignmentDao.getAll()
 
     fun getAllNotification(): List<Notification?> = notificationDao.getAll()
 

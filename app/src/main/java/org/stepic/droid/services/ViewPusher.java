@@ -16,6 +16,7 @@ import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.IVideoResolver;
+import org.stepic.droid.util.resolvers.StepHelper;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.ViewAssignment;
 
@@ -87,16 +88,19 @@ public class ViewPusher extends IntentService {
             database.addToQueueViewedState(new ViewAssignment(assignmentId, stepId));
         }
 
-        //anyway check in db as viewed:
-        if (assignmentId != null) {
-            database.markProgressAsPassed(assignmentId);
-        } else {
-            Step step = database.getStepById(stepId);
-            if (step != null && step.getProgressId() != null) {
-                database.markProgressAsPassedIfInDb(step.getProgressId());
+        Step step = database.getStepById(stepId);
+
+        //check in db as passed if it can be passed by view
+        if (StepHelper.isViewedStatePost(step)) {
+            if (assignmentId != null) {
+                database.markProgressAsPassed(assignmentId);
+            } else {
+                if (step != null && step.getProgressId() != null) {
+                    database.markProgressAsPassedIfInDb(step.getProgressId());
+                }
             }
+            unitProgressManager.checkUnitAsPassed(stepId);
         }
-        unitProgressManager.checkUnitAsPassed(stepId);
         // Get a handler that can be used to post to the main thread
 
         mainHandler.post(new Function0<Unit>() {

@@ -34,6 +34,7 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.ui.adapters.StepFragmentAdapter;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.resolvers.StepHelper;
 import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.web.ViewAssignment;
 
@@ -227,7 +228,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         if (stepsPresenter.getStepList().size() <= position) return;
         final Step step = stepsPresenter.getStepList().get(position);
 
-        if (stepTypeResolver.isViewedStatePost(step) && !step.is_custom_passed()) {
+        if (StepHelper.isViewedStatePost(step) && !step.is_custom_passed()) {
             step.set_custom_passed(true);
             if (position <= tabLayout.getTabCount()) {
                 TabLayout.Tab tab = tabLayout.getTabAt(position);
@@ -271,7 +272,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
             }
         }
 
-        if (step != null && !step.is_custom_passed() && (stepTypeResolver.isViewedStatePost(step) || e.isSuccessAttempt())) {
+        if (step != null && !step.is_custom_passed() && (StepHelper.isViewedStatePost(step) || e.isSuccessAttempt())) {
             // if not passed yet
             step.set_custom_passed(true);
             if (position >= 0 && position < tabLayout.getTabCount()) {
