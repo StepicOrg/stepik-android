@@ -5,10 +5,10 @@ import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormatter
 
 object DateTimeHelper {
-    fun getPresentOfDate(dateInISOFormat: String?, mFormatForView: DateTimeFormatter): String {
+    fun getPresentOfDate(dateInISOFormat: String?, formatForView: DateTimeFormatter): String {
         if (dateInISOFormat == null) return ""
         val dateTime = DateTime(dateInISOFormat)
-        return mFormatForView.print(dateTime)
+        return formatForView.print(dateTime)
     }
 
     fun isNeededUpdate(timestampStored: Long, deltaInMillis: Long = AppConstants.MILLIS_IN_24HOURS): Boolean {

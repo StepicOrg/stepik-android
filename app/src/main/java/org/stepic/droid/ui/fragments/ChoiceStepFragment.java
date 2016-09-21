@@ -24,25 +24,25 @@ import org.stepic.droid.model.Dataset;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.RadioGroupHelper;
-import org.stepic.droid.ui.custom.StepicCheckBox;
-import org.stepic.droid.ui.custom.StepicOptionView;
-import org.stepic.droid.ui.custom.StepicRadioButton;
-import org.stepic.droid.ui.custom.StepicRadioGroup;
+import org.stepic.droid.ui.custom.StepikCheckBox;
+import org.stepic.droid.ui.custom.StepikOptionView;
+import org.stepic.droid.ui.custom.StepikRadioButton;
+import org.stepic.droid.ui.custom.StepikRadioGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChoiceStepFragment extends StepWithAttemptsFragment {
 
-    private StepicRadioGroup mChoiceContainer;
+    private StepikRadioGroup choiceContainer;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        mChoiceContainer = (StepicRadioGroup) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_choice_attempt, mAttemptContainer, false);
-        mAttemptContainer.addView(mChoiceContainer);
-        mAttemptContainer.setPadding(0, 0, 0, 0);
+        choiceContainer = (StepikRadioGroup) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_choice_attempt, attemptContainer, false);
+        attemptContainer.addView(choiceContainer);
+        attemptContainer.setPadding(0, 0, 0, 0);
         return v;
     }
 
@@ -59,14 +59,14 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
         List<String> options = dataset.getOptions();
         if (options == null || options.isEmpty()) return;
 
-        mChoiceContainer.removeAllViews();
+        choiceContainer.removeAllViews();
 
         for (String option : options) {
-            StepicOptionView optionViewItem;
+            StepikOptionView optionViewItem;
             if (dataset.is_multiple_choice()) {
-                optionViewItem = new StepicCheckBox(getActivity());
+                optionViewItem = new StepikCheckBox(getActivity());
             } else {
-                optionViewItem = new StepicRadioButton(getActivity());
+                optionViewItem = new StepikRadioButton(getActivity());
             }
             buildChoiceItem(optionViewItem, option);
         }
@@ -76,15 +76,15 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
     //it is unique for each type
     @Override
     protected void blockUIBeforeSubmit(boolean needBlock) {
-        RadioGroupHelper.setEnabled(mChoiceContainer, !needBlock);
+        RadioGroupHelper.setEnabled(choiceContainer, !needBlock);
     }
 
     //it is unique for each type of replay
     @Override
     protected Reply generateReply() {
         List<Boolean> options = new ArrayList<>();
-        for (int i = 0; i < mChoiceContainer.getChildCount(); i++) {
-            StepicOptionView view = (StepicOptionView) mChoiceContainer.getChildAt(i);
+        for (int i = 0; i < choiceContainer.getChildCount(); i++) {
+            StepikOptionView view = (StepikOptionView) choiceContainer.getChildAt(i);
             options.add(view.isChecked());
         }
         return new Reply.Builder()
@@ -95,22 +95,22 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
 
     @Override
     protected void onRestoreSubmission() {
-        Reply reply = mSubmission.getReply();
+        Reply reply = submission.getReply();
         if (reply == null) return;
 
         List<Boolean> choices = reply.getChoices();
         if (choices == null) return;
 
-        for (int i = 0; i < mChoiceContainer.getChildCount(); i++) {
-            StepicOptionView view = (StepicOptionView) mChoiceContainer.getChildAt(i);
+        for (int i = 0; i < choiceContainer.getChildCount(); i++) {
+            StepikOptionView view = (StepikOptionView) choiceContainer.getChildAt(i);
             view.setChecked(choices.get(i));
         }
     }
 
-    private void buildChoiceItem(StepicOptionView item, String rawText) {
+    private void buildChoiceItem(StepikOptionView item, String rawText) {
         String text = HtmlHelper.fromHtml(rawText).toString();
         item.setText(text);
-        mChoiceContainer.addView(item);
+        choiceContainer.addView(item);
     }
 
     @Subscribe

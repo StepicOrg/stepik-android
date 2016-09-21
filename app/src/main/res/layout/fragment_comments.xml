@@ -29,7 +29,8 @@
                     android:clipToPadding="false"
                     android:divider="@color/transparent"
                     android:scrollbarStyle="outsideOverlay"
-                    android:scrollbars="vertical"/>
+                    android:scrollbars="vertical"
+                    android:overScrollMode="never"/>
             </android.support.v4.widget.SwipeRefreshLayout>
     </FrameLayout>
 

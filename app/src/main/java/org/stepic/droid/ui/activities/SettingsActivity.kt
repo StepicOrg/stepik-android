@@ -15,7 +15,7 @@ open class SettingsActivity : SingleFragmentActivity() {
         return SettingsFragment.newInstance()
     }
 
-    var mToolbar: Toolbar? = null;
+    var toolbar: Toolbar? = null;
 
     override fun getLayoutResId(): Int {
         return R.layout.activity_container_with_bar
@@ -24,13 +24,13 @@ open class SettingsActivity : SingleFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ButterKnife.bind(this)
-        mToolbar = findViewById(R.id.toolbar) as Toolbar
+        toolbar = findViewById(R.id.toolbar) as Toolbar
         setUpToolbar()
     }
 
 
     private fun setUpToolbar() {
-        setSupportActionBar(mToolbar)
+        setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         supportActionBar!!.setHomeButtonEnabled(true)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -39,7 +39,7 @@ open class SettingsActivity : SingleFragmentActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
-                if (mSharedPreferenceHelper.getAuthResponseFromStore() == null) {
+                if (sharedPreferenceHelper.getAuthResponseFromStore() == null) {
                     finish();
                     return true
                 } else {

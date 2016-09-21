@@ -24,8 +24,8 @@ import javax.inject.Singleton;
 @Singleton
 public class UserPreferences {
 
-    Context mContext;
-    SharedPreferenceHelper mSharedPreferenceHelper;
+    Context context;
+    SharedPreferenceHelper sharedPreferenceHelper;
     private Analytic analytic;
 
     private String kb;
@@ -38,8 +38,8 @@ public class UserPreferences {
 
     @Inject
     public UserPreferences(Context context, SharedPreferenceHelper helper, Analytic analytic) {
-        mContext = context;
-        mSharedPreferenceHelper = helper;
+        this.context = context;
+        sharedPreferenceHelper = helper;
         this.analytic = analytic;
         kb = context.getString(R.string.kb);
         mb = context.getString(R.string.mb);
@@ -61,7 +61,7 @@ public class UserPreferences {
 
         File android = new File(Environment.getExternalStorageDirectory(), "Android");
         File downloadsDir = new File(android, "data");
-        File packDir = new File(downloadsDir, mContext.getPackageName());
+        File packDir = new File(downloadsDir, context.getPackageName());
         if (packDir == null) return null;
         File userStepicIdDir = new File(packDir, getUserId() + "");
         userStepicIdDir.mkdirs();
@@ -80,7 +80,7 @@ public class UserPreferences {
     @Nullable
     public File getSdCardDownloadFolder() {
         try {
-            File androidDataPackage = ContextCompat.getExternalFilesDirs(mContext, null)[1];
+            File androidDataPackage = ContextCompat.getExternalFilesDirs(context, null)[1];
             if (androidDataPackage == null) return null;
             File userStepicIdDir = new File(androidDataPackage, getUserId() + "");
             userStepicIdDir.mkdirs();
@@ -102,7 +102,7 @@ public class UserPreferences {
     }
 
     public long getUserId() {
-        Profile userProfile = mSharedPreferenceHelper.getProfile();
+        Profile userProfile = sharedPreferenceHelper.getProfile();
         long userId = -1; // default anonymous user id
         if (userProfile != null) {
             userId = userProfile.getId();
@@ -112,7 +112,7 @@ public class UserPreferences {
 
     @Nullable
     public List<EmailAddress> getUserEmails() {
-        return mSharedPreferenceHelper.getStoredEmails();
+        return sharedPreferenceHelper.getStoredEmails();
     }
 
     @Nullable
@@ -136,68 +136,68 @@ public class UserPreferences {
     }
 
     public boolean isNetworkMobileAllowed() {
-        return mSharedPreferenceHelper.isMobileInternetAlsoAllowed();
+        return sharedPreferenceHelper.isMobileInternetAlsoAllowed();
     }
 
     public String getQualityVideo() {
-        return mSharedPreferenceHelper.getVideoQuality();
+        return sharedPreferenceHelper.getVideoQuality();
     }
 
     public void storeQualityVideo(String videoQuality) {
-        mSharedPreferenceHelper.storeVideoQuality(videoQuality);
+        sharedPreferenceHelper.storeVideoQuality(videoQuality);
     }
 
     public VideoPlaybackRate getVideoPlaybackRate() {
-        return mSharedPreferenceHelper.getVideoPlaybackRate();
+        return sharedPreferenceHelper.getVideoPlaybackRate();
     }
 
     public void setVideoPlaybackRate(VideoPlaybackRate rate) {
-        mSharedPreferenceHelper.storeVideoPlaybackRate(rate);
+        sharedPreferenceHelper.storeVideoPlaybackRate(rate);
     }
 
     public boolean isOpenInExternal() {
-        return mSharedPreferenceHelper.isOpenInExternal();
+        return sharedPreferenceHelper.isOpenInExternal();
     }
 
     public void setOpenInExternal(boolean isOpenInExternal) {
-        mSharedPreferenceHelper.setOpenInExternal(isOpenInExternal);
+        sharedPreferenceHelper.setOpenInExternal(isOpenInExternal);
     }
 
     public boolean isNotificationEnabled() {
-        return !mSharedPreferenceHelper.isNotificationDisabled();
+        return !sharedPreferenceHelper.isNotificationDisabled();
     }
 
     public void setNotificationEnabled(boolean isEnabled) {
-        mSharedPreferenceHelper.setNotificationDisabled(!isEnabled);
+        sharedPreferenceHelper.setNotificationDisabled(!isEnabled);
     }
 
 
     public boolean isVibrateNotificationEnabled() {
-        return !mSharedPreferenceHelper.isNotificationVibrationDisabled();
+        return !sharedPreferenceHelper.isNotificationVibrationDisabled();
     }
 
     public void setVibrateNotificationEnabled(boolean isEnabled) {
-        mSharedPreferenceHelper.setNotificationVibrationDisabled(!isEnabled);
+        sharedPreferenceHelper.setNotificationVibrationDisabled(!isEnabled);
     }
 
     public boolean isSoundNotificationEnabled() {
-        return !mSharedPreferenceHelper.isNotificationSoundDisabled();
+        return !sharedPreferenceHelper.isNotificationSoundDisabled();
     }
 
     public void setNotificationSoundEnabled(boolean isEnabled) {
-        mSharedPreferenceHelper.setNotificationSoundDisabled(!isEnabled);
+        sharedPreferenceHelper.setNotificationSoundDisabled(!isEnabled);
     }
 
     public void setSdChosen(boolean isSdChosen) {
-        mSharedPreferenceHelper.setSDChosen(isSdChosen);
+        sharedPreferenceHelper.setSDChosen(isSdChosen);
     }
 
     public boolean isSdChosen() {
-        return mSharedPreferenceHelper.isSDChosen();
+        return sharedPreferenceHelper.isSDChosen();
     }
 
     /**
-     * @return list of storage option: list.size()<=2, can be empty
+     * @return oldList of storage option: oldList.size()<=2, can be empty
      */
     @NotNull
     public List<StorageOption> getStorageOptionList() {
@@ -280,10 +280,10 @@ public class UserPreferences {
     }
 
     public boolean isNeedToShowCalendarWidget() {
-        return mSharedPreferenceHelper.isNeedToShowCalendarWidget();
+        return sharedPreferenceHelper.isNeedToShowCalendarWidget();
     }
 
     public void setNeedToShowCalendarWidget(boolean needToShowCalendarWidget) {
-        mSharedPreferenceHelper.setNeedToShowCalendarWidget(needToShowCalendarWidget);
+        sharedPreferenceHelper.setNeedToShowCalendarWidget(needToShowCalendarWidget);
     }
 }

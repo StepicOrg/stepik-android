@@ -62,6 +62,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom10To11(db);
         upgradeFrom11To12(db);
         upgradeFrom12To13(db);
+        upgradeFrom13To14(db);
+    }
+
+    private void upgradeFrom13To14(SQLiteDatabase db) {
+        alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.PEER_REVIEW, TEXT_TYPE);
     }
 
     private void upgradeFrom12To13(SQLiteDatabase db) {
@@ -194,6 +199,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 13) {
             upgradeFrom12To13(db);
+        }
+
+        if (oldVersion < 14) {
+            upgradeFrom13To14(db);
         }
     }
 

@@ -3,7 +3,7 @@ package org.stepic.droid.web;
 public class ViewAssignmentWrapper {
     private final ViewAssignment view;
 
-    public ViewAssignmentWrapper(long assignmentId, long stepId) {
+    public ViewAssignmentWrapper(Long assignmentId, long stepId) {
         view = new ViewAssignment(assignmentId, stepId);
     }
 

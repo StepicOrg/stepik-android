@@ -16,7 +16,7 @@ import android.widget.Toast;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.CertificateModule;
+import org.stepic.droid.core.modules.CertificateModule;
 import org.stepic.droid.core.presenters.CertificatePresenter;
 import org.stepic.droid.core.presenters.contracts.CertificateView;
 import org.stepic.droid.model.CertificateViewItem;

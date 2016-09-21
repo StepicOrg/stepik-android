@@ -33,17 +33,17 @@ public class LogoutAreYouSureDialog extends DialogFragment {
     }
 
     @Inject
-    IShell mShell;
+    IShell shell;
     @Inject
-    DatabaseFacade mDatabaseFacade;
+    DatabaseFacade databaseFacade;
     @Inject
-    DownloadManager mSystemDownloadManager;
+    DownloadManager systemDownloadManager;
     @Inject
-    UserPreferences mUserPreferences;
+    UserPreferences userPreferences;
     @Inject
-    ThreadPoolExecutor mThreadPoolExecutor;
+    ThreadPoolExecutor threadPoolExecutor;
     @Inject
-    SharedPreferenceHelper mSharedPreferenceHelper;
+    SharedPreferenceHelper sharedPreferenceHelper;
     @Inject
     Analytic analytic;
 
@@ -60,22 +60,22 @@ public class LogoutAreYouSureDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         analytic.reportEvent(Analytic.Interaction.CLICK_YES_LOGOUT);
 
-                        final File directoryForClean = mUserPreferences.getUserDownloadFolder();
+                        final File directoryForClean = userPreferences.getUserDownloadFolder();
                         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                             @Override
                             protected Void doInBackground(Void... params) {
-                                List<DownloadEntity> downloadEntities = mDatabaseFacade.getAllDownloadEntities();
+                                List<DownloadEntity> downloadEntities = databaseFacade.getAllDownloadEntities();
                                 for (DownloadEntity de : downloadEntities) {
-                                    mSystemDownloadManager.remove(de.getDownloadId());
+                                    systemDownloadManager.remove(de.getDownloadId());
                                 }
 
                                 FileUtil.cleanDirectory(directoryForClean);
 
-                                mDatabaseFacade.dropDatabase();
+                                databaseFacade.dropDatabase();
                                 return null;
                             }
                         };
-                        task.executeOnExecutor(mThreadPoolExecutor);
+                        task.executeOnExecutor(threadPoolExecutor);
 
                         ((LogoutSuccess) getActivity()).onLogout();
                     }

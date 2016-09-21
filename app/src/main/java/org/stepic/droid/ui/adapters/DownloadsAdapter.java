@@ -67,18 +67,19 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     public static final int TYPE_DOWNLOADED_VIDEO = 2;
     public static final int TYPE_TITLE = 3;
 
-    private List<CachedVideo> mCachedVideoList;
+    private List<CachedVideo> cachedVideoList;
     private Activity sourceActivity;
-    private Map<Long, Lesson> mStepIdToLessonMap;
-    final private List<DownloadingVideoItem> mDownloadingVideoList;
+    private Map<Long, Lesson> stepIdToLessonMap;
+    final private List<DownloadingVideoItem> downloadingVideoList;
 
     @Inject
-    CleanManager mCleanManager;
+    CleanManager cleanManager;
 
     @Inject
-    DatabaseFacade mDatabaseFacade;
+    DatabaseFacade databaseFacade;
+
     @Inject
-    IScreenManager mScreenManager;
+    IScreenManager screenManager;
 
     @Inject
     ThreadPoolExecutor threadPoolExecutor;
@@ -98,10 +99,10 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Activity context, DownloadsFragment downloadsFragment, List<DownloadingVideoItem> downloadingList, Set<Long> cachedStepsSet) {
         this.downloadsFragment = downloadsFragment;
         MainApplication.component().inject(this);
-        mCachedVideoList = cachedVideos;
+        cachedVideoList = cachedVideos;
         sourceActivity = context;
-        mStepIdToLessonMap = videoIdToStepMap;
-        mDownloadingVideoList = downloadingList;
+        stepIdToLessonMap = videoIdToStepMap;
+        downloadingVideoList = downloadingList;
         this.cachedStepsSet = cachedStepsSet;
         placeholder = ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.video_placeholder);
     }
@@ -124,9 +125,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Override
     public int getItemViewType(int position) {
-        if ((!mDownloadingVideoList.isEmpty() && position == 0) || (!mCachedVideoList.isEmpty() && position == (mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList)))) {
+        if ((!downloadingVideoList.isEmpty() && position == 0) || (!cachedVideoList.isEmpty() && position == (downloadingVideoList.size() + getTitleCount(downloadingVideoList)))) {
             return TYPE_TITLE;
-        } else if (position >= mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList) + getTitleCount(mCachedVideoList)) {
+        } else if (position >= downloadingVideoList.size() + getTitleCount(downloadingVideoList) + getTitleCount(cachedVideoList)) {
             return TYPE_DOWNLOADED_VIDEO;
         } else {
             return TYPE_DOWNLOADING_VIDEO;
@@ -140,25 +141,25 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Override
     public int getItemCount() {
-        final int countOnRecycler = mCachedVideoList.size() + mDownloadingVideoList.size() + getTitleCount(mDownloadingVideoList) + getTitleCount(mCachedVideoList);
+        final int countOnRecycler = cachedVideoList.size() + downloadingVideoList.size() + getTitleCount(downloadingVideoList) + getTitleCount(cachedVideoList);
         return countOnRecycler;
     }
 
     @Override
     public void onClick(int position) {
-        //the position in list!
-        if (position >= 0 && position < mCachedVideoList.size()) {
-            final CachedVideo video = mCachedVideoList.get(position);
+        //the position in oldList!
+        if (position >= 0 && position < cachedVideoList.size()) {
+            final CachedVideo video = cachedVideoList.get(position);
             File file = new File(video.getUrl());
             if (video.getUrl()!= null && file.exists()) {
-                mScreenManager.showVideo(sourceActivity, video.getUrl());
+                screenManager.showVideo(sourceActivity, video.getUrl());
             } else {
                 Toast.makeText(MainApplication.getAppContext(), R.string.sorry_moved, Toast.LENGTH_SHORT).show();
                 threadPoolExecutor.execute(new Runnable() {
                     @Override
                     public void run() {
-                        Step step = mDatabaseFacade.getStepById(video.getStepId());
-                        mCleanManager.removeStep(step);
+                        Step step = databaseFacade.getStepById(video.getStepId());
+                        cleanManager.removeStep(step);
                     }
                 });
             }
@@ -167,11 +168,11 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Override
     public void onClickLoad(int position) {
-        //the position in list!
-        if (position >= 0 && position < mCachedVideoList.size()) {
-            CachedVideo video = mCachedVideoList.get(position);
-            mCachedVideoList.remove(position);
-            mStepIdToLessonMap.remove(video.getStepId());
+        //the position in oldList!
+        if (position >= 0 && position < cachedVideoList.size()) {
+            CachedVideo video = cachedVideoList.get(position);
+            cachedVideoList.remove(position);
+            stepIdToLessonMap.remove(video.getStepId());
             cachedStepsSet.remove(video.getStepId());
 
             final long stepId = video.getStepId();
@@ -179,13 +180,13 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             AsyncTask<Void, Void, Step> task = new AsyncTask<Void, Void, Step>() {
                 @Override
                 protected Step doInBackground(Void... params) {
-                    return mDatabaseFacade.getStepById(stepId);
+                    return databaseFacade.getStepById(stepId);
                 }
 
                 @Override
                 protected void onPostExecute(Step step) {
                     super.onPostExecute(step);
-                    mCleanManager.removeStep(step);
+                    cleanManager.removeStep(step);
                 }
             };
             task.executeOnExecutor(threadPoolExecutor);
@@ -196,9 +197,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Override
     public void onClickCancel(int position) {
-        //the position in list!
-        if (position >= 0 && position < mDownloadingVideoList.size()) {
-            DownloadingVideoItem downloadingVideoItem = mDownloadingVideoList.get(position);
+        //the position in oldList!
+        if (position >= 0 && position < downloadingVideoList.size()) {
+            DownloadingVideoItem downloadingVideoItem = downloadingVideoList.get(position);
             final long stepId = downloadingVideoItem.getDownloadEntity().getStepId();
             threadPoolExecutor.execute(new Runnable() {
                 @Override
@@ -208,7 +209,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
                 }
             });
 
-            mDownloadingVideoList.remove(position);
+            downloadingVideoList.remove(position);
             notifyDataSetChanged(); // TODO: 13.05.16 investigate and make remove animation
             if (downloadsFragment != null) {
                 downloadsFragment.checkForEmpty();
@@ -222,7 +223,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         View cancelLoad;
 
         @BindView(R.id.video_header)
-        TextView mVideoHeader;
+        TextView videoHeader;
 
         @BindView(R.id.video_icon)
         ImageView mVideoIcon;
@@ -258,7 +259,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             cancelLoad.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    cancelListener.onClickCancel(getAdapterPosition() - getTitleCount(mDownloadingVideoList));
+                    cancelListener.onClickCancel(getAdapterPosition() - getTitleCount(downloadingVideoList));
                 }
             });
 
@@ -268,7 +269,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         @Override
         public void setDataOnView(int position) {
-            DownloadingVideoItem downloadingVideoItem = mDownloadingVideoList.get(position - 1);//here downloading list shoudn't be empty!
+            DownloadingVideoItem downloadingVideoItem = downloadingVideoList.get(position - 1);//here downloading oldList shoudn't be empty!
 
             String thumbnail = downloadingVideoItem.getDownloadEntity().getThumbnail();
             if (thumbnail != null) {
@@ -284,12 +285,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
                         .into(mVideoIcon);
             }
 
-            Lesson relatedLesson = mStepIdToLessonMap.get(downloadingVideoItem.getDownloadEntity().getStepId());
+            Lesson relatedLesson = stepIdToLessonMap.get(downloadingVideoItem.getDownloadEntity().getStepId());
             if (relatedLesson != null) {
                 String header = relatedLesson.getTitle();
-                mVideoHeader.setText(header);
+                videoHeader.setText(header);
             } else {
-                mVideoHeader.setText("");
+                videoHeader.setText("");
             }
 
             int bytesTotal = downloadingVideoItem.getDownloadReportItem().getBytesTotal();
@@ -340,16 +341,16 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     public class DownloadsViewHolder extends GenericViewHolder {
 
         @BindView(R.id.current_quality)
-        TextView mCurrentQuality;
+        TextView currentQuality;
 
         @BindView(R.id.size_of_cached_video)
-        TextView mSize;
+        TextView size;
 
         @BindView(R.id.video_icon)
-        ImageView mVideoIcon;
+        ImageView videoIcon;
 
         @BindView(R.id.video_header)
-        TextView mVideoHeader;
+        TextView videoHeader;
 
 
         @BindView(R.id.pre_load_iv)
@@ -368,7 +369,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         String mb;
 
         @BindView(R.id.load_button)
-        View mLoadRoot;
+        View loadRoot;
 
         public DownloadsViewHolder(View itemView, final StepicOnClickItemListener click, final OnClickLoadListener loadListener) {
             super(itemView);
@@ -377,21 +378,21 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
                 @Override
                 public void onClick(View v) {
-                    click.onClick(getAdapterPosition() - mDownloadingVideoList.size() - getTitleCount(mDownloadingVideoList) - getTitleCount(mCachedVideoList));
+                    click.onClick(getAdapterPosition() - downloadingVideoList.size() - getTitleCount(downloadingVideoList) - getTitleCount(cachedVideoList));
                 }
             });
 
-            mLoadRoot.setOnClickListener(new View.OnClickListener() {
+            loadRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    loadListener.onClickLoad(getAdapterPosition() - mDownloadingVideoList.size() - getTitleCount(mDownloadingVideoList) - getTitleCount(mCachedVideoList));
+                    loadListener.onClickLoad(getAdapterPosition() - downloadingVideoList.size() - getTitleCount(downloadingVideoList) - getTitleCount(cachedVideoList));
                 }
             });
         }
 
         @Override
         public void setDataOnView(int position) {
-            CachedVideo cachedVideo = mCachedVideoList.get(position - mDownloadingVideoList.size() - getTitleCount(mDownloadingVideoList) - getTitleCount(mCachedVideoList));
+            CachedVideo cachedVideo = cachedVideoList.get(position - downloadingVideoList.size() - getTitleCount(downloadingVideoList) - getTitleCount(cachedVideoList));
 
 
             loadActionIcon.setVisibility(View.GONE);
@@ -404,20 +405,20 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
                 Glide.with(MainApplication.getAppContext())
                         .load(uriForThumbnail)
                         .placeholder(placeholder)
-                        .into(mVideoIcon);
+                        .into(videoIcon);
             } else {
                 Glide.with(MainApplication.getAppContext())
                         .load("")
                         .placeholder(placeholder)
-                        .into(mVideoIcon);
+                        .into(videoIcon);
             }
 
-            Lesson relatedLesson = mStepIdToLessonMap.get(cachedVideo.getStepId());
+            Lesson relatedLesson = stepIdToLessonMap.get(cachedVideo.getStepId());
             if (relatedLesson != null) {
                 String header = relatedLesson.getTitle();
-                mVideoHeader.setText(header);
+                videoHeader.setText(header);
             } else {
-                mVideoHeader.setText("");
+                videoHeader.setText("");
             }
             File file = new File(cachedVideo.getUrl()); // predict: heavy operation
             long size = FileUtil.getFileOrFolderSizeInKb(file);
@@ -428,14 +429,14 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
                 size /= 1024;
                 sizeString = size + " " + mb;
             }
-            mSize.setText(sizeString);
+            this.size.setText(sizeString);
 
             String quality = cachedVideo.getQuality();
             if (quality == null || quality.length() == 0) {
-                mCurrentQuality.setText("");
+                currentQuality.setText("");
             } else {
                 quality += "p";
-                mCurrentQuality.setText(quality);
+                currentQuality.setText(quality);
             }
         }
 
@@ -471,7 +472,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         @Override
         public void setDataOnView(int position) {
-            if (position == 0 && !mDownloadingVideoList.isEmpty()) {
+            if (position == 0 && !downloadingVideoList.isEmpty()) {
                 headerTextView.setText(titleDownloading);
                 headerButton.setText(titleForDownloadingButton);
             } else {
@@ -484,7 +485,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         @Override
         public void onClickCancel(int position) {
-            if (position == 0 && !mDownloadingVideoList.isEmpty()) {
+            if (position == 0 && !downloadingVideoList.isEmpty()) {
                 //downloading
 
                 DialogFragment dialogFragment = new CancelVideoDialog();
@@ -494,9 +495,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
                 ClearVideosDialog dialogFragment = new ClearVideosDialog();
 
                 Bundle bundle = new Bundle();
-                long[] stepIds = new long[mCachedVideoList.size()];
+                long[] stepIds = new long[cachedVideoList.size()];
                 int i = 0;
-                for (CachedVideo videoItem : mCachedVideoList) {
+                for (CachedVideo videoItem : cachedVideoList) {
                     stepIds[i++] = videoItem.getStepId();
                 }
                 String stringWithIds = DbParseHelper.parseLongArrayToString(stepIds);
@@ -547,8 +548,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     public void notifyCachedVideoInserted(long stepId, int position) {
         // when cached video is insert, we should remove downloading
         int downloadingPos = -1;
-        for (int i = 0; i < mDownloadingVideoList.size(); i++) {
-            if (mDownloadingVideoList.get(i).getDownloadEntity().getStepId() == stepId) {
+        for (int i = 0; i < downloadingVideoList.size(); i++) {
+            if (downloadingVideoList.get(i).getDownloadEntity().getStepId() == stepId) {
                 downloadingPos = i;
                 break;
             }
@@ -559,7 +560,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
 
         if (isVideoWasInDownloading) {
-            mDownloadingVideoList.remove(downloadingPos);
+            downloadingVideoList.remove(downloadingPos);
         }
 
         notifyDataSetChanged();
@@ -588,7 +589,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     }
 
     public void notifyDownloadingVideoChanged(int position, long stepId) {
-        DownloadingVideoItem item = mDownloadingVideoList.get(position);
+        DownloadingVideoItem item = downloadingVideoList.get(position);
         if (item != null) {
             if (item.getDownloadEntity().getStepId() == stepId) {
                 notifyItemChanged(position);
@@ -602,7 +603,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     public void notifyDownloadingItemInserted(int position) {
         notifyDataSetChanged();
-        if (mDownloadingVideoList.size() <= 1) {
+        if (downloadingVideoList.size() <= 1) {
             notifyDataSetChanged();
         } else {
             notifyItemChanged(0);

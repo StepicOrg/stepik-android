@@ -26,13 +26,13 @@ import butterknife.ButterKnife;
 public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.SocialViewHolder> implements StepicOnClickItemListener {
 
     @Inject
-    SocialManager mSocialManager;
+    SocialManager socialManager;
 
     @Inject
-    IApi mApi;
+    IApi api;
 
 
-    List<? extends ISocialType> mSocialList;
+    private List<? extends ISocialType> socialList;
     private FragmentActivity activity;
     private GoogleApiClient client;
 
@@ -40,7 +40,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
         this.client = client;
         MainApplication.component().inject(this);
         this.activity = activity;
-        mSocialList = mSocialManager.getAllSocial();
+        socialList = socialManager.getAllSocial();
     }
 
 
@@ -52,20 +52,20 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
 
     @Override
     public void onBindViewHolder(SocialViewHolder holder, int position) {
-        ISocialType socialType = mSocialList.get(position);
+        ISocialType socialType = socialList.get(position);
 
         holder.imageView.setImageDrawable(socialType.getIcon());
     }
 
     @Override
     public int getItemCount() {
-        return mSocialList.size();
+        return socialList.size();
     }
 
     @Override
     public void onClick(int position) {
-        ISocialType type = mSocialList.get(position);
-        mApi.loginWithSocial(activity, type, client);
+        ISocialType type = socialList.get(position);
+        api.loginWithSocial(activity, type, client);
     }
 
     public static class SocialViewHolder extends RecyclerView.ViewHolder {

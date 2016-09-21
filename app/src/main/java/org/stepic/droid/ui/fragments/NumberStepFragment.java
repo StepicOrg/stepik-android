@@ -26,24 +26,24 @@ public class NumberStepFragment extends SingleLineSendStepFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        mAnswerField.setRawInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        answerField.setRawInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
         return v;
     }
 
     @Override
     protected Reply generateReply() {
         return new Reply.Builder()
-                .setNumber(mAnswerField.getText().toString())
+                .setNumber(answerField.getText().toString())
                 .build();
     }
 
     @Override
     protected void onRestoreSubmission() {
-        Reply reply = mSubmission.getReply();
+        Reply reply = submission.getReply();
         if (reply == null) return;
 
         String text = reply.getNumber();
-        mAnswerField.setText(text);
+        answerField.setText(text);
     }
 
     @Subscribe

@@ -31,37 +31,37 @@ public class SplashActivity extends BackToExitActivityBase {
             return;
         }
 
-        if (checkPlayServices() && !mSharedPreferenceHelper.isGcmTokenOk()) {
+        if (checkPlayServices() && !sharedPreferenceHelper.isGcmTokenOk()) {
 
-            mThreadPoolExecutor.execute(new Runnable() {
+            threadPoolExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    StepicInstanceIdService.Companion.updateAnywhere(mShell.getApi(), mSharedPreferenceHelper, analytic); //FCM!
+                    StepicInstanceIdService.Companion.updateAnywhere(shell.getApi(), sharedPreferenceHelper, analytic); //FCM!
                 }
             });
         }
 
-        if (mSharedPreferenceHelper.isFirstTime() || !mSharedPreferenceHelper.isScheduleAdded() || mSharedPreferenceHelper.isNeedDropCoursesIn114()) {
+        if (sharedPreferenceHelper.isFirstTime() || !sharedPreferenceHelper.isScheduleAdded() || sharedPreferenceHelper.isNeedDropCoursesIn114()) {
             //fix v11 bug:
-            mThreadPoolExecutor.execute(new Runnable() {
+            threadPoolExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    if (mSharedPreferenceHelper.isFirstTime()) {
-                        mDbManager.dropOnlyCourseTable(); //v11 bug, when slug was not cached. We can remove it, when all users will have v1.11 or above. (flavour problem)
-                        mSharedPreferenceHelper.afterFirstTime();
-                        mSharedPreferenceHelper.afterScheduleAdded();
-                        mSharedPreferenceHelper.afterNeedDropCoursesIn114();
+                    if (sharedPreferenceHelper.isFirstTime()) {
+                        databaseFacade.dropOnlyCourseTable(); //v11 bug, when slug was not cached. We can remove it, when all users will have v1.11 or above. (flavour problem)
+                        sharedPreferenceHelper.afterFirstTime();
+                        sharedPreferenceHelper.afterScheduleAdded();
+                        sharedPreferenceHelper.afterNeedDropCoursesIn114();
                         defaultFilter.setNeedResolveLanguage(); //if user 1st time and v1.16 or more --> resolve language
-                    } else if (!mSharedPreferenceHelper.isScheduleAdded()) {
-                        mDbManager.dropOnlyCourseTable();
-                        mSharedPreferenceHelper.afterScheduleAdded();
-                        mSharedPreferenceHelper.afterNeedDropCoursesIn114();
-                    } else if (mSharedPreferenceHelper.isNeedDropCoursesIn114()){
-                        mDbManager.dropOnlyCourseTable();
-                        mSharedPreferenceHelper.afterNeedDropCoursesIn114();
+                    } else if (!sharedPreferenceHelper.isScheduleAdded()) {
+                        databaseFacade.dropOnlyCourseTable();
+                        sharedPreferenceHelper.afterScheduleAdded();
+                        sharedPreferenceHelper.afterNeedDropCoursesIn114();
+                    } else if (sharedPreferenceHelper.isNeedDropCoursesIn114()){
+                        databaseFacade.dropOnlyCourseTable();
+                        sharedPreferenceHelper.afterNeedDropCoursesIn114();
                     }
 
-                    mMainHandler.post(new Function0<Unit>() {
+                    mainHandler.post(new Function0<Unit>() {
                         @Override
                         public Unit invoke() {
                             bus.post(new FirstTimeActionIsDoneEvent());
@@ -98,11 +98,11 @@ public class SplashActivity extends BackToExitActivityBase {
 
     private void showNextScreen() {
         if (!isFinishing()) {
-            SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
+            SharedPreferenceHelper helper = shell.getSharedPreferenceHelper();
             if (helper.getAuthResponseFromStore() != null) {
-                mShell.getScreenProvider().showMainFeed(SplashActivity.this);
+                shell.getScreenProvider().showMainFeed(SplashActivity.this);
             } else {
-                mShell.getScreenProvider().showLaunchScreen(SplashActivity.this, false);
+                shell.getScreenProvider().showLaunchScreen(SplashActivity.this, false);
             }
             finish();
         }

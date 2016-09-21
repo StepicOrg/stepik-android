@@ -17,12 +17,12 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent
-import org.stepic.droid.util.HtmlHelper
-import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.ui.dialogs.DiscardTextDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.ui.util.BackButtonHandler
 import org.stepic.droid.ui.util.OnBackClickListener
+import org.stepic.droid.util.HtmlHelper
+import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.web.CommentsResponse
 import retrofit.Callback
 import retrofit.Response
@@ -47,8 +47,8 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
         }
     }
 
-    lateinit var mToolbar: Toolbar
-    lateinit var mTextBody: EditText
+    lateinit var toolbar: Toolbar
+    lateinit var textBody: EditText
     var target: Long? = null
     var parent: Long? = null
     var isCommentSending: Boolean = false
@@ -96,22 +96,22 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
     }
 
     private fun initEditBody(v: View) {
-        mTextBody = v.findViewById(R.id.input_comment_form) as EditText
+        textBody = v.findViewById(R.id.input_comment_form) as EditText
     }
 
     override fun onResume() {
         super.onResume()
-        if (!mTextBody.isFocused) {
-            mTextBody.requestFocus()
+        if (!textBody.isFocused) {
+            textBody.requestFocus()
         }
-        mTextBody.postDelayed({
-            showSoftKeypad(mTextBody)
+        textBody.postDelayed({
+            showSoftKeypad(textBody)
         }, 300)
     }
 
     private fun initToolbar(v: View) {
-        mToolbar = v.findViewById(R.id.toolbar) as Toolbar
-        (activity as AppCompatActivity).setSupportActionBar(mToolbar)
+        toolbar = v.findViewById(R.id.toolbar) as Toolbar
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         (activity as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp)
     }
@@ -139,7 +139,7 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
 
     private fun sendComment() {
         analytic.reportEvent(Analytic.Comments.CLICK_SEND_COMMENTS)
-        val text: String = HtmlHelper.getHtmlWhiteSpaces(mTextBody.text.toString())
+        val text: String = HtmlHelper.getHtmlWhiteSpaces(textBody.text.toString())
         if (text.isEmpty()) {
             Toast.makeText(context, R.string.feedback_fill_fields, Toast.LENGTH_SHORT).show()
         } else {
@@ -164,7 +164,7 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
                     enableMenuItem(true)
                 }
 
-                mShell.api.postComment(text, target!!, parent).enqueue(object : Callback<CommentsResponse> {
+                shell.api.postComment(text, target!!, parent).enqueue(object : Callback<CommentsResponse> {
 
                     override fun onResponse(response: Response<CommentsResponse>?, retrofit: Retrofit?) {
                         if (response?.isSuccess ?: false && response?.body()?.comments != null) {
@@ -191,7 +191,7 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
     }
 
     override fun onBackClick(): Boolean {
-        if (mTextBody.text?.isNotBlank() ?: false) {
+        if (textBody.text?.isNotBlank() ?: false) {
             val dialog = DiscardTextDialogFragment.newInstance()
             dialog.setTargetFragment(this, requestDiscardText)
             if (!dialog.isAdded) {

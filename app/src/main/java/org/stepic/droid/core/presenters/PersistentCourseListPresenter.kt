@@ -48,11 +48,17 @@ class PersistentCourseListPresenter(
      * 4) show from cache. (all states)
      */
     fun downloadData(courseType: Table, applyFilter: Boolean) {
+        downloadData(courseType, applyFilter, isRefreshing = false)
+    }
+
+    private fun downloadData(courseType: Table, applyFilter: Boolean, isRefreshing: Boolean ) {
         if (isLoading.get() || !hasNextPage.get()) return
         isLoading.set(true)
 
         threadPoolExecutor.execute {
-            getFromDatabaseAndShow(applyFilter, courseType)
+            if (!isRefreshing) {
+                getFromDatabaseAndShow(applyFilter, courseType)
+            }
 
             while (hasNextPage.get()) {
                 val response: Response<CoursesStepicResponse>?
@@ -86,7 +92,7 @@ class PersistentCourseListPresenter(
                     } else {
                         filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(allCourses, courseType)
                     }
-                    if (filteredCourseList.size < MIN_COURSES_ON_SCREEN && hasNextPage.get()) {
+                    if ((filteredCourseList.size < MIN_COURSES_ON_SCREEN || isRefreshing) && hasNextPage.get()) {
                         //try to load next in loop
                     } else {
                         mainHandler.post {
@@ -143,11 +149,11 @@ class PersistentCourseListPresenter(
         }
     }
 
-    fun refreshData(courseType: Table, applyFilter: Boolean) {
+    fun refreshData(courseType: Table, applyFilter: Boolean, allPAges: Boolean) {
         if (isLoading.get()) return
         currentPage.set(1);
         hasNextPage.set(true)
-        downloadData(courseType, applyFilter)
+        downloadData(courseType, applyFilter, isRefreshing = allPAges)
     }
 
 }

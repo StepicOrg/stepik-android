@@ -13,35 +13,35 @@ import javax.inject.Singleton;
 @Singleton
 public class Shell implements IShell {
 
-    Context mContext;
+    Context context;
 
     @Inject
     public Shell(Context context) {
-        mContext = context;
-        MainApplication.component(mContext).inject(this);
+        this.context = context;
+        MainApplication.component(this.context).inject(this);
     }
 
     @Inject
-    IScreenManager mScreenProvider;
+    IScreenManager screenProvider;
 
     @Inject
-    IApi mApi;
+    IApi api;
 
     @Inject
-    SharedPreferenceHelper mSharedPreferenceHelper;
+    SharedPreferenceHelper sharedPreferenceHelper;
 
     @Override
     public IScreenManager getScreenProvider() {
-        return mScreenProvider;
+        return screenProvider;
     }
 
     @Override
     public IApi getApi() {
-        return mApi;
+        return api;
     }
 
     @Override
     public SharedPreferenceHelper getSharedPreferenceHelper() {
-        return mSharedPreferenceHelper;
+        return sharedPreferenceHelper;
     }
 }

@@ -213,8 +213,8 @@
     <string name="certificate_distinction_with_substitution">Certificate with distinction for completing %s</string>
     <string name="certificate_regular_with_substitution">Certificate for completing %s</string>
     <string name="certificate_result_with_substitution">Result: %s%%</string>
-    <string name="certificate_share_copy_link">Copy Link</string>
-    <string name="certificate_share_copy_link_success">Link Copied</string>
+    <string name="copy_link_title">Copy Link</string>
+    <string name="link_copied_title">Link Copied</string>
     <string name="certificate_share_share_link">Share via…</string>
     <string name="add_to_linkedin">Add to LinkedIn</string>
     <string name="empty_certificates">You don\'t have any certificates yet</string>
@@ -234,4 +234,9 @@
     <string name="timing_past_title">Past</string>
     <string name="save_filter_title">Always accept the filters</string>
     <string name="accept">Accept</string>
+    <string name="lesson_not_found_or_not_access">The lesson does not exist or you don\'t have the permission</string>
+    <string name="not_auth_message">Sign in for continue</string>
+    <string name="auth_action_title">Sign in</string>
+    <string name="empty_steps_title">This lesson doesn\'t have steps</string>
+    <string name="open_in_browser">Open in Browser</string>
 </resources>

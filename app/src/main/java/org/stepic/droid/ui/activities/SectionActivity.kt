@@ -5,12 +5,12 @@ import android.support.annotation.NonNull
 import android.support.v4.app.Fragment
 import org.stepic.droid.R
 import org.stepic.droid.base.SingleFragmentActivity
-import org.stepic.droid.ui.fragments.SectionFragment
+import org.stepic.droid.ui.fragments.SectionsFragment
 
 class SectionActivity : SingleFragmentActivity() {
 
     override fun createFragment(): Fragment? {
-        return SectionFragment.newInstance()
+        return SectionsFragment.newInstance()
     }
 
 
@@ -27,7 +27,7 @@ class SectionActivity : SingleFragmentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        (fragment as? SectionFragment)?.onNewIntent(intent)
+        (fragment as? SectionsFragment)?.onNewIntent(intent)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, @NonNull permissions: Array<String>, @NonNull grantResults: IntArray) {

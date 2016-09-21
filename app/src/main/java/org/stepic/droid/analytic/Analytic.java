@@ -25,7 +25,7 @@ public interface Analytic {
         String YES_CLEAR_VIDEOS = "clear videos from downloads";
         String DELETE_COMMENT_TRIAL = "comment: delete comment trial";
         String UPDATING_MESSAGE_IS_APPROVED = "updating approved";
-        String PULL_TO_REFRESH_COURSE = "Pull from top to refresh course";
+        String PULL_TO_REFRESH_COURSE = "Pull from top to refreshWhenOnConnectionProblem course";
         String COURSE_USER_TRY_FAIL = "course: user open failed for him course";
         String JOIN_COURSE_NULL = "course is null when join, detail";
         String CANCEL_CHOOSE_STORE_CLICK = "storage: cancel choice";
@@ -34,8 +34,8 @@ public interface Analytic {
         String CLICK_CANCEL_SECTION = "click cancel section";
         String CLICK_CANCEL_UNIT = "click cancel unit";
         String UPDATING_MESSAGE_IS_SHOWN = "updating shown";
-        String REFRESH_UNIT = "Pull from top to refresh section unit";
-        String REFRESH_SECTION = "Pull from top to refresh section";
+        String REFRESH_UNIT = "Pull from top to refreshWhenOnConnectionProblem section unit";
+        String REFRESH_SECTION = "Pull from top to refreshWhenOnConnectionProblem section";
         String SUCCESS_LOGIN = "success login";
         String SHOW_DETAILED_INFO_CLICK = "Show detailed info click from context menu of course";
         String LONG_TAP_COURSE = "Long tap on course";
@@ -48,6 +48,8 @@ public interface Analytic {
         String CLICK_PREVIOUS_LESSON_IN_STEPS = "click_previous_lesson_in_steps";
         String CLICK_SIGN_IN_SOCIAL = "social_login";
         String CLICK_ACCEPT_FILTER_BUTTON = "click_accept_filter_btn";
+        String CLICK_AUTH_FROM_STEPS = "click_auth_from_steps";
+        String SHARE_STEP_CLICK = "share_step_click";
     }
 
     interface Screens {
@@ -62,7 +64,7 @@ public interface Analytic {
         String SHOW_SETTINGS = "show settings";
         String SHOW_STORAGE_MANAGEMENT = "show storage management";
         String OPEN_COMMENT_NOT_AVAILABLE = "comment: not available";
-        String OPEN_COMMENT = "comments: open list";
+        String OPEN_COMMENT = "comments: open oldList";
         String OPEN_WRITE_COMMENT = "comments: open write form";
         String SHOW_SECTIONS = "Screen manager: show section";
         String SHOW_UNITS = "Screen manager: show units-lessons screen";
@@ -83,6 +85,7 @@ public interface Analytic {
         String JUMP_BACKWARD = "video player: onJumpBackward";
         String START_LOADING = "video player: startLoading";
         String STOP_LOADING = "video player: stopLoading";
+        String QUALITY_NOT_DETERMINATED = "video_quality_failed";
     }
 
     interface AppIndexing {
@@ -119,6 +122,7 @@ public interface Analytic {
         String CONFIG_NOT_PARSED = "configRelease, config.json problem";
         String ILLEGAL_STATE_NEXT_LESSON = "cant_show_next_lesson";
         String ILLEGAL_STATE_PREVIOUS_LESSON = "cant_show_previous_lesson";
+        String FAIL_PUSH_STEP_VIEW = "fail_push_step_view";
     }
 
     interface Web {
@@ -161,6 +165,9 @@ public interface Analytic {
     interface Steps {
         String CORRECT_SUBMISSION_FILL = "submission_correct_fill"; // it can be existing submission, use in chain.
         String WRONG_SUBMISSION_FILL = "submission_wrong_fill";
+        java.lang.String SHARE_OPEN_IN_BROWSER = "step_share_open_in_browser";
+        java.lang.String COPY_LINK = "step_share_copy";
+        java.lang.String SHARE_ALL = "steps_share_all";
     }
 
     interface Calendar {
@@ -176,6 +183,7 @@ public interface Analytic {
     interface DeepLink {
         String USER_OPEN_SYLLABUS_LINK = "open_syllabus_by_link";
         String USER_OPEN_COURSE_DETAIL_LINK = "open_detail_course_link";
+        String USER_OPEN_STEPS_LINK = "open_step_link";
     }
 
     interface Certificate {

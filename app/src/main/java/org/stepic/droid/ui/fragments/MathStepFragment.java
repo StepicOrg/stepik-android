@@ -18,17 +18,17 @@ public class MathStepFragment extends SingleLineSendStepFragment {
     @Override
     protected Reply generateReply() {
         return new Reply.Builder()
-                .setFormula(mAnswerField.getText().toString())
+                .setFormula(answerField.getText().toString())
                 .build();
     }
 
     @Override
     protected void onRestoreSubmission() {
-        Reply reply = mSubmission.getReply();
+        Reply reply = submission.getReply();
         if (reply == null) return;
 
         String text = reply.getFormula();
-        mAnswerField.setText(text);
+        answerField.setText(text);
     }
 
     @Subscribe
