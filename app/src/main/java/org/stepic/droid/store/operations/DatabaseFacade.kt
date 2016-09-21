@@ -400,7 +400,7 @@ class DatabaseFacade {
     }
 
     /**
-     * null or not empty list
+     * null or not empty oldList
      */
     fun getAllCertificates(): List<CertificateViewItem?>? {
         val list = certificateViewItemDao.getAll()

@@ -228,9 +228,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         footerDownloadingView.setVisibility(View.GONE);
         reportConnectionProblem.setVisibility(View.GONE);
         showEmptyScreen(false);
-        List<Course> localList = new ArrayList<>(this.courses);
-        localList.addAll(courses);
-        List<Course> finalCourses = KotlinUtil.INSTANCE.filterIfNotUnique(localList);
+        List<Course> finalCourses = KotlinUtil.INSTANCE.getListOldPlusUpdated(this.courses, courses);
         this.courses.clear();
         this.courses.addAll(finalCourses);
         coursesAdapter.notifyDataSetChanged();

@@ -122,7 +122,7 @@ public class AndroidDevices {
                 String mountpoint = tokens.nextToken();
                 String type = tokens.nextToken();
 
-                // skip if already in list or if type/mountpoint is blacklisted
+                // skip if already in oldList or if type/mountpoint is blacklisted
                 if (list.contains(mountpoint) || typeBL.contains(type) || Strings.startsWith(mountBL, mountpoint))
                     continue;
 

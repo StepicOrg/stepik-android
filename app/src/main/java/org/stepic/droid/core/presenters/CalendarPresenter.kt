@@ -34,7 +34,7 @@ class CalendarPresenter(val config: IConfig,
                             val analytic : Analytic) : PresenterBase<CalendarExportableView>() {
 
     /**
-     * true, if any section in list have deadline (soft or hard) and the deadline is not happened
+     * true, if any section in oldList have deadline (soft or hard) and the deadline is not happened
      * and calendar was not added before. If course was restarted, than show (new_deadline - old_deadline > 1 month).
      * false, otherwise.
      *
@@ -137,7 +137,7 @@ class CalendarPresenter(val config: IConfig,
     /**
      * add soft and hard deadline to calendar, if permission not granted put it to {@code exportableView}
      *
-     * @param sectionList list of sections of course
+     * @param sectionList oldList of sections of course
      */
     fun addDeadlinesToCalendar(outSectionList: List<Section>, calendarItemOut: CalendarItem?) {
         val permissionCheck = ContextCompat.checkSelfPermission(context,

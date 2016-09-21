@@ -75,7 +75,7 @@ class CertificatePresenter(val api: IApi,
                         return
                     }
 
-                    //certificate list is not empty:
+                    //certificate oldList is not empty:
                     val courseIds: LongArray = certificateList.mapNotNull { it.course }.toLongArray()
                     if (courseIds.isEmpty()) {
                         view?.onInternetProblem()

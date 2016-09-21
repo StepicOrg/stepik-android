@@ -154,7 +154,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
                 int discussionCount = step.getDiscussions_count();
                 shell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
                 if (discussionCount == 0) {
-                    shell.getScreenProvider().openNewCommentForm(getActivity(), step.getId(), null); //show new form, but in back stack comment list is exist.
+                    shell.getScreenProvider().openNewCommentForm(getActivity(), step.getId(), null); //show new form, but in back stack comment oldList is exist.
                 }
             }
         });

@@ -64,7 +64,7 @@ public interface Analytic {
         String SHOW_SETTINGS = "show settings";
         String SHOW_STORAGE_MANAGEMENT = "show storage management";
         String OPEN_COMMENT_NOT_AVAILABLE = "comment: not available";
-        String OPEN_COMMENT = "comments: open list";
+        String OPEN_COMMENT = "comments: open oldList";
         String OPEN_WRITE_COMMENT = "comments: open write form";
         String SHOW_SECTIONS = "Screen manager: show section";
         String SHOW_UNITS = "Screen manager: show units-lessons screen";

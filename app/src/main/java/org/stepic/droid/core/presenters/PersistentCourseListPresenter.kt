@@ -56,7 +56,9 @@ class PersistentCourseListPresenter(
         isLoading.set(true)
 
         threadPoolExecutor.execute {
-            getFromDatabaseAndShow(applyFilter, courseType)
+            if (!isRefreshing) {
+                getFromDatabaseAndShow(applyFilter, courseType)
+            }
 
             while (hasNextPage.get()) {
                 val response: Response<CoursesStepicResponse>?

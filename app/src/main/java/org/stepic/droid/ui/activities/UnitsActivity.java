@@ -344,7 +344,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         Unit unit = unitPairPosition.first;
         int position = unitPairPosition.second;
 
-        //now we have not null unit and correct position at list
+        //now we have not null unit and correct position at oldList
         unit.set_cached(true);
         unit.set_loading(false);
         adapter.notifyItemChanged(position);

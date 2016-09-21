@@ -147,7 +147,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Override
     public void onClick(int position) {
-        //the position in list!
+        //the position in oldList!
         if (position >= 0 && position < cachedVideoList.size()) {
             final CachedVideo video = cachedVideoList.get(position);
             File file = new File(video.getUrl());
@@ -168,7 +168,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Override
     public void onClickLoad(int position) {
-        //the position in list!
+        //the position in oldList!
         if (position >= 0 && position < cachedVideoList.size()) {
             CachedVideo video = cachedVideoList.get(position);
             cachedVideoList.remove(position);
@@ -197,7 +197,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     @Override
     public void onClickCancel(int position) {
-        //the position in list!
+        //the position in oldList!
         if (position >= 0 && position < downloadingVideoList.size()) {
             DownloadingVideoItem downloadingVideoItem = downloadingVideoList.get(position);
             final long stepId = downloadingVideoItem.getDownloadEntity().getStepId();
@@ -269,7 +269,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         @Override
         public void setDataOnView(int position) {
-            DownloadingVideoItem downloadingVideoItem = downloadingVideoList.get(position - 1);//here downloading list shoudn't be empty!
+            DownloadingVideoItem downloadingVideoItem = downloadingVideoList.get(position - 1);//here downloading oldList shoudn't be empty!
 
             String thumbnail = downloadingVideoItem.getDownloadEntity().getThumbnail();
             if (thumbnail != null) {

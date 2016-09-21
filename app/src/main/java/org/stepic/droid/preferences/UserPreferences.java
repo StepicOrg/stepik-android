@@ -197,7 +197,7 @@ public class UserPreferences {
     }
 
     /**
-     * @return list of storage option: list.size()<=2, can be empty
+     * @return oldList of storage option: oldList.size()<=2, can be empty
      */
     @NotNull
     public List<StorageOption> getStorageOptionList() {

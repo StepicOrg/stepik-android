@@ -486,7 +486,7 @@ public class SectionsFragment
         }
         if (section == null || position == -1 || position >= sectionList.size()) return;
 
-        //now we have not null section and correct position at list
+        //now we have not null section and correct position at oldList
         section.set_cached(isCached);
         section.set_loading(isLoading);
         adapter.notifyItemChanged(position + SectionAdapter.SECTION_LIST_DELTA);
