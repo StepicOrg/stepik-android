@@ -5,15 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Handler;
 
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.events.InternetIsEnabledEvent;
+import org.stepic.droid.events.steps.UpdateStepEvent;
+import org.stepic.droid.model.Step;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.util.resolvers.StepHelper;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.ViewAssignment;
 
@@ -23,6 +27,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 
 public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
@@ -43,6 +50,12 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
     @Inject
     ThreadPoolExecutor threadPoolExecutor;
 
+    @Inject
+    LocalProgressManager unitProgressManager;
+
+    @Inject
+    IMainHandler mainHandler;
+
     private AtomicBoolean inWork = new AtomicBoolean(false);
 
 
@@ -54,15 +67,13 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (!isOnline(MainApplication.getAppContext()) || inWork.get()) return;
         inWork.set(true);
-
-        Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
-        Runnable myRunnable = new Runnable() {
+        mainHandler.post(new Function0<Unit>() {
             @Override
-            public void run() {
+            public Unit invoke() {
                 bus.post(new InternetIsEnabledEvent());
+                return Unit.INSTANCE;
             }
-        };
-        mainHandler.post(myRunnable);
+        });
 
 
         threadPoolExecutor.execute(new Runnable() {
@@ -74,6 +85,30 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
                         retrofit.Response<Void> response = api.postViewed(item).execute();
                         if (response.isSuccess()) {
                             databaseFacade.removeFromQueue(item);
+                            Step step = databaseFacade.getStepById(item.getStep());
+                            if (step != null) {
+                                final long stepId = step.getId();
+                                if (StepHelper.isViewedStatePost(step)) {
+                                    if (item.getAssignment() != null) {
+                                        databaseFacade.markProgressAsPassed(item.getAssignment());
+                                    } else {
+                                        if (step.getProgressId() != null) {
+                                            databaseFacade.markProgressAsPassedIfInDb(step.getProgressId());
+                                        }
+                                    }
+                                    unitProgressManager.checkUnitAsPassed(step.getId());
+                                }
+                                // Get a handler that can be used to post to the main thread
+
+                                mainHandler.post(new Function0<Unit>() {
+                                                     @Override
+                                                     public Unit invoke() {
+                                                         bus.post(new UpdateStepEvent(stepId, false));
+                                                         return Unit.INSTANCE;
+                                                     }
+                                                 }
+                                );
+                            }
                         }
                     } catch (IOException e) {
                         analytic.reportError(Analytic.Error.PUSH_STATE_EXCEPTION, e);

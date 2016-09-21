@@ -46,7 +46,9 @@ public class LocalProgressImpl implements LocalProgressManager {
 
 //        unit.set_viewed_custom(true);
 //        mDatabaseFacade.addUnit(unit); //// TODO: 26.01.16 progress is not saved
-        databaseFacade.markProgressAsPassedIfInDb(unit.getProgressId());
+        if (unit.getProgressId() != null) {
+            databaseFacade.markProgressAsPassedIfInDb(unit.getProgressId());
+        }
 
         final long unitId = unit.getId();
         Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
