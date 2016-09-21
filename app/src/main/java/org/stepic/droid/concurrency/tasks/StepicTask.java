@@ -9,24 +9,24 @@ import android.widget.ProgressBar;
 public abstract class StepicTask<Params, Progress, Result> extends AsyncTask<Params, Progress, AsyncResultWrapper<Result>> {
 
 
-    private ProgressBar mProgressBar;
-    protected Context mContext;
+    private ProgressBar progressBar;
+    protected Context context;
 
     protected StepicTask(Context context) {
         super();
-        this.mContext = context;
+        this.context = context;
     }
 
 
     public void setProgressBar(ProgressBar progressBar) {
-        this.mProgressBar = progressBar;
+        this.progressBar = progressBar;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        if (mProgressBar != null) {
-            mProgressBar.setVisibility(View.VISIBLE);
+        if (progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
         }
     }
 
@@ -48,8 +48,8 @@ public abstract class StepicTask<Params, Progress, Result> extends AsyncTask<Par
     protected void onPostExecute(AsyncResultWrapper<Result> resultAsyncResultWrapper) {
         super.onPostExecute(resultAsyncResultWrapper);
 
-        if (mProgressBar != null) {
-            mProgressBar.setVisibility(View.GONE);
+        if (progressBar != null) {
+            progressBar.setVisibility(View.GONE);
         }
 
         if (resultAsyncResultWrapper.getException() != null) {
@@ -74,7 +74,7 @@ public abstract class StepicTask<Params, Progress, Result> extends AsyncTask<Par
     }
 
     public void unbind() {
-        mProgressBar=null;
-        mContext = null;
+        progressBar =null;
+        context = null;
     }
 }

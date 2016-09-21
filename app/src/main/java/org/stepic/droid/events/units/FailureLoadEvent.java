@@ -3,14 +3,14 @@ package org.stepic.droid.events.units;
 import org.stepic.droid.model.Section;
 
 public class FailureLoadEvent {
-    private Section mSection;
+    private Section section;
 
-    public FailureLoadEvent(Section mSection) {
+    public FailureLoadEvent(Section section) {
 
-        this.mSection = mSection;
+        this.section = section;
     }
 
     public Section getSection() {
-        return mSection;
+        return section;
     }
 }

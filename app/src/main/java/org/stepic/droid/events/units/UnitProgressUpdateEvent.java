@@ -2,13 +2,13 @@ package org.stepic.droid.events.units;
 
 public class UnitProgressUpdateEvent {
 
-    long mUnitId;
+    long unitId;
 
     public UnitProgressUpdateEvent(long unitId) {
-        this.mUnitId = unitId;
+        this.unitId = unitId;
     }
 
     public long getUnitId() {
-        return mUnitId;
+        return unitId;
     }
 }

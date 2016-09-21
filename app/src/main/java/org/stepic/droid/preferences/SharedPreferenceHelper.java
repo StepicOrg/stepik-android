@@ -13,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
@@ -35,15 +34,15 @@ public class SharedPreferenceHelper {
     private static final String NOTIFICATION_SOUND_DISABLED = "notification_sound";
     private static final String TEMP_UPDATE_LINK = "temp_update_link";
     private static final java.lang.String NEED_DROP_116 = "need_drop_116";
-    private Context mContext;
+    private Context context;
     private Analytic analytic;
     private DefaultFilter defaultFilter;
 
     @Inject
-    public SharedPreferenceHelper(Analytic analytic, DefaultFilter defaultFilter) {
+    public SharedPreferenceHelper(Analytic analytic, DefaultFilter defaultFilter, Context context) {
         this.analytic = analytic;
         this.defaultFilter = defaultFilter;
-        mContext = MainApplication.getAppContext();
+        this.context = context;
 
         resetFilters(Table.enrolled); //reset on app recreating and on destroy course's Fragments
         resetFilters(Table.featured);
@@ -401,42 +400,42 @@ public class SharedPreferenceHelper {
     }
 
     private void put(PreferenceType type, String key, String value) {
-        SharedPreferences.Editor editor = mContext.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.putString(key, value).apply();
     }
 
     private void put(PreferenceType type, String key, int value) {
-        SharedPreferences.Editor editor = mContext.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.putInt(key, value).apply();
     }
 
     private void put(PreferenceType type, String key, long value) {
-        SharedPreferences.Editor editor = mContext.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.putLong(key, value).apply();
     }
 
     private void put(PreferenceType type, String key, Boolean value) {
-        SharedPreferences.Editor editor = mContext.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.putBoolean(key, value).apply();
     }
 
     private void clear(PreferenceType type) {
-        SharedPreferences.Editor editor = mContext.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.clear().apply();
     }
 
     private int getInt(PreferenceType preferenceType, String key) {
-        return mContext.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
+        return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
                 .getInt(key, -1);
     }
 
     private long getLong(PreferenceType preferenceType, String key) {
-        return mContext.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
+        return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
                 .getLong(key, -1);
     }
 
     private String getString(PreferenceType preferenceType, String key) {
-        return mContext.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
+        return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
                 .getString(key, null);
     }
 
@@ -445,7 +444,7 @@ public class SharedPreferenceHelper {
     }
 
     private boolean getBoolean(PreferenceType preferenceType, String key, boolean defaultValue) {
-        return mContext.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
+        return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
                 .getBoolean(key, defaultValue);
     }
 

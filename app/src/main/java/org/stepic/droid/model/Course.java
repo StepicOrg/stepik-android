@@ -21,11 +21,11 @@ import javax.inject.Inject;
 public class Course implements Serializable, Parcelable {
 
     @Inject
-    transient IConfig mConfig;
+    transient IConfig config;
 
-    private transient Context mContext;
+    private transient Context context;
 
-    private transient DateTimeFormatter mFormatForView;
+    private transient DateTimeFormatter internalFormatForView;
 
     private long id;
     private String summary;
@@ -127,11 +127,11 @@ public class Course implements Serializable, Parcelable {
     private String formatForView = null;
 
     public Course() {
-        mContext = MainApplication.getAppContext();
+        context = MainApplication.getAppContext();
         MainApplication.component(MainApplication.getAppContext()).inject(this);
 
-        mFormatForView = DateTimeFormat
-                .forPattern(mConfig.getDatePatternForView())
+        internalFormatForView = DateTimeFormat
+                .forPattern(config.getDatePatternForView())
                 .withZone(DateTimeZone.getDefault())
                 .withLocale(Locale.getDefault());
     }
@@ -144,7 +144,7 @@ public class Course implements Serializable, Parcelable {
         if (begin_date_source == null && last_deadline == null) {
             sb.append("");
         } else if (last_deadline == null) {
-            sb.append(mContext.getResources().getString(R.string.begin_date));
+            sb.append(context.getResources().getString(R.string.begin_date));
             sb.append(": ");
 
             try {
@@ -172,7 +172,7 @@ public class Course implements Serializable, Parcelable {
 
     private String getPresentOfDate(String dateInISOformat) {
         DateTime dateTime = new DateTime(dateInISOformat);
-        return mFormatForView.print(dateTime);
+        return internalFormatForView.print(dateTime);
     }
 
 
@@ -299,8 +299,8 @@ public class Course implements Serializable, Parcelable {
         return title;
     }
 
-    public void setmFormatForView(DateTimeFormatter mFormatForView) {
-        this.mFormatForView = mFormatForView;
+    public void setInternalFormatForView(DateTimeFormatter internalFormatForView) {
+        this.internalFormatForView = internalFormatForView;
     }
 
     public void setId(long id) {

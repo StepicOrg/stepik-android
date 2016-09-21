@@ -1,7 +1,6 @@
 package org.stepic.droid.core.presenters
 
 import com.squareup.otto.Bus
-import org.stepic.droid.concurrency.tasks.UpdateCourseTask
 import org.stepic.droid.core.presenters.contracts.CourseJoinView
 import org.stepic.droid.events.joining_course.FailJoinEvent
 import org.stepic.droid.events.joining_course.SuccessJoinEvent
@@ -20,8 +19,8 @@ class CourseJoinerPresenter(
         val sharedPreferenceHelper: SharedPreferenceHelper,
         val api: IApi,
         val threadPoolExecutor: ThreadPoolExecutor,
-        val bus: Bus
-) : PresenterBase<CourseJoinView>() {
+        val bus: Bus,
+        val database: DatabaseFacade) : PresenterBase<CourseJoinView>() {
 
     fun joinCourse(mCourse: Course) {
         val response = sharedPreferenceHelper.authResponseFromStore
@@ -30,21 +29,24 @@ class CourseJoinerPresenter(
             view?.setEnabledJoinButton(false)
 
             api.tryJoinCourse(mCourse).enqueue(object : Callback<Void> {
-                private val localCopy = mCourse
+                private val localCourseCopy = mCourse
 
                 override fun onResponse(response: Response<Void>, retrofit: Retrofit) {
                     if (response.isSuccess) {
 
-                        localCopy.enrollment = localCopy.courseId.toInt()
+                        localCourseCopy.enrollment = localCourseCopy.courseId.toInt()
 
-                        val updateCourseTask = UpdateCourseTask(Table.enrolled, localCopy)
-                        updateCourseTask.executeOnExecutor(threadPoolExecutor)
+                        threadPoolExecutor.execute {
+                            //update in database
+                            database.addCourse(localCourseCopy, Table.enrolled)
+                            val isFeatured = database.getCourseById(localCourseCopy.courseId, Table.featured) != null
+                            if (isFeatured){
+                                database.addCourse(localCourseCopy, Table.featured)
+                            }
+                        }
 
-                        val updateCourseFeaturedTask = UpdateCourseTask(Table.featured, localCopy)
-                        updateCourseFeaturedTask.executeOnExecutor(threadPoolExecutor)
-
-                        bus.post(SuccessJoinEvent(localCopy)) //todo reamke without bus
-                        view?.onSuccessJoin(SuccessJoinEvent(localCopy))
+                        bus.post(SuccessJoinEvent(localCourseCopy)) //todo remake without bus
+                        view?.onSuccessJoin(SuccessJoinEvent(localCourseCopy))
                     } else {
                         view?.onFailJoin(FailJoinEvent(response.code()))
                     }

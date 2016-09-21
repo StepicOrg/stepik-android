@@ -24,19 +24,19 @@ public class VideoQualityDialog extends DialogFragment {
 
 
     @Inject
-    IShell mShell;
+    IShell shell;
 
     @Inject
-    DatabaseFacade mDbManager;
+    DatabaseFacade databaseFacade;
 
     @Inject
-    UserPreferences mUserPreferences;
+    UserPreferences userPreferences;
 
     @Inject
     Analytic analytic;
 
-    private Map<String, Integer> mQualityToPositionMap = null;
-    private Map<Integer, String> mPositionToQualityMap = null;
+    private Map<String, Integer> qualityToPositionMap = null;
+    private Map<Integer, String> positionToQualityMap = null;
 
     static {
     }
@@ -46,7 +46,7 @@ public class VideoQualityDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         MainApplication.component().inject(this);
-        if (mQualityToPositionMap == null || mPositionToQualityMap == null) {
+        if (qualityToPositionMap == null || positionToQualityMap == null) {
             initMaps();
         }
 
@@ -59,15 +59,15 @@ public class VideoQualityDialog extends DialogFragment {
                     }
                 })
                 .setSingleChoiceItems(R.array.video_quality,
-                        mQualityToPositionMap.get(mUserPreferences.getQualityVideo()),
+                        qualityToPositionMap.get(userPreferences.getQualityVideo()),
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, final int which) {
-                                analytic.reportEventWithIdName(Analytic.Preferences.VIDEO_QUALITY, which + "", mPositionToQualityMap.get(which));
+                                analytic.reportEventWithIdName(Analytic.Preferences.VIDEO_QUALITY, which + "", positionToQualityMap.get(which));
                                 AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                                     @Override
                                     protected Void doInBackground(Void... params) {
-                                        mUserPreferences.storeQualityVideo(mPositionToQualityMap.get(which));
+                                        userPreferences.storeQualityVideo(positionToQualityMap.get(which));
                                         return null;
                                     }
                                 };
@@ -81,20 +81,20 @@ public class VideoQualityDialog extends DialogFragment {
 
     private void initMaps() {
 
-        if (mQualityToPositionMap == null) {
-            mQualityToPositionMap = new HashMap<>();
-            mQualityToPositionMap.put("270", 0);
-            mQualityToPositionMap.put("360", 1);
-            mQualityToPositionMap.put("720", 2);
-            mQualityToPositionMap.put("1080", 3);
+        if (qualityToPositionMap == null) {
+            qualityToPositionMap = new HashMap<>();
+            qualityToPositionMap.put("270", 0);
+            qualityToPositionMap.put("360", 1);
+            qualityToPositionMap.put("720", 2);
+            qualityToPositionMap.put("1080", 3);
         }
 
-        if (mPositionToQualityMap == null) {
-            mPositionToQualityMap = new HashMap<>();
-            mPositionToQualityMap.put(0, "270");
-            mPositionToQualityMap.put(1, "360");
-            mPositionToQualityMap.put(2, "720");
-            mPositionToQualityMap.put(3, "1080");
+        if (positionToQualityMap == null) {
+            positionToQualityMap = new HashMap<>();
+            positionToQualityMap.put(0, "270");
+            positionToQualityMap.put(1, "360");
+            positionToQualityMap.put(2, "720");
+            positionToQualityMap.put(3, "1080");
         }
     }
 }

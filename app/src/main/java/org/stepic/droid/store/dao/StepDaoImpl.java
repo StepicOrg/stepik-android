@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.jetbrains.annotations.Nullable;
+import org.stepic.droid.model.ActionsContainer;
 import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.BlockPersistentWrapper;
 import org.stepic.droid.model.Progress;
@@ -20,18 +21,18 @@ import java.util.List;
 public class StepDaoImpl extends DaoBase<Step> {
 
 
-    private final IDao<BlockPersistentWrapper> mBlockWrapperDao;
-    private final IDao<Assignment> mAssignmentDao;
-    private final IDao<Progress> mProgressDao;
+    private final IDao<BlockPersistentWrapper> blockWrapperDao;
+    private final IDao<Assignment> assignmentDao;
+    private final IDao<Progress> progressDao;
 
     public StepDaoImpl(SQLiteDatabase openHelper,
                        IDao<BlockPersistentWrapper> blockWrapperDao,
                        IDao<Assignment> assignmentDao,
                        IDao<Progress> progressDao) {
         super(openHelper);
-        mBlockWrapperDao = blockWrapperDao;
-        mAssignmentDao = assignmentDao;
-        mProgressDao = progressDao;
+        this.blockWrapperDao = blockWrapperDao;
+        this.assignmentDao = assignmentDao;
+        this.progressDao = progressDao;
     }
 
     @Override
@@ -52,6 +53,7 @@ public class StepDaoImpl extends DaoBase<Step> {
         int columnIndexIsLoading = cursor.getColumnIndex(DbStructureStep.Column.IS_LOADING);
         int columnIndexDiscussionCount = cursor.getColumnIndex(DbStructureStep.Column.DISCUSSION_COUNT);
         int columnIndexDiscussionId = cursor.getColumnIndex(DbStructureStep.Column.DISCUSSION_ID);
+        int columnIndexPeerReview = cursor.getColumnIndex(DbStructureStep.Column.PEER_REVIEW);
 
 
         step.setDiscussions_count(cursor.getInt(columnIndexDiscussionCount));
@@ -68,6 +70,12 @@ public class StepDaoImpl extends DaoBase<Step> {
         step.setPosition(cursor.getLong(columnIndexPosition));
         step.set_cached(cursor.getInt(columnIndexIsCached) > 0);
         step.set_loading(cursor.getInt(columnIndexIsLoading) > 0);
+
+        String review = cursor.getString(columnIndexPeerReview);
+
+        ActionsContainer actionsContainer = new ActionsContainer();
+        actionsContainer.setDo_review(review);
+        step.setActions(actionsContainer);
 
 //        step.setIs_custom_passed(isAssignmentByStepViewed(step.getId()));
         return step;
@@ -89,6 +97,10 @@ public class StepDaoImpl extends DaoBase<Step> {
         values.put(DbStructureStep.Column.POSITION, step.getPosition());
         values.put(DbStructureStep.Column.DISCUSSION_COUNT, step.getDiscussions_count());
         values.put(DbStructureStep.Column.DISCUSSION_ID, step.getDiscussion_proxy());
+
+        if (step.getActions() != null) {
+            values.put(DbStructureStep.Column.PEER_REVIEW, step.getActions().getDo_review());
+        }
 
         return values;
     }
@@ -128,25 +140,33 @@ public class StepDaoImpl extends DaoBase<Step> {
     private void addInnerObjects(Step step) {
         if (step == null) return;
         BlockPersistentWrapper blockPersistentWrapper =
-                mBlockWrapperDao.get(DbStructureBlock.Column.STEP_ID, step.getId() + "");
+                blockWrapperDao.get(DbStructureBlock.Column.STEP_ID, step.getId() + "");
         if (blockPersistentWrapper != null && blockPersistentWrapper.getBlock() != null) {
             step.setBlock(blockPersistentWrapper.getBlock());
         }
 
-        Assignment assignment = mAssignmentDao.get(DbStructureAssignment.Column.STEP_ID, step.getId() + "");
+        Assignment assignment = assignmentDao.get(DbStructureAssignment.Column.STEP_ID, step.getId() + "");
         if (assignment != null && assignment.getProgressId() != null) {
-            Progress progress = mProgressDao.get(DbStructureProgress.Column.ID, assignment.getProgressId());
+            Progress progress = progressDao.get(DbStructureProgress.Column.ID, assignment.getProgressId());
             if (progress != null) {
                 step.set_custom_passed(progress.is_passed());
             }
+        } else {
+            if (step.getProgressId() != null) {
+                Progress progress = progressDao.get(DbStructureProgress.Column.ID, step.getProgressId());
+                if (progress != null) {
+                    step.set_custom_passed(progress.is_passed());
+                }
+            }
         }
+
     }
 
     @Override
     public void insertOrUpdate(Step persistentObject) {
         super.insertOrUpdate(persistentObject);
         if (persistentObject != null) {
-            mBlockWrapperDao.insertOrUpdate(new BlockPersistentWrapper(persistentObject.getBlock(), persistentObject.getId()));
+            blockWrapperDao.insertOrUpdate(new BlockPersistentWrapper(persistentObject.getBlock(), persistentObject.getId()));
         }
     }
 

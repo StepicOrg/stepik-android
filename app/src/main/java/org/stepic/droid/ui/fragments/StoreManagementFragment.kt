@@ -158,8 +158,8 @@ class StoreManagementFragment : FragmentBase() {
         }
 
         val clearCacheStringBuilder = StringBuilder()
-        var size = FileUtil.getFileOrFolderSizeInKb(mUserPreferences.userDownloadFolder)
-        size += FileUtil.getFileOrFolderSizeInKb(mUserPreferences.sdCardDownloadFolder)
+        var size = FileUtil.getFileOrFolderSizeInKb(userPreferences.userDownloadFolder)
+        size += FileUtil.getFileOrFolderSizeInKb(userPreferences.sdCardDownloadFolder)
         if (size > 0) {
             clearCacheButton.isEnabled = true
             if (size > 1024) {

@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 public class NotSupportedYetStepFragment extends StepBaseFragment {
 
     @BindView(R.id.open_web)
-    Button mOpenWebBtn;
+    Button openWebBtn;
 
     @Nullable
     @Override
@@ -33,10 +33,10 @@ public class NotSupportedYetStepFragment extends StepBaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mOpenWebBtn.setOnClickListener(new View.OnClickListener() {
+        openWebBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mShell.getScreenProvider().openStepInWeb(getContext(), step);
+                shell.getScreenProvider().openStepInWeb(getContext(), step);
             }
         });
     }

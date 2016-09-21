@@ -30,18 +30,18 @@ import butterknife.ButterKnife;
 public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewHolder> {
 
     private final List<Option> data;
-    private final int mWidth;
+    private final int width;
     private final int halfScreen;
-    private final Map<Integer, Option> mItemIdOptionMap;
+    private final Map<Integer, Option> itemIdOptionMap;
     private final boolean isMatching;
 
     public SortStepAdapter(RecyclerView recyclerView, List<Option> data, int width, boolean isMatching) {
         super(recyclerView);
         this.data = data;
-        mWidth = width;
-        mItemIdOptionMap = new HashMap<>();
+        this.width = width;
+        itemIdOptionMap = new HashMap<>();
         for (Option option : data) {
-            mItemIdOptionMap.put(option.getPositionId(), option);
+            itemIdOptionMap.put(option.getPositionId(), option);
         }
 
         WindowManager wm = (WindowManager) MainApplication.getAppContext().getSystemService(Context.WINDOW_SERVICE);
@@ -67,7 +67,7 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
     }
 
     public Map<Integer, Option> getItemIdOptionMap() {
-        return mItemIdOptionMap;
+        return itemIdOptionMap;
     }
 
     @Override
@@ -89,22 +89,22 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
     @Override
     public void onBindViewHolder(OptionViewHolder holder, int position) {
         int itemId = data.get(position).getPositionId();
-        if (mWidth > 0) {
-            int lines = (mWidth / halfScreen) + 1;
+        if (width > 0) {
+            int lines = (width / halfScreen) + 1;
             int height = (int) MainApplication.getAppContext().getResources().getDimension(R.dimen.option_height);
             height = lines * height;
-            holder.mContainer.getLayoutParams().height = height;
+            holder.container.getLayoutParams().height = height;
 //            holder.mOptionText.setLines((mWidth / halfScreen) + 1);
         }
 
         if (!isMatching) {
-            holder.enhancedText.setText(mItemIdOptionMap.get(itemId).getValue());
+            holder.enhancedText.setText(itemIdOptionMap.get(itemId).getValue());
         } else {
-            holder.mOptionText.setText(HtmlHelper.fromHtml(mItemIdOptionMap.get(itemId).getValue()).toString());
+            holder.optionText.setText(HtmlHelper.fromHtml(itemIdOptionMap.get(itemId).getValue()).toString());
         }
         // NOTE: check for getDraggingId() match to set an "invisible space" while dragging
-        holder.mContainer.setVisibility(getDraggingId() == itemId ? View.INVISIBLE : View.VISIBLE);
-        holder.mContainer.postInvalidate();
+        holder.container.setVisibility(getDraggingId() == itemId ? View.INVISIBLE : View.VISIBLE);
+        holder.container.postInvalidate();
     }
 
     @Override
@@ -120,7 +120,7 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
     @Override
     public int getPositionForId(long id) {
         int id_int = (int) id;
-        Option option = mItemIdOptionMap.get(id_int);
+        Option option = itemIdOptionMap.get(id_int);
         return data.indexOf(option);
     }
 
@@ -136,12 +136,14 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
             View.OnClickListener, View.OnLongClickListener, View.OnTouchListener {
 
         private final boolean mIsMatching;
+        
         @BindView(R.id.container)
-        ViewGroup mContainer;
+        ViewGroup container;
 
-        TextView mOptionText;
+        TextView optionText;
+
         @BindView(R.id.sort_icon)
-        View mSortController;
+        View sortController;
 
         LatexSupportableEnhancedFrameLayout enhancedText;
 
@@ -152,11 +154,11 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
             ButterKnife.bind(this, itemView);
             //// FIXME: 26.04.16 refactor this
             if (mIsMatching) {
-                mOptionText = (TextView) itemView.findViewById(R.id.option_text);
+                optionText = (TextView) itemView.findViewById(R.id.option_text);
             } else {
                 enhancedText = (LatexSupportableEnhancedFrameLayout) itemView.findViewById(R.id.option_text);
             }
-            mSortController.setOnTouchListener(new View.OnTouchListener() {
+            sortController.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     startDrag();

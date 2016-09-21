@@ -8,59 +8,59 @@ import javax.inject.Inject;
 
 public class ConcurrentCancelSniffer implements ICancelSniffer {
 
-    private final Set<Long> mCanceledStepIdsSet;
-    private final Set<Long> mCanceledSectionIdsSet;
-    private final Set<Long> mCanceledUnitIdsSet;
+    private final Set<Long> canceledStepIdsSet;
+    private final Set<Long> canceledSectionIdsSet;
+    private final Set<Long> canceledUnitIdsSet;
 
     @Inject
     public ConcurrentCancelSniffer() {
-        mCanceledStepIdsSet = Collections.newSetFromMap(new ConcurrentHashMap<Long, Boolean>());
-        mCanceledSectionIdsSet = Collections.newSetFromMap(new ConcurrentHashMap<Long, Boolean>());
-        mCanceledUnitIdsSet = Collections.newSetFromMap(new ConcurrentHashMap<Long, Boolean>());
+        canceledStepIdsSet = Collections.newSetFromMap(new ConcurrentHashMap<Long, Boolean>());
+        canceledSectionIdsSet = Collections.newSetFromMap(new ConcurrentHashMap<Long, Boolean>());
+        canceledUnitIdsSet = Collections.newSetFromMap(new ConcurrentHashMap<Long, Boolean>());
     }
 
     @Override
     public void addStepIdCancel(long stepId) {
-        mCanceledStepIdsSet.add(stepId);
+        canceledStepIdsSet.add(stepId);
     }
 
     @Override
     public void removeStepIdCancel(long stepId) {
-        mCanceledStepIdsSet.remove(stepId);
+        canceledStepIdsSet.remove(stepId);
     }
 
     @Override
     public boolean isStepIdCanceled(long stepId) {
-        return mCanceledStepIdsSet.contains(stepId);
+        return canceledStepIdsSet.contains(stepId);
     }
 
     @Override
     public void addSectionIdCancel(long sectionId) {
-        mCanceledSectionIdsSet.add(sectionId);
+        canceledSectionIdsSet.add(sectionId);
     }
 
     @Override
     public void removeSectionIdCancel(long sectionId) {
-        mCanceledSectionIdsSet.remove(sectionId);
+        canceledSectionIdsSet.remove(sectionId);
     }
 
     @Override
     public boolean isSectionIdIsCanceled(long sectionId) {
-        return mCanceledSectionIdsSet.contains(sectionId);
+        return canceledSectionIdsSet.contains(sectionId);
     }
 
     @Override
     public void addUnitIdCancel(long unitId) {
-        mCanceledUnitIdsSet.add(unitId);
+        canceledUnitIdsSet.add(unitId);
     }
 
     @Override
     public void removeUnitIdCancel(long unitId) {
-        mCanceledUnitIdsSet.remove(unitId);
+        canceledUnitIdsSet.remove(unitId);
     }
 
     @Override
     public boolean isUnitIdIsCanceled(long unitId) {
-        return mCanceledUnitIdsSet.contains(unitId);
+        return canceledUnitIdsSet.contains(unitId);
     }
 }

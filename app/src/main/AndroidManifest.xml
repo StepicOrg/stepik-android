@@ -87,11 +87,6 @@
             android:label="@string/units_lessons_title"/>
 
 
-        <activity
-            android:name=".ui.activities.StepsActivity"
-            android:hardwareAccelerated="false"
-            android:label="@string/steps_title"/>
-
         <receiver
             android:name="org.stepic.droid.receivers.DownloadCompleteReceiver"
             android:exported="true">

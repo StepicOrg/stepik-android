@@ -26,42 +26,42 @@ import org.stepic.droid.util.HtmlHelper;
 
 public class StringStepFragment extends StepWithAttemptsFragment {
 
-    protected EditText mAnswerField;
+    protected EditText answerField;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        mAnswerField = (EditText) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_free_answer_attempt, mAttemptContainer, false);
-        mAttemptContainer.addView(mAnswerField);
+        answerField = (EditText) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_free_answer_attempt, attemptContainer, false);
+        attemptContainer.addView(answerField);
         return v;
     }
 
 
     @Override
     protected final void showAttempt(Attempt attempt) {
-        mAnswerField.getText().clear();
+        answerField.getText().clear();
     }
 
     @Override
     protected final void blockUIBeforeSubmit(boolean needBlock) {
-        mAnswerField.setEnabled(!needBlock);
+        answerField.setEnabled(!needBlock);
     }
 
     @Override
     protected Reply generateReply() {
         return new Reply.Builder()
-                .setText(mAnswerField.getText().toString())
+                .setText(answerField.getText().toString())
                 .build();
     }
 
     @Override
     protected void onRestoreSubmission() {
-        Reply reply = mSubmission.getReply();
+        Reply reply = submission.getReply();
         if (reply == null) return;
 
         String text = reply.getText();
-        mAnswerField.setText(HtmlHelper.fromHtml(text));
+        answerField.setText(HtmlHelper.fromHtml(text));
     }
 
     @Subscribe
@@ -119,6 +119,6 @@ public class StringStepFragment extends StepWithAttemptsFragment {
     @Override
     public void onPause() {
         super.onPause();
-        mAnswerField.clearFocus();
+        answerField.clearFocus();
     }
 }

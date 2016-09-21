@@ -44,4 +44,8 @@ public class ActionsContainer implements Parcelable {
             return new ActionsContainer[size];
         }
     };
+
+    public void setDo_review(String do_review) {
+        this.do_review = do_review;
+    }
 }

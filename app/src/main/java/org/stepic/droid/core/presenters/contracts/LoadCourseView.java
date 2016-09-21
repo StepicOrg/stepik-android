@@ -6,6 +6,8 @@ import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
 
 public interface LoadCourseView {
     void onCourseFound(CourseFoundEvent event);
+
     void onCourseUnavailable(CourseUnavailableForUserEvent event);
+
     void onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent event);
 }

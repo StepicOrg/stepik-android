@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/abc_action_bar_default_height_material"
             android:background="@color/stepic_brand_primary"
-            app:layout_scrollFlags="scroll|enterAlways"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             />
@@ -40,7 +40,6 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <include
@@ -50,6 +49,15 @@
         <include layout="@layout/progress_bar_on_empty_screen"/>
 
         <include layout="@layout/drop_shadow_view"/>
+
+        <include layout="@layout/internet_fail_clickable"/>
+
+        <include layout="@layout/corrupted_lesson"/>
+
+        <include layout="@layout/need_auth_placeholder"/>
+
+        <include layout="@layout/empty_steps"/>
+
     </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

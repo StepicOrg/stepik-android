@@ -40,12 +40,16 @@ public class WantMoveDataDialog extends DialogFragment {
 
     @Inject
     DatabaseFacade databaseFacade;
+
     @Inject
     UserPreferences userPreferences;
+
     @Inject
     ThreadPoolExecutor threadPoolExecutor;
+
     @Inject
     IMainHandler mainHandler;
+
     @Inject
     Analytic analytic;
 

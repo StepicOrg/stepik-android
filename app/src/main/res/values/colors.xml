@@ -23,6 +23,7 @@
     <color name="stepic_cover">#EEEEEE</color>
     <color name="stepic_viewed_steps">#C5EBB8</color>
     <color name="warning_light_yellow">#FFFAE9</color>
+    <color name="warning_comment_highlight_yellow">#FFF4B3</color>
 
     <color name="default_color_of_link">#0077CC</color>
     <color name="windowBackground">#eeeeee</color>

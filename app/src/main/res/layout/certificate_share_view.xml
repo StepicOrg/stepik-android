@@ -26,7 +26,7 @@
         style="@style/BottomSheetShareItem"
         android:drawableLeft="@drawable/ic_content_copy_material_24"
         android:drawableStart="@drawable/ic_content_copy_material_24"
-        android:text="@string/certificate_share_copy_link"
+        android:text="@string/copy_link_title"
         />
 
     <TextView

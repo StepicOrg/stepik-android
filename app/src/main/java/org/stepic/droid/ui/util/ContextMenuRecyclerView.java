@@ -8,7 +8,7 @@ import android.view.View;
 
 public class ContextMenuRecyclerView extends RecyclerView {
 
-    private RecyclerViewContextMenuInfo mContextMenuInfo;
+    private RecyclerViewContextMenuInfo contextMenuInfo;
 
     public ContextMenuRecyclerView(Context context) {
         this(context, null);
@@ -30,7 +30,7 @@ public class ContextMenuRecyclerView extends RecyclerView {
 
     @Override
     protected ContextMenu.ContextMenuInfo getContextMenuInfo() {
-        return mContextMenuInfo;
+        return contextMenuInfo;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ContextMenuRecyclerView extends RecyclerView {
 
         if (longPressPosition >= 0) {
             final long longPressId = getAdapter().getItemId(longPressPosition);
-            mContextMenuInfo = new RecyclerViewContextMenuInfo(longPressPosition, longPressId);
+            contextMenuInfo = new RecyclerViewContextMenuInfo(longPressPosition, longPressId);
             return super.showContextMenuForChild(originalView);
         }
         return false;

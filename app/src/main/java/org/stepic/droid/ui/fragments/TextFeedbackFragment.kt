@@ -17,9 +17,9 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.events.feedback.FeedbackFailedEvent
 import org.stepic.droid.events.feedback.FeedbackInternetProblemsEvent
 import org.stepic.droid.events.feedback.FeedbackSentEvent
+import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ValidatorUtil
-import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import retrofit.Callback
 import retrofit.Response
 import retrofit.Retrofit
@@ -36,11 +36,11 @@ class TextFeedbackFragment : FragmentBase() {
         }
     }
 
-    lateinit var mToolbar: Toolbar
-    lateinit var mEmailEditText: EditText
-    lateinit var mDescriptionEditText: EditText
+    lateinit var toolbar: Toolbar
+    lateinit var emailEditText: EditText
+    lateinit var descriptionEditText: EditText
     lateinit var rootScrollView: ViewGroup
-    var mProgressDialog: ProgressDialog? = null
+    var progressDialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,13 +54,13 @@ class TextFeedbackFragment : FragmentBase() {
             initTextFields(v)
             initScrollView(v)
 
-            if (mEmailEditText.text.isEmpty()){
-                mEmailEditText.requestFocus()
+            if (emailEditText.text.isEmpty()){
+                emailEditText.requestFocus()
             }
             else{
-                mDescriptionEditText.requestFocus()
+                descriptionEditText.requestFocus()
             }
-            mProgressDialog = LoadingProgressDialog(context)
+            progressDialog = LoadingProgressDialog(context)
 
         }
         return v
@@ -79,21 +79,21 @@ class TextFeedbackFragment : FragmentBase() {
     fun initScrollView(v: View) {
         rootScrollView = v.findViewById(R.id.root_view) as ViewGroup
         rootScrollView.setOnTouchListener { v, event ->
-            if (!mDescriptionEditText.isFocused)
-                mDescriptionEditText.requestFocus()
+            if (!descriptionEditText.isFocused)
+                descriptionEditText.requestFocus()
             false
         }
     }
 
     fun initToolbar(v: View) {
-        mToolbar = v.findViewById(R.id.toolbar) as Toolbar
-        (activity as AppCompatActivity).setSupportActionBar(mToolbar)
+        toolbar = v.findViewById(R.id.toolbar) as Toolbar
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     fun initTextFields(v: View) {
-        mEmailEditText = v.findViewById(R.id.feedback_contacts) as EditText
-        mEmailEditText.setOnEditorActionListener { textView, i, keyEvent ->
+        emailEditText = v.findViewById(R.id.feedback_contacts) as EditText
+        emailEditText.setOnEditorActionListener { textView, i, keyEvent ->
             if (i == EditorInfo.IME_ACTION_SEND) {
                 sendFeedback()
                 true
@@ -101,11 +101,11 @@ class TextFeedbackFragment : FragmentBase() {
                 false
             }
         }
-        val primaryEmail = mUserPreferences.primaryEmail?.email
-        primaryEmail?.let { mEmailEditText.setText(primaryEmail) }
+        val primaryEmail = userPreferences.primaryEmail?.email
+        primaryEmail?.let { emailEditText.setText(primaryEmail) }
 
-        mDescriptionEditText = v.findViewById(R.id.feedback_form) as EditText
-        mDescriptionEditText.setOnFocusChangeListener { view, hasFocus ->
+        descriptionEditText = v.findViewById(R.id.feedback_form) as EditText
+        descriptionEditText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) {
                 showSoftKeypad(view)
             }
@@ -135,8 +135,8 @@ class TextFeedbackFragment : FragmentBase() {
 
     fun sendFeedback() {
         hideSoftKeypad()
-        val email = mEmailEditText.text.toString()
-        val description = mDescriptionEditText.text.toString()
+        val email = emailEditText.text.toString()
+        val description = descriptionEditText.text.toString()
         if (email.isEmpty() || description.isEmpty()) {
             Toast.makeText(context, R.string.feedback_fill_fields, Toast.LENGTH_SHORT).show()
             return
@@ -146,11 +146,11 @@ class TextFeedbackFragment : FragmentBase() {
             return
         }
 
-        ProgressHelper.activate(mProgressDialog)
-        mShell.api.sendFeedback(email, description).enqueue(object : Callback<Void> {
+        ProgressHelper.activate(progressDialog)
+        shell.api.sendFeedback(email, description).enqueue(object : Callback<Void> {
 
             override fun onResponse(response: Response<Void>?, retrofit: Retrofit?) {
-                ProgressHelper.dismiss(mProgressDialog)
+                ProgressHelper.dismiss(progressDialog)
                 if (response?.isSuccess ?: false) {
                     bus.post(FeedbackSentEvent())
 
@@ -160,7 +160,7 @@ class TextFeedbackFragment : FragmentBase() {
             }
 
             override fun onFailure(throwable: Throwable?) {
-                ProgressHelper.dismiss(mProgressDialog)
+                ProgressHelper.dismiss(progressDialog)
                 bus.post(FeedbackInternetProblemsEvent())
             }
         })
@@ -169,7 +169,7 @@ class TextFeedbackFragment : FragmentBase() {
     @Subscribe
     fun onFeedbackSent(event: FeedbackSentEvent) {
         Toast.makeText(context, R.string.feedback_sent, Toast.LENGTH_SHORT).show()
-        mShell.screenProvider.showMainFeed(activity)
+        shell.screenProvider.showMainFeed(activity)
     }
 
     @Subscribe
@@ -185,9 +185,9 @@ class TextFeedbackFragment : FragmentBase() {
     }
 
     override fun onDestroyView() {
-        mEmailEditText.setOnEditorActionListener(null)
+        emailEditText.setOnEditorActionListener(null)
         rootScrollView.setOnClickListener(null)
-        mDescriptionEditText.onFocusChangeListener = null
+        descriptionEditText.onFocusChangeListener = null
         super.onDestroyView()
     }
 
