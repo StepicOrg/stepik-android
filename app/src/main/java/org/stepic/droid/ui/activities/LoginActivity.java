@@ -105,10 +105,10 @@ public class LoginActivity extends FragmentActivityBase {
 
         hideSoftKeypad();
 
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(mConfig.getTwitterKey(), mConfig.getTwitterSecret());
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(config.getTwitterKey(), config.getTwitterSecret());
         Fabric.with(this, new Twitter(authConfig));
 
-        String serverClientId = mConfig.getGoogleServerClientId();
+        String serverClientId = config.getGoogleServerClientId();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestScopes(new Scope(Scopes.EMAIL), new Scope(Scopes.PROFILE))
                 .requestServerAuthCode(serverClientId)
