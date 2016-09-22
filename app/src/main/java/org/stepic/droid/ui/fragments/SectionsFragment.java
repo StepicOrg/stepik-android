@@ -744,6 +744,7 @@ public class SectionsFragment
                 }
 
                 analytic.reportEvent(Analytic.DeepLink.USER_OPEN_SYLLABUS_LINK, simpleId + "");
+                analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
                 if (simpleId < 0) {
                     onCourseUnavailable(new CourseUnavailableForUserEvent());
                 } else {
