@@ -697,6 +697,8 @@ public class SectionsFragment
         }
         if (course != null) {
             if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
+                analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION);
+                analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION_SYLLABUS, course.getCourseId() + "");
                 final long courseId = course.getCourseId();
                 AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                     @Override

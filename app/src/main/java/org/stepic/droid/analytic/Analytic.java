@@ -146,6 +146,8 @@ public interface Analytic {
         String CANT_PARSE_COURSE_ID = "notification, cant parse courseId";
         String TOKEN_UPDATED = "notification gcm token is updated";
         String TOKEN_UPDATE_FAILED = "notification gcm token is not updated";
+        String OPEN_NOTIFICATION = "notification_opened";
+        String OPEN_NOTIFICATION_SYLLABUS = "notification_opened_syllabus";
     }
 
     interface Feedback {
