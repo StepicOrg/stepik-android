@@ -64,7 +64,7 @@ public interface Analytic {
         String SHOW_SETTINGS = "show settings";
         String SHOW_STORAGE_MANAGEMENT = "show storage management";
         String OPEN_COMMENT_NOT_AVAILABLE = "comment: not available";
-        String OPEN_COMMENT = "comments: open list";
+        String OPEN_COMMENT = "comments: open oldList";
         String OPEN_WRITE_COMMENT = "comments: open write form";
         String SHOW_SECTIONS = "Screen manager: show section";
         String SHOW_UNITS = "Screen manager: show units-lessons screen";
@@ -139,13 +139,15 @@ public interface Analytic {
     interface Notification {
         String DISABLED_BY_USER = "Notification is disabled by user in app";
         String ACTION_NOT_SUPPORT = "notification action is not support";
-        String HTML_WAS_NULL = "notification action is not support";
+        String HTML_WAS_NULL = "notification action is not support"; //// FIXME: 22.09.16 similar analytic
         String WAS_MUTED = "notification html text was muted";
         String NOT_SUPPORT = "notification is not support";
         String LEARN_SHOWN = "notification learn is shown";
         String CANT_PARSE_COURSE_ID = "notification, cant parse courseId";
         String TOKEN_UPDATED = "notification gcm token is updated";
         String TOKEN_UPDATE_FAILED = "notification gcm token is not updated";
+        String OPEN_NOTIFICATION = "notification_opened";
+        String OPEN_NOTIFICATION_SYLLABUS = "notification_opened_syllabus";
     }
 
     interface Feedback {
@@ -165,6 +167,9 @@ public interface Analytic {
     interface Steps {
         String CORRECT_SUBMISSION_FILL = "submission_correct_fill"; // it can be existing submission, use in chain.
         String WRONG_SUBMISSION_FILL = "submission_wrong_fill";
+        java.lang.String SHARE_OPEN_IN_BROWSER = "step_share_open_in_browser";
+        java.lang.String COPY_LINK = "step_share_copy";
+        java.lang.String SHARE_ALL = "steps_share_all";
     }
 
     interface Calendar {
@@ -178,6 +183,7 @@ public interface Analytic {
     }
 
     interface DeepLink {
+        String USER_OPEN_LINK_GENERAL = "open_deep_link";
         String USER_OPEN_SYLLABUS_LINK = "open_syllabus_by_link";
         String USER_OPEN_COURSE_DETAIL_LINK = "open_detail_course_link";
         String USER_OPEN_STEPS_LINK = "open_step_link";

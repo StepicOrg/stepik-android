@@ -38,16 +38,16 @@ import butterknife.ButterKnife;
 public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.SocialViewHolder> implements StepicOnClickItemListener {
 
     @Inject
-    SocialManager mSocialManager;
+    SocialManager socialManager;
 
     @Inject
-    IApi mApi;
+    IApi api;
 
     @Inject
     Analytic analytic;
 
 
-    List<? extends ISocialType> mSocialList;
+    private List<? extends ISocialType> socialList;
     private FragmentActivity activity;
     private GoogleApiClient client;
     private TwitterAuthClient twitterAuthClient;
@@ -59,7 +59,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
         this.twitterSessionCallback = twitterSessionCallback;
         MainApplication.component().inject(this);
         this.activity = activity;
-        mSocialList = mSocialManager.getAllSocial();
+        socialList = socialManager.getAllSocial();
     }
 
 
@@ -71,19 +71,19 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
 
     @Override
     public void onBindViewHolder(SocialViewHolder holder, int position) {
-        ISocialType socialType = mSocialList.get(position);
+        ISocialType socialType = socialList.get(position);
 
         holder.imageView.setImageDrawable(socialType.getIcon());
     }
 
     @Override
     public int getItemCount() {
-        return mSocialList.size();
+        return socialList.size();
     }
 
     @Override
     public void onClick(int position) {
-        ISocialType type = mSocialList.get(position);
+        ISocialType type = socialList.get(position);
         analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_SOCIAL, type.getIdentifier());
         if (type == SocialManager.SocialType.google) {
             // Start the retrieval process for a server auth code.  If requested, ask for a refreshWhenOnConnectionProblem
@@ -105,7 +105,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
             Toast.makeText(activity, "twitter", Toast.LENGTH_SHORT).show();
             twitterAuthClient.authorize(activity, twitterSessionCallback);
         } else {
-            mApi.loginWithSocial(activity, type);
+            api.loginWithSocial(activity, type);
         }
     }
 

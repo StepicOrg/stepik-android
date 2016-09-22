@@ -1,7 +1,7 @@
 package org.stepic.droid.store.structure;
 
 public class DbStructureCalendarSection extends DBStructureBase {
-    private static String[] mUsedColumns = null;
+    private static String[] usedColumns = null;
 
     public static final String CALENDAR_SECTION = "calendar_section";
 
@@ -16,13 +16,13 @@ public class DbStructureCalendarSection extends DBStructureBase {
     }
 
     public static String[] getUsedColumns() {
-        if (mUsedColumns == null) {
-            mUsedColumns = new String[]{
+        if (usedColumns == null) {
+            usedColumns = new String[]{
                     Column.SECTION_ID,
                     Column.EVENT_ID_HARD,
                     Column.HARD_DEADLINE,
             };
         }
-        return mUsedColumns;
+        return usedColumns;
     }
 }

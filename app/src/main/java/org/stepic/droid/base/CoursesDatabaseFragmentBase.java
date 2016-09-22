@@ -20,7 +20,7 @@ import com.squareup.otto.Subscribe;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.core.CourseListModule;
+import org.stepic.droid.core.modules.CourseListModule;
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
 import org.stepic.droid.core.presenters.contracts.FilterForCoursesView;
 import org.stepic.droid.events.courses.FailDropCourseEvent;
@@ -83,7 +83,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_filter_menu:
-                mShell.getScreenProvider().showFilterScreen(this, FILTER_REQUEST_CODE, getCourseType());
+                shell.getScreenProvider().showFilterScreen(this, FILTER_REQUEST_CODE, getCourseType());
                 return true;
         }
 
@@ -107,16 +107,16 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         if (savedInstanceState == null) {
             //reset all data
             needFilter = false;
-            mCourses.clear();
-            mSwipeRefreshLayout.post(new Runnable() {
+            courses.clear();
+            swipeRefreshLayout.post(new Runnable() {
                 @Override
                 public void run() {
-                    courseListPresenter.refreshData(getCourseType(), needFilter);
+                    courseListPresenter.refreshData(getCourseType(), needFilter, false);
                 }
             });
         } else {
             //load if not
-            mSwipeRefreshLayout.post(new Runnable() {
+            swipeRefreshLayout.post(new Runnable() {
                 @Override
                 public void run() {
                     courseListPresenter.downloadData(getCourseType(), needFilter);
@@ -129,7 +129,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     @Override
     public void onStart() {
         super.onStart();
-        mSwipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -147,7 +147,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
         MenuInflater inflater = getActivity().getMenuInflater();
-        if (mCourses.get(info.position).getEnrollment() != 0) {
+        if (courses.get(info.position).getEnrollment() != 0) {
             inflater.inflate(R.menu.course_context_menu, menu);
         } else {
             inflater.inflate(R.menu.course_context_not_enrolled_menu, menu);
@@ -171,16 +171,16 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     }
 
     private void dropCourse(int position) {
-        if (position >= mCourses.size() || position < 0) {
+        if (position >= courses.size() || position < 0) {
             Toast.makeText(getContext(), R.string.try_in_web_drop, Toast.LENGTH_LONG).show();
             return;
         }
-        final Course course = mCourses.get(position);
+        final Course course = courses.get(position);
         if (course.getEnrollment() == 0) {
             Toast.makeText(getContext(), R.string.you_not_enrolled, Toast.LENGTH_LONG).show();
             return;
         }
-        Call<Void> drop = mShell.getApi().dropCourse(course.getCourseId());
+        Call<Void> drop = shell.getApi().dropCourse(course.getCourseId());
         if (drop != null) {
             drop.enqueue(new Callback<Void>() {
                 Course localRef = course;
@@ -191,11 +191,11 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                     new Handler().post(new Runnable() {
                         @Override
                         public void run() {
-                            mDatabaseFacade.deleteCourse(localRef, Table.enrolled);
+                            databaseFacade.deleteCourse(localRef, Table.enrolled);
 
-                            if (mDatabaseFacade.getCourseById(course.getCourseId(), Table.featured) != null) {
+                            if (databaseFacade.getCourseById(course.getCourseId(), Table.featured) != null) {
                                 localRef.setEnrollment(0);
-                                mDatabaseFacade.addCourse(localRef, Table.featured);
+                                databaseFacade.addCourse(localRef, Table.featured);
                             }
 
                         }
@@ -223,11 +223,11 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         analytic.reportEvent(Analytic.Web.DROP_COURSE_SUCCESSFUL, courseId + "");
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + e.getCourse().getTitle(), Toast.LENGTH_LONG).show();
         if (e.getType() == Table.enrolled) {
-            mCourses.remove(e.getCourse());
-            mCoursesAdapter.notifyDataSetChanged();
+            courses.remove(e.getCourse());
+            coursesAdapter.notifyDataSetChanged();
         }
 
-        if (mCourses.size() == 0) {
+        if (courses.size() == 0) {
             showEmptyScreen(true);
         }
     }
@@ -244,8 +244,8 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     private void showInfo(int position) {
         analytic.reportEvent(Analytic.Interaction.SHOW_DETAILED_INFO_CLICK);
-        Course course = mCourses.get(position);
-        mShell.getScreenProvider().showCourseDescription(this, course);
+        Course course = courses.get(position);
+        shell.getScreenProvider().showCourseDescription(this, course);
     }
 
     @Override
@@ -263,10 +263,10 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
             if (requestCode == FILTER_REQUEST_CODE) {
                 analytic.reportEvent(Analytic.Filters.FILTERS_NEED_UPDATE);
                 needFilter = true; // not last filter? check it
-                mCourses.clear();
-                mCoursesAdapter.notifyDataSetChanged();
+                courses.clear();
+                coursesAdapter.notifyDataSetChanged();
                 courseListPresenter.reportCurrentFiltersToAnalytic(getCourseType());
-                courseListPresenter.refreshData(getCourseType(), needFilter);
+                courseListPresenter.refreshData(getCourseType(), needFilter, false);
             }
         }
 
@@ -282,17 +282,17 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
         if (isShowed) {
             if (getCourseType() == Table.enrolled) {
-                mEmptyCoursesView.setVisibility(View.VISIBLE);
-                mEmptySearch.setVisibility(View.GONE);
+                emptyCoursesView.setVisibility(View.VISIBLE);
+                emptySearch.setVisibility(View.GONE);
             } else {
-                mEmptyCoursesView.setVisibility(View.GONE);
-                mEmptySearch.setVisibility(View.VISIBLE);
+                emptyCoursesView.setVisibility(View.GONE);
+                emptySearch.setVisibility(View.VISIBLE);
             }
-            mSwipeRefreshLayout.setVisibility(View.GONE);
+            swipeRefreshLayout.setVisibility(View.GONE);
         } else {
-            mEmptySearch.setVisibility(View.GONE);
-            mEmptyCoursesView.setVisibility(View.GONE);
-            mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+            emptySearch.setVisibility(View.GONE);
+            emptyCoursesView.setVisibility(View.GONE);
+            swipeRefreshLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -303,8 +303,8 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void clearAndShowLoading() {
-        mCourses.clear();
-        mCoursesAdapter.notifyDataSetChanged();
+        courses.clear();
+        coursesAdapter.notifyDataSetChanged();
         showLoading();
     }
 
@@ -316,7 +316,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     @Override
     public void onRefresh() {
         analytic.reportEvent(Analytic.Interaction.PULL_TO_REFRESH_COURSE);
-        courseListPresenter.refreshData(getCourseType(), needFilter);
+        courseListPresenter.refreshData(getCourseType(), needFilter, true);
     }
 
     @Override
@@ -326,7 +326,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public boolean onBackClick() {
-        mSharedPreferenceHelper.onTryDiscardFilters(getCourseType());
+        sharedPreferenceHelper.onTryDiscardFilters(getCourseType());
         return false;
     }
 

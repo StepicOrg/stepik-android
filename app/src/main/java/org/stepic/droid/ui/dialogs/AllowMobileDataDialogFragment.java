@@ -17,7 +17,7 @@ import javax.inject.Inject;
 
 public class AllowMobileDataDialogFragment extends DialogFragment {
     @Inject
-    Bus mBus;
+    Bus bus;
 
     @NotNull
     @Override
@@ -31,14 +31,14 @@ public class AllowMobileDataDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //mobile allowed
-                        mBus.post(new WifiLoadIsChangedEvent(true));
+                        bus.post(new WifiLoadIsChangedEvent(true));
                     }
                 })
                 .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //only wifi allowed
-                        mBus.post(new WifiLoadIsChangedEvent(false));
+                        bus.post(new WifiLoadIsChangedEvent(false));
                     }
                 });
 
@@ -48,6 +48,6 @@ public class AllowMobileDataDialogFragment extends DialogFragment {
     @Override
     public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
-        mBus.post(new WifiLoadIsChangedEvent(false));
+        bus.post(new WifiLoadIsChangedEvent(false));
     }
 }

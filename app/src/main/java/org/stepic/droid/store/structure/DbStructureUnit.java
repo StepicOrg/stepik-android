@@ -2,7 +2,7 @@ package org.stepic.droid.store.structure;
 
 public final class DbStructureUnit extends DBStructureBase {
 
-    private static String[] mUsedColumns = null;
+    private static String[] usedColumns = null;
 
     public static final String UNITS = "units";
 
@@ -33,8 +33,8 @@ public final class DbStructureUnit extends DBStructureBase {
     }
 
     public static String[] getUsedColumns() {
-        if (mUsedColumns == null) {
-            mUsedColumns = new String[]{
+        if (usedColumns == null) {
+            usedColumns = new String[]{
                     Column.ID,
                     Column.UNIT_ID,
                     Column.LESSON,
@@ -59,7 +59,7 @@ public final class DbStructureUnit extends DBStructureBase {
                     Column.IS_LOADING,
             };
         }
-        return mUsedColumns;
+        return usedColumns;
     }
 
 }

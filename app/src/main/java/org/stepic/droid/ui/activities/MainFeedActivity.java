@@ -79,27 +79,27 @@ public class MainFeedActivity extends BackToExitActivityBase
     public static final String KEY_CURRENT_INDEX = "Current_index";
 
     @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    Toolbar toolbar;
 
     @BindView(R.id.navigation_view)
-    NavigationView mNavigationView;
+    NavigationView navigationView;
 
     @BindView(R.id.drawer)
-    DrawerLayout mDrawerLayout;
+    DrawerLayout drawerLayout;
 
-    ImageView mProfileImage;
+    ImageView profileImage;
 
-    TextView mUserNameTextView;
+    TextView userNameTextView;
 
     @BindString(R.string.my_courses_title)
-    String mCoursesTitle;
+    String coursesTitle;
 
     @BindDrawable(R.drawable.placeholder_icon)
-    Drawable mUserPlaceholder;
+    Drawable userPlaceholder;
 
-    private int mCurrentIndex;
+    private int currentIndex;
 
-    GoogleApiClient mGoogleApiClient;
+    GoogleApiClient googleApiClient;
 
     private List<WeakReference<OnBackClickListener>> onBackClickListenerList = new ArrayList<>(4);
 
@@ -131,19 +131,19 @@ public class MainFeedActivity extends BackToExitActivityBase
 
         bus.register(this);
 
-        final SharedPreferenceHelper helper = mShell.getSharedPreferenceHelper();
+        final SharedPreferenceHelper helper = shell.getSharedPreferenceHelper();
         Profile cachedProfile = helper.getProfile();
         if (cachedProfile != null) {
             showProfile(new ProfileCanBeShownEvent(cachedProfile));//update now!
         }
-        mShell.getApi().getUserProfile().enqueue(new Callback<StepicProfileResponse>() {
+        shell.getApi().getUserProfile().enqueue(new Callback<StepicProfileResponse>() {
             @Override
             public void onResponse(Response<StepicProfileResponse> response, Retrofit retrofit) {
                 if (response.isSuccess()) {
                     Profile profile = response.body().getProfile();
                     final long[] emailIds = profile.getEmailAddresses();
                     if (emailIds != null && emailIds.length != 0) {
-                        mShell.getApi().getEmailAddresses(emailIds).enqueue(new Callback<EmailAddressResponse>() {
+                        shell.getApi().getEmailAddresses(emailIds).enqueue(new Callback<EmailAddressResponse>() {
                             @Override
                             public void onResponse(Response<EmailAddressResponse> response, Retrofit retrofit) {
                                 if (response.isSuccess()) {
@@ -178,12 +178,12 @@ public class MainFeedActivity extends BackToExitActivityBase
         });
 
 
-        if (checkPlayServices() && !mSharedPreferenceHelper.isGcmTokenOk()) {
+        if (checkPlayServices() && !sharedPreferenceHelper.isGcmTokenOk()) {
 
-            mThreadPoolExecutor.execute(new Runnable() {
+            threadPoolExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    StepicInstanceIdService.Companion.updateAnywhere(mShell.getApi(), mSharedPreferenceHelper, analytic); //FCM!
+                    StepicInstanceIdService.Companion.updateAnywhere(shell.getApi(), sharedPreferenceHelper, analytic); //FCM!
                 }
             });
         }
@@ -193,13 +193,13 @@ public class MainFeedActivity extends BackToExitActivityBase
     }
 
     private void initGoogleApiClient() {
-        String serverClientId = mConfig.getGoogleServerClientId();
+        String serverClientId = config.getGoogleServerClientId();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestScopes(new Scope(Scopes.EMAIL), new Scope(Scopes.PROFILE))
                 .requestServerAuthCode(serverClientId)
                 .build();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -211,37 +211,37 @@ public class MainFeedActivity extends BackToExitActivityBase
     }
 
     private void initDrawerHeader() {
-        View headerLayout = mNavigationView.getHeaderView(0);
-        mProfileImage = ButterKnife.findById(headerLayout, R.id.profile_image);
-        mUserNameTextView = ButterKnife.findById(headerLayout, R.id.username);
+        View headerLayout = navigationView.getHeaderView(0);
+        profileImage = ButterKnife.findById(headerLayout, R.id.profile_image);
+        userNameTextView = ButterKnife.findById(headerLayout, R.id.username);
 
-        mProfileImage.setVisibility(View.INVISIBLE);
-        mUserNameTextView.setVisibility(View.INVISIBLE);
-        mUserNameTextView.setText("");
+        profileImage.setVisibility(View.INVISIBLE);
+        userNameTextView.setVisibility(View.INVISIBLE);
+        userNameTextView.setText("");
     }
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             fragmentBackKeyIntercept();
             FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment fragment = fragmentManager.findFragmentById(R.id.frame);
             fragmentManager.popBackStackImmediate();
             fragmentManager.beginTransaction().remove(fragment).commit();
-            if (mCurrentIndex == 0 || fragmentManager.getBackStackEntryCount() <= 0) {
+            if (currentIndex == 0 || fragmentManager.getBackStackEntryCount() <= 0) {
                 finish();
             } else {
-                mCurrentIndex = 0;
-                mNavigationView.setCheckedItem(R.id.my_courses);
+                currentIndex = 0;
+                navigationView.setCheckedItem(R.id.my_courses);
                 setTitle(R.string.my_courses_title);
             }
         }
     }
 
     private void setUpToolbar() {
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -249,17 +249,17 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     private void initFragments(Bundle bundle) {
         if (bundle == null) {
-            mCurrentIndex = 0;
+            currentIndex = 0;
         } else {
-            mCurrentIndex = bundle.getInt(KEY_CURRENT_INDEX);
+            currentIndex = bundle.getInt(KEY_CURRENT_INDEX);
         }
 
-        showCurrentFragment(mCurrentIndex);
+        showCurrentFragment(currentIndex);
     }
 
     private void showCurrentFragment(int currentIndex) {
-        mCurrentIndex = currentIndex;
-        Menu menu = mNavigationView.getMenu();
+        this.currentIndex = currentIndex;
+        Menu menu = navigationView.getMenu();
         MenuItem menuItem = menu.getItem(currentIndex);
         menuItem.setChecked(true); //when we do not choose in menu
         showCurrentFragment(menuItem);
@@ -284,7 +284,7 @@ public class MainFeedActivity extends BackToExitActivityBase
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        mDrawerLayout.closeDrawers();
+                        drawerLayout.closeDrawers();
                     }
                 }, 0);
                 return true;
@@ -292,10 +292,10 @@ public class MainFeedActivity extends BackToExitActivityBase
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        mDrawerLayout.closeDrawers();
+                        drawerLayout.closeDrawers();
                     }
                 }, 0);
-                mShell.getScreenProvider().showSettings(this);
+                shell.getScreenProvider().showSettings(this);
                 return true;
             default:
                 showCurrentFragment(menuItem);
@@ -304,16 +304,16 @@ public class MainFeedActivity extends BackToExitActivityBase
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mDrawerLayout.closeDrawers();
+                drawerLayout.closeDrawers();
             }
         }, 0);
         return true;
     }
 
     private void setUpDrawerLayout() {
-        mNavigationView.setNavigationItemSelectedListener(this);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_closed);
-        mDrawerLayout.setDrawerListener(actionBarDrawerToggle);
+        navigationView.setNavigationItemSelectedListener(this);
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_closed);
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
     }
 
@@ -321,7 +321,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
+                drawerLayout.openDrawer(GravityCompat.START);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -338,37 +338,37 @@ public class MainFeedActivity extends BackToExitActivityBase
         }
         switch (menuItem.getItemId()) {
             case R.id.my_courses:
-                mCurrentIndex = 1;
+                currentIndex = 1;
                 if (tag == null || !tag.equals(MyCoursesFragment.class.toString())) {
                     shortLifetimeRef = MyCoursesFragment.newInstance();
                 }
                 break;
             case R.id.find_lessons:
-                mCurrentIndex = 2;
+                currentIndex = 2;
                 if (tag == null || !tag.equals(FindCoursesFragment.class.toString())) {
                     shortLifetimeRef = FindCoursesFragment.newInstance();
                 }
                 break;
             case R.id.cached_videos:
-                mCurrentIndex = 3;
+                currentIndex = 3;
                 if (tag == null || !tag.equals(DownloadsFragment.class.toString())) {
                     shortLifetimeRef = DownloadsFragment.newInstance();
                 }
                 break;
             case R.id.feedback:
-                mCurrentIndex = 6;
+                currentIndex = 6;
                 if (tag == null || !tag.equals(FeedbackFragment.class.toString())) {
                     shortLifetimeRef = FeedbackFragment.Companion.newInstance();
                 }
                 break;
             case R.id.certificates:
-                mCurrentIndex = 4;
+                currentIndex = 4;
                 if (tag == null || !tag.equals(CertificateFragment.class.toString())) {
                     shortLifetimeRef = CertificateFragment.newInstance();
                 }
                 break;
         }
-        mCurrentIndex--; // menu indices from 1
+        currentIndex--; // menu indices from 1
         if (shortLifetimeRef != null) {
 
             if (fragment != null) {
@@ -391,20 +391,20 @@ public class MainFeedActivity extends BackToExitActivityBase
             analytic.reportError(Analytic.Error.NULL_SHOW_PROFILE, new NullPointerException());
             return;
         }
-        mProfileImage.setVisibility(View.VISIBLE);
-        mUserNameTextView.setVisibility(View.VISIBLE);
+        profileImage.setVisibility(View.VISIBLE);
+        userNameTextView.setVisibility(View.VISIBLE);
         Glide
                 .with(MainFeedActivity.this)
                 .load(profile.getAvatar())
                 .asBitmap()
-                .placeholder(mUserPlaceholder)
-                .into(mProfileImage);
-        mUserNameTextView.setText(profile.getFirst_name() + " " + profile.getLast_name());
+                .placeholder(userPlaceholder)
+                .into(profileImage);
+        userNameTextView.setText(profile.getFirst_name() + " " + profile.getLast_name());
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(KEY_CURRENT_INDEX, mCurrentIndex);
+        outState.putInt(KEY_CURRENT_INDEX, currentIndex);
         super.onSaveInstanceState(outState);
     }
 
@@ -415,8 +415,8 @@ public class MainFeedActivity extends BackToExitActivityBase
     }
 
     public void showFindLesson() {
-        mCurrentIndex = 1;
-        showCurrentFragment(mCurrentIndex);
+        currentIndex = 1;
+        showCurrentFragment(currentIndex);
     }
 
     public static int getFindLessonIndex() {
@@ -430,11 +430,11 @@ public class MainFeedActivity extends BackToExitActivityBase
         if (!event.isAppInGp() && event.getLinkForUpdate() == null) {
             return;
         }
-        long storedTimestamp = mSharedPreferenceHelper.getLastShownUpdatingMessageTimestamp();
+        long storedTimestamp = sharedPreferenceHelper.getLastShownUpdatingMessageTimestamp();
         boolean needUpdate = DateTimeHelper.INSTANCE.isNeededUpdate(storedTimestamp, AppConstants.MILLIS_IN_24HOURS);
         if (!needUpdate) return;
 
-        mSharedPreferenceHelper.storeLastShownUpdatingMessage();
+        sharedPreferenceHelper.storeLastShownUpdatingMessage();
         analytic.reportEvent(Analytic.Interaction.UPDATING_MESSAGE_IS_SHOWN);
         DialogFragment dialog = NeedUpdatingDialog.Companion.newInstance(event.getLinkForUpdate(), event.isAppInGp());
         dialog.show(getSupportFragmentManager(), null);
@@ -450,7 +450,7 @@ public class MainFeedActivity extends BackToExitActivityBase
 
             if (permissionExternalStorage.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                String link = mSharedPreferenceHelper.getTempLink();
+                String link = sharedPreferenceHelper.getTempLink();
                 if (link != null) {
                     Intent updateIntent = new Intent(this, UpdateWithApkService.class);
                     updateIntent.putExtra(UpdateWithApkService.Companion.getLinkKey(), link);
@@ -470,9 +470,9 @@ public class MainFeedActivity extends BackToExitActivityBase
         Twitter.logOut();
         LoginManager.getInstance().logOut();
         VKSdk.logout();
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-        mSharedPreferenceHelper.deleteAuthInfo();
-        mShell.getScreenProvider().showLaunchScreen(MainApplication.getAppContext(), false);
+        Auth.GoogleSignInApi.signOut(googleApiClient);
+        sharedPreferenceHelper.deleteAuthInfo();
+        shell.getScreenProvider().showLaunchScreen(MainApplication.getAppContext(), false);
     }
 
     private boolean fragmentBackKeyIntercept() {

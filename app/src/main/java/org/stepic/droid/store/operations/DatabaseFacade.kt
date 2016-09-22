@@ -18,31 +18,31 @@ import javax.inject.Singleton
 class DatabaseFacade {
 
     @Inject
-    lateinit var mSectionDao: IDao<Section>
+    lateinit var sectionDao: IDao<Section>
     @Inject
-    lateinit var mUnitDao: IDao<Unit>
+    lateinit var unitDao: IDao<Unit>
     @Inject
-    lateinit var mProgressDao: IDao<Progress>
+    lateinit var progressDao: IDao<Progress>
     @Inject
-    lateinit var mAssignmentDao: IDao<Assignment>
+    lateinit var assignmentDao: IDao<Assignment>
     @Inject
-    lateinit var mLessonDao: IDao<Lesson>
+    lateinit var lessonDao: IDao<Lesson>
     @Inject
-    lateinit var mViewAssignmentDao: IDao<ViewAssignment>
+    lateinit var viewAssignmentDao: IDao<ViewAssignment>
     @Inject
-    lateinit var mDownloadEntityDao: IDao<DownloadEntity>
+    lateinit var downloadEntityDao: IDao<DownloadEntity>
     @Inject
-    lateinit var mCachedVideoDao: IDao<CachedVideo>
+    lateinit var cachedVideoDao: IDao<CachedVideo>
     @Inject
-    lateinit var mStepDao: IDao<Step>
+    lateinit var stepDao: IDao<Step>
 
     @Inject
-    lateinit var mCoursesEnrolledDao: IDao<Course>
+    lateinit var coursesEnrolledDao: IDao<Course>
     @Inject
-    lateinit var mCoursesFeaturedDao: IDao<Course>
+    lateinit var coursesFeaturedDao: IDao<Course>
 
     @Inject
-    lateinit var mNotificationDao: IDao<Notification>
+    lateinit var notificationDao: IDao<Notification>
 
     @Inject
     lateinit var calendarSectionDao: IDao<CalendarSection>
@@ -51,39 +51,39 @@ class DatabaseFacade {
     lateinit var certificateViewItemDao: IDao<CertificateViewItem>
 
     init {
-        MainApplication.component().inject(this)
-        mCoursesEnrolledDao.setTableName(Table.enrolled.storeName)
-        mCoursesFeaturedDao.setTableName(Table.featured.storeName)
+        MainApplication.storageComponent().inject(this)
+        coursesEnrolledDao.setTableName(Table.enrolled.storeName)
+        coursesFeaturedDao.setTableName(Table.featured.storeName)
     }
 
     fun dropDatabase() {
-        mSectionDao.removeAll()
-        mUnitDao.removeAll()
-        mProgressDao.removeAll()
-        mLessonDao.removeAll()
-        mViewAssignmentDao.removeAll()
-        mDownloadEntityDao.removeAll()
-        mCachedVideoDao.removeAll()
-        mStepDao.removeAll()
-        mCoursesEnrolledDao.removeAll()
-        mCoursesFeaturedDao.removeAll()
-        mNotificationDao.removeAll()
+        sectionDao.removeAll()
+        unitDao.removeAll()
+        progressDao.removeAll()
+        lessonDao.removeAll()
+        viewAssignmentDao.removeAll()
+        downloadEntityDao.removeAll()
+        cachedVideoDao.removeAll()
+        stepDao.removeAll()
+        coursesEnrolledDao.removeAll()
+        coursesFeaturedDao.removeAll()
+        notificationDao.removeAll()
         certificateViewItemDao.removeAll()
     }
 
     fun getCourseDao(table: Table) =
-            if (table == Table.featured) mCoursesFeaturedDao
-            else mCoursesEnrolledDao
+            if (table == Table.featured) coursesFeaturedDao
+            else coursesEnrolledDao
 
 
-    fun addAssignment(assignment: Assignment?) = assignment?.let { mAssignmentDao.insertOrUpdate(assignment) }
+    fun addAssignment(assignment: Assignment?) = assignment?.let { assignmentDao.insertOrUpdate(assignment) }
 
     /**
      * deprecated because of step has 0..* assignments.
      */
     @Deprecated("")
     fun getAssignmentIdByStepId(stepId: Long): Long {
-        val assignment = mAssignmentDao.get(DbStructureAssignment.Column.STEP_ID, stepId.toString())
+        val assignment = assignmentDao.get(DbStructureAssignment.Column.STEP_ID, stepId.toString())
         return assignment?.id ?: -1;
     }
 
@@ -93,7 +93,7 @@ class DatabaseFacade {
             val lessonSet = HashSet<Long>()
 
             DbParseHelper.parseLongArrayToString(stepIds, AppConstants.COMMA)?.let {
-                val steps = mStepDao.getAllInRange(DbStructureStep.Column.STEP_ID, it)
+                val steps = stepDao.getAllInRange(DbStructureStep.Column.STEP_ID, it)
                 for (step in steps) {
                     lessonSet.add(step.lesson)
                 }
@@ -101,7 +101,7 @@ class DatabaseFacade {
                 val lessonIds = lessonSet.toLongArray()
                 val lessonIdsCommaSeparated = DbParseHelper.parseLongArrayToString(lessonIds, AppConstants.COMMA)
                 lessonIdsCommaSeparated?.let {
-                    val lessonCollection = mLessonDao.getAllInRange(DbStructureLesson.Column.LESSON_ID, lessonIdsCommaSeparated).toHashSet()
+                    val lessonCollection = lessonDao.getAllInRange(DbStructureLesson.Column.LESSON_ID, lessonIdsCommaSeparated).toHashSet()
                     for (stepItem in steps) {
                         lessonCollection
                                 .find { it.id == stepItem.lesson }
@@ -113,32 +113,32 @@ class DatabaseFacade {
         return result
     }
 
-    fun getStepById(stepId: Long) = mStepDao.get(DbStructureStep.Column.STEP_ID, stepId.toString())
+    fun getStepById(stepId: Long) = stepDao.get(DbStructureStep.Column.STEP_ID, stepId.toString())
 
-    fun getLessonById(lessonId: Long) = mLessonDao.get(DbStructureLesson.Column.LESSON_ID, lessonId.toString())
+    fun getLessonById(lessonId: Long) = lessonDao.get(DbStructureLesson.Column.LESSON_ID, lessonId.toString())
 
-    fun getSectionById(sectionId: Long) = mSectionDao.get(DbStructureSections.Column.SECTION_ID, sectionId.toString())
+    fun getSectionById(sectionId: Long) = sectionDao.get(DbStructureSections.Column.SECTION_ID, sectionId.toString())
 
     fun getCourseById(courseId: Long, type: Table) = getCourseDao(type).get(DBStructureCourses.Column.COURSE_ID, courseId.toString())
 
-    fun getProgressById(progressId: String) = mProgressDao.get(DbStructureProgress.Column.ID, progressId)
+    fun getProgressById(progressId: String) = progressDao.get(DbStructureProgress.Column.ID, progressId)
 
     @Deprecated("Lesson can have a lot of units", ReplaceWith("try to get unit from section"))
-    fun getUnitByLessonId(lessonId: Long) = mUnitDao.get(DbStructureUnit.Column.LESSON, lessonId.toString())
+    fun getUnitByLessonId(lessonId: Long) = unitDao.get(DbStructureUnit.Column.LESSON, lessonId.toString())
 
-    fun getUnitById(unitId: Long) = mUnitDao.get(DbStructureUnit.Column.UNIT_ID, unitId.toString())
+    fun getUnitById(unitId: Long) = unitDao.get(DbStructureUnit.Column.UNIT_ID, unitId.toString())
 
-    fun getAllDownloadEntities() = mDownloadEntityDao.getAll()
+    fun getAllDownloadEntities() = downloadEntityDao.getAll()
 
     fun isUnitCached(unit: Unit?): Boolean {
         val id = unit?.id ?: return false
-        val dbUnit = mUnitDao.get(DbStructureUnit.Column.UNIT_ID, id.toString())
+        val dbUnit = unitDao.get(DbStructureUnit.Column.UNIT_ID, id.toString())
         return dbUnit != null && dbUnit.is_cached
     }
 
     fun isLessonCached(lesson: Lesson?): Boolean {
         val id = lesson?.id ?: return false
-        val dbLesson = mLessonDao.get(DbStructureLesson.Column.LESSON_ID, id.toString())
+        val dbLesson = lessonDao.get(DbStructureLesson.Column.LESSON_ID, id.toString())
         return dbLesson != null && dbLesson.is_cached
     }
 
@@ -148,7 +148,7 @@ class DatabaseFacade {
     }
 
     fun isStepCached(stepId: Long): Boolean {
-        val dbStep = mStepDao.get(DbStructureStep.Column.STEP_ID, stepId.toString())
+        val dbStep = stepDao.get(DbStructureStep.Column.STEP_ID, stepId.toString())
         return dbStep != null && dbStep.is_cached
     }
 
@@ -157,7 +157,7 @@ class DatabaseFacade {
             val cv = ContentValues()
             cv.put(DbStructureStep.Column.IS_LOADING, step.is_loading)
             cv.put(DbStructureStep.Column.IS_CACHED, step.is_cached)
-            mStepDao.update(DbStructureStep.Column.STEP_ID, step.id.toString(), cv)
+            stepDao.update(DbStructureStep.Column.STEP_ID, step.id.toString(), cv)
         }
     }
 
@@ -166,7 +166,7 @@ class DatabaseFacade {
             val cv = ContentValues()
             cv.put(DbStructureUnit.Column.IS_LOADING, unit.is_loading)
             cv.put(DbStructureUnit.Column.IS_CACHED, unit.is_cached)
-            mUnitDao.update(DbStructureUnit.Column.UNIT_ID, unit.id.toString(), cv)
+            unitDao.update(DbStructureUnit.Column.UNIT_ID, unit.id.toString(), cv)
         }
     }
 
@@ -175,7 +175,7 @@ class DatabaseFacade {
             val cv = ContentValues()
             cv.put(DbStructureLesson.Column.IS_LOADING, lesson.is_loading)
             cv.put(DbStructureLesson.Column.IS_CACHED, lesson.is_cached)
-            mLessonDao.update(DbStructureLesson.Column.LESSON_ID, lesson.id.toString(), cv)
+            lessonDao.update(DbStructureLesson.Column.LESSON_ID, lesson.id.toString(), cv)
         }
     }
 
@@ -184,7 +184,7 @@ class DatabaseFacade {
             val cv = ContentValues()
             cv.put(DbStructureSections.Column.IS_LOADING, section.is_loading)
             cv.put(DbStructureSections.Column.IS_CACHED, section.is_cached)
-            mSectionDao.update(DbStructureSections.Column.SECTION_ID, section.id.toString(), cv)
+            sectionDao.update(DbStructureSections.Column.SECTION_ID, section.id.toString(), cv)
         }
     }
 
@@ -206,51 +206,51 @@ class DatabaseFacade {
         getCourseDao(type).delete(DBStructureCourses.Column.COURSE_ID, course.courseId.toString())
     }
 
-    fun addSection(section: Section) = mSectionDao.insertOrUpdate(section)
+    fun addSection(section: Section) = sectionDao.insertOrUpdate(section)
 
-    fun addStep(step: Step) = mStepDao.insertOrUpdate(step)
+    fun addStep(step: Step) = stepDao.insertOrUpdate(step)
 
-    fun getAllSectionsOfCourse(course: Course) = mSectionDao.getAll(DbStructureSections.Column.COURSE, course.courseId.toString())
+    fun getAllSectionsOfCourse(course: Course) = sectionDao.getAll(DbStructureSections.Column.COURSE, course.courseId.toString())
 
-    fun getAllUnitsOfSection(sectionId: Long) = mUnitDao.getAll(DbStructureUnit.Column.SECTION, sectionId.toString())
+    fun getAllUnitsOfSection(sectionId: Long) = unitDao.getAll(DbStructureUnit.Column.SECTION, sectionId.toString())
 
-    fun getStepsOfLesson(lessonId: Long) = mStepDao.getAll(DbStructureStep.Column.LESSON_ID, lessonId.toString())
+    fun getStepsOfLesson(lessonId: Long) = stepDao.getAll(DbStructureStep.Column.LESSON_ID, lessonId.toString())
 
     fun getLessonOfUnit(unit: Unit?): Lesson? {
         if (unit != null) {
-            return mLessonDao.get(DbStructureLesson.Column.LESSON_ID, unit.lesson.toString())
+            return lessonDao.get(DbStructureLesson.Column.LESSON_ID, unit.lesson.toString())
         } else {
             return null
         }
     }
 
 
-    fun addVideo(cachedVideo: CachedVideo?) = cachedVideo?.let { mCachedVideoDao.insertOrUpdate(cachedVideo) }
+    fun addVideo(cachedVideo: CachedVideo?) = cachedVideo?.let { cachedVideoDao.insertOrUpdate(cachedVideo) }
 
     fun deleteDownloadEntityByDownloadId(downloadId: Long) =
-            mDownloadEntityDao.delete(DbStructureSharedDownloads.Column.DOWNLOAD_ID, downloadId.toString())
+            downloadEntityDao.delete(DbStructureSharedDownloads.Column.DOWNLOAD_ID, downloadId.toString())
 
     fun isExistDownloadEntityByVideoId(videoId: Long) =
-            mDownloadEntityDao.isInDb(DbStructureSharedDownloads.Column.VIDEO_ID, videoId.toString())
+            downloadEntityDao.isInDb(DbStructureSharedDownloads.Column.VIDEO_ID, videoId.toString())
 
     fun deleteVideo(video: Video) =
             deleteVideo(video.id)
 
     fun deleteVideo(videoId: Long) =
-            mCachedVideoDao.delete(DbStructureCachedVideo.Column.VIDEO_ID, videoId.toString())
+            cachedVideoDao.delete(DbStructureCachedVideo.Column.VIDEO_ID, videoId.toString())
 
-    fun deleteVideoByUrl(path: String?) = path?.let { mCachedVideoDao.delete(DbStructureCachedVideo.Column.URL, path) }
+    fun deleteVideoByUrl(path: String?) = path?.let { cachedVideoDao.delete(DbStructureCachedVideo.Column.URL, path) }
 
     fun deleteStep(step: Step?) {
         val stepId = step?.id ?: return
         deleteStepById(stepId)
     }
 
-    fun deleteStepById(stepId: Long) = mStepDao.delete(DbStructureStep.Column.STEP_ID, stepId.toString())
+    fun deleteStepById(stepId: Long) = stepDao.delete(DbStructureStep.Column.STEP_ID, stepId.toString())
 
-    fun getCachedVideoById(videoId: Long) = mCachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, videoId.toString())
+    fun getCachedVideoById(videoId: Long) = cachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, videoId.toString())
 
-    fun getAllCachedVideos() = mCachedVideoDao.getAll()
+    fun getAllCachedVideos() = cachedVideoDao.getAll()
 
     /**
      * getPath of cached video
@@ -260,13 +260,13 @@ class DatabaseFacade {
      * @return null if video not existing in db, otherwise path to disk
      */
     fun getPathToVideoIfExist(video: Video): String? {
-        val cachedVideo = mCachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, video.id.toString())
+        val cachedVideo = cachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, video.id.toString())
         return cachedVideo?.url
     }
 
     fun getDownloadEntityIfExist(downloadId: Long?): DownloadEntity? {
         downloadId ?: return null
-        return mDownloadEntityDao.get(DbStructureSharedDownloads.Column.DOWNLOAD_ID, downloadId.toString())
+        return downloadEntityDao.get(DbStructureSharedDownloads.Column.DOWNLOAD_ID, downloadId.toString())
     }
 
     fun clearCacheCourses(type: Table) {
@@ -279,24 +279,24 @@ class DatabaseFacade {
         }
     }
 
-    fun addUnit(unit: Unit) = mUnitDao.insertOrUpdate(unit)
+    fun addUnit(unit: Unit) = unitDao.insertOrUpdate(unit)
 
-    fun addDownloadEntity(downloadEntity: DownloadEntity) = mDownloadEntityDao.insertOrUpdate(downloadEntity)
+    fun addDownloadEntity(downloadEntity: DownloadEntity) = downloadEntityDao.insertOrUpdate(downloadEntity)
 
-    fun addLesson(lesson: Lesson) = mLessonDao.insertOrUpdate(lesson)
+    fun addLesson(lesson: Lesson) = lessonDao.insertOrUpdate(lesson)
 
-    fun addToQueueViewedState(viewState: ViewAssignment) = mViewAssignmentDao.insertOrUpdate(viewState)
+    fun addToQueueViewedState(viewState: ViewAssignment) = viewAssignmentDao.insertOrUpdate(viewState)
 
-    val allInQueue: List<ViewAssignment?> = mViewAssignmentDao.getAll()
+    fun getAllInQueue() = viewAssignmentDao.getAll()
 
-    fun getAllNotification(): List<Notification?> = mNotificationDao.getAll()
+    fun getAllNotification(): List<Notification?> = notificationDao.getAll()
 
     fun addNotification(notification: Notification) {
-        mNotificationDao.insertOrUpdate(notification)
+        notificationDao.insertOrUpdate(notification)
     }
 
     fun removeNotification(id: Long) {
-        mNotificationDao.delete(DbStructureNotification.Column.ID, id.toString())
+        notificationDao.delete(DbStructureNotification.Column.ID, id.toString())
     }
 
     fun removeAllNotifications() {
@@ -310,39 +310,39 @@ class DatabaseFacade {
     }
 
     fun removeAllNotificationsByCourseId(courseId: Long) {
-        mNotificationDao.delete(DbStructureNotification.Column.COURSE_ID, courseId.toString())
+        notificationDao.delete(DbStructureNotification.Column.COURSE_ID, courseId.toString())
     }
 
     fun removeFromQueue(viewAssignmentWrapper: ViewAssignment?) {
         val assignmentId = viewAssignmentWrapper?.assignment ?: return
-        mViewAssignmentDao.delete(DbStructureViewQueue.Column.ASSIGNMENT_ID, assignmentId.toString())
+        viewAssignmentDao.delete(DbStructureViewQueue.Column.ASSIGNMENT_ID, assignmentId.toString())
     }
 
     fun markProgressAsPassed(assignmentId: Long) {
-        val assignment = mAssignmentDao.get(DbStructureAssignment.Column.ASSIGNMENT_ID, assignmentId.toString())
+        val assignment = assignmentDao.get(DbStructureAssignment.Column.ASSIGNMENT_ID, assignmentId.toString())
         val progressId = assignment?.progress ?: return
         markProgressAsPassedIfInDb(progressId)
     }
 
     fun markProgressAsPassedIfInDb(progressId: String) {
-        val inDb = mProgressDao.isInDb(DbStructureProgress.Column.ID, progressId)
+        val inDb = progressDao.isInDb(DbStructureProgress.Column.ID, progressId)
         if (inDb) {
             val values = ContentValues()
             values.put(DbStructureProgress.Column.IS_PASSED, true)
-            mProgressDao.update(DbStructureProgress.Column.ID, progressId, values)
+            progressDao.update(DbStructureProgress.Column.ID, progressId, values)
         }
     }
 
-    fun addProgress(progress: Progress) = mProgressDao.insertOrUpdate(progress)
+    fun addProgress(progress: Progress) = progressDao.insertOrUpdate(progress)
 
     fun isProgressViewed(progressId: String?): Boolean {
         if (progressId == null) return false
-        val progress = mProgressDao.get(DbStructureProgress.Column.ID, progressId)
+        val progress = progressDao.get(DbStructureProgress.Column.ID, progressId)
         return progress?.is_passed ?: false
     }
 
     fun isStepPassed(step: Step): Boolean {
-        val assignment = mAssignmentDao.get(DbStructureAssignment.Column.STEP_ID, step.id.toString())
+        val assignment = assignmentDao.get(DbStructureAssignment.Column.STEP_ID, step.id.toString())
         val progressId: String?
         if (assignment != null) {
             progressId = assignment.progress
@@ -353,26 +353,26 @@ class DatabaseFacade {
     }
 
     fun getAllNotificationsOfCourse(courseId: Long): MutableList<Notification?> {
-        return mNotificationDao.getAll(DbStructureNotification.Column.COURSE_ID, courseId.toString())
+        return notificationDao.getAll(DbStructureNotification.Column.COURSE_ID, courseId.toString())
     }
 
-    fun getDownloadEntityByStepId(stepId: Long) = mDownloadEntityDao.get(DbStructureSharedDownloads.Column.STEP_ID, stepId.toString())
+    fun getDownloadEntityByStepId(stepId: Long) = downloadEntityDao.get(DbStructureSharedDownloads.Column.STEP_ID, stepId.toString())
 
     fun getAllDownloadingUnits(): LongArray {
-        val units = mUnitDao.getAll(DbStructureUnit.Column.IS_LOADING, 1.toString())
+        val units = unitDao.getAll(DbStructureUnit.Column.IS_LOADING, 1.toString())
         val unitIds = units.map { it?.id }.filterNotNull()
         return unitIds.toLongArray()
     }
 
     fun getAllDownloadingSections(): LongArray {
-        val sections = mSectionDao.getAll(DbStructureSections.Column.IS_LOADING, 1.toString())
+        val sections = sectionDao.getAll(DbStructureSections.Column.IS_LOADING, 1.toString())
         val sectionIds = sections.map { it?.id }.filterNotNull()
         return sectionIds.toLongArray()
     }
 
     fun dropOnlyCourseTable() {
-        mCoursesEnrolledDao.removeAll()
-        mCoursesFeaturedDao.removeAll()
+        coursesEnrolledDao.removeAll()
+        coursesFeaturedDao.removeAll()
     }
 
     fun getCalendarSectionsByIds(ids: LongArray): Map<Long, CalendarSection> {
@@ -400,7 +400,7 @@ class DatabaseFacade {
     }
 
     /**
-     * null or not empty list
+     * null or not empty oldList
      */
     fun getAllCertificates(): List<CertificateViewItem?>? {
         val list = certificateViewItemDao.getAll()
@@ -409,6 +409,10 @@ class DatabaseFacade {
         } else {
             return list
         }
+    }
+
+    fun removeSectionsOfCourse(courseId: Long) {
+        sectionDao.delete(DbStructureSections.Column.COURSE, courseId.toString());
     }
 
 }

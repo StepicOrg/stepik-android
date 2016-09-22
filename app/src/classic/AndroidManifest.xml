@@ -84,6 +84,7 @@
                 <data android:scheme="http"/>
                 <data android:host="stepic.org"/>
                 <data android:host="stepik.org"/>
+                <data android:pathPattern="/lesson/.*/"/>
                 <data android:pathPattern="/lesson/.*/step/1"/>
                 <data android:pathPattern="/lesson/.*/step/2"/>
                 <data android:pathPattern="/lesson/.*/step/3"/>

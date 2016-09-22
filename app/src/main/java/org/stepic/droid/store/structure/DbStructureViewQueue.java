@@ -2,7 +2,7 @@ package org.stepic.droid.store.structure;
 
 public final class DbStructureViewQueue extends DBStructureBase {
 
-    private static String[] mUsedColumns = null;
+    private static String[] usedColumns = null;
 
     public static final String VIEW_QUEUE = "view_queue";
 
@@ -12,13 +12,13 @@ public final class DbStructureViewQueue extends DBStructureBase {
     }
 
     public static String[] getUsedColumns() {
-        if (mUsedColumns == null) {
-            mUsedColumns = new String[]{
+        if (usedColumns == null) {
+            usedColumns = new String[]{
                     Column.ASSIGNMENT_ID,
                     Column.STEP_ID
             };
         }
-        return mUsedColumns;
+        return usedColumns;
     }
 
 }

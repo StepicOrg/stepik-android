@@ -19,8 +19,8 @@ class FeedbackFragment : FragmentBase() {
         }
     }
 
-    lateinit var mGoodButton: Button
-    lateinit var mBadButton: Button
+    lateinit var goodButton: Button
+    lateinit var badButton: Button
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater?.inflate(R.layout.fragment_feedback, container, false)
@@ -31,16 +31,16 @@ class FeedbackFragment : FragmentBase() {
     }
 
     private fun initButtons(v: View) {
-        mGoodButton = v.findViewById(R.id.feedback_good_btn) as Button
-        mBadButton = v.findViewById(R.id.feedback_bad_btn) as Button
+        goodButton = v.findViewById(R.id.feedback_good_btn) as Button
+        badButton = v.findViewById(R.id.feedback_bad_btn) as Button
 
-        mGoodButton.setOnClickListener { mShell.screenProvider.showStoreWithApp(activity) }
-        mBadButton.setOnClickListener { mShell.screenProvider.showTextFeedback(activity) }
+        goodButton.setOnClickListener { shell.screenProvider.showStoreWithApp(activity) }
+        badButton.setOnClickListener { shell.screenProvider.showTextFeedback(activity) }
     }
 
     private fun destroyButtons() {
-        mGoodButton.setOnClickListener(null)
-        mBadButton.setOnClickListener (null)
+        goodButton.setOnClickListener(null)
+        badButton.setOnClickListener (null)
     }
 
     override fun onDestroyView() {

@@ -1,7 +1,7 @@
 package org.stepic.droid.store.structure;
 
 public final class DbStructureAssignment extends DBStructureBase {
-    private static String[] mUsedColumns = null;
+    private static String[] usedColumns = null;
 
     public static final String ASSIGNMENTS = "assignments";
 
@@ -15,8 +15,8 @@ public final class DbStructureAssignment extends DBStructureBase {
     }
 
     public static String[] getUsedColumns() {
-        if (mUsedColumns == null) {
-            mUsedColumns = new String[]{
+        if (usedColumns == null) {
+            usedColumns = new String[]{
                     Column.ASSIGNMENT_ID,
                     Column.UNIT_ID,
                     Column.STEP_ID,
@@ -27,6 +27,6 @@ public final class DbStructureAssignment extends DBStructureBase {
 
             };
         }
-        return mUsedColumns;
+        return usedColumns;
     }
 }

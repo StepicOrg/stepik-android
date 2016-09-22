@@ -8,25 +8,25 @@ import java.util.List;
 import java.util.Map;
 
 public class UnitLessonProgressContainer {
-    List<Unit> mUnitList;
-    List<Lesson> mLessonList;
-    Map<Long, Progress> mUnitProgressMap;
+    List<Unit> unitList;
+    List<Lesson> lessonList;
+    Map<Long, Progress> unitProgressMap;
 
     public UnitLessonProgressContainer(List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap) {
-        mUnitList = unitList;
-        mLessonList = lessonList;
-        mUnitProgressMap = unitProgressMap;
+        this.unitList = unitList;
+        this.lessonList = lessonList;
+        this.unitProgressMap = unitProgressMap;
     }
 
     public List<Unit> getUnitList() {
-        return mUnitList;
+        return unitList;
     }
 
     public List<Lesson> getLessonList() {
-        return mLessonList;
+        return lessonList;
     }
 
     public Map<Long, Progress> getUnitProgressMap() {
-        return mUnitProgressMap;
+        return unitProgressMap;
     }
 }

@@ -30,26 +30,26 @@ import butterknife.ButterKnife;
 
 public class PyCharmStepFragment extends StepWithAttemptsFragment {
 
-    private TextView mMessageField;
+    private TextView messageField;
 
     @BindString(R.string.py_message)
-    String mPyMessage;
+    String pyMessage;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        mMessageField = (TextView) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_py_step, mAttemptContainer, false);
-        mMessageField.setMovementMethod(LinkMovementMethod.getInstance());
-        mAttemptContainer.addView(mMessageField);
+        messageField = (TextView) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_py_step, attemptContainer, false);
+        messageField.setMovementMethod(LinkMovementMethod.getInstance());
+        attemptContainer.addView(messageField);
         unbinder = ButterKnife.bind(this, v);
-        mActionButton.setVisibility(View.GONE);
+        actionButton.setVisibility(View.GONE);
         return v;
     }
 
     @Override
     protected void showAttempt(Attempt attempt) {
-        mMessageField.setText(HtmlHelper.fromHtml(mPyMessage));
+        messageField.setText(HtmlHelper.fromHtml(pyMessage));
     }
 
     @Override
@@ -60,12 +60,12 @@ public class PyCharmStepFragment extends StepWithAttemptsFragment {
 
     @Override
     protected void blockUIBeforeSubmit(boolean needBlock) {
-        mMessageField.setEnabled(true);
+        messageField.setEnabled(true);
     }
 
     @Override
     protected void onRestoreSubmission() {
-        mMessageField.setText(HtmlHelper.fromHtml(mPyMessage));
+        messageField.setText(HtmlHelper.fromHtml(pyMessage));
     }
 
 

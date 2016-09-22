@@ -3,7 +3,7 @@ package org.stepic.droid.core.presenters
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.model.Course
-import org.stepic.droid.util.resolvers.ISearchResolver
+import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepic.droid.web.CoursesStepicResponse
 import org.stepic.droid.web.IApi
 import org.stepic.droid.web.SearchResultResponse
@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class SearchCoursesPresenter(val api: IApi,
                              val threadPoolExecutor: ThreadPoolExecutor,
                              val mainHandler: IMainHandler,
-                             val searchResolver: ISearchResolver) : PresenterBase<CoursesView>() {
+                             val searchResolver: SearchResolver) : PresenterBase<CoursesView>() {
 
     private var isLoading = AtomicBoolean(false)
     private var currentPage = AtomicInteger(1)

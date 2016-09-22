@@ -19,7 +19,7 @@ data class Comment(
         val can_delete: Boolean?= null,
         val actions: Actions? = null,
         var target: Long? = null, //for example, id of Step.
-        val replies: List<Long>? = null,//list of all replies, but in query only 20.
+        val replies: List<Long>? = null,//oldList of all replies, but in query only 20.
         val tonality_auto: Int? = null,
         val tonality_manual: Int?= null,
         val is_pinned: Boolean? = null,

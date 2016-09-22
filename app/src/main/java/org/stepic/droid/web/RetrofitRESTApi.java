@@ -70,38 +70,38 @@ public class RetrofitRESTApi implements IApi {
     private final int TIMEOUT_IN_SECONDS = 10;
 
     @Inject
-    SharedPreferenceHelper mSharedPreference;
+    SharedPreferenceHelper sharedPreference;
     @Inject
     ScreenManager screenManager;
     @Inject
-    DatabaseFacade mDbManager;
+    DatabaseFacade databaseFacade;
     @Inject
-    IConfig mConfig;
+    IConfig config;
     @Inject
-    UserPreferences mUserPreferences;
+    UserPreferences userPreferences;
     @Inject
     Analytic analytic;
 
-    private StepicRestLoggedService mLoggedService;
-    private StepicRestOAuthService mOAuthService;
-    private StepicEmptyAuthService mStepicEmptyAuthService;
+    private StepicRestLoggedService loggedService;
+    private StepicRestOAuthService oAuthService;
+    private StepicEmptyAuthService StepikEmptyAuthService;
     private final OkHttpClient okHttpClient = new OkHttpClient();
 
 
     public RetrofitRESTApi() {
         MainApplication.component().inject(this);
 
-        makeOauthServiceWithNewAuthHeader(mSharedPreference.isLastTokenSocial() ? TokenType.social : TokenType.loginPassword);
+        makeOauthServiceWithNewAuthHeader(sharedPreference.isLastTokenSocial() ? TokenType.social : TokenType.loginPassword);
         makeLoggedService();
 
         OkHttpClient okHttpClient = new OkHttpClient();
         setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(mConfig.getBaseUrl())
+                .baseUrl(config.getBaseUrl())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpClient)
                 .build();
-        mStepicEmptyAuthService = retrofit.create(StepicEmptyAuthService.class);
+        StepikEmptyAuthService = retrofit.create(StepicEmptyAuthService.class);
 //        makeZendeskService();
     }
 
@@ -124,10 +124,10 @@ public class RetrofitRESTApi implements IApi {
                 Request newRequest = chain.request();
                 try {
                     RWLocks.AuthLock.writeLock().lock();
-                    AuthenticationStepicResponse response = mSharedPreference.getAuthResponseFromStore();
+                    AuthenticationStepicResponse response = sharedPreference.getAuthResponseFromStore();
                     if (isNeededUpdate(response)) {
                         try {
-                            response = mOAuthService.updateToken(mConfig.getRefreshGrantType(), response.getRefresh_token()).execute().body();
+                            response = oAuthService.updateToken(config.getRefreshGrantType(), response.getRefresh_token()).execute().body();
                         } catch (Exception e) {
                             analytic.reportError(Analytic.Error.CANT_UPDATE_TOKEN, e);
                             return chain.proceed(newRequest);
@@ -139,7 +139,7 @@ public class RetrofitRESTApi implements IApi {
                         }
 
                         //Update is success:
-                        mSharedPreference.storeAuthInfo(response);
+                        sharedPreference.storeAuthInfo(response);
                     }
                     if (response != null) {
                         //it is good way
@@ -155,20 +155,20 @@ public class RetrofitRESTApi implements IApi {
         okHttpClient.networkInterceptors().add(interceptor);
         setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(mConfig.getBaseUrl())
+                .baseUrl(config.getBaseUrl())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpClient)
                 .build();
-        mLoggedService = retrofit.create(StepicRestLoggedService.class);
+        loggedService = retrofit.create(StepicRestLoggedService.class);
     }
 
     private void makeOauthServiceWithNewAuthHeader(final TokenType type) {
-        mSharedPreference.storeLastTokenType(type == TokenType.social);
+        sharedPreference.storeLastTokenType(type == TokenType.social);
         Interceptor interceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
                 Request newRequest = chain.request();
-                String credential = Credentials.basic(mConfig.getOAuthClientId(type), mConfig.getOAuthClientSecret(type));
+                String credential = Credentials.basic(config.getOAuthClientId(type), config.getOAuthClientSecret(type));
                 newRequest = newRequest.newBuilder().addHeader("Authorization", credential).build();
                 return chain.proceed(newRequest);
             }
@@ -177,11 +177,11 @@ public class RetrofitRESTApi implements IApi {
         setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
         okHttpClient.networkInterceptors().add(interceptor);
         Retrofit notLogged = new Retrofit.Builder()
-                .baseUrl(mConfig.getBaseUrl())
+                .baseUrl(config.getBaseUrl())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpClient)
                 .build();
-        mOAuthService = notLogged.create(StepicRestOAuthService.class);
+        oAuthService = notLogged.create(StepicRestOAuthService.class);
     }
 
     private Converter.Factory generateGsonFactory() {
@@ -201,7 +201,7 @@ public class RetrofitRESTApi implements IApi {
     public Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type) {
         analytic.reportEvent(Analytic.Web.AUTH_SOCIAL);
         makeOauthServiceWithNewAuthHeader(TokenType.social);
-        return mOAuthService.getTokenByNativeCode(type.getIdentifier(), code, mConfig.getGrantType(TokenType.social), mConfig.getRedirectUri());
+        return oAuthService.getTokenByNativeCode(type.getIdentifier(), code, config.getGrantType(TokenType.social), config.getRedirectUri());
     }
 
     @Override
@@ -210,14 +210,14 @@ public class RetrofitRESTApi implements IApi {
         makeOauthServiceWithNewAuthHeader(TokenType.loginPassword);
         String encodedPassword = URLEncoder.encode(password);
         String encodedLogin = URLEncoder.encode(login);
-        return mOAuthService.authWithLoginPassword(mConfig.getGrantType(TokenType.loginPassword), encodedLogin, encodedPassword);
+        return oAuthService.authWithLoginPassword(config.getGrantType(TokenType.loginPassword), encodedLogin, encodedPassword);
     }
 
     @Override
     public Call<AuthenticationStepicResponse> authWithCode(String code) {
         analytic.reportEvent(Analytic.Web.AUTH_SOCIAL);
         makeOauthServiceWithNewAuthHeader(TokenType.social);
-        return mOAuthService.getTokenByCode(mConfig.getGrantType(TokenType.social), code, mConfig.getRedirectUri());
+        return oAuthService.getTokenByCode(config.getGrantType(TokenType.social), code, config.getRedirectUri());
     }
 
     @Override
@@ -253,7 +253,7 @@ public class RetrofitRESTApi implements IApi {
                 Request.Builder requestBuilder = chain
                         .request()
                         .newBuilder()
-                        .addHeader("Referer", mConfig.getBaseUrl())
+                        .addHeader("Referer", config.getBaseUrl())
                         .addHeader("X-CSRFToken", csrftoken)
                         .addHeader("Cookie", cookieResult);
                 newRequest = requestBuilder.build();
@@ -262,7 +262,7 @@ public class RetrofitRESTApi implements IApi {
         };
         okHttpClient.networkInterceptors().add(interceptor);
         Retrofit notLogged = new Retrofit.Builder()
-                .baseUrl(mConfig.getBaseUrl())
+                .baseUrl(config.getBaseUrl())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpClient)
                 .build();
@@ -271,76 +271,76 @@ public class RetrofitRESTApi implements IApi {
     }
 
     public Call<CoursesStepicResponse> getEnrolledCourses(int page) {
-        return mLoggedService.getEnrolledCourses(true, page);
+        return loggedService.getEnrolledCourses(true, page);
     }
 
     public Call<CoursesStepicResponse> getFeaturedCourses(int page) {
-        return mLoggedService.getFeaturedCourses(true, page);
+        return loggedService.getFeaturedCourses(true, page);
     }
 
     @Override
     public Call<StepicProfileResponse> getUserProfile() {
-        return mLoggedService.getUserProfile();
+        return loggedService.getUserProfile();
     }
 
     @Override
     public Call<UserStepicResponse> getUsers(long[] userIds) {
-        return mLoggedService.getUsers(userIds);
+        return loggedService.getUsers(userIds);
     }
 
     @Override
     public Call<Void> tryJoinCourse(@NotNull Course course) {
         analytic.reportEventWithIdName(Analytic.Web.TRY_JOIN_COURSE, course.getCourseId() + "", course.getTitle());
         EnrollmentWrapper enrollmentWrapper = new EnrollmentWrapper(course.getCourseId());
-        return mLoggedService.joinCourse(enrollmentWrapper);
+        return loggedService.joinCourse(enrollmentWrapper);
     }
 
     @Override
     public Call<SectionsStepicResponse> getSections(long[] sectionsIds) {
-        return mLoggedService.getSections(sectionsIds);
+        return loggedService.getSections(sectionsIds);
     }
 
     @Override
     public Call<UnitStepicResponse> getUnits(long[] units) {
-        return mLoggedService.getUnits(units);
+        return loggedService.getUnits(units);
     }
 
     @Override
     public Call<LessonStepicResponse> getLessons(long[] lessons) {
-        return mLoggedService.getLessons(lessons);
+        return loggedService.getLessons(lessons);
     }
 
     @Override
     public Call<StepResponse> getSteps(long[] steps) {
-        return mLoggedService.getSteps(steps);
+        return loggedService.getSteps(steps);
     }
 
     @Override
     public Call<Void> dropCourse(long courseId) {
-        if (!mConfig.isUserCanDropCourse()) return null;
+        if (!config.isUserCanDropCourse()) return null;
         analytic.reportEvent(Analytic.Web.DROP_COURSE, courseId + "");
-        return mLoggedService.dropCourse(courseId);
+        return loggedService.dropCourse(courseId);
     }
 
     @Override
     public Call<ProgressesResponse> getProgresses(String[] progresses) {
-        return mLoggedService.getProgresses(progresses);
+        return loggedService.getProgresses(progresses);
     }
 
     @Override
     public Call<AssignmentResponse> getAssignments(long[] assignmentsIds) {
-        return mLoggedService.getAssignments(assignmentsIds);
+        return loggedService.getAssignments(assignmentsIds);
     }
 
     @Override
     public Call<Void> postViewed(ViewAssignment stepAssignment) {
-        return mLoggedService.postViewed(new ViewAssignmentWrapper(stepAssignment.getAssignment(), stepAssignment.getStep()));
+        return loggedService.postViewed(new ViewAssignmentWrapper(stepAssignment.getAssignment(), stepAssignment.getStep()));
     }
 
     @Override
     public void loginWithSocial(final FragmentActivity activity, ISocialType type) {
         String socialIdentifier = type.getIdentifier();
-        String url = mConfig.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + mConfig.getOAuthClientId(TokenType.social) + "&response_type=code");
+        String url = config.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + config.getOAuthClientId(TokenType.social) + "&response_type=code");
         Uri uri = Uri.parse(url);
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
         activity.startActivity(intent);
@@ -355,7 +355,7 @@ public class RetrofitRESTApi implements IApi {
         analytic.reportEvent(FirebaseAnalytics.Event.SEARCH, bundle);
 
         String type = "course";
-        return mLoggedService.getSearchResults(page, encodedQuery, type);
+        return loggedService.getSearchResults(page, encodedQuery, type);
     }
 
     @Override
@@ -363,24 +363,24 @@ public class RetrofitRESTApi implements IApi {
         if (ids == null || ids.length == 0) {
             ids = new long[]{0};
         }
-        return mLoggedService.getCourses(page, ids);
+        return loggedService.getCourses(page, ids);
     }
 
     @Override
     public Call<AttemptResponse> createNewAttempt(long stepId) {
         AttemptRequest attemptRequest = new AttemptRequest(stepId);
-        return mLoggedService.createNewAttempt(attemptRequest);
+        return loggedService.createNewAttempt(attemptRequest);
     }
 
     @Override
     public Call<SubmissionResponse> createNewSubmission(Reply reply, long attemptId) {
         SubmissionRequest submissionRequest = new SubmissionRequest(reply, attemptId);
-        return mLoggedService.createNewSubmission(submissionRequest);
+        return loggedService.createNewSubmission(submissionRequest);
     }
 
     @Override
     public Call<AttemptResponse> getExistingAttempts(long stepId) {
-        Profile profile = mSharedPreference.getProfile();
+        Profile profile = sharedPreference.getProfile();
         long userId = 0;
         //noinspection StatementWithEmptyBody
         if (profile == null) {
@@ -388,13 +388,13 @@ public class RetrofitRESTApi implements IApi {
         } else {
             userId = profile.getId();
         }
-        return mLoggedService.getExistingAttempts(stepId, userId);
+        return loggedService.getExistingAttempts(stepId, userId);
     }
 
     @Override
     public Call<SubmissionResponse> getSubmissions(long attemptId) {
         String order = "desc";
-        return mLoggedService.getExistingSubmissions(attemptId, order);
+        return loggedService.getExistingSubmissions(attemptId, order);
     }
 
     @Override
@@ -431,7 +431,7 @@ public class RetrofitRESTApi implements IApi {
                         .addQueryParameter("csrfmiddlewaretoken", csrftoken)
                         .build();
                 newRequest = newRequest.newBuilder()
-                        .addHeader("referer", mConfig.getBaseUrl())
+                        .addHeader("referer", config.getBaseUrl())
                         .addHeader("X-CSRFToken", csrftoken)
                         .addHeader("Cookie", cookieResult)
                         .url(url)
@@ -441,7 +441,7 @@ public class RetrofitRESTApi implements IApi {
         };
         okHttpClient.networkInterceptors().add(interceptor);
         Retrofit notLogged = new Retrofit.Builder()
-                .baseUrl(mConfig.getBaseUrl())
+                .baseUrl(config.getBaseUrl())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpClient)
                 .build();
@@ -452,7 +452,7 @@ public class RetrofitRESTApi implements IApi {
 
     @Override
     public Call<EmailAddressResponse> getEmailAddresses(@NotNull long[] ids) {
-        return mLoggedService.getEmailAddresses(ids);
+        return loggedService.getEmailAddresses(ids);
     }
 
     @Override
@@ -475,7 +475,7 @@ public class RetrofitRESTApi implements IApi {
                     CookieManager cookieManager = new CookieManager();
                     URI myUri = null;
                     try {
-                        myUri = new URI(mConfig.getZendeskHost());
+                        myUri = new URI(config.getZendeskHost());
                     } catch (URISyntaxException e) {
                         return null;
                     }
@@ -518,7 +518,7 @@ public class RetrofitRESTApi implements IApi {
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.networkInterceptors().add(interceptor);
         Retrofit notLogged = new Retrofit.Builder()
-                .baseUrl(mConfig.getZendeskHost())
+                .baseUrl(config.getZendeskHost())
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpClient)
                 .build();
@@ -530,53 +530,53 @@ public class RetrofitRESTApi implements IApi {
         String encodedSubject = URLEncoder.encode(subject);
         String aboutSystem = DeviceInfoUtil.getInfosAboutDevice(MainApplication.getAppContext());
         String encodedSystem = URLEncoder.encode(aboutSystem);
-        return tempService.sendFeedback(encodedSubject, encodedEmail, encodedSystem, encodedDescription, mConfig.getBaseUrl());
+        return tempService.sendFeedback(encodedSubject, encodedEmail, encodedSystem, encodedDescription, config.getBaseUrl());
     }
 
     @Override
     public Call<DeviceResponse> getDevices() {
-        Profile profile = mSharedPreference.getProfile();
+        Profile profile = sharedPreference.getProfile();
         long userId = 0;
         if (profile != null) {
             userId = profile.getId();
         }
-        return mLoggedService.getDevices(userId);
+        return loggedService.getDevices(userId);
     }
 
     @Override
     public Call<DeviceResponse> registerDevice(String token) {
         String description = DeviceInfoUtil.getShortInfo(MainApplication.getAppContext());
         DeviceRequest deviceRequest = new DeviceRequest(token, description);
-        return mLoggedService.registerDevice(deviceRequest);
+        return loggedService.registerDevice(deviceRequest);
     }
 
     @Override
     public Call<CoursesStepicResponse> getCourse(long id) {
         long[] ids = new long[]{id};
-        return mLoggedService.getCourses(ids);
+        return loggedService.getCourses(ids);
     }
 
     @Override
     public Call<Void> markNotificationAsRead(long notificationId, boolean isRead) {
         Notification notification = new Notification();
         notification.set_unread(!isRead);
-        return mLoggedService.putNotification(notificationId, new NotificationRequest(notification));
+        return loggedService.putNotification(notificationId, new NotificationRequest(notification));
     }
 
     @Override
     public Call<Void> removeDevice(long deviceId) {
-        return mLoggedService.removeDevice(deviceId);
+        return loggedService.removeDevice(deviceId);
     }
 
     @Override
     public Call<DiscussionProxyResponse> getDiscussionProxies(String discussionProxyId) {
-        return mLoggedService.getDiscussionProxy(discussionProxyId);
+        return loggedService.getDiscussionProxy(discussionProxyId);
     }
 
     @Override
     public UpdateResponse getInfoForUpdating() throws IOException {
         Request request = new Request.Builder()
-                .url(mConfig.getBaseUrl() + "/" + mConfig.getUpdateEndpoint())
+                .url(config.getBaseUrl() + "/" + config.getUpdateEndpoint())
                 .build();
 
         String jsonString = okHttpClient.newCall(request).execute().body().string();
@@ -588,53 +588,48 @@ public class RetrofitRESTApi implements IApi {
     @Override
     public Call<CommentsResponse> getCommentAnd20Replies(long commentId) {
         long[] id = new long[]{commentId};
-        return mLoggedService.getComments(id);
+        return loggedService.getComments(id);
     }
 
     @Override
     public Call<CommentsResponse> getCommentsByIds(long[] commentIds) {
-        return mLoggedService.getComments(commentIds);
+        return loggedService.getComments(commentIds);
     }
 
     @Override
     public Call<CommentsResponse> postComment(String text, long target, @Nullable Long parent) {
         Comment comment = new Comment(target, text, parent);
-        return mLoggedService.postComment(new CommentRequest(comment));
+        return loggedService.postComment(new CommentRequest(comment));
     }
 
     @Override
     public Call<VoteResponse> makeVote(String voteId, @Nullable VoteValue voteValue) {
         Vote vote = new Vote(voteId, voteValue);
         VoteRequest request = new VoteRequest(vote);
-        return mLoggedService.postVote(voteId, request);
+        return loggedService.postVote(voteId, request);
     }
 
     @Override
     public Call<CommentsResponse> deleteComment(long commentId) {
-        return mLoggedService.deleteComment(commentId);
+        return loggedService.deleteComment(commentId);
     }
 
     @Override
     public Call<CertificateResponse> getCertificates() {
-        long userId = mUserPreferences.getUserId();
-        return mLoggedService.getCertificates(userId);
+        long userId = userPreferences.getUserId();
+        return loggedService.getCertificates(userId);
     }
 
     @Override
     public Call<UnitStepicResponse> getUnitByLessonId(long lessonId) {
-        return mLoggedService.getUnitByLessonId(lessonId);
-    }
-
-    @Override
-    public Call<StepResponse> getStepsByLessonId(long lessonId) {
-        return mLoggedService.geStepsByLessonId(lessonId);
+        return loggedService.getUnitByLessonId(lessonId);
     }
 
     @Nullable
     private Response getZendeskResponse() throws IOException {
         OkHttpClient client = new OkHttpClient();
 
-        String url = mConfig.getZendeskHost() + "/hc/en-us/requests/new";
+        String url = config.getZendeskHost() + "/hc/en-us/requests/new";
 
         Request request = new Request.Builder()
                 .url(url)
@@ -646,12 +641,12 @@ public class RetrofitRESTApi implements IApi {
     @Nullable
     private List<HttpCookie> getCookiesForBaseUrl() throws IOException {
         String lang = Locale.getDefault().getLanguage();
-        retrofit.Response ob = mStepicEmptyAuthService.getStepicForFun(lang).execute();
+        retrofit.Response ob = StepikEmptyAuthService.getStepicForFun(lang).execute();
         Headers headers = ob.headers();
         CookieManager cookieManager = new CookieManager();
         URI myUri;
         try {
-            myUri = new URI(mConfig.getBaseUrl());
+            myUri = new URI(config.getBaseUrl());
         } catch (URISyntaxException e) {
             return null;
         }
@@ -661,7 +656,7 @@ public class RetrofitRESTApi implements IApi {
 
     private String getAuthHeaderValueForLogged() {
         try {
-            AuthenticationStepicResponse resp = mSharedPreference.getAuthResponseFromStore();
+            AuthenticationStepicResponse resp = sharedPreference.getAuthResponseFromStore();
             if (resp == null) {
                 //not happen, look "resp null" in metrica before 07.2016
                 return "";
@@ -673,11 +668,11 @@ public class RetrofitRESTApi implements IApi {
             analytic.reportError(Analytic.Error.AUTH_ERROR, ex);
             // FIXME: 19.11.15 It is not should happen
 
-            mSharedPreference.deleteAuthInfo();
+            sharedPreference.deleteAuthInfo();
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
-                    mDbManager.clearCacheCourses(Table.enrolled);
+                    databaseFacade.clearCacheCourses(Table.enrolled);
                     return null;
                 }
             };
@@ -691,7 +686,7 @@ public class RetrofitRESTApi implements IApi {
     private boolean isNeededUpdate(AuthenticationStepicResponse response) {
         if (response == null) return false;
 
-        long timestampStored = mSharedPreference.getAccessTokenTimestamp();
+        long timestampStored = sharedPreference.getAccessTokenTimestamp();
         if (timestampStored == -1) return true;
 
         long nowTemp = DateTime.now(DateTimeZone.UTC).getMillis();

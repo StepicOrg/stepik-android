@@ -33,19 +33,19 @@ import javax.inject.Inject;
 public class DownloadCompleteReceiver extends BroadcastReceiver {
 
     @Inject
-    UserPreferences mUserPrefs;
+    UserPreferences userPreferences;
     @Inject
-    DatabaseFacade mDatabaseFacade;
+    DatabaseFacade databaseFacade;
     @Inject
-    IStoreStateManager mStoreStateManager;
+    IStoreStateManager storeStateManager;
     @Inject
     Bus bus;
 
     @Inject
-    ICancelSniffer mCancelSniffer;
+    ICancelSniffer cancelSniffer;
 
     @Inject
-    ExecutorService mThreadSingleThreadExecutor;
+    ExecutorService threadSingleThreadExecutor;
 
     @Inject
     DownloadManager downloadManager;
@@ -61,7 +61,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         final long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
 
-        mThreadSingleThreadExecutor.execute(new Runnable() {
+        threadSingleThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 blockForInBackground(referenceId);
@@ -73,26 +73,26 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
         try {
             RWLocks.DownloadLock.writeLock().lock();
 
-            DownloadEntity downloadEntity = mDatabaseFacade.getDownloadEntityIfExist(referenceId);
+            DownloadEntity downloadEntity = databaseFacade.getDownloadEntityIfExist(referenceId);
             if (downloadEntity != null) {
                 final long video_id = downloadEntity.getVideoId();
                 final long step_id = downloadEntity.getStepId();
-                mDatabaseFacade.deleteDownloadEntityByDownloadId(referenceId);
+                databaseFacade.deleteDownloadEntityByDownloadId(referenceId);
 
 
-                if (mCancelSniffer.isStepIdCanceled(step_id)) {
+                if (cancelSniffer.isStepIdCanceled(step_id)) {
                     downloadManager.remove(referenceId);//remove notification (is it really work and need?)
-                    mCancelSniffer.removeStepIdCancel(step_id);
-                    Step step = mDatabaseFacade.getStepById(step_id);
+                    cancelSniffer.removeStepIdCancel(step_id);
+                    Step step = databaseFacade.getStepById(step_id);
                     if (step != null) {
-                        Lesson lesson = mDatabaseFacade.getLessonById(step.getLesson());
+                        Lesson lesson = databaseFacade.getLessonById(step.getLesson());
                         if (lesson != null) {
-                            Unit unit = mDatabaseFacade.getUnitByLessonId(lesson.getId());
-                            if (unit != null && mCancelSniffer.isUnitIdIsCanceled(unit.getId())) {
-                                mStoreStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
-                                mCancelSniffer.removeUnitIdCancel(unit.getId());
-                                if (mCancelSniffer.isSectionIdIsCanceled(unit.getSection())) {
-                                    mCancelSniffer.removeSectionIdCancel(unit.getSection());
+                            Unit unit = databaseFacade.getUnitByLessonId(lesson.getId());
+                            if (unit != null && cancelSniffer.isUnitIdIsCanceled(unit.getId())) {
+                                storeStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
+                                cancelSniffer.removeUnitIdCancel(unit.getId());
+                                if (cancelSniffer.isSectionIdIsCanceled(unit.getSection())) {
+                                    cancelSniffer.removeSectionIdCancel(unit.getSection());
                                 }
                             }
                         }
@@ -100,12 +100,12 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                 } else {
                     //is not canceled
 
-                    File userDownloadFolder = mUserPrefs.getUserDownloadFolder();
+                    File userDownloadFolder = userPreferences.getUserDownloadFolder();
                     File downloadFolderAndFile = new File(userDownloadFolder, video_id + "");
                     String path = Uri.fromFile(downloadFolderAndFile).getPath();
                     String thumbnail = downloadEntity.getThumbnail();
-                    if (mUserPrefs.isSdChosen()) {
-                        File sdFile = mUserPrefs.getSdCardDownloadFolder();
+                    if (userPreferences.isSdChosen()) {
+                        File sdFile = userPreferences.getSdCardDownloadFolder();
                         if (sdFile != null) {
                             try {
                                 StorageUtil.moveFile(userDownloadFolder.getPath(), video_id + "", sdFile.getPath());
@@ -122,14 +122,14 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     }
                     final CachedVideo cachedVideo = new CachedVideo(step_id, video_id, path, thumbnail);
                     cachedVideo.setQuality(downloadEntity.getQuality());
-                    mDatabaseFacade.addVideo(cachedVideo);
+                    databaseFacade.addVideo(cachedVideo);
 
-                    final Step step = mDatabaseFacade.getStepById(step_id);
+                    final Step step = databaseFacade.getStepById(step_id);
                     step.set_cached(true);
                     step.set_loading(false);
-                    mDatabaseFacade.updateOnlyCachedLoadingStep(step);
-                    mStoreStateManager.updateUnitLessonState(step.getLesson());
-                    final Lesson lesson = mDatabaseFacade.getLessonById(step.getLesson());
+                    databaseFacade.updateOnlyCachedLoadingStep(step);
+                    storeStateManager.updateUnitLessonState(step.getLesson());
+                    final Lesson lesson = databaseFacade.getLessonById(step.getLesson());
                     Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
                     //Say to ui that ui is cached now
                     Runnable myRunnable = new Runnable() {

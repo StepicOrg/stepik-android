@@ -11,11 +11,11 @@ import javax.inject.Inject
 class DownloadClickReceiver : BroadcastReceiver() {
 
     @Inject
-    lateinit var mScreenProvider : IScreenManager
+    lateinit var screenProvider : IScreenManager
 
     init {
         MainApplication.component().inject(this)
     }
 
-    override fun onReceive(context: Context, intent: Intent) = mScreenProvider.showDownload()
+    override fun onReceive(context: Context, intent: Intent) = screenProvider.showDownload()
 }

@@ -36,23 +36,23 @@ public class ShareHelperImpl implements ShareHelper {
 
 
     @Override
-    public Intent getIntentForCourseSharing(@NotNull Course mCourse) {
+    public Intent getIntentForCourseSharing(@NotNull Course course) {
         Intent shareIntent = new Intent();
         StringBuilder sb = new StringBuilder();
 
-        if (mCourse.getTitle() != null) {
-            sb.append(mCourse.getTitle());
+        if (course.getTitle() != null) {
+            sb.append(course.getTitle());
             sb.append("\r\n");
             sb.append("\r\n");
         }
 
-        if (mCourse.getSummary() != null && !mCourse.getSummary().isEmpty()) {
-            sb.append(HtmlHelper.fromHtml(mCourse.getSummary()).toString());
+        if (course.getSummary() != null && !course.getSummary().isEmpty()) {
+            sb.append(HtmlHelper.fromHtml(course.getSummary()).toString());
             sb.append("\r\n");
             sb.append("\r\n");
         }
 
-        String uriForSharing = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getSlug())).toString();
+        String uriForSharing = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), course.getSlug())).toString();
         sb.append(uriForSharing);
 
         String textForSharing = HtmlHelper.fromHtml(sb.toString()).toString();

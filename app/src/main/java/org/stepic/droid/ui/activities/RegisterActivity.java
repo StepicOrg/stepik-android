@@ -42,44 +42,44 @@ public class RegisterActivity extends FragmentActivityBase {
     public static final String ERROR_DELIMITER = " ";
 
     @BindView(R.id.root_view)
-    View mRootView;
+    View rootView;
 
     @BindView(R.id.sign_up_btn)
-    Button mCreateAccountButton;
+    Button createAccountButton;
 
     @BindView(R.id.actionbar_close_btn_layout)
-    View mCloseButton;
+    View closeButton;
 
     @BindView(R.id.first_name_reg)
-    TextView mFirstNameView;
+    TextView firstNameView;
 
     @BindView(R.id.second_name_reg)
-    TextView mSecondNameView;
+    TextView secondNameView;
 
     @BindView(R.id.email_reg)
-    TextView mEmailView;
+    TextView emailView;
 
     @BindView(R.id.password_reg)
-    TextView mPassword;
+    TextView passwordTextView;
 
     @BindView(R.id.first_name_reg_wrapper)
-    TextInputLayout mFirstNameViewWrapper;
+    TextInputLayout firstNameViewWrapper;
 
     @BindView(R.id.second_name_reg_wrapper)
-    TextInputLayout mSecondNameViewWrapper;
+    TextInputLayout secondNameViewWrapper;
 
     @BindView(R.id.email_reg_wrapper)
-    TextInputLayout mEmailViewWrapper;
+    TextInputLayout emailViewWrapper;
 
     @BindView(R.id.password_reg_wrapper)
-    TextInputLayout mPasswordWrapper;
+    TextInputLayout passwordWrapper;
 
     @BindString(R.string.password_too_short)
-    String mPasswordTooShortMessage;
+    String passwordTooShortMessage;
 
 
-    ProgressDialog mProgress;
-    TextWatcher mPasswordWatcher;
+    ProgressDialog progress;
+    TextWatcher passwordWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,13 +91,13 @@ public class RegisterActivity extends FragmentActivityBase {
 
         hideSoftKeypad();
 
-        mCreateAccountButton.setOnClickListener(new View.OnClickListener() {
+        createAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createAccount();
             }
         });
-        mCloseButton.setOnClickListener(new View.OnClickListener() {
+        closeButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -105,12 +105,12 @@ public class RegisterActivity extends FragmentActivityBase {
             }
         });
 
-        mProgress = new ProgressDialog(this);
-        mProgress.setTitle(getString(R.string.loading));
-        mProgress.setMessage(getString(R.string.loading_message));
-        mProgress.setCancelable(false);
+        progress = new ProgressDialog(this);
+        progress.setTitle(getString(R.string.loading));
+        progress.setMessage(getString(R.string.loading_message));
+        progress.setCancelable(false);
 
-        mPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        passwordTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
@@ -122,7 +122,7 @@ public class RegisterActivity extends FragmentActivityBase {
             }
         });
 
-        mPassword.addTextChangedListener(mPasswordWatcher = new TextWatcher() {
+        passwordTextView.addTextChangedListener(passwordWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -136,52 +136,52 @@ public class RegisterActivity extends FragmentActivityBase {
             @Override
             public void afterTextChanged(Editable s) {
                 if (ValidatorUtil.isPasswordLengthValid(s.length())) {
-                    hideError(mPasswordWrapper);
+                    hideError(passwordWrapper);
                 }
             }
         });
 
-        mRootView.requestFocus();
+        rootView.requestFocus();
     }
 
 
     private void createAccount() {
-        String firstName = mFirstNameView.getText().toString().trim();
-        String lastName = mSecondNameView.getText().toString().trim();
-        final String email = mEmailView.getText().toString().trim();
-        final String password = mPassword.getText().toString();
+        String firstName = firstNameView.getText().toString().trim();
+        String lastName = secondNameView.getText().toString().trim();
+        final String email = emailView.getText().toString().trim();
+        final String password = passwordTextView.getText().toString();
 
         analytic.reportEvent(Analytic.Interaction.CLICK_REGISTER_BUTTON);
 
         boolean isOk = true;
 
         if (!ValidatorUtil.isPasswordValid(password)) {
-            showError(mPasswordWrapper, mPasswordTooShortMessage);
+            showError(passwordWrapper, passwordTooShortMessage);
             isOk = false;
         }
 
         if (isOk) {
-            hideError(mFirstNameViewWrapper);
-            hideError(mSecondNameViewWrapper);
-            hideError(mEmailViewWrapper);
-            hideError(mPasswordWrapper);
+            hideError(firstNameViewWrapper);
+            hideError(secondNameViewWrapper);
+            hideError(emailViewWrapper);
+            hideError(passwordWrapper);
 
-            mShell.getApi().signUp(firstName, lastName, email, password).enqueue(new Callback<RegistrationResponse>() {
+            shell.getApi().signUp(firstName, lastName, email, password).enqueue(new Callback<RegistrationResponse>() {
                 @Override
                 public void onResponse(Response<RegistrationResponse> response, Retrofit retrofit) {
-                    ProgressHelper.dismiss(mProgress);
+                    ProgressHelper.dismiss(progress);
                     if (response.isSuccess()) {
                         analytic.reportEvent(FirebaseAnalytics.Event.SIGN_UP);
-                        mLoginManager.login(email, password, new ProgressHandler() {
+                        loginManager.login(email, password, new ProgressHandler() {
                             @Override
                             public void activate() {
                                 hideSoftKeypad();
-                                ProgressHelper.activate(mProgress);
+                                ProgressHelper.activate(progress);
                             }
 
                             @Override
                             public void dismiss() {
-                                ProgressHelper.dismiss(mProgress);
+                                ProgressHelper.dismiss(progress);
                             }
                         }, new ActivityFinisher() {
                             @Override
@@ -205,7 +205,7 @@ public class RegisterActivity extends FragmentActivityBase {
 
                 @Override
                 public void onFailure(Throwable t) {
-                    ProgressHelper.dismiss(mProgress);
+                    ProgressHelper.dismiss(progress);
                     Toast.makeText(RegisterActivity.this, R.string.connectionProblems, Toast.LENGTH_SHORT).show();
                 }
             });
@@ -226,8 +226,8 @@ public class RegisterActivity extends FragmentActivityBase {
 
     @Override
     protected void onDestroy() {
-        mPassword.removeTextChangedListener(mPasswordWatcher);
-        mPassword.setOnEditorActionListener(null);
+        passwordTextView.removeTextChangedListener(passwordWatcher);
+        passwordTextView.setOnEditorActionListener(null);
         super.onDestroy();
     }
 
@@ -253,10 +253,10 @@ public class RegisterActivity extends FragmentActivityBase {
 
     private void handleErrorRegistrationResponse(@Nullable RegistrationResponse registrationResponse) {
         if (registrationResponse == null) return;
-        showError(mEmailViewWrapper, getErrorString(registrationResponse.getEmail()));
-        showError(mFirstNameViewWrapper, getErrorString(registrationResponse.getFirst_name()));
-        showError(mSecondNameViewWrapper, getErrorString(registrationResponse.getLast_name()));
-        showError(mPasswordWrapper, getErrorString(registrationResponse.getPassword()));
+        showError(emailViewWrapper, getErrorString(registrationResponse.getEmail()));
+        showError(firstNameViewWrapper, getErrorString(registrationResponse.getFirst_name()));
+        showError(secondNameViewWrapper, getErrorString(registrationResponse.getLast_name()));
+        showError(passwordWrapper, getErrorString(registrationResponse.getPassword()));
     }
 
     @Nullable
@@ -276,14 +276,14 @@ public class RegisterActivity extends FragmentActivityBase {
     public void setClearErrorOnFocus(View view, boolean hasFocus) {
         if (hasFocus) {
             if (view.getId() == R.id.email_reg) {
-                hideError(mEmailViewWrapper);
+                hideError(emailViewWrapper);
             }
 
             if (view.getId() == R.id.first_name_reg) {
-                hideError(mFirstNameViewWrapper);
+                hideError(firstNameViewWrapper);
             }
             if (view.getId() == R.id.second_name_reg) {
-                hideError(mSecondNameViewWrapper);
+                hideError(secondNameViewWrapper);
             }
         }
     }

@@ -1,7 +1,7 @@
 package org.stepic.droid.store.structure;
 
 public final class DbStructureLesson extends DBStructureBase {
-    private static String[] mUsedColumns = null;
+    private static String[] usedColumns = null;
 
     public static final String LESSONS = "lessons";
 
@@ -32,8 +32,8 @@ public final class DbStructureLesson extends DBStructureBase {
     }
 
     public static String[] getUsedColumns() {
-        if (mUsedColumns == null) {
-            mUsedColumns = new String[]{
+        if (usedColumns == null) {
+            usedColumns = new String[]{
                     Column.ID,
                     Column.LESSON_ID,
                     Column.STEPS,
@@ -57,6 +57,6 @@ public final class DbStructureLesson extends DBStructureBase {
                     Column.IS_LOADING,
             };
         }
-        return mUsedColumns;
+        return usedColumns;
     }
 }

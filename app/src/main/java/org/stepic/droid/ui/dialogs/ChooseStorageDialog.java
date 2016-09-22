@@ -24,7 +24,7 @@ public class ChooseStorageDialog extends DialogFragment {
     ThreadPoolExecutor threadPoolExecutor;
 
     @Inject
-    UserPreferences mUserPreferences;
+    UserPreferences userPreferences;
 
     @Inject
     Analytic analytic;
@@ -35,7 +35,7 @@ public class ChooseStorageDialog extends DialogFragment {
         MainApplication.component().inject(this);
 
         //fixme get From User Prefs
-        final List<StorageOption> storageOptions = mUserPreferences.getStorageOptionList();
+        final List<StorageOption> storageOptions = userPreferences.getStorageOptionList();
         String[] headers = new String[storageOptions.size()];
         int indexChosen = -1; //// FIXME: 08.06.16 change to 0
         for (int i = 0; i < headers.length; i++) {

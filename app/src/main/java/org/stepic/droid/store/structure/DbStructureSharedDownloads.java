@@ -1,7 +1,7 @@
 package org.stepic.droid.store.structure;
 
 public final class DbStructureSharedDownloads {
-    private static String[] mUsedColumns = null;
+    private static String[] usedColumns = null;
 
     public static final String SHARED_DOWNLOADS = "shared_downloads";
 
@@ -16,8 +16,8 @@ public final class DbStructureSharedDownloads {
     }
 
     public static String[] getUsedColumns() {
-        if (mUsedColumns == null) {
-            mUsedColumns = new String[]{
+        if (usedColumns == null) {
+            usedColumns = new String[]{
                     Column.DOWNLOAD_ID,
                     Column.STEP_ID,
                     Column.VIDEO_ID,
@@ -25,7 +25,7 @@ public final class DbStructureSharedDownloads {
                     Column.QUALITY
             };
         }
-        return mUsedColumns;
+        return usedColumns;
     }
 
 }

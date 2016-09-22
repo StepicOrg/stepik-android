@@ -52,6 +52,7 @@ public class CourseDetailActivity extends SingleFragmentActivity {
                 simpleId = id;
             }
             analytic.reportEvent(Analytic.DeepLink.USER_OPEN_COURSE_DETAIL_LINK, simpleId+"");
+            analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
             return CourseDetailFragment.newInstance(simpleId);
         } else {
             return CourseDetailFragment.newInstance(course);

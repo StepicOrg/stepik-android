@@ -14,7 +14,6 @@ import org.stepic.droid.social.SocialManager;
 
 import java.io.IOException;
 
-import kotlin.Deprecated;
 import retrofit.Call;
 
 
@@ -106,6 +105,4 @@ public interface IApi {
     Call<CertificateResponse> getCertificates();
 
     Call<UnitStepicResponse> getUnitByLessonId(long lessonId);
-
-    Call<StepResponse> getStepsByLessonId(long lessonId);
 }

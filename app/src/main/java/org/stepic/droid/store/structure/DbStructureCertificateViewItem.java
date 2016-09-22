@@ -1,7 +1,7 @@
 package org.stepic.droid.store.structure;
 
 public class DbStructureCertificateViewItem {
-    private static String[] mUsedColumns = null;
+    private static String[] usedColumns = null;
 
     public static final String CERTIFICATE_VIEW_ITEM = "certificate_view_item";
 
@@ -18,8 +18,8 @@ public class DbStructureCertificateViewItem {
     }
 
     public static String[] getUsedColumns() {
-        if (mUsedColumns == null) {
-            mUsedColumns = new String[]{
+        if (usedColumns == null) {
+            usedColumns = new String[]{
                     Column.CERTIFICATE_ID,
                     Column.TITLE,
                     Column.COVER_FULL_PATH,
@@ -29,6 +29,6 @@ public class DbStructureCertificateViewItem {
                     Column.ISSUE_DATE
             };
         }
-        return mUsedColumns;
+        return usedColumns;
     }
 }

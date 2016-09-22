@@ -38,19 +38,19 @@ import butterknife.ButterKnife;
 public class MyCoursesAdapter extends ArrayAdapter<Course> {
 
     @Inject
-    IShell mShell;
+    IShell shell;
 
     @Inject
-    IConfig mConfig;
+    IConfig config;
 
     @Inject
-    DatabaseFacade mDatabase;
+    DatabaseFacade databaseFacade;
 
     @Inject
-    IDownloadManager mDownloadManager;
+    IDownloadManager downloadManager;
 
     @Inject
-    CleanManager mCleaner;
+    CleanManager cleaner;
 
     private Drawable coursePlaceholder;
 
@@ -87,7 +87,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
 
         Glide
                 .with(getContext())
-                .load(StepicLogicHelper.getPathForCourseOrEmpty(course, mConfig))
+                .load(StepicLogicHelper.getPathForCourseOrEmpty(course, config))
                 .placeholder(coursePlaceholder)
                 .centerCrop()
                 .into(viewHolderItem.imageViewTarget);

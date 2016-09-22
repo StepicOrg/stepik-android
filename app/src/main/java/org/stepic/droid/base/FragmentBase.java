@@ -15,8 +15,8 @@ import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.AudioFocusHelper;
 import org.stepic.droid.core.ILessonSessionManager;
-import org.stepic.droid.core.ILocalProgressManager;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
@@ -24,8 +24,6 @@ import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
-import org.stepic.droid.util.resolvers.ISearchResolver;
-import org.stepic.droid.util.resolvers.IStepResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
 
 import java.util.concurrent.ThreadPoolExecutor;
@@ -47,16 +45,13 @@ public class FragmentBase extends Fragment {
     protected Analytic analytic;
 
     @Inject
-    public ThreadPoolExecutor mThreadPoolExecutor;
+    public ThreadPoolExecutor threadPoolExecutor;
 
     @Inject
-    public ILessonSessionManager mLessonManager;
+    public ILessonSessionManager lessonManager;
 
     @Inject
-    public ISearchResolver mSearchResolver;
-
-    @Inject
-    public DatabaseFacade mDatabaseFacade;
+    public DatabaseFacade databaseFacade;
 
     @Inject
     public Bus bus;
@@ -65,40 +60,37 @@ public class FragmentBase extends Fragment {
     public IConfig config;
 
     @Inject
-    public IShell mShell;
+    public IShell shell;
 
     @Inject
-    public ILocalProgressManager mLocalProgressManager;
-
-
-    @Inject
-    public IDownloadManager mDownloadManager;
+    public LocalProgressManager localProgressManager;
 
 
     @Inject
-    public IVideoResolver mVideoResolver;
+    public IDownloadManager downloadManager;
 
 
     @Inject
-    public SharedPreferenceHelper mSharedPreferenceHelper;
+    public IVideoResolver videoResolver;
+
 
     @Inject
-    public UserPreferences mUserPreferences;
+    public SharedPreferenceHelper sharedPreferenceHelper;
 
     @Inject
-    public CoursePropertyResolver mCoursePropertyResolver;
+    public UserPreferences userPreferences;
 
     @Inject
-    public IStepResolver mStepResolver;
+    public CoursePropertyResolver coursePropertyResolver;
 
     @Inject
-    public IMainHandler mMainHandler;
+    public IMainHandler mainHandler;
 
     @Inject
-    public AudioFocusHelper mAudioFocusHelper;
+    public AudioFocusHelper audioFocusHelper;
 
     @Inject
-    public DownloadManager mSystemDownloadManager;
+    public DownloadManager systemDownloadManager;
 
     @Inject
     public ICancelSniffer cancelSniffer;

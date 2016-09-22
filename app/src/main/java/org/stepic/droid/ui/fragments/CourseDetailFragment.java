@@ -42,7 +42,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.CourseDetailModule;
+import org.stepic.droid.core.modules.CourseDetailModule;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
@@ -113,10 +113,10 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
 
     @BindView(R.id.root_view)
-    View mRootView;
+    View rootView;
 
     @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    Toolbar toolbar;
 
     @BindView(R.id.course_not_found)
     View courseNotFoundView;
@@ -124,21 +124,16 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @BindDrawable(R.drawable.ic_course_placeholder)
     Drawable coursePlaceholder;
 
-    private WebView mIntroView;
+    private WebView introView;
 
-    private TextView mCourseNameView;
+    private TextView courseNameView;
 
-    private RecyclerView mInstructorsCarousel;
+    private RecyclerView instructorsCarousel;
 
-//    @Deprecated
-//    private ProgressBar mInstructorsProgressBar; //useless
-
-//    private View mInstructorsRootView;
-
-    View mJoinCourseView;
+    View joinCourseView;
     View continueCourseView;
 
-    ProgressDialog mJoinCourseSpinner;
+    ProgressDialog joinCourseSpinner;
 
     @BindString(R.string.join_course_impossible)
     String joinCourseImpossible;
@@ -150,7 +145,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     String joinCourseWebException;
 
     @BindView(R.id.list_of_course_property)
-    ListView mCoursePropertyListView;
+    ListView coursePropertyListView;
 
     @BindDrawable(R.drawable.video_placeholder)
     Drawable mVideoPlaceholder;
@@ -160,29 +155,29 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     ImageView courseIcon;
 
-    ImageView mThumbnail;
+    ImageView thumbnail;
 
-    View mPlayer;
+    View player;
 
     //App indexing:
-    private GoogleApiClient mClient;
-    private Uri mUrlInApp;
-    private Uri mUrlInWeb;
+    private GoogleApiClient client;
+    private Uri urlInApp;
+    private Uri urlInWeb;
     private String mTitle;
     private String mDescription;
 
 
-    private List<CourseProperty> mCoursePropertyList;
-    private Course mCourse;
+    private List<CourseProperty> coursePropertyList;
+    private Course course;
     private List<User> instructorsList;
-    private InstructorAdapter mInstructorAdapter;
+    private InstructorAdapter instructorAdapter;
 
     public Action getAction() {
         Thing object = new Thing.Builder()
-                .setId(mUrlInWeb.toString())
+                .setId(urlInWeb.toString())
                 .setName(mTitle)
                 .setDescription(mDescription)
-                .setUrl(mUrlInApp)
+                .setUrl(urlInApp)
                 .build();
 
         return new Action.Builder(Action.TYPE_VIEW)
@@ -206,7 +201,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     public void onCreate(Bundle savedInstanceState) {
         getActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         super.onCreate(savedInstanceState);
-        mClient = new GoogleApiClient.Builder(getActivity()).addApi(AppIndex.API).build();
+        client = new GoogleApiClient.Builder(getActivity()).addApi(AppIndex.API).build();
         setRetainInstance(true);
         instructorsList = new ArrayList<>();
     }
@@ -224,35 +219,35 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         super.onViewCreated(view, savedInstanceState);
 
         //VIEW:
-        mCoursePropertyList = new ArrayList<>();
-        mJoinCourseSpinner = new LoadingProgressDialog(getActivity());
+        coursePropertyList = new ArrayList<>();
+        joinCourseSpinner = new LoadingProgressDialog(getActivity());
         footer = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_footer, null, false);
-        mCoursePropertyListView.addFooterView(footer);
-        mInstructorsCarousel = ButterKnife.findById(footer, R.id.instructors_carousel);
+        coursePropertyListView.addFooterView(footer);
+        instructorsCarousel = ButterKnife.findById(footer, R.id.instructors_carousel);
 //        mInstructorsProgressBar = ButterKnife.findById(footer, R.id.load_progressbar);
 //        mInstructorsRootView = ButterKnife.findById(footer, R.id.instructors_root_view);
 
         header = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_header, null, false);
-        mCoursePropertyListView.addHeaderView(header);
+        coursePropertyListView.addHeaderView(header);
 
         courseIcon = ButterKnife.findById(header, R.id.courseIcon);
-        mJoinCourseView = ButterKnife.findById(header, R.id.join_course_layout);
+        joinCourseView = ButterKnife.findById(header, R.id.join_course_layout);
         continueCourseView = ButterKnife.findById(header, R.id.go_to_learn);
-        mIntroView = ButterKnife.findById(header, R.id.intro_video);
-        mThumbnail = ButterKnife.findById(header, R.id.player_thumbnail);
-        mPlayer = ButterKnife.findById(header, R.id.player_layout);
+        introView = ButterKnife.findById(header, R.id.intro_video);
+        thumbnail = ButterKnife.findById(header, R.id.player_thumbnail);
+        player = ButterKnife.findById(header, R.id.player_layout);
         courseTargetFigSupported = new GlideDrawableImageViewTarget(courseIcon);
-        mPlayer.setVisibility(View.GONE);
-        mCourseNameView = ButterKnife.findById(header, R.id.course_name);
-        mCoursePropertyListView.setAdapter(new CoursePropertyAdapter(getActivity(), mCoursePropertyList));
+        player.setVisibility(View.GONE);
+        courseNameView = ButterKnife.findById(header, R.id.course_name);
+        coursePropertyListView.setAdapter(new CoursePropertyAdapter(getActivity(), coursePropertyList));
         hideSoftKeypad();
-        mInstructorAdapter = new InstructorAdapter(instructorsList, getActivity());
-        mInstructorsCarousel.setAdapter(mInstructorAdapter);
+        instructorAdapter = new InstructorAdapter(instructorsList, getActivity());
+        instructorsCarousel.setAdapter(instructorAdapter);
         courseNotFoundView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSharedPreferenceHelper.getAuthResponseFromStore() != null) {
-                    mShell.getScreenProvider().showFindCourses(getContext());
+                if (sharedPreferenceHelper.getAuthResponseFromStore() != null) {
+                    shell.getScreenProvider().showFindCourses(getContext());
                     finish();
                 } else {
                     if (!unauthorizedDialog.isAdded()) {
@@ -265,8 +260,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         RecyclerView.LayoutManager layoutManager =
                 new LinearLayoutManager(getActivity(),
                         LinearLayoutManager.HORIZONTAL, false);//// TODO: 30.09.15 determine right-to-left-mode
-        mInstructorsCarousel.setLayoutManager(layoutManager);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        instructorsCarousel.setLayoutManager(layoutManager);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         onClickReportListener = new View.OnClickListener() {
             @Override
@@ -290,8 +285,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     private void tryToShowCourse() {
         reportInternetProblem.setVisibility(View.GONE); // now we try show -> it is not visible
-        mCourse = (Course) (getArguments().getSerializable(AppConstants.KEY_COURSE_BUNDLE));
-        if (mCourse == null) {
+        course = (Course) (getArguments().getSerializable(AppConstants.KEY_COURSE_BUNDLE));
+        if (course == null) {
             //it is not from our activity
             long courseId = getArguments().getLong(AppConstants.KEY_COURSE_LONG_ID);
             if (courseId < 0) {
@@ -308,10 +303,10 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @Override
     public void onCourseFound(CourseFoundEvent event) {
-        if (mCourse == null) {
-            mCourse = event.getCourse();
+        if (course == null) {
+            course = event.getCourse();
             Bundle args = getArguments();
-            args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, mCourse);
+            args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
             initScreenByCourse();
         }
     }
@@ -323,33 +318,33 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         //
         header.setVisibility(View.VISIBLE);
 
-        mTitle = mCourse.getTitle();
-        mDescription = mCourse.getSummary();
-        if (mCourse.getSlug() != null && !wasIndexed) {
-            mUrlInWeb = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), mCourse.getSlug()));
-            mUrlInApp = StringUtil.getAppUriForCourse(config.getBaseUrl(), mCourse.getSlug());
+        mTitle = course.getTitle();
+        mDescription = course.getSummary();
+        if (course.getSlug() != null && !wasIndexed) {
+            urlInWeb = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), course.getSlug()));
+            urlInApp = StringUtil.getAppUriForCourse(config.getBaseUrl(), course.getSlug());
             reportIndexToGoogle();
         }
 
 
-        mCoursePropertyList.clear();
-        mCoursePropertyList.addAll(mCoursePropertyResolver.getSortedPropertyList(mCourse));
-        if (mCourse.getTitle() != null && !mCourse.getTitle().equals("")) {
-            mCourseNameView.setText(mCourse.getTitle());
+        coursePropertyList.clear();
+        coursePropertyList.addAll(coursePropertyResolver.getSortedPropertyList(course));
+        if (course.getTitle() != null && !course.getTitle().equals("")) {
+            courseNameView.setText(course.getTitle());
         } else {
-            mCourseNameView.setVisibility(View.GONE);
+            courseNameView.setVisibility(View.GONE);
         }
 
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
-        mIntroView.getLayoutParams().width = width;
-        mIntroView.getLayoutParams().height = (9 * width) / 16;
+        introView.getLayoutParams().width = width;
+        introView.getLayoutParams().height = (9 * width) / 16;
         setUpIntroVideo();
 
         Glide.with(MainApplication.getAppContext())
-                .load(StepicLogicHelper.getPathForCourseOrEmpty(mCourse, config))
+                .load(StepicLogicHelper.getPathForCourseOrEmpty(course, config))
                 .placeholder(coursePlaceholder)
                 .into(courseTargetFigSupported);
 
@@ -367,32 +362,32 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     }
 
     private void reportIndexToGoogle() {
-        if (mCourse != null && !wasIndexed && mCourse.getSlug() != null) {
-            if (!mClient.isConnecting() && !mClient.isConnected()) {
-                mClient.connect();
+        if (course != null && !wasIndexed && course.getSlug() != null) {
+            if (!client.isConnecting() && !client.isConnected()) {
+                client.connect();
             }
             wasIndexed = true;
-            AppIndex.AppIndexApi.start(mClient, getAction());
-            analytic.reportEventWithIdName(Analytic.AppIndexing.COURSE_DETAIL, mCourse.getCourseId() + "", mCourse.getTitle());
+            AppIndex.AppIndexApi.start(client, getAction());
+            analytic.reportEventWithIdName(Analytic.AppIndexing.COURSE_DETAIL, course.getCourseId() + "", course.getTitle());
         }
     }
 
     private void resolveJoinView() {
-        if (mCourse.getEnrollment() != 0) {
-            mJoinCourseView.setVisibility(View.GONE);
+        if (course.getEnrollment() != 0) {
+            joinCourseView.setVisibility(View.GONE);
             continueCourseView.setVisibility(View.VISIBLE);
             continueCourseView.setEnabled(true);
             continueCourseView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mShell.getScreenProvider().showSections(getActivity(), mCourse);
+                    shell.getScreenProvider().showSections(getActivity(), course);
                 }
             });
         } else {
             continueCourseView.setVisibility(View.GONE);
-            mJoinCourseView.setVisibility(View.VISIBLE);
-            mJoinCourseView.setEnabled(true);
-            mJoinCourseView.setOnClickListener(new View.OnClickListener() {
+            joinCourseView.setVisibility(View.VISIBLE);
+            joinCourseView.setEnabled(true);
+            joinCourseView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     joinCourse();
@@ -411,88 +406,88 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     }
 
     private void fetchInstructors() {
-        if (mCourse != null && mCourse.getInstructors() != null && mCourse.getInstructors().length != 0) {
-            bus.post(new StartLoadingInstructorsEvent(mCourse));
-            mShell.getApi().getUsers(mCourse.getInstructors()).enqueue(new Callback<UserStepicResponse>() {
+        if (course != null && course.getInstructors() != null && course.getInstructors().length != 0) {
+            bus.post(new StartLoadingInstructorsEvent(course));
+            shell.getApi().getUsers(course.getInstructors()).enqueue(new Callback<UserStepicResponse>() {
                 @Override
                 public void onResponse(Response<UserStepicResponse> response, Retrofit retrofit) {
                     if (response.isSuccess()) {
                         if (response.body() == null) {
-                            bus.post(new FailureLoadInstructorsEvent(mCourse, null));
+                            bus.post(new FailureLoadInstructorsEvent(course, null));
                         } else {
-                            bus.post(new OnResponseLoadingInstructorsEvent(mCourse, response, retrofit));
+                            bus.post(new OnResponseLoadingInstructorsEvent(course, response, retrofit));
                         }
                     } else {
-                        bus.post(new FailureLoadInstructorsEvent(mCourse, null));
+                        bus.post(new FailureLoadInstructorsEvent(course, null));
                     }
                 }
 
                 @Override
                 public void onFailure(Throwable t) {
-                    bus.post(new FailureLoadInstructorsEvent(mCourse, t));
+                    bus.post(new FailureLoadInstructorsEvent(course, t));
                 }
             });
         } else {
-            mInstructorsCarousel.setVisibility(View.GONE);
+            instructorsCarousel.setVisibility(View.GONE);
         }
     }
 
     private void setUpIntroVideo() {
         String urlToVideo;
 
-        Video newTypeVideo = mCourse.getIntro_video();
+        Video newTypeVideo = course.getIntro_video();
         if (newTypeVideo != null && newTypeVideo.getUrls() != null && !newTypeVideo.getUrls().isEmpty()) {
             urlToVideo = newTypeVideo.getUrls().get(0).getUrl();
             showNewStyleVideo(urlToVideo, newTypeVideo.getThumbnail());
         } else {
-            urlToVideo = mCourse.getIntro();
+            urlToVideo = course.getIntro();
             showOldStyleVideo(urlToVideo);
         }
 
     }
 
     private void showNewStyleVideo(final String urlToVideo, String pathThumbnail) {
-        mIntroView.setVisibility(View.GONE);
+        introView.setVisibility(View.GONE);
         if (urlToVideo == null || urlToVideo.equals("") || pathThumbnail == null || pathThumbnail.equals("")) {
-            mIntroView.setVisibility(View.GONE);
-            mPlayer.setVisibility(View.GONE);
+            introView.setVisibility(View.GONE);
+            player.setVisibility(View.GONE);
         } else {
             setThumbnail(pathThumbnail);
-            mPlayer.setVisibility(View.VISIBLE);
-            mPlayer.setOnClickListener(new View.OnClickListener() {
+            player.setVisibility(View.VISIBLE);
+            player.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mShell.getScreenProvider().showVideo(getActivity(), urlToVideo);
+                    shell.getScreenProvider().showVideo(getActivity(), urlToVideo);
                 }
             });
         }
     }
 
     private void showOldStyleVideo(String urlToVideo) {
-        mPlayer.setVisibility(View.GONE);
+        player.setVisibility(View.GONE);
         if (urlToVideo == null || urlToVideo.equals("")) {
-            mIntroView.setVisibility(View.GONE);
-            mPlayer.setVisibility(View.GONE);
+            introView.setVisibility(View.GONE);
+            player.setVisibility(View.GONE);
         } else {
-            WebSettings webSettings = mIntroView.getSettings();
+            WebSettings webSettings = introView.getSettings();
             webSettings.setJavaScriptEnabled(true);
             webSettings.setAppCacheEnabled(true);
             webSettings.setDomStorageEnabled(true);
 
             webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
             webSettings.setPluginState(WebSettings.PluginState.ON);
-            mIntroView.setWebChromeClient(new WebChromeClient());
-            mIntroView.clearFocus();
-            mRootView.requestFocus();
+            introView.setWebChromeClient(new WebChromeClient());
+            introView.clearFocus();
+            rootView.requestFocus();
 
-            mIntroView.loadUrl(urlToVideo);
-            mIntroView.setVisibility(View.VISIBLE);
+            introView.loadUrl(urlToVideo);
+            introView.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void onCourseUnavailable(CourseUnavailableForUserEvent event) {
-        if (mCourse == null) {
+        if (course == null) {
             analytic.reportEvent(Analytic.Interaction.COURSE_USER_TRY_FAIL, event.getCourseId() + "");
             reportInternetProblem.setVisibility(View.GONE);
             courseNotFoundView.setVisibility(View.VISIBLE);
@@ -501,7 +496,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @Override
     public void onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent event) {
-        if (mCourse == null) {
+        if (course == null) {
             courseNotFoundView.setVisibility(View.GONE);
             reportInternetProblem.setVisibility(View.VISIBLE);
             reportInternetProblem.setOnClickListener(onClickReportListener);
@@ -510,7 +505,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @Subscribe
     public void onStartLoadingInstructors(StartLoadingInstructorsEvent e) {
-        if (e.getCourse() != null && mCourse != null && e.getCourse().getCourseId() == mCourse.getCourseId()) {
+        if (e.getCourse() != null && course != null && e.getCourse().getCourseId() == course.getCourseId()) {
 //            ProgressHelper.activate(mInstructorsProgressBar);
             //not react
         }
@@ -518,7 +513,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @Subscribe
     public void onResponseLoadingInstructors(OnResponseLoadingInstructorsEvent e) {
-        if (e.getCourse() != null && mCourse != null && e.getCourse().getCourseId() == mCourse.getCourseId()) {
+        if (e.getCourse() != null && course != null && e.getCourse().getCourseId() == course.getCourseId()) {
 
             List<User> users = e.getResponse().body().getUsers();
             if (users != null && !users.isEmpty()) {
@@ -535,9 +530,9 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     private void showCurrentInstructors() {
         footer.setVisibility(View.VISIBLE);
-        mInstructorAdapter.notifyDataSetChanged();
+        instructorAdapter.notifyDataSetChanged();
 
-        mInstructorsCarousel.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+        instructorsCarousel.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
                 centeringRecycler(this);
@@ -553,21 +548,21 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         display.getSize(size);
         int widthOfScreen = size.x;
 
-        int widthOfAllItems = mInstructorsCarousel.getMeasuredWidth();
+        int widthOfAllItems = instructorsCarousel.getMeasuredWidth();
         if (widthOfAllItems != 0) {
-            mInstructorsCarousel.getViewTreeObserver().removeOnPreDrawListener(listener);
+            instructorsCarousel.getViewTreeObserver().removeOnPreDrawListener(listener);
         }
         if (widthOfScreen > widthOfAllItems) {
             int padding = (int) (widthOfScreen - widthOfAllItems) / 2;
-            mInstructorsCarousel.setPadding(padding, 0, padding, 0);
+            instructorsCarousel.setPadding(padding, 0, padding, 0);
         } else {
-            mInstructorsCarousel.setPadding(0, 0, 0, 0);
+            instructorsCarousel.setPadding(0, 0, 0, 0);
         }
     }
 
     @Subscribe
     public void onFinishLoading(FailureLoadInstructorsEvent e) {
-        if (e.getCourse() != null && mCourse != null && e.getCourse().getCourseId() == mCourse.getCourseId()) {
+        if (e.getCourse() != null && course != null && e.getCourse().getCourseId() == course.getCourseId()) {
             footer.setVisibility(View.GONE);
         }
     }
@@ -575,17 +570,17 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @Override
     public void onPause() {
         super.onPause();
-        mIntroView.onPause();
+        introView.onPause();
     }
 
     @Override
     public void onStop() {
 
         if (wasIndexed) {
-            AppIndex.AppIndexApi.end(mClient, getAction());
+            AppIndex.AppIndexApi.end(client, getAction());
         }
-        if (mClient != null && mClient.isConnected() && mClient.isConnecting()) {
-            mClient.disconnect();
+        if (client != null && client.isConnected() && client.isConnecting()) {
+            client.disconnect();
         }
         wasIndexed = false;
         super.onStop();
@@ -599,20 +594,20 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         courseFinderPresenter.detachView(this);
         reportInternetProblem.setOnClickListener(null);
         courseNotFoundView.setOnClickListener(null);
-        mIntroView.destroy();
-        mIntroView = null;
-        mInstructorAdapter = null;
-        mJoinCourseView.setOnClickListener(null);
+        introView.destroy();
+        introView = null;
+        instructorAdapter = null;
+        joinCourseView.setOnClickListener(null);
         continueCourseView.setOnClickListener(null);
         super.onDestroyView();
-        mCourse = null;
+        course = null;
     }
 
     public void finish() {
         Intent intent = new Intent();
-        if (mCourse != null) {
-            intent.putExtra(AppConstants.COURSE_ID_KEY, (Parcelable) mCourse);
-            intent.putExtra(AppConstants.ENROLLMENT_KEY, mCourse.getEnrollment());
+        if (course != null) {
+            intent.putExtra(AppConstants.COURSE_ID_KEY, (Parcelable) course);
+            intent.putExtra(AppConstants.ENROLLMENT_KEY, course.getEnrollment());
             getActivity().setResult(Activity.RESULT_OK, intent);
         }
         getActivity().finish();
@@ -620,35 +615,35 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     }
 
     private void joinCourse() {
-        if (mCourse != null) {
-            courseJoinerPresenter.joinCourse(mCourse);
+        if (course != null) {
+            courseJoinerPresenter.joinCourse(course);
         } else {
             analytic.reportEvent(Analytic.Interaction.JOIN_COURSE_NULL);
         }
     }
 
     public void onSuccessJoin(SuccessJoinEvent e) {
-        if (mCourse != null && e.getCourse() != null && e.getCourse().getCourseId() == mCourse.getCourseId()) {
+        if (course != null && e.getCourse() != null && e.getCourse().getCourseId() == course.getCourseId()) {
             e.getCourse().setEnrollment((int) e.getCourse().getCourseId());
-            mShell.getScreenProvider().showSections(getActivity(), mCourse);
+            shell.getScreenProvider().showSections(getActivity(), course);
             finish();
         }
-        ProgressHelper.dismiss(mJoinCourseSpinner);
+        ProgressHelper.dismiss(joinCourseSpinner);
     }
 
     @Override
     public void showProgress() {
-        ProgressHelper.activate(mJoinCourseSpinner);
+        ProgressHelper.activate(joinCourseSpinner);
     }
 
     @Override
     public void setEnabledJoinButton(boolean isEnabled) {
-        mJoinCourseView.setEnabled(isEnabled);
+        joinCourseView.setEnabled(isEnabled);
     }
 
     @Subscribe
     public void onFailJoin(FailJoinEvent e) {
-        if (mCourse != null) {
+        if (course != null) {
             if (e.getCode() == HttpURLConnection.HTTP_FORBIDDEN) {
                 Toast.makeText(getActivity(), joinCourseWebException, Toast.LENGTH_LONG).show();
             } else if (e.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
@@ -661,8 +656,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
                 Toast.makeText(getActivity(), joinCourseException,
                         Toast.LENGTH_LONG).show();
             }
-            ProgressHelper.dismiss(mJoinCourseSpinner);
-            mJoinCourseView.setEnabled(true);
+            ProgressHelper.dismiss(joinCourseSpinner);
+            joinCourseView.setEnabled(true);
         }
 
     }
@@ -673,21 +668,21 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
                 .load(uri)
                 .placeholder(mVideoPlaceholder)
                 .error(mVideoPlaceholder)
-                .into(mThumbnail);
+                .into(this.thumbnail);
     }
 
 
     @Subscribe
     public void onSuccessDrop(final SuccessDropCourseEvent e) {
-        if (mCourse != null && e.getCourse().getCourseId() == mCourse.getCourseId()) {
-            mCourse.setEnrollment(0);
+        if (course != null && e.getCourse().getCourseId() == course.getCourseId()) {
+            course.setEnrollment(0);
             resolveJoinView();
         }
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (mCourse != null) {
+        if (course != null) {
             inflater.inflate(R.menu.share_menu, menu);
             createIntentForSharing();
         }
@@ -698,8 +693,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         switch (item.getItemId()) {
             case R.id.menu_item_share:
                 if (shareIntentWithChooser != null) {
-                    if (mCourse != null && mCourse.getTitle() != null) {
-                        analytic.reportEventWithIdName(Analytic.Interaction.SHARE_COURSE, mCourse.getCourseId() + "", mCourse.getTitle());
+                    if (course != null && course.getTitle() != null) {
+                        analytic.reportEventWithIdName(Analytic.Interaction.SHARE_COURSE, course.getCourseId() + "", course.getTitle());
                     }
                     startActivity(shareIntentWithChooser);
                 }
@@ -709,8 +704,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     }
 
     private void createIntentForSharing() {
-        if (mCourse == null) return;
+        if (course == null) return;
 
-        shareIntentWithChooser = shareHelper.getIntentForCourseSharing(mCourse);
+        shareIntentWithChooser = shareHelper.getIntentForCourseSharing(course);
     }
 }

@@ -1,7 +1,7 @@
 package org.stepic.droid.store.structure;
 
 public class DbStructureNotification extends DBStructureBase {
-    private static String[] mUsedColumns = null;
+    private static String[] usedColumns = null;
 
     public static final String NOTIFICATIONS_TEMP = "notifications_temp";
 
@@ -21,8 +21,8 @@ public class DbStructureNotification extends DBStructureBase {
     }
 
     public static String[] getUsedColumns() {
-        if (mUsedColumns == null) {
-            mUsedColumns = new String[]{
+        if (usedColumns == null) {
+            usedColumns = new String[]{
                     Column.ID,
                     Column.IS_UNREAD,
                     Column.IS_MUTED,
@@ -35,7 +35,7 @@ public class DbStructureNotification extends DBStructureBase {
                     Column.COURSE_ID
             };
         }
-        return mUsedColumns;
+        return usedColumns;
     }
 
 }

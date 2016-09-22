@@ -4,13 +4,7 @@ import android.app.DownloadManager
 import android.app.IntentService
 import android.app.Service
 import android.content.Intent
-import android.util.Log
-import com.squareup.otto.Bus
 import org.stepic.droid.base.MainApplication
-import org.stepic.droid.model.Lesson
-import org.stepic.droid.model.Section
-import org.stepic.droid.model.Step
-import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.ICancelSniffer
 import org.stepic.droid.store.IStoreStateManager
 import org.stepic.droid.store.operations.DatabaseFacade
@@ -21,17 +15,13 @@ import javax.inject.Inject
 class CancelLoadingService : IntentService("cancel_loading") {
 
     @Inject
-    lateinit var mSystemDownloadManager: DownloadManager
+    lateinit var systemDownloadManager: DownloadManager
     @Inject
-    lateinit var mUserPrefs: UserPreferences
+    lateinit var databaseFacade: DatabaseFacade
     @Inject
-    lateinit var mBus: Bus
+    lateinit var storeStateManager: IStoreStateManager
     @Inject
-    lateinit var mDb: DatabaseFacade
-    @Inject
-    lateinit var mStoreStateManager: IStoreStateManager
-    @Inject
-    lateinit var mCancelSniffer: ICancelSniffer
+    lateinit var cancelSniffer: ICancelSniffer
 
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -64,30 +54,30 @@ class CancelLoadingService : IntentService("cancel_loading") {
     private fun cancelStepVideo(stepId: Long) {
         try {
             RWLocks.DownloadLock.writeLock().lock()
-            var downloadEntity = mDb.getDownloadEntityByStepId(stepId)
+            var downloadEntity = databaseFacade.getDownloadEntityByStepId(stepId)
             downloadEntity?.let {
-                val numberOfRemoved = mSystemDownloadManager.remove(downloadEntity.downloadId)
+                val numberOfRemoved = systemDownloadManager.remove(downloadEntity.downloadId)
                 if (numberOfRemoved > 0) {
-                    mCancelSniffer.removeStepIdCancel(stepId)
-                    mDb.deleteDownloadEntityByDownloadId(downloadEntity.downloadId)
-                    mDb.deleteVideo(downloadEntity.videoId)
-                    val step = mDb.getStepById(stepId)
+                    cancelSniffer.removeStepIdCancel(stepId)
+                    databaseFacade.deleteDownloadEntityByDownloadId(downloadEntity.downloadId)
+                    databaseFacade.deleteVideo(downloadEntity.videoId)
+                    val step = databaseFacade.getStepById(stepId)
 
                     if (step != null) {
                         step.is_cached = false
                         step.is_loading = false
-                        mDb.updateOnlyCachedLoadingStep(step)
-                        mStoreStateManager.updateStepAfterDeleting(step)
+                        databaseFacade.updateOnlyCachedLoadingStep(step)
+                        storeStateManager.updateStepAfterDeleting(step)
 
-                        val lesson = mDb.getLessonById(step.id)
+                        val lesson = databaseFacade.getLessonById(step.id)
                         lesson?.let {
-                            val unit = mDb.getUnitByLessonId(lesson.id)
+                            val unit = databaseFacade.getUnitByLessonId(lesson.id)
                             unit?.let {
-                                if (mCancelSniffer.isUnitIdIsCanceled(unit.id)) {
-                                    mCancelSniffer.removeUnitIdCancel(unit.id)
+                                if (cancelSniffer.isUnitIdIsCanceled(unit.id)) {
+                                    cancelSniffer.removeUnitIdCancel(unit.id)
 
-                                    if (mCancelSniffer.isSectionIdIsCanceled(unit.section)) {
-                                        mCancelSniffer.removeSectionIdCancel(unit.section)
+                                    if (cancelSniffer.isSectionIdIsCanceled(unit.section)) {
+                                        cancelSniffer.removeSectionIdCancel(unit.section)
                                     }
                                 }
                             }

@@ -24,7 +24,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.StepModule;
+import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.presenters.StepsPresenter;
 import org.stepic.droid.core.presenters.contracts.StepsView;
 import org.stepic.droid.events.steps.UpdateStepEvent;
@@ -34,6 +34,8 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.ui.adapters.StepFragmentAdapter;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.resolvers.StepHelper;
+import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.web.ViewAssignment;
 
 import javax.inject.Inject;
@@ -126,6 +128,9 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @Inject
     StepsPresenter stepsPresenter;
 
+    @Inject
+    StepTypeResolver stepTypeResolver;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -188,14 +193,14 @@ public class StepsFragment extends FragmentBase implements StepsView {
             @Override
             public void onClick(View v) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_AUTH_FROM_STEPS);
-                mShell.getScreenProvider().showLaunchScreen(getContext(), false);
+                shell.getScreenProvider().showLaunchScreen(getContext(), false);
                 getActivity().finish();
             }
         });
     }
 
     private void init(Lesson lesson, Unit unit) {
-        stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepsPresenter.getStepList(), lesson, unit);
+        stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepsPresenter.getStepList(), lesson, unit, stepTypeResolver);
         viewPager.setAdapter(stepAdapter);
 
         getActivity().setTitle(lesson.getTitle());
@@ -215,10 +220,15 @@ public class StepsFragment extends FragmentBase implements StepsView {
     }
 
     private void pushState(int position) {
+        boolean isTryToPushFirstStep = position == 0;
+        if (isTryToPushFirstStep && fromPreviousLesson && stepsPresenter.getStepList().size() != 1) {
+            //if from previous lesson --> not mark as viewed
+            return;
+        }
         if (stepsPresenter.getStepList().size() <= position) return;
         final Step step = stepsPresenter.getStepList().get(position);
 
-        if (mStepResolver.isViewedStatePost(step) && !step.is_custom_passed()) {
+        if (StepHelper.isViewedStatePost(step) && !step.is_custom_passed()) {
             step.set_custom_passed(true);
             if (position <= tabLayout.getTabCount()) {
                 TabLayout.Tab tab = tabLayout.getTabAt(position);
@@ -226,23 +236,25 @@ public class StepsFragment extends FragmentBase implements StepsView {
                     tab.setIcon(stepAdapter.getTabDrawable(position));
                 }
             }
+        }
 
-            //try to push viewed state to the server
+        //try to push viewed state to the server
+        if (step != null) {
+            //always push view to server
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 long stepId = step.getId();
 
                 protected Void doInBackground(Void... params) {
                     try {
-                        long assignmentID = mDatabaseFacade.getAssignmentIdByStepId(stepId);
-
-                        mShell.getScreenProvider().pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
+                        long assignmentID = databaseFacade.getAssignmentIdByStepId(stepId);
+                        shell.getScreenProvider().pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
                     } catch (Exception exception) {
                         analytic.reportError(Analytic.Error.FAIL_PUSH_STEP_VIEW, exception);
                     }
                     return null;
                 }
             };
-            task.executeOnExecutor(mThreadPoolExecutor);
+            task.executeOnExecutor(threadPoolExecutor);
         }
     }
 
@@ -250,20 +262,23 @@ public class StepsFragment extends FragmentBase implements StepsView {
     public void onUpdateOneStep(UpdateStepEvent e) {
         long stepId = e.getStepId();
         Step step = null;
-        for (Step item : stepsPresenter.getStepList()) {
-            if (item.getId() == stepId) {
-                step = item;
+        int position = -1;
+        for (int i = 0; i < stepsPresenter.getStepList().size(); i++) {
+            Step stepInList = stepsPresenter.getStepList().get(i);
+            if (stepInList.getId() == stepId) {
+                position = i;
+                step = stepInList;
                 break;
             }
         }
 
-        if (step != null && step.is_custom_passed()) {
+        if (step != null && !step.is_custom_passed() && (StepHelper.isViewedStatePost(step) || e.isSuccessAttempt())) {
             // if not passed yet
             step.set_custom_passed(true);
-            for (int i = 0; i < tabLayout.getTabCount(); i++) {
-                TabLayout.Tab tab = tabLayout.getTabAt(i);
+            if (position >= 0 && position < tabLayout.getTabCount()) {
+                TabLayout.Tab tab = tabLayout.getTabAt(position);
                 if (tab != null) {
-                    tab.setIcon(stepAdapter.getTabDrawable(i));
+                    tab.setIcon(stepAdapter.getTabDrawable(position));
                 }
             }
         }
@@ -319,7 +334,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
                 }
 
                 Step step = stepsPresenter.getStepList().get(position);
-                mShell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+                shell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -385,13 +400,14 @@ public class StepsFragment extends FragmentBase implements StepsView {
                     return true;
                 }
             });
+        } else {
+            pushState(viewPager.getCurrentItem());
         }
         tabLayout.setVisibility(View.VISIBLE);
-        pushState(viewPager.getCurrentItem());
 
-        if (disscussionId >= 0 && position >= 0 && position < stepsPresenter.getStepList().size()) {
+        if (disscussionId > 0 && position >= 0 && position < stepsPresenter.getStepList().size()) {
             Step step = stepsPresenter.getStepList().get(position);
-            mShell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+            shell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
             disscussionId = -1;
         }
     }

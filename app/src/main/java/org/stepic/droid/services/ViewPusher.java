@@ -3,12 +3,12 @@ package org.stepic.droid.services;
 import android.app.DownloadManager;
 import android.app.IntentService;
 import android.content.Intent;
-import android.os.Handler;
 
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.ILocalProgressManager;
+import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.preferences.UserPreferences;
@@ -16,6 +16,7 @@ import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.IVideoResolver;
+import org.stepic.droid.util.resolvers.StepHelper;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.ViewAssignment;
 
@@ -23,26 +24,32 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 import retrofit.Response;
 
 public class ViewPusher extends IntentService {
-    @Inject
-    DownloadManager mSystemDownloadManager;
-    @Inject
-    UserPreferences mUserPrefs;
-    @Inject
-    Bus mBus;
-    @Inject
-    IVideoResolver mResolver;
-    @Inject
-    IApi mApi;
-    @Inject
-    DatabaseFacade mDb;
-    @Inject
-    IStoreStateManager mStoreStateManager;
 
     @Inject
-    ILocalProgressManager mUnitProgressManager;
+    DownloadManager systemDownloadManager;
+    @Inject
+    UserPreferences userPrefs;
+    @Inject
+    Bus bus;
+    @Inject
+    IVideoResolver resolver;
+    @Inject
+    IApi api;
+    @Inject
+    DatabaseFacade database;
+    @Inject
+    IStoreStateManager storeStateManager;
+
+    @Inject
+    LocalProgressManager unitProgressManager;
+
+    @Inject
+    IMainHandler mainHandler;
 
 
     /**
@@ -72,35 +79,37 @@ public class ViewPusher extends IntentService {
         }
 
         try {
-            Response<Void> response = mApi.postViewed(new ViewAssignment(assignmentId, stepId)).execute();
+            Response<Void> response = api.postViewed(new ViewAssignment(assignmentId, stepId)).execute();
             if (!response.isSuccess()) {
                 throw new IOException("response is not success");
             }
         } catch (IOException e) {
             //if we not push:
-            mDb.addToQueueViewedState(new ViewAssignment(assignmentId, stepId));
+            database.addToQueueViewedState(new ViewAssignment(assignmentId, stepId));
         }
 
-        //anyway check in db as viewed:
-        if (assignmentId != null) {
-            mDb.markProgressAsPassed(assignmentId);
-        } else {
-            Step step = mDb.getStepById(stepId);
-            if (step != null && step.getProgressId() != null) {
-                mDb.markProgressAsPassedIfInDb(step.getProgressId());
+        Step step = database.getStepById(stepId);
+
+        //check in db as passed if it can be passed by view
+        if (StepHelper.isViewedStatePost(step)) {
+            if (assignmentId != null) {
+                database.markProgressAsPassed(assignmentId);
+            } else {
+                if (step != null && step.getProgressId() != null) {
+                    database.markProgressAsPassedIfInDb(step.getProgressId());
+                }
             }
+            unitProgressManager.checkUnitAsPassed(stepId);
         }
-        mUnitProgressManager.checkUnitAsPassed(stepId);
         // Get a handler that can be used to post to the main thread
-        Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
 
-        Runnable myRunnable = new Runnable() {
+        mainHandler.post(new Function0<Unit>() {
             @Override
-            public void run() {
-                mBus.post(new UpdateStepEvent(stepId));
-            } // This is your code
-        };
-        mainHandler.post(myRunnable);
+            public Unit invoke() {
+                bus.post(new UpdateStepEvent(stepId, false));
+                return Unit.INSTANCE;
+            }
+        });
     }
 }
 
