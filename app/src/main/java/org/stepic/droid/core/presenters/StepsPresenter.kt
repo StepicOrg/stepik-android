@@ -107,7 +107,7 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
             // and try to update from internet
             var response: Response<StepResponse>? = null
             try {
-                response = api.getStepsByLessonId(it.id).execute()
+                response = api.getSteps(it.steps).execute()
             } catch (ex: Exception) {
                 if (!isStepsShown) {
                     mainHandler.post {
