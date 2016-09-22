@@ -139,7 +139,7 @@ public interface Analytic {
     interface Notification {
         String DISABLED_BY_USER = "Notification is disabled by user in app";
         String ACTION_NOT_SUPPORT = "notification action is not support";
-        String HTML_WAS_NULL = "notification action is not support";
+        String HTML_WAS_NULL = "notification action is not support"; //// FIXME: 22.09.16 similar analytic
         String WAS_MUTED = "notification html text was muted";
         String NOT_SUPPORT = "notification is not support";
         String LEARN_SHOWN = "notification learn is shown";
