@@ -265,7 +265,6 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
                 mediaPlayer?.setEventListener(preRollListener)
                 mediaPlayer?.play()
             }
-            mediaPlayer?.time = currentTimeInMillis
             playerSeekBar?.let {
                 if (!isSeekBarDragging) {
                     val max = it.max
@@ -572,7 +571,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
 
     override fun onNeedShowVideoWithTimestamp(timestamp: Long) {
         if (!isInitiatedByTimestamp) {
-//            currentTimeInMillis = timestamp
+            currentTimeInMillis = timestamp
         }
         isInitiatedByTimestamp = true
         releasePlayer()
@@ -692,6 +691,8 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
             mOwner = owner
         }
 
+        private var alreadyTimestamped = false
+
         override fun onEvent(event: MediaPlayer.Event) {
             val player = mOwner?.mediaPlayer
             when (event.type) {
@@ -700,6 +701,21 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
                 }
                 MediaPlayer.Event.Playing -> {
                     mOwner?.stopLoading()
+
+                    if (!alreadyTimestamped) {
+                        var currentTime = 0L
+                        if (mOwner?.currentTimeInMillis != null) {
+                            currentTime = mOwner!!.currentTimeInMillis
+                        }
+                        player?.let {
+                            if (it.length - JUMP_MAX_DELTA < currentTime) {
+                                it.time = 0L
+                            } else {
+                                it.time = currentTime
+                            }
+                        }
+                        alreadyTimestamped = true
+                    }
                     if (player?.isPlaying ?: false) {
                         mOwner?.showPause()
                         player?.length?.let {
