@@ -65,31 +65,31 @@ import io.fabric.sdk.android.Fabric;
 public class LoginActivity extends FragmentActivityBase {
 
     @BindView(R.id.actionbar_close_btn_layout)
-    View mCloseButton;
+    View closeButton;
 
     @BindView(R.id.login_button_layout)
-    View mLoginBtn;
+    View loginBtn;
 
     @BindView(R.id.email_et)
-    EditText mLoginText;
+    EditText loginText;
 
     @BindView(R.id.password_et)
-    EditText mPasswordText;
+    EditText passwordText;
 
     @BindView(R.id.forgot_password_tv)
-    TextView mForgotPassword;
+    TextView forgotPassword;
 
     @BindView(R.id.root_view)
-    View mRootView;
+    View rootView;
 
     @BindView(R.id.social_list)
-    RecyclerView mSocialRecyclerView;
+    RecyclerView socialRecyclerView;
 
-    private ProgressDialog mProgressLogin;
+    private ProgressDialog progressLogin;
 
     ProgressHandler progressHandler;
 
-    GoogleApiClient mGoogleApiClient;
+    GoogleApiClient googleApiClient;
     private CallbackManager callbackManager;
     private TwitterAuthClient twitterAuthClient;
 
@@ -114,7 +114,7 @@ public class LoginActivity extends FragmentActivityBase {
         // Build GoogleAPIClient with the Google Sign-In API and the above options.
         // ATTENTION: This "addApi(AppIndex.API)"was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -128,12 +128,12 @@ public class LoginActivity extends FragmentActivityBase {
             @Override
             public void activate() {
                 hideSoftKeypad();
-                ProgressHelper.activate(mProgressLogin);
+                ProgressHelper.activate(progressLogin);
             }
 
             @Override
             public void dismiss() {
-                ProgressHelper.dismiss(mProgressLogin);
+                ProgressHelper.dismiss(progressLogin);
             }
         };
 
@@ -148,14 +148,14 @@ public class LoginActivity extends FragmentActivityBase {
         int widthOfScreen = size.x;
 
 
-        mSocialRecyclerView.addItemDecoration(new SpacesItemDecorationHorizontal((int) pixelForPadding));//30 is ok
+        socialRecyclerView.addItemDecoration(new SpacesItemDecorationHorizontal((int) pixelForPadding));//30 is ok
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         if (widthOfScreen > widthOfAllItems) {
             int padding = (int) (widthOfScreen - widthOfAllItems) / 2;
-            mSocialRecyclerView.setPadding(padding, 0, 0, 0);
+            socialRecyclerView.setPadding(padding, 0, 0, 0);
         }
 
-        mSocialRecyclerView.setLayoutManager(layoutManager);
+        socialRecyclerView.setLayoutManager(layoutManager);
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -201,23 +201,23 @@ public class LoginActivity extends FragmentActivityBase {
                 Toast.makeText(LoginActivity.this, "twitter_failure", Toast.LENGTH_SHORT).show();
             }
         };
-        mSocialRecyclerView.setAdapter(new SocialAuthAdapter(this, mGoogleApiClient, twitterAuthClient, twitterSessionCallback));
+        socialRecyclerView.setAdapter(new SocialAuthAdapter(this, googleApiClient, twitterAuthClient, twitterSessionCallback));
 
-        mProgressLogin = new LoadingProgressDialog(this);
+        progressLogin = new LoadingProgressDialog(this);
 
-        mLoginText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        loginText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    mPasswordText.requestFocus();
+                    passwordText.requestFocus();
                     handled = true;
                 }
                 return handled;
             }
         });
 
-        mPasswordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        passwordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
@@ -230,13 +230,13 @@ public class LoginActivity extends FragmentActivityBase {
         });
 
 
-        mCloseButton.setOnClickListener(new View.OnClickListener() {
+        closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        mLoginBtn.setOnClickListener(new View.OnClickListener() {
+        loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_ON_SIGN_IN_SCREEN);
@@ -244,7 +244,7 @@ public class LoginActivity extends FragmentActivityBase {
             }
         });
 
-        mRootView.requestFocus();
+        rootView.requestFocus();
 
         //if we redirect from social:
 
@@ -273,7 +273,7 @@ public class LoginActivity extends FragmentActivityBase {
     @Override
     protected void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        googleApiClient.connect();
         bus.register(this);
     }
 
@@ -281,7 +281,7 @@ public class LoginActivity extends FragmentActivityBase {
     protected void onStop() {
         super.onStop();
         bus.unregister(this);
-        mGoogleApiClient.disconnect();
+        googleApiClient.disconnect();
     }
 
     @Override
@@ -291,8 +291,8 @@ public class LoginActivity extends FragmentActivityBase {
     }
 
     private void tryLogin() {
-        String login = mLoginText.getText().toString();
-        String password = mPasswordText.getText().toString();
+        String login = loginText.getText().toString();
+        String password = passwordText.getText().toString();
 
         loginManager.login(login, password,
                 progressHandler,
@@ -306,8 +306,8 @@ public class LoginActivity extends FragmentActivityBase {
 
     @Override
     protected void onDestroy() {
-        mCloseButton.setOnClickListener(null);
-        mLoginBtn.setOnClickListener(null);
+        closeButton.setOnClickListener(null);
+        loginBtn.setOnClickListener(null);
         super.onDestroy();
     }
 
@@ -359,7 +359,7 @@ public class LoginActivity extends FragmentActivityBase {
                         new FailLoginSupplementaryHandler() {
                             @Override
                             public void onFailLogin(Throwable t) {
-                                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+                                Auth.GoogleSignInApi.signOut(googleApiClient);
                             }
                         });
             } else {
