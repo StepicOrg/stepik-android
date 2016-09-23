@@ -19,25 +19,34 @@ class DatabaseFacade {
 
     @Inject
     lateinit var sectionDao: IDao<Section>
+
     @Inject
     lateinit var unitDao: IDao<Unit>
+
     @Inject
     lateinit var progressDao: IDao<Progress>
+
     @Inject
     lateinit var assignmentDao: IDao<Assignment>
+
     @Inject
     lateinit var lessonDao: IDao<Lesson>
+
     @Inject
     lateinit var viewAssignmentDao: IDao<ViewAssignment>
+
     @Inject
     lateinit var downloadEntityDao: IDao<DownloadEntity>
+
     @Inject
     lateinit var cachedVideoDao: IDao<CachedVideo>
+
     @Inject
     lateinit var stepDao: IDao<Step>
 
     @Inject
     lateinit var coursesEnrolledDao: IDao<Course>
+
     @Inject
     lateinit var coursesFeaturedDao: IDao<Course>
 
