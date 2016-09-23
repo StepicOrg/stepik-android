@@ -165,6 +165,7 @@ public class LoginActivity extends FragmentActivityBase {
             public void onSuccess(LoginResult loginResult) {
                 // App code
                 Toast.makeText(LoginActivity.this, "onSuccess", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
@@ -366,21 +367,5 @@ public class LoginActivity extends FragmentActivityBase {
 
     private void onInternetProblems() {
         Toast.makeText(this, R.string.connectionProblems, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Login Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
     }
 }
