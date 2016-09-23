@@ -98,6 +98,8 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
 
     private var isLoading: Boolean = false
 
+    private val receiver: BroadcastReceiver = MyBroadcastReceiver(this)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -106,8 +108,6 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         isOnResumeDirectlyAfterOnCreate = true
     }
 
-
-    private val mReceiver: BroadcastReceiver = MyBroadcastReceiver(this)
 
     private class MyBroadcastReceiver(owner: VideoFragment) : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -145,7 +145,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
 
         var filter = IntentFilter()
         filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
-        activity.registerReceiver(mReceiver, filter)
+        activity.registerReceiver(receiver, filter)
         startLoading()
         return fragmentContainer
     }
@@ -299,7 +299,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
     override fun onDestroyView() {
         destroyVideoView()
         destroyController()
-        activity?.unregisterReceiver(mReceiver)
+        activity?.unregisterReceiver(receiver)
         super.onDestroyView()
     }
 
