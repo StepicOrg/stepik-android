@@ -305,6 +305,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
             currentTimeInMillis = (mediaPlayer?.time ?: 0L) - DELTA_TIME
         }
         if (currentTimeInMillis < 0L) currentTimeInMillis = 0L
+        videoTimestampPresenter.saveMillis(currentTimeInMillis, videoId)
         pausePlayer()
         mediaPlayer?.setEventListener(null)
         releasePlayer()
@@ -571,7 +572,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
 
     override fun onNeedShowVideoWithTimestamp(timestamp: Long) {
         if (!isInitiatedByTimestamp) {
-            currentTimeInMillis = timestamp
+            currentTimeInMillis = Math.max(timestamp - JUMP_MAX_DELTA, 0L)
         }
         isInitiatedByTimestamp = true
         releasePlayer()
