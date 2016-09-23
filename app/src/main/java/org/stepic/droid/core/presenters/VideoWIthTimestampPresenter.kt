@@ -9,10 +9,25 @@ class VideoWIthTimestampPresenter(val databaseFacade: DatabaseFacade,
                                   val mainHandler: IMainHandler,
                                   val threadPoolExecutor: ThreadPoolExecutor) : PresenterBase<VideoWithTimestampView>() {
 
-    fun showVideoWithPredefinedTimestamp(videoId: Long) {
+    var cachedTimestamp: Long? = null
+        private set
+
+    fun showVideoWithPredefinedTimestamp(videoId: Long?) {
+        if (videoId == null) {
+            view?.onNeedShowVideoWithTimestamp(null)
+            return
+        }
+
+        if (cachedTimestamp != null) {
+            view?.onNeedShowVideoWithTimestamp(cachedTimestamp)
+        }
+
+
         threadPoolExecutor.execute {
-            val timestamp: Long? = databaseFacade.getVideoTimestamp(videoId)?.timestamp
+//            val timestamp: Long? = databaseFacade.getVideoTimestamp(videoId)?.timestamp
+            val timestamp: Long? = 10000L
             mainHandler.post {
+                cachedTimestamp = timestamp
                 view?.onNeedShowVideoWithTimestamp(timestamp)
             }
         }
