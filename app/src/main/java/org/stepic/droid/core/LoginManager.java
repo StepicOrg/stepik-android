@@ -47,16 +47,16 @@ public class LoginManager implements ILoginManager {
             public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
                 progressHandler.dismiss();
                 if (response.isSuccess()) {
-                    successLogin(response, finisher);
+                    successLogin(response, finisher, null);
                 } else {
-                    failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())));
+                    failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())), null);
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
                 progressHandler.dismiss();
-                failLogin(t);
+                failLogin(t, null);
             }
         });
     }
@@ -68,26 +68,26 @@ public class LoginManager implements ILoginManager {
         shell.getApi().authWithCode(code).enqueue(new Callback<AuthenticationStepicResponse>() {
             @Override
             public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
-                handleSuccess(progressHandler, response, finisher);
+                handleSuccess(progressHandler, response, finisher, null);
             }
 
             @Override
             public void onFailure(Throwable t) {
                 progressHandler.dismiss();
-                failLogin(t);
+                failLogin(t, null);
             }
         });
     }
 
-    private void handleSuccess(ProgressHandler progressHandler, Response<AuthenticationStepicResponse> response, ActivityFinisher finisher) {
+    private void handleSuccess(ProgressHandler progressHandler, Response<AuthenticationStepicResponse> response, ActivityFinisher finisher, FailLoginSupplementaryHandler failLoginSupplementaryHandler) {
         progressHandler.dismiss();
         if (response.isSuccess()) {
-            successLogin(response, finisher);
+            successLogin(response, finisher, failLoginSupplementaryHandler);
         } else {
             if (response.code() == 401) {
-                failLogin(new LoginAlreadyUsedException("already used login"));
+                failLogin(new LoginAlreadyUsedException("already used login"), failLoginSupplementaryHandler);
             } else {
-                failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())));
+                failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())), failLoginSupplementaryHandler);
             }
         }
     }
@@ -99,7 +99,7 @@ public class LoginManager implements ILoginManager {
         shell.getApi().authWithNativeCode(code, type).enqueue(new Callback<AuthenticationStepicResponse>() {
             @Override
             public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
-                handleSuccess(progressHandler, response, finisher);
+                handleSuccess(progressHandler, response, finisher, failLoginSupplementaryHandler);
             }
 
             @Override
@@ -129,11 +129,7 @@ public class LoginManager implements ILoginManager {
         }
     }
 
-    private void failLogin(Throwable t) {
-        failLogin(t, null);
-    }
-
-    private void successLogin(Response<AuthenticationStepicResponse> response, ActivityFinisher finisher) {
+    private void successLogin(Response<AuthenticationStepicResponse> response, ActivityFinisher finisher, FailLoginSupplementaryHandler failLoginSupplementaryHandler) {
         SharedPreferenceHelper preferenceHelper = shell.getSharedPreferenceHelper();
         AuthenticationStepicResponse authStepic = response.body();
         preferenceHelper.storeAuthInfo(authStepic);
@@ -143,11 +139,11 @@ public class LoginManager implements ILoginManager {
             shell.getScreenProvider().showMainFeed(context);
             finisher.onFinish();
         } else {
-            failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())));
+            failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())), failLoginSupplementaryHandler);
         }
     }
 
-    public static class LoginAlreadyUsedException extends RuntimeException {
+    private static class LoginAlreadyUsedException extends RuntimeException {
         LoginAlreadyUsedException(String message) {
             super(message);
         }

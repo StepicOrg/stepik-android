@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,9 +21,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -165,7 +162,21 @@ public class LoginActivity extends FragmentActivityBase {
             public void onSuccess(LoginResult loginResult) {
                 // App code
                 Toast.makeText(LoginActivity.this, "onSuccess", Toast.LENGTH_SHORT).show();
-
+                loginManager.loginWithNativeProviderCode(loginResult.getAccessToken().getToken(),
+                        SocialManager.SocialType.facebook,
+                        progressHandler,
+                        new ActivityFinisher() {
+                            @Override
+                            public void onFinish() {
+                                finish();
+                            }
+                        },
+                        new FailLoginSupplementaryHandler() {
+                            @Override
+                            public void onFailLogin(Throwable t) {
+                                LoginManager.getInstance().logOut();
+                            }
+                        });
             }
 
             @Override
@@ -261,23 +272,15 @@ public class LoginActivity extends FragmentActivityBase {
 
     @Override
     protected void onStart() {
-        super.onStart();// ATTENTION: This was auto-generated to implement the App Indexing API.
-// See https://g.co/AppIndexing/AndroidStudio for more information.
+        super.onStart();
         mGoogleApiClient.connect();
         bus.register(this);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.start(mGoogleApiClient, getIndexApiAction());
     }
 
     @Override
     protected void onStop() {
-        super.onStop();// ATTENTION: This was auto-generated to implement the App Indexing API.
-// See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(mGoogleApiClient, getIndexApiAction());
+        super.onStop();
         bus.unregister(this);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         mGoogleApiClient.disconnect();
     }
 
