@@ -97,6 +97,9 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
     private var mSarNum: Int = 0
     private var mSarDen: Int = 0
     private var isOnResumeDirectlyAfterOnCreate = true
+    private var hideRunnable: Runnable? = null
+    private val preRollListener = PreRollListener(this)
+    private var needPlay = false
 
     private var isLoading: Boolean = false
 
@@ -131,7 +134,6 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         }
     }
 
-
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         fragmentContainer = inflater?.inflate(R.layout.fragment_video, container, false) as ViewGroup
 
@@ -149,7 +151,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         setupController(fragmentContainer)
         isOnStartAfterSurfaceDestroyed = false
 
-        var filter = IntentFilter()
+        val filter = IntentFilter()
         filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
         activity.registerReceiver(receiver, filter)
         startLoading()
@@ -225,11 +227,6 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         analytic.reportEvent(Analytic.Video.VLC_HARDWARE_ERROR)
         activity?.finish()
     }
-
-    override fun onStart() {
-        super.onStart()
-    }
-
 
     override fun onResume() {
         super.onResume()
@@ -483,26 +480,24 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         }
     }
 
-    private var mHideRunnable: Runnable? = null
-
     private fun autoHideController(timeout: Long = TIMEOUT_BEFORE_HIDE) {
         val view = controller
-        mHideRunnable?.let {
+        hideRunnable?.let {
             view?.removeCallbacks(it)
         }
         if (timeout >= 0) {
-            mHideRunnable = Runnable {
+            hideRunnable = Runnable {
                 controller?.let {
                     showController(false)
                 }
             }
-            view?.postDelayed(mHideRunnable, timeout)
+            view?.postDelayed(hideRunnable, timeout)
         }
     }
 
     private fun clearAutoHideQueue() {
         val view = controller
-        mHideRunnable?.let {
+        hideRunnable?.let {
             view?.removeCallbacks(it)
         }
     }
@@ -751,9 +746,6 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
             }
         }
     }
-
-    private val preRollListener = PreRollListener(this)
-    private var needPlay = false
 
     private class PreRollListener(owner: VideoFragment) : MediaPlayer.EventListener {
         private var mOwner: VideoFragment?
