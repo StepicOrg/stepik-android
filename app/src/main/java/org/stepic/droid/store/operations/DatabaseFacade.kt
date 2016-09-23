@@ -87,10 +87,7 @@ class DatabaseFacade {
 
     fun addAssignment(assignment: Assignment?) = assignment?.let { assignmentDao.insertOrUpdate(assignment) }
 
-    /**
-     * deprecated because of step has 0..* assignments.
-     */
-    @Deprecated("")
+    @Deprecated("because of step has 0..* assignments.")
     fun getAssignmentIdByStepId(stepId: Long): Long {
         val assignment = assignmentDao.get(DbStructureAssignment.Column.STEP_ID, stepId.toString())
         return assignment?.id ?: -1;
