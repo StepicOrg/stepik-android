@@ -59,6 +59,9 @@ class DatabaseFacade {
     @Inject
     lateinit var certificateViewItemDao: IDao<CertificateViewItem>
 
+    @Inject
+    lateinit var videoTimestampDao: IDao<VideoTimestamp>
+
     init {
         MainApplication.storageComponent().inject(this)
         coursesEnrolledDao.setTableName(Table.enrolled.storeName)
@@ -420,5 +423,12 @@ class DatabaseFacade {
     fun removeSectionsOfCourse(courseId: Long) {
         sectionDao.delete(DbStructureSections.Column.COURSE, courseId.toString());
     }
+
+    fun addTimestamp(videoTimestamp: VideoTimestamp) {
+        videoTimestampDao.insertOrUpdate(videoTimestamp)
+    }
+
+    fun getVideoTimestamp(videoId: Long): VideoTimestamp? =
+            videoTimestampDao.get(DbStructureVideoTimestamp.Column.VIDEO_ID, videoId.toString())
 
 }
