@@ -169,7 +169,7 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
-    public void showVideo(Activity sourceActivity, String videoPath) {
+    public void showVideo(Activity sourceActivity, String videoPath, Long videoId) {
         analytic.reportEvent(Analytic.Screens.TRY_OPEN_VIDEO);
         boolean isOpenExternal = userPreferences.isOpenInExternal();
         if (isOpenExternal) {
@@ -187,6 +187,7 @@ public class ScreenManager implements IScreenManager {
         if (isCompatible && !isOpenExternal) {
             Intent intent = new Intent(MainApplication.getAppContext(), VideoActivity.class);
             intent.putExtra(VideoActivity.Companion.getVideoPathKey(), videoPath);
+            intent.putExtra(VideoActivity.Companion.getVideoIdKey(), videoId);
             sourceActivity.startActivity(intent);
         } else {
             Uri videoUri = Uri.parse(videoPath);

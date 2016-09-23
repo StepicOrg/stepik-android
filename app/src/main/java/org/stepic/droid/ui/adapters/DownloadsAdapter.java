@@ -152,7 +152,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             final CachedVideo video = cachedVideoList.get(position);
             File file = new File(video.getUrl());
             if (video.getUrl()!= null && file.exists()) {
-                screenManager.showVideo(sourceActivity, video.getUrl());
+                screenManager.showVideo(sourceActivity, video.getUrl(), video.getVideoId());
             } else {
                 Toast.makeText(MainApplication.getAppContext(), R.string.sorry_moved, Toast.LENGTH_SHORT).show();
                 threadPoolExecutor.execute(new Runnable() {

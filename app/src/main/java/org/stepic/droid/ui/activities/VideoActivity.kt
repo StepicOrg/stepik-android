@@ -7,12 +7,14 @@ import org.stepic.droid.ui.fragments.VideoFragment
 class VideoActivity : SingleFragmentActivity() {
     companion object {
         val videoPathKey = "VIDEO_URI_KEY"
+        val videoIdKey = "VIDEO_ID_KEY"
     }
 
     override fun createFragment(): Fragment? {
         val path: String? = intent.extras.getString(videoPathKey)
+        val videoId : Long = intent.extras.getLong(videoIdKey)
         if (path != null) {
-            return VideoFragment.newInstance(path)
+            return VideoFragment.newInstance(path, videoId)
         } else {
             return null
         }

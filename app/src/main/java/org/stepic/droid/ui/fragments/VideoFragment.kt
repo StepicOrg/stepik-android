@@ -37,18 +37,19 @@ import java.util.*
 
 class VideoFragment : FragmentBase(), IVLCVout.Callback {
 
-
     companion object {
         private val TIMEOUT_BEFORE_HIDE = 4500L
         private val INDEX_PLAY_IMAGE = 0
         private val INDEX_PAUSE_IMAGE = 1
         private val JUMP_TIME_MILLIS = 10000L
         private val JUMP_MAX_DELTA = 3000L
-        private val VIDEO_KEY = "video_key"
+        private val VIDEO_PATH_KEY = "video_path_key"
+        private val VIDEO_ID_KEY = "video_id_key"
         private val DELTA_TIME = 0L
-        fun newInstance(videoUri: String): VideoFragment {
+        fun newInstance(videoUri: String, videoId: Long): VideoFragment {
             val args = Bundle()
-            args.putString(VIDEO_KEY, videoUri)
+            args.putString(VIDEO_PATH_KEY, videoUri)
+            args.putLong(VIDEO_ID_KEY, videoId)
             val fragment = VideoFragment()
             fragment.arguments = args
             return fragment
@@ -61,6 +62,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
     var fragmentContainer: ViewGroup? = null
     var videoView: SurfaceView? = null;
     var filePath: String? = null;
+    private var videoId: Long? = null
     var libvlc: LibVLC? = null
     var mediaPlayer: MediaPlayer? = null
     var videoWidth: Int = 0
@@ -103,7 +105,11 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-        filePath = arguments.getString(VIDEO_KEY)
+        filePath = arguments.getString(VIDEO_PATH_KEY)
+        videoId = arguments.getLong(VIDEO_ID_KEY)
+        if (videoId != null && videoId!! <= 0L) { // if equal zero -> it is default, it is not our video
+            videoId = null
+        }
         initPhoneStateListener()
         isOnResumeDirectlyAfterOnCreate = true
     }
@@ -181,7 +187,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
             // Create media player
             mediaPlayer = MediaPlayer(libvlc)
 
-            val file = File (filePath)
+            val file = File(filePath)
             var uri: Uri?
             if (file.exists()) {
                 uri = Uri.fromFile(file)
@@ -392,7 +398,6 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         lp.width = Math.ceil(w.toDouble() * videoWidth / mVideoVisibleWidth).toInt()
         lp.height = Math.ceil(h.toDouble() * videoHeight / mVideoVisibleHeight).toInt()
         videoView!!.layoutParams = lp
-
 
 
         // set frame size (crop if necessary)
@@ -763,7 +768,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
                 MediaPlayer.Event.Playing -> {
                     //mOwner?.pausePlayer()//it is not need, because we do not want change button
                     player?.pause()
-                    player?.setEventListener (mOwner?.mPlayerListener)
+                    player?.setEventListener(mOwner?.mPlayerListener)
                     mOwner?.stopLoading()
                     player?.length?.let {
                         mOwner?.slashTime?.visibility = View.VISIBLE
