@@ -21,6 +21,9 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.core.MyPhoneStateListener
+import org.stepic.droid.core.modules.VideoModule
+import org.stepic.droid.core.presenters.VideoWIthTimestampPresenter
+import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
 import org.stepic.droid.events.IncomingCallEvent
 import org.stepic.droid.events.audio.AudioFocusLossEvent
 import org.stepic.droid.preferences.VideoPlaybackRate
@@ -34,8 +37,9 @@ import org.videolan.libvlc.MediaPlayer
 import org.videolan.libvlc.util.AndroidUtil
 import java.io.File
 import java.util.*
+import javax.inject.Inject
 
-class VideoFragment : FragmentBase(), IVLCVout.Callback {
+class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView {
 
     companion object {
         private val TIMEOUT_BEFORE_HIDE = 4500L
@@ -105,9 +109,13 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
 
     private val receiver: BroadcastReceiver = MyBroadcastReceiver(this)
 
+    @Inject
+    lateinit var videoTimestampPresenter: VideoWIthTimestampPresenter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
+        MainApplication.component().plus(VideoModule()).inject(this)
         filePath = arguments.getString(VIDEO_PATH_KEY)
         videoId = arguments.getLong(VIDEO_ID_KEY)
         if (videoId != null && videoId!! <= 0L) { // if equal zero -> it is default, it is not our video
@@ -162,6 +170,11 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         super.onActivityCreated(savedInstanceState)
         hideNavigationBar(false)
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        videoTimestampPresenter.attachView(this)
     }
 
     private fun bindViewWithPlayer() {
@@ -231,7 +244,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
     override fun onResume() {
         super.onResume()
         bus.register(this)
-        recreateAndPreloadPlayer(isNeedPlayAfterRecreating = false)
+        videoTimestampPresenter.showVideoWithPredefinedTimestamp(videoId)
     }
 
     fun recreateAndPreloadPlayer(isNeedPlayAfterRecreating: Boolean = true) {
@@ -260,7 +273,6 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
                     if (maxTimeInMillis != null) {
                         val maxTime = maxTimeInMillis ?: 1L
                         positionByHand = (currentTimeInMillis.toFloat() / maxTime.toFloat()).toFloat()
-
                     }
                     if (positionByHand > max) {
                         positionByHand = 0f
@@ -300,6 +312,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
     }
 
     override fun onDestroyView() {
+        videoTimestampPresenter.detachView(this)
         destroyVideoView()
         destroyController()
         activity?.unregisterReceiver(receiver)
@@ -553,6 +566,17 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         videoRateChooser?.setImageDrawable(rate.icon)
         mediaPlayer?.rate = rate.rateFloat
         userPreferences.videoPlaybackRate = rate
+    }
+
+    private var isInitiatedByTimestamp: Boolean = false
+
+    override fun onNeedShowVideoWithTimestamp(timestamp: Long) {
+        if (!isInitiatedByTimestamp) {
+//            currentTimeInMillis = timestamp
+        }
+        isInitiatedByTimestamp = true
+        releasePlayer()
+        recreateAndPreloadPlayer(isNeedPlayAfterRecreating = false)
     }
 
     private fun onJumpForward() {

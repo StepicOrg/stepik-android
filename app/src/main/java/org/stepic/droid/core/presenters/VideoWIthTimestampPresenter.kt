@@ -25,7 +25,7 @@ class VideoWIthTimestampPresenter(val databaseFacade: DatabaseFacade,
 
         threadPoolExecutor.execute {
 //            val timestamp: Long? = databaseFacade.getVideoTimestamp(videoId)?.timestamp
-            val timestamp: Long? = 10000L
+            val timestamp: Long? = 430000L
             mainHandler.post {
                 cachedTimestamp = timestamp
                 view?.onNeedShowVideoWithTimestamp(timestamp)
