@@ -35,6 +35,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
@@ -54,6 +55,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     @Inject
     IScreenManager screenManager;
+
     @Inject
     IDownloadManager downloadManager;
 
@@ -68,6 +70,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     @Inject
     Analytic analytic;
+
+    @Inject
+    ThreadPoolExecutor threadPoolExecutor;
 
     private List<Section> sections;
     private Context mContext;
@@ -142,7 +147,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     public void onClickLoad(int adapterPosition) {
         int sectionPosition = adapterPosition - SECTION_LIST_DELTA;
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
-            Section section = sections.get(sectionPosition);
+            final Section section = sections.get(sectionPosition);
 
             int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -177,7 +182,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 cleaner.removeSection(section);
                 section.set_loading(false);
                 section.set_cached(false);
-                databaseFacade.updateOnlyCachedLoadingSection(section);
+                threadPoolExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        databaseFacade.updateOnlyCachedLoadingSection(section);
+                    }
+                });
                 notifyItemChanged(adapterPosition);
             } else {
                 if (section.is_loading()) {
@@ -192,7 +202,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                     analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
                     section.set_cached(false);
                     section.set_loading(true);
-                    databaseFacade.updateOnlyCachedLoadingSection(section);
+                    threadPoolExecutor.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            databaseFacade.updateOnlyCachedLoadingSection(section);
+                        }
+                    });
                     downloadManager.addSection(section);
                     notifyItemChanged(adapterPosition);
                 }
