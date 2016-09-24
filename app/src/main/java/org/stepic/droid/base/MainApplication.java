@@ -7,6 +7,7 @@ import android.support.multidex.MultiDexApplication;
 
 import com.yandex.metrica.YandexMetrica;
 
+import org.stepic.droid.BuildConfig;
 import org.stepic.droid.R;
 import org.stepic.droid.core.components.AppCoreComponent;
 import org.stepic.droid.core.components.DaggerAppCoreComponent;
@@ -15,6 +16,7 @@ import org.stepic.droid.core.components.StorageComponent;
 import org.stepic.droid.core.modules.AppCoreModule;
 import org.stepic.droid.core.modules.StorageModule;
 
+import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class MainApplication extends MultiDexApplication {
@@ -34,6 +36,11 @@ public class MainApplication extends MultiDexApplication {
     private void init() {
 //        refWatcher = LeakCanary.install(this);
         application = this;
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
+
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/NotoSans-Regular.ttf")
                 .setFontAttrId(R.attr.fontPath)
