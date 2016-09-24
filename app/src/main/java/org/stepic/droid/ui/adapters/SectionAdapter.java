@@ -71,7 +71,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     private List<Section> sections;
     private Context mContext;
-    private AppCompatActivity mActivity;
+    private AppCompatActivity activity;
     private CalendarPresenter calendarPresenter;
     private Course course;
     private boolean needShowCalendarWidget;
@@ -87,7 +87,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     public SectionAdapter(List<Section> sections, Context mContext, AppCompatActivity activity, CalendarPresenter calendarPresenter) {
         this.sections = sections;
         this.mContext = mContext;
-        mActivity = activity;
+        this.activity = activity;
         this.calendarPresenter = calendarPresenter;
         highlightDrawable = ContextCompat.getDrawable(mContext, R.drawable.section_background);
         defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_white, mContext);
@@ -149,7 +149,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                 shell.getSharedPreferenceHelper().storeTempPosition(adapterPosition);
-                if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
+                if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
                     // Show an explanation to the user *asynchronously* -- don't block
@@ -158,13 +158,13 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
                     DialogFragment dialog = ExplainExternalStoragePermissionDialog.newInstance();
                     if (!dialog.isAdded()) {
-                        dialog.show(mActivity.getSupportFragmentManager(), null);
+                        dialog.show(activity.getSupportFragmentManager(), null);
                     }
 
                 } else {
                     // No explanation needed, we can request the permission.
 
-                    ActivityCompat.requestPermissions(mActivity,
+                    ActivityCompat.requestPermissions(activity,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             AppConstants.REQUEST_EXTERNAL_STORAGE);
 
