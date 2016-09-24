@@ -30,6 +30,8 @@ import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
+import org.stepic.droid.ui.dialogs.OnLoadPositionListener;
+import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
@@ -44,7 +46,7 @@ import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements StepicOnClickItemListener, OnClickLoadListener {
+public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements StepicOnClickItemListener, OnClickLoadListener, OnLoadPositionListener {
 
 
     @Inject
@@ -261,28 +263,49 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_UNIT, unit.getId() + "");
                     screenManager.showDownload(activity);
                 } else {
-                    analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_UNIT, unit.getId() + "");
-                    unit.set_cached(false);
-                    lesson.set_cached(false);
-                    unit.set_loading(true);
-                    lesson.set_loading(true);
-                    threadPoolExecutor.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            databaseFacade.updateOnlyCachedLoadingLesson(lesson);
-                            databaseFacade.updateOnlyCachedLoadingUnit(unit);
+                    if (shell.getSharedPreferenceHelper().isNeedToShowVideoQualityExplanation()) {
+                        VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(position);
+                        dialogFragment.setOnLoadPositionListener(this);
+                        if (!dialogFragment.isAdded()) {
+                            dialogFragment.show(activity.getSupportFragmentManager(), null);
                         }
-                    });
-                    downloadManager.addUnitLesson(unit, lesson);
-                    notifyItemChanged(position);
+                    } else {
+                        load(position);
+                    }
                 }
             }
+        }
+    }
+
+    private void load(int position) {
+        if (position >= 0 && position < unitList.size()) {
+            final Unit unit = unitList.get(position);
+            final Lesson lesson = lessonList.get(position);
+            analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_UNIT, unit.getId() + "");
+            unit.set_cached(false);
+            lesson.set_cached(false);
+            unit.set_loading(true);
+            lesson.set_loading(true);
+            threadPoolExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    databaseFacade.updateOnlyCachedLoadingLesson(lesson);
+                    databaseFacade.updateOnlyCachedLoadingUnit(unit);
+                }
+            });
+            downloadManager.addUnitLesson(unit, lesson);
+            notifyItemChanged(position);
         }
     }
 
 
     public void requestClickLoad(int position) {
         onClickLoad(position);
+    }
+
+    @Override
+    public void onNeedLoadPosition(int adapterPosition) {
+            load(adapterPosition);
     }
 
 
