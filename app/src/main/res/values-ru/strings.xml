@@ -232,4 +232,8 @@
     <string name="auth_action_title">Войти</string>
     <string name="empty_steps_title">В данном уроке еще нет шагов</string>
     <string name="open_in_browser">Открыть в Браузере</string>
+    <string name="very_high_quality">Очень высокое</string>
+    <string name="low_quality">Низкое</string>
+    <string name="medium_quality">Среднее</string>
+    <string name="high_quality">Высокое</string>
 </resources>
