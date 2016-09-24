@@ -48,6 +48,7 @@ import org.stepic.droid.ui.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.ui.dialogs.StepShareDialog;
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
+import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepic.droid.ui.dialogs.VideoQualityDialog;
 import org.stepic.droid.ui.dialogs.WantMoveDataDialog;
 import org.stepic.droid.ui.fragments.CommentsFragment;
@@ -168,4 +169,6 @@ public interface AppCoreComponent {
     void inject(SectionAdapter sectionAdapter);
 
     void inject(StepShareDialog stepShareDialog);
+
+    void inject(VideoQualityDetailedDialog videoQualityDetailedDialog);
 }

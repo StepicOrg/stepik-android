@@ -236,4 +236,6 @@
     <string name="low_quality">Низкое</string>
     <string name="medium_quality">Среднее</string>
     <string name="high_quality">Высокое</string>
+    <string name="video_quality_explanation">Видео высокого качества занимают больше места и могут загружаться медленнее</string>
+    <string name="do_not_ask_me_again">Больше не спрашивать</string>
 </resources>

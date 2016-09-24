@@ -20,9 +20,9 @@ import android.widget.TextView;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.store.CleanManager;
@@ -184,6 +184,11 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_SECTION, section.getId() + "");
                     screenManager.showDownload(mContext);
                 } else {
+
+//                    DialogFragment dialogFragment = VideoQualityDetailedDialog.Companion.newInstance();
+//                    if (!dialogFragment.isAdded()) {
+//                        dialogFragment.show(mActivity.getSupportFragmentManager(), null);
+//                    }
                     analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
                     section.set_cached(false);
                     section.set_loading(true);

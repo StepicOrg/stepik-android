@@ -243,4 +243,6 @@
     <string name="medium_quality">Medium</string>
     <string name="high_quality">High</string>
     <string name="very_high_quality">Very high</string>
+    <string name="video_quality_explanation">High quality video takes more space and can be loaded slowly</string>
+    <string name="do_not_ask_me_again">Do not ask me again</string>
 </resources>
