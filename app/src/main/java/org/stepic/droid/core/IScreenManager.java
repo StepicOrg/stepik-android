@@ -59,7 +59,7 @@ public interface IScreenManager {
 
     void showFindCourses(Context context);
 
-    void showVideo(Activity sourceActivity, String source);
+    void showVideo(Activity sourceActivity, String source, Long videoId);
 
     void showSettings(Activity sourceActivity);
 

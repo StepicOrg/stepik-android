@@ -43,6 +43,7 @@ class StepsActivity : SingleFragmentActivity() {
 
         if (lesson == null && dataUri != null) {
             analytic.reportEvent(Analytic.DeepLink.USER_OPEN_STEPS_LINK);
+            analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
             //All can be -1
             val simpleLessonId: Long = getSimpleLessonId(dataUri)
             val simpleStepPosition: Long = getStepPosition(dataUri)

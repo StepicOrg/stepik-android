@@ -19,25 +19,34 @@ class DatabaseFacade {
 
     @Inject
     lateinit var sectionDao: IDao<Section>
+
     @Inject
     lateinit var unitDao: IDao<Unit>
+
     @Inject
     lateinit var progressDao: IDao<Progress>
+
     @Inject
     lateinit var assignmentDao: IDao<Assignment>
+
     @Inject
     lateinit var lessonDao: IDao<Lesson>
+
     @Inject
     lateinit var viewAssignmentDao: IDao<ViewAssignment>
+
     @Inject
     lateinit var downloadEntityDao: IDao<DownloadEntity>
+
     @Inject
     lateinit var cachedVideoDao: IDao<CachedVideo>
+
     @Inject
     lateinit var stepDao: IDao<Step>
 
     @Inject
     lateinit var coursesEnrolledDao: IDao<Course>
+
     @Inject
     lateinit var coursesFeaturedDao: IDao<Course>
 
@@ -49,6 +58,9 @@ class DatabaseFacade {
 
     @Inject
     lateinit var certificateViewItemDao: IDao<CertificateViewItem>
+
+    @Inject
+    lateinit var videoTimestampDao: IDao<VideoTimestamp>
 
     init {
         MainApplication.storageComponent().inject(this)
@@ -78,10 +90,7 @@ class DatabaseFacade {
 
     fun addAssignment(assignment: Assignment?) = assignment?.let { assignmentDao.insertOrUpdate(assignment) }
 
-    /**
-     * deprecated because of step has 0..* assignments.
-     */
-    @Deprecated("")
+    @Deprecated("because of step has 0..* assignments.")
     fun getAssignmentIdByStepId(stepId: Long): Long {
         val assignment = assignmentDao.get(DbStructureAssignment.Column.STEP_ID, stepId.toString())
         return assignment?.id ?: -1;
@@ -414,5 +423,12 @@ class DatabaseFacade {
     fun removeSectionsOfCourse(courseId: Long) {
         sectionDao.delete(DbStructureSections.Column.COURSE, courseId.toString());
     }
+
+    fun addTimestamp(videoTimestamp: VideoTimestamp) {
+        videoTimestampDao.insertOrUpdate(videoTimestamp)
+    }
+
+    fun getVideoTimestamp(videoId: Long): VideoTimestamp? =
+            videoTimestampDao.get(DbStructureVideoTimestamp.Column.VIDEO_ID, videoId.toString())
 
 }

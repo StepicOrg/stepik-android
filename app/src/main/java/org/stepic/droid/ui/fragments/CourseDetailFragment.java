@@ -438,7 +438,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         Video newTypeVideo = course.getIntro_video();
         if (newTypeVideo != null && newTypeVideo.getUrls() != null && !newTypeVideo.getUrls().isEmpty()) {
             urlToVideo = newTypeVideo.getUrls().get(0).getUrl();
-            showNewStyleVideo(urlToVideo, newTypeVideo.getThumbnail());
+            long videoId = newTypeVideo.getId();
+            showNewStyleVideo(urlToVideo, newTypeVideo.getThumbnail(), videoId);
         } else {
             urlToVideo = course.getIntro();
             showOldStyleVideo(urlToVideo);
@@ -446,7 +447,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     }
 
-    private void showNewStyleVideo(final String urlToVideo, String pathThumbnail) {
+    private void showNewStyleVideo(final String urlToVideo, String pathThumbnail, final long videoId) {
         introView.setVisibility(View.GONE);
         if (urlToVideo == null || urlToVideo.equals("") || pathThumbnail == null || pathThumbnail.equals("")) {
             introView.setVisibility(View.GONE);
@@ -457,7 +458,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             player.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    shell.getScreenProvider().showVideo(getActivity(), urlToVideo);
+                    shell.getScreenProvider().showVideo(getActivity(), urlToVideo, videoId);
                 }
             });
         }

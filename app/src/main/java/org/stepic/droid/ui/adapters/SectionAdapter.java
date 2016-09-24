@@ -20,21 +20,24 @@ import android.widget.TextView;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
+import org.stepic.droid.ui.dialogs.OnLoadPositionListener;
+import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
@@ -42,7 +45,7 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder> implements OnClickLoadListener {
+public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder> implements OnClickLoadListener, OnLoadPositionListener {
     private final static String SECTION_TITLE_DELIMETER = ". ";
 
     public static final int TYPE_SECTION_ITEM = 1;
@@ -54,6 +57,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     @Inject
     IScreenManager screenManager;
+
     @Inject
     IDownloadManager downloadManager;
 
@@ -69,9 +73,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     @Inject
     Analytic analytic;
 
+    @Inject
+    ThreadPoolExecutor threadPoolExecutor;
+
     private List<Section> sections;
     private Context mContext;
-    private AppCompatActivity mActivity;
+    private AppCompatActivity activity;
     private CalendarPresenter calendarPresenter;
     private Course course;
     private boolean needShowCalendarWidget;
@@ -87,7 +94,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     public SectionAdapter(List<Section> sections, Context mContext, AppCompatActivity activity, CalendarPresenter calendarPresenter) {
         this.sections = sections;
         this.mContext = mContext;
-        mActivity = activity;
+        this.activity = activity;
         this.calendarPresenter = calendarPresenter;
         highlightDrawable = ContextCompat.getDrawable(mContext, R.drawable.section_background);
         defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_white, mContext);
@@ -142,14 +149,14 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     public void onClickLoad(int adapterPosition) {
         int sectionPosition = adapterPosition - SECTION_LIST_DELTA;
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
-            Section section = sections.get(sectionPosition);
+            final Section section = sections.get(sectionPosition);
 
             int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                 shell.getSharedPreferenceHelper().storeTempPosition(adapterPosition);
-                if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
+                if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
                     // Show an explanation to the user *asynchronously* -- don't block
@@ -158,13 +165,13 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
                     DialogFragment dialog = ExplainExternalStoragePermissionDialog.newInstance();
                     if (!dialog.isAdded()) {
-                        dialog.show(mActivity.getSupportFragmentManager(), null);
+                        dialog.show(activity.getSupportFragmentManager(), null);
                     }
 
                 } else {
                     // No explanation needed, we can request the permission.
 
-                    ActivityCompat.requestPermissions(mActivity,
+                    ActivityCompat.requestPermissions(activity,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             AppConstants.REQUEST_EXTERNAL_STORAGE);
 
@@ -177,26 +184,58 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 cleaner.removeSection(section);
                 section.set_loading(false);
                 section.set_cached(false);
-                databaseFacade.updateOnlyCachedLoadingSection(section);
+                threadPoolExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        databaseFacade.updateOnlyCachedLoadingSection(section);
+                    }
+                });
                 notifyItemChanged(adapterPosition);
             } else {
                 if (section.is_loading()) {
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_SECTION, section.getId() + "");
                     screenManager.showDownload(mContext);
                 } else {
-                    analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
-                    section.set_cached(false);
-                    section.set_loading(true);
-                    databaseFacade.updateOnlyCachedLoadingSection(section);
-                    downloadManager.addSection(section);
-                    notifyItemChanged(adapterPosition);
+                    if (shell.getSharedPreferenceHelper().isNeedToShowVideoQualityExplanation()) {
+                        VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(adapterPosition);
+                        dialogFragment.setOnLoadPositionListener(this);
+                        if (!dialogFragment.isAdded()) {
+                            dialogFragment.show(activity.getSupportFragmentManager(), null);
+                        }
+                    } else {
+                        loadSection(adapterPosition);
+                    }
                 }
             }
         }
     }
 
+    private void loadSection(int adapterPosition) {
+        int sectionPosition = adapterPosition - SECTION_LIST_DELTA;
+        if (sectionPosition >= 0 && sectionPosition < sections.size()) {
+            final Section section = sections.get(sectionPosition);
+
+            analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
+            section.set_cached(false);
+            section.set_loading(true);
+            threadPoolExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    databaseFacade.updateOnlyCachedLoadingSection(section);
+                }
+            });
+            downloadManager.addSection(section);
+            notifyItemChanged(adapterPosition);
+        }
+    }
+
     public void setNeedShowCalendarWidget(boolean needShowCalendarWidget) {
         this.needShowCalendarWidget = needShowCalendarWidget;
+    }
+
+    @Override
+    public void onNeedLoadPosition(int adapterPosition) {
+        loadSection(adapterPosition);
     }
 
     class SectionViewHolder extends GenericViewHolder implements StepicOnClickItemListener {

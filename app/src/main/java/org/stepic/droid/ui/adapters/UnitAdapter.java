@@ -30,12 +30,15 @@ import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
+import org.stepic.droid.ui.dialogs.OnLoadPositionListener;
+import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
@@ -43,7 +46,7 @@ import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements StepicOnClickItemListener, OnClickLoadListener {
+public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements StepicOnClickItemListener, OnClickLoadListener, OnLoadPositionListener {
 
 
     @Inject
@@ -63,6 +66,9 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
     @Inject
     Analytic analytic;
+
+    @Inject
+    ThreadPoolExecutor threadPoolExecutor;
 
 
     private final static String DELIMITER = ".";
@@ -145,7 +151,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             holder.mTextScore.setVisibility(View.VISIBLE);
             holder.mProgressScore.setVisibility(View.VISIBLE);
             holder.mProgressScore.setMax(cost);
-            holder.mProgressScore.setProgress((int)doubleScore);
+            holder.mProgressScore.setProgress((int) doubleScore);
             holder.mTextScore.setText(sb.toString());
         } else {
             holder.mTextScore.setVisibility(View.GONE);
@@ -202,8 +208,8 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     @Override
     public void onClickLoad(int position) {
         if (position >= 0 && position < unitList.size()) {
-            Unit unit = unitList.get(position);
-            Lesson lesson = lessonList.get(position);
+            final Unit unit = unitList.get(position);
+            final Lesson lesson = lessonList.get(position);
 
             int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -237,38 +243,69 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
             if (unit.is_cached()) {
                 //delete
-                analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_UNIT, unit.getId()+"");
+                analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_UNIT, unit.getId() + "");
                 cleanManager.removeUnitLesson(unit, lesson);
                 unit.set_loading(false);
                 unit.set_cached(false);
                 lesson.set_loading(false);
                 lesson.set_cached(false);
-                databaseFacade.updateOnlyCachedLoadingLesson(lesson);
-                databaseFacade.updateOnlyCachedLoadingUnit(unit);
+                threadPoolExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        databaseFacade.updateOnlyCachedLoadingLesson(lesson);
+                        databaseFacade.updateOnlyCachedLoadingUnit(unit);
+                    }
+                });
                 notifyItemChanged(position);
             } else {
                 if (unit.is_loading()) {
                     //cancel loading
-                    analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_UNIT, unit.getId()+"");
+                    analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_UNIT, unit.getId() + "");
                     screenManager.showDownload(activity);
                 } else {
-                    analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_UNIT, unit.getId()+"");
-                    unit.set_cached(false);
-                    lesson.set_cached(false);
-                    unit.set_loading(true);
-                    lesson.set_loading(true);
-                    databaseFacade.updateOnlyCachedLoadingLesson(lesson);
-                    databaseFacade.updateOnlyCachedLoadingUnit(unit);
-                    downloadManager.addUnitLesson(unit, lesson);
-                    notifyItemChanged(position);
+                    if (shell.getSharedPreferenceHelper().isNeedToShowVideoQualityExplanation()) {
+                        VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(position);
+                        dialogFragment.setOnLoadPositionListener(this);
+                        if (!dialogFragment.isAdded()) {
+                            dialogFragment.show(activity.getSupportFragmentManager(), null);
+                        }
+                    } else {
+                        load(position);
+                    }
                 }
             }
+        }
+    }
+
+    private void load(int position) {
+        if (position >= 0 && position < unitList.size()) {
+            final Unit unit = unitList.get(position);
+            final Lesson lesson = lessonList.get(position);
+            analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_UNIT, unit.getId() + "");
+            unit.set_cached(false);
+            lesson.set_cached(false);
+            unit.set_loading(true);
+            lesson.set_loading(true);
+            threadPoolExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    databaseFacade.updateOnlyCachedLoadingLesson(lesson);
+                    databaseFacade.updateOnlyCachedLoadingUnit(unit);
+                }
+            });
+            downloadManager.addUnitLesson(unit, lesson);
+            notifyItemChanged(position);
         }
     }
 
 
     public void requestClickLoad(int position) {
         onClickLoad(position);
+    }
+
+    @Override
+    public void onNeedLoadPosition(int adapterPosition) {
+            load(adapterPosition);
     }
 
 

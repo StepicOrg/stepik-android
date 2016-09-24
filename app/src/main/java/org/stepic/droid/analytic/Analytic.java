@@ -22,6 +22,7 @@ public interface Analytic {
         String CLICK_CLEAR_CACHE = "Click clear cache button";
         String CLICK_YES_LOGOUT = "Click accept logout";
         String CANCEL_VIDEO_QUALITY = "Cancel video quality dialog";
+        String CANCEL_VIDEO_QUALITY_DETAILED = "cancel_detailed_video";
         String YES_CLEAR_VIDEOS = "clear videos from downloads";
         String DELETE_COMMENT_TRIAL = "comment: delete comment trial";
         String UPDATING_MESSAGE_IS_APPROVED = "updating approved";
@@ -139,13 +140,15 @@ public interface Analytic {
     interface Notification {
         String DISABLED_BY_USER = "Notification is disabled by user in app";
         String ACTION_NOT_SUPPORT = "notification action is not support";
-        String HTML_WAS_NULL = "notification action is not support";
+        String HTML_WAS_NULL = "notification action is not support"; //// FIXME: 22.09.16 similar analytic
         String WAS_MUTED = "notification html text was muted";
         String NOT_SUPPORT = "notification is not support";
         String LEARN_SHOWN = "notification learn is shown";
         String CANT_PARSE_COURSE_ID = "notification, cant parse courseId";
         String TOKEN_UPDATED = "notification gcm token is updated";
         String TOKEN_UPDATE_FAILED = "notification gcm token is not updated";
+        String OPEN_NOTIFICATION = "notification_opened";
+        String OPEN_NOTIFICATION_SYLLABUS = "notification_opened_syllabus";
     }
 
     interface Feedback {
@@ -181,6 +184,7 @@ public interface Analytic {
     }
 
     interface DeepLink {
+        String USER_OPEN_LINK_GENERAL = "open_deep_link";
         String USER_OPEN_SYLLABUS_LINK = "open_syllabus_by_link";
         String USER_OPEN_COURSE_DETAIL_LINK = "open_detail_course_link";
         String USER_OPEN_STEPS_LINK = "open_step_link";

@@ -15,6 +15,7 @@ import org.stepic.droid.core.modules.CourseListModule;
 import org.stepic.droid.core.modules.FilterModule;
 import org.stepic.droid.core.modules.SectionModule;
 import org.stepic.droid.core.modules.StepModule;
+import org.stepic.droid.core.modules.VideoModule;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.notifications.HackFcmListener;
@@ -47,6 +48,7 @@ import org.stepic.droid.ui.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.ui.dialogs.StepShareDialog;
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
+import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepic.droid.ui.dialogs.VideoQualityDialog;
 import org.stepic.droid.ui.dialogs.WantMoveDataDialog;
 import org.stepic.droid.ui.fragments.CommentsFragment;
@@ -67,6 +69,8 @@ public interface AppCoreComponent {
     CertificateComponent plus(CertificateModule module);
 
     StepComponent plus(StepModule module);
+
+    VideoComponent plus(VideoModule module);
 
     FilterComponent plus(FilterModule module);
 
@@ -165,4 +169,6 @@ public interface AppCoreComponent {
     void inject(SectionAdapter sectionAdapter);
 
     void inject(StepShareDialog stepShareDialog);
+
+    void inject(VideoQualityDetailedDialog videoQualityDetailedDialog);
 }
