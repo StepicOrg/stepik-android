@@ -3,6 +3,7 @@ package org.stepic.droid.ui.activities
 import android.support.v4.app.Fragment
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.VideoFragment
+import timber.log.Timber
 
 class VideoActivity : SingleFragmentActivity() {
     companion object {
@@ -21,6 +22,7 @@ class VideoActivity : SingleFragmentActivity() {
     }
 
     override fun finish() {
+        Timber.d("finish")
         super.finish()
         overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
     }
