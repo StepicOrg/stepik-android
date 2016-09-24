@@ -15,6 +15,7 @@ import org.stepic.droid.core.modules.CourseListModule;
 import org.stepic.droid.core.modules.FilterModule;
 import org.stepic.droid.core.modules.SectionModule;
 import org.stepic.droid.core.modules.StepModule;
+import org.stepic.droid.core.modules.VideoModule;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.notifications.HackFcmListener;
@@ -67,6 +68,8 @@ public interface AppCoreComponent {
     CertificateComponent plus(CertificateModule module);
 
     StepComponent plus(StepModule module);
+
+    VideoComponent plus(VideoModule module);
 
     FilterComponent plus(FilterModule module);
 

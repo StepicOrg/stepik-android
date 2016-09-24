@@ -155,8 +155,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
                     @Override
                     protected void onPostExecute(String url) {
                         super.onPostExecute(url);
-
-                        if (url != null) {
+                        if (url != null && localStep.getBlock() != null && localStep.getBlock().getVideo() != null) {
                             bus.post(new VideoResolvedEvent(localStep.getBlock().getVideo(), url, localStep.getId()));
                         } else {
                             Toast.makeText(MainApplication.getAppContext(), R.string.sync_problem, Toast.LENGTH_SHORT).show();
@@ -177,8 +176,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
         if (tempVideoQuality != null) {
             qualityItemMenu.setVisible(true);
             qualityItemMenu.setTitle(tempVideoQuality);
-        }
-        else {
+        } else {
             qualityItemMenu.setVisible(false);
         }
     }
@@ -213,7 +211,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
     @Subscribe
     public void onVideoResolved(VideoResolvedEvent e) {
         if (e.getStepId() != step.getId()) return;
-        shell.getScreenProvider().showVideo(getActivity(), e.getPathToVideo());
+        shell.getScreenProvider().showVideo(getActivity(), e.getPathToVideo(), e.getVideoId());
     }
 
     @Subscribe
