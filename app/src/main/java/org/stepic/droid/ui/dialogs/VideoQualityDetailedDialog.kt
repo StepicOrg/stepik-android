@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.dialogs
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
@@ -10,6 +11,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
@@ -18,8 +20,14 @@ import javax.inject.Inject
 class VideoQualityDetailedDialog : VideoQualityDialogBase() {
 
     companion object {
-        fun newInstance(): DialogFragment {
-            return VideoQualityDetailedDialog()
+        val adapterPositionKey = "adapterPosKey"
+
+        fun newInstance(adapterPosition: Int): VideoQualityDetailedDialog {
+            val dialog = VideoQualityDetailedDialog()
+            val bundle = Bundle()
+            bundle.putInt(adapterPositionKey, adapterPosition)
+            dialog.arguments = bundle
+            return dialog
         }
     }
 
@@ -35,9 +43,14 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
     @Inject
     lateinit var mainHandler: IMainHandler
 
+    @Inject
+    lateinit var sharedPreferencesHelper: SharedPreferenceHelper
+
+    private var onLoadPositionListener: OnLoadPositionListener? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         init()
+        val adapterPosition = arguments.getInt(adapterPositionKey)
         val layoutInflater = LayoutInflater.from(context)
         val explanationView = layoutInflater.inflate(R.layout.quality_dialog_explanation, null)
         val checkbox = explanationView.findViewById(R.id.do_not_ask_checkbox) as CheckBox
@@ -56,15 +69,38 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
                         qualityToPositionMap[userPreferences.qualityVideo]!!,
                         { dialog, which -> chosenOptionPosition = which })
                 .setPositiveButton(R.string.ok, { dialog, which ->
-                    Timber.d(chosenOptionPosition.toString())
-                    Timber.d(checkbox.isChecked.toString())
+                    val qualityString = positionToQualityMap[chosenOptionPosition]
+                    analytic.reportEventWithIdName(Analytic.Preferences.VIDEO_QUALITY, which.toString(), qualityString)
+
+                    threadPoolExecutor.execute {
+                        userPreferences.storeQualityVideo(qualityString)
+                        mainHandler.post {
+                            onLoadPositionListener?.onNeedLoadPosition(adapterPosition)
+                        }
+                    }
+
+                    val isNeedExplanation = !checkbox.isChecked
+                    threadPoolExecutor.execute {
+                        sharedPreferencesHelper.isNeedToShowVideoQualityExplanation = isNeedExplanation
+                    }
                 })
 
 
         return builder.create()
     }
 
+    override fun onDismiss(dialog: DialogInterface?) {
+        super.onDismiss(dialog)
+        Timber.d("onDismiss")
+        onLoadPositionListener = null
+
+    }
+
     override fun injectDependencies() {
         MainApplication.component().inject(this)
+    }
+
+    fun setOnLoadPositionListener(onLoadPositionListener: OnLoadPositionListener) {
+        this.onLoadPositionListener = onLoadPositionListener
     }
 }

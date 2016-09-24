@@ -29,6 +29,8 @@ import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
+import org.stepic.droid.ui.dialogs.OnLoadPositionListener;
+import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
@@ -43,7 +45,7 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder> implements OnClickLoadListener {
+public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder> implements OnClickLoadListener, OnLoadPositionListener {
     private final static String SECTION_TITLE_DELIMETER = ". ";
 
     public static final int TYPE_SECTION_ITEM = 1;
@@ -194,29 +196,46 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_SECTION, section.getId() + "");
                     screenManager.showDownload(mContext);
                 } else {
-
-//                    DialogFragment dialogFragment = VideoQualityDetailedDialog.Companion.newInstance();
-//                    if (!dialogFragment.isAdded()) {
-//                        dialogFragment.show(mActivity.getSupportFragmentManager(), null);
-//                    }
-                    analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
-                    section.set_cached(false);
-                    section.set_loading(true);
-                    threadPoolExecutor.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            databaseFacade.updateOnlyCachedLoadingSection(section);
+                    if (shell.getSharedPreferenceHelper().isNeedToShowVideoQualityExplanation()) {
+                        VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(adapterPosition);
+                        dialogFragment.setOnLoadPositionListener(this);
+                        if (!dialogFragment.isAdded()) {
+                            dialogFragment.show(activity.getSupportFragmentManager(), null);
                         }
-                    });
-                    downloadManager.addSection(section);
-                    notifyItemChanged(adapterPosition);
+                    } else {
+                        loadSection(adapterPosition);
+                    }
                 }
             }
         }
     }
 
+    private void loadSection(int adapterPosition) {
+        int sectionPosition = adapterPosition - SECTION_LIST_DELTA;
+        if (sectionPosition >= 0 && sectionPosition < sections.size()) {
+            final Section section = sections.get(sectionPosition);
+
+            analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
+            section.set_cached(false);
+            section.set_loading(true);
+            threadPoolExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    databaseFacade.updateOnlyCachedLoadingSection(section);
+                }
+            });
+            downloadManager.addSection(section);
+            notifyItemChanged(adapterPosition);
+        }
+    }
+
     public void setNeedShowCalendarWidget(boolean needShowCalendarWidget) {
         this.needShowCalendarWidget = needShowCalendarWidget;
+    }
+
+    @Override
+    public void onNeedLoadPosition(int adapterPosition) {
+        loadSection(adapterPosition);
     }
 
     class SectionViewHolder extends GenericViewHolder implements StepicOnClickItemListener {
