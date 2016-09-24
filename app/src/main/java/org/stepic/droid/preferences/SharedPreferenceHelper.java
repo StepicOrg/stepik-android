@@ -103,6 +103,15 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, FIRST_TIME_LAUNCH, false);
     }
 
+    public boolean isNeedToShowVideoQualityExplanation() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, VIDEO_QUALITY_EXPLANATION, true);
+    }
+
+
+    public void setNeedToShowVideoQualityExplanation(boolean needToShowCalendarWidget) {
+        put(PreferenceType.DEVICE_SPECIFIC, VIDEO_QUALITY_EXPLANATION, needToShowCalendarWidget);
+    }
+
     public boolean isNeedToShowCalendarWidget() {
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, CALENDAR_WIDGET, true);
     }
@@ -467,6 +476,7 @@ public class SharedPreferenceHelper {
     private final String SCHEDULED_LINK_CACHED = "scheduled_cached";
     private final String DISCUSSION_ORDER = "discussion_order";
     private final String CALENDAR_WIDGET = "calenda_widget";
+    private final String VIDEO_QUALITY_EXPLANATION = "video_quality_explanation";
     private final String NEED_DROP_114 = "need_drop_114";
 
     private final String FILTER_PERSISTENT = "filter_persistent";

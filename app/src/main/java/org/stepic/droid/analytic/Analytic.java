@@ -22,6 +22,7 @@ public interface Analytic {
         String CLICK_CLEAR_CACHE = "Click clear cache button";
         String CLICK_YES_LOGOUT = "Click accept logout";
         String CANCEL_VIDEO_QUALITY = "Cancel video quality dialog";
+        String CANCEL_VIDEO_QUALITY_DETAILED = "cancel_detailed_video";
         String YES_CLEAR_VIDEOS = "clear videos from downloads";
         String DELETE_COMMENT_TRIAL = "comment: delete comment trial";
         String UPDATING_MESSAGE_IS_APPROVED = "updating approved";
