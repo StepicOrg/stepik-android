@@ -59,6 +59,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
 
     private String tempVideoUrl = null;
     private String tempVideoQuality = null;
+    private long videoId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -155,8 +156,14 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
                     @Override
                     protected void onPostExecute(String url) {
                         super.onPostExecute(url);
-                        if (url != null && localStep.getBlock() != null && localStep.getBlock().getVideo() != null) {
-                            bus.post(new VideoResolvedEvent(localStep.getBlock().getVideo(), url, localStep.getId()));
+                        if (url != null && localStep.getBlock() != null) {
+                            long localVideoId = 0;
+                            if (localStep.getBlock().getVideo() != null) {
+                                localVideoId = localStep.getBlock().getVideo().getId();
+                            } else {
+                                localVideoId = videoId;
+                            }
+                            bus.post(new VideoResolvedEvent(localVideoId, url, localStep.getId()));
                         } else {
                             Toast.makeText(MainApplication.getAppContext(), R.string.sync_problem, Toast.LENGTH_SHORT).show();
                         }
@@ -198,6 +205,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
         stepQualityPresenter.determineQuality(e.getVideo());
         setThumbnail(e.getVideo().getThumbnail());
         tempVideoUrl = e.getVideoUrl();
+        videoId = e.getVideo().getId();
     }
 
     private void setThumbnail(String thumbnail) {
