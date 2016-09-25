@@ -4,7 +4,7 @@
     <string name="or_sign_up_with_email">or sign up with e-mail</string>
     <string name="sign_up">Sign up</string>
     <string name="create_my_account">Create account</string>
-    <string name="by_creating_you_agree">By creating stepic account, you agree to the</string>
+    <string name="by_creating_you_agree">By creating Stepik.org account, you agree to the</string>
     <string name="terms">Terms</string>
     <string name="email" translatable="false">E-mail</string>
     <string name="remind_password">Forgot password?</string>
@@ -38,7 +38,7 @@
     <string name="units_lessons_title">Lessons</string>
     <string name="steps_title">Steps</string>
     <string name="not_available_lesson">Lesson is not available now</string>
-    <string name="description_download">Caching Stepic\'s video</string>
+    <string name="description_download">Caching Stepik\'s video</string>
     <string name="video_title">Video</string>
     <string name="wi_fi_setting">Wi-Fi only download</string>
     <string name="clear_cache_title">Clear cache</string>
@@ -59,7 +59,7 @@
     <string name="failLogin">Login/password was incorrect</string>
     <string name="connectionProblems">Internet connection was lost</string>
     <string name="are_you_sure">Are you sure?</string>
-    <string name="explain_permission">For cache course and watch video offline Stepic needs permission to storage of phone.</string>
+    <string name="explain_permission">For cache course and watch video offline Stepik.org needs permission to storage of phone.</string>
     <string name="explain_calendar_permission">For add deadlines to calendar the app needs permission to calendar. The app doesn\'t change and read your events.</string>
     <string name="allow_question">Allow?</string>
     <string name="video_quality">Video quality</string>
