@@ -9,6 +9,7 @@ import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -200,7 +201,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                         VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(adapterPosition);
                         dialogFragment.setOnLoadPositionListener(this);
                         if (!dialogFragment.isAdded()) {
-                            dialogFragment.show(activity.getSupportFragmentManager(), null);
+                            FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+                            ft.add(dialogFragment, null);
+                            ft.commitAllowingStateLoss();
                         }
                     } else {
                         loadSection(adapterPosition);
