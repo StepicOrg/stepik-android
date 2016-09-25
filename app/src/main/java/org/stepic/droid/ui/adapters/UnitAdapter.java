@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -267,7 +268,9 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                         VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(position);
                         dialogFragment.setOnLoadPositionListener(this);
                         if (!dialogFragment.isAdded()) {
-                            dialogFragment.show(activity.getSupportFragmentManager(), null);
+                            FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+                            ft.add(dialogFragment, null);
+                            ft.commitAllowingStateLoss();
                         }
                     } else {
                         load(position);

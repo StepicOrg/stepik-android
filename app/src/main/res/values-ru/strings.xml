@@ -38,7 +38,7 @@
     <string name="steps_title">Шаги</string>
     <string name="not_available_lesson">Урок недоступен сейчас</string>
     <string name="not_video_player_error">Пожалуйста, установите видеоплеер</string>
-    <string name="description_download">Кеширование Stepic урока</string>
+    <string name="description_download">Кеширование Stepik урока</string>
     <string name="video_title">Видео</string>
     <string name="clear_cache_title">Очистить кэш</string>
     <string name="wi_fi_setting">Загружать только по Wi-Fi </string>
@@ -59,7 +59,7 @@
     <string name="deny">Отклонить</string>
     <string name="allow">Разрешить</string>
     <string name="allow_question">Разрешить?</string>
-    <string name="explain_permission">Для сохранения и просмотра видео в режиме оффлайн Stepic должен иметь права записи файлов в память телефона.</string>
+    <string name="explain_permission">Для сохранения и просмотра видео в режиме оффлайн Stepik должен иметь права записи файлов в память телефона.</string>
     <string name="connectionProblems">Отсутствует подключение к Интернету</string>
     <string name="video_quality">Качество видео</string>
     <string name="sync_problem">Возникли проблемы с синхронизацией данных, пожалуйста, повторите попытку позже.</string>
