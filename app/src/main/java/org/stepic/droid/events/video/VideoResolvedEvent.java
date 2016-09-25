@@ -1,16 +1,12 @@
 package org.stepic.droid.events.video;
 
-import org.jetbrains.annotations.NotNull;
-import org.stepic.droid.model.Video;
-
 public class VideoResolvedEvent {
-    @NotNull
-    private Video video;
+    private long videoId;
     private String pathToVideo;
     private final long stepId;
 
-    public VideoResolvedEvent(@NotNull Video video, String pathToVideo, long stepId) {
-        this.video = video;
+    public VideoResolvedEvent(long videoId, String pathToVideo, long stepId) {
+        this.videoId = videoId;
         this.pathToVideo = pathToVideo;
         this.stepId = stepId;
     }
@@ -23,7 +19,7 @@ public class VideoResolvedEvent {
         return stepId;
     }
 
-    public long getVideoId(){
-        return video.getId();
+    public long getVideoId() {
+        return videoId;
     }
 }
