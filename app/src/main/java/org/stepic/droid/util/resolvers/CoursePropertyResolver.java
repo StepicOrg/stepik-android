@@ -15,7 +15,7 @@ import javax.inject.Singleton;
 @Singleton
 public class CoursePropertyResolver {
 
-    public enum CoursePropertyType {
+    public enum Type {
         summary(R.string.about_course),
         workload(R.string.workload),
         certificate(R.string.certificate),
@@ -26,7 +26,7 @@ public class CoursePropertyResolver {
 
         private int titleRes;
 
-        CoursePropertyType(@StringRes int titleRes) {
+        Type(@StringRes int titleRes) {
             this.titleRes = titleRes;
         }
 
@@ -42,18 +42,18 @@ public class CoursePropertyResolver {
         if (course == null) return result;
 
 
-        addIfNotEmpty(result, course.getSummary(), CoursePropertyType.summary);
-        addIfNotEmpty(result, course.getWorkload(), CoursePropertyType.workload);
-        addIfNotEmpty(result, course.getCertificate(), CoursePropertyType.certificate);
-        addIfNotEmpty(result, course.getCourse_format(), CoursePropertyType.courseFormat);
-        addIfNotEmpty(result, course.getTarget_audience(), CoursePropertyType.targetAudience);
-        addIfNotEmpty(result, course.getRequirements(), CoursePropertyType.requirements);
-        addIfNotEmpty(result, course.getDescription(), CoursePropertyType.description);
+        addIfNotEmpty(result, course.getSummary(), Type.summary);
+        addIfNotEmpty(result, course.getWorkload(), Type.workload);
+        addIfNotEmpty(result, course.getCertificate(), Type.certificate);
+        addIfNotEmpty(result, course.getCourse_format(), Type.courseFormat);
+        addIfNotEmpty(result, course.getTarget_audience(), Type.targetAudience);
+        addIfNotEmpty(result, course.getRequirements(), Type.requirements);
+        addIfNotEmpty(result, course.getDescription(), Type.description);
 
         return result;
     }
 
-    private void addIfNotEmpty(ArrayList<CourseProperty> result, String propertyValue, CoursePropertyType type) {
+    private void addIfNotEmpty(ArrayList<CourseProperty> result, String propertyValue, Type type) {
         if (propertyValue != null && !propertyValue.equals("")) {
             int titleRes = type.getTitleRes();
             String title = MainApplication.getAppContext().getResources().getString(titleRes);
