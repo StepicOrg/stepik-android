@@ -38,7 +38,8 @@ public class CoursePropertyAdapter extends ArrayAdapter<CourseProperty> {
             viewHolderItem = (ViewHolderItem) convertView.getTag();
         }
 
-        viewHolderItem.coursePropertyTitle.setText(HtmlHelper.fromHtml(courseProperty.getTitle()).toString());
+        viewHolderItem.coursePropertyTitle.setText(courseProperty.getTitle());
+
         viewHolderItem.getCoursePropertyValue.setText(HtmlHelper.fromHtml(courseProperty.getText()).toString());
 
         return view;
