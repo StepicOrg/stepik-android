@@ -12,4 +12,12 @@ public interface TextResolver {
 
     @NotNull
     TextResult resolveStepText(String content);
+
+    /**
+     * For SIMPLE HTML, which you can set for textview only
+     * @param content
+     * @return
+     */
+    @NotNull
+    CharSequence fromHtml (@NotNull String content);
 }

@@ -24,6 +24,7 @@ public class HtmlHelper {
     }
 
     @NotNull
+    @java.lang.Deprecated
     public static CharSequence fromHtml(@Nullable String content) {
         if (content == null)
             return fromHtmlLegacy("");

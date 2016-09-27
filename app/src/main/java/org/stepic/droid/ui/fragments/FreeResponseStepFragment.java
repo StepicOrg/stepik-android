@@ -23,7 +23,6 @@ import org.stepic.droid.events.submissions.SuccessGettingLastSubmissionEvent;
 import org.stepic.droid.model.Attachment;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Reply;
-import org.stepic.droid.util.HtmlHelper;
 
 import java.util.ArrayList;
 
@@ -70,7 +69,12 @@ public class FreeResponseStepFragment extends StepWithAttemptsFragment {
         if (reply == null) return;
 
         String text = reply.getText();
-        answerField.setText(HtmlHelper.fromHtml(text));
+        if (attempt != null && attempt.getDataset() != null && attempt.getDataset().getIs_html_enabled() != null && attempt.getDataset().getIs_html_enabled()) {
+            //todo show as html in enhanced latexview
+            answerField.setText(textResolver.fromHtml(text));
+        } else {
+            answerField.setText(text);
+        }
     }
 
     @Override

@@ -49,7 +49,7 @@ class TextResolverImpl : TextResolver {
     }
 
     @Suppress("DEPRECATION")
-    private fun fromHtml(content: String): CharSequence {
+    override fun fromHtml(content: String): CharSequence {
         val fromHtml: Spanned
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             fromHtml = Html.fromHtml(content, Html.FROM_HTML_MODE_LEGACY, null, tagHandler)

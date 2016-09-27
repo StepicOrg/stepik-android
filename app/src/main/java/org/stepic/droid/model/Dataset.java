@@ -35,4 +35,8 @@ public class Dataset {
     public List<Pair> getPairs() {
         return pairs;
     }
+
+    public Boolean getIs_html_enabled() {
+        return is_html_enabled;
+    }
 }
