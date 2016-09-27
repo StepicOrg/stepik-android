@@ -53,7 +53,7 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         TypedArray ta = context.obtainStyledAttributes(attrs, set);
         try {
             textColor = ta.getColor(0, defaultTextColor);
-            if (textColor == themeDefaultTextColor){
+            if (textColor == themeDefaultTextColor) {
                 textColor = defaultTextColor;
             }
             //noinspection ResourceType
@@ -79,16 +79,11 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
 
     public void setText(String text) {
         TextResult textResult = textResolver.resolveStepText(text);
-
-//        boolean needWebView = HtmlHelper.isForWebView(text); //text is raw text from response
         if (!textResult.isNeedWebView()) {
-//            CharSequence str = HtmlHelper.trimTrailingWhitespace(HtmlHelper.fromHtml(text));
-
             webView.setVisibility(GONE);
             textView.setVisibility(VISIBLE);
             textView.setText(textResult.getText());
         } else {
-//            String coloredText = applyColoredWebView(text);
             textView.setVisibility(GONE);
             webView.setVisibility(VISIBLE);
             webView.setText(textResult.getText());
