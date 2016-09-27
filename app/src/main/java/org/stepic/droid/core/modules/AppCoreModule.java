@@ -44,6 +44,8 @@ import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
+import org.stepic.droid.util.resolvers.TextResolver;
+import org.stepic.droid.util.resolvers.TextResolverImpl;
 import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.RetrofitRESTApi;
@@ -242,5 +244,11 @@ public class AppCoreModule {
     @Singleton
     FilterApplicator provideFilterApplicator(DefaultFilter defaultFilter, SharedPreferenceHelper sharedPreferenceHelper) {
         return new FilterApplicatorImpl(defaultFilter, sharedPreferenceHelper);
+    }
+
+    @Provides
+    @Singleton
+    TextResolver provideTextResolver() {
+        return new TextResolverImpl();
     }
 }
