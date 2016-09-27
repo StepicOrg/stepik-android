@@ -52,8 +52,14 @@ public class FreeResponseStepFragment extends StepWithAttemptsFragment {
 
     @Override
     protected Reply generateReply() {
+        String answer = answerField.getText().toString();
+        if (attempt != null && attempt.getDataset() != null && attempt.getDataset().getIs_html_enabled() != null && attempt.getDataset().getIs_html_enabled()) {
+            answer = textResolver.replaceWhitespaceToBr(answer);
+        }
+
+
         return new Reply.Builder()
-                .setText(answerField.getText().toString())
+                .setText(answer)
                 .setAttachments(new ArrayList<Attachment>())
                 .build();
     }

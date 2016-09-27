@@ -3,6 +3,7 @@ package org.stepic.droid.util.resolvers.text;
 import android.content.Context;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 
 public interface TextResolver {
@@ -15,9 +16,14 @@ public interface TextResolver {
 
     /**
      * For SIMPLE HTML, which you can set for textview only
+     *
      * @param content
      * @return
      */
     @NotNull
-    CharSequence fromHtml (@NotNull String content);
+    CharSequence fromHtml(@NotNull String content);
+
+    @NotNull
+    String replaceWhitespaceToBr(@Nullable String answer);
+
 }

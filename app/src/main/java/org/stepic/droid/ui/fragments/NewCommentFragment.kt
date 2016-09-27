@@ -21,7 +21,6 @@ import org.stepic.droid.ui.dialogs.DiscardTextDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.ui.util.BackButtonHandler
 import org.stepic.droid.ui.util.OnBackClickListener
-import org.stepic.droid.util.HtmlHelper
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.web.CommentsResponse
 import retrofit.Callback
@@ -139,7 +138,7 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
 
     private fun sendComment() {
         analytic.reportEvent(Analytic.Comments.CLICK_SEND_COMMENTS)
-        val text: String = HtmlHelper.getHtmlWhiteSpaces(textBody.text.toString())
+        val text: String = textResolver.replaceWhitespaceToBr(textBody.text.toString())
         if (text.isEmpty()) {
             Toast.makeText(context, R.string.feedback_fill_fields, Toast.LENGTH_SHORT).show()
         } else {

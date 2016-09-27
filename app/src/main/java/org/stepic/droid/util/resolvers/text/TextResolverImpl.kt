@@ -58,4 +58,11 @@ class TextResolverImpl : TextResolver {
         }
         return fromHtml
     }
+
+    override fun replaceWhitespaceToBr(answer: String?): String {
+        if (answer == null) return ""
+
+        val newContent = answer.replace("\n", "<br>")
+        return newContent
+    }
 }

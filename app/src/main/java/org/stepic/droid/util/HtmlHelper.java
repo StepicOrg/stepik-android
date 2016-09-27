@@ -24,7 +24,7 @@ public class HtmlHelper {
     }
 
     @NotNull
-    @java.lang.Deprecated
+    @Deprecated
     public static CharSequence fromHtml(@Nullable String content) {
         if (content == null)
             return fromHtmlLegacy("");
@@ -32,13 +32,6 @@ public class HtmlHelper {
 
         CharSequence htmlHandled = fromHtmlLegacy(newContent);
         return trimTrailingWhitespace(htmlHandled);
-    }
-
-    @NotNull
-    public static String getHtmlWhiteSpaces(String content) {
-        if (content == null) return "";
-        String newContent = content.replace("\n", "<br>");
-        return newContent;
     }
 
     /**
