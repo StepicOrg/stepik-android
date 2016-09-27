@@ -155,14 +155,14 @@ public class HtmlHelper {
     }
 
 
-    public static String buildMathPage(CharSequence body, int widthPx) {
-        String preBody = String.format(PRE_BODY, MathJaxScript, widthPx);
+    public static String buildMathPage(CharSequence body, int widthPx, String baseUrl) {
+        String preBody = String.format(PRE_BODY, MathJaxScript, widthPx, baseUrl);
         String result = preBody + body + POST_BODY;
         return result;
     }
 
-    public static String buildPageWithAdjustingTextAndImage(CharSequence body, int widthPx) {
-        String preBody = String.format(PRE_BODY, " ", widthPx);
+    public static String buildPageWithAdjustingTextAndImage(CharSequence body, int widthPx, String baseUrl) {
+        String preBody = String.format(PRE_BODY, " ", widthPx, baseUrl);
         String result = preBody + body + POST_BODY;
         return result;
     }
@@ -193,6 +193,7 @@ public class HtmlHelper {
             ", target-densitydpi=medium-dpi" +
             "\" />" +
             "<link rel=\"stylesheet\" type=\"text/css\" href=\"wysiwyg.css\"/>" +
+            "<base href=\"%s\"" + //FIXME set from configs
             "</head>\n"
             + "<body style='margin:0;padding:0;'>";
 
