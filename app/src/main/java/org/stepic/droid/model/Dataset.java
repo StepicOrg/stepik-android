@@ -9,6 +9,7 @@ public class Dataset {
     private List<String> options;
     private String someStringValueFromServer;
     private List<Pair> pairs;
+    private Boolean is_html_enabled;
 
     public Dataset() {
     }
