@@ -70,12 +70,14 @@ public class HtmlHelper {
 
     public static boolean isForWebView(@NotNull String text) {
         //FIXME ADD wysiwyg, REMOVE <img>???
+        //TODO: REGEXP IS SLOWER
         boolean isContainsWysiwyg = text.contains("wysiwyg-");
+        boolean isContainsHTag = text.contains("<h");
         boolean isContainsPicture = text.contains("<img");
         boolean isContainsLatex = text.contains("$");
         boolean isContainsCode = text.contains("<pre><code>");
         boolean isContainsBigMath = text.contains("\\[");
-        return isContainsLatex || isContainsPicture || isContainsCode || isContainsBigMath || isContainsWysiwyg;
+        return isContainsLatex || isContainsPicture || isContainsCode || isContainsBigMath || isContainsWysiwyg || isContainsHTag;
     }
 
     /**
@@ -178,9 +180,9 @@ public class HtmlHelper {
             "<style>\n"
             + "\nhtml{-webkit-text-size-adjust: 100%%;}"
             + "\nbody{font-size: 12pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-            + "\nh1{font-size: 20pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-            + "\nh2{font-size: 17pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-            + "\nh3{font-size: 14pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
+            + "\nh1{font-size: 20pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nh2{font-size: 17pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nh3{font-size: 14pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
             + "\nimg { max-width: 100%%; }"
 
             + "</style>\n" +
@@ -193,7 +195,7 @@ public class HtmlHelper {
             ", target-densitydpi=medium-dpi" +
             "\" />" +
             "<link rel=\"stylesheet\" type=\"text/css\" href=\"wysiwyg.css\"/>" +
-            "<base href=\"%s\"" + //FIXME set from configs
+            "<base href=\"%s\"" +
             "</head>\n"
             + "<body style='margin:0;padding:0;'>";
 
