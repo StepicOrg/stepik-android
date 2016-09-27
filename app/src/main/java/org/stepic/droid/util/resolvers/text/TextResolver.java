@@ -9,4 +9,7 @@ public interface TextResolver {
 
     @NotNull
     TextResult resolveCourseProperty(CoursePropertyResolver.Type type, String content, Context context);
+
+    @NotNull
+    TextResult resolveStepText(String content);
 }

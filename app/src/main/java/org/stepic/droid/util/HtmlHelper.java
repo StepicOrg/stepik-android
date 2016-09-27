@@ -69,6 +69,7 @@ public class HtmlHelper {
     }
 
     public static boolean isForWebView(@NotNull String text) {
+        //FIXME ADD wysiwyg, REMOVE <img>???
         boolean isContainsPicture = text.contains("<img");
         boolean isContainsLatex = text.contains("$");
         boolean isContainsCode = text.contains("<pre><code>");
@@ -168,6 +169,9 @@ public class HtmlHelper {
     //string with 2 format args
     private static final String PRE_BODY = "<html>\n" +
             "<head>\n" +
+
+
+
             "<title>Step</title>\n" +
 
             "%s" +

@@ -10,8 +10,12 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.stepic.droid.R;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.util.ColorUtil;
-import org.stepic.droid.util.HtmlHelper;
+import org.stepic.droid.util.resolvers.text.TextResolver;
+import org.stepic.droid.util.resolvers.text.TextResult;
+
+import javax.inject.Inject;
 
 public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     private final static String assetUrl = "file:///android_asset/";
@@ -30,8 +34,12 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     @ColorInt
     int defaultTextColor;
 
+    @Inject
+    TextResolver textResolver;
+
     public LatexSupportableEnhancedFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        MainApplication.component().inject(this);
 
         defaultTextColor = ColorUtil.INSTANCE.getColorArgb(R.color.black, context);
         themeDefaultTextColor = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, context);
@@ -70,18 +78,20 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     }
 
     public void setText(String text) {
-        boolean needWebView = HtmlHelper.isForWebView(text); //text is raw text from response
-        if (!needWebView) {
-            CharSequence str = HtmlHelper.trimTrailingWhitespace(HtmlHelper.fromHtml(text));
+        TextResult textResult = textResolver.resolveStepText(text);
+
+//        boolean needWebView = HtmlHelper.isForWebView(text); //text is raw text from response
+        if (!textResult.isNeedWebView()) {
+//            CharSequence str = HtmlHelper.trimTrailingWhitespace(HtmlHelper.fromHtml(text));
 
             webView.setVisibility(GONE);
             textView.setVisibility(VISIBLE);
-            textView.setText(str.toString().trim());
+            textView.setText(textResult.getText());
         } else {
-            String coloredText = applyColoredWebView(text);
+//            String coloredText = applyColoredWebView(text);
             textView.setVisibility(GONE);
             webView.setVisibility(VISIBLE);
-            webView.setText(coloredText);
+            webView.setText(textResult.getText());
         }
     }
 
