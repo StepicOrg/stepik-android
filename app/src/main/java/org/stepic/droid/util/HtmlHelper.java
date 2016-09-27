@@ -13,10 +13,10 @@ import org.stepic.droid.notifications.model.Notification;
 
 public class HtmlHelper {
 
-    private static Spanned fromHtmlLegacy (@Nullable String content){
+    private static Spanned fromHtmlLegacy(@Nullable String content) {
         Spanned result;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            result = Html.fromHtml(content,Html.FROM_HTML_MODE_LEGACY);
+            result = Html.fromHtml(content, Html.FROM_HTML_MODE_LEGACY);
         } else {
             result = Html.fromHtml(content);
         }
@@ -70,11 +70,12 @@ public class HtmlHelper {
 
     public static boolean isForWebView(@NotNull String text) {
         //FIXME ADD wysiwyg, REMOVE <img>???
+        boolean isContainsWysiwyg = text.contains("wysiwyg-");
         boolean isContainsPicture = text.contains("<img");
         boolean isContainsLatex = text.contains("$");
         boolean isContainsCode = text.contains("<pre><code>");
         boolean isContainsBigMath = text.contains("\\[");
-        return isContainsLatex || isContainsPicture || isContainsCode || isContainsBigMath;
+        return isContainsLatex || isContainsPicture || isContainsCode || isContainsBigMath || isContainsWysiwyg;
     }
 
     /**
@@ -170,8 +171,6 @@ public class HtmlHelper {
     private static final String PRE_BODY = "<html>\n" +
             "<head>\n" +
 
-
-
             "<title>Step</title>\n" +
 
             "%s" +
@@ -193,7 +192,7 @@ public class HtmlHelper {
             ", user-scalable=no" +
             ", target-densitydpi=medium-dpi" +
             "\" />" +
-
+            "<link rel=\"stylesheet\" type=\"text/css\" href=\"wysiwyg.css\"/>" +
             "</head>\n"
             + "<body style='margin:0;padding:0;'>";
 
@@ -205,7 +204,7 @@ public class HtmlHelper {
                     "  MathJax.Hub.Config({" +
                     "messageStyle: \"none\", " +
                     "tex2jax: {preview: \"none\", inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
-                    "displayMath: [ ['$$','$$'], ['\\[','\\]'] ]"+
+                    "displayMath: [ ['$$','$$'], ['\\[','\\]'] ]" +
                     "</script>\n" +
                     "<script type=\"text/javascript\"\n" +
                     " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full\">\n" +
