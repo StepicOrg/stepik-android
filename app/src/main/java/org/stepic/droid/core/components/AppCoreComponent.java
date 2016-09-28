@@ -37,6 +37,7 @@ import org.stepic.droid.ui.adapters.MyCoursesAdapter;
 import org.stepic.droid.ui.adapters.SectionAdapter;
 import org.stepic.droid.ui.adapters.SocialAuthAdapter;
 import org.stepic.droid.ui.adapters.UnitAdapter;
+import org.stepic.droid.ui.custom.ExpandableTextView;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.custom.LatexSupportableWebView;
 import org.stepic.droid.ui.dialogs.AllowMobileDataDialogFragment;
@@ -177,4 +178,6 @@ public interface AppCoreComponent {
     void inject(LatexSupportableEnhancedFrameLayout latexSupportableEnhancedFrameLayout);
 
     void inject(LatexSupportableWebView latexSupportableWebView);
+
+    void inject(ExpandableTextView expandableTextView);
 }
