@@ -1,8 +1,5 @@
 package org.stepic.droid.util;
 
-import android.text.Html;
-import android.text.Spanned;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
@@ -12,27 +9,6 @@ import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.notifications.model.Notification;
 
 public class HtmlHelper {
-
-    private static Spanned fromHtmlLegacy(@Nullable String content) {
-        Spanned result;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            result = Html.fromHtml(content, Html.FROM_HTML_MODE_LEGACY);
-        } else {
-            result = Html.fromHtml(content);
-        }
-        return result;
-    }
-
-    @NotNull
-    @Deprecated
-    public static CharSequence fromHtml(@Nullable String content) {
-        if (content == null)
-            return fromHtmlLegacy("");
-        String newContent = content.trim().replace("\n", "<br>");
-
-        CharSequence htmlHandled = fromHtmlLegacy(newContent);
-        return trimTrailingWhitespace(htmlHandled);
-    }
 
     /**
      * Trims trailing whitespace. Removes any of these characters:
