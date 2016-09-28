@@ -83,7 +83,7 @@ public class CoursesAdapter extends ArrayAdapter<Course> {
             viewHolderItem = (ViewHolderItem) convertView.getTag();
         }
         viewHolderItem.courseName.setText(course.getTitle());
-        viewHolderItem.courseSummary.setText(textResolver.fromHtml(course.getSummary()));
+        viewHolderItem.courseSummary.setText(textResolver.fromHtml(course.getSummary()).toString());
 
         Glide
                 .with(getContext())
