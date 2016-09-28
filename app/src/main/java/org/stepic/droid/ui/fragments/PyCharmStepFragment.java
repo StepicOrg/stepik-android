@@ -23,7 +23,6 @@ import org.stepic.droid.events.submissions.SubmissionCreatedEvent;
 import org.stepic.droid.events.submissions.SuccessGettingLastSubmissionEvent;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Reply;
-import org.stepic.droid.util.HtmlHelper;
 
 import butterknife.BindString;
 import butterknife.ButterKnife;
@@ -49,7 +48,7 @@ public class PyCharmStepFragment extends StepWithAttemptsFragment {
 
     @Override
     protected void showAttempt(Attempt attempt) {
-        messageField.setText(HtmlHelper.fromHtml(pyMessage));
+        messageField.setText(textResolver.fromHtml(pyMessage));
     }
 
     @Override
@@ -65,7 +64,7 @@ public class PyCharmStepFragment extends StepWithAttemptsFragment {
 
     @Override
     protected void onRestoreSubmission() {
-        messageField.setText(HtmlHelper.fromHtml(pyMessage));
+        messageField.setText(textResolver.fromHtml(pyMessage));
     }
 
 
