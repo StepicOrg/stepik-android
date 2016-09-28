@@ -230,8 +230,8 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    ShareHelper provideShareHelper(IConfig config, Context context) {
-        return new ShareHelperImpl(config, context);
+    ShareHelper provideShareHelper(IConfig config, Context contex, TextResolver textResolver) {
+        return new ShareHelperImpl(config, context, textResolver);
     }
 
     @Provides
