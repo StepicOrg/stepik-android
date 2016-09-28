@@ -25,8 +25,8 @@ import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.store.operations.Table;
-import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.StepicLogicHelper;
+import org.stepic.droid.util.resolvers.text.TextResolver;
 
 import java.util.List;
 
@@ -51,6 +51,9 @@ public class CoursesAdapter extends ArrayAdapter<Course> {
 
     @Inject
     CleanManager cleaner;
+
+    @Inject
+    TextResolver textResolver;
 
     private Drawable coursePlaceholder;
 
@@ -80,7 +83,7 @@ public class CoursesAdapter extends ArrayAdapter<Course> {
             viewHolderItem = (ViewHolderItem) convertView.getTag();
         }
         viewHolderItem.courseName.setText(course.getTitle());
-        viewHolderItem.courseSummary.setText(HtmlHelper.fromHtml(course.getSummary()));
+        viewHolderItem.courseSummary.setText(textResolver.fromHtml(course.getSummary()));
 
         Glide
                 .with(getContext())
