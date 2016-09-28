@@ -81,11 +81,10 @@ public class StringUtil {
 
 
     //Pull all links from the body for easy retrieval
-    public static List<String> pullLinks(String textHtml) {
-        String text = HtmlHelper.fromHtml(textHtml).toString();
+    public static List<String> pullLinks(String fromHtmlText) {
         List<String> links = new ArrayList<>();
 
-        Matcher m = Patterns.WEB_URL.matcher(text);
+        Matcher m = Patterns.WEB_URL.matcher(fromHtmlText);
         while (m.find()) {
             String urlStr = m.group();
             if (urlStr.startsWith("(") && urlStr.endsWith(")")) {

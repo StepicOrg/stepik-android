@@ -159,7 +159,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         }
 
         links.clear()
-        links.addAll(StringUtil.pullLinks(comment.text))
+        links.addAll(StringUtil.pullLinks(textResolver.fromHtml(comment.text).toString()))
         firstLinkShift = 0
         if (links.isNotEmpty()) {
             links.forEach {
