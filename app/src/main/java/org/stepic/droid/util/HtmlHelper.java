@@ -65,13 +65,12 @@ public class HtmlHelper {
     public static boolean isForWebView(@NotNull String text) {
         //FIXME ADD wysiwyg, REMOVE <img>???
         //TODO: REGEXP IS SLOWER
-        boolean isContainsWysiwyg = text.contains("wysiwyg-");
-        boolean isContainsHTag = text.contains("<h");
-        boolean isContainsPicture = text.contains("<img");
-        boolean isContainsLatex = text.contains("$");
-        boolean isContainsCode = text.contains("<pre><code>");
-        boolean isContainsBigMath = text.contains("\\[");
-        return isContainsLatex || isContainsPicture || isContainsCode || isContainsBigMath || isContainsWysiwyg || isContainsHTag;
+        return text.contains("$")
+                || text.contains("wysiwyg-")
+                || text.contains("<h")
+                || text.contains("\\[")
+                || text.contains("<pre><code>")
+                || text.contains("<img");
     }
 
     /**
