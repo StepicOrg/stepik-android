@@ -213,8 +213,13 @@ public class AppCoreModule {
 
     @Singleton
     @Provides
-    INotificationManager provideNotificationManager(SharedPreferenceHelper sp, IApi api, IConfig config, UserPreferences userPreferences, DatabaseFacade db, Analytic analytic) {
-        return new NotificationManagerImpl(sp, api, config, userPreferences, db, analytic);
+    INotificationManager provideNotificationManager(SharedPreferenceHelper sp,
+                                                    IApi api,
+                                                    IConfig config,
+                                                    UserPreferences userPreferences,
+                                                    DatabaseFacade db, Analytic analytic,
+                                                    TextResolver textResolver) {
+        return new NotificationManagerImpl(sp, api, config, userPreferences, db, analytic, textResolver);
     }
 
     @Provides
