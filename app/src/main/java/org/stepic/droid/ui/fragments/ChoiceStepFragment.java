@@ -22,12 +22,11 @@ import org.stepic.droid.events.submissions.SuccessGettingLastSubmissionEvent;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Dataset;
 import org.stepic.droid.model.Reply;
-import org.stepic.droid.util.HtmlHelper;
-import org.stepic.droid.util.RadioGroupHelper;
 import org.stepic.droid.ui.custom.StepikCheckBox;
 import org.stepic.droid.ui.custom.StepikOptionView;
 import org.stepic.droid.ui.custom.StepikRadioButton;
 import org.stepic.droid.ui.custom.StepikRadioGroup;
+import org.stepic.droid.util.RadioGroupHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,8 +107,7 @@ public class ChoiceStepFragment extends StepWithAttemptsFragment {
     }
 
     private void buildChoiceItem(StepikOptionView item, String rawText) {
-        String text = HtmlHelper.fromHtml(rawText).toString();
-        item.setText(text);
+        item.setText(rawText);
         choiceContainer.addView(item);
     }
 
