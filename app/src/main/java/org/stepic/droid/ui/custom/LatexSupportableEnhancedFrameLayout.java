@@ -12,6 +12,7 @@ import android.widget.TextView;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.util.ColorUtil;
+import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 import org.stepic.droid.util.resolvers.text.TextResult;
 
@@ -103,4 +104,23 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         }
     }
 
+    private void setTextWebViewOnlyForLaTeX(String text) {
+        textView.setVisibility(GONE);
+        webView.setVisibility(VISIBLE);
+        webView.setText(text, true);
+    }
+
+    private void setPlainText(String text) {
+        webView.setVisibility(GONE);
+        textView.setVisibility(VISIBLE);
+        textView.setText(text);
+    }
+
+    public void setPlainOrLaTeXText(String text) {
+        if (HtmlHelper.hasLaTeX(text)) {
+            setTextWebViewOnlyForLaTeX(text);
+        } else {
+            setPlainText(text);
+        }
+    }
 }

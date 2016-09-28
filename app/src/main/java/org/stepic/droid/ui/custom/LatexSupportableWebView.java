@@ -45,19 +45,22 @@ public class LatexSupportableWebView extends WebView {
     }
 
     public void setText(CharSequence text) {
+        setText(text, false); //by default we do not want latex -> try to optimize
+    }
+
+    public void setText(CharSequence text, boolean wantLaTeX) {
 
         final String mimeType = "text/html";
         final String encoding = "UTF-8";
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         ((AppCompatActivity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        int height = displaymetrics.heightPixels;
         int width = displaymetrics.widthPixels;
 
 
         getSettings().setDomStorageEnabled(true);
         String textString = text.toString();
-        if (textString.contains("$") || textString.contains("\\[")) {
+        if (wantLaTeX || HtmlHelper.hasLaTeX(textString)) {
             WebSettings webSettings = getSettings();
             webSettings.setJavaScriptEnabled(true);
             final String html = HtmlHelper.buildMathPage(text, width, config.getBaseUrl());

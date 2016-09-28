@@ -41,12 +41,17 @@ public class HtmlHelper {
     public static boolean isForWebView(@NotNull String text) {
         //FIXME ADD wysiwyg, REMOVE <img>???
         //TODO: REGEXP IS SLOWER
-        return  text.contains("$")
+        return text.contains("$")
                 || text.contains("wysiwyg-")
                 || text.contains("<h")
                 || text.contains("\\[")
                 || text.contains("<pre><code>")
-                || text.contains("<img") ;
+                || text.contains("<img");
+    }
+
+
+    public static boolean hasLaTeX(String textString) {
+        return textString.contains("$") || textString.contains("\\[");
     }
 
     /**

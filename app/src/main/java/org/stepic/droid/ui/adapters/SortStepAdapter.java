@@ -103,10 +103,11 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
 //            holder.mOptionText.setLines((mWidth / halfScreen) + 1);
         }
 
+        String text = itemIdOptionMap.get(itemId).getValue();
         if (!isMatching) {
-            holder.enhancedText.setText(itemIdOptionMap.get(itemId).getValue());
+            holder.enhancedText.setPlainOrLaTeXText(text);
         } else {
-            holder.optionText.setText(itemIdOptionMap.get(itemId).getValue());
+            holder.optionText.setText(text);
         }
         // NOTE: check for getDraggingId() match to set an "invisible space" while dragging
         holder.container.setVisibility(getDraggingId() == itemId ? View.INVISIBLE : View.VISIBLE);
