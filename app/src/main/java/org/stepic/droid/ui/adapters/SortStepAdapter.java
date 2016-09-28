@@ -106,7 +106,7 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
         if (!isMatching) {
             holder.enhancedText.setText(itemIdOptionMap.get(itemId).getValue());
         } else {
-            holder.optionText.setText(textResolver.fromHtml(itemIdOptionMap.get(itemId).getValue()).toString());
+            holder.optionText.setText(itemIdOptionMap.get(itemId).getValue());
         }
         // NOTE: check for getDraggingId() match to set an "invisible space" while dragging
         holder.container.setVisibility(getDraggingId() == itemId ? View.INVISIBLE : View.VISIBLE);

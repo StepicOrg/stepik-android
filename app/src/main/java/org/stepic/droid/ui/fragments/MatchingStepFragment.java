@@ -151,7 +151,7 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
         for (String value : firstList) {
             View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_matching_first_option, leftLinearLayout, false);
             TextView header = ButterKnife.findById(view, R.id.option_text);
-            header.setText(textResolver.fromHtml(value));
+            header.setText(value);
             int lines = (maxWidth / halfScreen) + 1;
             int height = (int) MainApplication.getAppContext().getResources().getDimension(R.dimen.option_height);
             height = lines * height;
@@ -173,7 +173,7 @@ public class MatchingStepFragment extends StepWithAttemptsFragment {
             allTextList.add(option.getValue());
         }
         for (String text : allTextList) {
-            header.setText(textResolver.fromHtml(text));
+            header.setText(text);
             header.setVisibility(View.INVISIBLE);
             leftLinearLayout.addView(view);
 
