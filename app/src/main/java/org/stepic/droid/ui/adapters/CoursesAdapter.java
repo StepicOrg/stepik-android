@@ -54,13 +54,10 @@ public class CoursesAdapter extends ArrayAdapter<Course> {
 
     private Drawable coursePlaceholder;
 
-    @Nullable
-    private final Table type;
     private LayoutInflater mInflater;
 
     public CoursesAdapter(Fragment fragment, List<Course> courses, @Nullable Table type) {
         super(fragment.getActivity(), 0, courses);
-        this.type = type;
         mInflater = (LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         MainApplication.component().inject(this);
