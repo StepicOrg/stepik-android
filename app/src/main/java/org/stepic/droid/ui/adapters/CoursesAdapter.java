@@ -35,7 +35,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MyCoursesAdapter extends ArrayAdapter<Course> {
+public class CoursesAdapter extends ArrayAdapter<Course> {
 
     @Inject
     IShell shell;
@@ -58,7 +58,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
     private final Table type;
     private LayoutInflater mInflater;
 
-    public MyCoursesAdapter(Fragment fragment, List<Course> courses, @Nullable Table type) {
+    public CoursesAdapter(Fragment fragment, List<Course> courses, @Nullable Table type) {
         super(fragment.getActivity(), 0, courses);
         this.type = type;
         mInflater = (LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);

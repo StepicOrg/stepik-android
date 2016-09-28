@@ -32,8 +32,8 @@ import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.ui.activities.SectionActivity;
 import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
+import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.adapters.DownloadsAdapter;
-import org.stepic.droid.ui.adapters.MyCoursesAdapter;
 import org.stepic.droid.ui.adapters.SectionAdapter;
 import org.stepic.droid.ui.adapters.SocialAuthAdapter;
 import org.stepic.droid.ui.adapters.UnitAdapter;
@@ -85,7 +85,7 @@ public interface AppCoreComponent {
 
     void inject(Shell injectAllToShell);
 
-    void inject(MyCoursesAdapter adapter);
+    void inject(CoursesAdapter adapter);
 
     void inject(Course adapter);
 
