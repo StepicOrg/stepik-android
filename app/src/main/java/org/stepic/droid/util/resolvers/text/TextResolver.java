@@ -16,9 +16,6 @@ public interface TextResolver {
 
     /**
      * For SIMPLE HTML, which you can set for textview only
-     *
-     * @param content
-     * @return
      */
     @NotNull
     CharSequence fromHtml(@NotNull String content);

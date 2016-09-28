@@ -39,7 +39,7 @@ public class HtmlHelper {
     }
 
     public static boolean isForWebView(@NotNull String text) {
-        //FIXME ADD wysiwyg, REMOVE <img>???
+        //FIXME  REMOVE <img>??? and make ImageGetter with simple textview
         //TODO: REGEXP IS SLOWER
         return text.contains("$")
                 || text.contains("wysiwyg-")

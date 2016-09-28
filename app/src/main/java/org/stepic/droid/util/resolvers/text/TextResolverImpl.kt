@@ -39,10 +39,15 @@ class TextResolverImpl : TextResolver {
                 type == CoursePropertyResolver.Type.description) {
             //it can be html text
 
-            val fromHtml: CharSequence = fromHtml(content).trim()
+            if (HtmlHelper.isForWebView(content)) {
+                return TextResult(content,
+                        isNeedWebView = true)
+            } else {
+                val fromHtml: CharSequence = fromHtml(content).trim()
+                return TextResult(fromHtml,
+                        isNeedWebView = false)
+            }
 
-            return TextResult(fromHtml,
-                    isNeedWebView = false) //FIXME handle latex & ImageGetter & <pre><code>
         } else {
             return TextResult(content.trim())
         }

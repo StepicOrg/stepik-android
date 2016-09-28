@@ -11,6 +11,7 @@ import android.widget.TextView;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.CourseProperty;
+import org.stepic.droid.ui.custom.LatexSupportableWebView;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 import org.stepic.droid.util.resolvers.text.TextResult;
 
@@ -53,9 +54,15 @@ public class CoursePropertyAdapter extends ArrayAdapter<CourseProperty> {
         TextResult textResult = textResolver.resolveCourseProperty(courseProperty.getCoursePropertyType(), courseProperty.getText(), getContext());
 
         if (!textResult.isNeedWebView()) {
+            //it is plain
+            viewHolderItem.latexSupportableWebView.setVisibility(View.GONE);
+            viewHolderItem.coursePropertyValue.setVisibility(View.VISIBLE);
             viewHolderItem.coursePropertyValue.setText(textResult.getText());
         } else {
-            //todo ONLY if LaTeX is here -> show webview
+            //show webview
+            viewHolderItem.latexSupportableWebView.setVisibility(View.VISIBLE);
+            viewHolderItem.coursePropertyValue.setVisibility(View.GONE);
+            viewHolderItem.latexSupportableWebView.setText(textResult.getText());
         }
 
         return view;
@@ -68,6 +75,9 @@ public class CoursePropertyAdapter extends ArrayAdapter<CourseProperty> {
 
         @BindView(R.id.course_property_text_value)
         TextView coursePropertyValue;
+
+        @BindView(R.id.course_property_html_value)
+        LatexSupportableWebView latexSupportableWebView;
 
         ViewHolderItem(View view) {
             ButterKnife.bind(this, view);
