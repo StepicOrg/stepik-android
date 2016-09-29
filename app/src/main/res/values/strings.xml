@@ -246,4 +246,8 @@
     <string name="video_quality_explanation">High quality video takes more space and can be loaded slowly</string>
     <string name="do_not_ask_me_again">Do not ask me again</string>
     <string name="discount_policy_inverse_title">After every wrong submission you will get 1 point less</string>
+    <plurals name="discount_policy_first_n">
+        <item quantity="one">You have %d attempt, for which you will get points</item>
+        <item quantity="other">You have %d attempts, for which you will get points</item>
+    </plurals>
 </resources>
