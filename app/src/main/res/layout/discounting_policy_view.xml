@@ -11,11 +11,12 @@
     tools:visibility="visible">
 
     <TextView
+        android:id="@+id/discounting_policy_textview"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
         android:padding="8dp"
-        tools:text="Grading policy"/>
+        tools:text="@string/discount_policy_inverse_title"/>
 
 </FrameLayout>

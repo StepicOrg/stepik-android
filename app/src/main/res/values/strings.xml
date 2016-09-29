@@ -245,4 +245,5 @@
     <string name="very_high_quality">Very high</string>
     <string name="video_quality_explanation">High quality video takes more space and can be loaded slowly</string>
     <string name="do_not_ask_me_again">Do not ask me again</string>
+    <string name="discount_policy_inverse_title">After every wrong submission you will get 1 point less</string>
 </resources>
