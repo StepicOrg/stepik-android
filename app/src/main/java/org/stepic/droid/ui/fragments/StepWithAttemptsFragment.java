@@ -332,7 +332,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         }
 
         if (submission.getHint() != null && !submission.getHint().isEmpty()) {
-            hintTextView.setText(submission.getHint());
+            hintTextView.setPlainOrLaTeXTextColored(submission.getHint(), R.color.white);
             hintTextView.setVisibility(View.VISIBLE);
         } else {
             hintTextView.setVisibility(View.GONE);

@@ -9,6 +9,7 @@ public class Dataset {
     private List<String> options;
     private String someStringValueFromServer;
     private List<Pair> pairs;
+    private Boolean is_html_enabled;
 
     public Dataset() {
     }
@@ -33,5 +34,9 @@ public class Dataset {
     @Nullable
     public List<Pair> getPairs() {
         return pairs;
+    }
+
+    public Boolean getIs_html_enabled() {
+        return is_html_enabled;
     }
 }

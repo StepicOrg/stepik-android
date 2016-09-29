@@ -25,6 +25,7 @@ import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
+import org.stepic.droid.util.resolvers.text.TextResolver;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -37,6 +38,9 @@ public class FragmentBase extends Fragment {
 //    protected String TAG = "StepicFragment";
 
     protected Unbinder unbinder;
+
+    @Inject
+    protected TextResolver textResolver;
 
     @Inject
     protected ShareHelper shareHelper;

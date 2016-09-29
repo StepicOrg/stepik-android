@@ -44,6 +44,8 @@ import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.IVideoResolver;
+import org.stepic.droid.util.resolvers.text.TextResolver;
+import org.stepic.droid.util.resolvers.text.TextResolverImpl;
 import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.RetrofitRESTApi;
@@ -211,8 +213,13 @@ public class AppCoreModule {
 
     @Singleton
     @Provides
-    INotificationManager provideNotificationManager(SharedPreferenceHelper sp, IApi api, IConfig config, UserPreferences userPreferences, DatabaseFacade db, Analytic analytic) {
-        return new NotificationManagerImpl(sp, api, config, userPreferences, db, analytic);
+    INotificationManager provideNotificationManager(SharedPreferenceHelper sp,
+                                                    IApi api,
+                                                    IConfig config,
+                                                    UserPreferences userPreferences,
+                                                    DatabaseFacade db, Analytic analytic,
+                                                    TextResolver textResolver) {
+        return new NotificationManagerImpl(sp, api, config, userPreferences, db, analytic, textResolver);
     }
 
     @Provides
@@ -228,8 +235,8 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    ShareHelper provideShareHelper(IConfig config, Context context) {
-        return new ShareHelperImpl(config, context);
+    ShareHelper provideShareHelper(IConfig config, Context contex, TextResolver textResolver) {
+        return new ShareHelperImpl(config, context, textResolver);
     }
 
     @Provides
@@ -242,5 +249,11 @@ public class AppCoreModule {
     @Singleton
     FilterApplicator provideFilterApplicator(DefaultFilter defaultFilter, SharedPreferenceHelper sharedPreferenceHelper) {
         return new FilterApplicatorImpl(defaultFilter, sharedPreferenceHelper);
+    }
+
+    @Provides
+    @Singleton
+    TextResolver provideTextResolver() {
+        return new TextResolverImpl();
     }
 }

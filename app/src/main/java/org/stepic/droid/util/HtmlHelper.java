@@ -1,8 +1,5 @@
 package org.stepic.droid.util;
 
-import android.text.Html;
-import android.text.Spanned;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
@@ -12,33 +9,6 @@ import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.notifications.model.Notification;
 
 public class HtmlHelper {
-
-    private static Spanned fromHtmlLegacy (@Nullable String content){
-        Spanned result;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            result = Html.fromHtml(content,Html.FROM_HTML_MODE_LEGACY);
-        } else {
-            result = Html.fromHtml(content);
-        }
-        return result;
-    }
-
-    @NotNull
-    public static CharSequence fromHtml(@Nullable String content) {
-        if (content == null)
-            return fromHtmlLegacy("");
-        String newContent = content.trim().replace("\n", "<br>");
-
-        CharSequence htmlHandled = fromHtmlLegacy(newContent);
-        return trimTrailingWhitespace(htmlHandled);
-    }
-
-    @NotNull
-    public static String getHtmlWhiteSpaces(String content) {
-        if (content == null) return "";
-        String newContent = content.replace("\n", "<br>");
-        return newContent;
-    }
 
     /**
      * Trims trailing whitespace. Removes any of these characters:
@@ -69,11 +39,19 @@ public class HtmlHelper {
     }
 
     public static boolean isForWebView(@NotNull String text) {
-        boolean isContainsPicture = text.contains("<img");
-        boolean isContainsLatex = text.contains("$");
-        boolean isContainsCode = text.contains("<pre><code>");
-        boolean isContainsBigMath = text.contains("\\[");
-        return isContainsLatex || isContainsPicture || isContainsCode || isContainsBigMath;
+        //FIXME  REMOVE <img>??? and make ImageGetter with simple textview
+        //TODO: REGEXP IS SLOWER
+        return text.contains("$")
+                || text.contains("wysiwyg-")
+                || text.contains("<h")
+                || text.contains("\\[")
+                || text.contains("<pre><code>")
+                || text.contains("<img");
+    }
+
+
+    public static boolean hasLaTeX(String textString) {
+        return textString.contains("$") || textString.contains("\\[");
     }
 
     /**
@@ -153,14 +131,14 @@ public class HtmlHelper {
     }
 
 
-    public static String buildMathPage(CharSequence body, int widthPx) {
-        String preBody = String.format(PRE_BODY, MathJaxScript, widthPx);
+    public static String buildMathPage(CharSequence body, int widthPx, String baseUrl) {
+        String preBody = String.format(PRE_BODY, MathJaxScript, widthPx, baseUrl);
         String result = preBody + body + POST_BODY;
         return result;
     }
 
-    public static String buildPageWithAdjustingTextAndImage(CharSequence body, int widthPx) {
-        String preBody = String.format(PRE_BODY, " ", widthPx);
+    public static String buildPageWithAdjustingTextAndImage(CharSequence body, int widthPx, String baseUrl) {
+        String preBody = String.format(PRE_BODY, " ", widthPx, baseUrl);
         String result = preBody + body + POST_BODY;
         return result;
     }
@@ -168,6 +146,7 @@ public class HtmlHelper {
     //string with 2 format args
     private static final String PRE_BODY = "<html>\n" +
             "<head>\n" +
+
             "<title>Step</title>\n" +
 
             "%s" +
@@ -175,11 +154,11 @@ public class HtmlHelper {
             "<style>\n"
             + "\nhtml{-webkit-text-size-adjust: 100%%;}"
             + "\nbody{font-size: 12pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-            + "\nh1{font-size: 20pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-            + "\nh2{font-size: 17pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
-            + "\nh3{font-size: 14pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;}"
+            + "\nh1{font-size: 20pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nh2{font-size: 17pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
+            + "\nh3{font-size: 14pt; font-family:Arial, Helvetica, sans-serif; line-height:1.6em;text-align: center;}"
             + "\nimg { max-width: 100%%; }"
-            + "\np{margin: 0px; padding: 0px; display: inline;}"
+
             + "</style>\n" +
 
             "<meta name=\"viewport\" content=\"width=" +
@@ -189,7 +168,8 @@ public class HtmlHelper {
             ", user-scalable=no" +
             ", target-densitydpi=medium-dpi" +
             "\" />" +
-
+            "<link rel=\"stylesheet\" type=\"text/css\" href=\"wysiwyg.css\"/>" +
+            "<base href=\"%s\"" +
             "</head>\n"
             + "<body style='margin:0;padding:0;'>";
 
@@ -201,7 +181,7 @@ public class HtmlHelper {
                     "  MathJax.Hub.Config({" +
                     "messageStyle: \"none\", " +
                     "tex2jax: {preview: \"none\", inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
-                    "displayMath: [ ['$$','$$'], ['\\[','\\]'] ]"+
+                    "displayMath: [ ['$$','$$'], ['\\[','\\]'] ]" +
                     "</script>\n" +
                     "<script type=\"text/javascript\"\n" +
                     " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full\">\n" +

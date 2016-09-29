@@ -32,11 +32,15 @@ import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.ui.activities.SectionActivity;
 import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
+import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.adapters.DownloadsAdapter;
-import org.stepic.droid.ui.adapters.MyCoursesAdapter;
 import org.stepic.droid.ui.adapters.SectionAdapter;
 import org.stepic.droid.ui.adapters.SocialAuthAdapter;
+import org.stepic.droid.ui.adapters.SortStepAdapter;
 import org.stepic.droid.ui.adapters.UnitAdapter;
+import org.stepic.droid.ui.custom.ExpandableTextView;
+import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
+import org.stepic.droid.ui.custom.LatexSupportableWebView;
 import org.stepic.droid.ui.dialogs.AllowMobileDataDialogFragment;
 import org.stepic.droid.ui.dialogs.CertificateShareDialog;
 import org.stepic.droid.ui.dialogs.ChooseCalendarDialog;
@@ -82,7 +86,7 @@ public interface AppCoreComponent {
 
     void inject(Shell injectAllToShell);
 
-    void inject(MyCoursesAdapter adapter);
+    void inject(CoursesAdapter adapter);
 
     void inject(Course adapter);
 
@@ -171,4 +175,12 @@ public interface AppCoreComponent {
     void inject(StepShareDialog stepShareDialog);
 
     void inject(VideoQualityDetailedDialog videoQualityDetailedDialog);
+
+    void inject(LatexSupportableEnhancedFrameLayout latexSupportableEnhancedFrameLayout);
+
+    void inject(LatexSupportableWebView latexSupportableWebView);
+
+    void inject(ExpandableTextView expandableTextView);
+
+    void inject(SortStepAdapter sortStepAdapter);
 }

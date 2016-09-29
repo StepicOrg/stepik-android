@@ -22,7 +22,6 @@ import org.stepic.droid.events.submissions.SubmissionCreatedEvent;
 import org.stepic.droid.events.submissions.SuccessGettingLastSubmissionEvent;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Reply;
-import org.stepic.droid.util.HtmlHelper;
 
 public class StringStepFragment extends StepWithAttemptsFragment {
 
@@ -61,7 +60,7 @@ public class StringStepFragment extends StepWithAttemptsFragment {
         if (reply == null) return;
 
         String text = reply.getText();
-        answerField.setText(HtmlHelper.fromHtml(text));
+        answerField.setText(text);
     }
 
     @Subscribe
