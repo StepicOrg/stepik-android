@@ -2,6 +2,7 @@ package org.stepic.droid.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
@@ -43,6 +44,10 @@ class Section : Serializable, Parcelable {
     var is_cached: Boolean = false
     var is_loading: Boolean = false
     var actions: Actions? = null
+
+    @SerializedName("discounting_policy")
+    var discountingPolicy: DiscountingPolicyType? = null
+
 
     private var formatted_begin_date: String? = null
     private var formatted_soft_deadline: String? = null
