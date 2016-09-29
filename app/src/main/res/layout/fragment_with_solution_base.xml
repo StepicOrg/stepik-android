@@ -18,6 +18,8 @@
         <include
             layout="@layout/step_text_header"/>
 
+        <include layout="@layout/discounting_policy_view"/>
+
         <FrameLayout
             android:id="@+id/attempt_container"
             android:layout_width="match_parent"
