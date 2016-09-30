@@ -1,14 +1,13 @@
 package org.stepic.droid.core
 
 import org.stepic.droid.model.Attempt
+import org.stepic.droid.model.LessonSession
 import org.stepic.droid.model.Submission
 
 interface ILessonSessionManager {
-    fun restoreSubmissionForStep(stepId: Long): Submission?
+    fun restoreLessonSession(stepId: Long): LessonSession?
 
-    fun restoreAttemptForStep(stepId: Long): Attempt?
-
-    fun saveSession(stepId: Long, attempt: Attempt?, submission: Submission?)
+    fun saveSession(stepId: Long, attempt: Attempt?, submission: Submission?, numberOfSubmissionOnFirstPage: Int)
 
     fun reset()
 }

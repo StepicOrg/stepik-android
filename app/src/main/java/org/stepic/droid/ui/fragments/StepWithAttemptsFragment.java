@@ -32,6 +32,8 @@ import org.stepic.droid.events.submissions.FailSubmissionCreatedEvent;
 import org.stepic.droid.events.submissions.SubmissionCreatedEvent;
 import org.stepic.droid.events.submissions.SuccessGettingLastSubmissionEvent;
 import org.stepic.droid.model.Attempt;
+import org.stepic.droid.model.DiscountingPolicyType;
+import org.stepic.droid.model.LessonSession;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Submission;
@@ -103,6 +105,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     protected Attempt attempt = null;
     protected Submission submission = null;
+    protected int numberOfSubmissions = 0;
 
     protected Handler handler;
 
@@ -186,8 +189,12 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
      * @return false if restore was failed;
      */
     protected final boolean tryRestoreState() {
-        attempt = lessonManager.restoreAttemptForStep(step.getId());
-        submission = lessonManager.restoreSubmissionForStep(step.getId());
+        final LessonSession lessonSession = lessonManager.restoreLessonSession(step.getId());
+        if (lessonSession == null) return false;
+
+        attempt = lessonSession.getAttempt();
+        submission = lessonSession.getSubmission();
+        numberOfSubmissions = lessonSession.getNumberOfSubmissionsOnFirstPage();
         if (submission == null || attempt == null) return false;
 
         showAttemptAbstractWrapMethod(attempt, true);
@@ -369,7 +376,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
             submission = new Submission(reply, attempt.getId(), Submission.Status.LOCAL);
         }
 
-        lessonManager.saveSession(step.getId(), attempt, submission);
+        lessonManager.saveSession(step.getId(), attempt, submission, numberOfSubmissions);
     }
 
     protected final void showOnlyInternetProblem(boolean isNeedShow) {
@@ -486,7 +493,8 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     private void showAttemptAbstractWrapMethod(Attempt attempt, boolean isCreatedAttempt) {
         showAttempt(attempt);
-        if (lessonManager.restoreSubmissionForStep(step.getId()) == null && !isCreatedAttempt) {
+        LessonSession lessonSession = lessonManager.restoreLessonSession(step.getId());
+        if ((lessonSession == null || lessonSession.getSubmission() == null) && !isCreatedAttempt) {
             getStatusOfSubmission(attempt.getId());//fill last server submission if exist
         } else {
             showLoadState(false);
@@ -570,5 +578,29 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     @Subscribe
     public void onStepWasUpdated(StepWasUpdatedEvent event) {
         super.onStepWasUpdated(event);
+    }
+
+    private void handleDiscountingPolicy() {
+        if (section == null || section.getDiscountingPolicy() == null || section.getDiscountingPolicy() == DiscountingPolicyType.noDiscount) {
+            // do nothing
+            return;
+        }
+
+        int numberOfSubmission = 0;
+
+        DiscountingPolicyType discountingPolicyType = section.getDiscountingPolicy();
+
+        if (discountingPolicyType == DiscountingPolicyType.inverse) {
+            discountingPolicyRoot.setVisibility(View.VISIBLE);
+            discountingPolicyTextView.setText(getString(R.string.discount_policy_inverse_title));
+        } else if (discountingPolicyType == DiscountingPolicyType.firstOne) {
+            handleDiscountingPolicyLimitedSubmission(discountingPolicyType.numberOfTries(), numberOfSubmission);
+        } else if (discountingPolicyType == DiscountingPolicyType.firstThree) {
+            handleDiscountingPolicyLimitedSubmission(discountingPolicyType.numberOfTries(), numberOfSubmission);
+        }
+    }
+
+    private void handleDiscountingPolicyLimitedSubmission(int numberOfTries, int numberOfSubmission) {
+        // last submission can be success
     }
 }
