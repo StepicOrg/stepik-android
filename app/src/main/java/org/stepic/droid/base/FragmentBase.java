@@ -50,6 +50,10 @@ public class FragmentBase extends Fragment {
     @Inject
     public DatabaseFacade databaseFacade;
 
+    /**
+     * Do not use bus, try to use presenters, after deleting most part of bus related code project will use RxJava
+     */
+    @Deprecated
     @Inject
     public Bus bus;
 
