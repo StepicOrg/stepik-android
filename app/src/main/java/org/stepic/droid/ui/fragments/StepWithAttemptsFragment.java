@@ -95,6 +95,12 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     @BindString(R.string.try_again)
     protected String tryAgainText;
 
+    @BindView(R.id.discounting_policy_root)
+    View discountingPolicyRoot;
+
+    @BindView(R.id.discounting_policy_textview)
+    TextView discountingPolicyTextView;
+
     protected Attempt attempt = null;
     protected Submission submission = null;
 
