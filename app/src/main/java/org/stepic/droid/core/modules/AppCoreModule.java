@@ -43,10 +43,10 @@ import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
-import org.stepic.droid.util.resolvers.IVideoResolver;
+import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 import org.stepic.droid.util.resolvers.text.TextResolverImpl;
-import org.stepic.droid.util.resolvers.VideoResolver;
+import org.stepic.droid.util.resolvers.VideoResolverImpl;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.RetrofitRESTApi;
 
@@ -113,11 +113,11 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    IVideoResolver provideVideoResolver(Analytic analytic,
-                                        DatabaseFacade dbOperationsCachedVideo,
-                                        UserPreferences userPreferences,
-                                        CleanManager cleanManager) {
-        return new VideoResolver(dbOperationsCachedVideo, userPreferences, cleanManager, analytic);
+    VideoResolver provideVideoResolver(Analytic analytic,
+                                       DatabaseFacade dbOperationsCachedVideo,
+                                       UserPreferences userPreferences,
+                                       CleanManager cleanManager) {
+        return new VideoResolverImpl(dbOperationsCachedVideo, userPreferences, cleanManager, analytic);
     }
 
     @Provides

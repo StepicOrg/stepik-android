@@ -23,7 +23,6 @@ import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
-import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 
 import java.util.concurrent.ThreadPoolExecutor;
@@ -33,8 +32,6 @@ import javax.inject.Inject;
 import butterknife.Unbinder;
 
 public class FragmentBase extends Fragment {
-
-//    protected String TAG = "StepicFragment";
 
     protected Unbinder unbinder;
 
@@ -65,14 +62,8 @@ public class FragmentBase extends Fragment {
     @Inject
     public LocalProgressManager localProgressManager;
 
-
     @Inject
     public IDownloadManager downloadManager;
-
-
-    @Inject
-    public IVideoResolver videoResolver;
-
 
     @Inject
     public SharedPreferenceHelper sharedPreferenceHelper;

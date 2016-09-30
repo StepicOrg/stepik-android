@@ -32,6 +32,7 @@ import org.stepic.droid.events.video.VideoResolvedEvent;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.util.ThumbnailParser;
+import org.stepic.droid.util.resolvers.VideoResolver;
 
 import java.io.IOException;
 import java.util.List;
@@ -56,6 +57,9 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
 
     @Inject
     StepQualityPresenter stepQualityPresenter;
+
+    @Inject
+    public VideoResolver videoResolver;
 
     private String tempVideoUrl = null;
     private String tempVideoQuality = null;
