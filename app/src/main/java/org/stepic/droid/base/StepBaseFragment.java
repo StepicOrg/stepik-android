@@ -92,9 +92,10 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        step = (Step) getArguments().getSerializable(AppConstants.KEY_STEP_BUNDLE);
-        lesson = (Lesson) getArguments().getSerializable(AppConstants.KEY_LESSON_BUNDLE);
-        unit = (Unit) getArguments().getSerializable(AppConstants.KEY_UNIT_BUNDLE);
+        step = getArguments().getParcelable(AppConstants.KEY_STEP_BUNDLE);
+        lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
+        unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
+        section = getArguments().getParcelable(AppConstants.KEY_SECTION_BUNDLE);
     }
 
     @Override
