@@ -21,6 +21,7 @@ import com.squareup.otto.Subscribe;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.StepBaseFragment;
+import org.stepic.droid.core.presenters.contracts.StepAttemptView;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.attempts.FailAttemptEvent;
 import org.stepic.droid.events.attempts.SuccessAttemptEvent;
@@ -55,7 +56,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 import timber.log.Timber;
 
-public abstract class StepWithAttemptsFragment extends StepBaseFragment {
+public abstract class StepWithAttemptsFragment extends StepBaseFragment implements StepAttemptView {
     protected final int FIRST_DELAY = 1000;
 
     @BindView(R.id.root_view)
