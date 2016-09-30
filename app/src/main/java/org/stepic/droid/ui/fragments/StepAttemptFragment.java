@@ -60,7 +60,6 @@ import kotlin.jvm.functions.Function0;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
-import timber.log.Timber;
 
 public abstract class StepAttemptFragment extends StepBaseFragment implements StepAttemptView {
     protected final int FIRST_DELAY = 1000;
@@ -146,7 +145,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         unbinder = ButterKnife.bind(this, v);
         return v;
     }
-
 
     @Override
     public final void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -424,7 +422,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     }
 
     protected final void fillSubmission(@org.jetbrains.annotations.Nullable Submission submission) {
-        handleDiscountingPolicy(numberOfSubmissions);
+        stepAttemptPresenter.handleDiscountingPolicy(numberOfSubmissions, section);
         if (submission == null || submission.getStatus() == null) {
             return;
         }
@@ -587,7 +585,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         if ((lessonSession == null || lessonSession.getSubmission() == null) && !isCreatedAttempt) {
             getStatusOfSubmission(attempt.getId());//fill last server submission if exist
         } else {
-            handleDiscountingPolicy(numberOfSubmissions);
+            stepAttemptPresenter.handleDiscountingPolicy(numberOfSubmissions, section);
             showLoadState(false);
         }
     }
@@ -670,42 +668,28 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         super.onStepWasUpdated(event);
     }
 
-    private void handleDiscountingPolicy(int numberOfSubmission) {
-        if (section == null || section.getDiscountingPolicy() == null || section.getDiscountingPolicy() == DiscountingPolicyType.noDiscount) {
-            // do nothing
-            return;
-        }
-
-        DiscountingPolicyType discountingPolicyType = section.getDiscountingPolicy();
-        Timber.d("try show discounting policy on 1st page %d", numberOfSubmission);
-        Timber.d("discounting policy type is %s", discountingPolicyType);
-
-        if (numberOfSubmission < 0) {
+    @Override
+    public void onResultHandlingDiscountPolicy(boolean needShow, DiscountingPolicyType discountingPolicyType, int remainTries) {
+        if (!needShow || discountingPolicyType == null) {
             discountingPolicyRoot.setVisibility(View.GONE);
             return;
         }
 
-        if (discountingPolicyType == DiscountingPolicyType.inverse) {
-            discountingPolicyRoot.setVisibility(View.VISIBLE);
-            discountingPolicyTextView.setText(getString(R.string.discount_policy_inverse_title));
-        } else if (discountingPolicyType == DiscountingPolicyType.firstOne) {
-            handleDiscountingPolicyLimitedSubmission(discountingPolicyType.numberOfTries(), numberOfSubmission);
-        } else if (discountingPolicyType == DiscountingPolicyType.firstThree) {
-            handleDiscountingPolicyLimitedSubmission(discountingPolicyType.numberOfTries(), numberOfSubmission);
-        }
-    }
-
-    private void handleDiscountingPolicyLimitedSubmission(int numberOfTries, int numberOfSubmission) {
-        // last submission can be success
-        int remain = numberOfTries - numberOfSubmissions;
         String warningText;
-        if (remain > 0) {
-            warningText = getResources().getQuantityString(R.plurals.discount_policy_first_n, remain, remain);
+        if (discountingPolicyType == DiscountingPolicyType.inverse) {
+            warningText = getString(R.string.discount_policy_inverse_title);
+        } else if (discountingPolicyType == DiscountingPolicyType.firstOne || discountingPolicyType == DiscountingPolicyType.firstThree) {
+            if (remainTries > 0) {
+                warningText = getResources().getQuantityString(R.plurals.discount_policy_first_n, remainTries, remainTries);
+            } else {
+                warningText = getString(R.string.discount_policy_no_way);
+            }
         } else {
-            warningText = getString(R.string.discount_policy_no_way);
+            discountingPolicyRoot.setVisibility(View.GONE);
+            return;
         }
 
-        discountingPolicyRoot.setVisibility(View.VISIBLE);
         discountingPolicyTextView.setText(warningText);
+        discountingPolicyRoot.setVisibility(View.VISIBLE);
     }
 }
