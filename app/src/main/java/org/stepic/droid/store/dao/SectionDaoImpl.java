@@ -50,6 +50,7 @@ public class SectionDaoImpl extends DaoBase<Section> {
         section.setUnits(DbParseHelper.INSTANCE.parseStringToLongArray(cursor.getString(columnIndexUnits)));
         int typeId = cursor.getInt(indexDiscountingPolicy);
         DiscountingPolicyType discountingPolicyType = getDiscountingPolicyType(typeId);
+        section.setDiscountingPolicy(discountingPolicyType);
 
         String test_section = cursor.getString(indexTestSection);
         Actions actions = new Actions();
