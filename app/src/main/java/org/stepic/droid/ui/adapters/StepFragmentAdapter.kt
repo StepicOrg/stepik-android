@@ -12,7 +12,7 @@ import org.stepic.droid.model.Unit
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.resolvers.StepTypeResolver
 
-class StepFragmentAdapter(fm: FragmentManager, val stepList: List<Step?>, val lesson: Lesson?, val unit: Unit?, val stepTypeResolver: StepTypeResolver, val section : Section) : FragmentStatePagerAdapter(fm) {
+class StepFragmentAdapter(fm: FragmentManager, val stepList: List<Step?>, val lesson: Lesson?, val unit: Unit?, val stepTypeResolver: StepTypeResolver, val section : Section?) : FragmentStatePagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
         val step = stepList[position]

@@ -30,6 +30,8 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
 
     var unit: Unit? = null
 
+    var section: Section? = null
+
     val stepList = ArrayList<Step>()
 
 
@@ -48,7 +50,7 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
 
         if (this.lesson != null) {
             //already loaded if THIS.Lesson != null -> show
-            view?.onLessonUnitPrepared(lesson, unit, section)
+            view?.onLessonUnitPrepared(lesson, unit, this.section)
             view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
             return
         }
@@ -78,23 +80,22 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
 
                 val sectionId = unit?.section ?: -1L
 
-                var resultSection: Section?
                 if (section == null && sectionId >= 0) {
-                    resultSection = databaseFacade.getSectionById(sectionId)
-                    if (resultSection == null) {
+                    this.section = databaseFacade.getSectionById(sectionId)
+                    if (this.section == null) {
                         try {
-                            resultSection = api.getSections(longArrayOf(sectionId)).execute().body().sections.firstOrNull()
+                            this.section = api.getSections(longArrayOf(sectionId)).execute().body().sections.firstOrNull()
                             // do not add to cache section in this way, because we need to support loading/caching state :<
                         } catch (ignored: Exception) {
                             // ok, section is optional
                         }
                     }
                 } else {
-                    resultSection = section
+                    this.section = section
                 }
 
                 mainHandler.post {
-                    view?.onLessonUnitPrepared(lesson, unit, resultSection)
+                    view?.onLessonUnitPrepared(lesson, unit, this.section)
                 }
 
                 loadSteps(defaultStepPositionStartWithOne, fromPreviousLesson)
