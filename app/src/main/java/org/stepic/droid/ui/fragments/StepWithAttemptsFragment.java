@@ -48,9 +48,12 @@ import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
+import timber.log.Timber;
 
 public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     protected final int FIRST_DELAY = 1000;
@@ -105,7 +108,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     protected Attempt attempt = null;
     protected Submission submission = null;
-    protected int numberOfSubmissions = 0;
+    protected int numberOfSubmissions = -1;
 
     protected Handler handler;
 
@@ -135,15 +138,15 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
             @Override
             public void onClick(View v) {
 
-                Bundle bundle = new Bundle();
-                bundle.putLong(FirebaseAnalytics.Param.VALUE, 1L);
-                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, step.getId() + "");
-                analytic.reportEvent(Analytic.Interaction.CLICK_SEND_SUBMISSION, bundle);//value
-
                 showLoadState(true);
                 if (submission == null || submission.getStatus() == Submission.Status.LOCAL) {
+                    Bundle bundle = new Bundle();
+                    bundle.putLong(FirebaseAnalytics.Param.VALUE, 1L);
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, step.getId() + "");
+                    analytic.reportEvent(Analytic.Interaction.CLICK_SEND_SUBMISSION, bundle);//value
                     makeSubmission();
                 } else {
+                    analytic.reportEvent(Analytic.Interaction.CLICK_TRY_STEP_AGAIN);
                     tryAgain();
                 }
             }
@@ -238,6 +241,8 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     protected final void createNewAttempt() {
         if (step == null) return;
+        final long stepId = step.getId();
+        // TODO: 30.09.16 refactor this, fix memory leaks
         shell.getApi().createNewAttempt(step.getId()).enqueue(new Callback<AttemptResponse>() {
             Step localStep = step;
 
@@ -246,8 +251,46 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
                 if (response.isSuccess()) {
                     List<Attempt> attemptList = response.body().getAttempts();
                     if (attemptList != null && !attemptList.isEmpty()) {
-                        Attempt attempt = attemptList.get(0);
-                        bus.post(new SuccessAttemptEvent(localStep.getId(), attempt, true));
+                        final Attempt attempt = attemptList.get(0);
+                        //ok we get attempt -> get number of submissions
+                        threadPoolExecutor.execute(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            final Response<SubmissionResponse> numberResponse = shell.getApi().getSubmissionForStep(stepId).execute();
+                                            if (numberResponse.isSuccess()) {
+                                                mainHandler.post(new Function0<Unit>() {
+                                                    @Override
+                                                    public Unit invoke() {
+                                                        numberOfSubmissions = numberResponse.body().getSubmissions().size();
+                                                        bus.post(new SuccessAttemptEvent(localStep.getId(), attempt, true));
+                                                        return Unit.INSTANCE;
+                                                    }
+                                                });
+                                            } else {
+                                                analytic.reportEvent(Analytic.Error.FAIL_GET_SUB_OF_STEP_CREATING_ATTEMPT);
+                                                mainHandler.post(new Function0<Unit>() {
+                                                    @Override
+                                                    public Unit invoke() {
+                                                        bus.post(new SuccessAttemptEvent(localStep.getId(), attempt, true));
+                                                        return Unit.INSTANCE;
+                                                    }
+                                                });
+                                            }
+                                        } catch (Exception e) {
+                                            analytic.reportEvent(Analytic.Error.FAIL_GET_SUB_OF_STEP_CREATING_ATTEMPT);
+                                            mainHandler.post(new Function0<Unit>() {
+                                                @Override
+                                                public Unit invoke() {
+                                                    bus.post(new SuccessAttemptEvent(localStep.getId(), attempt, true));
+                                                    return Unit.INSTANCE;
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                        );
                     } else {
                         bus.post(new FailAttemptEvent(localStep.getId()));
                     }
@@ -298,25 +341,47 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
             @Override
             public void run() {
+                //todo refactor this hard to reading code. NB: here we hold reference on the outer class.
                 shell.getApi().getSubmissions(localAttemptId).enqueue(new Callback<SubmissionResponse>() {
                     @Override
-                    public void onResponse(Response<SubmissionResponse> response, Retrofit retrofit) {
+                    public void onResponse(final Response<SubmissionResponse> response, Retrofit retrofit) {
                         if (response.isSuccess()) {
-                            List<Submission> submissionList = response.body().getSubmissions();
-                            if (submissionList == null || submissionList.isEmpty()) {
-                                bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId)); //19.09.16 why? because we do not submissions
-                                return;
-                            }
+                            threadPoolExecutor.execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        final Response<SubmissionResponse> responseNumber = shell.getApi().getSubmissionForStep(step.getId()).execute();
+                                        if (responseNumber.isSuccess()) {
+                                            mainHandler.post(new Function0<Unit>() {
+                                                @Override
+                                                public Unit invoke() {
 
-                            Submission submission = submissionList.get(0);
+                                                    List<Submission> submissionList = response.body().getSubmissions();
+                                                    if (submissionList == null || submissionList.isEmpty()) {
+                                                        bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId, null, responseNumber.body().getSubmissions().size())); //19.09.16 why? because we do not submissions for THIS ATTEMPT
+                                                        return Unit.INSTANCE;
+                                                    }
 
-                            if (submission.getStatus() == Submission.Status.EVALUATION) {
-                                bus.post(new FailGettingLastSubmissionEvent(localAttemptId, numberOfTry));
-                                return;
-                            }
+                                                    Submission submission = submissionList.get(0);
 
-                            bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId, submission, submissionList.size()));
+                                                    if (submission.getStatus() == Submission.Status.EVALUATION) {
+                                                        bus.post(new FailGettingLastSubmissionEvent(localAttemptId, numberOfTry));
+                                                        return Unit.INSTANCE;
+                                                    }
 
+                                                    bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId, submission, responseNumber.body().getSubmissions().size()));
+
+                                                    return Unit.INSTANCE;
+                                                }
+                                            });
+                                        } else {
+                                            analytic.reportEvent(Analytic.Error.FAIL_GET_SUBMISSIONS_OF_STEP);
+                                        }
+                                    } catch (Exception ignored) {
+                                        analytic.reportEvent(Analytic.Error.FAIL_GET_SUBMISSIONS_OF_STEP);
+                                    }
+                                }
+                            });
 
                         } else {
                             bus.post(new FailGettingLastSubmissionEvent(localAttemptId, numberOfTry));
@@ -339,7 +404,8 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         super.onDestroyView();
     }
 
-    protected final void fillSubmission(Submission submission) {
+    protected final void fillSubmission(@org.jetbrains.annotations.Nullable Submission submission) {
+        handleDiscountingPolicy(numberOfSubmissions);
         if (submission == null || submission.getStatus() == null) {
             return;
         }
@@ -353,6 +419,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
         switch (submission.getStatus()) {
             case CORRECT:
+                discountingPolicyRoot.setVisibility(View.GONE); // remove if user was correct
                 onCorrectSubmission(submission);
                 setTextToActionButton(tryAgainText);
                 blockUIBeforeSubmit(true);
@@ -389,6 +456,10 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         }
         showAnswerField(!isNeedShow);
         enableInternetMessage(isNeedShow);
+
+        if (isNeedShow) {
+            discountingPolicyRoot.setVisibility(View.GONE);
+        }
     }
 
     private void setTextToActionButton(String text) {
@@ -497,6 +568,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         if ((lessonSession == null || lessonSession.getSubmission() == null) && !isCreatedAttempt) {
             getStatusOfSubmission(attempt.getId());//fill last server submission if exist
         } else {
+            handleDiscountingPolicy(numberOfSubmissions);
             showLoadState(false);
         }
     }
@@ -521,9 +593,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         if (attempt == null || e.getAttemptId() != attempt.getId()) return;
         if (e.getSubmission() == null || e.getSubmission().getStatus() == null) {
             showLoadState(false);
-            return;
         }
-
         numberOfSubmissions = e.getNumberOfSubmissionsOnFirstPage();
         submission = e.getSubmission();
         saveSession();
@@ -581,15 +651,20 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         super.onStepWasUpdated(event);
     }
 
-    private void handleDiscountingPolicy() {
+    private void handleDiscountingPolicy(int numberOfSubmission) {
         if (section == null || section.getDiscountingPolicy() == null || section.getDiscountingPolicy() == DiscountingPolicyType.noDiscount) {
             // do nothing
             return;
         }
 
-        int numberOfSubmission = 0;
-
         DiscountingPolicyType discountingPolicyType = section.getDiscountingPolicy();
+        Timber.d("try show discounting policy on 1st page %d", numberOfSubmission);
+        Timber.d("discounting policy type is %s", discountingPolicyType);
+
+        if (numberOfSubmission < 0) {
+            discountingPolicyRoot.setVisibility(View.GONE);
+            return;
+        }
 
         if (discountingPolicyType == DiscountingPolicyType.inverse) {
             discountingPolicyRoot.setVisibility(View.VISIBLE);
@@ -603,5 +678,15 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
 
     private void handleDiscountingPolicyLimitedSubmission(int numberOfTries, int numberOfSubmission) {
         // last submission can be success
+        int remain = numberOfTries - numberOfSubmissions;
+        String warningText;
+        if (remain > 0) {
+            warningText = getResources().getQuantityString(R.plurals.discount_policy_first_n, remain, remain);
+        } else {
+            warningText = getString(R.string.discount_policy_no_way);
+        }
+
+        discountingPolicyRoot.setVisibility(View.VISIBLE);
+        discountingPolicyTextView.setText(warningText);
     }
 }

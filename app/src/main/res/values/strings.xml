@@ -250,4 +250,5 @@
         <item quantity="one">You have %d attempt, for which you will get points</item>
         <item quantity="other">You have %d attempts, for which you will get points</item>
     </plurals>
+    <string name="discount_policy_no_way"></string>
 </resources>
