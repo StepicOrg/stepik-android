@@ -107,10 +107,10 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
     protected Handler handler;
 
     @BindDrawable(R.drawable.ic_correct)
-    protected Drawable mCorrectIcon;
+    protected Drawable correctIcon;
 
     @BindDrawable(R.drawable.ic_error)
-    protected Drawable mWrongIcon;
+    protected Drawable wrongIcon;
 
     @BindView(R.id.hint_text_view)
     LatexSupportableEnhancedFrameLayout hintTextView;
@@ -393,7 +393,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
             analytic.reportEvent(Analytic.Steps.WRONG_SUBMISSION_FILL, step.getId() + "");
         }
         attemptContainer.setBackgroundResource(R.color.wrong_answer_background);
-        statusIcon.setImageDrawable(mWrongIcon);
+        statusIcon.setImageDrawable(wrongIcon);
         statusTextView.setText(wrongString);
         resultLine.setBackgroundResource(R.color.wrong_answer_background);
         resultLine.setVisibility(View.VISIBLE);
@@ -405,7 +405,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
         }
         markLocalProgressAsViewed();
         attemptContainer.setBackgroundResource(R.color.correct_answer_background);
-        statusIcon.setImageDrawable(mCorrectIcon);
+        statusIcon.setImageDrawable(correctIcon);
         statusTextView.setText(getCorrectString());
         resultLine.setBackgroundResource(R.color.correct_answer_background);
         resultLine.setVisibility(View.VISIBLE);
