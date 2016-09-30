@@ -22,6 +22,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.base.StepBaseFragment;
+import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
@@ -129,6 +130,9 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     @Inject
     StepAttemptPresenter stepAttemptPresenter;
+
+    @Inject
+    LessonSessionManager lessonManager;
 
     @Override
     protected void injectComponent() {

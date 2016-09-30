@@ -14,7 +14,6 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.AudioFocusHelper;
-import org.stepic.droid.core.ILessonSessionManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.ShareHelper;
@@ -50,9 +49,6 @@ public class FragmentBase extends Fragment {
 
     @Inject
     public ThreadPoolExecutor threadPoolExecutor;
-
-    @Inject
-    public ILessonSessionManager lessonManager;
 
     @Inject
     public DatabaseFacade databaseFacade;

@@ -6,8 +6,8 @@ import org.stepic.droid.model.Submission
 import java.util.*
 import javax.inject.Inject
 
-class LocalLessonSessionManager
-@Inject constructor() : ILessonSessionManager {
+class LocalLessonSessionManagerImpl
+@Inject constructor() : LessonSessionManager {
 
     private val stepIdToLessonSession: MutableMap<Long, LessonSession>
 
