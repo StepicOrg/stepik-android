@@ -304,7 +304,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
                         if (response.isSuccess()) {
                             List<Submission> submissionList = response.body().getSubmissions();
                             if (submissionList == null || submissionList.isEmpty()) {
-                                bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId, null)); // FIXME: 19.09.16 why?
+                                bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId)); //19.09.16 why? because we do not submissions
                                 return;
                             }
 
@@ -315,7 +315,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
                                 return;
                             }
 
-                            bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId, submission));
+                            bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId, submission, submissionList.size()));
 
 
                         } else {
@@ -524,6 +524,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment {
             return;
         }
 
+        numberOfSubmissions = e.getNumberOfSubmissionsOnFirstPage();
         submission = e.getSubmission();
         saveSession();
         fillSubmission(submission);
