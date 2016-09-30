@@ -20,7 +20,10 @@ import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.base.StepBaseFragment;
+import org.stepic.droid.core.modules.StepModule;
+import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.attempts.FailAttemptEvent;
@@ -45,6 +48,8 @@ import org.stepic.droid.web.SubmissionResponse;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
@@ -56,7 +61,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 import timber.log.Timber;
 
-public abstract class StepWithAttemptsFragment extends StepBaseFragment implements StepAttemptView {
+public abstract class StepAttemptFragment extends StepBaseFragment implements StepAttemptView {
     protected final int FIRST_DELAY = 1000;
 
     @BindView(R.id.root_view)
@@ -122,10 +127,18 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment implemen
     @BindView(R.id.hint_text_view)
     LatexSupportableEnhancedFrameLayout hintTextView;
 
+    @Inject
+    StepAttemptPresenter stepAttemptPresenter;
+
+    @Override
+    protected void injectComponent() {
+        MainApplication.component().plus(new StepModule()).inject(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_with_solution_base, container, false);
+        View v = inflater.inflate(R.layout.fragment_step_attempt, container, false);
         unbinder = ButterKnife.bind(this, v);
         return v;
     }
@@ -159,7 +172,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment implemen
                 startWork();
             }
         });
-
+        stepAttemptPresenter.attachView(this);
         startWork();
     }
 
@@ -402,6 +415,7 @@ public abstract class StepWithAttemptsFragment extends StepBaseFragment implemen
     @Override
     public void onDestroyView() {
         saveSession();
+        stepAttemptPresenter.detachView(this);
         super.onDestroyView();
     }
 

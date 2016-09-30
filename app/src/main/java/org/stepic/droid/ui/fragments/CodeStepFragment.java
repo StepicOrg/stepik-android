@@ -26,7 +26,7 @@ import org.stepic.droid.model.Reply;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
-public class CodeStepFragment extends StepWithAttemptsFragment{
+public class CodeStepFragment extends StepAttemptFragment {
 
 
     @BindString(R.string.correct)

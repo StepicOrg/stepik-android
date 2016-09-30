@@ -27,7 +27,7 @@ import org.stepic.droid.model.Reply;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
-public class PyCharmStepFragment extends StepWithAttemptsFragment {
+public class PyCharmStepFragment extends StepAttemptFragment {
 
     private TextView messageField;
 

@@ -33,7 +33,7 @@ import java.util.Map;
 
 import butterknife.ButterKnife;
 
-public class SortingStepFragment extends StepWithAttemptsFragment {
+public class SortingStepFragment extends StepAttemptFragment {
 
     RecyclerView recyclerView;
 

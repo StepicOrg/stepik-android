@@ -40,7 +40,7 @@ import java.util.Map;
 
 import butterknife.ButterKnife;
 
-public class MatchingStepFragment extends StepWithAttemptsFragment {
+public class MatchingStepFragment extends StepAttemptFragment {
 
     RecyclerView recyclerView;
     LinearLayout leftLinearLayout;

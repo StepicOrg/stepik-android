@@ -31,7 +31,7 @@ import org.stepic.droid.util.RadioGroupHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChoiceStepFragment extends StepWithAttemptsFragment {
+public class ChoiceStepFragment extends StepAttemptFragment {
 
     private StepikRadioGroup choiceContainer;
 

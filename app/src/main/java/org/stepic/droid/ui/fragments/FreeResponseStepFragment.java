@@ -28,7 +28,7 @@ import java.util.ArrayList;
 
 import butterknife.BindString;
 
-public class FreeResponseStepFragment extends StepWithAttemptsFragment {
+public class FreeResponseStepFragment extends StepAttemptFragment {
 
     @BindString(R.string.correct_free_response)
     String correctString;

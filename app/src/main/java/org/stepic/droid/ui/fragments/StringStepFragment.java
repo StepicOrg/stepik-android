@@ -23,7 +23,7 @@ import org.stepic.droid.events.submissions.SuccessGettingLastSubmissionEvent;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Reply;
 
-public class StringStepFragment extends StepWithAttemptsFragment {
+public class StringStepFragment extends StepAttemptFragment {
 
     protected EditText answerField;
 
