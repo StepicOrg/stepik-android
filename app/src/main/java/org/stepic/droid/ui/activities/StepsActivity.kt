@@ -81,17 +81,16 @@ class StepsActivity : SingleFragmentActivity() {
         return parseLong(stepNumberRaw)
     }
 
-    private fun parseLong(raw: String?): Long {
-        if (raw == null) {
-            return -1L;
-        } else {
-            try {
-                return java.lang.Long.parseLong(raw)
-            } catch (numberFormatException: NumberFormatException) {
-                return -1L
+    private fun parseLong(raw: String?) =
+            if (raw == null) {
+                -1L;
+            } else {
+                try {
+                    java.lang.Long.parseLong(raw)
+                } catch (numberFormatException: NumberFormatException) {
+                    -1L
+                }
             }
-        }
-    }
 
     private fun getSimpleLessonId(dataUri: Uri): Long {
         var lessonSlug: String? = null
