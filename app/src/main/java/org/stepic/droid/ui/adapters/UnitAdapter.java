@@ -294,9 +294,9 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 public void run() {
                     databaseFacade.updateOnlyCachedLoadingLesson(lesson);
                     databaseFacade.updateOnlyCachedLoadingUnit(unit);
+                    downloadManager.addUnitLesson(unit, lesson);
                 }
             });
-            downloadManager.addUnitLesson(unit, lesson);
             notifyItemChanged(position);
         }
     }
