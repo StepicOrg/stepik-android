@@ -1,11 +1,13 @@
 package org.stepic.droid.ui.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +39,7 @@ import org.stepic.droid.model.LessonSession;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.Submission;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
+import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
 import org.stepic.droid.util.ProgressHelper;
 
 import javax.inject.Inject;
@@ -47,6 +50,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public abstract class StepAttemptFragment extends StepBaseFragment implements StepAttemptView {
+
+    private final int DISCOUNTING_POLICY_REQUEST_CODE = 131;
 
     @BindView(R.id.root_view)
     ViewGroup rootView;
@@ -134,8 +139,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         setListenerToActionButton(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                showLoadState(true);
                 if (submission == null || submission.getStatus() == Submission.Status.LOCAL) {
                     Bundle bundle = new Bundle();
                     bundle.putLong(FirebaseAnalytics.Param.VALUE, 1L);
@@ -159,8 +162,25 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         stepAttemptPresenter.startLoadAttempt(step);
     }
 
-    protected void makeSubmission() {
+    private void makeSubmission() {
         if (attempt == null || attempt.getId() <= 0) return;
+
+        if (section != null && section.getDiscountingPolicy() != DiscountingPolicyType.noDiscount
+                && userPreferences.isShowDiscountingPolicyWarning()) {
+            //showDialog
+            DialogFragment dialogFragment = DiscountingPolicyDialogFragment.Companion.newInstance();
+            if (!dialogFragment.isAdded()) {
+                dialogFragment.setTargetFragment(this, DISCOUNTING_POLICY_REQUEST_CODE);
+                dialogFragment.show(getFragmentManager(), null);
+            }
+        } else {
+            makeSubmissionDirectly();
+        }
+
+    }
+
+    private void makeSubmissionDirectly() {
+        showLoadState(true);
         blockUIBeforeSubmit(true);
         final long attemptId = attempt.getId();
         final Reply reply = generateReply();
@@ -258,6 +278,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     }
 
     protected final void tryAgain() {
+        showLoadState(true);
         blockUIBeforeSubmit(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -444,6 +465,14 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
             setTextToActionButton(submitText);
         } else {
             setTextToActionButton(tryAgainText);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == DISCOUNTING_POLICY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            makeSubmissionDirectly();
         }
     }
 }

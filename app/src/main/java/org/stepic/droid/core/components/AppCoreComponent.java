@@ -47,6 +47,7 @@ import org.stepic.droid.ui.dialogs.ChooseCalendarDialog;
 import org.stepic.droid.ui.dialogs.ChooseStorageDialog;
 import org.stepic.droid.ui.dialogs.ClearVideosDialog;
 import org.stepic.droid.ui.dialogs.DeleteCommentDialogFragment;
+import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
@@ -93,6 +94,8 @@ public interface AppCoreComponent {
     void inject(FragmentBase baseFragment);
 
     void inject(RetrofitRESTApi api);
+
+    void inject(DiscountingPolicyDialogFragment dialogFragment);
 
     void inject(Section section);
 

@@ -3,6 +3,7 @@ package org.stepic.droid.analytic;
 import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
@@ -52,6 +53,8 @@ public interface Analytic {
         String CLICK_AUTH_FROM_STEPS = "click_auth_from_steps";
         String SHARE_STEP_CLICK = "share_step_click";
         String CLICK_TRY_STEP_AGAIN = "step_try_again";
+        String NO_DISCOUNTING_DIALOG = "discounting_dialog_no";
+        String YES_DISCOUNTING_DIALOG = "discounting_dialog_yes";
     }
 
     interface Screens {
