@@ -3,7 +3,6 @@ package org.stepic.droid.ui.dialogs
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.widget.CheckBox
@@ -52,7 +51,7 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
         init()
         val adapterPosition = arguments.getInt(adapterPositionKey)
         val layoutInflater = LayoutInflater.from(context)
-        val explanationView = layoutInflater.inflate(R.layout.quality_dialog_explanation, null)
+        val explanationView = layoutInflater.inflate(R.layout.not_ask_again_view, null)
         val checkbox = explanationView.findViewById(R.id.do_not_ask_checkbox) as CheckBox
 
         var chosenOptionPosition = qualityToPositionMap[userPreferences.qualityVideo]!!

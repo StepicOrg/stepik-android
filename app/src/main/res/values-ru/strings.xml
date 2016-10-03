@@ -238,4 +238,15 @@
     <string name="high_quality">Высокое</string>
     <string name="video_quality_explanation">Видео высокого качества занимают больше места и могут загружаться медленнее</string>
     <string name="do_not_ask_me_again">Больше не спрашивать</string>
+    <string name="discount_policy_inverse_title">После каждой неправильной попытки Вам будет начисляться на 1 балл меньше</string>
+    <plurals name="discount_policy_first_n">
+        <item quantity="one">У Вас осталась %d попытка, за которую Вы сможете получить баллы</item>
+        <item quantity="few">У Вас осталось %d попытки, за которые Вы сможете получить баллы</item>
+        <item quantity="many">У Вас осталось %d попыток, за которые Вы сможете получить баллы</item>
+        <item quantity="other">У Вас осталось %d попыток, за которые Вы сможете получить баллы</item>
+    </plurals>
+    <string name="discount_policy_no_way">За Ваши следующие попытки не будут начислены баллы</string>
+    <string name="other_title">Прочее</string>
+    <string name="discounting_policy_title_settings">Предупреждать об уроках со штрафами за неверные ответы</string>
+    <string name="discounting_policy_message">Если Вы отправите неверное решение этого задания, то в дальнейшем Вы можете не получить баллы. Вы уверены?</string>
 </resources>

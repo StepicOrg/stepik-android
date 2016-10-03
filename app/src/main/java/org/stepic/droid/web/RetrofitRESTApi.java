@@ -413,6 +413,12 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
+    public Call<SubmissionResponse> getSubmissionForStep(long stepId) {
+        return loggedService.getExistingSubmissionsForStep(stepId);
+
+    }
+
+    @Override
     public Call<Void> remindPassword(String email) {
         String encodedEmail = URLEncoder.encode(email);
 

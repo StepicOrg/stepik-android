@@ -29,6 +29,7 @@ import org.stepic.droid.core.presenters.StepsPresenter;
 import org.stepic.droid.core.presenters.contracts.StepsView;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.ui.adapters.StepFragmentAdapter;
@@ -71,10 +72,11 @@ public class StepsFragment extends FragmentBase implements StepsView {
         }
     };
 
-    public static StepsFragment newInstance(@org.jetbrains.annotations.Nullable Unit unit, Lesson lesson, boolean fromPreviousLesson) {
+    public static StepsFragment newInstance(@org.jetbrains.annotations.Nullable Unit unit, Lesson lesson, boolean fromPreviousLesson, Section section) {
         Bundle args = new Bundle();
         args.putParcelable(AppConstants.KEY_UNIT_BUNDLE, unit);
         args.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lesson);
+        args.putParcelable(AppConstants.KEY_SECTION_BUNDLE, section);
         args.putBoolean(FROM_PREVIOUS_KEY, fromPreviousLesson);
         StepsFragment fragment = new StepsFragment();
         fragment.setArguments(args);
@@ -160,15 +162,16 @@ public class StepsFragment extends FragmentBase implements StepsView {
         initIndependentUI();
         stepsPresenter.attachView(this);
         if (stepsPresenter.getLesson() == null) {
+            Section section = getArguments().getParcelable(AppConstants.KEY_SECTION_BUNDLE);
             Lesson lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
             Unit unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
             long unitId = getArguments().getLong(SIMPLE_UNIT_ID_KEY);
             long defaultStepPos = getArguments().getLong(SIMPLE_STEP_POSITION_KEY);
             long lessonId = getArguments().getLong(SIMPLE_LESSON_ID_KEY);
-            stepsPresenter.init(lesson, unit, lessonId, unitId, defaultStepPos, fromPreviousLesson);
+            stepsPresenter.init(lesson, unit, lessonId, unitId, defaultStepPos, fromPreviousLesson, section);
             fromPreviousLesson = false;
         } else {
-            stepsPresenter.init(null, null, -1, -1, -1, false);
+            stepsPresenter.init();
         }
         bus.register(this);
     }
@@ -179,13 +182,14 @@ public class StepsFragment extends FragmentBase implements StepsView {
         reportProblem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Section section = getArguments().getParcelable(AppConstants.KEY_SECTION_BUNDLE);
                 Lesson lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
                 Unit unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
                 long unitId = getArguments().getLong(SIMPLE_UNIT_ID_KEY);
                 long defaultStepPos = getArguments().getLong(SIMPLE_STEP_POSITION_KEY);
                 long lessonId = getArguments().getLong(SIMPLE_LESSON_ID_KEY);
                 fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
-                stepsPresenter.refreshWhenOnConnectionProblem(lesson, unit, lessonId, unitId, defaultStepPos, fromPreviousLesson);
+                stepsPresenter.refreshWhenOnConnectionProblem(lesson, unit, lessonId, unitId, defaultStepPos, fromPreviousLesson, section);
                 fromPreviousLesson = false;
             }
         });
@@ -199,8 +203,8 @@ public class StepsFragment extends FragmentBase implements StepsView {
         });
     }
 
-    private void init(Lesson lesson, Unit unit) {
-        stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepsPresenter.getStepList(), lesson, unit, stepTypeResolver);
+    private void init(Lesson lesson, Unit unit, Section section) {
+        stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepsPresenter.getStepList(), lesson, unit, stepTypeResolver, section);
         viewPager.setAdapter(stepAdapter);
 
         getActivity().setTitle(lesson.getTitle());
@@ -353,8 +357,8 @@ public class StepsFragment extends FragmentBase implements StepsView {
     }
 
     @Override
-    public void onLessonUnitPrepared(Lesson lesson, @NonNull Unit unit) {
-        init(lesson, unit);
+    public void onLessonUnitPrepared(Lesson lesson, @NonNull Unit unit, Section section) {
+        init(lesson, unit, section);
     }
 
     @Override

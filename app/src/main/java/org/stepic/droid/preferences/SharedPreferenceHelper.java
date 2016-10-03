@@ -34,6 +34,7 @@ public class SharedPreferenceHelper {
     private static final String NOTIFICATION_SOUND_DISABLED = "notification_sound";
     private static final String TEMP_UPDATE_LINK = "temp_update_link";
     private static final java.lang.String NEED_DROP_116 = "need_drop_116";
+    private static final java.lang.String DISCOUNTING_POLICY_DIALOG = "discounting_pol_dialog";
     private Context context;
     private Analytic analytic;
     private DefaultFilter defaultFilter;
@@ -116,8 +117,16 @@ public class SharedPreferenceHelper {
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, CALENDAR_WIDGET, true);
     }
 
+    public boolean isShowDiscountingPolicyWarning() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, DISCOUNTING_POLICY_DIALOG, true);
+    }
+
     public void setNeedToShowCalendarWidget(boolean needToShowCalendarWidget) {
         put(PreferenceType.DEVICE_SPECIFIC, CALENDAR_WIDGET, needToShowCalendarWidget);
+    }
+
+    public void setShowDiscountingPolicyWarning(boolean needToShowCalendarWidget) {
+        put(PreferenceType.DEVICE_SPECIFIC, DISCOUNTING_POLICY_DIALOG, needToShowCalendarWidget);
     }
 
     public boolean isNeedDropCoursesIn114() {

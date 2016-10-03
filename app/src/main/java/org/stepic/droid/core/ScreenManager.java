@@ -330,17 +330,18 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
-    public void showSteps(Activity sourceActivity, Unit unit, Lesson lesson) {
-        showSteps(sourceActivity, unit, lesson, false);
+    public void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, @Nullable Section section) {
+        showSteps(sourceActivity, unit, lesson, false, section);
     }
 
     @Override
-    public void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, boolean backAnimation) {
+    public void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, boolean backAnimation, @Nullable Section section) {
         analytic.reportEventWithIdName(Analytic.Screens.SHOW_STEP, lesson.getId() + "", lesson.getTitle());
         Intent intent = new Intent(sourceActivity, StepsActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(AppConstants.KEY_UNIT_BUNDLE, unit);
-        bundle.putSerializable(AppConstants.KEY_LESSON_BUNDLE, lesson);
+        bundle.putParcelable(AppConstants.KEY_UNIT_BUNDLE, unit);
+        bundle.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lesson);
+        bundle.putParcelable(AppConstants.KEY_SECTION_BUNDLE, section);
         if (backAnimation) {
             bundle.putBoolean(StepsActivity.Companion.getNeedReverseAnimationKey(), true);
         }

@@ -17,11 +17,11 @@ import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.core.DefaultFilterImpl;
 import org.stepic.droid.core.FilterApplicator;
 import org.stepic.droid.core.FilterApplicatorImpl;
-import org.stepic.droid.core.ILessonSessionManager;
+import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.ILoginManager;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.core.IShell;
-import org.stepic.droid.core.LocalLessonSessionManager;
+import org.stepic.droid.core.LocalLessonSessionManagerImpl;
 import org.stepic.droid.core.LocalProgressImpl;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.LoginManager;
@@ -43,10 +43,10 @@ import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
-import org.stepic.droid.util.resolvers.IVideoResolver;
+import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 import org.stepic.droid.util.resolvers.text.TextResolverImpl;
-import org.stepic.droid.util.resolvers.VideoResolver;
+import org.stepic.droid.util.resolvers.VideoResolverImpl;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.RetrofitRESTApi;
 
@@ -113,11 +113,11 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    IVideoResolver provideVideoResolver(Analytic analytic,
-                                        DatabaseFacade dbOperationsCachedVideo,
-                                        UserPreferences userPreferences,
-                                        CleanManager cleanManager) {
-        return new VideoResolver(dbOperationsCachedVideo, userPreferences, cleanManager, analytic);
+    VideoResolver provideVideoResolver(Analytic analytic,
+                                       DatabaseFacade dbOperationsCachedVideo,
+                                       UserPreferences userPreferences,
+                                       CleanManager cleanManager) {
+        return new VideoResolverImpl(dbOperationsCachedVideo, userPreferences, cleanManager, analytic);
     }
 
     @Provides
@@ -163,8 +163,8 @@ public class AppCoreModule {
 
     @Singleton
     @Provides
-    ILessonSessionManager provideLessonSessionManager() {
-        return new LocalLessonSessionManager();
+    LessonSessionManager provideLessonSessionManager() {
+        return new LocalLessonSessionManagerImpl();
     }
 
     @Singleton

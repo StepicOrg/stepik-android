@@ -29,7 +29,7 @@ import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ProgressUtil;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.StepicLogicHelper;
-import org.stepic.droid.util.resolvers.IVideoResolver;
+import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.LessonStepicResponse;
 import org.stepic.droid.web.SectionsStepicResponse;
@@ -54,7 +54,7 @@ public class LoadService extends IntentService {
     @Inject
     UserPreferences userPrefs;
     @Inject
-    IVideoResolver resolver;
+    VideoResolver resolver;
     @Inject
     IApi api;
     @Inject

@@ -14,7 +14,6 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.AudioFocusHelper;
-import org.stepic.droid.core.ILessonSessionManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.ShareHelper;
@@ -24,7 +23,6 @@ import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
-import org.stepic.droid.util.resolvers.IVideoResolver;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 
 import java.util.concurrent.ThreadPoolExecutor;
@@ -34,8 +32,6 @@ import javax.inject.Inject;
 import butterknife.Unbinder;
 
 public class FragmentBase extends Fragment {
-
-//    protected String TAG = "StepicFragment";
 
     protected Unbinder unbinder;
 
@@ -52,11 +48,12 @@ public class FragmentBase extends Fragment {
     public ThreadPoolExecutor threadPoolExecutor;
 
     @Inject
-    public ILessonSessionManager lessonManager;
-
-    @Inject
     public DatabaseFacade databaseFacade;
 
+    /**
+     * Do not use bus, try to use presenters, after deleting most part of bus related code project will use RxJava
+     */
+    @Deprecated
     @Inject
     public Bus bus;
 
@@ -69,14 +66,8 @@ public class FragmentBase extends Fragment {
     @Inject
     public LocalProgressManager localProgressManager;
 
-
     @Inject
     public IDownloadManager downloadManager;
-
-
-    @Inject
-    public IVideoResolver videoResolver;
-
 
     @Inject
     public SharedPreferenceHelper sharedPreferenceHelper;

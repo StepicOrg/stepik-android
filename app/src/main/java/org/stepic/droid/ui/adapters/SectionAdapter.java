@@ -78,7 +78,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     ThreadPoolExecutor threadPoolExecutor;
 
     private List<Section> sections;
-    private Context mContext;
+    private Context context;
     private AppCompatActivity activity;
     private CalendarPresenter calendarPresenter;
     private Course course;
@@ -94,7 +94,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     public SectionAdapter(List<Section> sections, Context mContext, AppCompatActivity activity, CalendarPresenter calendarPresenter) {
         this.sections = sections;
-        this.mContext = mContext;
+        this.context = mContext;
         this.activity = activity;
         this.calendarPresenter = calendarPresenter;
         highlightDrawable = ContextCompat.getDrawable(mContext, R.drawable.section_background);
@@ -106,10 +106,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     @Override
     public GenericViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_SECTION_ITEM) {
-            View v = LayoutInflater.from(mContext).inflate(R.layout.section_item, parent, false);
+            View v = LayoutInflater.from(context).inflate(R.layout.section_item, parent, false);
             return new SectionViewHolder(v);
         } else if (viewType == TYPE_TITLE) {
-            View v = LayoutInflater.from(mContext).inflate(R.layout.export_calendar_view, parent, false);
+            View v = LayoutInflater.from(context).inflate(R.layout.export_calendar_view, parent, false);
             return new CalendarViewHolder(v);
         } else {
             return null;
@@ -195,7 +195,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             } else {
                 if (section.is_loading()) {
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_SECTION, section.getId() + "");
-                    screenManager.showDownload(mContext);
+                    screenManager.showDownload(context);
                 } else {
                     if (shell.getSharedPreferenceHelper().isNeedToShowVideoQualityExplanation()) {
                         VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(adapterPosition);
@@ -225,9 +225,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 @Override
                 public void run() {
                     databaseFacade.updateOnlyCachedLoadingSection(section);
+                    downloadManager.addSection(section);
                 }
             });
-            downloadManager.addSection(section);
             notifyItemChanged(adapterPosition);
         }
     }
@@ -302,7 +302,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         public void onClick(int adapterPosition) {
             int itemPosition = adapterPosition - SECTION_LIST_DELTA;
             if (itemPosition >= 0 && itemPosition < sections.size()) {
-                screenManager.showUnitsForSection(mContext, sections.get(itemPosition));
+                screenManager.showUnitsForSection(context, sections.get(itemPosition));
             }
         }
 

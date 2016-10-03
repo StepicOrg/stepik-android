@@ -202,7 +202,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     @Override
     public void onClick(int itemPosition) {
         if (itemPosition >= 0 && itemPosition < unitList.size()) {
-            screenManager.showSteps(activity, unitList.get(itemPosition), lessonList.get(itemPosition));
+            screenManager.showSteps(activity, unitList.get(itemPosition), lessonList.get(itemPosition), parentSection);
         }
     }
 
@@ -294,9 +294,9 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 public void run() {
                     databaseFacade.updateOnlyCachedLoadingLesson(lesson);
                     databaseFacade.updateOnlyCachedLoadingUnit(unit);
+                    downloadManager.addUnitLesson(unit, lesson);
                 }
             });
-            downloadManager.addUnitLesson(unit, lesson);
             notifyItemChanged(position);
         }
     }

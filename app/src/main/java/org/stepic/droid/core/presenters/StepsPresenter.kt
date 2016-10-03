@@ -3,6 +3,7 @@ package org.stepic.droid.core.presenters
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.core.presenters.contracts.StepsView
 import org.stepic.droid.model.Lesson
+import org.stepic.droid.model.Section
 import org.stepic.droid.model.Step
 import org.stepic.droid.model.Unit
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -29,17 +30,27 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
 
     var unit: Unit? = null
 
+    var section: Section? = null
+
     val stepList = ArrayList<Step>()
 
 
-    fun init(outLesson: Lesson?, outUnit: Unit?, simpleLessonId: Long, simpleUnitId: Long, defaultStepPositionStartWithOne: Long = -1, fromPreviousLesson: Boolean = false) {
+    @JvmOverloads
+    fun init(outLesson: Lesson? = null,
+             outUnit: Unit? = null,
+             simpleLessonId: Long = -1,
+             simpleUnitId: Long = -1,
+             defaultStepPositionStartWithOne: Long = -1,
+             fromPreviousLesson: Boolean = false,
+             section: Section? = null) {
+
         if (isLoading.get()) {
             return
         }
 
         if (this.lesson != null) {
             //already loaded if THIS.Lesson != null -> show
-            view?.onLessonUnitPrepared(lesson, unit)
+            view?.onLessonUnitPrepared(lesson, unit, this.section)
             view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
             return
         }
@@ -66,8 +77,25 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                 if (lesson == null) {
                     return@execute
                 }
+
+                val sectionId = unit?.section ?: -1L
+
+                if (section == null && sectionId >= 0) {
+                    this.section = databaseFacade.getSectionById(sectionId)
+                    if (this.section == null) {
+                        try {
+                            this.section = api.getSections(longArrayOf(sectionId)).execute().body().sections.firstOrNull()
+                            // do not add to cache section in this way, because we need to support loading/caching state :<
+                        } catch (ignored: Exception) {
+                            // ok, section is optional
+                        }
+                    }
+                } else {
+                    this.section = section
+                }
+
                 mainHandler.post {
-                    view?.onLessonUnitPrepared(lesson, unit)
+                    view?.onLessonUnitPrepared(lesson, unit, this.section)
                 }
 
                 loadSteps(defaultStepPositionStartWithOne, fromPreviousLesson)
@@ -142,13 +170,13 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
         }
     }
 
-    fun refreshWhenOnConnectionProblem(outLesson: Lesson?, outUnit: Unit?, simpleLessonId: Long, simpleUnitId: Long, defaultStepPositionStartWithOne: Long = -1, fromPreviousLesson: Boolean = false) {
+    fun refreshWhenOnConnectionProblem(outLesson: Lesson?, outUnit: Unit?, simpleLessonId: Long, simpleUnitId: Long, defaultStepPositionStartWithOne: Long = -1, fromPreviousLesson: Boolean = false, section: Section?) {
         if (isLoading.get()) {
             return
         }
 
         if (lesson == null) {
-            init(outLesson, outUnit, simpleLessonId, simpleUnitId, defaultStepPositionStartWithOne, fromPreviousLesson)
+            init(outLesson, outUnit, simpleLessonId, simpleUnitId, defaultStepPositionStartWithOne, fromPreviousLesson, section)
 
         } else {
             isLoading.set(true)
