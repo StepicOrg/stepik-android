@@ -246,4 +246,6 @@
         <item quantity="other">У Вас осталось %d попыток, за которые Вы сможете получить баллы</item>
     </plurals>
     <string name="discount_policy_no_way">За Ваши следующие попытки не будут начислены баллы</string>
+    <string name="other_title">Прочее</string>
+    <string name="discounting_policy_title_settings">Предупреждать об уроках со штрафами за неверные ответы</string>
 </resources>

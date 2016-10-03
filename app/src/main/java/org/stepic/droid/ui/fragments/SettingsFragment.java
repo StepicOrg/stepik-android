@@ -51,6 +51,9 @@ public class SettingsFragment extends FragmentBase {
     @BindView(R.id.storage_management_button)
     View storageManagementButton;
 
+    @BindView(R.id.fragment_settings_discounting_policy_switch)
+    BetterSwitch discountingPolicySwitch;
+
     @BindString(R.string.version)
     String versionPrefix;
 
@@ -98,6 +101,15 @@ public class SettingsFragment extends FragmentBase {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 userPreferences.setNeedToShowCalendarWidget(isChecked);
+            }
+        });
+
+        discountingPolicySwitch.setChecked(userPreferences.isShowDiscountingPolicyWarning());
+
+        discountingPolicySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                userPreferences.setShowDiscountingPolicyWarning(isChecked);
             }
         });
 
@@ -174,6 +186,7 @@ public class SettingsFragment extends FragmentBase {
 
     @Override
     public void onDestroyView() {
+        discountingPolicySwitch.setOnCheckedChangeListener(null);
         calendarWidgetSwitch.setOnCheckedChangeListener(null);
         wifiLoadSwitch.setOnCheckedChangeListener(null);
         externalPlayerSwitch.setOnCheckedChangeListener(null);
