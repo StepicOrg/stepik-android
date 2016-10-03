@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.otto.Subscribe;
@@ -27,27 +28,16 @@ import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
 import org.stepic.droid.events.InternetIsEnabledEvent;
-import org.stepic.droid.events.attempts.FailAttemptEvent;
-import org.stepic.droid.events.attempts.SuccessAttemptEvent;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.events.steps.UpdateStepEvent;
-import org.stepic.droid.events.submissions.FailGettingLastSubmissionEvent;
-import org.stepic.droid.events.submissions.FailSubmissionCreatedEvent;
-import org.stepic.droid.events.submissions.SubmissionCreatedEvent;
-import org.stepic.droid.events.submissions.SuccessGettingLastSubmissionEvent;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.DiscountingPolicyType;
 import org.stepic.droid.model.LessonSession;
 import org.stepic.droid.model.Reply;
-import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Submission;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.web.AttemptResponse;
-import org.stepic.droid.web.SubmissionResponse;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -55,14 +45,8 @@ import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
 
 public abstract class StepAttemptFragment extends StepBaseFragment implements StepAttemptView {
-    protected final int FIRST_DELAY = 1000;
 
     @BindView(R.id.root_view)
     ViewGroup rootView;
@@ -171,156 +155,11 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         connectionProblem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startWork();
+                stepAttemptPresenter.startLoadAttempt(step, true);
             }
         });
         stepAttemptPresenter.attachView(this);
-        startWork();
-    }
-
-    private void startWork() {
-        connectionProblem.setVisibility(View.GONE);
-        showLoadState(true);
-        showAnswerField(false);
-        if (!tryRestoreState()) {
-            getExistingAttempts();
-        }
-
-        if (submission == null || submission.getStatus() == Submission.Status.LOCAL) {
-            setTextToActionButton(submitText);
-        } else {
-            setTextToActionButton(tryAgainText);
-        }
-
-        if (step.getActions() != null && step.getActions().getDo_review() != null) {
-            peerReviewIndicator.setVisibility(View.VISIBLE);
-            peerReviewIndicator.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    shell.getScreenProvider().openStepInWeb(getContext(), step);
-                }
-            });
-        }
-    }
-
-
-    /**
-     * @return false if restore was failed;
-     */
-    protected final boolean tryRestoreState() {
-        final LessonSession lessonSession = lessonManager.restoreLessonSession(step.getId());
-        if (lessonSession == null) return false;
-
-        attempt = lessonSession.getAttempt();
-        submission = lessonSession.getSubmission();
-        numberOfSubmissions = lessonSession.getNumberOfSubmissionsOnFirstPage();
-        if (submission == null || attempt == null) return false;
-
-        showAttemptAbstractWrapMethod(attempt, true);
-        fillSubmission(submission);
-        return true;
-    }
-
-    protected final void getExistingAttempts() {
-        shell.getApi().getExistingAttempts(step.getId()).enqueue(new Callback<AttemptResponse>() {
-            Step localStep = step;
-
-            @Override
-            public void onResponse(Response<AttemptResponse> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
-
-                    AttemptResponse body = response.body();
-                    if (body == null) {
-                        createNewAttempt();
-                        return;
-                    }
-
-                    List<Attempt> attemptList = body.getAttempts();
-                    if (attemptList == null || attemptList.isEmpty() || !attemptList.get(0).getStatus().equals("active")) {
-                        createNewAttempt();
-                    } else {
-                        Attempt attempt = attemptList.get(0);
-                        bus.post(new SuccessAttemptEvent(localStep.getId(), attempt, false));
-                    }
-                } else {
-                    createNewAttempt();
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                createNewAttempt();
-            }
-        });
-    }
-
-
-    protected final void createNewAttempt() {
-        if (step == null) return;
-        final long stepId = step.getId();
-        // TODO: 30.09.16 refactor this, fix memory leaks
-        shell.getApi().createNewAttempt(step.getId()).enqueue(new Callback<AttemptResponse>() {
-            Step localStep = step;
-
-            @Override
-            public void onResponse(Response<AttemptResponse> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
-                    List<Attempt> attemptList = response.body().getAttempts();
-                    if (attemptList != null && !attemptList.isEmpty()) {
-                        final Attempt attempt = attemptList.get(0);
-                        //ok we get attempt -> get number of submissions
-                        threadPoolExecutor.execute(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            final Response<SubmissionResponse> numberResponse = shell.getApi().getSubmissionForStep(stepId).execute();
-                                            if (numberResponse.isSuccess()) {
-                                                mainHandler.post(new Function0<Unit>() {
-                                                    @Override
-                                                    public Unit invoke() {
-                                                        numberOfSubmissions = numberResponse.body().getSubmissions().size();
-                                                        bus.post(new SuccessAttemptEvent(localStep.getId(), attempt, true));
-                                                        return Unit.INSTANCE;
-                                                    }
-                                                });
-                                            } else {
-                                                analytic.reportEvent(Analytic.Error.FAIL_GET_SUB_OF_STEP_CREATING_ATTEMPT);
-                                                mainHandler.post(new Function0<Unit>() {
-                                                    @Override
-                                                    public Unit invoke() {
-                                                        bus.post(new SuccessAttemptEvent(localStep.getId(), attempt, true));
-                                                        return Unit.INSTANCE;
-                                                    }
-                                                });
-                                            }
-                                        } catch (Exception e) {
-                                            analytic.reportEvent(Analytic.Error.FAIL_GET_SUB_OF_STEP_CREATING_ATTEMPT);
-                                            mainHandler.post(new Function0<Unit>() {
-                                                @Override
-                                                public Unit invoke() {
-                                                    bus.post(new SuccessAttemptEvent(localStep.getId(), attempt, true));
-                                                    return Unit.INSTANCE;
-                                                }
-                                            });
-                                        }
-                                    }
-                                }
-                        );
-                    } else {
-                        bus.post(new FailAttemptEvent(localStep.getId()));
-                    }
-
-                } else {
-                    bus.post(new FailAttemptEvent(localStep.getId()));
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                bus.post(new FailAttemptEvent(localStep.getId()));
-            }
-        });
+        stepAttemptPresenter.startLoadAttempt(step);
     }
 
     protected void makeSubmission() {
@@ -328,90 +167,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         blockUIBeforeSubmit(true);
         final long attemptId = attempt.getId();
         final Reply reply = generateReply();
-        shell.getApi().createNewSubmission(reply, attemptId).enqueue(new Callback<SubmissionResponse>() {
-            @Override
-            public void onResponse(Response<SubmissionResponse> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
-                    bus.post(new SubmissionCreatedEvent(attemptId, response.body()));
-                } else {
-                    bus.post(new FailSubmissionCreatedEvent(attemptId));
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                bus.post(new FailSubmissionCreatedEvent(attemptId));
-            }
-        });
-
-    }
-
-    protected final void getStatusOfSubmission(long attemptId) {
-        getStatusOfSubmission(attemptId, 0);
-    }
-
-    protected final void getStatusOfSubmission(final long attemptId, final int numberOfTry) {
-        if (handler == null) return;
-        handler.postDelayed(new Runnable() {
-            long localAttemptId = attemptId;
-
-            @Override
-            public void run() {
-                //todo refactor this hard to reading code. NB: here we hold reference on the outer class.
-                shell.getApi().getSubmissions(localAttemptId).enqueue(new Callback<SubmissionResponse>() {
-                    @Override
-                    public void onResponse(final Response<SubmissionResponse> response, Retrofit retrofit) {
-                        if (response.isSuccess()) {
-                            threadPoolExecutor.execute(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        final Response<SubmissionResponse> responseNumber = shell.getApi().getSubmissionForStep(step.getId()).execute();
-                                        if (responseNumber.isSuccess()) {
-                                            mainHandler.post(new Function0<Unit>() {
-                                                @Override
-                                                public Unit invoke() {
-
-                                                    List<Submission> submissionList = response.body().getSubmissions();
-                                                    if (submissionList == null || submissionList.isEmpty()) {
-                                                        bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId, null, responseNumber.body().getSubmissions().size())); //19.09.16 why? because we do not submissions for THIS ATTEMPT
-                                                        return Unit.INSTANCE;
-                                                    }
-
-                                                    Submission submission = submissionList.get(0);
-
-                                                    if (submission.getStatus() == Submission.Status.EVALUATION) {
-                                                        bus.post(new FailGettingLastSubmissionEvent(localAttemptId, numberOfTry));
-                                                        return Unit.INSTANCE;
-                                                    }
-
-                                                    bus.post(new SuccessGettingLastSubmissionEvent(localAttemptId, submission, responseNumber.body().getSubmissions().size()));
-
-                                                    return Unit.INSTANCE;
-                                                }
-                                            });
-                                        } else {
-                                            analytic.reportEvent(Analytic.Error.FAIL_GET_SUBMISSIONS_OF_STEP);
-                                        }
-                                    } catch (Exception ignored) {
-                                        analytic.reportEvent(Analytic.Error.FAIL_GET_SUBMISSIONS_OF_STEP);
-                                    }
-                                }
-                            });
-
-                        } else {
-                            bus.post(new FailGettingLastSubmissionEvent(localAttemptId, numberOfTry));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        //it is dirty swap of events:
-                        bus.post(new FailSubmissionCreatedEvent(localAttemptId));
-                    }
-                });
-            }
-        }, numberOfTry * FIRST_DELAY);
+        stepAttemptPresenter.postSubmission(step.getId(), reply, attemptId);
     }
 
     @Override
@@ -437,7 +193,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         switch (submission.getStatus()) {
             case CORRECT:
                 discountingPolicyRoot.setVisibility(View.GONE); // remove if user was correct
-                onCorrectSubmission(submission);
+                onCorrectSubmission();
                 setTextToActionButton(tryAgainText);
                 blockUIBeforeSubmit(true);
                 break;
@@ -449,7 +205,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         }
 
         onRestoreSubmission();
-        showLoadState(false);
     }
 
     protected final void saveSession() {
@@ -466,7 +221,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     protected final void showOnlyInternetProblem(boolean isNeedShow) {
         showLoadState(!isNeedShow);
         if (isNeedShow) {
-            //// FIXME: 17.01.16 it is bad way, because this class don't know about the button
             actionButton.setVisibility(View.GONE);
         } else {
             actionButton.setVisibility(View.VISIBLE);
@@ -494,7 +248,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         resultLine.setVisibility(View.VISIBLE);
     }
 
-    protected final void onCorrectSubmission(Submission submission) {
+    protected final void onCorrectSubmission() {
         if (step != null) {
             analytic.reportEvent(Analytic.Steps.CORRECT_SUBMISSION_FILL, step.getId() + "");
         }
@@ -506,30 +260,27 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         resultLine.setVisibility(View.VISIBLE);
     }
 
-
     protected final void tryAgain() {
         blockUIBeforeSubmit(false);
 
-        // FIXME: 17.01.16 refactor
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             attemptContainer.setBackground(rootView.getBackground());
         } else {
             attemptContainer.setBackgroundDrawable(rootView.getBackground());
         }
 
-        createNewAttempt();
-        submission = null;
-
         hintTextView.setVisibility(View.GONE);
         resultLine.setVisibility(View.GONE);
         actionButton.setText(submitText);
-    }
 
+        stepAttemptPresenter.tryAgain(step.getId());
+        submission = null;
+
+    }
 
     private void setListenerToActionButton(View.OnClickListener l) {
         actionButton.setOnClickListener(l);
     }
-
 
     protected final void markLocalProgressAsViewed() {
         bus.post(new UpdateStepEvent(step.getId(), true));
@@ -557,7 +308,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         }
     }
 
-
     protected final void showAnswerField(boolean needShow) {
         if (needShow) {
             attemptContainer.setVisibility(View.VISIBLE);
@@ -565,7 +315,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
             attemptContainer.setVisibility(View.GONE);
         }
     }
-
 
     protected void showLoadState(boolean isLoading) {
         if (isLoading) {
@@ -583,66 +332,18 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         showAttempt(attempt);
         LessonSession lessonSession = lessonManager.restoreLessonSession(step.getId());
         if ((lessonSession == null || lessonSession.getSubmission() == null) && !isCreatedAttempt) {
-            getStatusOfSubmission(attempt.getId());//fill last server submission if exist
+            stepAttemptPresenter.getStatusOfSubmission(step.getId(), attempt.getId());//fill last server submission if exist
         } else {
+            // when just now created --> do not need show submission, it is not exist.
             stepAttemptPresenter.handleDiscountingPolicy(numberOfSubmissions, section);
-            showLoadState(false);
         }
-    }
-
-    @Subscribe
-    public void onSuccessCreateSubmission(SubmissionCreatedEvent e) {
-        if (attempt == null || e.getAttemptId() != attempt.getId()) return;
-        getStatusOfSubmission(attempt.getId());
-    }
-
-    @Subscribe
-    public void onFailGettingSubmission(FailGettingLastSubmissionEvent e) {
-        if (attempt == null || e.getAttemptId() != attempt.getId()) return;
-
-        int nextTry = e.getTryNumber() + 1;
-
-        getStatusOfSubmission(e.getAttemptId(), nextTry);
-    }
-
-    @Subscribe
-    public void onGettingSubmission(SuccessGettingLastSubmissionEvent e) {
-        if (attempt == null || e.getAttemptId() != attempt.getId()) return;
-        if (e.getSubmission() == null || e.getSubmission().getStatus() == null) {
-            showLoadState(false);
-        }
-        numberOfSubmissions = e.getNumberOfSubmissionsOnFirstPage();
-        submission = e.getSubmission();
-        saveSession();
-        fillSubmission(submission);
     }
 
     @Subscribe
     public void onInternetEnabled(InternetIsEnabledEvent enabledEvent) {
         if (connectionProblem.getVisibility() == View.VISIBLE) {
-            enableInternetMessage(false);
-            startWork();
+            stepAttemptPresenter.startLoadAttempt(step);
         }
-    }
-
-    @Subscribe
-    public void onSuccessLoadAttempt(SuccessAttemptEvent e) {
-        if (step == null || e.getStepId() != step.getId() || e.getAttempt() == null) return;
-
-        showAttemptAbstractWrapMethod(e.getAttempt(), e.isJustCreated());
-        attempt = e.getAttempt();
-    }
-
-    @Subscribe
-    public void onFailCreateAttemptEvent(FailAttemptEvent event) {
-        if (step == null || event.getStepId() != step.getId()) return;
-        showOnlyInternetProblem(true);
-    }
-
-    @Subscribe
-    public void onFailCreateSubmission(FailSubmissionCreatedEvent event) {
-        if (attempt == null || event.getAttemptId() != attempt.getId()) return;
-        showOnlyInternetProblem(true);
     }
 
     protected abstract void showAttempt(Attempt attempt);
@@ -660,7 +361,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @Subscribe
     public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
         super.onNewCommentWasAdded(event);
-
     }
 
     @Subscribe
@@ -691,5 +391,62 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
         discountingPolicyTextView.setText(warningText);
         discountingPolicyRoot.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onStartLoadingAttempt() {
+        enableInternetMessage(false);
+        showAnswerField(false);
+        showLoadState(true);
+    }
+
+    @Override
+    public void onNeedShowAttempt(@org.jetbrains.annotations.Nullable Attempt attempt, boolean isCreated, int numberOfSubmissionsForStep) {
+        enableInternetMessage(false);
+        showLoadState(false);
+        showAnswerField(true);
+        this.numberOfSubmissions = numberOfSubmissionsForStep;
+        this.attempt = attempt;
+        showAttemptAbstractWrapMethod(this.attempt, isCreated);
+    }
+
+    @Override
+    public void onConnectionFailWhenLoadAttempt() {
+        showOnlyInternetProblem(true);
+    }
+
+    @Override
+    public void onNeedFillSubmission(Submission submission, int numberOfSubmissions) {
+        showLoadState(false);
+        this.numberOfSubmissions = numberOfSubmissions;
+        this.submission = submission;
+        saveSession();
+        fillSubmission(submission);
+    }
+
+    @Override
+    public void onConnectionFailOnSubmit() {
+        blockUIBeforeSubmit(false);
+        Toast.makeText(getContext(), R.string.internet_problem, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNeedShowPeerReview() {
+        peerReviewIndicator.setVisibility(View.VISIBLE);
+        peerReviewIndicator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shell.getScreenProvider().openStepInWeb(getContext(), step);
+            }
+        });
+    }
+
+    @Override
+    public void onNeedResolveActionButtonText() {
+        if (submission == null || submission.getStatus() == Submission.Status.LOCAL) {
+            setTextToActionButton(submitText);
+        } else {
+            setTextToActionButton(tryAgainText);
+        }
     }
 }

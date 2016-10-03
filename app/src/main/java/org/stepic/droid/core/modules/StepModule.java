@@ -4,6 +4,7 @@ import android.content.Context;
 
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.StepAttemptPresenter;
@@ -69,7 +70,15 @@ public class StepModule {
 
     @Provides
     @PerFragment
-    StepAttemptPresenter provideStepAttemptProvider() {
-        return new StepAttemptPresenter();
+    StepAttemptPresenter provideStepAttemptProvider(IMainHandler mainHandler,
+                                                    ThreadPoolExecutor threadPoolExecutor,
+                                                    LessonSessionManager lessonSessionManager,
+                                                    IApi api,
+                                                    Analytic analytic) {
+        return new StepAttemptPresenter(mainHandler,
+                threadPoolExecutor,
+                lessonSessionManager,
+                api,
+                analytic);
     }
 }

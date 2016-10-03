@@ -125,8 +125,7 @@ public interface Analytic {
         String ILLEGAL_STATE_NEXT_LESSON = "cant_show_next_lesson";
         String ILLEGAL_STATE_PREVIOUS_LESSON = "cant_show_previous_lesson";
         String FAIL_PUSH_STEP_VIEW = "fail_push_step_view";
-        java.lang.String FAIL_GET_SUBMISSIONS_OF_STEP = "fail_get_submission_of_step";
-        java.lang.String FAIL_GET_SUB_OF_STEP_CREATING_ATTEMPT = "fail_get_sub_of_step_creating_attempt";
+        java.lang.String NO_INTERNET_EXISTING_ATTEMPTS = "no_internet_existing_attempts";
     }
 
     interface Web {
