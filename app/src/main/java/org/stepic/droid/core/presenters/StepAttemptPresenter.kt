@@ -120,10 +120,7 @@ class StepAttemptPresenter(val mainHandler: IMainHandler,
                                     return@Runnable
                                 }
 
-                                var numberOfSubmissions = 0
-                                if (submission != null) {
-                                    numberOfSubmissions = api.getSubmissionForStep(stepId).execute().body().submissions.size
-                                }
+                                val numberOfSubmissions = api.getSubmissionForStep(stepId).execute().body().submissions.size
 
                                 mainHandler.post {
                                     view?.onNeedFillSubmission(submission, numberOfSubmissions)
