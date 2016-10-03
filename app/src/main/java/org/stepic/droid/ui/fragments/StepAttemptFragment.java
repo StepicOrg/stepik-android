@@ -100,8 +100,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     protected Submission submission = null;
     protected int numberOfSubmissions = -1;
 
-    protected Handler handler;
-
     @BindDrawable(R.drawable.ic_correct)
     protected Drawable correctIcon;
 
@@ -133,7 +131,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @Override
     public final void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        handler = new Handler();
         setListenerToActionButton(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
