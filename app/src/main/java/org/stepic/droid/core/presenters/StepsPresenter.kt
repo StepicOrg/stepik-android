@@ -48,7 +48,7 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
             return
         }
 
-        if (this.lesson != null) {
+        if (lesson != null) {
             //already loaded if THIS.Lesson != null -> show
             view?.onLessonUnitPrepared(lesson, unit, this.section)
             view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
@@ -125,6 +125,7 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                     it.is_custom_passed = databaseFacade.isStepPassed(it)
                 }
                 isStepsShown = true
+                //if we get steps from database -> progresses and assignments were stored
                 mainHandler.post {
                     this.stepList.clear()
                     this.stepList.addAll(stepList)
@@ -154,16 +155,21 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
             } else {
                 val stepListFromInternet = response.body().steps
                 if (stepListFromInternet.isEmpty()) {
-                    mainHandler.post {
-                        view?.onEmptySteps()
+                    if (!isStepsShown) {
+                        mainHandler.post {
+                            view?.onEmptySteps()
+                        }
                     }
                     return
                 } else {
                     updateAssignmentsAndProgresses(stepListFromInternet, unit)
-                    mainHandler.post {
-                        this.stepList.clear()
-                        this.stepList.addAll(stepListFromInternet)
-                        view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
+                    //only after getting progresses and assignments we can get steps
+                    if (!isStepsShown) {
+                        mainHandler.post {
+                            this.stepList.clear()
+                            this.stepList.addAll(stepListFromInternet)
+                            view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
+                        }
                     }
                 }
             }
