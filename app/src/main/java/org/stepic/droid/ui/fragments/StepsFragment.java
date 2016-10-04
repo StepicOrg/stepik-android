@@ -52,7 +52,10 @@ public class StepsFragment extends FragmentBase implements StepsView {
     private static final String SIMPLE_STEP_POSITION_KEY = "simpleStepPosition";
     private static final String SIMPLE_DISCUSSION_ID_KEY = "simpleDiscussionPos";
     private boolean fromPreviousLesson;
-    private long disscussionId = -1;
+    private long discussionId = -1;
+    private Lesson lesson;
+    private Unit unit;
+    private Section section;
 
     private final ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -124,7 +127,6 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @BindView(R.id.empty_steps)
     View emptySteps;
 
-
     StepFragmentAdapter stepAdapter;
 
     @Inject
@@ -138,7 +140,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
-        disscussionId = getArguments().getLong(SIMPLE_DISCUSSION_ID_KEY);
+        discussionId = getArguments().getLong(SIMPLE_DISCUSSION_ID_KEY);
 
         MainApplication
                 .component()
@@ -160,8 +162,10 @@ public class StepsFragment extends FragmentBase implements StepsView {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initIndependentUI();
+        stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepsPresenter.getStepList(), stepTypeResolver);
+        viewPager.setAdapter(stepAdapter);
         stepsPresenter.attachView(this);
-        if (stepsPresenter.getLesson() == null) {
+        if (lesson == null) {
             Section section = getArguments().getParcelable(AppConstants.KEY_SECTION_BUNDLE);
             Lesson lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
             Unit unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
@@ -171,8 +175,10 @@ public class StepsFragment extends FragmentBase implements StepsView {
             stepsPresenter.init(lesson, unit, lessonId, unitId, defaultStepPos, fromPreviousLesson, section);
             fromPreviousLesson = false;
         } else {
-            stepsPresenter.init();
+            onLessonUnitPrepared(lesson, unit, section);
+            showSteps(fromPreviousLesson, -1);
         }
+//        tabLayout.setupWithViewPager(viewPager);
         bus.register(this);
     }
 
@@ -203,10 +209,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         });
     }
 
-    private void init(Lesson lesson, Unit unit, Section section) {
-        stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepsPresenter.getStepList(), lesson, unit, stepTypeResolver, section);
-        viewPager.setAdapter(stepAdapter);
-
+    private void init(Lesson lesson) {
         getActivity().setTitle(lesson.getTitle());
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -358,7 +361,10 @@ public class StepsFragment extends FragmentBase implements StepsView {
 
     @Override
     public void onLessonUnitPrepared(Lesson lesson, @NonNull Unit unit, Section section) {
-        init(lesson, unit, section);
+        this.lesson = lesson;
+        this.section = section;
+        this.unit = unit;
+        init(lesson);
     }
 
     @Override
@@ -383,6 +389,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         authView.setVisibility(View.GONE);
         emptySteps.setVisibility(View.GONE);
         viewPager.setVisibility(View.VISIBLE);
+        stepAdapter.setDataIfNotNull(lesson, unit, section);
         stepAdapter.notifyDataSetChanged();
         updateTabState();
 
@@ -409,10 +416,10 @@ public class StepsFragment extends FragmentBase implements StepsView {
         }
         tabLayout.setVisibility(View.VISIBLE);
 
-        if (disscussionId > 0 && position >= 0 && position < stepsPresenter.getStepList().size()) {
+        if (discussionId > 0 && position >= 0 && position < stepsPresenter.getStepList().size()) {
             Step step = stepsPresenter.getStepList().get(position);
             shell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
-            disscussionId = -1;
+            discussionId = -1;
         }
     }
 

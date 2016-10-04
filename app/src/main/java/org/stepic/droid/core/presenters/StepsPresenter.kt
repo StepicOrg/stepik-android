@@ -48,7 +48,7 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
             return
         }
 
-        if (this.lesson != null) {
+        if (lesson != null) {
             //already loaded if THIS.Lesson != null -> show
             view?.onLessonUnitPrepared(lesson, unit, this.section)
             view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
@@ -154,16 +154,20 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
             } else {
                 val stepListFromInternet = response.body().steps
                 if (stepListFromInternet.isEmpty()) {
-                    mainHandler.post {
-                        view?.onEmptySteps()
+                    if (!isStepsShown) {
+                        mainHandler.post {
+                            view?.onEmptySteps()
+                        }
                     }
                     return
                 } else {
                     updateAssignmentsAndProgresses(stepListFromInternet, unit)
-                    mainHandler.post {
-                        this.stepList.clear()
-                        this.stepList.addAll(stepListFromInternet)
-                        view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
+                    if (!isStepsShown) {
+                        mainHandler.post {
+                            this.stepList.clear()
+                            this.stepList.addAll(stepListFromInternet)
+                            view?.showSteps(fromPreviousLesson, defaultStepPositionStartWithOne)
+                        }
                     }
                 }
             }

@@ -7,6 +7,7 @@ import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.model.Step;
@@ -28,6 +29,8 @@ import java.util.Map;
 
 import javax.inject.Singleton;
 
+import timber.log.Timber;
+
 @Singleton
 public class StepTypeResolverImpl implements StepTypeResolver {
 
@@ -39,6 +42,8 @@ public class StepTypeResolverImpl implements StepTypeResolver {
 
 
     public StepTypeResolverImpl(Context context) {
+
+        Timber.d("create step type resolver: %s", toString());
 
         this.context = context;
         mapFromTypeToDrawable = new HashMap<>();
@@ -145,6 +150,7 @@ public class StepTypeResolverImpl implements StepTypeResolver {
     }
 
     @Override
+    @NotNull
     public StepBaseFragment getFragment(Step step) {
         StepBaseFragment errorStep = new NotSupportedYetStepFragment();//todo: error and update?
         if (step == null
