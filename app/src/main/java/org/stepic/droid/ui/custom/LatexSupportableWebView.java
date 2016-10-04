@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.custom;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -42,6 +43,7 @@ public class LatexSupportableWebView extends WebView {
                 return true;
             }
         });
+        setBackgroundColor(Color.TRANSPARENT);
     }
 
     public void setText(CharSequence text) {
