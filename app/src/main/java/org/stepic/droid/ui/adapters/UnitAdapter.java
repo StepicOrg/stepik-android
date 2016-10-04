@@ -38,6 +38,7 @@ import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -79,14 +80,14 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     private AppCompatActivity activity;
     private final List<Unit> unitList;
     private RecyclerView recyclerView;
-    private final Map<Long, Progress> mUnitProgressMap;
+    private final Map<Long, Progress> unitProgressMap;
 
     public UnitAdapter(Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, AppCompatActivity activity) {
         this.activity = activity;
         this.parentSection = parentSection;
         this.unitList = unitList;
         this.lessonList = lessonList;
-        mUnitProgressMap = unitProgressMap;
+        this.unitProgressMap = unitProgressMap;
         MainApplication.component().inject(this);
     }
 
@@ -122,7 +123,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         holder.unitTitle.setText(titleBuilder.toString());
 
-        Progress progress = mUnitProgressMap.get(unit.getId());
+        Progress progress = unitProgressMap.get(unit.getId());
         int cost = 0;
         double doubleScore = 0;
         String scoreString = "";
@@ -133,6 +134,8 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 doubleScore = Double.parseDouble(scoreString);
                 if ((doubleScore == Math.floor(doubleScore)) && !Double.isInfinite(doubleScore)) {
                     scoreString = (int) doubleScore + "";
+                } else {
+                    scoreString = String.format(Locale.getDefault(), "%.2f", doubleScore);
                 }
 
             } catch (Exception ignored) {
@@ -308,7 +311,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
     @Override
     public void onNeedLoadPosition(int adapterPosition) {
-            load(adapterPosition);
+        load(adapterPosition);
     }
 
 
