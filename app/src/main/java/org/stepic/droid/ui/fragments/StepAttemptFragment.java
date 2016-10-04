@@ -180,7 +180,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     }
 
     private void makeSubmissionDirectly() {
-        showLoadState(true);
+        showActionButtonLoadState(true);
         blockUIBeforeSubmit(true);
         final long attemptId = attempt.getId();
         final Reply reply = generateReply();
@@ -236,7 +236,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     }
 
     protected final void showOnlyInternetProblem(boolean isNeedShow) {
-        showLoadState(!isNeedShow);
+        showActionButtonLoadState(!isNeedShow);
         if (isNeedShow) {
             actionButton.setVisibility(View.GONE);
         } else {
@@ -278,7 +278,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     }
 
     protected final void tryAgain() {
-        showLoadState(true);
+        showActionButtonLoadState(true);
         blockUIBeforeSubmit(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -334,14 +334,13 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         }
     }
 
-    protected void showLoadState(boolean isLoading) {
+    protected void showActionButtonLoadState(boolean isLoading) {
         if (isLoading) {
             actionButton.setVisibility(View.GONE);
             ProgressHelper.activate(progressBar);
         } else {
             ProgressHelper.dismiss(progressBar);
             actionButton.setVisibility(View.VISIBLE);
-            showAnswerField(true);
         }
 
     }
@@ -354,6 +353,8 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         } else {
             // when just now created --> do not need show submission, it is not exist.
             stepAttemptPresenter.handleDiscountingPolicy(numberOfSubmissions, section);
+            showActionButtonLoadState(false);
+            showAnswerField(true);
         }
     }
 
@@ -415,14 +416,11 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     public void onStartLoadingAttempt() {
         enableInternetMessage(false);
         showAnswerField(false);
-        showLoadState(true);
+        showActionButtonLoadState(true);
     }
 
     @Override
     public void onNeedShowAttempt(@org.jetbrains.annotations.Nullable Attempt attempt, boolean isCreated, int numberOfSubmissionsForStep) {
-        enableInternetMessage(false);
-        showLoadState(false);
-        showAnswerField(true);
         this.numberOfSubmissions = numberOfSubmissionsForStep;
         this.attempt = attempt;
         showAttemptAbstractWrapMethod(this.attempt, isCreated);
@@ -435,7 +433,11 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     @Override
     public void onNeedFillSubmission(Submission submission, int numberOfSubmissions) {
-        showLoadState(false);
+        enableInternetMessage(false);
+        showActionButtonLoadState(false);
+        showAnswerField(true);
+
+        showActionButtonLoadState(false);
         this.numberOfSubmissions = numberOfSubmissions;
         this.submission = submission;
         saveSession();
