@@ -125,6 +125,7 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                     it.is_custom_passed = databaseFacade.isStepPassed(it)
                 }
                 isStepsShown = true
+                //if we get steps from database -> progresses and assignments were stored
                 mainHandler.post {
                     this.stepList.clear()
                     this.stepList.addAll(stepList)
@@ -162,6 +163,7 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                     return
                 } else {
                     updateAssignmentsAndProgresses(stepListFromInternet, unit)
+                    //only after getting progresses and assignments we can get steps
                     if (!isStepsShown) {
                         mainHandler.post {
                             this.stepList.clear()
