@@ -294,4 +294,12 @@ public class UserPreferences {
     public void setShowDiscountingPolicyWarning(boolean isChecked) {
         sharedPreferenceHelper.setShowDiscountingPolicyWarning(isChecked);
     }
+
+    public boolean isKeepScreenOnSteps() {
+        return sharedPreferenceHelper.isKeepScreenOnSteps();
+    }
+
+    public void setKeepScreenOnSteps(boolean isChecked) {
+        sharedPreferenceHelper.setKeepScreenOnSteps(isChecked);
+    }
 }

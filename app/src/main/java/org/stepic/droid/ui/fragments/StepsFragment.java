@@ -152,6 +152,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_steps, container, false);
+        v.setKeepScreenOn(userPreferences.isKeepScreenOnSteps());
         setHasOptionsMenu(true);
         unbinder = ButterKnife.bind(this, v);
         return v;

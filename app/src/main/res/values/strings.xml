@@ -254,4 +254,5 @@
     <string name="other_title">Other</string>
     <string name="discounting_policy_title_settings">Warn about the lessons with penalties for wrong answers</string>
     <string name="discounting_policy_message">If you send the wrong submission of this task, in the future, you can not get the points. Are you sure?</string>
+    <string name="keep_screen_on_title_settings">Keep screen on, when solve steps</string>
 </resources>
