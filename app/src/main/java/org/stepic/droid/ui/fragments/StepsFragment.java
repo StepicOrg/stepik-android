@@ -152,7 +152,13 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_steps, container, false);
-        v.setKeepScreenOn(userPreferences.isKeepScreenOnSteps());
+        boolean keepScreenOnSteps = userPreferences.isKeepScreenOnSteps();
+        if (keepScreenOnSteps) {
+            analytic.reportEvent(Analytic.Steps.SHOW_KEEP_ON_SCREEN);
+        } else {
+            analytic.reportEvent(Analytic.Steps.SHOW_KEEP_OFF_SCREEN);
+        }
+        v.setKeepScreenOn(keepScreenOnSteps);
         setHasOptionsMenu(true);
         unbinder = ButterKnife.bind(this, v);
         return v;
@@ -179,7 +185,6 @@ public class StepsFragment extends FragmentBase implements StepsView {
             onLessonUnitPrepared(lesson, unit, section);
             showSteps(fromPreviousLesson, -1);
         }
-//        tabLayout.setupWithViewPager(viewPager);
         bus.register(this);
     }
 

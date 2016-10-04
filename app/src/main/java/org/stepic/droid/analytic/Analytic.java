@@ -176,6 +176,8 @@ public interface Analytic {
         java.lang.String SHARE_OPEN_IN_BROWSER = "step_share_open_in_browser";
         java.lang.String COPY_LINK = "step_share_copy";
         java.lang.String SHARE_ALL = "steps_share_all";
+        java.lang.String SHOW_KEEP_ON_SCREEN = "steps_show_keep_on_screen";
+        java.lang.String SHOW_KEEP_OFF_SCREEN = "steps_show_keep_off_screen";
     }
 
     interface Calendar {
