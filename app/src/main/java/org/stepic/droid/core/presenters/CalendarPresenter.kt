@@ -26,12 +26,12 @@ import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 
 class CalendarPresenter(val config: IConfig,
-                            val mainHandler: IMainHandler,
-                            val context: Context,
-                            val threadPool: ThreadPoolExecutor,
-                            val database: DatabaseFacade,
-                            val userPrefs: UserPreferences,
-                            val analytic : Analytic) : PresenterBase<CalendarExportableView>() {
+                        val mainHandler: IMainHandler,
+                        val context: Context,
+                        val threadPool: ThreadPoolExecutor,
+                        val database: DatabaseFacade,
+                        val userPrefs: UserPreferences,
+                        val analytic: Analytic) : PresenterBase<CalendarExportableView>() {
 
     /**
      * true, if any section in oldList have deadline (soft or hard) and the deadline is not happened
@@ -68,8 +68,7 @@ class CalendarPresenter(val config: IConfig,
                             mainHandler.post {
                                 view?.onShouldBeShownCalendar(true)
                             }
-                        }
-                        else{
+                        } else {
                             analytic.reportEvent(Analytic.Calendar.HIDE_WIDGET_FROM_PREFS)
                         }
 
@@ -105,8 +104,7 @@ class CalendarPresenter(val config: IConfig,
                             mainHandler.post {
                                 view?.onShouldBeShownCalendar(true)
                             }
-                        }
-                        else{
+                        } else {
                             analytic.reportEvent(Analytic.Calendar.HIDE_WIDGET_FROM_PREFS)
                         }
                         return@execute
@@ -166,8 +164,7 @@ class CalendarPresenter(val config: IConfig,
                         view?.onNeedToChooseCalendar(primariesCalendars)
                     }
                     return@execute
-                }
-                else if (primariesCalendars.isEmpty()){
+                } else if (primariesCalendars.isEmpty()) {
                     analytic.reportEvent(Analytic.Calendar.CALENDAR_ADDED_FAIL)
                     mainHandler.post {
                         view?.onUserDoesntHaveCalendar()
@@ -211,15 +208,20 @@ class CalendarPresenter(val config: IConfig,
             it.moveToFirst()
             while (!it.isAfterLast) {
                 val indexId = it.getColumnIndex(CalendarContract.Calendars._ID)
-                var indexIsPrimary = it.getColumnIndex(CalendarContract.Calendars.IS_PRIMARY)
-                val indexOwner = it.getColumnIndex(CalendarContract.Calendars.OWNER_ACCOUNT)
-                if (indexIsPrimary < 0){
-                    indexIsPrimary = it.getColumnIndex("COALESCE(isPrimary, ownerAccount = account_name)")//look at http://stackoverflow.com/questions/25870556/check-if-calendar-is-primary
+                var indexIsPrimary = -1
+                try {
+                    indexIsPrimary = it.getColumnIndex(CalendarContract.Calendars.IS_PRIMARY)
+                    if (indexIsPrimary < 0) {
+                        indexIsPrimary = it.getColumnIndex("COALESCE(isPrimary, ownerAccount = account_name)")//look at http://stackoverflow.com/questions/25870556/check-if-calendar-is-primary
+                    }
+                } catch(ex: NoSuchFieldError) {
+                    //if no such field we will show all calendars, see below
                 }
+                val indexOwner = it.getColumnIndex(CalendarContract.Calendars.OWNER_ACCOUNT)
 
                 var isPrimary = false
                 if (indexIsPrimary >= 0) {
-                     isPrimary = it.getInt(indexIsPrimary) > 0
+                    isPrimary = it.getInt(indexIsPrimary) > 0
                 }
                 val calendarId = it.getLong(indexId)
                 val owner = it.getString(indexOwner)
