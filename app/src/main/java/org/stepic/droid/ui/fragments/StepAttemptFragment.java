@@ -166,7 +166,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         if (attempt == null || attempt.getId() <= 0) return;
 
         if (section != null && section.getDiscountingPolicy() != DiscountingPolicyType.noDiscount
-                && userPreferences.isShowDiscountingPolicyWarning()) {
+                && userPreferences.isShowDiscountingPolicyWarning() && !step.is_custom_passed()) {
             //showDialog
             DialogFragment dialogFragment = DiscountingPolicyDialogFragment.Companion.newInstance();
             if (!dialogFragment.isAdded()) {
@@ -195,7 +195,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     }
 
     protected final void fillSubmission(@org.jetbrains.annotations.Nullable Submission submission) {
-        stepAttemptPresenter.handleDiscountingPolicy(numberOfSubmissions, section);
+        stepAttemptPresenter.handleDiscountingPolicy(numberOfSubmissions, section, step);
         if (submission == null || submission.getStatus() == null) {
             return;
         }
@@ -352,7 +352,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
             stepAttemptPresenter.getStatusOfSubmission(step.getId(), attempt.getId());//fill last server submission if exist
         } else {
             // when just now created --> do not need show submission, it is not exist.
-            stepAttemptPresenter.handleDiscountingPolicy(numberOfSubmissions, section);
+            stepAttemptPresenter.handleDiscountingPolicy(numberOfSubmissions, section, step);
             showActionButtonLoadState(false);
             showAnswerField(true);
         }

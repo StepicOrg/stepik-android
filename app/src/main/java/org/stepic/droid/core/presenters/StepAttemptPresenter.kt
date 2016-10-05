@@ -37,8 +37,8 @@ class StepAttemptPresenter(val mainHandler: IMainHandler,
 
 
     @MainThread
-    fun handleDiscountingPolicy(numberOfSubmission: Int, section: Section?) {
-        if (section?.discountingPolicy == null || section?.discountingPolicy == DiscountingPolicyType.noDiscount || numberOfSubmission < 0) {
+    fun handleDiscountingPolicy(numberOfSubmission: Int, section: Section?, step: Step) {
+        if (section?.discountingPolicy == null || section?.discountingPolicy == DiscountingPolicyType.noDiscount || numberOfSubmission < 0 || step.is_custom_passed) {
             view?.onResultHandlingDiscountPolicy(needShow = false)
             return
         }
