@@ -169,7 +169,7 @@ public class HtmlHelper {
             ", target-densitydpi=medium-dpi" +
             "\" />" +
             "<link rel=\"stylesheet\" type=\"text/css\" href=\"wysiwyg.css\"/>" +
-            "<base href=\"%s\"" +
+            "<base href=\"%s\">" +
             "</head>\n"
             + "<body style='margin:0;padding:0;'>";
 
@@ -184,7 +184,7 @@ public class HtmlHelper {
                     "displayMath: [ ['$$','$$'], ['\\[','\\]'] ]" +
                     "</script>\n" +
                     "<script type=\"text/javascript\"\n" +
-                    " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML-full\">\n" +
+                    " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML\">\n" +
                     "</script>\n";
 
     public static String getUserPath(IConfig config, int userId) {
