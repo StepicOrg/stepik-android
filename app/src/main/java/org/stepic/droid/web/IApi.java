@@ -72,6 +72,8 @@ public interface IApi {
 
     Call<SubmissionResponse> getSubmissions(long attemptId);
 
+    Call<SubmissionResponse> getSubmissionForStep(long stepId);
+
     Call<Void> remindPassword(String email);
 
     Call<EmailAddressResponse> getEmailAddresses(long[] ids);

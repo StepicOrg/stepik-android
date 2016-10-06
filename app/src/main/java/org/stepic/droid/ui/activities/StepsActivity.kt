@@ -8,6 +8,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.model.Lesson
+import org.stepic.droid.model.Section
 import org.stepic.droid.model.Unit
 import org.stepic.droid.ui.fragments.StepsFragment
 import org.stepic.droid.util.AppConstants
@@ -35,8 +36,9 @@ class StepsActivity : SingleFragmentActivity() {
     override fun createFragment(): Fragment {
         val extras = intent.extras
 
-        val unit = extras?.get(AppConstants.KEY_UNIT_BUNDLE) as? Unit //Unit can be null
-        val lesson = extras?.get(AppConstants.KEY_LESSON_BUNDLE) as? Lesson //Lesson can be null in intent and if url is broken
+        val section = extras?.getParcelable<Section>(AppConstants.KEY_SECTION_BUNDLE)
+        val unit: Unit? = extras?.getParcelable<Unit>(AppConstants.KEY_UNIT_BUNDLE) // UNit can be null
+        val lesson = extras?.getParcelable<Lesson>(AppConstants.KEY_LESSON_BUNDLE) //Lesson can be null in intent and if url is broken
         val fromPrevious: Boolean = extras?.getBoolean(needReverseAnimationKey, false) ?: false
 
         val dataUri = intent?.data
@@ -52,7 +54,7 @@ class StepsActivity : SingleFragmentActivity() {
             return StepsFragment.newInstance(simpleUnitId, simpleLessonId, simpleStepPosition, discussionSampleId)
 
         } else {
-            return StepsFragment.newInstance(unit, lesson, fromPrevious)
+            return StepsFragment.newInstance(unit, lesson, fromPrevious, section)
         }
     }
 
@@ -79,17 +81,16 @@ class StepsActivity : SingleFragmentActivity() {
         return parseLong(stepNumberRaw)
     }
 
-    private fun parseLong(raw: String?): Long {
-        if (raw == null) {
-            return -1L;
-        } else {
-            try {
-                return java.lang.Long.parseLong(raw)
-            } catch (numberFormatException: NumberFormatException) {
-                return -1L
+    private fun parseLong(raw: String?) =
+            if (raw == null) {
+                -1L;
+            } else {
+                try {
+                    java.lang.Long.parseLong(raw)
+                } catch (numberFormatException: NumberFormatException) {
+                    -1L
+                }
             }
-        }
-    }
 
     private fun getSimpleLessonId(dataUri: Uri): Long {
         var lessonSlug: String? = null

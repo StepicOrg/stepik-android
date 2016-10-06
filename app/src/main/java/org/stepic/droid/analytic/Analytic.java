@@ -3,6 +3,7 @@ package org.stepic.droid.analytic;
 import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
@@ -51,6 +52,9 @@ public interface Analytic {
         String CLICK_ACCEPT_FILTER_BUTTON = "click_accept_filter_btn";
         String CLICK_AUTH_FROM_STEPS = "click_auth_from_steps";
         String SHARE_STEP_CLICK = "share_step_click";
+        String CLICK_TRY_STEP_AGAIN = "step_try_again";
+        String NO_DISCOUNTING_DIALOG = "discounting_dialog_no";
+        String YES_DISCOUNTING_DIALOG = "discounting_dialog_yes";
     }
 
     interface Screens {
@@ -124,6 +128,7 @@ public interface Analytic {
         String ILLEGAL_STATE_NEXT_LESSON = "cant_show_next_lesson";
         String ILLEGAL_STATE_PREVIOUS_LESSON = "cant_show_previous_lesson";
         String FAIL_PUSH_STEP_VIEW = "fail_push_step_view";
+        java.lang.String NO_INTERNET_EXISTING_ATTEMPTS = "no_internet_existing_attempts";
     }
 
     interface Web {
@@ -171,6 +176,8 @@ public interface Analytic {
         java.lang.String SHARE_OPEN_IN_BROWSER = "step_share_open_in_browser";
         java.lang.String COPY_LINK = "step_share_copy";
         java.lang.String SHARE_ALL = "steps_share_all";
+        java.lang.String SHOW_KEEP_ON_SCREEN = "steps_show_keep_on_screen";
+        java.lang.String SHOW_KEEP_OFF_SCREEN = "steps_show_keep_off_screen";
     }
 
     interface Calendar {

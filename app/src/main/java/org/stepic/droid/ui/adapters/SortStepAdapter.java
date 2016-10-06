@@ -15,14 +15,16 @@ import android.widget.TextView;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Option;
-import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.custom.dragsortadapter.DragSortAdapter;
 import org.stepic.droid.ui.custom.dragsortadapter.NoForegroundShadowBuilder;
+import org.stepic.droid.util.resolvers.text.TextResolver;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,8 +37,12 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
     private final Map<Integer, Option> itemIdOptionMap;
     private final boolean isMatching;
 
+    @Inject
+    TextResolver textResolver;
+
     public SortStepAdapter(RecyclerView recyclerView, List<Option> data, int width, boolean isMatching) {
         super(recyclerView);
+        MainApplication.component().inject(this);
         this.data = data;
         this.width = width;
         itemIdOptionMap = new HashMap<>();
@@ -97,10 +103,11 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
 //            holder.mOptionText.setLines((mWidth / halfScreen) + 1);
         }
 
+        String text = itemIdOptionMap.get(itemId).getValue();
         if (!isMatching) {
-            holder.enhancedText.setText(itemIdOptionMap.get(itemId).getValue());
+            holder.enhancedText.setPlainOrLaTeXText(text);
         } else {
-            holder.optionText.setText(HtmlHelper.fromHtml(itemIdOptionMap.get(itemId).getValue()).toString());
+            holder.optionText.setText(text);
         }
         // NOTE: check for getDraggingId() match to set an "invisible space" while dragging
         holder.container.setVisibility(getDraggingId() == itemId ? View.INVISIBLE : View.VISIBLE);
@@ -135,8 +142,8 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
     public static class OptionViewHolder extends DragSortAdapter.ViewHolder implements
             View.OnClickListener, View.OnLongClickListener, View.OnTouchListener {
 
-        private final boolean mIsMatching;
-        
+        private final boolean isMatching;
+
         @BindView(R.id.container)
         ViewGroup container;
 
@@ -150,10 +157,10 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
 
         public OptionViewHolder(DragSortAdapter adapter, View itemView, boolean isMatching) {
             super(adapter, itemView);
-            mIsMatching = isMatching;
+            this.isMatching = isMatching;
             ButterKnife.bind(this, itemView);
             //// FIXME: 26.04.16 refactor this
-            if (mIsMatching) {
+            if (this.isMatching) {
                 optionText = (TextView) itemView.findViewById(R.id.option_text);
             } else {
                 enhancedText = (LatexSupportableEnhancedFrameLayout) itemView.findViewById(R.id.option_text);
@@ -172,7 +179,7 @@ public class SortStepAdapter extends DragSortAdapter<SortStepAdapter.OptionViewH
         @Override
         public void onClick(@NonNull View v) {
 //            startDrag();
-            if (mIsMatching) {
+            if (isMatching) {
                 startDrag();
             }
         }

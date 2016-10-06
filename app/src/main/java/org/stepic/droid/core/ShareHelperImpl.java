@@ -14,8 +14,8 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.StringUtil;
+import org.stepic.droid.util.resolvers.text.TextResolver;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -27,11 +27,13 @@ public class ShareHelperImpl implements ShareHelper {
 
     Context context;
 
+    private TextResolver textResolver;
 
     @Inject
-    public ShareHelperImpl(IConfig config, Context context) {
+    public ShareHelperImpl(IConfig config, Context context, TextResolver textResolver) {
         this.config = config;
         this.context = context;
+        this.textResolver = textResolver;
     }
 
 
@@ -47,7 +49,7 @@ public class ShareHelperImpl implements ShareHelper {
         }
 
         if (course.getSummary() != null && !course.getSummary().isEmpty()) {
-            sb.append(HtmlHelper.fromHtml(course.getSummary()).toString());
+            sb.append(textResolver.fromHtml(course.getSummary()).toString());
             sb.append("\r\n");
             sb.append("\r\n");
         }
@@ -55,7 +57,7 @@ public class ShareHelperImpl implements ShareHelper {
         String uriForSharing = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), course.getSlug())).toString();
         sb.append(uriForSharing);
 
-        String textForSharing = HtmlHelper.fromHtml(sb.toString()).toString();
+        String textForSharing = textResolver.fromHtml(sb.toString()).toString();
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_TEXT, textForSharing);
         shareIntent.setType("text/plain");

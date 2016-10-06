@@ -37,9 +37,9 @@ public interface IScreenManager {
 
     void showUnitsForSection(Context sourceActivity, @NotNull Section section);
 
-    void showSteps(Activity sourceActivity, Unit unit, Lesson lesson);
+    void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, @Nullable Section section);
 
-    void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, boolean backAnimation);
+    void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, boolean backAnimation, @Nullable Section section);
 
     void openStepInWeb(Context context, Step step);
 

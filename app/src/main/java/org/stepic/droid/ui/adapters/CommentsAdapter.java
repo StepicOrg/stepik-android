@@ -277,7 +277,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
 
         public abstract void setDataOnView(int position);
 
-        protected final void initialSetUp(CommentAdapterItem needUpdateAndComment) {
+        final void initialSetUp(CommentAdapterItem needUpdateAndComment) {
             final Comment comment = needUpdateAndComment.getComment();
 
             final boolean isParent = comment.getParent() == null;

@@ -34,6 +34,8 @@ public class SharedPreferenceHelper {
     private static final String NOTIFICATION_SOUND_DISABLED = "notification_sound";
     private static final String TEMP_UPDATE_LINK = "temp_update_link";
     private static final java.lang.String NEED_DROP_116 = "need_drop_116";
+    private static final java.lang.String DISCOUNTING_POLICY_DIALOG = "discounting_pol_dialog";
+    private static final java.lang.String KEEP_SCREEN_ON_STEPS = "keep_screen_on_steps";
     private Context context;
     private Analytic analytic;
     private DefaultFilter defaultFilter;
@@ -107,6 +109,13 @@ public class SharedPreferenceHelper {
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, VIDEO_QUALITY_EXPLANATION, true);
     }
 
+    public boolean isKeepScreenOnSteps() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, KEEP_SCREEN_ON_STEPS, true);
+    }
+
+    public void setKeepScreenOnSteps(boolean isChecked) {
+        put(PreferenceType.DEVICE_SPECIFIC, KEEP_SCREEN_ON_STEPS, isChecked);
+    }
 
     public void setNeedToShowVideoQualityExplanation(boolean needToShowCalendarWidget) {
         put(PreferenceType.DEVICE_SPECIFIC, VIDEO_QUALITY_EXPLANATION, needToShowCalendarWidget);
@@ -116,8 +125,16 @@ public class SharedPreferenceHelper {
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, CALENDAR_WIDGET, true);
     }
 
+    public boolean isShowDiscountingPolicyWarning() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, DISCOUNTING_POLICY_DIALOG, true);
+    }
+
     public void setNeedToShowCalendarWidget(boolean needToShowCalendarWidget) {
         put(PreferenceType.DEVICE_SPECIFIC, CALENDAR_WIDGET, needToShowCalendarWidget);
+    }
+
+    public void setShowDiscountingPolicyWarning(boolean needToShowCalendarWidget) {
+        put(PreferenceType.DEVICE_SPECIFIC, DISCOUNTING_POLICY_DIALOG, needToShowCalendarWidget);
     }
 
     public boolean isNeedDropCoursesIn114() {

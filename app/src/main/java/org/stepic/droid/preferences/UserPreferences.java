@@ -286,4 +286,20 @@ public class UserPreferences {
     public void setNeedToShowCalendarWidget(boolean needToShowCalendarWidget) {
         sharedPreferenceHelper.setNeedToShowCalendarWidget(needToShowCalendarWidget);
     }
+
+    public boolean isShowDiscountingPolicyWarning() {
+        return sharedPreferenceHelper.isShowDiscountingPolicyWarning();
+    }
+
+    public void setShowDiscountingPolicyWarning(boolean isChecked) {
+        sharedPreferenceHelper.setShowDiscountingPolicyWarning(isChecked);
+    }
+
+    public boolean isKeepScreenOnSteps() {
+        return sharedPreferenceHelper.isKeepScreenOnSteps();
+    }
+
+    public void setKeepScreenOnSteps(boolean isChecked) {
+        sharedPreferenceHelper.setKeepScreenOnSteps(isChecked);
+    }
 }

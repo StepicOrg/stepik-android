@@ -2,6 +2,7 @@ package org.stepic.droid.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
@@ -43,6 +44,10 @@ class Section : Serializable, Parcelable {
     var is_cached: Boolean = false
     var is_loading: Boolean = false
     var actions: Actions? = null
+
+    @SerializedName("discounting_policy")
+    var discountingPolicy: DiscountingPolicyType? = null
+
 
     private var formatted_begin_date: String? = null
     private var formatted_soft_deadline: String? = null
@@ -94,6 +99,7 @@ class Section : Serializable, Parcelable {
         dest.writeString(this.formatted_soft_deadline)
         dest.writeString(this.formatted_hard_deadline)
         dest.writeParcelable(this.actions, flags)
+        dest.writeInt(discountingPolicy?.ordinal ?: -1)
     }
 
     protected constructor(input: Parcel) : this() {
@@ -123,6 +129,7 @@ class Section : Serializable, Parcelable {
         this.formatted_soft_deadline = input.readString()
         this.formatted_hard_deadline = input.readString()
         this.actions = input.readParcelable<Actions>(Actions::class.java.classLoader)
+        this.discountingPolicy = getDiscountingPolicyTypeByParcel(input)
     }
 
     companion object {
@@ -136,6 +143,17 @@ class Section : Serializable, Parcelable {
                 return arrayOfNulls(size)
             }
         }
+
+        private fun getDiscountingPolicyTypeByParcel(input: Parcel): DiscountingPolicyType? {
+            val temp = input.readInt()
+            val localValues = DiscountingPolicyType.values()
+            if (temp >= 0 && temp < localValues.size) {
+                return localValues[temp]
+            } else {
+                return null
+            }
+        }
+
     }
 
 }

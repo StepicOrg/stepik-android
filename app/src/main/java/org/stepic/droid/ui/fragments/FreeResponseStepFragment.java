@@ -12,56 +12,55 @@ import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.events.InternetIsEnabledEvent;
-import org.stepic.droid.events.attempts.FailAttemptEvent;
-import org.stepic.droid.events.attempts.SuccessAttemptEvent;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
-import org.stepic.droid.events.submissions.FailGettingLastSubmissionEvent;
-import org.stepic.droid.events.submissions.FailSubmissionCreatedEvent;
-import org.stepic.droid.events.submissions.SubmissionCreatedEvent;
-import org.stepic.droid.events.submissions.SuccessGettingLastSubmissionEvent;
 import org.stepic.droid.model.Attachment;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Reply;
-import org.stepic.droid.util.HtmlHelper;
 
 import java.util.ArrayList;
 
 import butterknife.BindString;
 
-public class FreeResponseStepFragment extends StepWithAttemptsFragment {
+public class FreeResponseStepFragment extends StepAttemptFragment {
 
     @BindString(R.string.correct_free_response)
     String correctString;
 
-    EditText mAnswerField;
+    EditText answerField;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        mAnswerField = (EditText) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_free_answer_attempt, attemptContainer, false);
-        attemptContainer.addView(mAnswerField);
+        answerField = (EditText) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_free_answer_attempt, attemptContainer, false);
+        attemptContainer.addView(answerField);
         return v;
     }
 
     @Override
     protected void showAttempt(Attempt attempt) {
         //do nothing, because this attempt doesn't have any specific.
-        mAnswerField.getText().clear();
+        answerField.getText().clear();
     }
 
     @Override
     protected Reply generateReply() {
+        String answer = answerField.getText().toString();
+        if (attempt != null && attempt.getDataset() != null && attempt.getDataset().getIs_html_enabled() != null && attempt.getDataset().getIs_html_enabled()) {
+            answer = textResolver.replaceWhitespaceToBr(answer);
+        }
+
+
         return new Reply.Builder()
-                .setText(mAnswerField.getText().toString())
+                .setText(answer)
                 .setAttachments(new ArrayList<Attachment>())
                 .build();
     }
 
     @Override
     protected void blockUIBeforeSubmit(boolean needBlock) {
-        mAnswerField.setEnabled(!needBlock);
+        answerField.setEnabled(!needBlock);
     }
 
     @Override
@@ -70,7 +69,12 @@ public class FreeResponseStepFragment extends StepWithAttemptsFragment {
         if (reply == null) return;
 
         String text = reply.getText();
-        mAnswerField.setText(HtmlHelper.fromHtml(text));
+        if (attempt != null && attempt.getDataset() != null && attempt.getDataset().getIs_html_enabled() != null && attempt.getDataset().getIs_html_enabled()) {
+            //todo show as html in enhanced latexview
+            answerField.setText(textResolver.fromHtml(text));
+        } else {
+            answerField.setText(text);
+        }
     }
 
     @Override
@@ -82,41 +86,6 @@ public class FreeResponseStepFragment extends StepWithAttemptsFragment {
     @Override
     public void onInternetEnabled(InternetIsEnabledEvent enabledEvent) {
         super.onInternetEnabled(enabledEvent);
-    }
-
-    @Override
-    @Subscribe
-    public void onSuccessLoadAttempt(SuccessAttemptEvent e) {
-        super.onSuccessLoadAttempt(e);
-    }
-
-    @Override
-    @Subscribe
-    public void onSuccessCreateSubmission(SubmissionCreatedEvent e) {
-        super.onSuccessCreateSubmission(e);
-    }
-
-    @Override
-    @Subscribe
-    public void onGettingSubmission(SuccessGettingLastSubmissionEvent e) {
-        super.onGettingSubmission(e);
-    }
-
-    @Subscribe
-    @Override
-    public void onFailCreateAttemptEvent(FailAttemptEvent event) {
-        super.onFailCreateAttemptEvent(event);
-    }
-
-    @Subscribe
-    @Override
-    public void onFailCreateSubmission(FailSubmissionCreatedEvent event) {
-        super.onFailCreateSubmission(event);
-    }
-
-    @Subscribe
-    public void onFailGettingSubmission(FailGettingLastSubmissionEvent e) {
-        super.onFailGettingSubmission(e);
     }
 
     @Subscribe
@@ -133,6 +102,6 @@ public class FreeResponseStepFragment extends StepWithAttemptsFragment {
     @Override
     public void onPause() {
         super.onPause();
-        mAnswerField.clearFocus();
+        answerField.clearFocus();
     }
 }

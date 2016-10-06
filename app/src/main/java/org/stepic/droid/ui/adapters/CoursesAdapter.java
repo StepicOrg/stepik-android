@@ -25,8 +25,8 @@ import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.store.operations.Table;
-import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.StepicLogicHelper;
+import org.stepic.droid.util.resolvers.text.TextResolver;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MyCoursesAdapter extends ArrayAdapter<Course> {
+public class CoursesAdapter extends ArrayAdapter<Course> {
 
     @Inject
     IShell shell;
@@ -52,15 +52,15 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
     @Inject
     CleanManager cleaner;
 
+    @Inject
+    TextResolver textResolver;
+
     private Drawable coursePlaceholder;
 
-    @Nullable
-    private final Table type;
     private LayoutInflater mInflater;
 
-    public MyCoursesAdapter(Fragment fragment, List<Course> courses, @Nullable Table type) {
+    public CoursesAdapter(Fragment fragment, List<Course> courses, @Nullable Table type) {
         super(fragment.getActivity(), 0, courses);
-        this.type = type;
         mInflater = (LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         MainApplication.component().inject(this);
@@ -83,7 +83,7 @@ public class MyCoursesAdapter extends ArrayAdapter<Course> {
             viewHolderItem = (ViewHolderItem) convertView.getTag();
         }
         viewHolderItem.courseName.setText(course.getTitle());
-        viewHolderItem.courseSummary.setText(HtmlHelper.fromHtml(course.getSummary()));
+        viewHolderItem.courseSummary.setText(textResolver.fromHtml(course.getSummary()).toString());
 
         Glide
                 .with(getContext())

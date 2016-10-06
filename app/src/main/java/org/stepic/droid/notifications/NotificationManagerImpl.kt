@@ -28,9 +28,16 @@ import org.stepic.droid.ui.activities.SectionActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.HtmlHelper
+import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.web.IApi
 
-class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper, val api: IApi, val configs: IConfig, val userPreferences: UserPreferences, val databaseFacade: DatabaseFacade, val analytic : Analytic) : INotificationManager {
+class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper,
+                              val api: IApi,
+                              val configs: IConfig,
+                              val userPreferences: UserPreferences,
+                              val databaseFacade: DatabaseFacade,
+                              val analytic : Analytic,
+                              val textResolver : TextResolver) : INotificationManager {
     override fun showNotification(notification: Notification) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             throw RuntimeException("Can't create notification on main thread")
@@ -107,7 +114,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         val pendingIntent = taskBuilder.getPendingIntent(courseId.toInt(), PendingIntent.FLAG_ONE_SHOT)
 
         val title = MainApplication.getAppContext().getString(R.string.app_name)
-        val justText: String = HtmlHelper.fromHtml(rawMessageHtml).toString()
+        val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
 
         val notification = NotificationCompat.Builder(MainApplication.getAppContext())
                 .setLargeIcon(largeIcon)
@@ -134,7 +141,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         } else {
             val inboxStyle = NotificationCompat.InboxStyle()
             for (notificationItem in notificationOfCourseList.reversed()) {
-                val line = HtmlHelper.fromHtml(notificationItem?.htmlText).toString()
+                val line = textResolver.fromHtml(notificationItem?.htmlText?:"").toString()
                 inboxStyle.addLine(line);
             }
             inboxStyle.setSummaryText(summaryText)

@@ -245,4 +245,14 @@
     <string name="very_high_quality">Very high</string>
     <string name="video_quality_explanation">High quality video takes more space and can be loaded slowly</string>
     <string name="do_not_ask_me_again">Do not ask me again</string>
+    <string name="discount_policy_inverse_title">After every wrong submission your maximum points will be reduced</string>
+    <plurals name="discount_policy_first_n">
+        <item quantity="one">You have %d attempt, for which you will get points</item>
+        <item quantity="other">You have %d attempts, for which you will get points</item>
+    </plurals>
+    <string name="discount_policy_no_way">You will not get score for the next attempts</string>
+    <string name="other_title">Other</string>
+    <string name="discounting_policy_title_settings">Warn about the lessons with penalties for wrong answers</string>
+    <string name="discounting_policy_message">If you send the wrong submission of this task, in the future, you can not get the points. Are you sure?</string>
+    <string name="keep_screen_on_title_settings">Keep screen on, when solve steps</string>
 </resources>
