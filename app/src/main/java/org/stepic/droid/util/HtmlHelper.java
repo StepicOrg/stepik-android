@@ -184,7 +184,7 @@ public class HtmlHelper {
                     "displayMath: [ ['$$','$$'], ['\\[','\\]'] ]" +
                     "</script>\n" +
                     "<script type=\"text/javascript\"\n" +
-                    " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML\">\n" +
+                    " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS_HTML\">\n" +
                     "</script>\n";
 
     public static String getUserPath(IConfig config, int userId) {

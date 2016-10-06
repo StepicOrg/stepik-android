@@ -1,5 +1,5 @@
 /*
- *  /MathJax/jax/input/MathML/entities/h.js
+ *  /MathJax/jax/output/PreviewHTML/config.js
  *
  *  Copyright (c) 2009-2015 The MathJax Consortium
  *
@@ -16,4 +16,4 @@
  *  limitations under the License.
  */
 
-(function(a){MathJax.Hub.Insert(a.Parse.Entity,{HARDcy:"\u042A",Hcirc:"\u0124",HilbertSpace:"\u210B",HorizontalLine:"\u2500",Hstrok:"\u0126",hArr:"\u21D4",hairsp:"\u200A",half:"\u00BD",hamilt:"\u210B",hardcy:"\u044A",harr:"\u2194",harrcir:"\u2948",hcirc:"\u0125",hearts:"\u2665",heartsuit:"\u2665",hercon:"\u22B9",hksearow:"\u2925",hkswarow:"\u2926",hoarr:"\u21FF",homtht:"\u223B",horbar:"\u2015",hslash:"\u210F",hstrok:"\u0127",hybull:"\u2043",hyphen:"\u2010"});MathJax.Ajax.loadComplete(a.entityDir+"/h.js")})(MathJax.InputJax.MathML);
+MathJax.OutputJax.PreviewHTML=MathJax.OutputJax({id:"PreviewHTML",version:"2.6.1",directory:MathJax.OutputJax.directory+"/PreviewHTML",extensionDir:MathJax.OutputJax.extensionDir+"/PreviewHTML",noFastPreview:true,config:{scale:100,minScaleAdjust:50,mtextFontInherit:false,linebreaks:{automatic:false,width:"container"}}});if(!MathJax.Hub.config.delayJaxRegistration){MathJax.OutputJax.PreviewHTML.Register("jax/mml")}MathJax.OutputJax.PreviewHTML.loadComplete("config.js");
