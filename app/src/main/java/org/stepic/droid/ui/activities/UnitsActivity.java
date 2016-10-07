@@ -47,15 +47,15 @@ import org.stepic.droid.web.ProgressesResponse;
 import org.stepic.droid.web.UnitStepicResponse;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit.Callback;
+import kotlin.jvm.functions.Function0;
 import retrofit.Response;
-import retrofit.Retrofit;
 
 public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -137,19 +137,62 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
             reportEmpty.setVisibility(View.VISIBLE);
         } else {
             reportEmpty.setVisibility(View.GONE);
-            shell.getApi().getUnits(section.getUnits()).enqueue(new Callback<UnitStepicResponse>() {
-                @Override
-                public void onResponse(Response<UnitStepicResponse> response, Retrofit retrofit) {
-                    if (response.isSuccess()) {
-                        bus.post(new SuccessLoadUnitsEvent(section, response, retrofit));
-                    } else {
-                        bus.post(new FailureLoadEvent(section));
-                    }
-                }
+
+            //todo make it in presenter
+
+            threadPoolExecutor.execute(new Runnable() {
+                final long[] unitIds = section.getUnits();
 
                 @Override
-                public void onFailure(Throwable t) {
-                    bus.post(new FailureLoadEvent(section));
+                public void run() {
+                    try {
+                        final List<Unit> backgroundUnits = new ArrayList<>();
+                        boolean responseIsSuccess = true;
+                        if (unitIds == null) {
+                            responseIsSuccess = false;
+                        }
+                        int pointer = 0;
+                        while (responseIsSuccess && pointer < unitIds.length) {
+                            int lastExclusive = Math.min(unitIds.length, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
+                            long[] subArrayForLoading = Arrays.copyOfRange(unitIds, pointer, lastExclusive);
+                            Response<UnitStepicResponse> unitResponse = shell.getApi().getUnits(subArrayForLoading).execute();
+                            if (!unitResponse.isSuccess()) {
+                                responseIsSuccess = false;
+                            } else {
+                                backgroundUnits.addAll(unitResponse.body().getUnits());
+                                pointer = lastExclusive;
+                            }
+                        }
+
+                        if (responseIsSuccess) {
+                            mainHandler.post(new Function0<kotlin.Unit>() {
+                                @Override
+                                public kotlin.Unit invoke() {
+                                    bus.post(new SuccessLoadUnitsEvent(section, backgroundUnits)); // we do not use this unit in background threads => send to main without extra copy
+                                    return kotlin.Unit.INSTANCE;
+                                }
+                            });
+
+
+                        } else {
+                            mainHandler.post(new Function0<kotlin.Unit>() {
+                                @Override
+                                public kotlin.Unit invoke() {
+                                    bus.post(new FailureLoadEvent(section));
+                                    return kotlin.Unit.INSTANCE;
+                                }
+                            });
+                        }
+
+                    } catch (Exception exception) {
+                        mainHandler.post(new Function0<kotlin.Unit>() {
+                            @Override
+                            public kotlin.Unit invoke() {
+                                bus.post(new FailureLoadEvent(section));
+                                return kotlin.Unit.INSTANCE;
+                            }
+                        });
+                    }
                 }
             });
         }
@@ -169,23 +212,63 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
                 || e.getSection().getId() != section.getId())
             return;
 
-        UnitStepicResponse unitStepicResponse = e.getResponse().body();
-        final List<Unit> units = unitStepicResponse.getUnits();
+        final List<Unit> units = e.getUnitList();
 
-        long[] lessonsIds = StepicLogicHelper.fromUnitsToLessonIds(units);
-        shell.getApi().getLessons(lessonsIds).enqueue(new Callback<LessonStepicResponse>() {
+        final long[] lessonsIds = StepicLogicHelper.fromUnitsToLessonIds(units);
+
+        //todo make it in presenter
+
+        threadPoolExecutor.execute(new Runnable() {
             @Override
-            public void onResponse(Response<LessonStepicResponse> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
-                    bus.post(new SuccessLoadLessonsEvent(section, response, retrofit, units));
-                } else {
-                    bus.post(new FailureLoadEvent(section));
+            public void run() {
+                try {
+                    final List<Lesson> backgroundLessons = new ArrayList<>();
+                    boolean responseIsSuccess = true;
+                    if (lessonsIds == null) {
+                        responseIsSuccess = false;
+                    }
+                    int pointer = 0;
+                    while (responseIsSuccess && pointer < lessonsIds.length) {
+                        int lastExclusive = Math.min(lessonsIds.length, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
+                        long[] subArrayForLoading = Arrays.copyOfRange(lessonsIds, pointer, lastExclusive);
+                        Response<LessonStepicResponse> lessonsResponse = shell.getApi().getLessons(subArrayForLoading).execute();
+                        if (!lessonsResponse.isSuccess()) {
+                            responseIsSuccess = false;
+                        } else {
+                            backgroundLessons.addAll(lessonsResponse.body().getLessons());
+                            pointer = lastExclusive;
+                        }
+                    }
+
+                    if (responseIsSuccess) {
+                        mainHandler.post(new Function0<kotlin.Unit>() {
+                            @Override
+                            public kotlin.Unit invoke() {
+                                bus.post(new SuccessLoadLessonsEvent(section, backgroundLessons, units)); // we do not use this unit in background threads => send to main without extra copy
+                                return kotlin.Unit.INSTANCE;
+                            }
+                        });
+
+
+                    } else {
+                        mainHandler.post(new Function0<kotlin.Unit>() {
+                            @Override
+                            public kotlin.Unit invoke() {
+                                bus.post(new FailureLoadEvent(section));
+                                return kotlin.Unit.INSTANCE;
+                            }
+                        });
+                    }
+
+                } catch (Exception exception) {
+                    mainHandler.post(new Function0<kotlin.Unit>() {
+                        @Override
+                        public kotlin.Unit invoke() {
+                            bus.post(new FailureLoadEvent(section));
+                            return kotlin.Unit.INSTANCE;
+                        }
+                    });
                 }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                bus.post(new FailureLoadEvent(section));
             }
         });
     }
@@ -196,22 +279,60 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
                 || e.getSection().getId() != section.getId())
             return;
 
-        String[] progressIds = ProgressUtil.getAllProgresses(e.getUnits());
+        final String[] progressIds = ProgressUtil.getAllProgresses(e.getUnits());
 
-        shell.getApi().getProgresses(progressIds).enqueue(new Callback<ProgressesResponse>() {
-            List<Unit> units = e.getUnits();
-            List<Lesson> lessons = e.getResponse().body().getLessons();
-
-            public void onResponse(Response<ProgressesResponse> response, Retrofit retrofit) {
-
-                if (response.isSuccess()) {
-                    saveToDb(units, lessons, response.body().getProgresses());
-                }
-            }
-
+        threadPoolExecutor.execute(new Runnable() {
             @Override
-            public void onFailure(Throwable t) {
+            public void run() {
+                try {
+                    final List<Progress> backgroundProgress = new ArrayList<>();
+                    boolean responseIsSuccess = true;
+                    if (progressIds == null) {
+                        responseIsSuccess = false;
+                    }
+                    int pointer = 0;
+                    while (responseIsSuccess && pointer < progressIds.length) {
+                        int lastExclusive = Math.min(progressIds.length, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
+                        String[] subArrayForLoading = Arrays.copyOfRange(progressIds, pointer, lastExclusive);
+                        Response<ProgressesResponse> progressesResponse = shell.getApi().getProgresses(subArrayForLoading).execute();
+                        if (!progressesResponse.isSuccess()) {
+                            responseIsSuccess = false;
+                        } else {
+                            backgroundProgress.addAll(progressesResponse.body().getProgresses());
+                            pointer = lastExclusive;
+                        }
+                    }
 
+                    if (responseIsSuccess) {
+
+                        mainHandler.post(new Function0<kotlin.Unit>() {
+                            @Override
+                            public kotlin.Unit invoke() {
+                                saveToDb(e.getUnits(), e.getLessons(), backgroundProgress);
+                                return kotlin.Unit.INSTANCE;
+                            }
+                        });
+
+
+                    } else {
+                        mainHandler.post(new Function0<kotlin.Unit>() {
+                            @Override
+                            public kotlin.Unit invoke() {
+                                bus.post(new FailureLoadEvent(section));
+                                return kotlin.Unit.INSTANCE;
+                            }
+                        });
+                    }
+
+                } catch (Exception exception) {
+                    mainHandler.post(new Function0<kotlin.Unit>() {
+                        @Override
+                        public kotlin.Unit invoke() {
+                            bus.post(new FailureLoadEvent(section));
+                            return kotlin.Unit.INSTANCE;
+                        }
+                    });
+                }
             }
         });
     }
