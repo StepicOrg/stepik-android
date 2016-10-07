@@ -58,7 +58,7 @@ android {
             reset()
             include 'armeabi-v7a', 'mips', 'x86', 'x86_64', 'arm64-v8a'
             //select ABIs to build APKs for
-            universalApk true //generate an additional APK that contains all the ABIs
+            universalApk false //generate an additional APK that contains all the ABIs
         }
     }
 
