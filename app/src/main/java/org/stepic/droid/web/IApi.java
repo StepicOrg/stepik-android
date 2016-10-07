@@ -43,6 +43,9 @@ public interface IApi {
 
     Call<SectionsStepicResponse> getSections(long[] sectionsIds);
 
+    /**
+     * Max number of  units defined in AppConstants
+     */
     Call<UnitStepicResponse> getUnits(long[] units);
 
     Call<LessonStepicResponse> getLessons(long[] lessons);

@@ -39,6 +39,8 @@ import org.stepic.droid.web.UnitStepicResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -239,7 +241,7 @@ public class LoadService extends IntentService {
         //make copies of objects.
         Unit unit = databaseFacade.getUnitByLessonId(lessonOut.getId());
         Lesson lesson = databaseFacade.getLessonById(lessonOut.getId());
-        if (unit!=null && lesson!=null&&  !unit.is_cached() && !lesson.is_cached() && unit.is_loading() && lesson.is_loading()) {
+        if (unit != null && lesson != null && !unit.is_cached() && !lesson.is_cached() && unit.is_loading() && lesson.is_loading()) {
 
             try {
                 List<Assignment> assignments = api.getAssignments(unit.getAssignments()).execute().body().getAssignments();
@@ -304,11 +306,29 @@ public class LoadService extends IntentService {
     private void addSection(Section sectionOut) {
         //if user click to removeSection, then section already in database.
         Section section = databaseFacade.getSectionById(sectionOut.getId());//make copy of section.
-        if (section!=null) {
+        if (section != null) {
             try {
-                Response<UnitStepicResponse> unitLessonResponse = api.getUnits(section.getUnits()).execute();
-                if (unitLessonResponse.isSuccess()) {
-                    final List<Unit> units = unitLessonResponse.body().getUnits();
+                boolean responseIsSuccess = true;
+                final List<Unit> units = new ArrayList<>();
+                long[] unitIds = section.getUnits();
+                if (unitIds == null) {
+                    responseIsSuccess = false;
+                }
+                int pointer = 0;
+                while (responseIsSuccess && pointer < unitIds.length) {
+                    int lastExclusive = Math.min(unitIds.length, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
+                    long[] subArrayForLoading = Arrays.copyOfRange(unitIds, pointer, lastExclusive);
+                    Response<UnitStepicResponse> unitResponse = api.getUnits(subArrayForLoading).execute();
+                    if (!unitResponse.isSuccess()) {
+                        responseIsSuccess = false;
+                    } else {
+                        units.addAll(unitResponse.body().getUnits());
+                        pointer = lastExclusive;
+                    }
+                }
+
+
+                if (responseIsSuccess) {
                     long[] lessonsIds = StepicLogicHelper.fromUnitsToLessonIds(units);
                     List<Progress> progresses = api.getProgresses(ProgressUtil.getAllProgresses(units)).execute().body().getProgresses();
                     for (Progress item : progresses) {
@@ -354,6 +374,9 @@ public class LoadService extends IntentService {
                         }
                         storeStateManager.updateSectionState(section.getId()); // FIXME DOUBLE CHECK, if all units were cached
                     }
+                } else {
+                    // if response is not succes --> throw
+                    throw new IOException("response is not success adding units");
                 }
             } catch (UnknownHostException e) {
                 //not internet
@@ -363,12 +386,14 @@ public class LoadService extends IntentService {
                 analytic.reportError(Analytic.Error.LOAD_SERVICE, e);
                 storeStateManager.updateSectionAfterDeleting(section.getId());
             }
-        }
-        else{
-            if (sectionOut!=null) {
+        } else
+
+        {
+            if (sectionOut != null) {
                 storeStateManager.updateSectionAfterDeleting(sectionOut.getId());
             }
         }
+
     }
 
     @Deprecated

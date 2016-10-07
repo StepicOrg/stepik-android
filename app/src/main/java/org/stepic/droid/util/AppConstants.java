@@ -63,8 +63,10 @@ public class AppConstants {
     public static final String LINKEDIN_ADD_URL = "https://www.linkedin.com/profile/add?";
     public static final String LINKEDIN_ED_ID = "0_uInsUtRlLF5qiDUg80Aftvf5K-uMiiQPc0IVksZ_0oh1hhPRasb5cWi8eD5WXfgDaSgvthvZk7wTBMS3S-m0L6A6mLjErM6PJiwMkk6nYZylU7__75hCVwJdOTZCAkdv";//// TODO: 02.08.16 add to configs?
 
-    public static final int REQUEST_CODE_GOOGLE_SIGN_IN  = 7007;
+    public static final int REQUEST_CODE_GOOGLE_SIGN_IN = 7007;
 
     public static final int ENROLLED_FILTER = 1;
     public static final int FEATURED_FILTER = 2;
+
+    public static final int DEFAULT_NUMBER_IDS_IN_QUERY = 100;
 }

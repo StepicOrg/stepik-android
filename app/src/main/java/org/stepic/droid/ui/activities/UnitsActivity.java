@@ -47,12 +47,14 @@ import org.stepic.droid.web.ProgressesResponse;
 import org.stepic.droid.web.UnitStepicResponse;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import kotlin.jvm.functions.Function0;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
@@ -137,19 +139,62 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
             reportEmpty.setVisibility(View.VISIBLE);
         } else {
             reportEmpty.setVisibility(View.GONE);
-            shell.getApi().getUnits(section.getUnits()).enqueue(new Callback<UnitStepicResponse>() {
-                @Override
-                public void onResponse(Response<UnitStepicResponse> response, Retrofit retrofit) {
-                    if (response.isSuccess()) {
-                        bus.post(new SuccessLoadUnitsEvent(section, response, retrofit));
-                    } else {
-                        bus.post(new FailureLoadEvent(section));
-                    }
-                }
+
+            //todo make it in presenter
+
+            threadPoolExecutor.execute(new Runnable() {
+                final long[] unitIds = section.getUnits();
 
                 @Override
-                public void onFailure(Throwable t) {
-                    bus.post(new FailureLoadEvent(section));
+                public void run() {
+                    try {
+                        final List<Unit> backgroundUnits = new ArrayList<>();
+                        boolean responseIsSuccess = true;
+                        if (unitIds == null) {
+                            responseIsSuccess = false;
+                        }
+                        int pointer = 0;
+                        while (responseIsSuccess && pointer < unitIds.length) {
+                            int lastExclusive = Math.min(unitIds.length, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
+                            long[] subArrayForLoading = Arrays.copyOfRange(unitIds, pointer, lastExclusive);
+                            Response<UnitStepicResponse> unitResponse = shell.getApi().getUnits(subArrayForLoading).execute();
+                            if (!unitResponse.isSuccess()) {
+                                responseIsSuccess = false;
+                            } else {
+                                backgroundUnits.addAll(unitResponse.body().getUnits());
+                                pointer = lastExclusive;
+                            }
+                        }
+
+                        if (responseIsSuccess) {
+                            mainHandler.post(new Function0<kotlin.Unit>() {
+                                @Override
+                                public kotlin.Unit invoke() {
+                                    bus.post(new SuccessLoadUnitsEvent(section, backgroundUnits)); // we do not use this unit in background threads => send to main without extra copy
+                                    return kotlin.Unit.INSTANCE;
+                                }
+                            });
+
+
+                        } else {
+                            mainHandler.post(new Function0<kotlin.Unit>() {
+                                @Override
+                                public kotlin.Unit invoke() {
+                                    bus.post(new FailureLoadEvent(section));
+                                    return kotlin.Unit.INSTANCE;
+                                }
+                            });
+                        }
+
+                    } catch (Exception exception) {
+                        mainHandler.post(new Function0<kotlin.Unit>() {
+                            @Override
+                            public kotlin.Unit invoke() {
+                                bus.post(new FailureLoadEvent(section));
+                                return kotlin.Unit.INSTANCE;
+                            }
+                        });
+                    }
                 }
             });
         }
@@ -169,8 +214,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
                 || e.getSection().getId() != section.getId())
             return;
 
-        UnitStepicResponse unitStepicResponse = e.getResponse().body();
-        final List<Unit> units = unitStepicResponse.getUnits();
+        final List<Unit> units = e.getUnitList();
 
         long[] lessonsIds = StepicLogicHelper.fromUnitsToLessonIds(units);
         shell.getApi().getLessons(lessonsIds).enqueue(new Callback<LessonStepicResponse>() {
