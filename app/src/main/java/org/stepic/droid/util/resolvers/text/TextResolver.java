@@ -18,7 +18,7 @@ public interface TextResolver {
      * For SIMPLE HTML, which you can set for textview only
      */
     @NotNull
-    CharSequence fromHtml(@NotNull String content);
+    CharSequence fromHtml(@Nullable String content);
 
     @NotNull
     String replaceWhitespaceToBr(@Nullable String answer);
