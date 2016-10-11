@@ -50,6 +50,7 @@ import org.stepic.droid.ui.fragments.DownloadsFragment;
 import org.stepic.droid.ui.fragments.FeedbackFragment;
 import org.stepic.droid.ui.fragments.FindCoursesFragment;
 import org.stepic.droid.ui.fragments.MyCoursesFragment;
+import org.stepic.droid.ui.fragments.NotificationsFragment;
 import org.stepic.droid.ui.util.BackButtonHandler;
 import org.stepic.droid.ui.util.LogoutSuccess;
 import org.stepic.droid.ui.util.OnBackClickListener;
@@ -352,18 +353,26 @@ public class MainFeedActivity extends BackToExitActivityBase
                     shortLifetimeRef = DownloadsFragment.newInstance();
                 }
                 break;
-            case R.id.feedback:
-                currentIndex = 6;
-                if (tag == null || !tag.equals(FeedbackFragment.class.toString())) {
-                    shortLifetimeRef = FeedbackFragment.Companion.newInstance();
-                }
-                break;
+
             case R.id.certificates:
                 currentIndex = 4;
                 if (tag == null || !tag.equals(CertificateFragment.class.toString())) {
                     shortLifetimeRef = CertificateFragment.newInstance();
                 }
                 break;
+            case R.id.notifications:
+                currentIndex = 5;
+                if (tag == null || !tag.equals(NotificationsFragment.class.toString())) {
+                    shortLifetimeRef = NotificationsFragment.newInstance();
+                }
+                break;
+            case R.id.feedback:
+                currentIndex = 7;
+                if (tag == null || !tag.equals(FeedbackFragment.class.toString())) {
+                    shortLifetimeRef = FeedbackFragment.Companion.newInstance();
+                }
+                break;
+
         }
         currentIndex--; // menu indices from 1
         if (shortLifetimeRef != null) {
