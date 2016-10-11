@@ -649,13 +649,25 @@ public class RetrofitRESTApi implements IApi {
 
     @Override
     public Call<NotificationResponse> getNotifications(NotificationCategory notificationCategory, int page) {
+        String categoryType = getNotificationCategoryString(notificationCategory);
+        return loggedService.getNotifications(page, categoryType);
+    }
+
+    @Override
+    public Call<Void> markAsReadAllType(NotificationCategory notificationCategory) {
+        String categoryType = getNotificationCategoryString(notificationCategory);
+        return loggedService.markAsRead(categoryType);
+    }
+
+    @Nullable
+    private String getNotificationCategoryString(NotificationCategory notificationCategory) {
         String categoryType;
         if (notificationCategory == NotificationCategory.all) {
             categoryType = null;
         } else {
             categoryType = notificationCategory.name();
         }
-        return loggedService.getNotifications(page, categoryType);
+        return categoryType;
     }
 
     @Nullable

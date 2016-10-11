@@ -6,6 +6,7 @@ import org.stepic.droid.model.EnrollmentWrapper;
 import retrofit.Call;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
+import retrofit.http.Field;
 import retrofit.http.GET;
 import retrofit.http.Headers;
 import retrofit.http.POST;
@@ -126,4 +127,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/notifications")
     Call<NotificationResponse> getNotifications(@Query("page") int page, @Nullable @Query("type") String type);
+
+    @POST("api/notifications/mark-as-read")
+    Call<Void> markAsRead(@Nullable @Field(value = "type", encoded = true) String notificationType);
 }
