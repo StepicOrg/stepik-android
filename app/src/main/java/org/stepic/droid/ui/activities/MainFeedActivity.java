@@ -73,7 +73,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class MainFeedActivity extends BackToExitActivityBase
-        implements NavigationView.OnNavigationItemSelectedListener, LogoutSuccess, BackButtonHandler {
+        implements NavigationView.OnNavigationItemSelectedListener, LogoutSuccess, BackButtonHandler, HasDrawer {
     public static final String KEY_CURRENT_INDEX = "Current_index";
 
     @BindView(R.id.toolbar)
@@ -100,6 +100,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     GoogleApiClient googleApiClient;
 
     private List<WeakReference<OnBackClickListener>> onBackClickListenerList = new ArrayList<>(4);
+    private ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -119,7 +120,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         initGoogleApiClient();
         initDrawerHeader();
         setUpToolbar();
-        setUpDrawerLayout();
+        setupDrawerLayout();
         Bundle extras = getIntent().getExtras();
         if (savedInstanceState != null) {
             initFragments(savedInstanceState);
@@ -308,10 +309,10 @@ public class MainFeedActivity extends BackToExitActivityBase
         return true;
     }
 
-    private void setUpDrawerLayout() {
+    private void setupDrawerLayout() {
         navigationView.setNavigationItemSelectedListener(this);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_closed);
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_closed);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
     }
 
@@ -417,6 +418,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onDestroy() {
         bus.unregister(this);
+        drawerLayout.removeDrawerListener(actionBarDrawerToggle);
         super.onDestroy();
     }
 
@@ -505,5 +507,10 @@ public class MainFeedActivity extends BackToExitActivityBase
                 iterator.remove();
             }
         }
+    }
+
+    @Override
+    public DrawerLayout getDrawerLayout() {
+        return drawerLayout;
     }
 }
