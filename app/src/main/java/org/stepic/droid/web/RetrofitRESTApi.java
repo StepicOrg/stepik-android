@@ -45,6 +45,7 @@ import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.store.operations.Table;
+import org.stepic.droid.ui.NotificationCategory;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.HtmlHelper;
@@ -644,6 +645,17 @@ public class RetrofitRESTApi implements IApi {
     @Override
     public Call<UnitStepicResponse> getUnitByLessonId(long lessonId) {
         return loggedService.getUnitByLessonId(lessonId);
+    }
+
+    @Override
+    public Call<NotificationResponse> getNotifications(NotificationCategory notificationCategory, int page) {
+        String categoryType;
+        if (notificationCategory == NotificationCategory.all) {
+            categoryType = null;
+        } else {
+            categoryType = notificationCategory.name();
+        }
+        return loggedService.getNotifications(page, categoryType);
     }
 
     @Nullable

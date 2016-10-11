@@ -1,5 +1,6 @@
 package org.stepic.droid.web;
 
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.EnrollmentWrapper;
 
 import retrofit.Call;
@@ -122,4 +123,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/submissions")
     Call<SubmissionResponse> getExistingSubmissionsForStep(@Query("step") long stepId);
+
+    @GET("api/notifications")
+    Call<NotificationResponse> getNotifications(@Query("page") int page, @Nullable @Query("type") String type);
 }
