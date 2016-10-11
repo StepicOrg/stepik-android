@@ -18,6 +18,7 @@ import org.stepic.droid.core.modules.StorageModule;
 
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainApplication extends MultiDexApplication {
 
@@ -85,7 +86,7 @@ public class MainApplication extends MultiDexApplication {
 
     @Override
     protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(base));
         MultiDex.install(this);
     }
 
