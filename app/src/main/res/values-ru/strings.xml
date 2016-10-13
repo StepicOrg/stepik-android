@@ -254,4 +254,5 @@
     <string name="learning_title">Обучение</string>
     <string name="reviews_title">Рецензии</string>
     <string name="teaching_title">Преподавание</string>
+    <string name="accessibility_switch_viewed_state">Изменить состояние просмотренности</string>
 </resources>

@@ -261,4 +261,5 @@
     <string name="learning_title">Learning</string>
     <string name="reviews_title">Reviews</string>
     <string name="teaching_title">Teaching</string>
+    <string name="accessibility_switch_viewed_state">Switch viewed state</string>
 </resources>
