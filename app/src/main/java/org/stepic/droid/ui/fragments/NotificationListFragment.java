@@ -2,20 +2,26 @@ package org.stepic.droid.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.core.components.NotificationComponent;
+import org.stepic.droid.core.presenters.NotificationListPresenter;
+import org.stepic.droid.core.presenters.contracts.NotificationListView;
 import org.stepic.droid.ui.NotificationCategory;
+import org.stepic.droid.ui.adapters.NotificationAdapter;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
-public class NotificationListFragment extends FragmentBase {
+public class NotificationListFragment extends FragmentBase implements NotificationListView {
 
     private static final String categoryPositionKey = "categoryPositionKey";
 
@@ -27,16 +33,26 @@ public class NotificationListFragment extends FragmentBase {
         return fragment;
     }
 
-    @BindView(R.id.notification_category)
-    TextView test;
+    @Inject
+    RecyclerView.RecycledViewPool recycledViewPool;
+
+    @Inject
+    NotificationListPresenter notificationListPresenter;
 
     NotificationCategory notificationCategory;
+
+    @BindView(R.id.mark_all_as_read_button)
+    View markAsReadButton;
+
+    @BindView(R.id.notification_recycler_view)
+    RecyclerView notificationRecyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Timber.d("Create NOTIFICATION LIST Fragment");
         setRetainInstance(true);
+        NotificationComponent component = getComponentFromActivity(NotificationComponent.class);
+        component.inject(this);
     }
 
     @Nullable
@@ -53,7 +69,13 @@ public class NotificationListFragment extends FragmentBase {
         int position = getArguments().getInt(categoryPositionKey);
         notificationCategory = NotificationCategory.values()[position];
 
-        test.setText(notificationCategory.toString());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setRecycleChildrenOnDetach(true);
+        notificationRecyclerView.setItemViewCacheSize(10);
+
+        notificationRecyclerView.setLayoutManager(layoutManager);
+        notificationRecyclerView.setRecycledViewPool(recycledViewPool);
+        notificationRecyclerView.setAdapter(new NotificationAdapter(getContext()));
     }
 
 }

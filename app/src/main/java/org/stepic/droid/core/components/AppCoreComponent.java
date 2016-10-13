@@ -13,6 +13,7 @@ import org.stepic.droid.core.modules.CertificateModule;
 import org.stepic.droid.core.modules.CourseDetailModule;
 import org.stepic.droid.core.modules.CourseListModule;
 import org.stepic.droid.core.modules.FilterModule;
+import org.stepic.droid.core.modules.NotificationModule;
 import org.stepic.droid.core.modules.SectionModule;
 import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.modules.VideoModule;
@@ -34,6 +35,7 @@ import org.stepic.droid.ui.activities.SectionActivity;
 import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.adapters.DownloadsAdapter;
+import org.stepic.droid.ui.adapters.NotificationAdapter;
 import org.stepic.droid.ui.adapters.SectionAdapter;
 import org.stepic.droid.ui.adapters.SocialAuthAdapter;
 import org.stepic.droid.ui.adapters.SortStepAdapter;
@@ -80,6 +82,8 @@ public interface AppCoreComponent {
     FilterComponent plus(FilterModule module);
 
     CourseListComponent plus(CourseListModule module);
+
+    NotificationComponent plus(NotificationModule module);
 
     void inject(FragmentActivityBase someActivity);
 
@@ -186,4 +190,6 @@ public interface AppCoreComponent {
     void inject(ExpandableTextView expandableTextView);
 
     void inject(SortStepAdapter sortStepAdapter);
+
+    void inject(NotificationAdapter.NotificationViewHolder notificationViewHolder);
 }
