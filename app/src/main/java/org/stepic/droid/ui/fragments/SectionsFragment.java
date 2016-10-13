@@ -708,7 +708,7 @@ public class SectionsFragment
                         for (Notification notificationItem : notifications) {
                             if (notificationItem != null && notificationItem.getId() != null) {
                                 try {
-                                    shell.getApi().markNotificationAsRead(notificationItem.getId(), true).execute();
+                                    shell.getApi().setReadStatusForNotification(notificationItem.getId(), true).execute();
                                 } catch (IOException e) {
                                     analytic.reportError(Analytic.Error.NOTIFICATION_NOT_POSTED_ON_CLICK, e);
                                 }

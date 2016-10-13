@@ -90,7 +90,7 @@ public interface IApi {
 
     Call<CoursesStepicResponse> getCourse(long id);
 
-    Call<Void> markNotificationAsRead(long notificationId, boolean isRead);
+    Call<Void> setReadStatusForNotification(long notificationId, boolean isRead);
 
     Call<Void> removeDevice(long deviceId);
 

@@ -579,7 +579,7 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
-    public Call<Void> markNotificationAsRead(long notificationId, boolean isRead) {
+    public Call<Void> setReadStatusForNotification(long notificationId, boolean isRead) {
         Notification notification = new Notification();
         notification.set_unread(!isRead);
         return loggedService.putNotification(notificationId, new NotificationRequest(notification));
