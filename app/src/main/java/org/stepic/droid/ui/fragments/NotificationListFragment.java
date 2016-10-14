@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.core.components.NotificationComponent;
+import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.core.modules.NotificationModule;
 import org.stepic.droid.core.presenters.NotificationListPresenter;
 import org.stepic.droid.core.presenters.contracts.NotificationListView;
 import org.stepic.droid.ui.NotificationCategory;
@@ -20,6 +21,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class NotificationListFragment extends FragmentBase implements NotificationListView {
 
@@ -34,7 +36,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     }
 
     @Inject
-    RecyclerView.RecycledViewPool recycledViewPool;
+    RecyclerView.RecycledViewPool sharedRecyclerViewPool;
 
     @Inject
     NotificationListPresenter notificationListPresenter;
@@ -51,8 +53,14 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        NotificationComponent component = getComponentFromActivity(NotificationComponent.class);
-        component.inject(this);
+    }
+
+    @Override
+    protected void injectComponent() {
+        MainApplication
+                .component()
+                .plus(new NotificationModule())
+                .inject(this);
     }
 
     @Nullable
@@ -69,13 +77,21 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         int position = getArguments().getInt(categoryPositionKey);
         notificationCategory = NotificationCategory.values()[position];
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setRecycleChildrenOnDetach(true);
+        Timber.d("We use notificationRecyclerView instance %s", sharedRecyclerViewPool);
+        Timber.d("Our unique for fragment presenter is %s", notificationListPresenter);
+        notificationRecyclerView.setRecycledViewPool(sharedRecyclerViewPool);
         notificationRecyclerView.setItemViewCacheSize(10);
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setRecycleChildrenOnDetach(true);
         notificationRecyclerView.setLayoutManager(layoutManager);
-        notificationRecyclerView.setRecycledViewPool(recycledViewPool);
         notificationRecyclerView.setAdapter(new NotificationAdapter(getContext()));
+        notificationListPresenter.attachView(this);
     }
 
+    @Override
+    public void onDestroyView() {
+        notificationListPresenter.detachView(this);
+        super.onDestroyView();
+    }
 }

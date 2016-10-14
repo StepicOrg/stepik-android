@@ -14,7 +14,6 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.AudioFocusHelper;
-import org.stepic.droid.core.HasComponent;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.ShareHelper;
@@ -166,13 +165,4 @@ public class FragmentBase extends Fragment {
         super.onDetach();
     }
 
-    /**
-     * Gets a component for dependency injection by its type.
-     * In onCreate of Method use
-     * this.getComponentFromActivity(NameOfComponent.class).inject(this);
-     */
-    @SuppressWarnings("unchecked")
-    protected <C> C getComponentFromActivity(Class<C> componentType) {
-        return componentType.cast(((HasComponent<C>) getActivity()).getComponent());
-    }
 }

@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,9 +35,6 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.HasComponent;
-import org.stepic.droid.core.components.NotificationComponent;
-import org.stepic.droid.core.modules.NotificationModule;
 import org.stepic.droid.events.profile.ProfileCanBeShownEvent;
 import org.stepic.droid.events.updating.NeedUpdateEvent;
 import org.stepic.droid.model.EmailAddress;
@@ -77,7 +73,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class MainFeedActivity extends BackToExitActivityBase
-        implements NavigationView.OnNavigationItemSelectedListener, LogoutSuccess, BackButtonHandler, HasDrawer, HasComponent<NotificationComponent> {
+        implements NavigationView.OnNavigationItemSelectedListener, LogoutSuccess, BackButtonHandler, HasDrawer {
     public static final String KEY_CURRENT_INDEX = "Current_index";
 
     @BindView(R.id.toolbar)
@@ -103,9 +99,8 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     GoogleApiClient googleApiClient;
 
-    private List<WeakReference<OnBackClickListener>> onBackClickListenerList = new ArrayList<>(4);
+    private List<WeakReference<OnBackClickListener>> onBackClickListenerList = new ArrayList<>(8);
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    private NotificationComponent notificationComponent;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -121,9 +116,6 @@ public class MainFeedActivity extends BackToExitActivityBase
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_feed);
         unbinder = ButterKnife.bind(this);
-        if (savedInstanceState == null) {
-            initializeInjector();
-        }
         initGoogleApiClient();
         initDrawerHeader();
         setUpToolbar();
@@ -519,16 +511,6 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     public DrawerLayout getDrawerLayout() {
         return drawerLayout;
-    }
-
-    @Override
-    public NotificationComponent getComponent() {
-        return notificationComponent;
-    }
-
-    private void initializeInjector() {
-        RecyclerView.RecycledViewPool recycledViewPool = new RecyclerView.RecycledViewPool();
-        notificationComponent = MainApplication.component().plus(new NotificationModule(recycledViewPool));
     }
 
 }
