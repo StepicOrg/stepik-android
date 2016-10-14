@@ -43,9 +43,6 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 
     NotificationCategory notificationCategory;
 
-    @BindView(R.id.mark_all_as_read_button)
-    View markAsReadButton;
-
     @BindView(R.id.notification_recycler_view)
     RecyclerView notificationRecyclerView;
 

@@ -255,4 +255,5 @@
     <string name="reviews_title">Рецензии</string>
     <string name="teaching_title">Преподавание</string>
     <string name="accessibility_switch_viewed_state">Изменить состояние просмотренности</string>
+    <string name="mark_all_as_read">Отметить все как прочитанное</string>
 </resources>
