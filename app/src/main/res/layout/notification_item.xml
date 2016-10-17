@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <FrameLayout
+        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="@drawable/non_radius_foreground"
