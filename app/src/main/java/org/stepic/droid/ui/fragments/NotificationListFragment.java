@@ -7,15 +7,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.modules.NotificationModule;
 import org.stepic.droid.core.presenters.NotificationListPresenter;
 import org.stepic.droid.core.presenters.contracts.NotificationListView;
+import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.ui.NotificationCategory;
 import org.stepic.droid.ui.adapters.NotificationAdapter;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -26,6 +31,7 @@ import timber.log.Timber;
 public class NotificationListFragment extends FragmentBase implements NotificationListView {
 
     private static final String categoryPositionKey = "categoryPositionKey";
+    private NotificationAdapter adapter;
 
     public static NotificationListFragment newInstance(int categoryPosition) {
         Bundle args = new Bundle();
@@ -82,7 +88,8 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setRecycleChildrenOnDetach(true);
         notificationRecyclerView.setLayoutManager(layoutManager);
-        notificationRecyclerView.setAdapter(new NotificationAdapter(getContext()));
+        adapter = new NotificationAdapter(getContext());
+        notificationRecyclerView.setAdapter(adapter);
         notificationListPresenter.attachView(this);
     }
 
@@ -90,5 +97,20 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     public void onDestroyView() {
         notificationListPresenter.detachView(this);
         super.onDestroyView();
+    }
+
+    @Override
+    public void onConnectionProblem() {
+        Toast.makeText(getContext(), "Connection problem...", Toast.LENGTH_SHORT).show(); //// FIXME: 17.10.16 make ok UI
+    }
+
+    @Override
+    public void onNeedShowNotifications(@NotNull List<Notification> notifications) {
+        adapter.setNotifications(notifications);
+    }
+
+    @Override
+    public void onLoading() {
+        Toast.makeText(getContext(), "Loading...", Toast.LENGTH_SHORT).show(); //// FIXME: 17.10.16 make ok UI
     }
 }

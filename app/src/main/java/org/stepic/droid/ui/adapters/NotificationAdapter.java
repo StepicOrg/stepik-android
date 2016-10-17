@@ -22,6 +22,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 
+import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -44,6 +45,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     private DateTimeZone zone;
     private Locale locale;
     private int countOfItems = 500;
+    private List<Notification> notifications;
 
     public NotificationAdapter(Context context) {
         this.context = context;
@@ -88,6 +90,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public int getItemCount() {
         return countOfItems + countOfHeads;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+        notifyDataSetChanged();
     }
 
 
