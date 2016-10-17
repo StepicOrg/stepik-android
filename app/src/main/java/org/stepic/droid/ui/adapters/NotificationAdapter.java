@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
@@ -27,12 +28,16 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
+import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.GenericViewHolder> {
 
     private final int itemViewType = 1;
     private final int headerViewType = 2;
     private final int countOfHeads = 1;
+    private final Typeface boldTypeface;
+    private final Typeface regularTypeface;
 
     private Context context;
     private DateTimeZone zone;
@@ -43,6 +48,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         this.context = context;
         zone = DateTimeZone.getDefault();
         locale = Locale.getDefault();
+        boldTypeface = TypefaceUtils.load(context.getAssets(), "fonts/NotoSans-Bold.ttf");
+        regularTypeface = TypefaceUtils.load(context.getAssets(), "fonts/NotoSans-Regular.ttf");
     }
 
     @Override
@@ -131,6 +138,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             notificationBody.setText(textResolver.fromHtml(fixedHtml));
             String timeForView = DateTimeHelper.INSTANCE.getPresentOfDate(notification.getTime(), DateTimeFormat.forPattern(AppConstants.COMMENT_DATE_TIME_PATTERN).withZone(zone).withLocale(locale)); // // TODO: 13.10.16 save in ViewModel
             notificationTime.setText(timeForView);
+
+            makeViewed(position % 3 == 0);
+        }
+
+        private void makeViewed(boolean viewed) {
+            if (viewed) {
+                CalligraphyUtils.applyFontToTextView(notificationBody, regularTypeface);
+            } else {
+                CalligraphyUtils.applyFontToTextView(notificationBody, boldTypeface);
+            }
         }
     }
 
