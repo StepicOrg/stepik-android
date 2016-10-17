@@ -6,9 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import org.joda.time.DateTimeZone;
@@ -111,8 +112,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         @BindView(R.id.notification_body)
         TextView notificationBody;
 
+        @BindView(R.id.notification_root)
+        ViewGroup notificationRoot;
+
         @BindView(R.id.check_view)
-        ImageView checkImageView;
+        CheckBox checkImageView;
 
         @BindView(R.id.notification_time)
         TextView notificationTime;
@@ -122,6 +126,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             super(itemView);
             MainApplication.component().inject(this);
             notificationBody.setMovementMethod(LinkMovementMethod.getInstance());
+            notificationRoot.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    checkImageView.dispatchTouchEvent(event);
+                    return true;
+                }
+            });
         }
 
         public void setData(int position) {

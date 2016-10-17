@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/notification_root"
+
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,8 +8,10 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/notification_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:orientation="vertical"
         android:padding="@dimen/guideline_standard_padding">
 
@@ -25,17 +27,18 @@
                 android:layout_marginRight="@dimen/half_padding"
                 android:layout_toLeftOf="@+id/check_view"
                 android:layout_toStartOf="@+id/check_view"
+                android:clickable="false"
+                android:focusable="false"
                 tools:text="В курсе Археология фольклора: мифологические мотивы на карте мира менее чем через 36 часов наступит совсем крайний срок сдачи заданий по модулю Ныряльщик и антропогонические мифы"/>
 
-            <ImageView
+            <CheckBox
                 android:id="@+id/check_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:contentDescription="@string/accessibility_switch_viewed_state"
-                android:src="@drawable/ic_reply_material_24px"/>
+                android:contentDescription="@string/accessibility_switch_viewed_state"/>
 
         </RelativeLayout>
 
