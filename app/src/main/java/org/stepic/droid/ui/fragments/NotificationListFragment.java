@@ -52,6 +52,8 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     @BindView(R.id.notification_recycler_view)
     RecyclerView notificationRecyclerView;
 
+    private RecyclerView.OnScrollListener recyclerViewScrollListener;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,10 +87,34 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         Timber.d("Our unique for fragment presenter is %s", notificationListPresenter);
 //        notificationRecyclerView.setRecycledViewPool(sharedRecyclerViewPool); // TODO: 18.10.16 investigate why views is not rebind
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 //        layoutManager.setRecycleChildrenOnDetach(true);
         notificationRecyclerView.setLayoutManager(layoutManager);
         notificationRecyclerView.setAdapter(adapter);
+
+        recyclerViewScrollListener = new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) //check for scroll down
+                {
+                    int visibleItemCount = layoutManager.getChildCount();
+                    int totalItemCount = layoutManager.getItemCount();
+                    int pastVisibleItems = layoutManager.findFirstVisibleItemPosition();
+                    Timber.d("visibleItemCount = %d, totalItemCount = %d, pastVisibleItems=%d", visibleItemCount, totalItemCount, pastVisibleItems);
+
+                    if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                        if (notificationListPresenter.getWasShown().get() &&
+                                !notificationListPresenter.isLoading().get() &&
+                                notificationListPresenter.getHasNextPage().get()) {
+                            Timber.d("try call loadMore()");
+                            notificationListPresenter.loadMore();
+                        }
+                    }
+                }
+
+            }
+        };
+        notificationRecyclerView.addOnScrollListener(recyclerViewScrollListener);
 
         notificationListPresenter.attachView(this);
         notificationListPresenter.init(notificationCategory);
@@ -97,6 +123,8 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     @Override
     public void onDestroyView() {
         notificationListPresenter.detachView(this);
+        notificationRecyclerView.removeOnScrollListener(recyclerViewScrollListener);
+        recyclerViewScrollListener = null;
         super.onDestroyView();
     }
 
