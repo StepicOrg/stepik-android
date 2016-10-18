@@ -6,7 +6,7 @@ interface NotificationListView {
 
     fun onConnectionProblem();
 
-    fun onNeedShowNotifications(notifications: List<Notification>);
+    fun onNeedShowNotifications(notifications: List<Notification>)
 
     fun onLoading();
 }

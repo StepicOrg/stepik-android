@@ -107,7 +107,13 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 
     @Override
     public void onNeedShowNotifications(@NotNull List<Notification> notifications) {
-        adapter.setNotifications(notifications);
+        if (notifications.isEmpty()) {
+            notificationRecyclerView.setVisibility(View.GONE);
+            //// FIXME: 18.10.16 add placeholder
+        } else {
+            notificationRecyclerView.setVisibility(View.VISIBLE);
+            adapter.setNotifications(notifications);
+        }
     }
 
     @Override
