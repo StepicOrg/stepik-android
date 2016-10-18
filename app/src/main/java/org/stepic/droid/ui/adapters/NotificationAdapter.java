@@ -14,6 +14,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.core.presenters.NotificationListPresenter;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
@@ -43,13 +44,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     private final Typeface regularTypeface;
 
     private Context context;
+    private NotificationListPresenter notificationListPresenter;
     private DateTimeZone zone;
     private Locale locale;
     private List<Notification> notifications = new ArrayList<>();
     private boolean isNeedShowFooter;
 
-    public NotificationAdapter(Context context) {
+    public NotificationAdapter(Context context, NotificationListPresenter notificationListPresenter) {
         this.context = context;
+        this.notificationListPresenter = notificationListPresenter;
         zone = DateTimeZone.getDefault();
         locale = Locale.getDefault();
         boldTypeface = TypefaceUtils.load(context.getAssets(), "fonts/NotoSans-Bold.ttf");
@@ -109,8 +112,29 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             Notification notification = notifications.get(positionInList);
             Boolean unread = notification.is_unread();
             if (unread == null || unread) {
+                Long id = notification.getId();
+                if (id != null) {
+                    notificationListPresenter.markAsRead(id);
+                } else {
+                    notificationListPresenter.notificationIdIsNull();
+                }
                 notification.set_unread(false);
                 notifyItemChanged(adapterPosition);
+            }
+        }
+    }
+
+    public void markNotificationAsRead(int position, long id, boolean needRead) {
+        boolean newValue = !needRead;
+        if (position >= 0 && position < notifications.size()) {
+            Notification notification = notifications.get(position);
+            Long notificationId = notification.getId();
+            if (notificationId != null && notificationId == id) {
+                Boolean unread = notification.is_unread();
+                if (unread != null && unread != newValue) {
+                    notification.set_unread(newValue);
+                    notifyItemChanged(position + countOfHeads);
+                }
             }
         }
     }

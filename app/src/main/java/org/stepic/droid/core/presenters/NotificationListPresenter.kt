@@ -2,9 +2,13 @@ package org.stepic.droid.core.presenters
 
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
+import com.squareup.otto.Bus
+import com.squareup.otto.Subscribe
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.core.presenters.contracts.NotificationListView
+import org.stepic.droid.events.notify_ui.NotificationCheckedSuccessfullyEvent
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.ui.NotificationCategory
 import org.stepic.droid.util.not
@@ -19,7 +23,9 @@ class NotificationListPresenter(
         val threadPoolExecutor: ThreadPoolExecutor,
         val mainHandler: IMainHandler,
         val api: IApi,
-        val config: IConfig
+        val config: IConfig,
+        val bus: Bus,
+        val analytic: Analytic
 ) : PresenterBase<NotificationListView>() {
 
     private var notificationCategory: NotificationCategory? = null
@@ -28,6 +34,17 @@ class NotificationListPresenter(
     val hasNextPage = AtomicBoolean(true)
     private val page = AtomicInteger(1)
     val notificationList: MutableList<Notification> = ArrayList<Notification>()
+    val notificationMapIdToPosition: MutableMap<Long, Int> = HashMap()
+
+    override fun attachView(view: NotificationListView) {
+        super.attachView(view)
+        bus.register(this)
+    }
+
+    override fun detachView(view: NotificationListView) {
+        bus.unregister(this)
+        super.detachView(view)
+    }
 
     @MainThread
     fun init(notificationCategory: NotificationCategory) {
@@ -45,6 +62,12 @@ class NotificationListPresenter(
             threadPoolExecutor.execute {
                 try {
                     val notifications = getNotificationFromOnePage(notificationCategory)
+                    notifications.forEachIndexed { position, notification ->
+                        notification.id?.let {
+                            notificationId ->
+                            notificationMapIdToPosition[notificationId] = position
+                        }
+                    }
                     mainHandler.post {
                         notificationList.addAll(notifications)
                         wasShown.set(true)
@@ -103,6 +126,13 @@ class NotificationListPresenter(
             try {
                 notificationCategory?.let { category ->
                     val notifications = getNotificationFromOnePage(category)
+                    val oldSize = notificationList.size
+                    notifications.forEachIndexed { shift, notification ->
+                        notification.id?.let {
+                            notificationId ->
+                            notificationMapIdToPosition[notificationId] = shift + oldSize
+                        }
+                    }
                     mainHandler.post {
                         notificationList.addAll(notifications)
                         view?.onNeedShowNotifications(notificationList)
@@ -115,6 +145,50 @@ class NotificationListPresenter(
                 }
             } finally {
                 isLoading.set(false)
+            }
+        }
+    }
+
+    fun markAsRead(id: Long) {
+        threadPoolExecutor.execute {
+            try {
+                val isSuccess = api.setReadStatusForNotification(id, true).execute().isSuccess
+                if (isSuccess) {
+                    mainHandler.post {
+                        bus.post(NotificationCheckedSuccessfullyEvent(id))
+                    }
+                } else {
+                    val pos = notificationMapIdToPosition[id]
+                    mainHandler.post {
+                        if (pos != null) {
+                            view?.notCheckNotification(pos, id)
+                        }
+                    }
+                }
+
+            } catch (ex: Exception) {
+                val pos = notificationMapIdToPosition[id]
+                mainHandler.post {
+                    if (pos != null) {
+                        view?.notCheckNotification(pos, id)
+                    }
+                }
+            }
+        }
+    }
+
+    fun notificationIdIsNull() {
+        analytic.reportEvent(Analytic.Notification.ID_WAS_NULL)
+    }
+
+    @Subscribe
+    fun onNotificationShouldBeRead(event: NotificationCheckedSuccessfullyEvent) {
+        val id = event.notificationId
+        val position: Int = notificationMapIdToPosition[id] ?: return
+        if (position >= 0 && position < notificationList.size) {
+            val notificationInList = notificationList[position]
+            if (notificationInList.is_unread ?: false) {
+                view?.markNotificationAsRead(position, id)
             }
         }
 

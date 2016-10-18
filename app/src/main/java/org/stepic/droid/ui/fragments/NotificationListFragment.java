@@ -58,7 +58,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        adapter = new NotificationAdapter(getContext());
+        adapter = new NotificationAdapter(getContext(), notificationListPresenter);
     }
 
     @Override
@@ -155,5 +155,15 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     @Override
     public void onNeedShowLoadingFooter() {
         adapter.showLoadingFooter(true);
+    }
+
+    @Override
+    public void notCheckNotification(int position, long notificationId) {
+        adapter.markNotificationAsRead(position, notificationId, false);
+    }
+
+    @Override
+    public void markNotificationAsRead(int position, long id) {
+        adapter.markNotificationAsRead(position, id, true);
     }
 }

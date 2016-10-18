@@ -1,5 +1,8 @@
 package org.stepic.droid.core.modules;
 
+import com.squareup.otto.Bus;
+
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.PerFragment;
@@ -19,7 +22,9 @@ public class NotificationModule {
     NotificationListPresenter provideNotificationListPresenter(ThreadPoolExecutor threadPoolExecutor,
                                                                IMainHandler mainHandler,
                                                                IApi api,
-                                                               IConfig config) {
-        return new NotificationListPresenter(threadPoolExecutor, mainHandler, api, config);
+                                                               IConfig config,
+                                                               Bus bus,
+                                                               Analytic analytic) {
+        return new NotificationListPresenter(threadPoolExecutor, mainHandler, api, config, bus, analytic);
     }
 }

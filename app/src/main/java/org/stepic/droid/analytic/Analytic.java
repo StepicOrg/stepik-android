@@ -154,6 +154,7 @@ public interface Analytic {
         String TOKEN_UPDATE_FAILED = "notification gcm token is not updated";
         String OPEN_NOTIFICATION = "notification_opened";
         String OPEN_NOTIFICATION_SYLLABUS = "notification_opened_syllabus";
+        String ID_WAS_NULL = "notification_id_was_null";
     }
 
     interface Feedback {
