@@ -172,6 +172,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             } else {
                 CalligraphyUtils.applyFontToTextView(notificationBody, boldTypeface);
             }
+
+            checkImageView.setChecked(isViewed);
         }
 
     }
