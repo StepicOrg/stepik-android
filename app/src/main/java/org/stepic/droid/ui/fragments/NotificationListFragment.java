@@ -2,6 +2,7 @@ package org.stepic.droid.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,6 +20,8 @@ import org.stepic.droid.core.presenters.contracts.NotificationListView;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.ui.NotificationCategory;
 import org.stepic.droid.ui.adapters.NotificationAdapter;
+import org.stepic.droid.util.ColorUtil;
+import org.stepic.droid.util.SnackbarExtensionKt;
 
 import java.util.List;
 
@@ -159,6 +162,14 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 
     @Override
     public void notCheckNotification(int position, long notificationId) {
+        SnackbarExtensionKt
+                .setTextColor(
+                        Snackbar.make(notificationRecyclerView,
+                                R.string.connectionProblems,
+                                Snackbar.LENGTH_SHORT),
+                        ColorUtil.INSTANCE.getColorArgb(R.color.white,
+                                getContext()))
+                .show();
         adapter.markNotificationAsRead(position, notificationId, false);
     }
 
