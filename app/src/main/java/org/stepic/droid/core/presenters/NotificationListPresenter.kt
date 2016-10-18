@@ -98,6 +98,7 @@ class NotificationListPresenter(
 
         //if is not loading:
         isLoading.set(true)
+        view?.onNeedShowLoadingFooter()
         threadPoolExecutor.execute {
             try {
                 notificationCategory?.let { category ->

@@ -130,11 +130,13 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 
     @Override
     public void onConnectionProblem() {
+        adapter.showLoadingFooter(false);
         Toast.makeText(getContext(), "Connection problem...", Toast.LENGTH_SHORT).show(); //// FIXME: 17.10.16 make ok UI
     }
 
     @Override
     public void onNeedShowNotifications(@NotNull List<Notification> notifications) {
+        adapter.showLoadingFooter(false);
         if (notifications.isEmpty()) {
             notificationRecyclerView.setVisibility(View.GONE);
             //// FIXME: 18.10.16 add placeholder
@@ -146,6 +148,12 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 
     @Override
     public void onLoading() {
+        adapter.showLoadingFooter(false);
         Toast.makeText(getContext(), "Loading...", Toast.LENGTH_SHORT).show(); //// FIXME: 17.10.16 make ok UI
+    }
+
+    @Override
+    public void onNeedShowLoadingFooter() {
+        adapter.showLoadingFooter(true);
     }
 }

@@ -9,4 +9,6 @@ interface NotificationListView {
     fun onNeedShowNotifications(notifications: List<Notification>)
 
     fun onLoading();
+
+    fun onNeedShowLoadingFooter()
 }

@@ -37,7 +37,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     private final int itemViewType = 1;
     private final int headerViewType = 2;
+    private final int footerViewType = 3;
     private final int countOfHeads = 1;
+    private final int countOfFooter = 1;
     private final Typeface boldTypeface;
     private final Typeface regularTypeface;
 
@@ -45,6 +47,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     private DateTimeZone zone;
     private Locale locale;
     private List<Notification> notifications = new ArrayList<>();
+    private boolean isNeedShowFooter;
 
     public NotificationAdapter(Context context) {
         this.context = context;
@@ -60,6 +63,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         if (viewType == headerViewType) {
             View view = LayoutInflater.from(context).inflate(R.layout.notification_list_header_item, parent, false);
             return new HeaderViewHolder(view);
+        } else if (viewType == footerViewType) {
+            View view = LayoutInflater.from(context).inflate(R.layout.view_notification_loading_footer, parent, false);
+            return new FooterViewHolder(view);
         } else {
             View view = LayoutInflater.from(context).inflate(R.layout.notification_item, parent, false);
             return new NotificationViewHolder(view);
@@ -73,17 +79,28 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @Override
     public int getItemViewType(int position) {
-        return position == 0 ? headerViewType : itemViewType;
+        if (position == 0) {
+            return headerViewType;
+        } else if (position == getItemCount() - 1) {
+            return footerViewType;
+        } else {
+            return itemViewType;
+        }
     }
 
     @Override
     public int getItemCount() {
-        return notifications.size() + countOfHeads;
+        return notifications.size() + countOfHeads + countOfFooter;
     }
 
     public void setNotifications(List<Notification> notifications) {
         this.notifications = notifications;
         notifyDataSetChanged();
+    }
+
+    public void showLoadingFooter(boolean isNeedShow) {
+        isNeedShowFooter = isNeedShow;
+        notifyItemChanged(getItemCount() - 1);
     }
 
 
@@ -171,6 +188,22 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         @Override
         void setData(int position) {
             //it is called in onBind method
+        }
+    }
+
+    class FooterViewHolder extends GenericViewHolder {
+
+        @BindView(R.id.loading_root)
+        ViewGroup loadingRoot;
+
+
+        public FooterViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        void setData(int position) {
+            loadingRoot.setVisibility(isNeedShowFooter ? View.VISIBLE : View.GONE);
         }
     }
 }
