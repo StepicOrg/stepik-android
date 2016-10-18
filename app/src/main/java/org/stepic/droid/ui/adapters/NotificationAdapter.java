@@ -5,10 +5,8 @@ import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import org.joda.time.DateTimeZone;
@@ -17,6 +15,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.notifications.model.Notification;
+import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.resolvers.text.TextResolver;
@@ -33,7 +32,7 @@ import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
-public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.GenericViewHolder> {
+public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.GenericViewHolder> implements StepicOnClickItemListener {
 
     private final int itemViewType = 1;
     private final int headerViewType = 2;
@@ -103,6 +102,19 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         notifyItemChanged(getItemCount() - 1);
     }
 
+    @Override
+    public void onClick(int adapterPosition) {
+        int positionInList = adapterPosition - countOfHeads;
+        if (positionInList >= 0 && positionInList < notifications.size()) {
+            Notification notification = notifications.get(positionInList);
+            Boolean unread = notification.is_unread();
+            if (unread == null || unread) {
+                notification.set_unread(false);
+                notifyItemChanged(adapterPosition);
+            }
+        }
+    }
+
 
     abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 
@@ -129,7 +141,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         ViewGroup notificationRoot;
 
         @BindView(R.id.check_view)
-        CheckBox checkImageView;
+        View checkImageView;
 
         @BindView(R.id.notification_time)
         TextView notificationTime;
@@ -139,13 +151,17 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             super(itemView);
             MainApplication.component().inject(this);
             notificationBody.setMovementMethod(LinkMovementMethod.getInstance());
-            notificationRoot.setOnTouchListener(new View.OnTouchListener() {
+
+            //for checking notification
+            View.OnClickListener click = new View.OnClickListener() {
                 @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    checkImageView.dispatchTouchEvent(event);
-                    return true;
+                public void onClick(View v) {
+                    NotificationAdapter.this.onClick(getAdapterPosition());
                 }
-            });
+            };
+            notificationRoot.setOnClickListener(click);
+            notificationBody.setOnClickListener(click);
+            checkImageView.setOnClickListener(click);
         }
 
         public void setData(int position) {
@@ -173,7 +189,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 CalligraphyUtils.applyFontToTextView(notificationBody, boldTypeface);
             }
 
-            checkImageView.setChecked(isViewed);
+            checkImageView.setVisibility(isViewed ? View.GONE : View.VISIBLE);
         }
 
     }

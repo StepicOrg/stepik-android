@@ -31,14 +31,27 @@
                 android:focusable="false"
                 tools:text="В курсе Археология фольклора: мифологические мотивы на карте мира менее чем через 36 часов наступит совсем крайний срок сдачи заданий по модулю Ныряльщик и антропогонические мифы"/>
 
-            <CheckBox
+            <FrameLayout
                 android:id="@+id/check_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:contentDescription="@string/accessibility_switch_viewed_state"/>
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="@drawable/circle_foreground">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/accessibility_switch_viewed_state"
+                    android:src="@drawable/ic_circle"/>
+
+            </FrameLayout>
+
 
         </RelativeLayout>
 
