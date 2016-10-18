@@ -41,8 +41,8 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         return fragment;
     }
 
-    @Inject
-    RecyclerView.RecycledViewPool sharedRecyclerViewPool;
+//    @Inject
+//    RecyclerView.RecycledViewPool sharedRecyclerViewPool;
 
     @Inject
     NotificationListPresenter notificationListPresenter;
@@ -56,6 +56,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        adapter = new NotificationAdapter(getContext());
     }
 
     @Override
@@ -80,17 +81,17 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         int position = getArguments().getInt(categoryPositionKey);
         notificationCategory = NotificationCategory.values()[position];
 
-        Timber.d("We use notificationRecyclerView instance %s", sharedRecyclerViewPool);
+//        Timber.d("We use notificationRecyclerView instance %s", sharedRecyclerViewPool);
         Timber.d("Our unique for fragment presenter is %s", notificationListPresenter);
-        notificationRecyclerView.setRecycledViewPool(sharedRecyclerViewPool);
-        notificationRecyclerView.setItemViewCacheSize(10);
+//        notificationRecyclerView.setRecycledViewPool(sharedRecyclerViewPool); // TODO: 18.10.16 investigate why views is not rebind
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setRecycleChildrenOnDetach(true);
+//        layoutManager.setRecycleChildrenOnDetach(true);
         notificationRecyclerView.setLayoutManager(layoutManager);
-        adapter = new NotificationAdapter(getContext());
         notificationRecyclerView.setAdapter(adapter);
+
         notificationListPresenter.attachView(this);
+        notificationListPresenter.init(notificationCategory);
     }
 
     @Override

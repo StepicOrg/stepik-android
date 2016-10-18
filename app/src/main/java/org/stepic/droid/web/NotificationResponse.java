@@ -12,4 +12,8 @@ public class NotificationResponse extends StepicResponseBase {
     public NotificationResponse(Meta meta) {
         super(meta);
     }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
 }

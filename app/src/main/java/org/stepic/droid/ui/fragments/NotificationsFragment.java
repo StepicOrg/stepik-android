@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.components.NotificationComponent;
 import org.stepic.droid.ui.NotificationCategory;
 import org.stepic.droid.ui.activities.HasDrawer;
 
@@ -48,7 +47,6 @@ public class NotificationsFragment extends FragmentBase {
     ViewPager viewPager;
 
     private HasDrawer hasDrawerHost;
-    private NotificationComponent notificationComponent;
 
     @Override
     public void onAttach(Context context) {

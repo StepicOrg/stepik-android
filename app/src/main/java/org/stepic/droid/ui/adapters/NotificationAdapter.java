@@ -2,7 +2,6 @@ package org.stepic.droid.ui.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,8 +44,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     private Context context;
     private DateTimeZone zone;
     private Locale locale;
-    private int countOfItems = 500;
-    private List<Notification> notifications;
+    private List<Notification> notifications = new ArrayList<>();
 
     public NotificationAdapter(Context context) {
         this.context = context;
@@ -77,19 +76,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return position == 0 ? headerViewType : itemViewType;
     }
 
-    @NonNull
-    private Notification getFakeNotification(int position) {
-        Notification notification = new Notification();
-        String htmlTextFromNotification = position + " В курсе <a href=\"/course/Java-%D0%91%D0%B0%D0%B7%D0%BE%D0%B2%D1%8B%D0%B9-%D0%BA%D1%83%D1%80%D1%81-187/\">Java. Базовый курс</a> менее чем через 36 часов наступит совсем крайний срок сдачи заданий по модулю <a href=\"/course/Java-%D0%91%D0%B0%D0%B7%D0%BE%D0%B2%D1%8B%D0%B9-%D0%BA%D1%83%D1%80%D1%81-187/syllabus?module=4\">Обработка ошибок, исключения, отладка</a> МДА";
-        notification.setHtmlText(htmlTextFromNotification);
-        notification.setTime("2016-10-12T19:05:00Z");
-        return notification;
-    }
-
-
     @Override
     public int getItemCount() {
-        return countOfItems + countOfHeads;
+        return notifications.size() + countOfHeads;
     }
 
     public void setNotifications(List<Notification> notifications) {
@@ -143,30 +132,31 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
 
         public void setData(int position) {
-            Notification notification = getFakeNotification(position);
-            //<FIXME>
-            // this should be parsed, when we receive notification on background thread
+            int positionInList = position - countOfHeads;
+            Notification notification = notifications.get(positionInList);
 
-            String baseUrl = config.getBaseUrl();
-            String notificationHtmlText = notification.getHtmlText();
-            String fixedHtml = notificationHtmlText.replace("href=\"/", "href=\"" + baseUrl + "/");
+            notificationBody.setText(textResolver.fromHtml(notification.getHtmlText()));
 
-            // </FIXME>
-
-            notificationBody.setText(textResolver.fromHtml(fixedHtml));
             String timeForView = DateTimeHelper.INSTANCE.getPresentOfDate(notification.getTime(), DateTimeFormat.forPattern(AppConstants.COMMENT_DATE_TIME_PATTERN).withZone(zone).withLocale(locale)); // // TODO: 13.10.16 save in ViewModel
             notificationTime.setText(timeForView);
 
-            makeViewed(position % 3 == 0);
+            resolveViewedState(notification);
         }
 
-        private void makeViewed(boolean viewed) {
-            if (viewed) {
+        private void resolveViewedState(Notification notification) {
+            boolean isViewed = true;
+            Boolean unread = notification.is_unread();
+            if (unread != null) {
+                isViewed = !unread;
+            }
+
+            if (isViewed) {
                 CalligraphyUtils.applyFontToTextView(notificationBody, regularTypeface);
             } else {
                 CalligraphyUtils.applyFontToTextView(notificationBody, boldTypeface);
             }
         }
+
     }
 
     class HeaderViewHolder extends GenericViewHolder {
