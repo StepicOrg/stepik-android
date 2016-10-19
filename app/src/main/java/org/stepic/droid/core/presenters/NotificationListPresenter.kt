@@ -8,6 +8,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.core.presenters.contracts.NotificationListView
+import org.stepic.droid.events.InternetIsEnabledEvent
 import org.stepic.droid.events.notify_ui.NotificationCheckedSuccessfullyEvent
 import org.stepic.droid.events.notify_ui.NotificationMarkCategoryAsReadEvent
 import org.stepic.droid.notifications.model.Notification
@@ -281,6 +282,15 @@ class NotificationListPresenter(
         }
 
 
+    }
+
+    @Subscribe
+    @MainThread
+    fun onInternetEnabled(event: InternetIsEnabledEvent) {
+        val category = notificationCategory
+        if (notificationList.isEmpty() && category != null) {
+            init(category);
+        }
     }
 
 }
