@@ -263,4 +263,5 @@
     <string name="teaching_title">Teaching</string>
     <string name="accessibility_switch_viewed_state">Switch viewed state</string>
     <string name="mark_all_as_read">Mark all as read</string>
+    <string name="empty_notification_title">Yet notifications are empty</string>
 </resources>

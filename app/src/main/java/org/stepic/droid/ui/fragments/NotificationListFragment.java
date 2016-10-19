@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -58,6 +57,15 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 
     @BindView(R.id.notification_recycler_view)
     RecyclerView notificationRecyclerView;
+
+    @BindView(R.id.load_progressbar)
+    View progressBarOnEmptyScreen;
+
+    @BindView(R.id.report_problem)
+    View connectionProblemLayout;
+
+    @BindView(R.id.empty_notifications)
+    View emptyNotificatons;
 
     private RecyclerView.OnScrollListener recyclerViewScrollListener;
     private LinearLayoutManager layoutManager;
@@ -139,16 +147,27 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     @Override
     public void onConnectionProblem() {
         adapter.showLoadingFooter(false);
-        Toast.makeText(getContext(), "Connection problem...", Toast.LENGTH_SHORT).show(); //// FIXME: 17.10.16 make ok UI
+        progressBarOnEmptyScreen.setVisibility(View.GONE);
+        emptyNotificatons.setVisibility(View.GONE);
+        if (adapter.getNotificationsCount() > 0) {
+            //// TODO: 19.10.16 make in footer try again view
+            showConnectionProblemMessage();
+        } else {
+            notificationRecyclerView.setVisibility(View.GONE);
+            connectionProblemLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void onNeedShowNotifications(@NotNull List<Notification> notifications) {
         adapter.showLoadingFooter(false);
+        progressBarOnEmptyScreen.setVisibility(View.GONE);
+        connectionProblemLayout.setVisibility(View.GONE);
         if (notifications.isEmpty()) {
             notificationRecyclerView.setVisibility(View.GONE);
-            //// FIXME: 18.10.16 add placeholder
+            emptyNotificatons.setVisibility(View.VISIBLE);
         } else {
+            emptyNotificatons.setVisibility(View.GONE);
             notificationRecyclerView.setVisibility(View.VISIBLE);
             adapter.setNotifications(notifications);
         }
@@ -157,7 +176,10 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     @Override
     public void onLoading() {
         adapter.showLoadingFooter(false);
-        Toast.makeText(getContext(), "Loading...", Toast.LENGTH_SHORT).show(); //// FIXME: 17.10.16 make ok UI
+        notificationRecyclerView.setVisibility(View.GONE);
+        connectionProblemLayout.setVisibility(View.GONE);
+        emptyNotificatons.setVisibility(View.GONE);
+        progressBarOnEmptyScreen.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -167,14 +189,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 
     @Override
     public void notCheckNotification(int position, long notificationId) {
-        SnackbarExtensionKt
-                .setTextColor(
-                        Snackbar.make(notificationRecyclerView,
-                                R.string.connectionProblems,
-                                Snackbar.LENGTH_SHORT),
-                        ColorUtil.INSTANCE.getColorArgb(R.color.white,
-                                getContext()))
-                .show();
+        showConnectionProblemMessage();
         adapter.markNotificationAsRead(position, notificationId, false);
     }
 
@@ -203,6 +218,17 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 
     @Override
     public void onConnectionProblemWhenMarkAllFail() {
-        Toast.makeText(getContext(), "SORRY", Toast.LENGTH_SHORT).show();
+        showConnectionProblemMessage();
+    }
+
+    private void showConnectionProblemMessage() {
+        SnackbarExtensionKt
+                .setTextColor(
+                        Snackbar.make(notificationRecyclerView,
+                                R.string.connectionProblems,
+                                Snackbar.LENGTH_SHORT),
+                        ColorUtil.INSTANCE.getColorArgb(R.color.white,
+                                getContext()))
+                .show();
     }
 }

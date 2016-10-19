@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/notification_recycler_view"
@@ -15,4 +14,10 @@
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="vertical"/>
 
-</LinearLayout>
+    <include layout="@layout/progress_bar_on_empty_screen"/>
+
+    <include layout="@layout/report_problem_layout"/>
+
+    <include layout="@layout/empty_notifications"/>
+
+</FrameLayout>

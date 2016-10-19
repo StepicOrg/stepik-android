@@ -67,6 +67,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         regularTypeface = TypefaceUtils.load(context.getAssets(), "fonts/NotoSans-Regular.ttf");
     }
 
+    public int getNotificationsCount () {
+        return notifications.size();
+    }
+
     @Override
     public GenericViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Timber.d("createViewHolder of NotificationAdapter, viewType = %d", viewType);

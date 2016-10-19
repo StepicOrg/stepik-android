@@ -54,6 +54,7 @@ class NotificationListPresenter(
         if (!isLoading && !wasShown) {
             //it is not lock, it is just check, but we still can enter twice if we use it in multithreading way, but it is only for main thread.
             isLoading.set(true)
+            view?.onLoading()
             if (notificationList.isNotEmpty()) {
                 view?.onNeedShowNotifications(notificationList)
                 wasShown.set(true)
