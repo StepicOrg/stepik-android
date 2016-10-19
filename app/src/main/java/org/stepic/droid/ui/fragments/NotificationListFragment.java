@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,7 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class NotificationListFragment extends FragmentBase implements NotificationListView {
+public class NotificationListFragment extends FragmentBase implements NotificationListView, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String categoryPositionKey = "categoryPositionKey";
     private NotificationAdapter adapter;
@@ -65,7 +66,10 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     View connectionProblemLayout;
 
     @BindView(R.id.empty_notifications)
-    View emptyNotificatons;
+    View emptyNotifications;
+
+    @BindView(R.id.notification_swipe_refresh)
+    SwipeRefreshLayout notificationSwipeRefresh;
 
     private RecyclerView.OnScrollListener recyclerViewScrollListener;
     private LinearLayoutManager layoutManager;
@@ -108,6 +112,8 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         notificationRecyclerView.setLayoutManager(layoutManager);
         notificationRecyclerView.setAdapter(adapter);
 
+        initSwipeRefreshLayout();
+
         recyclerViewScrollListener = new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -136,6 +142,15 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         notificationListPresenter.init(notificationCategory);
     }
 
+    private void initSwipeRefreshLayout() {
+        notificationSwipeRefresh.setOnRefreshListener(this);
+        notificationSwipeRefresh.setColorSchemeResources(
+                R.color.stepic_brand_primary,
+                R.color.stepic_orange_carrot,
+                R.color.stepic_blue_ribbon);
+
+    }
+
     @Override
     public void onDestroyView() {
         notificationListPresenter.detachView(this);
@@ -148,7 +163,8 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     public void onConnectionProblem() {
         adapter.showLoadingFooter(false);
         progressBarOnEmptyScreen.setVisibility(View.GONE);
-        emptyNotificatons.setVisibility(View.GONE);
+        emptyNotifications.setVisibility(View.GONE);
+        ProgressHelper.dismiss(notificationSwipeRefresh);
         if (adapter.getNotificationsCount() > 0) {
             //// TODO: 19.10.16 make in footer try again view
             showConnectionProblemMessage();
@@ -163,11 +179,12 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         adapter.showLoadingFooter(false);
         progressBarOnEmptyScreen.setVisibility(View.GONE);
         connectionProblemLayout.setVisibility(View.GONE);
+        ProgressHelper.dismiss(notificationSwipeRefresh);
         if (notifications.isEmpty()) {
             notificationRecyclerView.setVisibility(View.GONE);
-            emptyNotificatons.setVisibility(View.VISIBLE);
+            emptyNotifications.setVisibility(View.VISIBLE);
         } else {
-            emptyNotificatons.setVisibility(View.GONE);
+            emptyNotifications.setVisibility(View.GONE);
             notificationRecyclerView.setVisibility(View.VISIBLE);
             adapter.setNotifications(notifications);
         }
@@ -178,7 +195,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         adapter.showLoadingFooter(false);
         notificationRecyclerView.setVisibility(View.GONE);
         connectionProblemLayout.setVisibility(View.GONE);
-        emptyNotificatons.setVisibility(View.GONE);
+        emptyNotifications.setVisibility(View.GONE);
         progressBarOnEmptyScreen.setVisibility(View.VISIBLE);
     }
 
@@ -230,5 +247,13 @@ public class NotificationListFragment extends FragmentBase implements Notificati
                         ColorUtil.INSTANCE.getColorArgb(R.color.white,
                                 getContext()))
                 .show();
+    }
+
+    @Override
+    public void onRefresh() {
+        boolean wasCancelled = notificationListPresenter.init(notificationCategory);
+        if (wasCancelled) {
+            ProgressHelper.dismiss(notificationSwipeRefresh);
+        }
     }
 }

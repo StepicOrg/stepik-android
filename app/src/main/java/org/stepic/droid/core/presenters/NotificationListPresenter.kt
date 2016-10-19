@@ -49,8 +49,15 @@ class NotificationListPresenter(
         super.detachView(view)
     }
 
+    fun refresh (notificationCategory: NotificationCategory){
+
+    }
+
+    /**
+     * return false if were cancelled
+     */
     @MainThread
-    fun init(notificationCategory: NotificationCategory) {
+    fun init(notificationCategory: NotificationCategory) : Boolean {
         this.notificationCategory = notificationCategory
         if (!isLoading && !wasShown) {
             //it is not lock, it is just check, but we still can enter twice if we use it in multithreading way, but it is only for main thread.
@@ -60,7 +67,6 @@ class NotificationListPresenter(
                 view?.onNeedShowNotifications(notificationList)
                 wasShown.set(true)
                 isLoading.set(false)
-                return
             }
 
             threadPoolExecutor.execute {
@@ -87,9 +93,10 @@ class NotificationListPresenter(
                     isLoading.set(false)
                 }
             }
+            return false
         } else {
             //do nothing we loading or already loaded
-            return
+            return true
         }
     }
 
