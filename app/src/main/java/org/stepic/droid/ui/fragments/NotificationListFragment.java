@@ -3,6 +3,7 @@ package org.stepic.droid.ui.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,7 +21,9 @@ import org.stepic.droid.core.presenters.contracts.NotificationListView;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.ui.NotificationCategory;
 import org.stepic.droid.ui.adapters.NotificationAdapter;
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.util.ColorUtil;
+import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.SnackbarExtensionKt;
 
 import java.util.List;
@@ -35,6 +38,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 
     private static final String categoryPositionKey = "categoryPositionKey";
     private NotificationAdapter adapter;
+    private final String loadingTag = "loadingTag";
 
     public static NotificationListFragment newInstance(int categoryPosition) {
         Bundle args = new Bundle();
@@ -56,6 +60,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     RecyclerView notificationRecyclerView;
 
     private RecyclerView.OnScrollListener recyclerViewScrollListener;
+    private LinearLayoutManager layoutManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,7 +95,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         Timber.d("Our unique for fragment presenter is %s", notificationListPresenter);
 //        notificationRecyclerView.setRecycledViewPool(sharedRecyclerViewPool); // TODO: 18.10.16 investigate why views is not rebind
 
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager = new LinearLayoutManager(getContext());
 //        layoutManager.setRecycleChildrenOnDetach(true);
         notificationRecyclerView.setLayoutManager(layoutManager);
         notificationRecyclerView.setAdapter(adapter);
@@ -176,5 +181,28 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     @Override
     public void markNotificationAsRead(int position, long id) {
         adapter.markNotificationAsRead(position, id, true);
+    }
+
+    @Override
+    public void onLoadingMarkingAsRead() {
+        adapter.setEnableMarkAllButton(false);
+        DialogFragment loadingProgressDialogFragment = LoadingProgressDialogFragment.Companion.newInstance();
+        ProgressHelper.activate(loadingProgressDialogFragment, getFragmentManager(), loadingTag);
+    }
+
+    @Override
+    public void makeEnableMarkAllButton() {
+        adapter.setEnableMarkAllButton(true);
+        ProgressHelper.dismiss(getFragmentManager(), loadingTag);
+    }
+
+    @Override
+    public void markAsReadSuccessfully() {
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onConnectionProblemWhenMarkAllFail() {
+        Toast.makeText(getContext(), "SORRY", Toast.LENGTH_SHORT).show();
     }
 }

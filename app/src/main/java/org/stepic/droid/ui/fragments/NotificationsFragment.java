@@ -84,13 +84,14 @@ public class NotificationsFragment extends FragmentBase {
     }
 
     private void initViewPager() {
-        viewPager.setAdapter(new NotificationPagerAdapter(getFragmentManager()));
+        viewPager.setAdapter(new NotificationPagerAdapter(getChildFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
     public void onDestroyView() {
         destroyToolbar();
+
         super.onDestroyView();
     }
 

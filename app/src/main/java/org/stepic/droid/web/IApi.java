@@ -114,5 +114,5 @@ public interface IApi {
 
     Call<NotificationResponse> getNotifications (NotificationCategory notificationCategory, int page);
 
-    Call<Void> markAsReadAllType (NotificationCategory notificationCategory);
+    Call<Void> markAsReadAllType (@NotNull NotificationCategory notificationCategory);
 }

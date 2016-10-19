@@ -9,7 +9,9 @@ import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.core.presenters.contracts.NotificationListView
 import org.stepic.droid.events.notify_ui.NotificationCheckedSuccessfullyEvent
+import org.stepic.droid.events.notify_ui.NotificationMarkCategoryAsReadEvent
 import org.stepic.droid.notifications.model.Notification
+import org.stepic.droid.notifications.model.NotificationType
 import org.stepic.droid.ui.NotificationCategory
 import org.stepic.droid.util.not
 import org.stepic.droid.web.IApi
@@ -191,6 +193,88 @@ class NotificationListPresenter(
                 view?.markNotificationAsRead(position, id)
             }
         }
+
+    }
+
+    @MainThread
+    fun markAllAsRead() {
+        val notificationCategoryLocal = notificationCategory
+        if (notificationCategoryLocal == null) {
+            analytic.reportEvent(Analytic.Notification.NOTIFICATION_NULL_POINTER)
+        } else {
+            view?.onLoadingMarkingAsRead()
+            threadPoolExecutor.execute {
+                try {
+                    val response = api.markAsReadAllType(notificationCategoryLocal).execute()
+                    if (response.isSuccess) {
+                        notificationList.forEach {
+                            it.is_unread = false
+                        }
+                        mainHandler.post {
+                            bus.post(NotificationMarkCategoryAsReadEvent(notificationCategoryLocal))
+                            view?.markAsReadSuccessfully()
+                        }
+                    }
+                } catch (exception: Exception) {
+                    mainHandler.post {
+                        view?.onConnectionProblemWhenMarkAllFail()
+                    }
+                } finally {
+                    mainHandler.post {
+                        view?.makeEnableMarkAllButton()
+                    }
+                }
+            }
+        }
+
+    }
+
+    @Subscribe
+    @MainThread
+    fun onMarkCategoryRead(event: NotificationMarkCategoryAsReadEvent) {
+        if (event.category == notificationCategory) {
+            //already mark
+            return
+        }
+
+        if (notificationCategory == null || (notificationCategory != NotificationCategory.all && event.category != NotificationCategory.all)) {
+            //if we update in not all and it is not all -> do not need extra check
+            return
+        }
+
+        val category = event.category
+        threadPoolExecutor.execute {
+            val listForNotificationForUI = notificationList
+                    .filter {
+                        it.is_unread ?: false
+                    }
+                    .filter {
+                        val notCategory: NotificationCategory = when (it.type) {
+                            NotificationType.comments -> NotificationCategory.comments
+                            NotificationType.default -> NotificationCategory.default
+                            NotificationType.review -> NotificationCategory.review
+                            NotificationType.teach -> NotificationCategory.teach
+                            NotificationType.learn -> NotificationCategory.learn
+                            null -> NotificationCategory.all
+                        }
+                        notCategory == category
+                    }
+
+            val list: List <Pair<Int?, Long?>> = listForNotificationForUI.map {
+                val first = notificationMapIdToPosition[it.id]
+                Pair(first, it.id)
+            }
+            if (list.isNotEmpty()) {
+                mainHandler.post {
+                    list.forEach {
+                        if (it.first != null && it.second != null) {
+                            view?.markNotificationAsRead(it.first!!, it.second!!)
+                        }
+                    }
+                }
+            }
+        }
+
 
     }
 

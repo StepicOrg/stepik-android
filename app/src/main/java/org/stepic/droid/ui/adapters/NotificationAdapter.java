@@ -7,6 +7,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.joda.time.DateTimeZone;
@@ -49,6 +50,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     private Locale locale;
     private List<Notification> notifications = new ArrayList<>();
     private boolean isNeedShowFooter;
+    private View.OnClickListener markAllReadListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            markAllAsRead();
+        }
+    };
+    private boolean isNeedEnableMarkButton = true;
 
     public NotificationAdapter(Context context, NotificationListPresenter notificationListPresenter) {
         this.context = context;
@@ -139,6 +147,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
     }
 
+    private void markAllAsRead() {
+        notificationListPresenter.markAllAsRead();
+    }
+
+    public void setEnableMarkAllButton(boolean needEnable) {
+        isNeedEnableMarkButton = needEnable;
+        notifyItemChanged(0);
+    }
+
 
     abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 
@@ -221,15 +238,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     class HeaderViewHolder extends GenericViewHolder {
 
         @BindView(R.id.mark_all_as_read_button)
-        View markAllAsViewed;
+        Button markAllAsViewed;
 
         public HeaderViewHolder(View itemView) {
             super(itemView);
+            markAllAsViewed.setOnClickListener(markAllReadListener);
         }
 
         @Override
         void setData(int position) {
-            //it is called in onBind method
+            markAllAsViewed.setEnabled(isNeedEnableMarkButton);
         }
     }
 

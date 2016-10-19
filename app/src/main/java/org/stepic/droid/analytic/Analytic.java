@@ -155,6 +155,7 @@ public interface Analytic {
         String OPEN_NOTIFICATION = "notification_opened";
         String OPEN_NOTIFICATION_SYLLABUS = "notification_opened_syllabus";
         String ID_WAS_NULL = "notification_id_was_null";
+        String NOTIFICATION_NULL_POINTER = "notification_unpredicatable_null";
     }
 
     interface Feedback {
