@@ -249,15 +249,19 @@ class NotificationListPresenter(
                         it.is_unread ?: false
                     }
                     .filter {
-                        val notCategory: NotificationCategory = when (it.type) {
-                            NotificationType.comments -> NotificationCategory.comments
-                            NotificationType.default -> NotificationCategory.default
-                            NotificationType.review -> NotificationCategory.review
-                            NotificationType.teach -> NotificationCategory.teach
-                            NotificationType.learn -> NotificationCategory.learn
-                            null -> NotificationCategory.all
+                        if (category == NotificationCategory.all) {
+                            true
+                        } else {
+                            val notCategory: NotificationCategory = when (it.type) {
+                                NotificationType.comments -> NotificationCategory.comments
+                                NotificationType.default -> NotificationCategory.default
+                                NotificationType.review -> NotificationCategory.review
+                                NotificationType.teach -> NotificationCategory.teach
+                                NotificationType.learn -> NotificationCategory.learn
+                                null -> NotificationCategory.all
+                            }
+                            notCategory == category
                         }
-                        notCategory == category
                     }
 
             val list: List <Pair<Int?, Long?>> = listForNotificationForUI.map {
