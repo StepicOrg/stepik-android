@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Stepik</string>
+    <string name="host_name" translatable="false">stepik.org</string>
+    <string name="secondary_host_name" translatable="false">stepic.org</string>
     <string name="yet_have_not_account">"Don\'t have an account yet? Sign up"</string>
     <string name="or_sign_up_with_email">or sign up with e-mail</string>
     <string name="sign_up">Sign up</string>

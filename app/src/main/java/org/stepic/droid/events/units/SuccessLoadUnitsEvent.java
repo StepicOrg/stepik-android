@@ -1,32 +1,24 @@
 package org.stepic.droid.events.units;
 
 import org.stepic.droid.model.Section;
-import org.stepic.droid.web.UnitStepicResponse;
+import org.stepic.droid.model.Unit;
 
-import retrofit.Response;
-import retrofit.Retrofit;
+import java.util.List;
 
 public class SuccessLoadUnitsEvent {
     private final Section section;
-    private final Response<UnitStepicResponse> response;
-    private final Retrofit retrofit;
+    private final List<Unit> unitList;
 
-    public SuccessLoadUnitsEvent(Section section, Response<UnitStepicResponse> response, Retrofit retrofit) {
-
+    public SuccessLoadUnitsEvent(Section section, List<Unit> unitList) {
         this.section = section;
-        this.response = response;
-        this.retrofit = retrofit;
+        this.unitList = unitList;
     }
 
     public Section getSection() {
         return section;
     }
 
-    public Response<UnitStepicResponse> getResponse() {
-        return response;
-    }
-
-    public Retrofit getRetrofit() {
-        return retrofit;
+    public List<Unit> getUnitList() {
+        return unitList;
     }
 }
