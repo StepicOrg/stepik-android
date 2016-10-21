@@ -3,7 +3,6 @@ package org.stepic.droid.analytic;
 import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
@@ -77,6 +76,15 @@ public interface Analytic {
         String OPEN_STEP_IN_WEB = "Screen manager: open Step in Web";
         String REMIND_PASSWORD = "Screen manager: remind password";
         String OPEN_LINK_IN_WEB = "open_link";
+
+        String USER_OPEN_MY_COURSES = "main_choice_my_courses";
+        String USER_OPEN_FIND_COURSES = "main_choice_find_courses";
+        String USER_OPEN_DOWNLOADS = "main_choice_downloads";
+        String USER_OPEN_CERTIFICATES = "main_choice_certificates";
+        String USER_OPEN_FEEDBACK = "main_choice_feedback";
+        String USER_OPEN_NOTIFICATIONS = "main_choice_notifications";
+        String USER_OPEN_SETTINGS = "main_choice_settings";
+        String USER_LOGOUT = "main_choice_logout";
     }
 
     interface Video {
@@ -201,6 +209,8 @@ public interface Analytic {
         String COPY_LINK_CERTIFICATE = "certificate_copy_link";
         String SHARE_LINK_CERTIFICATE = "certificate_share";
         String ADD_LINKEDIN = "certificate_add_linkeding";
+        String OPEN_IN_BROWSER = "certificate_open_browser";
+        String CLICK_SHARE_MAIN = "certificate_click_share_main";
     }
 
     interface Filters {
