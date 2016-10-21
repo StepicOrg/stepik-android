@@ -250,4 +250,5 @@
     <string name="discounting_policy_title_settings">Предупреждать об уроках со штрафами за неверные ответы</string>
     <string name="discounting_policy_message">Если Вы отправите неверное решение этого задания, то в дальнейшем Вы можете не получить баллы. Вы уверены?</string>
     <string name="keep_screen_on_title_settings">Оставлять экран включенным во время решения задач</string>
+    <string name="not_now">Не сейчас</string>
 </resources>
