@@ -258,4 +258,5 @@
     <string name="discounting_policy_message">If you send the wrong submission of this task, in the future, you can not get the points. Are you sure?</string>
     <string name="keep_screen_on_title_settings">Keep screen on, when solve steps</string>
     <string name="not_now">Not now</string>
+    <string name="after_hide_calendar_message">You can add deadlines in top menu</string>
 </resources>

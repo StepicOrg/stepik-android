@@ -196,6 +196,7 @@ public interface Analytic {
         String SHOW_CALENDAR_AS_WIDGET = "calendar_shown_as_widget";
         String SHOW_CALENDAR = "calendar_shown"; // course with deadlines in future
         String HIDE_WIDGET_FROM_PREFS = "widget_hidden_from_prefs";
+        java.lang.String USER_CLICK_NOT_NOW = "calendar_click_not_now";
     }
 
     interface DeepLink {

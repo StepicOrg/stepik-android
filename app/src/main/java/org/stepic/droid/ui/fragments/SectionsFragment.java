@@ -756,4 +756,10 @@ public class SectionsFragment
         }
     }
 
+    @Override
+    public void hideCalendarAfterNotNow() {
+        adapter.setNeedShowCalendarWidget(false);
+        adapter.notifyItemChanged(0);
+        SnackbarExtensionKt.setTextColor(Snackbar.make(rootView, R.string.after_hide_calendar_message, Snackbar.LENGTH_LONG), ColorUtil.INSTANCE.getColorArgb(R.color.white, getContext())).show();
+    }
 }
