@@ -447,6 +447,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @Override
     public void onConnectionFailOnSubmit() {
         blockUIBeforeSubmit(false);
+        showActionButtonLoadState(false);
         Toast.makeText(getContext(), R.string.internet_problem, Toast.LENGTH_SHORT).show();
     }
 
