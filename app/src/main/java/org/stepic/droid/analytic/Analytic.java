@@ -3,7 +3,6 @@ package org.stepic.droid.analytic;
 import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
@@ -211,6 +210,7 @@ public interface Analytic {
         String SHARE_LINK_CERTIFICATE = "certificate_share";
         String ADD_LINKEDIN = "certificate_add_linkeding";
         String OPEN_IN_BROWSER = "certificate_open_browser";
+        String CLICK_SHARE_MAIN = "certificate_click_share_main";
     }
 
     interface Filters {

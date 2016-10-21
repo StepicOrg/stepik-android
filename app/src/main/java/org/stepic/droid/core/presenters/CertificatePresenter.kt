@@ -144,6 +144,7 @@ class CertificatePresenter(val api: IApi,
     fun size() = certificateViewItemList?.size ?: 0
 
     fun showShareDialogForCertificate(certificateViewItem: CertificateViewItem?) {
+        analytic.reportEvent(Analytic.Certificate.CLICK_SHARE_MAIN)
         view?.onNeedShowShareDialog(certificateViewItem)
     }
 
