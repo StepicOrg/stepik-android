@@ -105,6 +105,23 @@ public class HtmlHelper {
         return id;
     }
 
+    private final static String syllabusModulePrefix = "syllabus?module=";
+
+    public static Integer parseModulePositionFromNotification(String htmlRaw) {
+        int indexOfStart = htmlRaw.indexOf(syllabusModulePrefix);
+        if (indexOfStart < 0) return null;
+
+        String begin = htmlRaw.substring(indexOfStart + syllabusModulePrefix.length());
+        int end = begin.indexOf("\"");
+        String substring = begin.substring(0, end);
+
+        try {
+            return Integer.parseInt(substring);
+        } catch (Exception exception) {
+            return null;
+        }
+    }
+
     private static Long parseCourseIdFromNotification(String htmlRaw) {
         int start = htmlRaw.indexOf('<');
         int end = htmlRaw.indexOf('>');

@@ -691,13 +691,31 @@ public class SectionsFragment
 
 
     public void onNewIntent(Intent intent) {
+
+        long simpleCourseId = -1;
+        int simpleModulePosition = -1;
+
         if (intent.getExtras() != null) {
-            course = (Course) (intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
+            Object courseInBundle = intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE);
+            if (courseInBundle != null && courseInBundle instanceof Course) {
+                course = (Course) courseInBundle;
+            } else {
+                try {
+                    simpleCourseId = intent.getExtras().getLong(AppConstants.KEY_COURSE_LONG_ID);
+                    simpleModulePosition = intent.getExtras().getInt(AppConstants.KEY_MODULE_POSITION);
+                } catch (Exception ex) {
+                    //cant parse -> continue
+                }
+            }
         }
         if (course != null) {
             final long courseId = course.getCourseId();
             postNotificationAsReadIfNeed(intent, courseId);
             initScreenByCourse();
+        } else if (simpleCourseId > 0 && simpleModulePosition > 0) {
+            modulePosition = simpleModulePosition;
+            courseFinderPresenter.findCourseById(simpleCourseId);
+            postNotificationAsReadIfNeed(intent, simpleCourseId);
         } else {
             Uri fullUri = intent.getData();
             List<String> pathSegments = fullUri.getPathSegments();
@@ -705,13 +723,11 @@ public class SectionsFragment
             if (pathSegments.size() > 1) {
                 String pathFromWeb = pathSegments.get(1);
                 Long id = HtmlHelper.parseIdFromSlug(pathFromWeb);
-                long simpleId;
                 if (id == null) {
-                    simpleId = -1;
+                    simpleCourseId = -1;
                 } else {
-                    simpleId = id;
+                    simpleCourseId = id;
                 }
-
 
                 try {
                     String rawSectionPosition = fullUri.getQueryParameter("module");
@@ -720,13 +736,13 @@ public class SectionsFragment
                     modulePosition = -1;
                 }
 
-                analytic.reportEvent(Analytic.DeepLink.USER_OPEN_SYLLABUS_LINK, simpleId + "");
+                analytic.reportEvent(Analytic.DeepLink.USER_OPEN_SYLLABUS_LINK, simpleCourseId + "");
                 analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
-                if (simpleId < 0) {
+                if (simpleCourseId < 0) {
                     onCourseUnavailable(new CourseUnavailableForUserEvent());
                 } else {
-                    courseFinderPresenter.findCourseById(simpleId);
-                    postNotificationAsReadIfNeed(intent, simpleId);
+                    courseFinderPresenter.findCourseById(simpleCourseId);
+                    postNotificationAsReadIfNeed(intent, simpleCourseId);
                 }
             } else {
                 onCourseUnavailable(new CourseUnavailableForUserEvent());

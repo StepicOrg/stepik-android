@@ -88,6 +88,23 @@ class HtmlHelperTest{
 //        assertNull(HtmlHelper.parseIdFromSlug(correctSlug))
 //    }
 
+    @Test
+    fun testParseModulePosition(){
+        val text = """ В курсе <a href="/course/%D0%9D%D0%B0%D1%83%D1%87%D0%BD%D0%BE%D0%B5-%D0%BC%D1%8B%D1%88%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5-578/">Научное мышление</a> открылся новый модуль <a href="/course/%D0%9D%D0%B0%D1%83%D1%87%D0%BD%D0%BE%D0%B5-%D0%BC%D1%8B%D1%88%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5-578/syllabus?module=10">Научная этика</a>  """
+        val correctPosition = 10
+
+        assertEquals(correctPosition, HtmlHelper.parseModulePositionFromNotification(text))
+    }
+
+
+    @Test
+    fun testParseModulePositionWithOneDigest(){
+        val text = """ В курсе <a href="/course/%D0%9D%D0%B0%D1%83%D1%87%D0%BD%D0%BE%D0%B5-%D0%BC%D1%8B%D1%88%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5-578/">Научное мышление</a> открылся новый модуль <a href="/course/%D0%9D%D0%B0%D1%83%D1%87%D0%BD%D0%BE%D0%B5-%D0%BC%D1%8B%D1%88%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5-578/syllabus?module=3">Научная этика</a>  """
+        val correctPosition = 3
+
+        assertEquals(correctPosition, HtmlHelper.parseModulePositionFromNotification(text))
+    }
+
 
     private fun predictCourseIdByHtml(courseId : Long, htmlRaw: String){
         val notification = buildNotificationWithHtml(htmlRaw)

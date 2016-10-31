@@ -102,7 +102,13 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
         val intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
         val bundle = Bundle()
-        bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, relatedCourse)
+        val modulePosition = HtmlHelper.parseModulePositionFromNotification(stepicNotification.htmlText)
+        if (courseId >= 0 && modulePosition != null && modulePosition >= 0) {
+            bundle.putLong(AppConstants.KEY_COURSE_LONG_ID, courseId)
+            bundle.putInt(AppConstants.KEY_MODULE_POSITION, modulePosition)
+        } else {
+            bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, relatedCourse)
+        }
         intent.putExtras(bundle)
         intent.action = AppConstants.OPEN_NOTIFICATION
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

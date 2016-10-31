@@ -69,4 +69,5 @@ public class AppConstants {
     public static final int FEATURED_FILTER = 2;
 
     public static final int DEFAULT_NUMBER_IDS_IN_QUERY = 100;
+    public static final java.lang.String KEY_MODULE_POSITION = "section_long_id";
 }
