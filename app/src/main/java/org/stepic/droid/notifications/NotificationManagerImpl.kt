@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.support.annotation.DrawableRes
+import android.support.annotation.MainThread
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import com.bumptech.glide.Glide
@@ -38,6 +39,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                               val databaseFacade: DatabaseFacade,
                               val analytic: Analytic,
                               val textResolver: TextResolver) : INotificationManager {
+
     override fun showNotification(notification: Notification) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             throw RuntimeException("Can't create notification on main thread")
@@ -209,5 +211,33 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     override fun discardAllNotifications(courseId: Long) {
         databaseFacade.removeAllNotificationsByCourseId(courseId)
+    }
+
+    @MainThread
+    override fun tryOpenNotificationInstantly(notification: Notification) {
+        when (notification.type) {
+            NotificationType.learn -> openLearnNotification(notification)
+//            NotificationType.comments -> TODO()
+//            NotificationType.review -> TODO()
+//            NotificationType.teach -> TODO()
+//            NotificationType.default -> TODO()
+//            null -> TODO()
+        }
+
+    }
+
+    @MainThread
+    private fun openLearnNotification(notification: Notification) {
+        val courseId = HtmlHelper.parseCourseIdFromNotification(notification)
+        val modulePosition = HtmlHelper.parseModulePositionFromNotification(notification.htmlText)
+        if (courseId != null && courseId >= 0 && modulePosition != null && modulePosition >= 0) {
+            val intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
+            val bundle = Bundle()
+            bundle.putLong(AppConstants.KEY_COURSE_LONG_ID, courseId)
+            bundle.putInt(AppConstants.KEY_MODULE_POSITION, modulePosition)
+            intent.putExtras(bundle)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            MainApplication.getAppContext().startActivity(intent)
+        }
     }
 }

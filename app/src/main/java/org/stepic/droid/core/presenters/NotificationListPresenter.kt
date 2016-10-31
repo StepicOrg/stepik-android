@@ -303,7 +303,7 @@ class NotificationListPresenter(
     }
 
     fun tryToOpenNotification(notification: Notification) {
-//        notificationManager.showNotification()
+        notificationManager.tryOpenNotificationInstantly(notification)
     }
 
     fun trackClickOnNotification(notification: Notification) {
