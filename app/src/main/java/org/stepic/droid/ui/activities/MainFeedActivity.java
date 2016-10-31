@@ -119,7 +119,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         initGoogleApiClient();
         initDrawerHeader();
         setUpToolbar();
-        setupDrawerLayout();
+        setUpDrawerLayout();
         Bundle extras = getIntent().getExtras();
         if (savedInstanceState != null) {
             initFragments(savedInstanceState);
@@ -332,7 +332,9 @@ public class MainFeedActivity extends BackToExitActivityBase
             case R.id.certificates:
                 analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES);
                 break;
-            //// FIXME: 21.10.16 add notifications
+            case R.id.notifications:
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_NOTIFICATIONS);
+                break;
         }
     }
 
