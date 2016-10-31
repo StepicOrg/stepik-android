@@ -78,7 +78,6 @@ import org.stepic.droid.util.SnackbarExtensionKt;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.StringUtil;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
@@ -696,30 +695,8 @@ public class SectionsFragment
             course = (Course) (intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
         }
         if (course != null) {
-            if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
-                analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION);
-                analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION_SYLLABUS, course.getCourseId() + "");
-                final long courseId = course.getCourseId();
-                AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        List<Notification> notifications = databaseFacade.getAllNotificationsOfCourse(courseId);
-                        notificationManager.discardAllNotifications(courseId);
-                        for (Notification notificationItem : notifications) {
-                            if (notificationItem != null && notificationItem.getId() != null) {
-                                try {
-                                    shell.getApi().setReadStatusForNotification(notificationItem.getId(), true).execute();
-                                } catch (IOException e) {
-                                    analytic.reportError(Analytic.Error.NOTIFICATION_NOT_POSTED_ON_CLICK, e);
-                                }
-                            }
-                        }
-                        return null;
-                    }
-                };
-                task.executeOnExecutor(threadPoolExecutor);
-            }
-
+            final long courseId = course.getCourseId();
+            postNotificationAsReadIfNeed(intent, courseId);
             initScreenByCourse();
         } else {
             Uri fullUri = intent.getData();
@@ -749,10 +726,36 @@ public class SectionsFragment
                     onCourseUnavailable(new CourseUnavailableForUserEvent());
                 } else {
                     courseFinderPresenter.findCourseById(simpleId);
+                    postNotificationAsReadIfNeed(intent, simpleId);
                 }
             } else {
                 onCourseUnavailable(new CourseUnavailableForUserEvent());
             }
+        }
+    }
+
+    private void postNotificationAsReadIfNeed(Intent intent, final long courseId) {
+        if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
+            analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION);
+            analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION_SYLLABUS, courseId + "");
+            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    List<Notification> notifications = databaseFacade.getAllNotificationsOfCourse(courseId);
+                    notificationManager.discardAllNotifications(courseId);
+                    for (Notification notificationItem : notifications) {
+                        if (notificationItem != null && notificationItem.getId() != null) {
+                            try {
+                                shell.getApi().setReadStatusForNotification(notificationItem.getId(), true).execute();
+                            } catch (Exception e) {
+                                analytic.reportError(Analytic.Error.NOTIFICATION_NOT_POSTED_ON_CLICK, e);
+                            }
+                        }
+                    }
+                    return null;
+                }
+            };
+            task.executeOnExecutor(threadPoolExecutor);
         }
     }
 

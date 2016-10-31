@@ -11,6 +11,7 @@ import org.stepic.droid.core.presenters.contracts.NotificationListView
 import org.stepic.droid.events.InternetIsEnabledEvent
 import org.stepic.droid.events.notify_ui.NotificationCheckedSuccessfullyEvent
 import org.stepic.droid.events.notify_ui.NotificationMarkCategoryAsReadEvent
+import org.stepic.droid.notifications.INotificationManager
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
 import org.stepic.droid.ui.NotificationCategory
@@ -28,7 +29,8 @@ class NotificationListPresenter(
         val api: IApi,
         val config: IConfig,
         val bus: Bus,
-        val analytic: Analytic
+        val analytic: Analytic,
+        val notificationManager: INotificationManager
 ) : PresenterBase<NotificationListView>() {
 
     private var notificationCategory: NotificationCategory? = null
@@ -301,7 +303,7 @@ class NotificationListPresenter(
     }
 
     fun tryToOpenNotification(notification: Notification) {
-
+//        notificationManager.showNotification()
     }
 
     fun trackClickOnNotification(notification: Notification) {
