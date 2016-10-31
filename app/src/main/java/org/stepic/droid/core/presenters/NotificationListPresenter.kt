@@ -49,7 +49,7 @@ class NotificationListPresenter(
         super.detachView(view)
     }
 
-    fun refresh (notificationCategory: NotificationCategory){
+    fun refresh(notificationCategory: NotificationCategory) {
 
     }
 
@@ -57,7 +57,7 @@ class NotificationListPresenter(
      * return false if were cancelled
      */
     @MainThread
-    fun init(notificationCategory: NotificationCategory) : Boolean {
+    fun init(notificationCategory: NotificationCategory): Boolean {
         this.notificationCategory = notificationCategory
         if (!isLoading && !wasShown) {
             //it is not lock, it is just check, but we still can enter twice if we use it in multithreading way, but it is only for main thread.
@@ -298,6 +298,14 @@ class NotificationListPresenter(
         if (notificationList.isEmpty() && category != null) {
             init(category);
         }
+    }
+
+    fun tryToOpenNotification(notification: Notification) {
+
+    }
+
+    fun trackClickOnNotification(notification: Notification) {
+        analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_CLICKED_IN_CENTER, notification.id.toString(), notification.type?.name ?: "")
     }
 
 }

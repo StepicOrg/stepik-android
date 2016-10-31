@@ -133,6 +133,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 notification.set_unread(false);
                 notifyItemChanged(adapterPosition);
             }
+
+            notificationListPresenter.trackClickOnNotification(notification);
+            notificationListPresenter.tryToOpenNotification(notification);
         }
     }
 

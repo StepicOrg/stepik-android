@@ -153,7 +153,7 @@ public interface Analytic {
     interface Notification {
         String DISABLED_BY_USER = "Notification is disabled by user in app";
         String ACTION_NOT_SUPPORT = "notification action is not support";
-        String HTML_WAS_NULL = "notification action is not support"; //// FIXME: 22.09.16 similar analytic
+        String HTML_WAS_NULL = "notification_html_was_null";
         String WAS_MUTED = "notification html text was muted";
         String NOT_SUPPORT = "notification is not support";
         String LEARN_SHOWN = "notification learn is shown";
@@ -164,6 +164,7 @@ public interface Analytic {
         String OPEN_NOTIFICATION_SYLLABUS = "notification_opened_syllabus";
         String ID_WAS_NULL = "notification_id_was_null";
         String NOTIFICATION_NULL_POINTER = "notification_unpredicatable_null";
+        String NOTIFICATION_CLICKED_IN_CENTER = "notification_clicked_in_center";
     }
 
     interface Feedback {

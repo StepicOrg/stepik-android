@@ -36,8 +36,8 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                               val configs: IConfig,
                               val userPreferences: UserPreferences,
                               val databaseFacade: DatabaseFacade,
-                              val analytic : Analytic,
-                              val textResolver : TextResolver) : INotificationManager {
+                              val analytic: Analytic,
+                              val textResolver: TextResolver) : INotificationManager {
     override fun showNotification(notification: Notification) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             throw RuntimeException("Can't create notification on main thread")
@@ -52,7 +52,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     private fun resolveAndSendNotification(notification: Notification) {
         val htmlText = notification.htmlText
         if (!NotificationHelper.isNotificationValidByAction(notification.action)) {
-            analytic.reportEventWithIdName(Analytic.Notification.ACTION_NOT_SUPPORT, notification.id.toString(), notification.action)
+            analytic.reportEventWithIdName(Analytic.Notification.ACTION_NOT_SUPPORT, notification.id.toString(), notification.type?.name ?: "")
             return
         } else if (htmlText == null || htmlText.isEmpty()) {
             analytic.reportEvent(Analytic.Notification.HTML_WAS_NULL, notification.id.toString())
@@ -65,7 +65,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             when (notification.type) {
                 NotificationType.learn -> sendLearnNotification(notification, htmlText, notification.id ?: 0)
                 NotificationType.comments -> sendCommentNotification(notification, htmlText, notification.id ?: 0)
-                else ->analytic.reportEventWithIdName(Analytic.Notification.NOT_SUPPORT, notification.id.toString(), notification.type.toString())
+                else -> analytic.reportEventWithIdName(Analytic.Notification.NOT_SUPPORT, notification.id.toString(), notification.type.toString())
             }
         }
     }
@@ -74,7 +74,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     }
 
     private fun sendLearnNotification(stepicNotification: Notification, rawMessageHtml: String, id: Long) {
-         analytic.reportEvent(Analytic.Notification.LEARN_SHOWN)
+        analytic.reportEvent(Analytic.Notification.LEARN_SHOWN)
 
         val courseId: Long = HtmlHelper.parseCourseIdFromNotification(stepicNotification) ?: 0L
         if (courseId == 0L) {
@@ -141,7 +141,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         } else {
             val inboxStyle = NotificationCompat.InboxStyle()
             for (notificationItem in notificationOfCourseList.reversed()) {
-                val line = textResolver.fromHtml(notificationItem?.htmlText?:"").toString()
+                val line = textResolver.fromHtml(notificationItem?.htmlText ?: "").toString()
                 inboxStyle.addLine(line);
             }
             inboxStyle.setSummaryText(summaryText)
