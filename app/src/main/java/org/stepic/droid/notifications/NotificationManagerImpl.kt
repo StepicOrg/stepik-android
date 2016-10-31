@@ -18,6 +18,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.configuration.IConfig
+import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.model.Course
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
@@ -26,6 +27,7 @@ import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.store.operations.Table
 import org.stepic.droid.ui.activities.SectionActivity
+import org.stepic.droid.ui.activities.StepsActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.HtmlHelper
@@ -38,7 +40,8 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                               val userPreferences: UserPreferences,
                               val databaseFacade: DatabaseFacade,
                               val analytic: Analytic,
-                              val textResolver: TextResolver) : INotificationManager {
+                              val textResolver: TextResolver,
+                              val screenManager: ScreenManager) : INotificationManager {
 
     override fun showNotification(notification: Notification) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
@@ -217,7 +220,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     override fun tryOpenNotificationInstantly(notification: Notification) {
         when (notification.type) {
             NotificationType.learn -> openLearnNotification(notification)
-//            NotificationType.comments -> TODO()
+            NotificationType.comments -> openCommentNotification(notification)
 //            NotificationType.review -> TODO()
 //            NotificationType.teach -> TODO()
 //            NotificationType.default -> TODO()
@@ -226,10 +229,19 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     }
 
+    private fun openCommentNotification(notification: Notification) {
+        val data = HtmlHelper.parseStepIdAndDiscussionId(notification.htmlText ?: "", configs.baseUrl)
+        val intent = Intent(MainApplication.getAppContext(), StepsActivity::class.java)
+        intent.data = Uri.parse(data)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        MainApplication.getAppContext().startActivity(intent)
+    }
+
     @MainThread
     private fun openLearnNotification(notification: Notification) {
         val courseId = HtmlHelper.parseCourseIdFromNotification(notification)
         val modulePosition = HtmlHelper.parseModulePositionFromNotification(notification.htmlText)
+
         if (courseId != null && courseId >= 0 && modulePosition != null && modulePosition >= 0) {
             val intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
             val bundle = Bundle()

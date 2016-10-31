@@ -219,8 +219,9 @@ public class AppCoreModule {
                                                     IConfig config,
                                                     UserPreferences userPreferences,
                                                     DatabaseFacade db, Analytic analytic,
-                                                    TextResolver textResolver) {
-        return new NotificationManagerImpl(sp, api, config, userPreferences, db, analytic, textResolver);
+                                                    TextResolver textResolver,
+                                                    ScreenManager screenManager) {
+        return new NotificationManagerImpl(sp, api, config, userPreferences, db, analytic, textResolver, screenManager);
     }
 
     @Provides

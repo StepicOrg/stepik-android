@@ -4,9 +4,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.notifications.model.Notification;
+
+import timber.log.Timber;
 
 public class HtmlHelper {
 
@@ -215,4 +218,20 @@ public class HtmlHelper {
                 .toString();
     }
 
+    private final static String closedATag = "</a>";
+
+    @Nullable
+    public static String parseStepIdAndDiscussionId(@NotNull String htmlText, String baseUrl) {
+        try {
+            Document document = Jsoup.parse(htmlText);
+            document.setBaseUri(baseUrl);
+            Elements elements = document.getElementsByTag("a");
+            Element our = elements.get(1);
+            String absolute = our.absUrl("href");
+            Timber.d(absolute);
+            return absolute;
+        } catch (Exception exception) {
+            return null;
+        }
+    }
 }
