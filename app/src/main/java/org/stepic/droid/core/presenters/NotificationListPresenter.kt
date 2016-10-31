@@ -303,6 +303,7 @@ class NotificationListPresenter(
     }
 
     fun tryToOpenNotification(notification: Notification) {
+        analytic.reportEvent(Analytic.Notification.NOTIFICATION_CENTER_OPENED)
         notificationManager.tryOpenNotificationInstantly(notification)
     }
 

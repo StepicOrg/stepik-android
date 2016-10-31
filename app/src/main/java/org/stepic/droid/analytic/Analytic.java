@@ -165,6 +165,7 @@ public interface Analytic {
         String ID_WAS_NULL = "notification_id_was_null";
         String NOTIFICATION_NULL_POINTER = "notification_unpredicatable_null";
         String NOTIFICATION_CLICKED_IN_CENTER = "notification_clicked_in_center";
+        String NOTIFICATION_CENTER_OPENED = "notification_center_opened";
     }
 
     interface Feedback {

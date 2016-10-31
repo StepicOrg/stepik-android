@@ -17,7 +17,6 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.presenters.NotificationListPresenter;
 import org.stepic.droid.notifications.model.Notification;
-import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.resolvers.text.TextResolver;
@@ -34,7 +33,7 @@ import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
-public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.GenericViewHolder> implements StepicOnClickItemListener {
+public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.GenericViewHolder> {
 
     private final int itemViewType = 1;
     private final int headerViewType = 2;
@@ -67,7 +66,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         regularTypeface = TypefaceUtils.load(context.getAssets(), "fonts/NotoSans-Regular.ttf");
     }
 
-    public int getNotificationsCount () {
+    public int getNotificationsCount() {
         return notifications.size();
     }
 
@@ -117,8 +116,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         notifyItemChanged(getItemCount() - 1);
     }
 
-    @Override
-    public void onClick(int adapterPosition) {
+    public void onClick(int adapterPosition, boolean needOpenNotification) {
         int positionInList = adapterPosition - countOfHeads;
         if (positionInList >= 0 && positionInList < notifications.size()) {
             Notification notification = notifications.get(positionInList);
@@ -135,7 +133,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             }
 
             notificationListPresenter.trackClickOnNotification(notification);
-            notificationListPresenter.tryToOpenNotification(notification);
+
+            if (needOpenNotification) {
+                notificationListPresenter.tryToOpenNotification(notification);
+            }
         }
     }
 
@@ -201,15 +202,23 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             notificationBody.setMovementMethod(LinkMovementMethod.getInstance());
 
             //for checking notification
-            View.OnClickListener click = new View.OnClickListener() {
+            View.OnClickListener rootClick = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    NotificationAdapter.this.onClick(getAdapterPosition());
+                    NotificationAdapter.this.onClick(getAdapterPosition(), true);
                 }
             };
-            notificationRoot.setOnClickListener(click);
-            notificationBody.setOnClickListener(click);
-            checkImageView.setOnClickListener(click);
+
+            View.OnClickListener onlyCheckView = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NotificationAdapter.this.onClick(getAdapterPosition(), false);
+                }
+            };
+
+            notificationRoot.setOnClickListener(rootClick);
+            notificationBody.setOnClickListener(rootClick);
+            checkImageView.setOnClickListener(onlyCheckView);
         }
 
         public void setData(int position) {
