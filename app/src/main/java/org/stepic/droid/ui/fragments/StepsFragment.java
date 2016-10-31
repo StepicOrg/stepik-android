@@ -169,7 +169,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initIndependentUI();
-        stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepsPresenter.getStepList(), stepTypeResolver); //// FIXME: 19.10.16 use getChildFragmentManager: http://stackoverflow.com/questions/26553865/fragments-inside-viewpager-are-not-destroyed
+        stepAdapter = new StepFragmentAdapter(getChildFragmentManager(), stepsPresenter.getStepList(), stepTypeResolver);
         viewPager.setAdapter(stepAdapter);
         stepsPresenter.attachView(this);
         if (lesson == null) {

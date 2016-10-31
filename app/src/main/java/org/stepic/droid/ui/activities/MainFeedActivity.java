@@ -270,6 +270,7 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
+        sendOpenUserAnalytic(menuItem.getItemId());
         switch (menuItem.getItemId()) {
             case R.id.logout_item:
                 analytic.reportEvent(Analytic.Interaction.CLICK_LOGOUT);
@@ -308,7 +309,34 @@ public class MainFeedActivity extends BackToExitActivityBase
         return true;
     }
 
-    private void setupDrawerLayout() {
+    private void sendOpenUserAnalytic(int itemId) {
+        switch (itemId) {
+            case R.id.logout_item:
+                analytic.reportEvent(Analytic.Screens.USER_LOGOUT);
+                break;
+            case R.id.my_settings:
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_SETTINGS);
+                break;
+            case R.id.my_courses:
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_MY_COURSES);
+                break;
+            case R.id.find_lessons:
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_FIND_COURSES);
+                break;
+            case R.id.cached_videos:
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_DOWNLOADS);
+                break;
+            case R.id.feedback:
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_FEEDBACK);
+                break;
+            case R.id.certificates:
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES);
+                break;
+            //// FIXME: 21.10.16 add notifications
+        }
+    }
+
+    private void setUpDrawerLayout() {
         navigationView.setNavigationItemSelectedListener(this);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_closed);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);

@@ -9,6 +9,7 @@ import java.util.*
 class DefaultFilterImpl(private val context: Context) : DefaultFilter {
 
     private var isNeedRussian: Boolean? = null
+    private val SHOW_FILTER_FEATURE_WITH_LANGUAGE_RESOLVING = "before116"
 
     override fun getDefaultFeatured(filterValue: StepikFilter): Boolean {
         when (filterValue) {
@@ -25,7 +26,7 @@ class DefaultFilterImpl(private val context: Context) : DefaultFilter {
     override fun getDefaultEnrolled(filterValue: StepikFilter): Boolean {
         //my courses is persistent by default
         when (filterValue) {
-            StepikFilter.RUSSIAN -> return isNeedRussian()
+            StepikFilter.RUSSIAN -> return true
             StepikFilter.ENGLISH -> return true
             StepikFilter.UPCOMING -> return true
             StepikFilter.ACTIVE -> return true
@@ -77,6 +78,4 @@ class DefaultFilterImpl(private val context: Context) : DefaultFilter {
         val editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit()
         editor.putBoolean(key, value!!).apply()
     }
-
-    private val SHOW_FILTER_FEATURE_WITH_LANGUAGE_RESOLVING = "before116"
 }

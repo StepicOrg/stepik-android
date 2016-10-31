@@ -257,4 +257,6 @@
     <string name="accessibility_switch_viewed_state">Изменить состояние просмотренности</string>
     <string name="mark_all_as_read">Отметить все как прочитанное</string>
     <string name="empty_notification_title">Пока уведомлений нет</string>
+    <string name="not_now">Не сейчас</string>
+    <string name="after_hide_calendar_message">Добавить дедлайны в календарь можно в верхнем меню</string>
 </resources>
