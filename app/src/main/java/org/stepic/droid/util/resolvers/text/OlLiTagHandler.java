@@ -88,6 +88,7 @@ public class OlLiTagHandler implements Html.TagHandler {
                 lists.peek().closeItem(output, lists.size());
             }
         } else {
+//            Timber.d("Found an unsupported tag %s", tag);
         }
     }
 
