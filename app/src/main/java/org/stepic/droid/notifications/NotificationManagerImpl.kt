@@ -59,7 +59,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     private fun resolveAndSendNotification(notification: Notification) {
         val htmlText = notification.htmlText
         if (!NotificationHelper.isNotificationValidByAction(notification.action)) {
-            analytic.reportEventWithIdName(Analytic.Notification.ACTION_NOT_SUPPORT, notification.id.toString(), notification.type?.name ?: "")
+            analytic.reportEventWithIdName(Analytic.Notification.ACTION_NOT_SUPPORT, notification.id.toString(), notification.action ?: "")
             return
         } else if (htmlText == null || htmlText.isEmpty()) {
             analytic.reportEvent(Analytic.Notification.HTML_WAS_NULL, notification.id.toString())
