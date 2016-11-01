@@ -444,7 +444,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             screenManager.showCertificates()
             return true
         } else if (notification.action == NotificationHelper.ISSUED_LICENSE) {
-            val intent : Intent = getLicenseIntent(notification)?: return false
+            val intent: Intent = getLicenseIntent(notification) ?: return false
             MainApplication.getAppContext().startActivity(intent)
             return true
         } else {
@@ -452,7 +452,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             val modulePosition = HtmlHelper.parseModulePositionFromNotification(notification.htmlText)
 
             if (courseId != null && courseId >= 0 && modulePosition != null && modulePosition >= 0) {
-                val intent : Intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
+                val intent: Intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
                 val bundle = Bundle()
                 bundle.putLong(AppConstants.KEY_COURSE_LONG_ID, courseId)
                 bundle.putInt(AppConstants.KEY_MODULE_POSITION, modulePosition)
@@ -473,7 +473,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     private fun getTeachIntent(notification: Notification): Intent? {
         val link = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
-        val intent : Intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
+        val intent: Intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
         intent.data = Uri.parse(link)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return intent
