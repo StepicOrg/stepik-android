@@ -49,10 +49,13 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         if (Looper.myLooper() == Looper.getMainLooper()) {
             throw RuntimeException("Can't create notification on main thread")
         }
-        if (userPreferences.isNotificationEnabled && sharedPreferenceHelper.isGcmTokenOk) {
-            resolveAndSendNotification(notification)
-        } else {
+
+        if (!userPreferences.isNotificationEnabled) {
             analytic.reportEvent(Analytic.Notification.DISABLED_BY_USER)
+        } else if (!sharedPreferenceHelper.isGcmTokenOk) {
+            analytic.reportEvent(Analytic.Notification.GCM_TOKEN_NOT_OK)
+        } else {
+            resolveAndSendNotification(notification)
         }
     }
 

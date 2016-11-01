@@ -3,7 +3,6 @@ package org.stepic.droid.analytic;
 import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
@@ -170,6 +169,7 @@ public interface Analytic {
         String OPEN_COMMENT_NOTIFICATION_LINK = "notification_open_comment_link";
         String OPEN_LESSON_NOTIFICATION_LINK = "notification_open_lesson_link";
         String NOTIFICATION_NOT_OPENABLE = "notification_not_openable";
+        String GCM_TOKEN_NOT_OK = "notification_gsm_token_not_ok";
     }
 
     interface Feedback {
