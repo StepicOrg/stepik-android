@@ -2,6 +2,7 @@ package org.stepic.droid.core;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
@@ -72,4 +73,6 @@ public interface IScreenManager {
     void showFilterScreen(Fragment sourceFragment, int requestCode, Table courseType);
 
     void showCertificates();
+
+    Intent getCertificateIntent();
 }

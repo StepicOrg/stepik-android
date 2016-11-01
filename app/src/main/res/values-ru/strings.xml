@@ -261,4 +261,5 @@
     <string name="after_hide_calendar_message">Добавить дедлайны в календарь можно в верхнем меню</string>
     <string name="received_review_title">Получена рецензия</string>
     <string name="new_message_title">Новое сообщение</string>
+    <string name="get_certifcate_title">Получен сертификат</string>
 </resources>

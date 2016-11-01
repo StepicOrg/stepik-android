@@ -141,6 +141,19 @@ public class ScreenManager implements IScreenManager {
         }
     }
 
+
+    @Override
+    public Intent getCertificateIntent() {
+        Context context = MainApplication.getAppContext();
+        int index = MainFeedActivity.getCertificateFragmentIndex();
+        Intent intent = new Intent(context, MainFeedActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Bundle bundle = new Bundle();
+        bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
+        intent.putExtras(bundle);
+        return intent;
+    }
+
     @Override
     public void showCertificates() {
         Context context = MainApplication.getAppContext();

@@ -240,7 +240,7 @@ public interface Analytic {
 
     void reportEvent(String eventName, String id);
 
-    void reportEventWithIdName(String eventName, String id, String name);
+    void reportEventWithIdName(String eventName, String id, @Nullable String name);
 
     void reportEvent(String eventName);
 

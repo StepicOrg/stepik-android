@@ -268,4 +268,5 @@
     <string name="after_hide_calendar_message">You can add deadlines in top menu</string>
     <string name="received_review_title">Received review</string>
     <string name="new_message_title">New message</string>
+    <string name="get_certifcate_title">New certificate</string>
 </resources>

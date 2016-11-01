@@ -157,87 +157,105 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     }
 
     private fun sendLearnNotification(stepicNotification: Notification, rawMessageHtml: String, id: Long) {
-        val courseId: Long = HtmlHelper.parseCourseIdFromNotification(stepicNotification) ?: 0L
-        if (courseId == 0L) {
-            analytic.reportEvent(Analytic.Notification.CANT_PARSE_COURSE_ID, stepicNotification.id.toString())
-            return
-        }
-        stepicNotification.course_id = courseId
-        val notificationOfCourseList: MutableList<Notification?> = databaseFacade.getAllNotificationsOfCourse(courseId)
-        val relatedCourse = getCourse(courseId)
-        var isNeedAdd = true
-        for (notificationItem in notificationOfCourseList) {
-            if (notificationItem?.id == stepicNotification.id) {
-                isNeedAdd = false
-                break
-            }
-        }
+        val action = stepicNotification.action
+        if (action != null && action == NotificationHelper.ISSUED_CERTIFICATE) {
+            val title = MainApplication.getAppContext().getString(R.string.get_certifcate_title)
+            val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
 
-        if (isNeedAdd) {
-            notificationOfCourseList.add(stepicNotification)
-            databaseFacade.addNotification(stepicNotification)
-        }
+            val intent = screenManager.certificateIntent
+//            intent.action = AppConstants.OPEN_NOTIFICATION //FIXME HANDLE OPEN NOTIFICATION IN LESSON FOR CHECK SHOWN
 
-        val largeIcon = getPictureByCourse(relatedCourse)
-        val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
+            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(MainApplication.getAppContext())
+            taskBuilder.addParentStack(StepsActivity::class.java)
+            taskBuilder.addNextIntent(intent)
 
-        val intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
-        val bundle = Bundle()
-        val modulePosition = HtmlHelper.parseModulePositionFromNotification(stepicNotification.htmlText)
-        if (courseId >= 0 && modulePosition != null && modulePosition >= 0) {
-            bundle.putLong(AppConstants.KEY_COURSE_LONG_ID, courseId)
-            bundle.putInt(AppConstants.KEY_MODULE_POSITION, modulePosition)
+            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepicNotification.type?.name)
+            showSimpleNotification(id, justText, taskBuilder, title)
         } else {
-            bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, relatedCourse)
-        }
-        intent.putExtras(bundle)
-        intent.action = AppConstants.OPEN_NOTIFICATION
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
-        val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(MainApplication.getAppContext())
-        taskBuilder.addParentStack(SectionActivity::class.java)
-        taskBuilder.addNextIntent(intent)
 
-        val pendingIntent = taskBuilder.getPendingIntent(courseId.toInt(), PendingIntent.FLAG_ONE_SHOT)
+            val courseId: Long = HtmlHelper.parseCourseIdFromNotification(stepicNotification) ?: 0L
+            if (courseId == 0L) {
+                analytic.reportEvent(Analytic.Notification.CANT_PARSE_COURSE_ID, stepicNotification.id.toString())
+                return
+            }
+            stepicNotification.course_id = courseId
+            val notificationOfCourseList: MutableList<Notification?> = databaseFacade.getAllNotificationsOfCourse(courseId)
+            val relatedCourse = getCourse(courseId)
+            var isNeedAdd = true
+            for (notificationItem in notificationOfCourseList) {
+                if (notificationItem?.id == stepicNotification.id) {
+                    isNeedAdd = false
+                    break
+                }
+            }
 
-        val title = MainApplication.getAppContext().getString(R.string.app_name)
-        val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
+            if (isNeedAdd) {
+                notificationOfCourseList.add(stepicNotification)
+                databaseFacade.addNotification(stepicNotification)
+            }
 
-        val notification = NotificationCompat.Builder(MainApplication.getAppContext())
-                .setLargeIcon(largeIcon)
-                .setSmallIcon(R.drawable.ic_notification_icon_1) // 1 is better
-                .setContentTitle(title)
-                .setContentText(justText)
-                .setColor(colorArgb)
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setDeleteIntent(getDeleteIntent(courseId))
-        addVibrationIfNeed(notification)
-        addSoundIfNeed(notification)
+            val largeIcon = getPictureByCourse(relatedCourse)
+            val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
 
-        val numberOfNotification = notificationOfCourseList.size
-        val summaryText = MainApplication.getAppContext().getResources().getQuantityString(R.plurals.notification_plural, numberOfNotification, numberOfNotification)
-        if (notificationOfCourseList.size == 1) {
-            notification.setStyle(NotificationCompat.BigTextStyle()
-                    .bigText(justText))
+            val intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
+            val bundle = Bundle()
+            val modulePosition = HtmlHelper.parseModulePositionFromNotification(stepicNotification.htmlText)
+            if (courseId >= 0 && modulePosition != null && modulePosition >= 0) {
+                bundle.putLong(AppConstants.KEY_COURSE_LONG_ID, courseId)
+                bundle.putInt(AppConstants.KEY_MODULE_POSITION, modulePosition)
+            } else {
+                bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, relatedCourse)
+            }
+            intent.putExtras(bundle)
+            intent.action = AppConstants.OPEN_NOTIFICATION
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(MainApplication.getAppContext())
+            taskBuilder.addParentStack(SectionActivity::class.java)
+            taskBuilder.addNextIntent(intent)
+
+            val pendingIntent = taskBuilder.getPendingIntent(courseId.toInt(), PendingIntent.FLAG_ONE_SHOT)
+
+            val title = MainApplication.getAppContext().getString(R.string.app_name)
+            val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
+
+            val notification = NotificationCompat.Builder(MainApplication.getAppContext())
+                    .setLargeIcon(largeIcon)
+                    .setSmallIcon(R.drawable.ic_notification_icon_1) // 1 is better
+                    .setContentTitle(title)
                     .setContentText(justText)
-                    .setNumber(1)
-        } else {
-            val inboxStyle = NotificationCompat.InboxStyle()
-            for (notificationItem in notificationOfCourseList.reversed()) {
-                val line = textResolver.fromHtml(notificationItem?.htmlText ?: "").toString()
-                inboxStyle.addLine(line);
-            }
-            inboxStyle.setSummaryText(summaryText)
-            notification.setStyle(inboxStyle)
-                    .setNumber(numberOfNotification)
-        }
+                    .setColor(colorArgb)
+                    .setAutoCancel(true)
+                    .setContentIntent(pendingIntent)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setDeleteIntent(getDeleteIntent(courseId))
+            addVibrationIfNeed(notification)
+            addSoundIfNeed(notification)
 
-        analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, stepicNotification.id?.toString() ?: "", stepicNotification.type?.name)
-        analytic.reportEvent(Analytic.Notification.LEARN_SHOWN)
-        val notificationManager = MainApplication.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(courseId.toInt(), notification.build())
+            val numberOfNotification = notificationOfCourseList.size
+            val summaryText = MainApplication.getAppContext().getResources().getQuantityString(R.plurals.notification_plural, numberOfNotification, numberOfNotification)
+            if (notificationOfCourseList.size == 1) {
+                notification.setStyle(NotificationCompat.BigTextStyle()
+                        .bigText(justText))
+                        .setContentText(justText)
+                        .setNumber(1)
+            } else {
+                val inboxStyle = NotificationCompat.InboxStyle()
+                for (notificationItem in notificationOfCourseList.reversed()) {
+                    val line = textResolver.fromHtml(notificationItem?.htmlText ?: "").toString()
+                    inboxStyle.addLine(line);
+                }
+                inboxStyle.setSummaryText(summaryText)
+                notification.setStyle(inboxStyle)
+                        .setNumber(numberOfNotification)
+            }
+
+            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, stepicNotification.id?.toString() ?: "", stepicNotification.type?.name)
+            analytic.reportEvent(Analytic.Notification.LEARN_SHOWN)
+            val notificationManager = MainApplication.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.notify(courseId.toInt(), notification.build())
+        }
     }
 
     private fun getDeleteIntent(courseId: Long = -1): PendingIntent {

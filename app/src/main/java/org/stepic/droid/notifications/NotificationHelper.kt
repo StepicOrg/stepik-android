@@ -8,6 +8,7 @@ object NotificationHelper {
     val REVIEW_TAKEN = "review_taken"
     val REPLIED = "replied"
     val COMMENTED = "commented"
+    val ISSUED_CERTIFICATE = "issued_certificate"
 
     init {
 
@@ -18,6 +19,7 @@ object NotificationHelper {
         validActions.add(REVIEW_TAKEN)
         validActions.add(REPLIED)
         validActions.add(COMMENTED)
+        validActions.add(ISSUED_CERTIFICATE)
     }
 
     fun isNotificationValidByAction(notification: Notification): Boolean {
