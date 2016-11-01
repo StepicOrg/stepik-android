@@ -127,9 +127,13 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             val title = MainApplication.getAppContext().getString(R.string.received_review_title)
             val justText: String = textResolver.fromHtml(htmlText).toString()
 
-            val link = HtmlHelper.parseLinkToLessonFromNotification(htmlText, configs.baseUrl) ?: ""
-            val intent = getReviewIntent(link)
-//            intent.action = AppConstants.OPEN_NOTIFICATION //FIXME HANDLE OPEN NOTIFICATION IN LESSON FOR CHECK SHOWN
+            val intent = getReviewIntent(notification = stepikNotification)
+            if (intent == null) {
+                analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, stepikNotification.id.toString())
+                return
+            }
+
+            intent.action = AppConstants.OPEN_NOTIFICATION
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(MainApplication.getAppContext())
             taskBuilder.addParentStack(StepsActivity::class.java)
@@ -139,32 +143,24 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         }
     }
 
-    private fun sendCommentNotification(stepicNotification: Notification, htmlText: String, id: Long) {
-        val action = stepicNotification.action
+    private fun sendCommentNotification(stepikNotification: Notification, htmlText: String, id: Long) {
+        val action = stepikNotification.action
         if (action != null && (action == NotificationHelper.REPLIED || action == NotificationHelper.COMMENTED)) {
             val title = MainApplication.getAppContext().getString(R.string.new_message_title)
             val justText: String = textResolver.fromHtml(htmlText).toString()
 
-            val link: String?
-            if (action == NotificationHelper.REPLIED) {
-                link = HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 1)
-            } else {
-                link = HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 3)
-            }
-
-            if (link == null) {
+            val intent = getCommentIntent(stepikNotification)
+            if (intent == null) {
                 analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
                 return
             }
-
-            val intent = getCommentIntent(link)
-//            intent.action = AppConstants.OPEN_NOTIFICATION //FIXME HANDLE OPEN NOTIFICATION IN LESSON FOR CHECK SHOWN
+            intent.action = AppConstants.OPEN_NOTIFICATION
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(MainApplication.getAppContext())
             taskBuilder.addParentStack(StepsActivity::class.java)
             taskBuilder.addNextIntent(intent)
 
-            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepicNotification.type?.name)
+            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
             showSimpleNotification(id, justText, taskBuilder, title)
         }
     }
@@ -193,55 +189,53 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         notificationManager.notify(id.toInt(), notification.build())
     }
 
-    private fun sendLearnNotification(stepicNotification: Notification, rawMessageHtml: String, id: Long) {
-        val action = stepicNotification.action
+    private fun sendLearnNotification(stepikNotification: Notification, rawMessageHtml: String, id: Long) {
+        val action = stepikNotification.action
         if (action != null && action == NotificationHelper.ISSUED_CERTIFICATE) {
             val title = MainApplication.getAppContext().getString(R.string.get_certifcate_title)
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
 
             val intent = screenManager.certificateIntent
-//          intent.action = AppConstants.OPEN_NOTIFICATION //FIXME HANDLE OPEN NOTIFICATION IN LESSON FOR CHECK SHOWN
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(MainApplication.getAppContext())
             taskBuilder.addParentStack(StepsActivity::class.java)
             taskBuilder.addNextIntent(intent)
 
-            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepicNotification.type?.name)
+            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
             showSimpleNotification(id, justText, taskBuilder, title)
         } else if (action == NotificationHelper.ISSUED_LICENSE) {
             val title = MainApplication.getAppContext().getString(R.string.get_license_message)
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
 
-            val intent = getLicenseIntent(notification = stepicNotification)
-//          intent.action = AppConstants.OPEN_NOTIFICATION //FIXME HANDLE OPEN NOTIFICATION IN LESSON FOR CHECK SHOWN
+            val intent = getLicenseIntent(notification = stepikNotification)
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(MainApplication.getAppContext())
             taskBuilder.addNextIntent(intent)
 
-            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepicNotification.type?.name)
+            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
             showSimpleNotification(id, justText, taskBuilder, title)
         } else {
 
 
-            val courseId: Long = HtmlHelper.parseCourseIdFromNotification(stepicNotification) ?: 0L
+            val courseId: Long = HtmlHelper.parseCourseIdFromNotification(stepikNotification) ?: 0L
             if (courseId == 0L) {
-                analytic.reportEvent(Analytic.Notification.CANT_PARSE_COURSE_ID, stepicNotification.id.toString())
+                analytic.reportEvent(Analytic.Notification.CANT_PARSE_COURSE_ID, stepikNotification.id.toString())
                 return
             }
-            stepicNotification.course_id = courseId
+            stepikNotification.course_id = courseId
             val notificationOfCourseList: MutableList<Notification?> = databaseFacade.getAllNotificationsOfCourse(courseId)
             val relatedCourse = getCourse(courseId)
             var isNeedAdd = true
             for (notificationItem in notificationOfCourseList) {
-                if (notificationItem?.id == stepicNotification.id) {
+                if (notificationItem?.id == stepikNotification.id) {
                     isNeedAdd = false
                     break
                 }
             }
 
             if (isNeedAdd) {
-                notificationOfCourseList.add(stepicNotification)
-                databaseFacade.addNotification(stepicNotification)
+                notificationOfCourseList.add(stepikNotification)
+                databaseFacade.addNotification(stepikNotification)
             }
 
             val largeIcon = getPictureByCourse(relatedCourse)
@@ -249,7 +243,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
             val intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
             val bundle = Bundle()
-            val modulePosition = HtmlHelper.parseModulePositionFromNotification(stepicNotification.htmlText)
+            val modulePosition = HtmlHelper.parseModulePositionFromNotification(stepikNotification.htmlText)
             if (courseId >= 0 && modulePosition != null && modulePosition >= 0) {
                 bundle.putLong(AppConstants.KEY_COURSE_LONG_ID, courseId)
                 bundle.putInt(AppConstants.KEY_MODULE_POSITION, modulePosition)
@@ -283,7 +277,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             addSoundIfNeed(notification)
 
             val numberOfNotification = notificationOfCourseList.size
-            val summaryText = MainApplication.getAppContext().getResources().getQuantityString(R.plurals.notification_plural, numberOfNotification, numberOfNotification)
+            val summaryText = MainApplication.getAppContext().resources.getQuantityString(R.plurals.notification_plural, numberOfNotification, numberOfNotification)
             if (notificationOfCourseList.size == 1) {
                 notification.setStyle(NotificationCompat.BigTextStyle()
                         .bigText(justText))
@@ -293,14 +287,14 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                 val inboxStyle = NotificationCompat.InboxStyle()
                 for (notificationItem in notificationOfCourseList.reversed()) {
                     val line = textResolver.fromHtml(notificationItem?.htmlText ?: "").toString()
-                    inboxStyle.addLine(line);
+                    inboxStyle.addLine(line)
                 }
                 inboxStyle.setSummaryText(summaryText)
                 notification.setStyle(inboxStyle)
                         .setNumber(numberOfNotification)
             }
 
-            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, stepicNotification.id?.toString() ?: "", stepicNotification.type?.name)
+            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, stepikNotification.id?.toString() ?: "", stepikNotification.type?.name)
             analytic.reportEvent(Analytic.Notification.LEARN_SHOWN)
             val notificationManager = MainApplication.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.notify(courseId.toInt(), notification.build())
@@ -308,7 +302,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     }
 
     private fun getDeleteIntent(courseId: Long = -1): PendingIntent {
-        val onNotificationDiscarded = Intent(MainApplication.getAppContext(), NotificationBroadcastReceiver::class.java);
+        val onNotificationDiscarded = Intent(MainApplication.getAppContext(), NotificationBroadcastReceiver::class.java)
         onNotificationDiscarded.action = AppConstants.NOTIFICATION_CANCELED
         val bundle = Bundle()
         if (courseId < 0) {
@@ -344,7 +338,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     }
 
     private fun getBitmap(@DrawableRes drawable: Int): Bitmap {
-        return BitmapFactory.decodeResource(MainApplication.getAppContext().resources, drawable);
+        return BitmapFactory.decodeResource(MainApplication.getAppContext().resources, drawable)
     }
 
     private fun addVibrationIfNeed(builder: NotificationCompat.Builder) {
@@ -356,7 +350,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     private fun addSoundIfNeed(builder: NotificationCompat.Builder) {
         if (userPreferences.isSoundNotificationEnabled) {
             val stepicSound = Uri.parse("android.resource://"
-                    + MainApplication.getAppContext().getPackageName() + "/" + R.raw.default_sound);
+                    + MainApplication.getAppContext().packageName + "/" + R.raw.default_sound)
             builder.setSound(stepicSound)
         }
     }
@@ -382,7 +376,10 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     }
 
     private fun openTeach(notification: Notification): Boolean {
-        return false
+        val intent: Intent? = getTeachIntent(notification) ?: return false
+        analytic.reportEvent(Analytic.Notification.OPEN_TEACH_CENTER)
+        MainApplication.getAppContext().startActivity(intent)
+        return true
     }
 
     private fun openDefault(notification: Notification): Boolean {
@@ -400,44 +397,44 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         val data = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 1) ?: return null
         val intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
         intent.data = Uri.parse(data)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return intent
     }
 
     private fun openReviewNotification(notification: Notification): Boolean {
-        val data = HtmlHelper.parseLinkToLessonFromNotification(notification.htmlText ?: "", configs.baseUrl) ?: return false
-        val intent = getReviewIntent(data)
+        val intent = getReviewIntent(notification) ?: return false
         MainApplication.getAppContext().startActivity(intent)
         analytic.reportEvent(Analytic.Notification.OPEN_LESSON_NOTIFICATION_LINK)
         return true
     }
 
-    private fun getReviewIntent(link: String): Intent {
+    private fun getReviewIntent(notification: Notification): Intent? {
+        val data = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
         val intent = Intent(MainApplication.getAppContext(), StepsActivity::class.java)
-        intent.data = Uri.parse(link)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.data = Uri.parse(data)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return intent
     }
 
     private fun openCommentNotification(notification: Notification): Boolean {
-        val link: String
-        val action = notification.action
-        val htmlText = notification.htmlText ?: ""
-        if (action == NotificationHelper.REPLIED) {
-            link = HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 1) ?: return false
-        } else {
-            link = HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 3) ?: return false
-        }
-        val intent = getCommentIntent(link)
+        val intent: Intent = getCommentIntent(notification) ?: return false
         analytic.reportEvent(Analytic.Notification.OPEN_COMMENT_NOTIFICATION_LINK)
         MainApplication.getAppContext().startActivity(intent)
         return true
     }
 
-    private fun getCommentIntent(link: String): Intent {
+    private fun getCommentIntent(notification: Notification): Intent? {
+        val link: String
+        val action = notification.action
+        val htmlText = notification.htmlText ?: ""
+        if (action == NotificationHelper.REPLIED) {
+            link = HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 1) ?: return null
+        } else {
+            link = HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 3) ?: return null
+        }
         val intent = Intent(MainApplication.getAppContext(), StepsActivity::class.java)
         intent.data = Uri.parse(link)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return intent
     }
 
@@ -447,7 +444,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             screenManager.showCertificates()
             return true
         } else if (notification.action == NotificationHelper.ISSUED_LICENSE) {
-            val intent = getLicenseIntent(notification)
+            val intent : Intent = getLicenseIntent(notification)?: return false
             MainApplication.getAppContext().startActivity(intent)
             return true
         } else {
@@ -455,12 +452,12 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             val modulePosition = HtmlHelper.parseModulePositionFromNotification(notification.htmlText)
 
             if (courseId != null && courseId >= 0 && modulePosition != null && modulePosition >= 0) {
-                val intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
+                val intent : Intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
                 val bundle = Bundle()
                 bundle.putLong(AppConstants.KEY_COURSE_LONG_ID, courseId)
                 bundle.putInt(AppConstants.KEY_MODULE_POSITION, modulePosition)
                 intent.putExtras(bundle)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 MainApplication.getAppContext().startActivity(intent)
                 return true
             } else {
@@ -476,9 +473,9 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     private fun getTeachIntent(notification: Notification): Intent? {
         val link = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
-        val intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
+        val intent : Intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
         intent.data = Uri.parse(link)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return intent
     }
 }
