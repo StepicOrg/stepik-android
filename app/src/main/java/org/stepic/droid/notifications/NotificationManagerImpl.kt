@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.support.annotation.DrawableRes
-import android.support.annotation.MainThread
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import com.bumptech.glide.Glide
@@ -42,8 +41,6 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                               val analytic: Analytic,
                               val textResolver: TextResolver,
                               val screenManager: ScreenManager) : INotificationManager {
-
-    val issuedCertificateActionValue = "issued_certificate"
 
     override fun showNotification(notification: Notification) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
@@ -100,7 +97,6 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             showSimpleNotification(id, justText, taskBuilder, title)
         }
     }
-
 
     private fun sendCommentNotification(stepicNotification: Notification, htmlText: String, id: Long) {
         val action = stepicNotification.action
@@ -163,10 +159,22 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
 
             val intent = screenManager.certificateIntent
-//            intent.action = AppConstants.OPEN_NOTIFICATION //FIXME HANDLE OPEN NOTIFICATION IN LESSON FOR CHECK SHOWN
+//          intent.action = AppConstants.OPEN_NOTIFICATION //FIXME HANDLE OPEN NOTIFICATION IN LESSON FOR CHECK SHOWN
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(MainApplication.getAppContext())
             taskBuilder.addParentStack(StepsActivity::class.java)
+            taskBuilder.addNextIntent(intent)
+
+            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepicNotification.type?.name)
+            showSimpleNotification(id, justText, taskBuilder, title)
+        } else if (action == NotificationHelper.ISSUED_LICENSE) {
+            val title = MainApplication.getAppContext().getString(R.string.get_license_message)
+            val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
+
+            val intent = getLicenseIntent(notification = stepicNotification)
+//          intent.action = AppConstants.OPEN_NOTIFICATION //FIXME HANDLE OPEN NOTIFICATION IN LESSON FOR CHECK SHOWN
+
+            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(MainApplication.getAppContext())
             taskBuilder.addNextIntent(intent)
 
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepicNotification.type?.name)
@@ -316,7 +324,6 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         databaseFacade.removeAllNotificationsByCourseId(courseId)
     }
 
-    @MainThread
     override fun tryOpenNotificationInstantly(notification: Notification) {
         val isShown = when (notification.type) {
             NotificationType.learn -> openLearnNotification(notification)
@@ -351,7 +358,6 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         }
     }
 
-    @MainThread
     private fun openReviewNotification(notification: Notification): Boolean {
         val data = HtmlHelper.parseLinkToLessonFromNotification(notification.htmlText ?: "", configs.baseUrl) ?: return false
         val intent = getReviewIntent(data)
@@ -367,7 +373,6 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         return intent
     }
 
-    @MainThread
     private fun openCommentNotification(notification: Notification): Boolean {
         val link: String
         val action = notification.action
@@ -390,11 +395,14 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         return intent
     }
 
-    @MainThread
     private fun openLearnNotification(notification: Notification): Boolean {
-        if (notification.action != null && notification.action == issuedCertificateActionValue) {
+        if (notification.action != null && notification.action == NotificationHelper.ISSUED_CERTIFICATE) {
             analytic.reportEvent(Analytic.Certificate.OPEN_CERTIFICATE_FROM_NOTIFICATION_CENTER)
             screenManager.showCertificates()
+            return true
+        } else if (notification.action == NotificationHelper.ISSUED_LICENSE) {
+            val intent = getLicenseIntent(notification)
+            MainApplication.getAppContext().startActivity(intent)
             return true
         } else {
             val courseId = HtmlHelper.parseCourseIdFromNotification(notification)
@@ -413,5 +421,10 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                 return false
             }
         }
+    }
+
+    private fun getLicenseIntent(notification: Notification): Intent? {
+        val link = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
+        return screenManager.getOpenInWebIntent(link)
     }
 }

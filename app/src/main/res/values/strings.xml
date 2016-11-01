@@ -269,4 +269,5 @@
     <string name="received_review_title">Received review</string>
     <string name="new_message_title">New message</string>
     <string name="get_certifcate_title">New certificate</string>
+    <string name="get_license_message">New license</string>
 </resources>

@@ -75,4 +75,6 @@ public interface IScreenManager {
     void showCertificates();
 
     Intent getCertificateIntent();
+
+    Intent getOpenInWebIntent(String path);
 }

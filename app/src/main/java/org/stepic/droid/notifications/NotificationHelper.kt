@@ -4,11 +4,12 @@ import org.stepic.droid.notifications.model.Notification
 import java.util.*
 
 object NotificationHelper {
-    private val validActions = HashSet<String>(8)
+    private val validActions = HashSet<String>(14)
     val REVIEW_TAKEN = "review_taken"
     val REPLIED = "replied"
     val COMMENTED = "commented"
     val ISSUED_CERTIFICATE = "issued_certificate"
+    val ISSUED_LICENSE = "issued_license"
 
     init {
 
@@ -20,6 +21,7 @@ object NotificationHelper {
         validActions.add(REPLIED)
         validActions.add(COMMENTED)
         validActions.add(ISSUED_CERTIFICATE)
+        validActions.add(ISSUED_LICENSE)
     }
 
     fun isNotificationValidByAction(notification: Notification): Boolean {

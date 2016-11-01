@@ -238,14 +238,21 @@ public class ScreenManager implements IScreenManager {
         activity.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
     }
 
+
     @Override
-    public void openInWeb(Context context, String path) {
-        analytic.reportEventWithIdName(Analytic.Screens.OPEN_LINK_IN_WEB, "0", path);
+    public Intent getOpenInWebIntent(String path) {
         if (!path.startsWith("https://") && !path.startsWith("http://")) {
             path = "http://" + path;
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(path));
+        return intent;
+    }
+
+    @Override
+    public void openInWeb(Context context, String path) {
+        analytic.reportEventWithIdName(Analytic.Screens.OPEN_LINK_IN_WEB, "0", path);
+        final Intent intent = getOpenInWebIntent(path);
         context.startActivity(intent);
     }
 
