@@ -497,6 +497,10 @@ public class MainFeedActivity extends BackToExitActivityBase
         }
     }
 
+    public static int getCertificateFragmentIndex(){
+        return 3;
+    }
+
     public static int getDownloadFragmentIndex() {
         return 2;
     }

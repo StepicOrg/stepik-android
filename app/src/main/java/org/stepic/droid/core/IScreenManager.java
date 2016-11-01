@@ -70,4 +70,6 @@ public interface IScreenManager {
     void addCertificateToLinkedIn(CertificateViewItem certificateViewItem);
 
     void showFilterScreen(Fragment sourceFragment, int requestCode, Table courseType);
+
+    void showCertificates();
 }

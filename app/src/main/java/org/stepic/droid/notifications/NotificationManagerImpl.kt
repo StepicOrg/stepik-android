@@ -43,6 +43,8 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                               val textResolver: TextResolver,
                               val screenManager: ScreenManager) : INotificationManager {
 
+    val issuedCertificateActionValue = "issued_certificate"
+
     override fun showNotification(notification: Notification) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             throw RuntimeException("Can't create notification on main thread")
@@ -251,17 +253,22 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     @MainThread
     private fun openLearnNotification(notification: Notification) {
-        val courseId = HtmlHelper.parseCourseIdFromNotification(notification)
-        val modulePosition = HtmlHelper.parseModulePositionFromNotification(notification.htmlText)
+        if (notification.action != null && notification.action == issuedCertificateActionValue) {
+            analytic.reportEvent(Analytic.Certificate.OPEN_CERTIFICATE_FROM_NOTIFICATION_CENTER)
+            screenManager.showCertificates()
+        } else {
+            val courseId = HtmlHelper.parseCourseIdFromNotification(notification)
+            val modulePosition = HtmlHelper.parseModulePositionFromNotification(notification.htmlText)
 
-        if (courseId != null && courseId >= 0 && modulePosition != null && modulePosition >= 0) {
-            val intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
-            val bundle = Bundle()
-            bundle.putLong(AppConstants.KEY_COURSE_LONG_ID, courseId)
-            bundle.putInt(AppConstants.KEY_MODULE_POSITION, modulePosition)
-            intent.putExtras(bundle)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            MainApplication.getAppContext().startActivity(intent)
+            if (courseId != null && courseId >= 0 && modulePosition != null && modulePosition >= 0) {
+                val intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
+                val bundle = Bundle()
+                bundle.putLong(AppConstants.KEY_COURSE_LONG_ID, courseId)
+                bundle.putInt(AppConstants.KEY_MODULE_POSITION, modulePosition)
+                intent.putExtras(bundle)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                MainApplication.getAppContext().startActivity(intent)
+            }
         }
     }
 }

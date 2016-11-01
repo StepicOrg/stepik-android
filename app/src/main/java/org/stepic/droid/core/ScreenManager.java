@@ -29,10 +29,9 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.store.operations.Table;
-import org.stepic.droid.ui.activities.FilterActivity;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.ui.activities.CommentsActivity;
 import org.stepic.droid.ui.activities.CourseDetailActivity;
+import org.stepic.droid.ui.activities.FilterActivity;
 import org.stepic.droid.ui.activities.LaunchActivity;
 import org.stepic.droid.ui.activities.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
@@ -46,6 +45,7 @@ import org.stepic.droid.ui.activities.TextFeedbackActivity;
 import org.stepic.droid.ui.activities.UnitsActivity;
 import org.stepic.droid.ui.activities.VideoActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.web.ViewAssignment;
 import org.videolan.libvlc.util.VLCUtil;
 
@@ -142,6 +142,13 @@ public class ScreenManager implements IScreenManager {
     }
 
     @Override
+    public void showCertificates() {
+        Context context = MainApplication.getAppContext();
+        int index = MainFeedActivity.getCertificateFragmentIndex();
+        showFromMainActivity(context, index);
+    }
+
+    @Override
     public void showDownload() {
         Context context = MainApplication.getAppContext();
         showDownload(context);
@@ -161,7 +168,7 @@ public class ScreenManager implements IScreenManager {
 
     private void showFromMainActivity(Context context, int index) {
         Intent intent = new Intent(context, MainFeedActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle bundle = new Bundle();
         bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
         intent.putExtras(bundle);
