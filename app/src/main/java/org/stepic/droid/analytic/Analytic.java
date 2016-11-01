@@ -167,6 +167,7 @@ public interface Analytic {
         String NOTIFICATION_CLICKED_IN_CENTER = "notification_clicked_in_center";
         String NOTIFICATION_CENTER_OPENED = "notification_center_opened";
         String OPEN_COMMENT_NOTIFICATION_LINK = "notification_open_comment_link";
+        String OPEN_LESSON_NOTIFICATION_LINK = "notification_open_lesson_link";
     }
 
     interface Feedback {

@@ -221,7 +221,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         when (notification.type) {
             NotificationType.learn -> openLearnNotification(notification)
             NotificationType.comments -> openCommentNotification(notification)
-//            NotificationType.review -> TODO()
+            NotificationType.review -> openReviewNotification(notification)
 //            NotificationType.teach -> TODO()
 //            NotificationType.default -> TODO()
 //            null -> TODO()
@@ -229,8 +229,19 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     }
 
+    @MainThread
+    private fun openReviewNotification(notification: Notification) {
+        val data = HtmlHelper.parseLinkToLessonFromNotifiation(notification.htmlText ?: "", configs.baseUrl) ?: return
+        val intent = Intent(MainApplication.getAppContext(), StepsActivity::class.java)
+        intent.data = Uri.parse(data)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        analytic.reportEvent(Analytic.Notification.OPEN_LESSON_NOTIFICATION_LINK)
+        MainApplication.getAppContext().startActivity(intent)
+    }
+
+    @MainThread
     private fun openCommentNotification(notification: Notification) {
-        val data = HtmlHelper.parseStepIdAndDiscussionId(notification.htmlText ?: "", configs.baseUrl)
+        val data = HtmlHelper.parseLinkToCommentFromNotifiation(notification.htmlText ?: "", configs.baseUrl) ?: return
         val intent = Intent(MainApplication.getAppContext(), StepsActivity::class.java)
         intent.data = Uri.parse(data)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

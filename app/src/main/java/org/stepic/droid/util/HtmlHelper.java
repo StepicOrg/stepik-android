@@ -218,15 +218,28 @@ public class HtmlHelper {
                 .toString();
     }
 
-    private final static String closedATag = "</a>";
-
     @Nullable
-    public static String parseStepIdAndDiscussionId(@NotNull String htmlText, String baseUrl) {
+    public static String parseLinkToCommentFromNotifiation(@NotNull String htmlText, String baseUrl) {
         try {
             Document document = Jsoup.parse(htmlText);
             document.setBaseUri(baseUrl);
             Elements elements = document.getElementsByTag("a");
             Element our = elements.get(1);
+            String absolute = our.absUrl("href");
+            Timber.d(absolute);
+            return absolute;
+        } catch (Exception exception) {
+            return null;
+        }
+    }
+
+    @Nullable
+    public static String parseLinkToLessonFromNotifiation(@NotNull String htmlText, String baseUrl) {
+        try {
+            Document document = Jsoup.parse(htmlText);
+            document.setBaseUri(baseUrl);
+            Elements elements = document.getElementsByTag("a");
+            Element our = elements.get(0);
             String absolute = our.absUrl("href");
             Timber.d(absolute);
             return absolute;
