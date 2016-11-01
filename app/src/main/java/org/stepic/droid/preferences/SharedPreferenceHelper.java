@@ -18,6 +18,7 @@ import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.model.comments.DiscussionOrder;
+import org.stepic.droid.notifications.model.NotificationType;
 import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.RWLocks;
@@ -72,13 +73,35 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_VIBRATION_DISABLED, isNotificationVibrationDisabled);
     }
 
-    public boolean isNotificationDisabled() {
-        //default is enabled
-        return getBoolean(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_DISABLED);
+    public boolean isNotificationDisabled(NotificationType type) {
+        String resultKey = keyByNotificationType(type);
+        if (resultKey == null) return true;
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, resultKey);
     }
 
-    public void setNotificationDisabled(boolean isNotificationDisabled) {
-        put(PreferenceType.DEVICE_SPECIFIC, NOTIFICATION_DISABLED, isNotificationDisabled);
+    @Nullable
+    private String keyByNotificationType(NotificationType type) {
+        switch (type) {
+            case learn:
+                return NOTIFICATION_LEARN_DISABLED;
+            case teach:
+                return NOTIFICATION_TEACH_DISABLED;
+            case comments:
+                return NOTIFICATION_COMMENT_DISABLED;
+            case other:
+                return NOTIFICATION_OTHER_DISABLED;
+            case review:
+                return NOTIFICATION_REVIEW_DISABLED;
+        }
+        return null;
+    }
+
+    public void setNotificationDisabled(NotificationType type, boolean isNotificationDisabled) {
+        String key = keyByNotificationType(type);
+        if (key != null) {
+            analytic.reportEventWithIdName(Analytic.Notification.PERSISTENT_KEY_NULL, "0", type.name());
+            put(PreferenceType.DEVICE_SPECIFIC, key, isNotificationDisabled);
+        }
     }
 
     public boolean isNotificationSoundDisabled() {
@@ -486,7 +509,11 @@ public class SharedPreferenceHelper {
     private final String VIDEO_RATE_PREF_KEY = "video_rate_pref_key";
     private final String VIDEO_EXTERNAL_PREF_KEY = "video_external_pref_key";
     private final String GCM_TOKEN_ACTUAL = "gcm_token_actual";
-    private final String NOTIFICATION_DISABLED = "notification_disabled_by_user";
+    private final String NOTIFICATION_LEARN_DISABLED = "notification_disabled_by_user";
+    private final String NOTIFICATION_COMMENT_DISABLED = "notification_comment_disabled";
+    private final String NOTIFICATION_TEACH_DISABLED = "notification_teach_disabled";
+    private final String NOTIFICATION_REVIEW_DISABLED = "notification_review_disabled";
+    private final String NOTIFICATION_OTHER_DISABLED = "notification_other_disabled";
     private final String NOTIFICATION_VIBRATION_DISABLED = "not_vibrat_disabled";
     private final String SD_CHOSEN = "sd_chosen";
     private final String FIRST_TIME_LAUNCH = "first_time_launch";

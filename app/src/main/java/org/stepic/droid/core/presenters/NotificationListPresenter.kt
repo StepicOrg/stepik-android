@@ -265,7 +265,7 @@ class NotificationListPresenter(
                         } else {
                             val notCategory: NotificationCategory = when (it.type) {
                                 NotificationType.comments -> NotificationCategory.comments
-                                NotificationType.default -> NotificationCategory.default
+                                NotificationType.other -> NotificationCategory.default
                                 NotificationType.review -> NotificationCategory.review
                                 NotificationType.teach -> NotificationCategory.teach
                                 NotificationType.learn -> NotificationCategory.learn

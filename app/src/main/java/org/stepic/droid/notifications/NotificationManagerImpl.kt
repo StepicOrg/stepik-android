@@ -47,7 +47,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             throw RuntimeException("Can't create notification on main thread")
         }
 
-        if (!userPreferences.isNotificationEnabled) {
+        if (!userPreferences.isNotificationEnabled(notification.type)) {
             analytic.reportEvent(Analytic.Notification.DISABLED_BY_USER)
         } else if (!sharedPreferenceHelper.isGcmTokenOk) {
             analytic.reportEvent(Analytic.Notification.GCM_TOKEN_NOT_OK)
@@ -74,7 +74,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                 NotificationType.learn -> sendLearnNotification(notification, htmlText, notification.id ?: 0)
                 NotificationType.comments -> sendCommentNotification(notification, htmlText, notification.id ?: 0)
                 NotificationType.review -> sendReviewType(notification, htmlText, notification.id ?: 0)
-                NotificationType.default -> sendDefaultNotification(notification, htmlText, notification.id ?: 0)
+                NotificationType.other -> sendDefaultNotification(notification, htmlText, notification.id ?: 0)
                 NotificationType.teach -> sendTeachNotification(notification, htmlText, notification.id ?: 0)
                 else -> analytic.reportEventWithIdName(Analytic.Notification.NOT_SUPPORT_TYPE, notification.id.toString(), notification.type.toString()) // it should never execute, because we handle it by action filter
             }
@@ -375,7 +375,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             NotificationType.comments -> openCommentNotification(notification)
             NotificationType.review -> openReviewNotification(notification)
             NotificationType.teach -> openTeach(notification)
-            NotificationType.default -> openDefault(notification)
+            NotificationType.other -> openDefault(notification)
             null -> false
         }
 
