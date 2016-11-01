@@ -49,7 +49,7 @@ class AnalyticImpl(context: Context) : Analytic {
     }
 
     override fun reportError(message: String, throwable: Throwable) {
-        FirebaseCrash.report(throwable);
+        FirebaseCrash.report(throwable)
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             YandexMetrica.reportError(message, throwable)
         }
@@ -70,7 +70,7 @@ class AnalyticImpl(context: Context) : Analytic {
 
     private fun castStringToFirebaseEvent(eventName: String): String {
         var eventNameLocal = eventName
-        if (eventName.equals(Analytic.Interaction.SUCCESS_LOGIN)) {
+        if (eventName == Analytic.Interaction.SUCCESS_LOGIN) {
             eventNameLocal = FirebaseAnalytics.Event.LOGIN
         }
 
