@@ -736,10 +736,13 @@ public class SectionsFragment
                     modulePosition = -1;
                 }
 
-                if (intent.getAction() == null || !intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)){
+                if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
+                    analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION);
+                } else {
                     analytic.reportEvent(Analytic.DeepLink.USER_OPEN_SYLLABUS_LINK, simpleCourseId + "");
                     analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
                 }
+
                 if (simpleCourseId < 0) {
                     onCourseUnavailable(new CourseUnavailableForUserEvent());
                 } else {

@@ -169,8 +169,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
             showSimpleNotification(id, justText, taskBuilder, title)
-        }
-        else{
+        } else {
             analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
         }
     }
@@ -182,6 +181,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
 
             val intent = screenManager.certificateIntent
+            intent.action = AppConstants.OPEN_NOTIFICATION
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(MainApplication.getAppContext())
             taskBuilder.addParentStack(StepsActivity::class.java)

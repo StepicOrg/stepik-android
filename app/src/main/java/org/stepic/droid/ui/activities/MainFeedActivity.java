@@ -105,6 +105,9 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        if (intent.getAction()!= null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)){
+            analytic.reportEvent(AppConstants.OPEN_NOTIFICATION);
+        }
         Bundle extras = intent.getExtras();
         if (extras != null) {
             initFragments(extras);
