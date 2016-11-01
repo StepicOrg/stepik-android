@@ -49,6 +49,7 @@ public class AppConstants {
     public static final java.lang.String NOTIFICATION_CANCELED = "notification_cancelled";
 
 
+    public static final String OPEN_NOTIFICATION_FOR_CHECK_COURSE = "Open_notification_check_course";
     public static final String OPEN_NOTIFICATION = "Open_notification";
     public static final long MILLIS_IN_24HOURS = 86400000L;
     public static final long MILLIS_IN_1HOUR = 3600000L;

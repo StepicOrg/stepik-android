@@ -263,4 +263,5 @@
     <string name="new_message_title">Новое сообщение</string>
     <string name="get_certifcate_title">Получен сертификат</string>
     <string name="get_license_message">Получена лицензия</string>
+    <string name="added_to_group_title">Добавление в группу</string>
 </resources>

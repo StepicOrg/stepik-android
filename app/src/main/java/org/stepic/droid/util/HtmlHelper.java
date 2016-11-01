@@ -262,19 +262,4 @@ public class HtmlHelper {
             return null;
         }
     }
-
-    @Nullable
-    public static String parseLinkToCourseFromDefaultNotifiation(String htmlText, String baseUrl) {
-        try {
-            Document document = Jsoup.parse(htmlText);
-            document.setBaseUri(baseUrl);
-            Elements elements = document.getElementsByTag("a");
-            Element our = elements.get(1);
-            String absolute = our.absUrl("href");
-            Timber.d(absolute);
-            return absolute;
-        } catch (Exception exception) {
-            return null;
-        }
-    }
 }

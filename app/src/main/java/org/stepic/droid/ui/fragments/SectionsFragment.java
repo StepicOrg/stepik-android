@@ -736,8 +736,10 @@ public class SectionsFragment
                     modulePosition = -1;
                 }
 
-                analytic.reportEvent(Analytic.DeepLink.USER_OPEN_SYLLABUS_LINK, simpleCourseId + "");
-                analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
+                if (intent.getAction() == null || !intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)){
+                    analytic.reportEvent(Analytic.DeepLink.USER_OPEN_SYLLABUS_LINK, simpleCourseId + "");
+                    analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
+                }
                 if (simpleCourseId < 0) {
                     onCourseUnavailable(new CourseUnavailableForUserEvent());
                 } else {
@@ -751,7 +753,7 @@ public class SectionsFragment
     }
 
     private void postNotificationAsReadIfNeed(Intent intent, final long courseId) {
-        if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
+        if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION_FOR_CHECK_COURSE)) {
             analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION);
             analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION_SYLLABUS, courseId + "");
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {

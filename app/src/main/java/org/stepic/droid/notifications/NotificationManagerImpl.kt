@@ -74,8 +74,30 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                 NotificationType.learn -> sendLearnNotification(notification, htmlText, notification.id ?: 0)
                 NotificationType.comments -> sendCommentNotification(notification, htmlText, notification.id ?: 0)
                 NotificationType.review -> sendReviewType(notification, htmlText, notification.id ?: 0)
+                NotificationType.default -> sendDefaultNotification(notification, htmlText, notification.id ?: 0)
                 else -> analytic.reportEventWithIdName(Analytic.Notification.NOT_SUPPORT_TYPE, notification.id.toString(), notification.type.toString()) // it should never execute, because we handle it by action filter
             }
+        }
+    }
+
+    private fun sendDefaultNotification(stepikNotification: Notification, htmlText: String, id: Long) {
+        val action = stepikNotification.action
+        if (action != null && action == NotificationHelper.ADDED_TO_GROUP) {
+            val title = MainApplication.getAppContext().getString(R.string.added_to_group_title)
+            val justText: String = textResolver.fromHtml(htmlText).toString()
+
+            val intent = getDefaultIntent(notification = stepikNotification)
+            if (intent == null) {
+                analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
+                return
+            }
+            intent.action = AppConstants.OPEN_NOTIFICATION
+
+            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(MainApplication.getAppContext())
+            taskBuilder.addParentStack(SectionActivity::class.java)
+            taskBuilder.addNextIntent(intent)
+
+            showSimpleNotification(id, justText, taskBuilder, title)
         }
     }
 
@@ -216,7 +238,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                 bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, relatedCourse)
             }
             intent.putExtras(bundle)
-            intent.action = AppConstants.OPEN_NOTIFICATION
+            intent.action = AppConstants.OPEN_NOTIFICATION_FOR_CHECK_COURSE
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(MainApplication.getAppContext())
@@ -345,17 +367,22 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     }
 
     private fun openDefault(notification: Notification): Boolean {
-        if (notification.action != null && notification.action == "added_to_group") {
-            val data = HtmlHelper.parseLinkToCourseFromDefaultNotifiation(notification.htmlText ?: "", configs.baseUrl) ?: return false
-            val intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
-            intent.data = Uri.parse(data)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (notification.action != null && notification.action == NotificationHelper.ADDED_TO_GROUP) {
+            val intent = getDefaultIntent(notification) ?: return false
             analytic.reportEvent(Analytic.Notification.OPEN_COMMENT_NOTIFICATION_LINK)
             MainApplication.getAppContext().startActivity(intent)
             return true
         } else {
             return false
         }
+    }
+
+    private fun getDefaultIntent(notification: Notification): Intent? {
+        val data = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 1) ?: return null
+        val intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
+        intent.data = Uri.parse(data)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent
     }
 
     private fun openReviewNotification(notification: Notification): Boolean {
