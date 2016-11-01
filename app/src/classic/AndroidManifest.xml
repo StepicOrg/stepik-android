@@ -16,10 +16,10 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data android:host="@string/host_name"/>
-                <data android:host="@string/secondary_host_name"/>
-                <data android:pathPattern="/oauth"/>
-                <data android:scheme="stepic"/>
+                <link android:host="@string/host_name"/>
+                <link android:host="@string/secondary_host_name"/>
+                <link android:pathPattern="/oauth"/>
+                <link android:scheme="stepic"/>
 
             </intent-filter>
         </activity>

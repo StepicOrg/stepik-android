@@ -61,7 +61,8 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     private fun resolveAndSendNotification(notification: Notification) {
         val htmlText = notification.htmlText
-        if (!NotificationHelper.isNotificationValidByAction(notification.action)) {
+
+        if (!NotificationHelper.isNotificationValidByAction(notification)) {
             analytic.reportEventWithIdName(Analytic.Notification.ACTION_NOT_SUPPORT, notification.id.toString(), notification.action ?: "")
             return
         } else if (htmlText == null || htmlText.isEmpty()) {
@@ -75,17 +76,58 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             when (notification.type) {
                 NotificationType.learn -> sendLearnNotification(notification, htmlText, notification.id ?: 0)
                 NotificationType.comments -> sendCommentNotification(notification, htmlText, notification.id ?: 0)
-                else -> analytic.reportEventWithIdName(Analytic.Notification.NOT_SUPPORT, notification.id.toString(), notification.type.toString())
+                NotificationType.review -> sendReviewType(notification, htmlText, notification.id ?: 0)
+                else -> analytic.reportEventWithIdName(Analytic.Notification.NOT_SUPPORT_TYPE, notification.id.toString(), notification.type.toString()) // it should never execute, because we handle it by action filter
             }
         }
     }
 
+    private fun sendReviewType(stepikNotification: Notification, htmlText: String, id: Long) {
+        // here is supportable action, but we need identify it
+        val action = stepikNotification.action
+        if (action != null && action == NotificationHelper.REVIEW_TAKEN) {
+            val title = MainApplication.getAppContext().getString(R.string.received_review_title)
+            val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
+            val justText: String = textResolver.fromHtml(htmlText).toString()
+
+            val link = HtmlHelper.parseLinkToLessonFromNotifiation(htmlText, configs.baseUrl) ?: ""
+            val intent = getReviewIntent(link)
+//            intent.action = AppConstants.OPEN_NOTIFICATION //FIXME HANDLE OPEN NOTIFICATION IN LESSON FOR CHECK SHOWN
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(MainApplication.getAppContext())
+            taskBuilder.addParentStack(StepsActivity::class.java)
+            taskBuilder.addNextIntent(intent)
+
+            val pendingIntent = taskBuilder.getPendingIntent(id.toInt(), PendingIntent.FLAG_ONE_SHOT) //fixme if it will overlay courses id -> bug
+
+            val notification = NotificationCompat.Builder(MainApplication.getAppContext())
+                    .setSmallIcon(R.drawable.ic_notification_icon_1)
+                    .setContentTitle(title)
+                    .setContentText(justText)
+                    .setColor(colorArgb)
+                    .setAutoCancel(true)
+                    .setContentIntent(pendingIntent)
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                    .setDeleteIntent(getDeleteIntent())
+            addVibrationIfNeed(notification)
+            addSoundIfNeed(notification)
+
+            notification.setStyle(NotificationCompat.BigTextStyle()
+                    .bigText(justText))
+                    .setContentText(justText)
+                    .setNumber(1)
+            val notificationManager = MainApplication.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.notify(id.toInt(), notification.build())
+        }
+    }
+
+
     private fun sendCommentNotification(stepicNotification: Notification, rawMessageHtml: String, id: Long) {
+
     }
 
     private fun sendLearnNotification(stepicNotification: Notification, rawMessageHtml: String, id: Long) {
-        analytic.reportEvent(Analytic.Notification.LEARN_SHOWN)
-
         val courseId: Long = HtmlHelper.parseCourseIdFromNotification(stepicNotification) ?: 0L
         if (courseId == 0L) {
             analytic.reportEvent(Analytic.Notification.CANT_PARSE_COURSE_ID, stepicNotification.id.toString())
@@ -152,8 +194,6 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                     .bigText(justText))
                     .setContentText(justText)
                     .setNumber(1)
-
-
         } else {
             val inboxStyle = NotificationCompat.InboxStyle()
             for (notificationItem in notificationOfCourseList.reversed()) {
@@ -165,15 +205,19 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                     .setNumber(numberOfNotification)
         }
 
+        analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, stepicNotification.id?.toString() ?: "", stepicNotification.type?.name)
+        analytic.reportEvent(Analytic.Notification.LEARN_SHOWN)
         val notificationManager = MainApplication.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(courseId.toInt(), notification.build())
     }
 
-    private fun getDeleteIntent(courseId: Long): PendingIntent {
+    private fun getDeleteIntent(courseId: Long = -1): PendingIntent {
         val onNotificationDiscarded = Intent(MainApplication.getAppContext(), NotificationBroadcastReceiver::class.java);
         onNotificationDiscarded.action = AppConstants.NOTIFICATION_CANCELED
         val bundle = Bundle()
-        bundle.putSerializable(AppConstants.COURSE_ID_KEY, courseId)
+        if (courseId < 0) {
+            bundle.putSerializable(AppConstants.COURSE_ID_KEY, courseId)
+        }
         onNotificationDiscarded.putExtras(bundle)
         //add course id for bundle
         return PendingIntent.getBroadcast(MainApplication.getAppContext(), 0, onNotificationDiscarded, PendingIntent.FLAG_CANCEL_CURRENT)
@@ -192,7 +236,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         val cover = course?.cover
         @DrawableRes val notificationPlaceholder = R.drawable.ic_course_placeholder
         if (cover == null) {
-            return BitmapFactory.decodeResource(MainApplication.getAppContext().getResources(), notificationPlaceholder);
+            return getBitmap(R.drawable.ic_course_placeholder)
         } else {
             return Glide.with(MainApplication.getAppContext())
                     .load(configs.baseUrl + cover)
@@ -201,6 +245,10 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                     .into(200, 200)//pixels
                     .get()
         }
+    }
+
+    private fun getBitmap(@DrawableRes drawable: Int): Bitmap {
+        return BitmapFactory.decodeResource(MainApplication.getAppContext().resources, drawable);
     }
 
     private fun addVibrationIfNeed(builder: NotificationCompat.Builder) {
@@ -259,12 +307,17 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     @MainThread
     private fun openReviewNotification(notification: Notification): Boolean {
         val data = HtmlHelper.parseLinkToLessonFromNotifiation(notification.htmlText ?: "", configs.baseUrl) ?: return false
-        val intent = Intent(MainApplication.getAppContext(), StepsActivity::class.java)
-        intent.data = Uri.parse(data)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        analytic.reportEvent(Analytic.Notification.OPEN_LESSON_NOTIFICATION_LINK)
+        val intent = getReviewIntent(data)
         MainApplication.getAppContext().startActivity(intent)
+        analytic.reportEvent(Analytic.Notification.OPEN_LESSON_NOTIFICATION_LINK)
         return true
+    }
+
+    private fun getReviewIntent(link: String): Intent {
+        val intent = Intent(MainApplication.getAppContext(), StepsActivity::class.java)
+        intent.data = Uri.parse(link)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent
     }
 
     @MainThread

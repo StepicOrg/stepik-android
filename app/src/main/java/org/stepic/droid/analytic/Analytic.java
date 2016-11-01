@@ -154,9 +154,11 @@ public interface Analytic {
         String DISABLED_BY_USER = "Notification is disabled by user in app";
         String ACTION_NOT_SUPPORT = "notification action is not support";
         String HTML_WAS_NULL = "notification_html_was_null";
-        String WAS_MUTED = "notification html text was muted";
-        String NOT_SUPPORT = "notification is not support";
-        String LEARN_SHOWN = "notification learn is shown";
+        String WAS_MUTED = "notification_was_muted";
+        String NOT_SUPPORT_TYPE = "notification_type_is_not_support";//After checking action
+
+        @Deprecated //use NOTIFICATION_SHOWN with name = notification.type
+                String LEARN_SHOWN = "notification learn is shown";
         String CANT_PARSE_COURSE_ID = "notification, cant parse courseId";
         String TOKEN_UPDATED = "notification gcm token is updated";
         String TOKEN_UPDATE_FAILED = "notification gcm token is not updated";
@@ -170,6 +172,8 @@ public interface Analytic {
         String OPEN_LESSON_NOTIFICATION_LINK = "notification_open_lesson_link";
         String NOTIFICATION_NOT_OPENABLE = "notification_not_openable";
         String GCM_TOKEN_NOT_OK = "notification_gsm_token_not_ok";
+        String NOTIFICATION_SHOWN = "notification_shown";
+        String DISCARD = "notification_discarded";
     }
 
     interface Feedback {

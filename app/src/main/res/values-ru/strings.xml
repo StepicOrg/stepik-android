@@ -259,4 +259,5 @@
     <string name="empty_notification_title">Пока уведомлений нет</string>
     <string name="not_now">Не сейчас</string>
     <string name="after_hide_calendar_message">Добавить дедлайны в календарь можно в верхнем меню</string>
+    <string name="received_review_title">Получена рецензия</string>
 </resources>
