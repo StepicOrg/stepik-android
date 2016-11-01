@@ -220,42 +220,67 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     @MainThread
     override fun tryOpenNotificationInstantly(notification: Notification) {
-        when (notification.type) {
+        val isShown = when (notification.type) {
             NotificationType.learn -> openLearnNotification(notification)
             NotificationType.comments -> openCommentNotification(notification)
             NotificationType.review -> openReviewNotification(notification)
-//            NotificationType.teach -> TODO()
-//            NotificationType.default -> TODO()
-//            null -> TODO()
+            NotificationType.teach -> openTeach(notification)
+            NotificationType.default -> openDefault(notification)
+            null -> false
+        }
+
+        if (!isShown) {
+            analytic.reportEvent(Analytic.Notification.NOTIFICATION_NOT_OPENABLE, notification.action ?: "")
         }
 
     }
 
+    private fun openTeach(notification: Notification): Boolean {
+        return false
+    }
+
+    private fun openDefault(notification: Notification): Boolean {
+        if (notification.action != null && notification.action == "added_to_group") {
+            val data = HtmlHelper.parseLinkToCourseFromDefaultNotifiation(notification.htmlText ?: "", configs.baseUrl) ?: return false
+            val intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
+            intent.data = Uri.parse(data)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            analytic.reportEvent(Analytic.Notification.OPEN_COMMENT_NOTIFICATION_LINK)
+            MainApplication.getAppContext().startActivity(intent)
+            return true
+        } else {
+            return false
+        }
+    }
+
     @MainThread
-    private fun openReviewNotification(notification: Notification) {
-        val data = HtmlHelper.parseLinkToLessonFromNotifiation(notification.htmlText ?: "", configs.baseUrl) ?: return
+    private fun openReviewNotification(notification: Notification): Boolean {
+        val data = HtmlHelper.parseLinkToLessonFromNotifiation(notification.htmlText ?: "", configs.baseUrl) ?: return false
         val intent = Intent(MainApplication.getAppContext(), StepsActivity::class.java)
         intent.data = Uri.parse(data)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         analytic.reportEvent(Analytic.Notification.OPEN_LESSON_NOTIFICATION_LINK)
         MainApplication.getAppContext().startActivity(intent)
+        return true
     }
 
     @MainThread
-    private fun openCommentNotification(notification: Notification) {
-        val data = HtmlHelper.parseLinkToCommentFromNotifiation(notification.htmlText ?: "", configs.baseUrl) ?: return
+    private fun openCommentNotification(notification: Notification): Boolean {
+        val data = HtmlHelper.parseLinkToCommentFromNotifiation(notification.htmlText ?: "", configs.baseUrl) ?: return false
         val intent = Intent(MainApplication.getAppContext(), StepsActivity::class.java)
         intent.data = Uri.parse(data)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         analytic.reportEvent(Analytic.Notification.OPEN_COMMENT_NOTIFICATION_LINK)
         MainApplication.getAppContext().startActivity(intent)
+        return true
     }
 
     @MainThread
-    private fun openLearnNotification(notification: Notification) {
+    private fun openLearnNotification(notification: Notification): Boolean {
         if (notification.action != null && notification.action == issuedCertificateActionValue) {
             analytic.reportEvent(Analytic.Certificate.OPEN_CERTIFICATE_FROM_NOTIFICATION_CENTER)
             screenManager.showCertificates()
+            return true
         } else {
             val courseId = HtmlHelper.parseCourseIdFromNotification(notification)
             val modulePosition = HtmlHelper.parseModulePositionFromNotification(notification.htmlText)
@@ -268,6 +293,9 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                 intent.putExtras(bundle)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 MainApplication.getAppContext().startActivity(intent)
+                return true
+            } else {
+                return false
             }
         }
     }
