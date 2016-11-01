@@ -87,44 +87,73 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         val action = stepikNotification.action
         if (action != null && action == NotificationHelper.REVIEW_TAKEN) {
             val title = MainApplication.getAppContext().getString(R.string.received_review_title)
-            val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
             val justText: String = textResolver.fromHtml(htmlText).toString()
 
-            val link = HtmlHelper.parseLinkToLessonFromNotifiation(htmlText, configs.baseUrl) ?: ""
+            val link = HtmlHelper.parseLinkToLessonFromNotification(htmlText, configs.baseUrl) ?: ""
             val intent = getReviewIntent(link)
 //            intent.action = AppConstants.OPEN_NOTIFICATION //FIXME HANDLE OPEN NOTIFICATION IN LESSON FOR CHECK SHOWN
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(MainApplication.getAppContext())
             taskBuilder.addParentStack(StepsActivity::class.java)
             taskBuilder.addNextIntent(intent)
 
-            val pendingIntent = taskBuilder.getPendingIntent(id.toInt(), PendingIntent.FLAG_ONE_SHOT) //fixme if it will overlay courses id -> bug
-
-            val notification = NotificationCompat.Builder(MainApplication.getAppContext())
-                    .setSmallIcon(R.drawable.ic_notification_icon_1)
-                    .setContentTitle(title)
-                    .setContentText(justText)
-                    .setColor(colorArgb)
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
-                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                    .setDeleteIntent(getDeleteIntent())
-            addVibrationIfNeed(notification)
-            addSoundIfNeed(notification)
-
-            notification.setStyle(NotificationCompat.BigTextStyle()
-                    .bigText(justText))
-                    .setContentText(justText)
-                    .setNumber(1)
-            val notificationManager = MainApplication.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.notify(id.toInt(), notification.build())
+            showSimpleNotification(id, justText, taskBuilder, title)
         }
     }
 
 
-    private fun sendCommentNotification(stepicNotification: Notification, rawMessageHtml: String, id: Long) {
+    private fun sendCommentNotification(stepicNotification: Notification, htmlText: String, id: Long) {
+        val action = stepicNotification.action
+        if (action != null && (action == NotificationHelper.REPLIED || action == NotificationHelper.COMMENTED)) {
+            val title = MainApplication.getAppContext().getString(R.string.new_message_title)
+            val justText: String = textResolver.fromHtml(htmlText).toString()
 
+            val link: String?
+            if (action == NotificationHelper.REPLIED) {
+                link = HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 1)
+            } else {
+                link = HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 3)
+            }
+
+            if (link == null) {
+                analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
+                return
+            }
+
+            val intent = getCommentIntent(link)
+//            intent.action = AppConstants.OPEN_NOTIFICATION //FIXME HANDLE OPEN NOTIFICATION IN LESSON FOR CHECK SHOWN
+
+            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(MainApplication.getAppContext())
+            taskBuilder.addParentStack(StepsActivity::class.java)
+            taskBuilder.addNextIntent(intent)
+
+            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepicNotification.type?.name)
+            showSimpleNotification(id, justText, taskBuilder, title)
+        }
+    }
+
+    private fun showSimpleNotification(id: Long, justText: String, taskBuilder: TaskStackBuilder, title: String?) {
+        val pendingIntent = taskBuilder.getPendingIntent(id.toInt(), PendingIntent.FLAG_ONE_SHOT) //fixme if it will overlay courses id -> bug
+
+        val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
+        val notification = NotificationCompat.Builder(MainApplication.getAppContext())
+                .setSmallIcon(R.drawable.ic_notification_icon_1)
+                .setContentTitle(title)
+                .setContentText(justText)
+                .setColor(colorArgb)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setDeleteIntent(getDeleteIntent())
+        addVibrationIfNeed(notification)
+        addSoundIfNeed(notification)
+
+        notification.setStyle(NotificationCompat.BigTextStyle()
+                .bigText(justText))
+                .setContentText(justText)
+                .setNumber(1)
+        val notificationManager = MainApplication.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(id.toInt(), notification.build())
     }
 
     private fun sendLearnNotification(stepicNotification: Notification, rawMessageHtml: String, id: Long) {
@@ -306,7 +335,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     @MainThread
     private fun openReviewNotification(notification: Notification): Boolean {
-        val data = HtmlHelper.parseLinkToLessonFromNotifiation(notification.htmlText ?: "", configs.baseUrl) ?: return false
+        val data = HtmlHelper.parseLinkToLessonFromNotification(notification.htmlText ?: "", configs.baseUrl) ?: return false
         val intent = getReviewIntent(data)
         MainApplication.getAppContext().startActivity(intent)
         analytic.reportEvent(Analytic.Notification.OPEN_LESSON_NOTIFICATION_LINK)
@@ -322,13 +351,25 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     @MainThread
     private fun openCommentNotification(notification: Notification): Boolean {
-        val data = HtmlHelper.parseLinkToCommentFromNotifiation(notification.htmlText ?: "", configs.baseUrl) ?: return false
-        val intent = Intent(MainApplication.getAppContext(), StepsActivity::class.java)
-        intent.data = Uri.parse(data)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        val link: String
+        val action = notification.action
+        val htmlText = notification.htmlText ?: ""
+        if (action == NotificationHelper.REPLIED) {
+            link = HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 1) ?: return false
+        } else {
+            link = HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 3) ?: return false
+        }
+        val intent = getCommentIntent(link)
         analytic.reportEvent(Analytic.Notification.OPEN_COMMENT_NOTIFICATION_LINK)
         MainApplication.getAppContext().startActivity(intent)
         return true
+    }
+
+    private fun getCommentIntent(link: String): Intent {
+        val intent = Intent(MainApplication.getAppContext(), StepsActivity::class.java)
+        intent.data = Uri.parse(link)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent
     }
 
     @MainThread

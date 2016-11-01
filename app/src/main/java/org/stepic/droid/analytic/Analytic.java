@@ -3,6 +3,7 @@ package org.stepic.droid.analytic;
 import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
@@ -174,6 +175,7 @@ public interface Analytic {
         String GCM_TOKEN_NOT_OK = "notification_gsm_token_not_ok";
         String NOTIFICATION_SHOWN = "notification_shown";
         String DISCARD = "notification_discarded";
+        String CANT_PARSE_NOTIFICATION = "notification_parse_fail";
     }
 
     interface Feedback {

@@ -234,7 +234,22 @@ public class HtmlHelper {
     }
 
     @Nullable
-    public static String parseLinkToLessonFromNotifiation(@NotNull String htmlText, String baseUrl) {
+    public static String parseNLinkInText(@NotNull String htmlText, String baseUrl, int position) {
+        try {
+            Document document = Jsoup.parse(htmlText);
+            document.setBaseUri(baseUrl);
+            Elements elements = document.getElementsByTag("a");
+            Element our = elements.get(position);
+            String absolute = our.absUrl("href");
+            Timber.d(absolute);
+            return absolute;
+        } catch (Exception exception) {
+            return null;
+        }
+    }
+
+    @Nullable
+    public static String parseLinkToLessonFromNotification(@NotNull String htmlText, String baseUrl) {
         try {
             Document document = Jsoup.parse(htmlText);
             document.setBaseUri(baseUrl);
