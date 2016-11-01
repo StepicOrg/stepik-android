@@ -166,6 +166,7 @@ public interface Analytic {
         String NOTIFICATION_NULL_POINTER = "notification_unpredicatable_null";
         String NOTIFICATION_CLICKED_IN_CENTER = "notification_clicked_in_center";
         String NOTIFICATION_CENTER_OPENED = "notification_center_opened";
+        String OPEN_COMMENT_NOTIFICATION_LINK = "notification_open_comment_link";
     }
 
     interface Feedback {

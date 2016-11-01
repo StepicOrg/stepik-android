@@ -234,6 +234,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         val intent = Intent(MainApplication.getAppContext(), StepsActivity::class.java)
         intent.data = Uri.parse(data)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        analytic.reportEvent(Analytic.Notification.OPEN_COMMENT_NOTIFICATION_LINK)
         MainApplication.getAppContext().startActivity(intent)
     }
 
