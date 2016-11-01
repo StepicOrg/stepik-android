@@ -96,6 +96,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         taskBuilder.addParentStack(SectionActivity::class.java)
         taskBuilder.addNextIntent(intent)
 
+        analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
         showSimpleNotification(id, justText, taskBuilder, title)
     }
 
@@ -116,7 +117,10 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             taskBuilder.addParentStack(SectionActivity::class.java)
             taskBuilder.addNextIntent(intent)
 
+            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
             showSimpleNotification(id, justText, taskBuilder, title)
+        } else {
+            analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
         }
     }
 
@@ -139,7 +143,10 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             taskBuilder.addParentStack(StepsActivity::class.java)
             taskBuilder.addNextIntent(intent)
 
+            analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
             showSimpleNotification(id, justText, taskBuilder, title)
+        } else {
+            analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
         }
     }
 
@@ -163,30 +170,9 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
             showSimpleNotification(id, justText, taskBuilder, title)
         }
-    }
-
-    private fun showSimpleNotification(id: Long, justText: String, taskBuilder: TaskStackBuilder, title: String?) {
-        val pendingIntent = taskBuilder.getPendingIntent(id.toInt(), PendingIntent.FLAG_ONE_SHOT) //fixme if it will overlay courses id -> bug
-
-        val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
-        val notification = NotificationCompat.Builder(MainApplication.getAppContext())
-                .setSmallIcon(R.drawable.ic_notification_icon_1)
-                .setContentTitle(title)
-                .setContentText(justText)
-                .setColor(colorArgb)
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setDeleteIntent(getDeleteIntent())
-        addVibrationIfNeed(notification)
-        addSoundIfNeed(notification)
-
-        notification.setStyle(NotificationCompat.BigTextStyle()
-                .bigText(justText))
-                .setContentText(justText)
-                .setNumber(1)
-        val notificationManager = MainApplication.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(id.toInt(), notification.build())
+        else{
+            analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
+        }
     }
 
     private fun sendLearnNotification(stepikNotification: Notification, rawMessageHtml: String, id: Long) {
@@ -301,11 +287,35 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         }
     }
 
+    private fun showSimpleNotification(id: Long, justText: String, taskBuilder: TaskStackBuilder, title: String?) {
+        val pendingIntent = taskBuilder.getPendingIntent(id.toInt(), PendingIntent.FLAG_ONE_SHOT) //fixme if it will overlay courses id -> bug
+
+        val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
+        val notification = NotificationCompat.Builder(MainApplication.getAppContext())
+                .setSmallIcon(R.drawable.ic_notification_icon_1)
+                .setContentTitle(title)
+                .setContentText(justText)
+                .setColor(colorArgb)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setDeleteIntent(getDeleteIntent())
+        addVibrationIfNeed(notification)
+        addSoundIfNeed(notification)
+
+        notification.setStyle(NotificationCompat.BigTextStyle()
+                .bigText(justText))
+                .setContentText(justText)
+                .setNumber(1)
+        val notificationManager = MainApplication.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(id.toInt(), notification.build())
+    }
+
     private fun getDeleteIntent(courseId: Long = -1): PendingIntent {
         val onNotificationDiscarded = Intent(MainApplication.getAppContext(), NotificationBroadcastReceiver::class.java)
         onNotificationDiscarded.action = AppConstants.NOTIFICATION_CANCELED
         val bundle = Bundle()
-        if (courseId < 0) {
+        if (courseId > 0) {
             bundle.putSerializable(AppConstants.COURSE_ID_KEY, courseId)
         }
         onNotificationDiscarded.putExtras(bundle)
