@@ -283,7 +283,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             addSoundIfNeed(notification)
 
             val numberOfNotification = notificationOfCourseList.size
-            val summaryText = MainApplication.getAppContext().getResources().getQuantityString(R.plurals.notification_plural, numberOfNotification, numberOfNotification)
+            val summaryText = MainApplication.getAppContext().resources.getQuantityString(R.plurals.notification_plural, numberOfNotification, numberOfNotification)
             if (notificationOfCourseList.size == 1) {
                 notification.setStyle(NotificationCompat.BigTextStyle()
                         .bigText(justText))
@@ -293,7 +293,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                 val inboxStyle = NotificationCompat.InboxStyle()
                 for (notificationItem in notificationOfCourseList.reversed()) {
                     val line = textResolver.fromHtml(notificationItem?.htmlText ?: "").toString()
-                    inboxStyle.addLine(line);
+                    inboxStyle.addLine(line)
                 }
                 inboxStyle.setSummaryText(summaryText)
                 notification.setStyle(inboxStyle)
@@ -308,7 +308,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     }
 
     private fun getDeleteIntent(courseId: Long = -1): PendingIntent {
-        val onNotificationDiscarded = Intent(MainApplication.getAppContext(), NotificationBroadcastReceiver::class.java);
+        val onNotificationDiscarded = Intent(MainApplication.getAppContext(), NotificationBroadcastReceiver::class.java)
         onNotificationDiscarded.action = AppConstants.NOTIFICATION_CANCELED
         val bundle = Bundle()
         if (courseId < 0) {
@@ -344,7 +344,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     }
 
     private fun getBitmap(@DrawableRes drawable: Int): Bitmap {
-        return BitmapFactory.decodeResource(MainApplication.getAppContext().resources, drawable);
+        return BitmapFactory.decodeResource(MainApplication.getAppContext().resources, drawable)
     }
 
     private fun addVibrationIfNeed(builder: NotificationCompat.Builder) {
@@ -356,7 +356,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     private fun addSoundIfNeed(builder: NotificationCompat.Builder) {
         if (userPreferences.isSoundNotificationEnabled) {
             val stepicSound = Uri.parse("android.resource://"
-                    + MainApplication.getAppContext().getPackageName() + "/" + R.raw.default_sound);
+                    + MainApplication.getAppContext().packageName + "/" + R.raw.default_sound)
             builder.setSound(stepicSound)
         }
     }
@@ -382,7 +382,10 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     }
 
     private fun openTeach(notification: Notification): Boolean {
-        return false
+        val intent: Intent? = getTeachIntent(notification) ?: return false
+        analytic.reportEvent(Analytic.Notification.OPEN_TEACH_CENTER)
+        MainApplication.getAppContext().startActivity(intent)
+        return true
     }
 
     private fun openDefault(notification: Notification): Boolean {
@@ -400,7 +403,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         val data = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 1) ?: return null
         val intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
         intent.data = Uri.parse(data)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return intent
     }
 
@@ -415,7 +418,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     private fun getReviewIntent(link: String): Intent {
         val intent = Intent(MainApplication.getAppContext(), StepsActivity::class.java)
         intent.data = Uri.parse(link)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return intent
     }
 
@@ -437,7 +440,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     private fun getCommentIntent(link: String): Intent {
         val intent = Intent(MainApplication.getAppContext(), StepsActivity::class.java)
         intent.data = Uri.parse(link)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return intent
     }
 
@@ -460,7 +463,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                 bundle.putLong(AppConstants.KEY_COURSE_LONG_ID, courseId)
                 bundle.putInt(AppConstants.KEY_MODULE_POSITION, modulePosition)
                 intent.putExtras(bundle)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 MainApplication.getAppContext().startActivity(intent)
                 return true
             } else {
@@ -478,7 +481,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         val link = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
         val intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
         intent.data = Uri.parse(link)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return intent
     }
 }
