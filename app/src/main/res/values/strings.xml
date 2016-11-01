@@ -271,4 +271,5 @@
     <string name="get_certifcate_title">New certificate</string>
     <string name="get_license_message">New license</string>
     <string name="added_to_group_title">Adding to group</string>
+    <string name="notification_comment_list">Comments and replies</string>
 </resources>
