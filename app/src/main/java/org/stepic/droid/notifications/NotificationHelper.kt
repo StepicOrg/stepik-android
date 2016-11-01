@@ -24,6 +24,9 @@ object NotificationHelper {
         validActions.add(ISSUED_CERTIFICATE)
         validActions.add(ISSUED_LICENSE)
         validActions.add(ADDED_TO_GROUP)
+        validActions.add("finished_long_task_execution")
+        validActions.add("started_long_task_execution")
+        validActions.add("queued_long_task_execution")
     }
 
     fun isNotificationValidByAction(notification: Notification): Boolean {

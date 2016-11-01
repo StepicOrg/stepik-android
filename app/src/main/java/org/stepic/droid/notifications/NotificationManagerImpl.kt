@@ -75,9 +75,28 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                 NotificationType.comments -> sendCommentNotification(notification, htmlText, notification.id ?: 0)
                 NotificationType.review -> sendReviewType(notification, htmlText, notification.id ?: 0)
                 NotificationType.default -> sendDefaultNotification(notification, htmlText, notification.id ?: 0)
+                NotificationType.teach -> sendTeachNotification(notification, htmlText, notification.id ?: 0)
                 else -> analytic.reportEventWithIdName(Analytic.Notification.NOT_SUPPORT_TYPE, notification.id.toString(), notification.type.toString()) // it should never execute, because we handle it by action filter
             }
         }
+    }
+
+    private fun sendTeachNotification(stepikNotification: Notification, htmlText: String, id: Long) {
+        val title = MainApplication.getAppContext().getString(R.string.teaching_title)
+        val justText: String = textResolver.fromHtml(htmlText).toString()
+
+        val intent = getTeachIntent(notification = stepikNotification)
+        if (intent == null) {
+            analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
+            return
+        }
+        intent.action = AppConstants.OPEN_NOTIFICATION
+
+        val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(MainApplication.getAppContext())
+        taskBuilder.addParentStack(SectionActivity::class.java)
+        taskBuilder.addNextIntent(intent)
+
+        showSimpleNotification(id, justText, taskBuilder, title)
     }
 
     private fun sendDefaultNotification(stepikNotification: Notification, htmlText: String, id: Long) {
@@ -453,5 +472,13 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     private fun getLicenseIntent(notification: Notification): Intent? {
         val link = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
         return screenManager.getOpenInWebIntent(link)
+    }
+
+    private fun getTeachIntent(notification: Notification): Intent? {
+        val link = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
+        val intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
+        intent.data = Uri.parse(link)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent
     }
 }
