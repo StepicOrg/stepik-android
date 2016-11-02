@@ -50,6 +50,7 @@ import org.stepic.droid.ui.fragments.DownloadsFragment;
 import org.stepic.droid.ui.fragments.FeedbackFragment;
 import org.stepic.droid.ui.fragments.FindCoursesFragment;
 import org.stepic.droid.ui.fragments.MyCoursesFragment;
+import org.stepic.droid.ui.fragments.NotificationsFragment;
 import org.stepic.droid.ui.util.BackButtonHandler;
 import org.stepic.droid.ui.util.LogoutSuccess;
 import org.stepic.droid.ui.util.OnBackClickListener;
@@ -72,7 +73,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class MainFeedActivity extends BackToExitActivityBase
-        implements NavigationView.OnNavigationItemSelectedListener, LogoutSuccess, BackButtonHandler {
+        implements NavigationView.OnNavigationItemSelectedListener, LogoutSuccess, BackButtonHandler, HasDrawer {
     public static final String KEY_CURRENT_INDEX = "Current_index";
 
     @BindView(R.id.toolbar)
@@ -98,11 +99,15 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     GoogleApiClient googleApiClient;
 
-    private List<WeakReference<OnBackClickListener>> onBackClickListenerList = new ArrayList<>(4);
+    private List<WeakReference<OnBackClickListener>> onBackClickListenerList = new ArrayList<>(8);
+    private ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        if (intent.getAction()!= null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)){
+            analytic.reportEvent(AppConstants.OPEN_NOTIFICATION);
+        }
         Bundle extras = intent.getExtras();
         if (extras != null) {
             initFragments(extras);
@@ -114,7 +119,6 @@ public class MainFeedActivity extends BackToExitActivityBase
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_feed);
         unbinder = ButterKnife.bind(this);
-
         initGoogleApiClient();
         initDrawerHeader();
         setUpToolbar();
@@ -269,6 +273,7 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
+        sendOpenUserAnalytic(menuItem.getItemId());
         switch (menuItem.getItemId()) {
             case R.id.logout_item:
                 analytic.reportEvent(Analytic.Interaction.CLICK_LOGOUT);
@@ -307,10 +312,39 @@ public class MainFeedActivity extends BackToExitActivityBase
         return true;
     }
 
+    private void sendOpenUserAnalytic(int itemId) {
+        switch (itemId) {
+            case R.id.logout_item:
+                analytic.reportEvent(Analytic.Screens.USER_LOGOUT);
+                break;
+            case R.id.my_settings:
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_SETTINGS);
+                break;
+            case R.id.my_courses:
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_MY_COURSES);
+                break;
+            case R.id.find_lessons:
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_FIND_COURSES);
+                break;
+            case R.id.cached_videos:
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_DOWNLOADS);
+                break;
+            case R.id.feedback:
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_FEEDBACK);
+                break;
+            case R.id.certificates:
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES);
+                break;
+            case R.id.notifications:
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_NOTIFICATIONS);
+                break;
+        }
+    }
+
     private void setUpDrawerLayout() {
         navigationView.setNavigationItemSelectedListener(this);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_closed);
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_closed);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
     }
 
@@ -352,18 +386,26 @@ public class MainFeedActivity extends BackToExitActivityBase
                     shortLifetimeRef = DownloadsFragment.newInstance();
                 }
                 break;
-            case R.id.feedback:
-                currentIndex = 6;
-                if (tag == null || !tag.equals(FeedbackFragment.class.toString())) {
-                    shortLifetimeRef = FeedbackFragment.Companion.newInstance();
-                }
-                break;
+
             case R.id.certificates:
                 currentIndex = 4;
                 if (tag == null || !tag.equals(CertificateFragment.class.toString())) {
                     shortLifetimeRef = CertificateFragment.newInstance();
                 }
                 break;
+            case R.id.notifications:
+                currentIndex = 5;
+                if (tag == null || !tag.equals(NotificationsFragment.class.toString())) {
+                    shortLifetimeRef = NotificationsFragment.newInstance();
+                }
+                break;
+            case R.id.feedback:
+                currentIndex = 7;
+                if (tag == null || !tag.equals(FeedbackFragment.class.toString())) {
+                    shortLifetimeRef = FeedbackFragment.Companion.newInstance();
+                }
+                break;
+
         }
         currentIndex--; // menu indices from 1
         if (shortLifetimeRef != null) {
@@ -408,6 +450,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onDestroy() {
         bus.unregister(this);
+        drawerLayout.removeDrawerListener(actionBarDrawerToggle);
         super.onDestroy();
     }
 
@@ -457,6 +500,10 @@ public class MainFeedActivity extends BackToExitActivityBase
         }
     }
 
+    public static int getCertificateFragmentIndex(){
+        return 3;
+    }
+
     public static int getDownloadFragmentIndex() {
         return 2;
     }
@@ -497,4 +544,10 @@ public class MainFeedActivity extends BackToExitActivityBase
             }
         }
     }
+
+    @Override
+    public DrawerLayout getDrawerLayout() {
+        return drawerLayout;
+    }
+
 }

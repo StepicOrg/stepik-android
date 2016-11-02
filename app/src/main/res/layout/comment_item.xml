@@ -57,12 +57,12 @@
                         />
 
 
-<org.stepic.droid.ui.custom.LatexInterceptFrameLayout
-    android:id="@+id/enhanced_text_view"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginRight="@dimen/right_padding_comments"
-    android:layout_marginBottom="4dp"/>
+                    <org.stepic.droid.ui.custom.LatexInterceptFrameLayout
+                        android:id="@+id/enhanced_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:layout_marginRight="@dimen/right_padding_comments"/>
 
                     <include layout="@layout/comment_state_view"/>
 

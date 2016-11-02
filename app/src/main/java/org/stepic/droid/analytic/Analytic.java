@@ -55,6 +55,7 @@ public interface Analytic {
         String CLICK_TRY_STEP_AGAIN = "step_try_again";
         String NO_DISCOUNTING_DIALOG = "discounting_dialog_no";
         String YES_DISCOUNTING_DIALOG = "discounting_dialog_yes";
+        String CLICK_SETTINGS_FROM_NOTIFICATION = "click_settings_from_notification";
     }
 
     interface Screens {
@@ -77,6 +78,15 @@ public interface Analytic {
         String OPEN_STEP_IN_WEB = "Screen manager: open Step in Web";
         String REMIND_PASSWORD = "Screen manager: remind password";
         String OPEN_LINK_IN_WEB = "open_link";
+
+        String USER_OPEN_MY_COURSES = "main_choice_my_courses";
+        String USER_OPEN_FIND_COURSES = "main_choice_find_courses";
+        String USER_OPEN_DOWNLOADS = "main_choice_downloads";
+        String USER_OPEN_CERTIFICATES = "main_choice_certificates";
+        String USER_OPEN_FEEDBACK = "main_choice_feedback";
+        String USER_OPEN_NOTIFICATIONS = "main_choice_notifications";
+        String USER_OPEN_SETTINGS = "main_choice_settings";
+        String USER_LOGOUT = "main_choice_logout";
     }
 
     interface Video {
@@ -145,15 +155,31 @@ public interface Analytic {
     interface Notification {
         String DISABLED_BY_USER = "Notification is disabled by user in app";
         String ACTION_NOT_SUPPORT = "notification action is not support";
-        String HTML_WAS_NULL = "notification action is not support"; //// FIXME: 22.09.16 similar analytic
-        String WAS_MUTED = "notification html text was muted";
-        String NOT_SUPPORT = "notification is not support";
-        String LEARN_SHOWN = "notification learn is shown";
+        String HTML_WAS_NULL = "notification_html_was_null";
+        String WAS_MUTED = "notification_was_muted";
+        String NOT_SUPPORT_TYPE = "notification_type_is_not_support";//After checking action
+
+        @Deprecated //use NOTIFICATION_SHOWN with name = notification.type
+                String LEARN_SHOWN = "notification learn is shown";
         String CANT_PARSE_COURSE_ID = "notification, cant parse courseId";
         String TOKEN_UPDATED = "notification gcm token is updated";
         String TOKEN_UPDATE_FAILED = "notification gcm token is not updated";
         String OPEN_NOTIFICATION = "notification_opened";
         String OPEN_NOTIFICATION_SYLLABUS = "notification_opened_syllabus";
+        String ID_WAS_NULL = "notification_id_was_null";
+        String NOTIFICATION_NULL_POINTER = "notification_unpredicatable_null";
+        String NOTIFICATION_CLICKED_IN_CENTER = "notification_clicked_in_center";
+        String NOTIFICATION_CENTER_OPENED = "notification_center_opened";
+        String OPEN_COMMENT_NOTIFICATION_LINK = "notification_open_comment_link";
+        String OPEN_LESSON_NOTIFICATION_LINK = "notification_open_lesson_link";
+        String NOTIFICATION_NOT_OPENABLE = "notification_not_openable";
+        String GCM_TOKEN_NOT_OK = "notification_gsm_token_not_ok";
+        String NOTIFICATION_SHOWN = "notification_shown";
+        String DISCARD = "notification_discarded";
+        String CANT_PARSE_NOTIFICATION = "notification_parse_fail";
+        String OPEN_TEACH_CENTER = "notification_open_teach_link";
+        String PERSISTENT_KEY_NULL = "notification_key_null";
+        String MARK_ALL_AS_READ = "notification_mark_all";
     }
 
     interface Feedback {
@@ -188,6 +214,7 @@ public interface Analytic {
         String SHOW_CALENDAR_AS_WIDGET = "calendar_shown_as_widget";
         String SHOW_CALENDAR = "calendar_shown"; // course with deadlines in future
         String HIDE_WIDGET_FROM_PREFS = "widget_hidden_from_prefs";
+        java.lang.String USER_CLICK_NOT_NOW = "calendar_click_not_now";
     }
 
     interface DeepLink {
@@ -201,6 +228,9 @@ public interface Analytic {
         String COPY_LINK_CERTIFICATE = "certificate_copy_link";
         String SHARE_LINK_CERTIFICATE = "certificate_share";
         String ADD_LINKEDIN = "certificate_add_linkeding";
+        String OPEN_IN_BROWSER = "certificate_open_browser";
+        String CLICK_SHARE_MAIN = "certificate_click_share_main";
+        String OPEN_CERTIFICATE_FROM_NOTIFICATION_CENTER = "certificate_notification_center";
     }
 
     interface Filters {
@@ -213,7 +243,9 @@ public interface Analytic {
 
     void reportEvent(String eventName, String id);
 
-    void reportEventWithIdName(String eventName, String id, String name);
+    void reportEventWithIdName(String eventName, String id, @Nullable String name);
+
+    void reportEventWithName(String eventName, @Nullable String name);
 
     void reportEvent(String eventName);
 

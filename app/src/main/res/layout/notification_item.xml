@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/notification_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:padding="@dimen/guideline_standard_padding">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/notification_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/half_padding"
+                android:layout_marginRight="@dimen/half_padding"
+                android:layout_toLeftOf="@+id/check_view"
+                android:layout_toStartOf="@+id/check_view"
+                android:clickable="false"
+                android:focusable="false"
+                tools:text="В курсе Археология фольклора: мифологические мотивы на карте мира менее чем через 36 часов наступит совсем крайний срок сдачи заданий по модулю Ныряльщик и антропогонические мифы"/>
+
+            <FrameLayout
+                android:id="@+id/check_view"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="@drawable/circle_foreground">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/accessibility_switch_viewed_state"
+                    android:src="@drawable/ic_circle"/>
+
+            </FrameLayout>
+
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/notification_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/stepic_weak_text"
+            tools:text="23.11.2015 14:33"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/grey_bar"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/silver"/>
+</LinearLayout>

@@ -2,6 +2,7 @@ package org.stepic.droid.ui.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +82,7 @@ public class CoursePropertyAdapter extends ArrayAdapter<CourseProperty> {
 
         ViewHolderItem(View view) {
             ButterKnife.bind(this, view);
+            coursePropertyValue.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
 }

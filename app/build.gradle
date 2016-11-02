@@ -3,6 +3,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.neenbedankt.android-apt' //needed for source code generation
 
+int minSdk = hasProperty('devMinSdk') ? devMinSdk.toInteger() : 14
+
 def globalConf = rootProject.ext
 android {
 
@@ -16,7 +18,7 @@ android {
             keyAlias globalConf.debugAlias
             keyPassword globalConf.debugAliasPass
         }
-
+        
         release {
             storeFile file(globalConf.keystore)
             storePassword globalConf.keystorePass
@@ -27,10 +29,10 @@ android {
 
     defaultConfig {
         applicationId "org.stepic.droid"
-        minSdkVersion 14
+        minSdkVersion minSdk
         targetSdkVersion 24
-        versionCode 95
-        versionName "1.19"
+        versionCode 99
+        versionName "1.20"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // Enabling multidex support.
         multiDexEnabled true

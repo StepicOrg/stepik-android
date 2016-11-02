@@ -45,6 +45,7 @@ import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.store.operations.Table;
+import org.stepic.droid.ui.NotificationCategory;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.HtmlHelper;
@@ -578,7 +579,7 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
-    public Call<Void> markNotificationAsRead(long notificationId, boolean isRead) {
+    public Call<Void> setReadStatusForNotification(long notificationId, boolean isRead) {
         Notification notification = new Notification();
         notification.set_unread(!isRead);
         return loggedService.putNotification(notificationId, new NotificationRequest(notification));
@@ -644,6 +645,29 @@ public class RetrofitRESTApi implements IApi {
     @Override
     public Call<UnitStepicResponse> getUnitByLessonId(long lessonId) {
         return loggedService.getUnitByLessonId(lessonId);
+    }
+
+    @Override
+    public Call<NotificationResponse> getNotifications(NotificationCategory notificationCategory, int page) {
+        String categoryType = getNotificationCategoryString(notificationCategory);
+        return loggedService.getNotifications(page, categoryType);
+    }
+
+    @Override
+    public Call<Void> markAsReadAllType(NotificationCategory notificationCategory) {
+        String categoryType = getNotificationCategoryString(notificationCategory);
+        return loggedService.markAsRead(categoryType);
+    }
+
+    @Nullable
+    private String getNotificationCategoryString(NotificationCategory notificationCategory) {
+        String categoryType;
+        if (notificationCategory == NotificationCategory.all) {
+            categoryType = null;
+        } else {
+            categoryType = notificationCategory.name();
+        }
+        return categoryType;
     }
 
     @Nullable

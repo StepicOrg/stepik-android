@@ -9,4 +9,6 @@ interface  INotificationManager {
     fun showNotification(notification : Notification);
 
     fun discardAllNotifications(courseId:Long)
+
+    fun tryOpenNotificationInstantly (notification: Notification)
 }

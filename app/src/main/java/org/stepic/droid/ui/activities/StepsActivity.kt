@@ -36,6 +36,10 @@ class StepsActivity : SingleFragmentActivity() {
     override fun createFragment(): Fragment {
         val extras = intent.extras
 
+        if (intent?.action == AppConstants.OPEN_NOTIFICATION) {
+            analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION)
+        }
+
         val section = extras?.getParcelable<Section>(AppConstants.KEY_SECTION_BUNDLE)
         val unit: Unit? = extras?.getParcelable<Unit>(AppConstants.KEY_UNIT_BUNDLE) // UNit can be null
         val lesson = extras?.getParcelable<Lesson>(AppConstants.KEY_LESSON_BUNDLE) //Lesson can be null in intent and if url is broken

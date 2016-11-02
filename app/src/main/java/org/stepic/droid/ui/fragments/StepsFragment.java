@@ -169,7 +169,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initIndependentUI();
-        stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepsPresenter.getStepList(), stepTypeResolver);
+        stepAdapter = new StepFragmentAdapter(getChildFragmentManager(), stepsPresenter.getStepList(), stepTypeResolver);
         viewPager.setAdapter(stepAdapter);
         stepsPresenter.attachView(this);
         if (lesson == null) {

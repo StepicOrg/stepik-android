@@ -49,7 +49,7 @@ class AnalyticImpl(context: Context) : Analytic {
     }
 
     override fun reportError(message: String, throwable: Throwable) {
-        FirebaseCrash.report(throwable);
+        FirebaseCrash.report(throwable)
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             YandexMetrica.reportError(message, throwable)
         }
@@ -57,6 +57,14 @@ class AnalyticImpl(context: Context) : Analytic {
 
     override fun reportEvent(eventName: String, id: String) {
         reportEventWithIdName(eventName, id, null)
+    }
+
+    override fun reportEventWithName(eventName: String, name: String?) {
+        val bundle = Bundle()
+        if (name != null) {
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name)
+        }
+        reportEvent(eventName, bundle)
     }
 
     override fun reportEventWithIdName(eventName: String, id: String, name: String?) {
@@ -70,7 +78,7 @@ class AnalyticImpl(context: Context) : Analytic {
 
     private fun castStringToFirebaseEvent(eventName: String): String {
         var eventNameLocal = eventName
-        if (eventName.equals(Analytic.Interaction.SUCCESS_LOGIN)) {
+        if (eventName == Analytic.Interaction.SUCCESS_LOGIN) {
             eventNameLocal = FirebaseAnalytics.Event.LOGIN
         }
 

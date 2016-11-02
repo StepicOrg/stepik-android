@@ -431,9 +431,14 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         @BindView(R.id.export_calendar_button)
         View addToCalendarButton;
 
+        @BindView(R.id.not_now_button)
+        View notNowButton;
+
+
         public CalendarViewHolder(View itemView) {
             super(itemView);
             rootView = itemView;
+            //calendar view holder is created only once
             addToCalendarButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -441,6 +446,15 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                     calendarPresenter.addDeadlinesToCalendar(SectionAdapter.this.sections, null);
                 }
             });
+
+            notNowButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    analytic.reportEventWithIdName(Analytic.Calendar.USER_CLICK_NOT_NOW, course.getCourseId() + "", course.getTitle());
+                    calendarPresenter.clickNotNow();
+                }
+            });
+
         }
 
         @Override
@@ -478,7 +492,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         }
     }
 
-    abstract class GenericViewHolder extends RecyclerView.ViewHolder {
+     abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 
         public GenericViewHolder(View itemView) {
             super(itemView);

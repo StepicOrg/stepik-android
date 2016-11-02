@@ -65,7 +65,7 @@
     <string name="explain_calendar_permission">For add deadlines to calendar the app needs permission to calendar. The app doesn\'t change and read your events.</string>
     <string name="allow_question">Allow?</string>
     <string name="video_quality">Video quality</string>
-    <string name="sync_problem">There was a problem syncing the data, please try again later.</string>
+    <string name="sync_problem">There was a problem syncing the link, please try again later.</string>
     <string name="empty_courses">Looks like you haven\'t enrolled in any courses yet</string>
     <string name="cache_cleared">Cache is cleared successfully!</string>
     <string name="join_course_web_exception">Try to join course in web</string>
@@ -101,7 +101,7 @@
     <string name="send">Send</string>
     <string name="email_sent">We have sent you an e-mail.</string>
     <string name="email_wrong">The e-mail address is not assigned to any user account.</string>
-    <string name="are_you_sure_logout">All saved data for offline will be removed. Are you sure? </string>
+    <string name="are_you_sure_logout">All saved link for offline will be removed. Are you sure? </string>
     <string name="feedback_good_description">The app is pleasure to use.</string>
     <string name="feedback_good">excellent</string>
     <string name="feedback_bad">terrible</string>
@@ -127,7 +127,7 @@
     <string name="cant_drop">You can not drop course</string>
     <string name="open_in_external_player">Open in external player</string>
     <string name="code_warning">This step is not optimized for mobile</string>
-    <string name="notification_title">Notification</string>
+    <string name="notification_title">Notifications</string>
     <string name="notification_learn_list">Deadlines, new modules, certificates</string>
     <string name="vibration_title">Vibration</string>
     <string name="empty_try_later">Now here is empty, try again later.</string>
@@ -257,4 +257,19 @@
     <string name="discounting_policy_title_settings">Warn about the lessons with penalties for wrong answers</string>
     <string name="discounting_policy_message">If you send the wrong submission of this task, in the future, you can not get the points. Are you sure?</string>
     <string name="keep_screen_on_title_settings">Keep screen on, when solve steps</string>
+    <string name="all_title">All</string>
+    <string name="learning_title">Learning</string>
+    <string name="reviews_title">Reviews</string>
+    <string name="teaching_title">Teaching</string>
+    <string name="accessibility_switch_viewed_state">Switch viewed state</string>
+    <string name="mark_all_as_read">Mark all as read</string>
+    <string name="empty_notification_title">Yet notifications are empty</string>
+    <string name="not_now">Not now</string>
+    <string name="after_hide_calendar_message">You can add deadlines in top menu</string>
+    <string name="received_review_title">Received review</string>
+    <string name="new_message_title">New message</string>
+    <string name="get_certifcate_title">New certificate</string>
+    <string name="get_license_message">New license</string>
+    <string name="added_to_group_title">Adding to group</string>
+    <string name="notification_comment_list">Comments and replies</string>
 </resources>

@@ -28,8 +28,6 @@ import org.xml.sax.XMLReader;
 
 import java.util.Stack;
 
-import timber.log.Timber;
-
 
 /**
  * Implements support for ordered ({@code <ol>}) and unordered ({@code <ul>}) lists in to Android TextView.
@@ -90,7 +88,7 @@ public class OlLiTagHandler implements Html.TagHandler {
                 lists.peek().closeItem(output, lists.size());
             }
         } else {
-            Timber.d("Found an unsupported tag %s", tag);
+//            Timber.d("Found an unsupported tag %s", tag);
         }
     }
 
@@ -183,7 +181,7 @@ public class OlLiTagHandler implements Html.TagHandler {
          * Creates a new {@code <ul>} with start index of 1.
          */
         public Ol() {
-            this(1); // default start index
+            this(1); // other start index
         }
 
         /**

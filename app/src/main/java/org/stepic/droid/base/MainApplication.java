@@ -73,7 +73,6 @@ public class MainApplication extends MultiDexApplication {
         return ((MainApplication) context.getApplicationContext()).component;
     }
 
-
     public static AppCoreComponent component() {
         return application.component;
     }
@@ -81,7 +80,6 @@ public class MainApplication extends MultiDexApplication {
     public static StorageComponent storageComponent() {
         return application.storageComponent;
     }
-
 
     @Override
     protected void attachBaseContext(Context base) {

@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.util.AppConstants
 import java.util.concurrent.ThreadPoolExecutor
@@ -16,6 +17,9 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
     @Inject
     lateinit var threadPool: ThreadPoolExecutor
 
+    @Inject
+    lateinit var analytic: Analytic
+
     init {
         MainApplication.component().inject(this)
     }
@@ -23,6 +27,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         val action = intent?.action
         if (action == AppConstants.NOTIFICATION_CANCELED) {
+            analytic.reportEvent(Analytic.Notification.DISCARD)
             val courseId = intent?.extras?.getLong(AppConstants.COURSE_ID_KEY)
             courseId?.let {
                 val task = object : AsyncTask<Void, Void, Void>() {

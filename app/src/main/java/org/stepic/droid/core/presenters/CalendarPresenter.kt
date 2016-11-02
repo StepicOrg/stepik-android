@@ -132,6 +132,15 @@ class CalendarPresenter(val config: IConfig,
         }
     }
 
+    fun clickNotNow() {
+        threadPool.execute {
+            userPrefs.isNeedToShowCalendarWidget = false
+            mainHandler.post {
+                view?.hideCalendarAfterNotNow()
+            }
+        }
+    }
+
     /**
      * add soft and hard deadline to calendar, if permission not granted put it to {@code exportableView}
      *
@@ -158,7 +167,7 @@ class CalendarPresenter(val config: IConfig,
             if (calendarItemOut == null) {
                 val primariesCalendars = getListOfPrimariesCalendars()
                 if (primariesCalendars.size == 1) {
-                    calendarItem = primariesCalendars.get(0)
+                    calendarItem = primariesCalendars[0]
                 } else if (primariesCalendars.size > 1) {
                     mainHandler.post {
                         view?.onNeedToChooseCalendar(primariesCalendars)

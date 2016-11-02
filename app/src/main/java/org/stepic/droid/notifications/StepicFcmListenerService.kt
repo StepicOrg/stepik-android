@@ -17,7 +17,7 @@ class StepicFcmListenerService : FirebaseMessagingService() {
          val data = message.data
         val notificationRawString: String? = data?.get("object")
         try {
-            val userId = hacker.mShell.getSharedPreferenceHelper().profile.id
+            val userId = hacker.shell.getSharedPreferenceHelper().profile.id
             val userIdServerString = data?.get("user_id")?:""
             val userIdServer = Integer.parseInt(userIdServerString)
             if (userIdServer.toLong() != userId){
@@ -39,7 +39,7 @@ class HackFcmListener() {
     lateinit var notificationManager: INotificationManager
 
     @Inject
-    lateinit var mShell : IShell
+    lateinit var shell: IShell
 
     @Inject
     lateinit var analytic : Analytic
