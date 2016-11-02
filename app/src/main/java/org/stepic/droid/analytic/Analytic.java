@@ -230,7 +230,6 @@ public interface Analytic {
         String OPEN_IN_BROWSER = "certificate_open_browser";
         String CLICK_SHARE_MAIN = "certificate_click_share_main";
         String OPEN_CERTIFICATE_FROM_NOTIFICATION_CENTER = "certificate_notification_center";
-        String OPEN_CERTIFICATE_FROM_NOTIFICATION = "certificate_notification";
     }
 
     interface Filters {
