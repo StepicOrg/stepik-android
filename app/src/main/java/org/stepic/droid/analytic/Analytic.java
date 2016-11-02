@@ -179,6 +179,7 @@ public interface Analytic {
         String CANT_PARSE_NOTIFICATION = "notification_parse_fail";
         String OPEN_TEACH_CENTER = "notification_open_teach_link";
         String PERSISTENT_KEY_NULL = "notification_key_null";
+        String MARK_ALL_AS_READ = "notification_mark_all";
     }
 
     interface Feedback {

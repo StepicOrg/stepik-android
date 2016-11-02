@@ -213,6 +213,7 @@ class NotificationListPresenter(
         if (notificationCategoryLocal == null) {
             analytic.reportEvent(Analytic.Notification.NOTIFICATION_NULL_POINTER)
         } else {
+            analytic.reportEvent(Analytic.Notification.MARK_ALL_AS_READ)
             view?.onLoadingMarkingAsRead()
             threadPoolExecutor.execute {
                 try {

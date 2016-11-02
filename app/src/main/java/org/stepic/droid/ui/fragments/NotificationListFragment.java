@@ -78,7 +78,9 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        adapter = new NotificationAdapter(getContext(), notificationListPresenter);
+        int position = getArguments().getInt(categoryPositionKey);
+        notificationCategory = NotificationCategory.values()[position];
+        adapter = new NotificationAdapter(getContext(), notificationListPresenter, notificationCategory);
     }
 
     @Override
@@ -100,8 +102,6 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        int position = getArguments().getInt(categoryPositionKey);
-        notificationCategory = NotificationCategory.values()[position];
 
 //        Timber.d("We use notificationRecyclerView instance %s", sharedRecyclerViewPool);
         Timber.d("Our unique for fragment presenter is %s", notificationListPresenter);

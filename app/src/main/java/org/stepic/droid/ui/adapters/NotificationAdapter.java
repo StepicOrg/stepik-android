@@ -17,6 +17,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.presenters.NotificationListPresenter;
 import org.stepic.droid.notifications.model.Notification;
+import org.stepic.droid.ui.NotificationCategory;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.resolvers.text.TextResolver;
@@ -38,13 +39,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     private final int itemViewType = 1;
     private final int headerViewType = 2;
     private final int footerViewType = 3;
-    private final int countOfHeads = 1;
+    private int countOfHeads = 1;
     private final int countOfFooter = 1;
     private final Typeface boldTypeface;
     private final Typeface regularTypeface;
 
     private Context context;
     private NotificationListPresenter notificationListPresenter;
+    private NotificationCategory notificationCategory;
     private DateTimeZone zone;
     private Locale locale;
     private List<Notification> notifications = new ArrayList<>();
@@ -57,13 +59,17 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     };
     private boolean isNeedEnableMarkButton = true;
 
-    public NotificationAdapter(Context context, NotificationListPresenter notificationListPresenter) {
+    public NotificationAdapter(Context context, NotificationListPresenter notificationListPresenter, NotificationCategory notificationCategory) {
         this.context = context;
         this.notificationListPresenter = notificationListPresenter;
+        this.notificationCategory = notificationCategory;
         zone = DateTimeZone.getDefault();
         locale = Locale.getDefault();
         boldTypeface = TypefaceUtils.load(context.getAssets(), "fonts/NotoSans-Bold.ttf");
         regularTypeface = TypefaceUtils.load(context.getAssets(), "fonts/NotoSans-Regular.ttf");
+        if (this.notificationCategory != NotificationCategory.all) {
+            countOfHeads = 0;
+        }
     }
 
     public int getNotificationsCount() {
@@ -92,7 +98,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
+        if (position < countOfHeads) {
             return headerViewType;
         } else if (position == getItemCount() - 1) {
             return footerViewType;
