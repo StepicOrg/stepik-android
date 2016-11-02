@@ -483,9 +483,23 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     private fun getTeachIntent(notification: Notification): Intent? {
         val link = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
-        val intent: Intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
-        intent.data = Uri.parse(link)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        return intent
+        try {
+            val url = Uri.parse(link)
+            val identifier = url.pathSegments[0]
+            val intent: Intent
+            if (identifier == "course") {
+                intent = Intent(MainApplication.getAppContext(), SectionActivity::class.java)
+            } else if (identifier == "lesson") {
+                intent = Intent(MainApplication.getAppContext(), StepsActivity::class.java)
+            } else {
+                return null
+            }
+            intent.data = url
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            return intent
+        } catch (exception: Exception) {
+            return null
+        }
+
     }
 }
