@@ -48,7 +48,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         }
 
         if (!userPreferences.isNotificationEnabled(notification.type)) {
-            analytic.reportEvent(Analytic.Notification.DISABLED_BY_USER)
+            analytic.reportEventWithName(Analytic.Notification.DISABLED_BY_USER, notification.type?.name)
         } else if (!sharedPreferenceHelper.isGcmTokenOk) {
             analytic.reportEvent(Analytic.Notification.GCM_TOKEN_NOT_OK)
         } else {

@@ -59,6 +59,14 @@ class AnalyticImpl(context: Context) : Analytic {
         reportEventWithIdName(eventName, id, null)
     }
 
+    override fun reportEventWithName(eventName: String, name: String?) {
+        val bundle = Bundle()
+        if (name != null) {
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name)
+        }
+        reportEvent(eventName, bundle)
+    }
+
     override fun reportEventWithIdName(eventName: String, id: String, name: String?) {
         val bundle = Bundle()
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id)

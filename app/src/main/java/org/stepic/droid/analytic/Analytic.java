@@ -245,6 +245,8 @@ public interface Analytic {
 
     void reportEventWithIdName(String eventName, String id, @Nullable String name);
 
+    void reportEventWithName(String eventName, @Nullable String name);
+
     void reportEvent(String eventName);
 
     void reportError(String message, @NotNull Throwable throwable);
