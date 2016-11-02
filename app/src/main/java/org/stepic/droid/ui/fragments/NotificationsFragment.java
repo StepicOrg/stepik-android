@@ -13,8 +13,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +68,6 @@ public class NotificationsFragment extends FragmentBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -99,28 +96,26 @@ public class NotificationsFragment extends FragmentBase {
         super.onDestroyView();
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.notification_center_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                analytic.reportEvent(Analytic.Interaction.CLICK_SETTINGS_FROM_NOTIFICATION);
-                shell.getScreenProvider().showSettings(getActivity());
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void initToolbar() {
         toolbar.setTitle(R.string.notification_title);
         if (hasDrawerHost != null) {
             actionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), hasDrawerHost.getDrawerLayout(), toolbar, R.string.drawer_open, R.string.drawer_closed);
             hasDrawerHost.getDrawerLayout().addDrawerListener(actionBarDrawerToggle);
             actionBarDrawerToggle.syncState();
+
+            toolbar.inflateMenu(R.menu.notification_center_menu);
+            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.action_settings:
+                            analytic.reportEvent(Analytic.Interaction.CLICK_SETTINGS_FROM_NOTIFICATION);
+                            shell.getScreenProvider().showSettings(getActivity());
+                            return true;
+                    }
+                    return false;
+                }
+            });
         }
         ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (supportActionBar != null) {
@@ -132,6 +127,7 @@ public class NotificationsFragment extends FragmentBase {
         if (actionBarDrawerToggle != null && hasDrawerHost != null) {
             hasDrawerHost.getDrawerLayout().removeDrawerListener(actionBarDrawerToggle);
         }
+        toolbar.setOnMenuItemClickListener(null);
         ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (supportActionBar != null) {
             supportActionBar.show();
