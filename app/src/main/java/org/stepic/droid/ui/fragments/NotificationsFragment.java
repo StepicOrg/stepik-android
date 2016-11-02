@@ -13,10 +13,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.ui.NotificationCategory;
@@ -66,6 +70,7 @@ public class NotificationsFragment extends FragmentBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -91,8 +96,23 @@ public class NotificationsFragment extends FragmentBase {
     @Override
     public void onDestroyView() {
         destroyToolbar();
-
         super.onDestroyView();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.notification_center_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                analytic.reportEvent(Analytic.Interaction.CLICK_SETTINGS_FROM_NOTIFICATION);
+                shell.getScreenProvider().showSettings(getActivity());
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initToolbar() {

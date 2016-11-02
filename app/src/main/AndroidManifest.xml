@@ -61,7 +61,7 @@
             android:label="@string/my_courses_title"
             android:launchMode="singleTop">
 
-            <meta-link
+            <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ui.activities.CourseSearchResultActivity"/>
         </activity>
@@ -79,13 +79,13 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
 
-                <link android:scheme="https"/>
-                <link android:scheme="http"/>
-                <link android:host="@string/host_name"/>
-                <link android:host="@string/secondary_host_name"/>
+                <data android:scheme="https"/>
+                <data android:scheme="http"/>
+                <data android:host="@string/host_name"/>
+                <data android:host="@string/secondary_host_name"/>
 
-                <link android:pathPattern="/course/.*/"/>
-                <link android:pathPattern="/course/.*/course_app"/>
+                <data android:pathPattern="/course/.*/"/>
+                <data android:pathPattern="/course/.*/course_app"/>
 
             </intent-filter>
         </activity>
@@ -94,8 +94,8 @@
             android:name=".ui.activities.SectionActivity"
             android:label="@string/syllabus_title"
             android:parentActivityName=".ui.activities.MainFeedActivity">
-            <!-- Parent activity meta-link to support 4.0 and lower -->
-            <meta-link
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainFeedActivity"/>
 
@@ -107,11 +107,11 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
 
-                <link android:scheme="https"/>
-                <link android:scheme="http"/>
-                <link android:host="@string/host_name"/>
-                <link android:host="@string/secondary_host_name"/>
-                <link android:pathPattern="/course/.*/syllabus.*"/>
+                <data android:scheme="https"/>
+                <data android:scheme="http"/>
+                <data android:host="@string/host_name"/>
+                <data android:host="@string/secondary_host_name"/>
+                <data android:pathPattern="/course/.*/syllabus.*"/>
             </intent-filter>
 
         </activity>
@@ -129,51 +129,51 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
 
-                <link android:scheme="https"/>
-                <link android:scheme="http"/>
-                <link android:host="@string/secondary_host_name"/>
-                <link android:host="@string/host_name"/>
-                <link android:pathPattern="/lesson/.*/"/>
-                <link android:pathPattern="/lesson/.*/step/1"/>
-                <link android:pathPattern="/lesson/.*/step/2"/>
-                <link android:pathPattern="/lesson/.*/step/3"/>
-                <link android:pathPattern="/lesson/.*/step/4"/>
-                <link android:pathPattern="/lesson/.*/step/5"/>
-                <link android:pathPattern="/lesson/.*/step/6"/>
-                <link android:pathPattern="/lesson/.*/step/7"/>
-                <link android:pathPattern="/lesson/.*/step/8"/>
-                <link android:pathPattern="/lesson/.*/step/9"/>
-                <link android:pathPattern="/lesson/.*/step/10"/>
-                <link android:pathPattern="/lesson/.*/step/11"/>
-                <link android:pathPattern="/lesson/.*/step/12"/>
-                <link android:pathPattern="/lesson/.*/step/13"/>
-                <link android:pathPattern="/lesson/.*/step/14"/>
-                <link android:pathPattern="/lesson/.*/step/15"/>
-                <link android:pathPattern="/lesson/.*/step/16"/>
-                <link android:pathPattern="/lesson/.*/step/17"/>
-                <link android:pathPattern="/lesson/.*/step/18"/>
-                <link android:pathPattern="/lesson/.*/step/19"/>
-                <link android:pathPattern="/lesson/.*/step/20"/>
-                <link android:pathPattern="/lesson/.*/step/21"/>
-                <link android:pathPattern="/lesson/.*/step/22"/>
-                <link android:pathPattern="/lesson/.*/step/23"/>
-                <link android:pathPattern="/lesson/.*/step/24"/>
-                <link android:pathPattern="/lesson/.*/step/25"/>
-                <link android:pathPattern="/lesson/.*/step/26"/>
-                <link android:pathPattern="/lesson/.*/step/27"/>
-                <link android:pathPattern="/lesson/.*/step/28"/>
-                <link android:pathPattern="/lesson/.*/step/29"/>
-                <link android:pathPattern="/lesson/.*/step/30"/>
-                <link android:pathPattern="/lesson/.*/step/31"/>
-                <link android:pathPattern="/lesson/.*/step/32"/>
-                <link android:pathPattern="/lesson/.*/step/33"/>
-                <link android:pathPattern="/lesson/.*/step/34"/>
-                <link android:pathPattern="/lesson/.*/step/35"/>
-                <link android:pathPattern="/lesson/.*/step/36"/>
-                <link android:pathPattern="/lesson/.*/step/37"/>
-                <link android:pathPattern="/lesson/.*/step/38"/>
-                <link android:pathPattern="/lesson/.*/step/39"/>
-                <link android:pathPattern="/lesson/.*/step/40"/>
+                <data android:scheme="https"/>
+                <data android:scheme="http"/>
+                <data android:host="@string/secondary_host_name"/>
+                <data android:host="@string/host_name"/>
+                <data android:pathPattern="/lesson/.*/"/>
+                <data android:pathPattern="/lesson/.*/step/1"/>
+                <data android:pathPattern="/lesson/.*/step/2"/>
+                <data android:pathPattern="/lesson/.*/step/3"/>
+                <data android:pathPattern="/lesson/.*/step/4"/>
+                <data android:pathPattern="/lesson/.*/step/5"/>
+                <data android:pathPattern="/lesson/.*/step/6"/>
+                <data android:pathPattern="/lesson/.*/step/7"/>
+                <data android:pathPattern="/lesson/.*/step/8"/>
+                <data android:pathPattern="/lesson/.*/step/9"/>
+                <data android:pathPattern="/lesson/.*/step/10"/>
+                <data android:pathPattern="/lesson/.*/step/11"/>
+                <data android:pathPattern="/lesson/.*/step/12"/>
+                <data android:pathPattern="/lesson/.*/step/13"/>
+                <data android:pathPattern="/lesson/.*/step/14"/>
+                <data android:pathPattern="/lesson/.*/step/15"/>
+                <data android:pathPattern="/lesson/.*/step/16"/>
+                <data android:pathPattern="/lesson/.*/step/17"/>
+                <data android:pathPattern="/lesson/.*/step/18"/>
+                <data android:pathPattern="/lesson/.*/step/19"/>
+                <data android:pathPattern="/lesson/.*/step/20"/>
+                <data android:pathPattern="/lesson/.*/step/21"/>
+                <data android:pathPattern="/lesson/.*/step/22"/>
+                <data android:pathPattern="/lesson/.*/step/23"/>
+                <data android:pathPattern="/lesson/.*/step/24"/>
+                <data android:pathPattern="/lesson/.*/step/25"/>
+                <data android:pathPattern="/lesson/.*/step/26"/>
+                <data android:pathPattern="/lesson/.*/step/27"/>
+                <data android:pathPattern="/lesson/.*/step/28"/>
+                <data android:pathPattern="/lesson/.*/step/29"/>
+                <data android:pathPattern="/lesson/.*/step/30"/>
+                <data android:pathPattern="/lesson/.*/step/31"/>
+                <data android:pathPattern="/lesson/.*/step/32"/>
+                <data android:pathPattern="/lesson/.*/step/33"/>
+                <data android:pathPattern="/lesson/.*/step/34"/>
+                <data android:pathPattern="/lesson/.*/step/35"/>
+                <data android:pathPattern="/lesson/.*/step/36"/>
+                <data android:pathPattern="/lesson/.*/step/37"/>
+                <data android:pathPattern="/lesson/.*/step/38"/>
+                <data android:pathPattern="/lesson/.*/step/39"/>
+                <data android:pathPattern="/lesson/.*/step/40"/>
             </intent-filter>
 
         </activity>
@@ -237,7 +237,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
-            <meta-link
+            <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable"/>
         </activity>
@@ -246,8 +246,8 @@
             android:name=".ui.activities.TextFeedbackActivity"
             android:label="@string/feedback_title"
             android:parentActivityName="org.stepic.droid.ui.activities.MainFeedActivity">
-            <!-- Parent activity meta-link to support 4.0 and lower -->
-            <meta-link
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainFeedActivity"/>
         </activity>
@@ -277,8 +277,8 @@
             android:label="@string/settings_title"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.activities.MainFeedActivity">
-            <!-- Parent activity meta-link to support 4.0 and lower -->
-            <meta-link
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainFeedActivity"/>
 
@@ -293,8 +293,8 @@
             android:label="@string/space_management_title"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.activities.SettingsActivity">
-            <!-- Parent activity meta-link to support 4.0 and lower -->
-            <meta-link
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.SettingsActivity"/>
         </activity>
@@ -310,8 +310,8 @@
             android:label="@string/comments_title"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.activities.StepsActivity">
-            <!-- Parent activity meta-link to support 4.0 and lower -->
-            <meta-link
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.StepsActivity"/>
         </activity>
@@ -321,8 +321,8 @@
             android:label="@string/new_comment_title"
             android:parentActivityName=".ui.activities.CommentsActivity"
             android:windowSoftInputMode="adjustResize|stateHidden">
-            <!-- Parent activity meta-link to support 4.0 and lower -->
-            <meta-link
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.CommentsActivity"/>
         </activity>
@@ -332,8 +332,8 @@
             android:label="@string/filter_title"
             android:parentActivityName=".ui.activities.MainFeedActivity"
             android:windowSoftInputMode="adjustResize|stateHidden">
-            <!-- Parent activity meta-link to support 4.0 and lower -->
-            <meta-link
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainFeedActivity"/>
         </activity>

@@ -55,6 +55,7 @@ public interface Analytic {
         String CLICK_TRY_STEP_AGAIN = "step_try_again";
         String NO_DISCOUNTING_DIALOG = "discounting_dialog_no";
         String YES_DISCOUNTING_DIALOG = "discounting_dialog_yes";
+        String CLICK_SETTINGS_FROM_NOTIFICATION = "click_settings_from_notification";
     }
 
     interface Screens {
