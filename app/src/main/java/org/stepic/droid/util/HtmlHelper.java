@@ -4,9 +4,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.notifications.model.Notification;
+
+import timber.log.Timber;
 
 public class HtmlHelper {
 
@@ -105,6 +108,23 @@ public class HtmlHelper {
         return id;
     }
 
+    private final static String syllabusModulePrefix = "syllabus?module=";
+
+    public static Integer parseModulePositionFromNotification(String htmlRaw) {
+        int indexOfStart = htmlRaw.indexOf(syllabusModulePrefix);
+        if (indexOfStart < 0) return null;
+
+        String begin = htmlRaw.substring(indexOfStart + syllabusModulePrefix.length());
+        int end = begin.indexOf("\"");
+        String substring = begin.substring(0, end);
+
+        try {
+            return Integer.parseInt(substring);
+        } catch (Exception exception) {
+            return null;
+        }
+    }
+
     private static Long parseCourseIdFromNotification(String htmlRaw) {
         int start = htmlRaw.indexOf('<');
         int end = htmlRaw.indexOf('>');
@@ -196,6 +216,21 @@ public class HtmlHelper {
                 .append(userId)
                 .append("/?from_mobile_app=true")
                 .toString();
+    }
+
+    @Nullable
+    public static String parseNLinkInText(@NotNull String htmlText, String baseUrl, int position) {
+        try {
+            Document document = Jsoup.parse(htmlText);
+            document.setBaseUri(baseUrl);
+            Elements elements = document.getElementsByTag("a");
+            Element our = elements.get(position);
+            String absolute = our.absUrl("href");
+            Timber.d(absolute);
+            return absolute;
+        } catch (Exception exception) {
+            return null;
+        }
     }
 
 }

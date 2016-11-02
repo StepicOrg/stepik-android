@@ -49,6 +49,7 @@ public class AppConstants {
     public static final java.lang.String NOTIFICATION_CANCELED = "notification_cancelled";
 
 
+    public static final String OPEN_NOTIFICATION_FOR_CHECK_COURSE = "Open_notification_check_course";
     public static final String OPEN_NOTIFICATION = "Open_notification";
     public static final long MILLIS_IN_24HOURS = 86400000L;
     public static final long MILLIS_IN_1HOUR = 3600000L;
@@ -69,4 +70,5 @@ public class AppConstants {
     public static final int FEATURED_FILTER = 2;
 
     public static final int DEFAULT_NUMBER_IDS_IN_QUERY = 100;
+    public static final java.lang.String KEY_MODULE_POSITION = "section_long_id";
 }

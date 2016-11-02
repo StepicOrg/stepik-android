@@ -30,5 +30,5 @@ enum class NotificationType {
     @SerializedName("learn")
     learn,
     @SerializedName("default")
-    default
+    other
 }

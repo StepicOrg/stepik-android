@@ -492,7 +492,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         }
     }
 
-    abstract class GenericViewHolder extends RecyclerView.ViewHolder {
+     abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 
         public GenericViewHolder(View itemView) {
             super(itemView);

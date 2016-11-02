@@ -164,4 +164,5 @@ public class FragmentBase extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
+
 }

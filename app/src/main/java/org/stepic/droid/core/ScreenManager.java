@@ -29,10 +29,9 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.store.operations.Table;
-import org.stepic.droid.ui.activities.FilterActivity;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.ui.activities.CommentsActivity;
 import org.stepic.droid.ui.activities.CourseDetailActivity;
+import org.stepic.droid.ui.activities.FilterActivity;
 import org.stepic.droid.ui.activities.LaunchActivity;
 import org.stepic.droid.ui.activities.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
@@ -46,6 +45,7 @@ import org.stepic.droid.ui.activities.TextFeedbackActivity;
 import org.stepic.droid.ui.activities.UnitsActivity;
 import org.stepic.droid.ui.activities.VideoActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.web.ViewAssignment;
 import org.videolan.libvlc.util.VLCUtil;
 
@@ -141,6 +141,26 @@ public class ScreenManager implements IScreenManager {
         }
     }
 
+
+    @Override
+    public Intent getCertificateIntent() {
+        Context context = MainApplication.getAppContext();
+        int index = MainFeedActivity.getCertificateFragmentIndex();
+        Intent intent = new Intent(context, MainFeedActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Bundle bundle = new Bundle();
+        bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
+        intent.putExtras(bundle);
+        return intent;
+    }
+
+    @Override
+    public void showCertificates() {
+        Context context = MainApplication.getAppContext();
+        int index = MainFeedActivity.getCertificateFragmentIndex();
+        showFromMainActivity(context, index);
+    }
+
     @Override
     public void showDownload() {
         Context context = MainApplication.getAppContext();
@@ -161,7 +181,7 @@ public class ScreenManager implements IScreenManager {
 
     private void showFromMainActivity(Context context, int index) {
         Intent intent = new Intent(context, MainFeedActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle bundle = new Bundle();
         bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
         intent.putExtras(bundle);
@@ -218,14 +238,21 @@ public class ScreenManager implements IScreenManager {
         activity.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
     }
 
+
     @Override
-    public void openInWeb(Context context, String path) {
-        analytic.reportEventWithIdName(Analytic.Screens.OPEN_LINK_IN_WEB, "0", path);
+    public Intent getOpenInWebIntent(String path) {
         if (!path.startsWith("https://") && !path.startsWith("http://")) {
             path = "http://" + path;
         }
         final Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(path));
+        return intent;
+    }
+
+    @Override
+    public void openInWeb(Context context, String path) {
+        analytic.reportEventWithIdName(Analytic.Screens.OPEN_LINK_IN_WEB, "0", path);
+        final Intent intent = getOpenInWebIntent(path);
         context.startActivity(intent);
     }
 

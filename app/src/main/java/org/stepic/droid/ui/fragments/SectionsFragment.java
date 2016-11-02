@@ -78,7 +78,6 @@ import org.stepic.droid.util.SnackbarExtensionKt;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.StringUtil;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
@@ -692,35 +691,31 @@ public class SectionsFragment
 
 
     public void onNewIntent(Intent intent) {
+
+        long simpleCourseId = -1;
+        int simpleModulePosition = -1;
+
         if (intent.getExtras() != null) {
-            course = (Course) (intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE));
+            Object courseInBundle = intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE);
+            if (courseInBundle != null && courseInBundle instanceof Course) {
+                course = (Course) courseInBundle;
+            } else {
+                try {
+                    simpleCourseId = intent.getExtras().getLong(AppConstants.KEY_COURSE_LONG_ID);
+                    simpleModulePosition = intent.getExtras().getInt(AppConstants.KEY_MODULE_POSITION);
+                } catch (Exception ex) {
+                    //cant parse -> continue
+                }
+            }
         }
         if (course != null) {
-            if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
-                analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION);
-                analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION_SYLLABUS, course.getCourseId() + "");
-                final long courseId = course.getCourseId();
-                AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        List<Notification> notifications = databaseFacade.getAllNotificationsOfCourse(courseId);
-                        notificationManager.discardAllNotifications(courseId);
-                        for (Notification notificationItem : notifications) {
-                            if (notificationItem != null && notificationItem.getId() != null) {
-                                try {
-                                    shell.getApi().markNotificationAsRead(notificationItem.getId(), true).execute();
-                                } catch (IOException e) {
-                                    analytic.reportError(Analytic.Error.NOTIFICATION_NOT_POSTED_ON_CLICK, e);
-                                }
-                            }
-                        }
-                        return null;
-                    }
-                };
-                task.executeOnExecutor(threadPoolExecutor);
-            }
-
+            final long courseId = course.getCourseId();
+            postNotificationAsReadIfNeed(intent, courseId);
             initScreenByCourse();
+        } else if (simpleCourseId > 0 && simpleModulePosition > 0) {
+            modulePosition = simpleModulePosition;
+            courseFinderPresenter.findCourseById(simpleCourseId);
+            postNotificationAsReadIfNeed(intent, simpleCourseId);
         } else {
             Uri fullUri = intent.getData();
             List<String> pathSegments = fullUri.getPathSegments();
@@ -728,13 +723,11 @@ public class SectionsFragment
             if (pathSegments.size() > 1) {
                 String pathFromWeb = pathSegments.get(1);
                 Long id = HtmlHelper.parseIdFromSlug(pathFromWeb);
-                long simpleId;
                 if (id == null) {
-                    simpleId = -1;
+                    simpleCourseId = -1;
                 } else {
-                    simpleId = id;
+                    simpleCourseId = id;
                 }
-
 
                 try {
                     String rawSectionPosition = fullUri.getQueryParameter("module");
@@ -743,16 +736,47 @@ public class SectionsFragment
                     modulePosition = -1;
                 }
 
-                analytic.reportEvent(Analytic.DeepLink.USER_OPEN_SYLLABUS_LINK, simpleId + "");
-                analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
-                if (simpleId < 0) {
+                if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
+                    analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION);
+                } else {
+                    analytic.reportEvent(Analytic.DeepLink.USER_OPEN_SYLLABUS_LINK, simpleCourseId + "");
+                    analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
+                }
+
+                if (simpleCourseId < 0) {
                     onCourseUnavailable(new CourseUnavailableForUserEvent());
                 } else {
-                    courseFinderPresenter.findCourseById(simpleId);
+                    courseFinderPresenter.findCourseById(simpleCourseId);
+                    postNotificationAsReadIfNeed(intent, simpleCourseId);
                 }
             } else {
                 onCourseUnavailable(new CourseUnavailableForUserEvent());
             }
+        }
+    }
+
+    private void postNotificationAsReadIfNeed(Intent intent, final long courseId) {
+        if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION_FOR_CHECK_COURSE)) {
+            analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION);
+            analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION_SYLLABUS, courseId + "");
+            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    List<Notification> notifications = databaseFacade.getAllNotificationsOfCourse(courseId);
+                    notificationManager.discardAllNotifications(courseId);
+                    for (Notification notificationItem : notifications) {
+                        if (notificationItem != null && notificationItem.getId() != null) {
+                            try {
+                                shell.getApi().setReadStatusForNotification(notificationItem.getId(), true).execute();
+                            } catch (Exception e) {
+                                analytic.reportError(Analytic.Error.NOTIFICATION_NOT_POSTED_ON_CLICK, e);
+                            }
+                        }
+                    }
+                    return null;
+                }
+            };
+            task.executeOnExecutor(threadPoolExecutor);
         }
     }
 

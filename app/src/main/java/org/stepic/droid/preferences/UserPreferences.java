@@ -11,6 +11,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.StorageOption;
+import org.stepic.droid.notifications.model.NotificationType;
 import org.stepic.droid.util.StorageUtil;
 
 import java.io.File;
@@ -163,15 +164,6 @@ public class UserPreferences {
         sharedPreferenceHelper.setOpenInExternal(isOpenInExternal);
     }
 
-    public boolean isNotificationEnabled() {
-        return !sharedPreferenceHelper.isNotificationDisabled();
-    }
-
-    public void setNotificationEnabled(boolean isEnabled) {
-        sharedPreferenceHelper.setNotificationDisabled(!isEnabled);
-    }
-
-
     public boolean isVibrateNotificationEnabled() {
         return !sharedPreferenceHelper.isNotificationVibrationDisabled();
     }
@@ -301,5 +293,14 @@ public class UserPreferences {
 
     public void setKeepScreenOnSteps(boolean isChecked) {
         sharedPreferenceHelper.setKeepScreenOnSteps(isChecked);
+    }
+
+    public boolean isNotificationEnabled(NotificationType type) {
+        return !sharedPreferenceHelper.isNotificationDisabled(type);
+//        return false; // FIXME: 01.11.16
+    }
+
+    public void setNotificationEnabled(NotificationType type, boolean isChecked) {
+        sharedPreferenceHelper.setNotificationDisabled(type, isChecked);
     }
 }

@@ -250,6 +250,19 @@
     <string name="discounting_policy_title_settings">Предупреждать об уроках со штрафами за неверные ответы</string>
     <string name="discounting_policy_message">Если Вы отправите неверное решение этого задания, то в дальнейшем Вы можете не получить баллы. Вы уверены?</string>
     <string name="keep_screen_on_title_settings">Оставлять экран включенным во время решения задач</string>
+    <string name="all_title">Все</string>
+    <string name="learning_title">Обучение</string>
+    <string name="reviews_title">Рецензии</string>
+    <string name="teaching_title">Преподавание</string>
+    <string name="accessibility_switch_viewed_state">Изменить состояние просмотренности</string>
+    <string name="mark_all_as_read">Отметить все как прочитанное</string>
+    <string name="empty_notification_title">Пока уведомлений нет</string>
     <string name="not_now">Не сейчас</string>
     <string name="after_hide_calendar_message">Добавить дедлайны в календарь можно в верхнем меню</string>
+    <string name="received_review_title">Получена рецензия</string>
+    <string name="new_message_title">Новое сообщение</string>
+    <string name="get_certifcate_title">Получен сертификат</string>
+    <string name="get_license_message">Получена лицензия</string>
+    <string name="added_to_group_title">Добавление в группу</string>
+    <string name="notification_comment_list">Комментарии и ответы</string>
 </resources>

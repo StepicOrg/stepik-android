@@ -60,4 +60,5 @@
     <dimen name="guideline_standard_padding">16dp</dimen>
     <dimen name="card_bottom_margin">10dp</dimen>
     <dimen name="stepik_text_size_in_button">14sp</dimen>
+    <dimen name="left_padding_tablayout_scrollable">60dp</dimen>
 </resources>

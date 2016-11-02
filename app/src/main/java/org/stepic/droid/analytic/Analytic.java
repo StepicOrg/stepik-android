@@ -3,6 +3,7 @@ package org.stepic.droid.analytic;
 import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
@@ -54,6 +55,7 @@ public interface Analytic {
         String CLICK_TRY_STEP_AGAIN = "step_try_again";
         String NO_DISCOUNTING_DIALOG = "discounting_dialog_no";
         String YES_DISCOUNTING_DIALOG = "discounting_dialog_yes";
+        String CLICK_SETTINGS_FROM_NOTIFICATION = "click_settings_from_notification";
     }
 
     interface Screens {
@@ -153,15 +155,30 @@ public interface Analytic {
     interface Notification {
         String DISABLED_BY_USER = "Notification is disabled by user in app";
         String ACTION_NOT_SUPPORT = "notification action is not support";
-        String HTML_WAS_NULL = "notification action is not support"; //// FIXME: 22.09.16 similar analytic
-        String WAS_MUTED = "notification html text was muted";
-        String NOT_SUPPORT = "notification is not support";
-        String LEARN_SHOWN = "notification learn is shown";
+        String HTML_WAS_NULL = "notification_html_was_null";
+        String WAS_MUTED = "notification_was_muted";
+        String NOT_SUPPORT_TYPE = "notification_type_is_not_support";//After checking action
+
+        @Deprecated //use NOTIFICATION_SHOWN with name = notification.type
+                String LEARN_SHOWN = "notification learn is shown";
         String CANT_PARSE_COURSE_ID = "notification, cant parse courseId";
         String TOKEN_UPDATED = "notification gcm token is updated";
         String TOKEN_UPDATE_FAILED = "notification gcm token is not updated";
         String OPEN_NOTIFICATION = "notification_opened";
         String OPEN_NOTIFICATION_SYLLABUS = "notification_opened_syllabus";
+        String ID_WAS_NULL = "notification_id_was_null";
+        String NOTIFICATION_NULL_POINTER = "notification_unpredicatable_null";
+        String NOTIFICATION_CLICKED_IN_CENTER = "notification_clicked_in_center";
+        String NOTIFICATION_CENTER_OPENED = "notification_center_opened";
+        String OPEN_COMMENT_NOTIFICATION_LINK = "notification_open_comment_link";
+        String OPEN_LESSON_NOTIFICATION_LINK = "notification_open_lesson_link";
+        String NOTIFICATION_NOT_OPENABLE = "notification_not_openable";
+        String GCM_TOKEN_NOT_OK = "notification_gsm_token_not_ok";
+        String NOTIFICATION_SHOWN = "notification_shown";
+        String DISCARD = "notification_discarded";
+        String CANT_PARSE_NOTIFICATION = "notification_parse_fail";
+        String OPEN_TEACH_CENTER = "notification_open_teach_link";
+        String PERSISTENT_KEY_NULL = "notification_key_null";
     }
 
     interface Feedback {
@@ -212,6 +229,7 @@ public interface Analytic {
         String ADD_LINKEDIN = "certificate_add_linkeding";
         String OPEN_IN_BROWSER = "certificate_open_browser";
         String CLICK_SHARE_MAIN = "certificate_click_share_main";
+        String OPEN_CERTIFICATE_FROM_NOTIFICATION_CENTER = "certificate_notification_center";
     }
 
     interface Filters {
@@ -224,7 +242,9 @@ public interface Analytic {
 
     void reportEvent(String eventName, String id);
 
-    void reportEventWithIdName(String eventName, String id, String name);
+    void reportEventWithIdName(String eventName, String id, @Nullable String name);
+
+    void reportEventWithName(String eventName, @Nullable String name);
 
     void reportEvent(String eventName);
 

@@ -16,13 +16,13 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data
+                <link
                     android:host="stepic.org"
                     android:pathPattern="/oauth"
                     android:scheme="stepic"/>
 
 
-                <data
+                <link
                     android:host="stepik.org"
                     android:pathPattern="/oauth"
                     android:scheme="stepic"/>

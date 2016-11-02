@@ -181,7 +181,7 @@ public class OlLiTagHandler implements Html.TagHandler {
          * Creates a new {@code <ul>} with start index of 1.
          */
         public Ol() {
-            this(1); // default start index
+            this(1); // other start index
         }
 
         /**
