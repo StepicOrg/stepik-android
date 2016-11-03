@@ -214,6 +214,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
             val media = Media(libvlc, uri)
             mediaPlayer?.media = media
             media.release()
+            mediaPlayer?.volume = 150
 
             mediaPlayer?.rate = userPreferences.videoPlaybackRate.rateFloat
             isEndReached = false
