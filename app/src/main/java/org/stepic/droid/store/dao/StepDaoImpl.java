@@ -101,6 +101,8 @@ public class StepDaoImpl extends DaoBase<Step> {
         values.put(DbStructureStep.Column.POSITION, step.getPosition());
         values.put(DbStructureStep.Column.DISCUSSION_COUNT, step.getDiscussions_count());
         values.put(DbStructureStep.Column.DISCUSSION_ID, step.getDiscussion_proxy());
+        values.put(DbStructureStep.Column.HAS_SUBMISSION_RESTRICTION, step.getHasSubmissionRestriction());
+        values.put(DbStructureStep.Column.MAX_SUBMISSION_COUNT, step.getMaxSubmissionCount());
 
         if (step.getActions() != null) {
             values.put(DbStructureStep.Column.PEER_REVIEW, step.getActions().getDo_review());
