@@ -827,6 +827,10 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
                         player?.play()
                     }
                 }
+
+                MediaPlayer.Event.Stopped -> {
+                    Timber.d("video stopped preroll")
+                }
             }
         }
     }
