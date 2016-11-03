@@ -72,7 +72,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
     var mediaPlayer: MediaPlayer? = null
     var videoWidth: Int = 0
     var videoHeight: Int = 0
-    private val mPlayerListener: MyPlayerListener = MyPlayerListener(this)
+    private val playerListener: MyPlayerListener = MyPlayerListener(this)
     var maxTimeInMillis: Long? = null
     var currentTimeInMillis: Long = 0L
     var progressBar: ProgressBar? = null
@@ -184,7 +184,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
         vout?.addCallback(this)
         vout?.attachViews()
 
-        mediaPlayer?.setEventListener(mPlayerListener)
+        mediaPlayer?.setEventListener(playerListener)
 
         playPauseSwitcher?.isClickable = true
 
@@ -263,7 +263,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
             }
             if (isOnResumeDirectlyAfterOnCreate) {
                 isOnResumeDirectlyAfterOnCreate = false
-                mediaPlayer?.setEventListener(mPlayerListener)
+                mediaPlayer?.setEventListener(playerListener)
                 playPlayer()
             } else {
                 mediaPlayer?.setEventListener(preRollListener)
@@ -812,7 +812,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
                     Timber.d("pre roll Playing")
                     //mOwner?.pausePlayer()//it is not need, because we do not want change button
                     player?.pause()
-                    player?.setEventListener(owner?.mPlayerListener)
+                    player?.setEventListener(owner?.playerListener)
                     owner?.stopLoading()
                     player?.length?.let {
                         owner?.slashTime?.visibility = View.VISIBLE
