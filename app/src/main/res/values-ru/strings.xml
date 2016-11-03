@@ -62,7 +62,7 @@
     <string name="explain_permission">Для сохранения и просмотра видео в режиме оффлайн Stepik должен иметь права записи файлов в память телефона.</string>
     <string name="connectionProblems">Отсутствует подключение к Интернету</string>
     <string name="video_quality">Качество видео</string>
-    <string name="sync_problem">Возникли проблемы с синхронизацией данных, пожалуйста, повторите попытку позже.</string>
+    <string name="sync_problem">Возникли проблемы с синхронизацией данных, пожалуйста, повторите попытку позже</string>
     <string name="empty_courses">Похоже, что Вы не записаны ни на один курс</string>
     <string name="cache_cleared">Кэш успешно очищен!</string>
     <string name="join_course_web_exception">Попробуйте записаться на курс в веб версии</string>

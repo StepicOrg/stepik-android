@@ -65,7 +65,7 @@
     <string name="explain_calendar_permission">For add deadlines to calendar the app needs permission to calendar. The app doesn\'t change and read your events.</string>
     <string name="allow_question">Allow?</string>
     <string name="video_quality">Video quality</string>
-    <string name="sync_problem">There was a problem syncing the link, please try again later.</string>
+    <string name="sync_problem">There was a problem syncing the link, please try again later</string>
     <string name="empty_courses">Looks like you haven\'t enrolled in any courses yet</string>
     <string name="cache_cleared">Cache is cleared successfully!</string>
     <string name="join_course_web_exception">Try to join course in web</string>

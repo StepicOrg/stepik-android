@@ -246,7 +246,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
 
     override fun onResume() {
         super.onResume()
-        Timber.d(("onResume"))
+        Timber.d("onResume")
         bus.register(this)
         videoTimestampPresenter.showVideoWithPredefinedTimestamp(videoId)
     }
@@ -768,6 +768,10 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
                 }
                 MediaPlayer.Event.Stopped -> {
                     Timber.d("player stopped")
+                    owner?.activity?.let {
+                        Toast.makeText(it, R.string.sync_problem, Toast.LENGTH_SHORT).show()
+                        it.finish()
+                    }
                 }
 
             }
