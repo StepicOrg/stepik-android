@@ -34,7 +34,7 @@ class VideoWIthTimestampPresenter(val databaseFacade: DatabaseFacade,
     }
 
     fun saveMillis(currentTimeInMillis: Long, videoId: Long?) {
-        if (videoId == null) return
+        if (videoId == null || currentTimeInMillis <= 0) return
         threadPoolExecutor.execute {
             databaseFacade.addTimestamp(VideoTimestamp(videoId, currentTimeInMillis))
         }
