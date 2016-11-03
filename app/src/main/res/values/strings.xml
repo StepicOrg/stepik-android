@@ -272,4 +272,6 @@
     <string name="get_license_message">New license</string>
     <string name="added_to_group_title">Adding to group</string>
     <string name="notification_comment_list">Comments and replies</string>
+    <string name="exam_module_title">It is exam module, you can solve it in web</string>
+    <string name="start_exam_action_title">Open</string>
 </resources>

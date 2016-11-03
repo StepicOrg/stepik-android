@@ -111,7 +111,7 @@
                 <data android:scheme="http"/>
                 <data android:host="@string/host_name"/>
                 <data android:host="@string/secondary_host_name"/>
-                <data android:pathPattern="/course/.*/syllabus.*"/>
+                <data android:pathPattern="/course/.*/syllabus"/>
             </intent-filter>
 
         </activity>

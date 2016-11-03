@@ -74,6 +74,8 @@ public interface IScreenManager {
 
     void showCertificates();
 
+    void openSyllabusInWeb(Context context, long courseId);
+
     Intent getCertificateIntent();
 
     Intent getOpenInWebIntent(String path);

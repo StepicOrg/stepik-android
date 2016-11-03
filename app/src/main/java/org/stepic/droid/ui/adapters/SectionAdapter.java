@@ -241,6 +241,14 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         loadSection(adapterPosition);
     }
 
+    private void onClickStartExam(int position) {
+        if (position >= 0 && position < sections.size()) {
+            analytic.reportEvent(Analytic.Exam.SHOW_EXAM);
+            Section section = sections.get(position);
+            screenManager.openSyllabusInWeb(context, section.getCourse());
+        }
+    }
+
     class SectionViewHolder extends GenericViewHolder implements StepicOnClickItemListener {
 
         @BindView(R.id.cv)
@@ -277,6 +285,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         @BindView(R.id.load_button)
         View loadButton;
 
+        @BindView(R.id.exam_view)
+        ViewGroup examRoot;
+
+        @BindView(R.id.start_exam_button)
+        View startExamButton;
+
 
         public SectionViewHolder(View itemView) {
             super(itemView);
@@ -293,6 +307,13 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 @Override
                 public void onClick(View v) {
                     onClickLoad(getAdapterPosition());
+                }
+            });
+
+            startExamButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SectionAdapter.this.onClickStartExam(getAdapterPosition());
                 }
             });
         }
@@ -393,6 +414,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 cv.setFocusable(false);
                 cv.setClickable(false);
                 cv.setFocusableInTouchMode(false);
+            }
+
+            if (section.isExam()) {
+                examRoot.setVisibility(View.VISIBLE);
+            } else {
+                examRoot.setVisibility(View.GONE);
             }
 
             if (defaultHighlightPosition >= 0 && defaultHighlightPosition == position) {
