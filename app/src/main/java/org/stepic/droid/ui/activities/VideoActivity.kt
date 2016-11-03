@@ -13,7 +13,7 @@ class VideoActivity : SingleFragmentActivity() {
 
     override fun createFragment(): Fragment? {
         val path: String? = intent.extras.getString(videoPathKey)
-        val videoId : Long = intent.extras.getLong(videoIdKey)
+        val videoId: Long = intent.extras.getLong(videoIdKey)
         if (path != null) {
             return VideoFragment.newInstance(path, videoId)
         } else {
@@ -25,5 +25,10 @@ class VideoActivity : SingleFragmentActivity() {
         Timber.d("finish")
         super.finish()
         overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
+    }
+
+    override fun onBackPressed() {
+        Timber.d("onBackPressed")
+        this.finish()
     }
 }
