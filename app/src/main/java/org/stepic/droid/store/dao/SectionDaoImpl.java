@@ -35,6 +35,7 @@ public class SectionDaoImpl extends DaoBase<Section> {
         int indexIsLoading = cursor.getColumnIndex(DbStructureSections.Column.IS_LOADING);
         int indexTestSection = cursor.getColumnIndex(DbStructureSections.Column.TEST_SECTION);
         int indexDiscountingPolicy = cursor.getColumnIndex(DbStructureSections.Column.DISCOUNTING_POLICY);
+        int indexIsExam = cursor.getColumnIndex(DbStructureSections.Column.IS_EXAM);
 
         section.setId(cursor.getLong(columnIndexId));
         section.setTitle(cursor.getString(columnIndexTitle));
@@ -56,6 +57,8 @@ public class SectionDaoImpl extends DaoBase<Section> {
         Actions actions = new Actions();
         actions.setTest_section(test_section);
         section.setActions(actions);
+
+        section.setExam(cursor.getInt(indexIsExam) > 0);
 
         return section;
     }
@@ -87,6 +90,7 @@ public class SectionDaoImpl extends DaoBase<Section> {
         values.put(DbStructureSections.Column.HARD_DEADLINE, section.getHard_deadline());
         values.put(DbStructureSections.Column.COURSE, section.getCourse());
         values.put(DbStructureSections.Column.POSITION, section.getPosition());
+        values.put(DbStructureSections.Column.IS_EXAM, section.isExam());
         values.put(DbStructureSections.Column.UNITS, DbParseHelper.parseLongArrayToString(section.getUnits()));
         if (section.getDiscountingPolicy() != null) {
             values.put(DbStructureSections.Column.DISCOUNTING_POLICY, section.getDiscountingPolicy().ordinal());
