@@ -95,9 +95,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @BindString(R.string.try_again)
     protected String tryAgainText;
 
-    @BindView(R.id.discounting_policy_root)
-    View discountingPolicyRoot;
-
     @BindView(R.id.discounting_policy_textview)
     TextView discountingPolicyTextView;
 
@@ -209,7 +206,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
         switch (submission.getStatus()) {
             case CORRECT:
-                discountingPolicyRoot.setVisibility(View.GONE); // remove if user was correct
+                discountingPolicyTextView.setVisibility(View.GONE); // remove if user was correct
                 onCorrectSubmission();
                 setTextToActionButton(tryAgainText);
                 blockUIBeforeSubmit(true);
@@ -246,7 +243,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         enableInternetMessage(isNeedShow);
 
         if (isNeedShow) {
-            discountingPolicyRoot.setVisibility(View.GONE);
+            discountingPolicyTextView.setVisibility(View.GONE);
         }
     }
 
@@ -390,7 +387,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @Override
     public void onResultHandlingDiscountPolicy(boolean needShow, DiscountingPolicyType discountingPolicyType, int remainTries) {
         if (!needShow || discountingPolicyType == null) {
-            discountingPolicyRoot.setVisibility(View.GONE);
+            discountingPolicyTextView.setVisibility(View.GONE);
             return;
         }
 
@@ -404,12 +401,12 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                 warningText = getString(R.string.discount_policy_no_way);
             }
         } else {
-            discountingPolicyRoot.setVisibility(View.GONE);
+            discountingPolicyTextView.setVisibility(View.GONE);
             return;
         }
 
         discountingPolicyTextView.setText(warningText);
-        discountingPolicyRoot.setVisibility(View.VISIBLE);
+        discountingPolicyTextView.setVisibility(View.VISIBLE);
     }
 
     @Override

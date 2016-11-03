@@ -18,7 +18,17 @@
         <include
             layout="@layout/step_text_header"/>
 
-        <include layout="@layout/discounting_policy_view"/>
+
+        <TextView
+            android:id="@+id/discounting_policy_textview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/warning_light_yellow"
+            android:gravity="center"
+            android:padding="8dp"
+            android:visibility="gone"
+            tools:text="@string/discount_policy_inverse_title"
+            tools:visibility="visible"/>
 
         <FrameLayout
             android:id="@+id/attempt_container"
@@ -92,6 +102,18 @@
         <include
             android:id="@+id/progress_bar"
             layout="@layout/progress_bar_on_empty_screen"/>
+
+
+        <TextView
+            android:id="@+id/submission_restrction_textview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/warning_light_yellow"
+            android:gravity="center"
+            android:padding="8dp"
+            android:visibility="gone"
+            tools:text="У Вас осталось 2 попытки"
+            tools:visibility="visible"/>
 
         <Button
             android:id="@+id/submit_button"
