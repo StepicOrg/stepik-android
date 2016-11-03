@@ -274,6 +274,7 @@
     <string name="notification_comment_list">Comments and replies</string>
     <string name="exam_module_title">It is exam module, you can solve it in web</string>
     <string name="start_exam_action_title">Open</string>
+    <string name="restriction_submission_enough">The step cannot be submitted, because the number of attempts has been exceeded</string>
     <plurals name="restriction_submission">
         <item quantity="one">You have %d attempt</item>
         <item quantity="other">You have %d attempts</item>

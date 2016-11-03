@@ -98,6 +98,9 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @BindView(R.id.discounting_policy_textview)
     TextView discountingPolicyTextView;
 
+    @BindView(R.id.submission_restrction_textview)
+    TextView submissionRestrictionTextView;
+
     protected Attempt attempt = null;
     protected Submission submission = null;
     protected int numberOfSubmissions = -1;
@@ -193,6 +196,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     protected final void fillSubmission(@org.jetbrains.annotations.Nullable Submission submission) {
         stepAttemptPresenter.handleDiscountingPolicy(numberOfSubmissions, section, step);
+        stepAttemptPresenter.handleStepRestriction(step, numberOfSubmissions);
         if (submission == null || submission.getStatus() == null) {
             return;
         }
@@ -352,6 +356,8 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
             stepAttemptPresenter.handleDiscountingPolicy(numberOfSubmissions, section, step);
             showActionButtonLoadState(false);
             showAnswerField(true);
+
+            stepAttemptPresenter.handleStepRestriction(step, numberOfSubmissions);
         }
     }
 
@@ -473,6 +479,23 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == DISCOUNTING_POLICY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             makeSubmissionDirectly();
+        }
+    }
+
+    @Override
+    public void onResultHandlingSubmissionRestriction(boolean needShow, int numberForShow) {
+        if (needShow) {
+            String warningText;
+            if (numberForShow > 0) {
+                warningText = getResources().getQuantityString(R.plurals.restriction_submission, numberForShow, numberForShow);
+            } else {
+                warningText = getString(R.string.restriction_submission_enough);
+                actionButton.setVisibility(View.GONE); //we cant send more
+            }
+            submissionRestrictionTextView.setText(warningText);
+            submissionRestrictionTextView.setVisibility(View.VISIBLE);
+        } else {
+            submissionRestrictionTextView.setVisibility(View.GONE);
         }
     }
 }
