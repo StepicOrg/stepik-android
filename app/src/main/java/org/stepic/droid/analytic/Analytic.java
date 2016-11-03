@@ -239,6 +239,11 @@ public interface Analytic {
         String FILTER_APPLIED_IN_INTERFACE_WITH_PARAMS = "filters_params";
     }
 
+    interface Exam {
+        String START_EXAM = "exam_start";
+        String SHOW_EXAM = "exam_shown_on_bind_view";
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);

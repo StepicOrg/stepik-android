@@ -265,4 +265,6 @@
     <string name="get_license_message">Получена лицензия</string>
     <string name="added_to_group_title">Добавление в группу</string>
     <string name="notification_comment_list">Комментарии и ответы</string>
+    <string name="exam_module_title">Это экзамен, пройдите его в браузере</string>
+    <string name="start_exam_action_title">Открыть</string>
 </resources>
