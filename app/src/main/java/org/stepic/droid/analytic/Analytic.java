@@ -56,6 +56,8 @@ public interface Analytic {
         String NO_DISCOUNTING_DIALOG = "discounting_dialog_no";
         String YES_DISCOUNTING_DIALOG = "discounting_dialog_yes";
         String CLICK_SETTINGS_FROM_NOTIFICATION = "click_settings_from_notification";
+        String START_SPLASH = "user_start_splash_new";
+        String START_SPLASH_EXPERT = "user_start_splash_expert";
     }
 
     interface Screens {

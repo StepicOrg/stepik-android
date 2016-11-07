@@ -37,6 +37,43 @@ public class SharedPreferenceHelper {
     private static final java.lang.String NEED_DROP_116 = "need_drop_116";
     private static final java.lang.String DISCOUNTING_POLICY_DIALOG = "discounting_pol_dialog";
     private static final java.lang.String KEEP_SCREEN_ON_STEPS = "keep_screen_on_steps";
+
+
+    private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
+    private final String UPDATING_TIMESTAMP = "updating_timestamp";
+    private final String AUTH_RESPONSE_JSON = "auth_response_json";
+    private final String PROFILE_JSON = "profile_json";
+    private final String EMAIL_LIST = "email_list";
+    private final String WIFI_KEY = "wifi_key";
+    private final String IS_SOCIAL = "is_social_key";
+    private final String VIDEO_QUALITY_KEY = "video_quality_key";
+    private final String TEMP_POSITION_KEY = "temp_position_key";
+    private final String VIDEO_RATE_PREF_KEY = "video_rate_pref_key";
+    private final String VIDEO_EXTERNAL_PREF_KEY = "video_external_pref_key";
+    private final String GCM_TOKEN_ACTUAL = "gcm_token_actual";
+    private final String NOTIFICATION_LEARN_DISABLED = "notification_disabled_by_user";
+    private final String NOTIFICATION_COMMENT_DISABLED = "notification_comment_disabled";
+    private final String NOTIFICATION_TEACH_DISABLED = "notification_teach_disabled";
+    private final String NOTIFICATION_REVIEW_DISABLED = "notification_review_disabled";
+    private final String NOTIFICATION_OTHER_DISABLED = "notification_other_disabled";
+    private final String NOTIFICATION_VIBRATION_DISABLED = "not_vibrat_disabled";
+    private final String SD_CHOSEN = "sd_chosen";
+    private final String FIRST_TIME_LAUNCH = "first_time_launch";
+    private final String SCHEDULED_LINK_CACHED = "scheduled_cached";
+    private final String DISCUSSION_ORDER = "discussion_order";
+    private final String CALENDAR_WIDGET = "calenda_widget";
+    private final String VIDEO_QUALITY_EXPLANATION = "video_quality_explanation";
+    private final String NEED_DROP_114 = "need_drop_114";
+
+    private final String FILTER_PERSISTENT = "filter_persistent";
+    private final String FILTER_RUSSIAN_LANGUAGE = "russian_lang";
+    private final String FILTER_ENGLISH_LANGUAGE = "english_lang";
+    private final String FILTER_UPCOMING = "filter_upcoming";
+    private final String FILTER_ACTIVE = "filter_active";
+    private final String FILTER_PAST = "filter_past";
+
+    public final String USER_START_KEY = "user_start_app";
+
     private Context context;
     private Analytic analytic;
     private DefaultFilter defaultFilter;
@@ -53,6 +90,17 @@ public class SharedPreferenceHelper {
 
     public void onTryDiscardFilters(Table type) {
         resetFilters(type);
+    }
+
+    public int incrementNumberOfLaunches() {
+        int numberOfLaunches = getInt(PreferenceType.DEVICE_SPECIFIC, USER_START_KEY);
+        int newValue = numberOfLaunches + 1;
+        put(PreferenceType.DEVICE_SPECIFIC, USER_START_KEY, newValue);
+        return newValue;
+    }
+
+    public int getNumberOfLaunches() {
+        return getInt(PreferenceType.DEVICE_SPECIFIC, USER_START_KEY);
     }
 
     public boolean isSDChosen() {
@@ -496,37 +544,4 @@ public class SharedPreferenceHelper {
         return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
                 .getBoolean(key, defaultValue);
     }
-
-    private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
-    private final String UPDATING_TIMESTAMP = "updating_timestamp";
-    private final String AUTH_RESPONSE_JSON = "auth_response_json";
-    private final String PROFILE_JSON = "profile_json";
-    private final String EMAIL_LIST = "email_list";
-    private final String WIFI_KEY = "wifi_key";
-    private final String IS_SOCIAL = "is_social_key";
-    private final String VIDEO_QUALITY_KEY = "video_quality_key";
-    private final String TEMP_POSITION_KEY = "temp_position_key";
-    private final String VIDEO_RATE_PREF_KEY = "video_rate_pref_key";
-    private final String VIDEO_EXTERNAL_PREF_KEY = "video_external_pref_key";
-    private final String GCM_TOKEN_ACTUAL = "gcm_token_actual";
-    private final String NOTIFICATION_LEARN_DISABLED = "notification_disabled_by_user";
-    private final String NOTIFICATION_COMMENT_DISABLED = "notification_comment_disabled";
-    private final String NOTIFICATION_TEACH_DISABLED = "notification_teach_disabled";
-    private final String NOTIFICATION_REVIEW_DISABLED = "notification_review_disabled";
-    private final String NOTIFICATION_OTHER_DISABLED = "notification_other_disabled";
-    private final String NOTIFICATION_VIBRATION_DISABLED = "not_vibrat_disabled";
-    private final String SD_CHOSEN = "sd_chosen";
-    private final String FIRST_TIME_LAUNCH = "first_time_launch";
-    private final String SCHEDULED_LINK_CACHED = "scheduled_cached";
-    private final String DISCUSSION_ORDER = "discussion_order";
-    private final String CALENDAR_WIDGET = "calenda_widget";
-    private final String VIDEO_QUALITY_EXPLANATION = "video_quality_explanation";
-    private final String NEED_DROP_114 = "need_drop_114";
-
-    private final String FILTER_PERSISTENT = "filter_persistent";
-    private final String FILTER_RUSSIAN_LANGUAGE = "russian_lang";
-    private final String FILTER_ENGLISH_LANGUAGE = "english_lang";
-    private final String FILTER_UPCOMING = "filter_upcoming";
-    private final String FILTER_ACTIVE = "filter_active";
-    private final String FILTER_PAST = "filter_past";
 }
