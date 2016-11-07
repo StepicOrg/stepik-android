@@ -50,7 +50,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public abstract class StepAttemptFragment extends StepBaseFragment implements StepAttemptView {
-
     private final int DISCOUNTING_POLICY_REQUEST_CODE = 131;
 
     @BindView(R.id.root_view)
@@ -490,6 +489,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                 warningText = getResources().getQuantityString(R.plurals.restriction_submission, numberForShow, numberForShow);
             } else {
                 warningText = getString(R.string.restriction_submission_enough);
+                blockUIBeforeSubmit(true);
                 actionButton.setVisibility(View.GONE); //we cant send more
             }
             submissionRestrictionTextView.setText(warningText);
