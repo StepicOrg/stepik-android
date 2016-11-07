@@ -245,6 +245,12 @@
         <item quantity="many">У Вас осталось %d попыток, за которые Вы сможете получить баллы</item>
         <item quantity="other">У Вас осталось %d попыток, за которые Вы сможете получить баллы</item>
     </plurals>
+    <plurals name="restriction_submission">
+        <item quantity="one">У Вас осталась %d попытка</item>
+        <item quantity="few">У Вас осталось %d попытки</item>
+        <item quantity="many">У Вас осталось %d попыток</item>
+        <item quantity="other">У Вас осталось %d попыток</item>
+    </plurals>
     <string name="discount_policy_no_way">За Ваши следующие попытки не будут начислены баллы</string>
     <string name="other_title">Прочее</string>
     <string name="discounting_policy_title_settings">Предупреждать об уроках со штрафами за неверные ответы</string>
@@ -267,4 +273,5 @@
     <string name="notification_comment_list">Комментарии и ответы</string>
     <string name="exam_module_title">Это экзамен, пройдите его в браузере</string>
     <string name="start_exam_action_title">Открыть</string>
+    <string name="restriction_submission_enough">Нельзя отправить решение, так как количество попыток было превышено</string>
 </resources>

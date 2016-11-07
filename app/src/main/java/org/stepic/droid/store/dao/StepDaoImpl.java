@@ -54,6 +54,8 @@ public class StepDaoImpl extends DaoBase<Step> {
         int columnIndexDiscussionCount = cursor.getColumnIndex(DbStructureStep.Column.DISCUSSION_COUNT);
         int columnIndexDiscussionId = cursor.getColumnIndex(DbStructureStep.Column.DISCUSSION_ID);
         int columnIndexPeerReview = cursor.getColumnIndex(DbStructureStep.Column.PEER_REVIEW);
+        int indexHasSubmissionRestriction = cursor.getColumnIndex(DbStructureStep.Column.HAS_SUBMISSION_RESTRICTION);
+        int indexMaxSubmission = cursor.getColumnIndex(DbStructureStep.Column.MAX_SUBMISSION_COUNT);
 
 
         step.setDiscussions_count(cursor.getInt(columnIndexDiscussionCount));
@@ -66,10 +68,12 @@ public class StepDaoImpl extends DaoBase<Step> {
         step.setViewed_by(cursor.getLong(columnIndexViewedBy));
         step.setPassed_by(cursor.getLong(columnIndexPassedBy));
         step.setUpdate_date(cursor.getString(columnIndexUpdateDate));
-        step.setSubscriptions(DbParseHelper.INSTANCE.parseStringToStringArray(cursor.getString(columnIndexSubscriptions)));
+        step.setSubscriptions(DbParseHelper.parseStringToStringArray(cursor.getString(columnIndexSubscriptions)));
         step.setPosition(cursor.getLong(columnIndexPosition));
         step.set_cached(cursor.getInt(columnIndexIsCached) > 0);
         step.set_loading(cursor.getInt(columnIndexIsLoading) > 0);
+        step.setHasSubmissionRestriction(cursor.getInt(indexHasSubmissionRestriction) > 0);
+        step.setMaxSubmissionCount(cursor.getInt(indexMaxSubmission));
 
         String review = cursor.getString(columnIndexPeerReview);
 
@@ -89,7 +93,7 @@ public class StepDaoImpl extends DaoBase<Step> {
         values.put(DbStructureStep.Column.LESSON_ID, step.getLesson());
         values.put(DbStructureStep.Column.STATUS, step.getStatus());
         values.put(DbStructureStep.Column.PROGRESS, step.getProgress());
-        values.put(DbStructureStep.Column.SUBSCRIPTIONS, DbParseHelper.INSTANCE.parseStringArrayToString(step.getSubscriptions()));
+        values.put(DbStructureStep.Column.SUBSCRIPTIONS, DbParseHelper.parseStringArrayToString(step.getSubscriptions()));
         values.put(DbStructureStep.Column.VIEWED_BY, step.getViewed_by());
         values.put(DbStructureStep.Column.PASSED_BY, step.getPassed_by());
         values.put(DbStructureStep.Column.CREATE_DATE, step.getCreate_date());
@@ -97,6 +101,8 @@ public class StepDaoImpl extends DaoBase<Step> {
         values.put(DbStructureStep.Column.POSITION, step.getPosition());
         values.put(DbStructureStep.Column.DISCUSSION_COUNT, step.getDiscussions_count());
         values.put(DbStructureStep.Column.DISCUSSION_ID, step.getDiscussion_proxy());
+        values.put(DbStructureStep.Column.HAS_SUBMISSION_RESTRICTION, step.getHasSubmissionRestriction());
+        values.put(DbStructureStep.Column.MAX_SUBMISSION_COUNT, step.getMaxSubmissionCount());
 
         if (step.getActions() != null) {
             values.put(DbStructureStep.Column.PEER_REVIEW, step.getActions().getDo_review());

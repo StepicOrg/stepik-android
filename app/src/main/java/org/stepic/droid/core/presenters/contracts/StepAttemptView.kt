@@ -20,4 +20,6 @@ interface StepAttemptView {
     fun onNeedShowPeerReview()
 
     fun onNeedResolveActionButtonText()
+
+    fun onResultHandlingSubmissionRestriction(needShow: Boolean, numberForShow : Int)
 }

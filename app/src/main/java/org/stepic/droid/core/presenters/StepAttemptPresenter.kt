@@ -35,6 +35,15 @@ class StepAttemptPresenter(val mainHandler: IMainHandler,
         super.detachView(view)
     }
 
+    @MainThread
+    fun handleStepRestriction(step: Step, numberOfSubmission: Int) {
+        if (!step.hasSubmissionRestriction) {
+            view?.onResultHandlingSubmissionRestriction(needShow = false, numberForShow = 0)
+        } else {
+            val remainTries = step.maxSubmissionCount - numberOfSubmission
+            view?.onResultHandlingSubmissionRestriction(needShow = true, numberForShow = remainTries)
+        }
+    }
 
     @MainThread
     fun handleDiscountingPolicy(numberOfSubmission: Int, section: Section?, step: Step) {

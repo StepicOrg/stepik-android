@@ -2,6 +2,7 @@ package org.stepic.droid.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 
 import java.io.Serializable
 
@@ -27,6 +28,10 @@ class Step : Parcelable, Serializable, IProgressable {
     var actions: ActionsContainer? = null
     var discussions_count: Int = 0
     var discussion_proxy: String? = null
+    @SerializedName("has_submissions_restrictions")
+    var hasSubmissionRestriction = false
+    @SerializedName("max_submissions_count")
+    var maxSubmissionCount: Int = 0
 
     constructor()
 
