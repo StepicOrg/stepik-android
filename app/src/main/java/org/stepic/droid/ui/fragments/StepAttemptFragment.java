@@ -210,6 +210,10 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         switch (submission.getStatus()) {
             case CORRECT:
                 discountingPolicyTextView.setVisibility(View.GONE); // remove if user was correct
+                submissionRestrictionTextView.setVisibility(View.GONE);
+                if (step.getHasSubmissionRestriction()) {
+                    actionButton.setVisibility(View.GONE);
+                }
                 onCorrectSubmission();
                 setTextToActionButton(tryAgainText);
                 blockUIBeforeSubmit(true);
