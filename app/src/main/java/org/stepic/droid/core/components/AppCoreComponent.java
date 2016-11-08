@@ -14,6 +14,7 @@ import org.stepic.droid.core.modules.CourseDetailModule;
 import org.stepic.droid.core.modules.CourseListModule;
 import org.stepic.droid.core.modules.FilterModule;
 import org.stepic.droid.core.modules.NotificationModule;
+import org.stepic.droid.core.modules.ProfileModule;
 import org.stepic.droid.core.modules.SectionModule;
 import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.modules.VideoModule;
@@ -68,6 +69,8 @@ import dagger.Component;
 @Singleton
 @Component(modules = {AppCoreModule.class})
 public interface AppCoreComponent {
+
+    ProfileComponent plus(ProfileModule profileModule);
 
     SectionComponent plus(SectionModule module);
 
