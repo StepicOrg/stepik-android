@@ -1,7 +1,6 @@
 package org.stepic.droid.base;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
@@ -58,11 +57,9 @@ public class MainApplication extends MultiDexApplication {
 
 
         // Инициализация AppMetrica SDK
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
-            YandexMetrica.activate(getApplicationContext(), "fd479031-bdf4-419e-8d8f-6895aab23502");
-            // Отслеживание активности пользователей
-            YandexMetrica.enableActivityAutoTracking(this);
-        }
+        YandexMetrica.activate(getApplicationContext(), "fd479031-bdf4-419e-8d8f-6895aab23502");
+        // Отслеживание активности пользователей
+        YandexMetrica.enableActivityAutoTracking(this);
     }
 //    public static RefWatcher getRefWatcher(Context context) {
 //        MainApplication application = (MainApplication) context.getApplicationContext();
