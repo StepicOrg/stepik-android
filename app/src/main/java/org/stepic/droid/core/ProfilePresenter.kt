@@ -20,6 +20,8 @@ class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
                 imageLink = "https://stepik.org/media/users/avatar/1718803?1443605961",
                 shortBio = "Android Expert",
                 isMyProfile = true)
+
+        view?.streaksIsLoaded(currentStreak = 0, maxStreak = 3)
     }
 
 }

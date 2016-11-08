@@ -280,4 +280,10 @@
     <string name="max_streak">Мой рекорд</string>
     <string name="about_me">Обо мне</string>
     <string name="short_info">Краткая информация</string>
+    <plurals name="day_number">
+        <item quantity="one">день</item>
+        <item quantity="few">дня</item>
+        <item quantity="many">дней</item>
+        <item quantity="other">дней</item>
+    </plurals>
 </resources>

@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.fragments;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -52,6 +53,21 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
 
     @BindView(R.id.shortBioValue)
     TextView shortBioValue;
+
+    @BindView(R.id.currentStreakValue)
+    TextView currentStreakValue;
+
+    @BindView(R.id.currentStreakSuffix)
+    TextView currentStreakSuffix;
+
+    @BindView(R.id.maxStreakValue)
+    TextView maxStreakValue;
+
+    @BindView(R.id.maxStreakSuffix)
+    TextView maxStreakSuffix;
+
+    @BindView(R.id.streakRoot)
+    View streakRoot;
 
     @BindView(R.id.shortBioTitle)
     TextView shortBioTitle;
@@ -119,5 +135,20 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
             shortBioTitle.setText(shortInfoTitle);
         }
 
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void streaksIsLoaded(int currentStreak, int maxStreak) {
+        String suffixCurrent = getResources().getQuantityString(R.plurals.day_number, currentStreak);
+        String suffixMax = getResources().getQuantityString(R.plurals.day_number, maxStreak);
+
+        currentStreakSuffix.setText(suffixCurrent);
+        maxStreakSuffix.setText(suffixMax);
+
+        currentStreakValue.setText(currentStreak + "");
+        maxStreakValue.setText(maxStreak + "");
+
+        streakRoot.setVisibility(View.VISIBLE);
     }
 }
