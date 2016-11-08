@@ -36,6 +36,7 @@ import org.stepic.droid.ui.activities.LaunchActivity;
 import org.stepic.droid.ui.activities.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.activities.NewCommentActivity;
+import org.stepic.droid.ui.activities.ProfileActivity;
 import org.stepic.droid.ui.activities.RegisterActivity;
 import org.stepic.droid.ui.activities.SectionActivity;
 import org.stepic.droid.ui.activities.SettingsActivity;
@@ -250,6 +251,12 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void openProfile(Activity activity) {
+        final Intent intent = new Intent(activity, ProfileActivity.class);
+        activity.startActivity(intent);
+    }
+
+    @Override
     public void openInWeb(Context context, String path) {
         analytic.reportEventWithIdName(Analytic.Screens.OPEN_LINK_IN_WEB, "0", path);
         final Intent intent = getOpenInWebIntent(path);
@@ -386,7 +393,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openSyllabusInWeb(Context context, long courseId){
+    public void openSyllabusInWeb(Context context, long courseId) {
         String url = config.getBaseUrl() + "/course/" + courseId + "/syllabus/?from_mobile_app=true";
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
         context.startActivity(intent);

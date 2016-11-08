@@ -79,4 +79,6 @@ public interface ScreenManager {
     Intent getCertificateIntent();
 
     Intent getOpenInWebIntent(String path);
+
+    void openProfile(Activity activity);
 }

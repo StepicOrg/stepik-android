@@ -105,7 +105,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (intent.getAction()!= null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)){
+        if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
             analytic.reportEvent(AppConstants.OPEN_NOTIFICATION);
         }
         Bundle extras = intent.getExtras();
@@ -439,6 +439,12 @@ public class MainFeedActivity extends BackToExitActivityBase
                 .placeholder(userPlaceholder)
                 .into(profileImage);
         userNameTextView.setText(profile.getFirst_name() + " " + profile.getLast_name());
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shell.getScreenProvider().openProfile(MainFeedActivity.this);
+            }
+        });
     }
 
     @Override
@@ -451,6 +457,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     protected void onDestroy() {
         bus.unregister(this);
         drawerLayout.removeDrawerListener(actionBarDrawerToggle);
+        profileImage.setOnClickListener(null);
         super.onDestroy();
     }
 
@@ -500,7 +507,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         }
     }
 
-    public static int getCertificateFragmentIndex(){
+    public static int getCertificateFragmentIndex() {
         return 3;
     }
 
