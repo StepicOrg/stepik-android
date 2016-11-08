@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.IScreenManager;
+import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.util.DisplayUtils;
@@ -30,7 +30,7 @@ public class CertificateShareDialog extends BottomSheetDialog {
     private final CertificateViewItem certificateViewItem;
 
     @Inject
-    IScreenManager screenManager;
+    ScreenManager screenManager;
 
     @Inject
     ShareHelper shareHelper;

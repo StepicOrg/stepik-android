@@ -21,7 +21,7 @@ import com.bumptech.glide.Glide;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.IScreenManager;
+import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;
@@ -52,7 +52,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
 
     @Inject
-    IScreenManager screenManager;
+    ScreenManager screenManager;
 
     @Inject
     IDownloadManager downloadManager;

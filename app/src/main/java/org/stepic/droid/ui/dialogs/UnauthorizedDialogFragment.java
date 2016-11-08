@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.IScreenManager;
+import org.stepic.droid.core.ScreenManager;
 
 import javax.inject.Inject;
 
@@ -20,7 +20,7 @@ public class UnauthorizedDialogFragment extends DialogFragment {
     }
 
     @Inject
-    IScreenManager screenManager;
+    ScreenManager screenManager;
 
     @Inject
     Analytic analytic;
