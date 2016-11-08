@@ -275,6 +275,7 @@
     <string name="exam_module_title">It is exam module, you can solve it in web</string>
     <string name="start_exam_action_title">Open</string>
     <string name="restriction_submission_enough">The step cannot be submitted, because the number of attempts has been exceeded</string>
+    <string name="too_many_attempts">Too many attempts. Please try later</string>
     <plurals name="restriction_submission">
         <item quantity="one">You have %d attempt</item>
         <item quantity="other">You have %d attempts</item>
