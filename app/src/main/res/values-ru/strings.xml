@@ -276,4 +276,6 @@
     <string name="restriction_submission_enough">Нельзя отправить решение, так как количество попыток было превышено</string>
     <string name="too_many_attempts">Слишком много неверных попыток. Попробуйте позже</string>
     <string name="profile_title">Профиль</string>
+    <string name="current_streak">Решаю без перерыва</string>
+    <string name="max_streak">Мой рекорд</string>
 </resources>
