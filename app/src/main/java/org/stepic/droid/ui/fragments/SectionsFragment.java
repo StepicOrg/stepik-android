@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -113,7 +114,7 @@ public class SectionsFragment
     ProgressBar loadOnCenterProgressBar;
 
     @BindView(R.id.toolbar)
-    android.support.v7.widget.Toolbar mToolbar;
+    Toolbar toolbar;
 
     @BindView(R.id.report_problem)
     protected View reportConnectionProblem;
@@ -235,7 +236,7 @@ public class SectionsFragment
         courseFinderPresenter.attachView(this);
         courseJoinerPresenter.attachView(this);
         sectionsPresenter.attachView(this);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         onNewIntent(((AppCompatActivity) getActivity()).getIntent());
     }
