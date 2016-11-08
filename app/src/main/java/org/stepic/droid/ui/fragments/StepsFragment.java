@@ -43,7 +43,6 @@ import javax.inject.Inject;
 
 import butterknife.BindString;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class StepsFragment extends FragmentBase implements StepsView {
     private static final String FROM_PREVIOUS_KEY = "fromPrevKey";
@@ -160,7 +159,6 @@ public class StepsFragment extends FragmentBase implements StepsView {
         }
         v.setKeepScreenOn(keepScreenOnSteps);
         setHasOptionsMenu(true);
-        unbinder = ButterKnife.bind(this, v);
         return v;
     }
 

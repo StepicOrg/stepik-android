@@ -36,7 +36,12 @@ public class SortingStepFragment extends StepAttemptFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onViewCreated(View v, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(v, savedInstanceState);
         View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_sorting, attemptContainer, false);
         attemptContainer.addView(view);
         recyclerView = ButterKnife.findById(view, R.id.recycler);
@@ -47,8 +52,6 @@ public class SortingStepFragment extends StepAttemptFragment {
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        return v;
     }
 
     @Override

@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public abstract class CourseListFragmentBase extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, CoursesView {
 
@@ -78,9 +77,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_courses, container, false);
-        unbinder = ButterKnife.bind(this, v);
-        return v;
+        return inflater.inflate(R.layout.fragment_courses, container, false);
     }
 
     @Override

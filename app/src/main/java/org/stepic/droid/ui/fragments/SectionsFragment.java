@@ -85,7 +85,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class SectionsFragment
         extends FragmentBase
@@ -207,8 +206,6 @@ public class SectionsFragment
     @Override
     public void onViewCreated(View view, @android.support.annotation.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        unbinder = ButterKnife.bind(this, view);
         imageViewTarget = new GlideDrawableImageViewTarget(courseIcon);
         hideSoftKeypad();
         firstLoad = true;

@@ -29,11 +29,12 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class FragmentBase extends Fragment {
 
-    protected Unbinder unbinder;
+    private Unbinder unbinder;
 
     @Inject
     protected TextResolver textResolver;
@@ -118,6 +119,11 @@ public class FragmentBase extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        unbinder = ButterKnife.bind(this, view);
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

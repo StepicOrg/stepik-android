@@ -47,7 +47,6 @@ import javax.inject.Inject;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public abstract class StepAttemptFragment extends StepBaseFragment implements StepAttemptView {
     private final int DISCOUNTING_POLICY_REQUEST_CODE = 131;
@@ -127,9 +126,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_step_attempt, container, false);
-        unbinder = ButterKnife.bind(this, v);
-        return v;
+        return inflater.inflate(R.layout.fragment_step_attempt, container, false);
     }
 
     @Override
