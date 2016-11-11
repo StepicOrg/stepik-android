@@ -39,8 +39,6 @@ public class ConfigRelease implements IConfig {
     private static final String CUSTOM_UPDATING_VERSION = "CUSTOM_UPDATING_VERSION";
     private static final String FIREBASE_DOMAIN = "FIREBASE_DOMAIN";
     private static final String GOOGLE_SERVER_CLIENT_ID = "GOOGLE_SERVER_CLIENT_ID";
-    private static final String TWITTER_KEY = "TWITTER_KEY";
-    private static final String TWITTER_SECRET = "TWITTER_SECRET";
 
 
     @Inject
@@ -150,16 +148,6 @@ public class ConfigRelease implements IConfig {
     @Override
     public String getGoogleServerClientId() {
         return getString(GOOGLE_SERVER_CLIENT_ID, null);
-    }
-
-    @Override
-    public String getTwitterKey() {
-        return getString(TWITTER_KEY, null);
-    }
-
-    @Override
-    public String getTwitterSecret() {
-        return getString(TWITTER_SECRET, null);
     }
 
     private String getString(String key) {

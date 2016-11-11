@@ -11,9 +11,6 @@ import android.widget.ImageView;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 
@@ -49,13 +46,9 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
     private List<? extends ISocialType> socialList;
     private FragmentActivity activity;
     private GoogleApiClient client;
-    private TwitterAuthClient twitterAuthClient;
-    private Callback<TwitterSession> twitterSessionCallback;
 
-    public SocialAuthAdapter(FragmentActivity activity, GoogleApiClient client, TwitterAuthClient twitterAuthClient, Callback<TwitterSession> twitterSessionCallback) {
+    public SocialAuthAdapter(FragmentActivity activity, GoogleApiClient client) {
         this.client = client;
-        this.twitterAuthClient = twitterAuthClient;
-        this.twitterSessionCallback = twitterSessionCallback;
         MainApplication.component().inject(this);
         this.activity = activity;
         socialList = socialManager.getAllSocial();
@@ -94,9 +87,6 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
         } else if (type == SocialManager.SocialType.vk) {
             String[] scopes = {VKScope.EMAIL};
             VKSdk.login(activity, scopes);
-//        } else if (type == SocialManager.SocialType.twitter) {
-//            Toast.makeText(activity, "twitter", Toast.LENGTH_SHORT).show();
-//            twitterAuthClient.authorize(activity, twitterSessionCallback);
         } else {
             api.loginWithSocial(activity, type);
         }

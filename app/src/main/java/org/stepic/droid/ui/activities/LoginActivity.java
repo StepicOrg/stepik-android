@@ -30,12 +30,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKSdk;
@@ -89,7 +83,6 @@ public class LoginActivity extends FragmentActivityBase {
 
     GoogleApiClient googleApiClient;
     private CallbackManager callbackManager;
-    private TwitterAuthClient twitterAuthClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,36 +176,7 @@ public class LoginActivity extends FragmentActivityBase {
                 onInternetProblems();
             }
         });
-        twitterAuthClient = new TwitterAuthClient();
-        Callback<TwitterSession> twitterSessionCallback = new Callback<TwitterSession>() {
-            @Override
-            public void success(Result<TwitterSession> result) {
-                Toast.makeText(LoginActivity.this, "twitter_success", Toast.LENGTH_SHORT).show();
-                String twitterToken = result.data.getAuthToken().token;
-                loginManager.loginWithNativeProviderCode(twitterToken,
-                        SocialManager.SocialType.twitter,
-                        progressHandler,
-                        new ActivityFinisher() {
-                            @Override
-                            public void onFinish() {
-                                finish();
-                            }
-                        },
-                        new FailLoginSupplementaryHandler() {
-                            @Override
-                            public void onFailLogin(Throwable t) {
-                                Twitter.getSessionManager().clearActiveSession();
-                                Twitter.logOut();
-                            }
-                        });
-            }
-
-            @Override
-            public void failure(TwitterException exception) {
-                onInternetProblems();
-            }
-        };
-        socialRecyclerView.setAdapter(new SocialAuthAdapter(this, googleApiClient, twitterAuthClient, twitterSessionCallback));
+        socialRecyclerView.setAdapter(new SocialAuthAdapter(this, googleApiClient));
 
         progressLogin = new LoadingProgressDialog(this);
 
@@ -329,7 +293,6 @@ public class LoginActivity extends FragmentActivityBase {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        twitterAuthClient.onActivityResult(requestCode, resultCode, data);
         if (VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
             @Override
             public void onResult(VKAccessToken res) {

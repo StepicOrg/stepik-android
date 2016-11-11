@@ -32,12 +32,10 @@
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup"
         >
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="d4016589326f6f7814080b7ff9017e18711a1959"
-            />
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
 
         <activity
             android:name="org.stepic.droid.ui.activities.SplashActivity"

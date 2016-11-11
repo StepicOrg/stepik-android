@@ -6,8 +6,6 @@ import android.support.multidex.MultiDexApplication;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.vk.sdk.VKSdk;
 import com.yandex.metrica.YandexMetrica;
 
@@ -23,7 +21,6 @@ import org.stepic.droid.core.modules.StorageModule;
 
 import javax.inject.Inject;
 
-import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -71,12 +68,6 @@ public class MainApplication extends MultiDexApplication {
                 .build();
 
         component.inject(this);
-
-        String twitterKey = config.getTwitterKey();
-        String twitterSecret = config.getTwitterSecret();
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(twitterKey, twitterSecret);
-        Fabric.with(this, new Twitter(authConfig));
-
 
         // Инициализация AppMetrica SDK
         YandexMetrica.activate(getApplicationContext(), "fd479031-bdf4-419e-8d8f-6895aab23502");

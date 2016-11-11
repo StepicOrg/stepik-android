@@ -31,7 +31,6 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.squareup.otto.Subscribe;
-import com.twitter.sdk.android.Twitter;
 import com.vk.sdk.VKSdk;
 
 import org.jetbrains.annotations.NotNull;
@@ -108,7 +107,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (intent.getAction()!= null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)){
+        if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
             analytic.reportEvent(AppConstants.OPEN_NOTIFICATION);
         }
         Bundle extras = intent.getExtras();
@@ -503,7 +502,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         }
     }
 
-    public static int getCertificateFragmentIndex(){
+    public static int getCertificateFragmentIndex() {
         return 3;
     }
 
@@ -513,8 +512,6 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     @Override
     public void onLogout() {
-        Twitter.getSessionManager().clearActiveSession();
-        Twitter.logOut();
         LoginManager.getInstance().logOut();
         VKSdk.logout();
         Auth.GoogleSignInApi.signOut(googleApiClient);

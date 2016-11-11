@@ -22,6 +22,4 @@ public interface IConfig {
 
     String getGoogleServerClientId();
 
-    String getTwitterKey();
-    String getTwitterSecret();
 }
