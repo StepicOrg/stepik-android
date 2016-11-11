@@ -16,7 +16,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.neenbedankt.android-apt' //needed for source code generation
 apply plugin: 'io.fabric'
 
-int minSdk = hasProperty('devMinSdk') ? devMinSdk.toInteger() : 14
+int minSdk = hasProperty('devMinSdk') ? devMinSdk.toInteger() : 15
 
 def globalConf = rootProject.ext
 android {
