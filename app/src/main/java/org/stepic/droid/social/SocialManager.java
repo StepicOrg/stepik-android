@@ -42,6 +42,11 @@ public class SocialManager {
         public Drawable getIcon() {
             return icon;
         }
+
+        @Override
+        public boolean needUseAccessTokenInsteadOfCode() {
+            return identifier.equals(VK_SOCIAL_IDENTIFIER) || identifier.equals(FACEBOOK_SOCIAL_IDENTIFIER);
+        }
     }
 
 

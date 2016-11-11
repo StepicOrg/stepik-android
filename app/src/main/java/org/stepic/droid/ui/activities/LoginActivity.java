@@ -30,6 +30,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
+import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterException;
@@ -187,11 +188,28 @@ public class LoginActivity extends FragmentActivityBase {
             @Override
             public void success(Result<TwitterSession> result) {
                 Toast.makeText(LoginActivity.this, "twitter_success", Toast.LENGTH_SHORT).show();
+                String twitterToken = result.data.getAuthToken().token;
+                loginManager.loginWithNativeProviderCode(twitterToken,
+                        SocialManager.SocialType.twitter,
+                        progressHandler,
+                        new ActivityFinisher() {
+                            @Override
+                            public void onFinish() {
+                                finish();
+                            }
+                        },
+                        new FailLoginSupplementaryHandler() {
+                            @Override
+                            public void onFailLogin(Throwable t) {
+                                Twitter.getSessionManager().clearActiveSession();
+                                Twitter.logOut();
+                            }
+                        });
             }
 
             @Override
             public void failure(TwitterException exception) {
-                Toast.makeText(LoginActivity.this, "twitter_failure", Toast.LENGTH_SHORT).show();
+                onInternetProblems();
             }
         };
         socialRecyclerView.setAdapter(new SocialAuthAdapter(this, googleApiClient, twitterAuthClient, twitterSessionCallback));

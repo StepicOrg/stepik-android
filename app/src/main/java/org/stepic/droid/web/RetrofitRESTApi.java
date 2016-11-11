@@ -202,11 +202,11 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
-    public Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type, boolean isAccessToken) {
+    public Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type) {
         analytic.reportEvent(Analytic.Web.AUTH_SOCIAL);
         makeOauthServiceWithNewAuthHeader(TokenType.social);
         String codeType = null;
-        if (isAccessToken) {
+        if (type.needUseAccessTokenInsteadOfCode()) {
             codeType = "access_token";
         }
         return oAuthService.getTokenByNativeCode(type.getIdentifier(), code, config.getGrantType(TokenType.social), config.getRedirectUri(), codeType);

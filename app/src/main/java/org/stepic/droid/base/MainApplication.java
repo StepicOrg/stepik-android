@@ -72,7 +72,9 @@ public class MainApplication extends MultiDexApplication {
 
         component.inject(this);
 
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(config.getTwitterKey(), config.getTwitterSecret());
+        String twitterKey = config.getTwitterKey();
+        String twitterSecret = config.getTwitterSecret();
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(twitterKey, twitterSecret);
         Fabric.with(this, new Twitter(authConfig));
 
 

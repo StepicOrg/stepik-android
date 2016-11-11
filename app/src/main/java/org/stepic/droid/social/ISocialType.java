@@ -7,4 +7,6 @@ public interface ISocialType {
     String getIdentifier();
 
     Drawable getIcon();
+
+    boolean needUseAccessTokenInsteadOfCode();
 }

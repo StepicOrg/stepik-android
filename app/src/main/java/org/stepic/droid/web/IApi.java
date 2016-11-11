@@ -22,7 +22,7 @@ public interface IApi {
         social, loginPassword
     }
 
-    Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type, boolean isAccessToken);
+    Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type);
 
     Call<AuthenticationStepicResponse> authWithLoginPassword(String login, String password);
 

@@ -189,7 +189,7 @@ dependencies {
     compile 'com.google.firebase:firebase-auth:9.4.0'
     compile 'com.facebook.android:facebook-android-sdk:4.17.0'
     compile 'com.vk:androidsdk:1.6.5'
-    compile('com.twitter.sdk.android:twitter:2.0.0@aar') {
+    compile('com.twitter.sdk.android:twitter:2.2.0@aar') {
         transitive = true;
     }
     compile 'com.jakewharton.timber:timber:4.3.1'

@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
@@ -95,9 +94,9 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
         } else if (type == SocialManager.SocialType.vk) {
             String[] scopes = {VKScope.EMAIL};
             VKSdk.login(activity, scopes);
-        } else if (type == SocialManager.SocialType.twitter) {
-            Toast.makeText(activity, "twitter", Toast.LENGTH_SHORT).show();
-            twitterAuthClient.authorize(activity, twitterSessionCallback);
+//        } else if (type == SocialManager.SocialType.twitter) {
+//            Toast.makeText(activity, "twitter", Toast.LENGTH_SHORT).show();
+//            twitterAuthClient.authorize(activity, twitterSessionCallback);
         } else {
             api.loginWithSocial(activity, type);
         }
