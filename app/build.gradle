@@ -187,7 +187,7 @@ dependencies {
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.google.firebase:firebase-auth:9.4.0'
-    compile 'com.facebook.android:facebook-android-sdk:4.15.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.17.0'
     compile 'com.vk:androidsdk:1.6.5'
     compile('com.twitter.sdk.android:twitter:2.0.0@aar') {
         transitive = true;
