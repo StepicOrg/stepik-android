@@ -200,7 +200,7 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 buildscript {
-    ext.kotlin_version = '1.0.3'
+    ext.kotlin_version = '1.0.4'
     repositories {
         mavenCentral()
     }
