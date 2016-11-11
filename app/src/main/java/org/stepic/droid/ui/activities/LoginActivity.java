@@ -152,10 +152,9 @@ public class LoginActivity extends FragmentActivityBase {
         socialRecyclerView.setLayoutManager(layoutManager);
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+
             @Override
             public void onSuccess(LoginResult loginResult) {
-                // App code
-                Toast.makeText(LoginActivity.this, "onSuccess", Toast.LENGTH_SHORT).show();
                 loginManager.loginWithNativeProviderCode(loginResult.getAccessToken().getToken(),
                         SocialManager.SocialType.facebook,
                         progressHandler,
@@ -175,12 +174,12 @@ public class LoginActivity extends FragmentActivityBase {
 
             @Override
             public void onCancel() {
-                Toast.makeText(LoginActivity.this, "onCancel", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
             public void onError(FacebookException exception) {
-                Toast.makeText(LoginActivity.this, "onError", Toast.LENGTH_SHORT).show();
+                onInternetProblems();
             }
         });
         twitterAuthClient = new TwitterAuthClient();
