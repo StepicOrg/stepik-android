@@ -99,7 +99,7 @@ public class LoginManager implements ILoginManager {
     @Override
     public void loginWithNativeProviderCode(String nativeCode, SocialManager.SocialType type, final ProgressHandler progressHandler, final ActivityFinisher finisher, final FailLoginSupplementaryHandler failLoginSupplementaryHandler) {
         boolean isAccessToken = false;
-        if (type == SocialManager.SocialType.facebook) {
+        if (type == SocialManager.SocialType.facebook || SocialManager.SocialType.vk == type) {
             isAccessToken = true;
         }
         String code = nativeCode.trim();

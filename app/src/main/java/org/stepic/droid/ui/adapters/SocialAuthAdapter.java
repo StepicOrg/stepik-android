@@ -91,10 +91,8 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
         } else if (type == SocialManager.SocialType.facebook) {
             List<String> permissions = new ArrayList<>();
             permissions.add("email");
-            Toast.makeText(activity, "facebook", Toast.LENGTH_SHORT).show();
             LoginManager.getInstance().logInWithReadPermissions(activity, permissions);
         } else if (type == SocialManager.SocialType.vk) {
-            Toast.makeText(activity, "vk", Toast.LENGTH_SHORT).show();
             String[] scopes = {VKScope.EMAIL};
             VKSdk.login(activity, scopes);
         } else if (type == SocialManager.SocialType.twitter) {

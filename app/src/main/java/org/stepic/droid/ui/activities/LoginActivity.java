@@ -315,14 +315,28 @@ public class LoginActivity extends FragmentActivityBase {
         if (VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
             @Override
             public void onResult(VKAccessToken res) {
-// Пользователь успешно авторизовался
-                Toast.makeText(LoginActivity.this, "vksuccess", Toast.LENGTH_SHORT).show();
+                loginManager.loginWithNativeProviderCode(res.accessToken,
+                        SocialManager.SocialType.vk,
+                        progressHandler,
+                        new ActivityFinisher() {
+                            @Override
+                            public void onFinish() {
+                                finish();
+                            }
+                        },
+                        new FailLoginSupplementaryHandler() {
+                            @Override
+                            public void onFailLogin(Throwable t) {
+                                VKSdk.logout();
+                            }
+                        });
             }
 
             @Override
             public void onError(VKError error) {
-// Произошла ошибка авторизации (например, пользователь запретил авторизацию)
-                Toast.makeText(LoginActivity.this, "vkerror", Toast.LENGTH_SHORT).show();
+                if (error.errorCode == VKError.VK_REQUEST_HTTP_FAILED) {
+                    onInternetProblems();
+                }
             }
         })) {
             return;
