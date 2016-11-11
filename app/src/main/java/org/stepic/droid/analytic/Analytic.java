@@ -3,6 +3,7 @@ package org.stepic.droid.analytic;
 import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
@@ -22,6 +23,7 @@ public interface Analytic {
         String CLICK_CLEAR_CACHE = "Click clear cache button";
         String CLICK_YES_LOGOUT = "Click accept logout";
         String CANCEL_VIDEO_QUALITY = "Cancel video quality dialog";
+        String CANCEL_VIDEO_QUALITY_DETAILED = "cancel_detailed_video";
         String YES_CLEAR_VIDEOS = "clear videos from downloads";
         String DELETE_COMMENT_TRIAL = "comment: delete comment trial";
         String UPDATING_MESSAGE_IS_APPROVED = "updating approved";
@@ -50,6 +52,12 @@ public interface Analytic {
         String CLICK_ACCEPT_FILTER_BUTTON = "click_accept_filter_btn";
         String CLICK_AUTH_FROM_STEPS = "click_auth_from_steps";
         String SHARE_STEP_CLICK = "share_step_click";
+        String CLICK_TRY_STEP_AGAIN = "step_try_again";
+        String NO_DISCOUNTING_DIALOG = "discounting_dialog_no";
+        String YES_DISCOUNTING_DIALOG = "discounting_dialog_yes";
+        String CLICK_SETTINGS_FROM_NOTIFICATION = "click_settings_from_notification";
+        String START_SPLASH = "user_start_splash_new";
+        String START_SPLASH_EXPERT = "user_start_splash_expert";
     }
 
     interface Screens {
@@ -72,6 +80,15 @@ public interface Analytic {
         String OPEN_STEP_IN_WEB = "Screen manager: open Step in Web";
         String REMIND_PASSWORD = "Screen manager: remind password";
         String OPEN_LINK_IN_WEB = "open_link";
+
+        String USER_OPEN_MY_COURSES = "main_choice_my_courses";
+        String USER_OPEN_FIND_COURSES = "main_choice_find_courses";
+        String USER_OPEN_DOWNLOADS = "main_choice_downloads";
+        String USER_OPEN_CERTIFICATES = "main_choice_certificates";
+        String USER_OPEN_FEEDBACK = "main_choice_feedback";
+        String USER_OPEN_NOTIFICATIONS = "main_choice_notifications";
+        String USER_OPEN_SETTINGS = "main_choice_settings";
+        String USER_LOGOUT = "main_choice_logout";
     }
 
     interface Video {
@@ -123,6 +140,7 @@ public interface Analytic {
         String ILLEGAL_STATE_NEXT_LESSON = "cant_show_next_lesson";
         String ILLEGAL_STATE_PREVIOUS_LESSON = "cant_show_previous_lesson";
         String FAIL_PUSH_STEP_VIEW = "fail_push_step_view";
+        java.lang.String NO_INTERNET_EXISTING_ATTEMPTS = "no_internet_existing_attempts";
     }
 
     interface Web {
@@ -139,15 +157,31 @@ public interface Analytic {
     interface Notification {
         String DISABLED_BY_USER = "Notification is disabled by user in app";
         String ACTION_NOT_SUPPORT = "notification action is not support";
-        String HTML_WAS_NULL = "notification action is not support"; //// FIXME: 22.09.16 similar analytic
-        String WAS_MUTED = "notification html text was muted";
-        String NOT_SUPPORT = "notification is not support";
-        String LEARN_SHOWN = "notification learn is shown";
+        String HTML_WAS_NULL = "notification_html_was_null";
+        String WAS_MUTED = "notification_was_muted";
+        String NOT_SUPPORT_TYPE = "notification_type_is_not_support";//After checking action
+
+        @Deprecated //use NOTIFICATION_SHOWN with name = notification.type
+                String LEARN_SHOWN = "notification learn is shown";
         String CANT_PARSE_COURSE_ID = "notification, cant parse courseId";
         String TOKEN_UPDATED = "notification gcm token is updated";
         String TOKEN_UPDATE_FAILED = "notification gcm token is not updated";
         String OPEN_NOTIFICATION = "notification_opened";
         String OPEN_NOTIFICATION_SYLLABUS = "notification_opened_syllabus";
+        String ID_WAS_NULL = "notification_id_was_null";
+        String NOTIFICATION_NULL_POINTER = "notification_unpredicatable_null";
+        String NOTIFICATION_CLICKED_IN_CENTER = "notification_clicked_in_center";
+        String NOTIFICATION_CENTER_OPENED = "notification_center_opened";
+        String OPEN_COMMENT_NOTIFICATION_LINK = "notification_open_comment_link";
+        String OPEN_LESSON_NOTIFICATION_LINK = "notification_open_lesson_link";
+        String NOTIFICATION_NOT_OPENABLE = "notification_not_openable";
+        String GCM_TOKEN_NOT_OK = "notification_gsm_token_not_ok";
+        String NOTIFICATION_SHOWN = "notification_shown";
+        String DISCARD = "notification_discarded";
+        String CANT_PARSE_NOTIFICATION = "notification_parse_fail";
+        String OPEN_TEACH_CENTER = "notification_open_teach_link";
+        String PERSISTENT_KEY_NULL = "notification_key_null";
+        String MARK_ALL_AS_READ = "notification_mark_all";
     }
 
     interface Feedback {
@@ -170,6 +204,8 @@ public interface Analytic {
         java.lang.String SHARE_OPEN_IN_BROWSER = "step_share_open_in_browser";
         java.lang.String COPY_LINK = "step_share_copy";
         java.lang.String SHARE_ALL = "steps_share_all";
+        java.lang.String SHOW_KEEP_ON_SCREEN = "steps_show_keep_on_screen";
+        java.lang.String SHOW_KEEP_OFF_SCREEN = "steps_show_keep_off_screen";
     }
 
     interface Calendar {
@@ -180,6 +216,7 @@ public interface Analytic {
         String SHOW_CALENDAR_AS_WIDGET = "calendar_shown_as_widget";
         String SHOW_CALENDAR = "calendar_shown"; // course with deadlines in future
         String HIDE_WIDGET_FROM_PREFS = "widget_hidden_from_prefs";
+        java.lang.String USER_CLICK_NOT_NOW = "calendar_click_not_now";
     }
 
     interface DeepLink {
@@ -193,6 +230,9 @@ public interface Analytic {
         String COPY_LINK_CERTIFICATE = "certificate_copy_link";
         String SHARE_LINK_CERTIFICATE = "certificate_share";
         String ADD_LINKEDIN = "certificate_add_linkeding";
+        String OPEN_IN_BROWSER = "certificate_open_browser";
+        String CLICK_SHARE_MAIN = "certificate_click_share_main";
+        String OPEN_CERTIFICATE_FROM_NOTIFICATION_CENTER = "certificate_notification_center";
     }
 
     interface Filters {
@@ -201,11 +241,18 @@ public interface Analytic {
         String FILTER_APPLIED_IN_INTERFACE_WITH_PARAMS = "filters_params";
     }
 
+    interface Exam {
+        String START_EXAM = "exam_start";
+        String SHOW_EXAM = "exam_shown_on_bind_view";
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);
 
-    void reportEventWithIdName(String eventName, String id, String name);
+    void reportEventWithIdName(String eventName, String id, @Nullable String name);
+
+    void reportEventWithName(String eventName, @Nullable String name);
 
     void reportEvent(String eventName);
 

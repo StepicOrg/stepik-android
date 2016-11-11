@@ -22,6 +22,9 @@ public final class DbStructureStep extends DBStructureBase {
         public static final String DISCUSSION_COUNT = "discussion_count";
         public static final String DISCUSSION_ID = "discussion_id";
         public static final String PEER_REVIEW = "has_peer_review";
+        public static final String HAS_SUBMISSION_RESTRICTION = "has_submission_restriction";
+        public static final String MAX_SUBMISSION_COUNT = "max_submission_count";
+
     }
 
     public static String[] getUsedColumns() {
@@ -41,7 +44,9 @@ public final class DbStructureStep extends DBStructureBase {
                     Column.IS_LOADING,
                     Column.DISCUSSION_COUNT,
                     Column.DISCUSSION_ID,
-                    Column.PEER_REVIEW
+                    Column.PEER_REVIEW,
+                    Column.HAS_SUBMISSION_RESTRICTION,
+                    Column.MAX_SUBMISSION_COUNT
             };
         }
         return usedColumns;

@@ -7,8 +7,8 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.social.SocialManager;
-import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.ui.util.FailLoginSupplementaryHandler;
+import org.stepic.droid.util.JsonHelper;
 import org.stepic.droid.web.AuthenticationStepicResponse;
 import org.stepic.droid.web.IApi;
 
@@ -49,7 +49,11 @@ public class LoginManager implements ILoginManager {
                 if (response.isSuccess()) {
                     successLogin(response, finisher, null);
                 } else {
-                    failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())), null);
+                    if (response.code() == 429) {
+                        failLogin(new TooManyAttempts(JsonHelper.toJson(response.errorBody())));
+                    } else {
+                        failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())));
+                    }
                 }
             }
 
@@ -119,6 +123,8 @@ public class LoginManager implements ILoginManager {
                 errorTextResId = R.string.failLogin;
             } else if (t instanceof LoginAlreadyUsedException) {
                 errorTextResId = R.string.email_already_used;
+            } else if (t instanceof TooManyAttempts) {
+                errorTextResId = R.string.too_many_attempts;
             } else {
                 errorTextResId = R.string.connectionProblems;
             }
@@ -146,6 +152,12 @@ public class LoginManager implements ILoginManager {
     private static class LoginAlreadyUsedException extends RuntimeException {
         LoginAlreadyUsedException(String message) {
             super(message);
+        }
+    }
+
+    public static class TooManyAttempts extends RuntimeException {
+        TooManyAttempts(String messsage) {
+            super(messsage);
         }
     }
 

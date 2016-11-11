@@ -1,4 +1,4 @@
-#Stepic for Android
+#Stepik for Android
 
 Mobile application of [Stepik.org][1].
 

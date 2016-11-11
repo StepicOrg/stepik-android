@@ -9,6 +9,7 @@ import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -20,21 +21,24 @@ import android.widget.TextView;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.IScreenManager;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
+import org.stepic.droid.ui.dialogs.OnLoadPositionListener;
+import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
 
@@ -42,7 +46,7 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder> implements OnClickLoadListener {
+public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder> implements OnClickLoadListener, OnLoadPositionListener {
     private final static String SECTION_TITLE_DELIMETER = ". ";
 
     public static final int TYPE_SECTION_ITEM = 1;
@@ -54,6 +58,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     @Inject
     IScreenManager screenManager;
+
     @Inject
     IDownloadManager downloadManager;
 
@@ -69,9 +74,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     @Inject
     Analytic analytic;
 
+    @Inject
+    ThreadPoolExecutor threadPoolExecutor;
+
     private List<Section> sections;
-    private Context mContext;
-    private AppCompatActivity mActivity;
+    private Context context;
+    private AppCompatActivity activity;
     private CalendarPresenter calendarPresenter;
     private Course course;
     private boolean needShowCalendarWidget;
@@ -86,8 +94,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     public SectionAdapter(List<Section> sections, Context mContext, AppCompatActivity activity, CalendarPresenter calendarPresenter) {
         this.sections = sections;
-        this.mContext = mContext;
-        mActivity = activity;
+        this.context = mContext;
+        this.activity = activity;
         this.calendarPresenter = calendarPresenter;
         highlightDrawable = ContextCompat.getDrawable(mContext, R.drawable.section_background);
         defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_white, mContext);
@@ -98,10 +106,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     @Override
     public GenericViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_SECTION_ITEM) {
-            View v = LayoutInflater.from(mContext).inflate(R.layout.section_item, parent, false);
+            View v = LayoutInflater.from(context).inflate(R.layout.section_item, parent, false);
             return new SectionViewHolder(v);
         } else if (viewType == TYPE_TITLE) {
-            View v = LayoutInflater.from(mContext).inflate(R.layout.export_calendar_view, parent, false);
+            View v = LayoutInflater.from(context).inflate(R.layout.export_calendar_view, parent, false);
             return new CalendarViewHolder(v);
         } else {
             return null;
@@ -142,14 +150,14 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     public void onClickLoad(int adapterPosition) {
         int sectionPosition = adapterPosition - SECTION_LIST_DELTA;
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
-            Section section = sections.get(sectionPosition);
+            final Section section = sections.get(sectionPosition);
 
             int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                 shell.getSharedPreferenceHelper().storeTempPosition(adapterPosition);
-                if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
+                if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
                     // Show an explanation to the user *asynchronously* -- don't block
@@ -158,13 +166,13 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
                     DialogFragment dialog = ExplainExternalStoragePermissionDialog.newInstance();
                     if (!dialog.isAdded()) {
-                        dialog.show(mActivity.getSupportFragmentManager(), null);
+                        dialog.show(activity.getSupportFragmentManager(), null);
                     }
 
                 } else {
                     // No explanation needed, we can request the permission.
 
-                    ActivityCompat.requestPermissions(mActivity,
+                    ActivityCompat.requestPermissions(activity,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             AppConstants.REQUEST_EXTERNAL_STORAGE);
 
@@ -177,26 +185,68 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 cleaner.removeSection(section);
                 section.set_loading(false);
                 section.set_cached(false);
-                databaseFacade.updateOnlyCachedLoadingSection(section);
+                threadPoolExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        databaseFacade.updateOnlyCachedLoadingSection(section);
+                    }
+                });
                 notifyItemChanged(adapterPosition);
             } else {
                 if (section.is_loading()) {
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_SECTION, section.getId() + "");
-                    screenManager.showDownload(mContext);
+                    screenManager.showDownload(context);
                 } else {
-                    analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
-                    section.set_cached(false);
-                    section.set_loading(true);
-                    databaseFacade.updateOnlyCachedLoadingSection(section);
-                    downloadManager.addSection(section);
-                    notifyItemChanged(adapterPosition);
+                    if (shell.getSharedPreferenceHelper().isNeedToShowVideoQualityExplanation()) {
+                        VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(adapterPosition);
+                        dialogFragment.setOnLoadPositionListener(this);
+                        if (!dialogFragment.isAdded()) {
+                            FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+                            ft.add(dialogFragment, null);
+                            ft.commitAllowingStateLoss();
+                        }
+                    } else {
+                        loadSection(adapterPosition);
+                    }
                 }
             }
         }
     }
 
+    private void loadSection(int adapterPosition) {
+        int sectionPosition = adapterPosition - SECTION_LIST_DELTA;
+        if (sectionPosition >= 0 && sectionPosition < sections.size()) {
+            final Section section = sections.get(sectionPosition);
+
+            analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
+            section.set_cached(false);
+            section.set_loading(true);
+            threadPoolExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    databaseFacade.updateOnlyCachedLoadingSection(section);
+                    downloadManager.addSection(section);
+                }
+            });
+            notifyItemChanged(adapterPosition);
+        }
+    }
+
     public void setNeedShowCalendarWidget(boolean needShowCalendarWidget) {
         this.needShowCalendarWidget = needShowCalendarWidget;
+    }
+
+    @Override
+    public void onNeedLoadPosition(int adapterPosition) {
+        loadSection(adapterPosition);
+    }
+
+    private void onClickStartExam(int position) {
+        if (position >= 0 && position < sections.size()) {
+            analytic.reportEvent(Analytic.Exam.SHOW_EXAM);
+            Section section = sections.get(position);
+            screenManager.openSyllabusInWeb(context, section.getCourse());
+        }
     }
 
     class SectionViewHolder extends GenericViewHolder implements StepicOnClickItemListener {
@@ -235,6 +285,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         @BindView(R.id.load_button)
         View loadButton;
 
+        @BindView(R.id.exam_view)
+        ViewGroup examRoot;
+
+        @BindView(R.id.start_exam_button)
+        View startExamButton;
+
 
         public SectionViewHolder(View itemView) {
             super(itemView);
@@ -253,6 +309,13 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                     onClickLoad(getAdapterPosition());
                 }
             });
+
+            startExamButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SectionAdapter.this.onClickStartExam(getAdapterPosition());
+                }
+            });
         }
 
 
@@ -260,7 +323,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         public void onClick(int adapterPosition) {
             int itemPosition = adapterPosition - SECTION_LIST_DELTA;
             if (itemPosition >= 0 && itemPosition < sections.size()) {
-                screenManager.showUnitsForSection(mContext, sections.get(itemPosition));
+                screenManager.showUnitsForSection(context, sections.get(itemPosition));
             }
         }
 
@@ -303,7 +366,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 hardDeadline.setVisibility(View.VISIBLE);
             }
 
-            if ((section.is_active() || (section.getActions() != null && section.getActions().getTest_section() != null)) && course.getEnrollment() > 0) {
+            if ((section.is_active() || (section.getActions() != null && section.getActions().getTest_section() != null)) && course.getEnrollment() > 0 && !section.isExam()) {
 
                 int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, MainApplication.getAppContext());
 
@@ -353,6 +416,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 cv.setFocusableInTouchMode(false);
             }
 
+            if (section.isExam()) {
+                examRoot.setVisibility(View.VISIBLE);
+            } else {
+                examRoot.setVisibility(View.GONE);
+            }
+
             if (defaultHighlightPosition >= 0 && defaultHighlightPosition == position) {
                 cv.clearAnimation();
                 setAnimation(cv);
@@ -389,9 +458,14 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         @BindView(R.id.export_calendar_button)
         View addToCalendarButton;
 
+        @BindView(R.id.not_now_button)
+        View notNowButton;
+
+
         public CalendarViewHolder(View itemView) {
             super(itemView);
             rootView = itemView;
+            //calendar view holder is created only once
             addToCalendarButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -399,6 +473,15 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                     calendarPresenter.addDeadlinesToCalendar(SectionAdapter.this.sections, null);
                 }
             });
+
+            notNowButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    analytic.reportEventWithIdName(Analytic.Calendar.USER_CLICK_NOT_NOW, course.getCourseId() + "", course.getTitle());
+                    calendarPresenter.clickNotNow();
+                }
+            });
+
         }
 
         @Override
@@ -409,7 +492,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             } else {
                 show();
             }
-
         }
 
         @Override

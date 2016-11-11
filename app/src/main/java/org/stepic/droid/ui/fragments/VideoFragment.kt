@@ -21,6 +21,9 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.core.MyPhoneStateListener
+import org.stepic.droid.core.modules.VideoModule
+import org.stepic.droid.core.presenters.VideoWIthTimestampPresenter
+import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
 import org.stepic.droid.events.IncomingCallEvent
 import org.stepic.droid.events.audio.AudioFocusLossEvent
 import org.stepic.droid.preferences.VideoPlaybackRate
@@ -32,11 +35,12 @@ import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.Media
 import org.videolan.libvlc.MediaPlayer
 import org.videolan.libvlc.util.AndroidUtil
+import timber.log.Timber
 import java.io.File
 import java.util.*
+import javax.inject.Inject
 
-class VideoFragment : FragmentBase(), IVLCVout.Callback {
-
+class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView {
 
     companion object {
         private val TIMEOUT_BEFORE_HIDE = 4500L
@@ -44,11 +48,13 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         private val INDEX_PAUSE_IMAGE = 1
         private val JUMP_TIME_MILLIS = 10000L
         private val JUMP_MAX_DELTA = 3000L
-        private val VIDEO_KEY = "video_key"
+        private val VIDEO_PATH_KEY = "video_path_key"
+        private val VIDEO_ID_KEY = "video_id_key"
         private val DELTA_TIME = 0L
-        fun newInstance(videoUri: String): VideoFragment {
+        fun newInstance(videoUri: String, videoId: Long): VideoFragment {
             val args = Bundle()
-            args.putString(VIDEO_KEY, videoUri)
+            args.putString(VIDEO_PATH_KEY, videoUri)
+            args.putLong(VIDEO_ID_KEY, videoId)
             val fragment = VideoFragment()
             fragment.arguments = args
             return fragment
@@ -61,11 +67,12 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
     var fragmentContainer: ViewGroup? = null
     var videoView: SurfaceView? = null;
     var filePath: String? = null;
+    private var videoId: Long? = null
     var libvlc: LibVLC? = null
     var mediaPlayer: MediaPlayer? = null
     var videoWidth: Int = 0
     var videoHeight: Int = 0
-    private val mPlayerListener: MyPlayerListener = MyPlayerListener(this)
+    private val playerListener: MyPlayerListener = MyPlayerListener(this)
     var maxTimeInMillis: Long? = null
     var currentTimeInMillis: Long = 0L
     var progressBar: ProgressBar? = null
@@ -95,19 +102,30 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
     private var mSarNum: Int = 0
     private var mSarDen: Int = 0
     private var isOnResumeDirectlyAfterOnCreate = true
+    private var hideRunnable: Runnable? = null
+    private val preRollListener = PreRollListener(this)
+    private var needPlay = false
 
     private var isLoading: Boolean = false
+
+    private val receiver: BroadcastReceiver = MyBroadcastReceiver(this)
+
+    @Inject
+    lateinit var videoTimestampPresenter: VideoWIthTimestampPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-        filePath = arguments.getString(VIDEO_KEY)
+        MainApplication.component().plus(VideoModule()).inject(this)
+        filePath = arguments.getString(VIDEO_PATH_KEY)
+        videoId = arguments.getLong(VIDEO_ID_KEY)
+        if (videoId != null && videoId!! <= 0L) { // if equal zero -> it is default, it is not our video
+            videoId = null
+        }
         initPhoneStateListener()
         isOnResumeDirectlyAfterOnCreate = true
     }
 
-
-    private val mReceiver: BroadcastReceiver = MyBroadcastReceiver(this)
 
     private class MyBroadcastReceiver(owner: VideoFragment) : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -124,7 +142,6 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
             mOwner = owner
         }
     }
-
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         fragmentContainer = inflater?.inflate(R.layout.fragment_video, container, false) as ViewGroup
@@ -143,9 +160,9 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         setupController(fragmentContainer)
         isOnStartAfterSurfaceDestroyed = false
 
-        var filter = IntentFilter()
+        val filter = IntentFilter()
         filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
-        activity.registerReceiver(mReceiver, filter)
+        activity.registerReceiver(receiver, filter)
         startLoading()
         return fragmentContainer
     }
@@ -156,13 +173,18 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
     }
 
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        videoTimestampPresenter.attachView(this)
+    }
+
     private fun bindViewWithPlayer() {
         val vout = mediaPlayer?.vlcVout
         vout?.setVideoView(videoView)
         vout?.addCallback(this)
         vout?.attachViews()
 
-        mediaPlayer?.setEventListener(mPlayerListener)
+        mediaPlayer?.setEventListener(playerListener)
 
         playPauseSwitcher?.isClickable = true
 
@@ -181,7 +203,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
             // Create media player
             mediaPlayer = MediaPlayer(libvlc)
 
-            val file = File (filePath)
+            val file = File(filePath)
             var uri: Uri?
             if (file.exists()) {
                 uri = Uri.fromFile(file)
@@ -192,6 +214,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
             val media = Media(libvlc, uri)
             mediaPlayer?.media = media
             media.release()
+            mediaPlayer?.volume = 150
 
             mediaPlayer?.rate = userPreferences.videoPlaybackRate.rateFloat
             isEndReached = false
@@ -217,18 +240,16 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
 
     override fun onHardwareAccelerationError(vlcVout: IVLCVout?) {
         analytic.reportEvent(Analytic.Video.VLC_HARDWARE_ERROR)
-        activity?.finish()
+        Timber.d("onHardwareAccelerationError")
+        releasePlayer()
+        recreateAndPreloadPlayer(isNeedPlayAfterRecreating = true)
     }
-
-    override fun onStart() {
-        super.onStart()
-    }
-
 
     override fun onResume() {
         super.onResume()
+        Timber.d("onResume")
         bus.register(this)
-        recreateAndPreloadPlayer(isNeedPlayAfterRecreating = false)
+        videoTimestampPresenter.showVideoWithPredefinedTimestamp(videoId)
     }
 
     fun recreateAndPreloadPlayer(isNeedPlayAfterRecreating: Boolean = true) {
@@ -243,13 +264,12 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
             }
             if (isOnResumeDirectlyAfterOnCreate) {
                 isOnResumeDirectlyAfterOnCreate = false
-                mediaPlayer?.setEventListener(mPlayerListener)
+                mediaPlayer?.setEventListener(playerListener)
                 playPlayer()
             } else {
                 mediaPlayer?.setEventListener(preRollListener)
                 mediaPlayer?.play()
             }
-            mediaPlayer?.time = currentTimeInMillis
             playerSeekBar?.let {
                 if (!isSeekBarDragging) {
                     val max = it.max
@@ -257,7 +277,6 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
                     if (maxTimeInMillis != null) {
                         val maxTime = maxTimeInMillis ?: 1L
                         positionByHand = (currentTimeInMillis.toFloat() / maxTime.toFloat()).toFloat()
-
                     }
                     if (positionByHand > max) {
                         positionByHand = 0f
@@ -269,12 +288,11 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         } else {
             showController(false)
         }
-
     }
 
     override fun onPause() {
         super.onPause()
-
+        Timber.d("onPause")
         stopPlayingBeforeRecreating()
 
         clearAutoHideQueue()
@@ -291,15 +309,17 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
             currentTimeInMillis = (mediaPlayer?.time ?: 0L) - DELTA_TIME
         }
         if (currentTimeInMillis < 0L) currentTimeInMillis = 0L
+        videoTimestampPresenter.saveMillis(currentTimeInMillis, videoId)
         pausePlayer()
         mediaPlayer?.setEventListener(null)
         releasePlayer()
     }
 
     override fun onDestroyView() {
+        videoTimestampPresenter.detachView(this)
         destroyVideoView()
         destroyController()
-        activity?.unregisterReceiver(mReceiver)
+        activity?.unregisterReceiver(receiver)
         super.onDestroyView()
     }
 
@@ -394,7 +414,6 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         videoView!!.layoutParams = lp
 
 
-
         // set frame size (crop if necessary)
         lp = surfaceFrame!!.layoutParams
         lp.width = Math.floor(w.toDouble()).toInt()
@@ -478,26 +497,24 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         }
     }
 
-    private var mHideRunnable: Runnable? = null
-
     private fun autoHideController(timeout: Long = TIMEOUT_BEFORE_HIDE) {
         val view = controller
-        mHideRunnable?.let {
+        hideRunnable?.let {
             view?.removeCallbacks(it)
         }
         if (timeout >= 0) {
-            mHideRunnable = Runnable {
+            hideRunnable = Runnable {
                 controller?.let {
                     showController(false)
                 }
             }
-            view?.postDelayed(mHideRunnable, timeout)
+            view?.postDelayed(hideRunnable, timeout)
         }
     }
 
     private fun clearAutoHideQueue() {
         val view = controller
-        mHideRunnable?.let {
+        hideRunnable?.let {
             view?.removeCallbacks(it)
         }
     }
@@ -553,6 +570,17 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         videoRateChooser?.setImageDrawable(rate.icon)
         mediaPlayer?.rate = rate.rateFloat
         userPreferences.videoPlaybackRate = rate
+    }
+
+    private var isInitiatedByTimestamp: Boolean = false
+
+    override fun onNeedShowVideoWithTimestamp(timestamp: Long) {
+        if (!isInitiatedByTimestamp) {
+            currentTimeInMillis = Math.max(timestamp - JUMP_MAX_DELTA, 0L)
+        }
+        isInitiatedByTimestamp = true
+        releasePlayer()
+        recreateAndPreloadPlayer(isNeedPlayAfterRecreating = false)
     }
 
     private fun onJumpForward() {
@@ -662,51 +690,71 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
     }
 
     private class MyPlayerListener(owner: VideoFragment) : MediaPlayer.EventListener {
-        private var mOwner: VideoFragment?
+        private var owner: VideoFragment?
 
         init {
-            mOwner = owner
+            this.owner = owner
         }
 
+        private var alreadyTimestamped = false
+
         override fun onEvent(event: MediaPlayer.Event) {
-            val player = mOwner?.mediaPlayer
+            val player = owner?.mediaPlayer
             when (event.type) {
                 MediaPlayer.Event.Paused -> {
-                    mOwner?.showPlay()
+                    Timber.d("player paused")
+                    owner?.showPlay()
                 }
                 MediaPlayer.Event.Playing -> {
-                    mOwner?.stopLoading()
+                    Timber.d("player playing")
+                    owner?.stopLoading()
+
+                    if (!alreadyTimestamped) {
+                        var currentTime = 0L
+                        if (owner?.currentTimeInMillis != null) {
+                            currentTime = owner!!.currentTimeInMillis
+                        }
+                        player?.let {
+                            if (it.length - JUMP_MAX_DELTA < currentTime) {
+                                it.time = 0L
+                            } else {
+                                it.time = currentTime
+                            }
+                        }
+                        alreadyTimestamped = true
+                    }
                     if (player?.isPlaying ?: false) {
-                        mOwner?.showPause()
+                        owner?.showPause()
                         player?.length?.let {
-                            mOwner?.slashTime?.visibility = View.VISIBLE
-                            mOwner?.maxTimeInMillis = it
-                            mOwner?.maxTime?.text = TimeUtil.getFormattedVideoTime(it)
+                            owner?.slashTime?.visibility = View.VISIBLE
+                            owner?.maxTimeInMillis = it
+                            owner?.maxTime?.text = TimeUtil.getFormattedVideoTime(it)
                         }
                     }
                 }
                 MediaPlayer.Event.EndReached -> {
-                    mOwner?.activity?.finish()
-                    mOwner?.isEndReached = true
-                    mOwner?.showController(true)
-                    mOwner?.showPlay()
+                    Timber.d("player endReached")
+                    owner?.activity?.finish()
+                    owner?.isEndReached = true
+                    owner?.showController(true)
+                    owner?.showPlay()
                     player?.length?.let {
-                        mOwner?.currentTime?.text = TimeUtil.getFormattedVideoTime(it)
+                        owner?.currentTime?.text = TimeUtil.getFormattedVideoTime(it)
                     }
-                    mOwner?.playerSeekBar?.let {
-                        if (!(mOwner?.isSeekBarDragging ?: false)) {
+                    owner?.playerSeekBar?.let {
+                        if (!(owner?.isSeekBarDragging ?: false)) {
                             val max = it.max
                             it.progress = max
                         }
                     }
-                    mOwner?.releasePlayer()
-                    mOwner?.activity?.finish()
+                    owner?.releasePlayer()
+                    owner?.activity?.finish()
                 }
                 MediaPlayer.Event.PositionChanged -> {
                     val currentPos = player?.position
                     currentPos?.let {
-                        mOwner?.playerSeekBar?.let {
-                            if (!(mOwner?.isSeekBarDragging ?: false)) {
+                        owner?.playerSeekBar?.let {
+                            if (!(owner?.isSeekBarDragging ?: false)) {
                                 val max = it.max
                                 it.progress = (max.toFloat() * currentPos).toInt()
                             }
@@ -715,10 +763,18 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
                 }
                 MediaPlayer.Event.TimeChanged -> {
                     player?.time?.let {
-                        mOwner?.currentTime?.text =
+                        owner?.currentTime?.text =
                                 TimeUtil.getFormattedVideoTime(it)
                     }
                 }
+                MediaPlayer.Event.Stopped -> {
+                    Timber.d("player stopped")
+                    owner?.activity?.let {
+                        Toast.makeText(it, R.string.sync_problem, Toast.LENGTH_SHORT).show()
+                        it.finish()
+                    }
+                }
+
             }
         }
     }
@@ -747,36 +803,38 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
         }
     }
 
-    private val preRollListener = PreRollListener(this)
-    private var needPlay = false
-
     private class PreRollListener(owner: VideoFragment) : MediaPlayer.EventListener {
-        private var mOwner: VideoFragment?
+        private var owner: VideoFragment?
 
         init {
-            mOwner = owner
+            this.owner = owner
         }
 
         override fun onEvent(event: MediaPlayer.Event) {
-            val player = mOwner?.mediaPlayer
+            val player = owner?.mediaPlayer
             when (event.type) {
                 MediaPlayer.Event.Playing -> {
+                    Timber.d("pre roll Playing")
                     //mOwner?.pausePlayer()//it is not need, because we do not want change button
                     player?.pause()
-                    player?.setEventListener (mOwner?.mPlayerListener)
-                    mOwner?.stopLoading()
+                    player?.setEventListener(owner?.playerListener)
+                    owner?.stopLoading()
                     player?.length?.let {
-                        mOwner?.slashTime?.visibility = View.VISIBLE
-                        mOwner?.maxTimeInMillis = it
-                        mOwner?.maxTime?.text = TimeUtil.getFormattedVideoTime(it)
-                        mOwner?.currentTime?.text = TimeUtil.getFormattedVideoTime(mOwner?.currentTimeInMillis ?: 0L)
-                        player.time = mOwner?.currentTimeInMillis ?: 0L
+                        owner?.slashTime?.visibility = View.VISIBLE
+                        owner?.maxTimeInMillis = it
+                        owner?.maxTime?.text = TimeUtil.getFormattedVideoTime(it)
+                        owner?.currentTime?.text = TimeUtil.getFormattedVideoTime(owner?.currentTimeInMillis ?: 0L)
+                        player.time = owner?.currentTimeInMillis ?: 0L
                     }
-                    if (mOwner?.needPlay ?: false) {
-                        mOwner?.fragmentContainer?.keepScreenOn = true
-                        mOwner?.audioFocusHelper?.requestAudioFocus()
+                    if (owner?.needPlay ?: false) {
+                        owner?.fragmentContainer?.keepScreenOn = true
+                        owner?.audioFocusHelper?.requestAudioFocus()
                         player?.play()
                     }
+                }
+
+                MediaPlayer.Event.Stopped -> {
+                    Timber.d("video stopped preroll")
                 }
             }
         }
@@ -845,7 +903,6 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback {
             isControllerVisible = false
         }
     }
-
 
     @Subscribe
     fun onIncomingCall(event: IncomingCallEvent) {

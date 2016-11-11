@@ -103,30 +103,6 @@
                     android:contentDescription="@string/app_name"
                     android:text="@string/sign_in"/>
 
-                <TextView
-                    android:id="@+id/by_signing_up_tv"
-                    style="@style/regular_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:gravity="center"
-                    android:maxWidth="@dimen/min_max_width_for_tablets"
-                    android:text="@string/by_creating_you_agree"
-                    android:textSize="11sp"
-                    android:visibility="gone"/>
-
-                <TextView
-                    android:id="@+id/end_user_agreement_tv"
-                    style="@style/regular_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:linksClickable="true"
-                    android:text="@string/terms"
-                    android:textColor="?attr/colorAccent"
-                    android:textSize="11sp"
-                    android:visibility="gone"/>
-
                 <include layout="@layout/sign_in_title"/>
 
             </LinearLayout>

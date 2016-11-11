@@ -16,6 +16,8 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.neenbedankt.android-apt' //needed for source code generation
 apply plugin: 'io.fabric'
 
+int minSdk = hasProperty('devMinSdk') ? devMinSdk.toInteger() : 14
+
 def globalConf = rootProject.ext
 android {
 
@@ -29,7 +31,7 @@ android {
             keyAlias globalConf.debugAlias
             keyPassword globalConf.debugAliasPass
         }
-
+        
         release {
             storeFile file(globalConf.keystore)
             storePassword globalConf.keystorePass
@@ -40,10 +42,10 @@ android {
 
     defaultConfig {
         applicationId "org.stepic.droid"
-        minSdkVersion 15
+        minSdkVersion minSdk
         targetSdkVersion 24
-        versionCode 86
-        versionName "1.17.5"
+        versionCode 99
+        versionName "1.20"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // Enabling multidex support.
         multiDexEnabled true
@@ -67,7 +69,7 @@ android {
 
     splits {
         abi {
-            enable true
+            enable !project.hasProperty('noSplitBuild')
             reset()
             include 'armeabi-v7a', 'mips', 'x86', 'x86_64', 'arm64-v8a'
             //select ABIs to build APKs for
@@ -158,7 +160,7 @@ dependencies {
     compile 'com.squareup:otto:1.3.8'
 
     // AppMetrica from maven central. Protobuf will be included as dependency.
-    compile 'com.yandex.android:mobmetricalib:2.42'
+    compile 'com.yandex.android:mobmetricalib:2.51'
 
     compile 'jp.wasabeef:recyclerview-animators:2.1.0'
 
@@ -190,6 +192,7 @@ dependencies {
     compile('com.twitter.sdk.android:twitter:2.0.0@aar') {
         transitive = true;
     }
+    compile 'com.jakewharton.timber:timber:4.3.1'
 }
 
 repositories {

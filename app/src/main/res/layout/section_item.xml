@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout android:id="@+id/cv"
+             xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cv"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/stepic_white"
-    android:clickable="true"
-    android:focusable="false"
-    android:focusableInTouchMode="false"
-    android:foreground="@drawable/non_radius_foreground">
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:background="@color/stepic_white"
+             android:clickable="true"
+             android:focusable="false"
+             android:focusableInTouchMode="false"
+             android:foreground="@drawable/non_radius_foreground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,19 +19,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:baselineAligned="false"
             android:orientation="horizontal"
             android:padding="@dimen/guideline_left_right_padding_list_item">
 
             <RelativeLayout
                 android:id="@+id/course_info_layout"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
                 <TextView
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp"
-                    android:textSize="@dimen/text_header"
                     android:id="@+id/section_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -39,41 +37,40 @@
                     android:layout_marginBottom="2dp"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:paddingBottom="2dp"
                     android:paddingRight="8dp"
+                    android:paddingTop="2dp"
+                    android:textSize="@dimen/text_header"
                     tools:text="1. Section Section"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+
+                <TextView
+                    android:id="@+id/start_date"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/section_title"
-                    android:orientation="vertical">
+                    android:textColor="@color/stepic_weak_text"
+                    android:textSize="@dimen/text_height"
+                    tools:text="start date"/>
+
+                <TextView
+                    android:id="@+id/soft_deadline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/start_date"
+                    android:textColor="@color/stepic_weak_text"
+                    android:textSize="@dimen/text_height"
+                    tools:text="soft deadline date"/>
 
 
-                    <TextView
-                        android:id="@+id/start_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="start date"
-                        android:textColor="@color/stepic_weak_text"
-                        android:textSize="@dimen/text_height" />
-
-                    <TextView
-                        android:id="@+id/soft_deadline"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="soft deadline date"
-                        android:textColor="@color/stepic_weak_text"
-                        android:textSize="@dimen/text_height" />
-
-                    <TextView
-                        android:id="@+id/hard_deadline"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="hard deadline date"
-                        android:textColor="@color/stepic_weak_text"
-                        android:textSize="@dimen/text_height" />
-
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/hard_deadline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/soft_deadline"
+                    android:textColor="@color/stepic_weak_text"
+                    android:textSize="@dimen/text_height"
+                    tools:text="hard deadline date"/>
 
             </RelativeLayout>
 
@@ -81,11 +78,44 @@
 
         </LinearLayout>
 
+        <RelativeLayout
+            android:id="@+id/exam_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/guideline_left_right_padding_list_item"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/exam_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/start_exam_button"
+                android:text="@string/exam_module_title"
+                android:textSize="@dimen/stepik_text_size_in_button"
+                />
+
+
+            <Button
+                android:id="@+id/start_exam_button"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="@string/start_exam_action_title"
+                android:textColor="@color/stepic_blue_ribbon"
+                android:textSize="@dimen/stepik_text_size_in_button"
+                />
+
+        </RelativeLayout>
+
+
         <View
             android:id="@+id/grey_bar"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/silver" />
+            android:background="@color/silver"/>
     </LinearLayout>
 
 </FrameLayout>

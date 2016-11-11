@@ -32,6 +32,8 @@ public final class DbStructureSections extends DBStructureBase {
         public static final String IS_CACHED = "is_cached";
         public static final String IS_LOADING = "is_loading";
         public static final String TEST_SECTION = "can_test_section";
+        public static final String DISCOUNTING_POLICY = "discounting_policy";
+        public static final String IS_EXAM = "is_exam";
 
     }
 
@@ -51,7 +53,9 @@ public final class DbStructureSections extends DBStructureBase {
                     Column.UNITS,
                     Column.IS_CACHED,
                     Column.IS_LOADING,
-                    Column.TEST_SECTION
+                    Column.TEST_SECTION,
+                    Column.DISCOUNTING_POLICY,
+                    Column.IS_EXAM
             };
         }
         return usedColumns;

@@ -2,11 +2,13 @@
     <string name="app_name" translatable="false">Stepik</string>
     <integer name="com_vk_sdk_AppId" translatable="false">5628680</integer>
     <string name="facebook_app_id" translatable="false">171127739724012</string>
+    <string name="host_name" translatable="false">stepik.org</string>
+    <string name="secondary_host_name" translatable="false">stepic.org</string>
     <string name="yet_have_not_account">"Don\'t have an account yet? Sign up"</string>
     <string name="or_sign_up_with_email">or sign up with e-mail</string>
     <string name="sign_up">Sign up</string>
     <string name="create_my_account">Create account</string>
-    <string name="by_creating_you_agree">By creating stepic account, you agree to the</string>
+    <string name="by_creating_you_agree">By creating Stepik.org account, you agree to the</string>
     <string name="terms">Terms</string>
     <string name="email" translatable="false">E-mail</string>
     <string name="remind_password">Forgot password?</string>
@@ -40,7 +42,7 @@
     <string name="units_lessons_title">Lessons</string>
     <string name="steps_title">Steps</string>
     <string name="not_available_lesson">Lesson is not available now</string>
-    <string name="description_download">Caching Stepic\'s video</string>
+    <string name="description_download">Caching Stepik\'s video</string>
     <string name="video_title">Video</string>
     <string name="wi_fi_setting">Wi-Fi only download</string>
     <string name="clear_cache_title">Clear cache</string>
@@ -61,11 +63,11 @@
     <string name="failLogin">Login/password was incorrect</string>
     <string name="connectionProblems">Internet connection was lost</string>
     <string name="are_you_sure">Are you sure?</string>
-    <string name="explain_permission">For cache course and watch video offline Stepic needs permission to storage of phone.</string>
+    <string name="explain_permission">For cache course and watch video offline Stepik.org needs permission to storage of phone.</string>
     <string name="explain_calendar_permission">For add deadlines to calendar the app needs permission to calendar. The app doesn\'t change and read your events.</string>
     <string name="allow_question">Allow?</string>
     <string name="video_quality">Video quality</string>
-    <string name="sync_problem">There was a problem syncing the data, please try again later.</string>
+    <string name="sync_problem">There was a problem syncing the link, please try again later</string>
     <string name="empty_courses">Looks like you haven\'t enrolled in any courses yet</string>
     <string name="cache_cleared">Cache is cleared successfully!</string>
     <string name="join_course_web_exception">Try to join course in web</string>
@@ -101,7 +103,7 @@
     <string name="send">Send</string>
     <string name="email_sent">We have sent you an e-mail.</string>
     <string name="email_wrong">The e-mail address is not assigned to any user account.</string>
-    <string name="are_you_sure_logout">All saved data for offline will be removed. Are you sure? </string>
+    <string name="are_you_sure_logout">All saved link for offline will be removed. Are you sure? </string>
     <string name="feedback_good_description">The app is pleasure to use.</string>
     <string name="feedback_good">excellent</string>
     <string name="feedback_bad">terrible</string>
@@ -127,7 +129,7 @@
     <string name="cant_drop">You can not drop course</string>
     <string name="open_in_external_player">Open in external player</string>
     <string name="code_warning">This step is not optimized for mobile</string>
-    <string name="notification_title">Notification</string>
+    <string name="notification_title">Notifications</string>
     <string name="notification_learn_list">Deadlines, new modules, certificates</string>
     <string name="vibration_title">Vibration</string>
     <string name="empty_try_later">Now here is empty, try again later.</string>
@@ -241,4 +243,43 @@
     <string name="auth_action_title">Sign in</string>
     <string name="empty_steps_title">This lesson doesn\'t have steps</string>
     <string name="open_in_browser">Open in Browser</string>
+    <string name="low_quality">Low</string>
+    <string name="medium_quality">Medium</string>
+    <string name="high_quality">High</string>
+    <string name="very_high_quality">Very high</string>
+    <string name="video_quality_explanation">High quality video takes more space and can be loaded slowly</string>
+    <string name="do_not_ask_me_again">Do not ask me again</string>
+    <string name="discount_policy_inverse_title">After every wrong submission your maximum points will be reduced</string>
+    <plurals name="discount_policy_first_n">
+        <item quantity="one">You have %d attempt, for which you will get points</item>
+        <item quantity="other">You have %d attempts, for which you will get points</item>
+    </plurals>
+    <string name="discount_policy_no_way">You will not get score for the next attempts</string>
+    <string name="other_title">Other</string>
+    <string name="discounting_policy_title_settings">Warn about the lessons with penalties for wrong answers</string>
+    <string name="discounting_policy_message">If you send the wrong submission of this task, in the future, you can not get the points. Are you sure?</string>
+    <string name="keep_screen_on_title_settings">Keep screen on, when solve steps</string>
+    <string name="all_title">All</string>
+    <string name="learning_title">Learning</string>
+    <string name="reviews_title">Reviews</string>
+    <string name="teaching_title">Teaching</string>
+    <string name="accessibility_switch_viewed_state">Switch viewed state</string>
+    <string name="mark_all_as_read">Mark all as read</string>
+    <string name="empty_notification_title">Yet notifications are empty</string>
+    <string name="not_now">Not now</string>
+    <string name="after_hide_calendar_message">You can add deadlines in top menu</string>
+    <string name="received_review_title">Received review</string>
+    <string name="new_message_title">New message</string>
+    <string name="get_certifcate_title">New certificate</string>
+    <string name="get_license_message">New license</string>
+    <string name="added_to_group_title">Adding to group</string>
+    <string name="notification_comment_list">Comments and replies</string>
+    <string name="exam_module_title">It is exam module, you can solve it in web</string>
+    <string name="start_exam_action_title">Open</string>
+    <string name="restriction_submission_enough">The step cannot be submitted, because the number of attempts has been exceeded</string>
+    <string name="too_many_attempts">Too many attempts. Please try later</string>
+    <plurals name="restriction_submission">
+        <item quantity="one">You have %d attempt</item>
+        <item quantity="other">You have %d attempts</item>
+    </plurals>
 </resources>

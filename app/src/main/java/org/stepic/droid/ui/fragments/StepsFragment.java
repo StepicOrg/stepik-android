@@ -29,6 +29,7 @@ import org.stepic.droid.core.presenters.StepsPresenter;
 import org.stepic.droid.core.presenters.contracts.StepsView;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.ui.adapters.StepFragmentAdapter;
@@ -51,7 +52,10 @@ public class StepsFragment extends FragmentBase implements StepsView {
     private static final String SIMPLE_STEP_POSITION_KEY = "simpleStepPosition";
     private static final String SIMPLE_DISCUSSION_ID_KEY = "simpleDiscussionPos";
     private boolean fromPreviousLesson;
-    private long disscussionId = -1;
+    private long discussionId = -1;
+    private Lesson lesson;
+    private Unit unit;
+    private Section section;
 
     private final ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -71,10 +75,11 @@ public class StepsFragment extends FragmentBase implements StepsView {
         }
     };
 
-    public static StepsFragment newInstance(@org.jetbrains.annotations.Nullable Unit unit, Lesson lesson, boolean fromPreviousLesson) {
+    public static StepsFragment newInstance(@org.jetbrains.annotations.Nullable Unit unit, Lesson lesson, boolean fromPreviousLesson, Section section) {
         Bundle args = new Bundle();
         args.putParcelable(AppConstants.KEY_UNIT_BUNDLE, unit);
         args.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lesson);
+        args.putParcelable(AppConstants.KEY_SECTION_BUNDLE, section);
         args.putBoolean(FROM_PREVIOUS_KEY, fromPreviousLesson);
         StepsFragment fragment = new StepsFragment();
         fragment.setArguments(args);
@@ -122,7 +127,6 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @BindView(R.id.empty_steps)
     View emptySteps;
 
-
     StepFragmentAdapter stepAdapter;
 
     @Inject
@@ -136,7 +140,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
-        disscussionId = getArguments().getLong(SIMPLE_DISCUSSION_ID_KEY);
+        discussionId = getArguments().getLong(SIMPLE_DISCUSSION_ID_KEY);
 
         MainApplication
                 .component()
@@ -148,6 +152,13 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_steps, container, false);
+        boolean keepScreenOnSteps = userPreferences.isKeepScreenOnSteps();
+        if (keepScreenOnSteps) {
+            analytic.reportEvent(Analytic.Steps.SHOW_KEEP_ON_SCREEN);
+        } else {
+            analytic.reportEvent(Analytic.Steps.SHOW_KEEP_OFF_SCREEN);
+        }
+        v.setKeepScreenOn(keepScreenOnSteps);
         setHasOptionsMenu(true);
         unbinder = ButterKnife.bind(this, v);
         return v;
@@ -158,17 +169,21 @@ public class StepsFragment extends FragmentBase implements StepsView {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initIndependentUI();
+        stepAdapter = new StepFragmentAdapter(getChildFragmentManager(), stepsPresenter.getStepList(), stepTypeResolver);
+        viewPager.setAdapter(stepAdapter);
         stepsPresenter.attachView(this);
-        if (stepsPresenter.getLesson() == null) {
+        if (lesson == null) {
+            Section section = getArguments().getParcelable(AppConstants.KEY_SECTION_BUNDLE);
             Lesson lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
             Unit unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
             long unitId = getArguments().getLong(SIMPLE_UNIT_ID_KEY);
             long defaultStepPos = getArguments().getLong(SIMPLE_STEP_POSITION_KEY);
             long lessonId = getArguments().getLong(SIMPLE_LESSON_ID_KEY);
-            stepsPresenter.init(lesson, unit, lessonId, unitId, defaultStepPos, fromPreviousLesson);
+            stepsPresenter.init(lesson, unit, lessonId, unitId, defaultStepPos, fromPreviousLesson, section);
             fromPreviousLesson = false;
         } else {
-            stepsPresenter.init(null, null, -1, -1, -1, false);
+            onLessonUnitPrepared(lesson, unit, section);
+            showSteps(fromPreviousLesson, -1);
         }
         bus.register(this);
     }
@@ -179,13 +194,14 @@ public class StepsFragment extends FragmentBase implements StepsView {
         reportProblem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Section section = getArguments().getParcelable(AppConstants.KEY_SECTION_BUNDLE);
                 Lesson lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
                 Unit unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
                 long unitId = getArguments().getLong(SIMPLE_UNIT_ID_KEY);
                 long defaultStepPos = getArguments().getLong(SIMPLE_STEP_POSITION_KEY);
                 long lessonId = getArguments().getLong(SIMPLE_LESSON_ID_KEY);
                 fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
-                stepsPresenter.refreshWhenOnConnectionProblem(lesson, unit, lessonId, unitId, defaultStepPos, fromPreviousLesson);
+                stepsPresenter.refreshWhenOnConnectionProblem(lesson, unit, lessonId, unitId, defaultStepPos, fromPreviousLesson, section);
                 fromPreviousLesson = false;
             }
         });
@@ -199,10 +215,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         });
     }
 
-    private void init(Lesson lesson, Unit unit) {
-        stepAdapter = new StepFragmentAdapter(getActivity().getSupportFragmentManager(), stepsPresenter.getStepList(), lesson, unit, stepTypeResolver);
-        viewPager.setAdapter(stepAdapter);
-
+    private void init(Lesson lesson) {
         getActivity().setTitle(lesson.getTitle());
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -353,8 +366,11 @@ public class StepsFragment extends FragmentBase implements StepsView {
     }
 
     @Override
-    public void onLessonUnitPrepared(Lesson lesson, @NonNull Unit unit) {
-        init(lesson, unit);
+    public void onLessonUnitPrepared(Lesson lesson, @NonNull Unit unit, Section section) {
+        this.lesson = lesson;
+        this.section = section;
+        this.unit = unit;
+        init(lesson);
     }
 
     @Override
@@ -379,6 +395,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         authView.setVisibility(View.GONE);
         emptySteps.setVisibility(View.GONE);
         viewPager.setVisibility(View.VISIBLE);
+        stepAdapter.setDataIfNotNull(lesson, unit, section);
         stepAdapter.notifyDataSetChanged();
         updateTabState();
 
@@ -405,10 +422,10 @@ public class StepsFragment extends FragmentBase implements StepsView {
         }
         tabLayout.setVisibility(View.VISIBLE);
 
-        if (disscussionId > 0 && position >= 0 && position < stepsPresenter.getStepList().size()) {
+        if (discussionId > 0 && position >= 0 && position < stepsPresenter.getStepList().size()) {
             Step step = stepsPresenter.getStepList().get(position);
             shell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
-            disscussionId = -1;
+            discussionId = -1;
         }
     }
 

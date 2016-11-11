@@ -1,6 +1,7 @@
 package org.stepic.droid.core.presenters
 
 import android.app.Activity
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.core.IScreenManager
@@ -23,7 +24,8 @@ class CertificatePresenter(val api: IApi,
                            val screenManager: IScreenManager,
                            val database: DatabaseFacade,
                            val threadPoolExecutor: ThreadPoolExecutor,
-                           val mainHandler: IMainHandler) : PresenterBase<CertificateView>() {
+                           val mainHandler: IMainHandler,
+                           val analytic: Analytic) : PresenterBase<CertificateView>() {
 
     private var certificateViewItemList: ArrayList<CertificateViewItem>? = null
     private var certificatesCall: Call<CertificateResponse>? = null
@@ -142,10 +144,12 @@ class CertificatePresenter(val api: IApi,
     fun size() = certificateViewItemList?.size ?: 0
 
     fun showShareDialogForCertificate(certificateViewItem: CertificateViewItem?) {
+        analytic.reportEvent(Analytic.Certificate.CLICK_SHARE_MAIN)
         view?.onNeedShowShareDialog(certificateViewItem)
     }
 
     fun showCertificateAsPdf(activity: Activity, fullPath: String) {
+        analytic.reportEvent(Analytic.Certificate.OPEN_IN_BROWSER);
         screenManager.showPdfInBrowserByGoogleDocs(activity, fullPath)
     }
 

@@ -20,6 +20,7 @@ import org.stepic.droid.core.presenters.contracts.RouteStepView;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
@@ -67,6 +68,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
 
     protected Step step;
     protected Lesson lesson;
+    protected Section section;
 
     @Nullable
     protected Unit unit;
@@ -90,9 +92,10 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        step = (Step) getArguments().getSerializable(AppConstants.KEY_STEP_BUNDLE);
-        lesson = (Lesson) getArguments().getSerializable(AppConstants.KEY_LESSON_BUNDLE);
-        unit = (Unit) getArguments().getSerializable(AppConstants.KEY_UNIT_BUNDLE);
+        step = getArguments().getParcelable(AppConstants.KEY_STEP_BUNDLE);
+        lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
+        unit = getArguments().getParcelable(AppConstants.KEY_UNIT_BUNDLE);
+        section = getArguments().getParcelable(AppConstants.KEY_SECTION_BUNDLE);
     }
 
     @Override
@@ -258,7 +261,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     @Override
     public final void openNextLesson(Unit nextUnit, Lesson nextLesson) {
         ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
-        shell.getScreenProvider().showSteps(getActivity(), nextUnit, nextLesson);
+        shell.getScreenProvider().showSteps(getActivity(), nextUnit, nextLesson, section);
         getActivity().finish();
     }
 
@@ -285,7 +288,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     @Override
     public void openPreviousLesson(Unit previousUnit, Lesson previousLesson) {
         ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
-        shell.getScreenProvider().showSteps(getActivity(), previousUnit, previousLesson, true);
+        shell.getScreenProvider().showSteps(getActivity(), previousUnit, previousLesson, true, section);
         getActivity().finish();
     }
 

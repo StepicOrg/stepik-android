@@ -1,5 +1,6 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="custom_peek_height">500dp</dimen>
     <dimen name="margin_registration">10dp</dimen>
     <dimen name="card_corner_radius_guideline">2dp</dimen>
     <dimen name="divider_height_guideline">4dp</dimen>
@@ -59,4 +60,5 @@
     <dimen name="guideline_standard_padding">16dp</dimen>
     <dimen name="card_bottom_margin">10dp</dimen>
     <dimen name="stepik_text_size_in_button">14sp</dimen>
+    <dimen name="left_padding_tablayout_scrollable">60dp</dimen>
 </resources>

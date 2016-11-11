@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="video_quality">
-        <item>240</item>
-        <item>360</item>
-        <item>720</item>
-        <item>1080</item>
+        <item>@string/low_quality</item>
+        <item>@string/medium_quality</item>
+        <item>@string/high_quality</item>
+        <item>@string/very_high_quality</item>
     </string-array>
 </resources>

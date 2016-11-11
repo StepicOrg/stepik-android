@@ -18,6 +18,7 @@ import org.stepic.droid.store.structure.DbStructureSections;
 import org.stepic.droid.store.structure.DbStructureSharedDownloads;
 import org.stepic.droid.store.structure.DbStructureStep;
 import org.stepic.droid.store.structure.DbStructureUnit;
+import org.stepic.droid.store.structure.DbStructureVideoTimestamp;
 import org.stepic.droid.store.structure.DbStructureViewQueue;
 
 import javax.inject.Inject;
@@ -27,6 +28,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String LONG_TYPE = "LONG";
     private static final String INT_TYPE = "INTEGER";
     private static final String BOOLEAN_TYPE = "BOOLEAN";
+    private static final String WHITESPACE = " ";
+
 
     @Inject
     public DatabaseHelper(Context context) {
@@ -63,6 +66,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom11To12(db);
         upgradeFrom12To13(db);
         upgradeFrom13To14(db);
+        upgradeFrom14To15(db);
+        upgradeFrom15To16(db);
+        upgradeFrom16To17(db);
+        upgradeFrom17To18(db);
+    }
+
+    private void upgradeFrom17To18(SQLiteDatabase db) {
+        alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.HAS_SUBMISSION_RESTRICTION, BOOLEAN_TYPE);
+        alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.MAX_SUBMISSION_COUNT, INT_TYPE);
+    }
+
+    private void upgradeFrom16To17(SQLiteDatabase db) {
+        alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.IS_EXAM, BOOLEAN_TYPE);
+    }
+
+    private void upgradeFrom15To16(SQLiteDatabase db) {
+        alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.DISCOUNTING_POLICY, INT_TYPE);
+    }
+
+    private void upgradeFrom14To15(SQLiteDatabase db) {
+        createVideoTimestamp(db);
     }
 
     private void upgradeFrom13To14(SQLiteDatabase db) {
@@ -203,6 +227,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 14) {
             upgradeFrom13To14(db);
+        }
+
+        if (oldVersion < 15) {
+            upgradeFrom14To15(db);
+        }
+
+        if (oldVersion < 16) {
+            upgradeFrom15To16(db);
+        }
+
+        if (oldVersion < 17) {
+            upgradeFrom16To17(db);
+        }
+
+        if (oldVersion < 18) {
+            upgradeFrom17To18(db);
         }
     }
 
@@ -477,6 +517,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureCertificateViewItem.Column.FULL_PATH + " TEXT, "
                 + DbStructureCertificateViewItem.Column.GRADE + " TEXT, "
                 + DbStructureCertificateViewItem.Column.ISSUE_DATE + " TEXT "
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createVideoTimestamp(SQLiteDatabase db) {
+        String sql = "CREATE TABLE " + DbStructureVideoTimestamp.VIDEO_TIMESTAMP
+                + " ("
+                + DbStructureVideoTimestamp.Column.VIDEO_ID + WHITESPACE + LONG_TYPE + ", "
+                + DbStructureVideoTimestamp.Column.TIMESTAMP + WHITESPACE + LONG_TYPE
                 + ")";
         db.execSQL(sql);
     }

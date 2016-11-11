@@ -13,12 +13,13 @@ import com.squareup.otto.Subscribe;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.events.wifi_settings.WifiLoadIsChangedEvent;
+import org.stepic.droid.notifications.model.NotificationType;
 import org.stepic.droid.ui.custom.BetterSwitch;
 import org.stepic.droid.ui.dialogs.AllowMobileDataDialogFragment;
 import org.stepic.droid.ui.dialogs.VideoQualityDialog;
 
-import butterknife.BindView;
 import butterknife.BindString;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SettingsFragment extends FragmentBase {
@@ -39,6 +40,19 @@ public class SettingsFragment extends FragmentBase {
     @BindView(R.id.fragment_settings_notification_learn_switch)
     BetterSwitch notificationLearnSwitch;
 
+    @BindView(R.id.fragment_settings_notification_comment_switch)
+    BetterSwitch notificationCommentSwitch;
+
+    @BindView(R.id.fragment_settings_notification_review_switch)
+    BetterSwitch notificationReviewSwitch;
+
+    @BindView(R.id.fragment_settings_notification_teaching_switch)
+    BetterSwitch notificationTeachingSwitch;
+
+    @BindView(R.id.fragment_settings_notification_other_switch)
+    BetterSwitch notificationOtherSwitch;
+
+
     @BindView(R.id.fragment_settings_notification_vibration_switch)
     BetterSwitch notificationVibration;
 
@@ -48,8 +62,14 @@ public class SettingsFragment extends FragmentBase {
     @BindView(R.id.fragment_settings_calendar_widget_switch)
     BetterSwitch calendarWidgetSwitch;
 
+    @BindView(R.id.fragment_settings_keep_screen_on_switch)
+    BetterSwitch keepScreenOnSwitch;
+
     @BindView(R.id.storage_management_button)
     View storageManagementButton;
+
+    @BindView(R.id.fragment_settings_discounting_policy_switch)
+    BetterSwitch discountingPolicySwitch;
 
     @BindString(R.string.version)
     String versionPrefix;
@@ -77,7 +97,7 @@ public class SettingsFragment extends FragmentBase {
 
         setUpNotificationVibration();
 
-        setUpNotificationLearn();
+        setUpNotifications();
 
         setUpSound();
 
@@ -98,6 +118,23 @@ public class SettingsFragment extends FragmentBase {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 userPreferences.setNeedToShowCalendarWidget(isChecked);
+            }
+        });
+
+        keepScreenOnSwitch.setChecked(userPreferences.isKeepScreenOnSteps());
+        keepScreenOnSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                userPreferences.setKeepScreenOnSteps(isChecked);
+            }
+        });
+
+        discountingPolicySwitch.setChecked(userPreferences.isShowDiscountingPolicyWarning());
+
+        discountingPolicySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                userPreferences.setShowDiscountingPolicyWarning(isChecked);
             }
         });
 
@@ -174,10 +211,16 @@ public class SettingsFragment extends FragmentBase {
 
     @Override
     public void onDestroyView() {
+        keepScreenOnSwitch.setOnCheckedChangeListener(null);
+        discountingPolicySwitch.setOnCheckedChangeListener(null);
         calendarWidgetSwitch.setOnCheckedChangeListener(null);
         wifiLoadSwitch.setOnCheckedChangeListener(null);
         externalPlayerSwitch.setOnCheckedChangeListener(null);
         notificationLearnSwitch.setOnCheckedChangeListener(null);
+        notificationCommentSwitch.setOnCheckedChangeListener(null);
+        notificationTeachingSwitch.setOnCheckedChangeListener(null);
+        notificationOtherSwitch.setOnCheckedChangeListener(null);
+        notificationReviewSwitch.setOnCheckedChangeListener(null);
         notificationVibration.setOnCheckedChangeListener(null);
         notificationSound.setOnCheckedChangeListener(null);
         storageManagementButton.setOnClickListener(null);
@@ -194,13 +237,46 @@ public class SettingsFragment extends FragmentBase {
         sharedPreferenceHelper.setMobileInternetAndWifiAllowed(isMobileAllowed);
     }
 
-    private void setUpNotificationLearn() {
-        notificationLearnSwitch.setChecked(userPreferences.isNotificationEnabled());
+    private void setUpNotifications() {
+        notificationLearnSwitch.setChecked(userPreferences.isNotificationEnabled(NotificationType.learn));
         notificationLearnSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                userPreferences.setNotificationEnabled(isChecked);
+                userPreferences.setNotificationEnabled(NotificationType.learn, isChecked);
             }
         });
+
+        notificationCommentSwitch.setChecked(userPreferences.isNotificationEnabled(NotificationType.comments));
+        notificationCommentSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                userPreferences.setNotificationEnabled(NotificationType.comments, isChecked);
+            }
+        });
+
+        notificationReviewSwitch.setChecked(userPreferences.isNotificationEnabled(NotificationType.review));
+        notificationReviewSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                userPreferences.setNotificationEnabled(NotificationType.review, isChecked);
+            }
+        });
+
+        notificationTeachingSwitch.setChecked(userPreferences.isNotificationEnabled(NotificationType.teach));
+        notificationTeachingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                userPreferences.setNotificationEnabled(NotificationType.teach, isChecked);
+            }
+        });
+
+        notificationOtherSwitch.setChecked(userPreferences.isNotificationEnabled(NotificationType.other));
+        notificationOtherSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                userPreferences.setNotificationEnabled(NotificationType.other, isChecked);
+            }
+        });
+
     }
 }

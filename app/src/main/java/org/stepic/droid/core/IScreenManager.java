@@ -2,6 +2,7 @@ package org.stepic.droid.core;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
@@ -37,9 +38,9 @@ public interface IScreenManager {
 
     void showUnitsForSection(Context sourceActivity, @NotNull Section section);
 
-    void showSteps(Activity sourceActivity, Unit unit, Lesson lesson);
+    void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, @Nullable Section section);
 
-    void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, boolean backAnimation);
+    void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, boolean backAnimation, @Nullable Section section);
 
     void openStepInWeb(Context context, Step step);
 
@@ -59,7 +60,7 @@ public interface IScreenManager {
 
     void showFindCourses(Context context);
 
-    void showVideo(Activity sourceActivity, String source);
+    void showVideo(Activity sourceActivity, String source, Long videoId);
 
     void showSettings(Activity sourceActivity);
 
@@ -70,4 +71,12 @@ public interface IScreenManager {
     void addCertificateToLinkedIn(CertificateViewItem certificateViewItem);
 
     void showFilterScreen(Fragment sourceFragment, int requestCode, Table courseType);
+
+    void showCertificates();
+
+    void openSyllabusInWeb(Context context, long courseId);
+
+    Intent getCertificateIntent();
+
+    Intent getOpenInWebIntent(String path);
 }

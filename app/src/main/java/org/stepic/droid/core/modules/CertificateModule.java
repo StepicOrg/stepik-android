@@ -1,5 +1,6 @@
 package org.stepic.droid.core.modules;
 
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.IScreenManager;
@@ -20,7 +21,8 @@ public class CertificateModule {
                                           IScreenManager screenManager,
                                           DatabaseFacade databaseFacade,
                                           ThreadPoolExecutor threadPoolExecutor,
-                                          IMainHandler mainHandler) {
-        return new CertificatePresenter (api, config, screenManager, databaseFacade, threadPoolExecutor, mainHandler);
+                                          IMainHandler mainHandler,
+                                          Analytic analytic) {
+        return new CertificatePresenter (api, config, screenManager, databaseFacade, threadPoolExecutor, mainHandler, analytic);
     }
 }

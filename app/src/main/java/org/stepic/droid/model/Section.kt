@@ -2,6 +2,7 @@ package org.stepic.droid.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
@@ -15,10 +16,11 @@ import javax.inject.Inject
 class Section : Serializable, Parcelable {
 
     @Inject
-    lateinit var mConfig: IConfig
+    @Deprecated("create helper or extension, not use config in model class")
+    lateinit var config: IConfig
 
-    private val mFormatForView: DateTimeFormatter by lazy {
-        DateTimeFormat.forPattern(mConfig.datePattern).withZone(DateTimeZone.getDefault()).withLocale(Locale.getDefault())
+    private val formatterForView: DateTimeFormatter by lazy {
+        DateTimeFormat.forPattern(config.datePattern).withZone(DateTimeZone.getDefault()).withLocale(Locale.getDefault())
     }
     var id: Long = 0
     var course: Long = 0 // course id
@@ -43,6 +45,12 @@ class Section : Serializable, Parcelable {
     var is_cached: Boolean = false
     var is_loading: Boolean = false
     var actions: Actions? = null
+    @SerializedName("is_exam")
+    var isExam: Boolean = false
+
+    @SerializedName("discounting_policy")
+    var discountingPolicy: DiscountingPolicyType? = null
+
 
     private var formatted_begin_date: String? = null
     private var formatted_soft_deadline: String? = null
@@ -53,15 +61,15 @@ class Section : Serializable, Parcelable {
     }
 
     val formattedBeginDate: String by lazy {
-        DateTimeHelper.getPresentOfDate(begin_date, mFormatForView)
+        DateTimeHelper.getPresentOfDate(begin_date, formatterForView)
     }
 
     val formattedSoftDeadline: String by lazy {
-        DateTimeHelper.getPresentOfDate(soft_deadline, mFormatForView)
+        DateTimeHelper.getPresentOfDate(soft_deadline, formatterForView)
     }
 
     val formattedHardDeadline: String by lazy {
-        DateTimeHelper.getPresentOfDate(hard_deadline, mFormatForView)
+        DateTimeHelper.getPresentOfDate(hard_deadline, formatterForView)
     }
 
 
@@ -94,6 +102,7 @@ class Section : Serializable, Parcelable {
         dest.writeString(this.formatted_soft_deadline)
         dest.writeString(this.formatted_hard_deadline)
         dest.writeParcelable(this.actions, flags)
+        dest.writeInt(discountingPolicy?.ordinal ?: -1)
     }
 
     protected constructor(input: Parcel) : this() {
@@ -123,6 +132,7 @@ class Section : Serializable, Parcelable {
         this.formatted_soft_deadline = input.readString()
         this.formatted_hard_deadline = input.readString()
         this.actions = input.readParcelable<Actions>(Actions::class.java.classLoader)
+        this.discountingPolicy = getDiscountingPolicyTypeByParcel(input)
     }
 
     companion object {
@@ -136,6 +146,17 @@ class Section : Serializable, Parcelable {
                 return arrayOfNulls(size)
             }
         }
+
+        private fun getDiscountingPolicyTypeByParcel(input: Parcel): DiscountingPolicyType? {
+            val temp = input.readInt()
+            val localValues = DiscountingPolicyType.values()
+            if (temp >= 0 && temp < localValues.size) {
+                return localValues[temp]
+            } else {
+                return null
+            }
+        }
+
     }
 
 }

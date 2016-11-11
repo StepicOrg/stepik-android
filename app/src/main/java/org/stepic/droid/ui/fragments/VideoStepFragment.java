@@ -32,6 +32,7 @@ import org.stepic.droid.events.video.VideoResolvedEvent;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.util.ThumbnailParser;
+import org.stepic.droid.util.resolvers.VideoResolver;
 
 import java.io.IOException;
 import java.util.List;
@@ -57,8 +58,12 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
     @Inject
     StepQualityPresenter stepQualityPresenter;
 
+    @Inject
+    public VideoResolver videoResolver;
+
     private String tempVideoUrl = null;
     private String tempVideoQuality = null;
+    private long videoId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -155,9 +160,14 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
                     @Override
                     protected void onPostExecute(String url) {
                         super.onPostExecute(url);
-
-                        if (url != null) {
-                            bus.post(new VideoResolvedEvent(localStep.getBlock().getVideo(), url, localStep.getId()));
+                        if (url != null && localStep.getBlock() != null) {
+                            long localVideoId = 0;
+                            if (localStep.getBlock().getVideo() != null) {
+                                localVideoId = localStep.getBlock().getVideo().getId();
+                            } else {
+                                localVideoId = videoId;
+                            }
+                            bus.post(new VideoResolvedEvent(localVideoId, url, localStep.getId()));
                         } else {
                             Toast.makeText(MainApplication.getAppContext(), R.string.sync_problem, Toast.LENGTH_SHORT).show();
                         }
@@ -177,8 +187,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
         if (tempVideoQuality != null) {
             qualityItemMenu.setVisible(true);
             qualityItemMenu.setTitle(tempVideoQuality);
-        }
-        else {
+        } else {
             qualityItemMenu.setVisible(false);
         }
     }
@@ -200,6 +209,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
         stepQualityPresenter.determineQuality(e.getVideo());
         setThumbnail(e.getVideo().getThumbnail());
         tempVideoUrl = e.getVideoUrl();
+        videoId = e.getVideo().getId();
     }
 
     private void setThumbnail(String thumbnail) {
@@ -213,7 +223,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
     @Subscribe
     public void onVideoResolved(VideoResolvedEvent e) {
         if (e.getStepId() != step.getId()) return;
-        shell.getScreenProvider().showVideo(getActivity(), e.getPathToVideo());
+        shell.getScreenProvider().showVideo(getActivity(), e.getPathToVideo(), e.getVideoId());
     }
 
     @Subscribe

@@ -235,6 +235,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                 @Override
                 public void onClick(View v) {
                     try {
+                        //// FIXME: 08.11.16 this lock work only on main thread and may produce performance problem
                         RWLocks.LoadMoreLock.writeLock().lock();
                         if (loadMoreTextView.getVisibility() == View.VISIBLE) {
                             onClickMoreLayout(getAdapterPosition());
@@ -277,7 +278,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
 
         public abstract void setDataOnView(int position);
 
-        protected final void initialSetUp(CommentAdapterItem needUpdateAndComment) {
+        final void initialSetUp(CommentAdapterItem needUpdateAndComment) {
             final Comment comment = needUpdateAndComment.getComment();
 
             final boolean isParent = comment.getParent() == null;

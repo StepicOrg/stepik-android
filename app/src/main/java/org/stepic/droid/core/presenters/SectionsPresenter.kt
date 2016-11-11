@@ -63,9 +63,19 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                         val response = api.getSections(sectionIds).execute()
                         if (response.isSuccess || response.body()?.sections?.isNotEmpty() ?: false) {
                             val sections = response.body().sections
+                            val cachedSections: Map<Long, Section> = databaseFacade
+                                    .getAllSectionsOfCourse(course)
+                                    .filterNotNull()
+                                    .associateBy { it.id }
                             databaseFacade.removeSectionsOfCourse(course.courseId)
                             sections.forEach {
+                                val cachedSection: Section? = cachedSections[it.id]
+                                if (cachedSection != null) {
+                                    it.is_cached = cachedSection.is_cached
+                                    it.is_loading = cachedSection.is_loading
+                                }
                                 databaseFacade.addSection(it)
+                                databaseFacade.updateOnlyCachedLoadingSection(it)
                             }
 
                             mainHandler.post {
@@ -76,9 +86,6 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                                 } else {
                                     view?.onNeedShowSections(sectionList)
                                 }
-                            }
-                            sections.forEach {
-                                databaseFacade.addSection(it)
                             }
                         } else {
                             mainHandler.post {

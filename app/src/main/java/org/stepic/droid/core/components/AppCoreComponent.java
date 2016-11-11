@@ -13,8 +13,10 @@ import org.stepic.droid.core.modules.CertificateModule;
 import org.stepic.droid.core.modules.CourseDetailModule;
 import org.stepic.droid.core.modules.CourseListModule;
 import org.stepic.droid.core.modules.FilterModule;
+import org.stepic.droid.core.modules.NotificationModule;
 import org.stepic.droid.core.modules.SectionModule;
 import org.stepic.droid.core.modules.StepModule;
+import org.stepic.droid.core.modules.VideoModule;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.notifications.HackFcmListener;
@@ -31,22 +33,29 @@ import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.ui.activities.SectionActivity;
 import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
+import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.adapters.DownloadsAdapter;
-import org.stepic.droid.ui.adapters.MyCoursesAdapter;
+import org.stepic.droid.ui.adapters.NotificationAdapter;
 import org.stepic.droid.ui.adapters.SectionAdapter;
 import org.stepic.droid.ui.adapters.SocialAuthAdapter;
+import org.stepic.droid.ui.adapters.SortStepAdapter;
 import org.stepic.droid.ui.adapters.UnitAdapter;
+import org.stepic.droid.ui.custom.ExpandableTextView;
+import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
+import org.stepic.droid.ui.custom.LatexSupportableWebView;
 import org.stepic.droid.ui.dialogs.AllowMobileDataDialogFragment;
 import org.stepic.droid.ui.dialogs.CertificateShareDialog;
 import org.stepic.droid.ui.dialogs.ChooseCalendarDialog;
 import org.stepic.droid.ui.dialogs.ChooseStorageDialog;
 import org.stepic.droid.ui.dialogs.ClearVideosDialog;
 import org.stepic.droid.ui.dialogs.DeleteCommentDialogFragment;
+import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.ui.dialogs.StepShareDialog;
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
+import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepic.droid.ui.dialogs.VideoQualityDialog;
 import org.stepic.droid.ui.dialogs.WantMoveDataDialog;
 import org.stepic.droid.ui.fragments.CommentsFragment;
@@ -68,9 +77,13 @@ public interface AppCoreComponent {
 
     StepComponent plus(StepModule module);
 
+    VideoComponent plus(VideoModule module);
+
     FilterComponent plus(FilterModule module);
 
     CourseListComponent plus(CourseListModule module);
+
+    NotificationComponent plus(NotificationModule module);
 
     void inject(FragmentActivityBase someActivity);
 
@@ -78,13 +91,15 @@ public interface AppCoreComponent {
 
     void inject(Shell injectAllToShell);
 
-    void inject(MyCoursesAdapter adapter);
+    void inject(CoursesAdapter adapter);
 
     void inject(Course adapter);
 
     void inject(FragmentBase baseFragment);
 
     void inject(RetrofitRESTApi api);
+
+    void inject(DiscountingPolicyDialogFragment dialogFragment);
 
     void inject(Section section);
 
@@ -165,4 +180,16 @@ public interface AppCoreComponent {
     void inject(SectionAdapter sectionAdapter);
 
     void inject(StepShareDialog stepShareDialog);
+
+    void inject(VideoQualityDetailedDialog videoQualityDetailedDialog);
+
+    void inject(LatexSupportableEnhancedFrameLayout latexSupportableEnhancedFrameLayout);
+
+    void inject(LatexSupportableWebView latexSupportableWebView);
+
+    void inject(ExpandableTextView expandableTextView);
+
+    void inject(SortStepAdapter sortStepAdapter);
+
+    void inject(NotificationAdapter.NotificationViewHolder notificationViewHolder);
 }

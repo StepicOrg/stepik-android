@@ -159,7 +159,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         }
 
         links.clear()
-        links.addAll(StringUtil.pullLinks(comment.text))
+        links.addAll(StringUtil.pullLinks(textResolver.fromHtml(comment.text).toString()))
         firstLinkShift = 0
         if (links.isNotEmpty()) {
             links.forEach {
@@ -276,7 +276,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     private fun copyTextToClipBoard(position: Int) {
         val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
         comment?.text?.let {
-            val clipData = ClipData.newHtmlText(getString(R.string.copy_text_label), HtmlHelper.fromHtml(it), it)
+            val clipData = ClipData.newHtmlText(getString(R.string.copy_text_label), textResolver.fromHtml(it), it)
 
             val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboardManager.primaryClip = clipData

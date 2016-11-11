@@ -3,6 +3,7 @@ package org.stepic.droid.ui.custom;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -10,8 +11,13 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.stepic.droid.R;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.HtmlHelper;
+import org.stepic.droid.util.resolvers.text.TextResolver;
+import org.stepic.droid.util.resolvers.text.TextResult;
+
+import javax.inject.Inject;
 
 public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     private final static String assetUrl = "file:///android_asset/";
@@ -19,46 +25,31 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     LatexSupportableWebView webView;
 
     @ColorInt
-    private final int themeDefaultTextColor;
-
-    @ColorInt
-    int textColor;
-
-    @ColorInt
     int backgroundColor;
 
-    @ColorInt
-    int defaultTextColor;
+    @Inject
+    TextResolver textResolver;
 
     public LatexSupportableEnhancedFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        defaultTextColor = ColorUtil.INSTANCE.getColorArgb(R.color.black, context);
-        themeDefaultTextColor = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, context);
+        MainApplication.component().inject(this);
 
 
         int[] set = {
-                android.R.attr.textColor,
                 android.R.attr.background
         };
 
         TypedArray ta = context.obtainStyledAttributes(attrs, set);
         try {
-            textColor = ta.getColor(0, defaultTextColor);
-            if (textColor == themeDefaultTextColor){
-                textColor = defaultTextColor;
-            }
             //noinspection ResourceType
-            backgroundColor = ta.getColor(1, ColorUtil.INSTANCE.getColorArgb(R.color.transparent, context));
+            backgroundColor = ta.getColor(0, ColorUtil.INSTANCE.getColorArgb(R.color.transparent, context));
         } finally {
             ta.recycle();
         }
 
         init(context);
 
-        textView.setTextColor(textColor);
         textView.setBackgroundColor(backgroundColor);
-
         webView.setBackgroundColor(backgroundColor);
     }
 
@@ -70,18 +61,15 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     }
 
     public void setText(String text) {
-        boolean needWebView = HtmlHelper.isForWebView(text); //text is raw text from response
-        if (!needWebView) {
-            CharSequence str = HtmlHelper.trimTrailingWhitespace(HtmlHelper.fromHtml(text));
-
+        TextResult textResult = textResolver.resolveStepText(text);
+        if (!textResult.isNeedWebView()) {
             webView.setVisibility(GONE);
             textView.setVisibility(VISIBLE);
-            textView.setText(str.toString().trim());
+            textView.setText(textResult.getText());
         } else {
-            String coloredText = applyColoredWebView(text);
             textView.setVisibility(GONE);
             webView.setVisibility(VISIBLE);
-            webView.setText(coloredText);
+            webView.setText(textResult.getText());
         }
     }
 
@@ -89,13 +77,36 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         return webView;
     }
 
-    private String applyColoredWebView(String text) {
-        if (defaultTextColor != textColor) {
-            String hexColor = String.format("#%06X", (0xFFFFFF & textColor));
-            return "<br>" + "<font color='" + hexColor + "'>" + text + "</font>";
+    private void setTextWebViewOnlyForLaTeX(String text) {
+        textView.setVisibility(GONE);
+        webView.setVisibility(VISIBLE);
+        webView.setText(text, true);
+    }
+
+    private void setPlainText(String text) {
+        webView.setVisibility(GONE);
+        textView.setVisibility(VISIBLE);
+        textView.setText(text);
+    }
+
+    public void setPlainOrLaTeXText(String text) {
+        if (HtmlHelper.hasLaTeX(text)) {
+            setTextWebViewOnlyForLaTeX(text);
         } else {
-            return text;
+            setPlainText(text);
         }
     }
 
+    public void setPlainOrLaTeXTextColored(String text, @ColorRes int colorRes) {
+        @ColorInt
+        int colorArgb = ColorUtil.INSTANCE.getColorArgb(colorRes, getContext());
+        if (HtmlHelper.hasLaTeX(text)) {
+            String hexColor = String.format("#%06X", (0xFFFFFF & colorArgb));
+            String coloredText = "<font color='" + hexColor + "'>" + text + "</font>";
+            setTextWebViewOnlyForLaTeX(coloredText);
+        } else {
+            textView.setTextColor(colorArgb);
+            setPlainText(text);
+        }
+    }
 }

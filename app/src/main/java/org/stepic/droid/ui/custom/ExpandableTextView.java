@@ -9,7 +9,9 @@ import android.widget.TextView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.util.HtmlHelper;
+import org.stepic.droid.util.resolvers.text.TextResolver;
+
+import javax.inject.Inject;
 
 public class ExpandableTextView extends TextView {
     private static final int DEFAULT_TRIM_LENGTH = 200;
@@ -20,12 +22,17 @@ public class ExpandableTextView extends TextView {
     private boolean trim = true;
     private int trimLength;
 
+    @Inject
+    TextResolver textResolver;
+
     public ExpandableTextView(Context context) {
         this(context, null);
     }
 
     public ExpandableTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        MainApplication.component().inject(this);
 
         if (isInEditMode()) {
             ELLIPSIS = "<font color=" + "#CCCCCC" + ">"
@@ -44,7 +51,7 @@ public class ExpandableTextView extends TextView {
             public void onClick(View v) {
                 trim = !trim;
                 setText();
-                requestFocusFromTouch();
+//                requestFocusFromTouch();
             }
         });
     }
@@ -67,7 +74,7 @@ public class ExpandableTextView extends TextView {
 
     private CharSequence getTrimmedText(CharSequence text) {
         if (originalText != null && originalText.length() > trimLength) {
-            return new SpannableStringBuilder(originalText, 0, trimLength + 1).append(" ").append(HtmlHelper.fromHtml(ELLIPSIS));
+            return new SpannableStringBuilder(originalText, 0, trimLength + 1).append(" ").append(textResolver.fromHtml(ELLIPSIS));
         } else {
             return originalText;
         }

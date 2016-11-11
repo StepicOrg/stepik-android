@@ -16,6 +16,7 @@ import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.model.VideoTimestamp;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.store.DatabaseHelper;
 import org.stepic.droid.store.dao.AssignmentDaoImpl;
@@ -32,6 +33,7 @@ import org.stepic.droid.store.dao.ProgressDaoImpl;
 import org.stepic.droid.store.dao.SectionDaoImpl;
 import org.stepic.droid.store.dao.StepDaoImpl;
 import org.stepic.droid.store.dao.UnitDaoImpl;
+import org.stepic.droid.store.dao.VideoTimestampDaoImpl;
 import org.stepic.droid.store.dao.ViewAssignmentDaoImpl;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.web.ViewAssignment;
@@ -149,5 +151,11 @@ public class StorageModule {
     @Provides
     IDao<Notification> provideNotification(SQLiteDatabase openHelper) {
         return new NotificationDaoImpl(openHelper);
+    }
+
+    @Provides
+    @Singleton
+    IDao<VideoTimestamp> provideVideoTimeStamp(SQLiteDatabase SQLiteDatabase) {
+        return new VideoTimestampDaoImpl(SQLiteDatabase);
     }
 }

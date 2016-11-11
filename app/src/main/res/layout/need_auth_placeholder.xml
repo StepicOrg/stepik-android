@@ -22,6 +22,7 @@
                 style="@style/PlaceholderTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_placeholder_auth_1"
                 android:text="@string/not_auth_message"/>
 
             <Button

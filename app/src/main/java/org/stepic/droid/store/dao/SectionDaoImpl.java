@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.stepic.droid.model.Actions;
+import org.stepic.droid.model.DiscountingPolicyType;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.store.structure.DbStructureSections;
 import org.stepic.droid.util.DbParseHelper;
@@ -33,6 +34,8 @@ public class SectionDaoImpl extends DaoBase<Section> {
         int indexIsCached = cursor.getColumnIndex(DbStructureSections.Column.IS_CACHED);
         int indexIsLoading = cursor.getColumnIndex(DbStructureSections.Column.IS_LOADING);
         int indexTestSection = cursor.getColumnIndex(DbStructureSections.Column.TEST_SECTION);
+        int indexDiscountingPolicy = cursor.getColumnIndex(DbStructureSections.Column.DISCOUNTING_POLICY);
+        int indexIsExam = cursor.getColumnIndex(DbStructureSections.Column.IS_EXAM);
 
         section.setId(cursor.getLong(columnIndexId));
         section.setTitle(cursor.getString(columnIndexTitle));
@@ -46,13 +49,27 @@ public class SectionDaoImpl extends DaoBase<Section> {
         section.set_cached(cursor.getInt(indexIsCached) > 0);
         section.set_loading(cursor.getInt(indexIsLoading) > 0);
         section.setUnits(DbParseHelper.INSTANCE.parseStringToLongArray(cursor.getString(columnIndexUnits)));
+        int typeId = cursor.getInt(indexDiscountingPolicy);
+        DiscountingPolicyType discountingPolicyType = getDiscountingPolicyType(typeId);
+        section.setDiscountingPolicy(discountingPolicyType);
 
         String test_section = cursor.getString(indexTestSection);
         Actions actions = new Actions();
         actions.setTest_section(test_section);
         section.setActions(actions);
 
+        section.setExam(cursor.getInt(indexIsExam) > 0);
+
         return section;
+    }
+
+    private DiscountingPolicyType getDiscountingPolicyType(int typeId) {
+        DiscountingPolicyType[] localValues = DiscountingPolicyType.values();
+        if (typeId >= 0 && typeId < localValues.length) {
+            return localValues[typeId];
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -73,9 +90,15 @@ public class SectionDaoImpl extends DaoBase<Section> {
         values.put(DbStructureSections.Column.HARD_DEADLINE, section.getHard_deadline());
         values.put(DbStructureSections.Column.COURSE, section.getCourse());
         values.put(DbStructureSections.Column.POSITION, section.getPosition());
+        values.put(DbStructureSections.Column.IS_EXAM, section.isExam());
         values.put(DbStructureSections.Column.UNITS, DbParseHelper.parseLongArrayToString(section.getUnits()));
+        if (section.getDiscountingPolicy() != null) {
+            values.put(DbStructureSections.Column.DISCOUNTING_POLICY, section.getDiscountingPolicy().ordinal());
+        } else {
+            values.put(DbStructureSections.Column.DISCOUNTING_POLICY, -1);
+        }
 
-        if (section.getActions() != null && section.getActions().getTest_section()!=null){
+        if (section.getActions() != null && section.getActions().getTest_section() != null) {
             values.put(DbStructureSections.Column.TEST_SECTION, section.getActions().getTest_section());
         }
 

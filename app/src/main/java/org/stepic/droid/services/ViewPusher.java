@@ -15,7 +15,7 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.resolvers.IVideoResolver;
+import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.util.resolvers.StepHelper;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.ViewAssignment;
@@ -37,7 +37,7 @@ public class ViewPusher extends IntentService {
     @Inject
     Bus bus;
     @Inject
-    IVideoResolver resolver;
+    VideoResolver resolver;
     @Inject
     IApi api;
     @Inject

@@ -24,7 +24,7 @@ import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.ui.activities.MainFeedActivity;
-import org.stepic.droid.ui.adapters.MyCoursesAdapter;
+import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.custom.TouchDispatchableFrameLayout;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
@@ -63,7 +63,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     protected ViewGroup emptySearch;
 
     protected List<Course> courses;
-    protected MyCoursesAdapter coursesAdapter;
+    protected CoursesAdapter coursesAdapter;
 
     protected boolean userScrolled;
 
@@ -103,7 +103,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
         registerForContextMenu(listOfCoursesView);
 
-        coursesAdapter = new MyCoursesAdapter(this, courses, getCourseType());
+        coursesAdapter = new CoursesAdapter(this, courses, getCourseType());
         listOfCoursesView.setAdapter(coursesAdapter);
 
         listOfCoursesView.setOnScrollListener(new AbsListView.OnScrollListener() {

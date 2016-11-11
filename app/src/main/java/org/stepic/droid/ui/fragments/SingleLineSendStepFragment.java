@@ -18,7 +18,7 @@ import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Attempt;
 
-public abstract class SingleLineSendStepFragment extends StepWithAttemptsFragment {
+public abstract class SingleLineSendStepFragment extends StepAttemptFragment {
 
     protected EditText answerField;
 

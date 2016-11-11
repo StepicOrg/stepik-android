@@ -70,8 +70,8 @@ public class LocalProgressImpl implements LocalProgressManager {
         Progress updatedUnitProgress;
         try {
             updatedUnitProgress = api.getProgresses(new String[]{unit.getProgressId()}).execute().body().getProgresses().get(0);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            //if we have no progress of unit or progress is null -> do nothing
             return;
         }
         if (updatedUnitProgress == null)
