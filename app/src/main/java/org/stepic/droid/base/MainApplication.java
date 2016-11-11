@@ -6,11 +6,14 @@ import android.support.multidex.MultiDexApplication;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.vk.sdk.VKSdk;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.BuildConfig;
 import org.stepic.droid.R;
+import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.components.AppCoreComponent;
 import org.stepic.droid.core.components.DaggerAppCoreComponent;
 import org.stepic.droid.core.components.DaggerStorageComponent;
@@ -18,6 +21,9 @@ import org.stepic.droid.core.components.StorageComponent;
 import org.stepic.droid.core.modules.AppCoreModule;
 import org.stepic.droid.core.modules.StorageModule;
 
+import javax.inject.Inject;
+
+import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -34,6 +40,9 @@ public class MainApplication extends MultiDexApplication {
         super.onCreate();
         init();
     }
+
+    @Inject
+    IConfig config;
 
     private void init() {
 //        refWatcher = LeakCanary.install(this);
@@ -60,6 +69,11 @@ public class MainApplication extends MultiDexApplication {
                 .appCoreModule(new AppCoreModule(application))
                 .storageModule(storageModule)
                 .build();
+
+        component.inject(this);
+
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(config.getTwitterKey(), config.getTwitterSecret());
+        Fabric.with(this, new Twitter(authConfig));
 
 
         // Инициализация AppMetrica SDK

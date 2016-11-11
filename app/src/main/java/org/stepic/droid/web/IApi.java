@@ -2,8 +2,6 @@ package org.stepic.droid.web;
 
 import android.support.v4.app.FragmentActivity;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Course;
@@ -24,7 +22,7 @@ public interface IApi {
         social, loginPassword
     }
 
-    Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type);
+    Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type, boolean isAccessToken);
 
     Call<AuthenticationStepicResponse> authWithLoginPassword(String login, String password);
 

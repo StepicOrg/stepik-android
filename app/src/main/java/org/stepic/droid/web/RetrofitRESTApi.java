@@ -44,7 +44,6 @@ import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.ui.NotificationCategory;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.resolvers.text.TextResolver;
@@ -203,10 +202,14 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
-    public Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type) {
+    public Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type, boolean isAccessToken) {
         analytic.reportEvent(Analytic.Web.AUTH_SOCIAL);
         makeOauthServiceWithNewAuthHeader(TokenType.social);
-        return oAuthService.getTokenByNativeCode(type.getIdentifier(), code, config.getGrantType(TokenType.social), config.getRedirectUri());
+        String codeType = null;
+        if (isAccessToken) {
+            codeType = "access_token";
+        }
+        return oAuthService.getTokenByNativeCode(type.getIdentifier(), code, config.getGrantType(TokenType.social), config.getRedirectUri(), codeType);
     }
 
     @Override

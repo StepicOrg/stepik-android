@@ -30,10 +30,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
-import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
@@ -60,7 +58,6 @@ import org.stepic.droid.util.ProgressHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.fabric.sdk.android.Fabric;
 
 public class LoginActivity extends FragmentActivityBase {
 
@@ -101,9 +98,6 @@ public class LoginActivity extends FragmentActivityBase {
         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition);
 
         hideSoftKeypad();
-
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(config.getTwitterKey(), config.getTwitterSecret());
-        Fabric.with(this, new Twitter(authConfig));
 
         String serverClientId = config.getGoogleServerClientId();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

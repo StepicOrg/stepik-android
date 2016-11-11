@@ -86,10 +86,6 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
         ISocialType type = socialList.get(position);
         analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_SOCIAL, type.getIdentifier());
         if (type == SocialManager.SocialType.google) {
-            // Start the retrieval process for a server auth code.  If requested, ask for a refreshWhenOnConnectionProblem
-            // token.  Otherwise, only get an access token if a refreshWhenOnConnectionProblem token has been previously
-            // retrieved.  Getting a new access token for an existing grant does not require
-            // user consent.
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(client);
             activity.startActivityForResult(signInIntent, AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN);
         } else if (type == SocialManager.SocialType.facebook) {

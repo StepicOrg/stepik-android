@@ -50,9 +50,9 @@ public class LoginManager implements ILoginManager {
                     successLogin(response, finisher, null);
                 } else {
                     if (response.code() == 429) {
-                        failLogin(new TooManyAttempts(JsonHelper.toJson(response.errorBody())));
+                        failLogin(new TooManyAttempts(JsonHelper.toJson(response.errorBody())), null);
                     } else {
-                        failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())));
+                        failLogin(new ProtocolException(JsonHelper.toJson(response.errorBody())), null);
                     }
                 }
             }
@@ -98,9 +98,13 @@ public class LoginManager implements ILoginManager {
 
     @Override
     public void loginWithNativeProviderCode(String nativeCode, SocialManager.SocialType type, final ProgressHandler progressHandler, final ActivityFinisher finisher, final FailLoginSupplementaryHandler failLoginSupplementaryHandler) {
+        boolean isAccessToken = false;
+        if (type == SocialManager.SocialType.facebook) {
+            isAccessToken = true;
+        }
         String code = nativeCode.trim();
         progressHandler.activate();
-        shell.getApi().authWithNativeCode(code, type).enqueue(new Callback<AuthenticationStepicResponse>() {
+        shell.getApi().authWithNativeCode(code, type, isAccessToken).enqueue(new Callback<AuthenticationStepicResponse>() {
             @Override
             public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
                 handleSuccess(progressHandler, response, finisher, failLoginSupplementaryHandler);

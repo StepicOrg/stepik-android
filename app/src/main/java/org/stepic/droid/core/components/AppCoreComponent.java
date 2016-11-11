@@ -2,6 +2,7 @@ package org.stepic.droid.core.components;
 
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.concurrency.DownloadPoster;
 import org.stepic.droid.concurrency.tasks.FromDbUnitLessonTask;
 import org.stepic.droid.concurrency.tasks.ToDbUnitLessonTask;
@@ -192,4 +193,6 @@ public interface AppCoreComponent {
     void inject(SortStepAdapter sortStepAdapter);
 
     void inject(NotificationAdapter.NotificationViewHolder notificationViewHolder);
+
+    void inject(MainApplication mainApplication);
 }
