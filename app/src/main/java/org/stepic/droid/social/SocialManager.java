@@ -20,10 +20,10 @@ public class SocialManager {
 
     public enum SocialType implements ISocialType {
         google(GOOGLE_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_new_google_favicon)),
-        facebook(FACEBOOK_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_facebook)),
-        mailru(MAILRU_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_it)),
-        twitter(TWITTER_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_twitter)),
         vk(VK_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_vk)),
+        facebook(FACEBOOK_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_facebook)),
+        twitter(TWITTER_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_twitter)),
+        mailru(MAILRU_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_it)),
         github(GITHUB_SOCIAL_IDENTIFIER, ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_github));
 
 
@@ -41,6 +41,11 @@ public class SocialManager {
 
         public Drawable getIcon() {
             return icon;
+        }
+
+        @Override
+        public boolean needUseAccessTokenInsteadOfCode() {
+            return identifier.equals(VK_SOCIAL_IDENTIFIER) || identifier.equals(FACEBOOK_SOCIAL_IDENTIFIER);
         }
     }
 
