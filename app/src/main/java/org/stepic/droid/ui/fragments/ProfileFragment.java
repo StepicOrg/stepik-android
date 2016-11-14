@@ -30,10 +30,12 @@ import butterknife.BindView;
 
 public class ProfileFragment extends FragmentBase implements ProfileView {
 
+    private static final String USER_ID_KEY = "user_id_key";
+
     public static ProfileFragment newInstance(long userId) {
 
         Bundle args = new Bundle();
-
+        args.putLong(USER_ID_KEY, userId);
         ProfileFragment fragment = new ProfileFragment();
         fragment.setArguments(args);
         return fragment;
@@ -84,10 +86,13 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
     @Inject
     ProfilePresenter profilePresenter;
 
+    long userId;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        userId = getArguments().getLong(USER_ID_KEY);
     }
 
     @Override
@@ -107,7 +112,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
         initToolbar();
 
         profilePresenter.attachView(this);
-        profilePresenter.initProfile();
+        profilePresenter.initProfile(userId);
     }
 
     @Override
