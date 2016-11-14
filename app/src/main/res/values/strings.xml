@@ -282,7 +282,8 @@
     <string name="current_streak">Current streak</string>
     <string name="max_streak">Max streak</string>
     <string name="about_me">About me</string>
-    <string name="short_info">Short info</string>
+    <string name="short_bio">Short biography</string>
+    <string name="user_info">Info</string>
     <plurals name="restriction_submission">
         <item quantity="one">You have %d attempt</item>
         <item quantity="other">You have %d attempts</item>

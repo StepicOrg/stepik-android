@@ -4,7 +4,7 @@ interface ProfileView {
 
     fun showLoadingAll()
 
-    fun showNameImageShortBio(fullName: String, imageLink: String?, shortBio: String, isMyProfile: Boolean)
+    fun showNameImageShortBio(fullName: String, imageLink: String?, shortBio: String, isMyProfile: Boolean, information : String)
 
     fun streaksIsLoaded(currentStreak: Int, maxStreak: Int)
 }

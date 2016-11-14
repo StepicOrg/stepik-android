@@ -51,17 +51,11 @@ class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
         } else {
             val fullName = user.getFirstAndLastName()
             val imageLink = user.avatar
-
-            val shortBioSource = user.short_bio ?: ""
-            val shortBio: String =
-                    if (shortBioSource.isBlank()) {
-                        ""
-                    } else {
-                        shortBioSource
-                    }
+            val shortBio = stringOrEmpty(user.short_bio)
+            val info = stringOrEmpty(user.details)
 
             mainHandler.post {
-                view?.showNameImageShortBio(fullName, imageLink, shortBio, false)
+                view?.showNameImageShortBio(fullName, imageLink, shortBio, false, info)
             }
         }
 
@@ -124,17 +118,20 @@ class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
     private fun showProfileBase(profile: Profile, isMyProfile: Boolean) {
         val fullName = profile.getFirstAndLastName()
         val imageLink = profile.avatar
-
-        val shortBioSource = profile.short_bio ?: ""
-        val shortBio: String =
-                if (shortBioSource.isBlank()) {
-                    ""
-                } else {
-                    shortBioSource
-                }
+        val shortBio = stringOrEmpty(profile.short_bio)
+        val info = stringOrEmpty(profile.details)
 
         mainHandler.post {
-            view?.showNameImageShortBio(fullName, imageLink, shortBio, isMyProfile)
+            view?.showNameImageShortBio(fullName, imageLink, shortBio, isMyProfile, info)
+        }
+    }
+
+    private fun stringOrEmpty(str: String?): String {
+        val source = str ?: ""
+        if (source.isBlank()) {
+            return ""
+        } else {
+            return source
         }
     }
 

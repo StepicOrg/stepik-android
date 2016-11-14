@@ -80,11 +80,17 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
     @BindView(R.id.shortBioTitle)
     TextView shortBioTitle;
 
+    @BindView(R.id.infoTitle)
+    TextView infoTitle;
+
     @BindString(R.string.about_me)
     String aboutMeTitle;
 
-    @BindString(R.string.short_info)
-    String shortInfoTitle;
+    @BindString(R.string.short_bio)
+    String shortBioTitleString;
+
+    @BindView(R.id.infoValue)
+    TextView infoValue;
 
     @Inject
     ProfilePresenter profilePresenter;
@@ -130,7 +136,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
     }
 
     @Override
-    public void showNameImageShortBio(@NotNull String fullName, @org.jetbrains.annotations.Nullable String imageLink, @NotNull String shortBio, boolean isMyProfile) {
+    public void showNameImageShortBio(@NotNull String fullName, @org.jetbrains.annotations.Nullable String imageLink, @NotNull String shortBio, boolean isMyProfile, @NotNull String information) {
         // FIXME: 14.11.16 hide loading at center
         mainInfoRoot.setVisibility(View.VISIBLE);
         profileName.setText(fullName);
@@ -141,17 +147,29 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
                 .placeholder(userPlaceholder)
                 .into(profileImage);
 
-        if (shortBio.isEmpty()) {
+        if (shortBio.isEmpty() && information.isEmpty()) {
             aboutMeRoot.setVisibility(View.GONE);
         } else {
-            shortBioValue.setText(shortBio);
-            aboutMeRoot.setVisibility(View.VISIBLE);
+            if (!shortBio.isEmpty()) {
+                shortBioValue.setText(shortBio);
+                aboutMeRoot.setVisibility(View.VISIBLE);
+            } else {
+                shortBioTitle.setVisibility(View.GONE);
+                shortBioValue.setVisibility(View.GONE);
+            }
+
+            if (!information.isEmpty()) {
+                infoValue.setText(information);
+            } else {
+                infoValue.setVisibility(View.GONE);
+                infoTitle.setVisibility(View.GONE);
+            }
         }
 
         if (isMyProfile) {
             shortBioTitle.setText(aboutMeTitle);
         } else {
-            shortBioTitle.setText(shortInfoTitle);
+            shortBioTitle.setText(shortBioTitleString);
         }
 
     }

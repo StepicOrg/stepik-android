@@ -279,7 +279,8 @@
     <string name="current_streak">Решаю без перерыва</string>
     <string name="max_streak">Мой рекорд</string>
     <string name="about_me">Обо мне</string>
-    <string name="short_info">Краткая информация</string>
+    <string name="short_bio">Краткая биография</string>
+    <string name="user_info">Информация</string>
     <plurals name="day_number">
         <item quantity="one">день</item>
         <item quantity="few">дня</item>
