@@ -29,9 +29,42 @@ class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
             } else if (profile != null && (profileId == 0L || profile.id == profileId)) {
                 showLocalProfile(profile)
             } else {
-
+                showInternetProfile(profileId)
             }
         }
+    }
+
+    @WorkerThread
+    private fun showInternetProfile(userId: Long) {
+        //1) show profile
+        //2) no internet
+        //3) user hide profile == Anonymous. We do not need handle this sitation
+
+        val user = try {
+            api.getUsers(longArrayOf(userId)).execute().body().users.firstOrNull()
+        } catch (exception: Exception) {
+            null
+        }
+
+        if (user == null) {
+            //TODO: Internet failed
+        } else {
+            val fullName = user.getFirstAndLastName()
+            val imageLink = user.avatar
+
+            val shortBioSource = user.short_bio ?: ""
+            val shortBio: String =
+                    if (shortBioSource.isBlank()) {
+                        ""
+                    } else {
+                        shortBioSource
+                    }
+
+            mainHandler.post {
+                view?.showNameImageShortBio(fullName, imageLink, shortBio, false)
+            }
+        }
+
     }
 
 
