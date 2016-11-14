@@ -88,7 +88,7 @@ public class RetrofitRESTApi implements IApi {
 
     private StepicRestLoggedService loggedService;
     private StepicRestOAuthService oAuthService;
-    private StepicEmptyAuthService StepikEmptyAuthService;
+    private StepicEmptyAuthService stepikEmptyAuthService;
     private final OkHttpClient okHttpClient = new OkHttpClient();
 
 
@@ -105,7 +105,7 @@ public class RetrofitRESTApi implements IApi {
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpClient)
                 .build();
-        StepikEmptyAuthService = retrofit.create(StepicEmptyAuthService.class);
+        stepikEmptyAuthService = retrofit.create(StepicEmptyAuthService.class);
 //        makeZendeskService();
     }
 
@@ -585,7 +585,7 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
-    public Call<Void> markAsReadAllType(NotificationCategory notificationCategory) {
+    public Call<Void> markAsReadAllType(@NotNull NotificationCategory notificationCategory) {
         String categoryType = getNotificationCategoryString(notificationCategory);
         return loggedService.markAsRead(categoryType);
     }
@@ -604,7 +604,7 @@ public class RetrofitRESTApi implements IApi {
     @Nullable
     private List<HttpCookie> getCookiesForBaseUrl() throws IOException {
         String lang = Locale.getDefault().getLanguage();
-        retrofit.Response ob = StepikEmptyAuthService.getStepicForFun(lang).execute();
+        retrofit.Response ob = stepikEmptyAuthService.getStepicForFun(lang).execute();
         Headers headers = ob.headers();
         CookieManager cookieManager = new CookieManager();
         URI myUri;
