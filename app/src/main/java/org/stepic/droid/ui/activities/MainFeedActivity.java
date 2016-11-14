@@ -58,6 +58,7 @@ import org.stepic.droid.ui.util.LogoutSuccess;
 import org.stepic.droid.ui.util.OnBackClickListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
+import org.stepic.droid.util.ProfileExtensionKt;
 import org.stepic.droid.web.EmailAddressResponse;
 import org.stepic.droid.web.StepicProfileResponse;
 
@@ -440,7 +441,7 @@ public class MainFeedActivity extends BackToExitActivityBase
                 .asBitmap()
                 .placeholder(userPlaceholder)
                 .into(profileImage);
-        userNameTextView.setText(profile.getFirst_name() + " " + profile.getLast_name());
+        userNameTextView.setText(ProfileExtensionKt.getFirstAndLastName(profile));
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

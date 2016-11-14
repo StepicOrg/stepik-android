@@ -54,6 +54,9 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
     @BindView(R.id.shortBioValue)
     TextView shortBioValue;
 
+    @BindView(R.id.aboutMeRoot)
+    View aboutMeRoot;
+
     @BindView(R.id.currentStreakValue)
     TextView currentStreakValue;
 
@@ -120,6 +123,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
 
     @Override
     public void showNameImageShortBio(@NotNull String fullName, @org.jetbrains.annotations.Nullable String imageLink, @NotNull String shortBio, boolean isMyProfile) {
+        // FIXME: 14.11.16 hide loading at center
         profileName.setText(fullName);
         Glide
                 .with(getContext())
@@ -127,7 +131,13 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
                 .asBitmap()
                 .placeholder(userPlaceholder)
                 .into(profileImage);
-        shortBioValue.setText(shortBio);
+
+        if (shortBio.isEmpty()) {
+            aboutMeRoot.setVisibility(View.GONE);
+        } else {
+            shortBioValue.setText(shortBio);
+            aboutMeRoot.setVisibility(View.VISIBLE);
+        }
 
         if (isMyProfile) {
             shortBioTitle.setText(aboutMeTitle);
@@ -150,5 +160,10 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
         maxStreakValue.setText(maxStreak + "");
 
         streakRoot.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showLoadingAll() {
+        // FIXME: 14.11.16 show loading in center
     }
 }

@@ -51,7 +51,7 @@ class PersistentCourseListPresenter(
         downloadData(courseType, applyFilter, isRefreshing = false)
     }
 
-    private fun downloadData(courseType: Table, applyFilter: Boolean, isRefreshing: Boolean ) {
+    private fun downloadData(courseType: Table, applyFilter: Boolean, isRefreshing: Boolean) {
         if (isLoading.get() || !hasNextPage.get()) return
         isLoading.set(true)
 
@@ -61,15 +61,14 @@ class PersistentCourseListPresenter(
             }
 
             while (hasNextPage.get()) {
-                val response: Response<CoursesStepicResponse>?
-                try {
+                val response: Response<CoursesStepicResponse>? = try {
                     if (courseType == Table.featured) {
-                        response = api.getFeaturedCourses(currentPage.get()).execute()
+                        api.getFeaturedCourses(currentPage.get()).execute()
                     } else {
-                        response = api.getEnrolledCourses(currentPage.get()).execute()
+                        api.getEnrolledCourses(currentPage.get()).execute()
                     }
                 } catch (ex: Exception) {
-                    response = null
+                    null
                 }
 
                 if (response != null && response.isSuccess) {
