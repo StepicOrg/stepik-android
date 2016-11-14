@@ -246,6 +246,10 @@ public interface Analytic {
         String SHOW_EXAM = "exam_shown_on_bind_view";
     }
 
+    interface Profile {
+        String CLICK_INSTRUCTOR = "profile_click_instructor";
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);

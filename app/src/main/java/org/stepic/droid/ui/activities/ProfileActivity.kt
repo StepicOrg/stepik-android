@@ -7,10 +7,19 @@ import org.stepic.droid.ui.fragments.ProfileFragment
 
 class ProfileActivity : SingleFragmentActivity() {
 
+    companion object {
+        val optionalUserIdKey = "optionalUserIdKey"
+    }
+
     override fun createFragment(): Fragment? {
-        val dataUri = intent?.data
-        val userId = getUserId(dataUri)
-        return ProfileFragment.newInstance(userId)
+        val userIdInternal: Long? = intent?.extras?.getLong(optionalUserIdKey)
+        if (userIdInternal != null) {
+            return ProfileFragment.newInstance(userIdInternal)
+        } else {
+            val dataUri = intent?.data
+            val userId = getUserId(dataUri)
+            return ProfileFragment.newInstance(userId)
+        }
     }
 
     private fun getUserId(dataUri: Uri?): Long {

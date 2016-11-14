@@ -37,6 +37,7 @@ import org.stepic.droid.ui.activities.SectionActivity;
 import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.adapters.DownloadsAdapter;
+import org.stepic.droid.ui.adapters.InstructorAdapter;
 import org.stepic.droid.ui.adapters.NotificationAdapter;
 import org.stepic.droid.ui.adapters.SectionAdapter;
 import org.stepic.droid.ui.adapters.SocialAuthAdapter;
@@ -198,4 +199,6 @@ public interface AppCoreComponent {
     void inject(NotificationAdapter.NotificationViewHolder notificationViewHolder);
 
     void inject(MainApplication mainApplication);
+
+    void inject(InstructorAdapter instructorAdapter);
 }
