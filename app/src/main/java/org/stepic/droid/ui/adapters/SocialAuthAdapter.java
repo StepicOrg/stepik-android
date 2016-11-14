@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.adapters;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,15 +8,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.vk.sdk.VKScope;
+import com.vk.sdk.VKSdk;
 
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.web.IApi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -30,6 +38,9 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
 
     @Inject
     IApi api;
+
+    @Inject
+    Analytic analytic;
 
 
     private List<? extends ISocialType> socialList;
@@ -65,7 +76,20 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
     @Override
     public void onClick(int position) {
         ISocialType type = socialList.get(position);
-        api.loginWithSocial(activity, type, client);
+        analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_SOCIAL, type.getIdentifier());
+        if (type == SocialManager.SocialType.google) {
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(client);
+            activity.startActivityForResult(signInIntent, AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN);
+        } else if (type == SocialManager.SocialType.facebook) {
+            List<String> permissions = new ArrayList<>();
+            permissions.add("email");
+            LoginManager.getInstance().logInWithReadPermissions(activity, permissions);
+        } else if (type == SocialManager.SocialType.vk) {
+            String[] scopes = {VKScope.EMAIL};
+            VKSdk.login(activity, scopes);
+        } else {
+            api.loginWithSocial(activity, type);
+        }
     }
 
     public static class SocialViewHolder extends RecyclerView.ViewHolder {

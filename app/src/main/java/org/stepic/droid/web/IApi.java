@@ -2,8 +2,6 @@ package org.stepic.droid.web;
 
 import android.support.v4.app.FragmentActivity;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.Course;
@@ -62,7 +60,7 @@ public interface IApi {
 
     Call<Void> postViewed(ViewAssignment stepAssignment);
 
-    void loginWithSocial(FragmentActivity activity, ISocialType type, GoogleApiClient mGoogleApiClient); /*bad dependency with this client TODO: remove it*/
+    void loginWithSocial(FragmentActivity activity, ISocialType type);
 
     Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery);
 

@@ -4,16 +4,22 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.vk.sdk.VKSdk;
 import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.BuildConfig;
 import org.stepic.droid.R;
+import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.components.AppCoreComponent;
 import org.stepic.droid.core.components.DaggerAppCoreComponent;
 import org.stepic.droid.core.components.DaggerStorageComponent;
 import org.stepic.droid.core.components.StorageComponent;
 import org.stepic.droid.core.modules.AppCoreModule;
 import org.stepic.droid.core.modules.StorageModule;
+
+import javax.inject.Inject;
 
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -32,6 +38,9 @@ public class MainApplication extends MultiDexApplication {
         init();
     }
 
+    @Inject
+    IConfig config;
+
     private void init() {
 //        refWatcher = LeakCanary.install(this);
         application = this;
@@ -45,6 +54,9 @@ public class MainApplication extends MultiDexApplication {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+        VKSdk.initialize(this);
 
         StorageModule storageModule = new StorageModule(this);
         storageComponent = DaggerStorageComponent.builder().
@@ -55,6 +67,7 @@ public class MainApplication extends MultiDexApplication {
                 .storageModule(storageModule)
                 .build();
 
+        component.inject(this);
 
         // Инициализация AppMetrica SDK
         YandexMetrica.activate(getApplicationContext(), "fd479031-bdf4-419e-8d8f-6895aab23502");

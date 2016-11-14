@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.neenbedankt.android-apt' //needed for source code generation
 
-int minSdk = hasProperty('devMinSdk') ? devMinSdk.toInteger() : 14
+int minSdk = hasProperty('devMinSdk') ? devMinSdk.toInteger() : 15
 
 def globalConf = rootProject.ext
 android {
@@ -173,6 +173,8 @@ dependencies {
     compile 'com.google.firebase:firebase-crash:9.4.0'
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.17.0'
+    compile 'com.vk:androidsdk:1.6.5'
     compile 'com.jakewharton.timber:timber:4.3.1'
 }
 
@@ -180,7 +182,7 @@ repositories {
     mavenCentral()
 }
 buildscript {
-    ext.kotlin_version = '1.0.3'
+    ext.kotlin_version = '1.0.4'
     repositories {
         mavenCentral()
     }

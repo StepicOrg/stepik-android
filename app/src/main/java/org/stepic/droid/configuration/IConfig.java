@@ -21,4 +21,5 @@ public interface IConfig {
     String getFirebaseDomain();
 
     String getGoogleServerClientId();
+
 }

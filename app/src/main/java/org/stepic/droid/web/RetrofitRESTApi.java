@@ -6,8 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -46,7 +44,6 @@ import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.ui.NotificationCategory;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.resolvers.text.TextResolver;
@@ -208,7 +205,11 @@ public class RetrofitRESTApi implements IApi {
     public Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type) {
         analytic.reportEvent(Analytic.Web.AUTH_SOCIAL);
         makeOauthServiceWithNewAuthHeader(TokenType.social);
-        return oAuthService.getTokenByNativeCode(type.getIdentifier(), code, config.getGrantType(TokenType.social), config.getRedirectUri());
+        String codeType = null;
+        if (type.needUseAccessTokenInsteadOfCode()) {
+            codeType = "access_token";
+        }
+        return oAuthService.getTokenByNativeCode(type.getIdentifier(), code, config.getGrantType(TokenType.social), config.getRedirectUri(), codeType);
     }
 
     @Override
@@ -345,24 +346,12 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
-    public void loginWithSocial(FragmentActivity activity, ISocialType type, GoogleApiClient googleApiClient) {
-        analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_SOCIAL, type.getIdentifier());
-        if (type == SocialManager.SocialType.google) {
-
-
-            // Start the retrieval process for a server auth code.  If requested, ask for a refreshWhenOnConnectionProblem
-            // token.  Otherwise, only get an access token if a refreshWhenOnConnectionProblem token has been previously
-            // retrieved.  Getting a new access token for an existing grant does not require
-            // user consent.
-            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-            activity.startActivityForResult(signInIntent, AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN);
-        } else {
-            String socialIdentifier = type.getIdentifier();
-            String url = config.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + config.getOAuthClientId(TokenType.social) + "&response_type=code");
-            Uri uri = Uri.parse(url);
-            final Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
-            activity.startActivity(intent);
-        }
+    public void loginWithSocial(final FragmentActivity activity, ISocialType type) {
+        String socialIdentifier = type.getIdentifier();
+        String url = config.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + config.getOAuthClientId(TokenType.social) + "&response_type=code");
+        Uri uri = Uri.parse(url);
+        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
+        activity.startActivity(intent);
     }
 
     @Override

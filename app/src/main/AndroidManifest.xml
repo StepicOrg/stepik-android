@@ -33,6 +33,10 @@
         tools:replace="android:allowBackup"
         >
 
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+
         <activity
             android:name="org.stepic.droid.ui.activities.SplashActivity"
             android:theme="@style/AppTheme.BrandedLaunch">
@@ -337,6 +341,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainFeedActivity"/>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
 
     </application>
 </manifest>
