@@ -41,6 +41,9 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
         return fragment;
     }
 
+    @BindView(R.id.mainInfoRoot)
+    View mainInfoRoot;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -129,6 +132,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
     @Override
     public void showNameImageShortBio(@NotNull String fullName, @org.jetbrains.annotations.Nullable String imageLink, @NotNull String shortBio, boolean isMyProfile) {
         // FIXME: 14.11.16 hide loading at center
+        mainInfoRoot.setVisibility(View.VISIBLE);
         profileName.setText(fullName);
         Glide
                 .with(getContext())
