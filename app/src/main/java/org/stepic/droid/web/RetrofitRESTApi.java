@@ -590,6 +590,11 @@ public class RetrofitRESTApi implements IApi {
         return loggedService.markAsRead(categoryType);
     }
 
+    @Override
+    public Call<UserActivityResponse> getUserActivities(long userId) {
+        return loggedService.getUserActivities(userId);
+    }
+
     @Nullable
     private String getNotificationCategoryString(NotificationCategory notificationCategory) {
         String categoryType;

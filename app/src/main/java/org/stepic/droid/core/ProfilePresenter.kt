@@ -9,6 +9,7 @@ import org.stepic.droid.model.Profile
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.getFirstAndLastName
 import org.stepic.droid.web.IApi
+import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 
 class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
@@ -29,19 +30,63 @@ class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
 
             }
         }
-
-
-        view?.showNameImageShortBio(fullName = "Kirill Makarov",
-                imageLink = "https://stepik.org/media/users/avatar/1718803?1443605961",
-                shortBio = "Android Expert",
-                isMyProfile = true)
-
-        view?.streaksIsLoaded(currentStreak = 0, maxStreak = 3)
     }
 
 
     @WorkerThread
     private fun showLocalProfile(profile: Profile) {
+        fun showStreaks(userId: Long) {
+            fun getMaxStreak(pins: ArrayList<Long>): Int {
+                var maxStreak: Int = 0
+                var currentStreak = 0
+                pins.forEach {
+                    if (it != 0L) {
+                        currentStreak++
+                    } else {
+                        if (currentStreak > maxStreak) {
+                            maxStreak = currentStreak
+                        }
+                        currentStreak = 0
+                    }
+                }
+                if (currentStreak > maxStreak) {
+                    maxStreak = currentStreak
+                }
+                return maxStreak
+            }
+
+            fun getCurrentStreak(pins: ArrayList<Long>): Int {
+                var currentStreak: Int = 0
+                pins.forEach {
+                    if (it != 0L) {
+                        currentStreak++;
+                    } else {
+                        return currentStreak
+                    }
+                }
+                return currentStreak
+            }
+
+            val pins = try {
+                api.getUserActivities(userId).execute().body().userActivities.firstOrNull()?.pins
+            } catch (exception: Exception) {
+                //if we do not have Internet or do not have access to streaks, just do nothing, because streaks is not primary on profile screen
+                null
+            } ?: return
+
+            val currentStreak = getCurrentStreak(pins)
+            val maxStreak = getMaxStreak(pins)
+            mainHandler.post {
+                view?.streaksIsLoaded(currentStreak = currentStreak,
+                        maxStreak = maxStreak)
+            }
+        }
+
+        showProfileBase(profile, isMyProfile = true)
+        showStreaks(profile.id)
+    }
+
+    private fun showProfileBase(profile: Profile, isMyProfile: Boolean) {
         val fullName = profile.getFirstAndLastName()
         val imageLink = profile.avatar
 
@@ -54,7 +99,7 @@ class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
                 }
 
         mainHandler.post {
-            view?.showNameImageShortBio(fullName, imageLink, shortBio, isMyProfile = true)
+            view?.showNameImageShortBio(fullName, imageLink, shortBio, isMyProfile)
         }
     }
 
