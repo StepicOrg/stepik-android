@@ -162,6 +162,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
 
             if (!information.isEmpty()) {
                 infoValue.setText(information);
+                aboutMeRoot.setVisibility(View.VISIBLE);
             } else {
                 infoValue.setVisibility(View.GONE);
                 infoTitle.setVisibility(View.GONE);
