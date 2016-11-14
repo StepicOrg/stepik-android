@@ -19,12 +19,14 @@ class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
                        val sharedPreferences: SharedPreferenceHelper) : PresenterBase<ProfileView>() {
 
     @JvmOverloads
-    fun initProfile(profileId: Long = -1L) {
+    fun initProfile(profileId: Long = 0L) {
         //todo handle rotates
 
         threadPoolExecutor.execute {
             val profile: Profile? = sharedPreferences.profile //need background thread?
-            if (profile != null && (profileId == -1L || profile.id == profileId)) {
+            if (profileId < 0) {
+//TODO: SHOW ERROR profile parse (THIS PROFILE IS NOT FOUND).
+            } else if (profile != null && (profileId == 0L || profile.id == profileId)) {
                 showLocalProfile(profile)
             } else {
 

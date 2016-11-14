@@ -30,7 +30,7 @@ import butterknife.BindView;
 
 public class ProfileFragment extends FragmentBase implements ProfileView {
 
-    public static ProfileFragment newInstance() {
+    public static ProfileFragment newInstance(long userId) {
 
         Bundle args = new Bundle();
 
