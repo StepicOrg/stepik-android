@@ -46,7 +46,7 @@ class SearchCoursesPresenter(val api: IApi,
                 hasNextPage.set(searchResponse.body().meta.has_next)
                 currentPage.set(searchResponse.body().meta.page + 1)
 
-                if (courseIdsForSearch.size == 0) {
+                if (courseIdsForSearch.isEmpty()) {
                     mainHandler.post {
                         view?.showEmptyCourses()
                     }
