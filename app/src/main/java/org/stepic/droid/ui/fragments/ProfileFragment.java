@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.ProfilePresenter;
@@ -115,6 +116,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         userId = getArguments().getLong(USER_ID_KEY);
+        analytic.reportEvent(Analytic.Profile.OPEN_SCREEN_OVERALL);
     }
 
     @Override
@@ -135,10 +137,34 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
 
         profilePresenter.attachView(this);
         profilePresenter.initProfile(userId);
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analytic.reportEvent(Analytic.Profile.CLICK_IMAGE);
+            }
+        });
+        View.OnClickListener clickStreakValue = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analytic.reportEvent(Analytic.Profile.CLICK_STREAK_VALUE);
+            }
+        };
+        currentStreakValue.setOnClickListener(clickStreakValue);
+        maxStreakValue.setOnClickListener(clickStreakValue);
+        profileName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analytic.reportEvent(Analytic.Profile.CLICK_FULL_NAME);
+            }
+        });
     }
 
     @Override
     public void onDestroyView() {
+        profileName.setOnClickListener(null);
+        currentStreakValue.setOnClickListener(null);
+        maxStreakValue.setOnClickListener(null);
+        profileImage.setOnClickListener(null);
         profilePresenter.detachView(this);
         super.onDestroyView();
     }
