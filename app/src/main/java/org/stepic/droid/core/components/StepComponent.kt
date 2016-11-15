@@ -21,5 +21,4 @@ interface StepComponent {
     fun inject(stepFragmentAdapter: StepFragmentAdapter)
 
     fun inject(stepAttemptFragment: StepAttemptFragment)
-
 }

@@ -208,15 +208,13 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_course_detailed, container, false);
-        setHasOptionsMenu(true);
-        return v;
+        return inflater.inflate(R.layout.fragment_course_detailed, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        setHasOptionsMenu(true);
         //VIEW:
         coursePropertyList = new ArrayList<>();
         joinCourseSpinner = new LoadingProgressDialog(getActivity());

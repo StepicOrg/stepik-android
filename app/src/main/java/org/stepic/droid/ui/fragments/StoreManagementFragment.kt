@@ -48,10 +48,8 @@ class StoreManagementFragment : FragmentBase() {
     private var empty: String? = null
     val loadingTag = "loading_storemanagement"
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v = inflater?.inflate(R.layout.fragment_space_management, container, false)
-        return v
-    }
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
+            = inflater?.inflate(R.layout.fragment_space_management, container, false)
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

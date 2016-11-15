@@ -98,9 +98,11 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         commentAdapter = CommentsAdapter(commentManager, context)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v = inflater?.inflate(R.layout.fragment_comments, container, false)
-        setHasOptionsMenu(true)
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
+            = inflater?.inflate(R.layout.fragment_comments, container, false)
+
+    override fun onViewCreated(v: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         discussionId = arguments.getString(discussionIdKey)
         stepId = arguments.getLong(stepIdKey)
         setHasOptionsMenu(true)
@@ -114,7 +116,6 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             initConnectionError(v)
             commentCoordinatorLayout = v.findViewById(R.id.comments_coordinator_layout) as CoordinatorLayout
         }
-        return v
     }
 
     private fun initConnectionError(v: View) {

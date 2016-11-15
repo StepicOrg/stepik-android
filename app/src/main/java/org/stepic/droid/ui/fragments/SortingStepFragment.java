@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.squareup.otto.Subscribe;
 
@@ -32,12 +31,6 @@ public class SortingStepFragment extends StepAttemptFragment {
     RecyclerView recyclerView;
 
     private List<Option> optionList;
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
 
     @Override
     public void onViewCreated(View v, @Nullable Bundle savedInstanceState) {

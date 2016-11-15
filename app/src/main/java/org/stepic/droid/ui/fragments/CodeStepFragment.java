@@ -28,14 +28,12 @@ public class CodeStepFragment extends StepAttemptFragment {
 
     EditText answerField;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         ViewGroup viewGroup = (ViewGroup) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.code_attempt, attemptContainer, false);
         answerField = ButterKnife.findById(viewGroup, R.id.answer_edit_text);
         attemptContainer.addView(viewGroup);
-        return v;
     }
 
     @Override

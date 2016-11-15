@@ -100,13 +100,13 @@ public class DownloadsFragment extends FragmentBase {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_downloads, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
 
         downloadAdapter = new DownloadsAdapter(cachedVideoList, stepIdToLesson, getActivity(), this, downloadingWithProgressList, cachedStepsSet);
         downloadsView.setAdapter(downloadAdapter);

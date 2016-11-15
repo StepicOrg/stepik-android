@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.squareup.otto.Subscribe;
@@ -29,13 +28,11 @@ public class FreeResponseStepFragment extends StepAttemptFragment {
 
     EditText answerField;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         answerField = (EditText) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_free_answer_attempt, attemptContainer, false);
         attemptContainer.addView(answerField);
-        return v;
     }
 
     @Override

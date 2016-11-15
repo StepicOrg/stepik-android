@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
@@ -26,12 +25,6 @@ public class PyCharmStepFragment extends StepAttemptFragment {
 
     @BindString(R.string.py_message)
     String pyMessage;
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

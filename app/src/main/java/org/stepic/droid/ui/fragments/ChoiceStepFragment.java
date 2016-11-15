@@ -2,10 +2,8 @@ package org.stepic.droid.ui.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.squareup.otto.Subscribe;
 
@@ -29,14 +27,12 @@ public class ChoiceStepFragment extends StepAttemptFragment {
 
     private StepikRadioGroup choiceContainer;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         choiceContainer = (StepikRadioGroup) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_choice_attempt, attemptContainer, false);
         attemptContainer.addView(choiceContainer);
         attemptContainer.setPadding(0, 0, 0, 0);
-        return v;
     }
 
     /**
