@@ -50,6 +50,7 @@ class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
             }
         }
 
+        view?.showLoadingAll()
         threadPoolExecutor.execute {
             val profile: Profile? = sharedPreferences.profile //need background thread?
             if (profileId < 0) {

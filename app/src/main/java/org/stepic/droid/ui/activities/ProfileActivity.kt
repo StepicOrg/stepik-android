@@ -13,7 +13,7 @@ class ProfileActivity : SingleFragmentActivity() {
 
     override fun createFragment(): Fragment? {
         val userIdInternal: Long? = intent?.extras?.getLong(optionalUserIdKey)
-        if (userIdInternal != null) {
+        if (userIdInternal != null && userIdInternal != 0L) {
             return ProfileFragment.newInstance(userIdInternal)
         } else {
             val dataUri = intent?.data

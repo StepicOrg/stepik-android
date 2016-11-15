@@ -96,6 +96,18 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
     @Inject
     ProfilePresenter profilePresenter;
 
+    @BindView(R.id.empty_users)
+    View emptyUsers;
+
+    @BindView(R.id.load_progressbar)
+    View loadingView;
+
+    @BindView(R.id.report_problem)
+    View reportProblemRoot;
+
+    @BindView(R.id.content_root)
+    View contentRoot;
+
     long userId;
 
     @Override
@@ -134,6 +146,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
     private void initToolbar() {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
+        //noinspection ConstantConditions
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
     }
@@ -155,12 +168,20 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
 
     @Override
     public void showLoadingAll() {
-        // FIXME: 14.11.16 show loading in center
+        contentRoot.setVisibility(View.GONE);
+        emptyUsers.setVisibility(View.GONE);
+        reportProblemRoot.setVisibility(View.GONE);
+        loadingView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showNameImageShortBio(@NotNull UserViewModel userViewModel) {
-        // FIXME: 14.11.16 hide loading at center
+        emptyUsers.setVisibility(View.GONE);
+        reportProblemRoot.setVisibility(View.GONE);
+        loadingView.setVisibility(View.GONE);
+        contentRoot.setVisibility(View.VISIBLE);
+
+
         mainInfoRoot.setVisibility(View.VISIBLE);
         profileName.setText(userViewModel.getFullName());
         Glide
@@ -199,11 +220,17 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
 
     @Override
     public void onInternetFailed() {
-
+        loadingView.setVisibility(View.GONE);
+        contentRoot.setVisibility(View.GONE);
+        emptyUsers.setVisibility(View.GONE);
+        reportProblemRoot.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onProfileNotFound() {
-
+        loadingView.setVisibility(View.GONE);
+        contentRoot.setVisibility(View.GONE);
+        reportProblemRoot.setVisibility(View.GONE);
+        emptyUsers.setVisibility(View.VISIBLE);
     }
 }

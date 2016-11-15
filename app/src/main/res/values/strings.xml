@@ -284,6 +284,7 @@
     <string name="about_me">About me</string>
     <string name="short_bio">Short biography</string>
     <string name="user_info">Info</string>
+    <string name="empty_user_title">User is not found</string>
     <plurals name="restriction_submission">
         <item quantity="one">You have %d attempt</item>
         <item quantity="other">You have %d attempts</item>

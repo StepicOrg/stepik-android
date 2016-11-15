@@ -287,4 +287,5 @@
         <item quantity="many">дней</item>
         <item quantity="other">дней</item>
     </plurals>
+    <string name="empty_user_title">Пользователь не найден</string>
 </resources>
