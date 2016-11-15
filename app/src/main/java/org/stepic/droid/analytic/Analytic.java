@@ -248,6 +248,7 @@ public interface Analytic {
 
     interface Profile {
         String CLICK_INSTRUCTOR = "profile_click_instructor";
+        String CLICK_USER_IN_COMMENT = "profile_click_in_comment";
     }
 
     void reportEvent(String eventName, Bundle bundle);
