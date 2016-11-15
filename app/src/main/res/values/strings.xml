@@ -278,8 +278,19 @@
     <string name="start_exam_action_title">Open</string>
     <string name="restriction_submission_enough">The step cannot be submitted, because the number of attempts has been exceeded</string>
     <string name="too_many_attempts">Too many attempts. Please try later</string>
+    <string name="profile_title">Profile</string>
+    <string name="current_streak">Current streak</string>
+    <string name="max_streak">Max streak</string>
+    <string name="about_me">About me</string>
+    <string name="short_bio">Short biography</string>
+    <string name="user_info">Info</string>
+    <string name="empty_user_title">User is not found</string>
     <plurals name="restriction_submission">
         <item quantity="one">You have %d attempt</item>
         <item quantity="other">You have %d attempts</item>
+    </plurals>
+    <plurals name="day_number">
+        <item quantity="one">day</item>
+        <item quantity="other">days</item>
     </plurals>
 </resources>

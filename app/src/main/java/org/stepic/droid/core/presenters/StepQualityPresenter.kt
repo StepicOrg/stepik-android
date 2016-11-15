@@ -22,8 +22,7 @@ class StepQualityPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                 val video = databaseFacade.getCachedVideoById(stepVideo.id)
                 val quality: String
                 if (video == null) {
-                    val resultQuality: String
-                    try {
+                    val resultQuality: String = try {
 
                         val weWant = Integer.parseInt(userPreferences.qualityVideo)
                         val urls = stepVideo.urls
@@ -38,9 +37,9 @@ class StepQualityPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                             }
 
                         }
-                        resultQuality = urls[bestIndex].quality
+                        urls[bestIndex].quality
                     } catch (e: NumberFormatException) {
-                        resultQuality = userPreferences.qualityVideo
+                        userPreferences.qualityVideo
                     }
 
 

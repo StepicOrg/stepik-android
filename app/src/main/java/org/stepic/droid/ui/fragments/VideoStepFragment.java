@@ -41,7 +41,6 @@ import javax.inject.Inject;
 
 import butterknife.BindDrawable;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class VideoStepFragment extends StepBaseFragment implements StepQualityView {
     private static final String TAG = "video_fragment";
@@ -81,9 +80,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        View v = inflater.inflate(R.layout.fragment_video_step, container, false);
-        unbinder = ButterKnife.bind(this, v);
-        return v;
+        return inflater.inflate(R.layout.fragment_video_step, container, false);
     }
 
     @Override

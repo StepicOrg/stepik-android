@@ -29,7 +29,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class CertificateFragment extends FragmentBase implements CertificateView, SwipeRefreshLayout.OnRefreshListener {
 
@@ -74,9 +73,7 @@ public class CertificateFragment extends FragmentBase implements CertificateView
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_certificates, null);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
+        return inflater.inflate(R.layout.fragment_certificates, null);
     }
 
     @Override

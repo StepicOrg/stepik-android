@@ -110,7 +110,9 @@ public interface IApi {
 
     Call<UnitStepicResponse> getUnitByLessonId(long lessonId);
 
-    Call<NotificationResponse> getNotifications (NotificationCategory notificationCategory, int page);
+    Call<NotificationResponse> getNotifications(NotificationCategory notificationCategory, int page);
 
-    Call<Void> markAsReadAllType (@NotNull NotificationCategory notificationCategory);
+    Call<Void> markAsReadAllType(@NotNull NotificationCategory notificationCategory);
+
+    Call<UserActivityResponse> getUserActivities(long userId);
 }

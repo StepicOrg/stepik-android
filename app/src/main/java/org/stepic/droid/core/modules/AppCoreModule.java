@@ -19,14 +19,14 @@ import org.stepic.droid.core.DefaultFilterImpl;
 import org.stepic.droid.core.FilterApplicator;
 import org.stepic.droid.core.FilterApplicatorImpl;
 import org.stepic.droid.core.ILoginManager;
-import org.stepic.droid.core.IScreenManager;
+import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.LocalLessonSessionManagerImpl;
 import org.stepic.droid.core.LocalProgressImpl;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.LoginManager;
-import org.stepic.droid.core.ScreenManager;
+import org.stepic.droid.core.ScreenManagerImpl;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.core.ShareHelperImpl;
 import org.stepic.droid.core.Shell;
@@ -72,8 +72,8 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    IScreenManager provideIScreenManager(IConfig config, UserPreferences userPreferences, Analytic analytic) {
-        return new ScreenManager(config, userPreferences, analytic);
+    ScreenManager provideIScreenManager(IConfig config, UserPreferences userPreferences, Analytic analytic) {
+        return new ScreenManagerImpl(config, userPreferences, analytic);
     }
 
     @Provides
@@ -220,7 +220,7 @@ public class AppCoreModule {
                                                     UserPreferences userPreferences,
                                                     DatabaseFacade db, Analytic analytic,
                                                     TextResolver textResolver,
-                                                    ScreenManager screenManager) {
+                                                    ScreenManagerImpl screenManager) {
         return new NotificationManagerImpl(sp, api, config, userPreferences, db, analytic, textResolver, screenManager);
     }
 

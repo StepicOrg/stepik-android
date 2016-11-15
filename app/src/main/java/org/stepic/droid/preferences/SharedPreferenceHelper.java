@@ -357,6 +357,7 @@ public class SharedPreferenceHelper {
         put(PreferenceType.LOGIN, PROFILE_JSON, json);
     }
 
+    @Nullable
     public Profile getProfile() {
         String json = getString(PreferenceType.LOGIN, PROFILE_JSON);
         if (json == null) {

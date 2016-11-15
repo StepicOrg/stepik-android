@@ -6,7 +6,7 @@ import org.stepic.droid.web.IApi;
 
 @Deprecated
 public interface IShell {
-    IScreenManager getScreenProvider();
+    ScreenManager getScreenProvider();
     IApi getApi();
     SharedPreferenceHelper getSharedPreferenceHelper();
 }

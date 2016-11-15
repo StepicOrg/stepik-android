@@ -132,4 +132,7 @@ public interface StepicRestLoggedService {
     @FormUrlEncoded
     @POST("api/notifications/mark-as-read")
     Call<Void> markAsRead(@Nullable @Field(value = "type", encoded = true) String notificationType);
+
+    @GET("api/user-activities/{userId}")
+    Call<UserActivityResponse> getUserActivities(@Path("userId") long userId);
 }
