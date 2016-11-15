@@ -21,6 +21,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.ProfilePresenter;
 import org.stepic.droid.core.modules.ProfileModule;
 import org.stepic.droid.core.presenters.contracts.ProfileView;
+import org.stepic.droid.model.UserViewModel;
 
 import javax.inject.Inject;
 
@@ -137,46 +138,6 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
         activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
     }
 
-    @Override
-    public void showNameImageShortBio(@NotNull String fullName, @org.jetbrains.annotations.Nullable String imageLink, @NotNull String shortBio, boolean isMyProfile, @NotNull String information) {
-        // FIXME: 14.11.16 hide loading at center
-        mainInfoRoot.setVisibility(View.VISIBLE);
-        profileName.setText(fullName);
-        Glide
-                .with(getContext())
-                .load(imageLink)
-                .asBitmap()
-                .placeholder(userPlaceholder)
-                .into(profileImage);
-
-        if (shortBio.isEmpty() && information.isEmpty()) {
-            aboutMeRoot.setVisibility(View.GONE);
-        } else {
-            if (!shortBio.isEmpty()) {
-                shortBioValue.setText(shortBio);
-                aboutMeRoot.setVisibility(View.VISIBLE);
-            } else {
-                shortBioTitle.setVisibility(View.GONE);
-                shortBioValue.setVisibility(View.GONE);
-            }
-
-            if (!information.isEmpty()) {
-                infoValue.setText(information);
-                aboutMeRoot.setVisibility(View.VISIBLE);
-            } else {
-                infoValue.setVisibility(View.GONE);
-                infoTitle.setVisibility(View.GONE);
-            }
-        }
-
-        if (isMyProfile) {
-            shortBioTitle.setText(aboutMeTitle);
-        } else {
-            shortBioTitle.setText(shortBioTitleString);
-        }
-
-    }
-
     @SuppressLint("SetTextI18n")
     @Override
     public void streaksIsLoaded(int currentStreak, int maxStreak) {
@@ -195,5 +156,54 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
     @Override
     public void showLoadingAll() {
         // FIXME: 14.11.16 show loading in center
+    }
+
+    @Override
+    public void showNameImageShortBio(@NotNull UserViewModel userViewModel) {
+        // FIXME: 14.11.16 hide loading at center
+        mainInfoRoot.setVisibility(View.VISIBLE);
+        profileName.setText(userViewModel.getFullName());
+        Glide
+                .with(getContext())
+                .load(userViewModel.getImageLink())
+                .asBitmap()
+                .placeholder(userPlaceholder)
+                .into(profileImage);
+
+        if (userViewModel.getShortBio().isEmpty() && userViewModel.getInformation().isEmpty()) {
+            aboutMeRoot.setVisibility(View.GONE);
+        } else {
+            if (!userViewModel.getShortBio().isEmpty()) {
+                shortBioValue.setText(userViewModel.getShortBio());
+                aboutMeRoot.setVisibility(View.VISIBLE);
+            } else {
+                shortBioTitle.setVisibility(View.GONE);
+                shortBioValue.setVisibility(View.GONE);
+            }
+
+            if (!userViewModel.getInformation().isEmpty()) {
+                infoValue.setText(userViewModel.getInformation());
+                aboutMeRoot.setVisibility(View.VISIBLE);
+            } else {
+                infoValue.setVisibility(View.GONE);
+                infoTitle.setVisibility(View.GONE);
+            }
+        }
+
+        if (userViewModel.isMyProfile()) {
+            shortBioTitle.setText(aboutMeTitle);
+        } else {
+            shortBioTitle.setText(shortBioTitleString);
+        }
+    }
+
+    @Override
+    public void onInternetFailed() {
+
+    }
+
+    @Override
+    public void onProfileNotFound() {
+
     }
 }
