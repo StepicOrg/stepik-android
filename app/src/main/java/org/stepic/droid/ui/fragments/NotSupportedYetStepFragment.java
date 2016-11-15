@@ -15,7 +15,6 @@ import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class NotSupportedYetStepFragment extends StepBaseFragment {
 
@@ -25,9 +24,7 @@ public class NotSupportedYetStepFragment extends StepBaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_unsupported, container, false);
-        unbinder = ButterKnife.bind(this, v);
-        return v;
+        return inflater.inflate(R.layout.fragment_unsupported, container, false);
     }
 
     @Override

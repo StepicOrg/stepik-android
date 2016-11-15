@@ -17,10 +17,10 @@ class StepicFcmListenerService : FirebaseMessagingService() {
          val data = message.data
         val notificationRawString: String? = data?.get("object")
         try {
-            val userId = hacker.shell.getSharedPreferenceHelper().profile.id
+            val userId : Long? = hacker.shell.sharedPreferenceHelper.profile?.id
             val userIdServerString = data?.get("user_id")?:""
             val userIdServer = Integer.parseInt(userIdServerString)
-            if (userIdServer.toLong() != userId){
+            if (userId == null || userIdServer.toLong() != userId){
                 return;
             }
             val stepicNotification = Gson().fromJson(notificationRawString, Notification::class.java)

@@ -34,11 +34,10 @@ class SearchCoursesPresenter(val api: IApi,
         isLoading.set(true)
         view?.showLoading()
         threadPoolExecutor.execute {
-            val searchResponse: Response<SearchResultResponse>?
-            try {
-                searchResponse = api.getSearchResultsCourses(currentPage.get(), searchQuery).execute()
+            val searchResponse: Response<SearchResultResponse>? = try {
+                api.getSearchResultsCourses(currentPage.get(), searchQuery).execute()
             } catch (ex: Exception) {
-                searchResponse = null
+                null
             }
 
             if (searchResponse != null && searchResponse.isSuccess) {
@@ -47,16 +46,15 @@ class SearchCoursesPresenter(val api: IApi,
                 hasNextPage.set(searchResponse.body().meta.has_next)
                 currentPage.set(searchResponse.body().meta.page + 1)
 
-                if (courseIdsForSearch.size == 0) {
+                if (courseIdsForSearch.isEmpty()) {
                     mainHandler.post {
                         view?.showEmptyCourses()
                     }
                 } else {
-                    val courseResponse: Response<CoursesStepicResponse>?
-                    try {
-                        courseResponse = api.getCourses(1, courseIdsForSearch).execute()
+                    val courseResponse: Response<CoursesStepicResponse>? = try {
+                        api.getCourses(1, courseIdsForSearch).execute()
                     } catch (ex: Exception) {
-                        courseResponse = null
+                        null
                     }
 
                     if (courseResponse != null && courseResponse.isSuccess) {

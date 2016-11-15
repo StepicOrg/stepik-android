@@ -38,12 +38,12 @@ import org.stepic.droid.model.DownloadingVideoItem;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.VideosAndMapToLesson;
+import org.stepic.droid.ui.adapters.DownloadsAdapter;
+import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.StepicLogicHelper;
-import org.stepic.droid.ui.adapters.DownloadsAdapter;
-import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -53,7 +53,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -102,9 +101,7 @@ public class DownloadsFragment extends FragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        View v = inflater.inflate(R.layout.fragment_downloads, container, false);
-        unbinder = ButterKnife.bind(this, v);
-        return v;
+        return inflater.inflate(R.layout.fragment_downloads, container, false);
     }
 
     @Override

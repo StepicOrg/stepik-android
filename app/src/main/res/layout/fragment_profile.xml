@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/abc_action_bar_default_height_material"
+            android:background="@color/stepic_brand_primary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    </android.support.design.widget.AppBarLayout>
+
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:id="@+id/content_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="40dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/mainInfoRoot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/half_padding"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profileImage"
+                        android:layout_width="@dimen/profile_image_height_width"
+                        android:layout_height="@dimen/profile_image_height_width"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/guideline_standard_padding"
+                        tools:src="@drawable/placeholder_icon"/>
+
+                    <TextView
+                        android:id="@+id/profileName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:padding="@dimen/half_padding"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        tools:text="John Doe"/>
+
+                    <LinearLayout
+                        android:id="@+id/streakRoot"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_horizontal"
+                                android:paddingLeft="@dimen/half_padding"
+                                android:paddingRight="@dimen/half_padding"
+                                android:paddingTop="@dimen/half_padding"
+                                android:text="@string/current_streak"/>
+
+                            <TextView
+                                android:id="@+id/currentStreakValue"
+                                style="@style/streakValueStyle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:text="0"/>
+
+                            <TextView
+                                android:id="@+id/currentStreakSuffix"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_horizontal"
+                                android:paddingBottom="@dimen/half_padding"
+                                android:paddingLeft="@dimen/half_padding"
+                                android:paddingRight="@dimen/half_padding"
+                                tools:text="дней"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_horizontal"
+                                android:paddingLeft="@dimen/half_padding"
+                                android:paddingRight="@dimen/half_padding"
+                                android:paddingTop="@dimen/half_padding"
+                                android:text="@string/max_streak"/>
+
+
+                            <TextView
+                                android:id="@+id/maxStreakValue"
+                                style="@style/streakValueStyle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:text="3"/>
+
+                            <TextView
+                                android:id="@+id/maxStreakSuffix"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_horizontal"
+                                android:paddingBottom="@dimen/half_padding"
+                                android:paddingLeft="@dimen/half_padding"
+                                android:paddingRight="@dimen/half_padding"
+                                tools:text="дня"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/aboutMeRoot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/half_padding"
+                android:visibility="gone"
+                app:cardCornerRadius="@dimen/card_corner_radius_guideline"
+                app:cardPreventCornerOverlap="true"
+                app:cardUseCompatPadding="false"
+                app:contentPaddingLeft="@dimen/padding_text_in_cv"
+                app:contentPaddingRight="@dimen/padding_text_in_cv"
+                app:contentPaddingTop="@dimen/padding_bot_top_cv"
+                tools:visibility="visible"
+                >
+
+                <LinearLayout
+                    android:id="@+id/shortBioRoot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/shortBioTitle"
+                        style="@style/cv_text_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/padding_text_in_cv"
+                        tools:text="Обо мне"/>
+
+                    <TextView
+                        android:id="@+id/shortBioValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/padding_bot_top_cv"
+                        tools:text="Android expert"/>
+
+                    <TextView
+                        android:id="@+id/infoTitle"
+                        style="@style/cv_text_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/padding_text_in_cv"
+                        android:text="@string/user_info"/>
+
+                    <TextView
+                        android:id="@+id/infoValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/padding_bot_top_cv"
+                        tools:text="Android ***"/>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+        <include layout="@layout/progress_bar_on_empty_screen"/>
+
+        <include layout="@layout/empty_users"/>
+
+        <include layout="@layout/report_problem_layout"/>
+
+    </FrameLayout>
+
+</android.support.design.widget.CoordinatorLayout>

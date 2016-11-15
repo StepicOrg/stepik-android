@@ -20,7 +20,6 @@ import org.stepic.droid.ui.dialogs.VideoQualityDialog;
 
 import butterknife.BindString;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class SettingsFragment extends FragmentBase {
 
@@ -86,9 +85,7 @@ public class SettingsFragment extends FragmentBase {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_settings, container, false);
-        unbinder = ButterKnife.bind(this, v);
-        return v;
+        return inflater.inflate(R.layout.fragment_settings, container, false);
     }
 
     @Override

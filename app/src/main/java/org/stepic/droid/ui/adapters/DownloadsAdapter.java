@@ -26,7 +26,7 @@ import com.squareup.otto.Bus;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.IScreenManager;
+import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.events.CancelAllVideosEvent;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadingVideoItem;
@@ -79,7 +79,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     DatabaseFacade databaseFacade;
 
     @Inject
-    IScreenManager screenManager;
+    ScreenManager screenManager;
 
     @Inject
     ThreadPoolExecutor threadPoolExecutor;
