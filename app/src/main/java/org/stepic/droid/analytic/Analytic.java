@@ -141,6 +141,7 @@ public interface Analytic {
         String ILLEGAL_STATE_PREVIOUS_LESSON = "cant_show_previous_lesson";
         String FAIL_PUSH_STEP_VIEW = "fail_push_step_view";
         java.lang.String NO_INTERNET_EXISTING_ATTEMPTS = "no_internet_existing_attempts";
+        String DOWNLOAD_ID_NEGATIVE = "download_id_negative";
     }
 
     interface Web {
