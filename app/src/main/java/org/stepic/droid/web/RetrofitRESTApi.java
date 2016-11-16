@@ -483,6 +483,7 @@ public class RetrofitRESTApi implements IApi {
 
         String subject = MainApplication.getAppContext().getString(R.string.feedback_subject);
         String aboutSystem = DeviceInfoUtil.getInfosAboutDevice(MainApplication.getAppContext());
+        rawDescription = rawDescription + "\n\n" + aboutSystem;
         return tempService.sendFeedback(subject, email, aboutSystem, rawDescription);
     }
 
