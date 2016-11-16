@@ -52,7 +52,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     public static final int TYPE_SECTION_ITEM = 1;
     public static final int TYPE_TITLE = 2;
 
-    public static final int SECTION_LIST_DELTA = 1;
+    public static final int PRE_SECTION_LIST_DELTA = 1;
 
     private int defaultHighlightPosition = -1;
 
@@ -134,7 +134,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     @Override
     public int getItemCount() {
-        return sections.size() + SECTION_LIST_DELTA;
+        return sections.size() + PRE_SECTION_LIST_DELTA;
     }
 
 
@@ -148,7 +148,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     @Override
     public void onClickLoad(int adapterPosition) {
-        int sectionPosition = adapterPosition - SECTION_LIST_DELTA;
+        int sectionPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
             final Section section = sections.get(sectionPosition);
 
@@ -214,7 +214,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     }
 
     private void loadSection(int adapterPosition) {
-        int sectionPosition = adapterPosition - SECTION_LIST_DELTA;
+        int sectionPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
             final Section section = sections.get(sectionPosition);
 
@@ -241,7 +241,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         loadSection(adapterPosition);
     }
 
-    private void onClickStartExam(int position) {
+    private void onClickStartExam(int adapterPosition) {
+        int position = adapterPosition - PRE_SECTION_LIST_DELTA;
         if (position >= 0 && position < sections.size()) {
             analytic.reportEvent(Analytic.Exam.SHOW_EXAM);
             Section section = sections.get(position);
@@ -321,7 +322,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
         @Override
         public void onClick(int adapterPosition) {
-            int itemPosition = adapterPosition - SECTION_LIST_DELTA;
+            int itemPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
             if (itemPosition >= 0 && itemPosition < sections.size()) {
                 screenManager.showUnitsForSection(context, sections.get(itemPosition));
             }
@@ -330,7 +331,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         @Override
         public void setDataOnView(int positionInAdapter) {
             // the 0 index always for calendar, we make its GONE, if calendar is not needed.
-            int position = positionInAdapter - SECTION_LIST_DELTA;
+            int position = positionInAdapter - PRE_SECTION_LIST_DELTA;
             Section section = sections.get(position);
 
             String title = section.getTitle();

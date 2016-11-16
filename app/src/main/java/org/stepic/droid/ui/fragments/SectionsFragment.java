@@ -367,7 +367,7 @@ public class SectionsFragment
                     shell.getScreenProvider().showUnitsForSection(getContext(), sections.get(modulePosition - 1));
                 } else {
                     adapter.setDefaultHighlightPosition(modulePosition - 1);
-                    int scrollTo = modulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
+                    int scrollTo = modulePosition + SectionAdapter.PRE_SECTION_LIST_DELTA - 1;
                     linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
                     afterUpdateModulePosition = modulePosition;
                 }
@@ -376,7 +376,7 @@ public class SectionsFragment
         } else {
             adapter.notifyDataSetChanged();
             adapter.setDefaultHighlightPosition(afterUpdateModulePosition - 1);
-            int scrollTo = afterUpdateModulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
+            int scrollTo = afterUpdateModulePosition + SectionAdapter.PRE_SECTION_LIST_DELTA - 1;
             linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
             afterUpdateModulePosition = -1;
         }
@@ -486,7 +486,7 @@ public class SectionsFragment
         //now we have not null section and correct position at oldList
         section.set_cached(isCached);
         section.set_loading(isLoading);
-        adapter.notifyItemChanged(position + SectionAdapter.SECTION_LIST_DELTA);
+        adapter.notifyItemChanged(position + SectionAdapter.PRE_SECTION_LIST_DELTA);
     }
 
 
