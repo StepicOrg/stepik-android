@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.activities
 
+import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.MenuItem
 import org.stepic.droid.base.SingleFragmentActivity
@@ -24,6 +25,11 @@ class NewCommentActivity : SingleFragmentActivity(), BackButtonHandler {
         val keyParent = "KEY_Parent_id"
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        window.setBackgroundDrawable(null)
+    }
+
     override fun createFragment(): Fragment? {
         val target: Long = intent.extras.getLong(NewCommentActivity.keyTarget)
         var parent: Long? = intent.extras.getLong(NewCommentActivity.keyParent)
@@ -38,8 +44,7 @@ class NewCommentActivity : SingleFragmentActivity(), BackButtonHandler {
             android.R.id.home -> {
                 if (fragmentBackKeyIntercept()) {
                     return true
-                }
-                else {
+                } else {
                     finish();
                     return true
                 }
