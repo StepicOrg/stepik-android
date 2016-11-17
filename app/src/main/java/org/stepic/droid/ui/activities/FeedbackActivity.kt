@@ -1,19 +1,16 @@
 package org.stepic.droid.ui.activities
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import butterknife.ButterKnife
 import org.stepic.droid.R
 import org.stepic.droid.base.SingleFragmentActivity
-import org.stepic.droid.ui.fragments.SettingsFragment
+import org.stepic.droid.ui.fragments.FeedbackFragment
 
-open class SettingsActivity : SingleFragmentActivity() {
+class FeedbackActivity : SingleFragmentActivity() {
+    override fun createFragment() = FeedbackFragment.newInstance()
 
-    override fun createFragment(): Fragment? {
-        return SettingsFragment.newInstance()
-    }
 
     var toolbar: Toolbar? = null;
 
@@ -23,6 +20,7 @@ open class SettingsActivity : SingleFragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setBackgroundDrawable(null)
         ButterKnife.bind(this)
         toolbar = findViewById(R.id.toolbar) as Toolbar
         setUpToolbar()
@@ -40,12 +38,8 @@ open class SettingsActivity : SingleFragmentActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
-                if (sharedPreferenceHelper.getAuthResponseFromStore() == null) {
-                    finish();
-                    return true
-                } else {
-                    return super.onOptionsItemSelected(item)
-                }
+                finish();
+                return true
             }
         }
         return super.onOptionsItemSelected(item)

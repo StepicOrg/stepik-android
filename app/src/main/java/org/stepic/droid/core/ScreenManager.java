@@ -83,4 +83,6 @@ public interface ScreenManager {
     void openProfile(Activity activity);
 
     void openProfile(Activity activity, long userId);
+
+    void openFeedbackActivity (Activity activity);
 }

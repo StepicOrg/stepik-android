@@ -14,6 +14,7 @@ class TextFeedbackActivity : SingleFragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setBackgroundDrawable(null)
         overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start)
     }
 
