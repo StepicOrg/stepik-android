@@ -6,8 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -46,10 +44,10 @@ import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.ui.NotificationCategory;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DeviceInfoUtil;
-import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.RWLocks;
+import org.stepic.droid.util.resolvers.text.TextResolver;
+import org.stepic.droid.web.util.StringConverterFactory;
 
 import java.io.IOException;
 import java.net.CookieManager;
@@ -85,10 +83,12 @@ public class RetrofitRESTApi implements IApi {
     UserPreferences userPreferences;
     @Inject
     Analytic analytic;
+    @Inject
+    TextResolver textResolver;
 
     private StepicRestLoggedService loggedService;
     private StepicRestOAuthService oAuthService;
-    private StepicEmptyAuthService StepikEmptyAuthService;
+    private StepicEmptyAuthService stepikEmptyAuthService;
     private final OkHttpClient okHttpClient = new OkHttpClient();
 
 
@@ -105,7 +105,7 @@ public class RetrofitRESTApi implements IApi {
                 .addConverterFactory(generateGsonFactory())
                 .client(okHttpClient)
                 .build();
-        StepikEmptyAuthService = retrofit.create(StepicEmptyAuthService.class);
+        stepikEmptyAuthService = retrofit.create(StepicEmptyAuthService.class);
 //        makeZendeskService();
     }
 
@@ -116,7 +116,7 @@ public class RetrofitRESTApi implements IApi {
 //                .baseUrl(mConfig.getZendeskHost())
 //                .client(okHttpClient)
 //                .build();
-//        mZendeskAuthService = retrofit.create(StepicZendeskEmptyAuthService.class);
+//        mZendeskAuthService = retrofit.create(StepikDeskEmptyAuthService.class);
 //    }
 
 
@@ -205,7 +205,11 @@ public class RetrofitRESTApi implements IApi {
     public Call<AuthenticationStepicResponse> authWithNativeCode(String code, SocialManager.SocialType type) {
         analytic.reportEvent(Analytic.Web.AUTH_SOCIAL);
         makeOauthServiceWithNewAuthHeader(TokenType.social);
-        return oAuthService.getTokenByNativeCode(type.getIdentifier(), code, config.getGrantType(TokenType.social), config.getRedirectUri());
+        String codeType = null;
+        if (type.needUseAccessTokenInsteadOfCode()) {
+            codeType = "access_token";
+        }
+        return oAuthService.getTokenByNativeCode(type.getIdentifier(), code, config.getGrantType(TokenType.social), config.getRedirectUri(), codeType);
     }
 
     @Override
@@ -342,24 +346,12 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
-    public void loginWithSocial(FragmentActivity activity, ISocialType type, GoogleApiClient googleApiClient) {
-        analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_SOCIAL, type.getIdentifier());
-        if (type == SocialManager.SocialType.google) {
-
-
-            // Start the retrieval process for a server auth code.  If requested, ask for a refreshWhenOnConnectionProblem
-            // token.  Otherwise, only get an access token if a refreshWhenOnConnectionProblem token has been previously
-            // retrieved.  Getting a new access token for an existing grant does not require
-            // user consent.
-            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-            activity.startActivityForResult(signInIntent, AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN);
-        } else {
-            String socialIdentifier = type.getIdentifier();
-            String url = config.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + config.getOAuthClientId(TokenType.social) + "&response_type=code");
-            Uri uri = Uri.parse(url);
-            final Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
-            activity.startActivity(intent);
-        }
+    public void loginWithSocial(final FragmentActivity activity, ISocialType type) {
+        String socialIdentifier = type.getIdentifier();
+        String url = config.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + config.getOAuthClientId(TokenType.social) + "&response_type=code");
+        Uri uri = Uri.parse(url);
+        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
+        activity.startActivity(intent);
     }
 
     @Override
@@ -480,79 +472,19 @@ public class RetrofitRESTApi implements IApi {
     @Override
     public Call<Void> sendFeedback(String email, String rawDescription) {
 
-        Interceptor interceptor = new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request();
-
-                String csrftoken = null;
-                String zendesk_shared_session = null;
-                String help_center_session = null;
-                try {
-                    Response response = getZendeskResponse();
-                    String htmlText = response.body().string();
-                    csrftoken = HtmlHelper.getValueOfMetaOrNull(htmlText, "csrf-token");
-
-                    Headers headers = response.headers();
-                    CookieManager cookieManager = new CookieManager();
-                    URI myUri = null;
-                    try {
-                        myUri = new URI(config.getZendeskHost());
-                    } catch (URISyntaxException e) {
-                        return null;
-                    }
-                    cookieManager.put(myUri, headers.toMultimap());
-                    List<HttpCookie> cookies = cookieManager.getCookieStore().get(myUri);
-
-                    for (HttpCookie item : cookies) {
-                        if (item.getName() != null && item.getName().equals("_zendesk_shared_session")) {
-                            zendesk_shared_session = item.getValue();
-                            continue;
-                        }
-                        if (item.getName() != null && item.getName().equals("_help_center_session")) {
-                            help_center_session = item.getValue();
-                        }
-                    }
-
-                } catch (Exception e) {
-                    return chain.proceed(newRequest);
-                }
-                if (csrftoken == null && zendesk_shared_session == null && help_center_session == null) {
-                    return chain.proceed(newRequest);
-                }
-
-
-                String cookieResult = "_zendesk_shared_session=" + zendesk_shared_session + "; " + "_help_center_session=" + help_center_session;
-
-                HttpUrl url = newRequest
-                        .httpUrl()
-                        .newBuilder()
-                        .addQueryParameter("authenticity_token", csrftoken)
-                        .build();
-                newRequest = newRequest.newBuilder()
-                        .addHeader("Cookie", cookieResult)
-                        .url(url)
-                        .build();
-                return chain.proceed(newRequest);
-            }
-        };
 
         OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.networkInterceptors().add(interceptor);
         Retrofit notLogged = new Retrofit.Builder()
                 .baseUrl(config.getZendeskHost())
-                .addConverterFactory(generateGsonFactory())
+                .addConverterFactory(StringConverterFactory.create())
                 .client(okHttpClient)
                 .build();
-        StepicZendeskEmptyAuthService tempService = notLogged.create(StepicZendeskEmptyAuthService.class);
+        StepikDeskEmptyAuthService tempService = notLogged.create(StepikDeskEmptyAuthService.class);
 
-        String encodedEmail = URLEncoder.encode(email);
-        String encodedDescription = URLEncoder.encode(rawDescription);
         String subject = MainApplication.getAppContext().getString(R.string.feedback_subject);
-        String encodedSubject = URLEncoder.encode(subject);
         String aboutSystem = DeviceInfoUtil.getInfosAboutDevice(MainApplication.getAppContext());
-        String encodedSystem = URLEncoder.encode(aboutSystem);
-        return tempService.sendFeedback(encodedSubject, encodedEmail, encodedSystem, encodedDescription, config.getBaseUrl());
+        rawDescription = rawDescription + "\n\n" + aboutSystem;
+        return tempService.sendFeedback(subject, email, aboutSystem, rawDescription);
     }
 
     @Override
@@ -654,9 +586,14 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Override
-    public Call<Void> markAsReadAllType(NotificationCategory notificationCategory) {
+    public Call<Void> markAsReadAllType(@NotNull NotificationCategory notificationCategory) {
         String categoryType = getNotificationCategoryString(notificationCategory);
         return loggedService.markAsRead(categoryType);
+    }
+
+    @Override
+    public Call<UserActivityResponse> getUserActivities(long userId) {
+        return loggedService.getUserActivities(userId);
     }
 
     @Nullable
@@ -671,22 +608,9 @@ public class RetrofitRESTApi implements IApi {
     }
 
     @Nullable
-    private Response getZendeskResponse() throws IOException {
-        OkHttpClient client = new OkHttpClient();
-
-        String url = config.getZendeskHost() + "/hc/en-us/requests/new";
-
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-
-        return client.newCall(request).execute();
-    }
-
-    @Nullable
     private List<HttpCookie> getCookiesForBaseUrl() throws IOException {
         String lang = Locale.getDefault().getLanguage();
-        retrofit.Response ob = StepikEmptyAuthService.getStepicForFun(lang).execute();
+        retrofit.Response ob = stepikEmptyAuthService.getStepicForFun(lang).execute();
         Headers headers = ob.headers();
         CookieManager cookieManager = new CookieManager();
         URI myUri;

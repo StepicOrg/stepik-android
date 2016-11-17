@@ -15,14 +15,14 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.events.loading.FinishLoadEvent
 import org.stepic.droid.events.loading.StartLoadEvent
 import org.stepic.droid.events.video.FailToMoveFilesEvent
-import org.stepic.droid.util.FileUtil
-import org.stepic.droid.util.KotlinUtil
-import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.StorageUtil
 import org.stepic.droid.ui.dialogs.ChooseStorageDialog
 import org.stepic.droid.ui.dialogs.ClearVideosDialog
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.MovingProgressDialogFragment
+import org.stepic.droid.util.FileUtil
+import org.stepic.droid.util.KotlinUtil
+import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.StorageUtil
 
 class StoreManagementFragment : FragmentBase() {
     companion object {
@@ -48,10 +48,8 @@ class StoreManagementFragment : FragmentBase() {
     private var empty: String? = null
     val loadingTag = "loading_storemanagement"
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v = inflater?.inflate(R.layout.fragment_space_management, container, false)
-        return v
-    }
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
+            = inflater?.inflate(R.layout.fragment_space_management, container, false)
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -107,7 +105,6 @@ class StoreManagementFragment : FragmentBase() {
     }
 
     override fun onStop() {
-
         super.onStop()
     }
 

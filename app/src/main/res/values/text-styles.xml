@@ -31,4 +31,11 @@
         <item name="android:textSize">@dimen/text_size_title</item>
     </style>
 
+    <style name="streakValueStyle">
+        <item name="android:padding">@dimen/half_padding</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/streak_default_color</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
 </resources>

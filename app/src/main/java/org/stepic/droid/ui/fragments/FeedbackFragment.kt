@@ -22,12 +22,14 @@ class FeedbackFragment : FragmentBase() {
     lateinit var goodButton: Button
     lateinit var badButton: Button
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v = inflater?.inflate(R.layout.fragment_feedback, container, false)
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
+            = inflater?.inflate(R.layout.fragment_feedback, container, false)
+
+    override fun onViewCreated(v: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(v, savedInstanceState)
         v?.let {
             initButtons(v)
         }
-        return v
     }
 
     private fun initButtons(v: View) {
@@ -40,7 +42,7 @@ class FeedbackFragment : FragmentBase() {
 
     private fun destroyButtons() {
         goodButton.setOnClickListener(null)
-        badButton.setOnClickListener (null)
+        badButton.setOnClickListener(null)
     }
 
     override fun onDestroyView() {

@@ -3,9 +3,7 @@ package org.stepic.droid.ui.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.InputType;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.squareup.otto.Subscribe;
 
@@ -16,12 +14,10 @@ import org.stepic.droid.model.Reply;
 
 public class NumberStepFragment extends SingleLineSendStepFragment {
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         answerField.setRawInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        return v;
     }
 
     @Override

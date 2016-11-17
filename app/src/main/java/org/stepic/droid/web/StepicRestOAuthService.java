@@ -30,7 +30,8 @@ public interface StepicRestOAuthService {
     Call<AuthenticationStepicResponse> getTokenByNativeCode(@Query("provider") String providerName,
                                                             @Query("code") String providerCode,
                                                             @Query("grant_type") String grant_type,
-                                                            @Query("redirect_uri") String redirect_uri);
+                                                            @Query("redirect_uri") String redirect_uri,
+                                                            @Query("code_type") String accessToken);
 
 
     @POST("/api/users")

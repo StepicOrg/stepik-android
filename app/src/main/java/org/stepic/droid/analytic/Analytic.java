@@ -56,6 +56,8 @@ public interface Analytic {
         String NO_DISCOUNTING_DIALOG = "discounting_dialog_no";
         String YES_DISCOUNTING_DIALOG = "discounting_dialog_yes";
         String CLICK_SETTINGS_FROM_NOTIFICATION = "click_settings_from_notification";
+        String START_SPLASH = "user_start_splash_new";
+        String START_SPLASH_EXPERT = "user_start_splash_expert";
     }
 
     interface Screens {
@@ -139,6 +141,7 @@ public interface Analytic {
         String ILLEGAL_STATE_PREVIOUS_LESSON = "cant_show_previous_lesson";
         String FAIL_PUSH_STEP_VIEW = "fail_push_step_view";
         java.lang.String NO_INTERNET_EXISTING_ATTEMPTS = "no_internet_existing_attempts";
+        String DOWNLOAD_ID_NEGATIVE = "download_id_negative";
     }
 
     interface Web {
@@ -237,6 +240,25 @@ public interface Analytic {
         String FILTERS_CANCELED = "filters_canceled";
         String FILTERS_NEED_UPDATE = "filters_need_update";
         String FILTER_APPLIED_IN_INTERFACE_WITH_PARAMS = "filters_params";
+    }
+
+    interface Exam {
+        String START_EXAM = "exam_start";
+        String SHOW_EXAM = "exam_shown_on_bind_view";
+    }
+
+    interface Profile {
+        String CLICK_INSTRUCTOR = "profile_click_instructor";
+        String CLICK_USER_IN_COMMENT = "profile_click_in_comment";
+        String CLICK_OPEN_MY_PROFILE = "profile_click_open_my";
+        String SHOW_LOCAL = "profile_show_my";
+        String OPEN_NO_INTERNET = "profile_no_internet";
+        String STREAK_NO_INTERNET = "profile_no_internet_streak";
+        String OPEN_BY_LINK = "profile_open_by_link";
+        java.lang.String CLICK_IMAGE = "profile_click_avatar";
+        java.lang.String CLICK_STREAK_VALUE = "profile_click_streak";
+        java.lang.String CLICK_FULL_NAME = "profile_click_full_name";
+        java.lang.String OPEN_SCREEN_OVERALL = "profile_open_screen_overall";
     }
 
     void reportEvent(String eventName, Bundle bundle);

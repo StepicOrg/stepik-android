@@ -16,6 +16,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -24,6 +30,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
+import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.VKCallback;
+import com.vk.sdk.VKSdk;
+import com.vk.sdk.api.VKError;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -32,13 +42,13 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.ActivityFinisher;
 import org.stepic.droid.core.ProgressHandler;
 import org.stepic.droid.social.SocialManager;
-import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.DpPixelsHelper;
-import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.ui.adapters.SocialAuthAdapter;
 import org.stepic.droid.ui.decorators.SpacesItemDecorationHorizontal;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.ui.util.FailLoginSupplementaryHandler;
+import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.DpPixelsHelper;
+import org.stepic.droid.util.ProgressHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,38 +57,39 @@ import butterknife.OnClick;
 public class LoginActivity extends FragmentActivityBase {
 
     @BindView(R.id.actionbar_close_btn_layout)
-    View mCloseButton;
+    View closeButton;
 
-    @BindView(org.stepic.droid.R.id.login_button_layout)
-    View mLoginBtn;
+    @BindView(R.id.login_button_layout)
+    View loginBtn;
 
-    @BindView(org.stepic.droid.R.id.email_et)
-    EditText mLoginText;
+    @BindView(R.id.email_et)
+    EditText loginText;
 
-    @BindView(org.stepic.droid.R.id.password_et)
-    EditText mPasswordText;
+    @BindView(R.id.password_et)
+    EditText passwordText;
 
     @BindView(R.id.forgot_password_tv)
-    TextView mForgotPassword;
+    TextView forgotPassword;
 
     @BindView(R.id.root_view)
-    View mRootView;
+    View rootView;
 
     @BindView(R.id.social_list)
-    RecyclerView mSocialRecyclerView;
+    RecyclerView socialRecyclerView;
 
-    private ProgressDialog mProgressLogin;
+    private ProgressDialog progressLogin;
 
     ProgressHandler progressHandler;
 
-    GoogleApiClient mGoogleApiClient;
+    GoogleApiClient googleApiClient;
+    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(org.stepic.droid.R.layout.activity_login);
+        setContentView(R.layout.activity_login);
         unbinder = ButterKnife.bind(this);
-        overridePendingTransition(org.stepic.droid.R.anim.slide_in_from_bottom, org.stepic.droid.R.anim.no_transition);
+        overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition);
 
         hideSoftKeypad();
 
@@ -89,7 +100,9 @@ public class LoginActivity extends FragmentActivityBase {
                 .build();
 
         // Build GoogleAPIClient with the Google Sign-In API and the above options.
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        // ATTENTION: This "addApi(AppIndex.API)"was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -97,19 +110,18 @@ public class LoginActivity extends FragmentActivityBase {
                     }
                 } /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
+                .addApi(AppIndex.API).build();
 
         progressHandler = new ProgressHandler() {
             @Override
             public void activate() {
                 hideSoftKeypad();
-                ProgressHelper.activate(mProgressLogin);
+                ProgressHelper.activate(progressLogin);
             }
 
             @Override
             public void dismiss() {
-                ProgressHelper.dismiss(mProgressLogin);
+                ProgressHelper.dismiss(progressLogin);
             }
         };
 
@@ -124,31 +136,63 @@ public class LoginActivity extends FragmentActivityBase {
         int widthOfScreen = size.x;
 
 
-        mSocialRecyclerView.addItemDecoration(new SpacesItemDecorationHorizontal((int) pixelForPadding));//30 is ok
+        socialRecyclerView.addItemDecoration(new SpacesItemDecorationHorizontal((int) pixelForPadding));//30 is ok
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         if (widthOfScreen > widthOfAllItems) {
             int padding = (int) (widthOfScreen - widthOfAllItems) / 2;
-            mSocialRecyclerView.setPadding(padding, 0, 0, 0);
+            socialRecyclerView.setPadding(padding, 0, 0, 0);
         }
 
-        mSocialRecyclerView.setLayoutManager(layoutManager);
-        mSocialRecyclerView.setAdapter(new SocialAuthAdapter(this, mGoogleApiClient));
+        socialRecyclerView.setLayoutManager(layoutManager);
+        callbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 
-        mProgressLogin = new LoadingProgressDialog(this);
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                loginManager.loginWithNativeProviderCode(loginResult.getAccessToken().getToken(),
+                        SocialManager.SocialType.facebook,
+                        progressHandler,
+                        new ActivityFinisher() {
+                            @Override
+                            public void onFinish() {
+                                finish();
+                            }
+                        },
+                        new FailLoginSupplementaryHandler() {
+                            @Override
+                            public void onFailLogin(Throwable t) {
+                                LoginManager.getInstance().logOut();
+                            }
+                        });
+            }
 
-        mLoginText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                onInternetProblems();
+            }
+        });
+        socialRecyclerView.setAdapter(new SocialAuthAdapter(this, googleApiClient));
+
+        progressLogin = new LoadingProgressDialog(this);
+
+        loginText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    mPasswordText.requestFocus();
+                    passwordText.requestFocus();
                     handled = true;
                 }
                 return handled;
             }
         });
 
-        mPasswordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        passwordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
@@ -161,13 +205,13 @@ public class LoginActivity extends FragmentActivityBase {
         });
 
 
-        mCloseButton.setOnClickListener(new View.OnClickListener() {
+        closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        mLoginBtn.setOnClickListener(new View.OnClickListener() {
+        loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_ON_SIGN_IN_SCREEN);
@@ -175,7 +219,7 @@ public class LoginActivity extends FragmentActivityBase {
             }
         });
 
-        mRootView.requestFocus();
+        rootView.requestFocus();
 
         //if we redirect from social:
 
@@ -204,6 +248,7 @@ public class LoginActivity extends FragmentActivityBase {
     @Override
     protected void onStart() {
         super.onStart();
+        googleApiClient.connect();
         bus.register(this);
     }
 
@@ -211,18 +256,18 @@ public class LoginActivity extends FragmentActivityBase {
     protected void onStop() {
         super.onStop();
         bus.unregister(this);
+        googleApiClient.disconnect();
     }
-
 
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.slide_out_to_bottom);
+        overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom);
     }
 
     private void tryLogin() {
-        String login = mLoginText.getText().toString();
-        String password = mPasswordText.getText().toString();
+        String login = loginText.getText().toString();
+        String password = passwordText.getText().toString();
 
         loginManager.login(login, password,
                 progressHandler,
@@ -234,11 +279,10 @@ public class LoginActivity extends FragmentActivityBase {
                 });
     }
 
-
     @Override
     protected void onDestroy() {
-        mCloseButton.setOnClickListener(null);
-        mLoginBtn.setOnClickListener(null);
+        closeButton.setOnClickListener(null);
+        loginBtn.setOnClickListener(null);
         super.onDestroy();
     }
 
@@ -249,7 +293,38 @@ public class LoginActivity extends FragmentActivityBase {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
+            @Override
+            public void onResult(VKAccessToken res) {
+                loginManager.loginWithNativeProviderCode(res.accessToken,
+                        SocialManager.SocialType.vk,
+                        progressHandler,
+                        new ActivityFinisher() {
+                            @Override
+                            public void onFinish() {
+                                finish();
+                            }
+                        },
+                        new FailLoginSupplementaryHandler() {
+                            @Override
+                            public void onFailLogin(Throwable t) {
+                                VKSdk.logout();
+                            }
+                        });
+            }
+
+            @Override
+            public void onError(VKError error) {
+                if (error.errorCode == VKError.VK_REQUEST_HTTP_FAILED) {
+                    onInternetProblems();
+                }
+            }
+        })) {
+            return;
+        }
+
         super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN && resultCode == Activity.RESULT_OK) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
@@ -272,7 +347,7 @@ public class LoginActivity extends FragmentActivityBase {
                         new FailLoginSupplementaryHandler() {
                             @Override
                             public void onFailLogin(Throwable t) {
-                                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+                                Auth.GoogleSignInApi.signOut(googleApiClient);
                             }
                         });
             } else {
@@ -284,5 +359,4 @@ public class LoginActivity extends FragmentActivityBase {
     private void onInternetProblems() {
         Toast.makeText(this, R.string.connectionProblems, Toast.LENGTH_SHORT).show();
     }
-
 }

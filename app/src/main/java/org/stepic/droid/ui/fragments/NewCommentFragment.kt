@@ -74,8 +74,11 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
 
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v = inflater?.inflate(R.layout.new_comment_fragment, container, false)
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
+            = inflater?.inflate(R.layout.new_comment_fragment, container, false)
+
+    override fun onViewCreated(v: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(v, savedInstanceState)
         target = arguments.getLong(NewCommentFragment.targetKey)
         parent = arguments.getLong(NewCommentFragment.parentKey)
         if (parent == 0L) {
@@ -87,7 +90,6 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
             initEditBody(v)
             initProgressDialog()
         }
-        return v
     }
 
     private fun initProgressDialog() {

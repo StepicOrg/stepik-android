@@ -46,24 +46,25 @@ class TextFeedbackFragment : FragmentBase() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v = inflater?.inflate(R.layout.fragment_text_feedback, container, false)
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
+            = inflater?.inflate(R.layout.fragment_text_feedback, container, false)
+
+    override fun onViewCreated(v: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(v, savedInstanceState)
         setHasOptionsMenu(true)
         v?.let {
             initToolbar(v)
             initTextFields(v)
             initScrollView(v)
 
-            if (emailEditText.text.isEmpty()){
+            if (emailEditText.text.isEmpty()) {
                 emailEditText.requestFocus()
-            }
-            else{
+            } else {
                 descriptionEditText.requestFocus()
             }
             progressDialog = LoadingProgressDialog(context)
-
         }
-        return v
+
     }
 
     override fun onStart() {

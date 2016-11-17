@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -85,7 +86,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class SectionsFragment
         extends FragmentBase
@@ -114,7 +114,7 @@ public class SectionsFragment
     ProgressBar loadOnCenterProgressBar;
 
     @BindView(R.id.toolbar)
-    android.support.v7.widget.Toolbar mToolbar;
+    Toolbar toolbar;
 
     @BindView(R.id.report_problem)
     protected View reportConnectionProblem;
@@ -207,8 +207,6 @@ public class SectionsFragment
     @Override
     public void onViewCreated(View view, @android.support.annotation.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        unbinder = ButterKnife.bind(this, view);
         imageViewTarget = new GlideDrawableImageViewTarget(courseIcon);
         hideSoftKeypad();
         firstLoad = true;
@@ -238,7 +236,7 @@ public class SectionsFragment
         courseFinderPresenter.attachView(this);
         courseJoinerPresenter.attachView(this);
         sectionsPresenter.attachView(this);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         onNewIntent(((AppCompatActivity) getActivity()).getIntent());
     }
@@ -364,12 +362,12 @@ public class SectionsFragment
             if (modulePosition > 0 && modulePosition <= sections.size()) {
                 Section section = sections.get(modulePosition - 1);
 
-                boolean userHasAccess = (section.is_active() || (section.getActions() != null && section.getActions().getTest_section() != null)) && course != null && course.getEnrollment() > 0;
+                boolean userHasAccess = (section.is_active() || (section.getActions() != null && section.getActions().getTest_section() != null)) && course != null && course.getEnrollment() > 0 && !section.isExam();
                 if (userHasAccess) {
                     shell.getScreenProvider().showUnitsForSection(getContext(), sections.get(modulePosition - 1));
                 } else {
                     adapter.setDefaultHighlightPosition(modulePosition - 1);
-                    int scrollTo = modulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
+                    int scrollTo = modulePosition + SectionAdapter.PRE_SECTION_LIST_DELTA - 1;
                     linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
                     afterUpdateModulePosition = modulePosition;
                 }
@@ -378,7 +376,7 @@ public class SectionsFragment
         } else {
             adapter.notifyDataSetChanged();
             adapter.setDefaultHighlightPosition(afterUpdateModulePosition - 1);
-            int scrollTo = afterUpdateModulePosition + SectionAdapter.SECTION_LIST_DELTA - 1;
+            int scrollTo = afterUpdateModulePosition + SectionAdapter.PRE_SECTION_LIST_DELTA - 1;
             linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
             afterUpdateModulePosition = -1;
         }
@@ -488,7 +486,7 @@ public class SectionsFragment
         //now we have not null section and correct position at oldList
         section.set_cached(isCached);
         section.set_loading(isLoading);
-        adapter.notifyItemChanged(position + SectionAdapter.SECTION_LIST_DELTA);
+        adapter.notifyItemChanged(position + SectionAdapter.PRE_SECTION_LIST_DELTA);
     }
 
 

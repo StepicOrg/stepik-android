@@ -4,11 +4,10 @@ package org.stepic.droid.ui.activities;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.squareup.otto.Subscribe;
-
-import org.stepic.droid.events.FirstTimeActionIsDoneEvent;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.notifications.StepicInstanceIdService;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
+import org.stepic.droid.util.AppConstants;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -22,8 +21,6 @@ public class SplashActivity extends BackToExitActivityBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        bus.register(this);
 
         //This stops from opening again from the Splash screen when minimized
         if (!isTaskRoot()) {
@@ -41,6 +38,21 @@ public class SplashActivity extends BackToExitActivityBase {
             });
         }
 
+        if (savedInstanceState == null) {
+            threadPoolExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    int numberOfLaunches = sharedPreferenceHelper.incrementNumberOfLaunches();
+                    if (numberOfLaunches < AppConstants.LAUNCHES_FOR_EXPERT_USER) {
+                        analytic.reportEvent(Analytic.Interaction.START_SPLASH, numberOfLaunches + "");
+                    } else {
+                        analytic.reportEvent(Analytic.Interaction.START_SPLASH_EXPERT, numberOfLaunches + "");
+                    }
+                }
+            });
+        }
+
+
         if (sharedPreferenceHelper.isFirstTime() || !sharedPreferenceHelper.isScheduleAdded() || sharedPreferenceHelper.isNeedDropCoursesIn114()) {
             //fix v11 bug:
             threadPoolExecutor.execute(new Runnable() {
@@ -56,7 +68,7 @@ public class SplashActivity extends BackToExitActivityBase {
                         databaseFacade.dropOnlyCourseTable();
                         sharedPreferenceHelper.afterScheduleAdded();
                         sharedPreferenceHelper.afterNeedDropCoursesIn114();
-                    } else if (sharedPreferenceHelper.isNeedDropCoursesIn114()){
+                    } else if (sharedPreferenceHelper.isNeedDropCoursesIn114()) {
                         databaseFacade.dropOnlyCourseTable();
                         sharedPreferenceHelper.afterNeedDropCoursesIn114();
                     }
@@ -64,7 +76,7 @@ public class SplashActivity extends BackToExitActivityBase {
                     mainHandler.post(new Function0<Unit>() {
                         @Override
                         public Unit invoke() {
-                            bus.post(new FirstTimeActionIsDoneEvent());
+                            showNextScreen();
                             return Unit.INSTANCE;
                         }
                     });
@@ -82,18 +94,6 @@ public class SplashActivity extends BackToExitActivityBase {
         }
 
 
-    }
-
-    @Subscribe
-    public void onFirstTimeActionsWasDone(FirstTimeActionIsDoneEvent event) {
-        showNextScreen();
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        bus.unregister(this);
-        super.onDestroy();
     }
 
     private void showNextScreen() {

@@ -4,7 +4,7 @@ import android.app.Activity
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
-import org.stepic.droid.core.IScreenManager
+import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.contracts.CertificateView
 import org.stepic.droid.model.Certificate
 import org.stepic.droid.model.CertificateViewItem
@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadPoolExecutor
 
 class CertificatePresenter(val api: IApi,
                            val config: IConfig,
-                           val screenManager: IScreenManager,
+                           val screenManager: ScreenManager,
                            val database: DatabaseFacade,
                            val threadPoolExecutor: ThreadPoolExecutor,
                            val mainHandler: IMainHandler,

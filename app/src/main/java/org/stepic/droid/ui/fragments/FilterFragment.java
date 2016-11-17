@@ -30,7 +30,6 @@ import java.util.EnumSet;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class FilterFragment extends FragmentBase implements FilterView {
 
@@ -104,7 +103,6 @@ public class FilterFragment extends FragmentBase implements FilterView {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
         initToolbar();
 
         acceptButton.setOnClickListener(new View.OnClickListener() {

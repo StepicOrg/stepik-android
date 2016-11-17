@@ -31,7 +31,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class NotificationListFragment extends FragmentBase implements NotificationListView, SwipeRefreshLayout.OnRefreshListener {
@@ -94,9 +93,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_notification_list, null);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
+        return inflater.inflate(R.layout.fragment_notification_list, null);
     }
 
     @Override

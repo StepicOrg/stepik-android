@@ -2,6 +2,7 @@ package org.stepic.droid.core.components;
 
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.concurrency.DownloadPoster;
 import org.stepic.droid.concurrency.tasks.FromDbUnitLessonTask;
 import org.stepic.droid.concurrency.tasks.ToDbUnitLessonTask;
@@ -14,6 +15,7 @@ import org.stepic.droid.core.modules.CourseDetailModule;
 import org.stepic.droid.core.modules.CourseListModule;
 import org.stepic.droid.core.modules.FilterModule;
 import org.stepic.droid.core.modules.NotificationModule;
+import org.stepic.droid.core.modules.ProfileModule;
 import org.stepic.droid.core.modules.SectionModule;
 import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.modules.VideoModule;
@@ -35,6 +37,7 @@ import org.stepic.droid.ui.activities.SectionActivity;
 import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.adapters.DownloadsAdapter;
+import org.stepic.droid.ui.adapters.InstructorAdapter;
 import org.stepic.droid.ui.adapters.NotificationAdapter;
 import org.stepic.droid.ui.adapters.SectionAdapter;
 import org.stepic.droid.ui.adapters.SocialAuthAdapter;
@@ -68,6 +71,8 @@ import dagger.Component;
 @Singleton
 @Component(modules = {AppCoreModule.class})
 public interface AppCoreComponent {
+
+    ProfileComponent plus(ProfileModule profileModule);
 
     SectionComponent plus(SectionModule module);
 
@@ -192,4 +197,8 @@ public interface AppCoreComponent {
     void inject(SortStepAdapter sortStepAdapter);
 
     void inject(NotificationAdapter.NotificationViewHolder notificationViewHolder);
+
+    void inject(MainApplication mainApplication);
+
+    void inject(InstructorAdapter instructorAdapter);
 }

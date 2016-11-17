@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
@@ -19,7 +18,6 @@ import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Reply;
 
 import butterknife.BindString;
-import butterknife.ButterKnife;
 
 public class PyCharmStepFragment extends StepAttemptFragment {
 
@@ -28,16 +26,13 @@ public class PyCharmStepFragment extends StepAttemptFragment {
     @BindString(R.string.py_message)
     String pyMessage;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         messageField = (TextView) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_py_step, attemptContainer, false);
         messageField.setMovementMethod(LinkMovementMethod.getInstance());
         attemptContainer.addView(messageField);
-        unbinder = ButterKnife.bind(this, v);
         actionButton.setVisibility(View.GONE);
-        return v;
     }
 
     @Override

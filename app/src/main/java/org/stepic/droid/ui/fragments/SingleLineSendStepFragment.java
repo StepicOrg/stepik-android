@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,10 +21,9 @@ public abstract class SingleLineSendStepFragment extends StepAttemptFragment {
 
     protected EditText answerField;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         answerField = (EditText) ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_single_line_attempt, attemptContainer, false);
         attemptContainer.addView(answerField);
         answerField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -39,9 +37,7 @@ public abstract class SingleLineSendStepFragment extends StepAttemptFragment {
                 return handled;
             }
         });
-        return v;
     }
-
 
     @Override
     protected final void showAttempt(Attempt attempt) {

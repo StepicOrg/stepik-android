@@ -33,7 +33,6 @@ import org.stepic.droid.ui.adapters.CommentsAdapter
 import org.stepic.droid.ui.dialogs.DeleteCommentDialogFragment
 import org.stepic.droid.ui.util.ContextMenuRecyclerView
 import org.stepic.droid.util.ColorUtil
-import org.stepic.droid.util.HtmlHelper
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StringUtil
 import org.stepic.droid.web.DiscussionProxyResponse
@@ -99,9 +98,11 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         commentAdapter = CommentsAdapter(commentManager, context)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v = inflater?.inflate(R.layout.fragment_comments, container, false)
-        setHasOptionsMenu(true)
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
+            = inflater?.inflate(R.layout.fragment_comments, container, false)
+
+    override fun onViewCreated(v: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         discussionId = arguments.getString(discussionIdKey)
         stepId = arguments.getLong(stepIdKey)
         setHasOptionsMenu(true)
@@ -115,7 +116,6 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             initConnectionError(v)
             commentCoordinatorLayout = v.findViewById(R.id.comments_coordinator_layout) as CoordinatorLayout
         }
-        return v
     }
 
     private fun initConnectionError(v: View) {
@@ -264,7 +264,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         if (comment.user != null) {
             val userId = commentManager.getUserById(comment.user)?.id
             if (userId != null) {
-                shell.screenProvider.openInWeb(context, HtmlHelper.getUserPath(config, userId))
+                analytic.reportEvent(Analytic.Profile.CLICK_USER_IN_COMMENT)
+                shell.screenProvider.openProfile(activity, userId.toLong())
             }
         }
     }

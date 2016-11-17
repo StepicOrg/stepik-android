@@ -5,13 +5,13 @@ import android.content.Context
 import android.content.Intent
 
 import org.stepic.droid.base.MainApplication
-import org.stepic.droid.core.IScreenManager
+import org.stepic.droid.core.ScreenManager
 import javax.inject.Inject
 
 class DownloadClickReceiver : BroadcastReceiver() {
 
     @Inject
-    lateinit var screenProvider : IScreenManager
+    lateinit var screenProvider : ScreenManager
 
     init {
         MainApplication.component().inject(this)

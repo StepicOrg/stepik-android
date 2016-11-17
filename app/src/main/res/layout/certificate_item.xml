@@ -5,8 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:foreground="@drawable/card_foreground"
     android:clickable="true"
+    android:foreground="@drawable/card_foreground"
+    app:cardBackgroundColor="@color/white"
     app:cardUseCompatPadding="true">
 
     <RelativeLayout
@@ -61,11 +62,8 @@
         </RelativeLayout>
 
         <Button
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
             android:id="@+id/certificate_share_button"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:background="@drawable/abc_btn_borderless_material"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -75,6 +73,9 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:background="@drawable/abc_btn_borderless_material"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:text="@string/share_title"
             android:textColor="@color/stepic_blue_ribbon"/>
 

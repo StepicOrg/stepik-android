@@ -72,7 +72,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
     var mediaPlayer: MediaPlayer? = null
     var videoWidth: Int = 0
     var videoHeight: Int = 0
-    private val mPlayerListener: MyPlayerListener = MyPlayerListener(this)
+    private val playerListener: MyPlayerListener = MyPlayerListener(this)
     var maxTimeInMillis: Long? = null
     var currentTimeInMillis: Long = 0L
     var progressBar: ProgressBar? = null
@@ -184,7 +184,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
         vout?.addCallback(this)
         vout?.attachViews()
 
-        mediaPlayer?.setEventListener(mPlayerListener)
+        mediaPlayer?.setEventListener(playerListener)
 
         playPauseSwitcher?.isClickable = true
 
@@ -214,6 +214,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
             val media = Media(libvlc, uri)
             mediaPlayer?.media = media
             media.release()
+            mediaPlayer?.volume = 150
 
             mediaPlayer?.rate = userPreferences.videoPlaybackRate.rateFloat
             isEndReached = false
@@ -246,7 +247,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
 
     override fun onResume() {
         super.onResume()
-        Timber.d(("onResume"))
+        Timber.d("onResume")
         bus.register(this)
         videoTimestampPresenter.showVideoWithPredefinedTimestamp(videoId)
     }
@@ -263,7 +264,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
             }
             if (isOnResumeDirectlyAfterOnCreate) {
                 isOnResumeDirectlyAfterOnCreate = false
-                mediaPlayer?.setEventListener(mPlayerListener)
+                mediaPlayer?.setEventListener(playerListener)
                 playPlayer()
             } else {
                 mediaPlayer?.setEventListener(preRollListener)
@@ -768,6 +769,10 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
                 }
                 MediaPlayer.Event.Stopped -> {
                     Timber.d("player stopped")
+                    owner?.activity?.let {
+                        Toast.makeText(it, R.string.sync_problem, Toast.LENGTH_SHORT).show()
+                        it.finish()
+                    }
                 }
 
             }
@@ -812,7 +817,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
                     Timber.d("pre roll Playing")
                     //mOwner?.pausePlayer()//it is not need, because we do not want change button
                     player?.pause()
-                    player?.setEventListener(owner?.mPlayerListener)
+                    player?.setEventListener(owner?.playerListener)
                     owner?.stopLoading()
                     player?.length?.let {
                         owner?.slashTime?.visibility = View.VISIBLE
@@ -826,6 +831,10 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
                         owner?.audioFocusHelper?.requestAudioFocus()
                         player?.play()
                     }
+                }
+
+                MediaPlayer.Event.Stopped -> {
+                    Timber.d("video stopped preroll")
                 }
             }
         }

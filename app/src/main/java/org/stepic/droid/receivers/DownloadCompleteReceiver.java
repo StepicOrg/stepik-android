@@ -142,7 +142,11 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     mainHandler.post(myRunnable);
                 }
             } else {
-                downloadManager.remove(referenceId);//remove notification (is it really work and need?)
+                if (referenceId < 0) {
+                    analytic.reportError(Analytic.Error.DOWNLOAD_ID_NEGATIVE, new IllegalArgumentException("ReferenceId was " + referenceId));
+                } else {
+                    downloadManager.remove(referenceId);//remove notification (is it really work and need?)
+                }
             }
         } finally
 

@@ -21,7 +21,7 @@ import android.widget.TextView;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.IScreenManager;
+import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.model.Course;
@@ -52,12 +52,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     public static final int TYPE_SECTION_ITEM = 1;
     public static final int TYPE_TITLE = 2;
 
-    public static final int SECTION_LIST_DELTA = 1;
+    public static final int PRE_SECTION_LIST_DELTA = 1;
 
     private int defaultHighlightPosition = -1;
 
     @Inject
-    IScreenManager screenManager;
+    ScreenManager screenManager;
 
     @Inject
     IDownloadManager downloadManager;
@@ -134,7 +134,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     @Override
     public int getItemCount() {
-        return sections.size() + SECTION_LIST_DELTA;
+        return sections.size() + PRE_SECTION_LIST_DELTA;
     }
 
 
@@ -148,7 +148,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
     @Override
     public void onClickLoad(int adapterPosition) {
-        int sectionPosition = adapterPosition - SECTION_LIST_DELTA;
+        int sectionPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
             final Section section = sections.get(sectionPosition);
 
@@ -214,7 +214,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     }
 
     private void loadSection(int adapterPosition) {
-        int sectionPosition = adapterPosition - SECTION_LIST_DELTA;
+        int sectionPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
             final Section section = sections.get(sectionPosition);
 
@@ -239,6 +239,15 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     @Override
     public void onNeedLoadPosition(int adapterPosition) {
         loadSection(adapterPosition);
+    }
+
+    private void onClickStartExam(int adapterPosition) {
+        int position = adapterPosition - PRE_SECTION_LIST_DELTA;
+        if (position >= 0 && position < sections.size()) {
+            analytic.reportEvent(Analytic.Exam.SHOW_EXAM);
+            Section section = sections.get(position);
+            screenManager.openSyllabusInWeb(context, section.getCourse());
+        }
     }
 
     class SectionViewHolder extends GenericViewHolder implements StepicOnClickItemListener {
@@ -277,6 +286,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         @BindView(R.id.load_button)
         View loadButton;
 
+        @BindView(R.id.exam_view)
+        ViewGroup examRoot;
+
+        @BindView(R.id.start_exam_button)
+        View startExamButton;
+
 
         public SectionViewHolder(View itemView) {
             super(itemView);
@@ -295,12 +310,19 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                     onClickLoad(getAdapterPosition());
                 }
             });
+
+            startExamButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SectionAdapter.this.onClickStartExam(getAdapterPosition());
+                }
+            });
         }
 
 
         @Override
         public void onClick(int adapterPosition) {
-            int itemPosition = adapterPosition - SECTION_LIST_DELTA;
+            int itemPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
             if (itemPosition >= 0 && itemPosition < sections.size()) {
                 screenManager.showUnitsForSection(context, sections.get(itemPosition));
             }
@@ -309,7 +331,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         @Override
         public void setDataOnView(int positionInAdapter) {
             // the 0 index always for calendar, we make its GONE, if calendar is not needed.
-            int position = positionInAdapter - SECTION_LIST_DELTA;
+            int position = positionInAdapter - PRE_SECTION_LIST_DELTA;
             Section section = sections.get(position);
 
             String title = section.getTitle();
@@ -345,7 +367,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 hardDeadline.setVisibility(View.VISIBLE);
             }
 
-            if ((section.is_active() || (section.getActions() != null && section.getActions().getTest_section() != null)) && course.getEnrollment() > 0) {
+            if ((section.is_active() || (section.getActions() != null && section.getActions().getTest_section() != null)) && course.getEnrollment() > 0 && !section.isExam()) {
 
                 int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, MainApplication.getAppContext());
 
@@ -393,6 +415,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 cv.setFocusable(false);
                 cv.setClickable(false);
                 cv.setFocusableInTouchMode(false);
+            }
+
+            if (section.isExam()) {
+                examRoot.setVisibility(View.VISIBLE);
+            } else {
+                examRoot.setVisibility(View.GONE);
             }
 
             if (defaultHighlightPosition >= 0 && defaultHighlightPosition == position) {
@@ -465,7 +493,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             } else {
                 show();
             }
-
         }
 
         @Override
@@ -492,7 +519,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         }
     }
 
-     abstract class GenericViewHolder extends RecyclerView.ViewHolder {
+    abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 
         public GenericViewHolder(View itemView) {
             super(itemView);

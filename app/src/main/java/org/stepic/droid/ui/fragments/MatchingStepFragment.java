@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -44,10 +43,10 @@ public class MatchingStepFragment extends StepAttemptFragment {
     private int maxWidth;
     private int halfScreen;
 
-    @Nullable
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
+    public void onViewCreated(View viewOuter, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(viewOuter, savedInstanceState);
         View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_matching, attemptContainer, false);
         attemptContainer.addView(view);
         recyclerView = ButterKnife.findById(view, R.id.recycler);
@@ -66,8 +65,6 @@ public class MatchingStepFragment extends StepAttemptFragment {
         display.getSize(size);
         int screenWidth = size.x;
         halfScreen = screenWidth / 2;
-
-        return v;
     }
 
     @Override

@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
@@ -30,6 +31,7 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.squareup.otto.Subscribe;
+import com.vk.sdk.VKSdk;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -56,6 +58,7 @@ import org.stepic.droid.ui.util.LogoutSuccess;
 import org.stepic.droid.ui.util.OnBackClickListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
+import org.stepic.droid.util.ProfileExtensionKt;
 import org.stepic.droid.web.EmailAddressResponse;
 import org.stepic.droid.web.StepicProfileResponse;
 
@@ -105,7 +108,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (intent.getAction()!= null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)){
+        if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
             analytic.reportEvent(AppConstants.OPEN_NOTIFICATION);
         }
         Bundle extras = intent.getExtras();
@@ -438,7 +441,13 @@ public class MainFeedActivity extends BackToExitActivityBase
                 .asBitmap()
                 .placeholder(userPlaceholder)
                 .into(profileImage);
-        userNameTextView.setText(profile.getFirst_name() + " " + profile.getLast_name());
+        userNameTextView.setText(ProfileExtensionKt.getFirstAndLastName(profile));
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shell.getScreenProvider().openProfile(MainFeedActivity.this);
+            }
+        });
     }
 
     @Override
@@ -451,6 +460,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     protected void onDestroy() {
         bus.unregister(this);
         drawerLayout.removeDrawerListener(actionBarDrawerToggle);
+        profileImage.setOnClickListener(null);
         super.onDestroy();
     }
 
@@ -500,7 +510,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         }
     }
 
-    public static int getCertificateFragmentIndex(){
+    public static int getCertificateFragmentIndex() {
         return 3;
     }
 
@@ -510,6 +520,8 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     @Override
     public void onLogout() {
+        LoginManager.getInstance().logOut();
+        VKSdk.logout();
         Auth.GoogleSignInApi.signOut(googleApiClient);
         sharedPreferenceHelper.deleteAuthInfo();
         shell.getScreenProvider().showLaunchScreen(MainApplication.getAppContext(), false);

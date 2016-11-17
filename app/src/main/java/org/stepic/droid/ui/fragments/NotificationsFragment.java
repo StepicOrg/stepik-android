@@ -25,7 +25,6 @@ import org.stepic.droid.ui.NotificationCategory;
 import org.stepic.droid.ui.activities.HasDrawer;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class NotificationsFragment extends FragmentBase {
@@ -73,9 +72,7 @@ public class NotificationsFragment extends FragmentBase {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_notifications, null);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
+        return inflater.inflate(R.layout.fragment_notifications, null);
     }
 
     @Override

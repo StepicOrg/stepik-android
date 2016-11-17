@@ -43,7 +43,6 @@ import javax.inject.Inject;
 
 import butterknife.BindString;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class StepsFragment extends FragmentBase implements StepsView {
     private static final String FROM_PREVIOUS_KEY = "fromPrevKey";
@@ -151,23 +150,23 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.activity_steps, container, false);
-        boolean keepScreenOnSteps = userPreferences.isKeepScreenOnSteps();
-        if (keepScreenOnSteps) {
-            analytic.reportEvent(Analytic.Steps.SHOW_KEEP_ON_SCREEN);
-        } else {
-            analytic.reportEvent(Analytic.Steps.SHOW_KEEP_OFF_SCREEN);
-        }
-        v.setKeepScreenOn(keepScreenOnSteps);
-        setHasOptionsMenu(true);
-        unbinder = ButterKnife.bind(this, v);
-        return v;
+        return inflater.inflate(R.layout.activity_steps, container, false);
     }
 
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        boolean keepScreenOnSteps = userPreferences.isKeepScreenOnSteps();
+        if (keepScreenOnSteps) {
+            analytic.reportEvent(Analytic.Steps.SHOW_KEEP_ON_SCREEN);
+        } else {
+            analytic.reportEvent(Analytic.Steps.SHOW_KEEP_OFF_SCREEN);
+        }
+        view.setKeepScreenOn(keepScreenOnSteps);
+        setHasOptionsMenu(true);
+
         initIndependentUI();
         stepAdapter = new StepFragmentAdapter(getChildFragmentManager(), stepsPresenter.getStepList(), stepTypeResolver);
         viewPager.setAdapter(stepAdapter);

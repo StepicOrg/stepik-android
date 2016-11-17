@@ -47,10 +47,8 @@ import javax.inject.Inject;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public abstract class StepAttemptFragment extends StepBaseFragment implements StepAttemptView {
-
     private final int DISCOUNTING_POLICY_REQUEST_CODE = 131;
 
     @BindView(R.id.root_view)
@@ -95,11 +93,11 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @BindString(R.string.try_again)
     protected String tryAgainText;
 
-    @BindView(R.id.discounting_policy_root)
-    View discountingPolicyRoot;
-
     @BindView(R.id.discounting_policy_textview)
     TextView discountingPolicyTextView;
+
+    @BindView(R.id.submission_restrction_textview)
+    TextView submissionRestrictionTextView;
 
     protected Attempt attempt = null;
     protected Submission submission = null;
@@ -128,9 +126,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_step_attempt, container, false);
-        unbinder = ButterKnife.bind(this, v);
-        return v;
+        return inflater.inflate(R.layout.fragment_step_attempt, container, false);
     }
 
     @Override
@@ -196,6 +192,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     protected final void fillSubmission(@org.jetbrains.annotations.Nullable Submission submission) {
         stepAttemptPresenter.handleDiscountingPolicy(numberOfSubmissions, section, step);
+        stepAttemptPresenter.handleStepRestriction(step, numberOfSubmissions);
         if (submission == null || submission.getStatus() == null) {
             return;
         }
@@ -209,7 +206,11 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
         switch (submission.getStatus()) {
             case CORRECT:
-                discountingPolicyRoot.setVisibility(View.GONE); // remove if user was correct
+                discountingPolicyTextView.setVisibility(View.GONE); // remove if user was correct
+                submissionRestrictionTextView.setVisibility(View.GONE);
+                if (step.getHasSubmissionRestriction()) {
+                    actionButton.setVisibility(View.GONE);
+                }
                 onCorrectSubmission();
                 setTextToActionButton(tryAgainText);
                 blockUIBeforeSubmit(true);
@@ -246,7 +247,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         enableInternetMessage(isNeedShow);
 
         if (isNeedShow) {
-            discountingPolicyRoot.setVisibility(View.GONE);
+            discountingPolicyTextView.setVisibility(View.GONE);
         }
     }
 
@@ -355,6 +356,8 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
             stepAttemptPresenter.handleDiscountingPolicy(numberOfSubmissions, section, step);
             showActionButtonLoadState(false);
             showAnswerField(true);
+
+            stepAttemptPresenter.handleStepRestriction(step, numberOfSubmissions);
         }
     }
 
@@ -390,7 +393,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @Override
     public void onResultHandlingDiscountPolicy(boolean needShow, DiscountingPolicyType discountingPolicyType, int remainTries) {
         if (!needShow || discountingPolicyType == null) {
-            discountingPolicyRoot.setVisibility(View.GONE);
+            discountingPolicyTextView.setVisibility(View.GONE);
             return;
         }
 
@@ -404,12 +407,12 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                 warningText = getString(R.string.discount_policy_no_way);
             }
         } else {
-            discountingPolicyRoot.setVisibility(View.GONE);
+            discountingPolicyTextView.setVisibility(View.GONE);
             return;
         }
 
         discountingPolicyTextView.setText(warningText);
-        discountingPolicyRoot.setVisibility(View.VISIBLE);
+        discountingPolicyTextView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -476,6 +479,24 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == DISCOUNTING_POLICY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             makeSubmissionDirectly();
+        }
+    }
+
+    @Override
+    public void onResultHandlingSubmissionRestriction(boolean needShow, int numberForShow) {
+        if (needShow) {
+            String warningText;
+            if (numberForShow > 0) {
+                warningText = getResources().getQuantityString(R.plurals.restriction_submission, numberForShow, numberForShow);
+            } else {
+                warningText = getString(R.string.restriction_submission_enough);
+                blockUIBeforeSubmit(true);
+                actionButton.setVisibility(View.GONE); //we cant send more
+            }
+            submissionRestrictionTextView.setText(warningText);
+            submissionRestrictionTextView.setVisibility(View.VISIBLE);
+        } else {
+            submissionRestrictionTextView.setVisibility(View.GONE);
         }
     }
 }

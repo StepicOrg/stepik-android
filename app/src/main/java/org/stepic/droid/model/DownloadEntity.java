@@ -1,7 +1,7 @@
 package org.stepic.droid.model;
 
 public class DownloadEntity {
-    private long downloadId;
+    private long downloadId; //TODO: investigate, when this parameter is minus 1
     private long stepId;
     private long videoId;
     private String thumbnail;

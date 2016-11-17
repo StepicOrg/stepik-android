@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:elevation="2dp"
         app:cardCornerRadius="@dimen/card_corner_radius_guideline"
-
+        app:cardBackgroundColor="@color/white"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true"
         app:contentPaddingBottom="@dimen/padding_bot_top_cv"

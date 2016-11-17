@@ -22,7 +22,7 @@ public class Shell implements IShell {
     }
 
     @Inject
-    IScreenManager screenProvider;
+    ScreenManager screenProvider;
 
     @Inject
     IApi api;
@@ -31,7 +31,7 @@ public class Shell implements IShell {
     SharedPreferenceHelper sharedPreferenceHelper;
 
     @Override
-    public IScreenManager getScreenProvider() {
+    public ScreenManager getScreenProvider() {
         return screenProvider;
     }
 

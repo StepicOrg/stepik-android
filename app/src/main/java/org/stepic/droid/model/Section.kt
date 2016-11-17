@@ -16,10 +16,11 @@ import javax.inject.Inject
 class Section : Serializable, Parcelable {
 
     @Inject
-    lateinit var mConfig: IConfig
+    @Deprecated("create helper or extension, not use config in model class")
+    lateinit var config: IConfig
 
-    private val mFormatForView: DateTimeFormatter by lazy {
-        DateTimeFormat.forPattern(mConfig.datePattern).withZone(DateTimeZone.getDefault()).withLocale(Locale.getDefault())
+    private val formatterForView: DateTimeFormatter by lazy {
+        DateTimeFormat.forPattern(config.datePattern).withZone(DateTimeZone.getDefault()).withLocale(Locale.getDefault())
     }
     var id: Long = 0
     var course: Long = 0 // course id
@@ -44,6 +45,8 @@ class Section : Serializable, Parcelable {
     var is_cached: Boolean = false
     var is_loading: Boolean = false
     var actions: Actions? = null
+    @SerializedName("is_exam")
+    var isExam: Boolean = false
 
     @SerializedName("discounting_policy")
     var discountingPolicy: DiscountingPolicyType? = null
@@ -58,15 +61,15 @@ class Section : Serializable, Parcelable {
     }
 
     val formattedBeginDate: String by lazy {
-        DateTimeHelper.getPresentOfDate(begin_date, mFormatForView)
+        DateTimeHelper.getPresentOfDate(begin_date, formatterForView)
     }
 
     val formattedSoftDeadline: String by lazy {
-        DateTimeHelper.getPresentOfDate(soft_deadline, mFormatForView)
+        DateTimeHelper.getPresentOfDate(soft_deadline, formatterForView)
     }
 
     val formattedHardDeadline: String by lazy {
-        DateTimeHelper.getPresentOfDate(hard_deadline, mFormatForView)
+        DateTimeHelper.getPresentOfDate(hard_deadline, formatterForView)
     }
 
 

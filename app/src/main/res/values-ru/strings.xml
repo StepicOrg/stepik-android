@@ -62,7 +62,7 @@
     <string name="explain_permission">Для сохранения и просмотра видео в режиме оффлайн Stepik должен иметь права записи файлов в память телефона.</string>
     <string name="connectionProblems">Отсутствует подключение к Интернету</string>
     <string name="video_quality">Качество видео</string>
-    <string name="sync_problem">Возникли проблемы с синхронизацией данных, пожалуйста, повторите попытку позже.</string>
+    <string name="sync_problem">Возникли проблемы с синхронизацией данных, пожалуйста, повторите попытку позже</string>
     <string name="empty_courses">Похоже, что Вы не записаны ни на один курс</string>
     <string name="cache_cleared">Кэш успешно очищен!</string>
     <string name="join_course_web_exception">Попробуйте записаться на курс в веб версии</string>
@@ -245,6 +245,12 @@
         <item quantity="many">У Вас осталось %d попыток, за которые Вы сможете получить баллы</item>
         <item quantity="other">У Вас осталось %d попыток, за которые Вы сможете получить баллы</item>
     </plurals>
+    <plurals name="restriction_submission">
+        <item quantity="one">У Вас осталась %d попытка</item>
+        <item quantity="few">У Вас осталось %d попытки</item>
+        <item quantity="many">У Вас осталось %d попыток</item>
+        <item quantity="other">У Вас осталось %d попыток</item>
+    </plurals>
     <string name="discount_policy_no_way">За Ваши следующие попытки не будут начислены баллы</string>
     <string name="other_title">Прочее</string>
     <string name="discounting_policy_title_settings">Предупреждать об уроках со штрафами за неверные ответы</string>
@@ -265,4 +271,21 @@
     <string name="get_license_message">Получена лицензия</string>
     <string name="added_to_group_title">Добавление в группу</string>
     <string name="notification_comment_list">Комментарии и ответы</string>
+    <string name="exam_module_title">Это экзамен, пройдите его в браузере</string>
+    <string name="start_exam_action_title">Открыть</string>
+    <string name="restriction_submission_enough">Нельзя отправить решение, так как количество попыток было превышено</string>
+    <string name="too_many_attempts">Слишком много неверных попыток. Попробуйте позже</string>
+    <string name="profile_title">Профиль</string>
+    <string name="current_streak">Решаю без перерыва</string>
+    <string name="max_streak">Мой рекорд</string>
+    <string name="about_me">Обо мне</string>
+    <string name="short_bio">Краткая биография</string>
+    <string name="user_info">Информация</string>
+    <plurals name="day_number">
+        <item quantity="one">день</item>
+        <item quantity="few">дня</item>
+        <item quantity="many">дней</item>
+        <item quantity="other">дней</item>
+    </plurals>
+    <string name="empty_user_title">Пользователь не найден</string>
 </resources>

@@ -3,9 +3,7 @@ package org.stepic.droid.ui.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.squareup.otto.Subscribe;
 
@@ -40,15 +38,9 @@ public class CourseSearchFragment extends CourseListFragmentBase {
         MainApplication.component().plus(new CourseListModule()).inject(this);
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        searchQuery = getArguments().getString(QUERY_KEY);
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        searchQuery = getArguments().getString(QUERY_KEY);
         super.onViewCreated(view, savedInstanceState);
         emptySearch.setClickable(false);
         emptySearch.setFocusable(false);
