@@ -2,6 +2,7 @@ package org.stepic.droid.ui.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -22,6 +23,8 @@ import org.stepic.droid.util.RadioGroupHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 public class ChoiceStepFragment extends StepAttemptFragment {
 
@@ -59,6 +62,39 @@ public class ChoiceStepFragment extends StepAttemptFragment {
             }
             buildChoiceItem(optionViewItem, option);
         }
+
+        if (!dataset.is_multiple_choice()) {
+            //radio button:
+            boolean isEmpty = checkOnEmptyChecked();
+            if (isEmpty) {
+                choiceContainer.setOnCheckedChangeListener(new StepikRadioGroup.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(StepikRadioGroup group, @IdRes int checkedId) {
+                        if (choiceContainer != null && actionButton != null) {
+                            Timber.d("Mark radio button 1st time");
+                            actionButton.setEnabled(true);
+                            choiceContainer.setOnCheckedChangeListener(null);
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * @return false if at most 1 item is checked, true otherwise
+     */
+    private boolean checkOnEmptyChecked() {
+        for (int i = 0; i < choiceContainer.getChildCount(); i++) {
+            StepikOptionView view = (StepikOptionView) choiceContainer.getChildAt(i);
+            if (view.isChecked()) {
+                return false;
+            }
+        }
+
+        // no one is checked
+        actionButton.setEnabled(false);
+        return true;
     }
 
 

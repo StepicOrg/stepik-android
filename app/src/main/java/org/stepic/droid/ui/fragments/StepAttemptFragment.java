@@ -185,7 +185,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     @Override
     public void onDestroyView() {
-        saveSession();
+        saveSession(true);
         stepAttemptPresenter.detachView(this);
         super.onDestroyView();
     }
@@ -225,10 +225,10 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         onRestoreSubmission();
     }
 
-    protected final void saveSession() {
+    protected final void saveSession(boolean isNeedGetFromUI) {
         if (attempt == null) return;
 
-        if (submission == null) {
+        if (submission == null || (isNeedGetFromUI && submission.getStatus() == Submission.Status.LOCAL)) {
             Reply reply = generateReply();
             submission = new Submission(reply, attempt.getId(), Submission.Status.LOCAL);
         }
@@ -443,7 +443,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         showActionButtonLoadState(false);
         this.numberOfSubmissions = numberOfSubmissions;
         this.submission = submission;
-        saveSession();
+        saveSession(false);
         fillSubmission(submission);
     }
 
