@@ -89,6 +89,7 @@ public interface Analytic {
         String USER_OPEN_NOTIFICATIONS = "main_choice_notifications";
         String USER_OPEN_SETTINGS = "main_choice_settings";
         String USER_LOGOUT = "main_choice_logout";
+        java.lang.String USER_OPEN_INVITE = "main_choice_user_open_invite";
     }
 
     interface Video {

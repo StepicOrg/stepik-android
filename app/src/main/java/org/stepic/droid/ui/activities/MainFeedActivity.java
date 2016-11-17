@@ -73,6 +73,7 @@ import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
+import timber.log.Timber;
 
 public class MainFeedActivity extends BackToExitActivityBase
         implements NavigationView.OnNavigationItemSelectedListener, LogoutSuccess, BackButtonHandler, HasDrawer {
@@ -310,6 +311,9 @@ public class MainFeedActivity extends BackToExitActivityBase
                 }, 0);
                 shell.getScreenProvider().openFeedbackActivity(this);
                 return true;
+            case R.id.invite:
+                Timber.d("show firebase invite");
+                break;
             default:
                 showCurrentFragment(menuItem);
                 break;
@@ -348,6 +352,9 @@ public class MainFeedActivity extends BackToExitActivityBase
                 break;
             case R.id.notifications:
                 analytic.reportEvent(Analytic.Screens.USER_OPEN_NOTIFICATIONS);
+                break;
+            case R.id.invite:
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_INVITE);
                 break;
         }
     }
