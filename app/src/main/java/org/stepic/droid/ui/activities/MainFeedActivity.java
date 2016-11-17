@@ -49,7 +49,6 @@ import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.ui.fragments.CertificateFragment;
 import org.stepic.droid.ui.fragments.DownloadsFragment;
-import org.stepic.droid.ui.fragments.FeedbackFragment;
 import org.stepic.droid.ui.fragments.FindCoursesFragment;
 import org.stepic.droid.ui.fragments.MyCoursesFragment;
 import org.stepic.droid.ui.fragments.NotificationsFragment;
@@ -302,6 +301,15 @@ public class MainFeedActivity extends BackToExitActivityBase
                 }, 0);
                 shell.getScreenProvider().showSettings(this);
                 return true;
+            case R.id.feedback:
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        drawerLayout.closeDrawers();
+                    }
+                }, 0);
+                shell.getScreenProvider().openFeedbackActivity(this);
+                return true;
             default:
                 showCurrentFragment(menuItem);
                 break;
@@ -402,13 +410,6 @@ public class MainFeedActivity extends BackToExitActivityBase
                     shortLifetimeRef = NotificationsFragment.newInstance();
                 }
                 break;
-            case R.id.feedback:
-                currentIndex = 7;
-                if (tag == null || !tag.equals(FeedbackFragment.class.toString())) {
-                    shortLifetimeRef = FeedbackFragment.Companion.newInstance();
-                }
-                break;
-
         }
         currentIndex--; // menu indices from 1
         if (shortLifetimeRef != null) {

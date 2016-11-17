@@ -292,6 +292,19 @@
             </intent-filter>
         </activity>
 
+
+        <activity
+            android:name=".ui.activities.FeedbackActivity"
+            android:label="@string/feedback_title"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.activities.MainFeedActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainFeedActivity"/>
+
+        </activity>
+
         <activity
             android:name=".ui.activities.StoreManagementActivity"
             android:label="@string/space_management_title"

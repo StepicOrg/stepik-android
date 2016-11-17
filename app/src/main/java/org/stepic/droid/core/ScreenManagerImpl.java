@@ -31,6 +31,7 @@ import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.ui.activities.CommentsActivity;
 import org.stepic.droid.ui.activities.CourseDetailActivity;
+import org.stepic.droid.ui.activities.FeedbackActivity;
 import org.stepic.droid.ui.activities.FilterActivity;
 import org.stepic.droid.ui.activities.LaunchActivity;
 import org.stepic.droid.ui.activities.LoginActivity;
@@ -263,6 +264,12 @@ public class ScreenManagerImpl implements ScreenManager {
         Bundle bundle = new Bundle();
         bundle.putLong(ProfileActivity.Companion.getOptionalUserIdKey(), userId);
         intent.putExtras(bundle);
+        activity.startActivity(intent);
+    }
+
+    @Override
+    public void openFeedbackActivity(Activity activity) {
+        final Intent intent = new Intent(activity, FeedbackActivity.class);
         activity.startActivity(intent);
     }
 
