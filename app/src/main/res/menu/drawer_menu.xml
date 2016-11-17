@@ -33,7 +33,7 @@
             android:id="@+id/invite"
             android:checkable="false"
             android:icon="@drawable/ic_notifications_black_24dp"
-            android:title="@string/invite_title"/>
+            android:title="@string/invite_title_main_menu"/>
 
     </group>
 

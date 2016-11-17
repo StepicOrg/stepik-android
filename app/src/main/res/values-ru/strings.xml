@@ -288,4 +288,8 @@
         <item quantity="other">дней</item>
     </plurals>
     <string name="empty_user_title">Пользователь не найден</string>
+    <string name="invitation_title">Пригласи друзей на Stepik</string>
+    <string name="invite_title_main_menu">Пригласить друзей</string>
+    <string name="invitation_call_to_action">Установить</string>
+    <string name="invitation_message">Посмотри приложение Stepik.org с бесплатными онлайн-курсами</string>
 </resources>

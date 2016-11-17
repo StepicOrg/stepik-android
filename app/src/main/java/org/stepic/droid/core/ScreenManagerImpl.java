@@ -10,6 +10,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.google.android.gms.appinvite.AppInviteInvitation;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
@@ -56,6 +58,8 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import timber.log.Timber;
 
 @Singleton
 public class ScreenManagerImpl implements ScreenManager {
@@ -271,6 +275,22 @@ public class ScreenManagerImpl implements ScreenManager {
     public void openFeedbackActivity(Activity activity) {
         final Intent intent = new Intent(activity, FeedbackActivity.class);
         activity.startActivity(intent);
+    }
+
+    @Override
+    public void inviteFriend(Activity activity, int requestInviteCode) {
+        AppInviteInvitation.IntentBuilder builder = new AppInviteInvitation.IntentBuilder(activity.getString(R.string.invitation_title))
+                .setMessage(activity.getString(R.string.invitation_message))
+                .setDeepLink(Uri.parse("https://stepik.org/")) //// TODO: 17.11.16 make deep link
+                .setCallToActionText(activity.getString(R.string.invitation_call_to_action))
+                .setAndroidMinimumVersionCode(AppConstants.INVITATION_STARTED_VERSION_CODE);
+        String iosOauth2Id = config.getIOSOauth2Id();
+        Timber.d("iosOauth2 is %s", iosOauth2Id);
+        if (iosOauth2Id != null) {
+//            builder.setOtherPlatformsTargetApplication(AppInviteInvitation.IntentBuilder.PlatformMode.PROJECT_PLATFORM_IOS, iosOauth2Id);
+        }
+        Intent intent = builder.build();
+        activity.startActivityForResult(intent, requestInviteCode);
     }
 
     @Override

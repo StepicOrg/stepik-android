@@ -85,4 +85,6 @@ public interface ScreenManager {
     void openProfile(Activity activity, long userId);
 
     void openFeedbackActivity (Activity activity);
+
+    void inviteFriend(Activity activity, int requestInviteCode);
 }

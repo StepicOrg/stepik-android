@@ -22,4 +22,5 @@ public interface IConfig {
 
     String getGoogleServerClientId();
 
+    String getIOSOauth2Id();
 }

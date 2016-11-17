@@ -20,6 +20,7 @@ public class ConfigRelease implements IConfig {
 
     private JsonObject properties;
 
+    private static final java.lang.String IOS_OAUTH2_ID = "IOS_OAUTH2_ID";
     private static final String API_HOST_URL = "API_HOST_URL";
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
     private static final String OAUTH_CLIENT_SECRET = "OAUTH_CLIENT_SECRET";
@@ -148,6 +149,11 @@ public class ConfigRelease implements IConfig {
     @Override
     public String getGoogleServerClientId() {
         return getString(GOOGLE_SERVER_CLIENT_ID, null);
+    }
+
+    @Override
+    public String getIOSOauth2Id() {
+        return getString(IOS_OAUTH2_ID, null);
     }
 
     private String getString(String key) {

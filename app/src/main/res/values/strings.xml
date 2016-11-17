@@ -285,7 +285,10 @@
     <string name="short_bio">Short biography</string>
     <string name="user_info">Info</string>
     <string name="empty_user_title">User is not found</string>
-    <string name="invite_title">Пригласить друзей</string>
+    <string name="invite_title_main_menu">Invite friends</string>
+    <string name="invitation_title">Invite friends to Stepik</string>
+    <string name="invitation_message">Check this out, great app with free educational courses</string>
+    <string name="invitation_call_to_action">Install</string>
     <plurals name="restriction_submission">
         <item quantity="one">You have %d attempt</item>
         <item quantity="other">You have %d attempts</item>

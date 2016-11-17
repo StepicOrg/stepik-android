@@ -73,11 +73,11 @@ import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
-import timber.log.Timber;
 
 public class MainFeedActivity extends BackToExitActivityBase
         implements NavigationView.OnNavigationItemSelectedListener, LogoutSuccess, BackButtonHandler, HasDrawer {
     public static final String KEY_CURRENT_INDEX = "Current_index";
+    private static final int REQUEST_INVITE_CODE = 120;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -312,7 +312,7 @@ public class MainFeedActivity extends BackToExitActivityBase
                 shell.getScreenProvider().openFeedbackActivity(this);
                 return true;
             case R.id.invite:
-                Timber.d("show firebase invite");
+                shell.getScreenProvider().inviteFriend(this, REQUEST_INVITE_CODE);
                 break;
             default:
                 showCurrentFragment(menuItem);
