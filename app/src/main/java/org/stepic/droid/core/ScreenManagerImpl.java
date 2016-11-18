@@ -281,9 +281,9 @@ public class ScreenManagerImpl implements ScreenManager {
     public void inviteFriend(Activity activity, int requestInviteCode) {
         AppInviteInvitation.IntentBuilder builder = new AppInviteInvitation.IntentBuilder(activity.getString(R.string.invitation_title))
                 .setMessage(activity.getString(R.string.invitation_message))
-//                .setDeepLink(Uri.parse("https://stepik.org/")) //// TODO: 17.11.16 make deep link
-                .setCallToActionText(activity.getString(R.string.invitation_call_to_action))
-                .setAndroidMinimumVersionCode(AppConstants.INVITATION_STARTED_VERSION_CODE);
+                .setDeepLink(Uri.parse("https://stepik.org/")) //// TODO: 17.11.16 make deep link. Should not be null for correct opening (default open google plus)
+                .setCallToActionText(activity.getString(R.string.invitation_call_to_action));
+//                .setAndroidMinimumVersionCode(AppConstants.INVITATION_STARTED_VERSION_CODE);
         String iosOauth2Id = config.getIOSOauth2Id();
         Timber.d("iosOauth2 is %s", iosOauth2Id);
         if (iosOauth2Id != null) {

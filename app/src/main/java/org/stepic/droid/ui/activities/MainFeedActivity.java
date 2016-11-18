@@ -74,7 +74,6 @@ import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
-import timber.log.Timber;
 
 public class MainFeedActivity extends BackToExitActivityBase
         implements NavigationView.OnNavigationItemSelectedListener, LogoutSuccess, BackButtonHandler, HasDrawer {
@@ -580,13 +579,10 @@ public class MainFeedActivity extends BackToExitActivityBase
                 // Get the invitation IDs of all sent messages
                 String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
                 for (String id : ids) {
-                    Timber.d("onActivityResult: sent invitation %s", id);
-                    // FIXME: 17.11.16 make analytic report
+                    analytic.reportEvent(Analytic.Invite.INVITE_SENT, id);
                 }
             } else {
-                // FIXME: 17.11.16
-                // Sending failed or it was canceled, show failure message to the user
-                // ...
+                analytic.reportEvent(Analytic.Invite.INVITE_CANCELED);
             }
         }
     }

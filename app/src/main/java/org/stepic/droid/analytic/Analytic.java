@@ -262,6 +262,11 @@ public interface Analytic {
         java.lang.String OPEN_SCREEN_OVERALL = "profile_open_screen_overall";
     }
 
+    interface Invite {
+        String INVITE_SENT = "invite_sent";
+        String INVITE_CANCELED = "invite_canceled";
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);
