@@ -1,8 +1,17 @@
 package org.stepic.droid.ui.activities;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+
+import com.google.android.gms.appinvite.AppInvite;
+import com.google.android.gms.appinvite.AppInviteInvitationResult;
+import com.google.android.gms.appinvite.AppInviteReferral;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.notifications.StepicInstanceIdService;
@@ -11,9 +20,10 @@ import org.stepic.droid.util.AppConstants;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
+import timber.log.Timber;
 
 
-public class SplashActivity extends BackToExitActivityBase {
+public class SplashActivity extends BackToExitActivityBase implements GoogleApiClient.OnConnectionFailedListener {
 
     // Splash screen wait time
     private static final int SPLASH_TIME_OUT = 1000;
@@ -27,6 +37,30 @@ public class SplashActivity extends BackToExitActivityBase {
             finish();
             return;
         }
+
+        // Create an auto-managed GoogleApiClient with access to App Invites.
+        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(com.google.android.gms.appinvite.AppInvite.API)
+                .enableAutoManage(this, this)
+                .build();
+//
+        AppInvite.AppInviteApi.getInvitation(googleApiClient, this, false)
+                .setResultCallback(
+                        new ResultCallback<AppInviteInvitationResult>() {
+                            @Override
+                            public void onResult(@NonNull AppInviteInvitationResult result) {
+                                Timber.d("invite onResult");
+                                if (result.getStatus().isSuccess()) {
+                                    Timber.d("invite onResult");
+                                    // Extract information from the intent
+                                    Intent intent = result.getInvitationIntent();
+                                    String invitationId = AppInviteReferral.getInvitationId(intent);
+
+                                    analytic.reportEvent(Analytic.Invite.INVITE_RECEIVED, invitationId);
+                                }
+                            }
+                        });
+
 
         if (checkPlayServices() && !sharedPreferenceHelper.isGcmTokenOk()) {
 
@@ -106,5 +140,10 @@ public class SplashActivity extends BackToExitActivityBase {
             }
             finish();
         }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Timber.d("onConnectionFailed: %s", connectionResult.getErrorMessage());
     }
 }
