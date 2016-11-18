@@ -1,5 +1,6 @@
 package org.stepic.droid.core.modules;
 
+import android.app.AlarmManager;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -138,6 +139,11 @@ public class AppCoreModule {
         return (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
     }
 
+    @Provides
+    AlarmManager provideSystemAlarmManager (Context context){
+        return (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    }
+
     @Singleton
     @Provides
     IStoreStateManager provideStoreManager(DatabaseFacade dbManager, Bus bus, Analytic analytic) {
@@ -220,8 +226,11 @@ public class AppCoreModule {
                                                     UserPreferences userPreferences,
                                                     DatabaseFacade db, Analytic analytic,
                                                     TextResolver textResolver,
-                                                    ScreenManagerImpl screenManager) {
-        return new NotificationManagerImpl(sp, api, config, userPreferences, db, analytic, textResolver, screenManager);
+                                                    ScreenManagerImpl screenManager,
+                                                    ThreadPoolExecutor threadPoolExecutor,
+                                                    AlarmManager alarmManager,
+                                                    Context context) {
+        return new NotificationManagerImpl(sp, api, config, userPreferences, db, analytic, textResolver, screenManager, threadPoolExecutor, alarmManager, context);
     }
 
     @Provides

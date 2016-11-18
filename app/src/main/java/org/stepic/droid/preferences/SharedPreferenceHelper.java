@@ -64,6 +64,10 @@ public class SharedPreferenceHelper {
     private final String CALENDAR_WIDGET = "calenda_widget";
     private final String VIDEO_QUALITY_EXPLANATION = "video_quality_explanation";
     private final String NEED_DROP_114 = "need_drop_114";
+    private static final String ONE_DAY_NOTIFICATION = "one_day_notification";
+    private static final String SEVEN_DAY_NOTIFICATION = "seven_day_notification";
+    private static final String ANY_STEP_SOLVED = "any_step_solved";
+    private static final String NEW_USER_ALARM_TIMESTAMP = "new_user_alarm_timestamp";
 
     private final String FILTER_PERSISTENT = "filter_persistent";
     private final String FILTER_RUSSIAN_LANGUAGE = "russian_lang";
@@ -77,6 +81,46 @@ public class SharedPreferenceHelper {
     private Context context;
     private Analytic analytic;
     private DefaultFilter defaultFilter;
+
+    public boolean anyStepIsSolved() {
+        return getBoolean(PreferenceType.LOGIN, ANY_STEP_SOLVED, false);
+    }
+
+    public void trackWhenUserSolved() {
+        put(PreferenceType.LOGIN, ANY_STEP_SOLVED, true);
+    }
+
+    public void saveNewUserTimestamp(long scheduleMillis) {
+        put(PreferenceType.DEVICE_SPECIFIC, NEW_USER_ALARM_TIMESTAMP, scheduleMillis);
+    }
+
+    public long getNewUserTimestamp (){
+        return getLong(PreferenceType.DEVICE_SPECIFIC, NEW_USER_ALARM_TIMESTAMP);
+    }
+
+    public enum NotificationDay {
+        ONE(ONE_DAY_NOTIFICATION),
+        SEVEN(SEVEN_DAY_NOTIFICATION);
+
+        private String internalNotificationKey;
+
+        NotificationDay(String notificationKey) {
+            this.internalNotificationKey = notificationKey;
+        }
+
+        public String getInternalNotificationKey() {
+            return internalNotificationKey;
+        }
+    }
+
+
+    public boolean isNotificationWasShown(NotificationDay day) {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, day.getInternalNotificationKey(), false);
+    }
+
+    public void setNotificationShown(NotificationDay day) {
+        put(PreferenceType.DEVICE_SPECIFIC, day.getInternalNotificationKey(), true);
+    }
 
     @Inject
     public SharedPreferenceHelper(Analytic analytic, DefaultFilter defaultFilter, Context context) {

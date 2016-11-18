@@ -2,13 +2,15 @@ package org.stepic.droid.notifications
 
 import org.stepic.droid.notifications.model.Notification
 
-interface  INotificationManager {
+interface INotificationManager {
     /**
      * worker thread
      */
-    fun showNotification(notification : Notification);
+    fun showNotification(notification: Notification);
 
-    fun discardAllNotifications(courseId:Long)
+    fun discardAllNotifications(courseId: Long)
 
-    fun tryOpenNotificationInstantly (notification: Notification)
+    fun tryOpenNotificationInstantly(notification: Notification)
+
+    fun tryScheduleNotificationForNewUser()
 }

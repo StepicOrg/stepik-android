@@ -1,5 +1,6 @@
 package org.stepic.droid.notifications
 
+import android.app.AlarmManager
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -10,9 +11,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.support.annotation.DrawableRes
+import android.support.annotation.MainThread
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import com.bumptech.glide.Glide
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
@@ -23,6 +27,7 @@ import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
+import org.stepic.droid.services.NewUserAlarmService
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.store.operations.Table
 import org.stepic.droid.ui.activities.SectionActivity
@@ -32,6 +37,10 @@ import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.HtmlHelper
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.web.IApi
+import timber.log.Timber
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.atomic.AtomicBoolean
+
 
 class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper,
                               val api: IApi,
@@ -40,7 +49,77 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                               val databaseFacade: DatabaseFacade,
                               val analytic: Analytic,
                               val textResolver: TextResolver,
-                              val screenManager: ScreenManager) : INotificationManager {
+                              val screenManager: ScreenManager,
+                              val threadPoolExecutor: ThreadPoolExecutor,
+                              val alarmManager: AlarmManager,
+                              val context: Context) : INotificationManager {
+
+    val isHandling = AtomicBoolean(false)
+
+    @MainThread
+    override fun tryScheduleNotificationForNewUser() {
+        threadPoolExecutor.execute {
+            val isNotLoading = isHandling.compareAndSet(/* expect */ false, true)
+            if (isNotLoading) {
+                try {
+
+                    val isFirstDayNotificationShown = sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.ONE)
+                    val isSevenDayNotificationShown = sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.SEVEN)
+                    if (isFirstDayNotificationShown
+                            && isSevenDayNotificationShown) {
+                        //already shown.
+                        //do not show again
+                        return@execute
+                    }
+                    if (sharedPreferenceHelper.authResponseFromStore == null) {
+                        return@execute
+                    }
+
+                    if (databaseFacade.getAllCourses(Table.enrolled).isNotEmpty()) {
+                        return@execute
+                    }
+
+                    if (sharedPreferenceHelper.anyStepIsSolved()) {
+                        return@execute
+                    }
+
+                    //now we can plan alarm
+
+                    val dayDiff: Int =
+                            if (!isFirstDayNotificationShown) {
+                                1
+                            } else if (!isSevenDayNotificationShown) {
+                                7
+                            } else {
+                                return@execute
+                            }
+
+                    val now = DateTime.now(DateTimeZone.getDefault())
+
+                    val nowHour = now.hourOfDay().get()
+                    Timber.d("hour of day = $nowHour")
+                    val scheduleMillis: Long
+                    if (nowHour < 12) {
+                        scheduleMillis = now.plusDays(dayDiff).withHourOfDay(12).millis
+                    } else if (nowHour >= 19) {
+                        scheduleMillis = now.plusDays(dayDiff + 1).withHourOfDay(12).millis
+                    } else {
+                        scheduleMillis = now.plusDays(dayDiff).millis
+                    }
+
+                    sharedPreferenceHelper.saveNewUserTimestamp(scheduleMillis)
+                    // Sets an alarm - note this alarm will be lost if the phone is turned off and on again
+                    val intent = Intent(context, NewUserAlarmService::class.java)
+                    intent.putExtra(NewUserAlarmService.notificationTimestampSentKey, scheduleMillis)
+                    val pendingIntent = PendingIntent.getService(context, NewUserAlarmService.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    alarmManager.cancel(pendingIntent)//timer should not be triggered
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, scheduleMillis, pendingIntent)
+                } finally {
+                    isHandling.set(false)
+                }
+            }
+        }
+    }
 
     override fun showNotification(notification: Notification) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
