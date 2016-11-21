@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="yet_have_not_account">Еще нет аккаунта? Создать</string>
+    <string name="stepik_free_courses_title">Stepik.org: бесплатные курсы</string>
+    <string name="local_remind_message">Мы заметили, что Вы до сих пор не выбрали ни одного курса для изучения. Не откладывайте, запишитесь на подходящий бесплатный курс прямо сейчас!</string>
     <string name="available_courses_title">Доступные курсы</string>
     <string name="begin_date">Начало</string>
     <string name="best_lessons_title">Лучшие уроки</string>

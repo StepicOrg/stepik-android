@@ -1,6 +1,5 @@
 package org.stepic.droid.notifications
 
-import android.app.AlarmManager
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -11,6 +10,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.support.annotation.DrawableRes
+import android.support.annotation.WorkerThread
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.TaskStackBuilder
 import com.bumptech.glide.Glide
@@ -48,8 +48,28 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                               val threadPoolExecutor: ThreadPoolExecutor,
                               val context: Context) : INotificationManager {
 
+    @WorkerThread
     override fun showLocalNotificationRemind() {
         Timber.d("Learn everyday, free courses")
+        if (sharedPreferenceHelper.authResponseFromStore == null ||
+                databaseFacade.getAllCourses(Table.enrolled).isNotEmpty() ||
+                sharedPreferenceHelper.anyStepIsSolved()) {
+            analytic.reportEvent(Analytic.Notification.REMIND_CANCELED)
+            return
+        }
+        //now we can show notification
+        val intent = screenManager.getShowFindCoursesIntent(context)
+        val taskBuilder: TaskStackBuilder =
+                TaskStackBuilder
+                        .create(context)
+                        .addNextIntent(intent)
+        val title = context.resources.getString(R.string.stepik_free_courses_title)
+        val remindMessage = context.resources.getString(R.string.local_remind_message)
+        showSimpleNotification(id = 4,
+                justText = remindMessage,
+                taskBuilder = taskBuilder,
+                title = title)
+        //TODO: make note in shared preferences about showing
     }
 
     override fun showNotification(notification: Notification) {

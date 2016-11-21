@@ -155,7 +155,8 @@ public interface Analytic {
         String DROP_COURSE_FAIL = "drop course fail";
     }
 
-    interface Notification {
+    interface
+    Notification {
         String DISABLED_BY_USER = "Notification is disabled by user in app";
         String ACTION_NOT_SUPPORT = "notification action is not support";
         String HTML_WAS_NULL = "notification_html_was_null";
@@ -183,6 +184,7 @@ public interface Analytic {
         String OPEN_TEACH_CENTER = "notification_open_teach_link";
         String PERSISTENT_KEY_NULL = "notification_key_null";
         String MARK_ALL_AS_READ = "notification_mark_all";
+        String REMIND_CANCELED = "local_remaind_canceled";
     }
 
     interface Feedback {
