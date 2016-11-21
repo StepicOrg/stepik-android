@@ -18,6 +18,7 @@ import org.stepic.droid.core.IShell;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.notifications.INotificationManager;
+import org.stepic.droid.notifications.LocalReminder;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.ICancelSniffer;
@@ -38,7 +39,7 @@ public class FragmentBase extends Fragment {
     private Unbinder unbinder;
 
     @Inject
-    protected INotificationManager notificationManager;
+    protected LocalReminder localReminder;
 
     @Inject
     protected TextResolver textResolver;

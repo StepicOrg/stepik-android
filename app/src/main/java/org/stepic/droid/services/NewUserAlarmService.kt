@@ -4,7 +4,9 @@ import android.app.IntentService
 import android.app.Service
 import android.content.Intent
 import org.stepic.droid.base.MainApplication
+import org.stepic.droid.notifications.INotificationManager
 import org.stepic.droid.web.IApi
+import timber.log.Timber
 import javax.inject.Inject
 
 class NewUserAlarmService : IntentService("NewUserAlarm") {
@@ -16,6 +18,9 @@ class NewUserAlarmService : IntentService("NewUserAlarm") {
     @Inject
     lateinit var api: IApi
 
+    @Inject
+    lateinit var notificationManager: INotificationManager
+
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         MainApplication.component().inject(this)
         super.onStartCommand(intent, flags, startId)
@@ -23,6 +28,7 @@ class NewUserAlarmService : IntentService("NewUserAlarm") {
     }
 
     override fun onHandleIntent(intent: Intent?) {
-        api.sendFeedback("kir-maka@yandex.ru", "Не удаляйте этот тикет. Нужен, для оценки адекватности времени.") //can throw runtime exception
+        Timber.d("hello user!")
+        notificationManager.showLocalNotificationRemind()
     }
 }

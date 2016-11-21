@@ -1,5 +1,6 @@
 package org.stepic.droid.notifications
 
+import android.support.annotation.WorkerThread
 import org.stepic.droid.notifications.model.Notification
 
 interface INotificationManager {
@@ -12,5 +13,6 @@ interface INotificationManager {
 
     fun tryOpenNotificationInstantly(notification: Notification)
 
-    fun tryScheduleNotificationForNewUser()
+    @WorkerThread
+    fun showLocalNotificationRemind()
 }

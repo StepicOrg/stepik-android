@@ -20,18 +20,20 @@ import org.stepic.droid.core.DefaultFilterImpl;
 import org.stepic.droid.core.FilterApplicator;
 import org.stepic.droid.core.FilterApplicatorImpl;
 import org.stepic.droid.core.ILoginManager;
-import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.LocalLessonSessionManagerImpl;
 import org.stepic.droid.core.LocalProgressImpl;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.LoginManager;
+import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ScreenManagerImpl;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.core.ShareHelperImpl;
 import org.stepic.droid.core.Shell;
 import org.stepic.droid.notifications.INotificationManager;
+import org.stepic.droid.notifications.LocalReminder;
+import org.stepic.droid.notifications.LocalReminderNotification;
 import org.stepic.droid.notifications.NotificationManagerImpl;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
@@ -140,7 +142,7 @@ public class AppCoreModule {
     }
 
     @Provides
-    AlarmManager provideSystemAlarmManager (Context context){
+    AlarmManager provideSystemAlarmManager(Context context) {
         return (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     }
 
@@ -220,6 +222,22 @@ public class AppCoreModule {
 
     @Singleton
     @Provides
+    LocalReminder provideLocalReminder(SharedPreferenceHelper sp,
+                                       DatabaseFacade db,
+                                       Analytic analytic,
+                                       ThreadPoolExecutor threadPoolExecutor,
+                                       Context context,
+                                       AlarmManager alarmManager) {
+        return new LocalReminderNotification(threadPoolExecutor,
+                sp,
+                db,
+                context,
+                alarmManager,
+                analytic);
+    }
+
+    @Singleton
+    @Provides
     INotificationManager provideNotificationManager(SharedPreferenceHelper sp,
                                                     IApi api,
                                                     IConfig config,
@@ -228,9 +246,8 @@ public class AppCoreModule {
                                                     TextResolver textResolver,
                                                     ScreenManagerImpl screenManager,
                                                     ThreadPoolExecutor threadPoolExecutor,
-                                                    AlarmManager alarmManager,
                                                     Context context) {
-        return new NotificationManagerImpl(sp, api, config, userPreferences, db, analytic, textResolver, screenManager, threadPoolExecutor, alarmManager, context);
+        return new NotificationManagerImpl(sp, api, config, userPreferences, db, analytic, textResolver, screenManager, threadPoolExecutor, context);
     }
 
     @Provides
