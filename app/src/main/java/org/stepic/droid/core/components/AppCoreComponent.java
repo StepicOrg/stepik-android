@@ -25,6 +25,7 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.notifications.HackFcmListener;
 import org.stepic.droid.notifications.HackerFcmInstanceId;
 import org.stepic.droid.notifications.NotificationBroadcastReceiver;
+import org.stepic.droid.receivers.BootCompletedReceiver;
 import org.stepic.droid.receivers.DownloadClickReceiver;
 import org.stepic.droid.receivers.DownloadCompleteReceiver;
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver;
@@ -205,4 +206,6 @@ public interface AppCoreComponent {
     void inject(InstructorAdapter instructorAdapter);
 
     void inject(@NotNull NewUserAlarmService newUserAlarmService);
+
+    void inject(BootCompletedReceiver bootCompletedReceiver);
 }

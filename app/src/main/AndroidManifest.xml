@@ -20,6 +20,7 @@
     <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
 
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:name="org.stepic.droid.base.MainApplication"
@@ -385,6 +386,16 @@
                 <data android:pathPattern="/users/.*/"/>
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".receivers.BootCompletedReceiver"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
 
         <meta-data
             android:name="com.google.android.gms.version"

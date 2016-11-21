@@ -13,7 +13,6 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.services.NewUserAlarmService
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.store.operations.Table
-import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -26,8 +25,7 @@ class LocalReminderImpl(val threadPoolExecutor: ThreadPoolExecutor,
 
     val isHandling = AtomicBoolean(false)
 
-    @MainThread
-    override fun remindAboutApp() {
+    override fun remindAboutApp(millis: Long?) {
         threadPoolExecutor.execute {
             val isNotLoading = isHandling.compareAndSet(/* expect */ false, true)
             if (isNotLoading) {
@@ -54,35 +52,34 @@ class LocalReminderImpl(val threadPoolExecutor: ThreadPoolExecutor,
 
                     //now we can plan alarm
 
-                    val dayDiff: Int =
-                            if (!isFirstDayNotificationShown) {
-                                1
-                            } else if (!isSevenDayNotificationShown) {
-                                7
-                            } else {
-                                return@execute
-                            }
-
                     val now = DateTime.now(DateTimeZone.getDefault())
-
-                    val nowHour = now.hourOfDay().get()
-                    Timber.d("hour of day = $nowHour")
-                    val scheduleTime: DateTime
-                    if (nowHour < 12) {
-                        scheduleTime = now.plusDays(dayDiff).withHourOfDay(12)
-                    } else if (nowHour >= 19) {
-                        scheduleTime = now.plusDays(dayDiff + 1).withHourOfDay(12)
+                    val scheduleMillis: Long
+                    if (millis != null && millis > 0L && DateTime(millis).isAfterNow) {
+                        scheduleMillis = millis // after reboot we already scheduled.
                     } else {
-                        scheduleTime = now.plusDays(dayDiff)
-                    }
-//                    val scheduleMillis: Long = scheduleTime.millis// FIXME: uncomment it & and comment 2 below
-                    val debugTime = now.plus(15 * 1000)
-                    val scheduleMillis: Long = debugTime.millis
-                    Timber.d("now: $now")
-                    Timber.d("planned: $scheduleTime")
-                    Timber.d("debug planned: $debugTime")
 
-                    sharedPreferenceHelper.saveNewUserTimestamp(scheduleMillis)
+                        val dayDiff: Int =
+                                if (!isFirstDayNotificationShown) {
+                                    1
+                                } else if (!isSevenDayNotificationShown) {
+                                    7
+                                } else {
+                                    return@execute
+                                }
+
+                        val nowHour = now.hourOfDay().get()
+                        val scheduleTime: DateTime
+                        if (nowHour < 12) {
+                            scheduleTime = now.plusDays(dayDiff).withHourOfDay(12)
+                        } else if (nowHour >= 19) {
+                            scheduleTime = now.plusDays(dayDiff + 1).withHourOfDay(12)
+                        } else {
+                            scheduleTime = now.plusDays(dayDiff)
+                        }
+                        scheduleMillis = scheduleTime.millis
+                    }
+
+                    sharedPreferenceHelper.saveNewUserRemindTimestamp(scheduleMillis)
                     // Sets an alarm - note this alarm will be lost if the phone is turned off and on again
                     val intent = Intent(context, NewUserAlarmService::class.java)
                     intent.putExtra(NewUserAlarmService.notificationTimestampSentKey, scheduleMillis)
@@ -108,5 +105,10 @@ class LocalReminderImpl(val threadPoolExecutor: ThreadPoolExecutor,
                 }
             }
         }
+    }
+
+    @MainThread
+    override fun remindAboutApp() {
+        remindAboutApp(null)
     }
 }

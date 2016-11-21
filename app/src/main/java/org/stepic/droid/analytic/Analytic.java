@@ -7,6 +7,10 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
+    interface System{
+        String BOOT_COMPLETED = "boot_completed";
+    }
+
     interface Preferences {
         String VIDEO_QUALITY = "video quality was chosen";
     }

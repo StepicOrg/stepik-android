@@ -97,7 +97,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     private fun afterLocalNotificationShown(day: SharedPreferenceHelper.NotificationDay) {
         analytic.reportEvent(Analytic.Notification.REMIND_SHOWN, day.name)
-//        sharedPreferenceHelper.setNotificationShown(day) //FIXME:uncomment
+        sharedPreferenceHelper.setNotificationShown(day)
     }
 
 

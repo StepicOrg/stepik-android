@@ -91,11 +91,11 @@ public class SharedPreferenceHelper {
         put(PreferenceType.LOGIN, ANY_STEP_SOLVED, true);
     }
 
-    public void saveNewUserTimestamp(long scheduleMillis) {
+    public void saveNewUserRemindTimestamp(long scheduleMillis) {
         put(PreferenceType.DEVICE_SPECIFIC, NEW_USER_ALARM_TIMESTAMP, scheduleMillis);
     }
 
-    public long getNewUserTimestamp() {
+    public long getNewUserRemindTimestamp() {
         return getLong(PreferenceType.DEVICE_SPECIFIC, NEW_USER_ALARM_TIMESTAMP);
     }
 
