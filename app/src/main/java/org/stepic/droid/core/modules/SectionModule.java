@@ -33,8 +33,8 @@ public class SectionModule {
             IApi api,
             ThreadPoolExecutor threadPoolExecutor,
             Bus bus,
-            DatabaseFacade databaseFacade) {
-        return new CourseJoinerPresenter(sharedPreferenceHelper, api, threadPoolExecutor, bus, databaseFacade);
+            DatabaseFacade databaseFacade, Analytic analytic) {
+        return new CourseJoinerPresenter(sharedPreferenceHelper, api, threadPoolExecutor, bus, databaseFacade, analytic);
     }
 
     @PerFragment

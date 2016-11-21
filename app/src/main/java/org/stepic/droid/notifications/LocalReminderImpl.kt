@@ -31,8 +31,8 @@ class LocalReminderImpl(val threadPoolExecutor: ThreadPoolExecutor,
             val isNotLoading = isHandling.compareAndSet(/* expect */ false, true)
             if (isNotLoading) {
                 try {
-                    val isFirstDayNotificationShown = sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.ONE)
-                    val isSevenDayNotificationShown = sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.SEVEN)
+                    val isFirstDayNotificationShown = sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_ONE)
+                    val isSevenDayNotificationShown = sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_SEVEN)
                     if (isFirstDayNotificationShown
                             && isSevenDayNotificationShown) {
                         //already shown.
@@ -88,6 +88,16 @@ class LocalReminderImpl(val threadPoolExecutor: ThreadPoolExecutor,
                     val pendingIntent = PendingIntent.getService(context, NewUserAlarmService.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
                     alarmManager.cancel(pendingIntent)//timer should not be triggered
                     alarmManager.set(AlarmManager.RTC_WAKEUP, scheduleMillis, pendingIntent)
+
+
+                    val dayType = if (!isFirstDayNotificationShown) {
+                        SharedPreferenceHelper.NotificationDay.DAY_ONE
+                    } else if (!isSevenDayNotificationShown) {
+                        SharedPreferenceHelper.NotificationDay.DAY_SEVEN
+                    } else {
+                        null
+                    }
+                    analytic.reportEvent(Analytic.Notification.REMIND_SCHEDULED, dayType?.name ?: "")
                 } finally {
                     isHandling.set(false)
                 }

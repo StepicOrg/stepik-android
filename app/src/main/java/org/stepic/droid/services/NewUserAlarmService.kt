@@ -6,7 +6,6 @@ import android.content.Intent
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.notifications.INotificationManager
 import org.stepic.droid.web.IApi
-import timber.log.Timber
 import javax.inject.Inject
 
 class NewUserAlarmService : IntentService("NewUserAlarm") {
@@ -28,7 +27,6 @@ class NewUserAlarmService : IntentService("NewUserAlarm") {
     }
 
     override fun onHandleIntent(intent: Intent?) {
-        Timber.d("hello user!")
         notificationManager.showLocalNotificationRemind()
     }
 }
