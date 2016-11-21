@@ -9,5 +9,5 @@ interface LocalReminder {
 
     @MainThread
     fun remindAboutApp(millis : Long? = null)
-
+    
 }
