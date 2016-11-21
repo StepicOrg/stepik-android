@@ -145,9 +145,13 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         super.onCreateContextMenu(menu, v, menuInfo);
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        int position = info.position;
+        if (position >= courses.size() && position < 0) {
+            return; // the context will not be displayed
+        }
 
         MenuInflater inflater = getActivity().getMenuInflater();
-        if (courses.get(info.position).getEnrollment() != 0) {
+        if (courses.get(position).getEnrollment() != 0) {
             inflater.inflate(R.menu.course_context_menu, menu);
         } else {
             inflater.inflate(R.menu.course_context_not_enrolled_menu, menu);
