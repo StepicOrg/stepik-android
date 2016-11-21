@@ -160,7 +160,7 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showCertificates() {
         Context context = MainApplication.getAppContext();
         int index = MainFeedActivity.getCertificateFragmentIndex();
-        showFromMainActivity(context, index);
+        context.startActivity(getFromMainActivityIntent(context, index));
     }
 
     @Override
@@ -172,22 +172,27 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showDownload(Context context) {
         int index = MainFeedActivity.getDownloadFragmentIndex();
-        showFromMainActivity(context, index);
+        context.startActivity(getFromMainActivityIntent(context, index));
     }
 
     @Override
     public void showFindCourses(Context context) {
-        int index = MainFeedActivity.getFindLessonIndex();
-        showFromMainActivity(context, index);
+        context.startActivity(getShowFindCoursesIntent(context));
     }
 
-    private void showFromMainActivity(Context context, int index) {
+    @Override
+    public Intent getShowFindCoursesIntent(Context context) {
+        int index = MainFeedActivity.getFindLessonIndex();
+        return getFromMainActivityIntent(context, index);
+    }
+
+    private Intent getFromMainActivityIntent(Context context, int index) {
         Intent intent = new Intent(context, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle bundle = new Bundle();
         bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
         intent.putExtras(bundle);
-        context.startActivity(intent);
+        return intent;
     }
 
     @Override

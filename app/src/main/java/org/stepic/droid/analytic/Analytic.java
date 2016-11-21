@@ -7,6 +7,10 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
+    interface System{
+        String BOOT_COMPLETED = "boot_completed";
+    }
+
     interface Preferences {
         String VIDEO_QUALITY = "video quality was chosen";
     }
@@ -155,7 +159,8 @@ public interface Analytic {
         String DROP_COURSE_FAIL = "drop course fail";
     }
 
-    interface Notification {
+    interface
+    Notification {
         String DISABLED_BY_USER = "Notification is disabled by user in app";
         String ACTION_NOT_SUPPORT = "notification action is not support";
         String HTML_WAS_NULL = "notification_html_was_null";
@@ -183,6 +188,12 @@ public interface Analytic {
         String OPEN_TEACH_CENTER = "notification_open_teach_link";
         String PERSISTENT_KEY_NULL = "notification_key_null";
         String MARK_ALL_AS_READ = "notification_mark_all";
+        String REMIND_HIDDEN = "remind_hidden";
+        String REMIND_SHOWN = "remind_shown";
+        String REMIND_SCHEDULED = "remind_scheduled";
+        String REMIND_OPEN = "remind_opened";
+        String REMIND_ENROLL = "remind_success_user_enroll";
+        String REMINDER_SWIPE_TO_CANCEL = "remind_swipe_to_cancel";
     }
 
     interface Feedback {

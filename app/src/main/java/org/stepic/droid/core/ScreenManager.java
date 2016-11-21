@@ -60,6 +60,8 @@ public interface ScreenManager {
 
     void showFindCourses(Context context);
 
+    Intent getShowFindCoursesIntent (Context context);
+
     void showVideo(Activity sourceActivity, String source, Long videoId);
 
     void showSettings(Activity sourceActivity);
