@@ -246,8 +246,9 @@ public class AppCoreModule {
                                                     TextResolver textResolver,
                                                     ScreenManagerImpl screenManager,
                                                     ThreadPoolExecutor threadPoolExecutor,
-                                                    Context context) {
-        return new NotificationManagerImpl(sp, api, config, userPreferences, db, analytic, textResolver, screenManager, threadPoolExecutor, context);
+                                                    Context context,
+                                                    LocalReminder localReminder) {
+        return new NotificationManagerImpl(sp, api, config, userPreferences, db, analytic, textResolver, screenManager, threadPoolExecutor, context, localReminder);
     }
 
     @Provides

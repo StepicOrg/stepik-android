@@ -46,7 +46,8 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                               val textResolver: TextResolver,
                               val screenManager: ScreenManager,
                               val threadPoolExecutor: ThreadPoolExecutor,
-                              val context: Context) : INotificationManager {
+                              val context: Context,
+                              val localReminder: LocalReminder) : INotificationManager {
 
     @WorkerThread
     override fun showLocalNotificationRemind() {
@@ -91,6 +92,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         } else if (!sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_SEVEN)) {
             afterLocalNotificationShown(SharedPreferenceHelper.NotificationDay.DAY_SEVEN)
         }
+        localReminder.remindAboutApp() // schedule for next time
     }
 
     private fun afterLocalNotificationShown(day: SharedPreferenceHelper.NotificationDay) {

@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.support.annotation.MainThread
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -87,8 +88,12 @@ class LocalReminderImpl(val threadPoolExecutor: ThreadPoolExecutor,
                     intent.putExtra(NewUserAlarmService.notificationTimestampSentKey, scheduleMillis)
                     val pendingIntent = PendingIntent.getService(context, NewUserAlarmService.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
                     alarmManager.cancel(pendingIntent)//timer should not be triggered
-                    alarmManager.set(AlarmManager.RTC_WAKEUP, scheduleMillis, pendingIntent)
 
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        alarmManager.setWindow(AlarmManager.RTC_WAKEUP, scheduleMillis - AlarmManager.INTERVAL_FIFTEEN_MINUTES, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent)
+                    } else {
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, scheduleMillis, pendingIntent)
+                    }
 
                     val dayType = if (!isFirstDayNotificationShown) {
                         SharedPreferenceHelper.NotificationDay.DAY_ONE
