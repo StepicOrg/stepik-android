@@ -202,7 +202,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         reportConnectionProblem.setVisibility(View.GONE);
         if (courses.isEmpty()) {
             showEmptyScreen(true);
-            notificationManager.tryScheduleNotificationForNewUser();
+            localReminder.remindAboutApp();
         }
     }
 
