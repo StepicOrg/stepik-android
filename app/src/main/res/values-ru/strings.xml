@@ -300,4 +300,5 @@
     <string name="empty_user_title">Пользователь не найден</string>
     <string name="streak_dialog_title">Поздравляем!</string>
     <string name="later_tatle">Позже</string>
+    <string name="notification_time">Время напоминания</string>
 </resources>

@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.NestedScrollView;
@@ -22,6 +23,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.otto.Subscribe;
@@ -45,6 +48,7 @@ import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.Submission;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
+import org.stepic.droid.ui.dialogs.PredefinedTimeIntervalPickerDialogFragment;
 import org.stepic.droid.util.ProgressHelper;
 
 import javax.inject.Inject;
@@ -251,6 +255,15 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                 .setNegativeText(R.string.later_tatle)
 //                        .withDialogAnimation(true) // strange animation
                 .setScrollable(true, 10) // 7 lines
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        DialogFragment dialogFragment = PredefinedTimeIntervalPickerDialogFragment.Companion.newInstance();
+                        if (!dialogFragment.isAdded()) {
+                            dialogFragment.show(getFragmentManager(), null);
+                        }
+                    }
+                })
                 .build();
         dialog.show();
     }
