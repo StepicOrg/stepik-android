@@ -2,6 +2,7 @@ package org.stepic.droid.ui.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -9,6 +10,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.NestedScrollView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.otto.Subscribe;
 
@@ -47,6 +52,8 @@ import javax.inject.Inject;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
+import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public abstract class StepAttemptFragment extends StepBaseFragment implements StepAttemptView {
     private final int DISCOUNTING_POLICY_REQUEST_CODE = 131;
@@ -214,6 +221,9 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                 onCorrectSubmission();
                 setTextToActionButton(tryAgainText);
                 blockUIBeforeSubmit(true);
+
+                //// FIXME: 22.11.16 transfer to after Submit not passed step
+                showStreakDialog(3);
                 break;
             case WRONG:
                 onWrongSubmission();
@@ -223,6 +233,26 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         }
 
         onRestoreSubmission();
+    }
+
+    private void showStreakDialog(int daysOfCurrentStreakIncludeToday) {
+        SpannableString streakTitle = new SpannableString(getString(R.string.streak_dialog_title));
+        streakTitle.setSpan(new ForegroundColorSpan(Color.BLACK), 0, streakTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), "fonts/NotoSans-Bold.ttf"));
+        streakTitle.setSpan(typefaceSpan, 0, streakTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        String description = getResources().getQuantityString(R.plurals.streak_description, daysOfCurrentStreakIncludeToday, daysOfCurrentStreakIncludeToday);
+
+        MaterialStyledDialog dialog = new MaterialStyledDialog.Builder(getContext())
+                .setTitle(streakTitle)
+                .setDescription(description)
+                .setHeaderDrawable(R.drawable.dialog_cover)
+                .setPositiveText(R.string.ok)
+                .setNegativeText(R.string.later_tatle)
+//                        .withDialogAnimation(true) // strange animation
+                .setScrollable(true, 10) // 7 lines
+                .build();
+        dialog.show();
     }
 
     protected final void saveSession(boolean isNeedGetFromUI) {

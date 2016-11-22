@@ -287,6 +287,8 @@
     <string name="short_bio">Short biography</string>
     <string name="user_info">Info</string>
     <string name="empty_user_title">User is not found</string>
+    <string name="streak_dialog_title">Congratulations!</string>
+    <string name="later_tatle">Later</string>
     <plurals name="restriction_submission">
         <item quantity="one">You have %d attempt</item>
         <item quantity="other">You have %d attempts</item>
@@ -294,5 +296,9 @@
     <plurals name="day_number">
         <item quantity="one">day</item>
         <item quantity="other">days</item>
+    </plurals>
+    <plurals name="streak_description">
+        <item quantity="one">It is your %d day when you are solving without break. Solve every day in order to save progress. We suggest you turn on the reminders.</item>
+        <item quantity="other">It is your %d days when you are solving without break. Solve every day in order to save progress. We suggest you turn on the reminders.</item>
     </plurals>
 </resources>
