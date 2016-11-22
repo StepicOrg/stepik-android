@@ -1,9 +1,11 @@
 package org.stepic.droid.ui.activities;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -35,6 +37,8 @@ import com.squareup.otto.Subscribe;
 import com.vk.sdk.VKSdk;
 
 import org.jetbrains.annotations.NotNull;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
@@ -74,11 +78,13 @@ import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
+import timber.log.Timber;
 
 public class MainFeedActivity extends BackToExitActivityBase
         implements NavigationView.OnNavigationItemSelectedListener, LogoutSuccess, BackButtonHandler, HasDrawer {
     public static final String KEY_CURRENT_INDEX = "Current_index";
     private static final int REQUEST_INVITE_CODE = 120;
+    public static final String REMINDER_KEY = "reminder_key";
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -109,12 +115,26 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
-            analytic.reportEvent(AppConstants.OPEN_NOTIFICATION);
-        }
+        notificationClickedCheck(intent);
         Bundle extras = intent.getExtras();
         if (extras != null) {
             initFragments(extras);
+        }
+    }
+
+    private void notificationClickedCheck(Intent intent) {
+        if (intent.getAction() != null) {
+            if (intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
+                analytic.reportEvent(AppConstants.OPEN_NOTIFICATION);
+            } else if (intent.getAction().equals(AppConstants.OPEN_NOTIFICATION_FOR_ENROLL_REMINDER)) {
+                String dayTypeString = intent.getStringExtra(REMINDER_KEY);
+                if (dayTypeString == null){
+                    dayTypeString = "";
+                }
+                analytic.reportEvent(Analytic.Notification.REMIND_OPEN, dayTypeString);
+                Timber.d(Analytic.Notification.REMIND_OPEN);
+                sharedPreferenceHelper.clickEnrollNotification(DateTime.now(DateTimeZone.getDefault()).getMillis());
+            }
         }
     }
 
@@ -123,6 +143,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_feed);
         unbinder = ButterKnife.bind(this);
+        notificationClickedCheck(getIntent());
         initGoogleApiClient();
         initDrawerHeader();
         setUpToolbar();

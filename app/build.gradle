@@ -9,7 +9,7 @@ def globalConf = rootProject.ext
 android {
 
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "25.0.0"
 
     signingConfigs {
         debug {
@@ -166,12 +166,11 @@ dependencies {
 
     compile 'org.jsoup:jsoup:1.8.3'
 
-    compile 'com.google.firebase:firebase-messaging:9.8.0'
-    compile 'com.google.android.gms:play-services-appindexing:9.8.0'
-    compile 'com.google.android.gms:play-services-auth:9.8.0'
-    compile 'com.google.firebase:firebase-core:9.8.0'
-    compile 'com.google.firebase:firebase-crash:9.8.0'
-    compile 'com.google.firebase:firebase-invites:9.8.0'
+    compile 'com.google.firebase:firebase-messaging:10.0.0'
+    compile "com.google.firebase:firebase-appindexing:10.0.0"
+    compile 'com.google.android.gms:play-services-auth:10.0.0'
+    compile 'com.google.firebase:firebase-core:10.0.0'
+    compile 'com.google.firebase:firebase-crash:10.0.0'
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.facebook.android:facebook-android-sdk:4.17.0'
@@ -183,7 +182,7 @@ repositories {
     mavenCentral()
 }
 buildscript {
-    ext.kotlin_version = '1.0.5'
+    ext.kotlin_version = '1.0.5-2'
     repositories {
         mavenCentral()
     }

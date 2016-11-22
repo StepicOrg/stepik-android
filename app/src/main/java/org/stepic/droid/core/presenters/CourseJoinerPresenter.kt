@@ -1,6 +1,8 @@
 package org.stepic.droid.core.presenters
 
 import com.squareup.otto.Bus
+import org.joda.time.DateTime
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.presenters.contracts.CourseJoinView
 import org.stepic.droid.events.joining_course.FailJoinEvent
 import org.stepic.droid.events.joining_course.SuccessJoinEvent
@@ -20,7 +22,8 @@ class CourseJoinerPresenter(
         val api: IApi,
         val threadPoolExecutor: ThreadPoolExecutor,
         val bus: Bus,
-        val database: DatabaseFacade) : PresenterBase<CourseJoinView>() {
+        val database: DatabaseFacade,
+        val analytic: Analytic) : PresenterBase<CourseJoinView>() {
 
     fun joinCourse(mCourse: Course) {
         val response = sharedPreferenceHelper.authResponseFromStore
@@ -40,8 +43,16 @@ class CourseJoinerPresenter(
                             //update in database
                             database.addCourse(localCourseCopy, Table.enrolled)
                             val isFeatured = database.getCourseById(localCourseCopy.courseId, Table.featured) != null
-                            if (isFeatured){
+                            if (isFeatured) {
                                 database.addCourse(localCourseCopy, Table.featured)
+                            }
+                            val enrollNotificationClickMillis: Long? = sharedPreferenceHelper.lastClickEnrollNotification
+                            enrollNotificationClickMillis?.let {
+                                val wasClicked = DateTime(it)
+                                if (wasClicked.plusMinutes(30).isAfterNow) {
+                                    sharedPreferenceHelper.clickEnrollNotification(-1L)
+                                    analytic.reportEvent(Analytic.Notification.REMIND_ENROLL)
+                                }
                             }
                         }
 

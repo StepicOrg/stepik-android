@@ -17,6 +17,8 @@ import org.stepic.droid.core.AudioFocusHelper;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.ShareHelper;
+import org.stepic.droid.notifications.INotificationManager;
+import org.stepic.droid.notifications.LocalReminder;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.ICancelSniffer;
@@ -35,6 +37,9 @@ import butterknife.Unbinder;
 public class FragmentBase extends Fragment {
 
     private Unbinder unbinder;
+
+    @Inject
+    protected LocalReminder localReminder;
 
     @Inject
     protected TextResolver textResolver;

@@ -1,5 +1,6 @@
 package org.stepic.droid.core.components;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
@@ -24,12 +25,14 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.notifications.HackFcmListener;
 import org.stepic.droid.notifications.HackerFcmInstanceId;
 import org.stepic.droid.notifications.NotificationBroadcastReceiver;
+import org.stepic.droid.receivers.BootCompletedReceiver;
 import org.stepic.droid.receivers.DownloadClickReceiver;
 import org.stepic.droid.receivers.DownloadCompleteReceiver;
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver;
 import org.stepic.droid.services.CancelLoadingService;
 import org.stepic.droid.services.DeleteService;
 import org.stepic.droid.services.LoadService;
+import org.stepic.droid.services.NewUserAlarmService;
 import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.services.ViewPusher;
@@ -201,4 +204,8 @@ public interface AppCoreComponent {
     void inject(MainApplication mainApplication);
 
     void inject(InstructorAdapter instructorAdapter);
+
+    void inject(@NotNull NewUserAlarmService newUserAlarmService);
+
+    void inject(BootCompletedReceiver bootCompletedReceiver);
 }
