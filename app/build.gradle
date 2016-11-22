@@ -178,6 +178,7 @@ dependencies {
     compile 'com.jakewharton.timber:timber:4.3.1'
 
     compile 'com.github.javiersantos:MaterialStyledDialogs:2.0'
+    compile 'biz.kasual:materialnumberpicker:1.2.1'
 }
 
 repositories {
