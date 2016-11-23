@@ -3,19 +3,19 @@ package org.stepic.droid.ui.dialogs
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
 import android.widget.NumberPicker
 import biz.kasual.materialnumberpicker.MaterialNumberPicker
+import com.afollestad.materialdialogs.MaterialDialog
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.TimeIntervalUtil
 import timber.log.Timber
 
 
-class PredefinedTimeIntervalPickerDialogFragment : DialogFragment() {
+class TimeIntervalPickerDialogFragment : DialogFragment() {
     companion object {
         private val chosenPositionKey = "chosenPositionKey"
         fun newInstance(): android.support.v4.app.DialogFragment {
-            val fragment = PredefinedTimeIntervalPickerDialogFragment()
+            val fragment = TimeIntervalPickerDialogFragment()
             return fragment
         }
     }
@@ -28,8 +28,6 @@ class PredefinedTimeIntervalPickerDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity)
-
         picker = MaterialNumberPicker(context)
         picker?.minValue = 0
         picker?.maxValue = TimeIntervalUtil.values.size - 1
@@ -43,16 +41,20 @@ class PredefinedTimeIntervalPickerDialogFragment : DialogFragment() {
             Timber.e("reflection failed -> ignore")
         }
 
-
-        builder.setTitle(R.string.notification_time)
-                .setView(picker)
-                .setPositiveButton(R.string.ok) { dialog, which ->
+        return MaterialDialog.Builder(activity)
+                .title(R.string.notification_time)
+                .customView(picker!!, false)
+                .positiveText(R.string.ok)
+                .negativeText(R.string.cancel)
+                .onPositive { dialog, which ->
                     //todo set result to Ok with position
                 }
-                .setNegativeButton(R.string.cancel) { dialog, which ->
-                    //todo: set result cancel
+                .onNegative { materialDialog, dialogAction ->
+                    //todo: set negative result cancel (just like cancel)
                 }
-
-        return builder.create()
+                .cancelListener {
+                    //todo this analytic include onNegative
+                }
+                .build()
     }
 }

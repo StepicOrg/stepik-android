@@ -48,7 +48,7 @@ import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.Submission;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
-import org.stepic.droid.ui.dialogs.PredefinedTimeIntervalPickerDialogFragment;
+import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
 import org.stepic.droid.util.ProgressHelper;
 
 import javax.inject.Inject;
@@ -258,7 +258,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        DialogFragment dialogFragment = PredefinedTimeIntervalPickerDialogFragment.Companion.newInstance();
+                        DialogFragment dialogFragment = TimeIntervalPickerDialogFragment.Companion.newInstance();
                         if (!dialogFragment.isAdded()) {
                             dialogFragment.show(getFragmentManager(), null);
                         }
