@@ -272,6 +272,10 @@ public interface Analytic {
         java.lang.String OPEN_SCREEN_OVERALL = "profile_open_screen_overall";
     }
 
+    interface Streak {
+        String SWITCH_NOTIFICATION_IN_MENU = "streak_switch_notification_state";
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);

@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,8 +22,11 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.ProfilePresenter;
 import org.stepic.droid.core.modules.ProfileModule;
+import org.stepic.droid.core.presenters.NotificationTimePresenter;
+import org.stepic.droid.core.presenters.contracts.NotificationTimeView;
 import org.stepic.droid.core.presenters.contracts.ProfileView;
 import org.stepic.droid.model.UserViewModel;
+import org.stepic.droid.ui.custom.BetterSwitch;
 
 import javax.inject.Inject;
 
@@ -30,12 +34,11 @@ import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
 
-public class ProfileFragment extends FragmentBase implements ProfileView {
+public class ProfileFragment extends FragmentBase implements ProfileView, NotificationTimeView {
 
     private static final String USER_ID_KEY = "user_id_key";
 
     public static ProfileFragment newInstance(long userId) {
-
         Bundle args = new Bundle();
         args.putLong(USER_ID_KEY, userId);
         ProfileFragment fragment = new ProfileFragment();
@@ -97,6 +100,9 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
     @Inject
     ProfilePresenter profilePresenter;
 
+    @Inject
+    NotificationTimePresenter notificationTimePresenter;
+
     @BindView(R.id.empty_users)
     View emptyUsers;
 
@@ -108,6 +114,15 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
 
     @BindView(R.id.content_root)
     View contentRoot;
+
+    @BindView(R.id.notificationStreakSwitch)
+    BetterSwitch notificationStreakSwitch;
+
+    @BindView(R.id.notificationIntervalTitle)
+    View notificationIntervalTitle;
+
+    @BindView(R.id.notificationIntervalValue)
+    TextView notificationIntervalValue;
 
     long userId;
 
@@ -121,7 +136,9 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
 
     @Override
     protected void injectComponent() {
-        MainApplication.component().plus(new ProfileModule()).inject(this);
+        MainApplication
+                .component()
+                .plus(new ProfileModule()).inject(this);
     }
 
     @Nullable
@@ -136,6 +153,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
         initToolbar();
 
         profilePresenter.attachView(this);
+        notificationTimePresenter.attachView(this);
         profilePresenter.initProfile(userId);
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,10 +179,12 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
 
     @Override
     public void onDestroyView() {
+        notificationStreakSwitch.setOnCheckedChangeListener(null);
         profileName.setOnClickListener(null);
         currentStreakValue.setOnClickListener(null);
         maxStreakValue.setOnClickListener(null);
         profileImage.setOnClickListener(null);
+        notificationTimePresenter.detachView(this);
         profilePresenter.detachView(this);
         super.onDestroyView();
     }
@@ -207,6 +227,12 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
         loadingView.setVisibility(View.GONE);
         contentRoot.setVisibility(View.VISIBLE);
 
+        if (userViewModel.isMyProfile()) {
+            shortBioTitle.setText(aboutMeTitle);
+            notificationTimePresenter.tryShowNotificationSetting();
+        } else {
+            shortBioTitle.setText(shortBioTitleString);
+        }
 
         mainInfoRoot.setVisibility(View.VISIBLE);
         profileName.setText(userViewModel.getFullName());
@@ -236,12 +262,6 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
                 infoTitle.setVisibility(View.GONE);
             }
         }
-
-        if (userViewModel.isMyProfile()) {
-            shortBioTitle.setText(aboutMeTitle);
-        } else {
-            shortBioTitle.setText(shortBioTitleString);
-        }
     }
 
     @Override
@@ -258,5 +278,38 @@ public class ProfileFragment extends FragmentBase implements ProfileView {
         contentRoot.setVisibility(View.GONE);
         reportProblemRoot.setVisibility(View.GONE);
         emptyUsers.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showNotification(boolean notificationEnabled, @NotNull String notificationTimeValueString) {
+        notificationStreakSwitch.setChecked(notificationEnabled);
+        if (notificationStreakSwitch.getVisibility() != View.VISIBLE) {
+            notificationStreakSwitch.setVisibility(View.VISIBLE);
+        }
+        if (notificationEnabled) {
+            hideNotificationTime(false);
+        } else {
+            hideNotificationTime(true);
+        }
+
+        notificationStreakSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                notificationTimePresenter.switchNotifcationStreak(isChecked);
+                hideNotificationTime(!isChecked);
+            }
+        });
+        notificationIntervalValue.setText(notificationTimeValueString); //need to set for show default value, when user enable it
+    }
+
+    @Override
+    public void hideNotificationTime(boolean needHide) {
+        if (needHide) {
+            notificationIntervalTitle.setVisibility(View.GONE);
+            notificationIntervalValue.setVisibility(View.GONE);
+        } else {
+            notificationIntervalTitle.setVisibility(View.VISIBLE);
+            notificationIntervalValue.setVisibility(View.VISIBLE);
+        }
     }
 }
