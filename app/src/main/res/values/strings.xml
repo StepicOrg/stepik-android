@@ -301,6 +301,7 @@
         <item quantity="one">It is your %d day when you are solving without break. Solve every day in order to save progress. We suggest you turn on the reminders.</item>
         <item quantity="other">It is your %d days when you are solving without break. Solve every day in order to save progress. We suggest you turn on the reminders.</item>
     </plurals>
-    <string name="notification_time">Choose notification interval</string>
+    <string name="choose_notification_time_interval">Choose notification interval</string>
+    <string name="notification_time">Notification time</string>
     <string name="notification_about_learning">Notifications about learning</string>
 </resources>

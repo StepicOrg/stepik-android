@@ -42,7 +42,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
         }
 
         return MaterialDialog.Builder(activity)
-                .title(R.string.notification_time)
+                .title(R.string.choose_notification_time_interval)
                 .customView(picker!!, false)
                 .positiveText(R.string.ok)
                 .negativeText(R.string.cancel)
