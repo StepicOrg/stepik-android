@@ -233,7 +233,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                 blockUIBeforeSubmit(true);
 
                 //// FIXME: 22.11.16 transfer to after Submit not passed step
-                showStreakDialog(3);
+//                showStreakDialog(3);
                 break;
             case WRONG:
                 onWrongSubmission();
@@ -535,6 +535,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                 int intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.Companion.getResultIntervalCodeKey(), TimeIntervalUtil.INSTANCE.getMiddle());
                 notificationTimePresenter.setStreakTime(intervalCode); // we do not need attach this view, because we need only set in model
                 analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode + "");
+                //// TODO: 24.11.16 show snackbar with congrats
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED);
             }
@@ -556,6 +557,17 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
             submissionRestrictionTextView.setVisibility(View.VISIBLE);
         } else {
             submissionRestrictionTextView.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onUserPostedCorrectSubmission() {
+        if (true || !step.is_custom_passed()) { //// FIXME: 24.11.16 remove TRUE, it is just for fast debugging
+            // this submission is correct and user posted it 1st time
+            //// FIXME: 24.11.16 provide number of days
+            //// FIXME: 24.11.16 fix only if it is not shown before
+            sharedPreferenceHelper.trackWhenUserSolved();
+            showStreakDialog(10);
         }
     }
 }

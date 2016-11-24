@@ -130,8 +130,11 @@ class StepAttemptPresenter(val mainHandler: IMainHandler,
                                 }
 
                                 val numberOfSubmissions = api.getSubmissionForStep(stepId).execute().body().submissions.size
-
+                                val isSubmissionCorrect = submission?.status == Submission.Status.CORRECT
                                 mainHandler.post {
+                                    if (isSubmissionCorrect) {
+                                        view?.onUserPostedCorrectSubmission()
+                                    }
                                     view?.onNeedFillSubmission(submission, numberOfSubmissions)
                                 }
 

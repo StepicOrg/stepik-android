@@ -21,5 +21,8 @@ interface StepAttemptView {
 
     fun onNeedResolveActionButtonText()
 
-    fun onResultHandlingSubmissionRestriction(needShow: Boolean, numberForShow : Int)
+    fun onResultHandlingSubmissionRestriction(needShow: Boolean, numberForShow: Int)
+
+    fun onUserPostedCorrectSubmission()
+
 }
