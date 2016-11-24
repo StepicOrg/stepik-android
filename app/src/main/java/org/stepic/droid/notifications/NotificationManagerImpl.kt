@@ -31,9 +31,11 @@ import org.stepic.droid.ui.activities.StepsActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.HtmlHelper
+import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.web.IApi
 import timber.log.Timber
+import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 
 
@@ -100,11 +102,36 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         if (sharedPreferenceHelper.isStreakNotificationEnabled) {
             localReminder.userChangeStateOfNotification() //plan new alarm at next day
             //go to internet for show streak info todo...
-            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
-            taskBuilder.addNextIntent(screenManager.getShowFindCoursesIntent(context))
-            showSimpleNotification(3214, "Драствуйте, зайдите в приложение, мы Вам рады.", taskBuilder, "Стрики")
 
+            //todo some processing about clicked previous notification
+            //todo some finding of available content or open just my courses?
+            try {
+                val pins: ArrayList<Long> = api.getUserActivities(sharedPreferenceHelper.profile?.id ?: throw Exception("User is not auth")).execute()?.body()?.userActivities?.firstOrNull()?.pins!!
+                val todaySolved = pins[0]
+                val previousPins = pins.subList(1, pins.size) // all except today
+                var (currentStreak, maxStreak) = StepikUtil.getCurrentAndMaxStreak(pins)
+                if (todaySolved > 0) {
+                    currentStreak += 1 // we can write some congrats, that today is already solved, but we need think about UTC update of day
+                }
+                showNotificationWithStreakInfo(currentStreak)
+            } catch (exception: Exception) {
+                // no internet || cant get streaks -> show some notification without streak information.
+                showNotificationWithoutStreakInfo()
+                return
+            }
         }
+    }
+
+    private fun showNotificationWithStreakInfo(currentStreak: Int) {
+        val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
+        taskBuilder.addNextIntent(screenManager.getShowFindCoursesIntent(context))
+        showSimpleNotification(3214, "Драствуйте, Ваш стрик равен $currentStreak. ", taskBuilder, "Стрики")
+    }
+
+    private fun showNotificationWithoutStreakInfo() {
+        val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
+        taskBuilder.addNextIntent(screenManager.getShowFindCoursesIntent(context))
+        showSimpleNotification(3214, "Драствуйте, Нету инфы о стриках, зайдите в приложение, мы Вам рады. ", taskBuilder, "Стрики")
     }
 
     private fun afterLocalNotificationShown(day: SharedPreferenceHelper.NotificationDay) {

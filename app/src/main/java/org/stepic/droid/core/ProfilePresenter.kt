@@ -8,10 +8,10 @@ import org.stepic.droid.core.presenters.contracts.ProfileView
 import org.stepic.droid.model.Profile
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.getFirstAndLastName
 import org.stepic.droid.web.IApi
 import timber.log.Timber
-import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 
 class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
@@ -103,37 +103,6 @@ class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
 
     @WorkerThread
     private fun showStreaks(userId: Long) {
-        fun getMaxStreak(pins: ArrayList<Long>): Int {
-            var maxStreak: Int = 0
-            var currentStreak = 0
-            pins.forEach {
-                if (it != 0L) {
-                    currentStreak++
-                } else {
-                    if (currentStreak > maxStreak) {
-                        maxStreak = currentStreak
-                    }
-                    currentStreak = 0
-                }
-            }
-            if (currentStreak > maxStreak) {
-                maxStreak = currentStreak
-            }
-            return maxStreak
-        }
-
-        fun getCurrentStreak(pins: ArrayList<Long>): Int {
-            var currentStreak: Int = 0
-            pins.forEach {
-                if (it != 0L) {
-                    currentStreak++
-                } else {
-                    return currentStreak
-                }
-            }
-            return currentStreak
-        }
-
         val pins = try {
             api.getUserActivities(userId).execute().body().userActivities.firstOrNull()?.pins
         } catch (exception: Exception) {
@@ -142,8 +111,7 @@ class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
             null
         } ?: return
 
-        val currentStreakLocal = getCurrentStreak(pins)
-        val maxStreakLocal = getMaxStreak(pins)
+        val (currentStreakLocal, maxStreakLocal) = StepikUtil.getCurrentAndMaxStreak(pins)
         mainHandler.post {
             if (currentStreak == null && maxStreak == null) {
                 currentStreak = currentStreakLocal
