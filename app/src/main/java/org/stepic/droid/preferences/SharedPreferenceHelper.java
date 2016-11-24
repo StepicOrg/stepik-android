@@ -20,6 +20,7 @@ import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.model.comments.DiscussionOrder;
 import org.stepic.droid.notifications.model.NotificationType;
 import org.stepic.droid.store.operations.Table;
+import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.web.AuthenticationStepicResponse;
@@ -76,6 +77,8 @@ public class SharedPreferenceHelper {
     private final String FILTER_UPCOMING = "filter_upcoming";
     private final String FILTER_ACTIVE = "filter_active";
     private final String FILTER_PAST = "filter_past";
+    private final String TIME_NOTIFICATION_CODE = "time_notification_code";
+    private final String STREAK_NOTIFICATION = "streak_notification";
 
     private final String USER_START_KEY = "user_start_app";
 
@@ -111,6 +114,22 @@ public class SharedPreferenceHelper {
         } else {
             return lastClickNotificationRemind;
         }
+    }
+
+    public int getTimeNotificationCode() {
+        return getInt(PreferenceType.LOGIN, TIME_NOTIFICATION_CODE, TimeIntervalUtil.INSTANCE.getMiddle());
+    }
+
+    public void setTimeNotificationCode(int value) {
+        put(PreferenceType.LOGIN, TIME_NOTIFICATION_CODE, value);
+    }
+
+    public boolean isStreakNotificationEnabled() {
+        return getBoolean(PreferenceType.LOGIN, STREAK_NOTIFICATION, false);
+    }
+
+    public void setStreakNotificationEnabled(boolean value) {
+        put(PreferenceType.LOGIN, STREAK_NOTIFICATION, value);
     }
 
     public enum NotificationDay {
@@ -579,6 +598,11 @@ public class SharedPreferenceHelper {
     private void clear(PreferenceType type) {
         SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.clear().apply();
+    }
+
+    private int getInt(PreferenceType preferenceType, String key, int defaultValue) {
+        return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
+                .getInt(key, defaultValue);
     }
 
     private int getInt(PreferenceType preferenceType, String key) {

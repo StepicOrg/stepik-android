@@ -1,16 +1,32 @@
 package org.stepic.droid.core.presenters
 
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView
+import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.ui.util.TimeIntervalUtil
+import java.util.concurrent.ThreadPoolExecutor
 
-class NotificationTimePresenter(val analytic: Analytic) : PresenterBase<NotificationTimeView>() {
+class NotificationTimePresenter(val analytic: Analytic,
+                                val threadPoolExecutor: ThreadPoolExecutor,
+                                val mainHandler: IMainHandler,
+                                val sharedPreferenceHelper: SharedPreferenceHelper) : PresenterBase<NotificationTimeView>() {
     fun tryShowNotificationSetting() {
-        view?.showNotification(true, "13:00 - 14:00") //todo check it in shared preferences and show
+        val isEnabled = sharedPreferenceHelper.isStreakNotificationEnabled
+        val code = sharedPreferenceHelper.timeNotificationCode
+        val timeNotificationString = TimeIntervalUtil.values[code]
+        view?.showNotification(isEnabled, timeNotificationString) //todo check it in shared preferences and show
     }
 
-    fun switchNotifcationStreak(isChecked: Boolean) {
-        //todo: save to shared prefs in main thread
+    fun switchNotificationStreak(isChecked: Boolean) {
+        sharedPreferenceHelper.isStreakNotificationEnabled = isChecked
         analytic.reportEvent(Analytic.Streak.SWITCH_NOTIFICATION_IN_MENU, isChecked.toString() + "")
         view?.hideNotificationTime(!isChecked)
+    }
+
+    fun setStreakTime(timeIntervalCode: Int) {
+        sharedPreferenceHelper.timeNotificationCode = timeIntervalCode
+        val timePresentationString = TimeIntervalUtil.values[timeIntervalCode]
+        view?.setNewTimeInterval (timePresentationString)
     }
 }

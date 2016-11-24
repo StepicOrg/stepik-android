@@ -295,7 +295,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
         notificationStreakSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                notificationTimePresenter.switchNotifcationStreak(isChecked);
+                notificationTimePresenter.switchNotificationStreak(isChecked);
                 hideNotificationTime(!isChecked);
             }
         });
@@ -311,5 +311,10 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
             notificationIntervalTitle.setVisibility(View.VISIBLE);
             notificationIntervalValue.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void setNewTimeInterval(@NotNull String timePresentationString) {
+        notificationIntervalValue.setText(timePresentationString);
     }
 }
