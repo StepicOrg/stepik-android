@@ -1,9 +1,12 @@
 package org.stepic.droid.ui.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -27,6 +30,8 @@ import org.stepic.droid.core.presenters.contracts.NotificationTimeView;
 import org.stepic.droid.core.presenters.contracts.ProfileView;
 import org.stepic.droid.model.UserViewModel;
 import org.stepic.droid.ui.custom.BetterSwitch;
+import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
+import org.stepic.droid.ui.util.TimeIntervalUtil;
 
 import javax.inject.Inject;
 
@@ -37,6 +42,7 @@ import butterknife.BindView;
 public class ProfileFragment extends FragmentBase implements ProfileView, NotificationTimeView {
 
     private static final String USER_ID_KEY = "user_id_key";
+    private static final int NOTIFICATION_INTERVAL_REQUEST_CODE = 11;
 
     public static ProfileFragment newInstance(long userId) {
         Bundle args = new Bundle();
@@ -178,6 +184,18 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
                 analytic.reportEvent(Analytic.Profile.CLICK_FULL_NAME);
             }
         });
+
+        notificationIntervalValue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analytic.reportEvent(Analytic.Interaction.CLICK_CHOOSE_NOTIFICATION_INTERVAL);
+                DialogFragment dialogFragment = TimeIntervalPickerDialogFragment.Companion.newInstance();
+                if (!dialogFragment.isAdded()) {
+                    dialogFragment.setTargetFragment(ProfileFragment.this, NOTIFICATION_INTERVAL_REQUEST_CODE);
+                    dialogFragment.show(getFragmentManager(), null);
+                }
+            }
+        });
     }
 
     @Override
@@ -187,6 +205,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
         currentStreakValue.setOnClickListener(null);
         maxStreakValue.setOnClickListener(null);
         profileImage.setOnClickListener(null);
+        notificationIntervalValue.setOnClickListener(null);
         notificationTimePresenter.detachView(this);
         profilePresenter.detachView(this);
         super.onDestroyView();
@@ -331,5 +350,19 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
     @Override
     public void setNewTimeInterval(@NotNull String timePresentationString) {
         notificationIntervalValue.setText(timePresentationString);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == NOTIFICATION_INTERVAL_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                int intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.Companion.getResultIntervalCodeKey(), TimeIntervalUtil.INSTANCE.getMiddle());
+                notificationTimePresenter.setStreakTime(intervalCode);
+                analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_PROFILE, intervalCode + "");
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED_PROFILE);
+            }
+        }
     }
 }

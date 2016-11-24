@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
-    interface System{
+    interface System {
         String BOOT_COMPLETED = "boot_completed";
     }
 
@@ -62,6 +62,7 @@ public interface Analytic {
         String CLICK_SETTINGS_FROM_NOTIFICATION = "click_settings_from_notification";
         String START_SPLASH = "user_start_splash_new";
         String START_SPLASH_EXPERT = "user_start_splash_expert";
+        java.lang.String CLICK_CHOOSE_NOTIFICATION_INTERVAL = "click_choose_notification_interval";
     }
 
     interface Screens {
@@ -274,6 +275,8 @@ public interface Analytic {
 
     interface Streak {
         String SWITCH_NOTIFICATION_IN_MENU = "streak_switch_notification_state";
+        java.lang.String CHOOSE_INTERVAL_PROFILE = "streak_choose_interval_profile";
+        java.lang.String CHOOSE_INTERVAL_CANCELED_PROFILE = "streak_choose_interval_canceled_profile";
     }
 
     void reportEvent(String eventName, Bundle bundle);
