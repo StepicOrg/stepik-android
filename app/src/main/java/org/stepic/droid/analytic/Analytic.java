@@ -277,6 +277,8 @@ public interface Analytic {
         String SWITCH_NOTIFICATION_IN_MENU = "streak_switch_notification_state";
         java.lang.String CHOOSE_INTERVAL_PROFILE = "streak_choose_interval_profile";
         java.lang.String CHOOSE_INTERVAL_CANCELED_PROFILE = "streak_choose_interval_canceled_profile";
+        java.lang.String CHOOSE_INTERVAL_CANCELED = "streak_choose_interval_canceled";
+        java.lang.String CHOOSE_INTERVAL = "streak_choose_interval";
     }
 
     void reportEvent(String eventName, Bundle bundle);

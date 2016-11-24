@@ -35,6 +35,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.modules.StepModule;
+import org.stepic.droid.core.presenters.NotificationTimePresenter;
 import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
 import org.stepic.droid.events.InternetIsEnabledEvent;
@@ -49,6 +50,7 @@ import org.stepic.droid.model.Submission;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
+import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.ProgressHelper;
 
 import javax.inject.Inject;
@@ -61,6 +63,7 @@ import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public abstract class StepAttemptFragment extends StepBaseFragment implements StepAttemptView {
     private final int DISCOUNTING_POLICY_REQUEST_CODE = 131;
+    private final int NOTIFICATION_TIME_REQUEST_CODE = 11;
 
     @BindView(R.id.root_view)
     ViewGroup rootView;
@@ -128,6 +131,9 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     @Inject
     LessonSessionManager lessonManager;
+
+    @Inject
+    NotificationTimePresenter notificationTimePresenter;
 
     @Override
     protected void injectComponent() {
@@ -260,6 +266,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         DialogFragment dialogFragment = TimeIntervalPickerDialogFragment.Companion.newInstance();
                         if (!dialogFragment.isAdded()) {
+                            dialogFragment.setTargetFragment(StepAttemptFragment.this, NOTIFICATION_TIME_REQUEST_CODE);
                             dialogFragment.show(getFragmentManager(), null);
                         }
                     }
@@ -523,6 +530,14 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == DISCOUNTING_POLICY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             makeSubmissionDirectly();
+        } else if (requestCode == NOTIFICATION_TIME_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                int intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.Companion.getResultIntervalCodeKey(), TimeIntervalUtil.INSTANCE.getMiddle());
+                notificationTimePresenter.setStreakTime(intervalCode); // we do not need attach this view, because we need only set in model
+                analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode + "");
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED);
+            }
         }
     }
 
