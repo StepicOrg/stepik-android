@@ -33,6 +33,7 @@ import org.stepic.droid.services.CancelLoadingService;
 import org.stepic.droid.services.DeleteService;
 import org.stepic.droid.services.LoadService;
 import org.stepic.droid.services.NewUserAlarmService;
+import org.stepic.droid.services.StreakAlarmService;
 import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.services.ViewPusher;
@@ -211,4 +212,6 @@ public interface AppCoreComponent {
     void inject(BootCompletedReceiver bootCompletedReceiver);
 
     void inject(@NotNull TimeIntervalPickerDialogFragment timeIntervalPickerDialogFragment);
+
+    void inject(@NotNull StreakAlarmService streakAlarmService);
 }

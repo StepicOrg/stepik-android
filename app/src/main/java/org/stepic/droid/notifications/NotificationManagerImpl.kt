@@ -95,6 +95,11 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         localReminder.remindAboutApp() // schedule for next time
     }
 
+    @WorkerThread
+    override fun showStreakRemind() {
+        TODO() //todo : implement it
+    }
+
     private fun afterLocalNotificationShown(day: SharedPreferenceHelper.NotificationDay) {
         analytic.reportEvent(Analytic.Notification.REMIND_SHOWN, day.name)
         sharedPreferenceHelper.setNotificationShown(day)

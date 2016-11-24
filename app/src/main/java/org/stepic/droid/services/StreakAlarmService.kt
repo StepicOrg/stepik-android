@@ -7,10 +7,10 @@ import org.stepic.droid.base.MainApplication
 import org.stepic.droid.notifications.INotificationManager
 import javax.inject.Inject
 
-class NewUserAlarmService : IntentService("NewUserAlarm") {
+class StreakAlarmService : IntentService("StreakAlarm") {
+
     companion object {
-        var notificationTimestampSentKey = "notificationTimestampKey"
-        var requestCode = 177
+        var requestCode = 178
     }
 
     @Inject
@@ -23,6 +23,8 @@ class NewUserAlarmService : IntentService("NewUserAlarm") {
     }
 
     override fun onHandleIntent(intent: Intent?) {
-        notificationManager.showLocalNotificationRemind()
+        notificationManager.showStreakRemind()
     }
+
 }
+

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    package="org.stepic.droid"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    package="org.stepic.droid"
     android:installLocation="auto">
 
 
@@ -213,30 +213,21 @@
         </receiver>
 
         <service
-            android:name="org.stepic.droid.services.NewUserAlarmService"
-            android:exported="true"/>
+            android:name="org.stepic.droid.services.NewUserAlarmService"/>
         <service
-            android:name="org.stepic.droid.services.LoadService"
-            android:exported="true"></service>
+            android:name="org.stepic.droid.services.StreakAlarmService"/>
         <service
-            android:name="org.stepic.droid.services.DeleteService"
-            android:exported="true"></service>
+            android:name="org.stepic.droid.services.LoadService"/>
         <service
-            android:name="org.stepic.droid.services.ViewPusher"
-            android:exported="true"></service>
-
+            android:name="org.stepic.droid.services.DeleteService"/>
         <service
-            android:name="org.stepic.droid.services.CancelLoadingService"
-            android:exported="true"></service>
-
+            android:name="org.stepic.droid.services.ViewPusher"/>
         <service
-            android:name="org.stepic.droid.services.UpdateAppService"
-            android:exported="true"></service>
-
-
+            android:name="org.stepic.droid.services.CancelLoadingService"/>
         <service
-            android:name="org.stepic.droid.services.UpdateWithApkService"
-            android:exported="true"></service>
+            android:name="org.stepic.droid.services.UpdateAppService"/>
+        <service
+            android:name="org.stepic.droid.services.UpdateWithApkService"/>
 
         <activity
             android:name=".ui.activities.CourseSearchResultActivity"

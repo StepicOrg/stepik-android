@@ -103,6 +103,14 @@ class LocalReminderImpl(val threadPoolExecutor: ThreadPoolExecutor,
         }
     }
 
+    override fun userChangeStateOfNotification() {
+
+    }
+
+    private fun cancelPreviousStreakNotification() {
+
+    }
+
     @MainThread
     override fun remindAboutApp() {
         remindAboutApp(null)
