@@ -73,14 +73,17 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
     @BindView(R.id.currentStreakSuffix)
     TextView currentStreakSuffix;
 
+    @BindView(R.id.currentStreakPrefix)
+    TextView currentStreakPrefix;
+
+    @BindView(R.id.maxStreakPrefix)
+    TextView maxStreakPrefix;
+
     @BindView(R.id.maxStreakValue)
     TextView maxStreakValue;
 
     @BindView(R.id.maxStreakSuffix)
     TextView maxStreakSuffix;
-
-    @BindView(R.id.streakRoot)
-    View streakRoot;
 
     @BindView(R.id.shortBioTitle)
     TextView shortBioTitle;
@@ -209,7 +212,19 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
         currentStreakValue.setText(currentStreak + "");
         maxStreakValue.setText(maxStreak + "");
 
-        streakRoot.setVisibility(View.VISIBLE);
+        showStreakRoot(true);
+    }
+
+    private void showStreakRoot(boolean needShow) {
+        if (needShow) {
+            currentStreakSuffix.setVisibility(View.VISIBLE);
+            currentStreakValue.setVisibility(View.VISIBLE);
+            currentStreakPrefix.setVisibility(View.VISIBLE);
+
+            maxStreakSuffix.setVisibility(View.VISIBLE);
+            maxStreakValue.setVisibility(View.VISIBLE);
+            maxStreakPrefix.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
