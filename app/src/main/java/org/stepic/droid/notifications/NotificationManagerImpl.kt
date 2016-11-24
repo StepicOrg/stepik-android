@@ -54,7 +54,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         Timber.d("Learn everyday, free courses")
         if (sharedPreferenceHelper.authResponseFromStore == null ||
                 databaseFacade.getAllCourses(Table.enrolled).isNotEmpty() ||
-                sharedPreferenceHelper.anyStepIsSolved()) {
+                sharedPreferenceHelper.anyStepIsSolved() || sharedPreferenceHelper.isStreakNotificationEnabled) {
             analytic.reportEvent(Analytic.Notification.REMIND_HIDDEN)
             return
         }

@@ -38,17 +38,13 @@ class LocalReminderImpl(val threadPoolExecutor: ThreadPoolExecutor,
                         //do not show again
                         return@execute
                     }
-                    if (sharedPreferenceHelper.authResponseFromStore == null) {
+                    if (sharedPreferenceHelper.authResponseFromStore == null
+                            || sharedPreferenceHelper.isStreakNotificationEnabled
+                            || databaseFacade.getAllCourses(Table.enrolled).isNotEmpty()
+                            || sharedPreferenceHelper.anyStepIsSolved()) {
                         return@execute
                     }
 
-                    if (databaseFacade.getAllCourses(Table.enrolled).isNotEmpty()) {
-                        return@execute
-                    }
-
-                    if (sharedPreferenceHelper.anyStepIsSolved()) {
-                        return@execute
-                    }
 
                     //now we can plan alarm
 
