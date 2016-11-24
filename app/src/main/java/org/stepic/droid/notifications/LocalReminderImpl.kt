@@ -11,6 +11,7 @@ import org.joda.time.DateTimeZone
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.services.NewUserAlarmService
+import org.stepic.droid.services.StreakAlarmService
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.store.operations.Table
 import java.util.concurrent.ThreadPoolExecutor
@@ -103,12 +104,49 @@ class LocalReminderImpl(val threadPoolExecutor: ThreadPoolExecutor,
         }
     }
 
-    override fun userChangeStateOfNotification() {
+    val stateNotificationHandling = AtomicBoolean(false)
 
+    override fun userChangeStateOfNotification() {
+        threadPoolExecutor.execute {
+            val isNotLoading = stateNotificationHandling.compareAndSet(/* expect */ false, true)
+            if (isNotLoading) {
+                try {
+                    cancelPreviousStreakNotification()
+                    if (sharedPreferenceHelper.isStreakNotificationEnabled) {
+                        //plan new alarm
+                        val hour = sharedPreferenceHelper.timeNotificationCode
+                        val now = DateTime.now()
+
+                        //start of interval
+                        var nextNotification = now
+                                .withHourOfDay(hour)
+                                .withMinuteOfHour(0)
+                                .withSecondOfMinute(0)
+                                .withMillisOfSecond(0)
+                        if (nextNotification.isBefore(now)) {
+                            nextNotification = nextNotification.plusDays(1)
+                        }
+
+                        val intent = Intent(context, StreakAlarmService::class.java)
+                        val pendingIntent = PendingIntent.getService(context, StreakAlarmService.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                            alarmManager.setWindow(AlarmManager.RTC_WAKEUP, nextNotification.millis, AlarmManager.INTERVAL_HOUR, pendingIntent)
+                        } else {
+                            alarmManager.setExact(AlarmManager.RTC_WAKEUP, nextNotification.millis + AlarmManager.INTERVAL_HALF_HOUR, pendingIntent)
+                        }
+                    }
+                } finally {
+                    stateNotificationHandling.set(false)
+                }
+            }
+        }
     }
 
     private fun cancelPreviousStreakNotification() {
-
+        val intent = Intent(context, StreakAlarmService::class.java)
+        val pendingIntent = PendingIntent.getService(context, StreakAlarmService.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        pendingIntent.cancel()
+        alarmManager.cancel(pendingIntent)//timer should not be triggered
     }
 
     @MainThread

@@ -97,7 +97,14 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     @WorkerThread
     override fun showStreakRemind() {
-        TODO() //todo : implement it
+        if (sharedPreferenceHelper.isStreakNotificationEnabled) {
+            localReminder.userChangeStateOfNotification() //plan new alarm at next day
+            //go to internet for show streak info todo...
+            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
+            taskBuilder.addNextIntent(screenManager.getShowFindCoursesIntent(context))
+            showSimpleNotification(3214, "Драствуйте, зайдите в приложение, мы Вам рады.", taskBuilder, "Стрики")
+
+        }
     }
 
     private fun afterLocalNotificationShown(day: SharedPreferenceHelper.NotificationDay) {
