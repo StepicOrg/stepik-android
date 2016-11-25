@@ -304,7 +304,7 @@
     <string name="notification_time">Время напоминания</string>
     <string name="notification_about_learning">Уведомления о занятиях</string>
     <string name="time_to_learn_notification_title">Время учиться!</string>
-    <plurals name="streak_notification_message">
+    <plurals name="streak_notification_message_call_to_action">
         <item quantity="one">Вы молодец! Вы решаете уже %d день без перерыва. Не останавливайтесь, решите задачу прямо сейчас!</item>
         <item quantity="few">Вы молодец! Вы решаете уже %d дня без перерыва. Не останавливайтесь, решите задачу прямо сейчас!</item>
         <item quantity="many">Вы молодец! Вы решаете уже %d дней без перерыва. Не останавливайтесь, решите задачу прямо сейчас!</item>

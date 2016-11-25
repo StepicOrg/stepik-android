@@ -305,7 +305,7 @@
     <string name="notification_time">Notification time</string>
     <string name="notification_about_learning">Notifications about learning</string>
     <string name="time_to_learn_notification_title">Time to learn!</string>
-    <plurals name="streak_notification_message">
+    <plurals name="streak_notification_message_call_to_action">
         <item quantity="one">Well done! You solve %d day without a break. Do not stop, solve the task right now!</item>
         <item quantity="other">Well done! You solve %d days without a break. Do not stop, solve the task right now!</item>
     </plurals>

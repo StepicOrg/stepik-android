@@ -3,6 +3,7 @@ package org.stepic.droid.util
 import android.content.Context
 import android.net.ConnectivityManager
 import org.stepic.droid.base.MainApplication
+import org.stepic.droid.model.CurrentStreakExtended
 
 object StepikUtil {
     fun isInternetAvailable(): Boolean {
@@ -35,6 +36,10 @@ object StepikUtil {
      * *Positive* current streak, which is not zero in the start of day and increased if today user solve some tasks.
      */
     fun getCurrentStreak(pins: List<Long>): Int {
+        return getCurrentStreakExtended(pins).currentStreak
+    }
+
+    fun getCurrentStreakExtended(pins: List<Long>): CurrentStreakExtended {
         val today = if (pins[0] == 0L) {
             0
         } else {
@@ -45,9 +50,9 @@ object StepikUtil {
             if (pins[i] != 0L) {
                 currentStreak++
             } else {
-                return currentStreak + today
+                return CurrentStreakExtended(currentStreak + today, today > 0)
             }
         }
-        return currentStreak
+        return CurrentStreakExtended(currentStreak + today, today > 0)
     }
 }

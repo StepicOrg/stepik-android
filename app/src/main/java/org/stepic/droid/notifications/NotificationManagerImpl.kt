@@ -108,8 +108,12 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             //todo some finding of available content or open just my courses?
             try {
                 val pins: ArrayList<Long> = api.getUserActivities(sharedPreferenceHelper.profile?.id ?: throw Exception("User is not auth")).execute()?.body()?.userActivities?.firstOrNull()?.pins!!
-                val currentStreak = StepikUtil.getCurrentStreak(pins)
-                showNotificationWithStreakInfo(currentStreak)
+                val (currentStreak, isSolvedToday) = StepikUtil.getCurrentStreakExtended(pins)
+                if (isSolvedToday) {
+                    showNotificationStreakImprovement(currentStreak)
+                } else {
+                    showNotificationWithStreakCallToAction(currentStreak)
+                }
             } catch (exception: Exception) {
                 // no internet || cant get streaks -> show some notification without streak information.
                 showNotificationWithoutStreakInfo()
@@ -118,16 +122,27 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         }
     }
 
-    private fun showNotificationWithStreakInfo(currentStreak: Int) {
-        val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
-        taskBuilder.addNextIntent(screenManager.getShowFindCoursesIntent(context))//fixme
-        showSimpleNotification(notificationStreakId, "Драствуйте, Ваш стрик равен $currentStreak. ", taskBuilder, context.getString(R.string.time_to_learn_notification_title))
+    private fun showNotificationStreakImprovement(currentStreak: Int) {
+        val taskBuilder: TaskStackBuilder = getStreakNotificationTaskBuilder()
+        showSimpleNotification(notificationStreakId, "Драствуйте, Ваш стрик равен $currentStreak. ", taskBuilder, context.getString(R.string.time_to_learn_notification_title)) //fixme
+    }
+
+    private fun showNotificationWithStreakCallToAction(currentStreak: Int) {
+        val taskBuilder: TaskStackBuilder = getStreakNotificationTaskBuilder()
+        val message = context.resources.getQuantityString(R.plurals.streak_notification_message_call_to_action, currentStreak, currentStreak)
+        showSimpleNotification(notificationStreakId, message, taskBuilder, context.getString(R.string.time_to_learn_notification_title))
     }
 
     private fun showNotificationWithoutStreakInfo() {
+        val taskBuilder: TaskStackBuilder = getStreakNotificationTaskBuilder()
+        showSimpleNotification(notificationStreakId, "Драствуйте, Нету инфы о стриках, зайдите в приложение, мы Вам рады. ", taskBuilder, context.getString(R.string.time_to_learn_notification_title)) //fixme
+    }
+
+    private fun getStreakNotificationTaskBuilder(): TaskStackBuilder {
+        //fixme: open content or my courses??
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
-        taskBuilder.addNextIntent(screenManager.getShowFindCoursesIntent(context))//fixme
-        showSimpleNotification(notificationStreakId, "Драствуйте, Нету инфы о стриках, зайдите в приложение, мы Вам рады. ", taskBuilder, context.getString(R.string.time_to_learn_notification_title))
+        taskBuilder.addNextIntent(screenManager.getShowFindCoursesIntent(context))
+        return taskBuilder
     }
 
     private fun afterLocalNotificationShown(day: SharedPreferenceHelper.NotificationDay) {
