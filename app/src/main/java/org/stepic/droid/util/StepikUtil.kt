@@ -3,7 +3,6 @@ package org.stepic.droid.util
 import android.content.Context
 import android.net.ConnectivityManager
 import org.stepic.droid.base.MainApplication
-import org.stepic.droid.model.CurrentMaxStreak
 
 object StepikUtil {
     fun isInternetAvailable(): Boolean {
@@ -13,41 +12,42 @@ object StepikUtil {
         return isConnectedOrConnecting
     }
 
-    fun getCurrentAndMaxStreak(pins: List<Long>): CurrentMaxStreak {
-        fun getMaxStreak(pins: List<Long>): Int {
-            var maxStreak: Int = 0
-            var currentStreak = 0
-            pins.forEach {
-                if (it != 0L) {
-                    currentStreak++
-                } else {
-                    if (currentStreak > maxStreak) {
-                        maxStreak = currentStreak
-                    }
-                    currentStreak = 0
+    fun getMaxStreak(pins: List<Long>): Int {
+        var maxStreak: Int = 0
+        var currentStreak = 0
+        pins.forEach {
+            if (it != 0L) {
+                currentStreak++
+            } else {
+                if (currentStreak > maxStreak) {
+                    maxStreak = currentStreak
                 }
+                currentStreak = 0
             }
-            if (currentStreak > maxStreak) {
-                maxStreak = currentStreak
-            }
-            return maxStreak
         }
-
-        fun getCurrentStreak(pins: List<Long>): Int {
-            var currentStreak: Int = 0
-            pins.forEach {
-                if (it != 0L) {
-                    currentStreak++
-                } else {
-                    return currentStreak
-                }
-            }
-            return currentStreak
+        if (currentStreak > maxStreak) {
+            maxStreak = currentStreak
         }
+        return maxStreak
+    }
 
-        val currentStreak = getCurrentStreak(pins)
-        val maxStreak = getMaxStreak(pins)
-
-        return CurrentMaxStreak(currentStreak, maxStreak)
+    /**
+     * *Positive* current streak, which is not zero in the start of day and increased if today user solve some tasks.
+     */
+    fun getCurrentStreak(pins: List<Long>): Int {
+        val today = if (pins[0] == 0L) {
+            0
+        } else {
+            1
+        }
+        var currentStreak: Int = 0
+        for (i in 1 until pins.size) {
+            if (pins[i] != 0L) {
+                currentStreak++
+            } else {
+                return currentStreak + today
+            }
+        }
+        return currentStreak
     }
 }

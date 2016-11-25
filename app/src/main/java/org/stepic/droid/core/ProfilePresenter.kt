@@ -111,7 +111,8 @@ class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
             null
         } ?: return
 
-        val (currentStreakLocal, maxStreakLocal) = StepikUtil.getCurrentAndMaxStreak(pins)
+        val currentStreakLocal = StepikUtil.getCurrentStreak(pins)
+        val maxStreakLocal = StepikUtil.getMaxStreak(pins)
         mainHandler.post {
             if (currentStreak == null && maxStreak == null) {
                 currentStreak = currentStreakLocal

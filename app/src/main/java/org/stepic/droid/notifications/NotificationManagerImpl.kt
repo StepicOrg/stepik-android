@@ -107,12 +107,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             //todo some finding of available content or open just my courses?
             try {
                 val pins: ArrayList<Long> = api.getUserActivities(sharedPreferenceHelper.profile?.id ?: throw Exception("User is not auth")).execute()?.body()?.userActivities?.firstOrNull()?.pins!!
-                val todaySolved = pins[0]
-                val previousPins = pins.subList(1, pins.size) // all except today
-                var (currentStreak, maxStreak) = StepikUtil.getCurrentAndMaxStreak(previousPins)
-                if (todaySolved > 0) {
-                    currentStreak += 1 // we can write some congrats, that today is already solved, but we need think about UTC update of day
-                }
+                val currentStreak = StepikUtil.getCurrentStreak(pins)
                 showNotificationWithStreakInfo(currentStreak)
             } catch (exception: Exception) {
                 // no internet || cant get streaks -> show some notification without streak information.
