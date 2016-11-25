@@ -50,6 +50,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                               val threadPoolExecutor: ThreadPoolExecutor,
                               val context: Context,
                               val localReminder: LocalReminder) : INotificationManager {
+    val notificationStreakId: Long = 3214L
 
     @WorkerThread
     override fun showLocalNotificationRemind() {
@@ -119,14 +120,14 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     private fun showNotificationWithStreakInfo(currentStreak: Int) {
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
-        taskBuilder.addNextIntent(screenManager.getShowFindCoursesIntent(context))
-        showSimpleNotification(3214, "Драствуйте, Ваш стрик равен $currentStreak. ", taskBuilder, "Стрики")
+        taskBuilder.addNextIntent(screenManager.getShowFindCoursesIntent(context))//fixme
+        showSimpleNotification(notificationStreakId, "Драствуйте, Ваш стрик равен $currentStreak. ", taskBuilder, context.getString(R.string.time_to_learn_notification_title))
     }
 
     private fun showNotificationWithoutStreakInfo() {
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
-        taskBuilder.addNextIntent(screenManager.getShowFindCoursesIntent(context))
-        showSimpleNotification(3214, "Драствуйте, Нету инфы о стриках, зайдите в приложение, мы Вам рады. ", taskBuilder, "Стрики")
+        taskBuilder.addNextIntent(screenManager.getShowFindCoursesIntent(context))//fixme
+        showSimpleNotification(notificationStreakId, "Драствуйте, Нету инфы о стриках, зайдите в приложение, мы Вам рады. ", taskBuilder, context.getString(R.string.time_to_learn_notification_title))
     }
 
     private fun afterLocalNotificationShown(day: SharedPreferenceHelper.NotificationDay) {

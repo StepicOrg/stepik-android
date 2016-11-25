@@ -304,4 +304,5 @@
     <string name="choose_notification_time_interval">Choose notification interval</string>
     <string name="notification_time">Notification time</string>
     <string name="notification_about_learning">Notifications about learning</string>
+    <string name="time_to_learn_notification_title">Time to learn!</string>
 </resources>

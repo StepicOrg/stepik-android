@@ -303,4 +303,5 @@
     <string name="choose_notification_time_interval">Выберите время напоминания</string>
     <string name="notification_time">Время напоминания</string>
     <string name="notification_about_learning">Уведомления о занятиях</string>
+    <string name="time_to_learn_notification_title">Время учиться!</string>
 </resources>
