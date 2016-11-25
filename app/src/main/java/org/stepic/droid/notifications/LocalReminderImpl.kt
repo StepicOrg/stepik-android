@@ -54,7 +54,6 @@ class LocalReminderImpl(val threadPoolExecutor: ThreadPoolExecutor,
                     if (millis != null && millis > 0L && DateTime(millis).isAfterNow) {
                         scheduleMillis = millis // after reboot we already scheduled.
                     } else {
-
                         val dayDiff: Int =
                                 if (!isFirstDayNotificationShown) {
                                     1
@@ -83,11 +82,7 @@ class LocalReminderImpl(val threadPoolExecutor: ThreadPoolExecutor,
                     val pendingIntent = PendingIntent.getService(context, NewUserAlarmService.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
                     alarmManager.cancel(pendingIntent)//timer should not be triggered
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        alarmManager.setWindow(AlarmManager.RTC_WAKEUP, scheduleMillis - AlarmManager.INTERVAL_FIFTEEN_MINUTES, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent)
-                    } else {
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, scheduleMillis, pendingIntent)
-                    }
+                    scheduleCompat(scheduleMillis, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent)
 
                     val dayType = if (!isFirstDayNotificationShown) {
                         SharedPreferenceHelper.NotificationDay.DAY_ONE
@@ -129,11 +124,9 @@ class LocalReminderImpl(val threadPoolExecutor: ThreadPoolExecutor,
 
                         val intent = Intent(context, StreakAlarmService::class.java)
                         val pendingIntent = PendingIntent.getService(context, StreakAlarmService.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                            alarmManager.setWindow(AlarmManager.RTC_WAKEUP, nextNotification.millis, AlarmManager.INTERVAL_HOUR, pendingIntent)
-                        } else {
-                            alarmManager.setExact(AlarmManager.RTC_WAKEUP, nextNotification.millis + AlarmManager.INTERVAL_HALF_HOUR, pendingIntent)
-                        }
+
+
+                        scheduleCompat(nextNotification.millis, AlarmManager.INTERVAL_HOUR, pendingIntent)
                     }
                 } finally {
                     stateNotificationHandling.set(false)
@@ -152,5 +145,18 @@ class LocalReminderImpl(val threadPoolExecutor: ThreadPoolExecutor,
     @MainThread
     override fun remindAboutApp() {
         remindAboutApp(null)
+    }
+
+    private fun scheduleCompat(scheduleMillis: Long, interval: Long, pendingIntent: PendingIntent) {
+        if (Build.VERSION.SDK_INT < 23) {
+            if (Build.VERSION.SDK_INT >= 19) {
+                alarmManager.setWindow(AlarmManager.RTC_WAKEUP, scheduleMillis, interval, pendingIntent)
+            } else {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, scheduleMillis + interval / 2, pendingIntent)
+            }
+        } else {
+//            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, scheduleMillis + interval / 2, pendingIntent) //fixme uncomment after developinga
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, DateTime.now().millis + 15000, pendingIntent) //DEBUG PURPOSE ONLY
+        }
     }
 }

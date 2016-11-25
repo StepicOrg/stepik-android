@@ -4,6 +4,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.presenters.NotificationTimePresenter;
+import org.stepic.droid.notifications.LocalReminder;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 
 import java.util.concurrent.ThreadPoolExecutor;
@@ -18,7 +19,8 @@ public class NotificationTimeModule {
     public NotificationTimePresenter provideNotificationTimePresenter(Analytic analytic,
                                                                       ThreadPoolExecutor threadPoolExecutor,
                                                                       IMainHandler mainHandler,
-                                                                      SharedPreferenceHelper sharedPreferenceHelper) {
-        return new NotificationTimePresenter(analytic, threadPoolExecutor, mainHandler, sharedPreferenceHelper);
+                                                                      SharedPreferenceHelper sharedPreferenceHelper,
+                                                                      LocalReminder localReminder) {
+        return new NotificationTimePresenter(analytic, threadPoolExecutor, mainHandler, sharedPreferenceHelper, localReminder);
     }
 }

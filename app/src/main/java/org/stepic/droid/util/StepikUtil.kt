@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.model.CurrentMaxStreak
-import java.util.*
 
 object StepikUtil {
     fun isInternetAvailable(): Boolean {
@@ -14,8 +13,8 @@ object StepikUtil {
         return isConnectedOrConnecting
     }
 
-    fun getCurrentAndMaxStreak(pins: ArrayList<Long>): CurrentMaxStreak {
-        fun getMaxStreak(pins: ArrayList<Long>): Int {
+    fun getCurrentAndMaxStreak(pins: List<Long>): CurrentMaxStreak {
+        fun getMaxStreak(pins: List<Long>): Int {
             var maxStreak: Int = 0
             var currentStreak = 0
             pins.forEach {
@@ -34,7 +33,7 @@ object StepikUtil {
             return maxStreak
         }
 
-        fun getCurrentStreak(pins: ArrayList<Long>): Int {
+        fun getCurrentStreak(pins: List<Long>): Int {
             var currentStreak: Int = 0
             pins.forEach {
                 if (it != 0L) {
