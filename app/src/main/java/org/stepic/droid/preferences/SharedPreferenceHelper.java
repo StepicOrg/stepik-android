@@ -130,6 +130,14 @@ public class SharedPreferenceHelper {
         return getBoolean(PreferenceType.LOGIN, STREAK_NOTIFICATION, false);
     }
 
+    /**
+     * Null by default
+     */
+    @Nullable
+    public Boolean isStreakNotificationEnabledNullable () {
+        return getBoolean(PreferenceType.LOGIN, STREAK_NOTIFICATION, null);
+    }
+
     public void setStreakNotificationEnabled(boolean value) {
         put(PreferenceType.LOGIN, STREAK_NOTIFICATION, value);
     }
@@ -659,6 +667,12 @@ public class SharedPreferenceHelper {
     private boolean getBoolean(PreferenceType preferenceType, String key) {
         return getBoolean(preferenceType, key, false);
     }
+
+    private boolean getBoolean(PreferenceType preferenceType, String key, Boolean defaultValue) {
+        return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
+                .getBoolean(key, defaultValue);
+    }
+
 
     private boolean getBoolean(PreferenceType preferenceType, String key, boolean defaultValue) {
         return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)

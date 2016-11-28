@@ -135,8 +135,8 @@ class StepAttemptPresenter(val mainHandler: IMainHandler,
 
                                 val numberOfSubmissions = api.getSubmissionForStep(stepId).execute().body().submissions.size
                                 val needShowStreakDialog = (submission?.status == Submission.Status.CORRECT)
-                                        && !sharedPreferenceHelper.isStreakNotificationEnabled &&
-                                        sharedPreferenceHelper.canShowStreakDialog()
+                                        && (sharedPreferenceHelper.isStreakNotificationEnabledNullable == null) // default value, user not change in profile
+                                        && sharedPreferenceHelper.canShowStreakDialog()
 
 
                                 val streakDayNumber: Int = if (needShowStreakDialog) {
