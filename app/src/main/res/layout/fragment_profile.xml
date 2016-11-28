@@ -190,9 +190,29 @@
                             android:layout_alignParentRight="true"
                             android:layout_below="@id/notificationStreakSwitch"
                             android:padding="@dimen/guideline_standard_padding"
+                            android:paddingBottom="@dimen/guideline_standard_padding"
+                            android:paddingLeft="@dimen/guideline_standard_padding"
+                            android:paddingRight="@dimen/guideline_standard_padding"
                             android:textSize="@dimen/text_header"
                             android:visibility="gone"
                             tools:text="12:00 - 13:00"
+                            tools:visibility="visible"/>
+
+                        <TextView
+                            android:id="@+id/notificationTimeZoneInfo"
+                            fontPath="fonts/NotoSans-Italic.ttf"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_below="@+id/notificationIntervalTitle"
+                            android:paddingBottom="@dimen/guideline_standard_padding"
+                            android:paddingLeft="@dimen/guideline_standard_padding"
+                            android:paddingRight="@dimen/guideline_standard_padding"
+                            android:textSize="@dimen/text_height"
+                            android:visibility="gone"
+                            tools:ignore="MissingPrefix"
+                            android:gravity="end"
+                            tools:text="Рекорды обновляются в 19:00 (Восточная Америка, стандартное время)"
                             tools:visibility="visible"/>
 
                     </RelativeLayout>

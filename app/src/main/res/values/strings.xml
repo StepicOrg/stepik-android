@@ -315,4 +315,5 @@
     <string name="streak_notification_enabled_successfully">Notifications are enabled. You can change your choice in Profile</string>
     <string name="streak_notification_canceled">Notifications are not enabled. You can change your choice in Profile</string>
     <string name="streak_notification_not_working">It seems that notifications are not working. We will not send them. Click to enable again</string>
+    <string name="streak_updated_timezone">Streaks are updated at %s</string>
 </resources>

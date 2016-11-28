@@ -316,4 +316,5 @@
     <string name="streak_notification_enabled_successfully">Уведомления включены. Вы можете изменить свой выбор в Профиле</string>
     <string name="streak_notification_canceled">Уведомления отключены. Вы можете изменить свой выбор в Профиле</string>
     <string name="streak_notification_not_working">Похоже напоминания не действуют. Мы больше не будем их посылать. Нажмите, чтобы включить снова</string>
+    <string name="streak_updated_timezone">Рекорды обновляются в %s</string>
 </resources>

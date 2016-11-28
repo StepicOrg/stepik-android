@@ -19,6 +19,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import org.jetbrains.annotations.NotNull;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
@@ -133,6 +137,9 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
     @BindView(R.id.notificationIntervalValue)
     TextView notificationIntervalValue;
 
+    @BindView(R.id.notificationTimeZoneInfo)
+    TextView notificationTimeZoneInfo;
+
     long userId;
 
     @Override
@@ -160,6 +167,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initToolbar();
+        initTimezone();
 
         profilePresenter.attachView(this);
         notificationTimePresenter.attachView(this);
@@ -196,6 +204,18 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
                 }
             }
         });
+    }
+
+    private void initTimezone() {
+        DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder()
+                .appendHourOfDay(2)
+                .appendLiteral(":00 (")
+                .appendTimeZoneName()
+                .appendLiteral(')')
+                .toFormatter();
+        DateTime utc = DateTime.now(DateTimeZone.UTC).withMillisOfDay(0);
+        String print = dateTimeFormatter.print(utc.withZone(DateTimeZone.getDefault()));
+        notificationTimeZoneInfo.setText(getString(R.string.streak_updated_timezone, print));
     }
 
     @Override
@@ -338,13 +358,10 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
 
     @Override
     public void hideNotificationTime(boolean needHide) {
-        if (needHide) {
-            notificationIntervalTitle.setVisibility(View.GONE);
-            notificationIntervalValue.setVisibility(View.GONE);
-        } else {
-            notificationIntervalTitle.setVisibility(View.VISIBLE);
-            notificationIntervalValue.setVisibility(View.VISIBLE);
-        }
+        int visibility = needHide ? View.GONE : View.VISIBLE;
+        notificationTimeZoneInfo.setVisibility(visibility);
+        notificationIntervalTitle.setVisibility(visibility);
+        notificationIntervalValue.setVisibility(visibility);
     }
 
     @Override
