@@ -131,7 +131,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     private fun showNotificationStreakImprovement(currentStreak: Int) {
         val taskBuilder: TaskStackBuilder = getStreakNotificationTaskBuilder()
         val message = context.resources.getString(R.string.streak_notification_message_improvement, currentStreak)
-        showSimpleNotification(notificationStreakId, message, taskBuilder, context.getString(R.string.time_to_learn_notification_title)) //fixme
+        showSimpleNotification(notificationStreakId, message, taskBuilder, context.getString(R.string.time_to_learn_notification_title))
     }
 
     private fun showNotificationWithStreakCallToAction(currentStreak: Int) {
@@ -143,7 +143,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     private fun showNotificationWithoutStreakInfo() {
         val taskBuilder: TaskStackBuilder = getStreakNotificationTaskBuilder()
         val message = context.resources.getString(R.string.streak_notification_empty_number)
-        showSimpleNotification(notificationStreakId, message, taskBuilder, context.getString(R.string.time_to_learn_notification_title)) //fixme
+        showSimpleNotification(notificationStreakId, message, taskBuilder, context.getString(R.string.time_to_learn_notification_title))
     }
 
     private fun getStreakNotificationTaskBuilder(): TaskStackBuilder {
