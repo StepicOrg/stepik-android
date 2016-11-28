@@ -542,6 +542,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         } else if (requestCode == NOTIFICATION_TIME_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 int intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.Companion.getResultIntervalCodeKey(), TimeIntervalUtil.INSTANCE.getMiddle());
+                sharedPreferenceHelper.setStreakNotificationEnabled(true);
                 notificationTimePresenter.setStreakTime(intervalCode); // we do not need attach this view, because we need only set in model
                 analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode + "");
                 SnackbarExtensionKt
