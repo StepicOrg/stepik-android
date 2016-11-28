@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.NestedScrollView;
 import android.text.Spannable;
@@ -51,7 +52,9 @@ import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
+import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.SnackbarExtensionKt;
 
 import javax.inject.Inject;
 
@@ -541,9 +544,24 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                 int intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.Companion.getResultIntervalCodeKey(), TimeIntervalUtil.INSTANCE.getMiddle());
                 notificationTimePresenter.setStreakTime(intervalCode); // we do not need attach this view, because we need only set in model
                 analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode + "");
-                //// TODO: 24.11.16 show snackbar with congrats
+                SnackbarExtensionKt
+                        .setTextColor(
+                                Snackbar.make(rootView,
+                                        R.string.streak_notification_enabled_successfully,
+                                        Snackbar.LENGTH_LONG),
+                                ColorUtil.INSTANCE.getColorArgb(R.color.white,
+                                        getContext()))
+                        .show();
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED);
+                SnackbarExtensionKt
+                        .setTextColor(
+                                Snackbar.make(rootView,
+                                        R.string.streak_notification_canceled,
+                                        Snackbar.LENGTH_LONG),
+                                ColorUtil.INSTANCE.getColorArgb(R.color.white,
+                                        getContext()))
+                        .show();
             }
         }
     }

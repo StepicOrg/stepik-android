@@ -312,4 +312,6 @@
     </plurals>
     <string name="streak_notification_message_improvement">Good job! Current streak was increased to %d. Keep it up!</string>
     <string name="streak_notification_empty_number">Learning requires daily practice. Solve the task right now!</string>
+    <string name="streak_notification_enabled_successfully">Notifications are enabled. You can change your choice in Profile</string>
+    <string name="streak_notification_canceled">Notifications are not enabled. You can change your choice in Profile</string>
 </resources>
