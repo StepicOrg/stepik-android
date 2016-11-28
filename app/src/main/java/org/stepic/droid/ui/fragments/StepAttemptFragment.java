@@ -263,6 +263,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
             description = getString(R.string.streak_description_not_positive);
         }
 
+        analytic.reportEvent(Analytic.Streak.SHOWN_MATERIAL_DIALOG);
         MaterialStyledDialog dialog = new MaterialStyledDialog.Builder(getContext())
                 .setTitle(streakTitle)
                 .setDescription(description)
@@ -273,11 +274,18 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        analytic.reportEvent(Analytic.Streak.POSITIVE_MATERIAL_DIALOG);
                         DialogFragment dialogFragment = TimeIntervalPickerDialogFragment.Companion.newInstance();
                         if (!dialogFragment.isAdded()) {
                             dialogFragment.setTargetFragment(StepAttemptFragment.this, NOTIFICATION_TIME_REQUEST_CODE);
                             dialogFragment.show(getFragmentManager(), null);
                         }
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        analytic.reportEvent(Analytic.Streak.NEGATIVE_MATERIAL_DIALOG);
                     }
                 })
                 .build();
