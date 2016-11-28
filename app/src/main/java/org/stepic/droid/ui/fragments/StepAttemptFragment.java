@@ -595,10 +595,8 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     @Override
     public void onNeedShowStreakDialog(int numberOfStreakDayIncludeToday) {
-        if (!step.is_custom_passed()) {
-            // this submission is correct and user posted it 1st time
-            sharedPreferenceHelper.trackWhenUserSolved();
-            showStreakDialog(numberOfStreakDayIncludeToday);
-        }
+        // this submission is correct and user posted it 1st time
+        sharedPreferenceHelper.trackWhenUserSolved();
+        showStreakDialog(numberOfStreakDayIncludeToday);
     }
 }
