@@ -200,7 +200,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         blockUIBeforeSubmit(true);
         final long attemptId = attempt.getId();
         final Reply reply = generateReply();
-        stepAttemptPresenter.postSubmission(step.getId(), reply, attemptId);
+        stepAttemptPresenter.postSubmission(step, reply, attemptId);
     }
 
     @Override
