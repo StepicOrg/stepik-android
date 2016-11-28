@@ -312,4 +312,5 @@
     </plurals>
     <string name="streak_notification_message_improvement">Хорошая работа! Вы увеличили количество дней без перерыва до %d. Так держать!</string>
     <string name="streak_notification_empty_number">Обучение требует ежедневной практики. Решите задание прямо сейчас!</string>
+    <string name="streak_description_not_positive">Верно! Решайте по одной каждый день, чтобы поддержать прогресс. Для этого мы предлагаем Вам включить напоминания.</string>
 </resources>

@@ -251,7 +251,14 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), "fonts/NotoSans-Bold.ttf"));
         streakTitle.setSpan(typefaceSpan, 0, streakTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        String description = getResources().getQuantityString(R.plurals.streak_description, daysOfCurrentStreakIncludeToday, daysOfCurrentStreakIncludeToday);
+        String description;
+        if (daysOfCurrentStreakIncludeToday > 0) {
+            analytic.reportEvent(Analytic.Streak.SHOW_DIALOG_UNDEFINED_STREAKS, daysOfCurrentStreakIncludeToday + "");
+            description = getResources().getQuantityString(R.plurals.streak_description, daysOfCurrentStreakIncludeToday, daysOfCurrentStreakIncludeToday);
+        } else {
+            analytic.reportEvent(Analytic.Streak.SHOW_DIALOG_POSITIVE_STREAKS, daysOfCurrentStreakIncludeToday + "");
+            description = getString(R.string.streak_description_not_positive);
+        }
 
         MaterialStyledDialog dialog = new MaterialStyledDialog.Builder(getContext())
                 .setTitle(streakTitle)
@@ -560,13 +567,11 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     }
 
     @Override
-    public void onUserPostedCorrectSubmission() {
+    public void onNeedShowStreakDialog(int numberOfStreakDayIncludeToday) {
         if (true || !step.is_custom_passed()) { //// FIXME: 24.11.16 remove TRUE, it is just for fast debugging
             // this submission is correct and user posted it 1st time
-            //// FIXME: 24.11.16 provide number of days
-            //// FIXME: 24.11.16 fix only if it is not shown before
             sharedPreferenceHelper.trackWhenUserSolved();
-            showStreakDialog(10);
+            showStreakDialog(numberOfStreakDayIncludeToday);
         }
     }
 }

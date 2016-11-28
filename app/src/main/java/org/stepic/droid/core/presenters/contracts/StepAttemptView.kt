@@ -23,6 +23,6 @@ interface StepAttemptView {
 
     fun onResultHandlingSubmissionRestriction(needShow: Boolean, numberForShow: Int)
 
-    fun onUserPostedCorrectSubmission()
+    fun onNeedShowStreakDialog(streakDays : Int)
 
 }

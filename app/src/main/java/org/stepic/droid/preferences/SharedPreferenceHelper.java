@@ -66,10 +66,12 @@ public class SharedPreferenceHelper {
     private final String VIDEO_QUALITY_EXPLANATION = "video_quality_explanation";
     private final String NEED_DROP_114 = "need_drop_114";
     private final String REMIND_CLICK = "remind_click";
-    private static final String ONE_DAY_NOTIFICATION = "one_day_notification";
-    private static final String SEVEN_DAY_NOTIFICATION = "seven_day_notification";
-    private static final String ANY_STEP_SOLVED = "any_step_solved";
-    private static final String NEW_USER_ALARM_TIMESTAMP = "new_user_alarm_timestamp";
+    private final static String ONE_DAY_NOTIFICATION = "one_day_notification";
+    private final static String SEVEN_DAY_NOTIFICATION = "seven_day_notification";
+    private final String ANY_STEP_SOLVED = "any_step_solved";
+    private final String NEW_USER_ALARM_TIMESTAMP = "new_user_alarm_timestamp";
+    private final String NUMBER_OF_SHOWN_STREAK_DIALOG = "number_of_shown_streak_dialog";
+    private final String STREAK_DIALOG_SHOWN_TIMESTAMP = "streak_dialog_shown_timestamp";
 
     private final String FILTER_PERSISTENT = "filter_persistent";
     private final String FILTER_RUSSIAN_LANGUAGE = "russian_lang";
@@ -130,6 +132,35 @@ public class SharedPreferenceHelper {
 
     public void setStreakNotificationEnabled(boolean value) {
         put(PreferenceType.LOGIN, STREAK_NOTIFICATION, value);
+    }
+
+    public boolean canShowStreakDialog() {
+        int streakDialogShownNumber = getInt(PreferenceType.LOGIN, NUMBER_OF_SHOWN_STREAK_DIALOG, 0);
+        if (streakDialogShownNumber > AppConstants.MAX_NUMBER_OF_SHOWING_STREAK_DIALOG) {
+            return false;
+        } else {
+            long millis = getLong(PreferenceType.LOGIN, STREAK_DIALOG_SHOWN_TIMESTAMP, -1L);
+            if (millis < 0) {
+                onShowStreakDialog(streakDialogShownNumber);
+                // first time
+                return true;
+            } else {
+                DateTime wasShownDateTime = new DateTime(millis);
+                if (wasShownDateTime.plusDays(AppConstants.NUMBER_OF_DAYS_BETWEEN_STREAK_SHOWING).isBeforeNow()) {
+                    //we can show
+                    onShowStreakDialog(streakDialogShownNumber);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+
+    private void onShowStreakDialog(int streakDialogShownNumber) {
+        analytic.reportEvent(Analytic.Streak.CAN_SHOW_DIALOG, streakDialogShownNumber + "");
+        put(PreferenceType.LOGIN, STREAK_DIALOG_SHOWN_TIMESTAMP, DateTime.now().getMillis());
+        put(PreferenceType.LOGIN, NUMBER_OF_SHOWN_STREAK_DIALOG, streakDialogShownNumber + 1);
     }
 
     public enum NotificationDay {
@@ -608,6 +639,11 @@ public class SharedPreferenceHelper {
     private int getInt(PreferenceType preferenceType, String key) {
         return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
                 .getInt(key, -1);
+    }
+
+    private long getLong(PreferenceType preferenceType, String key, long defaultValue) {
+        return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
+                .getLong(key, defaultValue);
     }
 
     private long getLong(PreferenceType preferenceType, String key) {

@@ -75,4 +75,6 @@ public class AppConstants {
     public static final int LAUNCHES_FOR_EXPERT_USER = 20;
     public static final long MILLIS_IN_SEVEN_DAYS = 604800000L;
     public static final String NOTIFICATION_CANCELED_REMINDER = "notification_canceled_reminder";
+    public static final int MAX_NUMBER_OF_SHOWING_STREAK_DIALOG = 3;
+    public static final int NUMBER_OF_DAYS_BETWEEN_STREAK_SHOWING = 2;
 }

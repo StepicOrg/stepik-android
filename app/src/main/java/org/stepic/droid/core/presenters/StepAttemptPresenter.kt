@@ -7,7 +7,10 @@ import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.core.LessonSessionManager
 import org.stepic.droid.core.presenters.contracts.StepAttemptView
 import org.stepic.droid.model.*
+import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.web.IApi
+import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ThreadPoolExecutor
@@ -17,7 +20,8 @@ class StepAttemptPresenter(val mainHandler: IMainHandler,
                            val threadPoolExecutor: ThreadPoolExecutor,
                            val lessonManager: LessonSessionManager,
                            val api: IApi,
-                           val analytic: Analytic) : PresenterBase<StepAttemptView>() {
+                           val analytic: Analytic,
+                           val sharedPreferenceHelper: SharedPreferenceHelper) : PresenterBase<StepAttemptView>() {
 
     companion object {
         private val FIRST_DELAY = 1000L
@@ -130,10 +134,26 @@ class StepAttemptPresenter(val mainHandler: IMainHandler,
                                 }
 
                                 val numberOfSubmissions = api.getSubmissionForStep(stepId).execute().body().submissions.size
-                                val isSubmissionCorrect = submission?.status == Submission.Status.CORRECT
+                                val needShowStreakDialog = (submission?.status == Submission.Status.CORRECT)
+                                        && sharedPreferenceHelper.canShowStreakDialog()
+
+
+                                val streakDayNumber: Int = if (needShowStreakDialog) {
+                                    try {
+                                        val pins: ArrayList<Long> = api.getUserActivities(sharedPreferenceHelper.profile?.id ?: throw Exception("User is not auth")).execute()?.body()?.userActivities?.firstOrNull()?.pins!!
+                                        val pair = StepikUtil.getCurrentStreakExtended(pins)
+                                        pair.currentStreak
+                                    } catch (exception: Exception) {
+                                        analytic.reportError(Analytic.Error.STREAK_ON_STEP_SOLVED, exception)
+                                        -1
+                                    }
+                                } else {
+                                    -1
+                                }
+
                                 mainHandler.post {
-                                    if (isSubmissionCorrect) {
-                                        view?.onUserPostedCorrectSubmission()
+                                    if (needShowStreakDialog) {
+                                        view?.onNeedShowStreakDialog(streakDayNumber) // it can be -1, if we fail to get streaks
                                     }
                                     view?.onNeedFillSubmission(submission, numberOfSubmissions)
                                 }

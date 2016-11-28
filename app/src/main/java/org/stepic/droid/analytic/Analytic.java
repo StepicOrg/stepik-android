@@ -147,6 +147,7 @@ public interface Analytic {
         String FAIL_PUSH_STEP_VIEW = "fail_push_step_view";
         java.lang.String NO_INTERNET_EXISTING_ATTEMPTS = "no_internet_existing_attempts";
         String DOWNLOAD_ID_NEGATIVE = "download_id_negative";
+        String STREAK_ON_STEP_SOLVED = "streak_on_step_solved";
     }
 
     interface Web {
@@ -279,6 +280,9 @@ public interface Analytic {
         java.lang.String CHOOSE_INTERVAL_CANCELED_PROFILE = "streak_choose_interval_canceled_profile";
         java.lang.String CHOOSE_INTERVAL_CANCELED = "streak_choose_interval_canceled";
         java.lang.String CHOOSE_INTERVAL = "streak_choose_interval";
+        java.lang.String CAN_SHOW_DIALOG = "streak_can_show_dialog";
+        java.lang.String SHOW_DIALOG_UNDEFINED_STREAKS = "streak_show_dialog_undefined";
+        java.lang.String SHOW_DIALOG_POSITIVE_STREAKS = "streak_show_dialog_positive";
     }
 
     void reportEvent(String eventName, Bundle bundle);
