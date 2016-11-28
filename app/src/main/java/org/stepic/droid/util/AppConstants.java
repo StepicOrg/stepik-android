@@ -48,7 +48,7 @@ public class AppConstants {
     public static final int REQUEST_CODE_DETAIL = 1;
     public static final java.lang.String THUMBNAIL_POSTFIX_EXTENSION = ".png";
     public static final java.lang.String DELIMITER_TEXT_SCORE = "/";
-    public static final java.lang.String NOTIFICATION_CANCELED = "notification_cancelled";
+    public static final java.lang.String NOTIFICATION_CANCELED = "notification_canceled";
 
 
     public static final String OPEN_NOTIFICATION_FOR_CHECK_COURSE = "Open_notification_check_course";
@@ -80,7 +80,7 @@ public class AppConstants {
     public static final String NOTIFICATION_CANCELED_REMINDER = "notification_canceled_reminder";
     public static final int MAX_NUMBER_OF_SHOWING_STREAK_DIALOG = 3;
     public static final int NUMBER_OF_DAYS_BETWEEN_STREAK_SHOWING = 2;
-    public static final int MAX_NUMBER_OF_NOTIFICATION_STREAK = 5;
+    public static final int MAX_NUMBER_OF_NOTIFICATION_STREAK = 3;
     @Nullable
     public static final String NOTIFICATION_CANCELED_STREAK = "notification_canceled_streaks";
 }
