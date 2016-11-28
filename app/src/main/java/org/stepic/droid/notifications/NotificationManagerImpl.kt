@@ -26,6 +26,7 @@ import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.store.operations.Table
 import org.stepic.droid.ui.activities.MainFeedActivity
+import org.stepic.droid.ui.activities.ProfileActivity
 import org.stepic.droid.ui.activities.SectionActivity
 import org.stepic.droid.ui.activities.StepsActivity
 import org.stepic.droid.util.AppConstants
@@ -102,9 +103,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
     override fun showStreakRemind() {
         if (sharedPreferenceHelper.isStreakNotificationEnabled) {
             localReminder.userChangeStateOfNotification() //plan new alarm at next day
-            //go to internet for show streak info todo...
 
-            //todo some finding of available content or open just my courses?
             val numberOfStreakNotifications = sharedPreferenceHelper.numberOfStreakNotifications
             if (numberOfStreakNotifications < AppConstants.MAX_NUMBER_OF_NOTIFICATION_STREAK) {
                 try {
@@ -133,8 +132,24 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                 } finally {
                     sharedPreferenceHelper.incrementNumberOfNotifications()
                 }
+            } else {
+                //too many ignored notifications about streaks
+                streakNotificationNumberIsOverflow()
             }
         }
+    }
+
+    private fun streakNotificationNumberIsOverflow() {
+        sharedPreferenceHelper.isStreakNotificationEnabled = false
+        val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
+        val profileIntent = screenManager.getProfileIntent(context)
+        taskBuilder.addParentStack(ProfileActivity::class.java)
+        taskBuilder.addNextIntent(profileIntent)
+        val message = context.getString(R.string.streak_notification_not_working)
+        showSimpleNotification(id = notificationStreakId,
+                justText = message,
+                taskBuilder = taskBuilder,
+                title = context.getString(R.string.time_to_learn_notification_title))
     }
 
     private fun getDeleteIntentForStreaks(): PendingIntent {

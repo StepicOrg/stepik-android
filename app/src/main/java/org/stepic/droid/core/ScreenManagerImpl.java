@@ -284,6 +284,14 @@ public class ScreenManagerImpl implements ScreenManager {
         return getFromMainActivityIntent(context, index);
     }
 
+    @Nullable
+    @Override
+    public Intent getProfileIntent(@NotNull Context context) {
+        Intent intent = new Intent(context, ProfileActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
+    }
+
     @Override
     public void openInWeb(Context context, String path) {
         analytic.reportEventWithIdName(Analytic.Screens.OPEN_LINK_IN_WEB, "0", path);
