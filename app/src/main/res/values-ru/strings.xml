@@ -311,4 +311,5 @@
         <item quantity="other">Вы молодец! Вы решаете уже %d дней без перерыва. Не останавливайтесь, решите задачу прямо сейчас!</item>
     </plurals>
     <string name="streak_notification_message_improvement">Хорошая работа! Вы увеличили количество дней без перерыва до %d. Так держать!</string>
+    <string name="streak_notification_empty_number">Обучение требует ежедневной практики. Решите задание прямо сейчас!</string>
 </resources>

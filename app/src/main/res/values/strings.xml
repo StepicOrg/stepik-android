@@ -310,4 +310,5 @@
         <item quantity="other">Well done! You solve %d days without a break. Do not stop, solve the task right now!</item>
     </plurals>
     <string name="streak_notification_message_improvement">Good job! Current streak was increased to %d. Keep it up!</string>
+    <string name="streak_notification_empty_number">Learning requires daily practice. Solve the task right now!</string>
 </resources>

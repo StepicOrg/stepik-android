@@ -110,8 +110,10 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                 val pins: ArrayList<Long> = api.getUserActivities(sharedPreferenceHelper.profile?.id ?: throw Exception("User is not auth")).execute()?.body()?.userActivities?.firstOrNull()?.pins!!
                 val (currentStreak, isSolvedToday) = StepikUtil.getCurrentStreakExtended(pins)
                 if (currentStreak <= 0) {
+                    //todo add analytic about zero streak?
                     showNotificationWithoutStreakInfo()
                 } else {
+                    //todo add analytic about non-zero streak
                     if (isSolvedToday) {
                         showNotificationStreakImprovement(currentStreak)
                     } else {
@@ -140,7 +142,8 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     private fun showNotificationWithoutStreakInfo() {
         val taskBuilder: TaskStackBuilder = getStreakNotificationTaskBuilder()
-        showSimpleNotification(notificationStreakId, "Драствуйте, Нету инфы о стриках, зайдите в приложение, мы Вам рады. ", taskBuilder, context.getString(R.string.time_to_learn_notification_title)) //fixme
+        val message = context.resources.getString(R.string.streak_notification_empty_number)
+        showSimpleNotification(notificationStreakId, message, taskBuilder, context.getString(R.string.time_to_learn_notification_title)) //fixme
     }
 
     private fun getStreakNotificationTaskBuilder(): TaskStackBuilder {
