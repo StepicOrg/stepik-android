@@ -124,7 +124,8 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     private fun showNotificationStreakImprovement(currentStreak: Int) {
         val taskBuilder: TaskStackBuilder = getStreakNotificationTaskBuilder()
-        showSimpleNotification(notificationStreakId, "Драствуйте, Ваш стрик равен $currentStreak. ", taskBuilder, context.getString(R.string.time_to_learn_notification_title)) //fixme
+        val message = context.resources.getString(R.string.streak_notification_message_improvement, currentStreak)
+        showSimpleNotification(notificationStreakId, message, taskBuilder, context.getString(R.string.time_to_learn_notification_title)) //fixme
     }
 
     private fun showNotificationWithStreakCallToAction(currentStreak: Int) {
