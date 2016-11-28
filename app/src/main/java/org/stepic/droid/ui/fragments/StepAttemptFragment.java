@@ -256,11 +256,10 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         MaterialStyledDialog dialog = new MaterialStyledDialog.Builder(getContext())
                 .setTitle(streakTitle)
                 .setDescription(description)
-                .setHeaderDrawable(R.drawable.dialog_cover)
+                .setHeaderDrawable(R.drawable.dialog_background)
                 .setPositiveText(R.string.ok)
                 .setNegativeText(R.string.later_tatle)
-//                        .withDialogAnimation(true) // strange animation
-                .setScrollable(true, 10) // 7 lines
+                .setScrollable(true, 10) // number of lines lines
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
