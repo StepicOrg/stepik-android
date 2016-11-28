@@ -115,6 +115,7 @@ class StepAttemptPresenter(val mainHandler: IMainHandler,
         }
     }
 
+    @JvmOverloads
     @MainThread
     fun getStatusOfSubmission(step: Step, attemptId: Long, fromPosting: Boolean = false) {
         fun getStatusOfSubmission(numberOfTry: Int) {

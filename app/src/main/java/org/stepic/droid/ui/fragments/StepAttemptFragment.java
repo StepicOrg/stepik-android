@@ -418,7 +418,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         showAttempt(attempt);
         LessonSession lessonSession = lessonManager.restoreLessonSession(step.getId());
         if ((lessonSession == null || lessonSession.getSubmission() == null) && !isCreatedAttempt) {
-            stepAttemptPresenter.getStatusOfSubmission(step.getId(), attempt.getId());//fill last server submission if exist
+            stepAttemptPresenter.getStatusOfSubmission(step, attempt.getId());//fill last server submission if exist
         } else {
             // when just now created --> do not need show submission, it is not exist.
             stepAttemptPresenter.handleDiscountingPolicy(numberOfSubmissions, section, step);

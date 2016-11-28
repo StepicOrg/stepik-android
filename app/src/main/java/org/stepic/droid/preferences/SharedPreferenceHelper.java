@@ -142,7 +142,8 @@ public class SharedPreferenceHelper {
     }
 
     public boolean isStreakNotificationEnabled() {
-        return getBoolean(PreferenceType.LOGIN, STREAK_NOTIFICATION, false);
+        int simpleCode = getInt(PreferenceType.LOGIN, STREAK_NOTIFICATION, -1);
+        return simpleCode > 0;
     }
 
     /**
@@ -150,11 +151,18 @@ public class SharedPreferenceHelper {
      */
     @Nullable
     public Boolean isStreakNotificationEnabledNullable() {
-        return getBoolean(PreferenceType.LOGIN, STREAK_NOTIFICATION, null);
+        int codeInt = getInt(PreferenceType.LOGIN, STREAK_NOTIFICATION, -1);
+        if (codeInt > 0) {
+            return true;
+        } else if (codeInt == 0) {
+            return false;
+        } else {
+            return null;
+        }
     }
 
     public void setStreakNotificationEnabled(boolean value) {
-        put(PreferenceType.LOGIN, STREAK_NOTIFICATION, value);
+        put(PreferenceType.LOGIN, STREAK_NOTIFICATION, value ? 1 : 0);
         resetNumberOfStreakNotifications();
     }
 
@@ -682,11 +690,6 @@ public class SharedPreferenceHelper {
 
     private boolean getBoolean(PreferenceType preferenceType, String key) {
         return getBoolean(preferenceType, key, false);
-    }
-
-    private boolean getBoolean(PreferenceType preferenceType, String key, Boolean defaultValue) {
-        return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
-                .getBoolean(key, defaultValue);
     }
 
 
