@@ -586,7 +586,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     @Override
     public void onNeedShowStreakDialog(int numberOfStreakDayIncludeToday) {
-        if (true || !step.is_custom_passed()) { //// FIXME: 24.11.16 remove TRUE, it is just for fast debugging
+        if (!step.is_custom_passed()) {
             // this submission is correct and user posted it 1st time
             sharedPreferenceHelper.trackWhenUserSolved();
             showStreakDialog(numberOfStreakDayIncludeToday);
