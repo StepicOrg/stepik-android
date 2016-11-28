@@ -125,7 +125,7 @@ public class MainFeedActivity extends BackToExitActivityBase
                 analytic.reportEvent(AppConstants.OPEN_NOTIFICATION);
             } else if (action.equals(AppConstants.OPEN_NOTIFICATION_FOR_ENROLL_REMINDER)) {
                 String dayTypeString = intent.getStringExtra(REMINDER_KEY);
-                if (dayTypeString == null){
+                if (dayTypeString == null) {
                     dayTypeString = "";
                 }
                 analytic.reportEvent(Analytic.Notification.REMIND_OPEN, dayTypeString);
@@ -134,6 +134,11 @@ public class MainFeedActivity extends BackToExitActivityBase
             } else if (action.equals(AppConstants.OPEN_NOTIFICATION_FROM_STREAK)) {
                 sharedPreferenceHelper.resetNumberOfStreakNotifications();
                 analytic.reportEvent(Analytic.Streak.CLICK_OPEN_STREAK_NOTIFICATION);
+            }
+
+            //after tracking check on null user
+            if (sharedPreferenceHelper.getAuthResponseFromStore() == null) {
+                shell.getScreenProvider().openSplash(this);
             }
         }
     }
