@@ -182,7 +182,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public Intent getShowFindCoursesIntent(Context context) {
-        int index = MainFeedActivity.getFindLessonIndex();
+        int index = MainFeedActivity.getFindCoursesIndex();
         return getFromMainActivityIntent(context, index);
     }
 
@@ -276,6 +276,12 @@ public class ScreenManagerImpl implements ScreenManager {
     public void openFeedbackActivity(Activity activity) {
         final Intent intent = new Intent(activity, FeedbackActivity.class);
         activity.startActivity(intent);
+    }
+
+    @Override
+    public Intent getMyCoursesIntent(@NotNull Context context) {
+        int index = MainFeedActivity.getMyCoursesIndex();
+        return getFromMainActivityIntent(context, index);
     }
 
     @Override

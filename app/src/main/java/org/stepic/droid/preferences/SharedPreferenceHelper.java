@@ -72,6 +72,7 @@ public class SharedPreferenceHelper {
     private final String NEW_USER_ALARM_TIMESTAMP = "new_user_alarm_timestamp";
     private final String NUMBER_OF_SHOWN_STREAK_DIALOG = "number_of_shown_streak_dialog";
     private final String STREAK_DIALOG_SHOWN_TIMESTAMP = "streak_dialog_shown_timestamp";
+    private final String STREAK_NUMBER_OF_IGNORED = "streak_number_of_ignored";
 
     private final String FILTER_PERSISTENT = "filter_persistent";
     private final String FILTER_RUSSIAN_LANGUAGE = "russian_lang";
@@ -87,6 +88,20 @@ public class SharedPreferenceHelper {
     private Context context;
     private Analytic analytic;
     private DefaultFilter defaultFilter;
+
+    public void incrementNumberOfNotifications() {
+        int numberOfIgnored = getInt(PreferenceType.LOGIN, STREAK_NUMBER_OF_IGNORED, 0);
+        numberOfIgnored++;
+        put(PreferenceType.LOGIN, STREAK_NUMBER_OF_IGNORED, numberOfIgnored);
+    }
+
+    public void resetNumberOfStreakNotifications() {
+        put(PreferenceType.LOGIN, STREAK_NUMBER_OF_IGNORED, 0);
+    }
+
+    public int getNumberOfStreakNotifications() {
+        return getInt(PreferenceType.LOGIN, STREAK_NUMBER_OF_IGNORED, 0);
+    }
 
     public boolean anyStepIsSolved() {
         return getBoolean(PreferenceType.LOGIN, ANY_STEP_SOLVED, false);
@@ -134,12 +149,13 @@ public class SharedPreferenceHelper {
      * Null by default
      */
     @Nullable
-    public Boolean isStreakNotificationEnabledNullable () {
+    public Boolean isStreakNotificationEnabledNullable() {
         return getBoolean(PreferenceType.LOGIN, STREAK_NOTIFICATION, null);
     }
 
     public void setStreakNotificationEnabled(boolean value) {
         put(PreferenceType.LOGIN, STREAK_NOTIFICATION, value);
+        resetNumberOfStreakNotifications();
     }
 
     public boolean canShowStreakDialog() {

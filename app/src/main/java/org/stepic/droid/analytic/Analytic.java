@@ -196,6 +196,7 @@ public interface Analytic {
         String REMIND_OPEN = "remind_opened";
         String REMIND_ENROLL = "remind_success_user_enroll";
         String REMINDER_SWIPE_TO_CANCEL = "remind_swipe_to_cancel";
+        String STREAK_SWIPE_TO_CANCEL = "streak_swipe_to_cancel";
     }
 
     interface Feedback {
@@ -283,6 +284,7 @@ public interface Analytic {
         java.lang.String CAN_SHOW_DIALOG = "streak_can_show_dialog";
         java.lang.String SHOW_DIALOG_UNDEFINED_STREAKS = "streak_show_dialog_undefined";
         java.lang.String SHOW_DIALOG_POSITIVE_STREAKS = "streak_show_dialog_positive";
+        java.lang.String CLICK_OPEN_STREAK_NOTIFICATION = "streak_notification_opened";
     }
 
     void reportEvent(String eventName, Bundle bundle);

@@ -104,52 +104,75 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             localReminder.userChangeStateOfNotification() //plan new alarm at next day
             //go to internet for show streak info todo...
 
-            //todo some processing about clicked previous notification
             //todo some finding of available content or open just my courses?
-            try {
-                val pins: ArrayList<Long> = api.getUserActivities(sharedPreferenceHelper.profile?.id ?: throw Exception("User is not auth")).execute()?.body()?.userActivities?.firstOrNull()?.pins!!
-                val (currentStreak, isSolvedToday) = StepikUtil.getCurrentStreakExtended(pins)
-                if (currentStreak <= 0) {
-                    //todo add analytic about zero streak?
-                    showNotificationWithoutStreakInfo()
-                } else {
-                    //todo add analytic about non-zero streak
-                    if (isSolvedToday) {
-                        showNotificationStreakImprovement(currentStreak)
+            val numberOfStreakNotifications = sharedPreferenceHelper.numberOfStreakNotifications
+            if (numberOfStreakNotifications < AppConstants.MAX_NUMBER_OF_NOTIFICATION_STREAK) {
+                try {
+                    val pins: ArrayList<Long> = api.getUserActivities(sharedPreferenceHelper.profile?.id ?: throw Exception("User is not auth"))
+                            .execute()
+                            ?.body()
+                            ?.userActivities
+                            ?.firstOrNull()
+                            ?.pins!!
+                    val (currentStreak, isSolvedToday) = StepikUtil.getCurrentStreakExtended(pins)
+                    if (currentStreak <= 0) {
+                        //todo add analytic about zero streak?
+                        showNotificationWithoutStreakInfo()
                     } else {
-                        showNotificationWithStreakCallToAction(currentStreak)
+                        //todo add analytic about non-zero streak
+                        if (isSolvedToday) {
+                            showNotificationStreakImprovement(currentStreak)
+                        } else {
+                            showNotificationWithStreakCallToAction(currentStreak)
+                        }
                     }
+                } catch (exception: Exception) {
+                    // no internet || cant get streaks -> show some notification without streak information.
+                    showNotificationWithoutStreakInfo()
+                    return
+                } finally {
+                    sharedPreferenceHelper.incrementNumberOfNotifications()
                 }
-            } catch (exception: Exception) {
-                // no internet || cant get streaks -> show some notification without streak information.
-                showNotificationWithoutStreakInfo()
-                return
             }
         }
     }
 
+    private fun getDeleteIntentForStreaks(): PendingIntent {
+        val deleteIntent = Intent(context, NotificationBroadcastReceiver::class.java)
+        deleteIntent.action = AppConstants.NOTIFICATION_CANCELED_STREAK;
+        val deletePendingIntent = PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        return deletePendingIntent
+    }
+
     private fun showNotificationStreakImprovement(currentStreak: Int) {
-        val taskBuilder: TaskStackBuilder = getStreakNotificationTaskBuilder()
         val message = context.resources.getString(R.string.streak_notification_message_improvement, currentStreak)
-        showSimpleNotification(notificationStreakId, message, taskBuilder, context.getString(R.string.time_to_learn_notification_title))
+        showNotificationStreakBase(message)
     }
 
     private fun showNotificationWithStreakCallToAction(currentStreak: Int) {
-        val taskBuilder: TaskStackBuilder = getStreakNotificationTaskBuilder()
         val message = context.resources.getQuantityString(R.plurals.streak_notification_message_call_to_action, currentStreak, currentStreak)
-        showSimpleNotification(notificationStreakId, message, taskBuilder, context.getString(R.string.time_to_learn_notification_title))
+        showNotificationStreakBase(message)
     }
 
     private fun showNotificationWithoutStreakInfo() {
-        val taskBuilder: TaskStackBuilder = getStreakNotificationTaskBuilder()
         val message = context.resources.getString(R.string.streak_notification_empty_number)
-        showSimpleNotification(notificationStreakId, message, taskBuilder, context.getString(R.string.time_to_learn_notification_title))
+        showNotificationStreakBase(message)
+    }
+
+    private fun showNotificationStreakBase(message: String) {
+        val taskBuilder: TaskStackBuilder = getStreakNotificationTaskBuilder()
+        showSimpleNotification(id = notificationStreakId,
+                justText = message,
+                taskBuilder = taskBuilder,
+                title = context.getString(R.string.time_to_learn_notification_title),
+                deleteIntent = getDeleteIntentForStreaks())
     }
 
     private fun getStreakNotificationTaskBuilder(): TaskStackBuilder {
-        //fixme: open content or my courses??
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
-        taskBuilder.addNextIntent(screenManager.getShowFindCoursesIntent(context))
+        val myCoursesIntent = screenManager.getMyCoursesIntent(context)
+        myCoursesIntent.action = AppConstants.OPEN_NOTIFICATION_FROM_STREAK
+        taskBuilder.addNextIntent(myCoursesIntent)
         return taskBuilder
     }
 
