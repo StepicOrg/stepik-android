@@ -286,6 +286,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         analytic.reportEvent(Analytic.Streak.NEGATIVE_MATERIAL_DIALOG);
+                        messageOnNotEnablingNotification();
                     }
                 })
                 .build();
@@ -563,16 +564,20 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                         .show();
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED);
-                SnackbarExtensionKt
-                        .setTextColor(
-                                Snackbar.make(rootView,
-                                        R.string.streak_notification_canceled,
-                                        Snackbar.LENGTH_LONG),
-                                ColorUtil.INSTANCE.getColorArgb(R.color.white,
-                                        getContext()))
-                        .show();
+                messageOnNotEnablingNotification();
             }
         }
+    }
+
+    private void messageOnNotEnablingNotification() {
+        SnackbarExtensionKt
+                .setTextColor(
+                        Snackbar.make(rootView,
+                                R.string.streak_notification_canceled,
+                                Snackbar.LENGTH_LONG),
+                        ColorUtil.INSTANCE.getColorArgb(R.color.white,
+                                getContext()))
+                .show();
     }
 
     @Override
