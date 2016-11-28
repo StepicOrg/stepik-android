@@ -109,10 +109,14 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             try {
                 val pins: ArrayList<Long> = api.getUserActivities(sharedPreferenceHelper.profile?.id ?: throw Exception("User is not auth")).execute()?.body()?.userActivities?.firstOrNull()?.pins!!
                 val (currentStreak, isSolvedToday) = StepikUtil.getCurrentStreakExtended(pins)
-                if (isSolvedToday) {
-                    showNotificationStreakImprovement(currentStreak)
+                if (currentStreak <= 0) {
+                    showNotificationWithoutStreakInfo()
                 } else {
-                    showNotificationWithStreakCallToAction(currentStreak)
+                    if (isSolvedToday) {
+                        showNotificationStreakImprovement(currentStreak)
+                    } else {
+                        showNotificationWithStreakCallToAction(currentStreak)
+                    }
                 }
             } catch (exception: Exception) {
                 // no internet || cant get streaks -> show some notification without streak information.
