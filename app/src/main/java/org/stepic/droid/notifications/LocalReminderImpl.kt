@@ -155,8 +155,8 @@ class LocalReminderImpl(val threadPoolExecutor: ThreadPoolExecutor,
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, scheduleMillis + interval / 2, pendingIntent)
             }
         } else {
-//            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, scheduleMillis + interval / 2, pendingIntent) //fixme uncomment after developinga
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, DateTime.now().millis + 15000, pendingIntent) //DEBUG PURPOSE ONLY
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, scheduleMillis + interval / 2, pendingIntent)
+//            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, DateTime.now().millis + 15000, pendingIntent) //DEBUG PURPOSE ONLY
         }
     }
 }
