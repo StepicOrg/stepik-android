@@ -49,7 +49,8 @@ public class HtmlHelper {
                 || text.contains("<h")
                 || text.contains("\\[")
                 || text.contains("<pre><code>")
-                || text.contains("<img");
+                || text.contains("<img")
+                || text.contains("<audio");
     }
 
 
