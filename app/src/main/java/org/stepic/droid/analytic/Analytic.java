@@ -169,8 +169,6 @@ public interface Analytic {
         String WAS_MUTED = "notification_was_muted";
         String NOT_SUPPORT_TYPE = "notification_type_is_not_support";//After checking action
 
-        @Deprecated //use NOTIFICATION_SHOWN with name = notification.type
-                String LEARN_SHOWN = "notification learn is shown";
         String CANT_PARSE_COURSE_ID = "notification, cant parse courseId";
         String TOKEN_UPDATED = "notification gcm token is updated";
         String TOKEN_UPDATE_FAILED = "notification gcm token is not updated";

@@ -76,7 +76,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
         //now we can show notification
         val intent = screenManager.getShowFindCoursesIntent(context)
-        intent.action = AppConstants.OPEN_NOTIFICATION_FOR_ENROLL_REMINDER;
+        intent.action = AppConstants.OPEN_NOTIFICATION_FOR_ENROLL_REMINDER
         val analyticDayTypeName = dayType?.name ?: ""
         intent.putExtra(MainFeedActivity.REMINDER_KEY, analyticDayTypeName)
         val taskBuilder: TaskStackBuilder =
@@ -155,7 +155,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     private fun getDeleteIntentForStreaks(): PendingIntent {
         val deleteIntent = Intent(context, NotificationBroadcastReceiver::class.java)
-        deleteIntent.action = AppConstants.NOTIFICATION_CANCELED_STREAK;
+        deleteIntent.action = AppConstants.NOTIFICATION_CANCELED_STREAK
         val deletePendingIntent = PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
         return deletePendingIntent
     }
@@ -367,13 +367,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             stepikNotification.course_id = courseId
             val notificationOfCourseList: MutableList<Notification?> = databaseFacade.getAllNotificationsOfCourse(courseId)
             val relatedCourse = getCourse(courseId)
-            var isNeedAdd = true
-            for (notificationItem in notificationOfCourseList) {
-                if (notificationItem?.id == stepikNotification.id) {
-                    isNeedAdd = false
-                    break
-                }
-            }
+            val isNeedAdd = notificationOfCourseList.none { it?.id == stepikNotification.id }
 
             if (isNeedAdd) {
                 notificationOfCourseList.add(stepikNotification)
@@ -437,7 +431,6 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             }
 
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, stepikNotification.id?.toString() ?: "", stepikNotification.type?.name)
-            analytic.reportEvent(Analytic.Notification.LEARN_SHOWN)
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.notify(courseId.toInt(), notification.build())
         }
