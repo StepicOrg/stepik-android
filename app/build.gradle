@@ -176,9 +176,16 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.17.0'
     compile 'com.vk:androidsdk:1.6.5'
     compile 'com.jakewharton.timber:timber:4.3.1'
+
+    compile 'com.github.javiersantos:MaterialStyledDialogs:2.0'
+    compile 'biz.kasual:materialnumberpicker:1.2.1'
 }
 
 repositories {
+    jcenter()
+    maven {
+        url "https://jitpack.io"
+    }
     mavenCentral()
 }
 buildscript {

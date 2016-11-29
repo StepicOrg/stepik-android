@@ -37,6 +37,8 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         } else if (action == AppConstants.NOTIFICATION_CANCELED_REMINDER) {
             Timber.d(Analytic.Notification.REMINDER_SWIPE_TO_CANCEL)
             analytic.reportEvent(Analytic.Notification.REMINDER_SWIPE_TO_CANCEL)
+        } else if (action == AppConstants.NOTIFICATION_CANCELED_STREAK) {
+            analytic.reportEvent(Analytic.Notification.STREAK_SWIPE_TO_CANCEL)
         }
     }
 }

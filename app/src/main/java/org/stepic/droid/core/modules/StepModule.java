@@ -74,11 +74,13 @@ public class StepModule {
                                                     ThreadPoolExecutor threadPoolExecutor,
                                                     LessonSessionManager lessonSessionManager,
                                                     IApi api,
-                                                    Analytic analytic) {
+                                                    Analytic analytic,
+                                                    SharedPreferenceHelper sharedPreferenceHelper) {
         return new StepAttemptPresenter(mainHandler,
                 threadPoolExecutor,
                 lessonSessionManager,
                 api,
-                analytic);
+                analytic,
+                sharedPreferenceHelper);
     }
 }

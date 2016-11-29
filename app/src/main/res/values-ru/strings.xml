@@ -290,5 +290,31 @@
         <item quantity="many">дней</item>
         <item quantity="other">дней</item>
     </plurals>
+    <plurals name="streak_description">
+        <item quantity="one">Это ваш %dый день, когда Вы решаете задачи без перерыва. Решайте по одной каждый день, чтобы поддержать прогресс. Для этого мы предлагаем Вам включить напоминания.</item>
+        <item quantity="few">Это ваш %dй день, когда Вы решаете задачи без перерыва. Решайте по одной каждый день, чтобы поддержать прогресс. Для этого мы предлагаем Вам включить напоминания.</item>
+        <item quantity="many">Это ваш %dй день, когда Вы решаете задачи без перерыва. Решайте по одной каждый день, чтобы поддержать прогресс. Для этого мы предлагаем Вам включить напоминания.</item>
+        <item quantity="other">Это ваш %dй день, когда Вы решаете задачи без перерыва. Решайте по одной каждый день, чтобы поддержать прогресс. Для этого мы предлагаем Вам включить напоминания.</item>
+    </plurals>
+
     <string name="empty_user_title">Пользователь не найден</string>
+    <string name="streak_dialog_title">Поздравляем!</string>
+    <string name="later_tatle">Позже</string>
+    <string name="choose_notification_time_interval">Выберите время напоминания</string>
+    <string name="notification_time">Время напоминания</string>
+    <string name="notification_about_learning">Уведомления о занятиях</string>
+    <string name="time_to_learn_notification_title">Время учиться!</string>
+    <plurals name="streak_notification_message_call_to_action">
+        <item quantity="one">Вы молодец! Вы решаете уже %d день без перерыва. Не останавливайтесь, решите задачу прямо сейчас!</item>
+        <item quantity="few">Вы молодец! Вы решаете уже %d дня без перерыва. Не останавливайтесь, решите задачу прямо сейчас!</item>
+        <item quantity="many">Вы молодец! Вы решаете уже %d дней без перерыва. Не останавливайтесь, решите задачу прямо сейчас!</item>
+        <item quantity="other">Вы молодец! Вы решаете уже %d дней без перерыва. Не останавливайтесь, решите задачу прямо сейчас!</item>
+    </plurals>
+    <string name="streak_notification_message_improvement">Хорошая работа! Вы увеличили количество дней без перерыва до %d. Так держать!</string>
+    <string name="streak_notification_empty_number">Обучение требует ежедневной практики. Решите задание прямо сейчас!</string>
+    <string name="streak_description_not_positive">Верно! Решайте по одной каждый день, чтобы поддержать прогресс. Для этого мы предлагаем Вам включить напоминания.</string>
+    <string name="streak_notification_enabled_successfully">Уведомления включены. Вы можете изменить свой выбор в Профиле</string>
+    <string name="streak_notification_canceled">Уведомления отключены. Вы можете изменить свой выбор в Профиле</string>
+    <string name="streak_notification_not_working">Похоже напоминания не действуют. Мы больше не будем их посылать. Нажмите, чтобы включить снова</string>
+    <string name="streak_updated_timezone">Рекорды обновляются в %s</string>
 </resources>

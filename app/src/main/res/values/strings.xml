@@ -287,6 +287,8 @@
     <string name="short_bio">Short biography</string>
     <string name="user_info">Info</string>
     <string name="empty_user_title">User is not found</string>
+    <string name="streak_dialog_title">Congratulations!</string>
+    <string name="later_tatle">Later</string>
     <plurals name="restriction_submission">
         <item quantity="one">You have %d attempt</item>
         <item quantity="other">You have %d attempts</item>
@@ -295,4 +297,23 @@
         <item quantity="one">day</item>
         <item quantity="other">days</item>
     </plurals>
+    <plurals name="streak_description">
+        <item quantity="one">It is your %d day when you are solving without break. Solve every day in order to save progress. We suggest you turn on the reminders.</item>
+        <item quantity="other">It is your %d days when you are solving without break. Solve every day in order to save progress. We suggest you turn on the reminders.</item>
+    </plurals>
+    <string name="choose_notification_time_interval">Choose notification interval</string>
+    <string name="notification_time">Notification time</string>
+    <string name="notification_about_learning">Notifications about learning</string>
+    <string name="time_to_learn_notification_title">Time to learn!</string>
+    <string name="streak_description_not_positive">Correct! Solve every day in order to save progress. We suggest you turn on the reminders.</string>
+    <plurals name="streak_notification_message_call_to_action">
+        <item quantity="one">Well done! You solve %d day without a break. Do not stop, solve the task right now!</item>
+        <item quantity="other">Well done! You solve %d days without a break. Do not stop, solve the task right now!</item>
+    </plurals>
+    <string name="streak_notification_message_improvement">Good job! Current streak was increased to %d. Keep it up!</string>
+    <string name="streak_notification_empty_number">Learning requires daily practice. Solve the task right now!</string>
+    <string name="streak_notification_enabled_successfully">Notifications are enabled. You can change your choice in Profile</string>
+    <string name="streak_notification_canceled">Notifications are not enabled. You can change your choice in Profile</string>
+    <string name="streak_notification_not_working">It seems that notifications are not working. We will not send them. Click to enable again</string>
+    <string name="streak_updated_timezone">Streaks are updated at %s</string>
 </resources>

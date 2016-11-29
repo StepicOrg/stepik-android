@@ -137,4 +137,14 @@
         <item name="android:paddingTop">@dimen/guideline_standard_padding</item>
         <item name="android:paddingRight">@dimen/guideline_standard_padding</item>
     </style>
+
+    <style name="SettingSwitch">
+        <item name="android:textColor">@color/stepic_regular_text</item>
+        <item name="android:textSize">@dimen/text_header</item>
+        <item name="android:foreground">@drawable/non_radius_foreground</item>
+        <item name="android:paddingBottom">@dimen/guideline_standard_padding</item>
+        <item name="android:paddingLeft">@dimen/guideline_standard_padding</item>
+        <item name="android:paddingTop">@dimen/guideline_standard_padding</item>
+        <item name="android:paddingRight">@dimen/guideline_standard_padding</item>
+    </style>
 </resources>

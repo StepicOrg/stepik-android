@@ -41,6 +41,7 @@ import org.stepic.droid.ui.activities.ProfileActivity;
 import org.stepic.droid.ui.activities.RegisterActivity;
 import org.stepic.droid.ui.activities.SectionActivity;
 import org.stepic.droid.ui.activities.SettingsActivity;
+import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StepsActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
 import org.stepic.droid.ui.activities.TextFeedbackActivity;
@@ -182,7 +183,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public Intent getShowFindCoursesIntent(Context context) {
-        int index = MainFeedActivity.getFindLessonIndex();
+        int index = MainFeedActivity.getFindCoursesIndex();
         return getFromMainActivityIntent(context, index);
     }
 
@@ -276,6 +277,27 @@ public class ScreenManagerImpl implements ScreenManager {
     public void openFeedbackActivity(Activity activity) {
         final Intent intent = new Intent(activity, FeedbackActivity.class);
         activity.startActivity(intent);
+    }
+
+    @Override
+    public Intent getMyCoursesIntent(@NotNull Context context) {
+        int index = MainFeedActivity.getMyCoursesIndex();
+        return getFromMainActivityIntent(context, index);
+    }
+
+    @Nullable
+    @Override
+    public Intent getProfileIntent(@NotNull Context context) {
+        Intent intent = new Intent(context, ProfileActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
+    }
+
+    @Override
+    public void openSplash(Context context) {
+        Intent launchIntent = new Intent(context, SplashActivity.class);
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(launchIntent);
     }
 
     @Override

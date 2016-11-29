@@ -33,6 +33,7 @@ import org.stepic.droid.services.CancelLoadingService;
 import org.stepic.droid.services.DeleteService;
 import org.stepic.droid.services.LoadService;
 import org.stepic.droid.services.NewUserAlarmService;
+import org.stepic.droid.services.StreakAlarmService;
 import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.services.ViewPusher;
@@ -60,6 +61,7 @@ import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.ui.dialogs.StepShareDialog;
+import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepic.droid.ui.dialogs.VideoQualityDialog;
@@ -208,4 +210,8 @@ public interface AppCoreComponent {
     void inject(@NotNull NewUserAlarmService newUserAlarmService);
 
     void inject(BootCompletedReceiver bootCompletedReceiver);
+
+    void inject(@NotNull TimeIntervalPickerDialogFragment timeIntervalPickerDialogFragment);
+
+    void inject(@NotNull StreakAlarmService streakAlarmService);
 }

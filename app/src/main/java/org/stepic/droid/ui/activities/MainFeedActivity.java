@@ -1,11 +1,9 @@
 package org.stepic.droid.ui.activities;
 
 import android.Manifest;
-import android.app.AlarmManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -121,17 +119,26 @@ public class MainFeedActivity extends BackToExitActivityBase
     }
 
     private void notificationClickedCheck(Intent intent) {
-        if (intent.getAction() != null) {
-            if (intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
+        String action = intent.getAction();
+        if (action != null) {
+            if (action.equals(AppConstants.OPEN_NOTIFICATION)) {
                 analytic.reportEvent(AppConstants.OPEN_NOTIFICATION);
-            } else if (intent.getAction().equals(AppConstants.OPEN_NOTIFICATION_FOR_ENROLL_REMINDER)) {
+            } else if (action.equals(AppConstants.OPEN_NOTIFICATION_FOR_ENROLL_REMINDER)) {
                 String dayTypeString = intent.getStringExtra(REMINDER_KEY);
-                if (dayTypeString == null){
+                if (dayTypeString == null) {
                     dayTypeString = "";
                 }
                 analytic.reportEvent(Analytic.Notification.REMIND_OPEN, dayTypeString);
                 Timber.d(Analytic.Notification.REMIND_OPEN);
                 sharedPreferenceHelper.clickEnrollNotification(DateTime.now(DateTimeZone.getDefault()).getMillis());
+            } else if (action.equals(AppConstants.OPEN_NOTIFICATION_FROM_STREAK)) {
+                sharedPreferenceHelper.resetNumberOfStreakNotifications();
+                analytic.reportEvent(Analytic.Streak.STREAK_NOTIFICATION_OPENED);
+            }
+
+            //after tracking check on null user
+            if (sharedPreferenceHelper.getAuthResponseFromStore() == null) {
+                shell.getScreenProvider().openSplash(this);
             }
         }
     }
@@ -491,7 +498,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         showCurrentFragment(currentIndex);
     }
 
-    public static int getFindLessonIndex() {
+    public static int getFindCoursesIndex() {
         return 1;
     }
 
@@ -538,6 +545,10 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     public static int getDownloadFragmentIndex() {
         return 2;
+    }
+
+    public static int getMyCoursesIndex() {
+        return 0;
     }
 
     @Override

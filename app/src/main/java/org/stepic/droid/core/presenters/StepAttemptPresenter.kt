@@ -7,7 +7,10 @@ import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.core.LessonSessionManager
 import org.stepic.droid.core.presenters.contracts.StepAttemptView
 import org.stepic.droid.model.*
+import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.web.IApi
+import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ThreadPoolExecutor
@@ -17,7 +20,8 @@ class StepAttemptPresenter(val mainHandler: IMainHandler,
                            val threadPoolExecutor: ThreadPoolExecutor,
                            val lessonManager: LessonSessionManager,
                            val api: IApi,
-                           val analytic: Analytic) : PresenterBase<StepAttemptView>() {
+                           val analytic: Analytic,
+                           val sharedPreferenceHelper: SharedPreferenceHelper) : PresenterBase<StepAttemptView>() {
 
     companion object {
         private val FIRST_DELAY = 1000L
@@ -70,12 +74,12 @@ class StepAttemptPresenter(val mainHandler: IMainHandler,
     }
 
     @MainThread
-    fun postSubmission(stepId: Long, reply: Reply, attemptId: Long) {
+    fun postSubmission(step: Step, reply: Reply, attemptId: Long) {
         threadPoolExecutor.execute {
             try {
                 api.createNewSubmission(reply, attemptId).execute().body().submissions
                 mainHandler.post {
-                    getStatusOfSubmission(stepId, attemptId)
+                    getStatusOfSubmission(step, attemptId, fromPosting = true)
                 }
             } catch (ex: Exception) {
                 mainHandler.post { view?.onConnectionFailOnSubmit() }
@@ -111,9 +115,10 @@ class StepAttemptPresenter(val mainHandler: IMainHandler,
         }
     }
 
+    @JvmOverloads
     @MainThread
-    fun getStatusOfSubmission(stepId: Long, attemptId: Long) {
-        fun getStatusOfSubmission(stepId: Long, attemptId: Long, numberOfTry: Int) {
+    fun getStatusOfSubmission(step: Step, attemptId: Long, fromPosting: Boolean = false) {
+        fun getStatusOfSubmission(numberOfTry: Int) {
             worker?.schedule(
                     Runnable {
                         try {
@@ -124,20 +129,48 @@ class StepAttemptPresenter(val mainHandler: IMainHandler,
 
                                 if (submission?.status === Submission.Status.EVALUATION) {
                                     mainHandler.post {
-                                        getStatusOfSubmission(stepId, attemptId, numberOfTry + 1)
+                                        getStatusOfSubmission(numberOfTry + 1)
                                     }
                                     return@Runnable
                                 }
 
-                                val numberOfSubmissions = api.getSubmissionForStep(stepId).execute().body().submissions.size
+                                if (!step.is_custom_passed &&  (submission?.status == Submission.Status.CORRECT)){
+                                    sharedPreferenceHelper.trackWhenUserSolved()
+                                }
+
+                                val numberOfSubmissions = api.getSubmissionForStep(step.id).execute().body().submissions.size
+                                val needShowStreakDialog =
+                                        fromPosting
+                                                && (submission?.status == Submission.Status.CORRECT)
+                                                && !step.is_custom_passed
+                                                && (sharedPreferenceHelper.isStreakNotificationEnabledNullable == null) // default value, user not change in profile
+                                                && sharedPreferenceHelper.canShowStreakDialog()
+
+
+                                val streakDayNumber: Int =
+                                        if (needShowStreakDialog) {
+                                            try {
+                                                val pins: ArrayList<Long> = api.getUserActivities(sharedPreferenceHelper.profile?.id ?: throw Exception("User is not auth")).execute()?.body()?.userActivities?.firstOrNull()?.pins!!
+                                                val pair = StepikUtil.getCurrentStreakExtended(pins)
+                                                pair.currentStreak
+                                            } catch (exception: Exception) {
+                                                analytic.reportError(Analytic.Error.STREAK_ON_STEP_SOLVED, exception)
+                                                -1
+                                            }
+                                        } else {
+                                            -1
+                                        }
 
                                 mainHandler.post {
+                                    if (needShowStreakDialog) {
+                                        view?.onNeedShowStreakDialog(streakDayNumber) // it can be -1, if we fail to get streaks
+                                    }
                                     view?.onNeedFillSubmission(submission, numberOfSubmissions)
                                 }
 
                             } else {
                                 mainHandler.post {
-                                    getStatusOfSubmission(stepId, attemptId, numberOfTry + 1)
+                                    getStatusOfSubmission(numberOfTry + 1)
                                 }
                             }
                         } catch (ex: Exception) {
@@ -148,7 +181,7 @@ class StepAttemptPresenter(val mainHandler: IMainHandler,
                     }, numberOfTry * FIRST_DELAY, TimeUnit.MILLISECONDS)
         }
 
-        getStatusOfSubmission(stepId, attemptId, 0)
+        getStatusOfSubmission(0)
     }
 
 

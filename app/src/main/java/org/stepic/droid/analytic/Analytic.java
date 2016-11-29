@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
-    interface System{
+    interface System {
         String BOOT_COMPLETED = "boot_completed";
     }
 
@@ -62,6 +62,7 @@ public interface Analytic {
         String CLICK_SETTINGS_FROM_NOTIFICATION = "click_settings_from_notification";
         String START_SPLASH = "user_start_splash_new";
         String START_SPLASH_EXPERT = "user_start_splash_expert";
+        java.lang.String CLICK_CHOOSE_NOTIFICATION_INTERVAL = "click_choose_notification_interval";
     }
 
     interface Screens {
@@ -146,6 +147,7 @@ public interface Analytic {
         String FAIL_PUSH_STEP_VIEW = "fail_push_step_view";
         java.lang.String NO_INTERNET_EXISTING_ATTEMPTS = "no_internet_existing_attempts";
         String DOWNLOAD_ID_NEGATIVE = "download_id_negative";
+        String STREAK_ON_STEP_SOLVED = "streak_on_step_solved";
     }
 
     interface Web {
@@ -167,8 +169,6 @@ public interface Analytic {
         String WAS_MUTED = "notification_was_muted";
         String NOT_SUPPORT_TYPE = "notification_type_is_not_support";//After checking action
 
-        @Deprecated //use NOTIFICATION_SHOWN with name = notification.type
-                String LEARN_SHOWN = "notification learn is shown";
         String CANT_PARSE_COURSE_ID = "notification, cant parse courseId";
         String TOKEN_UPDATED = "notification gcm token is updated";
         String TOKEN_UPDATE_FAILED = "notification gcm token is not updated";
@@ -194,6 +194,7 @@ public interface Analytic {
         String REMIND_OPEN = "remind_opened";
         String REMIND_ENROLL = "remind_success_user_enroll";
         String REMINDER_SWIPE_TO_CANCEL = "remind_swipe_to_cancel";
+        String STREAK_SWIPE_TO_CANCEL = "streak_swipe_to_cancel";
     }
 
     interface Feedback {
@@ -270,6 +271,24 @@ public interface Analytic {
         java.lang.String CLICK_STREAK_VALUE = "profile_click_streak";
         java.lang.String CLICK_FULL_NAME = "profile_click_full_name";
         java.lang.String OPEN_SCREEN_OVERALL = "profile_open_screen_overall";
+    }
+
+    interface Streak {
+        String SWITCH_NOTIFICATION_IN_MENU = "streak_switch_notification_state";
+        java.lang.String CHOOSE_INTERVAL_PROFILE = "streak_choose_interval_profile";
+        java.lang.String CHOOSE_INTERVAL_CANCELED_PROFILE = "streak_choose_interval_canceled_profile";
+        java.lang.String CHOOSE_INTERVAL_CANCELED = "streak_choose_interval_canceled";
+        java.lang.String CHOOSE_INTERVAL = "streak_choose_interval";
+        java.lang.String CAN_SHOW_DIALOG = "streak_can_show_dialog";
+        java.lang.String SHOW_DIALOG_UNDEFINED_STREAKS = "streak_show_dialog_undefined";
+        java.lang.String SHOW_DIALOG_POSITIVE_STREAKS = "streak_show_dialog_positive";
+        java.lang.String STREAK_NOTIFICATION_OPENED = "streak_notification_opened";
+        java.lang.String NEGATIVE_MATERIAL_DIALOG = "streak_material_dialog_negative";
+        java.lang.String POSITIVE_MATERIAL_DIALOG = "streak_material_dialog_positive";
+        java.lang.String SHOWN_MATERIAL_DIALOG = "streak_material_dialog_shown";
+        String GET_NON_ZERO_STREAK_NOTIFICATION = "streak_get_non_zero_notification";
+        String GET_ZERO_STREAK_NOTIFICATION = "streak_get_zero_notification";
+        String GET_NO_INTERNET_NOTIFICATION = " streak_get_no_internet_notification";
     }
 
     void reportEvent(String eventName, Bundle bundle);

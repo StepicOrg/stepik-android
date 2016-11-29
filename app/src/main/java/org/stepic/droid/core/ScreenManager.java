@@ -87,4 +87,11 @@ public interface ScreenManager {
     void openProfile(Activity activity, long userId);
 
     void openFeedbackActivity (Activity activity);
+
+    Intent getMyCoursesIntent(@NotNull Context context);
+
+    @Nullable
+    Intent getProfileIntent(@NotNull Context context);
+
+    void openSplash(Context context);
 }

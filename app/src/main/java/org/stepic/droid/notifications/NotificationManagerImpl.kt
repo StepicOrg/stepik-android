@@ -26,14 +26,17 @@ import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.store.operations.Table
 import org.stepic.droid.ui.activities.MainFeedActivity
+import org.stepic.droid.ui.activities.ProfileActivity
 import org.stepic.droid.ui.activities.SectionActivity
 import org.stepic.droid.ui.activities.StepsActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.HtmlHelper
+import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.web.IApi
 import timber.log.Timber
+import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 
 
@@ -48,13 +51,14 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                               val threadPoolExecutor: ThreadPoolExecutor,
                               val context: Context,
                               val localReminder: LocalReminder) : INotificationManager {
+    val notificationStreakId: Long = 3214L
 
     @WorkerThread
     override fun showLocalNotificationRemind() {
         Timber.d("Learn everyday, free courses")
         if (sharedPreferenceHelper.authResponseFromStore == null ||
                 databaseFacade.getAllCourses(Table.enrolled).isNotEmpty() ||
-                sharedPreferenceHelper.anyStepIsSolved()) {
+                sharedPreferenceHelper.anyStepIsSolved() || sharedPreferenceHelper.isStreakNotificationEnabled) {
             analytic.reportEvent(Analytic.Notification.REMIND_HIDDEN)
             return
         }
@@ -72,7 +76,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
         //now we can show notification
         val intent = screenManager.getShowFindCoursesIntent(context)
-        intent.action = AppConstants.OPEN_NOTIFICATION_FOR_ENROLL_REMINDER;
+        intent.action = AppConstants.OPEN_NOTIFICATION_FOR_ENROLL_REMINDER
         val analyticDayTypeName = dayType?.name ?: ""
         intent.putExtra(MainFeedActivity.REMINDER_KEY, analyticDayTypeName)
         val taskBuilder: TaskStackBuilder =
@@ -93,6 +97,99 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             afterLocalNotificationShown(SharedPreferenceHelper.NotificationDay.DAY_SEVEN)
         }
         localReminder.remindAboutApp() // schedule for next time
+    }
+
+    @WorkerThread
+    override fun showStreakRemind() {
+        if (sharedPreferenceHelper.isStreakNotificationEnabled) {
+            localReminder.userChangeStateOfNotification() //plan new alarm at next day
+
+            val numberOfStreakNotifications = sharedPreferenceHelper.numberOfStreakNotifications
+            if (numberOfStreakNotifications < AppConstants.MAX_NUMBER_OF_NOTIFICATION_STREAK) {
+                try {
+                    val pins: ArrayList<Long> = api.getUserActivities(sharedPreferenceHelper.profile?.id ?: throw Exception("User is not auth"))
+                            .execute()
+                            ?.body()
+                            ?.userActivities
+                            ?.firstOrNull()
+                            ?.pins!!
+                    val (currentStreak, isSolvedToday) = StepikUtil.getCurrentStreakExtended(pins)
+                    if (currentStreak <= 0) {
+                        analytic.reportEvent(Analytic.Streak.GET_ZERO_STREAK_NOTIFICATION)
+                        showNotificationWithoutStreakInfo()
+                    } else {
+                        analytic.reportEvent(Analytic.Streak.GET_NON_ZERO_STREAK_NOTIFICATION)
+                        if (isSolvedToday) {
+                            showNotificationStreakImprovement(currentStreak)
+                        } else {
+                            showNotificationWithStreakCallToAction(currentStreak)
+                        }
+                    }
+                } catch (exception: Exception) {
+                    // no internet || cant get streaks -> show some notification without streak information.
+                    analytic.reportEvent(Analytic.Streak.GET_NO_INTERNET_NOTIFICATION)
+                    showNotificationWithoutStreakInfo()
+                    return
+                } finally {
+                    sharedPreferenceHelper.incrementNumberOfNotifications()
+                }
+            } else {
+                //too many ignored notifications about streaks
+                streakNotificationNumberIsOverflow()
+            }
+        }
+    }
+
+    private fun streakNotificationNumberIsOverflow() {
+        sharedPreferenceHelper.isStreakNotificationEnabled = false
+        val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
+        val profileIntent = screenManager.getProfileIntent(context)
+        taskBuilder.addParentStack(ProfileActivity::class.java)
+        taskBuilder.addNextIntent(profileIntent)
+        val message = context.getString(R.string.streak_notification_not_working)
+        showSimpleNotification(id = notificationStreakId,
+                justText = message,
+                taskBuilder = taskBuilder,
+                title = context.getString(R.string.time_to_learn_notification_title))
+    }
+
+    private fun getDeleteIntentForStreaks(): PendingIntent {
+        val deleteIntent = Intent(context, NotificationBroadcastReceiver::class.java)
+        deleteIntent.action = AppConstants.NOTIFICATION_CANCELED_STREAK
+        val deletePendingIntent = PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        return deletePendingIntent
+    }
+
+    private fun showNotificationStreakImprovement(currentStreak: Int) {
+        val message = context.resources.getString(R.string.streak_notification_message_improvement, currentStreak)
+        showNotificationStreakBase(message)
+    }
+
+    private fun showNotificationWithStreakCallToAction(currentStreak: Int) {
+        val message = context.resources.getQuantityString(R.plurals.streak_notification_message_call_to_action, currentStreak, currentStreak)
+        showNotificationStreakBase(message)
+    }
+
+    private fun showNotificationWithoutStreakInfo() {
+        val message = context.resources.getString(R.string.streak_notification_empty_number)
+        showNotificationStreakBase(message)
+    }
+
+    private fun showNotificationStreakBase(message: String) {
+        val taskBuilder: TaskStackBuilder = getStreakNotificationTaskBuilder()
+        showSimpleNotification(id = notificationStreakId,
+                justText = message,
+                taskBuilder = taskBuilder,
+                title = context.getString(R.string.time_to_learn_notification_title),
+                deleteIntent = getDeleteIntentForStreaks())
+    }
+
+    private fun getStreakNotificationTaskBuilder(): TaskStackBuilder {
+        val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
+        val myCoursesIntent = screenManager.getMyCoursesIntent(context)
+        myCoursesIntent.action = AppConstants.OPEN_NOTIFICATION_FROM_STREAK
+        taskBuilder.addNextIntent(myCoursesIntent)
+        return taskBuilder
     }
 
     private fun afterLocalNotificationShown(day: SharedPreferenceHelper.NotificationDay) {
@@ -270,13 +367,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             stepikNotification.course_id = courseId
             val notificationOfCourseList: MutableList<Notification?> = databaseFacade.getAllNotificationsOfCourse(courseId)
             val relatedCourse = getCourse(courseId)
-            var isNeedAdd = true
-            for (notificationItem in notificationOfCourseList) {
-                if (notificationItem?.id == stepikNotification.id) {
-                    isNeedAdd = false
-                    break
-                }
-            }
+            val isNeedAdd = notificationOfCourseList.none { it?.id == stepikNotification.id }
 
             if (isNeedAdd) {
                 notificationOfCourseList.add(stepikNotification)
@@ -340,7 +431,6 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
             }
 
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, stepikNotification.id?.toString() ?: "", stepikNotification.type?.name)
-            analytic.reportEvent(Analytic.Notification.LEARN_SHOWN)
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.notify(courseId.toInt(), notification.build())
         }
@@ -365,7 +455,6 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
         notification.setStyle(NotificationCompat.BigTextStyle()
                 .bigText(justText))
                 .setContentText(justText)
-                .setNumber(1)
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(id.toInt(), notification.build())
     }

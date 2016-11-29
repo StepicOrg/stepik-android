@@ -15,4 +15,7 @@ interface INotificationManager {
 
     @WorkerThread
     fun showLocalNotificationRemind()
+
+    @WorkerThread
+    fun showStreakRemind()
 }
