@@ -115,10 +115,10 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                             ?.pins!!
                     val (currentStreak, isSolvedToday) = StepikUtil.getCurrentStreakExtended(pins)
                     if (currentStreak <= 0) {
-                        //todo add analytic about zero streak?
+                        analytic.reportEvent(Analytic.Streak.GET_ZERO_STREAK_NOTIFICATION)
                         showNotificationWithoutStreakInfo()
                     } else {
-                        //todo add analytic about non-zero streak
+                        analytic.reportEvent(Analytic.Streak.GET_NON_ZERO_STREAK_NOTIFICATION)
                         if (isSolvedToday) {
                             showNotificationStreakImprovement(currentStreak)
                         } else {
@@ -127,6 +127,7 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
                     }
                 } catch (exception: Exception) {
                     // no internet || cant get streaks -> show some notification without streak information.
+                    analytic.reportEvent(Analytic.Streak.GET_NO_INTERNET_NOTIFICATION)
                     showNotificationWithoutStreakInfo()
                     return
                 } finally {

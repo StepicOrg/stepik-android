@@ -288,6 +288,9 @@ public interface Analytic {
         java.lang.String NEGATIVE_MATERIAL_DIALOG = "streak_material_dialog_negative";
         java.lang.String POSITIVE_MATERIAL_DIALOG = "streak_material_dialog_positive";
         java.lang.String SHOWN_MATERIAL_DIALOG = "streak_material_dialog_shown";
+        String GET_NON_ZERO_STREAK_NOTIFICATION = "streak_get_non_zero_notification";
+        String GET_ZERO_STREAK_NOTIFICATION = "streak_get_zero_notification";
+        String GET_NO_INTERNET_NOTIFICATION = " streak_get_no_internet_notification";
     }
 
     void reportEvent(String eventName, Bundle bundle);
