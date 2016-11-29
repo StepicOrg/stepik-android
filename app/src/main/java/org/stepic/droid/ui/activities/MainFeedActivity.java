@@ -133,7 +133,7 @@ public class MainFeedActivity extends BackToExitActivityBase
                 sharedPreferenceHelper.clickEnrollNotification(DateTime.now(DateTimeZone.getDefault()).getMillis());
             } else if (action.equals(AppConstants.OPEN_NOTIFICATION_FROM_STREAK)) {
                 sharedPreferenceHelper.resetNumberOfStreakNotifications();
-                analytic.reportEvent(Analytic.Streak.CLICK_OPEN_STREAK_NOTIFICATION);
+                analytic.reportEvent(Analytic.Streak.STREAK_NOTIFICATION_OPENED);
             }
 
             //after tracking check on null user

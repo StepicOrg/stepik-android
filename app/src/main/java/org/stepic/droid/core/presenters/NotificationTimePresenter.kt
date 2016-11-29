@@ -17,7 +17,7 @@ class NotificationTimePresenter(val analytic: Analytic,
         val isEnabled = sharedPreferenceHelper.isStreakNotificationEnabled
         val code = sharedPreferenceHelper.timeNotificationCode
         val timeNotificationString = TimeIntervalUtil.values[code]
-        view?.showNotification(isEnabled, timeNotificationString) //todo check it in shared preferences and show
+        view?.showNotificationEnabledState(isEnabled, timeNotificationString) //todo check it in shared preferences and show
     }
 
     fun switchNotificationStreak(isChecked: Boolean) {

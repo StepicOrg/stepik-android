@@ -335,7 +335,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
     }
 
     @Override
-    public void showNotification(boolean notificationEnabled, @NotNull String notificationTimeValueString) {
+    public void showNotificationEnabledState(boolean notificationEnabled, @NotNull String notificationTimeValueString) {
         notificationStreakSwitch.setChecked(notificationEnabled);
         if (notificationStreakSwitch.getVisibility() != View.VISIBLE) {
             notificationStreakSwitch.setVisibility(View.VISIBLE);

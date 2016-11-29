@@ -284,7 +284,7 @@ public interface Analytic {
         java.lang.String CAN_SHOW_DIALOG = "streak_can_show_dialog";
         java.lang.String SHOW_DIALOG_UNDEFINED_STREAKS = "streak_show_dialog_undefined";
         java.lang.String SHOW_DIALOG_POSITIVE_STREAKS = "streak_show_dialog_positive";
-        java.lang.String CLICK_OPEN_STREAK_NOTIFICATION = "streak_notification_opened";
+        java.lang.String STREAK_NOTIFICATION_OPENED = "streak_notification_opened";
         java.lang.String NEGATIVE_MATERIAL_DIALOG = "streak_material_dialog_negative";
         java.lang.String POSITIVE_MATERIAL_DIALOG = "streak_material_dialog_positive";
         java.lang.String SHOWN_MATERIAL_DIALOG = "streak_material_dialog_shown";
