@@ -68,7 +68,7 @@ public interface ScreenManager {
 
     void showStorageManagement(Activity activity);
 
-    void openInWeb(Context context, String path);
+    void openInWeb(Activity context, String path);
 
     void addCertificateToLinkedIn(CertificateViewItem certificateViewItem);
 
@@ -94,4 +94,10 @@ public interface ScreenManager {
     Intent getProfileIntent(@NotNull Context context);
 
     void openSplash(Context context);
+
+    void openAboutActivity(Activity activity);
+
+    void openPrivacyPolicyWeb(Activity activity);
+
+    void openTermsOfServiceWeb(Activity activity);
 }

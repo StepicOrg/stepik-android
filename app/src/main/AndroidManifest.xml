@@ -301,6 +301,17 @@
         </activity>
 
         <activity
+            android:name=".ui.activities.AboutAppActivity"
+            android:label="@string/about_app"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.activities.SettingsActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.SettingsActivity"/>
+        </activity>
+
+        <activity
             android:name=".ui.activities.StoreManagementActivity"
             android:label="@string/space_management_title"
             android:launchMode="singleTop"
@@ -308,7 +319,7 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.SettingsActivity"/>
+                android:value=".ui.activities.MainFeedActivity"/>
         </activity>
 
         <receiver android:name=".notifications.NotificationBroadcastReceiver">

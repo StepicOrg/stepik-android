@@ -63,6 +63,8 @@ public interface Analytic {
         String START_SPLASH = "user_start_splash_new";
         String START_SPLASH_EXPERT = "user_start_splash_expert";
         java.lang.String CLICK_CHOOSE_NOTIFICATION_INTERVAL = "click_choose_notification_interval";
+        java.lang.String CLICK_PRIVACY_POLICY = "click_privacy_policy";
+        java.lang.String CLICK_TERMS_OF_SERVICE = "click_terms_of_service";
     }
 
     interface Screens {
@@ -94,6 +96,7 @@ public interface Analytic {
         String USER_OPEN_NOTIFICATIONS = "main_choice_notifications";
         String USER_OPEN_SETTINGS = "main_choice_settings";
         String USER_LOGOUT = "main_choice_logout";
+        java.lang.String USER_OPEN_ABOUT_APP = "main_choice_about";
     }
 
     interface Video {

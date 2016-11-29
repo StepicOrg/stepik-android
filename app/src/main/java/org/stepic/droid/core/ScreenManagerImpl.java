@@ -29,6 +29,7 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.store.operations.Table;
+import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.CommentsActivity;
 import org.stepic.droid.ui.activities.CourseDetailActivity;
 import org.stepic.droid.ui.activities.FeedbackActivity;
@@ -301,7 +302,27 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openInWeb(Context context, String path) {
+    public void openAboutActivity(Activity activity) {
+        analytic.reportEvent(Analytic.Screens.USER_OPEN_ABOUT_APP);
+        Intent intent = new Intent(activity, AboutAppActivity.class);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
+    }
+
+    @Override
+    public void openPrivacyPolicyWeb(Activity activity) {
+        String privacyPolicyUrl = config.getPrivacyPolicyUrl();
+        openInWeb(activity, privacyPolicyUrl);
+    }
+
+    @Override
+    public void openTermsOfServiceWeb(Activity activity) {
+        String termsOfServiceUrl = config.getTermsOfServiceUrl();
+        openInWeb(activity, termsOfServiceUrl);
+    }
+
+    @Override
+    public void openInWeb(Activity context, String path) {
         analytic.reportEventWithIdName(Analytic.Screens.OPEN_LINK_IN_WEB, "0", path);
         final Intent intent = getOpenInWebIntent(path);
         context.startActivity(intent);

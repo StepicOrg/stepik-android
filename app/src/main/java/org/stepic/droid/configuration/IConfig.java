@@ -22,4 +22,7 @@ public interface IConfig {
 
     String getGoogleServerClientId();
 
+    String getPrivacyPolicyUrl();
+
+    String getTermsOfServiceUrl();
 }

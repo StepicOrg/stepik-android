@@ -338,6 +338,14 @@ public class MainFeedActivity extends BackToExitActivityBase
                 }, 0);
                 shell.getScreenProvider().openFeedbackActivity(this);
                 return true;
+            case R.id.information:
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        drawerLayout.closeDrawers();
+                    }
+                }, 0);
+                shell.getScreenProvider().openAboutActivity(this);
             default:
                 showCurrentFragment(menuItem);
                 break;

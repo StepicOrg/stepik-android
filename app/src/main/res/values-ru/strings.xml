@@ -319,4 +319,7 @@
     <string name="streak_notification_canceled">Уведомления отключены. Вы можете изменить свой выбор в Профиле</string>
     <string name="streak_notification_not_working">Похоже напоминания не действуют. Мы больше не будем их посылать. Нажмите, чтобы включить снова</string>
     <string name="streak_updated_timezone">Рекорды обновляются в %s</string>
+    <string name="about_app">О приложении</string>
+    <string name="terms_of_service_title">Условия использования</string>
+    <string name="privacy_policy_title">Политика конфиденциальности</string>
 </resources>
