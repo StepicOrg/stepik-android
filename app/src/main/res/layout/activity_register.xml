@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/root_view"
-                xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/root_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:focusableInTouchMode="true">
@@ -111,9 +112,22 @@
                 android:id="@+id/sign_up_btn"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/min_ux_touchable_size"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="20dp"
                 android:text="@string/sign_up"
                 />
+
+            <TextView
+                android:id="@+id/terms_privacy_register"
+                fontPath="fonts/NotoSans-Italic.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
+                android:clickable="true"
+                android:gravity="center_horizontal"
+                android:textSize="@dimen/privacy_policy_text_size"
+                tools:ignore="MissingPrefix"
+                tools:text="Регистрируясь, Вы соглашаетесь с Условиями использования и Политикой конфиденциальности"/>
+
 
         </LinearLayout>
     </ScrollView>
