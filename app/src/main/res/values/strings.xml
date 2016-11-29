@@ -316,6 +316,6 @@
     <string name="streak_notification_canceled">Notifications are not enabled. You can change your choice in Profile</string>
     <string name="streak_notification_not_working">It seems that notifications are not working. We will not send them. Click to enable again</string>
     <string name="streak_updated_timezone">Streaks are updated at %s</string>
-    <string name="terms_message_login"><![CDATA[By signing in, you agree to our <a href="https://stepik.org/page/terms/">Terms of Service</a> and <a href="https://stepik.org/page/privacy/">Privacy Policy</a>]]></string>
-    <string name="terms_message_register"><![CDATA[By signing up, you agree to our <a href="https://stepik.org/page/terms/">Terms</a> and <a href="https://stepik.org/page/privacy/">Privacy Policy</a>]]></string>
+    <string name="terms_message_login"><![CDATA[By signing in, you agree to our <a href="https://stepik.org/page/terms/?from_mobile_app=true">Terms of Service</a> and <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Privacy Policy</a>]]></string>
+    <string name="terms_message_register"><![CDATA[By signing up, you agree to our <a href="https://stepik.org/page/terms/?from_mobile_app=true">Terms</a> and <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Privacy Policy</a>]]></string>
 </resources>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
               android:id="@+id/root_view"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -166,11 +167,29 @@
                 android:layout_height="@dimen/height_of_social"
                 android:layout_below="@+id/sign_in_title_layout"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="20dp"
                 android:layout_marginTop="15dp"
                 android:scrollbarStyle="outsideOverlay"
                 android:splitMotionEvents="false"
                 android:stretchColumns="0"/>
+
+            <TextView
+                android:id="@+id/terms_privacy_login"
+                fontPath="fonts/NotoSans-Italic.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/email_text_input"
+                android:layout_alignLeft="@+id/email_text_input"
+                android:layout_alignRight="@+id/email_text_input"
+                android:layout_alignStart="@+id/email_text_input"
+                android:layout_below="@+id/social_list"
+                android:layout_marginBottom="50dp"
+                android:clickable="true"
+                android:gravity="center_horizontal"
+                android:textSize="@dimen/privacy_policy_text_size"
+                tools:ignore="MissingPrefix"
+                tools:text="Входя в приложение, Вы соглашаетесь с Условиями использования и Политикой конфиденциальности"/>
+
 
         </RelativeLayout>
 

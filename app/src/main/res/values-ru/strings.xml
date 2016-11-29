@@ -94,8 +94,8 @@
     <string name="correct_free_response">Ваше решение сохранено.</string>
     <string name="hint_for_type_answer">Введите ответ здесь…</string>
     <string name="py_message"><![CDATA[Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>]]></string>
-    <string name="terms_message_login"><![CDATA[Входя в приложение, Вы соглашаетесь с <a href="https://stepik.org/page/terms/">Условиями использования</a> и <a href="https://stepik.org/page/privacy/">Политикой конфиденциальности</a>]]></string>
-    <string name="terms_message_register"><![CDATA[Регистрируясь, Вы соглашаетесь с <a href="https://stepik.org/page/terms/">Условиями использования</a> и <a href="https://stepik.org/page/privacy/">Политикой конфиденциальности</a>]]></string>
+    <string name="terms_message_login"><![CDATA[Входя в приложение, Вы соглашаетесь с <a href="https://stepik.org/page/terms/?from_mobile_app=true">Условиями использования</a> и <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Политикой конфиденциальности</a>]]></string>
+    <string name="terms_message_register"><![CDATA[Регистрируясь, Вы соглашаетесь с <a href="https://stepik.org/page/terms/?from_mobile_app=true">Условиями использования</a> и <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Политикой конфиденциальности</a>]]></string>
     <string name="review_warning">Это задание с рецензией. Нажмите, чтобы закончить задание в web и получить баллы.</string>
     <string name="password_too_short">Минимальное количество символов в пароле: 6. </string>
     <string name="reset_password">Сбросить пароль</string>

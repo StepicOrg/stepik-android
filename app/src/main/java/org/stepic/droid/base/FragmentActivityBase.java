@@ -28,6 +28,7 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.ui.fragments.MyCoursesFragment;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
+import org.stepic.droid.util.resolvers.text.TextResolver;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -41,6 +42,9 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     protected Unbinder unbinder;
+
+    @Inject
+    protected TextResolver textResolver;
 
     @Inject
     protected ShareHelper shareHelper;
