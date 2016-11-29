@@ -338,7 +338,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         if (step != null) {
             analytic.reportEvent(Analytic.Steps.CORRECT_SUBMISSION_FILL, step.getId() + "");
         }
-        sharedPreferenceHelper.trackWhenUserSolved();
         markLocalProgressAsViewed();
         attemptContainer.setBackgroundResource(R.color.correct_answer_background);
         statusIcon.setImageDrawable(correctIcon);
@@ -601,7 +600,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @Override
     public void onNeedShowStreakDialog(int numberOfStreakDayIncludeToday) {
         // this submission is correct and user posted it 1st time
-        sharedPreferenceHelper.trackWhenUserSolved();
         showStreakDialog(numberOfStreakDayIncludeToday);
     }
 }

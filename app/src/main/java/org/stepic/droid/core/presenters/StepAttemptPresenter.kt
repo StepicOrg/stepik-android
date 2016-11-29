@@ -134,6 +134,10 @@ class StepAttemptPresenter(val mainHandler: IMainHandler,
                                     return@Runnable
                                 }
 
+                                if (!step.is_custom_passed &&  (submission?.status == Submission.Status.CORRECT)){
+                                    sharedPreferenceHelper.trackWhenUserSolved()
+                                }
+
                                 val numberOfSubmissions = api.getSubmissionForStep(step.id).execute().body().submissions.size
                                 val needShowStreakDialog =
                                         fromPosting
