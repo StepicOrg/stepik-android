@@ -23,9 +23,8 @@ class StepQualityPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                 val quality: String
                 if (video == null) {
                     val resultQuality: String = try {
-
                         val weWant = Integer.parseInt(userPreferences.qualityVideo)
-                        val urls = stepVideo.urls
+                        val urls = stepVideo.urls //TODO: URLS can be empty here: Try to research it
                         var bestDelta = Integer.MAX_VALUE
                         var bestIndex = 0
                         for (i in urls.indices) {
@@ -38,10 +37,9 @@ class StepQualityPresenter(val threadPoolExecutor: ThreadPoolExecutor,
 
                         }
                         urls[bestIndex].quality
-                    } catch (e: NumberFormatException) {
+                    } catch (e: Exception) {
                         userPreferences.qualityVideo
                     }
-
 
                     quality = resultQuality
                 } else {
