@@ -13,12 +13,10 @@ class SectionActivity : SingleFragmentActivity() {
         return SectionsFragment.newInstance()
     }
 
-
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
     }
-
 
     override fun finish() {
         super.finish()

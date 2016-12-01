@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="yet_have_not_account">Еще нет аккаунта? Создать</string>
+    <string name="stepik_free_courses_title">Stepik.org: бесплатные курсы</string>
+    <string name="local_remind_message">Мы заметили, что Вы до сих пор не выбрали ни одного курса для изучения. Не откладывайте, запишитесь на подходящий бесплатный курс прямо сейчас!</string>
     <string name="available_courses_title">Доступные курсы</string>
     <string name="begin_date">Начало</string>
     <string name="best_lessons_title">Лучшие уроки</string>
@@ -91,6 +94,8 @@
     <string name="correct_free_response">Ваше решение сохранено.</string>
     <string name="hint_for_type_answer">Введите ответ здесь…</string>
     <string name="py_message"><![CDATA[Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>]]></string>
+    <string name="terms_message_login"><![CDATA[Входя в приложение, Вы соглашаетесь с <a href="https://stepik.org/page/terms/?from_mobile_app=true">Условиями использования</a> и <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Политикой конфиденциальности</a>]]></string>
+    <string name="terms_message_register"><![CDATA[Регистрируясь, Вы соглашаетесь с <a href="https://stepik.org/page/terms/?from_mobile_app=true">Условиями использования</a> и <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Политикой конфиденциальности</a>]]></string>
     <string name="review_warning">Это задание с рецензией. Нажмите, чтобы закончить задание в web и получить баллы.</string>
     <string name="password_too_short">Минимальное количество символов в пароле: 6. </string>
     <string name="reset_password">Сбросить пароль</string>
@@ -287,5 +292,34 @@
         <item quantity="many">дней</item>
         <item quantity="other">дней</item>
     </plurals>
+    <plurals name="streak_description">
+        <item quantity="one">Это ваш %dый день, когда Вы решаете задачи без перерыва. Решайте по одной каждый день, чтобы поддержать прогресс. Для этого мы предлагаем Вам включить напоминания.</item>
+        <item quantity="few">Это ваш %dй день, когда Вы решаете задачи без перерыва. Решайте по одной каждый день, чтобы поддержать прогресс. Для этого мы предлагаем Вам включить напоминания.</item>
+        <item quantity="many">Это ваш %dй день, когда Вы решаете задачи без перерыва. Решайте по одной каждый день, чтобы поддержать прогресс. Для этого мы предлагаем Вам включить напоминания.</item>
+        <item quantity="other">Это ваш %dй день, когда Вы решаете задачи без перерыва. Решайте по одной каждый день, чтобы поддержать прогресс. Для этого мы предлагаем Вам включить напоминания.</item>
+    </plurals>
+
     <string name="empty_user_title">Пользователь не найден</string>
+    <string name="streak_dialog_title">Поздравляем!</string>
+    <string name="later_tatle">Позже</string>
+    <string name="choose_notification_time_interval">Выберите время напоминания</string>
+    <string name="notification_time">Время напоминания</string>
+    <string name="notification_about_learning">Уведомления о занятиях</string>
+    <string name="time_to_learn_notification_title">Время учиться!</string>
+    <plurals name="streak_notification_message_call_to_action">
+        <item quantity="one">Вы молодец! Вы решаете уже %d день без перерыва. Не останавливайтесь, решите задачу прямо сейчас!</item>
+        <item quantity="few">Вы молодец! Вы решаете уже %d дня без перерыва. Не останавливайтесь, решите задачу прямо сейчас!</item>
+        <item quantity="many">Вы молодец! Вы решаете уже %d дней без перерыва. Не останавливайтесь, решите задачу прямо сейчас!</item>
+        <item quantity="other">Вы молодец! Вы решаете уже %d дней без перерыва. Не останавливайтесь, решите задачу прямо сейчас!</item>
+    </plurals>
+    <string name="streak_notification_message_improvement">Хорошая работа! Вы увеличили количество дней без перерыва до %d. Так держать!</string>
+    <string name="streak_notification_empty_number">Обучение требует ежедневной практики. Решите задание прямо сейчас!</string>
+    <string name="streak_description_not_positive">Верно! Решайте по одной каждый день, чтобы поддержать прогресс. Для этого мы предлагаем Вам включить напоминания.</string>
+    <string name="streak_notification_enabled_successfully">Уведомления включены. Вы можете изменить свой выбор в Профиле</string>
+    <string name="streak_notification_canceled">Уведомления отключены. Вы можете изменить свой выбор в Профиле</string>
+    <string name="streak_notification_not_working">Похоже напоминания не действуют. Мы больше не будем их посылать. Нажмите, чтобы включить снова</string>
+    <string name="streak_updated_timezone">Рекорды обновляются в %s</string>
+    <string name="about_app">О приложении</string>
+    <string name="terms_of_service_title">Условия использования</string>
+    <string name="privacy_policy_title">Политика конфиденциальности</string>
 </resources>

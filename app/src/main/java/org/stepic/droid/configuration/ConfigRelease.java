@@ -39,6 +39,8 @@ public class ConfigRelease implements IConfig {
     private static final String CUSTOM_UPDATING_VERSION = "CUSTOM_UPDATING_VERSION";
     private static final String FIREBASE_DOMAIN = "FIREBASE_DOMAIN";
     private static final String GOOGLE_SERVER_CLIENT_ID = "GOOGLE_SERVER_CLIENT_ID";
+    private static final java.lang.String TERMS_OF_SERVICE = "TERMS_OF_SERVICE";
+    private static final java.lang.String PRIVACY_POLICY = "PRIVACY_POLICY";
 
 
     @Inject
@@ -148,6 +150,16 @@ public class ConfigRelease implements IConfig {
     @Override
     public String getGoogleServerClientId() {
         return getString(GOOGLE_SERVER_CLIENT_ID, null);
+    }
+
+    @Override
+    public String getPrivacyPolicyUrl() {
+        return getString(PRIVACY_POLICY, getBaseUrl());
+    }
+
+    @Override
+    public String getTermsOfServiceUrl() {
+        return getString(TERMS_OF_SERVICE, getBaseUrl());
     }
 
     private String getString(String key) {

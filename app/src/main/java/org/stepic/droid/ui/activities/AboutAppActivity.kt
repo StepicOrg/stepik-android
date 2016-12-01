@@ -7,12 +7,12 @@ import android.view.MenuItem
 import butterknife.ButterKnife
 import org.stepic.droid.R
 import org.stepic.droid.base.SingleFragmentActivity
-import org.stepic.droid.ui.fragments.SettingsFragment
+import org.stepic.droid.ui.fragments.AboutAppFragment
 
-open class SettingsActivity : SingleFragmentActivity() {
+open class AboutAppActivity : SingleFragmentActivity() {
 
     override fun createFragment(): Fragment? {
-        return SettingsFragment.newInstance()
+        return AboutAppFragment.newInstance()
     }
 
     var toolbar: Toolbar? = null;
@@ -40,7 +40,7 @@ open class SettingsActivity : SingleFragmentActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
-                if (sharedPreferenceHelper.getAuthResponseFromStore() == null) {
+                if (sharedPreferenceHelper.authResponseFromStore == null) {
                     finish();
                     return true
                 } else {

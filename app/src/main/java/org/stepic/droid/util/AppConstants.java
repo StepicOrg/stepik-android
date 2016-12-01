@@ -1,6 +1,8 @@
 package org.stepic.droid.util;
 
 
+import org.jetbrains.annotations.Nullable;
+
 public class AppConstants {
 
     public static final String USER_LOG_IN = "user_login_clicked";
@@ -46,10 +48,12 @@ public class AppConstants {
     public static final int REQUEST_CODE_DETAIL = 1;
     public static final java.lang.String THUMBNAIL_POSTFIX_EXTENSION = ".png";
     public static final java.lang.String DELIMITER_TEXT_SCORE = "/";
-    public static final java.lang.String NOTIFICATION_CANCELED = "notification_cancelled";
+    public static final java.lang.String NOTIFICATION_CANCELED = "notification_canceled";
 
 
     public static final String OPEN_NOTIFICATION_FOR_CHECK_COURSE = "Open_notification_check_course";
+    public static final String OPEN_NOTIFICATION_FOR_ENROLL_REMINDER = "open_notificatoin_for_enroll_reminder";
+    public static final String OPEN_NOTIFICATION_FROM_STREAK = "open_notification_from_streak";
     public static final String OPEN_NOTIFICATION = "Open_notification";
     public static final long MILLIS_IN_24HOURS = 86400000L;
     public static final long MILLIS_IN_1HOUR = 3600000L;
@@ -72,4 +76,11 @@ public class AppConstants {
     public static final int DEFAULT_NUMBER_IDS_IN_QUERY = 100;
     public static final java.lang.String KEY_MODULE_POSITION = "section_long_id";
     public static final int LAUNCHES_FOR_EXPERT_USER = 20;
+    public static final long MILLIS_IN_SEVEN_DAYS = 604800000L;
+    public static final String NOTIFICATION_CANCELED_REMINDER = "notification_canceled_reminder";
+    public static final int MAX_NUMBER_OF_SHOWING_STREAK_DIALOG = 3;
+    public static final int NUMBER_OF_DAYS_BETWEEN_STREAK_SHOWING = 2;
+    public static final int MAX_NUMBER_OF_NOTIFICATION_STREAK = 3;
+    @Nullable
+    public static final String NOTIFICATION_CANCELED_STREAK = "notification_canceled_streaks";
 }

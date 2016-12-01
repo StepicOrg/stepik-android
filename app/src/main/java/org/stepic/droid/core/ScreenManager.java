@@ -60,13 +60,15 @@ public interface ScreenManager {
 
     void showFindCourses(Context context);
 
+    Intent getShowFindCoursesIntent (Context context);
+
     void showVideo(Activity sourceActivity, String source, Long videoId);
 
     void showSettings(Activity sourceActivity);
 
     void showStorageManagement(Activity activity);
 
-    void openInWeb(Context context, String path);
+    void openInWeb(Activity context, String path);
 
     void addCertificateToLinkedIn(CertificateViewItem certificateViewItem);
 
@@ -83,4 +85,19 @@ public interface ScreenManager {
     void openProfile(Activity activity);
 
     void openProfile(Activity activity, long userId);
+
+    void openFeedbackActivity (Activity activity);
+
+    Intent getMyCoursesIntent(@NotNull Context context);
+
+    @Nullable
+    Intent getProfileIntent(@NotNull Context context);
+
+    void openSplash(Context context);
+
+    void openAboutActivity(Activity activity);
+
+    void openPrivacyPolicyWeb(Activity activity);
+
+    void openTermsOfServiceWeb(Activity activity);
 }

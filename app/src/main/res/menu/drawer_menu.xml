@@ -43,8 +43,15 @@
 
         <item
             android:id="@+id/feedback"
+            android:checkable="false"
             android:icon="@drawable/ic_comment_black_24dp"
             android:title="@string/feedback_title"/>
+
+        <item
+            android:id="@+id/information"
+            android:checkable="false"
+            android:icon="@drawable/ic_info_outline_white_24dp"
+            android:title="@string/about_app"/>
 
 
         <item

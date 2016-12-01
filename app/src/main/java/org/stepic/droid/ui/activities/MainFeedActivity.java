@@ -34,6 +34,8 @@ import com.squareup.otto.Subscribe;
 import com.vk.sdk.VKSdk;
 
 import org.jetbrains.annotations.NotNull;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
@@ -49,7 +51,6 @@ import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.ui.fragments.CertificateFragment;
 import org.stepic.droid.ui.fragments.DownloadsFragment;
-import org.stepic.droid.ui.fragments.FeedbackFragment;
 import org.stepic.droid.ui.fragments.FindCoursesFragment;
 import org.stepic.droid.ui.fragments.MyCoursesFragment;
 import org.stepic.droid.ui.fragments.NotificationsFragment;
@@ -74,10 +75,12 @@ import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
+import timber.log.Timber;
 
 public class MainFeedActivity extends BackToExitActivityBase
         implements NavigationView.OnNavigationItemSelectedListener, LogoutSuccess, BackButtonHandler, HasDrawer {
     public static final String KEY_CURRENT_INDEX = "Current_index";
+    public static final String REMINDER_KEY = "reminder_key";
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -108,12 +111,35 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
-            analytic.reportEvent(AppConstants.OPEN_NOTIFICATION);
-        }
+        notificationClickedCheck(intent);
         Bundle extras = intent.getExtras();
         if (extras != null) {
             initFragments(extras);
+        }
+    }
+
+    private void notificationClickedCheck(Intent intent) {
+        String action = intent.getAction();
+        if (action != null) {
+            if (action.equals(AppConstants.OPEN_NOTIFICATION)) {
+                analytic.reportEvent(AppConstants.OPEN_NOTIFICATION);
+            } else if (action.equals(AppConstants.OPEN_NOTIFICATION_FOR_ENROLL_REMINDER)) {
+                String dayTypeString = intent.getStringExtra(REMINDER_KEY);
+                if (dayTypeString == null) {
+                    dayTypeString = "";
+                }
+                analytic.reportEvent(Analytic.Notification.REMIND_OPEN, dayTypeString);
+                Timber.d(Analytic.Notification.REMIND_OPEN);
+                sharedPreferenceHelper.clickEnrollNotification(DateTime.now(DateTimeZone.getDefault()).getMillis());
+            } else if (action.equals(AppConstants.OPEN_NOTIFICATION_FROM_STREAK)) {
+                sharedPreferenceHelper.resetNumberOfStreakNotifications();
+                analytic.reportEvent(Analytic.Streak.STREAK_NOTIFICATION_OPENED);
+            }
+
+            //after tracking check on null user
+            if (sharedPreferenceHelper.getAuthResponseFromStore() == null) {
+                shell.getScreenProvider().openSplash(this);
+            }
         }
     }
 
@@ -122,6 +148,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_feed);
         unbinder = ButterKnife.bind(this);
+        notificationClickedCheck(getIntent());
         initGoogleApiClient();
         initDrawerHeader();
         setUpToolbar();
@@ -302,6 +329,23 @@ public class MainFeedActivity extends BackToExitActivityBase
                 }, 0);
                 shell.getScreenProvider().showSettings(this);
                 return true;
+            case R.id.feedback:
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        drawerLayout.closeDrawers();
+                    }
+                }, 0);
+                shell.getScreenProvider().openFeedbackActivity(this);
+                return true;
+            case R.id.information:
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        drawerLayout.closeDrawers();
+                    }
+                }, 0);
+                shell.getScreenProvider().openAboutActivity(this);
             default:
                 showCurrentFragment(menuItem);
                 break;
@@ -402,13 +446,6 @@ public class MainFeedActivity extends BackToExitActivityBase
                     shortLifetimeRef = NotificationsFragment.newInstance();
                 }
                 break;
-            case R.id.feedback:
-                currentIndex = 7;
-                if (tag == null || !tag.equals(FeedbackFragment.class.toString())) {
-                    shortLifetimeRef = FeedbackFragment.Companion.newInstance();
-                }
-                break;
-
         }
         currentIndex--; // menu indices from 1
         if (shortLifetimeRef != null) {
@@ -469,7 +506,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         showCurrentFragment(currentIndex);
     }
 
-    public static int getFindLessonIndex() {
+    public static int getFindCoursesIndex() {
         return 1;
     }
 
@@ -516,6 +553,10 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     public static int getDownloadFragmentIndex() {
         return 2;
+    }
+
+    public static int getMyCoursesIndex() {
+        return 0;
     }
 
     @Override

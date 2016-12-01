@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.LinkMovementMethod;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
@@ -50,6 +51,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.ProgressHelper;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -77,6 +79,13 @@ public class LoginActivity extends FragmentActivityBase {
     @BindView(R.id.social_list)
     RecyclerView socialRecyclerView;
 
+    @BindView(R.id.terms_privacy_login)
+    TextView termsPrivacyTextView;
+
+    @BindString(R.string.terms_message_login)
+    String termsMessageHtml;
+
+
     private ProgressDialog progressLogin;
 
     ProgressHandler progressHandler;
@@ -92,6 +101,8 @@ public class LoginActivity extends FragmentActivityBase {
         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition);
 
         hideSoftKeypad();
+        termsPrivacyTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        termsPrivacyTextView.setText(textResolver.fromHtml(termsMessageHtml));
 
         String serverClientId = config.getGoogleServerClientId();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -77,6 +78,12 @@ public class RegisterActivity extends FragmentActivityBase {
     @BindString(R.string.password_too_short)
     String passwordTooShortMessage;
 
+    @BindView(R.id.terms_privacy_register)
+    TextView termsPrivacyTextView;
+
+    @BindString(R.string.terms_message_register)
+    String termsMessageHtml;
+
 
     ProgressDialog progress;
     TextWatcher passwordWatcher;
@@ -90,6 +97,9 @@ public class RegisterActivity extends FragmentActivityBase {
         overridePendingTransition(org.stepic.droid.R.anim.slide_in_from_bottom, org.stepic.droid.R.anim.no_transition);
 
         hideSoftKeypad();
+
+        termsPrivacyTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        termsPrivacyTextView.setText(textResolver.fromHtml(termsMessageHtml));
 
         createAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override

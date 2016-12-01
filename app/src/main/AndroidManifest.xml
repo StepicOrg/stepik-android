@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    package="org.stepic.droid"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    package="org.stepic.droid"
     android:installLocation="auto">
 
 
@@ -20,6 +20,7 @@
     <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
 
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:name="org.stepic.droid.base.MainApplication"
@@ -212,27 +213,21 @@
         </receiver>
 
         <service
-            android:name="org.stepic.droid.services.LoadService"
-            android:exported="true"></service>
+            android:name="org.stepic.droid.services.NewUserAlarmService"/>
         <service
-            android:name="org.stepic.droid.services.DeleteService"
-            android:exported="true"></service>
+            android:name="org.stepic.droid.services.StreakAlarmService"/>
         <service
-            android:name="org.stepic.droid.services.ViewPusher"
-            android:exported="true"></service>
-
+            android:name="org.stepic.droid.services.LoadService"/>
         <service
-            android:name="org.stepic.droid.services.CancelLoadingService"
-            android:exported="true"></service>
-
+            android:name="org.stepic.droid.services.DeleteService"/>
         <service
-            android:name="org.stepic.droid.services.UpdateAppService"
-            android:exported="true"></service>
-
-
+            android:name="org.stepic.droid.services.ViewPusher"/>
         <service
-            android:name="org.stepic.droid.services.UpdateWithApkService"
-            android:exported="true"></service>
+            android:name="org.stepic.droid.services.CancelLoadingService"/>
+        <service
+            android:name="org.stepic.droid.services.UpdateAppService"/>
+        <service
+            android:name="org.stepic.droid.services.UpdateWithApkService"/>
 
         <activity
             android:name=".ui.activities.CourseSearchResultActivity"
@@ -292,6 +287,30 @@
             </intent-filter>
         </activity>
 
+
+        <activity
+            android:name=".ui.activities.FeedbackActivity"
+            android:label="@string/feedback_title"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.activities.MainFeedActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainFeedActivity"/>
+
+        </activity>
+
+        <activity
+            android:name=".ui.activities.AboutAppActivity"
+            android:label="@string/about_app"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.activities.SettingsActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.SettingsActivity"/>
+        </activity>
+
         <activity
             android:name=".ui.activities.StoreManagementActivity"
             android:label="@string/space_management_title"
@@ -300,7 +319,7 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.SettingsActivity"/>
+                android:value=".ui.activities.MainFeedActivity"/>
         </activity>
 
         <receiver android:name=".notifications.NotificationBroadcastReceiver">
@@ -369,6 +388,16 @@
                 <data android:pathPattern="/users/.*/"/>
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".receivers.BootCompletedReceiver"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
 
         <meta-data
             android:name="com.google.android.gms.version"

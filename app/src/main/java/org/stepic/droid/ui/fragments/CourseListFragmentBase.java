@@ -28,7 +28,7 @@ import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.custom.TouchDispatchableFrameLayout;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.util.StepicUtil;
+import org.stepic.droid.util.StepikUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,7 +114,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem + visibleItemCount >= totalItemCount && userScrolled && StepicUtil.INSTANCE.isInternetAvailable()) {
+                if (firstVisibleItem + visibleItemCount >= totalItemCount && userScrolled && StepikUtil.INSTANCE.isInternetAvailable()) {
                     //check inside more expensive condition:
                     onNeedDownloadNextPage();
                 }
@@ -202,6 +202,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         reportConnectionProblem.setVisibility(View.GONE);
         if (courses.isEmpty()) {
             showEmptyScreen(true);
+            localReminder.remindAboutApp();
         }
     }
 

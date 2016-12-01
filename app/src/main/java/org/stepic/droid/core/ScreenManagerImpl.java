@@ -29,8 +29,10 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.store.operations.Table;
+import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.CommentsActivity;
 import org.stepic.droid.ui.activities.CourseDetailActivity;
+import org.stepic.droid.ui.activities.FeedbackActivity;
 import org.stepic.droid.ui.activities.FilterActivity;
 import org.stepic.droid.ui.activities.LaunchActivity;
 import org.stepic.droid.ui.activities.LoginActivity;
@@ -40,6 +42,7 @@ import org.stepic.droid.ui.activities.ProfileActivity;
 import org.stepic.droid.ui.activities.RegisterActivity;
 import org.stepic.droid.ui.activities.SectionActivity;
 import org.stepic.droid.ui.activities.SettingsActivity;
+import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StepsActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
 import org.stepic.droid.ui.activities.TextFeedbackActivity;
@@ -159,7 +162,7 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showCertificates() {
         Context context = MainApplication.getAppContext();
         int index = MainFeedActivity.getCertificateFragmentIndex();
-        showFromMainActivity(context, index);
+        context.startActivity(getFromMainActivityIntent(context, index));
     }
 
     @Override
@@ -171,22 +174,27 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showDownload(Context context) {
         int index = MainFeedActivity.getDownloadFragmentIndex();
-        showFromMainActivity(context, index);
+        context.startActivity(getFromMainActivityIntent(context, index));
     }
 
     @Override
     public void showFindCourses(Context context) {
-        int index = MainFeedActivity.getFindLessonIndex();
-        showFromMainActivity(context, index);
+        context.startActivity(getShowFindCoursesIntent(context));
     }
 
-    private void showFromMainActivity(Context context, int index) {
+    @Override
+    public Intent getShowFindCoursesIntent(Context context) {
+        int index = MainFeedActivity.getFindCoursesIndex();
+        return getFromMainActivityIntent(context, index);
+    }
+
+    private Intent getFromMainActivityIntent(Context context, int index) {
         Intent intent = new Intent(context, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle bundle = new Bundle();
         bundle.putInt(MainFeedActivity.KEY_CURRENT_INDEX, index);
         intent.putExtras(bundle);
-        context.startActivity(intent);
+        return intent;
     }
 
     @Override
@@ -267,7 +275,54 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openInWeb(Context context, String path) {
+    public void openFeedbackActivity(Activity activity) {
+        final Intent intent = new Intent(activity, FeedbackActivity.class);
+        activity.startActivity(intent);
+    }
+
+    @Override
+    public Intent getMyCoursesIntent(@NotNull Context context) {
+        int index = MainFeedActivity.getMyCoursesIndex();
+        return getFromMainActivityIntent(context, index);
+    }
+
+    @Nullable
+    @Override
+    public Intent getProfileIntent(@NotNull Context context) {
+        Intent intent = new Intent(context, ProfileActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
+    }
+
+    @Override
+    public void openSplash(Context context) {
+        Intent launchIntent = new Intent(context, SplashActivity.class);
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(launchIntent);
+    }
+
+    @Override
+    public void openAboutActivity(Activity activity) {
+        analytic.reportEvent(Analytic.Screens.USER_OPEN_ABOUT_APP);
+        Intent intent = new Intent(activity, AboutAppActivity.class);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
+    }
+
+    @Override
+    public void openPrivacyPolicyWeb(Activity activity) {
+        String privacyPolicyUrl = config.getPrivacyPolicyUrl();
+        openInWeb(activity, privacyPolicyUrl);
+    }
+
+    @Override
+    public void openTermsOfServiceWeb(Activity activity) {
+        String termsOfServiceUrl = config.getTermsOfServiceUrl();
+        openInWeb(activity, termsOfServiceUrl);
+    }
+
+    @Override
+    public void openInWeb(Activity context, String path) {
         analytic.reportEventWithIdName(Analytic.Screens.OPEN_LINK_IN_WEB, "0", path);
         final Intent intent = getOpenInWebIntent(path);
         context.startActivity(intent);

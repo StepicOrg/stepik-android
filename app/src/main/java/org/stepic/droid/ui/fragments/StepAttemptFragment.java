@@ -2,13 +2,19 @@ package org.stepic.droid.ui.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.NestedScrollView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +24,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.otto.Subscribe;
 
@@ -27,6 +36,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.modules.StepModule;
+import org.stepic.droid.core.presenters.NotificationTimePresenter;
 import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.contracts.StepAttemptView;
 import org.stepic.droid.events.InternetIsEnabledEvent;
@@ -40,16 +50,23 @@ import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.Submission;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
+import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
+import org.stepic.droid.ui.util.TimeIntervalUtil;
+import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.SnackbarExtensionKt;
 
 import javax.inject.Inject;
 
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
+import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public abstract class StepAttemptFragment extends StepBaseFragment implements StepAttemptView {
     private final int DISCOUNTING_POLICY_REQUEST_CODE = 131;
+    private final int NOTIFICATION_TIME_REQUEST_CODE = 11;
 
     @BindView(R.id.root_view)
     ViewGroup rootView;
@@ -118,6 +135,9 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @Inject
     LessonSessionManager lessonManager;
 
+    @Inject
+    NotificationTimePresenter notificationTimePresenter;
+
     @Override
     protected void injectComponent() {
         MainApplication.component().plus(new StepModule()).inject(this);
@@ -180,12 +200,12 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         blockUIBeforeSubmit(true);
         final long attemptId = attempt.getId();
         final Reply reply = generateReply();
-        stepAttemptPresenter.postSubmission(step.getId(), reply, attemptId);
+        stepAttemptPresenter.postSubmission(step, reply, attemptId);
     }
 
     @Override
     public void onDestroyView() {
-        saveSession();
+        saveSession(true);
         stepAttemptPresenter.detachView(this);
         super.onDestroyView();
     }
@@ -214,6 +234,9 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                 onCorrectSubmission();
                 setTextToActionButton(tryAgainText);
                 blockUIBeforeSubmit(true);
+
+                //// FIXME: 22.11.16 transfer to after Submit not passed step
+//                showStreakDialog(3);
                 break;
             case WRONG:
                 onWrongSubmission();
@@ -225,10 +248,55 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         onRestoreSubmission();
     }
 
-    protected final void saveSession() {
+    private void showStreakDialog(int daysOfCurrentStreakIncludeToday) {
+        SpannableString streakTitle = new SpannableString(getString(R.string.streak_dialog_title));
+        streakTitle.setSpan(new ForegroundColorSpan(Color.BLACK), 0, streakTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), "fonts/NotoSans-Bold.ttf"));
+        streakTitle.setSpan(typefaceSpan, 0, streakTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        String description;
+        if (daysOfCurrentStreakIncludeToday > 0) {
+            analytic.reportEvent(Analytic.Streak.SHOW_DIALOG_UNDEFINED_STREAKS, daysOfCurrentStreakIncludeToday + "");
+            description = getResources().getQuantityString(R.plurals.streak_description, daysOfCurrentStreakIncludeToday, daysOfCurrentStreakIncludeToday);
+        } else {
+            analytic.reportEvent(Analytic.Streak.SHOW_DIALOG_POSITIVE_STREAKS, daysOfCurrentStreakIncludeToday + "");
+            description = getString(R.string.streak_description_not_positive);
+        }
+
+        analytic.reportEvent(Analytic.Streak.SHOWN_MATERIAL_DIALOG);
+        MaterialStyledDialog dialog = new MaterialStyledDialog.Builder(getContext())
+                .setTitle(streakTitle)
+                .setDescription(description)
+                .setHeaderDrawable(R.drawable.dialog_background)
+                .setPositiveText(R.string.ok)
+                .setNegativeText(R.string.later_tatle)
+                .setScrollable(true, 10) // number of lines lines
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        analytic.reportEvent(Analytic.Streak.POSITIVE_MATERIAL_DIALOG);
+                        DialogFragment dialogFragment = TimeIntervalPickerDialogFragment.Companion.newInstance();
+                        if (!dialogFragment.isAdded()) {
+                            dialogFragment.setTargetFragment(StepAttemptFragment.this, NOTIFICATION_TIME_REQUEST_CODE);
+                            dialogFragment.show(getFragmentManager(), null);
+                        }
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        analytic.reportEvent(Analytic.Streak.NEGATIVE_MATERIAL_DIALOG);
+                        messageOnNotEnablingNotification();
+                    }
+                })
+                .build();
+        dialog.show();
+    }
+
+    protected final void saveSession(boolean isNeedGetFromUI) {
         if (attempt == null) return;
 
-        if (submission == null) {
+        if (submission == null || (isNeedGetFromUI && submission.getStatus() == Submission.Status.LOCAL)) {
             Reply reply = generateReply();
             submission = new Submission(reply, attempt.getId(), Submission.Status.LOCAL);
         }
@@ -350,7 +418,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         showAttempt(attempt);
         LessonSession lessonSession = lessonManager.restoreLessonSession(step.getId());
         if ((lessonSession == null || lessonSession.getSubmission() == null) && !isCreatedAttempt) {
-            stepAttemptPresenter.getStatusOfSubmission(step.getId(), attempt.getId());//fill last server submission if exist
+            stepAttemptPresenter.getStatusOfSubmission(step, attempt.getId());//fill last server submission if exist
         } else {
             // when just now created --> do not need show submission, it is not exist.
             stepAttemptPresenter.handleDiscountingPolicy(numberOfSubmissions, section, step);
@@ -443,7 +511,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         showActionButtonLoadState(false);
         this.numberOfSubmissions = numberOfSubmissions;
         this.submission = submission;
-        saveSession();
+        saveSession(false);
         fillSubmission(submission);
     }
 
@@ -479,7 +547,36 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == DISCOUNTING_POLICY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             makeSubmissionDirectly();
+        } else if (requestCode == NOTIFICATION_TIME_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                int intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.Companion.getResultIntervalCodeKey(), TimeIntervalUtil.INSTANCE.getMiddle());
+                sharedPreferenceHelper.setStreakNotificationEnabled(true);
+                notificationTimePresenter.setStreakTime(intervalCode); // we do not need attach this view, because we need only set in model
+                analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode + "");
+                SnackbarExtensionKt
+                        .setTextColor(
+                                Snackbar.make(rootView,
+                                        R.string.streak_notification_enabled_successfully,
+                                        Snackbar.LENGTH_LONG),
+                                ColorUtil.INSTANCE.getColorArgb(R.color.white,
+                                        getContext()))
+                        .show();
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED);
+                messageOnNotEnablingNotification();
+            }
         }
+    }
+
+    private void messageOnNotEnablingNotification() {
+        SnackbarExtensionKt
+                .setTextColor(
+                        Snackbar.make(rootView,
+                                R.string.streak_notification_canceled,
+                                Snackbar.LENGTH_LONG),
+                        ColorUtil.INSTANCE.getColorArgb(R.color.white,
+                                getContext()))
+                .show();
     }
 
     @Override
@@ -498,5 +595,11 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         } else {
             submissionRestrictionTextView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onNeedShowStreakDialog(int numberOfStreakDayIncludeToday) {
+        // this submission is correct and user posted it 1st time
+        showStreakDialog(numberOfStreakDayIncludeToday);
     }
 }
