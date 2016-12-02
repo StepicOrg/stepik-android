@@ -1,11 +1,15 @@
 package org.stepic.droid.core.presenters
 
+import android.support.annotation.WorkerThread
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.core.presenters.contracts.SectionsView
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Section
 import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.transformers.transformToViewModel
 import org.stepic.droid.web.IApi
+import timber.log.Timber
+import viewmodel.ProgressViewModel
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
@@ -17,6 +21,7 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
 
     val sectionList: MutableList<Section> = ArrayList<Section>()
     val isLoading: AtomicBoolean = AtomicBoolean(false)
+    val progressMap: HashMap<String, ProgressViewModel> = HashMap()
 
     fun showSections(course: Course?, isRefreshing: Boolean) {
         if (course == null) {
@@ -25,11 +30,10 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
         }
 
         if (sectionList.isNotEmpty() && !isRefreshing) {
-            view?.onNeedShowSections(sectionList)
+            view?.onNeedShowSections(sectionList, progressMap)
             return
         }
-        if (isLoading.get()) return
-        isLoading.set(true)
+        if (!isLoading.compareAndSet(/* expect */ false, true)) return //if false -> set true and return true, if true -> return false
         view?.onLoading()
         threadPoolExecutor.execute {
             try {
@@ -44,10 +48,22 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                     })
 
                     if (sectionsFromCache.isNotEmpty()) {
+                        val progressMapLocal = HashMap<String, ProgressViewModel>()
+                        sectionsFromCache.forEach {
+                            val progressId = it.progress
+                            if (progressId != null) {
+                                val progressViewModel = databaseFacade.getProgressById(progressId)?.transformToViewModel()
+                                progressViewModel?.let {
+                                    progressMapLocal.put(progressId, progressViewModel)
+                                }
+                            }
+                        }
                         mainHandler.post {
+                            progressMap.clear()
+                            progressMap.putAll(progressMapLocal)
                             sectionList.clear()
                             sectionList.addAll(sectionsFromCache)
-                            view?.onNeedShowSections(sectionList)
+                            view?.onNeedShowSections(sectionList, progressMap)
                         }
                     }
                 }
@@ -78,13 +94,17 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                                 databaseFacade.updateOnlyCachedLoadingSection(it)
                             }
 
+                            val progressMapOnBackground = fetchProgresses(sections)// we already shown cached sections, now show from Internet
+
                             mainHandler.post {
+                                progressMap.clear()
+                                progressMap.putAll(progressMapOnBackground)
                                 sectionList.clear()
                                 sectionList.addAll(sections)
                                 if (sectionList.isEmpty()) {
                                     view?.onEmptySections()
                                 } else {
-                                    view?.onNeedShowSections(sectionList)
+                                    view?.onNeedShowSections(sectionList, progressMap)
                                 }
                             }
                         } else {
@@ -102,6 +122,28 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                 isLoading.set(false)
             }
         }
+    }
+
+    @WorkerThread
+    private fun fetchProgresses(sectionList: List<Section>): Map<String, ProgressViewModel> {
+        try {
+            val progressIds
+                    = sectionList
+                    .map { it.progress }
+                    .filterNotNull()
+                    .toTypedArray()
+            val progresses = api.getProgresses(progressIds).execute().body().progresses
+            val progressIdToProgressViewModel = progresses.map { it.transformToViewModel() }.filterNotNull().associateBy { it.progressId }
+            threadPoolExecutor.execute {
+                //save to database
+                progresses.filterNotNull().forEach { databaseFacade.addProgress(it) }
+            }
+            return progressIdToProgressViewModel
+        } catch (exception: Exception) {
+            Timber.d("cant show progresses")
+            return emptyMap()
+        }
+
     }
 
 }

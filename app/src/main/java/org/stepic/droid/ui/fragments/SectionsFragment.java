@@ -81,11 +81,14 @@ import org.stepic.droid.util.StringUtil;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import viewmodel.ProgressViewModel;
 
 public class SectionsFragment
         extends FragmentBase
@@ -146,6 +149,7 @@ public class SectionsFragment
     private Course course;
     private SectionAdapter adapter;
     private List<Section> sectionList;
+    private Map<String, ProgressViewModel> progressMap;
 
     boolean firstLoad;
     boolean isNeedShowCalendarInMenu = false;
@@ -223,7 +227,8 @@ public class SectionsFragment
         linearLayoutManager = new LinearLayoutManager(getActivity());
         sectionsRecyclerView.setLayoutManager(linearLayoutManager);
         sectionList = new ArrayList<>();
-        adapter = new SectionAdapter(sectionList, getContext(), ((AppCompatActivity) getActivity()), calendarPresenter);
+        progressMap = new HashMap<>();
+        adapter = new SectionAdapter(sectionList, getContext(), ((AppCompatActivity) getActivity()), calendarPresenter, progressMap);
         sectionsRecyclerView.setAdapter(adapter);
 
         sectionsRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -348,10 +353,12 @@ public class SectionsFragment
         }
     }
 
-    public void onNeedShowSections(List<Section> sections) {
+    public void onNeedShowSections(@NotNull List<Section> sections, @NotNull Map<String, ProgressViewModel> progressMap) {
         boolean wasEmpty = sectionList.isEmpty();
         sectionList.clear();
         sectionList.addAll(sections);
+        this.progressMap.clear();
+        this.progressMap.putAll(progressMap);
         dismissReportView();
         sectionsRecyclerView.setVisibility(View.VISIBLE);
         dismissLoadState();

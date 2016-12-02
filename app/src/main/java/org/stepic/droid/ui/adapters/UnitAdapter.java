@@ -21,8 +21,8 @@ import com.bumptech.glide.Glide;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
@@ -30,6 +30,7 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.transformers.ProgressTransformerKt;
 import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
 import org.stepic.droid.ui.dialogs.OnLoadPositionListener;
 import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
@@ -38,7 +39,6 @@ import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -47,6 +47,7 @@ import javax.inject.Inject;
 import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import viewmodel.ProgressViewModel;
 
 public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements StepicOnClickItemListener, OnClickLoadListener, OnLoadPositionListener {
 
@@ -123,45 +124,27 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         holder.unitTitle.setText(titleBuilder.toString());
 
-        Progress progress = unitProgressMap.get(unit.getId());
-        int cost = 0;
-        double doubleScore = 0;
-        String scoreString = "";
-        if (progress != null) {
-            cost = progress.getCost();
-            scoreString = progress.getScore();
-            try {
-                doubleScore = Double.parseDouble(scoreString);
-                if ((doubleScore == Math.floor(doubleScore)) && !Double.isInfinite(doubleScore)) {
-                    scoreString = (int) doubleScore + "";
-                } else {
-                    scoreString = String.format(Locale.getDefault(), "%.2f", doubleScore);
-                }
-
-            } catch (Exception ignored) {
-            }
-        }
-
         Glide.with(MainApplication.getAppContext())
                 .load(lesson.getCover_url())
                 .placeholder(holder.lessonPlaceholderDrawable)
                 .into(holder.lessonIcon);
 
-        if (cost != 0) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(scoreString);
-            sb.append(AppConstants.DELIMITER_TEXT_SCORE);
-            sb.append(cost);
-            holder.textScore.setVisibility(View.VISIBLE);
-            holder.progressScore.setVisibility(View.VISIBLE);
-            holder.progressScore.setMax(cost);
-            holder.progressScore.setProgress((int) doubleScore);
-            holder.textScore.setText(sb.toString());
-        } else {
-            holder.textScore.setVisibility(View.GONE);
-            holder.progressScore.setVisibility(View.GONE);
+        Progress progress = unitProgressMap.get(unit.getId());
+        ProgressViewModel progressViewModel = null;
+        try {
+            progressViewModel = ProgressTransformerKt.transformToViewModel(progress);
+        } catch (Exception ignored) {
         }
 
+        boolean needShow = progressViewModel != null && progressViewModel.getCost() > 0;
+        int progressVisibility = needShow ? View.VISIBLE : View.GONE;
+        if (needShow) {
+            holder.textScore.setText(progressViewModel.getScoreAndCostText());
+            holder.progressScore.setMax(progressViewModel.getCost());
+            holder.progressScore.setProgress(progressViewModel.getScore());
+        }
+        holder.textScore.setVisibility(progressVisibility);
+        holder.progressScore.setVisibility(progressVisibility);
 
         if (unit.is_viewed_custom()) {
             holder.viewedItem.setVisibility(View.VISIBLE);

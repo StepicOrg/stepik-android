@@ -22,8 +22,8 @@ import android.widget.TextView;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
@@ -39,6 +39,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
@@ -46,6 +47,7 @@ import javax.inject.Inject;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import viewmodel.ProgressViewModel;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder> implements OnClickLoadListener, OnLoadPositionListener {
     private final static String SECTION_TITLE_DELIMETER = ". ";
@@ -87,19 +89,21 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     private Drawable highlightDrawable;
     @ColorInt
     private int defaultColor;
+    private Map<String, ProgressViewModel> progressMap;
     private final int durationMillis = 3000;
 
     public void setDefaultHighlightPosition(int defaultHighlightPosition) {
         this.defaultHighlightPosition = defaultHighlightPosition;
     }
 
-    public SectionAdapter(List<Section> sections, Context mContext, AppCompatActivity activity, CalendarPresenter calendarPresenter) {
+    public SectionAdapter(List<Section> sections, Context mContext, AppCompatActivity activity, CalendarPresenter calendarPresenter, Map<String, ProgressViewModel> progressMap) {
         this.sections = sections;
         this.context = mContext;
         this.activity = activity;
         this.calendarPresenter = calendarPresenter;
         highlightDrawable = ContextCompat.getDrawable(mContext, R.drawable.section_background);
         defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_white, mContext);
+        this.progressMap = progressMap;
         MainApplication.component().inject(this);
     }
 
@@ -434,25 +438,22 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 cv.setBackgroundColor(defaultColor);
             }
 
-
-            int cost = 75;
-            String scoreString = "34";
-            double doubleScore = 34;
-            if (cost != 0) {
-                StringBuilder sb = new StringBuilder();
-                sb.append(scoreString);
-                sb.append(AppConstants.DELIMITER_TEXT_SCORE);
-                sb.append(cost);
-                textScore.setVisibility(View.VISIBLE);
-                progressScore.setVisibility(View.VISIBLE);
-                progressScore.setMax(cost);
-                progressScore.setProgress((int) doubleScore);
-                textScore.setText(sb.toString());
-            } else {
-                textScore.setVisibility(View.GONE);
-                progressScore.setVisibility(View.GONE);
+            ProgressViewModel progressViewModel;
+            try {
+                progressViewModel = progressMap.get(section.getProgress());
+            } catch (Exception ex) {
+                progressViewModel = null;
             }
 
+            boolean needShow = progressViewModel != null && progressViewModel.getCost() > 0;
+            int progressVisibility = needShow ? View.VISIBLE : View.GONE;
+            if (needShow) {
+                textScore.setText(progressViewModel.getScoreAndCostText());
+                progressScore.setMax(progressViewModel.getCost());
+                progressScore.setProgress(progressViewModel.getScore());
+            }
+            textScore.setVisibility(progressVisibility);
+            progressScore.setVisibility(progressVisibility);
         }
 
         private void showExamView(boolean isExam) {

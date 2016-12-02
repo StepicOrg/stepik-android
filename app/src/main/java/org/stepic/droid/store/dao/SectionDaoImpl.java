@@ -36,6 +36,7 @@ public class SectionDaoImpl extends DaoBase<Section> {
         int indexTestSection = cursor.getColumnIndex(DbStructureSections.Column.TEST_SECTION);
         int indexDiscountingPolicy = cursor.getColumnIndex(DbStructureSections.Column.DISCOUNTING_POLICY);
         int indexIsExam = cursor.getColumnIndex(DbStructureSections.Column.IS_EXAM);
+        int indexProgress = cursor.getColumnIndex(DbStructureSections.Column.PROGRESS);
 
         section.setId(cursor.getLong(columnIndexId));
         section.setTitle(cursor.getString(columnIndexTitle));
@@ -52,6 +53,7 @@ public class SectionDaoImpl extends DaoBase<Section> {
         int typeId = cursor.getInt(indexDiscountingPolicy);
         DiscountingPolicyType discountingPolicyType = getDiscountingPolicyType(typeId);
         section.setDiscountingPolicy(discountingPolicyType);
+        section.setProgress(cursor.getString(indexProgress));
 
         String test_section = cursor.getString(indexTestSection);
         Actions actions = new Actions();
@@ -92,6 +94,7 @@ public class SectionDaoImpl extends DaoBase<Section> {
         values.put(DbStructureSections.Column.POSITION, section.getPosition());
         values.put(DbStructureSections.Column.IS_EXAM, section.isExam());
         values.put(DbStructureSections.Column.UNITS, DbParseHelper.parseLongArrayToString(section.getUnits()));
+        values.put(DbStructureSections.Column.PROGRESS, section.getProgress());
         if (section.getDiscountingPolicy() != null) {
             values.put(DbStructureSections.Column.DISCOUNTING_POLICY, section.getDiscountingPolicy().ordinal());
         } else {
