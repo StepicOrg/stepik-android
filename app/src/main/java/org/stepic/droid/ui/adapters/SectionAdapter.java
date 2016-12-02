@@ -286,8 +286,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         @BindView(R.id.load_button)
         View loadButton;
 
-        @BindView(R.id.exam_view)
-        ViewGroup examRoot;
+        @BindView(R.id.exam_title)
+        View examTitle;
 
         @BindView(R.id.start_exam_button)
         View startExamButton;
@@ -417,11 +417,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 cv.setFocusableInTouchMode(false);
             }
 
-            if (section.isExam()) {
-                examRoot.setVisibility(View.VISIBLE);
-            } else {
-                examRoot.setVisibility(View.GONE);
-            }
+            showExamView(section.isExam());
 
             if (defaultHighlightPosition >= 0 && defaultHighlightPosition == position) {
                 cv.clearAnimation();
@@ -429,6 +425,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             } else {
                 cv.setBackgroundColor(defaultColor);
             }
+        }
+
+        private void showExamView(boolean isExam) {
+            int needShow = isExam ? View.VISIBLE : View.GONE;
+            examTitle.setVisibility(needShow);
+            startExamButton.setVisibility(needShow);
         }
 
         @Override
