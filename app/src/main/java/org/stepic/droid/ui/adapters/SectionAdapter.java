@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.stepic.droid.R;
@@ -293,6 +294,13 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         View startExamButton;
 
 
+        @BindView(R.id.section_text_score)
+        TextView textScore;
+
+        @BindView(R.id.section_student_progress_score_bar)
+        ProgressBar progressScore;
+
+
         public SectionViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -425,6 +433,26 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             } else {
                 cv.setBackgroundColor(defaultColor);
             }
+
+
+            int cost = 75;
+            String scoreString = "34";
+            double doubleScore = 34;
+            if (cost != 0) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(scoreString);
+                sb.append(AppConstants.DELIMITER_TEXT_SCORE);
+                sb.append(cost);
+                textScore.setVisibility(View.VISIBLE);
+                progressScore.setVisibility(View.VISIBLE);
+                progressScore.setMax(cost);
+                progressScore.setProgress((int) doubleScore);
+                textScore.setText(sb.toString());
+            } else {
+                textScore.setVisibility(View.GONE);
+                progressScore.setVisibility(View.GONE);
+            }
+
         }
 
         private void showExamView(boolean isExam) {
