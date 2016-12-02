@@ -152,7 +152,7 @@ class LocalReminderImpl(val threadPoolExecutor: ThreadPoolExecutor,
             if (Build.VERSION.SDK_INT >= 19) {
                 alarmManager.setWindow(AlarmManager.RTC_WAKEUP, scheduleMillis, interval, pendingIntent)
             } else {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, scheduleMillis + interval / 2, pendingIntent)
+                alarmManager.set(AlarmManager.RTC_WAKEUP, scheduleMillis + interval / 2, pendingIntent)
             }
         } else {
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, scheduleMillis + interval / 2, pendingIntent)
