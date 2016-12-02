@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
              xmlns:tools="http://schemas.android.com/tools"
              android:id="@+id/cv"
              android:layout_width="match_parent"
@@ -78,6 +79,32 @@
                 android:textColor="@color/stepic_weak_text"
                 android:textSize="@dimen/text_height"
                 tools:text="hard deadline date"/>
+
+            <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+                android:id="@+id/section_student_progress_score_bar"
+                style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/section_title"
+                android:layout_alignStart="@+id/section_title"
+                android:layout_below="@+id/hard_deadline"
+                android:layout_toLeftOf="@+id/section_text_score"
+                android:tint="@color/stepic_brand_primary"
+                android:visibility="gone"
+                app:mpb_progressStyle="horizontal"
+                tools:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/section_text_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/section_title"
+                android:layout_alignRight="@id/section_title"
+                android:layout_alignTop="@+id/section_student_progress_score_bar"
+                android:textSize="12sp"
+                android:visibility="gone"
+                tools:text="10/12"
+                tools:visibility="visible"/>
 
             <include
                 android:id="@+id/load_button"
