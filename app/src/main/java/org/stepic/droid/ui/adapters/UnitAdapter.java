@@ -144,22 +144,22 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         Glide.with(MainApplication.getAppContext())
                 .load(lesson.getCover_url())
-                .placeholder(holder.mLessonPlaceholderDrawable)
-                .into(holder.mLessonIcon);
+                .placeholder(holder.lessonPlaceholderDrawable)
+                .into(holder.lessonIcon);
 
         if (cost != 0) {
             StringBuilder sb = new StringBuilder();
             sb.append(scoreString);
             sb.append(AppConstants.DELIMITER_TEXT_SCORE);
             sb.append(cost);
-            holder.mTextScore.setVisibility(View.VISIBLE);
-            holder.mProgressScore.setVisibility(View.VISIBLE);
-            holder.mProgressScore.setMax(cost);
-            holder.mProgressScore.setProgress((int) doubleScore);
-            holder.mTextScore.setText(sb.toString());
+            holder.textScore.setVisibility(View.VISIBLE);
+            holder.progressScore.setVisibility(View.VISIBLE);
+            holder.progressScore.setMax(cost);
+            holder.progressScore.setProgress((int) doubleScore);
+            holder.textScore.setText(sb.toString());
         } else {
-            holder.mTextScore.setVisibility(View.GONE);
-            holder.mProgressScore.setVisibility(View.GONE);
+            holder.textScore.setVisibility(View.GONE);
+            holder.progressScore.setVisibility(View.GONE);
         }
 
 
@@ -340,16 +340,16 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         View viewedItem;
 
         @BindView(R.id.text_score)
-        TextView mTextScore;
+        TextView textScore;
 
         @BindView(R.id.student_progress_score_bar)
-        ProgressBar mProgressScore;
+        ProgressBar progressScore;
 
         @BindView(R.id.lesson_icon)
-        ImageView mLessonIcon;
+        ImageView lessonIcon;
 
         @BindDrawable(R.drawable.ic_lesson_cover)
-        Drawable mLessonPlaceholderDrawable;
+        Drawable lessonPlaceholderDrawable;
 
         public UnitViewHolder(View itemView, final StepicOnClickItemListener listener, final OnClickLoadListener loadListener) {
             super(itemView);
