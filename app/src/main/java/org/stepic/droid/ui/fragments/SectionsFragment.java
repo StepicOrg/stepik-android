@@ -53,6 +53,7 @@ import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
 import org.stepic.droid.events.CalendarChosenEvent;
+import org.stepic.droid.events.UpdateSectionProgressEvent;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
 import org.stepic.droid.events.courses.CourseFoundEvent;
 import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
@@ -86,6 +87,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import timber.log.Timber;
 
 public class SectionsFragment
         extends FragmentBase
@@ -223,7 +225,7 @@ public class SectionsFragment
         linearLayoutManager = new LinearLayoutManager(getActivity());
         sectionsRecyclerView.setLayoutManager(linearLayoutManager);
         sectionList = new ArrayList<>();
-        adapter = new SectionAdapter(sectionList, getContext(), ((AppCompatActivity) getActivity()), calendarPresenter);
+        adapter = new SectionAdapter(sectionList, getContext(), ((AppCompatActivity) getActivity()), calendarPresenter, sectionsPresenter.getProgressMap());
         sectionsRecyclerView.setAdapter(adapter);
 
         sectionsRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -348,7 +350,8 @@ public class SectionsFragment
         }
     }
 
-    public void onNeedShowSections(List<Section> sections) {
+    @Override
+    public void onNeedShowSections(@NotNull List<Section> sections) {
         boolean wasEmpty = sectionList.isEmpty();
         sectionList.clear();
         sectionList.addAll(sections);
@@ -468,6 +471,13 @@ public class SectionsFragment
     public void onNotCachedSection(NotCachedSectionEvent e) {
         long sectionId = e.getSectionId();
         updateState(sectionId, false, false);
+    }
+
+    @Subscribe
+    public void onSectionProgressChanged(UpdateSectionProgressEvent event) {
+        if (course != null && course.getCourseId() == event.getCourseId()) {
+            sectionsPresenter.updateSectionProgress(event.getProgress());
+        }
     }
 
     private void updateState(long sectionId, boolean isCached, boolean isLoading) {
@@ -783,5 +793,16 @@ public class SectionsFragment
         adapter.setNeedShowCalendarWidget(false);
         adapter.notifyItemChanged(0);
         SnackbarExtensionKt.setTextColor(Snackbar.make(rootView, R.string.after_hide_calendar_message, Snackbar.LENGTH_LONG), ColorUtil.INSTANCE.getColorArgb(R.color.white, getContext())).show();
+    }
+
+    @Override
+    public void updatePosition(int position) {
+        if (position >= 0 && sectionList.size() > position && adapter != null) {
+            try {
+                adapter.notifyItemChanged(position + SectionAdapter.PRE_SECTION_LIST_DELTA);
+            } catch (Exception exception) {
+                Timber.d(exception);
+            }
+        }
     }
 }
