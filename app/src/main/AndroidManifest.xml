@@ -123,7 +123,6 @@
 
         <activity
             android:name=".ui.activities.StepsActivity"
-            android:hardwareAccelerated="false"
             android:label="@string/steps_title">
 
             <intent-filter
