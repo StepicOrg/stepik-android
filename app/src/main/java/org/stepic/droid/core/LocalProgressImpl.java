@@ -19,6 +19,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import kotlin.jvm.functions.Function0;
+import timber.log.Timber;
 
 public class LocalProgressImpl implements LocalProgressManager {
     private DatabaseFacade databaseFacade;
@@ -106,20 +107,20 @@ public class LocalProgressImpl implements LocalProgressManager {
             }
 
             final Progress progress = api.getProgresses(new String[]{progressId}).execute().body().getProgresses().get(0);
+            databaseFacade.addProgress(progress);
             mainHandler.post(new Function0<kotlin.Unit>() {
                 @Override
                 public kotlin.Unit invoke() {
-                    bus.post(new UpdateSectionProgressEvent(sectionId, progress, persistentSection.getCourse()));
+                    bus.post(new UpdateSectionProgressEvent(progress, persistentSection.getCourse()));
                     return kotlin.Unit.INSTANCE;
                 }
             });
         } catch (Exception exception) {
-            return;
+            Timber.e(exception);
         }
     }
 
     private Double getScoreOfProgress(Progress progress) {
-
         if (progress == null) return null;
         String oldScore = progress.getScore();
         return StringUtil.safetyParseString(oldScore);

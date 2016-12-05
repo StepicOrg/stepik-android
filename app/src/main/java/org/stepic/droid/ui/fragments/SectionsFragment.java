@@ -481,9 +481,8 @@ public class SectionsFragment
 
     @Subscribe
     public void onSectionProgressChanged(UpdateSectionProgressEvent event) {
-        long sectionId = event.getSectionId();
         if (course != null && course.getCourseId() == event.getCourseId()) {
-            sectionsPresenter.updateSectionProgress(sectionId, event.getProgress());
+            sectionsPresenter.updateSectionProgress(event.getProgress());
         }
     }
 

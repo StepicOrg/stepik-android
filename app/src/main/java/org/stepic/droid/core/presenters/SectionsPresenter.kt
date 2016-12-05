@@ -127,10 +127,9 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
     }
 
     @MainThread
-    public fun updateSectionProgress(sectionId: Long, progress: Progress) {
+    fun updateSectionProgress(progress: Progress) {
         threadPoolExecutor.execute {
             try {
-                databaseFacade.addProgress(progress)
                 val progressViewModel = progress.transformToViewModel()
                 var position: Int = -1
                 sectionList.forEachIndexed { index, section ->
