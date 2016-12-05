@@ -13,4 +13,6 @@ interface SectionsView {
 
     fun onLoading()
 
+    fun updatePosition(position: Int, progressViewModel: ProgressViewModel)
+
 }

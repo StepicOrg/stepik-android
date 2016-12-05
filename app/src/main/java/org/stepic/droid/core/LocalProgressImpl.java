@@ -3,9 +3,11 @@ package org.stepic.droid.core;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.events.UpdateSectionProgressEvent;
 import org.stepic.droid.events.units.UnitProgressUpdateEvent;
 import org.stepic.droid.events.units.UnitScoreUpdateEvent;
 import org.stepic.droid.model.Progress;
+import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.operations.DatabaseFacade;
@@ -89,6 +91,31 @@ public class LocalProgressImpl implements LocalProgressManager {
                 return kotlin.Unit.INSTANCE;
             }
         });
+
+        //after that update section progress
+        final long sectionId = unit.getSection();
+        try {
+            final Section persistentSection = databaseFacade.getSectionById(sectionId);
+            if (persistentSection == null) {
+                return;
+            }
+
+            String progressId = persistentSection.getProgress();
+            if (progressId == null) {
+                return;
+            }
+
+            final Progress progress = api.getProgresses(new String[]{progressId}).execute().body().getProgresses().get(0);
+            mainHandler.post(new Function0<kotlin.Unit>() {
+                @Override
+                public kotlin.Unit invoke() {
+                    bus.post(new UpdateSectionProgressEvent(sectionId, progress, persistentSection.getCourse()));
+                    return kotlin.Unit.INSTANCE;
+                }
+            });
+        } catch (Exception exception) {
+            return;
+        }
     }
 
     private Double getScoreOfProgress(Progress progress) {

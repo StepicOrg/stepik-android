@@ -1,9 +1,11 @@
 package org.stepic.droid.core.presenters
 
+import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.core.presenters.contracts.SectionsView
 import org.stepic.droid.model.Course
+import org.stepic.droid.model.Progress
 import org.stepic.droid.model.Section
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.transformers.transformToViewModel
@@ -120,6 +122,32 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                 }
             } finally {
                 isLoading.set(false)
+            }
+        }
+    }
+
+    @MainThread
+    public fun updateSectionProgress(sectionId: Long, progress: Progress) {
+        threadPoolExecutor.execute {
+            try {
+                databaseFacade.addProgress(progress)
+                val progressViewModel = progress.transformToViewModel()
+                var position: Int = -1
+                sectionList.forEachIndexed { index, section ->
+                    if (section.progress == progress.id) {
+                        position = index
+                        return@forEachIndexed
+                    }
+                }
+                val progressId = progress.id
+                if (position >= 0 && progressViewModel != null && progressId != null) {
+                    mainHandler.post {
+                        progressMap.put(progressId, progressViewModel)
+                        view?.updatePosition(position, progressViewModel)
+                    }
+                }
+            } catch (ex: Exception) {
+                Timber.e(ex)
             }
         }
     }
