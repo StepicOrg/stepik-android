@@ -1,10 +1,8 @@
 package org.stepic.droid.core;
 
-import android.os.Handler;
-
 import com.squareup.otto.Bus;
 
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.events.units.UnitProgressUpdateEvent;
 import org.stepic.droid.events.units.UnitScoreUpdateEvent;
 import org.stepic.droid.model.Progress;
@@ -14,21 +12,24 @@ import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.IApi;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import kotlin.jvm.functions.Function0;
 
 public class LocalProgressImpl implements LocalProgressManager {
     private DatabaseFacade databaseFacade;
     private Bus bus;
     private IApi api;
+    private IMainHandler mainHandler;
 
     @Inject
-    public LocalProgressImpl(DatabaseFacade databaseFacade, Bus bus, IApi api) {
+    public LocalProgressImpl(DatabaseFacade databaseFacade, Bus bus, IApi api, IMainHandler mainHandler) {
         this.databaseFacade = databaseFacade;
         this.bus = bus;
         this.api = api;
+        this.mainHandler = mainHandler;
     }
 
 
@@ -51,15 +52,14 @@ public class LocalProgressImpl implements LocalProgressManager {
         }
 
         final long unitId = unit.getId();
-        Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
         //Say to ui that ui is cached now
-        Runnable myRunnable = new Runnable() {
+        mainHandler.post(new Function0<kotlin.Unit>() {
             @Override
-            public void run() {
+            public kotlin.Unit invoke() {
                 bus.post(new UnitProgressUpdateEvent(unitId));
+                return kotlin.Unit.INSTANCE;
             }
-        };
-        mainHandler.post(myRunnable);
+        });
     }
 
     @Override
@@ -82,14 +82,13 @@ public class LocalProgressImpl implements LocalProgressManager {
         if (finalScoreInUnit == null) {
             return;
         }
-        Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
-        Runnable myRunnable = new Runnable() {
+        mainHandler.post(new Function0<kotlin.Unit>() {
             @Override
-            public void run() {
+            public kotlin.Unit invoke() {
                 bus.post(new UnitScoreUpdateEvent(unitId, finalScoreInUnit));
+                return kotlin.Unit.INSTANCE;
             }
-        };
-        mainHandler.post(myRunnable);
+        });
     }
 
     private Double getScoreOfProgress(Progress progress) {

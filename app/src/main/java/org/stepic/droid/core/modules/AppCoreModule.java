@@ -178,8 +178,8 @@ public class AppCoreModule {
 
     @Singleton
     @Provides
-    LocalProgressManager provideProgressManager(DatabaseFacade databaseFacade, Bus bus, IApi api) {
-        return new LocalProgressImpl(databaseFacade, bus, api);
+    LocalProgressManager provideProgressManager(DatabaseFacade databaseFacade, Bus bus, IApi api, IMainHandler mainHandler) {
+        return new LocalProgressImpl(databaseFacade, bus, api, mainHandler);
     }
 
     @Singleton
