@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView
-    android:id="@+id/root_scroll_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbarStyle="outsideOverlay"
@@ -17,7 +17,6 @@
 
         <include
             layout="@layout/step_text_header"/>
-
 
         <TextView
             android:id="@+id/discounting_policy_textview"
@@ -37,36 +36,20 @@
             android:padding="@dimen/attempt_padding"
             />
 
-        <LinearLayout
-            android:id="@+id/result_line"
+        <TextView
+            android:id="@+id/answer_status_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="start"
-            android:orientation="horizontal"
-            android:padding="8dp"
+            android:layout_gravity="center_vertical"
+            android:drawablePadding="5dp"
+            android:padding="@dimen/half_padding"
+            android:textSize="16sp"
             android:visibility="gone"
             tools:background="@color/correct_answer_background"
-            tools:visibility="visible"
-            >
+            tools:drawableLeft="@drawable/ic_correct"
+            tools:text="Correct!"
+            tools:visibility="visible"/>
 
-            <ImageView
-                android:id="@+id/answer_status_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                tools:src="@drawable/ic_correct"
-                />
-
-            <TextView
-                android:id="@+id/answer_status_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:textSize="16sp"
-                tools:text="Correct!"/>
-
-        </LinearLayout>
 
         <FrameLayout
             android:id="@+id/peer_review_warning"

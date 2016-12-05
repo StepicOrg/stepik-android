@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.widget.NestedScrollView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -19,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,12 +69,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @BindView(R.id.root_view)
     ViewGroup rootView;
 
-    @BindView(R.id.result_line)
-    View resultLine;
-
-    @BindView(R.id.answer_status_icon)
-    ImageView statusIcon;
-
     @BindView(R.id.answer_status_text)
     TextView statusTextView;
 
@@ -85,9 +77,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     @BindView(R.id.report_problem)
     View connectionProblem;
-
-    @BindView(R.id.root_scroll_view)
-    protected NestedScrollView rootScrollView;
 
     @BindView(R.id.attempt_container)
     ViewGroup attemptContainer;
@@ -328,10 +317,10 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
             analytic.reportEvent(Analytic.Steps.WRONG_SUBMISSION_FILL, step.getId() + "");
         }
         attemptContainer.setBackgroundResource(R.color.wrong_answer_background);
-        statusIcon.setImageDrawable(wrongIcon);
+        statusTextView.setCompoundDrawablesWithIntrinsicBounds(wrongIcon, null, null, null);
         statusTextView.setText(wrongString);
-        resultLine.setBackgroundResource(R.color.wrong_answer_background);
-        resultLine.setVisibility(View.VISIBLE);
+        statusTextView.setBackgroundResource(R.color.wrong_answer_background);
+        statusTextView.setVisibility(View.VISIBLE);
     }
 
     protected final void onCorrectSubmission() {
@@ -340,10 +329,10 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         }
         markLocalProgressAsViewed();
         attemptContainer.setBackgroundResource(R.color.correct_answer_background);
-        statusIcon.setImageDrawable(correctIcon);
+        statusTextView.setCompoundDrawablesWithIntrinsicBounds(correctIcon, null, null, null);
         statusTextView.setText(getCorrectString());
-        resultLine.setBackgroundResource(R.color.correct_answer_background);
-        resultLine.setVisibility(View.VISIBLE);
+        statusTextView.setBackgroundResource(R.color.correct_answer_background);
+        statusTextView.setVisibility(View.VISIBLE);
     }
 
     protected final void tryAgain() {
@@ -357,7 +346,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         }
 
         hintTextView.setVisibility(View.GONE);
-        resultLine.setVisibility(View.GONE);
+        statusTextView.setVisibility(View.GONE);
         actionButton.setText(submitText);
 
         stepAttemptPresenter.tryAgain(step.getId());
