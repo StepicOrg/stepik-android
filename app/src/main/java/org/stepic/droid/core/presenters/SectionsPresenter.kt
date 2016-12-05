@@ -32,7 +32,7 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
         }
 
         if (sectionList.isNotEmpty() && !isRefreshing) {
-            view?.onNeedShowSections(sectionList, progressMap)
+            view?.onNeedShowSections(sectionList)
             return
         }
         if (!isLoading.compareAndSet(/* expect */ false, true)) return //if false -> set true and return true, if true -> return false
@@ -65,7 +65,7 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                             progressMap.putAll(progressMapLocal)
                             sectionList.clear()
                             sectionList.addAll(sectionsFromCache)
-                            view?.onNeedShowSections(sectionList, progressMap)
+                            view?.onNeedShowSections(sectionList)
                         }
                     }
                 }
@@ -106,7 +106,7 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                                 if (sectionList.isEmpty()) {
                                     view?.onEmptySections()
                                 } else {
-                                    view?.onNeedShowSections(sectionList, progressMap)
+                                    view?.onNeedShowSections(sectionList)
                                 }
                             }
                         } else {
@@ -130,6 +130,7 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
     fun updateSectionProgress(progress: Progress) {
         threadPoolExecutor.execute {
             try {
+                //this progress should be already in database, just prepare for showing
                 val progressViewModel = progress.transformToViewModel()
                 var position: Int = -1
                 sectionList.forEachIndexed { index, section ->
@@ -142,7 +143,7 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                 if (position >= 0 && progressViewModel != null && progressId != null) {
                     mainHandler.post {
                         progressMap.put(progressId, progressViewModel)
-                        view?.updatePosition(position, progressViewModel)
+                        view?.updatePosition(position)
                     }
                 }
             } catch (ex: Exception) {

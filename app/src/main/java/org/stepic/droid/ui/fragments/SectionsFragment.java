@@ -82,15 +82,12 @@ import org.stepic.droid.util.StringUtil;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import timber.log.Timber;
-import viewmodel.ProgressViewModel;
 
 public class SectionsFragment
         extends FragmentBase
@@ -151,7 +148,6 @@ public class SectionsFragment
     private Course course;
     private SectionAdapter adapter;
     private List<Section> sectionList;
-    private Map<String, ProgressViewModel> progressMap;
 
     boolean firstLoad;
     boolean isNeedShowCalendarInMenu = false;
@@ -229,8 +225,7 @@ public class SectionsFragment
         linearLayoutManager = new LinearLayoutManager(getActivity());
         sectionsRecyclerView.setLayoutManager(linearLayoutManager);
         sectionList = new ArrayList<>();
-        progressMap = new HashMap<>();
-        adapter = new SectionAdapter(sectionList, getContext(), ((AppCompatActivity) getActivity()), calendarPresenter, progressMap);
+        adapter = new SectionAdapter(sectionList, getContext(), ((AppCompatActivity) getActivity()), calendarPresenter, sectionsPresenter.getProgressMap());
         sectionsRecyclerView.setAdapter(adapter);
 
         sectionsRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -355,12 +350,11 @@ public class SectionsFragment
         }
     }
 
-    public void onNeedShowSections(@NotNull List<Section> sections, @NotNull Map<String, ProgressViewModel> progressMap) {
+    @Override
+    public void onNeedShowSections(@NotNull List<Section> sections) {
         boolean wasEmpty = sectionList.isEmpty();
         sectionList.clear();
         sectionList.addAll(sections);
-        this.progressMap.clear();
-        this.progressMap.putAll(progressMap);
         dismissReportView();
         sectionsRecyclerView.setVisibility(View.VISIBLE);
         dismissLoadState();
@@ -802,10 +796,9 @@ public class SectionsFragment
     }
 
     @Override
-    public void updatePosition(int position, @NotNull ProgressViewModel progressViewModel) {
+    public void updatePosition(int position) {
         if (position >= 0 && sectionList.size() > position && adapter != null) {
             try {
-                progressMap.put(progressViewModel.getProgressId(), progressViewModel);
                 adapter.notifyItemChanged(position + SectionAdapter.PRE_SECTION_LIST_DELTA);
             } catch (Exception exception) {
                 Timber.d(exception);
