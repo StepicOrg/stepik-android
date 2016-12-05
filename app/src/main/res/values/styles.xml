@@ -1,6 +1,8 @@
 <resources>
 
-    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="AppTheme.15"/>
+
+    <style name="AppTheme.15" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/stepic_brand_primary</item>
         <item name="colorPrimaryDark">@color/stepic_brand_primary_dark</item>
         <item name="colorAccent">@color/stepic_blue_ribbon</item>

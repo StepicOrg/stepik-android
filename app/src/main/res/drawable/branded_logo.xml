@@ -1,6 +1,6 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <color android:color="@color/background_material_light"/>
+        <color android:color="@color/windowBackground"/>
     </item>
     <item>
         <bitmap

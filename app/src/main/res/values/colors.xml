@@ -10,6 +10,11 @@
     <color name="stepic_regular_text">#5E5E5E</color>
     <color name="stepic_weak_text">#A5A5A5</color>
     <color name="black">#000000</color>
+    <color name="drawer_text_color_checked">#505050</color>
+    <color name="drawer_text_color_unchecked">#5e5e5e</color>
+    <color name="drawer_background">@color/white</color>
+    <color name="drawer_item_highlighting">#eeeeee</color>
+    <color name="drawer_item_highlighting_pressed">#EDEDED</color>
 
     <!-- stepic brand book-->
     <color name="stepic_brand_primary">#66CC66</color>
@@ -28,12 +33,12 @@
 
     <color name="default_color_of_link">#0077CC</color>
     <color name="windowBackground">#eeeeee</color>
-    <color name="background_material_light">#eeeeee</color>
     <color name="correct_answer_background">#E9F9E9</color>
     <color name="wrong_answer_background">#F5EBF2</color>
     <color name="disabled_button_color">#D3D7D7</color>
     <color name="feedback_bad_color">#D64338</color>
-    <color name="feedback_good_color">#66CC66</color><!-- it is just green correct color, not the stepic primary -->
+    <color name="feedback_good_color">#66CC66
+    </color><!-- it is just green correct color, not the stepic primary -->
     <color name="transparent_black_30">#4D000000</color>
     <color name="default_option_color">#F9FAFB</color>
     <color name="material_grey">#ff757575</color>
