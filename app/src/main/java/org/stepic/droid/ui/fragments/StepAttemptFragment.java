@@ -230,6 +230,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
             case WRONG:
                 onWrongSubmission();
                 setTextToActionButton(tryAgainText);
+                actionButton.setEnabled(true); // "try again" always
                 blockUIBeforeSubmit(true);
                 break;
         }
