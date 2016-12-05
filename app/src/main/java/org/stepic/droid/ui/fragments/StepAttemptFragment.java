@@ -102,7 +102,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     @BindView(R.id.discounting_policy_textview)
     TextView discountingPolicyTextView;
 
-    @BindView(R.id.submission_restrction_textview)
+    @BindView(R.id.submission_restriction_textview)
     TextView submissionRestrictionTextView;
 
     protected Attempt attempt = null;

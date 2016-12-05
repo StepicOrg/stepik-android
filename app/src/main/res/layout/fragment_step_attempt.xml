@@ -81,7 +81,7 @@
 
 
         <TextView
-            android:id="@+id/submission_restrction_textview"
+            android:id="@+id/submission_restriction_textview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/warning_light_yellow"
