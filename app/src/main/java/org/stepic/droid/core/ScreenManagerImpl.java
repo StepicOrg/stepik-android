@@ -405,17 +405,36 @@ public class ScreenManagerImpl implements ScreenManager {
         sourceActivity.startActivity(intent);
     }
 
-    @Override
-    public void showSections(Activity sourceActivity, @NotNull Course course) {
-        analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS, course.getCourseId() + "", course.getTitle());
+    private Intent getSectionsIntent(Activity sourceActivity, @NotNull Course course) {
         Intent intent = new Intent(sourceActivity, SectionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
         intent.putExtras(bundle);
+        return intent;
+    }
+
+    @Override
+    public void showSections(Activity sourceActivity, @NotNull Course course) {
+        analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS, course.getCourseId() + "", course.getTitle());
+        Intent intent = getSectionsIntent(sourceActivity, course);
         sourceActivity.startActivity(intent);
         sourceActivity.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
+    }
+
+    @Override
+    public void showSections(Activity sourceActivity, @NotNull Course course, boolean joinedRightNow) {
+        if (!joinedRightNow){
+            showSections(sourceActivity, course);
+        }
+        else {
+            analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS_JOINED, course.getCourseId() + "", course.getTitle());
+            Intent intent = getSectionsIntent(sourceActivity, course);
+            Bundle bundle = intent.getExtras();
+            bundle.putBoolean(SectionActivity.Companion.getJoinFlag(), true);
+            sourceActivity.startActivity(intent);
+        }
     }
 
     @Override

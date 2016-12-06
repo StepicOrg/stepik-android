@@ -625,6 +625,11 @@ public class SectionsFragment
             adapter.notifyDataSetChanged();
         }
         ProgressHelper.dismiss(joinCourseProgressDialog);
+        showShareCourseWithFriendDialog();
+    }
+
+    public void showShareCourseWithFriendDialog(){
+        Toast.makeText(getContext(), "Share me!", Toast.LENGTH_SHORT).show();
     }
 
 

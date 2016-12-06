@@ -36,6 +36,8 @@ public interface ScreenManager {
 
     void showSections(Activity sourceActivity, @NotNull Course course);
 
+    void showSections(Activity sourceActivity, @NotNull Course course, boolean joinedRightNow);
+
     void showUnitsForSection(Context sourceActivity, @NotNull Section section);
 
     void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, @Nullable Section section);

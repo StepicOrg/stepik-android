@@ -97,6 +97,7 @@ public interface Analytic {
         String USER_OPEN_SETTINGS = "main_choice_settings";
         String USER_LOGOUT = "main_choice_logout";
         java.lang.String USER_OPEN_ABOUT_APP = "main_choice_about";
+        String SHOW_SECTIONS_JOINED = "show_sections_joined";
     }
 
     interface Video {

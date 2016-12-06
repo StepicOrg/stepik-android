@@ -8,6 +8,9 @@ import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.SectionsFragment
 
 class SectionActivity : SingleFragmentActivity() {
+    companion object {
+        val joinFlag = "joinFlag"
+    }
 
     override fun createFragment(): Fragment? {
         return SectionsFragment.newInstance()
