@@ -49,6 +49,7 @@ import org.stepic.droid.ui.activities.TextFeedbackActivity;
 import org.stepic.droid.ui.activities.UnitsActivity;
 import org.stepic.droid.ui.activities.VideoActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
+import org.stepic.droid.ui.fragments.SectionsFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.web.ViewAssignment;
 import org.videolan.libvlc.util.VLCUtil;
@@ -425,14 +426,14 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showSections(Activity sourceActivity, @NotNull Course course, boolean joinedRightNow) {
-        if (!joinedRightNow){
+        if (!joinedRightNow) {
             showSections(sourceActivity, course);
-        }
-        else {
+        } else {
             analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS_JOINED, course.getCourseId() + "", course.getTitle());
             Intent intent = getSectionsIntent(sourceActivity, course);
             Bundle bundle = intent.getExtras();
-            bundle.putBoolean(SectionActivity.Companion.getJoinFlag(), true);
+            bundle.putBoolean(SectionsFragment.joinFlag, true);
+            intent.putExtras(bundle);
             sourceActivity.startActivity(intent);
         }
     }

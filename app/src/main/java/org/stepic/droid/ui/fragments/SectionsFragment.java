@@ -97,11 +97,10 @@ public class SectionsFragment
         CalendarExportableView,
         SectionsView {
 
-    public static SectionsFragment newInstance() {
-        Bundle args = new Bundle();
+    public static String joinFlag = "joinFlag";
 
+    public static SectionsFragment newInstance() {
         SectionsFragment fragment = new SectionsFragment();
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -187,6 +186,7 @@ public class SectionsFragment
 
     private int afterUpdateModulePosition = -1;
     private int modulePosition;
+    private boolean isAfterJoining;
 
     @Override
     protected void injectComponent() {
@@ -628,7 +628,8 @@ public class SectionsFragment
         showShareCourseWithFriendDialog();
     }
 
-    public void showShareCourseWithFriendDialog(){
+    public void showShareCourseWithFriendDialog() {
+        isAfterJoining = false;
         Toast.makeText(getContext(), "Share me!", Toast.LENGTH_SHORT).show();
     }
 
@@ -709,6 +710,9 @@ public class SectionsFragment
         int simpleModulePosition = -1;
 
         if (intent.getExtras() != null) {
+            isAfterJoining = intent.getExtras().getBoolean(joinFlag);
+            intent.putExtra(joinFlag, false);
+
             Object courseInBundle = intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE);
             if (courseInBundle != null && courseInBundle instanceof Course) {
                 course = (Course) courseInBundle;
@@ -765,6 +769,10 @@ public class SectionsFragment
             } else {
                 onCourseUnavailable(new CourseUnavailableForUserEvent());
             }
+        }
+
+        if (isAfterJoining) {
+            showShareCourseWithFriendDialog();
         }
     }
 
