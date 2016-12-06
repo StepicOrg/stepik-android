@@ -609,7 +609,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             getActivity().setResult(Activity.RESULT_OK, intent);
         }
         getActivity().finish();
-//        getActivity().overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
+        getActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
     }
 
     private void joinCourse() {
