@@ -123,7 +123,6 @@
 
         <activity
             android:name=".ui.activities.StepsActivity"
-            android:hardwareAccelerated="false"
             android:label="@string/steps_title">
 
             <intent-filter
@@ -254,7 +253,7 @@
         <activity
             android:name=".ui.activities.VideoActivity"
             android:configChanges="orientation|screenSize"
-            android:hardwareAccelerated="false"
+            android:hardwareAccelerated="true"
             android:label="@string/video_title"
             android:theme="@style/AppTheme.VideoPlayer"/>
 
