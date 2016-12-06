@@ -151,6 +151,7 @@ public interface Analytic {
         java.lang.String NO_INTERNET_EXISTING_ATTEMPTS = "no_internet_existing_attempts";
         String DOWNLOAD_ID_NEGATIVE = "download_id_negative";
         String STREAK_ON_STEP_SOLVED = "streak_on_step_solved";
+        java.lang.String GOOGLE_SERVICES_TOO_OLD = "google_services_too_old";
     }
 
     interface Web {
