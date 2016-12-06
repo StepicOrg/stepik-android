@@ -3,6 +3,7 @@ package org.stepic.droid.ui.fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +17,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,8 +31,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -88,6 +95,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import timber.log.Timber;
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
+import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public class SectionsFragment
         extends FragmentBase
@@ -98,6 +107,7 @@ public class SectionsFragment
         SectionsView {
 
     public static String joinFlag = "joinFlag";
+    private static int INVITE_REQUEST_CODE = 324;
 
     public static SectionsFragment newInstance() {
         SectionsFragment fragment = new SectionsFragment();
@@ -264,6 +274,12 @@ public class SectionsFragment
             urlInApp = StringUtil.getAppUriForCourseSyllabus(mConfig.getBaseUrl(), course.getSlug());
             reportIndexToGoogle();
         }
+
+        if (isAfterJoining && course != null) {
+            isAfterJoining = false;
+            showShareCourseWithFriendDialog(course);
+        }
+
     }
 
     private void reportIndexToGoogle() {
@@ -625,12 +641,61 @@ public class SectionsFragment
             adapter.notifyDataSetChanged();
         }
         ProgressHelper.dismiss(joinCourseProgressDialog);
-        showShareCourseWithFriendDialog();
+        if (course != null) {
+            showShareCourseWithFriendDialog(course);
+        }
     }
 
-    public void showShareCourseWithFriendDialog() {
+    public void showShareCourseWithFriendDialog(@NotNull final Course courseForSharing) {
         isAfterJoining = false;
-        Toast.makeText(getContext(), "Share me!", Toast.LENGTH_SHORT).show();
+        analytic.reportEvent(Analytic.Interaction.SHOW_MATERIAL_DIALOG_INVITATION);
+
+        SpannableString inviteTitle = new SpannableString(getString(R.string.take_course_with_fiends));
+        inviteTitle.setSpan(new ForegroundColorSpan(Color.BLACK), 0, inviteTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), "fonts/NotoSans-Bold.ttf"));
+        inviteTitle.setSpan(typefaceSpan, 0, inviteTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+        MaterialStyledDialog dialog = new MaterialStyledDialog.Builder(getContext())
+                .setTitle(inviteTitle)
+                .setDescription(R.string.invite_friends_description)
+                .setHeaderDrawable(R.drawable.dialog_background)
+                .setPositiveText(R.string.invite)
+                .setNegativeText(R.string.dont_want)
+                .setScrollable(true, 10) // number of lines lines
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        analytic.reportEvent(Analytic.Interaction.POSITIVE_MATERIAL_DIALOG_INVITATION);
+                        Intent intent = shareHelper.getIntentForCourseSharing(courseForSharing);
+                        SectionsFragment.this.startActivityForResult(intent, INVITE_REQUEST_CODE);
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        analytic.reportEvent(Analytic.Interaction.NEGATIVE_MATERIAL_DIALOG_INVITATION);
+                        showMessageAboutSharing();
+                    }
+                })
+                .build();
+        dialog.show();
+    }
+
+    private void showMessageAboutSharing() {
+        SnackbarExtensionKt
+                .setTextColor(
+                        Snackbar.make(rootView, R.string.share_course_in_menu, Snackbar.LENGTH_INDEFINITE)
+                                .setAction(R.string.ok, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Timber.d("set empty click listener for appearing of Action text");
+                                    }
+                                })
+                                .setActionTextColor(ColorUtil.INSTANCE.getColorArgb(R.color.snack_action_color, getContext())),
+                        ColorUtil.INSTANCE.getColorArgb(R.color.white,
+                                getContext()))
+                .show();
     }
 
 
@@ -771,9 +836,6 @@ public class SectionsFragment
             }
         }
 
-        if (isAfterJoining) {
-            showShareCourseWithFriendDialog();
-        }
     }
 
     private void postNotificationAsReadIfNeed(Intent intent, final long courseId) {

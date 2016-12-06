@@ -322,4 +322,9 @@
     <string name="about_app">О приложении</string>
     <string name="terms_of_service_title">Условия использования</string>
     <string name="privacy_policy_title">Политика конфиденциальности</string>
+    <string name="invite">Позвать друзей</string>
+    <string name="dont_want">Не хочу</string>
+    <string name="share_course_in_menu">Вы всегда можете поделиться ссылкой на курс в меню сверху</string>
+    <string name="invite_friends_description">Люди, которые проходят курс вместе с друзьями, чаще завершают его. Пригласите друзей прямо сейчас, отправив им ссылку на курс!</string>
+    <string name="take_course_with_fiends">Проходите курс с друзьями</string>
 </resources>
