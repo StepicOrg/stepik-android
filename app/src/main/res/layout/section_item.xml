@@ -105,12 +105,16 @@
                 android:layout_alignTop="@+id/section_student_progress_score_bar"
                 android:layout_marginEnd="@dimen/margin_from_image_in_items"
                 android:layout_marginStart="@dimen/margin_from_image_in_items"
+                android:layout_marginLeft="@dimen/margin_from_image_in_items"
+                android:layout_marginRight="@dimen/margin_from_image_in_items"
                 android:textSize="12sp"
                 android:visibility="gone"
                 tools:text="10/12"
                 tools:visibility="visible"/>
 
             <include
+                android:layout_marginEnd="@dimen/guideline_left_right_padding_list_item"
+                android:layout_marginRight="@dimen/guideline_left_right_padding_list_item"
                 android:id="@+id/load_button"
                 layout="@layout/load_imageview"
                 android:layout_width="56dp"
