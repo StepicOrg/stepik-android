@@ -321,4 +321,9 @@
     <string name="about_app">About</string>
     <string name="terms_of_service_title">Terms of Service</string>
     <string name="privacy_policy_title">Privacy Policy</string>
+    <string name="invite">Invite friends</string>
+    <string name="dont_want">Not now</string>
+    <string name="share_course_in_menu">You always can share a link to the course in the top menu</string>
+    <string name="take_course_with_fiends">Take course together with friends!</string>
+    <string name="invite_friends_description"> People who take the course together with friends is most often complete it. Invite your friends now by sending them a link to the course!</string>
 </resources>

@@ -65,6 +65,9 @@ public interface Analytic {
         java.lang.String CLICK_CHOOSE_NOTIFICATION_INTERVAL = "click_choose_notification_interval";
         java.lang.String CLICK_PRIVACY_POLICY = "click_privacy_policy";
         java.lang.String CLICK_TERMS_OF_SERVICE = "click_terms_of_service";
+        java.lang.String POSITIVE_MATERIAL_DIALOG_INVITATION = "material_dialog_invite_positive";
+        java.lang.String NEGATIVE_MATERIAL_DIALOG_INVITATION = "material_dialog_invite_negative";
+        java.lang.String SHOW_MATERIAL_DIALOG_INVITATION = "materdial_dialog_invite_shown";
     }
 
     interface Screens {
@@ -97,6 +100,7 @@ public interface Analytic {
         String USER_OPEN_SETTINGS = "main_choice_settings";
         String USER_LOGOUT = "main_choice_logout";
         java.lang.String USER_OPEN_ABOUT_APP = "main_choice_about";
+        String SHOW_SECTIONS_JOINED = "show_sections_joined";
     }
 
     interface Video {
