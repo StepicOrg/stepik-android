@@ -5,7 +5,6 @@
     package="org.stepic.droid"
     android:installLocation="auto">
 
-
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -26,13 +25,14 @@
         android:name="org.stepic.droid.base.MainApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_app_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:manageSpaceActivity=".ui.activities.StoreManagementActivity"
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup"
-        >
+        tools:ignore="ManifestResource,UnusedAttribute">
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
