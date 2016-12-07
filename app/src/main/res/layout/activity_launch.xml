@@ -28,34 +28,19 @@
 
             <Button
                 android:id="@+id/sign_in_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/min_ux_touchable_size"
+                style="@style/LoginButtons"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
                 android:layout_marginTop="50dp"
-                android:background="@drawable/login_button_background"
-                android:contentDescription="@string/app_name"
-                android:maxWidth="@dimen/min_max_width_for_tablets"
-                android:minWidth="@dimen/min_max_width_for_tablets"
-                android:text="@string/sign_in_with_password"
-                android:textColor="@color/stepic_regular_text"/>
+                android:contentDescription="@string/sign_in_with_password"
+                android:text="@string/sign_in_with_password"/>
 
             <Button
                 android:id="@+id/sign_up_btn_activity_launch"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/min_ux_touchable_size"
+                style="@style/LoginButtons"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="40dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/login_button_background"
-                android:maxWidth="@dimen/min_max_width_for_tablets"
-                android:minWidth="@dimen/min_max_width_for_tablets"
-                android:text="@string/yet_have_not_account"
-                android:textColor="@color/stepic_regular_text"
-                />
+                android:text="@string/yet_have_not_account"/>
 
             <RelativeLayout
                 android:id="@+id/continue_title_layout"

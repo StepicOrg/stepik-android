@@ -104,16 +104,17 @@
 
             <Button
                 android:id="@+id/login_button_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/min_ux_touchable_size"
+                style="@style/LoginButtons"
                 android:layout_alignEnd="@+id/email_text_input"
                 android:layout_alignLeft="@+id/email_text_input"
                 android:layout_alignRight="@+id/email_text_input"
                 android:layout_alignStart="@+id/email_text_input"
                 android:layout_below="@id/forgot_password_tv"
                 android:layout_marginBottom="25dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
                 android:layout_marginTop="15dp"
-                android:contentDescription="@string/app_name"
+                android:contentDescription="@string/sign_in"
                 android:text="@string/sign_in"/>
 
 

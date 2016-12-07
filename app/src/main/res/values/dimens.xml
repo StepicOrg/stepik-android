@@ -63,4 +63,5 @@
     <dimen name="left_padding_tablayout_scrollable">60dp</dimen>
     <dimen name="profile_image_height_width">76dp</dimen>
     <dimen name="privacy_policy_text_size">13sp</dimen>
+    <dimen name="horizontal_margin_buttons">50dp</dimen>
 </resources>
