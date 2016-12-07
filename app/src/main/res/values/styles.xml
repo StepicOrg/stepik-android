@@ -37,7 +37,10 @@
     <style name="AppTheme.BrandedLaunch">
         <item name="colorPrimaryDark">@color/transparent_black_30</item>
         <item name="android:windowBackground">@drawable/branded_logo</item>
+    </style>
 
+    <style name="AppTheme.LoginLaunchRegistration">
+        <item name="colorPrimaryDark">@color/transparent_black_30</item>
     </style>
 
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7"/>

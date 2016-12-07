@@ -31,8 +31,7 @@
         android:manageSpaceActivity=".ui.activities.StoreManagementActivity"
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
-        tools:replace="android:allowBackup"
-        >
+        tools:replace="android:allowBackup">
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -53,19 +52,35 @@
         </activity-alias>
 
         <activity
-            android:name="org.stepic.droid.ui.activities.LaunchActivity"/>
+            android:name="org.stepic.droid.ui.activities.LaunchActivity"
+            android:theme="@style/AppTheme.LoginLaunchRegistration">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:host="@string/host_name"/>
+                <data android:host="@string/secondary_host_name"/>
+                <data android:pathPattern="/oauth"/>
+                <data android:scheme="stepic"/>
+
+            </intent-filter>
+        </activity>
 
         <activity
-            android:name="org.stepic.droid.ui.activities.RegisterActivity"/>
+            android:name="org.stepic.droid.ui.activities.RegisterActivity"
+            android:theme="@style/AppTheme.LoginLaunchRegistration"/>
+
         <activity
-            android:name="org.stepic.droid.ui.activities.LoginActivity">
+            android:name="org.stepic.droid.ui.activities.LoginActivity"
+            android:theme="@style/AppTheme.LoginLaunchRegistration">
         </activity>
 
         <activity
             android:name="org.stepic.droid.ui.activities.MainFeedActivity"
             android:label="@string/my_courses_title"
             android:launchMode="singleTop">
-
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ui.activities.CourseSearchResultActivity"/>
@@ -186,7 +201,6 @@
             android:name=".ui.activities.UnitsActivity"
             android:label="@string/units_lessons_title"/>
 
-
         <receiver
             android:name="org.stepic.droid.receivers.DownloadCompleteReceiver"
             android:exported="true">
@@ -263,6 +277,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+
         <service
             android:name=".notifications.StepicInstanceIdService">
             <intent-filter>
@@ -285,7 +300,6 @@
                 <category android:name="android.intent.category.NOTIFICATION_PREFERENCES"/>
             </intent-filter>
         </activity>
-
 
         <activity
             android:name=".ui.activities.FeedbackActivity"

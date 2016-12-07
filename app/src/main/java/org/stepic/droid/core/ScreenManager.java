@@ -22,7 +22,7 @@ public interface ScreenManager {
 
     void showRegistration(Activity sourceActivity);
 
-    void showLogin(Context sourceActivity);
+    void showLogin(Activity sourceActivity);
 
     void showMainFeed(Context sourceActivity);
 

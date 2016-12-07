@@ -77,7 +77,6 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showLaunchScreen(Context context, boolean overrideAnimation) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
         Intent launchIntent = new Intent(context, LaunchActivity.class);
-        launchIntent.putExtra(LaunchActivity.OVERRIDE_ANIMATION_FLAG, overrideAnimation);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(launchIntent);
     }
@@ -91,7 +90,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showLogin(Context sourceActivity) {
+    public void showLogin(Activity sourceActivity) {
         analytic.reportEvent(Analytic.Screens.SHOW_LOGIN);
         Intent loginIntent = new Intent(sourceActivity, LoginActivity.class);
         sourceActivity.startActivity(loginIntent);
