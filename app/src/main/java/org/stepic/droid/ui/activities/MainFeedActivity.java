@@ -563,7 +563,9 @@ public class MainFeedActivity extends BackToExitActivityBase
     public void onLogout() {
         LoginManager.getInstance().logOut();
         VKSdk.logout();
-        Auth.GoogleSignInApi.signOut(googleApiClient);
+        if (googleApiClient.isConnected()) {
+            Auth.GoogleSignInApi.signOut(googleApiClient);
+        }
         sharedPreferenceHelper.deleteAuthInfo();
         shell.getScreenProvider().showLaunchScreen(MainApplication.getAppContext(), false);
     }
