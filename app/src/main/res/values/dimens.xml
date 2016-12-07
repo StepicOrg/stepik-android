@@ -64,4 +64,6 @@
     <dimen name="profile_image_height_width">76dp</dimen>
     <dimen name="privacy_policy_text_size">13sp</dimen>
     <dimen name="horizontal_margin_buttons">50dp</dimen>
+    <dimen name="login_button_border">2dp</dimen>
+    <dimen name="login_button_radius">3dp</dimen>
 </resources>
