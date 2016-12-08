@@ -56,7 +56,7 @@ public class LaunchActivity extends BackToExitActivityBase {
     @BindView(R.id.sign_up_btn_activity_launch)
     View signUpButton;
 
-    @BindView(R.id.sign_in_tv)
+    @BindView(R.id.sign_in_with_email)
     View signInTextView;
 
     @BindView(R.id.social_list)
