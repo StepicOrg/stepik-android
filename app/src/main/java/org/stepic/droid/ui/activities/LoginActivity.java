@@ -58,6 +58,7 @@ public class LoginActivity extends FragmentActivityBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setBackgroundDrawable(null);
         setContentView(R.layout.activity_login);
         unbinder = ButterKnife.bind(this);
         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition);
