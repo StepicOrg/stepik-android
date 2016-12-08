@@ -1,107 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
 
-    <ImageView
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:overScrollMode="never">
+
+    <LinearLayout
+        android:id="@+id/root_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/dialog_background"
-        android:scaleType="centerCrop"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:splitMotionEvents="false">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never">
+        <Button
+            android:id="@+id/sign_in_tv"
+            style="@style/LoginButtons"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:contentDescription="@string/sign_in_with_password"
+            android:text="@string/sign_in_with_password"/>
+
+        <Button
+            android:id="@+id/sign_up_btn_activity_launch"
+            style="@style/LoginButtons"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="40dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/yet_have_not_account"/>
 
 
-        <LinearLayout
-            android:id="@+id/root_view"
-            android:layout_width="match_parent"
+        <TextView
+            android:textColor="@color/launchTextColor"
+            android:id="@+id/sign_in_text"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical"
-            android:splitMotionEvents="false">
-
-            <Button
-                android:id="@+id/sign_in_tv"
-                style="@style/LoginButtons"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="50dp"
-                android:contentDescription="@string/sign_in_with_password"
-                android:text="@string/sign_in_with_password"/>
-
-            <Button
-                android:id="@+id/sign_up_btn_activity_launch"
-                style="@style/LoginButtons"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="40dp"
-                android:layout_marginTop="20dp"
-                android:text="@string/yet_have_not_account"/>
-
-            <RelativeLayout
-                android:id="@+id/continue_title_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxWidth="@dimen/min_max_width_for_tablets"
-                android:minWidth="@dimen/min_max_width_for_tablets">
+            android:layout_gravity="center_horizontal"
+            android:layout_marginEnd="@dimen/space_for_text"
+            android:layout_marginLeft="@dimen/space_for_text"
+            android:layout_marginRight="@dimen/space_for_text"
+            android:layout_marginStart="@dimen/space_for_text"
+            android:text="@string/or_continue_social"
+            android:textSize="@dimen/launch_not_button_text_size"/>
 
 
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="1dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/sign_in_text"
-                    android:layout_toStartOf="@+id/sign_in_text"
-                    android:background="@color/silver"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/social_list"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_of_social"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="40dp"
+            android:layout_marginTop="25dp"
+            android:overScrollMode="never"
+            android:scrollbarStyle="outsideOverlay"
+            android:splitMotionEvents="false"
+            android:stretchColumns="0"/>
 
-                <TextView
-                    android:id="@+id/sign_in_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginEnd="@dimen/space_for_text"
-                    android:layout_marginLeft="@dimen/space_for_text"
-                    android:layout_marginRight="@dimen/space_for_text"
-                    android:layout_marginStart="@dimen/space_for_text"
-                    android:text="@string/or_continue_social"/>
+        <TextView
+            android:id="@+id/terms_privacy_launch"
+            style="@style/PrivacyPolicyTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:clickable="true"
+            android:gravity="center"
+            tools:ignore="MissingPrefix"
+            tools:text="Условия использования и Политика конфиденциальности"/>
 
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="1dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/sign_in_text"
-                    android:background="@color/silver"/>
-
-            </RelativeLayout>
-
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/social_list"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/height_of_social"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="40dp"
-                android:layout_marginTop="15dp"
-                android:overScrollMode="never"
-                android:scrollbarStyle="outsideOverlay"
-                android:splitMotionEvents="false"
-                android:stretchColumns="0"/>
-
-            <TextView
-                android:id="@+id/terms_privacy_launch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:clickable="true"
-                android:gravity="center"
-                android:textSize="@dimen/privacy_policy_text_size"
-                tools:ignore="MissingPrefix"
-                tools:text="Условия использования и Политика конфиденциальности"/>
-
-        </LinearLayout>
-    </ScrollView>
-</FrameLayout>
+    </LinearLayout>
+</ScrollView>

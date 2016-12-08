@@ -121,15 +121,14 @@
 
             <TextView
                 android:id="@+id/terms_privacy_register"
+                style="@style/PrivacyPolicyTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="50dp"
                 android:clickable="true"
                 android:gravity="center_horizontal"
-                android:textSize="@dimen/privacy_policy_text_size"
                 tools:ignore="MissingPrefix"
                 tools:text="Регистрируясь, Вы соглашаетесь с Условиями использования и Политикой конфиденциальности"/>
-
 
         </LinearLayout>
     </ScrollView>

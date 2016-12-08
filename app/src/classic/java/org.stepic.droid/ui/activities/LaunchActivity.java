@@ -176,7 +176,7 @@ public class LaunchActivity extends BackToExitActivityBase {
     }
 
     private void initSocialRecycler(GoogleApiClient googleApiClient) {
-        float pixelForPadding = DpPixelsHelper.convertDpToPixel(4f, this);//pixelForPadding * (count+1)
+        float pixelForPadding = DpPixelsHelper.convertDpToPixel(8f, this);//pixelForPadding * (count+1)
         float widthOfItem = getResources().getDimension(R.dimen.height_of_social);//width == height
         int count = SocialManager.SocialType.values().length;
         float widthOfAllItems = widthOfItem * count + pixelForPadding * (count + 1);
