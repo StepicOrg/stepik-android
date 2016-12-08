@@ -91,7 +91,6 @@
 
             <TextView
                 android:id="@+id/forgot_password_tv"
-                style="@style/bold_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/email_text_input"
@@ -100,10 +99,10 @@
                 android:layout_alignStart="@+id/email_text_input"
                 android:layout_below="@+id/password_text_input"
                 android:gravity="center"
-                android:padding="12dp"
+                android:padding="@dimen/guideline_standard_padding"
                 android:text="@string/remind_password"
-                android:textColor="?attr/colorAccent"
-                android:textSize="12sp"/>
+                android:textColor="@color/stepic_brand_primary"
+                android:textSize="@dimen/launch_not_button_text_size"/>
 
             <Button
                 android:id="@+id/login_button_layout"
