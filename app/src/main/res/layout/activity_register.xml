@@ -124,9 +124,9 @@
                 style="@style/PrivacyPolicyTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="50dp"
                 android:clickable="true"
-                android:gravity="center_horizontal"
                 tools:ignore="MissingPrefix"
                 tools:text="Регистрируясь, Вы соглашаетесь с Условиями использования и Политикой конфиденциальности"/>
 

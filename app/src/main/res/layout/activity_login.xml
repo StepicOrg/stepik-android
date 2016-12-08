@@ -119,15 +119,11 @@
 
 
             <TextView
-
                 style="@style/PrivacyPolicyTextStyle"
                 android:id="@+id/terms_privacy_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/email_text_input"
-                android:layout_alignLeft="@+id/email_text_input"
-                android:layout_alignRight="@+id/email_text_input"
-                android:layout_alignStart="@+id/email_text_input"
+                android:layout_centerHorizontal="true"
                 android:layout_below="@+id/login_button_layout"
                 android:layout_marginBottom="50dp"
                 android:clickable="true"
