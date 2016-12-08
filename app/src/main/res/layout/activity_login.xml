@@ -25,114 +25,116 @@
             android:layout_height="wrap_content"
             android:splitMotionEvents="false">
 
-
-
-            <ImageView
-                android:id="@+id/login_logo"
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="15dp"
-                android:layout_marginTop="20dp"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/ic_stepik_logotype_square_green"/>
+                android:layout_centerInParent="true">
 
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/email_text_input"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/login_logo"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="@dimen/padding_registration_left_right"
-                android:layout_marginRight="@dimen/padding_registration_left_right"
-                android:maxWidth="@dimen/min_max_width_for_tablets"
-                android:minWidth="@dimen/min_max_width_for_tablets"
-                android:paddingBottom="@dimen/half_padding"
-                android:paddingTop="@dimen/half_padding">
-
-                <EditText
-                    android:id="@+id/email_et"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/login_logo"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="@string/email"
-                    android:imeOptions="flagNoFullscreen|actionNext"
-                    android:inputType="textEmailAddress"
-                    android:maxLength="100"
-                    android:maxLines="1"/>
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="50dp"
+                    android:layout_marginTop="@dimen/guideline_standard_padding"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_stepik_logotype_square_green"/>
 
-            </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/password_text_input"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/email_text_input"
-                android:layout_alignLeft="@+id/email_text_input"
-                android:layout_alignRight="@+id/email_text_input"
-                android:layout_alignStart="@+id/email_text_input"
-                android:layout_below="@+id/email_text_input"
-                android:paddingBottom="@dimen/half_padding"
-                android:paddingTop="@dimen/half_padding"
-                app:passwordToggleEnabled="true">
+                <android.support.design.widget.TextInputLayout
 
-                <EditText
-                    android:id="@+id/password_et"
-                    android:layout_width="match_parent"
+                    android:id="@+id/email_text_input"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/login_logo"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="@dimen/padding_registration_left_right"
+                    android:layout_marginRight="@dimen/padding_registration_left_right"
+                    android:maxWidth="@dimen/min_max_width_for_tablets"
+                    android:minWidth="@dimen/min_max_width_for_tablets"
+                    android:paddingBottom="@dimen/half_padding"
+                    android:paddingTop="@dimen/half_padding">
 
-                    android:hint="@string/password_hint"
-                    android:imeOptions="flagNoFullscreen|actionSend"
-                    android:inputType="textPassword"
-                    android:maxLength="@integer/max_length_of_password"
-                    android:maxLines="1"/>
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/email_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/email"
+                        android:imeOptions="flagNoFullscreen|actionNext"
+                        android:inputType="textEmailAddress"
+                        android:maxLength="100"
+                        android:maxLines="1"/>
 
-            <TextView
-                android:id="@+id/forgot_password_tv"
-                style="@style/bold_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/email_text_input"
-                android:layout_alignLeft="@+id/email_text_input"
-                android:layout_alignRight="@+id/email_text_input"
-                android:layout_alignStart="@+id/email_text_input"
-                android:layout_below="@+id/password_text_input"
-                android:gravity="center"
-                android:padding="12dp"
-                android:text="@string/remind_password"
-                android:textColor="?attr/colorAccent"
-                android:textSize="12sp"/>
+                </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/login_button_layout"
-                style="@style/LoginButtons"
-                android:layout_alignEnd="@+id/email_text_input"
-                android:layout_alignLeft="@+id/email_text_input"
-                android:layout_alignRight="@+id/email_text_input"
-                android:layout_alignStart="@+id/email_text_input"
-                android:layout_below="@id/forgot_password_tv"
-                android:layout_marginBottom="25dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginTop="15dp"
-                android:contentDescription="@string/sign_in"
-                android:text="@string/sign_in"/>
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/password_text_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/email_text_input"
+                    android:layout_alignLeft="@+id/email_text_input"
+                    android:layout_alignRight="@+id/email_text_input"
+                    android:layout_alignStart="@+id/email_text_input"
+                    android:layout_below="@+id/email_text_input"
+                    android:paddingBottom="@dimen/half_padding"
+                    android:paddingTop="@dimen/half_padding"
+                    app:passwordToggleEnabled="true">
 
+                    <EditText
+                        android:id="@+id/password_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:hint="@string/password_hint"
+                        android:imeOptions="flagNoFullscreen|actionSend"
+                        android:inputType="textPassword"
+                        android:maxLength="@integer/max_length_of_password"
+                        android:maxLines="1"/>
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/forgot_password_tv"
+                    style="@style/bold_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/email_text_input"
+                    android:layout_alignLeft="@+id/email_text_input"
+                    android:layout_alignRight="@+id/email_text_input"
+                    android:layout_alignStart="@+id/email_text_input"
+                    android:layout_below="@+id/password_text_input"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:text="@string/remind_password"
+                    android:textColor="?attr/colorAccent"
+                    android:textSize="12sp"/>
+
+                <Button
+                    android:id="@+id/login_button_layout"
+                    style="@style/LoginButtons"
+                    android:layout_alignEnd="@+id/email_text_input"
+                    android:layout_alignLeft="@+id/email_text_input"
+                    android:layout_alignRight="@+id/email_text_input"
+                    android:layout_alignStart="@+id/email_text_input"
+                    android:layout_below="@id/forgot_password_tv"
+                    android:layout_marginBottom="25dp"
+                    android:layout_marginTop="15dp"
+                    android:contentDescription="@string/sign_in"
+                    android:text="@string/sign_in"/>
+
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/terms_privacy_login"
                 style="@style/PrivacyPolicyTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/login_button_layout"
+                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="50dp"
                 android:clickable="true"
-                android:gravity="center_horizontal"
-                tools:ignore="MissingPrefix"
+                android:gravity="center|bottom"
+                android:paddingBottom="@dimen/guideline_standard_padding"
+                android:paddingTop="@dimen/guideline_standard_padding"
                 tools:text="Входя в приложение, Вы соглашаетесь с Условиями использования и Политикой конфиденциальности"/>
-
 
         </RelativeLayout>
 

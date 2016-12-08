@@ -156,8 +156,6 @@
     <style name="LoginButtons" parent="Base.Widget.AppCompat.Button.Borderless">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/min_ux_touchable_size</item>
-        <item name="android:layout_marginLeft">@dimen/horizontal_margin_buttons</item>
-        <item name="android:layout_marginRight">@dimen/horizontal_margin_buttons</item>
         <item name="android:background">@drawable/login_button_background</item>
         <item name="android:minWidth">@dimen/min_max_width_for_tablets</item>
         <item name="android:minHeight">@dimen/min_max_width_for_tablets</item>

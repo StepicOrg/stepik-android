@@ -114,8 +114,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/min_ux_touchable_size"
                 android:layout_marginBottom="20dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
                 android:text="@string/sign_up"
                 />
 

@@ -39,8 +39,6 @@
                 android:layout_below="@+id/stepik_logo"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="15dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
                 android:layout_marginTop="50dp"
                 android:contentDescription="@string/sign_in_with_password"
                 android:text="@string/sign_in_with_password"/>
@@ -50,8 +48,6 @@
                 style="@style/LoginButtons"
                 android:layout_below="@id/sign_in_with_email"
                 android:layout_centerHorizontal="true"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
                 android:text="@string/yet_have_not_account"/>
 
 
