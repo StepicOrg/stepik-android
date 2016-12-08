@@ -92,7 +92,6 @@ public interface ScreenManager {
 
     Intent getMyCoursesIntent(@NotNull Context context);
 
-    @Nullable
     Intent getProfileIntent(@NotNull Context context);
 
     void openSplash(Context context);

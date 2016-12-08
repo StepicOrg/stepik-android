@@ -1,10 +1,12 @@
 package org.stepic.droid.ui.activities
 
+import android.content.pm.ShortcutManager
 import android.net.Uri
 import android.support.v4.app.Fragment
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.ProfileFragment
+import org.stepic.droid.util.AppConstants
 
 class ProfileActivity : SingleFragmentActivity() {
 
@@ -13,6 +15,14 @@ class ProfileActivity : SingleFragmentActivity() {
     }
 
     override fun createFragment(): Fragment? {
+        if (intent?.action?.equals(AppConstants.OPEN_SHORTCUT_PROFILE) ?: false) {
+            analytic.reportEvent(Analytic.Shortcut.OPEN_PROFILE)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
+                val shortcutManager = getSystemService(ShortcutManager::class.java)
+                shortcutManager.reportShortcutUsed(AppConstants.PROFILE_SHORTCUT_ID)
+            }
+        }
+
         val userIdInternal: Long? = intent?.extras?.getLong(optionalUserIdKey)
         if (userIdInternal != null && userIdInternal != 0L) {
             return ProfileFragment.newInstance(userIdInternal)

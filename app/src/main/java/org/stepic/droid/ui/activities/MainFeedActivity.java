@@ -3,6 +3,7 @@ package org.stepic.droid.ui.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -134,6 +135,13 @@ public class MainFeedActivity extends BackToExitActivityBase
             } else if (action.equals(AppConstants.OPEN_NOTIFICATION_FROM_STREAK)) {
                 sharedPreferenceHelper.resetNumberOfStreakNotifications();
                 analytic.reportEvent(Analytic.Streak.STREAK_NOTIFICATION_OPENED);
+            } else if (action.equals(AppConstants.OPEN_SHORTCUT_FIND_COURSES)) {
+                analytic.reportEvent(Analytic.Shortcut.FIND_COURSES);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
+                    ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
+                    shortcutManager.reportShortcutUsed(AppConstants.FIND_COURSES_SHORTCUT_ID);
+                }
+
             }
 
             //after tracking check on null user
@@ -563,7 +571,9 @@ public class MainFeedActivity extends BackToExitActivityBase
     public void onLogout() {
         LoginManager.getInstance().logOut();
         VKSdk.logout();
-        Auth.GoogleSignInApi.signOut(googleApiClient);
+        if (googleApiClient.isConnected()) {
+            Auth.GoogleSignInApi.signOut(googleApiClient);
+        }
         sharedPreferenceHelper.deleteAuthInfo();
         shell.getScreenProvider().showLaunchScreen(MainApplication.getAppContext(), false);
     }
