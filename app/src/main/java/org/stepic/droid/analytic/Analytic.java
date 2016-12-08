@@ -299,6 +299,11 @@ public interface Analytic {
         String GET_NO_INTERNET_NOTIFICATION = " streak_get_no_internet_notification";
     }
 
+    interface Shortcut {
+        String OPEN_PROFILE = "shortcut_open_profile";
+        String FIND_COURSES = "shortcut_find_courses";
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);
