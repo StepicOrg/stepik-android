@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="yet_have_not_account">Еще нет аккаунта? Создать</string>
+    <string name="yet_have_not_account">Регистрация с e-mail</string>
     <string name="stepik_free_courses_title">Stepik.org: бесплатные курсы</string>
     <string name="local_remind_message">Мы заметили, что Вы до сих пор не выбрали ни одного курса для изучения. Не откладывайте, запишитесь на подходящий бесплатный курс прямо сейчас!</string>
     <string name="available_courses_title">Доступные курсы</string>
@@ -95,6 +95,7 @@
     <string name="hint_for_type_answer">Введите ответ здесь…</string>
     <string name="py_message"><![CDATA[Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>]]></string>
     <string name="terms_message_login"><![CDATA[Входя в приложение, Вы соглашаетесь с <a href="https://stepik.org/page/terms/?from_mobile_app=true">Условиями использования</a> и <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Политикой конфиденциальности</a>]]></string>
+    <string name="terms_message_launch"><![CDATA[<a href="https://stepik.org/page/terms/?from_mobile_app=true">Условия использования</a> и <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Политика конфиденциальности</a>]]></string>
     <string name="terms_message_register"><![CDATA[Регистрируясь, Вы соглашаетесь с <a href="https://stepik.org/page/terms/?from_mobile_app=true">Условиями использования</a> и <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Политикой конфиденциальности</a>]]></string>
     <string name="review_warning">Это задание с рецензией. Нажмите, чтобы закончить задание в web и получить баллы.</string>
     <string name="password_too_short">Минимальное количество символов в пароле: 6. </string>
@@ -327,4 +328,6 @@
     <string name="share_course_in_menu">Вы всегда можете поделиться ссылкой на курс в меню сверху</string>
     <string name="invite_friends_description">Люди, которые проходят курс вместе с друзьями, чаще завершают его. Пригласите друзей прямо сейчас, отправив им ссылку на курс!</string>
     <string name="take_course_with_fiends">Проходите курс с друзьями</string>
+    <string name="sign_in_with_password">Войти с e-mail</string>
+    <string name="or_continue_social">Или продолжить с</string>
 </resources>

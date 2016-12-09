@@ -17,24 +17,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
-        android:background="@android:color/white">
+        android:background="@android:color/white"
+        android:fillViewport="true"
+        android:overScrollMode="never">
 
-        <LinearLayout
-            android:id="@+id/registrationLayout"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding_registration_left_right"
-            android:orientation="vertical"
-            android:paddingEnd="@dimen/padding_registration_left_right"
-            android:paddingLeft="@dimen/padding_registration_left_right"
-            android:paddingRight="@dimen/padding_registration_left_right"
-            android:paddingStart="@dimen/padding_registration_left_right"
-            >
+            android:gravity="center"
+            android:splitMotionEvents="false">
+
+            <ImageView
+                android:id="@+id/login_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="50dp"
+                android:layout_marginTop="@dimen/guideline_standard_padding"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_stepik_logotype_square_green"/>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/first_name_reg_wrapper"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/login_logo"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="@dimen/padding_registration_left_right"
+                android:layout_marginRight="@dimen/padding_registration_left_right"
+                android:maxWidth="@dimen/min_max_width_for_tablets"
+                android:minWidth="@dimen/min_max_width_for_tablets"
                 android:paddingBottom="@dimen/half_padding"
                 android:paddingTop="@dimen/half_padding">
 
@@ -52,8 +64,14 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/second_name_reg_wrapper"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/first_name_reg_wrapper"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="@dimen/padding_registration_left_right"
+                android:layout_marginRight="@dimen/padding_registration_left_right"
+                android:maxWidth="@dimen/min_max_width_for_tablets"
+                android:minWidth="@dimen/min_max_width_for_tablets"
                 android:paddingBottom="@dimen/half_padding"
                 android:paddingTop="@dimen/half_padding">
 
@@ -71,8 +89,14 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/email_reg_wrapper"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/second_name_reg_wrapper"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="@dimen/padding_registration_left_right"
+                android:layout_marginRight="@dimen/padding_registration_left_right"
+                android:maxWidth="@dimen/min_max_width_for_tablets"
+                android:minWidth="@dimen/min_max_width_for_tablets"
                 android:paddingBottom="@dimen/half_padding"
                 android:paddingTop="@dimen/half_padding">
 
@@ -84,14 +108,20 @@
                     android:imeOptions="flagNoFullscreen|actionNext"
                     android:inputType="textEmailAddress"
                     android:maxLength="100"
-                    android:singleLine="true"/>
+                    android:maxLines="1"/>
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/password_reg_wrapper"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/email_reg_wrapper"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="@dimen/padding_registration_left_right"
+                android:layout_marginRight="@dimen/padding_registration_left_right"
+                android:maxWidth="@dimen/min_max_width_for_tablets"
+                android:minWidth="@dimen/min_max_width_for_tablets"
                 android:paddingBottom="@dimen/half_padding"
                 android:paddingTop="@dimen/half_padding"
                 app:passwordToggleEnabled="true">
@@ -110,26 +140,34 @@
 
             <Button
                 android:id="@+id/sign_up_btn"
-                android:layout_width="match_parent"
+                style="@style/LoginButtons"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/min_ux_touchable_size"
+                android:layout_below="@id/password_reg_wrapper"
+                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="20dp"
-                android:text="@string/sign_up"
-                />
+                android:layout_marginLeft="@dimen/padding_registration_left_right"
+                android:layout_marginRight="@dimen/padding_registration_left_right"
+                android:layout_marginTop="15dp"
+                android:maxWidth="@dimen/min_max_width_for_tablets"
+                android:minWidth="@dimen/min_max_width_for_tablets"
+                android:text="@string/sign_up"/>
+
 
             <TextView
                 android:id="@+id/terms_privacy_register"
-                fontPath="fonts/NotoSans-Italic.ttf"
+                style="@style/PrivacyPolicyTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp"
+                android:layout_below="@id/sign_up_btn"
+                android:layout_centerHorizontal="true"
                 android:clickable="true"
-                android:gravity="center_horizontal"
-                android:textSize="@dimen/privacy_policy_text_size"
-                tools:ignore="MissingPrefix"
-                tools:text="Регистрируясь, Вы соглашаетесь с Условиями использования и Политикой конфиденциальности"/>
+                android:gravity="center|bottom"
+                android:paddingBottom="@dimen/guideline_standard_padding"
+                android:paddingTop="@dimen/guideline_standard_padding"
+                tools:text="Входя в приложение, Вы соглашаетесь с Условиями испольесь с Условиями использования и Политикоесь с Условиями использования и Политикоесь с Условиями использования и Политикоесь с Условиями использования и Политикоесь с Условиями использования и Политикоесь с Условиями использования и Политикозования и Политикой конфиденциальностиВходя в приложение, Вы соглашаетесь с Условиями использования и Политикой конфиденциальности"/>
 
-
-        </LinearLayout>
+        </RelativeLayout>
     </ScrollView>
 
 </RelativeLayout>

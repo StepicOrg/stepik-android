@@ -37,7 +37,10 @@
     <style name="AppTheme.BrandedLaunch">
         <item name="colorPrimaryDark">@color/transparent_black_30</item>
         <item name="android:windowBackground">@drawable/branded_logo</item>
+    </style>
 
+    <style name="AppTheme.LoginLaunchRegistration">
+        <item name="colorPrimaryDark">@color/transparent_black_30</item>
     </style>
 
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7"/>
@@ -148,5 +151,23 @@
         <item name="android:paddingLeft">@dimen/guideline_standard_padding</item>
         <item name="android:paddingTop">@dimen/guideline_standard_padding</item>
         <item name="android:paddingRight">@dimen/guideline_standard_padding</item>
+    </style>
+
+    <style name="LoginButtons" parent="Base.Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/min_ux_touchable_size</item>
+        <item name="android:background">@drawable/login_button_background</item>
+        <item name="android:minWidth">@dimen/min_max_width_for_tablets</item>
+        <item name="android:minHeight">@dimen/min_max_width_for_tablets</item>
+        <item name="android:textColor">@color/launchTextColor</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">@dimen/launch_button_text_size</item>
+
+    </style>
+
+    <style name="PrivacyPolicyTextStyle">
+        <item name="android:textSize">@dimen/launch_not_button_text_size</item>
+        <item name="android:textColorLink">@color/stepic_brand_primary</item>
+        <item name="android:textColor">@color/launchTextColor</item>
     </style>
 </resources>
