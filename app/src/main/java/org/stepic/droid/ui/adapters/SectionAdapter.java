@@ -99,7 +99,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         this.activity = activity;
         this.calendarPresenter = calendarPresenter;
         highlightDrawable = ContextCompat.getDrawable(activity, R.drawable.section_background);
-        defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_white, activity);
+        defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.white, activity);
         this.progressMap = progressMap;
         MainApplication.component().inject(this);
     }

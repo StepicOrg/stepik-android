@@ -19,11 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
-import org.stepic.droid.core.IShell;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.store.CleanManager;
-import org.stepic.droid.store.IDownloadManager;
-import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.util.StepicLogicHelper;
 import org.stepic.droid.util.resolvers.text.TextResolver;
@@ -38,30 +34,18 @@ import butterknife.ButterKnife;
 public class CoursesAdapter extends ArrayAdapter<Course> {
 
     @Inject
-    IShell shell;
-
-    @Inject
     IConfig config;
-
-    @Inject
-    DatabaseFacade databaseFacade;
-
-    @Inject
-    IDownloadManager downloadManager;
-
-    @Inject
-    CleanManager cleaner;
 
     @Inject
     TextResolver textResolver;
 
     private Drawable coursePlaceholder;
 
-    private LayoutInflater mInflater;
+    private LayoutInflater inflater;
 
     public CoursesAdapter(Fragment fragment, List<Course> courses, @Nullable Table type) {
         super(fragment.getActivity(), 0, courses);
-        mInflater = (LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         MainApplication.component().inject(this);
         coursePlaceholder = ContextCompat.getDrawable(fragment.getContext(), R.drawable.ic_course_placeholder);
@@ -76,7 +60,7 @@ public class CoursesAdapter extends ArrayAdapter<Course> {
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolderItem viewHolderItem = null;
         if (view == null) {
-            view = mInflater.inflate(R.layout.course_item, null);
+            view = inflater.inflate(R.layout.course_item, null);
             viewHolderItem = new ViewHolderItem(view);
             view.setTag(viewHolderItem);
         } else {
