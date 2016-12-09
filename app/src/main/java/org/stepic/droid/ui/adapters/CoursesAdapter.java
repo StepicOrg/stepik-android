@@ -89,11 +89,24 @@ public class CoursesAdapter extends ArrayAdapter<Course> {
         @BindView(R.id.course_icon)
         ImageView courseIcon;
 
+        @BindView(R.id.continue_button)
+        View continueButton;
+
         GlideDrawableImageViewTarget imageViewTarget;
 
         public ViewHolderItem(View view) {
             ButterKnife.bind(this, view);
             imageViewTarget = new GlideDrawableImageViewTarget(courseIcon);
+            continueButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                }
+            });
         }
     }
+
+    private interface OnClickContinueListener {
+        void onClickContinue(int position);
+    }
+
 }
