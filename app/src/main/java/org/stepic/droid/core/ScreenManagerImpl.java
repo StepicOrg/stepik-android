@@ -438,7 +438,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showUnitsForSection(Context sourceActivity, @NotNull Section section) {
+    public void showUnitsForSection(Activity sourceActivity, @NotNull Section section) {
         analytic.reportEvent(Analytic.Screens.SHOW_UNITS, section.getId() + "");
         Intent intent = new Intent(sourceActivity, UnitsActivity.class);
         Bundle bundle = new Bundle();

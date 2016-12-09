@@ -1,7 +1,6 @@
 package org.stepic.droid.ui.adapters;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
@@ -37,6 +36,7 @@ import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
+import org.stepic.droid.viewmodel.ProgressViewModel;
 
 import java.util.List;
 import java.util.Map;
@@ -47,7 +47,6 @@ import javax.inject.Inject;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import org.stepic.droid.viewmodel.ProgressViewModel;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder> implements OnClickLoadListener, OnLoadPositionListener {
     private final static String SECTION_TITLE_DELIMETER = ". ";
@@ -81,7 +80,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     ThreadPoolExecutor threadPoolExecutor;
 
     private List<Section> sections;
-    private Context context;
     private AppCompatActivity activity;
     private CalendarPresenter calendarPresenter;
     private Course course;
@@ -96,13 +94,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         this.defaultHighlightPosition = defaultHighlightPosition;
     }
 
-    public SectionAdapter(List<Section> sections, Context mContext, AppCompatActivity activity, CalendarPresenter calendarPresenter, Map<String, ProgressViewModel> progressMap) {
+    public SectionAdapter(List<Section> sections, AppCompatActivity activity, CalendarPresenter calendarPresenter, Map<String, ProgressViewModel> progressMap) {
         this.sections = sections;
-        this.context = mContext;
         this.activity = activity;
         this.calendarPresenter = calendarPresenter;
-        highlightDrawable = ContextCompat.getDrawable(mContext, R.drawable.section_background);
-        defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_white, mContext);
+        highlightDrawable = ContextCompat.getDrawable(activity, R.drawable.section_background);
+        defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_white, activity);
         this.progressMap = progressMap;
         MainApplication.component().inject(this);
     }
@@ -111,10 +108,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     @Override
     public GenericViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_SECTION_ITEM) {
-            View v = LayoutInflater.from(context).inflate(R.layout.section_item, parent, false);
+            View v = LayoutInflater.from(activity).inflate(R.layout.section_item, parent, false);
             return new SectionViewHolder(v);
         } else if (viewType == TYPE_TITLE) {
-            View v = LayoutInflater.from(context).inflate(R.layout.export_calendar_view, parent, false);
+            View v = LayoutInflater.from(activity).inflate(R.layout.export_calendar_view, parent, false);
             return new CalendarViewHolder(v);
         } else {
             return null;
@@ -200,7 +197,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             } else {
                 if (section.is_loading()) {
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_SECTION, section.getId() + "");
-                    screenManager.showDownload(context);
+                    screenManager.showDownload(activity);
                 } else {
                     if (shell.getSharedPreferenceHelper().isNeedToShowVideoQualityExplanation()) {
                         VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(adapterPosition);
@@ -251,7 +248,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         if (position >= 0 && position < sections.size()) {
             analytic.reportEvent(Analytic.Exam.SHOW_EXAM);
             Section section = sections.get(position);
-            screenManager.openSyllabusInWeb(context, section.getCourse());
+            screenManager.openSyllabusInWeb(activity, section.getCourse());
         }
     }
 
@@ -336,7 +333,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         public void onClick(int adapterPosition) {
             int itemPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
             if (itemPosition >= 0 && itemPosition < sections.size()) {
-                screenManager.showUnitsForSection(context, sections.get(itemPosition));
+                screenManager.showUnitsForSection(activity, sections.get(itemPosition));
             }
         }
 
