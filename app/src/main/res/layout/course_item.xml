@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/white"
     android:clickable="false"
     android:descendantFocusability="blocksDescendants"
@@ -60,7 +60,7 @@
     <Button
         android:id="@+id/continue_button"
         style="@style/ContinueCourseButtons"
-
+        android:layout_below="@+id/course_info"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="@dimen/guideline_left_right_padding_list_item"
