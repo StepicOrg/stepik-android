@@ -17,26 +17,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:overScrollMode="never">
 
         <RelativeLayout
             android:id="@+id/top_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:splitMotionEvents="false">
 
             <ImageView
                 android:id="@+id/login_logo"
                 android:layout_width="wrap_content"
-                android:layout_height="125dp"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="15dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginBottom="50dp"
+                android:layout_marginTop="@dimen/guideline_standard_padding"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/stepic_logo"/>
+                android:src="@drawable/ic_stepik_logotype_square_green"/>
 
 
             <android.support.design.widget.TextInputLayout
+
                 android:id="@+id/email_text_input"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -88,7 +91,6 @@
 
             <TextView
                 android:id="@+id/forgot_password_tv"
-                style="@style/bold_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/email_text_input"
@@ -97,98 +99,36 @@
                 android:layout_alignStart="@+id/email_text_input"
                 android:layout_below="@+id/password_text_input"
                 android:gravity="center"
-                android:padding="12dp"
+                android:padding="@dimen/guideline_standard_padding"
                 android:text="@string/remind_password"
-                android:textColor="?attr/colorAccent"
-                android:textSize="12sp"/>
+                android:textColor="@color/stepic_brand_primary"
+                android:textSize="@dimen/launch_not_button_text_size"/>
 
             <Button
                 android:id="@+id/login_button_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/min_ux_touchable_size"
+                style="@style/LoginButtons"
                 android:layout_alignEnd="@+id/email_text_input"
                 android:layout_alignLeft="@+id/email_text_input"
                 android:layout_alignRight="@+id/email_text_input"
                 android:layout_alignStart="@+id/email_text_input"
                 android:layout_below="@id/forgot_password_tv"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="25dp"
                 android:layout_marginTop="15dp"
-                android:contentDescription="@string/app_name"
+                android:contentDescription="@string/sign_in"
                 android:text="@string/sign_in"/>
-
-
-            <RelativeLayout
-                android:id="@+id/sign_in_title_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/email_text_input"
-                android:layout_alignLeft="@+id/email_text_input"
-                android:layout_alignRight="@+id/email_text_input"
-                android:layout_alignStart="@+id/email_text_input"
-                android:layout_below="@+id/login_button_layout"
-                android:layout_centerHorizontal="true"
-                android:maxWidth="@dimen/min_max_width_for_tablets"
-                android:minWidth="@dimen/min_max_width_for_tablets">
-
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="1dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/sign_in_text"
-                    android:layout_toStartOf="@+id/sign_in_text"
-                    android:background="@color/silver"/>
-
-                <TextView
-                    android:id="@+id/sign_in_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginEnd="@dimen/space_for_text"
-                    android:layout_marginLeft="@dimen/space_for_text"
-                    android:layout_marginRight="@dimen/space_for_text"
-                    android:layout_marginStart="@dimen/space_for_text"
-                    android:text="@string/or_sign_in_social"/>
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="1dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/sign_in_text"
-                    android:layout_toRightOf="@+id/sign_in_text"
-                    android:background="@color/silver"/>
-
-            </RelativeLayout>
-
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/social_list"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/height_of_social"
-                android:layout_below="@+id/sign_in_title_layout"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="15dp"
-                android:scrollbarStyle="outsideOverlay"
-                android:splitMotionEvents="false"
-                android:stretchColumns="0"/>
 
             <TextView
                 android:id="@+id/terms_privacy_login"
-                fontPath="fonts/NotoSans-Italic.ttf"
+                style="@style/PrivacyPolicyTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/email_text_input"
-                android:layout_alignLeft="@+id/email_text_input"
-                android:layout_alignRight="@+id/email_text_input"
-                android:layout_alignStart="@+id/email_text_input"
-                android:layout_below="@+id/social_list"
-                android:layout_marginBottom="50dp"
+                android:layout_below="@id/login_button_layout"
+                android:layout_centerHorizontal="true"
                 android:clickable="true"
-                android:gravity="center_horizontal"
-                android:textSize="@dimen/privacy_policy_text_size"
-                tools:ignore="MissingPrefix"
-                tools:text="Входя в приложение, Вы соглашаетесь с Условиями использования и Политикой конфиденциальности"/>
+                android:gravity="center|bottom"
+                android:paddingBottom="@dimen/guideline_standard_padding"
+                android:paddingTop="@dimen/guideline_standard_padding"
+                tools:text="Входя в приложение, Вы соглашаетесь с Условиями испольесь с Условиями использования и Политикоесь с Условиями использования и Политикоесь с Условиями использования и Политикоесь с Условиями использования и Политикоесь с Условиями использования и Политикоесь с Условиями использования и Политикозования и Политикой конфиденциальностиВходя в приложение, Вы соглашаетесь с Условиями использования и Политикой конфиденциальности"/>
 
 
         </RelativeLayout>
