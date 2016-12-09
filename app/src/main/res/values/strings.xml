@@ -330,4 +330,5 @@
     <string name="sign_in_with_password">Sign in with e-mail</string>
     <string name="or_continue_social">Or continue with</string>
     <string name="content_course_logo">Course logo</string>
+    <string name="continue_course_title">Continue</string>
 </resources>

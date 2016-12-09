@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
-    android:background="@color/stepic_white"
+    android:background="@color/white"
     android:clickable="true"
     android:focusable="false"
     android:focusableInTouchMode="false"
