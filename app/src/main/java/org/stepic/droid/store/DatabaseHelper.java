@@ -74,8 +74,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void upgradeFrom18To19(SQLiteDatabase db) {
-        alterColumn(db, DBStructureCourses.ENROLLED_COURSES, DBStructureCourses.Column.LAST_STEP, TEXT_TYPE);
-        alterColumn(db, DBStructureCourses.FEATURED_COURSES, DBStructureCourses.Column.LAST_STEP, TEXT_TYPE);
+        alterColumn(db, DBStructureCourses.ENROLLED_COURSES, DBStructureCourses.Column.LAST_STEP_ID, TEXT_TYPE);
+        alterColumn(db, DBStructureCourses.FEATURED_COURSES, DBStructureCourses.Column.LAST_STEP_ID, TEXT_TYPE);
     }
 
     private void upgradeFrom17To18(SQLiteDatabase db) {

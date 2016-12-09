@@ -39,9 +39,6 @@ class CancelLoadingService : IntentService("cancel_loading") {
             LoadService.LoadTypeKey.UnitLesson -> {
                 return
             }
-            LoadService.LoadTypeKey.Course -> {
-                return
-            }
             LoadService.LoadTypeKey.Step -> {
                 val stepId = intent?.getLongExtra(AppConstants.KEY_STEP_BUNDLE, -1)
                 if (stepId != null && stepId >= 0L) {

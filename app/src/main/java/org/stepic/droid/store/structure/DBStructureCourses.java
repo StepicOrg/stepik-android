@@ -40,7 +40,7 @@ public final class DBStructureCourses extends DBStructureBase {
         public static final String SCHEDULE_LINK = "schedule_link";
         public static final String SCHEDULE_LONG_LINK = "schedule_long_link";
         public static final String END_DATE = "end_date";
-        public static final String LAST_STEP = "last_step";
+        public static final String LAST_STEP_ID = "last_step";
     }
 
     public static String[] getUsedColumns() {
@@ -70,7 +70,7 @@ public final class DBStructureCourses extends DBStructureBase {
                     Column.SLUG,
                     Column.BEGIN_DATE,
                     Column.END_DATE,
-                    Column.LAST_STEP,
+                    Column.LAST_STEP_ID,
             };
         }
         return usedColumns;

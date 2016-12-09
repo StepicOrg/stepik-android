@@ -197,16 +197,6 @@ class DatabaseFacade {
         }
     }
 
-    @Deprecated("")
-    fun updateOnlyCachedLoadingCourse(course: Course?, type: Table) {
-        course?.let {
-            val cv = ContentValues()
-            cv.put(DBStructureCourses.Column.IS_LOADING, course.is_loading)
-            cv.put(DBStructureCourses.Column.IS_CACHED, course.is_cached)
-            getCourseDao(type).update(DBStructureCourses.Column.COURSE_ID, course.courseId.toString(), cv)
-        }
-    }
-
     fun getAllCourses(type: Table) = getCourseDao(type).getAll()
 
     fun addCourse(course: Course, type: Table) = getCourseDao(type).insertOrUpdate(course)
