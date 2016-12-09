@@ -3,7 +3,7 @@ package org.stepic.droid.transformers
 import org.stepic.droid.model.Progress
 import org.stepic.droid.util.AppConstants
 
-import viewmodel.ProgressViewModel
+import org.stepic.droid.viewmodel.ProgressViewModel
 import java.util.*
 
 fun Progress?.transformToViewModel(): ProgressViewModel? {

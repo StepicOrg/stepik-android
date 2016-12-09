@@ -11,7 +11,7 @@ import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.transformers.transformToViewModel
 import org.stepic.droid.web.IApi
 import timber.log.Timber
-import viewmodel.ProgressViewModel
+import org.stepic.droid.viewmodel.ProgressViewModel
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean

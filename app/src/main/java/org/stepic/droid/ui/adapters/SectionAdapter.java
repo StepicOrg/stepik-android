@@ -47,7 +47,7 @@ import javax.inject.Inject;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import viewmodel.ProgressViewModel;
+import org.stepic.droid.viewmodel.ProgressViewModel;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder> implements OnClickLoadListener, OnLoadPositionListener {
     private final static String SECTION_TITLE_DELIMETER = ". ";
