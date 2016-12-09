@@ -329,4 +329,5 @@
     <string name="invite_friends_description"> People who take the course together with friends is most often complete it. Invite your friends now by sending them a link to the course!</string>
     <string name="sign_in_with_password">Sign in with e-mail</string>
     <string name="or_continue_social">Or continue with</string>
+    <string name="content_course_logo">Course logo</string>
 </resources>

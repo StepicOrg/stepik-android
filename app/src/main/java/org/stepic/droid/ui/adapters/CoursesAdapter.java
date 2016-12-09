@@ -69,7 +69,7 @@ public class CoursesAdapter extends ArrayAdapter<Course> {
 
     @NonNull
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
         final Course course = getItem(position);
 
         View view = convertView;
@@ -104,12 +104,6 @@ public class CoursesAdapter extends ArrayAdapter<Course> {
 
         @BindView(R.id.course_icon)
         ImageView courseIcon;
-
-        @BindView(R.id.course_date_interval)
-        TextView courseDateInterval;
-
-        @BindView(R.id.cv)
-        View cardView;
 
         GlideDrawableImageViewTarget imageViewTarget;
 
