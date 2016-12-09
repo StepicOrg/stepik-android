@@ -63,7 +63,6 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     protected List<Course> courses;
     protected CoursesAdapter coursesAdapter;
 
-    protected boolean userScrolled;
     private RecyclerView.OnScrollListener listOfCoursesViewListener;
     private LinearLayoutManager layoutManager;
 
@@ -92,9 +91,6 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
                 R.color.stepic_blue_ribbon);
 
         if (courses == null) courses = new ArrayList<>();
-
-        registerForContextMenu(listOfCoursesView);
-
         coursesAdapter = new CoursesAdapter(this, courses, getCourseType());
         listOfCoursesView.setAdapter(coursesAdapter);
         layoutManager = new LinearLayoutManager(getContext());
@@ -118,7 +114,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
             }
         };
         listOfCoursesView.addOnScrollListener(listOfCoursesViewListener);
-
+        registerForContextMenu(listOfCoursesView);
 
         findCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +132,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     public void onDestroyView() {
         if (listOfCoursesView != null) {
             listOfCoursesView.setAdapter(null);
+            unregisterForContextMenu(listOfCoursesView);
         }
         super.onDestroyView();
     }

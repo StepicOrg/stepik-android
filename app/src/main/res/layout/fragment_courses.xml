@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
+        <org.stepic.droid.ui.util.ContextMenuRecyclerView
             android:id="@+id/list_of_courses"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

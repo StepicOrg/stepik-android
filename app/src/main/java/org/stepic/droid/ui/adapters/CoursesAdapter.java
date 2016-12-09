@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -138,7 +139,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
 
         GlideDrawableImageViewTarget imageViewTarget;
 
-        CourseViewHolderItem(View itemView) {
+        CourseViewHolderItem(final View itemView) {
             super(itemView);
             imageViewTarget = new GlideDrawableImageViewTarget(courseIcon);
             continueButton.setOnClickListener(new View.OnClickListener() {
@@ -150,6 +151,15 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                 @Override
                 public void onClick(View v) {
                     CoursesAdapter.this.onClickCourse(getAdapterPosition());
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                    itemView.showContextMenu();
+                    return true;
                 }
             });
         }
@@ -166,6 +176,13 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                     .placeholder(coursePlaceholder)
                     .centerCrop()
                     .into(imageViewTarget);
+
+
+            if (course.getEnrollment() != 0) {
+                continueButton.setVisibility(View.VISIBLE);
+            } else {
+                continueButton.setVisibility(View.GONE);
+            }
         }
     }
 

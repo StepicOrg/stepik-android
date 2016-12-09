@@ -149,10 +149,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         super.onCreateContextMenu(menu, v, menuInfo)
         menu?.setHeaderTitle(R.string.one_comment_title)
 
-        val info = menuInfo as? ContextMenuRecyclerView.RecyclerViewContextMenuInfo
-        if (info == null) {
-            return
-        }
+        val info = menuInfo as? ContextMenuRecyclerView.RecyclerViewContextMenuInfo ?: return
+
         val position = info.position //resolve which should show
         val userId = userPreferences.userId
         val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
