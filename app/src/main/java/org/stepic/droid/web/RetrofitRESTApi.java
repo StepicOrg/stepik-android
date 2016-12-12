@@ -596,6 +596,11 @@ public class RetrofitRESTApi implements IApi {
         return loggedService.getUserActivities(userId);
     }
 
+    @Override
+    public Call<LastStepResponse> getLastStepResponse(String lastStepId) {
+        return loggedService.getLastStepResponse(lastStepId);
+    }
+
     @Nullable
     private String getNotificationCategoryString(NotificationCategory notificationCategory) {
         String categoryType;
