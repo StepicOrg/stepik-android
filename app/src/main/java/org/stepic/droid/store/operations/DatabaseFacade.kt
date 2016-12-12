@@ -428,8 +428,8 @@ class DatabaseFacade {
         lastStepDao.insertOrUpdate(persistentLastStep)
     }
 
-    fun getLocalLastStepByCourseId(courseId: Long) {
-        lastStepDao.get(DbStructureLastStep.Column.COURSE_ID, courseId.toString())
-    }
+    fun getLocalLastStepByCourseId(courseId: Long) =
+            lastStepDao.get(DbStructureLastStep.Column.COURSE_ID, courseId.toString())
+
 
 }

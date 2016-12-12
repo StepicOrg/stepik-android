@@ -3,6 +3,7 @@ package org.stepic.droid.ui.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +31,7 @@ import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.custom.TouchDispatchableFrameLayout;
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepikUtil;
@@ -43,6 +45,8 @@ import butterknife.BindView;
 import timber.log.Timber;
 
 public abstract class CourseListFragmentBase extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, CoursesView, ContinueCourseView {
+
+    private static final String continueLoadingTag = "continueLoadingTag";
 
     @BindView(R.id.swipe_refresh_layout_mycourses)
     protected SwipeRefreshLayout swipeRefreshLayout;
@@ -239,17 +243,27 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
     @Override
     public void onShowContinueCourseLoadingDialog() {
-        // // TODO: 12.12.16 ???
+        DialogFragment loadingProgressDialogFragment = LoadingProgressDialogFragment.Companion.newInstance();
+        if (!loadingProgressDialogFragment.isAdded()) {
+            loadingProgressDialogFragment.show(getFragmentManager(), continueLoadingTag);
+        }
     }
 
     @Override
-    public void onOpenStep(long courseId,  @NotNull Section section, long lessonId,  long unitId, int stepPosition) {
+    public void onOpenStep(long courseId, @NotNull Section section, long lessonId, long unitId, int stepPosition) {
+        ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
         shell.getScreenProvider().continueCourse(getActivity(), courseId, section, lessonId, unitId, stepPosition);
     }
 
     @Override
     public void onAnyProblemWhileContinue(@NotNull Course course) {
+        ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
         shell.getScreenProvider().showSections(getActivity(), course);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
+    }
 }

@@ -116,5 +116,5 @@ public interface IApi {
 
     Call<UserActivityResponse> getUserActivities(long userId);
 
-    Call<LastStepResponse> getLastStepResponse(String lastStepId);
+    Call<LastStepResponse> getLastStepResponse(@NotNull String lastStepId);
 }
