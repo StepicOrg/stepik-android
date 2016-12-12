@@ -175,12 +175,12 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     private void dropCourse(int position) {
         if (position >= courses.size() || position < 0) {
-            Toast.makeText(getContext(), R.string.try_in_web_drop, Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.try_in_web_drop, Toast.LENGTH_SHORT).show();
             return;
         }
         final Course course = courses.get(position);
         if (course.getEnrollment() == 0) {
-            Toast.makeText(getContext(), R.string.you_not_enrolled, Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.you_not_enrolled, Toast.LENGTH_SHORT).show();
             return;
         }
         Call<Void> drop = shell.getApi().dropCourse(course.getCourseId());
@@ -213,7 +213,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                 }
             });
         } else {
-            Toast.makeText(MainApplication.getAppContext(), R.string.cant_drop, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.cant_drop, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -225,10 +225,24 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         }
         analytic.reportEvent(Analytic.Web.DROP_COURSE_SUCCESSFUL, courseId + "");
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + e.getCourse().getTitle(), Toast.LENGTH_LONG).show();
-        if (e.getType() == Table.enrolled) {
+        if (getCourseType() == Table.enrolled) { //why here was e.getCourseType?
             courses.remove(e.getCourse());
             coursesAdapter.notifyDataSetChanged();
+        } else if (getCourseType() == Table.featured) {
+            int position = -1;
+            for (int i = 0; i < courses.size(); i++) {
+                Course courseItem = courses.get(i);
+                if (courseItem.getCourseId() == e.getCourse().getCourseId()) {
+                    courseItem.setEnrollment(0);
+                    position = i;
+                    break;
+                }
+            }
+            if (position >= 0 && position < courses.size()) {
+                coursesAdapter.notifyItemChanged(position);
+            }
         }
+
 
         if (courses.size() == 0) {
             showEmptyScreen(true);

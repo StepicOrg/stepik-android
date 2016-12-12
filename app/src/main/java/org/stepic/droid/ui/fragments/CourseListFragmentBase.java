@@ -148,6 +148,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
     @Override
     public void onDestroyView() {
+        continueCoursePresenter.detachView(this);
         if (listOfCoursesView != null) {
             listOfCoursesView.setAdapter(null);
             unregisterForContextMenu(listOfCoursesView);
@@ -159,17 +160,22 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
     public final void updateEnrollment(Course courseForUpdate, long enrollment) {
         boolean inList = false;
-        for (Course courseItem : courses) {
+        int position = -1;
+        for (int i = 0; i < courses.size(); i++) {
+            Course courseItem = courses.get(i);
             if (courseItem.getCourseId() == courseForUpdate.getCourseId()) {
                 courseItem.setEnrollment((int) courseItem.getCourseId());
                 courseForUpdate = courseItem;
                 inList = true;
+                position = i;
                 break;
             }
         }
         if (getCourseType() == Table.enrolled && !inList) {
             courses.add(courseForUpdate);
             coursesAdapter.notifyDataSetChanged();
+        } else if (inList) {
+            coursesAdapter.notifyItemChanged(position);
         }
 
     }
