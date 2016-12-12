@@ -15,7 +15,7 @@
     <dimen name="padding_tab_bar">12dp</dimen>
     <dimen name="height_of_social">@dimen/min_ux_touchable_size</dimen>
     <dimen name="space_for_text">8dp</dimen>
-    <dimen name="min_max_width_for_tablets">344dp</dimen>
+    <dimen name="min_max_width_for_tablets">316dp</dimen>
     <dimen name="half_padding">8dp</dimen>
     <dimen name="padding_text_in_cv">16dp</dimen>
     <dimen name="padding_left_right_list_item">16dp</dimen>
