@@ -471,9 +471,9 @@ public class StepsFragment extends FragmentBase implements StepsView {
     void showViewPager(boolean needShow) {
         if (needShow) {
             viewPager.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setBackgroundDrawable(null);
+//            getActivity().getWindow().setBackgroundDrawable(null); // it may produce some bugs
         } else {
-            getActivity().getWindow().setBackgroundDrawableResource(R.color.windowBackground);
+//            getActivity().getWindow().setBackgroundDrawableResource(R.color.windowBackground); //it may produce some bugs
             viewPager.setVisibility(View.INVISIBLE);
         }
     }
