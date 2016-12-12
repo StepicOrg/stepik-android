@@ -62,6 +62,9 @@ class DatabaseFacade {
     @Inject
     lateinit var videoTimestampDao: IDao<VideoTimestamp>
 
+    @Inject
+    lateinit var lastStepDao: IDao<PersistentLastStep>
+
     init {
         MainApplication.storageComponent().inject(this)
         coursesEnrolledDao.setTableName(Table.enrolled.storeName)
@@ -420,5 +423,13 @@ class DatabaseFacade {
 
     fun getVideoTimestamp(videoId: Long): VideoTimestamp? =
             videoTimestampDao.get(DbStructureVideoTimestamp.Column.VIDEO_ID, videoId.toString())
+
+    fun updateLastStep(persistentLastStep: PersistentLastStep) {
+        lastStepDao.insertOrUpdate(persistentLastStep)
+    }
+
+    fun getLocalLastStepByCourseId(courseId: Long) {
+        lastStepDao.get(DbStructureLastStep.Column.COURSE_ID, courseId.toString())
+    }
 
 }

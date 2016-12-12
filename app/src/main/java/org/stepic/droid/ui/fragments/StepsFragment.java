@@ -29,6 +29,7 @@ import org.stepic.droid.core.presenters.StepsPresenter;
 import org.stepic.droid.core.presenters.contracts.StepsView;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.PersistentLastStep;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
@@ -260,6 +261,13 @@ public class StepsFragment extends FragmentBase implements StepsView {
                     try {
                         long assignmentID = databaseFacade.getAssignmentIdByStepId(stepId);
                         shell.getScreenProvider().pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
+                        if (unit != null && unit.getSection() > 0) {
+                            Section section = databaseFacade.getSectionById(unit.getId());
+                            if (section != null && section.getCourse() > 0) {
+                                PersistentLastStep persistentLastStep = new PersistentLastStep(section.getCourse(), stepId, unit.getId());
+                                databaseFacade.updateLastStep(persistentLastStep);
+                            }
+                        }
                     } catch (Exception exception) {
                         analytic.reportError(Analytic.Error.FAIL_PUSH_STEP_VIEW, exception);
                     }

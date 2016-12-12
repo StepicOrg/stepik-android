@@ -11,6 +11,7 @@ import org.stepic.droid.store.structure.DbStructureBlock;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
 import org.stepic.droid.store.structure.DbStructureCalendarSection;
 import org.stepic.droid.store.structure.DbStructureCertificateViewItem;
+import org.stepic.droid.store.structure.DbStructureLastStep;
 import org.stepic.droid.store.structure.DbStructureLesson;
 import org.stepic.droid.store.structure.DbStructureNotification;
 import org.stepic.droid.store.structure.DbStructureProgress;
@@ -71,6 +72,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom16To17(db);
         upgradeFrom17To18(db);
         upgradeFrom18To19(db);
+        upgradeFrom19To20(db);
+    }
+
+    private void upgradeFrom19To20(SQLiteDatabase db) {
+        createLastStepTable(db);
+
     }
 
     private void upgradeFrom18To19(SQLiteDatabase db) {
@@ -252,6 +259,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 19) {
             upgradeFrom18To19(db);
+        }
+
+        if (oldVersion < 20) {
+            upgradeFrom19To20(db);
         }
     }
 
@@ -535,6 +546,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + " ("
                 + DbStructureVideoTimestamp.Column.VIDEO_ID + WHITESPACE + LONG_TYPE + ", "
                 + DbStructureVideoTimestamp.Column.TIMESTAMP + WHITESPACE + LONG_TYPE
+                + ")";
+        db.execSQL(sql);
+    }
+
+    private void createLastStepTable(SQLiteDatabase db) {
+        String sql = "CREATE TABLE " + DbStructureLastStep.LAST_STEPS
+                + " ("
+                + DbStructureLastStep.Column.COURSE_ID + WHITESPACE + LONG_TYPE + ", "
+                + DbStructureLastStep.Column.UNIT_ID + WHITESPACE + LONG_TYPE + ", "
+                + DbStructureLastStep.Column.STEP_ID + WHITESPACE + LONG_TYPE
                 + ")";
         db.execSQL(sql);
     }
