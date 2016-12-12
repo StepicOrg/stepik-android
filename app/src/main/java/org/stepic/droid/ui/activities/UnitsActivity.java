@@ -95,7 +95,6 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_units);
         unbinder = ButterKnife.bind(this);
-        overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         hideSoftKeypad();
         isScreenEmpty = true;
         firstLoad = true;

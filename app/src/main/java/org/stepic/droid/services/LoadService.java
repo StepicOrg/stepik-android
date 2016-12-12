@@ -11,7 +11,6 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Assignment;
-import org.stepic.droid.model.Course;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;
@@ -24,7 +23,6 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ProgressUtil;
@@ -34,7 +32,6 @@ import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.LessonStepicResponse;
 import org.stepic.droid.web.ProgressesResponse;
-import org.stepic.droid.web.SectionsStepicResponse;
 import org.stepic.droid.web.StepResponse;
 import org.stepic.droid.web.UnitStepicResponse;
 
@@ -71,7 +68,7 @@ public class LoadService extends IntentService {
     Analytic analytic;
 
     public enum LoadTypeKey {
-        Course, Section, UnitLesson, Step
+        Section, UnitLesson, Step
     }
 
 
@@ -96,11 +93,6 @@ public class LoadService extends IntentService {
         LoadTypeKey type = (LoadTypeKey) intent.getSerializableExtra(AppConstants.KEY_LOAD_TYPE);
         try {
             switch (type) {
-                case Course:
-                    Course course = (Course) intent.getSerializableExtra(AppConstants.KEY_COURSE_BUNDLE);
-                    Table tableType = (Table) intent.getSerializableExtra(AppConstants.KEY_TABLE_TYPE);
-                    addCourse(course, tableType);
-                    break;
                 case Section:
                     Section section = (Section) intent.getSerializableExtra(AppConstants.KEY_SECTION_BUNDLE);
                     addSection(section);
@@ -416,38 +408,6 @@ public class LoadService extends IntentService {
         }
 
     }
-
-    @Deprecated
-    private void addCourse(Course course, Table type) {
-        databaseFacade.addCourse(course, type);
-        course = databaseFacade.getCourseById(course.getCourseId(), type); //make copy of course.
-
-        course.set_loading(true);
-        course.set_cached(false);
-        databaseFacade.updateOnlyCachedLoadingCourse(course, type);
-
-        Response<SectionsStepicResponse> response;
-        try {
-            response = api.getSections(course.getSections()).execute();
-            if (response.isSuccess()) {
-                List<Section> sections = response.body().getSections();
-
-                for (Section section : sections) {
-                    databaseFacade.addSection(section);
-                    section.set_cached(false);
-                    section.set_loading(true);
-                    databaseFacade.updateOnlyCachedLoadingSection(section);
-                }
-
-                for (Section section : sections) {
-                    addSection(section);
-                }
-            }
-        } catch (IOException e) {
-            analytic.reportError(Analytic.Error.LOAD_SERVICE, e);
-        }
-    }
-
 
     public boolean isDownloadManagerEnabled() {
         if (MainApplication.getAppContext() == null) {

@@ -62,6 +62,9 @@ class DatabaseFacade {
     @Inject
     lateinit var videoTimestampDao: IDao<VideoTimestamp>
 
+    @Inject
+    lateinit var lastStepDao: IDao<PersistentLastStep>
+
     init {
         MainApplication.storageComponent().inject(this)
         coursesEnrolledDao.setTableName(Table.enrolled.storeName)
@@ -194,16 +197,6 @@ class DatabaseFacade {
             cv.put(DbStructureSections.Column.IS_LOADING, section.is_loading)
             cv.put(DbStructureSections.Column.IS_CACHED, section.is_cached)
             sectionDao.update(DbStructureSections.Column.SECTION_ID, section.id.toString(), cv)
-        }
-    }
-
-    @Deprecated("")
-    fun updateOnlyCachedLoadingCourse(course: Course?, type: Table) {
-        course?.let {
-            val cv = ContentValues()
-            cv.put(DBStructureCourses.Column.IS_LOADING, course.is_loading)
-            cv.put(DBStructureCourses.Column.IS_CACHED, course.is_cached)
-            getCourseDao(type).update(DBStructureCourses.Column.COURSE_ID, course.courseId.toString(), cv)
         }
     }
 
@@ -430,5 +423,13 @@ class DatabaseFacade {
 
     fun getVideoTimestamp(videoId: Long): VideoTimestamp? =
             videoTimestampDao.get(DbStructureVideoTimestamp.Column.VIDEO_ID, videoId.toString())
+
+    fun updateLastStep(persistentLastStep: PersistentLastStep) {
+        lastStepDao.insertOrUpdate(persistentLastStep)
+    }
+
+    fun getLocalLastStepByCourseId(courseId: Long) =
+            lastStepDao.get(DbStructureLastStep.Column.COURSE_ID, courseId.toString())
+
 
 }

@@ -16,7 +16,7 @@ import org.stepic.droid.util.DbParseHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public  class CourseDaoImpl extends DaoBase<Course> {
+public class CourseDaoImpl extends DaoBase<Course> {
     private final IDao<CachedVideo> cachedVideoDao;
     private String tableName;
 
@@ -26,7 +26,7 @@ public  class CourseDaoImpl extends DaoBase<Course> {
     }
 
     @Override
-    public void setTableName(String tableName){
+    public void setTableName(String tableName) {
         this.tableName = tableName;
     }
 
@@ -49,8 +49,6 @@ public  class CourseDaoImpl extends DaoBase<Course> {
         int indexRequirements = cursor.getColumnIndex(DBStructureCourses.Column.REQUIREMENTS);
         int indexEnrollment = cursor.getColumnIndex(DBStructureCourses.Column.ENROLLMENT);
         int indexSection = cursor.getColumnIndex(DBStructureCourses.Column.SECTIONS);
-        int indexIsCached = cursor.getColumnIndex(DBStructureCourses.Column.IS_CACHED);
-        int indexIsLoading = cursor.getColumnIndex(DBStructureCourses.Column.IS_LOADING);
         int indexWorkload = cursor.getColumnIndex(DBStructureCourses.Column.WORKLOAD);
         int indexCourseFormat = cursor.getColumnIndex(DBStructureCourses.Column.COURSE_FORMAT);
         int indexTargetAudience = cursor.getColumnIndex(DBStructureCourses.Column.TARGET_AUDIENCE);
@@ -59,7 +57,10 @@ public  class CourseDaoImpl extends DaoBase<Course> {
         int indexSlug = cursor.getColumnIndex(DBStructureCourses.Column.SLUG);
         int indexScheduleLink = cursor.getColumnIndex(DBStructureCourses.Column.SCHEDULE_LINK);
         int indexScheduleLongLink = cursor.getColumnIndex(DBStructureCourses.Column.SCHEDULE_LONG_LINK);
+        int indexLastStepId = cursor.getColumnIndex(DBStructureCourses.Column.LAST_STEP_ID);
+        int indexIsActive = cursor.getColumnIndex(DBStructureCourses.Column.IS_ACTIVE);
 
+        course.setLastStepId(cursor.getString(indexLastStepId));
         course.setCertificate(cursor.getString(indexCertificate));
         course.setWorkload(cursor.getString(indexWorkload));
         course.setCourse_format(cursor.getString(indexCourseFormat));
@@ -74,18 +75,25 @@ public  class CourseDaoImpl extends DaoBase<Course> {
         course.setBegin_date_source(cursor.getString(indexBeginDateSource));
         course.setLast_deadline(cursor.getString(indexLastDeadline));
         course.setDescription(cursor.getString(indexDescription));
-        course.setInstructors(DbParseHelper.INSTANCE.parseStringToLongArray(cursor.getString(indexInstructors)));
+        course.setInstructors(DbParseHelper.parseStringToLongArray(cursor.getString(indexInstructors)));
         course.setRequirements(cursor.getString(indexRequirements));
         course.setEnrollment(cursor.getInt(indexEnrollment));
-        course.set_cached(cursor.getInt(indexIsCached) > 0);
-        course.set_loading(cursor.getInt(indexIsLoading) > 0);
-        course.setSections(DbParseHelper.INSTANCE.parseStringToLongArray(cursor.getString(indexSection)));
+        course.setSections(DbParseHelper.parseStringToLongArray(cursor.getString(indexSection)));
         course.setIntro_video_id(cursor.getLong(indexIntroVideoId));
         course.setSlug(cursor.getString(indexSlug));
         course.setSchedule_link(cursor.getString(indexScheduleLink));
         course.setSchedule_long_link(cursor.getString(indexScheduleLongLink));
         course.setBegin_date(cursor.getString(indexBeginDate));
         course.setEnd_date(cursor.getString(indexEndDate));
+
+        boolean isActive = true;
+        try {
+            isActive = cursor.getInt(indexIsActive) > 0;
+        } catch (Exception exception) {
+            //it can be null before migration --> default active
+        }
+        course.setIs_active(isActive);
+
         return course;
     }
 
@@ -93,6 +101,7 @@ public  class CourseDaoImpl extends DaoBase<Course> {
     public ContentValues getContentValues(Course course) {
         ContentValues values = new ContentValues();
 
+        values.put(DBStructureCourses.Column.LAST_STEP_ID, course.getLastStepId());
         values.put(DBStructureCourses.Column.COURSE_ID, course.getCourseId());
         values.put(DBStructureCourses.Column.SUMMARY, course.getSummary());
         values.put(DBStructureCourses.Column.COVER_LINK, course.getCover());
@@ -123,6 +132,7 @@ public  class CourseDaoImpl extends DaoBase<Course> {
 
         values.put(DBStructureCourses.Column.BEGIN_DATE, course.getBegin_date());
         values.put(DBStructureCourses.Column.END_DATE, course.getEnd_date());
+        values.put(DBStructureCourses.Column.IS_ACTIVE, course.is_active());
 
         Video video = course.getIntro_video();
         if (video != null) {
@@ -143,7 +153,7 @@ public  class CourseDaoImpl extends DaoBase<Course> {
 
     @Override
     public String getDefaultPrimaryValue(Course persistentObject) {
-        return persistentObject.getCourseId()+"";
+        return persistentObject.getCourseId() + "";
     }
 
     @Nullable
@@ -166,7 +176,7 @@ public  class CourseDaoImpl extends DaoBase<Course> {
     private void addInnerObjects(Course course) {
         if (course == null) return;
         CachedVideo video = cachedVideoDao.get(DbStructureCachedVideo.Column.VIDEO_ID, course.getIntro_video_id() + "");
-        if (video != null){
+        if (video != null) {
             course.setIntro_video(transformCachedVideoToRealVideo(video));
         }
     }
@@ -174,7 +184,7 @@ public  class CourseDaoImpl extends DaoBase<Course> {
     @Override
     public void insertOrUpdate(Course course) {
         super.insertOrUpdate(course);
-        if (course!=null && course.getIntro_video()!=null){
+        if (course != null && course.getIntro_video() != null) {
             Video video = course.getIntro_video();
             CachedVideo storedVideo = new CachedVideo();//it is cached, but not stored video.
             storedVideo.setVideoId(video.getId());

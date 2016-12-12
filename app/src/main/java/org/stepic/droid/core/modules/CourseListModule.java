@@ -4,6 +4,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.core.FilterApplicator;
 import org.stepic.droid.core.PerFragment;
+import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
 import org.stepic.droid.core.presenters.SearchCoursesPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -56,5 +57,15 @@ public class CourseListModule {
                 threadPoolExecutor,
                 mainHandler,
                 searchResolver);
+    }
+
+
+    @Provides
+    @PerFragment
+    ContinueCoursePresenter provideContinueCoursePresenter(DatabaseFacade databaseFacade,
+                                                           ThreadPoolExecutor threadPoolExecutor,
+                                                           IMainHandler mainHandler,
+                                                           IApi api) {
+        return new ContinueCoursePresenter(databaseFacade, api, threadPoolExecutor, mainHandler);
     }
 }

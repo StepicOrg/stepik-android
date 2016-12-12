@@ -1,32 +1,15 @@
 package org.stepic.droid.model;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.configuration.IConfig;
+import com.google.gson.annotations.SerializedName;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
-import java.util.Locale;
-
-import javax.inject.Inject;
 
 public class Course implements Serializable, Parcelable {
-
-    @Inject
-    transient IConfig config;
-
-    private transient Context context;
-
-    private transient DateTimeFormatter internalFormatForView;
-
     private long id;
     private String summary;
     private String workload;
@@ -57,12 +40,16 @@ public class Course implements Serializable, Parcelable {
     private String language;
     private boolean is_public;
     private String slug; //link to ../course/#slug#
-    private boolean is_cached;
-    private boolean is_loading;
     private Video intro_video;
     private long intro_video_id;
     private String schedule_link;
     private String schedule_long_link;
+    @SerializedName("last_step")
+    private String lastStepId;
+
+    public Course() {
+
+    }
 
     public String getEnd_date() {
         return end_date;
@@ -74,6 +61,15 @@ public class Course implements Serializable, Parcelable {
 
     public String getBegin_date() {
         return begin_date;
+    }
+
+    @Nullable
+    public String getLastStepId() {
+        return lastStepId;
+    }
+
+    public void setLastStepId(String lastStepId) {
+        this.lastStepId = lastStepId;
     }
 
     public void setBegin_date(String begin_date) {
@@ -96,111 +92,8 @@ public class Course implements Serializable, Parcelable {
         this.schedule_long_link = schedule_long_link;
     }
 
-    @Deprecated
-    public boolean is_loading() {
-        return is_loading;
-    }
-
-    @Deprecated
-    public synchronized void set_loading(boolean is_loading) {
-        this.is_loading = is_loading;
-    }
-
-    @Deprecated
-    public boolean is_cached() {
-        return is_cached;
-    }
-
-    @Deprecated
-    public synchronized void set_cached(boolean is_cached) {
-        this.is_cached = is_cached;
-    }
-
-    private transient DateTime mBeginDateTime = null;
-
-    private transient DateTime mEndDateTime = null;
-
     public void setIntro_video(Video intro_video) {
         this.intro_video = intro_video;
-    }
-
-    private String formatForView = null;
-
-    public Course() {
-        context = MainApplication.getAppContext();
-        MainApplication.component(MainApplication.getAppContext()).inject(this);
-
-        internalFormatForView = DateTimeFormat
-                .forPattern(config.getDatePatternForView())
-                .withZone(DateTimeZone.getDefault())
-                .withLocale(Locale.getDefault());
-    }
-
-    public String getDateOfCourse() {
-        if (formatForView != null) return formatForView;
-
-        StringBuilder sb = new StringBuilder();
-
-        if (begin_date_source == null && last_deadline == null) {
-            sb.append("");
-        } else if (last_deadline == null) {
-            sb.append(context.getResources().getString(R.string.begin_date));
-            sb.append(": ");
-
-            try {
-                sb.append(getPresentOfDate(begin_date_source));
-            } catch (Throwable throwable) {
-                return "";
-            }
-        } else if (begin_date_source != null) {
-            //both is not null
-
-            try {
-
-                sb.append(getPresentOfDate(begin_date_source));
-
-                sb.append(" - ");
-
-                sb.append(getPresentOfDate(last_deadline));
-            } catch (Throwable throwable) {
-                return "";
-            }
-        }
-        formatForView = sb.toString();
-        return formatForView;
-    }
-
-    private String getPresentOfDate(String dateInISOformat) {
-        DateTime dateTime = new DateTime(dateInISOformat);
-        return internalFormatForView.print(dateTime);
-    }
-
-
-    @Nullable
-    public DateTime getEndDateTime() {
-        if (mEndDateTime != null)
-            return mEndDateTime;
-
-        if (last_deadline == null) {
-            mEndDateTime = null; //infinity
-        } else {
-            mEndDateTime = new DateTime(last_deadline);
-        }
-        return mEndDateTime;
-
-    }
-
-    @Nullable
-    public DateTime getBeginDateTime() {
-        if (mBeginDateTime != null)
-            return mBeginDateTime;
-
-        if (begin_date_source == null) {
-            mBeginDateTime = null; //infinity
-        } else {
-            mBeginDateTime = new DateTime(begin_date_source);
-        }
-        return mBeginDateTime;
     }
 
     public long getCourseId() {
@@ -231,14 +124,6 @@ public class Course implements Serializable, Parcelable {
         return target_audience;
     }
 
-    public String getCertificate_footer() {
-        return certificate_footer;
-    }
-
-    public String getCertificate_cover_org() {
-        return certificate_cover_org;
-    }
-
     public long[] getInstructors() {
         return instructors;
     }
@@ -255,40 +140,16 @@ public class Course implements Serializable, Parcelable {
         return description;
     }
 
-    public int getTotal_units() {
-        return total_units;
-    }
-
     public int getEnrollment() {
         return enrollment;
-    }
-
-    public boolean is_featured() {
-        return is_featured;
-    }
-
-    public boolean is_spoc() {
-        return is_spoc;
-    }
-
-    public String getCertificate_link() {
-        return certificate_link;
     }
 
     public long getOwner() {
         return owner;
     }
 
-    public boolean is_contest() {
-        return is_contest;
-    }
-
     public String getLanguage() {
         return language;
-    }
-
-    public boolean is_public() {
-        return is_public;
     }
 
     public String getSlug() {
@@ -297,10 +158,6 @@ public class Course implements Serializable, Parcelable {
 
     public String getTitle() {
         return title;
-    }
-
-    public void setInternalFormatForView(DateTimeFormatter internalFormatForView) {
-        this.internalFormatForView = internalFormatForView;
     }
 
     public void setId(long id) {
@@ -331,14 +188,6 @@ public class Course implements Serializable, Parcelable {
         this.target_audience = target_audience;
     }
 
-    public void setCertificate_footer(String certificate_footer) {
-        this.certificate_footer = certificate_footer;
-    }
-
-    public void setCertificate_cover_org(String certificate_cover_org) {
-        this.certificate_cover_org = certificate_cover_org;
-    }
-
     public void setInstructors(long[] instructors) {
         this.instructors = instructors;
     }
@@ -355,36 +204,12 @@ public class Course implements Serializable, Parcelable {
         this.description = description;
     }
 
-    public void setTotal_units(int total_units) {
-        this.total_units = total_units;
-    }
-
     public void setEnrollment(int enrollment) {
         this.enrollment = enrollment;
     }
 
     public void setOwner(long owner) {
         this.owner = owner;
-    }
-
-    public void setIs_contest(boolean is_contest) {
-        this.is_contest = is_contest;
-    }
-
-    public void set_featured(boolean is_featured) {
-        this.is_featured = is_featured;
-    }
-
-    public void setIs_spoc(boolean is_spoc) {
-        this.is_spoc = is_spoc;
-    }
-
-    public void set_active(boolean is_active) {
-        this.is_active = is_active;
-    }
-
-    public void setCertificate_link(String certificate_link) {
-        this.certificate_link = certificate_link;
     }
 
     public void setTitle(String title) {
@@ -403,24 +228,8 @@ public class Course implements Serializable, Parcelable {
         this.language = language;
     }
 
-    public void set_public(boolean is_public) {
-        this.is_public = is_public;
-    }
-
     public void setSlug(String slug) {
         this.slug = slug;
-    }
-
-    public void setBeginDateTime(DateTime mBeginDateTime) {
-        this.mBeginDateTime = mBeginDateTime;
-    }
-
-    public void setEndDateTime(DateTime mEndDateTime) {
-        this.mEndDateTime = mEndDateTime;
-    }
-
-    public void setFormatForView(String formatForView) {
-        this.formatForView = formatForView;
     }
 
     public String getBegin_date_source() {
@@ -449,6 +258,14 @@ public class Course implements Serializable, Parcelable {
 
     public Video getIntro_video() {
         return intro_video;
+    }
+
+    public boolean is_active() {
+        return is_active;
+    }
+
+    public void setIs_active(boolean is_active) {
+        this.is_active = is_active;
     }
 
     @Override
@@ -486,17 +303,13 @@ public class Course implements Serializable, Parcelable {
         dest.writeString(this.language);
         dest.writeByte(is_public ? (byte) 1 : (byte) 0);
         dest.writeString(this.slug);
-        dest.writeByte(is_cached ? (byte) 1 : (byte) 0);
-        dest.writeByte(is_loading ? (byte) 1 : (byte) 0);
         dest.writeParcelable(this.intro_video, 0);
         dest.writeLong(this.intro_video_id);
-        dest.writeSerializable(this.mBeginDateTime);
-        dest.writeSerializable(this.mEndDateTime);
-        dest.writeString(this.formatForView);
         dest.writeString(schedule_link);
         dest.writeString(schedule_long_link);
         dest.writeString(begin_date);
         dest.writeString(end_date);
+        dest.writeString(lastStepId);
     }
 
     protected Course(Parcel in) {
@@ -528,17 +341,13 @@ public class Course implements Serializable, Parcelable {
         this.language = in.readString();
         this.is_public = in.readByte() != 0;
         this.slug = in.readString();
-        this.is_cached = in.readByte() != 0;
-        this.is_loading = in.readByte() != 0;
         this.intro_video = in.readParcelable(Video.class.getClassLoader());
         this.intro_video_id = in.readLong();
-        this.mBeginDateTime = (DateTime) in.readSerializable();
-        this.mEndDateTime = (DateTime) in.readSerializable();
-        this.formatForView = in.readString();
         schedule_link = in.readString();
         schedule_long_link = in.readString();
         begin_date = in.readString();
         end_date = in.readString();
+        lastStepId = in.readString();
     }
 
     public static final Creator<Course> CREATOR = new Creator<Course>() {

@@ -10,13 +10,11 @@ import org.stepic.droid.events.sections.NotCachedSectionEvent;
 import org.stepic.droid.events.sections.SectionCachedEvent;
 import org.stepic.droid.events.units.NotCachedUnitEvent;
 import org.stepic.droid.events.units.UnitCachedEvent;
-import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.store.operations.Table;
 
 import java.util.List;
 
@@ -148,21 +146,6 @@ public class StoreStateManager implements IStoreStateManager {
 //        updateCourseAfterDeleting(section.getCourse());
     }
 
-    @Deprecated
-    private void updateCourseAfterDeleting(long courseId) {
-
-        Course course = databaseFacade.getCourseById(courseId, Table.enrolled);
-        if (course == null) {
-            analytic.reportError(Analytic.Error.NULL_COURSE, new Exception("update Course after deleting"));
-            return;
-        }
-        if (course.is_cached() || course.is_loading()) {
-            course.set_cached(false);
-            course.set_loading(false);
-            databaseFacade.updateOnlyCachedLoadingCourse(course, Table.enrolled);
-        }
-    }
-
     @Override
     public void updateSectionState(long sectionId) {
         List<Unit> units = databaseFacade.getAllUnitsOfSection(sectionId);
@@ -194,25 +177,4 @@ public class StoreStateManager implements IStoreStateManager {
 //        updateCourseState(section.getCourse());
     }
 
-    @Deprecated
-    private void updateCourseState(long courseId) {
-        Course course = databaseFacade.getCourseById(courseId, Table.enrolled);
-        if (course == null) {
-            course = databaseFacade.getCourseById(courseId, Table.featured);
-            databaseFacade.addCourse(course, Table.enrolled);
-        }
-        List<Section> sections = databaseFacade.getAllSectionsOfCourse(course);
-        for (Section section : sections) {
-            if (!section.is_cached()) return;
-        }
-
-        if (course == null) {
-            analytic.reportError(Analytic.Error.NULL_COURSE, new Exception("null course in update course state"));
-            return;
-        }
-
-        course.set_loading(false);
-        course.set_cached(true);
-        databaseFacade.updateOnlyCachedLoadingCourse(course, Table.enrolled);
-    }
 }

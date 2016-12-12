@@ -38,7 +38,7 @@ public interface ScreenManager {
 
     void showSections(Activity sourceActivity, @NotNull Course course, boolean joinedRightNow);
 
-    void showUnitsForSection(Context sourceActivity, @NotNull Section section);
+    void showUnitsForSection(Activity sourceActivity, @NotNull Section section);
 
     void showSteps(Activity sourceActivity, Unit unit, Lesson lesson, @Nullable Section section);
 
@@ -62,7 +62,7 @@ public interface ScreenManager {
 
     void showFindCourses(Context context);
 
-    Intent getShowFindCoursesIntent (Context context);
+    Intent getShowFindCoursesIntent(Context context);
 
     void showVideo(Activity sourceActivity, String source, Long videoId);
 
@@ -88,7 +88,7 @@ public interface ScreenManager {
 
     void openProfile(Activity activity, long userId);
 
-    void openFeedbackActivity (Activity activity);
+    void openFeedbackActivity(Activity activity);
 
     Intent getMyCoursesIntent(@NotNull Context context);
 
@@ -101,4 +101,6 @@ public interface ScreenManager {
     void openPrivacyPolicyWeb(Activity activity);
 
     void openTermsOfServiceWeb(Activity activity);
+
+    void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition);
 }

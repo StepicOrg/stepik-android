@@ -47,7 +47,7 @@ import javax.inject.Inject;
 import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import viewmodel.ProgressViewModel;
+import org.stepic.droid.viewmodel.ProgressViewModel;
 
 public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements StepicOnClickItemListener, OnClickLoadListener, OnLoadPositionListener {
 

@@ -115,4 +115,6 @@ public interface IApi {
     Call<Void> markAsReadAllType(@NotNull NotificationCategory notificationCategory);
 
     Call<UserActivityResponse> getUserActivities(long userId);
+
+    Call<LastStepResponse> getLastStepResponse(@NotNull String lastStepId);
 }
