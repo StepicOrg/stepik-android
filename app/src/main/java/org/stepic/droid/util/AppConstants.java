@@ -87,4 +87,5 @@ public class AppConstants {
     public static final String OPEN_SHORTCUT_FIND_COURSES = "open_shortcut_find_courses";
     public static final String PROFILE_SHORTCUT_ID = "profile";
     public static final String OPEN_SHORTCUT_PROFILE = "open_shortcut_profile";
+    public static final String INTERNAL_STEPIK_ACTION = "internal_stepik_action";
 }

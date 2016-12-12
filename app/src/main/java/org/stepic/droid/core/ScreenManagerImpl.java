@@ -328,13 +328,16 @@ public class ScreenManagerImpl implements ScreenManager {
         String testStepPath = StringUtil.getUriForStepByIds(config.getBaseUrl(), lessonId, unitId, stepPosition);
         String testSectionPath = StringUtil.getUriForCourse(config.getBaseUrl(), courseId + "");
 
-        //// FIXME: 12.12.16  add actions for not tracking event at analytic
         TaskStackBuilder.create(activity)
-                .addNextIntent(new Intent(activity, MainFeedActivity.class))
+                .addNextIntent(new Intent(activity, MainFeedActivity.class)
+                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION))
                 .addNextIntent(new Intent(activity, SectionActivity.class)
+                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
                         .setData(Uri.parse(testSectionPath)))
-                .addNextIntent(getIntentForUnits(activity, section))
+                .addNextIntent(getIntentForUnits(activity, section)
+                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION))
                 .addNextIntent(new Intent(activity, StepsActivity.class)
+                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
                         .setData(Uri.parse(testStepPath)))
                 .startActivities();
     }
