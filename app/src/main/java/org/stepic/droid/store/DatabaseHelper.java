@@ -77,7 +77,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private void upgradeFrom19To20(SQLiteDatabase db) {
         createLastStepTable(db);
-
+        alterColumn(db, DBStructureCourses.ENROLLED_COURSES, DBStructureCourses.Column.IS_ACTIVE, BOOLEAN_TYPE);
+        alterColumn(db, DBStructureCourses.FEATURED_COURSES, DBStructureCourses.Column.IS_ACTIVE, BOOLEAN_TYPE);
     }
 
     private void upgradeFrom18To19(SQLiteDatabase db) {

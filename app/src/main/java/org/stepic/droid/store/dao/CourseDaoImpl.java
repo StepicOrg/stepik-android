@@ -58,6 +58,7 @@ public class CourseDaoImpl extends DaoBase<Course> {
         int indexScheduleLink = cursor.getColumnIndex(DBStructureCourses.Column.SCHEDULE_LINK);
         int indexScheduleLongLink = cursor.getColumnIndex(DBStructureCourses.Column.SCHEDULE_LONG_LINK);
         int indexLastStepId = cursor.getColumnIndex(DBStructureCourses.Column.LAST_STEP_ID);
+        int indexIsActive = cursor.getColumnIndex(DBStructureCourses.Column.IS_ACTIVE);
 
         course.setLastStepId(cursor.getString(indexLastStepId));
         course.setCertificate(cursor.getString(indexCertificate));
@@ -84,6 +85,15 @@ public class CourseDaoImpl extends DaoBase<Course> {
         course.setSchedule_long_link(cursor.getString(indexScheduleLongLink));
         course.setBegin_date(cursor.getString(indexBeginDate));
         course.setEnd_date(cursor.getString(indexEndDate));
+
+        boolean isActive = true;
+        try {
+            isActive = cursor.getInt(indexIsActive) > 0;
+        } catch (Exception exception) {
+            //it can be null before migration --> default active
+        }
+        course.setIs_active(isActive);
+
         return course;
     }
 
@@ -122,6 +132,7 @@ public class CourseDaoImpl extends DaoBase<Course> {
 
         values.put(DBStructureCourses.Column.BEGIN_DATE, course.getBegin_date());
         values.put(DBStructureCourses.Column.END_DATE, course.getEnd_date());
+        values.put(DBStructureCourses.Column.IS_ACTIVE, course.is_active());
 
         Video video = course.getIntro_video();
         if (video != null) {

@@ -260,6 +260,14 @@ public class Course implements Serializable, Parcelable {
         return intro_video;
     }
 
+    public boolean is_active() {
+        return is_active;
+    }
+
+    public void setIs_active(boolean is_active) {
+        this.is_active = is_active;
+    }
+
     @Override
     public int describeContents() {
         return 0;
