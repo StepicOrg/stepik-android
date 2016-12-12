@@ -1,5 +1,6 @@
 package org.stepic.droid.core.presenters
 
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.model.Course

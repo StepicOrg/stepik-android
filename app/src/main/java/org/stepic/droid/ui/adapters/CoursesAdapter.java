@@ -19,6 +19,7 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.IShell;
@@ -46,6 +47,9 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
 
     @Inject
     IShell shell;
+
+    @Inject
+    Analytic analytic;
 
     private Drawable coursePlaceholder;
 
@@ -103,6 +107,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
 
     private void onClickContinue(int position) {
         if (position >= 0 && position < courses.size()) {
+            analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE);
             Course course = courses.get(position);
             continueCoursePresenter.continueCourse(course); //provide position?
         }
@@ -110,6 +115,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
 
     private void onClickCourse(int position) {
         if (position >= courses.size() || position < 0) return;
+        analytic.reportEvent(Analytic.Interaction.CLICK_COURSE);
         Course course = courses.get(position);
         if (course.getEnrollment() != 0) {
             shell.getScreenProvider().showSections(contextActivity, course);
