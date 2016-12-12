@@ -11,15 +11,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
+import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.core.modules.CourseListModule;
+import org.stepic.droid.core.presenters.ContinueCoursePresenter;
+import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
+import org.stepic.droid.model.Section;
+import org.stepic.droid.model.Step;
+import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
@@ -31,10 +40,12 @@ import org.stepic.droid.util.StepikUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import timber.log.Timber;
 
-public abstract class CourseListFragmentBase extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, CoursesView {
+public abstract class CourseListFragmentBase extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, CoursesView, ContinueCourseView {
 
     @BindView(R.id.swipe_refresh_layout_mycourses)
     protected SwipeRefreshLayout swipeRefreshLayout;
@@ -66,10 +77,16 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     private RecyclerView.OnScrollListener listOfCoursesViewListener;
     private LinearLayoutManager layoutManager;
 
+    @Inject
+    ContinueCoursePresenter continueCoursePresenter;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        MainApplication.component()
+                .plus(new CourseListModule())
+                .inject(this);
     }
 
     @Nullable
@@ -91,7 +108,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
                 R.color.stepic_blue_ribbon);
 
         if (courses == null) courses = new ArrayList<>();
-        coursesAdapter = new CoursesAdapter(this, courses, getCourseType());
+        coursesAdapter = new CoursesAdapter(this, courses, getCourseType(), continueCoursePresenter);
         listOfCoursesView.setAdapter(coursesAdapter);
         layoutManager = new LinearLayoutManager(getContext());
         listOfCoursesView.setLayoutManager(layoutManager);
@@ -126,6 +143,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
                 ((MainFeedActivity) parent).showFindLesson();
             }
         });
+        continueCoursePresenter.attachView(this);
     }
 
     @Override
@@ -215,4 +233,20 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     protected abstract void onNeedDownloadNextPage();
 
     protected abstract void showEmptyScreen(boolean isShow);
+
+    @Override
+    public void onShowContinueCourseLoadingDialog() {
+        // // TODO: 12.12.16 ???
+    }
+
+    @Override
+    public void onOpenStep(@NotNull Section section, @NotNull Unit unit, @NotNull Step step) {
+        //// TODO: 12.12.16 go to ScreenManager and get intent
+    }
+
+    @Override
+    public void onConnectionProblemWhileContinue() {
+        Toast.makeText(getContext(), "Для продолжения курса необходим доступ к сети", Toast.LENGTH_SHORT).show();//// FIXME: 12.12.16 localize message
+    }
+
 }

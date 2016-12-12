@@ -12,16 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.util.StepicLogicHelper;
@@ -52,14 +53,16 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
 
     private Activity contextActivity;
     private final List<Course> courses;
+    private final ContinueCoursePresenter continueCoursePresenter;
     private int footerViewType = 1;
     private int itemViewType = 2;
     private int NUMBER_OF_EXTRA_ITEMS = 1;
     private boolean isNeedShowFooter;
 
-    public CoursesAdapter(Fragment fragment, List<Course> courses, @Nullable Table type) {
+    public CoursesAdapter(Fragment fragment, List<Course> courses, @Nullable Table type, @NotNull ContinueCoursePresenter continueCoursePresenter) {
         contextActivity = fragment.getActivity();
         this.courses = courses;
+        this.continueCoursePresenter = continueCoursePresenter;
         inflater = (LayoutInflater) contextActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         MainApplication.component().inject(this);
         coursePlaceholder = ContextCompat.getDrawable(fragment.getContext(), R.drawable.ic_course_placeholder);
@@ -99,7 +102,10 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
     }
 
     private void onClickContinue(int position) {
-        Toast.makeText(contextActivity, "you click continue at " + position, Toast.LENGTH_SHORT).show(); //// FIXME: 09.12.16 open smth
+        if (position >= 0 && position < courses.size()) {
+            Course course = courses.get(position);
+            continueCoursePresenter.continueCourse(course.getCourseId()); //provide position?
+        }
     }
 
     private void onClickCourse(int position) {
