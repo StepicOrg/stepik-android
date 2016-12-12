@@ -262,7 +262,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
                         long assignmentID = databaseFacade.getAssignmentIdByStepId(stepId);
                         shell.getScreenProvider().pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
                         if (unit != null && unit.getSection() > 0) {
-                            Section section = databaseFacade.getSectionById(unit.getId());
+                            Section section = databaseFacade.getSectionById(unit.getSection());
                             if (section != null && section.getCourse() > 0) {
                                 PersistentLastStep persistentLastStep = new PersistentLastStep(section.getCourse(), stepId, unit.getId());
                                 databaseFacade.updateLastStep(persistentLastStep);
