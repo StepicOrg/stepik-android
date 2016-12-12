@@ -104,7 +104,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
     private void onClickContinue(int position) {
         if (position >= 0 && position < courses.size()) {
             Course course = courses.get(position);
-            continueCoursePresenter.continueCourse(course.getCourseId()); //provide position?
+            continueCoursePresenter.continueCourse(course); //provide position?
         }
     }
 

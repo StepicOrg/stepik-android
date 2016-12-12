@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -51,6 +52,7 @@ import org.stepic.droid.ui.activities.VideoActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.ui.fragments.SectionsFragment;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.ViewAssignment;
 import org.videolan.libvlc.util.VLCUtil;
 
@@ -322,6 +324,21 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition) {
+        String testStepPath = StringUtil.getUriForStepByIds(config.getBaseUrl(), lessonId, unitId, stepPosition);
+        String testSectionPath = StringUtil.getUriForCourse(config.getBaseUrl(), courseId + "");
+
+        TaskStackBuilder.create(activity)
+                .addNextIntent(new Intent(activity, MainFeedActivity.class))
+                .addNextIntent(new Intent(activity, SectionActivity.class)
+                        .setData(Uri.parse(testSectionPath)))
+                .addNextIntent(getIntentForUnits(activity, section))
+                .addNextIntent(new Intent(activity, StepsActivity.class)
+                        .setData(Uri.parse(testStepPath)))
+                .startActivities();
+    }
+
+    @Override
     public void openInWeb(Activity context, String path) {
         analytic.reportEventWithIdName(Analytic.Screens.OPEN_LINK_IN_WEB, "0", path);
         final Intent intent = getOpenInWebIntent(path);
@@ -440,11 +457,17 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showUnitsForSection(Activity sourceActivity, @NotNull Section section) {
         analytic.reportEvent(Analytic.Screens.SHOW_UNITS, section.getId() + "");
-        Intent intent = new Intent(sourceActivity, UnitsActivity.class);
+        Intent intent = getIntentForUnits(sourceActivity, section);
+        sourceActivity.startActivity(intent);
+        sourceActivity.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
+    }
+
+    private Intent getIntentForUnits(Activity activity, @NotNull Section section) {
+        Intent intent = new Intent(activity, UnitsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_SECTION_BUNDLE, section);
         intent.putExtras(bundle);
-        sourceActivity.startActivity(intent);
+        return intent;
     }
 
     @Override

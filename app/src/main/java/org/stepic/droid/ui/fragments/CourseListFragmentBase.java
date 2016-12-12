@@ -27,8 +27,6 @@ import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
-import org.stepic.droid.model.Step;
-import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
@@ -246,8 +244,9 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     }
 
     @Override
-    public void onOpenStep(@NotNull Section section, @NotNull Unit unit, @NotNull Step step) {
+    public void onOpenStep(long courseId,  @NotNull Section section, long lessonId,  long unitId, int stepPosition) {
         //// TODO: 12.12.16 go to ScreenManager and get intent
+        shell.getScreenProvider().continueCourse(getActivity(), courseId, section, lessonId, unitId, stepPosition);
     }
 
     @Override

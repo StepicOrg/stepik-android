@@ -25,14 +25,14 @@
         android:name="org.stepic.droid.base.MainApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_app_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:manageSpaceActivity=".ui.activities.StoreManagementActivity"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
-        tools:replace="android:allowBackup"
-        tools:ignore="ManifestResource,UnusedAttribute">
+        tools:ignore="ManifestResource,UnusedAttribute"
+        tools:replace="android:allowBackup">
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -139,7 +139,12 @@
 
         <activity
             android:name=".ui.activities.StepsActivity"
-            android:label="@string/steps_title">
+            android:label="@string/steps_title"
+            android:parentActivityName=".ui.activities.UnitsActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.UnitsActivity"/>
 
             <intent-filter
                 android:autoVerify="true"

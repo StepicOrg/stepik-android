@@ -165,4 +165,24 @@ public class StringUtil {
         }
         return sb.toString();
     }
+
+
+    public static String getUriForStepByIds(@NotNull String baseUrl, long lessonId, long unitId, long stepPosition) {
+        StringBuilder sb;
+        sb = new StringBuilder();
+        sb.append(baseUrl);
+        sb.append(AppConstants.WEB_URI_SEPARATOR);
+        sb.append("lesson");
+        sb.append(AppConstants.WEB_URI_SEPARATOR);
+        sb.append(lessonId);
+        sb.append(AppConstants.WEB_URI_SEPARATOR);
+        sb.append("step");
+        sb.append(AppConstants.WEB_URI_SEPARATOR);
+        sb.append(stepPosition);
+        sb.append("?unit=");
+        sb.append(unitId);
+        return sb.toString();
+    }
+
+
 }
