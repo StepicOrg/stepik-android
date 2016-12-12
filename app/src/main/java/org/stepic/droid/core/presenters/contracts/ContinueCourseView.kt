@@ -1,5 +1,6 @@
 package org.stepic.droid.core.presenters.contracts
 
+import org.stepic.droid.model.Course
 import org.stepic.droid.model.Section
 
 interface ContinueCourseView {
@@ -8,5 +9,5 @@ interface ContinueCourseView {
 
     fun onOpenStep(courseId: Long, section: Section, lessonId: Long, unitId: Long, stepPosition: Int)
 
-    fun onConnectionProblemWhileContinue()
+    fun onAnyProblemWhileContinue(course: Course)
 }

@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
@@ -245,13 +244,12 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
     @Override
     public void onOpenStep(long courseId,  @NotNull Section section, long lessonId,  long unitId, int stepPosition) {
-        //// TODO: 12.12.16 go to ScreenManager and get intent
         shell.getScreenProvider().continueCourse(getActivity(), courseId, section, lessonId, unitId, stepPosition);
     }
 
     @Override
-    public void onConnectionProblemWhileContinue() {
-        Toast.makeText(getContext(), "Для продолжения курса необходим доступ к сети", Toast.LENGTH_SHORT).show();//// FIXME: 12.12.16 localize message
+    public void onAnyProblemWhileContinue(@NotNull Course course) {
+        shell.getScreenProvider().showSections(getActivity(), course);
     }
 
 }
