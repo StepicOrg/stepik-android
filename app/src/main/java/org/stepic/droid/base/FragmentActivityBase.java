@@ -153,8 +153,10 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
-                        .show();
+                //do not show Google Services dialog
+                analytic.reportEvent(Analytic.Error.GOOGLE_SERVICES_TOO_OLD); //it is resolvable, but we do not want push user for updating services
+//                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+//                        .show();
             } else {
                 //Log.i(TAG, "This device is not supported.");
                 return false;

@@ -626,7 +626,9 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     private fun getLicenseIntent(notification: Notification): Intent? {
         val link = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
-        return screenManager.getOpenInWebIntent(link)
+        val intent = screenManager.getOpenInWebIntent(link)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        return intent
     }
 
     private fun getTeachIntent(notification: Notification): Intent? {

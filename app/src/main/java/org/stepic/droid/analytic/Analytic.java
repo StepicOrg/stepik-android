@@ -65,6 +65,11 @@ public interface Analytic {
         java.lang.String CLICK_CHOOSE_NOTIFICATION_INTERVAL = "click_choose_notification_interval";
         java.lang.String CLICK_PRIVACY_POLICY = "click_privacy_policy";
         java.lang.String CLICK_TERMS_OF_SERVICE = "click_terms_of_service";
+        java.lang.String POSITIVE_MATERIAL_DIALOG_INVITATION = "material_dialog_invite_positive";
+        java.lang.String NEGATIVE_MATERIAL_DIALOG_INVITATION = "material_dialog_invite_negative";
+        java.lang.String SHOW_MATERIAL_DIALOG_INVITATION = "materdial_dialog_invite_shown";
+        String CLICK_CONTINUE_COURSE = "click_continue_course";
+        java.lang.String CLICK_COURSE = "click_course";
     }
 
     interface Screens {
@@ -97,6 +102,7 @@ public interface Analytic {
         String USER_OPEN_SETTINGS = "main_choice_settings";
         String USER_LOGOUT = "main_choice_logout";
         java.lang.String USER_OPEN_ABOUT_APP = "main_choice_about";
+        String SHOW_SECTIONS_JOINED = "show_sections_joined";
     }
 
     interface Video {
@@ -151,6 +157,7 @@ public interface Analytic {
         java.lang.String NO_INTERNET_EXISTING_ATTEMPTS = "no_internet_existing_attempts";
         String DOWNLOAD_ID_NEGATIVE = "download_id_negative";
         String STREAK_ON_STEP_SOLVED = "streak_on_step_solved";
+        java.lang.String GOOGLE_SERVICES_TOO_OLD = "google_services_too_old";
     }
 
     interface Web {
@@ -292,6 +299,11 @@ public interface Analytic {
         String GET_NON_ZERO_STREAK_NOTIFICATION = "streak_get_non_zero_notification";
         String GET_ZERO_STREAK_NOTIFICATION = "streak_get_zero_notification";
         String GET_NO_INTERNET_NOTIFICATION = " streak_get_no_internet_notification";
+    }
+
+    interface Shortcut {
+        String OPEN_PROFILE = "shortcut_open_profile";
+        String FIND_COURSES = "shortcut_find_courses";
     }
 
     void reportEvent(String eventName, Bundle bundle);

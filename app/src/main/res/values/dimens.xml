@@ -13,9 +13,9 @@
     <dimen name="guideline_left_right_padding_list_item">6dp</dimen>
     <dimen name="guideline_tab_indicator_height">2dp</dimen>
     <dimen name="padding_tab_bar">12dp</dimen>
-    <dimen name="height_of_social">75dp</dimen>
+    <dimen name="height_of_social">@dimen/min_ux_touchable_size</dimen>
     <dimen name="space_for_text">8dp</dimen>
-    <dimen name="min_max_width_for_tablets">600dp</dimen>
+    <dimen name="min_max_width_for_tablets">316dp</dimen>
     <dimen name="half_padding">8dp</dimen>
     <dimen name="padding_text_in_cv">16dp</dimen>
     <dimen name="padding_left_right_list_item">16dp</dimen>
@@ -63,4 +63,10 @@
     <dimen name="left_padding_tablayout_scrollable">60dp</dimen>
     <dimen name="profile_image_height_width">76dp</dimen>
     <dimen name="privacy_policy_text_size">13sp</dimen>
+    <dimen name="horizontal_margin_buttons">50dp</dimen>
+    <dimen name="login_button_border">2dp</dimen>
+    <dimen name="login_button_radius">6dp</dimen>
+    <dimen name="launch_button_text_size">18sp</dimen>
+    <dimen name="launch_not_button_text_size">15sp</dimen>
+    <dimen name="continue_course_button_text_size">13sp</dimen>
 </resources>

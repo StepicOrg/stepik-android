@@ -30,9 +30,9 @@ android {
     defaultConfig {
         applicationId "org.stepic.droid"
         minSdkVersion minSdk
-        targetSdkVersion 24
-        versionCode 108
-        versionName "1.22.1"
+        targetSdkVersion 25
+        versionCode 109
+        versionName "1.23"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // Enabling multidex support.
         multiDexEnabled true

@@ -55,7 +55,8 @@ public final class DbStructureSections extends DBStructureBase {
                     Column.IS_LOADING,
                     Column.TEST_SECTION,
                     Column.DISCOUNTING_POLICY,
-                    Column.IS_EXAM
+                    Column.IS_EXAM,
+                    Column.PROGRESS,
             };
         }
         return usedColumns;

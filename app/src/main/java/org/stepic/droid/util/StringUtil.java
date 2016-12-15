@@ -1,7 +1,6 @@
 package org.stepic.droid.util;
 
 import android.net.Uri;
-import android.util.Patterns;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,6 +14,7 @@ import org.stepic.droid.model.Unit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringUtil {
     public static Double safetyParseString(String str) {
@@ -79,12 +79,16 @@ public class StringUtil {
 //                    + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
 //            Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 
+    private static final Pattern urlPattern = Pattern.compile(
+            "\\b((https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])",
+            Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+
 
     //Pull all links from the body for easy retrieval
     public static List<String> pullLinks(String fromHtmlText) {
         List<String> links = new ArrayList<>();
 
-        Matcher m = Patterns.WEB_URL.matcher(fromHtmlText);
+        Matcher m = urlPattern.matcher(fromHtmlText);
         while (m.find()) {
             String urlStr = m.group();
             if (urlStr.startsWith("(") && urlStr.endsWith(")")) {
@@ -161,4 +165,24 @@ public class StringUtil {
         }
         return sb.toString();
     }
+
+
+    public static String getUriForStepByIds(@NotNull String baseUrl, long lessonId, long unitId, long stepPosition) {
+        StringBuilder sb;
+        sb = new StringBuilder();
+        sb.append(baseUrl);
+        sb.append(AppConstants.WEB_URI_SEPARATOR);
+        sb.append("lesson");
+        sb.append(AppConstants.WEB_URI_SEPARATOR);
+        sb.append(lessonId);
+        sb.append(AppConstants.WEB_URI_SEPARATOR);
+        sb.append("step");
+        sb.append(AppConstants.WEB_URI_SEPARATOR);
+        sb.append(stepPosition);
+        sb.append("?unit=");
+        sb.append(unitId);
+        return sb.toString();
+    }
+
+
 }

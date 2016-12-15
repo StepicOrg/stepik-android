@@ -1,13 +1,20 @@
 package org.stepic.droid.ui.activities;
 
 
+import android.content.Intent;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
+import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.os.Handler;
 
+import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.notifications.StepicInstanceIdService;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.util.AppConstants;
+
+import java.util.Arrays;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -27,6 +34,36 @@ public class SplashActivity extends BackToExitActivityBase {
             finish();
             return;
         }
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
+            ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
+
+            String findCoursesLabel = getString(R.string.find_courses_title);
+            Intent findCoursesIntent = shell.getScreenProvider().getShowFindCoursesIntent(getApplicationContext());
+            findCoursesIntent.setAction(AppConstants.OPEN_SHORTCUT_FIND_COURSES);
+            ShortcutInfo findCoursesShortcut = new ShortcutInfo.Builder(this, AppConstants.FIND_COURSES_SHORTCUT_ID)
+                    .setShortLabel(findCoursesLabel)
+                    .setLongLabel(findCoursesLabel)
+                    .setIcon(Icon.createWithResource(this, R.mipmap.ic_search_icon_shortcut))
+                    .setIntent(findCoursesIntent)
+                    .build();
+
+            String profileLabel = getString(R.string.profile_title);
+            Intent mainFeedActivityIntent = shell.getScreenProvider().getMyCoursesIntent(getApplicationContext());
+            mainFeedActivityIntent.setAction(AppConstants.OPEN_SHORTCUT_PROFILE);
+            Intent profileIntent = shell.getScreenProvider().getProfileIntent(getApplicationContext());
+            profileIntent.setAction(AppConstants.OPEN_SHORTCUT_PROFILE);
+            ShortcutInfo profileShortcut = new ShortcutInfo.Builder(this, AppConstants.PROFILE_SHORTCUT_ID)
+                    .setShortLabel(profileLabel)
+                    .setLongLabel(profileLabel)
+                    .setIcon(Icon.createWithResource(this, R.mipmap.ic_profile_shortcut))
+                    .setIntents(new Intent[]{mainFeedActivityIntent, profileIntent})
+                    .build();
+
+
+            shortcutManager.setDynamicShortcuts(Arrays.asList(findCoursesShortcut, profileShortcut));
+        }
+
 
         if (checkPlayServices() && !sharedPreferenceHelper.isGcmTokenOk()) {
 

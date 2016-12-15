@@ -4,13 +4,13 @@
                                                          android:layout_width="match_parent"
                                                          android:layout_height="match_parent">
 
-    <include layout="@layout/progress_bar_on_empty_screen" />
+    <include layout="@layout/progress_bar_on_empty_screen"/>
 
-    <include layout="@layout/report_problem_layout" />
+    <include layout="@layout/report_problem_layout"/>
 
-    <include layout="@layout/empty_courses" />
+    <include layout="@layout/empty_courses"/>
 
-    <include layout="@layout/empty_search" />
+    <include layout="@layout/empty_search"/>
 
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -18,14 +18,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
+        <org.stepic.droid.ui.util.ContextMenuRecyclerView
             android:id="@+id/list_of_courses"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:divider="@null"
+            android:divider="@color/transparent"
+            android:overScrollMode="never"
             android:scrollbarStyle="outsideOverlay"
-            android:drawSelectorOnTop="true" />
+            android:scrollbars="vertical"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

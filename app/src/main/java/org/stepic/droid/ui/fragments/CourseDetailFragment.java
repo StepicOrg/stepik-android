@@ -609,7 +609,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             getActivity().setResult(Activity.RESULT_OK, intent);
         }
         getActivity().finish();
-        getActivity().overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
+        getActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
     }
 
     private void joinCourse() {
@@ -623,7 +623,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     public void onSuccessJoin(SuccessJoinEvent e) {
         if (course != null && e.getCourse() != null && e.getCourse().getCourseId() == course.getCourseId()) {
             e.getCourse().setEnrollment((int) e.getCourse().getCourseId());
-            shell.getScreenProvider().showSections(getActivity(), course);
+            shell.getScreenProvider().showSections(getActivity(), course, true);
             finish();
         }
         ProgressHelper.dismiss(joinCourseSpinner);

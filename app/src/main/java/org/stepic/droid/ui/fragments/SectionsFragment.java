@@ -3,6 +3,7 @@ package org.stepic.droid.ui.fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +17,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,8 +31,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -53,6 +60,7 @@ import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
 import org.stepic.droid.events.CalendarChosenEvent;
+import org.stepic.droid.events.UpdateSectionProgressEvent;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
 import org.stepic.droid.events.courses.CourseFoundEvent;
 import org.stepic.droid.events.courses.CourseUnavailableForUserEvent;
@@ -86,6 +94,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import timber.log.Timber;
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
+import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public class SectionsFragment
         extends FragmentBase
@@ -95,11 +106,11 @@ public class SectionsFragment
         CalendarExportableView,
         SectionsView {
 
-    public static SectionsFragment newInstance() {
-        Bundle args = new Bundle();
+    public static String joinFlag = "joinFlag";
+    private static int INVITE_REQUEST_CODE = 324;
 
+    public static SectionsFragment newInstance() {
         SectionsFragment fragment = new SectionsFragment();
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -185,6 +196,7 @@ public class SectionsFragment
 
     private int afterUpdateModulePosition = -1;
     private int modulePosition;
+    private boolean isAfterJoining;
 
     @Override
     protected void injectComponent() {
@@ -223,7 +235,7 @@ public class SectionsFragment
         linearLayoutManager = new LinearLayoutManager(getActivity());
         sectionsRecyclerView.setLayoutManager(linearLayoutManager);
         sectionList = new ArrayList<>();
-        adapter = new SectionAdapter(sectionList, getContext(), ((AppCompatActivity) getActivity()), calendarPresenter);
+        adapter = new SectionAdapter(sectionList, ((AppCompatActivity) getActivity()), calendarPresenter, sectionsPresenter.getProgressMap());
         sectionsRecyclerView.setAdapter(adapter);
 
         sectionsRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -262,6 +274,12 @@ public class SectionsFragment
             urlInApp = StringUtil.getAppUriForCourseSyllabus(mConfig.getBaseUrl(), course.getSlug());
             reportIndexToGoogle();
         }
+
+        if (isAfterJoining && course != null) {
+            isAfterJoining = false;
+            showShareCourseWithFriendDialog(course);
+        }
+
     }
 
     private void reportIndexToGoogle() {
@@ -348,7 +366,8 @@ public class SectionsFragment
         }
     }
 
-    public void onNeedShowSections(List<Section> sections) {
+    @Override
+    public void onNeedShowSections(@NotNull List<Section> sections) {
         boolean wasEmpty = sectionList.isEmpty();
         sectionList.clear();
         sectionList.addAll(sections);
@@ -364,7 +383,7 @@ public class SectionsFragment
 
                 boolean userHasAccess = (section.is_active() || (section.getActions() != null && section.getActions().getTest_section() != null)) && course != null && course.getEnrollment() > 0 && !section.isExam();
                 if (userHasAccess) {
-                    shell.getScreenProvider().showUnitsForSection(getContext(), sections.get(modulePosition - 1));
+                    shell.getScreenProvider().showUnitsForSection(SectionsFragment.this.getActivity(), sections.get(modulePosition - 1));
                 } else {
                     adapter.setDefaultHighlightPosition(modulePosition - 1);
                     int scrollTo = modulePosition + SectionAdapter.PRE_SECTION_LIST_DELTA - 1;
@@ -468,6 +487,13 @@ public class SectionsFragment
     public void onNotCachedSection(NotCachedSectionEvent e) {
         long sectionId = e.getSectionId();
         updateState(sectionId, false, false);
+    }
+
+    @Subscribe
+    public void onSectionProgressChanged(UpdateSectionProgressEvent event) {
+        if (course != null && course.getCourseId() == event.getCourseId()) {
+            sectionsPresenter.updateSectionProgress(event.getProgress());
+        }
     }
 
     private void updateState(long sectionId, boolean isCached, boolean isLoading) {
@@ -615,6 +641,61 @@ public class SectionsFragment
             adapter.notifyDataSetChanged();
         }
         ProgressHelper.dismiss(joinCourseProgressDialog);
+        if (course != null) {
+            showShareCourseWithFriendDialog(course);
+        }
+    }
+
+    public void showShareCourseWithFriendDialog(@NotNull final Course courseForSharing) {
+        isAfterJoining = false;
+        analytic.reportEvent(Analytic.Interaction.SHOW_MATERIAL_DIALOG_INVITATION);
+
+        SpannableString inviteTitle = new SpannableString(getString(R.string.take_course_with_fiends));
+        inviteTitle.setSpan(new ForegroundColorSpan(Color.BLACK), 0, inviteTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), "fonts/NotoSans-Bold.ttf"));
+        inviteTitle.setSpan(typefaceSpan, 0, inviteTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+        MaterialStyledDialog dialog = new MaterialStyledDialog.Builder(getContext())
+                .setTitle(inviteTitle)
+                .setDescription(R.string.invite_friends_description)
+                .setHeaderDrawable(R.drawable.dialog_background)
+                .setPositiveText(R.string.invite)
+                .setNegativeText(R.string.dont_want)
+                .setScrollable(true, 10) // number of lines lines
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        analytic.reportEvent(Analytic.Interaction.POSITIVE_MATERIAL_DIALOG_INVITATION);
+                        Intent intent = shareHelper.getIntentForCourseSharing(courseForSharing);
+                        SectionsFragment.this.startActivityForResult(intent, INVITE_REQUEST_CODE);
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        analytic.reportEvent(Analytic.Interaction.NEGATIVE_MATERIAL_DIALOG_INVITATION);
+                        showMessageAboutSharing();
+                    }
+                })
+                .build();
+        dialog.show();
+    }
+
+    private void showMessageAboutSharing() {
+        SnackbarExtensionKt
+                .setTextColor(
+                        Snackbar.make(rootView, R.string.share_course_in_menu, Snackbar.LENGTH_INDEFINITE)
+                                .setAction(R.string.ok, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Timber.d("set empty click listener for appearing of Action text");
+                                    }
+                                })
+                                .setActionTextColor(ColorUtil.INSTANCE.getColorArgb(R.color.snack_action_color, getContext())),
+                        ColorUtil.INSTANCE.getColorArgb(R.color.white,
+                                getContext()))
+                .show();
     }
 
 
@@ -694,6 +775,9 @@ public class SectionsFragment
         int simpleModulePosition = -1;
 
         if (intent.getExtras() != null) {
+            isAfterJoining = intent.getExtras().getBoolean(joinFlag);
+            intent.putExtra(joinFlag, false);
+
             Object courseInBundle = intent.getExtras().get(AppConstants.KEY_COURSE_BUNDLE);
             if (courseInBundle != null && courseInBundle instanceof Course) {
                 course = (Course) courseInBundle;
@@ -734,11 +818,14 @@ public class SectionsFragment
                     modulePosition = -1;
                 }
 
-                if (intent.getAction() != null && intent.getAction().equals(AppConstants.OPEN_NOTIFICATION)) {
-                    analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION);
-                } else {
-                    analytic.reportEvent(Analytic.DeepLink.USER_OPEN_SYLLABUS_LINK, simpleCourseId + "");
-                    analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
+                String action = intent.getAction();
+                if (action != null) {
+                    if (action.equals(AppConstants.OPEN_NOTIFICATION)) {
+                        analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION);
+                    } else if (!action.equals(AppConstants.INTERNAL_STEPIK_ACTION)) {
+                        analytic.reportEvent(Analytic.DeepLink.USER_OPEN_SYLLABUS_LINK, simpleCourseId + "");
+                        analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
+                    }
                 }
 
                 if (simpleCourseId < 0) {
@@ -751,6 +838,7 @@ public class SectionsFragment
                 onCourseUnavailable(new CourseUnavailableForUserEvent());
             }
         }
+
     }
 
     private void postNotificationAsReadIfNeed(Intent intent, final long courseId) {
@@ -783,5 +871,16 @@ public class SectionsFragment
         adapter.setNeedShowCalendarWidget(false);
         adapter.notifyItemChanged(0);
         SnackbarExtensionKt.setTextColor(Snackbar.make(rootView, R.string.after_hide_calendar_message, Snackbar.LENGTH_LONG), ColorUtil.INSTANCE.getColorArgb(R.color.white, getContext())).show();
+    }
+
+    @Override
+    public void updatePosition(int position) {
+        if (position >= 0 && sectionList.size() > position && adapter != null) {
+            try {
+                adapter.notifyItemChanged(position + SectionAdapter.PRE_SECTION_LIST_DELTA);
+            } catch (Exception exception) {
+                Timber.d(exception);
+            }
+        }
     }
 }

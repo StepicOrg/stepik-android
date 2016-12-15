@@ -43,6 +43,7 @@ import retrofit.Retrofit
 import java.util.*
 import javax.inject.Inject
 
+
 class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
@@ -148,10 +149,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         super.onCreateContextMenu(menu, v, menuInfo)
         menu?.setHeaderTitle(R.string.one_comment_title)
 
-        val info = menuInfo as? ContextMenuRecyclerView.RecyclerViewContextMenuInfo
-        if (info == null) {
-            return
-        }
+        val info = menuInfo as? ContextMenuRecyclerView.RecyclerViewContextMenuInfo ?: return
+
         val position = info.position //resolve which should show
         val userId = userPreferences.userId
         val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
@@ -191,7 +190,9 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             val userNameText: String? = commentUser?.first_name + " " + commentUser?.last_name
             val spannableUserName = SpannableString(userNameText)
             spannableUserName.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.black)), 0, spannableUserName.length, 0)
-            menu?.add(Menu.NONE, userMenuId, Menu.NONE, spannableUserName)
+
+            val userMenuItem = menu?.add(Menu.NONE, userMenuId, Menu.NONE, spannableUserName)
+            userMenuItem?.titleCondensed = userNameText
         }
 
         if (userId > 0) {
@@ -199,7 +200,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                 val deleteText = getString(R.string.delete_label)
                 val spannableString = SpannableString(deleteText);
                 spannableString.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.feedback_bad_color)), 0, spannableString.length, 0)
-                menu?.add(Menu.NONE, deleteMenuId, Menu.NONE, spannableString)
+                val deleteMenuItem = menu?.add(Menu.NONE, deleteMenuId, Menu.NONE, spannableString)
+                deleteMenuItem?.titleCondensed = deleteText
             }
         }
         if (userId <= 0) {
@@ -211,7 +213,6 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     override fun onContextItemSelected(item: MenuItem?): Boolean {
         val info = item?.menuInfo as ContextMenuRecyclerView.RecyclerViewContextMenuInfo
         val position = info.position
-        val qq = item?.itemId
         when (item?.itemId) {
             replyMenuId -> {
                 replyToComment(info.position)

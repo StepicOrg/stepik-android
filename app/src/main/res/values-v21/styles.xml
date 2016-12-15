@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="AppTheme" parent="AppTheme.21"/>
+
+    <style name="AppTheme.21" parent="AppTheme.15">
+    </style>
+
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.21"/>
 
     <style name="AppTheme.VideoPlayer.21" parent="AppTheme.VideoPlayer.19">

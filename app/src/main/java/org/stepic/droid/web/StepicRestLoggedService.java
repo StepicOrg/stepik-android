@@ -135,4 +135,7 @@ public interface StepicRestLoggedService {
 
     @GET("api/user-activities/{userId}")
     Call<UserActivityResponse> getUserActivities(@Path("userId") long userId);
+
+    @GET("api/last-steps/{lastStepId}")
+    Call<LastStepResponse> getLastStepResponse(@Path("lastStepId") String lastStepId);
 }

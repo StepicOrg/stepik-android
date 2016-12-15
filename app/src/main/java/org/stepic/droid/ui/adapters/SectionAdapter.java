@@ -1,7 +1,6 @@
 package org.stepic.droid.ui.adapters;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
@@ -16,13 +15,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
@@ -36,8 +36,10 @@ import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
+import org.stepic.droid.viewmodel.ProgressViewModel;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
@@ -78,7 +80,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     ThreadPoolExecutor threadPoolExecutor;
 
     private List<Section> sections;
-    private Context context;
     private AppCompatActivity activity;
     private CalendarPresenter calendarPresenter;
     private Course course;
@@ -86,19 +87,20 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     private Drawable highlightDrawable;
     @ColorInt
     private int defaultColor;
+    private Map<String, ProgressViewModel> progressMap;
     private final int durationMillis = 3000;
 
     public void setDefaultHighlightPosition(int defaultHighlightPosition) {
         this.defaultHighlightPosition = defaultHighlightPosition;
     }
 
-    public SectionAdapter(List<Section> sections, Context mContext, AppCompatActivity activity, CalendarPresenter calendarPresenter) {
+    public SectionAdapter(List<Section> sections, AppCompatActivity activity, CalendarPresenter calendarPresenter, Map<String, ProgressViewModel> progressMap) {
         this.sections = sections;
-        this.context = mContext;
         this.activity = activity;
         this.calendarPresenter = calendarPresenter;
-        highlightDrawable = ContextCompat.getDrawable(mContext, R.drawable.section_background);
-        defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_white, mContext);
+        highlightDrawable = ContextCompat.getDrawable(activity, R.drawable.section_background);
+        defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.white, activity);
+        this.progressMap = progressMap;
         MainApplication.component().inject(this);
     }
 
@@ -106,10 +108,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     @Override
     public GenericViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_SECTION_ITEM) {
-            View v = LayoutInflater.from(context).inflate(R.layout.section_item, parent, false);
+            View v = LayoutInflater.from(activity).inflate(R.layout.section_item, parent, false);
             return new SectionViewHolder(v);
         } else if (viewType == TYPE_TITLE) {
-            View v = LayoutInflater.from(context).inflate(R.layout.export_calendar_view, parent, false);
+            View v = LayoutInflater.from(activity).inflate(R.layout.export_calendar_view, parent, false);
             return new CalendarViewHolder(v);
         } else {
             return null;
@@ -195,7 +197,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             } else {
                 if (section.is_loading()) {
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_SECTION, section.getId() + "");
-                    screenManager.showDownload(context);
+                    screenManager.showDownload(activity);
                 } else {
                     if (shell.getSharedPreferenceHelper().isNeedToShowVideoQualityExplanation()) {
                         VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(adapterPosition);
@@ -246,7 +248,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         if (position >= 0 && position < sections.size()) {
             analytic.reportEvent(Analytic.Exam.SHOW_EXAM);
             Section section = sections.get(position);
-            screenManager.openSyllabusInWeb(context, section.getCourse());
+            screenManager.openSyllabusInWeb(activity, section.getCourse());
         }
     }
 
@@ -286,11 +288,18 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         @BindView(R.id.load_button)
         View loadButton;
 
-        @BindView(R.id.exam_view)
-        ViewGroup examRoot;
+        @BindView(R.id.exam_title)
+        View examTitle;
 
         @BindView(R.id.start_exam_button)
         View startExamButton;
+
+
+        @BindView(R.id.section_text_score)
+        TextView textScore;
+
+        @BindView(R.id.section_student_progress_score_bar)
+        ProgressBar progressScore;
 
 
         public SectionViewHolder(View itemView) {
@@ -324,7 +333,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         public void onClick(int adapterPosition) {
             int itemPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
             if (itemPosition >= 0 && itemPosition < sections.size()) {
-                screenManager.showUnitsForSection(context, sections.get(itemPosition));
+                screenManager.showUnitsForSection(activity, sections.get(itemPosition));
             }
         }
 
@@ -417,11 +426,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 cv.setFocusableInTouchMode(false);
             }
 
-            if (section.isExam()) {
-                examRoot.setVisibility(View.VISIBLE);
-            } else {
-                examRoot.setVisibility(View.GONE);
-            }
+            showExamView(section.isExam());
 
             if (defaultHighlightPosition >= 0 && defaultHighlightPosition == position) {
                 cv.clearAnimation();
@@ -429,6 +434,29 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             } else {
                 cv.setBackgroundColor(defaultColor);
             }
+
+            ProgressViewModel progressViewModel;
+            try {
+                progressViewModel = progressMap.get(section.getProgress());
+            } catch (Exception ex) {
+                progressViewModel = null;
+            }
+
+            boolean needShow = progressViewModel != null && progressViewModel.getCost() > 0;
+            int progressVisibility = needShow ? View.VISIBLE : View.GONE;
+            if (needShow) {
+                textScore.setText(progressViewModel.getScoreAndCostText());
+                progressScore.setMax(progressViewModel.getCost());
+                progressScore.setProgress(progressViewModel.getScore());
+            }
+            textScore.setVisibility(progressVisibility);
+            progressScore.setVisibility(progressVisibility);
+        }
+
+        private void showExamView(boolean isExam) {
+            int needShow = isExam ? View.VISIBLE : View.GONE;
+            examTitle.setVisibility(needShow);
+            startExamButton.setVisibility(needShow);
         }
 
         @Override

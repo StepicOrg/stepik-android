@@ -42,9 +42,6 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     @BindView(R.id.text_header_enhanced)
     protected LatexSupportableEnhancedFrameLayout headerWvEnhanced;
 
-    @BindView(R.id.open_comments_root)
-    protected View openCommentViewClickable;
-
     @BindView(R.id.open_comments_text)
     protected TextView textForComment;
 
@@ -145,13 +142,13 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
         if (step != null && step.getDiscussion_proxy() != null) {
             showComment();
         } else {
-            openCommentViewClickable.setVisibility(View.GONE);
+            textForComment.setVisibility(View.GONE);
         }
     }
 
     private void showComment() {
-        openCommentViewClickable.setVisibility(View.VISIBLE);
-        openCommentViewClickable.setOnClickListener(new View.OnClickListener() {
+        textForComment.setVisibility(View.VISIBLE);
+        textForComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int discussionCount = step.getDiscussions_count();
@@ -199,7 +196,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     @Override
     public void onDestroyView() {
         bus.unregister(this);
-        openCommentViewClickable.setOnClickListener(null);
+        textForComment.setOnClickListener(null);
         routeStepPresenter.detachView(this);
         nextLessonView.setOnClickListener(null);
         previousLessonView.setOnClickListener(null);

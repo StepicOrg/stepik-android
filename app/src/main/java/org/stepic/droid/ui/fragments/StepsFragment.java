@@ -29,6 +29,7 @@ import org.stepic.droid.core.presenters.StepsPresenter;
 import org.stepic.droid.core.presenters.contracts.StepsView;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.PersistentLastStep;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
@@ -150,7 +151,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_steps, container, false);
+        return inflater.inflate(R.layout.fragment_steps, container, false);
     }
 
 
@@ -260,6 +261,13 @@ public class StepsFragment extends FragmentBase implements StepsView {
                     try {
                         long assignmentID = databaseFacade.getAssignmentIdByStepId(stepId);
                         shell.getScreenProvider().pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
+                        if (unit != null && unit.getSection() > 0) {
+                            Section section = databaseFacade.getSectionById(unit.getSection());
+                            if (section != null && section.getCourse() > 0) {
+                                PersistentLastStep persistentLastStep = new PersistentLastStep(section.getCourse(), stepId, unit.getId());
+                                databaseFacade.updateLastStep(persistentLastStep);
+                            }
+                        }
                     } catch (Exception exception) {
                         analytic.reportError(Analytic.Error.FAIL_PUSH_STEP_VIEW, exception);
                     }
@@ -360,7 +368,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         reportProblem.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
         emptySteps.setVisibility(View.GONE);
-        viewPager.setVisibility(View.INVISIBLE);
+        showViewPager(false);
         corruptedLesson.setVisibility(View.VISIBLE);
     }
 
@@ -378,7 +386,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         corruptedLesson.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
         emptySteps.setVisibility(View.GONE);
-        viewPager.setVisibility(View.INVISIBLE);
+        showViewPager(false);
         if (stepsPresenter.getStepList().isEmpty()) {
             reportProblem.setVisibility(View.VISIBLE);
         } else {
@@ -393,7 +401,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         corruptedLesson.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
         emptySteps.setVisibility(View.GONE);
-        viewPager.setVisibility(View.VISIBLE);
+        showViewPager(true);
         stepAdapter.setDataIfNotNull(lesson, unit, section);
         stepAdapter.notifyDataSetChanged();
         updateTabState();
@@ -435,7 +443,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         corruptedLesson.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
         emptySteps.setVisibility(View.VISIBLE);
-        viewPager.setVisibility(View.INVISIBLE);
+        showViewPager(false);
     }
 
     @Override
@@ -447,7 +455,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         corruptedLesson.setVisibility(View.GONE);
         authView.setVisibility(View.GONE);
         emptySteps.setVisibility(View.GONE);
-        viewPager.setVisibility(View.INVISIBLE);
+        showViewPager(false);
     }
 
     @Override
@@ -457,6 +465,16 @@ public class StepsFragment extends FragmentBase implements StepsView {
         corruptedLesson.setVisibility(View.GONE);
         emptySteps.setVisibility(View.GONE);
         authView.setVisibility(View.VISIBLE);
-        viewPager.setVisibility(View.INVISIBLE);
+        showViewPager(false);
+    }
+
+    void showViewPager(boolean needShow) {
+        if (needShow) {
+            viewPager.setVisibility(View.VISIBLE);
+//            getActivity().getWindow().setBackgroundDrawable(null); // it may produce some bugs
+        } else {
+//            getActivity().getWindow().setBackgroundDrawableResource(R.color.windowBackground); //it may produce some bugs
+            viewPager.setVisibility(View.INVISIBLE);
+        }
     }
 }

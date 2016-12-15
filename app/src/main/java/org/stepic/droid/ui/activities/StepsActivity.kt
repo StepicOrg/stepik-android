@@ -36,6 +36,10 @@ class StepsActivity : SingleFragmentActivity() {
     override fun createFragment(): Fragment {
         val extras = intent.extras
 
+        val action = intent.action
+        if (action != null && action == AppConstants.OPEN_NOTIFICATION) {
+            analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION)
+        }
         if (intent?.action == AppConstants.OPEN_NOTIFICATION) {
             analytic.reportEvent(Analytic.Notification.OPEN_NOTIFICATION)
         }
@@ -48,8 +52,10 @@ class StepsActivity : SingleFragmentActivity() {
         val dataUri = intent?.data
 
         if (lesson == null && dataUri != null) {
-            analytic.reportEvent(Analytic.DeepLink.USER_OPEN_STEPS_LINK);
-            analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
+            if (action != null && action != AppConstants.INTERNAL_STEPIK_ACTION) {
+                analytic.reportEvent(Analytic.DeepLink.USER_OPEN_STEPS_LINK);
+                analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
+            }
             //All can be -1
             val simpleLessonId: Long = getSimpleLessonId(dataUri)
             val simpleStepPosition: Long = getStepPosition(dataUri)

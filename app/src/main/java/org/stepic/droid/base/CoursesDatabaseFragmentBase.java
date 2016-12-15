@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
@@ -30,6 +29,7 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.ui.fragments.CourseListFragmentBase;
 import org.stepic.droid.ui.util.BackButtonHandler;
+import org.stepic.droid.ui.util.ContextMenuRecyclerView;
 import org.stepic.droid.ui.util.OnBackClickListener;
 import org.stepic.droid.util.AppConstants;
 
@@ -140,11 +140,10 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo
-            menuInfo) {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        ContextMenuRecyclerView.RecyclerViewContextMenuInfo info = (ContextMenuRecyclerView.RecyclerViewContextMenuInfo) menuInfo;
         int position = info.position;
         if (position >= courses.size() && position < 0) {
             return; // the context will not be displayed
@@ -161,7 +160,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         analytic.reportEvent(Analytic.Interaction.LONG_TAP_COURSE);
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        ContextMenuRecyclerView.RecyclerViewContextMenuInfo info = (ContextMenuRecyclerView.RecyclerViewContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
             case R.id.menu_item_info:
                 showInfo(info.position);
@@ -176,12 +175,12 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     private void dropCourse(int position) {
         if (position >= courses.size() || position < 0) {
-            Toast.makeText(getContext(), R.string.try_in_web_drop, Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.try_in_web_drop, Toast.LENGTH_SHORT).show();
             return;
         }
         final Course course = courses.get(position);
         if (course.getEnrollment() == 0) {
-            Toast.makeText(getContext(), R.string.you_not_enrolled, Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.you_not_enrolled, Toast.LENGTH_SHORT).show();
             return;
         }
         Call<Void> drop = shell.getApi().dropCourse(course.getCourseId());
@@ -214,7 +213,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                 }
             });
         } else {
-            Toast.makeText(MainApplication.getAppContext(), R.string.cant_drop, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.cant_drop, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -226,10 +225,24 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         }
         analytic.reportEvent(Analytic.Web.DROP_COURSE_SUCCESSFUL, courseId + "");
         Toast.makeText(getContext(), getContext().getString(R.string.you_dropped) + " " + e.getCourse().getTitle(), Toast.LENGTH_LONG).show();
-        if (e.getType() == Table.enrolled) {
+        if (getCourseType() == Table.enrolled) { //why here was e.getCourseType?
             courses.remove(e.getCourse());
             coursesAdapter.notifyDataSetChanged();
+        } else if (getCourseType() == Table.featured) {
+            int position = -1;
+            for (int i = 0; i < courses.size(); i++) {
+                Course courseItem = courses.get(i);
+                if (courseItem.getCourseId() == e.getCourse().getCourseId()) {
+                    courseItem.setEnrollment(0);
+                    position = i;
+                    break;
+                }
+            }
+            if (position >= 0 && position < courses.size()) {
+                coursesAdapter.notifyItemChanged(position);
+            }
         }
+
 
         if (courses.size() == 0) {
             showEmptyScreen(true);

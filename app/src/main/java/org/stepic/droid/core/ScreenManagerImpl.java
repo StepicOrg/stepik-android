@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -49,7 +50,9 @@ import org.stepic.droid.ui.activities.TextFeedbackActivity;
 import org.stepic.droid.ui.activities.UnitsActivity;
 import org.stepic.droid.ui.activities.VideoActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
+import org.stepic.droid.ui.fragments.SectionsFragment;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.web.ViewAssignment;
 import org.videolan.libvlc.util.VLCUtil;
 
@@ -76,7 +79,6 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showLaunchScreen(Context context, boolean overrideAnimation) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
         Intent launchIntent = new Intent(context, LaunchActivity.class);
-        launchIntent.putExtra(LaunchActivity.OVERRIDE_ANIMATION_FLAG, overrideAnimation);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(launchIntent);
     }
@@ -90,7 +92,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showLogin(Context sourceActivity) {
+    public void showLogin(Activity sourceActivity) {
         analytic.reportEvent(Analytic.Screens.SHOW_LOGIN);
         Intent loginIntent = new Intent(sourceActivity, LoginActivity.class);
         sourceActivity.startActivity(loginIntent);
@@ -322,6 +324,25 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition) {
+        String testStepPath = StringUtil.getUriForStepByIds(config.getBaseUrl(), lessonId, unitId, stepPosition);
+        String testSectionPath = StringUtil.getUriForCourse(config.getBaseUrl(), courseId + "");
+
+        TaskStackBuilder.create(activity)
+                .addNextIntent(new Intent(activity, MainFeedActivity.class)
+                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION))
+                .addNextIntent(new Intent(activity, SectionActivity.class)
+                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
+                        .setData(Uri.parse(testSectionPath)))
+                .addNextIntent(getIntentForUnits(activity, section)
+                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION))
+                .addNextIntent(new Intent(activity, StepsActivity.class)
+                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION)
+                        .setData(Uri.parse(testStepPath)))
+                .startActivities();
+    }
+
+    @Override
     public void openInWeb(Activity context, String path) {
         analytic.reportEventWithIdName(Analytic.Screens.OPEN_LINK_IN_WEB, "0", path);
         final Intent intent = getOpenInWebIntent(path);
@@ -405,27 +426,52 @@ public class ScreenManagerImpl implements ScreenManager {
         sourceActivity.startActivity(intent);
     }
 
-    @Override
-    public void showSections(Activity sourceActivity, @NotNull Course course) {
-        analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS, course.getCourseId() + "", course.getTitle());
+    private Intent getSectionsIntent(Activity sourceActivity, @NotNull Course course) {
         Intent intent = new Intent(sourceActivity, SectionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
         intent.putExtras(bundle);
+        return intent;
+    }
+
+    @Override
+    public void showSections(Activity sourceActivity, @NotNull Course course) {
+        analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS, course.getCourseId() + "", course.getTitle());
+        Intent intent = getSectionsIntent(sourceActivity, course);
         sourceActivity.startActivity(intent);
         sourceActivity.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
     }
 
     @Override
-    public void showUnitsForSection(Context sourceActivity, @NotNull Section section) {
+    public void showSections(Activity sourceActivity, @NotNull Course course, boolean joinedRightNow) {
+        if (!joinedRightNow) {
+            showSections(sourceActivity, course);
+        } else {
+            analytic.reportEventWithIdName(Analytic.Screens.SHOW_SECTIONS_JOINED, course.getCourseId() + "", course.getTitle());
+            Intent intent = getSectionsIntent(sourceActivity, course);
+            Bundle bundle = intent.getExtras();
+            bundle.putBoolean(SectionsFragment.joinFlag, true);
+            intent.putExtras(bundle);
+            sourceActivity.startActivity(intent);
+        }
+    }
+
+    @Override
+    public void showUnitsForSection(Activity sourceActivity, @NotNull Section section) {
         analytic.reportEvent(Analytic.Screens.SHOW_UNITS, section.getId() + "");
-        Intent intent = new Intent(sourceActivity, UnitsActivity.class);
+        Intent intent = getIntentForUnits(sourceActivity, section);
+        sourceActivity.startActivity(intent);
+        sourceActivity.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
+    }
+
+    private Intent getIntentForUnits(Activity activity, @NotNull Section section) {
+        Intent intent = new Intent(activity, UnitsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AppConstants.KEY_SECTION_BUNDLE, section);
         intent.putExtras(bundle);
-        sourceActivity.startActivity(intent);
+        return intent;
     }
 
     @Override

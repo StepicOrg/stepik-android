@@ -12,6 +12,7 @@ import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.PersistentLastStep;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
@@ -28,6 +29,7 @@ import org.stepic.droid.store.dao.DownloadEntityDaoImpl;
 import org.stepic.droid.store.dao.IDao;
 import org.stepic.droid.store.dao.LessonDaoImpl;
 import org.stepic.droid.store.dao.NotificationDaoImpl;
+import org.stepic.droid.store.dao.PersistentLastStepDaoImpl;
 import org.stepic.droid.store.dao.PersistentVideoDaoImpl;
 import org.stepic.droid.store.dao.ProgressDaoImpl;
 import org.stepic.droid.store.dao.SectionDaoImpl;
@@ -157,5 +159,11 @@ public class StorageModule {
     @Singleton
     IDao<VideoTimestamp> provideVideoTimeStamp(SQLiteDatabase SQLiteDatabase) {
         return new VideoTimestampDaoImpl(SQLiteDatabase);
+    }
+
+    @Provides
+    @Singleton
+    IDao<PersistentLastStep> provideLastStepDao (SQLiteDatabase sqLiteDatabase){
+        return new PersistentLastStepDaoImpl(sqLiteDatabase);
     }
 }

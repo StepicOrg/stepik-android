@@ -91,7 +91,7 @@ public class RegisterActivity extends FragmentActivityBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getWindow().setBackgroundDrawable(null);
         setContentView(org.stepic.droid.R.layout.activity_register);
         unbinder = ButterKnife.bind(this);
         overridePendingTransition(org.stepic.droid.R.anim.slide_in_from_bottom, org.stepic.droid.R.anim.no_transition);
