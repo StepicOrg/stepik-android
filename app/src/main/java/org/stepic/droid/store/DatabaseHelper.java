@@ -73,6 +73,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom17To18(db);
         upgradeFrom18To19(db);
         upgradeFrom19To20(db);
+        upgradeFrom20To21(db);
+    }
+
+    private void upgradeFrom20To21(SQLiteDatabase db) {
+        alterColumn(db, DbStructureLastStep.LAST_STEPS, DbStructureLastStep.Column.TIMESTAMP, LONG_TYPE);
     }
 
     private void upgradeFrom19To20(SQLiteDatabase db) {
