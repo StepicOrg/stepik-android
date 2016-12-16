@@ -1,6 +1,7 @@
 package org.stepic.droid.store.operations
 
 import android.content.ContentValues
+import org.joda.time.DateTime
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
@@ -64,6 +65,9 @@ class DatabaseFacade {
 
     @Inject
     lateinit var lastStepDao: IDao<PersistentLastStep>
+
+    @Inject
+    lateinit var lastInteractions: IDao<CourseLastInteraction>
 
     init {
         MainApplication.storageComponent().inject(this)
@@ -431,5 +435,10 @@ class DatabaseFacade {
     fun getLocalLastStepByCourseId(courseId: Long) =
             lastStepDao.get(DbStructureLastStep.Column.COURSE_ID, courseId.toString())
 
+    fun getAllLocalLastCourseInteraction() =
+            lastInteractions.getAll()
+
+    fun updateCourseLastInteraction(courseId: Long, timestamp: Long)
+            = lastInteractions.insertOrUpdate(CourseLastInteraction(courseId = courseId, timestamp = timestamp))
 
 }

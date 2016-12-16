@@ -1,6 +1,7 @@
 package org.stepic.droid.core.presenters
 
 import android.os.Bundle
+import android.support.annotation.WorkerThread
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.core.FilterApplicator
@@ -13,9 +14,11 @@ import org.stepic.droid.store.operations.Table
 import org.stepic.droid.web.CoursesStepicResponse
 import org.stepic.droid.web.IApi
 import retrofit.Response
+import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.comparisons.compareBy
 
 class PersistentCourseListPresenter(
         val analytic: Analytic,
@@ -94,12 +97,17 @@ class PersistentCourseListPresenter(
                     if ((filteredCourseList.size < MIN_COURSES_ON_SCREEN || isRefreshing) && hasNextPage.get()) {
                         //try to load next in loop
                     } else {
+                        val coursesForShow = if (courseType == Table.enrolled) {
+                            sortByLastAction(filteredCourseList)
+                        } else {
+                            filteredCourseList
+                        }
                         mainHandler.post {
                             if (filteredCourseList.isEmpty()) {
                                 isEmptyCourses.set(true)
                                 view?.showEmptyCourses()
                             } else {
-                                view?.showCourses(filteredCourseList)
+                                view?.showCourses(coursesForShow)
                             }
                         }
                         break;
@@ -126,8 +134,13 @@ class PersistentCourseListPresenter(
                 filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(coursesBeforeLoading, courseType)
             }
             if (filteredCourseList.isNotEmpty()) {
+                val coursesForShow = if (courseType == Table.enrolled) {
+                    sortByLastAction(filteredCourseList)
+                } else {
+                    filteredCourseList
+                }
                 mainHandler.post {
-                    view?.showCourses(filteredCourseList)
+                    view?.showCourses(coursesForShow)
                 }
             } else {
                 mainHandler.post { view?.showLoading() }
@@ -153,6 +166,34 @@ class PersistentCourseListPresenter(
         currentPage.set(1);
         hasNextPage.set(true)
         downloadData(courseType, applyFilter, isRefreshing = allPAges)
+    }
+
+
+    @WorkerThread
+    fun sortByLastAction(courses: List<Course>): List<Course> {
+        val result = ArrayList<Course>(courses.size)
+        val localLastStepsList = databaseFacade.getAllLocalLastCourseInteraction()
+        val sortedPersistentLastStepCourseIds = localLastStepsList
+                .filterNotNull()
+                .filter { it.timestamp > 0 }
+                .toSortedSet(compareBy { it.timestamp.times(-1L) })
+        val coursesMap = courses.associateBy { it.courseId }
+        val usedCourses = HashSet<Long>()
+        sortedPersistentLastStepCourseIds.forEach {
+            val course = coursesMap[it.courseId]
+            if (course != null) {
+                result.add(course)
+                usedCourses.add(course.courseId)
+            }
+        }
+
+        courses.forEach {
+            if (!usedCourses.contains(it.courseId)) {
+                result.add(it)
+            }
+        }
+
+        return result
     }
 
 }

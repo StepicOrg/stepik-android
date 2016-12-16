@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters
 
-import org.stepic.droid.analytic.Analytic
+import org.joda.time.DateTime
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.model.Course
@@ -23,6 +23,7 @@ class ContinueCoursePresenter(val databaseFacade: DatabaseFacade,
             threadPoolExecutor.execute()
             {
                 try {
+                    databaseFacade.updateCourseLastInteraction(courseId = course.courseId, timestamp = DateTime.now().millis)
                     var unitId: Long
                     var stepId: Long
                     try {

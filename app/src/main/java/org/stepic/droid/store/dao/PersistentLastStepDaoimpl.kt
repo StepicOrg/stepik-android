@@ -17,7 +17,6 @@ class PersistentLastStepDaoImpl(writableDatabase: SQLiteDatabase) : DaoBase<Pers
         contentValues.put(DbStructureLastStep.Column.COURSE_ID, persistentObject.courseId)
         contentValues.put(DbStructureLastStep.Column.UNIT_ID, persistentObject.unitId)
         contentValues.put(DbStructureLastStep.Column.STEP_ID, persistentObject.stepId)
-        contentValues.put(DbStructureLastStep.Column.TIMESTAMP, persistentObject.timestamp)
         return contentValues
     }
 
@@ -25,14 +24,7 @@ class PersistentLastStepDaoImpl(writableDatabase: SQLiteDatabase) : DaoBase<Pers
         val indexCourseId = cursor.getColumnIndex(DbStructureLastStep.Column.COURSE_ID)
         val indexUnitId = cursor.getColumnIndex(DbStructureLastStep.Column.UNIT_ID)
         val indexStepId = cursor.getColumnIndex(DbStructureLastStep.Column.STEP_ID)
-        val indexTimestamp = cursor.getColumnIndex(DbStructureLastStep.Column.TIMESTAMP)
 
-        val timestampSource: Long = cursor.getLong(indexTimestamp)
-        val timestamp = if (timestampSource <= 0) {
-            null
-        } else {
-            timestampSource
-        }
         val courseId = cursor.getLong(indexCourseId)
         val unitId = cursor.getLong(indexUnitId)
         val stepId = cursor.getLong(indexStepId)
@@ -40,9 +32,7 @@ class PersistentLastStepDaoImpl(writableDatabase: SQLiteDatabase) : DaoBase<Pers
         return PersistentLastStep(
                 courseId = courseId,
                 unitId = unitId,
-                stepId = stepId,
-                timestamp = timestamp
-        )
+                stepId = stepId)
     }
 
     override fun getDbName() = DbStructureLastStep.LAST_STEPS
