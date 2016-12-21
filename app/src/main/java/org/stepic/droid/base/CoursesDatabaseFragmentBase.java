@@ -51,6 +51,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     PersistentCourseListPresenter courseListPresenter;
 
     BackButtonHandler backButtonHandler = null;
+    private boolean isScreenCreated;
 
     @Override
     public void onAttach(Context context) {
@@ -103,32 +104,22 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         super.onViewCreated(view, savedInstanceState);
         bus.register(this);
         courseListPresenter.attachView(this);
-
-        if (savedInstanceState == null) {
-            //reset all data
-            needFilter = false;
-            courses.clear();
-            swipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    courseListPresenter.refreshData(getCourseType(), needFilter, false);
-                }
-            });
-        } else {
-            //load if not
-            swipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    courseListPresenter.downloadData(getCourseType(), needFilter);
-                }
-            });
-        }
+        isScreenCreated = savedInstanceState == null;
         courseListPresenter.restoreState();
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        if (isScreenCreated) {
+            //reset all data
+            needFilter = false;
+            courses.clear();
+            courseListPresenter.refreshData(getCourseType(), needFilter, false);
+        } else {
+            //load if not
+            courseListPresenter.downloadData(getCourseType(), needFilter);
+        }
         swipeRefreshLayout.setRefreshing(false);
     }
 
@@ -315,7 +306,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void onNeedDownloadNextPage() {
-        courseListPresenter.downloadData(getCourseType(), needFilter);
+        courseListPresenter.loadMore(getCourseType(), needFilter);
     }
 
     @Override

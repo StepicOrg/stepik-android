@@ -218,7 +218,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         try {
             notifyItemChanged(getItemCount() - 1);
         } catch (IllegalStateException ignored) {
-            //if it at already notified
+            //if it is already notified
         }
     }
 

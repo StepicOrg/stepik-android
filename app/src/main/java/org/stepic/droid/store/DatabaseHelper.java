@@ -11,6 +11,7 @@ import org.stepic.droid.store.structure.DbStructureBlock;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
 import org.stepic.droid.store.structure.DbStructureCalendarSection;
 import org.stepic.droid.store.structure.DbStructureCertificateViewItem;
+import org.stepic.droid.store.structure.DbStructureCourseLastInteraction;
 import org.stepic.droid.store.structure.DbStructureLastStep;
 import org.stepic.droid.store.structure.DbStructureLesson;
 import org.stepic.droid.store.structure.DbStructureNotification;
@@ -73,17 +74,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom17To18(db);
         upgradeFrom18To19(db);
         upgradeFrom19To20(db);
+        upgradeFrom20To21(db);
+    }
+
+    private void upgradeFrom20To21(SQLiteDatabase db) {
+        createCourseLastInteractionTable(db);
     }
 
     private void upgradeFrom19To20(SQLiteDatabase db) {
-        createLastStepTable(db);
-        alterColumn(db, DBStructureCourses.ENROLLED_COURSES, DBStructureCourses.Column.IS_ACTIVE, BOOLEAN_TYPE);
-        alterColumn(db, DBStructureCourses.FEATURED_COURSES, DBStructureCourses.Column.IS_ACTIVE, BOOLEAN_TYPE);
+        // NO ACTION FOR LEGACY
     }
 
     private void upgradeFrom18To19(SQLiteDatabase db) {
         alterColumn(db, DBStructureCourses.ENROLLED_COURSES, DBStructureCourses.Column.LAST_STEP_ID, TEXT_TYPE);
         alterColumn(db, DBStructureCourses.FEATURED_COURSES, DBStructureCourses.Column.LAST_STEP_ID, TEXT_TYPE);
+
+        createLastStepTable(db);
+        alterColumn(db, DBStructureCourses.ENROLLED_COURSES, DBStructureCourses.Column.IS_ACTIVE, BOOLEAN_TYPE);
+        alterColumn(db, DBStructureCourses.FEATURED_COURSES, DBStructureCourses.Column.IS_ACTIVE, BOOLEAN_TYPE);
     }
 
     private void upgradeFrom17To18(SQLiteDatabase db) {
@@ -264,6 +272,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 20) {
             upgradeFrom19To20(db);
+        }
+
+        if (oldVersion < 20) {
+            upgradeFrom20To21(db);
         }
     }
 
@@ -557,6 +569,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureLastStep.Column.COURSE_ID + WHITESPACE + LONG_TYPE + ", "
                 + DbStructureLastStep.Column.UNIT_ID + WHITESPACE + LONG_TYPE + ", "
                 + DbStructureLastStep.Column.STEP_ID + WHITESPACE + LONG_TYPE
+                + ")";
+        db.execSQL(sql);
+    }
+
+
+    private void createCourseLastInteractionTable(SQLiteDatabase db) {
+        String sql = "CREATE TABLE " + DbStructureCourseLastInteraction.COURSE_LAST_INTERACTION
+                + " ("
+                + DbStructureCourseLastInteraction.Column.COURSE_ID + WHITESPACE + LONG_TYPE + ", "
+                + DbStructureCourseLastInteraction.Column.TIMESTAMP + WHITESPACE + LONG_TYPE
                 + ")";
         db.execSQL(sql);
     }

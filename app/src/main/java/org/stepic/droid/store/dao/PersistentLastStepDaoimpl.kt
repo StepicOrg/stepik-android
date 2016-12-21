@@ -32,8 +32,7 @@ class PersistentLastStepDaoImpl(writableDatabase: SQLiteDatabase) : DaoBase<Pers
         return PersistentLastStep(
                 courseId = courseId,
                 unitId = unitId,
-                stepId = stepId
-        )
+                stepId = stepId)
     }
 
     override fun getDbName() = DbStructureLastStep.LAST_STEPS

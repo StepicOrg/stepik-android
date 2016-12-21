@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
+import org.joda.time.DateTime;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
@@ -266,6 +267,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
                             if (section != null && section.getCourse() > 0) {
                                 PersistentLastStep persistentLastStep = new PersistentLastStep(section.getCourse(), stepId, unit.getId());
                                 databaseFacade.updateLastStep(persistentLastStep);
+                                databaseFacade.updateCourseLastInteraction(section.getCourse(), DateTime.now().getMillis()); // It does not happen, when section is not cached (example: Continue course).
                             }
                         }
                     } catch (Exception exception) {

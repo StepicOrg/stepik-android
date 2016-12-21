@@ -31,6 +31,7 @@ import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.custom.TouchDispatchableFrameLayout;
+import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
@@ -111,7 +112,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         if (courses == null) courses = new ArrayList<>();
         coursesAdapter = new CoursesAdapter(this, courses, getCourseType(), continueCoursePresenter);
         listOfCoursesView.setAdapter(coursesAdapter);
-        layoutManager = new LinearLayoutManager(getContext());
+        layoutManager = new WrapContentLinearLayoutManager(getContext());
         listOfCoursesView.setLayoutManager(layoutManager);
 
         listOfCoursesViewListener = new RecyclerView.OnScrollListener() {
@@ -231,7 +232,12 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         coursesAdapter.showLoadingFooter(false);
         reportConnectionProblem.setVisibility(View.GONE);
         showEmptyScreen(false);
-        List<Course> finalCourses = KotlinUtil.INSTANCE.getListOldPlusUpdated(this.courses, courses);
+        List<Course> finalCourses;
+        if (getCourseType() == null) {
+            finalCourses = KotlinUtil.INSTANCE.getListOldPlusUpdated(this.courses, courses);
+        } else {
+            finalCourses = courses;
+        }
         this.courses.clear();
         this.courses.addAll(finalCourses);
         coursesAdapter.notifyDataSetChanged();
