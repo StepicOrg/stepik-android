@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import org.stepic.droid.model.PersistentLastStep
 import org.stepic.droid.store.structure.DbStructureLastStep
 
-class PersistentLastStepDaoimplAWHIDU(writableDatabase: SQLiteDatabase) : DaoBase<PersistentLastStep>(writableDatabase) {
+class PersistentLastStepDaoImpl(writableDatabase: SQLiteDatabase) : DaoBase<PersistentLastStep>(writableDatabase) {
     override fun getDefaultPrimaryColumn()
             = DbStructureLastStep.Column.COURSE_ID;
 

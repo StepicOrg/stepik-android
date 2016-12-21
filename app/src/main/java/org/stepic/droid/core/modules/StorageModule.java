@@ -31,7 +31,7 @@ import org.stepic.droid.store.dao.DownloadEntityDaoImpl;
 import org.stepic.droid.store.dao.IDao;
 import org.stepic.droid.store.dao.LessonDaoImpl;
 import org.stepic.droid.store.dao.NotificationDaoImpl;
-import org.stepic.droid.store.dao.PersistentLastStepDaoimplAWHIDU;
+import org.stepic.droid.store.dao.PersistentLastStepDaoImpl;
 import org.stepic.droid.store.dao.PersistentVideoDaoImpl;
 import org.stepic.droid.store.dao.ProgressDaoImpl;
 import org.stepic.droid.store.dao.SectionDaoImpl;
@@ -166,7 +166,7 @@ public class StorageModule {
     @Provides
     @Singleton
     IDao<PersistentLastStep> provideLastStepDao(SQLiteDatabase sqLiteDatabase) {
-        return new PersistentLastStepDaoimplAWHIDU(sqLiteDatabase);
+        return new PersistentLastStepDaoImpl(sqLiteDatabase);
     }
 
     @Provides
