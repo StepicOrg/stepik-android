@@ -11,7 +11,6 @@ import android.os.Handler;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.notifications.StepicInstanceIdService;
-import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.util.AppConstants;
 
 import java.util.Arrays;
@@ -135,12 +134,12 @@ public class SplashActivity extends BackToExitActivityBase {
 
     private void showNextScreen() {
         if (!isFinishing()) {
-            SharedPreferenceHelper helper = shell.getSharedPreferenceHelper();
-            if (helper.getAuthResponseFromStore() != null) {
-                shell.getScreenProvider().showMainFeed(SplashActivity.this);
-            } else {
-                shell.getScreenProvider().showLaunchScreen(SplashActivity.this, false);
-            }
+            shell.getScreenProvider().showMainFeed(SplashActivity.this);
+//            if (helper.getAuthResponseFromStore() != null) {
+//                shell.getScreenProvider().showMainFeed(SplashActivity.this);
+//            } else {
+//                shell.getScreenProvider().showLaunchScreen(SplashActivity.this, false);
+//            }
             finish();
         }
     }
