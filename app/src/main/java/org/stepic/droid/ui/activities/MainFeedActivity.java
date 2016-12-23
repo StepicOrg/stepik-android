@@ -168,7 +168,11 @@ public class MainFeedActivity extends BackToExitActivityBase
         if (savedInstanceState != null) {
             initFragments(savedInstanceState);
         } else {
-            initFragments(extras);
+            if (wasLaunchedFromRecents()) {
+                initFragments(null);
+            } else {
+                initFragments(extras);
+            }
         }
 
         bus.register(this);
@@ -241,8 +245,11 @@ public class MainFeedActivity extends BackToExitActivityBase
             Fragment fragment = fragmentManager.findFragmentById(R.id.frame);
             fragmentManager.popBackStackImmediate();
             fragmentManager.beginTransaction().remove(fragment).commit();
-            if (currentIndex == 0 || fragmentManager.getBackStackEntryCount() <= 0) {
-                finish();
+            if (fragmentManager.getBackStackEntryCount() <= 0) {
+                showCurrentFragment(0);
+
+//                super.onBackPressed();
+//                finish();
             } else {
                 currentIndex = 0;
                 navigationView.setCheckedItem(R.id.my_courses);

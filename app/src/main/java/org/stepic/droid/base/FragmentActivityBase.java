@@ -1,6 +1,7 @@
 package org.stepic.droid.base;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
@@ -18,9 +19,9 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.DefaultFilter;
-import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.ILoginManager;
 import org.stepic.droid.core.IShell;
+import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -164,5 +165,10 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+
+    protected boolean wasLaunchedFromRecents() {
+        return (getIntent().getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY;
     }
 }
