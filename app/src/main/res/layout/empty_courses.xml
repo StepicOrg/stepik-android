@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
-    android:id="@+id/empty_courses"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/empty_courses"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -30,10 +30,22 @@
                 style="@style/StepicSmallMaterialButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:layout_below="@id/text"
                 android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/guideline_standard_padding"
                 android:text="@string/find_courses_title"/>
+
+            <Button
+                android:id="@+id/empty_courses_anonymous_button"
+                style="@style/StepicSmallMaterialButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/empty_courses_button"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/guideline_standard_padding"
+                android:text="@string/auth_action_title"
+                android:visibility="gone"
+                tools:visibility="visible"/>
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
 </FrameLayout>

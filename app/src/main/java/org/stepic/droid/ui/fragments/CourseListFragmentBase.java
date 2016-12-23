@@ -61,6 +61,9 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     @BindView(R.id.empty_courses)
     protected View emptyCoursesView;
 
+    @BindView(R.id.empty_courses_anonymous_button)
+    protected Button signInButton;
+
     @BindView(R.id.empty_courses_button)
     protected Button findCourseButton;
 
@@ -134,6 +137,14 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         };
         listOfCoursesView.addOnScrollListener(listOfCoursesViewListener);
         registerForContextMenu(listOfCoursesView);
+
+
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shell.getScreenProvider().showLaunchScreen(getActivity());
+            }
+        });
 
         findCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override

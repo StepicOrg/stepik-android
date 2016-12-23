@@ -47,6 +47,7 @@ import org.stepic.droid.model.Profile;
 import org.stepic.droid.notifications.StepicInstanceIdService;
 import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.services.UpdateWithApkService;
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.ui.fragments.CertificateFragment;
@@ -55,11 +56,11 @@ import org.stepic.droid.ui.fragments.FindCoursesFragment;
 import org.stepic.droid.ui.fragments.MyCoursesFragment;
 import org.stepic.droid.ui.fragments.NotificationsFragment;
 import org.stepic.droid.ui.util.BackButtonHandler;
-import org.stepic.droid.ui.util.LogoutSuccess;
 import org.stepic.droid.ui.util.OnBackClickListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.ProfileExtensionKt;
+import org.stepic.droid.util.ProgressHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -75,9 +76,10 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class MainFeedActivity extends BackToExitActivityBase
-        implements NavigationView.OnNavigationItemSelectedListener, LogoutSuccess, BackButtonHandler, HasDrawer, ProfileMainFeedView {
+        implements NavigationView.OnNavigationItemSelectedListener, BackButtonHandler, HasDrawer, ProfileMainFeedView {
     public static final String KEY_CURRENT_INDEX = "Current_index";
     public static final String REMINDER_KEY = "reminder_key";
+    private final String PROGRESS_LOGOUT_TAG = "progress_logout";
 
 
     @BindView(R.id.toolbar)
@@ -523,18 +525,6 @@ public class MainFeedActivity extends BackToExitActivityBase
         return 0;
     }
 
-    @Override
-    public void onLogout() {
-        LoginManager.getInstance().logOut();
-        VKSdk.logout();
-        if (googleApiClient.isConnected()) {
-            Auth.GoogleSignInApi.signOut(googleApiClient);
-        }
-        sharedPreferenceHelper.deleteAuthInfo();
-        profileMainFeedPresenter.logout();
-        shell.getScreenProvider().showLaunchScreen(this);
-    }
-
     private boolean fragmentBackKeyIntercept() {
         if (onBackClickListenerList != null) {
             for (WeakReference<OnBackClickListener> weakReference : onBackClickListenerList) {
@@ -611,5 +601,22 @@ public class MainFeedActivity extends BackToExitActivityBase
     void showLogout(boolean needShow) {
         MenuItem menuItem = navigationView.getMenu().findItem(R.id.logout_item);
         menuItem.setVisible(needShow);
+    }
+
+    @Override
+    public void showLogoutLoading() {
+        DialogFragment loadingProgressDialogFragment = LoadingProgressDialogFragment.Companion.newInstance();
+        ProgressHelper.activate(loadingProgressDialogFragment, getSupportFragmentManager(), PROGRESS_LOGOUT_TAG);
+    }
+
+    @Override
+    public void onLogoutSuccess() {
+        ProgressHelper.dismiss(getSupportFragmentManager(), PROGRESS_LOGOUT_TAG);
+        LoginManager.getInstance().logOut();
+        VKSdk.logout();
+        if (googleApiClient.isConnected()) {
+            Auth.GoogleSignInApi.signOut(googleApiClient);
+        }
+        shell.getScreenProvider().showLaunchScreen(this);
     }
 }

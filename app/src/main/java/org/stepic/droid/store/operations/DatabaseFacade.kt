@@ -1,7 +1,6 @@
 package org.stepic.droid.store.operations
 
 import android.content.ContentValues
-import org.joda.time.DateTime
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
@@ -88,6 +87,8 @@ class DatabaseFacade {
         coursesFeaturedDao.removeAll()
         notificationDao.removeAll()
         certificateViewItemDao.removeAll()
+        lastStepDao.removeAll()
+        lastInteractions.removeAll()
     }
 
     fun getCourseDao(table: Table) =

@@ -6,4 +6,8 @@ interface ProfileMainFeedView {
     fun showAnonymous()
 
     fun showProfile(profile: Profile)
+
+    fun showLogoutLoading()
+
+    fun onLogoutSuccess()
 }
