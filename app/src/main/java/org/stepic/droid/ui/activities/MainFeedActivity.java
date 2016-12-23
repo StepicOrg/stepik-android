@@ -232,6 +232,10 @@ public class MainFeedActivity extends BackToExitActivityBase
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
+            if (currentIndex == 0) {
+                finish();
+                return;
+            }
             fragmentBackKeyIntercept();
             FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment fragment = fragmentManager.findFragmentById(R.id.frame);
