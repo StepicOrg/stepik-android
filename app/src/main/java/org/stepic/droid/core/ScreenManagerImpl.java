@@ -77,8 +77,17 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showLaunchScreen(Activity activity) {
+        showLaunchScreen(activity, false, 0);
+    }
+
+    @Override
+    public void showLaunchScreen(Activity activity, boolean fromMainFeed, int index) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
         Intent launchIntent = new Intent(activity, LaunchActivity.class);
+        if (fromMainFeed) {
+            launchIntent.putExtra(LaunchActivity.FROM_MAIN_FEED_FLAG, true);
+            launchIntent.putExtra(MainFeedActivity.KEY_CURRENT_INDEX, index);
+        }
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(launchIntent);
     }
@@ -103,6 +112,15 @@ public class ScreenManagerImpl implements ScreenManager {
         analytic.reportEvent(Analytic.Screens.SHOW_MAIN_FEED);
         Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        sourceActivity.startActivity(intent);
+    }
+
+    @Override
+    public void showMainFeed(Context sourceActivity, int indexOfMenu) {
+        analytic.reportEvent(Analytic.Screens.SHOW_MAIN_FEED);
+        Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(MainFeedActivity.KEY_CURRENT_INDEX, indexOfMenu);
         sourceActivity.startActivity(intent);
     }
 

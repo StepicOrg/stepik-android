@@ -20,11 +20,15 @@ import org.stepic.droid.web.ViewAssignment;
 public interface ScreenManager {
     void showLaunchScreen(Activity activity);
 
+    void showLaunchScreen(Activity activity, boolean fromMainFeed, int indexInMenu);
+
     void showRegistration(Activity sourceActivity);
 
     void showLogin(Activity sourceActivity);
 
     void showMainFeed(Context sourceActivity);
+
+    void showMainFeed(Context sourceActivity, int indexOfMenu);
 
     void showCourseDescription(Fragment sourceActivity, @NotNull Course course);
 
