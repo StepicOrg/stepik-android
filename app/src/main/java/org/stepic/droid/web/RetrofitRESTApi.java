@@ -1,8 +1,8 @@
 package org.stepic.droid.web;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.webkit.CookieManager;
@@ -43,7 +43,6 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.ui.NotificationCategory;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.RWLocks;
@@ -76,17 +75,26 @@ public class RetrofitRESTApi implements IApi {
     private final String cookieHeaderName = "Cookie";
 
     @Inject
+    Context context;
+
+    @Inject
     SharedPreferenceHelper sharedPreference;
+
     @Inject
     ScreenManager screenManager;
+
     @Inject
     DatabaseFacade databaseFacade;
+
     @Inject
     IConfig config;
+
     @Inject
     UserPreferences userPreferences;
+
     @Inject
     Analytic analytic;
+
     @Inject
     TextResolver textResolver;
 
@@ -666,19 +674,7 @@ public class RetrofitRESTApi implements IApi {
             return type + " " + access_token;
         } catch (Exception ex) {
             analytic.reportError(Analytic.Error.AUTH_ERROR, ex);
-            // FIXME: 19.11.15 It is not should happen
-
-            sharedPreference.deleteAuthInfo();
-            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    databaseFacade.clearCacheCourses(Table.enrolled);
-                    return null;
-                }
-            };
-            task.execute();
-            screenManager.showLaunchScreen(MainApplication.getAppContext(), false);
-            // FIXME: 19.11.15 ^^^^^^
+            //it is unreacheable from app version 1.2
             return "";
         }
     }

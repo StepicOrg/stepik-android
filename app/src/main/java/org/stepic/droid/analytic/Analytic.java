@@ -70,6 +70,7 @@ public interface Analytic {
         java.lang.String SHOW_MATERIAL_DIALOG_INVITATION = "materdial_dialog_invite_shown";
         String CLICK_CONTINUE_COURSE = "click_continue_course";
         java.lang.String CLICK_COURSE = "click_course";
+        String CLICK_PROFILE_BEFORE_LOADING = "click_profile_before_loading";
     }
 
     interface Screens {
@@ -139,10 +140,8 @@ public interface Analytic {
         String UPDATE_FROM_APK_FAILED = "update apk is failed";
         String CANT_RESOLVE_VIDEO = "can't Resolve video";
         String FAIL_TO_MOVE = "storage: fail to move";
-        String NULL_SHOW_PROFILE = "Null profile is tried to show";
         String REGISTRATION_IMPORTANT_ERROR = "registration important error";
         String NOTIFICATION_NOT_POSTED_ON_CLICK = "notification is not posted";
-        String NULL_COURSE = "Null course is not expected";
         String NULL_SECTION = "Null section is not expected";
         String LESSON_IN_STORE_STATE_NULL = "lesson was null in store state manager";
         String UNIT_IN_STORE_STATE_NULL = "unit was null in store state manager";

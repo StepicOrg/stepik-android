@@ -76,11 +76,11 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showLaunchScreen(Context context, boolean overrideAnimation) {
+    public void showLaunchScreen(Activity activity) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
-        Intent launchIntent = new Intent(context, LaunchActivity.class);
-        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(launchIntent);
+        Intent launchIntent = new Intent(activity, LaunchActivity.class);
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        activity.startActivity(launchIntent);
     }
 
 

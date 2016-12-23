@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="170dp"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
              xmlns:tools="http://schemas.android.com/tools"
-             xmlns:app="http://schemas.android.com/apk/res-auto">
+             android:layout_width="match_parent"
+             android:layout_height="170dp">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/background_header" />
+        android:src="@drawable/background_header"/>
 
 
     <RelativeLayout
@@ -18,6 +18,22 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/sign_in_profile_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/profile_image"
+            android:layout_alignLeft="@+id/profile_image"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/profile_image"
+            android:layout_alignStart="@+id/profile_image"
+            android:gravity="center"
+            android:paddingBottom="4dp"
+            android:text="@string/auth_action_title"
+            android:textColor="#FFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="invisible"/>
 
         <TextView
             android:id="@+id/username"
@@ -28,10 +44,10 @@
             android:layout_alignStart="@+id/profile_image"
             android:gravity="start"
             android:paddingBottom="4dp"
-            tools:text="Kirill Makarov"
             android:textColor="#FFF"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Kirill Makarov"/>
 
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -44,7 +60,7 @@
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
-            tools:src="@drawable/placeholder_icon"
-            app:border_color="#FF000000" />
+            app:border_color="#FF000000"
+            tools:src="@drawable/placeholder_icon"/>
     </RelativeLayout>
 </FrameLayout>

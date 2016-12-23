@@ -37,7 +37,7 @@ public class UnauthorizedDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         analytic.reportEvent(Analytic.Interaction.AUTH_FROM_DIALOG_FOR_UNAUTHORIZED_USER);
-                        screenManager.showLaunchScreen(getContext(), false);
+                        screenManager.showLaunchScreen(getActivity());
                     }
                 })
                 .setNegativeButton(R.string.no, null);

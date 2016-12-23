@@ -77,7 +77,7 @@ public class LogoutAreYouSureDialog extends DialogFragment {
                         };
                         task.executeOnExecutor(threadPoolExecutor);
 
-                        ((LogoutSuccess) getActivity()).onLogout();
+                        ((LogoutSuccess) getActivity()).onLogout(); //it is not after asynctask.
                     }
                 })
                 .setNegativeButton(R.string.no, null);

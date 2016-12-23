@@ -18,7 +18,7 @@ import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.web.ViewAssignment;
 
 public interface ScreenManager {
-    void showLaunchScreen(Context context, boolean overrideAnimation);
+    void showLaunchScreen(Activity activity);
 
     void showRegistration(Activity sourceActivity);
 

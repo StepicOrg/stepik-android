@@ -210,7 +210,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
             @Override
             public void onClick(View v) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_AUTH_FROM_STEPS);
-                shell.getScreenProvider().showLaunchScreen(getContext(), false);
+                shell.getScreenProvider().showLaunchScreen(getActivity());
                 getActivity().finish();
             }
         });
