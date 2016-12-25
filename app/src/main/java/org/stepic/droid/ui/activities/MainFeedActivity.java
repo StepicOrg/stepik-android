@@ -335,6 +335,7 @@ public class MainFeedActivity extends BackToExitActivityBase
                     }
                 }, 0);
                 shell.getScreenProvider().openAboutActivity(this);
+                return true;
             default:
                 showCurrentFragment(menuItem);
                 break;
