@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
@@ -66,6 +67,9 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
 
     @BindView(R.id.empty_courses_button)
     protected Button findCourseButton;
+
+    @BindView(R.id.empty_courses_text)
+    protected TextView emptyCoursesTextView;
 
     @BindView(R.id.root_fragment_view)
     protected TouchDispatchableFrameLayout rootView;
