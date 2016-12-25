@@ -240,7 +240,6 @@ public class SectionsFragment
 
         sectionsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        unauthorizedDialog = UnauthorizedDialogFragment.newInstance();
         joinCourseProgressDialog = new LoadingProgressDialog(getContext());
         ProgressHelper.activate(loadOnCenterProgressBar);
         bus.register(this);
@@ -582,6 +581,7 @@ public class SectionsFragment
                         shell.getScreenProvider().showFindCourses(getActivity());
                         getActivity().finish();
                     } else {
+                        unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);
                         if (!unauthorizedDialog.isAdded()) {
                             unauthorizedDialog.show(getFragmentManager(), null);
                         }
@@ -621,6 +621,7 @@ public class SectionsFragment
             } else if (e.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
                 //UNAUTHORIZED
                 //it is just for safety, we should detect no account before send request
+                unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);
                 if (!unauthorizedDialog.isAdded()) {
                     unauthorizedDialog.show(getFragmentManager(), null);
                 }

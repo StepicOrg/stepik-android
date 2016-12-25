@@ -3,6 +3,7 @@ package org.stepic.droid.base;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,20 +15,23 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.otto.Bus;
 
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.DefaultFilter;
-import org.stepic.droid.core.ILoginManager;
+import org.stepic.droid.core.LoginManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.ShareHelper;
+import org.stepic.droid.model.Course;
 import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.ui.fragments.MyCoursesFragment;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 
@@ -87,7 +91,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected UserPreferences userPreferences;
 
     @Inject
-    protected ILoginManager loginManager;
+    protected LoginManager loginManager;
 
     @Inject
     protected ThreadPoolExecutor threadPoolExecutor;
@@ -170,5 +174,16 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     protected boolean wasLaunchedFromRecents() {
         return (getIntent().getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY;
+    }
+
+
+    @Nullable
+    protected Course getCourseFromExtra() {
+        Parcelable course = getIntent().getParcelableExtra(AppConstants.KEY_COURSE_BUNDLE);
+        if (course != null && course instanceof Course) {
+            return (Course) course;
+        } else {
+            return null;
+        }
     }
 }

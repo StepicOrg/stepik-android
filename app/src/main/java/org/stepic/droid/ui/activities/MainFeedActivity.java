@@ -43,6 +43,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.presenters.ProfileMainFeedPresenter;
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView;
 import org.stepic.droid.events.updating.NeedUpdateEvent;
+import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.notifications.StepicInstanceIdService;
 import org.stepic.droid.services.UpdateAppService;
@@ -200,6 +201,13 @@ public class MainFeedActivity extends BackToExitActivityBase
 
         Intent updateIntent = new Intent(this, UpdateAppService.class);
         startService(updateIntent);
+
+
+        Course course= getCourseFromExtra();
+        if (course != null){
+            getIntent().removeExtra(AppConstants.KEY_COURSE_BUNDLE);
+            shell.getScreenProvider().showCourseDescription(this, course, true);
+        }
     }
 
     private void initGoogleApiClient() {

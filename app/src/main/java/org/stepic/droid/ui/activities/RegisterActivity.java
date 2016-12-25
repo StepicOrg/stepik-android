@@ -198,7 +198,7 @@ public class RegisterActivity extends FragmentActivityBase {
                             public void onFinish() {
                                 finish();
                             }
-                        });
+                        }, getCourseFromExtra());
                     } else {
                         Converter<ResponseBody, RegistrationResponse> errorConverter =
                                 retrofit.responseConverter(RegistrationResponse.class, new Annotation[0]);

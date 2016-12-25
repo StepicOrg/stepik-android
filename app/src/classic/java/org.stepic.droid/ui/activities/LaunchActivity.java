@@ -88,7 +88,7 @@ public class LaunchActivity extends BackToExitActivityBase {
             @Override
             public void onClick(View v) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_UP);
-                shell.getScreenProvider().showRegistration(LaunchActivity.this);
+                shell.getScreenProvider().showRegistration(LaunchActivity.this, getCourseFromExtra());
             }
         }));
 
@@ -97,7 +97,7 @@ public class LaunchActivity extends BackToExitActivityBase {
             @Override
             public void onClick(View v) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN);
-                shell.getScreenProvider().showLogin(LaunchActivity.this);
+                shell.getScreenProvider().showLogin(LaunchActivity.this, getCourseFromExtra());
             }
         });
 
@@ -153,7 +153,7 @@ public class LaunchActivity extends BackToExitActivityBase {
                             public void onFailLogin(Throwable t) {
                                 LoginManager.getInstance().logOut();
                             }
-                        });
+                        }, getCourseFromExtra());
             }
 
             @Override
@@ -221,7 +221,7 @@ public class LaunchActivity extends BackToExitActivityBase {
                 public void onFinish() {
                     finish();
                 }
-            });
+            }, getCourseFromExtra());
         } catch (Throwable t) {
             analytic.reportError(Analytic.Error.CALLBACK_SOCIAL, t);
         }
@@ -253,7 +253,7 @@ public class LaunchActivity extends BackToExitActivityBase {
                             public void onFailLogin(Throwable t) {
                                 VKSdk.logout();
                             }
-                        });
+                        }, getCourseFromExtra());
             }
 
             @Override
@@ -292,7 +292,7 @@ public class LaunchActivity extends BackToExitActivityBase {
                             public void onFailLogin(Throwable t) {
                                 Auth.GoogleSignInApi.signOut(googleApiClient);
                             }
-                        });
+                        }, getCourseFromExtra());
             } else {
                 onInternetProblems();
             }

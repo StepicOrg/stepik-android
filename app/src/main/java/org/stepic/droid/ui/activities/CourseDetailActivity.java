@@ -19,6 +19,8 @@ import java.util.List;
 
 public class CourseDetailActivity extends SingleFragmentActivity {
 
+    public static final String INSTA_ENROLL_KEY = "insta_enroll";
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -30,9 +32,13 @@ public class CourseDetailActivity extends SingleFragmentActivity {
     protected Fragment createFragment() {
         Bundle extras = getIntent().getExtras();
         Course course = null;
+        boolean needInstaEnroll = false;
         if (extras != null) {
             course = (Course) (extras.get(AppConstants.KEY_COURSE_BUNDLE));
+            needInstaEnroll = extras.getBoolean(INSTA_ENROLL_KEY);
         }
+
+
         if (course == null) {
             //Warning: work only for pattern android:pathPattern="/course/.*/" NOT Working for /course/.*/.* !!!
             Intent intent = getIntent();
@@ -51,11 +57,11 @@ public class CourseDetailActivity extends SingleFragmentActivity {
             } else {
                 simpleId = id;
             }
-            analytic.reportEvent(Analytic.DeepLink.USER_OPEN_COURSE_DETAIL_LINK, simpleId+"");
+            analytic.reportEvent(Analytic.DeepLink.USER_OPEN_COURSE_DETAIL_LINK, simpleId + "");
             analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
             return CourseDetailFragment.newInstance(simpleId);
         } else {
-            return CourseDetailFragment.newInstance(course);
+            return CourseDetailFragment.newInstance(course, needInstaEnroll);
         }
     }
 
