@@ -125,6 +125,7 @@ public interface Analytic {
     interface AppIndexing {
         String COURSE_DETAIL = "appindexing_course_detail";
         String COURSE_SYLLABUS = "appindexing_course_syllabus";
+        String STEP = "appindexing_step";
     }
 
     interface Error {

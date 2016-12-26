@@ -351,7 +351,10 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     }
 
     private Indexable getIndexable() {
-        return Indexables.newSimple(getTitle(), getUrlInWeb());
+        String urlInWeb = getUrlInWeb();
+        String title = getTitle();
+        analytic.reportEventWithIdName(Analytic.AppIndexing.STEP, urlInWeb, title);
+        return Indexables.newSimple(title, urlInWeb);
     }
 
     @NotNull
