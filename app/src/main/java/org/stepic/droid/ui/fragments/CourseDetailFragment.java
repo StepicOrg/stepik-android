@@ -359,6 +359,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         }
 
         if (needInstaEnroll) {
+            analytic.reportEvent(Analytic.Anonymous.SUCCESS_LOGIN_AND_ENROLL);
             needInstaEnroll = false;
             joinCourse();
         }
@@ -395,6 +396,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             joinCourseView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    analytic.reportEvent(Analytic.Interaction.JOIN_COURSE);
                     joinCourse();
                 }
             });

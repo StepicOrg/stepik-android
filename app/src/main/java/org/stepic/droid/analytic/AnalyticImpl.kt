@@ -77,10 +77,12 @@ class AnalyticImpl(context: Context) : Analytic {
     }
 
     private fun castStringToFirebaseEvent(eventName: String): String {
-        var eventNameLocal = eventName
-        if (eventName == Analytic.Interaction.SUCCESS_LOGIN) {
-            eventNameLocal = FirebaseAnalytics.Event.LOGIN
-        }
+        var eventNameLocal =
+                if (eventName == Analytic.Interaction.SUCCESS_LOGIN) {
+                    FirebaseAnalytics.Event.LOGIN
+                } else {
+                    eventName
+                }
 
         val sb = StringBuilder()
         eventNameLocal.forEach {

@@ -146,6 +146,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                analytic.reportEvent(Analytic.Anonymous.AUTH_CENTER);
                 shell.getScreenProvider().showLaunchScreen(getActivity());
             }
         });
@@ -155,8 +156,10 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
             public void onClick(View v) {
                 Activity parent = getActivity();
                 if (parent == null || !(parent instanceof MainFeedActivity)) return;
-
                 analytic.reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_EMPTY_SCREEN);
+                if (sharedPreferenceHelper.getAuthResponseFromStore() == null) { // TODO: 27.12.16 make it on background thread
+                    analytic.reportEvent(Analytic.Anonymous.BROWSE_COURSES_CENTER);
+                }
                 ((MainFeedActivity) parent).showFindLesson();
             }
         });

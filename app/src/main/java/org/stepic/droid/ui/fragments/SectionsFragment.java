@@ -302,6 +302,7 @@ public class SectionsFragment
                 @Override
                 public void onClick(View v) {
                     if (course != null) {
+                        analytic.reportEvent(Analytic.Interaction.JOIN_COURSE);
                         courseJoinerPresenter.joinCourse(course);
                     }
                 }

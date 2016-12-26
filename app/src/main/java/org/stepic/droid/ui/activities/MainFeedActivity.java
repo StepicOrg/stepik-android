@@ -370,6 +370,9 @@ public class MainFeedActivity extends BackToExitActivityBase
                 break;
             case R.id.find_lessons:
                 analytic.reportEvent(Analytic.Screens.USER_OPEN_FIND_COURSES);
+                if (sharedPreferenceHelper.getAuthResponseFromStore() == null) {
+                    analytic.reportEvent(Analytic.Anonymous.BROWSE_COURSES_DRAWER);
+                }
                 break;
             case R.id.cached_videos:
                 analytic.reportEvent(Analytic.Screens.USER_OPEN_DOWNLOADS);
@@ -578,6 +581,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                analytic.reportEvent(Analytic.Anonymous.AUTH_DRAWER);
                 shell.getScreenProvider().showLaunchScreen(MainFeedActivity.this);
             }
         };
