@@ -7,6 +7,8 @@ import android.widget.FrameLayout;
 
 import org.stepic.droid.ui.listeners.OnRootTouchedListener;
 
+import timber.log.Timber;
+
 public class TouchDispatchableFrameLayout extends FrameLayout {
 
     private OnRootTouchedListener listener = null;
@@ -28,7 +30,13 @@ public class TouchDispatchableFrameLayout extends FrameLayout {
         if (listener != null) {
             listener.makeBeforeChildren();
         }
-        return super.dispatchTouchEvent(ev);
+        try {
+            return super.dispatchTouchEvent(ev);
+        }
+        catch (IndexOutOfBoundsException exception){
+            Timber.e(exception);
+            return true;
+        }
     }
 
     public void setParentTouchEvent(OnRootTouchedListener listener) {
