@@ -19,13 +19,13 @@ import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.core.DefaultFilterImpl;
 import org.stepic.droid.core.FilterApplicator;
 import org.stepic.droid.core.FilterApplicatorImpl;
-import org.stepic.droid.core.ILoginManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.LocalLessonSessionManagerImpl;
 import org.stepic.droid.core.LocalProgressImpl;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.LoginManager;
+import org.stepic.droid.core.LoginManagerImpl;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ScreenManagerImpl;
 import org.stepic.droid.core.ShareHelper;
@@ -184,8 +184,8 @@ public class AppCoreModule {
 
     @Singleton
     @Provides
-    ILoginManager provideLoginManager(IShell shell, Context context, Analytic analytic) {
-        return new LoginManager(shell, context, analytic);
+    LoginManager provideLoginManager(IShell shell, Context context, Analytic analytic) {
+        return new LoginManagerImpl(shell, context, analytic);
     }
 
     @Provides

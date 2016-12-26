@@ -15,6 +15,7 @@ import org.stepic.droid.core.modules.CertificateModule;
 import org.stepic.droid.core.modules.CourseDetailModule;
 import org.stepic.droid.core.modules.CourseListModule;
 import org.stepic.droid.core.modules.FilterModule;
+import org.stepic.droid.core.modules.MainFeedModule;
 import org.stepic.droid.core.modules.NotificationModule;
 import org.stepic.droid.core.modules.ProfileModule;
 import org.stepic.droid.core.modules.SectionModule;
@@ -37,6 +38,7 @@ import org.stepic.droid.services.StreakAlarmService;
 import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.services.ViewPusher;
+import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.activities.SectionActivity;
 import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
@@ -74,7 +76,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = {AppCoreModule.class})
+@Component(modules = {AppCoreModule.class, MainFeedModule.class})
 public interface AppCoreComponent {
 
     ProfileComponent plus(ProfileModule profileModule);
@@ -96,6 +98,8 @@ public interface AppCoreComponent {
     NotificationComponent plus(NotificationModule module);
 
     void inject(FragmentActivityBase someActivity);
+
+    void inject(MainFeedActivity someActivity);
 
     void inject(SectionActivity someActivity);
 

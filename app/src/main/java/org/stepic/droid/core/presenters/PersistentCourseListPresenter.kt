@@ -61,6 +61,10 @@ class PersistentCourseListPresenter(
             threadPoolExecutor.execute {
                 if (!isRefreshing && !isLoadMore) {
                     getFromDatabaseAndShow(applyFilter, courseType)
+                } else if (hasNextPage.get()) {
+                    mainHandler.post {
+                        view?.showLoading()
+                    }
                 }
 
                 while (hasNextPage.get()) {

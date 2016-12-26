@@ -53,6 +53,8 @@ import butterknife.ButterKnife;
 
 public class LaunchActivity extends BackToExitActivityBase {
 
+    public final static String FROM_MAIN_FEED_FLAG = "from_main_feed";
+
     @BindView(R.id.sign_up_btn_activity_launch)
     View signUpButton;
 
@@ -86,7 +88,7 @@ public class LaunchActivity extends BackToExitActivityBase {
             @Override
             public void onClick(View v) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_UP);
-                shell.getScreenProvider().showRegistration(LaunchActivity.this);
+                shell.getScreenProvider().showRegistration(LaunchActivity.this, getCourseFromExtra());
             }
         }));
 
@@ -95,7 +97,7 @@ public class LaunchActivity extends BackToExitActivityBase {
             @Override
             public void onClick(View v) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN);
-                shell.getScreenProvider().showLogin(LaunchActivity.this);
+                shell.getScreenProvider().showLogin(LaunchActivity.this, getCourseFromExtra());
             }
         });
 
@@ -151,7 +153,7 @@ public class LaunchActivity extends BackToExitActivityBase {
                             public void onFailLogin(Throwable t) {
                                 LoginManager.getInstance().logOut();
                             }
-                        });
+                        }, getCourseFromExtra());
             }
 
             @Override
@@ -219,7 +221,7 @@ public class LaunchActivity extends BackToExitActivityBase {
                 public void onFinish() {
                     finish();
                 }
-            });
+            }, getCourseFromExtra());
         } catch (Throwable t) {
             analytic.reportError(Analytic.Error.CALLBACK_SOCIAL, t);
         }
@@ -251,7 +253,7 @@ public class LaunchActivity extends BackToExitActivityBase {
                             public void onFailLogin(Throwable t) {
                                 VKSdk.logout();
                             }
-                        });
+                        }, getCourseFromExtra());
             }
 
             @Override
@@ -290,7 +292,7 @@ public class LaunchActivity extends BackToExitActivityBase {
                             public void onFailLogin(Throwable t) {
                                 Auth.GoogleSignInApi.signOut(googleApiClient);
                             }
-                        });
+                        }, getCourseFromExtra());
             } else {
                 onInternetProblems();
             }
@@ -299,5 +301,23 @@ public class LaunchActivity extends BackToExitActivityBase {
 
     private void onInternetProblems() {
         Toast.makeText(this, R.string.connectionProblems, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        boolean fromMainFeed;
+        int index = 0;
+        try {
+            fromMainFeed = getIntent().getExtras().getBoolean(FROM_MAIN_FEED_FLAG);
+            index = getIntent().getExtras().getInt(MainFeedActivity.KEY_CURRENT_INDEX);
+        } catch (Exception ex) {
+            fromMainFeed = false;
+        }
+
+        if (!fromMainFeed) {
+            super.onBackPressed();
+        } else {
+            shell.getScreenProvider().showMainFeed(this, index);
+        }
     }
 }

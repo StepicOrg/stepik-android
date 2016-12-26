@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.squareup.otto.Subscribe;
@@ -57,6 +58,7 @@ import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
+//// TODO: 26.12.16 rewrite this class to MVP
 public class DownloadsFragment extends FragmentBase {
 
     private static final int ANIMATION_DURATION = 10; //reset to 10 after debug
@@ -76,6 +78,12 @@ public class DownloadsFragment extends FragmentBase {
 
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
+
+    @BindView(R.id.need_auth_view)
+    View needAuthRootView;
+
+    @BindView(R.id.auth_action)
+    Button authUserButton;
 
     private DownloadsAdapter downloadAdapter;
     private List<CachedVideo> cachedVideoList;
@@ -108,6 +116,13 @@ public class DownloadsFragment extends FragmentBase {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
 
+        needAuthRootView.setVisibility(View.GONE);
+        authUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shell.getScreenProvider().showLaunchScreen(getActivity());
+            }
+        });
         downloadAdapter = new DownloadsAdapter(cachedVideoList, stepIdToLesson, getActivity(), this, downloadingWithProgressList, cachedStepsSet);
         downloadsView.setAdapter(downloadAdapter);
 
@@ -255,7 +270,7 @@ public class DownloadsFragment extends FragmentBase {
 
         if (pos >= 0 && pos < downloadingWithProgressList.size()) {
             downloadingWithProgressList.remove(pos);
-            downloadAdapter.notifyDownloadingVideoRemoved(pos , downloadId);
+            downloadAdapter.notifyDownloadingVideoRemoved(pos, downloadId);
         }
 
     }
@@ -320,6 +335,7 @@ public class DownloadsFragment extends FragmentBase {
     @Override
     public void onDestroyView() {
         bus.unregister(this);
+        authUserButton.setOnClickListener(null);
         downloadsView.setAdapter(null);
         downloadAdapter = null;
         loadingProgressDialog = null;
@@ -468,11 +484,18 @@ public class DownloadsFragment extends FragmentBase {
 
     public void checkForEmpty() {
         //// FIXME: 14.12.15 add to notify methods
-        if (!cachedVideoList.isEmpty() || !downloadingWithProgressList.isEmpty()) {
-            ProgressHelper.dismiss(progressBar);
+        if (sharedPreferenceHelper.getAuthResponseFromStore() == null) {
             emptyDownloadView.setVisibility(View.GONE);
+            downloadsView.setVisibility(View.GONE);
+            needAuthRootView.setVisibility(View.VISIBLE);
         } else {
-            emptyDownloadView.setVisibility(View.VISIBLE);
+            needAuthRootView.setVisibility(View.GONE);
+            if (!cachedVideoList.isEmpty() || !downloadingWithProgressList.isEmpty()) {
+                ProgressHelper.dismiss(progressBar);
+                emptyDownloadView.setVisibility(View.GONE);
+            } else {
+                emptyDownloadView.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -557,7 +580,7 @@ public class DownloadsFragment extends FragmentBase {
     }
 
     @Subscribe
-    public void onVideoMoved (VideosMovedEvent event){
+    public void onVideoMoved(VideosMovedEvent event) {
         updateCachedAsync();
     }
 }

@@ -67,6 +67,7 @@
     <string name="video_quality">Качество видео</string>
     <string name="sync_problem">Возникли проблемы с синхронизацией данных, пожалуйста, повторите попытку позже</string>
     <string name="empty_courses">Похоже, что Вы не записаны ни на один курс</string>
+    <string name="empty_courses_anonymous">Посмотрите курсы или войдите, чтобы записаться на них</string>
     <string name="cache_cleared">Кэш успешно очищен!</string>
     <string name="join_course_web_exception">Попробуйте записаться на курс в веб версии</string>
     <string name="downloads">Загрузки</string>
@@ -332,4 +333,6 @@
     <string name="or_continue_social">Или продолжить с</string>
     <string name="content_course_logo">Логотип курса</string>
     <string name="continue_course_title">Учиться</string>
+    <string name="auth_inline_message">Войдите, чтобы мы запомнили Ваши успехи</string>
+    <string name="step_with_position">– Шаг %d</string>
 </resources>

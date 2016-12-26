@@ -88,4 +88,9 @@ public class AppConstants {
     public static final String PROFILE_SHORTCUT_ID = "profile";
     public static final String OPEN_SHORTCUT_PROFILE = "open_shortcut_profile";
     public static final String INTERNAL_STEPIK_ACTION = "internal_stepik_action";
+    public static final String setCookieHeaderName = "Set-Cookie";
+    public static final String authorizationHeaderName = "Authorization";
+    public static final String cookieHeaderName = "Cookie";
+    public static final String refererHeaderName = "Referer";
+    public static final String csrfTokenHeaderName = "X-CSRFToken";
 }

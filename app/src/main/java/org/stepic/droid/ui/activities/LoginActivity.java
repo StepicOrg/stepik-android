@@ -142,7 +142,7 @@ public class LoginActivity extends FragmentActivityBase {
                 public void onFinish() {
                     finish();
                 }
-            });
+            }, getCourseFromExtra());
         } catch (Throwable t) {
             analytic.reportError(Analytic.Error.CALLBACK_SOCIAL, t);
         }
@@ -166,7 +166,7 @@ public class LoginActivity extends FragmentActivityBase {
                     public void onFinish() {
                         finish();
                     }
-                });
+                }, getCourseFromExtra());
     }
 
     @Override

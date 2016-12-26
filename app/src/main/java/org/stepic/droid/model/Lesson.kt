@@ -67,31 +67,31 @@ class Lesson : Parcelable, Serializable {
         dest.writeString(this.cover_url)
     }
 
-    protected constructor(`in`: Parcel) {
-        this.id = `in`.readLong()
-        this.steps = `in`.createLongArray()
-        this.tags = `in`.createIntArray()
-        this.playlists = `in`.createStringArray()
-        this.is_featured = `in`.readByte().toInt() != 0
-        this.is_prime = `in`.readByte().toInt() != 0
-        this.progress = `in`.readString()
-        this.owner = `in`.readInt()
-        this.subscriptions = `in`.createStringArray()
-        this.viewed_by = `in`.readInt()
-        this.passed_by = `in`.readInt()
-        this.dependencies = `in`.createStringArray()
-        this.followers = `in`.createStringArray()
-        this.language = `in`.readString()
-        this.is_public = `in`.readByte().toInt() != 0
-        this.title = `in`.readString()
-        this.slug = `in`.readString()
-        this.create_date = `in`.readString()
-        this.update_date = `in`.readString()
-        this.learners_group = `in`.readString()
-        this.teacher_group = `in`.readString()
-        this.is_cached = `in`.readByte().toInt() != 0
-        this.is_loading = `in`.readByte().toInt() != 0
-        this.cover_url = `in`.readString()
+    protected constructor(input: Parcel) {
+        this.id = input.readLong()
+        this.steps = input.createLongArray()
+        this.tags = input.createIntArray()
+        this.playlists = input.createStringArray()
+        this.is_featured = input.readByte().toInt() != 0
+        this.is_prime = input.readByte().toInt() != 0
+        this.progress = input.readString()
+        this.owner = input.readInt()
+        this.subscriptions = input.createStringArray()
+        this.viewed_by = input.readInt()
+        this.passed_by = input.readInt()
+        this.dependencies = input.createStringArray()
+        this.followers = input.createStringArray()
+        this.language = input.readString()
+        this.is_public = input.readByte().toInt() != 0
+        this.title = input.readString()
+        this.slug = input.readString()
+        this.create_date = input.readString()
+        this.update_date = input.readString()
+        this.learners_group = input.readString()
+        this.teacher_group = input.readString()
+        this.is_cached = input.readByte().toInt() != 0
+        this.is_loading = input.readByte().toInt() != 0
+        this.cover_url = input.readString()
     }
 
     companion object {

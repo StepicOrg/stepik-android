@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/auth_line_text"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
+    android:gravity="center"
+    android:padding="@dimen/guideline_standard_padding"
+    android:text="@string/auth_inline_message"
+    android:textColor="?colorAccent"
+    android:textSize="16sp"
+    android:visibility="gone"
+    tools:visibility="visible"/>

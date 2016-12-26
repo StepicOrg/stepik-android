@@ -287,10 +287,18 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void showEmptyScreen(boolean isShowed) {
-
         if (isShowed) {
             if (getCourseType() == Table.enrolled) {
                 emptyCoursesView.setVisibility(View.VISIBLE);
+                if (sharedPreferenceHelper.getAuthResponseFromStore() != null) { //// TODO: 23.12.16 optimize it and do on background thread
+                    //logged
+                    emptyCoursesTextView.setText(R.string.empty_courses);
+                    signInButton.setVisibility(View.GONE);
+                } else {
+                    //anonymous
+                    emptyCoursesTextView.setText(R.string.empty_courses_anonymous);
+                    signInButton.setVisibility(View.VISIBLE);
+                }
                 emptySearch.setVisibility(View.GONE);
             } else {
                 emptyCoursesView.setVisibility(View.GONE);

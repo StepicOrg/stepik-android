@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
@@ -61,8 +62,14 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     @BindView(R.id.empty_courses)
     protected View emptyCoursesView;
 
+    @BindView(R.id.empty_courses_anonymous_button)
+    protected Button signInButton;
+
     @BindView(R.id.empty_courses_button)
     protected Button findCourseButton;
+
+    @BindView(R.id.empty_courses_text)
+    protected TextView emptyCoursesTextView;
 
     @BindView(R.id.root_fragment_view)
     protected TouchDispatchableFrameLayout rootView;
@@ -135,13 +142,24 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         listOfCoursesView.addOnScrollListener(listOfCoursesViewListener);
         registerForContextMenu(listOfCoursesView);
 
+
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analytic.reportEvent(Analytic.Anonymous.AUTH_CENTER);
+                shell.getScreenProvider().showLaunchScreen(getActivity());
+            }
+        });
+
         findCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Activity parent = getActivity();
                 if (parent == null || !(parent instanceof MainFeedActivity)) return;
-
                 analytic.reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_EMPTY_SCREEN);
+                if (sharedPreferenceHelper.getAuthResponseFromStore() == null) { // TODO: 27.12.16 make it on background thread
+                    analytic.reportEvent(Analytic.Anonymous.BROWSE_COURSES_CENTER);
+                }
                 ((MainFeedActivity) parent).showFindLesson();
             }
         });
@@ -216,7 +234,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     public void showConnectionProblem() {
         ProgressHelper.dismiss(progressBarOnEmptyScreen);
         ProgressHelper.dismiss(swipeRefreshLayout);
-        coursesAdapter.showLoadingFooter(true);
+        coursesAdapter.showLoadingFooter(false);
 
         if (courses == null || courses.isEmpty()) {
             //screen is clear due to error connection

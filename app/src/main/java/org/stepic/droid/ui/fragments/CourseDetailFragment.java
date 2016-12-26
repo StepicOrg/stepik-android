@@ -32,10 +32,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.appindexing.Action;
+import com.google.firebase.appindexing.FirebaseAppIndex;
+import com.google.firebase.appindexing.FirebaseUserActions;
+import com.google.firebase.appindexing.Indexable;
+import com.google.firebase.appindexing.builders.Actions;
+import com.google.firebase.appindexing.builders.Indexables;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
@@ -44,8 +46,8 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.modules.CourseDetailModule;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
-import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
+import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
 import org.stepic.droid.events.courses.CourseFoundEvent;
@@ -87,16 +89,19 @@ import retrofit.Retrofit;
 
 public class CourseDetailFragment extends FragmentBase implements LoadCourseView, CourseJoinView {
 
+    private static String instaEnrollKey = "instaEnrollKey";
     private View.OnClickListener onClickReportListener;
     private View header;
     private View footer;
     private DialogFragment unauthorizedDialog;
     private Intent shareIntentWithChooser;
     private GlideDrawableImageViewTarget courseTargetFigSupported;
+    private boolean needInstaEnroll;
 
-    public static CourseDetailFragment newInstance(Course course) {
+    public static CourseDetailFragment newInstance(Course course, boolean instaEnroll) {
         Bundle args = new Bundle();
         args.putSerializable(AppConstants.KEY_COURSE_BUNDLE, course);
+        args.putBoolean(instaEnrollKey, instaEnroll);
         CourseDetailFragment fragment = new CourseDetailFragment();
         fragment.setArguments(args);
         return fragment;
@@ -160,11 +165,10 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     View player;
 
     //App indexing:
-    private GoogleApiClient client;
     private Uri urlInApp;
     private Uri urlInWeb;
-    private String mTitle;
-    private String mDescription;
+    private String titleString;
+    private String descriptionString;
 
 
     private List<CourseProperty> coursePropertyList;
@@ -173,17 +177,18 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     private InstructorAdapter instructorAdapter;
 
     public Action getAction() {
-        Thing object = new Thing.Builder()
-                .setId(urlInWeb.toString())
-                .setName(mTitle)
-                .setDescription(mDescription)
-                .setUrl(urlInApp)
-                .build();
-
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
+        return Actions.newView(titleString, urlInWeb.toString());
+//        Thing object = new Thing.Builder()
+//                .setId(urlInWeb.toString())
+//                .setName(titleString)
+//                .setDescription(descriptionString)
+//                .setUrl(urlInApp)
+//                .build();
+//
+//        return new Action.Builder(Action.TYPE_VIEW)
+//                .setObject(object)
+//                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+//                .build();
     }
 
     @Inject
@@ -201,9 +206,9 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     public void onCreate(Bundle savedInstanceState) {
         getActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         super.onCreate(savedInstanceState);
-        client = new GoogleApiClient.Builder(getActivity()).addApi(AppIndex.API).build();
         setRetainInstance(true);
         instructorsList = new ArrayList<>();
+        needInstaEnroll = getArguments().getBoolean(instaEnrollKey); //if not exist -> false
     }
 
     @Override
@@ -221,8 +226,6 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         footer = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_footer, null, false);
         coursePropertyListView.addFooterView(footer);
         instructorsCarousel = ButterKnife.findById(footer, R.id.instructors_carousel);
-//        mInstructorsProgressBar = ButterKnife.findById(footer, R.id.load_progressbar);
-//        mInstructorsRootView = ButterKnife.findById(footer, R.id.instructors_root_view);
 
         header = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.fragment_course_detailed_header, null, false);
         coursePropertyListView.addHeaderView(header);
@@ -247,6 +250,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
                     shell.getScreenProvider().showFindCourses(getContext());
                     finish();
                 } else {
+                    unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);
                     if (!unauthorizedDialog.isAdded()) {
                         unauthorizedDialog.show(getFragmentManager(), null);
                     }
@@ -271,8 +275,6 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
         header.setVisibility(View.GONE); //hide while we don't have the course
         footer.setVisibility(View.GONE);
-
-        unauthorizedDialog = UnauthorizedDialogFragment.newInstance();
 
         courseFinderPresenter.attachView(this);
         courseJoinerPresenter.attachView(this);
@@ -315,8 +317,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         //
         header.setVisibility(View.VISIBLE);
 
-        mTitle = course.getTitle();
-        mDescription = course.getSummary();
+        titleString = course.getTitle();
+        descriptionString = course.getSummary();
         if (course.getSlug() != null && !wasIndexed) {
             urlInWeb = Uri.parse(StringUtil.getUriForCourse(config.getBaseUrl(), course.getSlug()));
             urlInApp = StringUtil.getAppUriForCourse(config.getBaseUrl(), course.getSlug());
@@ -348,25 +350,32 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         resolveJoinView();
         if (instructorsList.isEmpty()) {
             fetchInstructors();
-        }
-        else{
+        } else {
             showCurrentInstructors();
         }
         Activity activity = getActivity();
         if (activity != null) {
             activity.invalidateOptionsMenu();
         }
+
+        if (needInstaEnroll) {
+            analytic.reportEvent(Analytic.Anonymous.SUCCESS_LOGIN_AND_ENROLL);
+            needInstaEnroll = false;
+            joinCourse();
+        }
     }
 
     private void reportIndexToGoogle() {
         if (course != null && !wasIndexed && course.getSlug() != null) {
-            if (!client.isConnecting() && !client.isConnected()) {
-                client.connect();
-            }
             wasIndexed = true;
-            AppIndex.AppIndexApi.start(client, getAction());
+            FirebaseAppIndex.getInstance().update(getIndexable());
+            FirebaseUserActions.getInstance().start(getAction());
             analytic.reportEventWithIdName(Analytic.AppIndexing.COURSE_DETAIL, course.getCourseId() + "", course.getTitle());
         }
+    }
+
+    private Indexable getIndexable() {
+        return Indexables.newSimple(titleString, urlInWeb.toString());
     }
 
     private void resolveJoinView() {
@@ -387,6 +396,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             joinCourseView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    analytic.reportEvent(Analytic.Interaction.JOIN_COURSE);
                     joinCourse();
                 }
             });
@@ -575,10 +585,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     public void onStop() {
 
         if (wasIndexed) {
-            AppIndex.AppIndexApi.end(client, getAction());
-        }
-        if (client != null && client.isConnected() && client.isConnecting()) {
-            client.disconnect();
+            FirebaseUserActions.getInstance().end(getAction());
         }
         wasIndexed = false;
         super.onStop();
@@ -647,6 +654,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             } else if (e.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
                 //UNAUTHORIZED
                 //it is just for safety, we should detect no account before send request
+                unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);
                 if (!unauthorizedDialog.isAdded()) {
                     unauthorizedDialog.show(getFragmentManager(), null);
                 }

@@ -58,7 +58,8 @@
             android:id="@+id/logout_item"
             android:checkable="false"
             android:icon="@drawable/ic_exit_to_app_black_24dp"
-            android:title="@string/logout_title"/>
+            android:title="@string/logout_title"
+            android:visible="false"/>
     </group>
 
 </menu>

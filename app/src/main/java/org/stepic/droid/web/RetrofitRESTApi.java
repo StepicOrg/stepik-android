@@ -1,10 +1,12 @@
 package org.stepic.droid.web;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.webkit.CookieManager;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
@@ -42,15 +44,14 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.ui.NotificationCategory;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 import org.stepic.droid.web.util.StringConverterFactory;
 
 import java.io.IOException;
-import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -66,23 +67,33 @@ import retrofit.Call;
 import retrofit.Converter;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
+import timber.log.Timber;
 
 @Singleton
 public class RetrofitRESTApi implements IApi {
     private final int TIMEOUT_IN_SECONDS = 10;
 
     @Inject
+    Context context;
+
+    @Inject
     SharedPreferenceHelper sharedPreference;
+
     @Inject
     ScreenManager screenManager;
+
     @Inject
     DatabaseFacade databaseFacade;
+
     @Inject
     IConfig config;
+
     @Inject
     UserPreferences userPreferences;
+
     @Inject
     Analytic analytic;
+
     @Inject
     TextResolver textResolver;
 
@@ -106,19 +117,7 @@ public class RetrofitRESTApi implements IApi {
                 .client(okHttpClient)
                 .build();
         stepikEmptyAuthService = retrofit.create(StepicEmptyAuthService.class);
-//        makeZendeskService();
     }
-
-//    private void makeZendeskService() {
-//        OkHttpClient okHttpClient = new OkHttpClient();
-//        setTimeout(okHttpClient, TIMEOUT_IN_SECONDS);
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(mConfig.getZendeskHost())
-//                .client(okHttpClient)
-//                .build();
-//        mZendeskAuthService = retrofit.create(StepikDeskEmptyAuthService.class);
-//    }
-
 
     private void makeLoggedService() {
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -129,7 +128,29 @@ public class RetrofitRESTApi implements IApi {
                 try {
                     RWLocks.AuthLock.writeLock().lock();
                     AuthenticationStepicResponse response = sharedPreference.getAuthResponseFromStore();
-                    if (isNeededUpdate(response)) {
+                    String urlForCookies = newRequest.url().toString();
+                    if (response == null) {
+                        //it is Anonymous, we can log it.
+                        String cookies = android.webkit.CookieManager.getInstance().getCookie(urlForCookies); //if token is expired or doesn't exist -> manager return null
+                        Timber.d("set cookie for url %s is %s", urlForCookies, cookies);
+                        if (cookies == null) {
+                            updateCookieForBaseUrl();
+                            cookies = android.webkit.CookieManager.getInstance().getCookie(urlForCookies);
+                        }
+                        if (cookies != null) {
+                            String csrfTokenFromCookies = getCsrfTokenFromCookies(cookies);
+                            if (sharedPreference.getProfile() == null) {
+                                Profile profile = stepikEmptyAuthService.getUserProfileWithCookie(config.getBaseUrl(), cookies, csrfTokenFromCookies).execute().body().getProfile();
+                                sharedPreference.storeProfile(profile);
+                            }
+                            newRequest = chain.request()
+                                    .newBuilder()
+                                    .addHeader(AppConstants.cookieHeaderName, cookies)
+                                    .addHeader(AppConstants.refererHeaderName, config.getBaseUrl())
+                                    .addHeader(AppConstants.csrfTokenHeaderName, csrfTokenFromCookies)
+                                    .build();
+                        }
+                    } else if (isNeededUpdate(response)) {
                         try {
                             response = oAuthService.updateToken(config.getRefreshGrantType(), response.getRefresh_token()).execute().body();
                         } catch (Exception e) {
@@ -147,9 +168,19 @@ public class RetrofitRESTApi implements IApi {
                     }
                     if (response != null) {
                         //it is good way
-                        newRequest = chain.request().newBuilder().addHeader("Authorization", getAuthHeaderValueForLogged()).build();
+                        newRequest = chain.request().newBuilder().addHeader(AppConstants.authorizationHeaderName, getAuthHeaderValueForLogged()).build();
                     }
-                    return chain.proceed(newRequest);
+                    Response originalResponse = chain.proceed(newRequest);
+                    List<String> setCookieHeaders = originalResponse.headers(AppConstants.setCookieHeaderName);
+                    if (!setCookieHeaders.isEmpty()) {
+                        for (String value : setCookieHeaders) {
+                            Timber.d("save for url %s,  cookie %s", urlForCookies, value);
+                            if (value != null) {
+                                CookieManager.getInstance().setCookie(urlForCookies, value); //set-cookie is not empty
+                            }
+                        }
+                    }
+                    return originalResponse;
                 } finally {
                     RWLocks.AuthLock.writeLock().unlock();
                 }
@@ -173,7 +204,7 @@ public class RetrofitRESTApi implements IApi {
             public Response intercept(Chain chain) throws IOException {
                 Request newRequest = chain.request();
                 String credential = Credentials.basic(config.getOAuthClientId(type), config.getOAuthClientSecret(type));
-                newRequest = newRequest.newBuilder().addHeader("Authorization", credential).build();
+                newRequest = newRequest.newBuilder().addHeader(AppConstants.authorizationHeaderName, credential).build();
                 return chain.proceed(newRequest);
             }
         };
@@ -238,32 +269,22 @@ public class RetrofitRESTApi implements IApi {
             public Response intercept(Chain chain) throws IOException {
                 Request newRequest = chain.request();
 
-                List<HttpCookie> cookies = getCookiesForBaseUrl();
+                String cookies = android.webkit.CookieManager.getInstance().getCookie(config.getBaseUrl()); //if token is expired or doesn't exist -> manager return null
+                if (cookies == null) {
+                    updateCookieForBaseUrl();
+                    cookies = android.webkit.CookieManager.getInstance().getCookie(config.getBaseUrl());
+                }
                 if (cookies == null)
                     return chain.proceed(newRequest);
-                String csrftoken = null;
-                String sessionId = null;
-                for (HttpCookie item : cookies) {
-                    if (item.getName() != null && item.getName().equals("csrftoken")) {
-                        csrftoken = item.getValue();
-                        continue;
-                    }
-                    if (item.getName() != null && item.getName().equals("sessionid")) {
-                        sessionId = item.getValue();
-                    }
-                }
-                if (csrftoken == null) {
-                    csrftoken = "";
-                }
 
-                String cookieResult = "csrftoken=" + csrftoken + "; " + "sessionid=" + sessionId;
 
+                String csrftoken = getCsrfTokenFromCookies(cookies);
                 Request.Builder requestBuilder = chain
                         .request()
                         .newBuilder()
-                        .addHeader("Referer", config.getBaseUrl())
-                        .addHeader("X-CSRFToken", csrftoken)
-                        .addHeader("Cookie", cookieResult);
+                        .addHeader(AppConstants.refererHeaderName, config.getBaseUrl())
+                        .addHeader(AppConstants.csrfTokenHeaderName, csrftoken)
+                        .addHeader(AppConstants.cookieHeaderName, cookies);
                 newRequest = requestBuilder.build();
                 return chain.proceed(newRequest);
             }
@@ -276,6 +297,22 @@ public class RetrofitRESTApi implements IApi {
                 .build();
         StepicRestOAuthService tempService = notLogged.create(StepicRestOAuthService.class);
         return tempService.createAccount(new UserRegistrationRequest(new RegistrationUser(firstName, lastName, email, password)));
+    }
+
+    @NonNull
+    private String getCsrfTokenFromCookies(String cookies) {
+        String csrftoken = null;
+        List<HttpCookie> cookieList = HttpCookie.parse(cookies);
+        for (HttpCookie item : cookieList) {
+            if (item.getName() != null && item.getName().equals("csrftoken")) {
+                csrftoken = item.getValue();
+                break;
+            }
+        }
+        if (csrftoken == null) {
+            csrftoken = "";
+        }
+        return csrftoken;
     }
 
     public Call<CoursesStepicResponse> getEnrolledCourses(int page) {
@@ -408,7 +445,6 @@ public class RetrofitRESTApi implements IApi {
     @Override
     public Call<SubmissionResponse> getSubmissionForStep(long stepId) {
         return loggedService.getExistingSubmissionsForStep(stepId);
-
     }
 
     @Override
@@ -471,8 +507,6 @@ public class RetrofitRESTApi implements IApi {
 
     @Override
     public Call<Void> sendFeedback(String email, String rawDescription) {
-
-
         OkHttpClient okHttpClient = new OkHttpClient();
         Retrofit notLogged = new Retrofit.Builder()
                 .baseUrl(config.getZendeskHost())
@@ -617,7 +651,7 @@ public class RetrofitRESTApi implements IApi {
         String lang = Locale.getDefault().getLanguage();
         retrofit.Response ob = stepikEmptyAuthService.getStepicForFun(lang).execute();
         Headers headers = ob.headers();
-        CookieManager cookieManager = new CookieManager();
+        java.net.CookieManager cookieManager = new java.net.CookieManager();
         URI myUri;
         try {
             myUri = new URI(config.getBaseUrl());
@@ -627,6 +661,21 @@ public class RetrofitRESTApi implements IApi {
         cookieManager.put(myUri, headers.toMultimap());
         return cookieManager.getCookieStore().get(myUri);
     }
+
+    private void updateCookieForBaseUrl() throws IOException {
+        String lang = Locale.getDefault().getLanguage();
+        retrofit.Response ob = stepikEmptyAuthService.getStepicForFun(lang).execute();
+
+        List<String> setCookieHeaders = ob.headers().values(AppConstants.setCookieHeaderName);
+        if (!setCookieHeaders.isEmpty()) {
+            for (String value : setCookieHeaders) {
+                if (value != null) {
+                    CookieManager.getInstance().setCookie(config.getBaseUrl(), value); //set-cookie is not empty
+                }
+            }
+        }
+    }
+
 
     private String getAuthHeaderValueForLogged() {
         try {
@@ -640,19 +689,7 @@ public class RetrofitRESTApi implements IApi {
             return type + " " + access_token;
         } catch (Exception ex) {
             analytic.reportError(Analytic.Error.AUTH_ERROR, ex);
-            // FIXME: 19.11.15 It is not should happen
-
-            sharedPreference.deleteAuthInfo();
-            AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    databaseFacade.clearCacheCourses(Table.enrolled);
-                    return null;
-                }
-            };
-            task.execute();
-            screenManager.showLaunchScreen(MainApplication.getAppContext(), false);
-            // FIXME: 19.11.15 ^^^^^^
+            //it is unreacheable from app version 1.2
             return "";
         }
     }

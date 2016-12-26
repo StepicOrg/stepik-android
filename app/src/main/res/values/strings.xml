@@ -71,6 +71,7 @@
     <string name="video_quality">Video quality</string>
     <string name="sync_problem">There was a problem syncing the link, please try again later</string>
     <string name="empty_courses">Looks like you haven\'t enrolled in any courses yet</string>
+    <string name="empty_courses_anonymous">Browse courses without authorization or sign in for enroll</string>
     <string name="cache_cleared">Cache is cleared successfully!</string>
     <string name="join_course_web_exception">Try to join course in web</string>
     <string name="downloads">Downloads</string>
@@ -331,4 +332,6 @@
     <string name="or_continue_social">Or continue with</string>
     <string name="content_course_logo">Course logo</string>
     <string name="continue_course_title">Continue</string>
+    <string name="auth_inline_message">To save your progress please sign in first</string>
+    <string name="step_with_position">– Step %d</string>
 </resources>

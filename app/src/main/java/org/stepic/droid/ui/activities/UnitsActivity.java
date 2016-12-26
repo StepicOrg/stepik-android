@@ -549,7 +549,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == AppConstants.REQUEST_EXTERNAL_STORAGE) {
+        if (requestCode == AppConstants.REQUEST_EXTERNAL_STORAGE && permissions.length > 0) {
             String permissionExternalStorage = permissions[0];
             if (permissionExternalStorage == null) return;
 

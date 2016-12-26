@@ -4,6 +4,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.ScreenManager;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.core.presenters.CertificatePresenter;
 import org.stepic.droid.web.IApi;
@@ -22,7 +23,8 @@ public class CertificateModule {
                                           DatabaseFacade databaseFacade,
                                           ThreadPoolExecutor threadPoolExecutor,
                                           IMainHandler mainHandler,
+                                          SharedPreferenceHelper sharedPreferenceHelper,
                                           Analytic analytic) {
-        return new CertificatePresenter (api, config, screenManager, databaseFacade, threadPoolExecutor, mainHandler, analytic);
+        return new CertificatePresenter(api, config, screenManager, databaseFacade, threadPoolExecutor, mainHandler, sharedPreferenceHelper, analytic);
     }
 }
