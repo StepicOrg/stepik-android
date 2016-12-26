@@ -61,13 +61,17 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
         unit = outUnit
         threadPoolExecutor.execute {
             try {
-                val profileResponse = sharedPreferenceHelper.authResponseFromStore
-                if (profileResponse == null) {
-                    mainHandler.post {
-                        view?.onUserNotAuth()
+                if (!(lesson?.is_public ?: true)) {
+                    //lesson is not public
+                    val profileResponse = sharedPreferenceHelper.authResponseFromStore
+                    if (profileResponse == null) {
+                        mainHandler.post {
+                            view?.onUserNotAuth()
+                        }
+                        return@execute
                     }
-                    return@execute
                 }
+
 
                 if (lesson == null) {
                     initUnitLessonWithIds(simpleLessonId, simpleUnitId)

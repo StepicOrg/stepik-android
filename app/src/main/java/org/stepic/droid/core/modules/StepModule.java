@@ -6,6 +6,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.PerFragment;
+import org.stepic.droid.core.presenters.AnonymousPresenter;
 import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.StepQualityPresenter;
@@ -24,6 +25,13 @@ import dagger.Provides;
 
 @Module
 public class StepModule {
+
+    @Provides
+    @PerFragment
+    AnonymousPresenter anonymousPresenter(SharedPreferenceHelper sharedPreferenceHelper, ThreadPoolExecutor threadPoolExecutor, IMainHandler mainHandler) {
+        return new AnonymousPresenter(sharedPreferenceHelper, threadPoolExecutor, mainHandler);
+    }
+
     @Provides
     RouteStepPresenter provideNextStepPresenter(
             ThreadPoolExecutor threadPoolExecutor,

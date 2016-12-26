@@ -332,4 +332,5 @@
     <string name="or_continue_social">Or continue with</string>
     <string name="content_course_logo">Course logo</string>
     <string name="continue_course_title">Continue</string>
+    <string name="auth_inline_message">To save your progress please sign in first</string>
 </resources>

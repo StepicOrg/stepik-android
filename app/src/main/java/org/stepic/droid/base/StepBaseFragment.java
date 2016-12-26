@@ -15,7 +15,9 @@ import com.squareup.otto.Subscribe;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.modules.StepModule;
+import org.stepic.droid.core.presenters.AnonymousPresenter;
 import org.stepic.droid.core.presenters.RouteStepPresenter;
+import org.stepic.droid.core.presenters.contracts.AnonymousView;
 import org.stepic.droid.core.presenters.contracts.RouteStepView;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
@@ -37,13 +39,16 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-public abstract class StepBaseFragment extends FragmentBase implements RouteStepView {
+public abstract class StepBaseFragment extends FragmentBase implements RouteStepView, AnonymousView {
 
     @BindView(R.id.text_header_enhanced)
     protected LatexSupportableEnhancedFrameLayout headerWvEnhanced;
 
     @BindView(R.id.open_comments_text)
     protected TextView textForComment;
+
+    @BindView(R.id.auth_line_text)
+    TextView authLineText;
 
     /**
      * default: Gone
@@ -79,6 +84,9 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
 
     @Inject
     RouteStepPresenter routeStepPresenter;
+
+    @Inject
+    AnonymousPresenter anonymousPresenter;
 
     @Override
     protected void injectComponent() {
@@ -116,6 +124,8 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
         updateCommentState();
 
         routeStepPresenter.attachView(this);
+        anonymousPresenter.attachView(this);
+        anonymousPresenter.checkForAnonymous();
         if (unit != null) {
             nextLessonView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -136,6 +146,17 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
         }
 
         bus.register(this);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        authLineText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shell.getScreenProvider().showLaunchScreen(getActivity());
+            }
+        });
     }
 
     private void updateCommentState() {
@@ -196,8 +217,10 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     @Override
     public void onDestroyView() {
         bus.unregister(this);
+        authLineText.setOnClickListener(null);
         textForComment.setOnClickListener(null);
         routeStepPresenter.detachView(this);
+        anonymousPresenter.detachView(this);
         nextLessonView.setOnClickListener(null);
         previousLessonView.setOnClickListener(null);
         super.onDestroyView();
@@ -303,4 +326,8 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
         outState.putBoolean(PREVIOUS_LESSON_VISIBILITY_KEY, previousLessonView.getVisibility() == View.VISIBLE);
     }
 
+    @Override
+    public final void onShowAnonymous(boolean isAnonymous) {
+        authLineText.setVisibility(isAnonymous ? View.VISIBLE : View.GONE);
+    }
 }

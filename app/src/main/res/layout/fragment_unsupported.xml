@@ -29,6 +29,8 @@
 
         <include layout="@layout/open_comment_view"/>
 
+        <include layout="@layout/auth_line_view"/>
+
         <include layout="@layout/next_lesson_view"/>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
