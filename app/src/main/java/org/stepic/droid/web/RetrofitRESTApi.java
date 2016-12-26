@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.webkit.CookieManager;
 
@@ -44,6 +45,7 @@ import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.ui.NotificationCategory;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.resolvers.text.TextResolver;
@@ -70,9 +72,6 @@ import timber.log.Timber;
 @Singleton
 public class RetrofitRESTApi implements IApi {
     private final int TIMEOUT_IN_SECONDS = 10;
-    private final String setCookieHeaderName = "Set-Cookie";
-    private final String authorizationHeaderName = "Authorization";
-    private final String cookieHeaderName = "Cookie";
 
     @Inject
     Context context;
@@ -139,7 +138,17 @@ public class RetrofitRESTApi implements IApi {
                             cookies = android.webkit.CookieManager.getInstance().getCookie(urlForCookies);
                         }
                         if (cookies != null) {
-                            newRequest = chain.request().newBuilder().addHeader(cookieHeaderName, cookies).build();
+                            String csrfTokenFromCookies = getCsrfTokenFromCookies(cookies);
+                            if (sharedPreference.getProfile() == null) {
+                                Profile profile = stepikEmptyAuthService.getUserProfileWithCookie(config.getBaseUrl(), cookies, csrfTokenFromCookies).execute().body().getProfile();
+                                sharedPreference.storeProfile(profile);
+                            }
+                            newRequest = chain.request()
+                                    .newBuilder()
+                                    .addHeader(AppConstants.cookieHeaderName, cookies)
+                                    .addHeader(AppConstants.refererHeaderName, config.getBaseUrl())
+                                    .addHeader(AppConstants.csrfTokenHeaderName, csrfTokenFromCookies)
+                                    .build();
                         }
                     } else if (isNeededUpdate(response)) {
                         try {
@@ -159,10 +168,10 @@ public class RetrofitRESTApi implements IApi {
                     }
                     if (response != null) {
                         //it is good way
-                        newRequest = chain.request().newBuilder().addHeader(authorizationHeaderName, getAuthHeaderValueForLogged()).build();
+                        newRequest = chain.request().newBuilder().addHeader(AppConstants.authorizationHeaderName, getAuthHeaderValueForLogged()).build();
                     }
                     Response originalResponse = chain.proceed(newRequest);
-                    List<String> setCookieHeaders = originalResponse.headers(setCookieHeaderName);
+                    List<String> setCookieHeaders = originalResponse.headers(AppConstants.setCookieHeaderName);
                     if (!setCookieHeaders.isEmpty()) {
                         for (String value : setCookieHeaders) {
                             Timber.d("save for url %s,  cookie %s", urlForCookies, value);
@@ -195,7 +204,7 @@ public class RetrofitRESTApi implements IApi {
             public Response intercept(Chain chain) throws IOException {
                 Request newRequest = chain.request();
                 String credential = Credentials.basic(config.getOAuthClientId(type), config.getOAuthClientSecret(type));
-                newRequest = newRequest.newBuilder().addHeader(authorizationHeaderName, credential).build();
+                newRequest = newRequest.newBuilder().addHeader(AppConstants.authorizationHeaderName, credential).build();
                 return chain.proceed(newRequest);
             }
         };
@@ -269,23 +278,13 @@ public class RetrofitRESTApi implements IApi {
                     return chain.proceed(newRequest);
 
 
-                String csrftoken = null;
-                List<HttpCookie> cookieList = HttpCookie.parse(cookies);
-                for (HttpCookie item : cookieList) {
-                    if (item.getName() != null && item.getName().equals("csrftoken")) {
-                        csrftoken = item.getValue();
-                        break;
-                    }
-                }
-                if (csrftoken == null) {
-                    csrftoken = "";
-                }
+                String csrftoken = getCsrfTokenFromCookies(cookies);
                 Request.Builder requestBuilder = chain
                         .request()
                         .newBuilder()
-                        .addHeader("Referer", config.getBaseUrl())
-                        .addHeader("X-CSRFToken", csrftoken)
-                        .addHeader(cookieHeaderName, cookies);
+                        .addHeader(AppConstants.refererHeaderName, config.getBaseUrl())
+                        .addHeader(AppConstants.csrfTokenHeaderName, csrftoken)
+                        .addHeader(AppConstants.cookieHeaderName, cookies);
                 newRequest = requestBuilder.build();
                 return chain.proceed(newRequest);
             }
@@ -298,6 +297,22 @@ public class RetrofitRESTApi implements IApi {
                 .build();
         StepicRestOAuthService tempService = notLogged.create(StepicRestOAuthService.class);
         return tempService.createAccount(new UserRegistrationRequest(new RegistrationUser(firstName, lastName, email, password)));
+    }
+
+    @NonNull
+    private String getCsrfTokenFromCookies(String cookies) {
+        String csrftoken = null;
+        List<HttpCookie> cookieList = HttpCookie.parse(cookies);
+        for (HttpCookie item : cookieList) {
+            if (item.getName() != null && item.getName().equals("csrftoken")) {
+                csrftoken = item.getValue();
+                break;
+            }
+        }
+        if (csrftoken == null) {
+            csrftoken = "";
+        }
+        return csrftoken;
     }
 
     public Call<CoursesStepicResponse> getEnrolledCourses(int page) {
@@ -651,7 +666,7 @@ public class RetrofitRESTApi implements IApi {
         String lang = Locale.getDefault().getLanguage();
         retrofit.Response ob = stepikEmptyAuthService.getStepicForFun(lang).execute();
 
-        List<String> setCookieHeaders = ob.headers().values(setCookieHeaderName);
+        List<String> setCookieHeaders = ob.headers().values(AppConstants.setCookieHeaderName);
         if (!setCookieHeaders.isEmpty()) {
             for (String value : setCookieHeaders) {
                 if (value != null) {
