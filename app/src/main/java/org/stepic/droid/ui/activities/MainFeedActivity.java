@@ -77,7 +77,7 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class MainFeedActivity extends BackToExitActivityBase
-        implements NavigationView.OnNavigationItemSelectedListener, BackButtonHandler, HasDrawer, ProfileMainFeedView {
+        implements NavigationView.OnNavigationItemSelectedListener, BackButtonHandler, HasDrawer, ProfileMainFeedView, LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener {
     public static final String KEY_CURRENT_INDEX = "Current_index";
     public static final String REMINDER_KEY = "reminder_key";
     private final String PROGRESS_LOGOUT_TAG = "progress_logout";
@@ -203,8 +203,8 @@ public class MainFeedActivity extends BackToExitActivityBase
         startService(updateIntent);
 
 
-        Course course= getCourseFromExtra();
-        if (course != null){
+        Course course = getCourseFromExtra();
+        if (course != null) {
             getIntent().removeExtra(AppConstants.KEY_COURSE_BUNDLE);
             shell.getScreenProvider().showCourseDescription(this, course, true);
         }
@@ -305,7 +305,7 @@ public class MainFeedActivity extends BackToExitActivityBase
             case R.id.logout_item:
                 analytic.reportEvent(Analytic.Interaction.CLICK_LOGOUT);
 
-                LogoutAreYouSureDialog dialog = LogoutAreYouSureDialog.newInstance();
+                LogoutAreYouSureDialog dialog = LogoutAreYouSureDialog.Companion.newInstance();
                 if (!dialog.isAdded()) {
                     dialog.show(getSupportFragmentManager(), null);
                 }
@@ -627,5 +627,10 @@ public class MainFeedActivity extends BackToExitActivityBase
             Auth.GoogleSignInApi.signOut(googleApiClient);
         }
         shell.getScreenProvider().showLaunchScreen(this, true, currentIndex);
+    }
+
+    @Override
+    public void onLogout() {
+        profileMainFeedPresenter.logout();
     }
 }

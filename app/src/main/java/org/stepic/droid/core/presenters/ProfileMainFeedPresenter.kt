@@ -13,14 +13,14 @@ import org.stepic.droid.web.IApi
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 
-class ProfileMainFeedPresenter(val sharedPreferenceHelper: SharedPreferenceHelper,
-                               val mainHandler: IMainHandler,
-                               val api: IApi,
-                               val threadPoolExecutor: ThreadPoolExecutor,
-                               val analytic: Analytic,
-                               val databaseFacade: DatabaseFacade,
-                               val userPreferences: UserPreferences,
-                               val systemDownloadManager: DownloadManager) : PresenterBase<ProfileMainFeedView>() {
+class ProfileMainFeedPresenter(private val sharedPreferenceHelper: SharedPreferenceHelper,
+                               private val mainHandler: IMainHandler,
+                               private val api: IApi,
+                               private val threadPoolExecutor: ThreadPoolExecutor,
+                               private val analytic: Analytic,
+                               private val databaseFacade: DatabaseFacade,
+                               private val userPreferences: UserPreferences,
+                               private val systemDownloadManager: DownloadManager) : PresenterBase<ProfileMainFeedView>() {
 
     val isProfileFetching = AtomicBoolean(false)
     var profile: Profile? = null
