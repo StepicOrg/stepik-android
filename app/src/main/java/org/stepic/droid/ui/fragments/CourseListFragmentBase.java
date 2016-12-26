@@ -231,7 +231,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     public void showConnectionProblem() {
         ProgressHelper.dismiss(progressBarOnEmptyScreen);
         ProgressHelper.dismiss(swipeRefreshLayout);
-        coursesAdapter.showLoadingFooter(true);
+        coursesAdapter.showLoadingFooter(false);
 
         if (courses == null || courses.isEmpty()) {
             //screen is clear due to error connection
