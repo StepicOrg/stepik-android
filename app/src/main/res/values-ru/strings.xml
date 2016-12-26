@@ -334,4 +334,5 @@
     <string name="content_course_logo">Логотип курса</string>
     <string name="continue_course_title">Учиться</string>
     <string name="auth_inline_message">Войдите, чтобы мы запомнили Ваши успехи</string>
+    <string name="step_with_position">– Шаг %d</string>
 </resources>

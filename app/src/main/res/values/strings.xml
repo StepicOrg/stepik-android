@@ -333,4 +333,5 @@
     <string name="content_course_logo">Course logo</string>
     <string name="continue_course_title">Continue</string>
     <string name="auth_inline_message">To save your progress please sign in first</string>
+    <string name="step_with_position">– Step %d</string>
 </resources>
