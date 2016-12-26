@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -59,6 +60,12 @@ public class CertificateFragment extends FragmentBase implements CertificateView
     @BindView(R.id.certificate_swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
 
+    @BindView(R.id.need_auth_view)
+    View needAuthRootView;
+
+    @BindView(R.id.auth_action)
+    Button authUserButton;
+
     @Override
     protected void injectComponent() {
         MainApplication.component().plus(new CertificateModule()).inject(this);
@@ -84,6 +91,13 @@ public class CertificateFragment extends FragmentBase implements CertificateView
         certificateRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         certificateRecyclerView.setAdapter(adapter);
 
+        authUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shell.getScreenProvider().showLaunchScreen(getActivity());
+            }
+        });
+
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(
                 R.color.stepic_brand_primary,
@@ -98,6 +112,7 @@ public class CertificateFragment extends FragmentBase implements CertificateView
     @Override
     public void onDestroyView() {
         certificatePresenter.detachView(this);
+        authUserButton.setOnClickListener(null);
         super.onDestroyView();
     }
 
@@ -116,6 +131,7 @@ public class CertificateFragment extends FragmentBase implements CertificateView
 
     @Override
     public void showEmptyState() {
+        needAuthRootView.setVisibility(View.GONE);
         ProgressHelper.dismiss(swipeRefreshLayout);
         ProgressHelper.dismiss(progressBarOnCenter);
         reportInternetProblem.setVisibility(View.GONE);
@@ -129,6 +145,7 @@ public class CertificateFragment extends FragmentBase implements CertificateView
         ProgressHelper.dismiss(swipeRefreshLayout);
         ProgressHelper.dismiss(progressBarOnCenter);
         reportEmpty.setVisibility(View.GONE);
+        needAuthRootView.setVisibility(View.GONE);
         if (certificatePresenter.size() <= 0) {
             reportInternetProblem.setVisibility(View.VISIBLE);
         } else {
@@ -142,6 +159,7 @@ public class CertificateFragment extends FragmentBase implements CertificateView
         ProgressHelper.dismiss(swipeRefreshLayout);
         reportEmpty.setVisibility(View.GONE);
         reportInternetProblem.setVisibility(View.GONE);
+        needAuthRootView.setVisibility(View.GONE);
         certificateRecyclerView.setVisibility(View.VISIBLE);
         adapter.updateCertificates(certificateViewItems);
     }
@@ -156,6 +174,15 @@ public class CertificateFragment extends FragmentBase implements CertificateView
             bottomSheetDialogFragment.show(getFragmentManager(), null);
         }
 
+    }
+
+    @Override
+    public void onAnonymousUser() {
+        ProgressHelper.dismiss(swipeRefreshLayout);
+        ProgressHelper.dismiss(progressBarOnCenter);
+        reportEmpty.setVisibility(View.GONE);
+        reportInternetProblem.setVisibility(View.GONE);
+        needAuthRootView.setVisibility(View.VISIBLE);
     }
 
     @Override

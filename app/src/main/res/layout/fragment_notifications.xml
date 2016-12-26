@@ -47,6 +47,8 @@
 
         <include layout="@layout/report_problem_layout"/>
 
+        <include layout="@layout/need_auth_placeholder"/>
+
         <android.support.v4.view.ViewPager
             android:id="@+id/notification_viewpager"
             android:layout_width="match_parent"

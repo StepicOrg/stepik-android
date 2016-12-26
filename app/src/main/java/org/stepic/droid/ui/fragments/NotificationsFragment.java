@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -46,6 +47,12 @@ public class NotificationsFragment extends FragmentBase {
 
     @BindView(R.id.notification_viewpager)
     ViewPager viewPager;
+
+    @BindView(R.id.need_auth_view)
+    View needAuthRootView;
+
+    @BindView(R.id.auth_action)
+    Button authUserButton;
 
     private HasDrawer hasDrawerHost;
 
@@ -78,8 +85,25 @@ public class NotificationsFragment extends FragmentBase {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initToolbar();
-        initViewPager();
+        if (sharedPreferenceHelper.getAuthResponseFromStore() == null) {
+            authUserButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    shell.getScreenProvider().showLaunchScreen(getActivity());
+                }
+            });
+            toolbar.setVisibility(View.GONE);
+            tabLayout.setVisibility(View.GONE);
+            needAuthRootView.setVisibility(View.VISIBLE);
+            viewPager.setVisibility(View.GONE);
+        } else {
+            tabLayout.setVisibility(View.VISIBLE);
+            initToolbar();
+            toolbar.setVisibility(View.VISIBLE);
+            viewPager.setVisibility(View.VISIBLE);
+            needAuthRootView.setVisibility(View.GONE);
+            initViewPager();
+        }
     }
 
     private void initViewPager() {
@@ -90,6 +114,7 @@ public class NotificationsFragment extends FragmentBase {
     @Override
     public void onDestroyView() {
         destroyToolbar();
+        authUserButton.setOnClickListener(null);
         super.onDestroyView();
     }
 
