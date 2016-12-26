@@ -36,10 +36,12 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.appindexing.Action;
+import com.google.firebase.appindexing.FirebaseAppIndex;
+import com.google.firebase.appindexing.FirebaseUserActions;
+import com.google.firebase.appindexing.Indexable;
+import com.google.firebase.appindexing.builders.Actions;
+import com.google.firebase.appindexing.builders.Indexables;
 import com.squareup.otto.Subscribe;
 
 import org.jetbrains.annotations.NotNull;
@@ -185,7 +187,6 @@ public class SectionsFragment
     @Inject
     INotificationManager notificationManager;
 
-    private GoogleApiClient googleClient;
     private boolean wasIndexed;
     private Uri urlInApp;
     private Uri urlInWeb;
@@ -222,8 +223,6 @@ public class SectionsFragment
         imageViewTarget = new GlideDrawableImageViewTarget(courseIcon);
         hideSoftKeypad();
         firstLoad = true;
-
-        googleClient = new GoogleApiClient.Builder(getActivity()).addApi(AppIndex.API).build();
 
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(
@@ -283,13 +282,15 @@ public class SectionsFragment
 
     private void reportIndexToGoogle() {
         if (course != null && !wasIndexed && course.getSlug() != null) {
-            if (!googleClient.isConnecting() && !googleClient.isConnected()) {
-                googleClient.connect();
-            }
             wasIndexed = true;
-            AppIndex.AppIndexApi.start(googleClient, getAction());
+            FirebaseAppIndex.getInstance().update(getIndexable());
+            FirebaseUserActions.getInstance().start(getAction());
             analytic.reportEventWithIdName(Analytic.AppIndexing.COURSE_SYLLABUS, course.getCourseId() + "", course.getTitle());
         }
+    }
+
+    private Indexable getIndexable() {
+        return Indexables.newSimple(title, urlInWeb.toString());
     }
 
     public void resolveJoinCourseView() {
@@ -439,30 +440,26 @@ public class SectionsFragment
     @Override
     public void onStop() {
         super.onStop();
-
         if (wasIndexed) {
-            AppIndex.AppIndexApi.end(googleClient, getAction());
-        }
-
-        if (googleClient != null && googleClient.isConnected() && googleClient.isConnecting()) {
-            googleClient.disconnect();
+            FirebaseUserActions.getInstance().end(getAction());
         }
         wasIndexed = false;
         ProgressHelper.dismiss(swipeRefreshLayout);
     }
 
     public Action getAction() {
-        Thing object = new Thing.Builder()
-                .setId(urlInWeb.toString())
-                .setName(title)
-                .setDescription(description)
-                .setUrl(urlInApp)
-                .build();
-
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
+        return Actions.newView(title, urlInWeb.toString());
+//        Thing object = new Thing.Builder()
+//                .setId(urlInWeb.toString())
+//                .setName(title)
+//                .setDescription(description)
+//                .setUrl(urlInApp)
+//                .build();
+//
+//        return new Action.Builder(Action.TYPE_VIEW)
+//                .setObject(object)
+//                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+//                .build();
     }
 
     @Override

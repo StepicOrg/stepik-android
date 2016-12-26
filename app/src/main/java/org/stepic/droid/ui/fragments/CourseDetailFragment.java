@@ -32,10 +32,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.appindexing.Action;
+import com.google.firebase.appindexing.FirebaseAppIndex;
+import com.google.firebase.appindexing.FirebaseUserActions;
+import com.google.firebase.appindexing.Indexable;
+import com.google.firebase.appindexing.builders.Actions;
+import com.google.firebase.appindexing.builders.Indexables;
 import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
@@ -163,7 +165,6 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     View player;
 
     //App indexing:
-    private GoogleApiClient client;
     private Uri urlInApp;
     private Uri urlInWeb;
     private String titleString;
@@ -176,17 +177,18 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     private InstructorAdapter instructorAdapter;
 
     public Action getAction() {
-        Thing object = new Thing.Builder()
-                .setId(urlInWeb.toString())
-                .setName(titleString)
-                .setDescription(descriptionString)
-                .setUrl(urlInApp)
-                .build();
-
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
+        return Actions.newView(titleString, urlInWeb.toString());
+//        Thing object = new Thing.Builder()
+//                .setId(urlInWeb.toString())
+//                .setName(titleString)
+//                .setDescription(descriptionString)
+//                .setUrl(urlInApp)
+//                .build();
+//
+//        return new Action.Builder(Action.TYPE_VIEW)
+//                .setObject(object)
+//                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+//                .build();
     }
 
     @Inject
@@ -204,7 +206,6 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     public void onCreate(Bundle savedInstanceState) {
         getActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         super.onCreate(savedInstanceState);
-        client = new GoogleApiClient.Builder(getActivity()).addApi(AppIndex.API).build();
         setRetainInstance(true);
         instructorsList = new ArrayList<>();
         needInstaEnroll = getArguments().getBoolean(instaEnrollKey); //if not exist -> false
@@ -357,7 +358,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             activity.invalidateOptionsMenu();
         }
 
-        if (needInstaEnroll){
+        if (needInstaEnroll) {
             needInstaEnroll = false;
             joinCourse();
         }
@@ -365,13 +366,15 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     private void reportIndexToGoogle() {
         if (course != null && !wasIndexed && course.getSlug() != null) {
-            if (!client.isConnecting() && !client.isConnected()) {
-                client.connect();
-            }
             wasIndexed = true;
-            AppIndex.AppIndexApi.start(client, getAction());
+            FirebaseAppIndex.getInstance().update(getIndexable());
+            FirebaseUserActions.getInstance().start(getAction());
             analytic.reportEventWithIdName(Analytic.AppIndexing.COURSE_DETAIL, course.getCourseId() + "", course.getTitle());
         }
+    }
+
+    private Indexable getIndexable() {
+        return Indexables.newSimple(titleString, urlInWeb.toString());
     }
 
     private void resolveJoinView() {
@@ -580,10 +583,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     public void onStop() {
 
         if (wasIndexed) {
-            AppIndex.AppIndexApi.end(client, getAction());
-        }
-        if (client != null && client.isConnected() && client.isConnecting()) {
-            client.disconnect();
+            FirebaseUserActions.getInstance().end(getAction());
         }
         wasIndexed = false;
         super.onStop();
