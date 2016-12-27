@@ -61,6 +61,10 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
         unit = outUnit
         threadPoolExecutor.execute {
             try {
+                if (lesson == null) {
+                    initUnitLessonWithIds(simpleLessonId, simpleUnitId)
+                }
+
                 if (!(lesson?.is_public ?: true)) {
                     //lesson is not public
                     val profileResponse = sharedPreferenceHelper.authResponseFromStore
@@ -71,12 +75,6 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                         return@execute
                     }
                 }
-
-
-                if (lesson == null) {
-                    initUnitLessonWithIds(simpleLessonId, simpleUnitId)
-                }
-
                 //after that Lesson should be not null
                 if (lesson == null) {
                     return@execute
@@ -160,8 +158,14 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                 val stepListFromInternet = response.body().steps
                 if (stepListFromInternet.isEmpty()) {
                     if (!isStepsShown) {
-                        mainHandler.post {
-                            view?.onEmptySteps()
+                        if (it.steps?.isEmpty() ?: true) {
+                            mainHandler.post {
+                                view?.onEmptySteps()
+                            }
+                        } else {
+                            mainHandler.post {
+                                view?.onLessonCorrupted()
+                            }
                         }
                     }
                     return
