@@ -134,7 +134,11 @@ public class SplashActivity extends BackToExitActivityBase {
 
     private void showNextScreen() {
         if (!isFinishing()) {
-            shell.getScreenProvider().showMainFeed(SplashActivity.this);
+            if (sharedPreferenceHelper.getAuthResponseFromStore() != null) {
+                shell.getScreenProvider().showMainFeed(SplashActivity.this);
+            } else {
+                shell.getScreenProvider().showLaunchScreen(this);
+            }
             finish();
         }
     }

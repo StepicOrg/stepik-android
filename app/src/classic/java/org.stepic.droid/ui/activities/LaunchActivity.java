@@ -67,6 +67,9 @@ public class LaunchActivity extends BackToExitActivityBase {
     @BindView(R.id.terms_privacy_launch)
     TextView termsPrivacyTextView;
 
+    @BindView(R.id.find_courses_button)
+    View findCoursesButton;
+
     @BindString(R.string.terms_message_launch)
     String termsMessageHtml;
 
@@ -81,6 +84,14 @@ public class LaunchActivity extends BackToExitActivityBase {
         setContentView(R.layout.activity_launch);
         getWindow().setBackgroundDrawable(null);
         unbinder = ButterKnife.bind(this);
+
+        findCoursesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analytic.reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_LAUNCH);
+                shell.getScreenProvider().showFindCourses(LaunchActivity.this);
+            }
+        });
 
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom);
 
@@ -210,6 +221,14 @@ public class LaunchActivity extends BackToExitActivityBase {
     protected void onStop() {
         googleApiClient.disconnect();
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        signInTextView.setOnClickListener(null);
+        signUpButton.setOnClickListener(null);
+        findCoursesButton.setOnClickListener(null);
+        super.onDestroy();
     }
 
     private void redirectFromSocial(Intent intent) {

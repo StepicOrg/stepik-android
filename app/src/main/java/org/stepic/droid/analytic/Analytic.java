@@ -73,6 +73,7 @@ public interface Analytic {
         String CLICK_PROFILE_BEFORE_LOADING = "click_profile_before_loading";
         String JOIN_COURSE = "click_join_course";
 
+        java.lang.String CLICK_FIND_COURSE_LAUNCH = "click_find_courses_launch";
     }
 
     interface Screens {
