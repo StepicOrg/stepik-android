@@ -75,8 +75,8 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    ScreenManager provideIScreenManager(IConfig config, UserPreferences userPreferences, Analytic analytic) {
-        return new ScreenManagerImpl(config, userPreferences, analytic);
+    ScreenManager provideIScreenManager(IConfig config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferenceHelper) {
+        return new ScreenManagerImpl(config, userPreferences, analytic, sharedPreferenceHelper);
     }
 
     @Provides
