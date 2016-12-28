@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
@@ -27,6 +29,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.store.operations.Table;
@@ -64,45 +67,88 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ScreenManagerImpl implements ScreenManager {
-    private IConfig config;
-    private UserPreferences userPreferences;
-    private Analytic analytic;
+    private final SharedPreferenceHelper sharedPreferences;
+    private final IConfig config;
+    private final UserPreferences userPreferences;
+    private final Analytic analytic;
 
     @Inject
-    public ScreenManagerImpl(IConfig config, UserPreferences userPreferences, Analytic analytic) {
+    public ScreenManagerImpl(IConfig config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferences) {
         this.config = config;
         this.userPreferences = userPreferences;
         this.analytic = analytic;
+        this.sharedPreferences = sharedPreferences;
     }
 
     @Override
-    public void showLaunchScreen(Context context, boolean overrideAnimation) {
+    public void showLaunchScreen(Activity activity) {
+        showLaunchScreen(activity, false, 0);
+    }
+
+    @Override
+    public void showLaunchScreen(FragmentActivity activity, @NotNull Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
-        Intent launchIntent = new Intent(context, LaunchActivity.class);
-        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(launchIntent);
+        Intent launchIntent = new Intent(activity, LaunchActivity.class);
+        launchIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, (Parcelable) course);
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        activity.startActivity(launchIntent);
+    }
+
+    @Override
+    public void showLaunchScreen(Activity activity, boolean fromMainFeed, int index) {
+        analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
+        Intent launchIntent = new Intent(activity, LaunchActivity.class);
+        if (fromMainFeed) {
+            launchIntent.putExtra(LaunchActivity.FROM_MAIN_FEED_FLAG, true);
+            launchIntent.putExtra(MainFeedActivity.KEY_CURRENT_INDEX, index);
+        }
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        activity.startActivity(launchIntent);
     }
 
 
     @Override
-    public void showRegistration(Activity sourceActivity) {
+    public void showRegistration(Activity sourceActivity, @Nullable Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_REGISTRATION);
         Intent launchIntent = new Intent(sourceActivity, RegisterActivity.class);
+        if (course != null) {
+            launchIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, (Parcelable) course);
+        }
         sourceActivity.startActivity(launchIntent);
     }
 
     @Override
-    public void showLogin(Activity sourceActivity) {
+    public void showLogin(Activity sourceActivity, @Nullable Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_LOGIN);
         Intent loginIntent = new Intent(sourceActivity, LoginActivity.class);
+        if (course != null) {
+            loginIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, (Parcelable) course);
+        }
         sourceActivity.startActivity(loginIntent);
     }
 
     @Override
     public void showMainFeed(Context sourceActivity) {
+        showMainFeed(sourceActivity, null);
+    }
+
+    @Override
+    public void showMainFeed(Context sourceActivity, @Nullable Course course) {
+        analytic.reportEvent(Analytic.Screens.SHOW_MAIN_FEED);
+        Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
+        if (course != null) {
+            intent.putExtra(AppConstants.KEY_COURSE_BUNDLE, (Parcelable) course);
+        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        sourceActivity.startActivity(intent);
+    }
+
+    @Override
+    public void showMainFeed(Context sourceActivity, int indexOfMenu) {
         analytic.reportEvent(Analytic.Screens.SHOW_MAIN_FEED);
         Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(MainFeedActivity.KEY_CURRENT_INDEX, indexOfMenu);
         sourceActivity.startActivity(intent);
     }
 
@@ -115,6 +161,13 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showCourseDescription(Activity sourceActivity, @NotNull Course course) {
         Intent intent = getIntentForDescription(sourceActivity, course);
+        sourceActivity.startActivity(intent);
+    }
+
+    @Override
+    public void showCourseDescription(Activity sourceActivity, @NotNull Course course, boolean instaEnroll) {
+        Intent intent = getIntentForDescription(sourceActivity, course);
+        intent.putExtra(CourseDetailActivity.INSTA_ENROLL_KEY, instaEnroll);
         sourceActivity.startActivity(intent);
     }
 
@@ -415,15 +468,19 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void openNewCommentForm(Activity sourceActivity, Long target, @Nullable Long parent) {
-        analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT);
-        Intent intent = new Intent(sourceActivity, NewCommentActivity.class);
-        Bundle bundle = new Bundle();
-        if (parent != null) {
-            bundle.putLong(NewCommentActivity.Companion.getKeyParent(), parent);
+        if (sharedPreferences.getAuthResponseFromStore() != null) {
+            analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT);
+            Intent intent = new Intent(sourceActivity, NewCommentActivity.class);
+            Bundle bundle = new Bundle();
+            if (parent != null) {
+                bundle.putLong(NewCommentActivity.Companion.getKeyParent(), parent);
+            }
+            bundle.putLong(NewCommentActivity.Companion.getKeyTarget(), target);
+            intent.putExtras(bundle);
+            sourceActivity.startActivity(intent);
+        } else {
+            Toast.makeText(sourceActivity, R.string.anonymous_write_comment, Toast.LENGTH_SHORT).show();
         }
-        bundle.putLong(NewCommentActivity.Companion.getKeyTarget(), target);
-        intent.putExtras(bundle);
-        sourceActivity.startActivity(intent);
     }
 
     private Intent getSectionsIntent(Activity sourceActivity, @NotNull Course course) {

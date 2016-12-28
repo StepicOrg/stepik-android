@@ -16,15 +16,37 @@ object KotlinUtil {
         return result
     }
 
-    fun getListOldPlusUpdated(oldList: List<Course>, newList: List<Course>): List<Course> {
-        val result = ArrayList<Course>(newList.size + oldList.size)
-        result.addAll(newList)
-        result.addAll(oldList)
-        return result.distinctBy { it.courseId }
-    }
+    fun getListOldPlusUpdated(oldList: List<Course>, newList: List<Course>)
+            = mergeTwoCourseList(newList = newList, oldList = oldList)
 
     fun getNiceFormatOfDouble(number: Double): String {
         val format = DecimalFormat("0.##");
         return format.format(number)
+    }
+
+
+    //oldList should be first, and after that newList, but if exists 2 elements with the same ID, get from newList at position of oldList
+    private fun mergeTwoCourseList(oldList: List<Course>, newList: List<Course>): List<Course> {
+        val hashMap = newList.associateBy { it.courseId }
+        val usedFromNew = HashSet<Long>(newList.size)
+        val result = ArrayList<Course>(newList.size + oldList.size)
+        oldList.forEach {
+            val updatedCourse: Course? = hashMap[it.courseId]
+            if (updatedCourse != null) {
+                result.add(updatedCourse)
+                usedFromNew.add(updatedCourse.courseId)
+            } else {
+                result.add(it)
+            }
+        }
+
+        //do not add used from new
+        newList.forEach {
+            if (!usedFromNew.contains(it.courseId)) {
+                result.add(it)
+            }
+        }
+
+        return result
     }
 }

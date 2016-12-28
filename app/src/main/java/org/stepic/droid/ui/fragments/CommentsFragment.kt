@@ -323,6 +323,11 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun vote(position: Int, voteValue: VoteValue?) {
+        if (sharedPreferenceHelper.authResponseFromStore == null) {
+            Toast.makeText(context, R.string.anonymous_like_mark_comment, Toast.LENGTH_SHORT).show()
+            return
+        }
+
 
         val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
         val voteId = comment.vote

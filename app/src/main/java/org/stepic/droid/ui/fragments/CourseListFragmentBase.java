@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
@@ -31,6 +32,7 @@ import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.custom.TouchDispatchableFrameLayout;
+import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
@@ -60,8 +62,14 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     @BindView(R.id.empty_courses)
     protected View emptyCoursesView;
 
+    @BindView(R.id.empty_courses_anonymous_button)
+    protected Button signInButton;
+
     @BindView(R.id.empty_courses_button)
     protected Button findCourseButton;
+
+    @BindView(R.id.empty_courses_text)
+    protected TextView emptyCoursesTextView;
 
     @BindView(R.id.root_fragment_view)
     protected TouchDispatchableFrameLayout rootView;
@@ -111,7 +119,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         if (courses == null) courses = new ArrayList<>();
         coursesAdapter = new CoursesAdapter(this, courses, getCourseType(), continueCoursePresenter);
         listOfCoursesView.setAdapter(coursesAdapter);
-        layoutManager = new LinearLayoutManager(getContext());
+        layoutManager = new WrapContentLinearLayoutManager(getContext());
         listOfCoursesView.setLayoutManager(layoutManager);
 
         listOfCoursesViewListener = new RecyclerView.OnScrollListener() {
@@ -134,13 +142,24 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         listOfCoursesView.addOnScrollListener(listOfCoursesViewListener);
         registerForContextMenu(listOfCoursesView);
 
+
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analytic.reportEvent(Analytic.Anonymous.AUTH_CENTER);
+                shell.getScreenProvider().showLaunchScreen(getActivity());
+            }
+        });
+
         findCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Activity parent = getActivity();
                 if (parent == null || !(parent instanceof MainFeedActivity)) return;
-
                 analytic.reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_EMPTY_SCREEN);
+                if (sharedPreferenceHelper.getAuthResponseFromStore() == null) { // TODO: 27.12.16 make it on background thread
+                    analytic.reportEvent(Analytic.Anonymous.BROWSE_COURSES_CENTER);
+                }
                 ((MainFeedActivity) parent).showFindLesson();
             }
         });
@@ -215,7 +234,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     public void showConnectionProblem() {
         ProgressHelper.dismiss(progressBarOnEmptyScreen);
         ProgressHelper.dismiss(swipeRefreshLayout);
-        coursesAdapter.showLoadingFooter(true);
+        coursesAdapter.showLoadingFooter(false);
 
         if (courses == null || courses.isEmpty()) {
             //screen is clear due to error connection
@@ -231,7 +250,12 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
         coursesAdapter.showLoadingFooter(false);
         reportConnectionProblem.setVisibility(View.GONE);
         showEmptyScreen(false);
-        List<Course> finalCourses = KotlinUtil.INSTANCE.getListOldPlusUpdated(this.courses, courses);
+        List<Course> finalCourses;
+        if (getCourseType() == null) {
+            finalCourses = KotlinUtil.INSTANCE.getListOldPlusUpdated(this.courses, courses);
+        } else {
+            finalCourses = courses;
+        }
         this.courses.clear();
         this.courses.addAll(finalCourses);
         coursesAdapter.notifyDataSetChanged();

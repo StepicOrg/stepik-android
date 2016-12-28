@@ -55,6 +55,9 @@ class StepsActivity : SingleFragmentActivity() {
             if (action != null && action != AppConstants.INTERNAL_STEPIK_ACTION) {
                 analytic.reportEvent(Analytic.DeepLink.USER_OPEN_STEPS_LINK);
                 analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL);
+                if (sharedPreferenceHelper.authResponseFromStore == null) {
+                    analytic.reportEvent(Analytic.DeepLink.ANONYMOUS_OPEN_STEPS_LINK)
+                }
             }
             //All can be -1
             val simpleLessonId: Long = getSimpleLessonId(dataUri)

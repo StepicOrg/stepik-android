@@ -1,6 +1,7 @@
 package org.stepic.droid.core.presenters
 
 import android.app.Activity
+import android.support.annotation.MainThread
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.configuration.IConfig
@@ -8,6 +9,7 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.contracts.CertificateView
 import org.stepic.droid.model.Certificate
 import org.stepic.droid.model.CertificateViewItem
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.web.CertificateResponse
 import org.stepic.droid.web.CoursesStepicResponse
@@ -25,20 +27,30 @@ class CertificatePresenter(val api: IApi,
                            val database: DatabaseFacade,
                            val threadPoolExecutor: ThreadPoolExecutor,
                            val mainHandler: IMainHandler,
+                           val sharedPreferenceHelper: SharedPreferenceHelper,
                            val analytic: Analytic) : PresenterBase<CertificateView>() {
 
     private var certificateViewItemList: ArrayList<CertificateViewItem>? = null
     private var certificatesCall: Call<CertificateResponse>? = null
     private var coursesCall: Call<CoursesStepicResponse>? = null
 
+    @MainThread
     fun showCertificates(isRefreshing: Boolean) {
         if (certificateViewItemList == null) {
-            database.getAllCertificates()
             //need load from internet
             if (!isRefreshing) {
                 view?.onLoading()
             }
             threadPoolExecutor.execute {
+                val isAnonymous = sharedPreferenceHelper.authResponseFromStore == null
+                if (isAnonymous) {
+                    mainHandler.post {
+                        view?.onAnonymousUser()
+                    }
+                    return@execute
+                }
+
+
                 certificateViewItemList = database.getAllCertificates()?.filterNotNull() as? ArrayList<CertificateViewItem>
                 mainHandler.post {
                     if (certificateViewItemList != null) {
@@ -48,7 +60,6 @@ class CertificatePresenter(val api: IApi,
                     loadCertificatesSilent()
                 }
             }
-            loadCertificatesSilent()
         } else if (certificateViewItemList?.isEmpty() ?: false) {
             view?.showEmptyState()
         } else if (certificateViewItemList?.isNotEmpty() ?: false) {
@@ -57,6 +68,7 @@ class CertificatePresenter(val api: IApi,
     }
 
     //if you reuse this function, you need handle getView's callbacks carefully
+    @MainThread
     private fun loadCertificatesSilent() {
         certificatesCall = api.certificates
         certificatesCall?.enqueue(object : Callback<CertificateResponse> {

@@ -51,6 +51,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     PersistentCourseListPresenter courseListPresenter;
 
     BackButtonHandler backButtonHandler = null;
+    private boolean isScreenCreated;
 
     @Override
     public void onAttach(Context context) {
@@ -103,32 +104,22 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         super.onViewCreated(view, savedInstanceState);
         bus.register(this);
         courseListPresenter.attachView(this);
-
-        if (savedInstanceState == null) {
-            //reset all data
-            needFilter = false;
-            courses.clear();
-            swipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    courseListPresenter.refreshData(getCourseType(), needFilter, false);
-                }
-            });
-        } else {
-            //load if not
-            swipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    courseListPresenter.downloadData(getCourseType(), needFilter);
-                }
-            });
-        }
+        isScreenCreated = savedInstanceState == null;
         courseListPresenter.restoreState();
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        if (isScreenCreated) {
+            //reset all data
+            needFilter = false;
+            courses.clear();
+            courseListPresenter.refreshData(getCourseType(), needFilter, false);
+        } else {
+            //load if not
+            courseListPresenter.downloadData(getCourseType(), needFilter);
+        }
         swipeRefreshLayout.setRefreshing(false);
     }
 
@@ -296,10 +287,18 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void showEmptyScreen(boolean isShowed) {
-
         if (isShowed) {
             if (getCourseType() == Table.enrolled) {
                 emptyCoursesView.setVisibility(View.VISIBLE);
+                if (sharedPreferenceHelper.getAuthResponseFromStore() != null) { //// TODO: 23.12.16 optimize it and do on background thread
+                    //logged
+                    emptyCoursesTextView.setText(R.string.empty_courses);
+                    signInButton.setVisibility(View.GONE);
+                } else {
+                    //anonymous
+                    emptyCoursesTextView.setText(R.string.empty_courses_anonymous);
+                    signInButton.setVisibility(View.VISIBLE);
+                }
                 emptySearch.setVisibility(View.GONE);
             } else {
                 emptyCoursesView.setVisibility(View.GONE);
@@ -315,7 +314,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Override
     public void onNeedDownloadNextPage() {
-        courseListPresenter.downloadData(getCourseType(), needFilter);
+        courseListPresenter.loadMore(getCourseType(), needFilter);
     }
 
     @Override

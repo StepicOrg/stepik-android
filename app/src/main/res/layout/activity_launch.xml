@@ -26,6 +26,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_marginLeft="@dimen/padding_registration_left_right"
+                android:layout_marginRight="@dimen/padding_registration_left_right"
                 android:layout_marginTop="@dimen/guideline_standard_padding"
                 android:clickable="false"
                 android:contentDescription="@string/app_name"
@@ -34,8 +36,7 @@
                 android:src="@drawable/ic_stepik_logotype_square_green"/>
 
             <Button
-
-                android:id="@+id/sign_in_with_email"
+                android:id="@+id/find_courses_button"
                 style="@style/LoginButtons"
                 android:layout_below="@+id/stepik_logo"
                 android:layout_centerHorizontal="true"
@@ -43,14 +44,25 @@
                 android:layout_marginLeft="@dimen/padding_registration_left_right"
                 android:layout_marginRight="@dimen/padding_registration_left_right"
                 android:layout_marginTop="50dp"
+                android:contentDescription="@string/find_courses_title"
+                android:text="@string/find_courses_title"/>
+
+            <Button
+                android:id="@+id/sign_in_with_email"
+                style="@style/LoginButtons"
+                android:layout_alignLeft="@id/find_courses_button"
+                android:layout_alignRight="@id/find_courses_button"
+                android:layout_below="@+id/find_courses_button"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="15dp"
                 android:contentDescription="@string/sign_in_with_password"
                 android:text="@string/sign_in_with_password"/>
 
             <Button
                 android:id="@+id/sign_up_btn_activity_launch"
                 style="@style/LoginButtons"
-                android:layout_alignLeft="@id/sign_in_with_email"
-                android:layout_alignRight="@id/sign_in_with_email"
+                android:layout_alignLeft="@id/find_courses_button"
+                android:layout_alignRight="@id/find_courses_button"
                 android:layout_below="@id/sign_in_with_email"
                 android:layout_centerHorizontal="true"
                 android:text="@string/yet_have_not_account"/>

@@ -215,7 +215,11 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
 
     public void showLoadingFooter(boolean isNeedShow) {
         isNeedShowFooter = isNeedShow;
-        notifyItemChanged(getItemCount() - 1);
+        try {
+            notifyItemChanged(getItemCount() - 1);
+        } catch (IllegalStateException ignored) {
+            //if it is already notified
+        }
     }
 
 }

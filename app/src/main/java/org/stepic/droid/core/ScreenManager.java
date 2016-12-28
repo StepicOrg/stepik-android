@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -18,13 +19,20 @@ import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.web.ViewAssignment;
 
 public interface ScreenManager {
-    void showLaunchScreen(Context context, boolean overrideAnimation);
+    void showLaunchScreen(Activity activity);
 
-    void showRegistration(Activity sourceActivity);
+    void showLaunchScreen(Activity activity, boolean fromMainFeed, int indexInMenu);
 
-    void showLogin(Activity sourceActivity);
+    void showRegistration(Activity sourceActivity, @Nullable Course course);
+
+    void showLogin(Activity sourceActivity, @Nullable Course course);
+
+    void showMainFeed(Context sourceActivity, @Nullable Course course);
 
     void showMainFeed(Context sourceActivity);
+
+
+    void showMainFeed(Context sourceActivity, int indexOfMenu);
 
     void showCourseDescription(Fragment sourceActivity, @NotNull Course course);
 
@@ -51,6 +59,8 @@ public interface ScreenManager {
     void pushToViewedQueue(ViewAssignment viewAssignmentWrapper);
 
     void showCourseDescription(Activity sourceActivity, @NotNull Course course);
+
+    void showCourseDescription(Activity sourceActivity, @NotNull Course course, boolean instaEnroll);
 
     void showTextFeedback(Activity sourceActivity);
 
@@ -103,4 +113,6 @@ public interface ScreenManager {
     void openTermsOfServiceWeb(Activity activity);
 
     void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition);
+
+    void showLaunchScreen(FragmentActivity activity, @NotNull Course course);
 }

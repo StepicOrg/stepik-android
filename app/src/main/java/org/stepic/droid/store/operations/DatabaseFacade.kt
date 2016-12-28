@@ -65,6 +65,9 @@ class DatabaseFacade {
     @Inject
     lateinit var lastStepDao: IDao<PersistentLastStep>
 
+    @Inject
+    lateinit var lastInteractions: IDao<CourseLastInteraction>
+
     init {
         MainApplication.storageComponent().inject(this)
         coursesEnrolledDao.setTableName(Table.enrolled.storeName)
@@ -84,6 +87,8 @@ class DatabaseFacade {
         coursesFeaturedDao.removeAll()
         notificationDao.removeAll()
         certificateViewItemDao.removeAll()
+        lastStepDao.removeAll()
+        lastInteractions.removeAll()
     }
 
     fun getCourseDao(table: Table) =
@@ -431,5 +436,10 @@ class DatabaseFacade {
     fun getLocalLastStepByCourseId(courseId: Long) =
             lastStepDao.get(DbStructureLastStep.Column.COURSE_ID, courseId.toString())
 
+    fun getAllLocalLastCourseInteraction() =
+            lastInteractions.getAll()
+
+    fun updateCourseLastInteraction(courseId: Long, timestamp: Long)
+            = lastInteractions.insertOrUpdate(CourseLastInteraction(courseId = courseId, timestamp = timestamp))
 
 }

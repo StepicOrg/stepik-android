@@ -15,4 +15,6 @@ public interface CertificateView {
     void onDataLoaded(List<CertificateViewItem> certificateViewItems);
 
     void onNeedShowShareDialog(@Nullable CertificateViewItem certificateViewItem);
+
+    void onAnonymousUser();
 }

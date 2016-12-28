@@ -36,10 +36,12 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.appindexing.Action;
+import com.google.firebase.appindexing.FirebaseAppIndex;
+import com.google.firebase.appindexing.FirebaseUserActions;
+import com.google.firebase.appindexing.Indexable;
+import com.google.firebase.appindexing.builders.Actions;
+import com.google.firebase.appindexing.builders.Indexables;
 import com.squareup.otto.Subscribe;
 
 import org.jetbrains.annotations.NotNull;
@@ -185,7 +187,6 @@ public class SectionsFragment
     @Inject
     INotificationManager notificationManager;
 
-    private GoogleApiClient googleClient;
     private boolean wasIndexed;
     private Uri urlInApp;
     private Uri urlInWeb;
@@ -223,8 +224,6 @@ public class SectionsFragment
         hideSoftKeypad();
         firstLoad = true;
 
-        googleClient = new GoogleApiClient.Builder(getActivity()).addApi(AppIndex.API).build();
-
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(
                 R.color.stepic_brand_primary,
@@ -240,7 +239,6 @@ public class SectionsFragment
 
         sectionsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        unauthorizedDialog = UnauthorizedDialogFragment.newInstance();
         joinCourseProgressDialog = new LoadingProgressDialog(getContext());
         ProgressHelper.activate(loadOnCenterProgressBar);
         bus.register(this);
@@ -284,13 +282,15 @@ public class SectionsFragment
 
     private void reportIndexToGoogle() {
         if (course != null && !wasIndexed && course.getSlug() != null) {
-            if (!googleClient.isConnecting() && !googleClient.isConnected()) {
-                googleClient.connect();
-            }
             wasIndexed = true;
-            AppIndex.AppIndexApi.start(googleClient, getAction());
+            FirebaseAppIndex.getInstance().update(getIndexable());
+            FirebaseUserActions.getInstance().start(getAction());
             analytic.reportEventWithIdName(Analytic.AppIndexing.COURSE_SYLLABUS, course.getCourseId() + "", course.getTitle());
         }
+    }
+
+    private Indexable getIndexable() {
+        return Indexables.newSimple(title, urlInWeb.toString());
     }
 
     public void resolveJoinCourseView() {
@@ -302,6 +302,7 @@ public class SectionsFragment
                 @Override
                 public void onClick(View v) {
                     if (course != null) {
+                        analytic.reportEvent(Analytic.Interaction.JOIN_COURSE);
                         courseJoinerPresenter.joinCourse(course);
                     }
                 }
@@ -440,30 +441,26 @@ public class SectionsFragment
     @Override
     public void onStop() {
         super.onStop();
-
         if (wasIndexed) {
-            AppIndex.AppIndexApi.end(googleClient, getAction());
-        }
-
-        if (googleClient != null && googleClient.isConnected() && googleClient.isConnecting()) {
-            googleClient.disconnect();
+            FirebaseUserActions.getInstance().end(getAction());
         }
         wasIndexed = false;
         ProgressHelper.dismiss(swipeRefreshLayout);
     }
 
     public Action getAction() {
-        Thing object = new Thing.Builder()
-                .setId(urlInWeb.toString())
-                .setName(title)
-                .setDescription(description)
-                .setUrl(urlInApp)
-                .build();
-
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
+        return Actions.newView(title, urlInWeb.toString());
+//        Thing object = new Thing.Builder()
+//                .setId(urlInWeb.toString())
+//                .setName(title)
+//                .setDescription(description)
+//                .setUrl(urlInApp)
+//                .build();
+//
+//        return new Action.Builder(Action.TYPE_VIEW)
+//                .setObject(object)
+//                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+//                .build();
     }
 
     @Override
@@ -531,7 +528,7 @@ public class SectionsFragment
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == AppConstants.REQUEST_EXTERNAL_STORAGE) {
+        if (requestCode == AppConstants.REQUEST_EXTERNAL_STORAGE && permissions.length > 0) {
             String permissionExternalStorage = permissions[0];
             if (permissionExternalStorage == null) return;
 
@@ -582,6 +579,7 @@ public class SectionsFragment
                         shell.getScreenProvider().showFindCourses(getActivity());
                         getActivity().finish();
                     } else {
+                        unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);
                         if (!unauthorizedDialog.isAdded()) {
                             unauthorizedDialog.show(getFragmentManager(), null);
                         }
@@ -621,6 +619,7 @@ public class SectionsFragment
             } else if (e.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
                 //UNAUTHORIZED
                 //it is just for safety, we should detect no account before send request
+                unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);
                 if (!unauthorizedDialog.isAdded()) {
                     unauthorizedDialog.show(getFragmentManager(), null);
                 }

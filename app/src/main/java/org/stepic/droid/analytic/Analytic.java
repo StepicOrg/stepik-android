@@ -70,6 +70,10 @@ public interface Analytic {
         java.lang.String SHOW_MATERIAL_DIALOG_INVITATION = "materdial_dialog_invite_shown";
         String CLICK_CONTINUE_COURSE = "click_continue_course";
         java.lang.String CLICK_COURSE = "click_course";
+        String CLICK_PROFILE_BEFORE_LOADING = "click_profile_before_loading";
+        String JOIN_COURSE = "click_join_course";
+
+        java.lang.String CLICK_FIND_COURSE_LAUNCH = "click_find_courses_launch";
     }
 
     interface Screens {
@@ -122,6 +126,7 @@ public interface Analytic {
     interface AppIndexing {
         String COURSE_DETAIL = "appindexing_course_detail";
         String COURSE_SYLLABUS = "appindexing_course_syllabus";
+        String STEP = "appindexing_step";
     }
 
     interface Error {
@@ -139,10 +144,8 @@ public interface Analytic {
         String UPDATE_FROM_APK_FAILED = "update apk is failed";
         String CANT_RESOLVE_VIDEO = "can't Resolve video";
         String FAIL_TO_MOVE = "storage: fail to move";
-        String NULL_SHOW_PROFILE = "Null profile is tried to show";
         String REGISTRATION_IMPORTANT_ERROR = "registration important error";
         String NOTIFICATION_NOT_POSTED_ON_CLICK = "notification is not posted";
-        String NULL_COURSE = "Null course is not expected";
         String NULL_SECTION = "Null section is not expected";
         String LESSON_IN_STORE_STATE_NULL = "lesson was null in store state manager";
         String UNIT_IN_STORE_STATE_NULL = "unit was null in store state manager";
@@ -247,6 +250,7 @@ public interface Analytic {
         String USER_OPEN_SYLLABUS_LINK = "open_syllabus_by_link";
         String USER_OPEN_COURSE_DETAIL_LINK = "open_detail_course_link";
         String USER_OPEN_STEPS_LINK = "open_step_link";
+        String ANONYMOUS_OPEN_STEPS_LINK = "open_step_link_anonymous";
     }
 
     interface Certificate {
@@ -304,6 +308,16 @@ public interface Analytic {
     interface Shortcut {
         String OPEN_PROFILE = "shortcut_open_profile";
         String FIND_COURSES = "shortcut_find_courses";
+    }
+
+
+    interface Anonymous {
+        String JOIN_COURSE = "click_join_course_anonymous";
+        String BROWSE_COURSES_CENTER = "click_anonymous_browse_courses_center";
+        String AUTH_CENTER = "click_anonymous_auth_center";
+        String BROWSE_COURSES_DRAWER = "click_anonymous_auth_center";
+        String AUTH_DRAWER = "click_anonymous_auth_drawer";
+        String SUCCESS_LOGIN_AND_ENROLL = "success_login_insta_enroll";
     }
 
     void reportEvent(String eventName, Bundle bundle);

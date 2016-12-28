@@ -1,9 +1,11 @@
 package org.stepic.droid.util;
 
+import android.content.Context;
 import android.net.Uri;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.model.Lesson;
@@ -185,4 +187,11 @@ public class StringUtil {
     }
 
 
+    public static String getTitleForStep(Context context, Lesson lesson, long position) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(lesson.getTitle());
+        stringBuilder.append(" ");
+        stringBuilder.append(context.getString(R.string.step_with_position, position));
+        return stringBuilder.toString();
+    }
 }

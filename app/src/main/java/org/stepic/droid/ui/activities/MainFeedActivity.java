@@ -40,14 +40,15 @@ import org.joda.time.DateTimeZone;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.events.profile.ProfileCanBeShownEvent;
+import org.stepic.droid.core.presenters.ProfileMainFeedPresenter;
+import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView;
 import org.stepic.droid.events.updating.NeedUpdateEvent;
-import org.stepic.droid.model.EmailAddress;
+import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.notifications.StepicInstanceIdService;
-import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.services.UpdateWithApkService;
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog;
 import org.stepic.droid.ui.dialogs.NeedUpdatingDialog;
 import org.stepic.droid.ui.fragments.CertificateFragment;
@@ -56,32 +57,31 @@ import org.stepic.droid.ui.fragments.FindCoursesFragment;
 import org.stepic.droid.ui.fragments.MyCoursesFragment;
 import org.stepic.droid.ui.fragments.NotificationsFragment;
 import org.stepic.droid.ui.util.BackButtonHandler;
-import org.stepic.droid.ui.util.LogoutSuccess;
 import org.stepic.droid.ui.util.OnBackClickListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.ProfileExtensionKt;
-import org.stepic.droid.web.EmailAddressResponse;
-import org.stepic.droid.web.StepicProfileResponse;
+import org.stepic.droid.util.ProgressHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
 import timber.log.Timber;
 
 public class MainFeedActivity extends BackToExitActivityBase
-        implements NavigationView.OnNavigationItemSelectedListener, LogoutSuccess, BackButtonHandler, HasDrawer {
+        implements NavigationView.OnNavigationItemSelectedListener, BackButtonHandler, HasDrawer, ProfileMainFeedView, LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener {
     public static final String KEY_CURRENT_INDEX = "Current_index";
     public static final String REMINDER_KEY = "reminder_key";
+    private final String PROGRESS_LOGOUT_TAG = "progress_logout";
+
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -96,6 +96,8 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     TextView userNameTextView;
 
+    View signInProfileView;
+
     @BindString(R.string.my_courses_title)
     String coursesTitle;
 
@@ -105,6 +107,9 @@ public class MainFeedActivity extends BackToExitActivityBase
     private int currentIndex;
 
     GoogleApiClient googleApiClient;
+
+    @Inject
+    ProfileMainFeedPresenter profileMainFeedPresenter;
 
     private List<WeakReference<OnBackClickListener>> onBackClickListenerList = new ArrayList<>(8);
     private ActionBarDrawerToggle actionBarDrawerToggle;
@@ -154,6 +159,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainApplication.component().inject(this);
         setContentView(R.layout.activity_main_feed);
         unbinder = ButterKnife.bind(this);
         notificationClickedCheck(getIntent());
@@ -165,60 +171,26 @@ public class MainFeedActivity extends BackToExitActivityBase
         if (savedInstanceState != null) {
             initFragments(savedInstanceState);
         } else {
-            initFragments(extras);
+            if (wasLaunchedFromRecents()) {
+                initFragments(null);
+            } else {
+                initFragments(extras);
+            }
         }
 
         bus.register(this);
 
-        final SharedPreferenceHelper helper = shell.getSharedPreferenceHelper();
-        Profile cachedProfile = helper.getProfile();
-        if (cachedProfile != null) {
-            showProfile(new ProfileCanBeShownEvent(cachedProfile));//update now!
-        }
-        shell.getApi().getUserProfile().enqueue(new Callback<StepicProfileResponse>() {
+        profileMainFeedPresenter.attachView(this);
+        profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Response<StepicProfileResponse> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
-                    Profile profile = response.body().getProfile();
-                    final long[] emailIds = profile.getEmailAddresses();
-                    if (emailIds != null && emailIds.length != 0) {
-                        shell.getApi().getEmailAddresses(emailIds).enqueue(new Callback<EmailAddressResponse>() {
-                            @Override
-                            public void onResponse(Response<EmailAddressResponse> response, Retrofit retrofit) {
-                                if (response.isSuccess()) {
-                                    EmailAddressResponse emailsResponse = response.body();
-                                    if (emailsResponse != null) {
-                                        List<EmailAddress> emails = emailsResponse.getEmailAddresses();
-                                        if (emails != null && !emails.isEmpty()) {
-                                            helper.storeEmailAddresses(emails);
-                                        }
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Throwable t) {
-
-                            }
-                        });
-                    }
-
-                    helper.storeProfile(profile);
-                    bus.post(new ProfileCanBeShownEvent(profile));//show if we can
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                // FIXME: 06.10.15 Sometimes profile is not load, investigate it! (maybe just set for update when create this activity)
-                //do nothing because view is now visible
-
+            public void onClick(View v) {
+                //base callback for profile, if it is not loaded.
+                analytic.reportEvent(Analytic.Interaction.CLICK_PROFILE_BEFORE_LOADING);
             }
         });
-
+        profileMainFeedPresenter.fetchProfile();
 
         if (checkPlayServices() && !sharedPreferenceHelper.isGcmTokenOk()) {
-
             threadPoolExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -229,6 +201,13 @@ public class MainFeedActivity extends BackToExitActivityBase
 
         Intent updateIntent = new Intent(this, UpdateAppService.class);
         startService(updateIntent);
+
+
+        Course course = getCourseFromExtra();
+        if (course != null) {
+            getIntent().removeExtra(AppConstants.KEY_COURSE_BUNDLE);
+            shell.getScreenProvider().showCourseDescription(this, course, true);
+        }
     }
 
     private void initGoogleApiClient() {
@@ -253,7 +232,10 @@ public class MainFeedActivity extends BackToExitActivityBase
         View headerLayout = navigationView.getHeaderView(0);
         profileImage = ButterKnife.findById(headerLayout, R.id.profile_image);
         userNameTextView = ButterKnife.findById(headerLayout, R.id.username);
+        signInProfileView = ButterKnife.findById(headerLayout, R.id.sign_in_profile_view);
 
+        signInProfileView.setOnClickListener(null);
+        signInProfileView.setVisibility(View.INVISIBLE);
         profileImage.setVisibility(View.INVISIBLE);
         userNameTextView.setVisibility(View.INVISIBLE);
         userNameTextView.setText("");
@@ -264,13 +246,20 @@ public class MainFeedActivity extends BackToExitActivityBase
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
+            if (currentIndex == 0) {
+                finish();
+                return;
+            }
             fragmentBackKeyIntercept();
             FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment fragment = fragmentManager.findFragmentById(R.id.frame);
             fragmentManager.popBackStackImmediate();
             fragmentManager.beginTransaction().remove(fragment).commit();
-            if (currentIndex == 0 || fragmentManager.getBackStackEntryCount() <= 0) {
-                finish();
+            if (fragmentManager.getBackStackEntryCount() <= 0) {
+                showCurrentFragment(0);
+
+//                super.onBackPressed();
+//                finish();
             } else {
                 currentIndex = 0;
                 navigationView.setCheckedItem(R.id.my_courses);
@@ -316,7 +305,7 @@ public class MainFeedActivity extends BackToExitActivityBase
             case R.id.logout_item:
                 analytic.reportEvent(Analytic.Interaction.CLICK_LOGOUT);
 
-                LogoutAreYouSureDialog dialog = LogoutAreYouSureDialog.newInstance();
+                LogoutAreYouSureDialog dialog = LogoutAreYouSureDialog.Companion.newInstance();
                 if (!dialog.isAdded()) {
                     dialog.show(getSupportFragmentManager(), null);
                 }
@@ -354,6 +343,7 @@ public class MainFeedActivity extends BackToExitActivityBase
                     }
                 }, 0);
                 shell.getScreenProvider().openAboutActivity(this);
+                return true;
             default:
                 showCurrentFragment(menuItem);
                 break;
@@ -380,6 +370,9 @@ public class MainFeedActivity extends BackToExitActivityBase
                 break;
             case R.id.find_lessons:
                 analytic.reportEvent(Analytic.Screens.USER_OPEN_FIND_COURSES);
+                if (sharedPreferenceHelper.getAuthResponseFromStore() == null) {
+                    analytic.reportEvent(Analytic.Anonymous.BROWSE_COURSES_DRAWER);
+                }
                 break;
             case R.id.cached_videos:
                 analytic.reportEvent(Analytic.Screens.USER_OPEN_DOWNLOADS);
@@ -471,30 +464,6 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     }
 
-    @Subscribe
-    public void showProfile(ProfileCanBeShownEvent e) {
-        Profile profile = e.getProfile();
-        if (profile == null) {
-            analytic.reportError(Analytic.Error.NULL_SHOW_PROFILE, new NullPointerException());
-            return;
-        }
-        profileImage.setVisibility(View.VISIBLE);
-        userNameTextView.setVisibility(View.VISIBLE);
-        Glide
-                .with(MainFeedActivity.this)
-                .load(profile.getAvatar())
-                .asBitmap()
-                .placeholder(userPlaceholder)
-                .into(profileImage);
-        userNameTextView.setText(ProfileExtensionKt.getFirstAndLastName(profile));
-        profileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                shell.getScreenProvider().openProfile(MainFeedActivity.this);
-            }
-        });
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(KEY_CURRENT_INDEX, currentIndex);
@@ -503,9 +472,10 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     @Override
     protected void onDestroy() {
+        profileImage.setOnClickListener(null);
+        profileMainFeedPresenter.detachView(this);
         bus.unregister(this);
         drawerLayout.removeDrawerListener(actionBarDrawerToggle);
-        profileImage.setOnClickListener(null);
         super.onDestroy();
     }
 
@@ -567,17 +537,6 @@ public class MainFeedActivity extends BackToExitActivityBase
         return 0;
     }
 
-    @Override
-    public void onLogout() {
-        LoginManager.getInstance().logOut();
-        VKSdk.logout();
-        if (googleApiClient.isConnected()) {
-            Auth.GoogleSignInApi.signOut(googleApiClient);
-        }
-        sharedPreferenceHelper.deleteAuthInfo();
-        shell.getScreenProvider().showLaunchScreen(MainApplication.getAppContext(), false);
-    }
-
     private boolean fragmentBackKeyIntercept() {
         if (onBackClickListenerList != null) {
             for (WeakReference<OnBackClickListener> weakReference : onBackClickListenerList) {
@@ -613,4 +572,69 @@ public class MainFeedActivity extends BackToExitActivityBase
         return drawerLayout;
     }
 
+    @Override
+    public void showAnonymous() {
+        signInProfileView.setVisibility(View.VISIBLE);
+        profileImage.setVisibility(View.VISIBLE);
+        userNameTextView.setVisibility(View.INVISIBLE);
+        profileImage.setImageDrawable(userPlaceholder);
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analytic.reportEvent(Analytic.Anonymous.AUTH_DRAWER);
+                shell.getScreenProvider().showLaunchScreen(MainFeedActivity.this);
+            }
+        };
+        profileImage.setOnClickListener(onClickListener);
+        signInProfileView.setOnClickListener(onClickListener);
+        showLogout(false);
+    }
+
+    @Override
+    public void showProfile(@NotNull Profile profile) {
+        signInProfileView.setVisibility(View.INVISIBLE);
+        profileImage.setVisibility(View.VISIBLE);
+        userNameTextView.setVisibility(View.VISIBLE);
+        Glide
+                .with(MainFeedActivity.this)
+                .load(profile.getAvatar())
+                .asBitmap()
+                .placeholder(userPlaceholder)
+                .into(profileImage);
+        userNameTextView.setText(ProfileExtensionKt.getFirstAndLastName(profile));
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shell.getScreenProvider().openProfile(MainFeedActivity.this);
+            }
+        });
+        showLogout(true);
+    }
+
+    void showLogout(boolean needShow) {
+        MenuItem menuItem = navigationView.getMenu().findItem(R.id.logout_item);
+        menuItem.setVisible(needShow);
+    }
+
+    @Override
+    public void showLogoutLoading() {
+        DialogFragment loadingProgressDialogFragment = LoadingProgressDialogFragment.Companion.newInstance();
+        ProgressHelper.activate(loadingProgressDialogFragment, getSupportFragmentManager(), PROGRESS_LOGOUT_TAG);
+    }
+
+    @Override
+    public void onLogoutSuccess() {
+        ProgressHelper.dismiss(getSupportFragmentManager(), PROGRESS_LOGOUT_TAG);
+        LoginManager.getInstance().logOut();
+        VKSdk.logout();
+        if (googleApiClient.isConnected()) {
+            Auth.GoogleSignInApi.signOut(googleApiClient);
+        }
+        shell.getScreenProvider().showLaunchScreen(this, true, currentIndex);
+    }
+
+    @Override
+    public void onLogout() {
+        profileMainFeedPresenter.logout();
+    }
 }

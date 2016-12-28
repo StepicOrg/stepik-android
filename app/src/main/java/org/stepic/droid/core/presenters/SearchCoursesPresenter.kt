@@ -4,10 +4,7 @@ import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.model.Course
 import org.stepic.droid.util.resolvers.SearchResolver
-import org.stepic.droid.web.CoursesStepicResponse
 import org.stepic.droid.web.IApi
-import org.stepic.droid.web.SearchResultResponse
-import retrofit.Response
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
@@ -31,34 +28,25 @@ class SearchCoursesPresenter(val api: IApi,
 
     fun downloadData(searchQuery: String) {
         if (isLoading.get() || !hasNextPage.get()) return
-        isLoading.set(true)
-        view?.showLoading()
-        threadPoolExecutor.execute {
-            val searchResponse: Response<SearchResultResponse>? = try {
-                api.getSearchResultsCourses(currentPage.get(), searchQuery).execute()
-            } catch (ex: Exception) {
-                null
-            }
 
-            if (searchResponse != null && searchResponse.isSuccess) {
-                val searchResultList = searchResponse.body().searchResultList
-                val courseIdsForSearch = searchResolver.getCourseIdsFromSearchResults(searchResultList)
-                hasNextPage.set(searchResponse.body().meta.has_next)
-                currentPage.set(searchResponse.body().meta.page + 1)
+        if (hasNextPage.get() && isLoading.compareAndSet(false, true)) {
+            view?.showLoading()
+            threadPoolExecutor.execute {
+                try {
+                    api.getSearchResultsCourses(currentPage.get(), searchQuery).execute()
 
-                if (courseIdsForSearch.isEmpty()) {
-                    mainHandler.post {
-                        view?.showEmptyCourses()
-                    }
-                } else {
-                    val courseResponse: Response<CoursesStepicResponse>? = try {
-                        api.getCourses(1, courseIdsForSearch).execute()
-                    } catch (ex: Exception) {
-                        null
-                    }
+                    val searchResultResponseBody = api.getSearchResultsCourses(currentPage.get(), searchQuery).execute().body()
+                    val searchResultList = searchResultResponseBody.searchResultList
+                    val courseIdsForSearch = searchResolver.getCourseIdsFromSearchResults(searchResultList)
+                    hasNextPage.set(searchResultResponseBody.meta.has_next)
+                    currentPage.set(searchResultResponseBody.meta.page + 1)
 
-                    if (courseResponse != null && courseResponse.isSuccess) {
-                        val courses = courseResponse.body().courses
+                    if (courseIdsForSearch.isEmpty()) {
+                        mainHandler.post {
+                            view?.showEmptyCourses()
+                        }
+                    } else {
+                        val courses = api.getCourses(1, courseIdsForSearch).execute().body().courses //FIXME: WARNING, here may pagination not working for query with ids[]
                         if (courses == null || courses.isEmpty()) {
                             mainHandler.post { view?.showEmptyCourses() }
                         } else {
@@ -82,22 +70,18 @@ class SearchCoursesPresenter(val api: IApi,
 
                         }
 
-                    } else {
-                        mainHandler.post {
-                            view?.showConnectionProblem()
-                        }
                     }
 
+
+                } catch (exception: Exception) {
+                    mainHandler.post {
+                        view?.showConnectionProblem()
+                    }
+                } finally {
+                    isLoading.set(false)
                 }
 
-
-            } else {
-                mainHandler.post {
-                    view?.showConnectionProblem()
-                }
             }
-
-            isLoading.set(false)
         }
     }
 
