@@ -29,6 +29,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.store.operations.Table;
@@ -66,15 +67,17 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ScreenManagerImpl implements ScreenManager {
-    private IConfig config;
-    private UserPreferences userPreferences;
-    private Analytic analytic;
+    private final SharedPreferenceHelper sharedPreferences;
+    private final IConfig config;
+    private final UserPreferences userPreferences;
+    private final Analytic analytic;
 
     @Inject
-    public ScreenManagerImpl(IConfig config, UserPreferences userPreferences, Analytic analytic) {
+    public ScreenManagerImpl(IConfig config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferences) {
         this.config = config;
         this.userPreferences = userPreferences;
         this.analytic = analytic;
+        this.sharedPreferences = sharedPreferences;
     }
 
     @Override
@@ -465,15 +468,19 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void openNewCommentForm(Activity sourceActivity, Long target, @Nullable Long parent) {
-        analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT);
-        Intent intent = new Intent(sourceActivity, NewCommentActivity.class);
-        Bundle bundle = new Bundle();
-        if (parent != null) {
-            bundle.putLong(NewCommentActivity.Companion.getKeyParent(), parent);
+        if (sharedPreferences.getAuthResponseFromStore() != null) {
+            analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT);
+            Intent intent = new Intent(sourceActivity, NewCommentActivity.class);
+            Bundle bundle = new Bundle();
+            if (parent != null) {
+                bundle.putLong(NewCommentActivity.Companion.getKeyParent(), parent);
+            }
+            bundle.putLong(NewCommentActivity.Companion.getKeyTarget(), target);
+            intent.putExtras(bundle);
+            sourceActivity.startActivity(intent);
+        } else {
+            Toast.makeText(sourceActivity, R.string.anonymous_write_comment, Toast.LENGTH_SHORT).show();
         }
-        bundle.putLong(NewCommentActivity.Companion.getKeyTarget(), target);
-        intent.putExtras(bundle);
-        sourceActivity.startActivity(intent);
     }
 
     private Intent getSectionsIntent(Activity sourceActivity, @NotNull Course course) {

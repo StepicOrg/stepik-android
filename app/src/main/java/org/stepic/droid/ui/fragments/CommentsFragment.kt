@@ -131,11 +131,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         floatingActionButton = v.findViewById(R.id.add_new_comment_button) as FloatingActionButton
         floatingActionButton!!.setOnClickListener {
             if (stepId != null) {
-                if (sharedPreferenceHelper.authResponseFromStore != null) {
-                    shell.screenProvider.openNewCommentForm(activity, stepId, null)
-                } else {
-                    Toast.makeText(context, R.string.anonymous_write_comment, Toast.LENGTH_SHORT).show()
-                }
+                shell.screenProvider.openNewCommentForm(activity, stepId, null)
             }
         }
     }
