@@ -335,4 +335,6 @@
     <string name="continue_course_title">Учиться</string>
     <string name="auth_inline_message">Войдите, чтобы мы запомнили Ваши успехи</string>
     <string name="step_with_position">– Шаг %d</string>
+    <string name="anonymous_write_comment">Чтобы присоединиться к этому обсуждению Вам нужно Войти</string>
+    <string name="anonymous_like_mark_comment">Чтобы оценивать комментарии Вам нужно Войти</string>
 </resources>

@@ -90,6 +90,7 @@ public class LaunchActivity extends BackToExitActivityBase {
             public void onClick(View v) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_LAUNCH);
                 shell.getScreenProvider().showFindCourses(LaunchActivity.this);
+                LaunchActivity.this.finish();
             }
         });
 

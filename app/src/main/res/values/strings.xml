@@ -334,4 +334,6 @@
     <string name="continue_course_title">Continue</string>
     <string name="auth_inline_message">To save your progress please sign in first</string>
     <string name="step_with_position">– Step %d</string>
+    <string name="anonymous_write_comment">To join this discussion you have to Sign in</string>
+    <string name="anonymous_like_mark_comment">To rate the comments you have to Sign in</string>
 </resources>

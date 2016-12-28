@@ -131,7 +131,11 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         floatingActionButton = v.findViewById(R.id.add_new_comment_button) as FloatingActionButton
         floatingActionButton!!.setOnClickListener {
             if (stepId != null) {
-                shell.screenProvider.openNewCommentForm(activity, stepId, null)
+                if (sharedPreferenceHelper.authResponseFromStore != null) {
+                    shell.screenProvider.openNewCommentForm(activity, stepId, null)
+                } else {
+                    Toast.makeText(context, R.string.anonymous_write_comment, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -323,6 +327,11 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun vote(position: Int, voteValue: VoteValue?) {
+        if (sharedPreferenceHelper.authResponseFromStore == null) {
+            Toast.makeText(context, R.string.anonymous_like_mark_comment, Toast.LENGTH_SHORT).show()
+            return
+        }
+
 
         val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
         val voteId = comment.vote
