@@ -103,7 +103,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
         } else {
             Glide.with(getContext())
                     .load("")
-                    .placeholder(R.drawable.video_placeholder)
+                    .placeholder(R.drawable.video_placeholder_color)
                     .into(this.thumbnail);
         }
 
