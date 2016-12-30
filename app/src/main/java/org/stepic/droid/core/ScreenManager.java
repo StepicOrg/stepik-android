@@ -74,7 +74,7 @@ public interface ScreenManager {
 
     Intent getShowFindCoursesIntent(Context context);
 
-    void showVideo(Activity sourceActivity, String source, Long videoId);
+    void showVideo(Activity sourceActivity, String source, long videoId);
 
     void showSettings(Activity sourceActivity);
 

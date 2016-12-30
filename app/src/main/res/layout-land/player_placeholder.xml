@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/video_height"
         android:layout_gravity="center"
-        tools:src="@drawable/video_placeholder_color"/>
+        android:src="@drawable/video_placeholder_color"/>
 
 
     <ImageView

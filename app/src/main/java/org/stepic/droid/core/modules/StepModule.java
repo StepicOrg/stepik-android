@@ -11,11 +11,13 @@ import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.StepQualityPresenter;
 import org.stepic.droid.core.presenters.StepsPresenter;
+import org.stepic.droid.core.presenters.VideoStepPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.util.resolvers.StepTypeResolverImpl;
+import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.web.IApi;
 
 import java.util.concurrent.ThreadPoolExecutor;
@@ -25,6 +27,17 @@ import dagger.Provides;
 
 @Module
 public class StepModule {
+
+    @Provides
+    @PerFragment
+    VideoStepPresenter provideVideoStepPresenter(ThreadPoolExecutor threadPoolExecutor,
+                                                 IMainHandler mainHandler,
+                                                 IApi api,
+                                                 DatabaseFacade databaseFacade,
+                                                 VideoResolver videoResolver,
+                                                 Analytic analytic) {
+        return new VideoStepPresenter(threadPoolExecutor, mainHandler, api, databaseFacade, videoResolver, analytic);
+    }
 
     @Provides
     @PerFragment
