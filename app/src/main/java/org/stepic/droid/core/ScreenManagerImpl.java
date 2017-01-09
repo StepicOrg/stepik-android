@@ -101,7 +101,6 @@ public class ScreenManagerImpl implements ScreenManager {
         Intent intent = new Intent(context, PhotoViewActivity.class);
         intent.putExtra(PhotoViewActivity.pathKey, path);
         context.startActivity(intent);
-        Toast.makeText(context, path, Toast.LENGTH_SHORT).show();
     }
 
     @Override
