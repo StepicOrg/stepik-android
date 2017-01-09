@@ -647,6 +647,11 @@ public class SectionsFragment
 
     public void showShareCourseWithFriendDialog(@NotNull final Course courseForSharing) {
         isAfterJoining = false;
+        if (sharedPreferenceHelper.isInvitationWasDeclined()) {
+            analytic.reportEvent(Analytic.Interaction.INVITATION_PREVENTED); // // TODO: 09.01.17   make it on background thread
+            return;
+        }
+
         analytic.reportEvent(Analytic.Interaction.SHOW_MATERIAL_DIALOG_INVITATION);
 
         SpannableString inviteTitle = new SpannableString(getString(R.string.take_course_with_fiends));
@@ -674,6 +679,7 @@ public class SectionsFragment
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         analytic.reportEvent(Analytic.Interaction.NEGATIVE_MATERIAL_DIALOG_INVITATION);
+                        sharedPreferenceHelper.onDeclineInvitation(); // TODO: 09.01.17 make it on background thread 
                         showMessageAboutSharing();
                     }
                 })

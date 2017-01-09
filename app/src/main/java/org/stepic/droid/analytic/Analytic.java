@@ -68,6 +68,7 @@ public interface Analytic {
         java.lang.String POSITIVE_MATERIAL_DIALOG_INVITATION = "material_dialog_invite_positive";
         java.lang.String NEGATIVE_MATERIAL_DIALOG_INVITATION = "material_dialog_invite_negative";
         java.lang.String SHOW_MATERIAL_DIALOG_INVITATION = "materdial_dialog_invite_shown";
+        java.lang.String INVITATION_PREVENTED = "invite_prevented";
         String CLICK_CONTINUE_COURSE = "click_continue_course";
         java.lang.String CLICK_COURSE = "click_course";
         String CLICK_PROFILE_BEFORE_LOADING = "click_profile_before_loading";
