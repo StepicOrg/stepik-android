@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.fragments;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -38,13 +39,25 @@ public class PhotoViewFragment extends FragmentBase {
     @BindView(R.id.toolbar)
     android.support.v7.widget.Toolbar toolbar;
 
+    @BindView(R.id.retry_button)
+    View retryButton;
+
+    @BindView(R.id.internet_problem_root)
+    View internetProblemRootView;
+
     PhotoViewAttacher photoViewAttacher;
 
     private SimpleTarget<Bitmap> target = new SimpleTarget<Bitmap>() {
         @Override
         public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+            internetProblemRootView.setVisibility(View.GONE);
             zoomableImageView.setImageBitmap(resource);
             photoViewAttacher.update();
+        }
+
+        @Override
+        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+            internetProblemRootView.setVisibility(View.VISIBLE);
         }
     };
 
@@ -70,18 +83,26 @@ public class PhotoViewFragment extends FragmentBase {
         super.onViewCreated(view, savedInstanceState);
         setUpToolbar();
         photoViewAttacher = new PhotoViewAttacher(zoomableImageView);
+        retryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                internetProblemRootView.setVisibility(View.GONE);
+                loadImage();
+            }
+        });
+        loadImage();
+    }
+
+    private void loadImage() {
         Glide.with(getContext())
                 .load(url)
                 .asBitmap()
                 .fitCenter()
                 .into(target);
-
     }
 
     private void setUpToolbar() {
         final AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
-//        toolbar.setBackgroundResource(0);
-//        toolbar.setBackgroundColor(Color.TRANSPARENT);
         toolbar.setTitle("");
         appCompatActivity.setSupportActionBar(toolbar);
         final ActionBar supportActionBar = appCompatActivity.getSupportActionBar();
