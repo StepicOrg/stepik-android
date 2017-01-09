@@ -2,6 +2,8 @@ package org.stepic.droid.ui.fragments;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,9 @@ public class PhotoViewFragment extends FragmentBase {
     @BindView(R.id.zoomable_image)
     ImageView zoomableImageView;
 
+    @BindView(R.id.toolbar)
+    android.support.v7.widget.Toolbar toolbar;
+
     PhotoViewAttacher photoViewAttacher;
 
     private SimpleTarget<Bitmap> target = new SimpleTarget<Bitmap>() {
@@ -63,7 +68,7 @@ public class PhotoViewFragment extends FragmentBase {
     @Override
     public void onViewCreated(View view, @android.support.annotation.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        setUpToolbar();
         photoViewAttacher = new PhotoViewAttacher(zoomableImageView);
         Glide.with(getContext())
                 .load(url)
@@ -71,5 +76,21 @@ public class PhotoViewFragment extends FragmentBase {
                 .fitCenter()
                 .into(target);
 
+    }
+
+    private void setUpToolbar() {
+        final AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
+//        toolbar.setBackgroundResource(0);
+//        toolbar.setBackgroundColor(Color.TRANSPARENT);
+        toolbar.setTitle("");
+        appCompatActivity.setSupportActionBar(toolbar);
+        final ActionBar supportActionBar = appCompatActivity.getSupportActionBar();
+
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayShowHomeEnabled(true);
+            supportActionBar.setHomeButtonEnabled(true);
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+        }
     }
 }
