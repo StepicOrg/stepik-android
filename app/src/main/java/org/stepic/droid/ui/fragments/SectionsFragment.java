@@ -50,15 +50,16 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.core.modules.SectionModule;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
+import org.stepic.droid.core.presenters.InvitationPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.core.presenters.contracts.CalendarExportableView;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
+import org.stepic.droid.core.presenters.contracts.InvitationView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
 import org.stepic.droid.events.CalendarChosenEvent;
@@ -106,7 +107,8 @@ public class SectionsFragment
         ActivityCompat.OnRequestPermissionsResultCallback,
         LoadCourseView, CourseJoinView,
         CalendarExportableView,
-        SectionsView {
+        SectionsView,
+        InvitationView {
 
     public static String joinFlag = "joinFlag";
     private static int INVITE_REQUEST_CODE = 324;
@@ -176,9 +178,6 @@ public class SectionsFragment
     ShareHelper shareHelper;
 
     @Inject
-    IConfig mConfig;
-
-    @Inject
     CalendarPresenter calendarPresenter;
 
     @Inject
@@ -186,6 +185,9 @@ public class SectionsFragment
 
     @Inject
     INotificationManager notificationManager;
+
+    @Inject
+    InvitationPresenter invitationPresenter;
 
     private boolean wasIndexed;
     private Uri urlInApp;
@@ -246,6 +248,7 @@ public class SectionsFragment
         courseFinderPresenter.attachView(this);
         courseJoinerPresenter.attachView(this);
         sectionsPresenter.attachView(this);
+        invitationPresenter.attachView(this);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         onNewIntent(((AppCompatActivity) getActivity()).getIntent());
@@ -268,8 +271,8 @@ public class SectionsFragment
         if (course != null && course.getSlug() != null && !wasIndexed) {
             title = getString(R.string.syllabus_title) + ": " + course.getTitle();
             description = course.getSummary();
-            urlInWeb = Uri.parse(StringUtil.getUriForSyllabus(mConfig.getBaseUrl(), course.getSlug()));
-            urlInApp = StringUtil.getAppUriForCourseSyllabus(mConfig.getBaseUrl(), course.getSlug());
+            urlInWeb = Uri.parse(StringUtil.getUriForSyllabus(config.getBaseUrl(), course.getSlug()));
+            urlInApp = StringUtil.getAppUriForCourseSyllabus(config.getBaseUrl(), course.getSlug());
             reportIndexToGoogle();
         }
 
@@ -309,7 +312,7 @@ public class SectionsFragment
             });
             courseName.setText(course.getTitle());
             Glide.with(this)
-                    .load(StepicLogicHelper.getPathForCourseOrEmpty(course, mConfig))
+                    .load(StepicLogicHelper.getPathForCourseOrEmpty(course, config))
                     .placeholder(R.drawable.ic_course_placeholder)
                     .into(imageViewTarget);
         } else {
@@ -469,6 +472,7 @@ public class SectionsFragment
         courseJoinerPresenter.detachView(this);
         courseFinderPresenter.detachView(this);
         sectionsPresenter.detachView(this);
+        invitationPresenter.detachView(this);
         bus.unregister(this);
         courseNotParsedView.setOnClickListener(null);
         super.onDestroyView();
@@ -647,44 +651,7 @@ public class SectionsFragment
 
     public void showShareCourseWithFriendDialog(@NotNull final Course courseForSharing) {
         isAfterJoining = false;
-        if (sharedPreferenceHelper.isInvitationWasDeclined()) {
-            analytic.reportEvent(Analytic.Interaction.INVITATION_PREVENTED); // // TODO: 09.01.17   make it on background thread
-            return;
-        }
-
-        analytic.reportEvent(Analytic.Interaction.SHOW_MATERIAL_DIALOG_INVITATION);
-
-        SpannableString inviteTitle = new SpannableString(getString(R.string.take_course_with_fiends));
-        inviteTitle.setSpan(new ForegroundColorSpan(Color.BLACK), 0, inviteTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), "fonts/NotoSans-Bold.ttf"));
-        inviteTitle.setSpan(typefaceSpan, 0, inviteTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-
-        MaterialStyledDialog dialog = new MaterialStyledDialog.Builder(getContext())
-                .setTitle(inviteTitle)
-                .setDescription(R.string.invite_friends_description)
-                .setHeaderDrawable(R.drawable.dialog_background)
-                .setPositiveText(R.string.invite)
-                .setNegativeText(R.string.dont_want)
-                .setScrollable(true, 10) // number of lines lines
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        analytic.reportEvent(Analytic.Interaction.POSITIVE_MATERIAL_DIALOG_INVITATION);
-                        Intent intent = shareHelper.getIntentForCourseSharing(courseForSharing);
-                        SectionsFragment.this.startActivityForResult(intent, INVITE_REQUEST_CODE);
-                    }
-                })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        analytic.reportEvent(Analytic.Interaction.NEGATIVE_MATERIAL_DIALOG_INVITATION);
-                        sharedPreferenceHelper.onDeclineInvitation(); // TODO: 09.01.17 make it on background thread 
-                        showMessageAboutSharing();
-                    }
-                })
-                .build();
-        dialog.show();
+        invitationPresenter.needShowInvitationDialog(courseForSharing);
     }
 
     private void showMessageAboutSharing() {
@@ -887,5 +854,39 @@ public class SectionsFragment
                 Timber.d(exception);
             }
         }
+    }
+
+    @Override
+    public void onShowInvitationDialog(@NotNull final Course courseForSharing) {
+        SpannableString inviteTitle = new SpannableString(getString(R.string.take_course_with_fiends));
+        inviteTitle.setSpan(new ForegroundColorSpan(Color.BLACK), 0, inviteTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), "fonts/NotoSans-Bold.ttf"));
+        inviteTitle.setSpan(typefaceSpan, 0, inviteTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+        MaterialStyledDialog dialog = new MaterialStyledDialog.Builder(getContext())
+                .setTitle(inviteTitle)
+                .setDescription(R.string.invite_friends_description)
+                .setHeaderDrawable(R.drawable.dialog_background)
+                .setPositiveText(R.string.invite)
+                .setNegativeText(R.string.dont_want)
+                .setScrollable(true, 10) // number of lines
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        analytic.reportEvent(Analytic.Interaction.POSITIVE_MATERIAL_DIALOG_INVITATION);
+                        Intent intent = shareHelper.getIntentForCourseSharing(courseForSharing);
+                        SectionsFragment.this.startActivityForResult(intent, INVITE_REQUEST_CODE);
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        invitationPresenter.onClickDecline();
+                        showMessageAboutSharing();
+                    }
+                })
+                .build();
+        dialog.show();
     }
 }

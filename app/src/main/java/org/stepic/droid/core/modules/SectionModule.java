@@ -10,6 +10,7 @@ import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.presenters.CalendarPresenter;
+import org.stepic.droid.core.presenters.InvitationPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
@@ -71,5 +72,14 @@ public class SectionModule {
                 mainHandler,
                 api,
                 databaseFacade);
+    }
+
+    @PerFragment
+    @Provides
+    InvitationPresenter provideInvitationPresenter(ThreadPoolExecutor threadPoolExecutor,
+                                                   IMainHandler mainHandler,
+                                                   SharedPreferenceHelper sharedPreferenceHelper,
+                                                   Analytic analytic) {
+        return new InvitationPresenter(threadPoolExecutor, mainHandler, sharedPreferenceHelper, analytic);
     }
 }
