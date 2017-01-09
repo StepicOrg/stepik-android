@@ -253,7 +253,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showVideo(Activity sourceActivity, String videoPath, Long videoId) {
+    public void showVideo(Activity sourceActivity, String videoPath, long videoId) {
         analytic.reportEvent(Analytic.Screens.TRY_OPEN_VIDEO);
         boolean isOpenExternal = userPreferences.isOpenInExternal();
         if (isOpenExternal) {
@@ -266,7 +266,6 @@ public class ScreenManagerImpl implements ScreenManager {
         if (!isCompatible) {
             analytic.reportEvent(Analytic.Video.NOT_COMPATIBLE);
         }
-
 
         if (isCompatible && !isOpenExternal) {
             Intent intent = new Intent(MainApplication.getAppContext(), VideoActivity.class);
