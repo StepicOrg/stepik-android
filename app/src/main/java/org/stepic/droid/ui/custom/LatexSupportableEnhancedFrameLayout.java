@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.resolvers.text.TextResolver;
@@ -29,6 +30,9 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
 
     @Inject
     TextResolver textResolver;
+
+    @Inject
+    ScreenManager screenManager;
 
     public LatexSupportableEnhancedFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -58,6 +62,24 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         textView = (TextView) findViewById(R.id.textView);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         webView = (LatexSupportableWebView) findViewById(R.id.webView);
+
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        webView.setOnWebViewClickListener(new LatexSupportableWebView.OnWebViewImageClicked() {
+            @Override
+            public void onClick(String path) {
+                screenManager.openImage(LatexSupportableEnhancedFrameLayout.this.getContext(), path);
+            }
+        });
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        webView.setOnWebViewClickListener(null);
     }
 
     public void setText(String text) {

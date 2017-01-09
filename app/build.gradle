@@ -179,6 +179,8 @@ dependencies {
 
     compile 'com.github.javiersantos:MaterialStyledDialogs:2.0'
     compile 'biz.kasual:materialnumberpicker:1.2.1'
+
+    compile 'com.github.chrisbanes:PhotoView:1.3.1'
 }
 
 repositories {

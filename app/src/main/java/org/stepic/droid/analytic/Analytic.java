@@ -75,6 +75,7 @@ public interface Analytic {
         String JOIN_COURSE = "click_join_course";
 
         java.lang.String CLICK_FIND_COURSE_LAUNCH = "click_find_courses_launch";
+        java.lang.String USER_OPEN_IMAGE = "user_open_image";
     }
 
     interface Screens {

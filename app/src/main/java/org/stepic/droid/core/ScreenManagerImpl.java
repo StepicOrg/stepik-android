@@ -42,6 +42,7 @@ import org.stepic.droid.ui.activities.LaunchActivity;
 import org.stepic.droid.ui.activities.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.activities.NewCommentActivity;
+import org.stepic.droid.ui.activities.PhotoViewActivity;
 import org.stepic.droid.ui.activities.ProfileActivity;
 import org.stepic.droid.ui.activities.RegisterActivity;
 import org.stepic.droid.ui.activities.SectionActivity;
@@ -92,6 +93,14 @@ public class ScreenManagerImpl implements ScreenManager {
         launchIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, (Parcelable) course);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(launchIntent);
+    }
+
+    @Override
+    public void openImage(Context context, String path) {
+        analytic.reportEvent(Analytic.Interaction.USER_OPEN_IMAGE);
+        Intent intent = new Intent(context, PhotoViewActivity.class);
+        intent.putExtra(PhotoViewActivity.pathKey, path);
+        context.startActivity(intent);
     }
 
     @Override
