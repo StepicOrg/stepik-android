@@ -74,7 +74,7 @@ public interface ScreenManager {
 
     Intent getShowFindCoursesIntent(Context context);
 
-    void showVideo(Activity sourceActivity, String source, Long videoId);
+    void showVideo(Activity sourceActivity, String source, long videoId);
 
     void showSettings(Activity sourceActivity);
 
@@ -115,4 +115,6 @@ public interface ScreenManager {
     void continueCourse(Activity activity, long courseId, Section section, long lessonId, long unitId, long stepPosition);
 
     void showLaunchScreen(FragmentActivity activity, @NotNull Course course);
+
+    void openImage(Context context, String path);
 }
