@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
@@ -58,6 +59,24 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         textView = (TextView) findViewById(R.id.textView);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         webView = (LatexSupportableWebView) findViewById(R.id.webView);
+
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        webView.setOnWebViewClickListener(new LatexSupportableWebView.OnWebViewImageClicked() {
+            @Override
+            public void onClick(String path) {
+                Toast.makeText(LatexSupportableEnhancedFrameLayout.this.getContext(), path, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        webView.setOnWebViewClickListener(null);
     }
 
     public void setText(String text) {
