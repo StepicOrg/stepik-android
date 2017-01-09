@@ -103,11 +103,11 @@ public class PhotoViewFragment extends FragmentBase {
 
     private void setUpToolbar() {
         final AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
-        toolbar.setTitle("");
         appCompatActivity.setSupportActionBar(toolbar);
         final ActionBar supportActionBar = appCompatActivity.getSupportActionBar();
 
         if (supportActionBar != null) {
+            supportActionBar.setDisplayShowTitleEnabled(false);
             supportActionBar.setDisplayShowHomeEnabled(true);
             supportActionBar.setHomeButtonEnabled(true);
             supportActionBar.setDisplayHomeAsUpEnabled(true);
