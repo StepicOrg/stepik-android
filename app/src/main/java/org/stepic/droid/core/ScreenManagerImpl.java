@@ -95,6 +95,12 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void openImage(Context context, String path) {
+        analytic.reportEvent(Analytic.Interaction.USER_OPEN_IMAGE);
+        Toast.makeText(context, path, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void showLaunchScreen(Activity activity, boolean fromMainFeed, int index) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
         Intent launchIntent = new Intent(activity, LaunchActivity.class);

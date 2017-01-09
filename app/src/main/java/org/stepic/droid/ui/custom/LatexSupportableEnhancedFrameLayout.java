@@ -9,10 +9,10 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.resolvers.text.TextResolver;
@@ -30,6 +30,9 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
 
     @Inject
     TextResolver textResolver;
+
+    @Inject
+    ScreenManager screenManager;
 
     public LatexSupportableEnhancedFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -68,7 +71,7 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         webView.setOnWebViewClickListener(new LatexSupportableWebView.OnWebViewImageClicked() {
             @Override
             public void onClick(String path) {
-                Toast.makeText(LatexSupportableEnhancedFrameLayout.this.getContext(), path, Toast.LENGTH_SHORT).show();
+                screenManager.openImage(LatexSupportableEnhancedFrameLayout.this.getContext(), path);
             }
         });
     }
