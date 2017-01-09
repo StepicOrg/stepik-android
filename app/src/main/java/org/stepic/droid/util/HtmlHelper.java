@@ -48,7 +48,7 @@ public class HtmlHelper {
                 || text.contains("wysiwyg-")
                 || text.contains("<h")
                 || text.contains("\\[")
-                || text.contains("<pre><code>")
+                || text.contains("<pre><code")
                 || text.contains("<img")
                 || text.contains("<audio");
     }
