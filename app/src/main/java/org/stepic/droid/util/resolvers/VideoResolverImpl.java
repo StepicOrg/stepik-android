@@ -20,8 +20,8 @@ public class VideoResolverImpl implements VideoResolver {
     private CleanManager cleanManager;
     private Analytic analytic;
 
-    public VideoResolverImpl(DatabaseFacade dbOperationsCachedVideo, UserPreferences userPreferences, CleanManager cleanManager, Analytic analytic) {
-        databaseFacade = dbOperationsCachedVideo;
+    public VideoResolverImpl(DatabaseFacade databaseFacade, UserPreferences userPreferences, CleanManager cleanManager, Analytic analytic) {
+        this.databaseFacade = databaseFacade;
         this.userPreferences = userPreferences;
         this.cleanManager = cleanManager;
         this.analytic = analytic;
@@ -55,7 +55,6 @@ public class VideoResolverImpl implements VideoResolver {
     @Nullable
     private String resolveFromWeb(List<VideoUrl> urlList) {
         String resolvedURL = null;
-
 
         try {
             int weWant = Integer.parseInt(userPreferences.getQualityVideo());

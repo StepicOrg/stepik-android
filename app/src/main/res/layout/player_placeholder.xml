@@ -7,17 +7,17 @@
 
 
     <ImageView
-        android:scaleType="centerCrop"
         android:id="@+id/player_thumbnail"
         android:layout_width="match_parent"
         android:layout_height="@dimen/video_height"
-        tools:src = "@drawable/video_placeholder_color"/>
+        android:scaleType="centerCrop"
+        android:src="@drawable/video_placeholder_color"/>
 
     <ImageView
         android:id="@+id/player_button"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="center"
-        android:src="@drawable/ic_media_play_active" />
+        android:src="@drawable/ic_media_play_active"/>
 
 </FrameLayout>

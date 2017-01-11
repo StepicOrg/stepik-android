@@ -152,8 +152,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @BindView(R.id.list_of_course_property)
     ListView coursePropertyListView;
 
-    @BindDrawable(R.drawable.video_placeholder)
-    Drawable mVideoPlaceholder;
+    @BindDrawable(R.drawable.video_placeholder_color)
+    Drawable videoPlaceholder;
 
     @BindView(R.id.report_problem)
     View reportInternetProblem;
@@ -672,8 +672,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         Uri uri = ThumbnailParser.getUriForThumbnail(thumbnail);
         Glide.with(getActivity())
                 .load(uri)
-                .placeholder(mVideoPlaceholder)
-                .error(mVideoPlaceholder)
+                .placeholder(videoPlaceholder)
+                .error(videoPlaceholder)
                 .into(this.thumbnail);
     }
 

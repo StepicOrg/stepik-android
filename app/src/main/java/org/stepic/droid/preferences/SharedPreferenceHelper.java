@@ -85,9 +85,19 @@ public class SharedPreferenceHelper {
 
     private final String USER_START_KEY = "user_start_app";
 
+    private final String INVITATION_WAS_DECLINED_DEVICE_SPECIFIC = "invitation_wast_declined";
+
     private Context context;
     private Analytic analytic;
     private DefaultFilter defaultFilter;
+
+    public boolean isInvitationWasDeclined() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, INVITATION_WAS_DECLINED_DEVICE_SPECIFIC, false);
+    }
+
+    public void onDeclineInvitation() {
+        put(PreferenceType.DEVICE_SPECIFIC, INVITATION_WAS_DECLINED_DEVICE_SPECIFIC, true);
+    }
 
     public void incrementNumberOfNotifications() {
         int numberOfIgnored = getInt(PreferenceType.LOGIN, STREAK_NUMBER_OF_IGNORED, 0);

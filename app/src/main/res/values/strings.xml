@@ -336,4 +336,5 @@
     <string name="step_with_position">– Step %d</string>
     <string name="anonymous_write_comment">To join this discussion you have to Sign in</string>
     <string name="anonymous_like_mark_comment">To rate the comments you have to Sign in</string>
+    <string name="retry">Retry</string>
 </resources>
