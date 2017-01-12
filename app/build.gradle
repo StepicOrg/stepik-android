@@ -181,6 +181,8 @@ dependencies {
     compile 'biz.kasual:materialnumberpicker:1.2.1'
 
     compile 'com.github.chrisbanes:PhotoView:1.3.1'
+
+    compile "com.mixpanel.android:mixpanel-android:4.9.3"
 }
 
 repositories {

@@ -25,4 +25,6 @@ public interface IConfig {
     String getPrivacyPolicyUrl();
 
     String getTermsOfServiceUrl();
+
+    String getMixpanelToken();
 }

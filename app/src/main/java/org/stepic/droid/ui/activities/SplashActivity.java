@@ -8,6 +8,8 @@ import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.notifications.StepicInstanceIdService;
@@ -134,6 +136,13 @@ public class SplashActivity extends BackToExitActivityBase {
 
     private void showNextScreen() {
         if (!isFinishing()) {
+            threadPoolExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    MixpanelAPI mixpanelAPI = MixpanelAPI.getInstance(getApplicationContext(), config.getMixpanelToken());
+                    mixpanelAPI.track("Splash shown");
+                }
+            });
             if (sharedPreferenceHelper.getAuthResponseFromStore() != null) {
                 shell.getScreenProvider().showMainFeed(SplashActivity.this);
             } else {
