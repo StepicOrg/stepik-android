@@ -164,6 +164,7 @@ public interface Analytic {
         String STREAK_ON_STEP_SOLVED = "streak_on_step_solved";
         java.lang.String GOOGLE_SERVICES_TOO_OLD = "google_services_too_old";
         String VIDEO_PATH_WAS_NULL_WITH_INTERNET = "video_path_was_null_internet_enabled";
+        java.lang.String FAIL_REFRESH_TOKEN_ONLINE = "fail_refresh_token_online";
     }
 
     interface Web {

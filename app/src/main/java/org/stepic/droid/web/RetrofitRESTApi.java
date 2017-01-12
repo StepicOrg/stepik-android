@@ -159,6 +159,13 @@ public class RetrofitRESTApi implements IApi {
                         }
                         if (response == null || !response.isSuccess()) {
                             //it is worst case:
+                            String message;
+                            if (response == null) {
+                                message = "response was null";
+                            } else {
+                                message = response.toString();
+                            }
+                            analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_ONLINE, new FailRefreshException(message));
                             analytic.reportEvent(Analytic.Web.UPDATE_TOKEN_FAILED);
                             return chain.proceed(newRequest);
                         }
