@@ -1,8 +1,11 @@
 package org.stepic.droid.base;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Parcelable;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
@@ -21,9 +24,9 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.DefaultFilter;
-import org.stepic.droid.core.LoginManager;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.core.LessonSessionManager;
+import org.stepic.droid.core.LoginManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.notifications.INotificationManager;
@@ -35,6 +38,8 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 
+import java.lang.ref.WeakReference;
+import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
@@ -45,6 +50,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public abstract class FragmentActivityBase extends AppCompatActivity {
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final String screenshotServiceName = "com.android.systemui:screenshot";
 
     protected Unbinder unbinder;
 
@@ -184,6 +190,61 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
             return (Course) course;
         } else {
             return null;
+        }
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        detectScreenShotService();
+    }
+
+    @Override
+    protected void onPause() {
+        stopDetectingOfScreenshots();
+        super.onPause();
+    }
+
+    private Handler detectScreenshotHandler;
+    ScreenshotDetectionRunnable screenshotDetectionRunnable;
+    static final int delay = 3000;
+
+    private void stopDetectingOfScreenshots() {
+        detectScreenshotHandler.removeCallbacks(screenshotDetectionRunnable);
+    }
+
+    private void detectScreenShotService() {
+        HandlerThread handlerThread = new HandlerThread("detect_thread");
+        handlerThread.start();
+        detectScreenshotHandler = new Handler(handlerThread.getLooper());
+        screenshotDetectionRunnable = new ScreenshotDetectionRunnable(this, detectScreenshotHandler);
+        detectScreenshotHandler.postDelayed(screenshotDetectionRunnable, delay);
+    }
+
+    static class ScreenshotDetectionRunnable implements Runnable {
+        WeakReference<FragmentActivityBase> activityWeakReference;
+        private final Handler detectScreenShotHandler;
+
+        ScreenshotDetectionRunnable(FragmentActivityBase activity, Handler handler) {
+            activityWeakReference = new WeakReference<>(activity);
+            this.detectScreenShotHandler = handler;
+        }
+
+        @Override
+        public void run() {
+            FragmentActivityBase activity = activityWeakReference.get();
+            if (activity != null) {
+                final ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
+                List<ActivityManager.RunningServiceInfo> rs = activityManager.getRunningServices(200);
+                for (ActivityManager.RunningServiceInfo ar : rs) {
+                    if (ar.process.equals(screenshotServiceName)) {
+                        activity.analytic.reportEventWithName(Analytic.Interaction.SCREENSHOT, activity.getClass().getSimpleName());
+                    }
+                }
+                detectScreenShotHandler.postDelayed(this, delay);
+            }
+
         }
     }
 }
