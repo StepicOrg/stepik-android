@@ -245,8 +245,8 @@ public interface Analytic {
         String CALENDAR_ADDED_SUCCESSFULLY = "calendar_added_successfully";
         String CALENDAR_ADDED_FAIL = "calendar_added_fail";
         String SHOW_CALENDAR_AS_WIDGET = "calendar_shown_as_widget";
-        String SHOW_CALENDAR = "calendar_shown"; // course with deadlines in future
-        String HIDE_WIDGET_FROM_PREFS = "widget_hidden_from_prefs";
+        String SHOW_CALENDAR = "calendar_shown"; // course with deadlines in future //// FIXME: 13.01.17 this metric has doubled number of events
+        String HIDE_WIDGET_FROM_PREFS = "widget_hidden_from_prefs"; //// FIXME: 13.01.17 this metric has doubled number of events
         java.lang.String USER_CLICK_NOT_NOW = "calendar_click_not_now";
     }
 

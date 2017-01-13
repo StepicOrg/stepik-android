@@ -195,20 +195,20 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         detectScreenShotService();
     }
 
     @Override
-    protected void onPause() {
+    protected void onStop() {
         stopDetectingOfScreenshots();
-        super.onPause();
+        super.onStop();
     }
 
     private Handler detectScreenshotHandler;
     ScreenshotDetectionRunnable screenshotDetectionRunnable;
-    static final int delay = 3000;
+    static final int delay = 2000;
 
     private void stopDetectingOfScreenshots() {
         detectScreenshotHandler.removeCallbacks(screenshotDetectionRunnable);
