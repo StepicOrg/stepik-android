@@ -316,7 +316,7 @@
     </plurals>
     <string name="streak_notification_message_improvement">Хорошая работа! Вы увеличили количество дней без перерыва до %d. Так держать!</string>
     <string name="streak_notification_empty_number">Обучение требует ежедневной практики. Решите задание прямо сейчас!</string>
-    <string name="streak_description_not_positive">Верно! Решайте по одной каждый день, чтобы поддержать прогресс. Для этого мы предлагаем Вам включить напоминания.</string>
+    <string name="streak_description_not_positive">Верно! Решайте по одной задаче каждый день, чтобы поддержать прогресс. Для этого мы предлагаем Вам включить напоминания.</string>
     <string name="streak_notification_enabled_successfully">Уведомления включены. Вы можете изменить свой выбор в Профиле</string>
     <string name="streak_notification_canceled">Уведомления отключены. Вы можете изменить свой выбор в Профиле</string>
     <string name="streak_notification_not_working">Похоже напоминания не действуют. Мы больше не будем их посылать. Нажмите, чтобы включить снова</string>
