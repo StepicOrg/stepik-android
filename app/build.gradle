@@ -162,7 +162,7 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    compile 'de.mrmaffen:vlc-android-sdk:1.9.8'
+    compile 'de.mrmaffen:vlc-android-sdk:2.0.6'
 
     compile 'org.jsoup:jsoup:1.8.3'
 
