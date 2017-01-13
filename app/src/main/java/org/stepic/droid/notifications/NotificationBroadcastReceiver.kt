@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.AppConstants
 import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
@@ -19,6 +20,9 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
 
     @Inject
     lateinit var analytic: Analytic
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferenceHelper
 
     init {
         MainApplication.component().inject(this)
@@ -39,6 +43,10 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             analytic.reportEvent(Analytic.Notification.REMINDER_SWIPE_TO_CANCEL)
         } else if (action == AppConstants.NOTIFICATION_CANCELED_STREAK) {
             analytic.reportEvent(Analytic.Notification.STREAK_SWIPE_TO_CANCEL)
+            //continue send notification about streaks
+            threadPool.execute {
+                sharedPreferences.resetNumberOfStreakNotifications()
+            }
         }
     }
 }
