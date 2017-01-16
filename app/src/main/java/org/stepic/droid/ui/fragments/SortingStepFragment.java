@@ -24,13 +24,12 @@ import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Option;
 import org.stepic.droid.model.Reply;
-import org.stepic.droid.ui.adapters.SortStepAdapter;
 import org.stepic.droid.ui.adapters.SortingStepEnhancedAdapter;
 import org.stepic.droid.util.DpPixelsHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -147,23 +146,19 @@ public class SortingStepFragment extends StepAttemptFragment {
         List<Integer> ordering = reply.getOrdering();
         if (ordering == null) return;
 
-        SortStepAdapter adapter;
-        try {
-            adapter = (SortStepAdapter) recyclerView.getAdapter();
-        } catch (Exception e) {
-            return;
+
+        HashMap<Integer, Option> hashMap = new HashMap<>();
+        for (Option option : optionList) {
+            hashMap.put(option.getPositionId(), option);
         }
-
-
-        optionList = adapter.getData();
         optionList.clear();
-        Map<Integer, Option> itemIdToOption = adapter.getItemIdOptionMap();
         int i = 0;
         for (Integer itemId : ordering) {
-            optionList.add(i, itemIdToOption.get(itemId));
+            optionList.add(i, hashMap.get(itemId));
             i++;
         }
-        adapter.notifyDataSetChanged();
+
+        wrappedAdapter.notifyDataSetChanged();
     }
 
     @Override
