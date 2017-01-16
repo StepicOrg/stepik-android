@@ -185,7 +185,9 @@ public class SortingStepFragment extends StepAttemptFragment {
 
     @Override
     public void onPause() {
-        recyclerViewDragDropManager.cancelDrag();
+        if (recyclerViewDragDropManager != null) {
+            recyclerViewDragDropManager.cancelDrag();
+        }
         super.onPause();
     }
 

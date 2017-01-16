@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
@@ -26,6 +25,7 @@ import org.stepic.droid.model.Option;
 import org.stepic.droid.model.Pair;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.ui.adapters.SortStepAdapter;
+import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,8 +141,8 @@ public class MatchingStepFragment extends StepAttemptFragment {
         leftLinearLayout.removeAllViews();
         for (String value : firstList) {
             View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_matching_first_option, leftLinearLayout, false);
-            TextView header = ButterKnife.findById(view, R.id.option_text);
-            header.setText(value);
+            LatexSupportableEnhancedFrameLayout header = ButterKnife.findById(view, R.id.option_text);
+            header.setPlainOrLaTeXText(value);
             int lines = (maxWidth / halfScreen) + 1;
             int height = (int) MainApplication.getAppContext().getResources().getDimension(R.dimen.option_height);
             height = lines * height;
@@ -155,7 +155,7 @@ public class MatchingStepFragment extends StepAttemptFragment {
     private int getMaxWidthOfLines() {
         // TODO: 25.01.16 dirty hack, try to find less dirty
         View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_matching_second_option, leftLinearLayout, false);
-        final TextView header = ButterKnife.findById(view, R.id.option_text);
+        final LatexSupportableEnhancedFrameLayout header = ButterKnife.findById(view, R.id.option_text);
 
 
         int maxWidth = 0;

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
-    android:id="@+id/container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="@dimen/option_height"
@@ -11,28 +11,15 @@
     app:cardBackgroundColor="@color/default_option_color"
     app:cardUseCompatPadding="true">
 
-    <LinearLayout
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
+
+    <org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
+        android:id="@+id/option_text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:orientation="horizontal"
-        >
-
-        <TextView
-            android:textColor="@color/black"
-            android:padding="8dp"
-            android:id="@+id/option_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="80"
-            android:gravity="center"
-            android:layout_gravity="center_vertical"
-            tools:text="option "/>
-
-    </LinearLayout>
+        android:gravity="center"
+        android:padding="8dp"
+        android:textColor="@color/black"
+        tools:text="option "/>
 
 </android.support.v7.widget.CardView>
