@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:background="@color/transparent">
 
-    <org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
+    <org.stepic.droid.ui.custom.ProgressLatexView
+        android:layout_centerVertical="true"
         android:id="@+id/option_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

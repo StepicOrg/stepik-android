@@ -11,7 +11,7 @@ import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemView
 
 import org.stepic.droid.R;
 import org.stepic.droid.model.Option;
-import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
+import org.stepic.droid.ui.custom.ProgressLatexView;
 import org.stepic.droid.ui.util.ViewUtils;
 
 import java.util.List;
@@ -105,7 +105,7 @@ public class SortingStepEnhancedAdapter extends RecyclerView.Adapter<SortingStep
         View sortController;
 
         @BindView(R.id.option_text)
-        LatexSupportableEnhancedFrameLayout enhancedText;
+        ProgressLatexView enhancedText;
 
 
         public OptionViewHolder(View itemView) {
