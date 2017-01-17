@@ -11,9 +11,11 @@ import org.stepic.droid.R;
 
 public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
     private Drawable divider;
+    private Drawable verticalDivider;
 
     public SimpleDividerItemDecoration(Context context) {
         divider = ContextCompat.getDrawable(context, R.drawable.list_divider_h);
+        verticalDivider = ContextCompat.getDrawable(context, R.drawable.list_divider_w);
     }
 
     @Override
@@ -32,6 +34,13 @@ public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
 
             divider.setBounds(left, top, right, bottom);
             divider.draw(c);
+
+            int leftVertical = child.getLeft();
+            int rightVertical = leftVertical + verticalDivider.getIntrinsicWidth();
+            int topVertical = child.getTop();
+
+            verticalDivider.setBounds(leftVertical, topVertical, rightVertical, bottom);
+            verticalDivider.draw(c);
         }
     }
 }
