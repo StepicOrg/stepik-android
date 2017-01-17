@@ -24,6 +24,7 @@ import org.stepic.droid.model.Pair;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.ui.adapters.MatchingStepEnhancedAdapter;
 import org.stepic.droid.ui.adapters.SortStepAdapter;
+import org.stepic.droid.ui.util.SimpleDividerItemDecoration;
 import org.stepic.droid.util.DpPixelsHelper;
 
 import java.util.ArrayList;
@@ -58,6 +59,7 @@ public class MatchingStepFragment extends StepAttemptFragment {
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DraggableItemAnimator());
+        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
     }
 
     @Override
