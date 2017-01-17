@@ -23,6 +23,8 @@ import butterknife.ButterKnife;
 public class SortingStepEnhancedAdapter extends RecyclerView.Adapter<SortingStepEnhancedAdapter.OptionViewHolder>
         implements DraggableItemAdapter<SortingStepEnhancedAdapter.OptionViewHolder> {
 
+    @Nullable
+    private RecyclerView recyclerView;
     protected final static int DEFAULT_DRAGGABLE_VIEW_TYPE = 0;
     protected final List<Option> data;
 
@@ -57,7 +59,7 @@ public class SortingStepEnhancedAdapter extends RecyclerView.Adapter<SortingStep
 
     @Override
     public boolean onCheckCanStartDrag(OptionViewHolder holder, int position, int x, int y) {
-        return ViewUtils.hitTest(holder.sortController, x, y);
+        return recyclerView != null && recyclerView.isEnabled() && ViewUtils.hitTest(holder.sortController, x, y);
     }
 
     @Override
@@ -100,4 +102,15 @@ public class SortingStepEnhancedAdapter extends RecyclerView.Adapter<SortingStep
 
     }
 
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        this.recyclerView = recyclerView;
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        recyclerView = null;
+    }
 }
