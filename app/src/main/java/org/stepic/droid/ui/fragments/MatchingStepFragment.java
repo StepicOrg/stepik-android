@@ -24,6 +24,7 @@ import org.stepic.droid.model.Pair;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.ui.adapters.MatchingStepEnhancedAdapter;
 import org.stepic.droid.ui.adapters.SortStepAdapter;
+import org.stepic.droid.util.DpPixelsHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +38,6 @@ public class MatchingStepFragment extends StepAttemptFragment {
     RecyclerView recyclerView;
 
     private List<Option> optionList;
-    private List<String> firstList;
-    private List<String> allList;
 
     private GridLayoutManager layoutManager;
     private MatchingStepEnhancedAdapter adapter;
@@ -50,6 +49,8 @@ public class MatchingStepFragment extends StepAttemptFragment {
         super.onViewCreated(viewOuter, savedInstanceState);
         View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_sorting, attemptContainer, false);
         attemptContainer.addView(view);
+        int dp8InPx = (int) DpPixelsHelper.convertDpToPixel(8, getContext());
+        attemptContainer.setPadding(0, dp8InPx, 0, dp8InPx);
         recyclerView = ButterKnife.findById(view, R.id.recycler);
 
         recyclerView.setNestedScrollingEnabled(false);
@@ -63,28 +64,16 @@ public class MatchingStepFragment extends StepAttemptFragment {
     protected void showAttempt(Attempt attempt) {
         List<Pair> options = attempt.getDataset().getPairs();
         if (options == null) return;
-        optionList = new ArrayList<>(options.size());
-        firstList = new ArrayList<>(options.size());
-        allList = new ArrayList<>(options.size() * 2);
+        optionList = new ArrayList<>(options.size() * 2);
         for (int i = 0; i < options.size(); i++) {
+            optionList.add(new Option(options.get(i).getFirst(), i + options.size()));
             optionList.add(new Option(options.get(i).getSecond(), i));
-            optionList.add(new Option(options.get(i).getSecond() + "2", i + options.size()));
-            firstList.add(options.get(i).getFirst());
-            allList.add(options.get(i).getFirst());
-            allList.add(options.get(i).getSecond());
         }
-
 
         adapter = new MatchingStepEnhancedAdapter(optionList);
         releaseDragFeature();
 
-
         recyclerViewDragDropManager = new RecyclerViewDragDropManager();
-//        recyclerViewDragDropManager.setDraggingItemShadowDrawable((NinePatchDrawable) ContextCompat.getDrawable(getContext(), R.drawable.material_shadow_z3)); //if not transparent background
-        // Lollipop or later has native drop shadow feature. ItemShadowDecorator is not required.
-//        if (!supportsViewElevation()) {
-//            recyclerView.addItemDecoration(new ItemShadowDecorator((NinePatchDrawable) ContextCompat.getDrawable(getContext(), R.drawable.material_shadow_z1))); if not transparent background
-//        }
         recyclerViewDragDropManager.attachRecyclerView(recyclerView);
         wrappedAdapter = recyclerViewDragDropManager.createWrappedAdapter(adapter);
         recyclerViewDragDropManager.setInitiateOnMove(false);
@@ -112,7 +101,6 @@ public class MatchingStepFragment extends StepAttemptFragment {
 
             }
         });
-
         recyclerViewDragDropManager.setItemMoveMode(RecyclerViewDragDropManager.ITEM_MOVE_MODE_SWAP);
         recyclerViewDragDropManager.setCheckCanDropEnabled(true);
         recyclerView.setAdapter(wrappedAdapter);
