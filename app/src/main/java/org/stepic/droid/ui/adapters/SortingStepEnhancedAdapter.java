@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.adapters;
 
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import butterknife.ButterKnife;
 public class SortingStepEnhancedAdapter extends RecyclerView.Adapter<SortingStepEnhancedAdapter.OptionViewHolder>
         implements DraggableItemAdapter<SortingStepEnhancedAdapter.OptionViewHolder> {
 
+    protected final static int DEFAULT_DRAGGABLE_VIEW_TYPE = 0;
     protected final List<Option> data;
 
     public SortingStepEnhancedAdapter(List<Option> data) {
@@ -46,24 +48,6 @@ public class SortingStepEnhancedAdapter extends RecyclerView.Adapter<SortingStep
     public void onBindViewHolder(OptionViewHolder holder, int position) {
         String text = data.get(position).getValue();
         holder.enhancedText.setPlainOrLaTeXText(text);
-
-//        final int dragState = holder.getDragStateFlags();
-//        if ((dragState & DraggableItemConstants.STATE_FLAG_IS_UPDATED) != 0) {
-//            @DrawableRes
-//            int backgroundResource;
-//
-//            if ((dragState & DraggableItemConstants.STATE_FLAG_IS_ACTIVE) != 0) {
-//                backgroundResource = R.drawable.bg_item_dragging_active_state;
-//                // need to clear drawable state here to get correct appearance of the dragging item.
-//                DrawableUtils.clearState(holder.container.getForeground());
-//            } else if ((dragState & DraggableItemConstants.STATE_FLAG_DRAGGING) != 0) {
-//                backgroundResource = R.drawable.bg_item_dragging_state;
-//            } else {
-//                backgroundResource = R.drawable.bg_item_normal_state;
-//            }
-//
-//            holder.container.setBackgroundResource(backgroundResource);
-//        }
     }
 
     @Override
@@ -101,6 +85,7 @@ public class SortingStepEnhancedAdapter extends RecyclerView.Adapter<SortingStep
         @BindView(R.id.container)
         View container;
 
+        @Nullable
         @BindView(R.id.sort_icon)
         View sortController;
 

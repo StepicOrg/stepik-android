@@ -1,8 +1,11 @@
 package org.stepic.droid.ui.adapters;
 
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
+import org.stepic.droid.R;
 import org.stepic.droid.model.Option;
 
 import java.util.Collections;
@@ -12,13 +15,25 @@ import timber.log.Timber;
 
 public class MatchingStepEnhancedAdapter extends SortingStepEnhancedAdapter {
 
+    protected static final int NOT_DRAGGABLE_VIEW_TYPE = 1;
+
     public MatchingStepEnhancedAdapter(List<Option> data) {
         super(data);
     }
 
     @Override
     public OptionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final OptionViewHolder optionViewHolder = super.onCreateViewHolder(parent, viewType);
+        final OptionViewHolder optionViewHolder;
+        if (viewType == NOT_DRAGGABLE_VIEW_TYPE) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            View view = inflater.inflate(R.layout.view_matching_first_option_enhanced, parent, false);
+            optionViewHolder = new OptionViewHolder(view);
+        } else if (viewType == DEFAULT_DRAGGABLE_VIEW_TYPE) {
+            optionViewHolder = super.onCreateViewHolder(parent, viewType);
+        } else {
+            throw new IllegalArgumentException("Illegal view type of matching adapter");
+        }
+
         optionViewHolder.container.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
@@ -51,5 +66,15 @@ public class MatchingStepEnhancedAdapter extends SortingStepEnhancedAdapter {
     @Override
     public boolean onCheckCanDrop(int draggingPosition, int dropPosition) {
         return dropPosition % 2 != 0;
+    }
+
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position % 2 == 0) {
+            return NOT_DRAGGABLE_VIEW_TYPE;
+        } else {
+            return super.getItemViewType(position);
+        }
     }
 }

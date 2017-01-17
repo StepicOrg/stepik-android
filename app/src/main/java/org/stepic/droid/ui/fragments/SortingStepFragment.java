@@ -1,7 +1,6 @@
 package org.stepic.droid.ui.fragments;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -65,10 +64,6 @@ public class SortingStepFragment extends StepAttemptFragment {
         recyclerView.addItemDecoration(new SimpleListDividerDecorator(ContextCompat.getDrawable(getContext(), R.drawable.list_divider_h), true));
     }
 
-    private boolean supportsViewElevation() {
-        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP);
-    }
-
     @Override
     protected void showAttempt(Attempt attempt) {
         List<String> options = attempt.getDataset().getOptions();
@@ -81,11 +76,6 @@ public class SortingStepFragment extends StepAttemptFragment {
         releaseDragFeature();
         // drag & drop manager
         recyclerViewDragDropManager = new RecyclerViewDragDropManager();
-//        recyclerViewDragDropManager.setDraggingItemShadowDrawable((NinePatchDrawable) ContextCompat.getDrawable(getContext(), R.drawable.material_shadow_z3)); //if not transparent background
-        // Lollipop or later has native drop shadow feature. ItemShadowDecorator is not required.
-//        if (!supportsViewElevation()) {
-//            recyclerView.addItemDecoration(new ItemShadowDecorator((NinePatchDrawable) ContextCompat.getDrawable(getContext(), R.drawable.material_shadow_z1))); if not transparent background
-//        }
         recyclerViewDragDropManager.attachRecyclerView(recyclerView);
         wrappedAdapter = recyclerViewDragDropManager.createWrappedAdapter(adapter);
         recyclerViewDragDropManager.setInitiateOnMove(false);

@@ -69,4 +69,5 @@
     <dimen name="launch_button_text_size">18sp</dimen>
     <dimen name="launch_not_button_text_size">15sp</dimen>
     <dimen name="continue_course_button_text_size">13sp</dimen>
+    <dimen name="onePx">1px</dimen>
 </resources>

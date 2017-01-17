@@ -3,10 +3,14 @@ package org.stepic.droid.ui.util;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
 
-import timber.log.Timber;
+import org.jetbrains.annotations.Nullable;
 
 public class ViewUtils {
-    public static boolean hitTest(View v, int x, int y) {
+    public static boolean hitTest(@Nullable View v, int x, int y) {
+        if (v == null){
+            return  false;
+        }
+
         final int tx = (int) (ViewCompat.getTranslationX(v) + 0.5f);
         final int ty = (int) (ViewCompat.getTranslationY(v) + 0.5f);
         final int left = v.getLeft() + tx;
@@ -14,9 +18,7 @@ public class ViewUtils {
         final int top = v.getTop() + ty;
         final int bottom = v.getBottom() + ty;
 
-        boolean isHit = (x >= left) && (x <= right) && (y >= top) && (y <= bottom);
-        Timber.d("hit in view %s", isHit);
-        return isHit;
+        return (x >= left) && (x <= right) && (y >= top) && (y <= bottom);
     }
 
 }
