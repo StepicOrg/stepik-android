@@ -113,8 +113,6 @@ public class MatchingStepFragment extends StepAttemptFragment {
             }
         });
 
-        recyclerViewDragDropManager.setDraggingItemScale(1.3f);
-        recyclerViewDragDropManager.setDraggingItemRotation(15.0f);
         recyclerViewDragDropManager.setItemMoveMode(RecyclerViewDragDropManager.ITEM_MOVE_MODE_SWAP);
         recyclerViewDragDropManager.setCheckCanDropEnabled(true);
         recyclerView.setAdapter(wrappedAdapter);
