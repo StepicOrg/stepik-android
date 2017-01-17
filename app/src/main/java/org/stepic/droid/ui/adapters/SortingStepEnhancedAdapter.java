@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 public class SortingStepEnhancedAdapter extends RecyclerView.Adapter<SortingStepEnhancedAdapter.OptionViewHolder>
         implements DraggableItemAdapter<SortingStepEnhancedAdapter.OptionViewHolder> {
 
-    private final List<Option> data;
+    protected final List<Option> data;
 
     public SortingStepEnhancedAdapter(List<Option> data) {
         super();
