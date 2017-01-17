@@ -23,13 +23,12 @@ import org.stepic.droid.model.Option;
 import org.stepic.droid.model.Pair;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.ui.adapters.MatchingStepEnhancedAdapter;
-import org.stepic.droid.ui.adapters.SortStepAdapter;
 import org.stepic.droid.ui.util.SimpleDividerItemDecoration;
 import org.stepic.droid.util.DpPixelsHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -110,7 +109,6 @@ public class MatchingStepFragment extends StepAttemptFragment {
         recyclerView.getAdapter().notifyDataSetChanged();
     }
 
-    // TODO: 25.01.16 refactor
     @Override
     protected Reply generateReply() {
         if (optionList == null) return new Reply.Builder().build();
@@ -125,10 +123,8 @@ public class MatchingStepFragment extends StepAttemptFragment {
                 .build();
     }
 
-    // TODO: 25.01.16 refactor
     @Override
     protected void blockUIBeforeSubmit(boolean needBlock) {
-//        mAttemptContainer.setEnabled(!needBlock);
         recyclerView.setEnabled(!needBlock);
     }
 
@@ -140,26 +136,19 @@ public class MatchingStepFragment extends StepAttemptFragment {
         List<Integer> ordering = reply.getOrdering();
         if (ordering == null) return;
 
-        SortStepAdapter adapter;
-        try {
-            adapter = (SortStepAdapter) recyclerView.getAdapter();
-        } catch (Exception e) {
-            return;
+
+        HashMap<Integer, Option> hashMap = new HashMap<>();
+        for (Option option : optionList) {
+            hashMap.put(option.getPositionId(), option);
         }
-
-//        if (mFirstList == null || mFirstList.isEmpty()) return;
-//        buildFirstColumn(mFirstList);
-
-
-        optionList = adapter.getData();
         optionList.clear();
-        Map<Integer, Option> itemIdToOption = adapter.getItemIdOptionMap();
         int i = 0;
         for (Integer itemId : ordering) {
-            optionList.add(i, itemIdToOption.get(itemId));
+            optionList.add(i, hashMap.get(itemId));
             i++;
         }
-        adapter.notifyDataSetChanged();
+
+        wrappedAdapter.notifyDataSetChanged();
     }
 
     @Subscribe
