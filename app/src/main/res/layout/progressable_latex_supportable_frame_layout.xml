@@ -16,6 +16,7 @@
     <org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
         android:id="@+id/latex_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
 
 </merge>
