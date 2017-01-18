@@ -12,8 +12,6 @@ import org.stepic.droid.model.Option;
 import java.util.Collections;
 import java.util.List;
 
-import timber.log.Timber;
-
 public class MatchingStepEnhancedAdapter extends SortingStepEnhancedAdapter {
 
     protected static final int NOT_DRAGGABLE_VIEW_TYPE = 1;
