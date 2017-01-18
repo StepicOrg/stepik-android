@@ -108,11 +108,11 @@ public class MatchingStepFragment extends StepAttemptFragment {
 
     @Override
     protected Reply generateReply() {
-        if (optionList == null) return new Reply.Builder().build();
+        if (optionList == null || optionList.size() < 2) return new Reply.Builder().build();
 
-        List<Integer> ordering = new ArrayList<>(optionList.size());
-        for (int i = 0; i < optionList.size(); i++) {
-            ordering.add(i, optionList.get(i).getPositionId());
+        List<Integer> ordering = new ArrayList<>(optionList.size() / 2);
+        for (int i = 1; i < optionList.size(); i += 2) {
+            ordering.add(optionList.get(i).getPositionId());
         }
 
         return new Reply.Builder()
@@ -133,16 +133,25 @@ public class MatchingStepFragment extends StepAttemptFragment {
         List<Integer> ordering = reply.getOrdering();
         if (ordering == null) return;
 
-
         HashMap<Integer, Option> hashMap = new HashMap<>();
         for (Option option : optionList) {
             hashMap.put(option.getPositionId(), option);
         }
+        ArrayList<Option> firstColumn = new ArrayList<>(ordering.size() / 2);
+        for (int i = 0; i < optionList.size(); i += 2) {
+            firstColumn.add(optionList.get(i));
+        }
+
         optionList.clear();
-        int i = 0;
-        for (Integer itemId : ordering) {
-            optionList.add(i, hashMap.get(itemId));
-            i++;
+        for (int i = 0; i < ordering.size() * 2; i++) {
+            boolean isFirstColumn = i % 2 == 0;
+            if (isFirstColumn) {
+                int firstColumnIndex = i / 2;
+                optionList.add(firstColumn.get(firstColumnIndex));
+            } else {
+                int orderingIndex = (i - 1) / 2;
+                optionList.add(hashMap.get(ordering.get(orderingIndex)));
+            }
         }
 
         wrappedAdapter.notifyDataSetChanged();
