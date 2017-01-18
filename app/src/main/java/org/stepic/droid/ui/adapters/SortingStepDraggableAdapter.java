@@ -20,15 +20,15 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SortingStepEnhancedAdapter extends RecyclerView.Adapter<SortingStepEnhancedAdapter.OptionViewHolder>
-        implements DraggableItemAdapter<SortingStepEnhancedAdapter.OptionViewHolder> {
+public class SortingStepDraggableAdapter extends RecyclerView.Adapter<SortingStepDraggableAdapter.OptionViewHolder>
+        implements DraggableItemAdapter<SortingStepDraggableAdapter.OptionViewHolder> {
 
     @Nullable
     private RecyclerView recyclerView;
     protected final static int DEFAULT_DRAGGABLE_VIEW_TYPE = 0;
     protected final List<Option> data;
 
-    public SortingStepEnhancedAdapter(List<Option> data) {
+    public SortingStepDraggableAdapter(List<Option> data) {
         super();
         this.data = data;
         setHasStableIds(true);
@@ -42,7 +42,7 @@ public class SortingStepEnhancedAdapter extends RecyclerView.Adapter<SortingStep
     @Override
     public OptionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.view_sorting_option, parent, false);
+        View view = inflater.inflate(R.layout.view_draggable_option, parent, false);
         return new OptionViewHolder(view);
     }
 
@@ -82,7 +82,7 @@ public class SortingStepEnhancedAdapter extends RecyclerView.Adapter<SortingStep
         return true;
     }
 
-    public static class OptionViewHolder extends AbstractDraggableItemViewHolder {
+    static class OptionViewHolder extends AbstractDraggableItemViewHolder {
 
         @BindView(R.id.container)
         View container;
@@ -95,7 +95,7 @@ public class SortingStepEnhancedAdapter extends RecyclerView.Adapter<SortingStep
         ProgressLatexView enhancedText;
 
 
-        public OptionViewHolder(View itemView) {
+        OptionViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
@@ -111,6 +111,6 @@ public class SortingStepEnhancedAdapter extends RecyclerView.Adapter<SortingStep
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
-        recyclerView = null;
+        this.recyclerView = null;
     }
 }

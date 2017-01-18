@@ -12,13 +12,13 @@ import org.stepic.droid.model.Option;
 import java.util.Collections;
 import java.util.List;
 
-public class MatchingStepEnhancedAdapter extends SortingStepEnhancedAdapter {
+public class MatchingStepDraggableAdapter extends SortingStepDraggableAdapter {
 
     protected static final int NOT_DRAGGABLE_VIEW_TYPE = 1;
 
     int optionHeightPx;
 
-    public MatchingStepEnhancedAdapter(List<Option> data) {
+    public MatchingStepDraggableAdapter(List<Option> data) {
         super(data);
         optionHeightPx = (int) MainApplication.getAppContext().getResources().getDimension(R.dimen.option_height);
     }

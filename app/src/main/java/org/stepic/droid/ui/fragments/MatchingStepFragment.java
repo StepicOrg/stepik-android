@@ -1,20 +1,12 @@
 package org.stepic.droid.ui.fragments;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
 
-import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
-import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
 import com.squareup.otto.Subscribe;
 
-import org.stepic.droid.R;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
@@ -22,88 +14,47 @@ import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Option;
 import org.stepic.droid.model.Pair;
 import org.stepic.droid.model.Reply;
-import org.stepic.droid.ui.adapters.MatchingStepEnhancedAdapter;
+import org.stepic.droid.ui.adapters.MatchingStepDraggableAdapter;
 import org.stepic.droid.ui.util.SimpleDividerItemDecoration;
-import org.stepic.droid.util.DpPixelsHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import butterknife.ButterKnife;
-
-public class MatchingStepFragment extends StepAttemptFragment {
-
-    RecyclerView recyclerView;
-
-    private List<Option> optionList;
-
-    private GridLayoutManager layoutManager;
-    private MatchingStepEnhancedAdapter adapter;
-    private RecyclerViewDragDropManager recyclerViewDragDropManager;
-    private RecyclerView.Adapter wrappedAdapter;
+public class MatchingStepFragment extends DraggableStepFragment {
 
     @Override
-    public void onViewCreated(View viewOuter, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(viewOuter, savedInstanceState);
-        View view = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_sorting, attemptContainer, false);
-        attemptContainer.addView(view);
-        int dp8InPx = (int) DpPixelsHelper.convertDpToPixel(8, getContext());
-        attemptContainer.setPadding(0, dp8InPx, 0, dp8InPx);
-        recyclerView = ButterKnife.findById(view, R.id.recycler);
-
-        recyclerView.setNestedScrollingEnabled(false);
-        layoutManager = new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false);
-
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DraggableItemAnimator());
-        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
+    protected RecyclerView.ItemDecoration getItemDecoration() {
+        return new SimpleDividerItemDecoration(getContext());
     }
 
     @Override
-    protected void showAttempt(Attempt attempt) {
-        List<Pair> options = attempt.getDataset().getPairs();
-        if (options == null) return;
-        optionList = new ArrayList<>(options.size() * 2);
-        for (int i = 0; i < options.size(); i++) {
-            optionList.add(new Option(options.get(i).getFirst(), i + options.size()));
-            optionList.add(new Option(options.get(i).getSecond(), i));
+    protected RecyclerView.LayoutManager initLayoutManager() {
+        return new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false);
+    }
+
+    @Override
+    protected RecyclerView.Adapter initAdapter() {
+        return new MatchingStepDraggableAdapter(optionList);
+    }
+
+    @Override
+    protected void initOptionListFromAttempt(Attempt attempt) {
+        final List<Pair> options = attempt.getDataset().getPairs();
+        if (options != null && options.size() >= 2) {
+            optionList = new ArrayList<>(options.size() * 2);
+            for (int i = 0; i < options.size(); i++) {
+                optionList.add(new Option(options.get(i).getFirst(), i + options.size()));
+                optionList.add(new Option(options.get(i).getSecond(), i));
+            }
         }
+    }
 
-        adapter = new MatchingStepEnhancedAdapter(optionList);
-        releaseDragFeature();
-
-        recyclerViewDragDropManager = new RecyclerViewDragDropManager();
-        recyclerViewDragDropManager.attachRecyclerView(recyclerView);
-        wrappedAdapter = recyclerViewDragDropManager.createWrappedAdapter(adapter);
-        recyclerViewDragDropManager.setInitiateOnMove(false);
-        recyclerViewDragDropManager.setInitiateOnTouch(true);
-        recyclerViewDragDropManager.setOnItemDragEventListener(new RecyclerViewDragDropManager.OnItemDragEventListener() {
-            @Override
-            public void onItemDragStarted(int position) {
-                recyclerView.setNestedScrollingEnabled(true);
-            }
-
-            @Override
-            public void onItemDragPositionChanged(int fromPosition, int toPosition) {
-
-            }
-
-            @Override
-            public void onItemDragFinished(int fromPosition, int toPosition, boolean result) {
-                recyclerView.setNestedScrollingEnabled(false);
-            }
-
-            @Override
-            public void onItemDragMoveDistanceUpdated(int offsetX, int offsetY) {
-
-            }
-        });
+    @Override
+    protected void initDragDropManager() {
+        super.initDragDropManager();
         recyclerViewDragDropManager.setItemMoveMode(RecyclerViewDragDropManager.ITEM_MOVE_MODE_SWAP);
         recyclerViewDragDropManager.setCheckCanDropEnabled(true);
-        recyclerView.setAdapter(wrappedAdapter);
-
-        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -118,11 +69,6 @@ public class MatchingStepFragment extends StepAttemptFragment {
         return new Reply.Builder()
                 .setOrdering(ordering)
                 .build();
-    }
-
-    @Override
-    protected void blockUIBeforeSubmit(boolean needBlock) {
-        recyclerView.setEnabled(!needBlock);
     }
 
     @Override
@@ -166,7 +112,6 @@ public class MatchingStepFragment extends StepAttemptFragment {
     @Subscribe
     public void onNewCommentWasAdded(NewCommentWasAddedOrUpdateEvent event) {
         super.onNewCommentWasAdded(event);
-
     }
 
     @Subscribe
@@ -174,22 +119,4 @@ public class MatchingStepFragment extends StepAttemptFragment {
         super.onStepWasUpdated(event);
     }
 
-    private void releaseDragFeature() {
-        if (recyclerViewDragDropManager != null) {
-            recyclerViewDragDropManager.release();
-            recyclerViewDragDropManager = null;
-        }
-        if (wrappedAdapter != null) {
-            WrapperAdapterUtils.releaseAll(wrappedAdapter);
-            wrappedAdapter = null;
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (recyclerViewDragDropManager != null) {
-            recyclerViewDragDropManager.cancelDrag();
-        }
-    }
 }
