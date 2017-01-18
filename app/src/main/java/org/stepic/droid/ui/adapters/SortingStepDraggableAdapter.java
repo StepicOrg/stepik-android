@@ -28,7 +28,7 @@ public class SortingStepDraggableAdapter extends RecyclerView.Adapter<SortingSte
     protected final static int DEFAULT_DRAGGABLE_VIEW_TYPE = 0;
     protected final List<Option> data;
 
-    public SortingStepDraggableAdapter(List<Option> data) {
+    public SortingStepDraggableAdapter (List<Option> data) {
         super();
         this.data = data;
         setHasStableIds(true);

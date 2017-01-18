@@ -35,7 +35,7 @@ public class MatchingStepFragment extends DraggableStepFragment {
 
     @Override
     protected RecyclerView.Adapter initAdapter() {
-        return new MatchingStepDraggableAdapter(optionList);
+        return new MatchingStepDraggableAdapter(getActivity(), optionList);
     }
 
     @Override

@@ -1,26 +1,36 @@
 package org.stepic.droid.ui.adapters;
 
+import android.app.Activity;
+import android.graphics.Point;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Option;
 
 import java.util.Collections;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class MatchingStepDraggableAdapter extends SortingStepDraggableAdapter {
 
-    protected static final int NOT_DRAGGABLE_VIEW_TYPE = 1;
+    private static final int NOT_DRAGGABLE_VIEW_TYPE = 1;
 
-    int optionHeightPx;
+    private int optionHeightPx;
+    private int deviceHeightPx;
 
-    public MatchingStepDraggableAdapter(List<Option> data) {
+    public MatchingStepDraggableAdapter(Activity context, List<Option> data) {
         super(data);
-        optionHeightPx = (int) MainApplication.getAppContext().getResources().getDimension(R.dimen.option_height);
+        optionHeightPx = (int) context.getResources().getDimension(R.dimen.option_height);
+
+        Display display = context.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        deviceHeightPx = size.y;
     }
 
     @Override
@@ -40,7 +50,8 @@ public class MatchingStepDraggableAdapter extends SortingStepDraggableAdapter {
             @Override
             public boolean onPreDraw() {
                 int localHeight = optionViewHolder.container.getMeasuredHeight();
-                if (localHeight > optionHeightPx) {
+                Timber.d("localHeight = %s, of view = %s", localHeight, optionViewHolder.container);
+                if (localHeight > optionHeightPx && localHeight < deviceHeightPx) {
                     optionViewHolder.container.getLayoutParams().height = localHeight;
                     optionViewHolder.container.getViewTreeObserver().removeOnPreDrawListener(this);
                 }

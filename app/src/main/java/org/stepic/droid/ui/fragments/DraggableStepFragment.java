@@ -44,6 +44,7 @@ public abstract class DraggableStepFragment extends StepAttemptFragment {
         attemptContainer.addView(view);
 
         recyclerView = ButterKnife.findById(view, R.id.recycler);
+        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(initLayoutManager());
         recyclerView.setItemAnimator(new DraggableItemAnimator());
         recyclerView.addItemDecoration(getItemDecoration());
