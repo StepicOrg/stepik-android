@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
 import org.stepic.droid.R;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Option;
 
 import java.util.Collections;
@@ -17,8 +18,11 @@ public class MatchingStepEnhancedAdapter extends SortingStepEnhancedAdapter {
 
     protected static final int NOT_DRAGGABLE_VIEW_TYPE = 1;
 
+    int optionHeightPx;
+
     public MatchingStepEnhancedAdapter(List<Option> data) {
         super(data);
+        optionHeightPx = (int) MainApplication.getAppContext().getResources().getDimension(R.dimen.option_height);
     }
 
     @Override
@@ -38,8 +42,7 @@ public class MatchingStepEnhancedAdapter extends SortingStepEnhancedAdapter {
             @Override
             public boolean onPreDraw() {
                 int localHeight = optionViewHolder.container.getMeasuredHeight();
-                Timber.d("MeasuredHeight = %s, height = %s, viewId = %s", localHeight, optionViewHolder.container.getHeight(), optionViewHolder.container.toString());
-                if (localHeight != 0) {
+                if (localHeight > optionHeightPx) {
                     optionViewHolder.container.getLayoutParams().height = localHeight;
                     optionViewHolder.container.getViewTreeObserver().removeOnPreDrawListener(this);
                 }
