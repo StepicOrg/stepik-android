@@ -7,11 +7,10 @@
     android:background="@color/transparent">
 
     <org.stepic.droid.ui.custom.ProgressLatexView
-        android:layout_centerVertical="true"
         android:id="@+id/option_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/sort_icon"
         android:layout_toStartOf="@id/sort_icon"
         android:gravity="center"
@@ -22,7 +21,7 @@
     <FrameLayout
         android:id="@+id/sort_icon"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_alignBottom="@+id/option_text"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"

@@ -31,7 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 public class MatchingStepFragment extends StepAttemptFragment {
 
@@ -82,7 +81,6 @@ public class MatchingStepFragment extends StepAttemptFragment {
         recyclerViewDragDropManager.setOnItemDragEventListener(new RecyclerViewDragDropManager.OnItemDragEventListener() {
             @Override
             public void onItemDragStarted(int position) {
-                Timber.d("start drag");
                 recyclerView.setNestedScrollingEnabled(true);
             }
 
@@ -93,7 +91,6 @@ public class MatchingStepFragment extends StepAttemptFragment {
 
             @Override
             public void onItemDragFinished(int fromPosition, int toPosition, boolean result) {
-                Timber.d("finish drag");
                 recyclerView.setNestedScrollingEnabled(false);
             }
 

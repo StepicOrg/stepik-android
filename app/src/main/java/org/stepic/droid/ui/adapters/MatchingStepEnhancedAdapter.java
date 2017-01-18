@@ -38,7 +38,7 @@ public class MatchingStepEnhancedAdapter extends SortingStepEnhancedAdapter {
             @Override
             public boolean onPreDraw() {
                 int localHeight = optionViewHolder.container.getMeasuredHeight();
-                Timber.d("MeasuredHeight = %s", localHeight);
+                Timber.d("MeasuredHeight = %s, height = %s, viewId = %s", localHeight, optionViewHolder.container.getHeight(), optionViewHolder.container.toString());
                 if (localHeight != 0) {
                     optionViewHolder.container.getLayoutParams().height = localHeight;
                     optionViewHolder.container.getViewTreeObserver().removeOnPreDrawListener(this);
