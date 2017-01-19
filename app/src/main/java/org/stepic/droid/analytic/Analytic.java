@@ -166,6 +166,7 @@ public interface Analytic {
         java.lang.String GOOGLE_SERVICES_TOO_OLD = "google_services_too_old";
         String VIDEO_PATH_WAS_NULL_WITH_INTERNET = "video_path_was_null_internet_enabled";
         java.lang.String FAIL_REFRESH_TOKEN_ONLINE = "fail_refresh_token_online";
+        String COOKIE_MANAGER_ERROR = "cookie_manager_error";
     }
 
     interface Web {
