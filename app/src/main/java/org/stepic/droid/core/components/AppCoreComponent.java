@@ -47,7 +47,6 @@ import org.stepic.droid.ui.adapters.InstructorAdapter;
 import org.stepic.droid.ui.adapters.NotificationAdapter;
 import org.stepic.droid.ui.adapters.SectionAdapter;
 import org.stepic.droid.ui.adapters.SocialAuthAdapter;
-import org.stepic.droid.ui.adapters.SortStepAdapter;
 import org.stepic.droid.ui.adapters.UnitAdapter;
 import org.stepic.droid.ui.custom.ExpandableTextView;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
@@ -202,8 +201,6 @@ public interface AppCoreComponent {
     void inject(LatexSupportableWebView latexSupportableWebView);
 
     void inject(ExpandableTextView expandableTextView);
-
-    void inject(SortStepAdapter sortStepAdapter);
 
     void inject(NotificationAdapter.NotificationViewHolder notificationViewHolder);
 
