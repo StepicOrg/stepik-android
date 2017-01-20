@@ -62,5 +62,4 @@ public class FillBlanksFragment extends StepAttemptFragment {
         super.onStepWasUpdated(event);
     }
 
-
 }

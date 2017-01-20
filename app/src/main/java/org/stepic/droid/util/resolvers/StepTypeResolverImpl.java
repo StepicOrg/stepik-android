@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.model.Step;
+import org.stepic.droid.ui.fragments.FillBlanksFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.ui.fragments.ChoiceStepFragment;
 import org.stepic.droid.ui.fragments.FreeResponseStepFragment;
@@ -181,6 +182,8 @@ public class StepTypeResolverImpl implements StepTypeResolver {
                 return new SortingStepFragment();
             case AppConstants.TYPE_MATCHING:
                 return new MatchingStepFragment();
+            case AppConstants.TYPE_FILL_BLANKS:
+                return new FillBlanksFragment();
             default:
                 return new NotSupportedYetStepFragment();
         }
