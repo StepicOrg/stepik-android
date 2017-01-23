@@ -20,6 +20,7 @@ import org.stepic.droid.model.Reply;
 import org.stepic.droid.ui.adapters.FillBlanksAdapter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -52,11 +53,16 @@ public class FillBlanksFragment extends StepAttemptFragment {
 
     @Override
     protected Reply generateReply() {
-        //// TODO: 20.01.17 make it from user changing
+        if (fillBlanksAdapter == null) {
+            throw new IllegalStateException("adapter cant be null on generating reply");
+        }
+        // TODO: 23.01.17 make checking on answerList.size == optionList.getSendable.size
+
+        Collection<String> answerList = fillBlanksAdapter.getAnswerList();
         List<String> blanks = new ArrayList<>();
-        blanks.add("First one");
-        blanks.add("Second");
-        blanks.add("    etc");
+        for (String item : answerList) {
+            blanks.add(item);
+        }
         return new Reply.Builder()
                 .setBlanks(blanks)
                 .build();

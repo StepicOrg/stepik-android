@@ -1,21 +1,28 @@
 package org.stepic.droid.ui.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.model.FillBlankComponent;
 import org.stepic.droid.ui.custom.ProgressLatexView;
 import org.stepic.droid.ui.util.NothingSelectedSpinnerAdapter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +35,7 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
 
     private List<FillBlankComponent> componentList;
     private boolean isAllEnabled = true;
+    private final SortedMap<Integer, String> positionAnswerMap = new TreeMap<>();
 
     public FillBlanksAdapter(@NotNull List<FillBlankComponent> componentList) {
         this.componentList = componentList;
@@ -98,6 +106,17 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
         public abstract View getRoot();
     }
 
+    private void changeAnswerAtPosition(int position, @Nullable CharSequence answer) {
+        if (answer != null) {
+            positionAnswerMap.put(position, answer.toString());
+        } else {
+            positionAnswerMap.remove(position);
+        }
+    }
+
+    public Collection<String> getAnswerList() {
+        return positionAnswerMap.values();
+    }
 
     class TextViewHolder extends FillBlankViewHolderBase {
 
@@ -133,6 +152,21 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
             NothingSelectedSpinnerAdapter wrappedAdapter = new NothingSelectedSpinnerAdapter(dataAdapter, R.layout.fill_blanks_prompt, itemView.getContext());
             dataAdapter.setDropDownViewResource(R.layout.stepik_spinner_dropdown_item);
             spinner.setAdapter(wrappedAdapter);
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (position > 0) {
+                        FillBlankComponent fillBlankComponent = componentList.get(getAdapterPosition());
+                        String answer = fillBlankComponent.getOptions().get(position - 1);
+                        changeAnswerAtPosition(getAdapterPosition(), answer);
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    changeAnswerAtPosition(getAdapterPosition(), null);
+                }
+            });
         }
 
         @Override
@@ -165,6 +199,22 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
 
         public InputViewHolder(View itemView) {
             super(itemView);
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    changeAnswerAtPosition(getAdapterPosition(), s);
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
         }
 
         @Override
