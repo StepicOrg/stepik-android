@@ -78,8 +78,17 @@ public class FillBlanksFragment extends StepAttemptFragment {
     @Override
     protected void onRestoreSubmission() {
         Reply reply = submission.getReply();
-        //// TODO: 20.01.17   fill blanks from reply
-        reply.getBlanks();
+
+        List<String> blanksFromReply = reply.getBlanks();
+        int i = 0;
+        for (FillBlankComponent component : componentList) {
+            if (component.getType().canSubmit() && i < blanksFromReply.size()) {
+                component.setDefaultValue(blanksFromReply.get(i));
+                i++;
+            }
+        }
+
+        fillBlanksAdapter.notifyDataSetChanged();
     }
 
     @Subscribe

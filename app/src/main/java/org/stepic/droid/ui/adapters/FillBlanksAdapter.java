@@ -176,14 +176,22 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
             if (rawOptions == null) {
                 throw new IllegalArgumentException("options in select of fill blank cannot be null");
             }
+
             List<String> options = new ArrayList<>(rawOptions.size());
-            for (String item : rawOptions) {
+            final String defaultValue = fillBlankComponent.getDefaultValue();
+            int indexForSelection = -1;
+            for (int i = 0; i < rawOptions.size(); i++) {
+                String item = rawOptions.get(i);
                 options.add(item.trim());
+                if (defaultValue != null && defaultValue.equals(item)) {
+                    indexForSelection = i;
+                }
             }
 
             dataAdapter.clear();
             dataAdapter.addAll(options);
             dataAdapter.notifyDataSetChanged();
+            spinner.setSelection(indexForSelection + 1, false);
         }
 
         @Override
@@ -219,7 +227,10 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
 
         @Override
         public void bindData(FillBlankComponent fillBlankComponent) {
-            //// TODO: 23.01.17 we should restore data
+            String defaultValue = fillBlankComponent.getDefaultValue();
+            if (defaultValue != null) {
+                editText.setText(defaultValue);
+            }
         }
 
         @Override
