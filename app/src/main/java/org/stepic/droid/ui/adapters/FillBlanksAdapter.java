@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.model.FillBlankComponent;
 import org.stepic.droid.ui.custom.ProgressLatexView;
+import org.stepic.droid.ui.util.NothingSelectedSpinnerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +111,8 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
         public SelectViewHolder(View itemView) {
             super(itemView);
             dataAdapter = new ArrayAdapter<>(itemView.getContext(), android.R.layout.simple_spinner_item, new ArrayList<String>());
-            spinner.setAdapter(dataAdapter);
+            NothingSelectedSpinnerAdapter wrappedAdapter = new NothingSelectedSpinnerAdapter(dataAdapter, R.layout.fill_blanks_prompt, itemView.getContext());
+            spinner.setAdapter(wrappedAdapter);
         }
 
         @Override
