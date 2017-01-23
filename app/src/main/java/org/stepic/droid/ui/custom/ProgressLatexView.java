@@ -64,6 +64,13 @@ public class ProgressLatexView extends FrameLayout {
         }
     }
 
+    public void setAnyText(String text) {
+        if (!isSet) {
+            isSet = true;
+            optionText.setText(text);
+        }
+    }
+
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
         SavedState ownState = (SavedState) state;

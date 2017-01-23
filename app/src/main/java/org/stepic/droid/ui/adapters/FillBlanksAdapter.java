@@ -111,7 +111,7 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
 
         @Override
         public void bindData(FillBlankComponent fillBlankComponent) {
-            progressLatexView.setPlainOrLaTeXText(fillBlankComponent.getText()); //// FIXME: 23.01.17 HTML is allowed here
+            progressLatexView.setAnyText(fillBlankComponent.getText());
         }
 
         @Override
