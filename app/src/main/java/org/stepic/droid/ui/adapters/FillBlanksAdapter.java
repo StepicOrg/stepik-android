@@ -19,10 +19,7 @@ import org.stepic.droid.ui.custom.ProgressLatexView;
 import org.stepic.droid.ui.util.NothingSelectedSpinnerAdapter;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,7 +32,6 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
 
     private List<FillBlankComponent> componentList;
     private boolean isAllEnabled = true;
-    private final SortedMap<Integer, String> positionAnswerMap = new TreeMap<>();
 
     public FillBlanksAdapter(@NotNull List<FillBlankComponent> componentList) {
         this.componentList = componentList;
@@ -108,14 +104,10 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
 
     private void changeAnswerAtPosition(int position, @Nullable CharSequence answer) {
         if (answer != null) {
-            positionAnswerMap.put(position, answer.toString());
+            componentList.get(position).setDefaultValue(answer.toString());
         } else {
-            positionAnswerMap.remove(position);
+            componentList.get(position).setDefaultValue(null);
         }
-    }
-
-    public Collection<String> getAnswerList() {
-        return positionAnswerMap.values();
     }
 
     class TextViewHolder extends FillBlankViewHolderBase {
