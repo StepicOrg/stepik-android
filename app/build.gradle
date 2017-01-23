@@ -18,7 +18,7 @@ android {
             keyAlias globalConf.debugAlias
             keyPassword globalConf.debugAliasPass
         }
-        
+
         release {
             storeFile file(globalConf.keystore)
             storePassword globalConf.keystorePass
@@ -184,8 +184,8 @@ dependencies {
 
     compile "com.mixpanel.android:mixpanel-android:4.9.3"
 
-    compile ('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.10.2@aar'){
-        transitive=true
+    compile('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.10.2@aar') {
+        transitive = true
     }
 }
 

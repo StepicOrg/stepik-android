@@ -1,12 +1,12 @@
 package org.stepic.droid.ui.adapters;
 
-import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -26,6 +26,7 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
     final static int SELECT_TYPE = 2;
 
     private List<FillBlankComponent> componentList;
+    private boolean isAllEnabled = true;
 
     public FillBlanksAdapter(@NotNull List<FillBlankComponent> componentList) {
         this.componentList = componentList;
@@ -67,6 +68,7 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
     public void onBindViewHolder(FillBlankViewHolderBase holder, int position) {
         FillBlankComponent fillBlankComponent = componentList.get(position);
         holder.bindData(fillBlankComponent);
+        holder.makeEnabled(isAllEnabled);
     }
 
     @Override
@@ -74,7 +76,12 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
         return componentList.size();
     }
 
-    static abstract class FillBlankViewHolderBase extends RecyclerView.ViewHolder {
+    public void setAllItemsEnabled(boolean isAllEnabled) {
+        this.isAllEnabled = isAllEnabled;
+        notifyItemRangeChanged(0, getItemCount());
+    }
+
+    abstract class FillBlankViewHolderBase extends RecyclerView.ViewHolder {
 
         public FillBlankViewHolderBase(View itemView) {
             super(itemView);
@@ -82,10 +89,16 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
         }
 
         public abstract void bindData(FillBlankComponent fillBlankComponent);
+
+        public final void makeEnabled(boolean isEnabled) {
+            getRoot().setEnabled(isEnabled);
+        }
+
+        public abstract View getRoot();
     }
 
 
-    static class TextViewHolder extends FillBlankViewHolderBase {
+    class TextViewHolder extends FillBlankViewHolderBase {
 
         @BindView(R.id.latex_text_fill_blanks)
         ProgressLatexView progressLatexView;
@@ -99,19 +112,25 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
         public void bindData(FillBlankComponent fillBlankComponent) {
             progressLatexView.setPlainOrLaTeXText(fillBlankComponent.getText()); //// FIXME: 23.01.17 HTML is allowed here
         }
+
+        @Override
+        public View getRoot() {
+            return progressLatexView;
+        }
     }
 
-    static class SelectViewHolder extends FillBlankViewHolderBase {
+    class SelectViewHolder extends FillBlankViewHolderBase {
 
         @BindView(R.id.spinner_fill_blanks)
-        AppCompatSpinner spinner;
+        Spinner spinner;
 
         ArrayAdapter<String> dataAdapter;
 
         public SelectViewHolder(View itemView) {
             super(itemView);
-            dataAdapter = new ArrayAdapter<>(itemView.getContext(), android.R.layout.simple_spinner_item, new ArrayList<String>());
+            dataAdapter = new ArrayAdapter<>(itemView.getContext(), R.layout.stepik_spinner_item, new ArrayList<String>());
             NothingSelectedSpinnerAdapter wrappedAdapter = new NothingSelectedSpinnerAdapter(dataAdapter, R.layout.fill_blanks_prompt, itemView.getContext());
+            dataAdapter.setDropDownViewResource(R.layout.stepik_spinner_dropdown_item);
             spinner.setAdapter(wrappedAdapter);
         }
 
@@ -125,9 +144,14 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
             dataAdapter.addAll(options);
             dataAdapter.notifyDataSetChanged();
         }
+
+        @Override
+        public View getRoot() {
+            return spinner;
+        }
     }
 
-    static class InputViewHolder extends FillBlankViewHolderBase {
+    class InputViewHolder extends FillBlankViewHolderBase {
 
         @BindView(R.id.input_view_fill_blanks)
         EditText editText;
@@ -139,6 +163,11 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
         @Override
         public void bindData(FillBlankComponent fillBlankComponent) {
             //// TODO: 23.01.17 we should restore data
+        }
+
+        @Override
+        public View getRoot() {
+            return editText;
         }
     }
 

@@ -28,12 +28,14 @@ public class FillBlanksFragment extends StepAttemptFragment {
 
     private RecyclerView recyclerContainer;
     private final List<FillBlankComponent> componentList = new ArrayList<>();
+    FillBlanksAdapter fillBlanksAdapter;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         View fillBlanksView = ((LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_fill_blanks, attemptContainer, false);
         recyclerContainer = ButterKnife.findById(fillBlanksView, R.id.recycler);
+        recyclerContainer.setNestedScrollingEnabled(false);
         attemptContainer.addView(fillBlanksView);
 
         recyclerContainer.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -43,7 +45,7 @@ public class FillBlanksFragment extends StepAttemptFragment {
     protected void showAttempt(Attempt attempt) {
         componentList.clear();
         componentList.addAll(attempt.getDataset().getFillBlankComponents());
-        FillBlanksAdapter fillBlanksAdapter = new FillBlanksAdapter(componentList);
+        fillBlanksAdapter = new FillBlanksAdapter(componentList);
         recyclerContainer.setAdapter(fillBlanksAdapter);
         recyclerContainer.getAdapter().notifyDataSetChanged();
     }
@@ -62,7 +64,9 @@ public class FillBlanksFragment extends StepAttemptFragment {
 
     @Override
     protected void blockUIBeforeSubmit(boolean needBlock) {
-        //// TODO: 20.01.17   block UI
+        if (fillBlanksAdapter != null) {
+            fillBlanksAdapter.setAllItemsEnabled(!needBlock);
+        }
     }
 
     @Override
