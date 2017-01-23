@@ -19,6 +19,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.FillBlankViewHolderBase> {
     final static int TEXT_TYPE = 0;
@@ -136,10 +137,16 @@ public class FillBlanksAdapter extends RecyclerView.Adapter<FillBlanksAdapter.Fi
 
         @Override
         public void bindData(FillBlankComponent fillBlankComponent) {
-            List<String> options = fillBlankComponent.getOptions();
-            if (options == null) {
+            Timber.d("Bind view, allocate some strings");
+            List<String> rawOptions = fillBlankComponent.getOptions();
+            if (rawOptions == null) {
                 throw new IllegalArgumentException("options in select of fill blank cannot be null");
             }
+            List<String> options = new ArrayList<>(rawOptions.size());
+            for (String item : rawOptions) {
+                options.add(item.trim());
+            }
+
             dataAdapter.clear();
             dataAdapter.addAll(options);
             dataAdapter.notifyDataSetChanged();
