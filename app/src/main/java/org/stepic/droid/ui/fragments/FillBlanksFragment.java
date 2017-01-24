@@ -47,7 +47,6 @@ public class FillBlanksFragment extends StepAttemptFragment {
         componentList.addAll(attempt.getDataset().getFillBlankComponents());
         fillBlanksAdapter = new FillBlanksAdapter(componentList);
         recyclerContainer.setAdapter(fillBlanksAdapter);
-        recyclerContainer.getAdapter().notifyDataSetChanged();
     }
 
     @Override
