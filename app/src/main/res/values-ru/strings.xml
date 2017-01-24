@@ -339,4 +339,6 @@
     <string name="anonymous_like_mark_comment">Чтобы оценивать комментарии Вам нужно Войти</string>
     <string name="retry">Повторить попытку</string>
     <string name="accessibility_drag_and_drop">Нажать и перетащить</string>
+    <string name="fill_blanks_select_value"><![CDATA[<Выберите значение>]]></string>
+    <string name="fill_blanks_type_text">Введите текст</string>
 </resources>

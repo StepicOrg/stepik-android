@@ -70,4 +70,5 @@
     <dimen name="launch_not_button_text_size">15sp</dimen>
     <dimen name="continue_course_button_text_size">13sp</dimen>
     <dimen name="onePx">1px</dimen>
+    <dimen name="fill_blanks_input_text_size">16sp</dimen>
 </resources>

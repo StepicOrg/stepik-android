@@ -17,7 +17,7 @@ import org.stepic.droid.R;
 public class ProgressLatexView extends FrameLayout {
 
     private LatexSupportableEnhancedFrameLayout optionText;
-    private boolean isSet;
+    private String beforeText = null;
 
     public ProgressLatexView(Context context) {
         this(context, null);
@@ -58,17 +58,29 @@ public class ProgressLatexView extends FrameLayout {
     }
 
     public void setPlainOrLaTeXText(String text) {
-        if (!isSet) {
-            isSet = true;
+        if (!beforeIsEqual(text)) {
+            beforeText = text;
             optionText.setPlainOrLaTeXText(text);
         }
+    }
+
+
+    public void setAnyText(String text) {
+        if (!beforeIsEqual(text)) {
+            beforeText = text;
+            optionText.setText(text);
+        }
+    }
+
+    private boolean beforeIsEqual(String newText) {
+        return beforeText != null && newText != null && newText.equals(beforeText);
     }
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
         SavedState ownState = (SavedState) state;
         super.onRestoreInstanceState(ownState.getSuperState());
-        isSet = ownState.isSet;
+        beforeText = ownState.beforeText;
         requestLayout();
     }
 
@@ -76,7 +88,7 @@ public class ProgressLatexView extends FrameLayout {
     protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
         SavedState ownState = new SavedState(superState);
-        ownState.isSet = isSet;
+        ownState.beforeText = beforeText;
         return ownState;
     }
 
@@ -92,11 +104,11 @@ public class ProgressLatexView extends FrameLayout {
                 return new SavedState[size];
             }
         };
-        boolean isSet;
+        String beforeText;
 
         private SavedState(Parcel source) {
             super(source);
-            isSet = source.readInt() == 1;
+            beforeText = source.readString();
         }
 
         SavedState(Parcelable superState) {
@@ -106,7 +118,7 @@ public class ProgressLatexView extends FrameLayout {
         @Override
         public void writeToParcel(Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
-            dest.writeInt(isSet ? 1 : 0);
+            dest.writeString(beforeText);
         }
     }
 
