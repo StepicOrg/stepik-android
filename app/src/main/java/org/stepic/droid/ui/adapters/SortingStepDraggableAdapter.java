@@ -11,6 +11,7 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
 
 import org.stepic.droid.R;
+import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.model.Option;
 import org.stepic.droid.ui.custom.ProgressLatexView;
 import org.stepic.droid.ui.util.ViewUtils;
@@ -27,11 +28,18 @@ public class SortingStepDraggableAdapter extends RecyclerView.Adapter<SortingSte
     private RecyclerView recyclerView;
     protected final static int DEFAULT_DRAGGABLE_VIEW_TYPE = 0;
     protected final List<Option> data;
+    protected final int sortingImageViewHeight;
+    protected final int sortingControllerPadding;
+    protected final int minEnhancedTextHeight;
 
-    public SortingStepDraggableAdapter (List<Option> data) {
+    public SortingStepDraggableAdapter(List<Option> data) {
         super();
         this.data = data;
         setHasStableIds(true);
+
+        sortingImageViewHeight = (int) MainApplication.getAppContext().getResources().getDimension(R.dimen.sort_image_view_height);
+        sortingControllerPadding = (int) MainApplication.getAppContext().getResources().getDimension(R.dimen.padding_sort_controller);
+        minEnhancedTextHeight = sortingImageViewHeight + 2 * sortingControllerPadding;
     }
 
     @Override
@@ -43,7 +51,14 @@ public class SortingStepDraggableAdapter extends RecyclerView.Adapter<SortingSte
     public OptionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.view_draggable_option, parent, false);
-        return new OptionViewHolder(view);
+        OptionViewHolder optionViewHolder = new OptionViewHolder(view);
+
+        optionViewHolder.sortImageView.getLayoutParams().height = sortingImageViewHeight;
+
+        optionViewHolder.sortController.setPadding(sortingControllerPadding, sortingControllerPadding, sortingControllerPadding, sortingControllerPadding);
+
+        optionViewHolder.enhancedText.setMinimumHeight(minEnhancedTextHeight);
+        return optionViewHolder;
     }
 
     @Override
@@ -94,6 +109,9 @@ public class SortingStepDraggableAdapter extends RecyclerView.Adapter<SortingSte
         @BindView(R.id.option_text)
         ProgressLatexView enhancedText;
 
+        @Nullable
+        @BindView(R.id.sort_image_view)
+        View sortImageView;
 
         OptionViewHolder(View itemView) {
             super(itemView);

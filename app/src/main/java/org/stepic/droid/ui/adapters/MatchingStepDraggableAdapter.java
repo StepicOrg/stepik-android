@@ -20,17 +20,18 @@ public class MatchingStepDraggableAdapter extends SortingStepDraggableAdapter {
 
     private static final int NOT_DRAGGABLE_VIEW_TYPE = 1;
 
-    private int optionHeightPx;
     private int deviceHeightPx;
+    private int doublePadding;
 
     public MatchingStepDraggableAdapter(Activity context, List<Option> data) {
         super(data);
-        optionHeightPx = (int) context.getResources().getDimension(R.dimen.option_height);
 
         Display display = context.getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         deviceHeightPx = size.y;
+
+        doublePadding = (int) context.getResources().getDimension(R.dimen.half_padding) * 2;
     }
 
     @Override
@@ -49,12 +50,19 @@ public class MatchingStepDraggableAdapter extends SortingStepDraggableAdapter {
         optionViewHolder.container.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
-                int localHeight = optionViewHolder.container.getMeasuredHeight();
+                int localHeight = optionViewHolder.enhancedText.getMeasuredHeightOfInnerLayout() + doublePadding;
                 Timber.d("localHeight = %s, of view = %s", localHeight, optionViewHolder.container);
-                if (localHeight > optionHeightPx && localHeight < deviceHeightPx) {
-                    optionViewHolder.container.getLayoutParams().height = localHeight;
+                if (localHeight > doublePadding && localHeight < deviceHeightPx) {
+                    if (optionViewHolder.sortController != null) {
+                        optionViewHolder.sortController.setPadding(sortingControllerPadding, sortingControllerPadding, sortingControllerPadding, sortingControllerPadding);
+                    }
+                    if (optionViewHolder.sortImageView != null) {
+                        optionViewHolder.sortImageView.getLayoutParams().height = sortingImageViewHeight;
+                    }
+                    optionViewHolder.container.getLayoutParams().height = Math.max(localHeight, minEnhancedTextHeight);
                     optionViewHolder.container.getViewTreeObserver().removeOnPreDrawListener(this);
                 }
+
                 return true;
             }
         });

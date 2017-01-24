@@ -54,7 +54,6 @@ public class ProgressLatexView extends FrameLayout {
             }
         };
         optionText.getWebView().setWebViewClient(client);
-
     }
 
     public void setPlainOrLaTeXText(String text) {
@@ -122,5 +121,9 @@ public class ProgressLatexView extends FrameLayout {
         }
     }
 
+
+    public int getMeasuredHeightOfInnerLayout() {
+        return optionText.getMeasuredHeight();
+    }
 
 }
