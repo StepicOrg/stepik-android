@@ -137,7 +137,7 @@ public class SplashActivity extends BackToExitActivityBase {
     private void showNextScreen() {
         if (!isFinishing()) {
             MixpanelAPI mixpanelAPI = MixpanelAPI.getInstance(getApplicationContext(), config.getMixpanelToken());
-            mixpanelAPI.track("Splash shown");
+            mixpanelAPI.track("app_opened");
             if (sharedPreferenceHelper.getAuthResponseFromStore() != null) {
                 shell.getScreenProvider().showMainFeed(SplashActivity.this);
             } else {
