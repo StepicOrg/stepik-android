@@ -326,6 +326,10 @@ public interface Analytic {
         String SUCCESS_LOGIN_AND_ENROLL = "success_login_insta_enroll";
     }
 
+    interface DownloadManager {
+        String DOWNLOAD_MANAGER_IS_NOT_ENABLED = "download_manager_is_not_enabled";
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);
