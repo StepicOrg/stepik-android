@@ -144,7 +144,7 @@ public class SharedPreferenceHelper {
     }
 
     public int getTimeNotificationCode() {
-        return getInt(PreferenceType.LOGIN, TIME_NOTIFICATION_CODE, TimeIntervalUtil.INSTANCE.getMiddle());
+        return getInt(PreferenceType.LOGIN, TIME_NOTIFICATION_CODE, TimeIntervalUtil.INSTANCE.getDefaultTimeCode());
     }
 
     public void setTimeNotificationCode(int value) {

@@ -1,6 +1,8 @@
 package org.stepic.droid.web;
 
-public class AuthenticationStepicResponse implements IStepicResponse {
+import java.util.Locale;
+
+public class AuthenticationStepicResponse {
     private String refresh_token;
     private long expires_in;
     private String scope;
@@ -28,12 +30,12 @@ public class AuthenticationStepicResponse implements IStepicResponse {
 
     @Override
     public String toString() {
-        return String.format("access_token=%s; access_type=%s; "
-                + "expires_in=%d; scope=%s; refresh_token=%s", access_token, token_type, expires_in, scope, refresh_token);
+        return String.format(Locale.getDefault(),
+                "access_token=%s; access_type=%s; expires_in=%d; scope=%s; refresh_token=%s; error = %s; error_description = %s", access_token, token_type, expires_in, scope, refresh_token, error, error_description);
     }
 
     public boolean isSuccess() {
-        return (error == null && access_token != null);
+        return (refresh_token != null && access_token != null && expires_in > 0);
     }
 
 }

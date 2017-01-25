@@ -3,10 +3,12 @@ package org.stepic.droid.web;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
@@ -117,6 +119,13 @@ public class RetrofitRESTApi implements IApi {
                 .client(okHttpClient)
                 .build();
         stepikEmptyAuthService = retrofit.create(StepicEmptyAuthService.class);
+        try {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                CookieSyncManager.createInstance(context);
+            }
+        } catch (Exception ex) {
+            analytic.reportError(Analytic.Error.COOKIE_MANAGER_ERROR, ex);
+        }
     }
 
     private void makeLoggedService() {
@@ -131,7 +140,9 @@ public class RetrofitRESTApi implements IApi {
                     String urlForCookies = newRequest.url().toString();
                     if (response == null) {
                         //it is Anonymous, we can log it.
-                        String cookies = android.webkit.CookieManager.getInstance().getCookie(urlForCookies); //if token is expired or doesn't exist -> manager return null
+
+                        CookieManager cookieManager = android.webkit.CookieManager.getInstance();
+                        String cookies = cookieManager.getCookie(config.getBaseUrl()); //if token is expired or doesn't exist -> manager return null
                         Timber.d("set cookie for url %s is %s", urlForCookies, cookies);
                         if (cookies == null) {
                             updateCookieForBaseUrl();
@@ -159,6 +170,13 @@ public class RetrofitRESTApi implements IApi {
                         }
                         if (response == null || !response.isSuccess()) {
                             //it is worst case:
+                            String message;
+                            if (response == null) {
+                                message = "response was null";
+                            } else {
+                                message = response.toString();
+                            }
+                            analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_ONLINE, new FailRefreshException(message));
                             analytic.reportEvent(Analytic.Web.UPDATE_TOKEN_FAILED);
                             return chain.proceed(newRequest);
                         }

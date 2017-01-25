@@ -374,7 +374,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == NOTIFICATION_INTERVAL_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                int intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.Companion.getResultIntervalCodeKey(), TimeIntervalUtil.INSTANCE.getMiddle());
+                int intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.Companion.getResultIntervalCodeKey(), TimeIntervalUtil.INSTANCE.getDefaultTimeCode());
                 notificationTimePresenter.setStreakTime(intervalCode);
                 analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_PROFILE, intervalCode + "");
             } else if (resultCode == Activity.RESULT_CANCELED) {

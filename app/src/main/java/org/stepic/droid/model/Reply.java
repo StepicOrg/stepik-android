@@ -11,6 +11,7 @@ public class Reply {
     private final List<Integer> ordering;
     private final String language;
     private final String code;
+    private final List<String> blanks;
 
     public static class Builder {
 
@@ -22,6 +23,7 @@ public class Reply {
         private List<Integer> ordering;
         private String language;
         private String code;
+        private List<String> blanks;
 
         public Builder() {
         }
@@ -66,6 +68,11 @@ public class Reply {
             return this;
         }
 
+        public Builder setBlanks(List<String> blanks) {
+            this.blanks = blanks;
+            return this;
+        }
+
         public Reply build() {
             return new Reply(this);
         }
@@ -81,6 +88,7 @@ public class Reply {
         ordering = builder.ordering;
         language = builder.language;
         code = builder.code;
+        blanks = builder.blanks;
     }
 
     public String getNumber() {
@@ -113,5 +121,9 @@ public class Reply {
 
     public String getCode() {
         return code;
+    }
+
+    public List<String> getBlanks() {
+        return blanks;
     }
 }

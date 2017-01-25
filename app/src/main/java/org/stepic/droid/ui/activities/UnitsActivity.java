@@ -98,7 +98,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
         hideSoftKeypad();
         isScreenEmpty = true;
         firstLoad = true;
-        section = (Section) (getIntent().getExtras().get(AppConstants.KEY_SECTION_BUNDLE));
+        section = getIntent().getParcelableExtra(AppConstants.KEY_SECTION_BUNDLE);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

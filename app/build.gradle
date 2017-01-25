@@ -18,7 +18,7 @@ android {
             keyAlias globalConf.debugAlias
             keyPassword globalConf.debugAliasPass
         }
-        
+
         release {
             storeFile file(globalConf.keystore)
             storePassword globalConf.keystorePass
@@ -31,8 +31,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion minSdk
         targetSdkVersion 25
-        versionCode 114
-        versionName "1.25"
+        versionCode 116
+        versionName "1.26.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // Enabling multidex support.
         multiDexEnabled true
@@ -147,7 +147,7 @@ dependencies {
     compile 'com.squareup:otto:1.3.8'
 
     // AppMetrica from maven central. Protobuf will be included as dependency.
-    compile 'com.yandex.android:mobmetricalib:2.51'
+    compile 'com.yandex.android:mobmetricalib:2.62'
 
     compile 'jp.wasabeef:recyclerview-animators:2.1.0'
 
@@ -162,7 +162,7 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    compile 'de.mrmaffen:vlc-android-sdk:1.9.8'
+    compile 'de.mrmaffen:vlc-android-sdk:2.0.6'
 
     compile 'org.jsoup:jsoup:1.8.3'
 
@@ -181,6 +181,12 @@ dependencies {
     compile 'biz.kasual:materialnumberpicker:1.2.1'
 
     compile 'com.github.chrisbanes:PhotoView:1.3.1'
+
+    compile "com.mixpanel.android:mixpanel-android:4.9.3"
+
+    compile('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.10.2@aar') {
+        transitive = true
+    }
 }
 
 repositories {
