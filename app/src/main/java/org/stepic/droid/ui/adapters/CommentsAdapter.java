@@ -348,7 +348,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
             @NotNull
             String userAvatar = "";
             if (user != null) {
-                userAvatar = user.getAvatar() == null ? "" : user.getAvatar();
+                userAvatar = user.getAvatarPath() == null ? "" : user.getAvatarPath();
             }
 
             if (userAvatar.endsWith(AppConstants.SVG_EXTENSION)) {

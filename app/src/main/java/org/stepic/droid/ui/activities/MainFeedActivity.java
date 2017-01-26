@@ -602,9 +602,10 @@ public class MainFeedActivity extends BackToExitActivityBase
         signInProfileView.setVisibility(View.INVISIBLE);
         profileImage.setVisibility(View.VISIBLE);
         userNameTextView.setVisibility(View.VISIBLE);
-        if (profile.getAvatar() != null && profile.getAvatar().endsWith(AppConstants.SVG_EXTENSION)) {
+        final String avatarPath = profile.getAvatarPath();
+        if (avatarPath != null && avatarPath.endsWith(AppConstants.SVG_EXTENSION)) {
             GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> svgRequestBuilder = GlideSvgRequestFactory.create(this, userPlaceholder);
-            Uri uri = Uri.parse(profile.getAvatar());
+            Uri uri = Uri.parse(avatarPath);
             svgRequestBuilder
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .load(uri)
@@ -612,7 +613,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         } else {
             Glide
                     .with(MainFeedActivity.this)
-                    .load(profile.getAvatar())
+                    .load(avatarPath)
                     .asBitmap()
                     .placeholder(userPlaceholder)
                     .into(profileImage);

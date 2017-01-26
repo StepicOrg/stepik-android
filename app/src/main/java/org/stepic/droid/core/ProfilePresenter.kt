@@ -86,7 +86,7 @@ class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
             }
         } else {
             val userViewModelLocal = UserViewModel(fullName = user.getFirstAndLastName(),
-                    imageLink = user.avatar,
+                    imageLink = user.getAvatarPath(),
                     shortBio = stringOrEmpty(user.short_bio),
                     information = stringOrEmpty((user.details)),
                     isMyProfile = false,
@@ -133,7 +133,7 @@ class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
 
     private fun showProfileBase(profile: Profile, isMyProfile: Boolean) {
         val userViewModelLocal = UserViewModel(fullName = profile.getFirstAndLastName(),
-                imageLink = profile.avatar,
+                imageLink = profile.getAvatarPath(),
                 shortBio = stringOrEmpty(profile.short_bio),
                 information = stringOrEmpty((profile.details)),
                 isMyProfile = isMyProfile,
