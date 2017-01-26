@@ -1,7 +1,10 @@
 package org.stepic.droid.ui.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,7 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.GenericRequestBuilder;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.caverock.androidsvg.SVG;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -18,7 +24,9 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.model.User;
 import org.stepic.droid.util.UserExtensionKt;
+import org.stepic.droid.util.svg.GlideSvgRequestFactory;
 
+import java.io.InputStream;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -66,11 +74,21 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
         String firstLastNameString = UserExtensionKt.getFirstAndLastName(instructor);
         holder.firstLastName.setText(firstLastNameString);
         holder.courseShortBio.setText(instructor.getShort_bio());
-        Glide.with(activity)
-                .load(instructor.getAvatar())
-                .asBitmap()
-                .placeholder(placeholder)
-                .into(holder.instructorIcon);
+        String svgAvatarPath = instructor.getSvgAvatarPath();
+        if (svgAvatarPath == null) {
+            Glide.with(activity)
+                    .load(instructor.getAvatar())
+                    .asBitmap()
+                    .placeholder(placeholder)
+                    .into(holder.instructorIcon);
+        } else {
+            Uri uri = Uri.parse(svgAvatarPath);
+            holder.svgRequestBuilder
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .load(uri)
+                    .into(holder.instructorIcon);
+
+        }
     }
 
 
@@ -90,6 +108,8 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
         @BindView(R.id.course_short_bio)
         TextView courseShortBio;
 
+        final GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> svgRequestBuilder;
+
         public InstructorViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -99,6 +119,9 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
                     InstructorAdapter.this.onClickInstructor(getAdapterPosition());
                 }
             });
+
+            final Context context = itemView.getContext();
+            svgRequestBuilder = GlideSvgRequestFactory.create(context, InstructorAdapter.this.placeholder);
         }
     }
 }

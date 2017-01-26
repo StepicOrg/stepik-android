@@ -187,6 +187,8 @@ dependencies {
     compile('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.10.2@aar') {
         transitive = true
     }
+
+    compile 'com.caverock:androidsvg:1.2.1'
 }
 
 repositories {
