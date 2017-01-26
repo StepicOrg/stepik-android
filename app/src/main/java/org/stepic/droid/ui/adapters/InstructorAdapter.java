@@ -74,7 +74,7 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
         String firstLastNameString = UserExtensionKt.getFirstAndLastName(instructor);
         holder.firstLastName.setText(firstLastNameString);
         holder.courseShortBio.setText(instructor.getShort_bio());
-        String svgAvatarPath = instructor.getSvgAvatarPath();
+        String svgAvatarPath = instructor.getAvatar();
         if (svgAvatarPath == null) {
             Glide.with(activity)
                     .load(instructor.getAvatar())

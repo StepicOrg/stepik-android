@@ -1,7 +1,6 @@
 package org.stepic.droid.model
 
 import com.google.gson.annotations.SerializedName
-import org.stepic.droid.BuildConfig
 import java.io.Serializable
 
 data class Profile(
@@ -27,16 +26,4 @@ data class Profile(
         val subscribed_for_news_ru: Boolean = false,
         @SerializedName("email_addresses")
         var emailAddresses: LongArray?
-) : Serializable {
-    fun getSvgImagePath(): String? {
-        if (BuildConfig.DEBUG) {
-            return "https://stepik.org/static/frontend/topbar_logo.svg" //fixme: remove debug
-        } else {
-            if (avatar != null && avatar.endsWith(".svg", ignoreCase = true)) {
-                return avatar
-            } else {
-                return null
-            }
-        }
-    }
-}
+) : Serializable

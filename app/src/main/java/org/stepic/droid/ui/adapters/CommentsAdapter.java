@@ -3,6 +3,8 @@ package org.stepic.droid.ui.adapters;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.HapticFeedbackConstants;
@@ -13,7 +15,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.GenericRequestBuilder;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.caverock.androidsvg.SVG;
 
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTimeZone;
@@ -31,7 +36,9 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.RWLocks;
+import org.stepic.droid.util.svg.GlideSvgRequestFactory;
 
+import java.io.InputStream;
 import java.util.Locale;
 
 import butterknife.BindString;
@@ -228,6 +235,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         Drawable likeActiveDrawable;
         Drawable likeEmptyDrawable;
 
+        final GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> svgRequestBuilder;
+
         public GenericViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -267,6 +276,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
             likeEmptyDrawable.setColorFilter(ColorUtil.INSTANCE.getColorArgb(R.color.material_grey, context), PorterDuff.Mode.MULTIPLY);
             likeActiveDrawable.setColorFilter(ColorUtil.INSTANCE.getColorArgb(R.color.stepic_blue_ribbon, context), PorterDuff.Mode.MULTIPLY);
 
+            svgRequestBuilder = GlideSvgRequestFactory.create(itemView.getContext(), placeholderUserIcon);
         }
 
         private void onClickMoreLayout(int adapterPosition) {
@@ -341,11 +351,19 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                 userAvatar = user.getAvatar() == null ? "" : user.getAvatar();
             }
 
-            Glide.with(MainApplication.getAppContext())
-                    .load(userAvatar)
-                    .asBitmap()
-                    .placeholder(placeholderUserIcon)
-                    .into(userIcon);
+            if (userAvatar.endsWith(AppConstants.SVG_EXTENSION)) {
+                Uri uri = Uri.parse(userAvatar);
+                svgRequestBuilder
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .load(uri)
+                        .into(userIcon);
+            } else {
+                Glide.with(MainApplication.getAppContext())
+                        .load(userAvatar)
+                        .asBitmap()
+                        .placeholder(placeholderUserIcon)
+                        .into(userIcon);
+            }
 
             if (user != null) {
                 userName.setVisibility(View.VISIBLE);

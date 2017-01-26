@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -23,7 +25,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.GenericRequestBuilder;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.caverock.androidsvg.SVG;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -62,7 +67,9 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.ProfileExtensionKt;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.svg.GlideSvgRequestFactory;
 
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -595,12 +602,21 @@ public class MainFeedActivity extends BackToExitActivityBase
         signInProfileView.setVisibility(View.INVISIBLE);
         profileImage.setVisibility(View.VISIBLE);
         userNameTextView.setVisibility(View.VISIBLE);
-        Glide
-                .with(MainFeedActivity.this)
-                .load(profile.getAvatar())
-                .asBitmap()
-                .placeholder(userPlaceholder)
-                .into(profileImage);
+        if (profile.getAvatar() != null && profile.getAvatar().endsWith(AppConstants.SVG_EXTENSION)) {
+            GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> svgRequestBuilder = GlideSvgRequestFactory.create(this, userPlaceholder);
+            Uri uri = Uri.parse(profile.getAvatar());
+            svgRequestBuilder
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .load(uri)
+                    .into(profileImage);
+        } else {
+            Glide
+                    .with(MainFeedActivity.this)
+                    .load(profile.getAvatar())
+                    .asBitmap()
+                    .placeholder(userPlaceholder)
+                    .into(profileImage);
+        }
         userNameTextView.setText(ProfileExtensionKt.getFirstAndLastName(profile));
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
