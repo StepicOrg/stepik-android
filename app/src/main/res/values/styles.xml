@@ -192,4 +192,8 @@
     <style name="ContinueCourseButtons" parent="StepikButtonStyleBase">
         <item name="android:textSize">@dimen/continue_course_button_text_size</item>
     </style>
+
+    <style name="StepikSpinnerItem" parent="@style/Widget.AppCompat.TextView.SpinnerItem">
+        <item name="android:gravity">center_horizontal</item>
+    </style>
 </resources>

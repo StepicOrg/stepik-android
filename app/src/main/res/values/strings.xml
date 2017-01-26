@@ -337,4 +337,7 @@
     <string name="anonymous_write_comment">To join this discussion you have to Sign in</string>
     <string name="anonymous_like_mark_comment">To rate the comments you have to Sign in</string>
     <string name="retry">Retry</string>
+    <string name="accessibility_drag_and_drop">drag and drop</string>
+    <string name="fill_blanks_select_value"><![CDATA[<Select value>]]></string>
+    <string name="fill_blanks_type_text">Type text</string>
 </resources>

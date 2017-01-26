@@ -76,6 +76,7 @@ public interface Analytic {
 
         java.lang.String CLICK_FIND_COURSE_LAUNCH = "click_find_courses_launch";
         java.lang.String USER_OPEN_IMAGE = "user_open_image";
+        java.lang.String SCREENSHOT = "screenshot";
     }
 
     interface Screens {
@@ -164,6 +165,9 @@ public interface Analytic {
         String STREAK_ON_STEP_SOLVED = "streak_on_step_solved";
         java.lang.String GOOGLE_SERVICES_TOO_OLD = "google_services_too_old";
         String VIDEO_PATH_WAS_NULL_WITH_INTERNET = "video_path_was_null_internet_enabled";
+        java.lang.String FAIL_REFRESH_TOKEN_ONLINE = "fail_refresh_token_online";
+        String COOKIE_MANAGER_ERROR = "cookie_manager_error";
+        String PENDING_INTENT_WAS_NULL = "pending_intent_null_streaks";
     }
 
     interface Web {
@@ -243,8 +247,8 @@ public interface Analytic {
         String CALENDAR_ADDED_SUCCESSFULLY = "calendar_added_successfully";
         String CALENDAR_ADDED_FAIL = "calendar_added_fail";
         String SHOW_CALENDAR_AS_WIDGET = "calendar_shown_as_widget";
-        String SHOW_CALENDAR = "calendar_shown"; // course with deadlines in future
-        String HIDE_WIDGET_FROM_PREFS = "widget_hidden_from_prefs";
+        String SHOW_CALENDAR = "calendar_shown"; // course with deadlines in future //// FIXME: 13.01.17 this metric has doubled number of events
+        String HIDE_WIDGET_FROM_PREFS = "widget_hidden_from_prefs"; //// FIXME: 13.01.17 this metric has doubled number of events
         java.lang.String USER_CLICK_NOT_NOW = "calendar_click_not_now";
     }
 
@@ -321,6 +325,10 @@ public interface Analytic {
         String BROWSE_COURSES_DRAWER = "click_anonymous_auth_center";
         String AUTH_DRAWER = "click_anonymous_auth_drawer";
         String SUCCESS_LOGIN_AND_ENROLL = "success_login_insta_enroll";
+    }
+
+    interface DownloadManager {
+        String DOWNLOAD_MANAGER_IS_NOT_ENABLED = "download_manager_is_not_enabled";
     }
 
     void reportEvent(String eventName, Bundle bundle);

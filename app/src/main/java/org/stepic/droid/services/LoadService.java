@@ -411,15 +411,22 @@ public class LoadService extends IntentService {
 
     public boolean isDownloadManagerEnabled() {
         if (MainApplication.getAppContext() == null) {
+            analytic.reportEvent(Analytic.DownloadManager.DOWNLOAD_MANAGER_IS_NOT_ENABLED);
             return false;
         }
-
-        int state = MainApplication.getAppContext().getPackageManager()
-                .getApplicationEnabledSetting("com.android.providers.downloads");
+        int state;
+        try {
+            state = MainApplication.getAppContext().getPackageManager()
+                    .getApplicationEnabledSetting("com.android.providers.downloads");
+        } catch (Exception ex) {
+            analytic.reportError(Analytic.DownloadManager.DOWNLOAD_MANAGER_IS_NOT_ENABLED, ex);
+            return false;
+        }
 
         if (state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED ||
                 state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER
                 || state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED) {
+            analytic.reportEvent(Analytic.DownloadManager.DOWNLOAD_MANAGER_IS_NOT_ENABLED);
             return false;
         }
         return true;

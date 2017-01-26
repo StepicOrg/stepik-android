@@ -1,7 +1,6 @@
 package org.stepic.droid.analytic
 
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crash.FirebaseCrash
@@ -32,12 +31,10 @@ class AnalyticImpl(context: Context) : Analytic {
         bundle?.keySet()?.forEach {
             map.put(it, bundle.get(it))
         }
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
-            if (map.isEmpty()) {
-                YandexMetrica.reportEvent(eventName)
-            } else {
-                YandexMetrica.reportEvent(eventName, map)
-            }
+        if (map.isEmpty()) {
+            YandexMetrica.reportEvent(eventName)
+        } else {
+            YandexMetrica.reportEvent(eventName, map)
         }
 
         val eventNameLocal = castStringToFirebaseEvent(eventName)
@@ -50,9 +47,7 @@ class AnalyticImpl(context: Context) : Analytic {
 
     override fun reportError(message: String, throwable: Throwable) {
         FirebaseCrash.report(throwable)
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
-            YandexMetrica.reportError(message, throwable)
-        }
+        YandexMetrica.reportError(message, throwable)
     }
 
     override fun reportEvent(eventName: String, id: String) {

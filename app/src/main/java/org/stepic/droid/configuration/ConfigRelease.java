@@ -41,6 +41,7 @@ public class ConfigRelease implements IConfig {
     private static final String GOOGLE_SERVER_CLIENT_ID = "GOOGLE_SERVER_CLIENT_ID";
     private static final java.lang.String TERMS_OF_SERVICE = "TERMS_OF_SERVICE";
     private static final java.lang.String PRIVACY_POLICY = "PRIVACY_POLICY";
+    private static final java.lang.String MIXPANEL_TOKEN = "MIXPANEL_TOKEN";
 
 
     @Inject
@@ -160,6 +161,11 @@ public class ConfigRelease implements IConfig {
     @Override
     public String getTermsOfServiceUrl() {
         return getString(TERMS_OF_SERVICE, getBaseUrl());
+    }
+
+    @Override
+    public String getMixpanelToken() {
+        return getString(MIXPANEL_TOKEN, null);
     }
 
     private String getString(String key) {

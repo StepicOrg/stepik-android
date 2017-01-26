@@ -11,15 +11,12 @@ import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.BuildConfig;
 import org.stepic.droid.R;
-import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.components.AppCoreComponent;
 import org.stepic.droid.core.components.DaggerAppCoreComponent;
 import org.stepic.droid.core.components.DaggerStorageComponent;
 import org.stepic.droid.core.components.StorageComponent;
 import org.stepic.droid.core.modules.AppCoreModule;
 import org.stepic.droid.core.modules.StorageModule;
-
-import javax.inject.Inject;
 
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -38,8 +35,6 @@ public class MainApplication extends MultiDexApplication {
         init();
     }
 
-    @Inject
-    IConfig config;
 
     private void init() {
 //        refWatcher = LeakCanary.install(this);
@@ -100,5 +95,6 @@ public class MainApplication extends MultiDexApplication {
     public static Context getAppContext() {
         return application.getApplicationContext();
     }
+
 
 }

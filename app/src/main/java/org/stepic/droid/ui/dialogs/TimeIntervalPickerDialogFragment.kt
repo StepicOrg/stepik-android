@@ -42,7 +42,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        outState?.putInt(chosenPositionKey, picker?.value ?: TimeIntervalUtil.middle)
+        outState?.putInt(chosenPositionKey, picker?.value ?: TimeIntervalUtil.defaultTimeCode)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

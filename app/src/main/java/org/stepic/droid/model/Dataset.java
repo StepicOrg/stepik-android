@@ -10,6 +10,7 @@ public class Dataset {
     private String someStringValueFromServer;
     private List<Pair> pairs;
     private Boolean is_html_enabled;
+    List<FillBlankComponent> components;
 
     public Dataset() {
     }
@@ -38,5 +39,9 @@ public class Dataset {
 
     public Boolean getIs_html_enabled() {
         return is_html_enabled;
+    }
+
+    public List<FillBlankComponent> getFillBlankComponents() {
+        return components;
     }
 }

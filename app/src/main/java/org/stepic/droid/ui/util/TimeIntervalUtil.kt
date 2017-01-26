@@ -4,7 +4,7 @@ import java.util.*
 
 object TimeIntervalUtil {
     val values: Array<String>
-    val middle: Int
+    val defaultTimeCode: Int
 
     init {
         val numberOfHours = 24
@@ -13,6 +13,6 @@ object TimeIntervalUtil {
             valuesList.add(String.format("%02d:00 - %02d:00", i, i + 1))
         }
         values = valuesList.toTypedArray()
-        middle = values.size / 2
+        defaultTimeCode = 20 // most usable
     }
 }

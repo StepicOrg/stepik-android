@@ -198,7 +198,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
             options.add("--no-drop-late-frames") //help when user accelerates video
             options.add("--no-skip-frames")
 
-            libvlc = LibVLC(options)
+            libvlc = LibVLC(context, options)
 
             // Create media player
             mediaPlayer = MediaPlayer(libvlc)
