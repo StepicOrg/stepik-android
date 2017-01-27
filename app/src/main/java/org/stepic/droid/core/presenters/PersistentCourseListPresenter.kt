@@ -83,6 +83,7 @@ class PersistentCourseListPresenter(
                         val coursesFromInternet = response.body().courses
 
                         try {
+                            //this lock need for not saving enrolled courses to database after user click logout
                             RWLocks.ClearEnrollmentsLock.writeLock().lock()
                             if (sharedPreferenceHelper.authResponseFromStore != null || courseType == Table.featured) {
                                 coursesFromInternet.filterNotNull().forEach {
