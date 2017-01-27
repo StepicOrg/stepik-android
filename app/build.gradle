@@ -31,8 +31,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion minSdk
         targetSdkVersion 25
-        versionCode 117
-        versionName "1.26.2"
+        versionCode 118
+        versionName "1.26.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // Enabling multidex support.
         multiDexEnabled true
@@ -162,7 +162,7 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    compile 'de.mrmaffen:vlc-android-sdk:2.0.6'
+    compile 'de.mrmaffen:vlc-android-sdk:1.9.8'
 
     compile 'org.jsoup:jsoup:1.8.3'
 
