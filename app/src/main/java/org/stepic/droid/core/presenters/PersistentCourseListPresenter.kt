@@ -11,6 +11,7 @@ import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.store.operations.Table
+import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.CoursesStepicResponse
 import org.stepic.droid.web.IApi
 import retrofit.Response
@@ -81,9 +82,17 @@ class PersistentCourseListPresenter(
                     if (response != null && response.isSuccess) {
                         val coursesFromInternet = response.body().courses
 
-                        coursesFromInternet.filterNotNull().forEach {
-                            databaseFacade.addCourse(it, courseType)
+                        try {
+                            RWLocks.ClearEnrollmentsLock.writeLock().lock()
+                            if (sharedPreferenceHelper.authResponseFromStore != null || courseType == Table.featured) {
+                                coursesFromInternet.filterNotNull().forEach {
+                                    databaseFacade.addCourse(it, courseType)
+                                }
+                            }
+                        } finally {
+                            RWLocks.ClearEnrollmentsLock.writeLock().unlock()
                         }
+
 
                         hasNextPage.set(response.body().meta.has_next)
                         if (hasNextPage.get()) {
