@@ -257,7 +257,7 @@ public class MainFeedActivity extends BackToExitActivityBase
                 finish();
                 return;
             }
-            fragmentBackKeyIntercept();
+            fragmentBackKeyIntercept();//on back when fragment is changed (work for filter feature)
             FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment fragment = fragmentManager.findFragmentById(R.id.frame);
             fragmentManager.popBackStackImmediate();
@@ -415,7 +415,6 @@ public class MainFeedActivity extends BackToExitActivityBase
     }
 
     private void setFragment(MenuItem menuItem) {
-        fragmentBackKeyIntercept(); //on back when fragment is changed (work for filter feature)
         Fragment shortLifetimeRef = null;
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame);
         String tag = null;

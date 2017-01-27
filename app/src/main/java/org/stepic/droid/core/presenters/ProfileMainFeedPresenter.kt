@@ -9,6 +9,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.FileUtil
+import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.IApi
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
@@ -97,8 +98,13 @@ class ProfileMainFeedPresenter(private val sharedPreferenceHelper: SharedPrefere
                 }
             }
             FileUtil.cleanDirectory(directoryForClean)
-            databaseFacade.dropDatabase()
-            sharedPreferenceHelper.deleteAuthInfo()
+            try {
+                RWLocks.ClearEnrollmentsLock.writeLock().lock()
+                sharedPreferenceHelper.deleteAuthInfo()
+                databaseFacade.dropDatabase()
+            } finally {
+                RWLocks.ClearEnrollmentsLock.writeLock().unlock()
+            }
             mainHandler.post {
                 view?.onLogoutSuccess()
             }
