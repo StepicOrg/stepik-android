@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -16,7 +18,10 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.GenericRequestBuilder;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.caverock.androidsvg.SVG;
 
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
@@ -36,6 +41,10 @@ import org.stepic.droid.model.UserViewModel;
 import org.stepic.droid.ui.custom.BetterSwitch;
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
+import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.svg.GlideSvgRequestFactory;
+
+import java.io.InputStream;
 
 import javax.inject.Inject;
 
@@ -290,12 +299,21 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
 
         mainInfoRoot.setVisibility(View.VISIBLE);
         profileName.setText(userViewModel.getFullName());
-        Glide
-                .with(getContext())
-                .load(userViewModel.getImageLink())
-                .asBitmap()
-                .placeholder(userPlaceholder)
-                .into(profileImage);
+        if (userViewModel.getImageLink() != null && userViewModel.getImageLink().endsWith(AppConstants.SVG_EXTENSION)) {
+            GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> svgRequestBuilder = GlideSvgRequestFactory.create(getContext(), userPlaceholder);
+            Uri uri = Uri.parse(userViewModel.getImageLink());
+            svgRequestBuilder
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .load(uri)
+                    .into(profileImage);
+
+        } else {
+            Glide.with(getContext())
+                    .load(userViewModel.getImageLink())
+                    .asBitmap()
+                    .placeholder(userPlaceholder)
+                    .into(profileImage);
+        }
 
         if (userViewModel.getShortBio().isEmpty() && userViewModel.getInformation().isEmpty()) {
             aboutMeRoot.setVisibility(View.GONE);
