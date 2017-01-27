@@ -25,14 +25,10 @@ data class Profile(
         val subscribed_for_news_en: Boolean = false,
         val subscribed_for_news_ru: Boolean = false,
         @SerializedName("email_addresses")
-        var emailAddresses: LongArray?,
-        private val svgAvatar: String? = null
-) : Serializable{
-        fun getAvatarPath(): String? {
-                if (svgAvatar != null) {
-                        return svgAvatar;
-                } else {
-                        return avatar;
-                }
-        }
+        var emailAddresses: LongArray?
+) : Serializable {
+    fun getAvatarPath(): String? {
+        return avatar;
+    }
+
 }

@@ -13,14 +13,9 @@ data class User(
         var level: Int = 0,
         var score_learn: Int = 0,
         var score_teach: Int = 0,
-        var leaders: IntArray? = null,
-        private val svgAvatar: String? = null
-) {
+        var leaders: IntArray? = null
+        ) {
     fun getAvatarPath(): String? {
-        if (svgAvatar != null) {
-            return svgAvatar;
-        } else {
-            return avatar;
-        }
+        return avatar;
     }
 }
