@@ -3,7 +3,7 @@ package org.stepic.droid.model;
 import java.util.List;
 
 public class Reply {
-    private final List<Boolean> choices;
+    private final List<?> choices;
     private final String text;
     private final List<Attachment> attachments;
     private final String formula;
@@ -14,8 +14,7 @@ public class Reply {
     private final List<String> blanks;
 
     public static class Builder {
-
-        private List<Boolean> choices;
+        private List<?> choices;
         private String text;
         private List<Attachment> attachments;
         private String formula;
@@ -28,7 +27,7 @@ public class Reply {
         public Builder() {
         }
 
-        public Builder setChoices(List<Boolean> choices) {
+        public Builder setChoices(List<?> choices) {
             this.choices = choices;
             return this;
         }
@@ -100,7 +99,7 @@ public class Reply {
     }
 
     public List<Boolean> getChoices() {
-        return choices;
+        return (List<Boolean>) choices;
     }
 
     public String getFormula() {
@@ -125,5 +124,9 @@ public class Reply {
 
     public List<String> getBlanks() {
         return blanks;
+    }
+
+    public List<TableChoiceAnswer> getTableChoices() {
+        return (List<TableChoiceAnswer>) choices;
     }
 }
