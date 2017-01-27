@@ -10,7 +10,11 @@ public class Dataset {
     private String someStringValueFromServer;
     private List<Pair> pairs;
     private Boolean is_html_enabled;
-    List<FillBlankComponent> components;
+    private List<FillBlankComponent> components;
+    private List<String> rows;
+    private List<String> columns;
+    private String description;
+    private boolean is_checkbox;
 
     public Dataset() {
     }
@@ -43,5 +47,21 @@ public class Dataset {
 
     public List<FillBlankComponent> getFillBlankComponents() {
         return components;
+    }
+
+    public String getDescriptionTableQuiz() {
+        return description;
+    }
+
+    public boolean isTableCheckbox() {
+        return is_checkbox;
+    }
+
+    public List<String> getTableRows() {
+        return rows;
+    }
+
+    public List<String> getTableColumns() {
+        return columns;
     }
 }
