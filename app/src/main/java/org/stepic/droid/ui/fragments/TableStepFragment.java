@@ -33,6 +33,7 @@ public class TableStepFragment extends StepAttemptFragment {
     }
 
     private RecyclerView recyclerContainer;
+    private List<TableChoiceAnswer> answerList;
 
     @Nullable
     GridLayoutManager gridLayoutManager;
@@ -57,10 +58,27 @@ public class TableStepFragment extends StepAttemptFragment {
         String description = dataset.getDescriptionTableQuiz();
         boolean isCheckbox = dataset.isTableCheckbox();
 
+        answerList = initAnswerListFromAttempt(rows, columns);
+
         gridLayoutManager = new GridLayoutManager(getContext(), rows.size() + 1, GridLayoutManager.HORIZONTAL, false);
-        RecyclerView.Adapter adapter = new TableQuizAdapter(rows, columns, description, isCheckbox, new ArrayList<TableChoiceAnswer>());
+        RecyclerView.Adapter adapter = new TableQuizAdapter(rows, columns, description, isCheckbox, answerList);
         recyclerContainer.setLayoutManager(gridLayoutManager);
         recyclerContainer.setAdapter(adapter);
+    }
+
+    private ArrayList<TableChoiceAnswer> initAnswerListFromAttempt(List<String> rows, List<String> columns) {
+        // may be we should do it on background thread, but then we should rewrite logic of parent class, and do same actions for each quiz on background thread
+        ArrayList<TableChoiceAnswer> result = new ArrayList<>(rows.size());
+        for (String nameRow : rows) {
+            List<TableChoiceAnswer.Companion.Cell> oneRowAnswer = new ArrayList<>(columns.size());
+            //we should create new objects for each try –> it is generated in for cycle (but Strings is same objects)
+            for (String nameColumn : columns) {
+                oneRowAnswer.add(new TableChoiceAnswer.Companion.Cell(nameColumn, false));
+            }
+            result.add(new TableChoiceAnswer(nameRow, oneRowAnswer));
+        }
+
+        return result;
     }
 
     @Override
