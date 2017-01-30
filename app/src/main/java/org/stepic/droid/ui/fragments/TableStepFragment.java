@@ -38,6 +38,8 @@ public class TableStepFragment extends StepAttemptFragment {
     @Nullable
     GridLayoutManager gridLayoutManager;
 
+    RecyclerView.Adapter adapter;
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -61,7 +63,7 @@ public class TableStepFragment extends StepAttemptFragment {
         answerList = initAnswerListFromAttempt(rows, columns);
 
         gridLayoutManager = new GridLayoutManager(getContext(), rows.size() + 1, GridLayoutManager.HORIZONTAL, false);
-        RecyclerView.Adapter adapter = new TableQuizAdapter(rows, columns, description, isCheckbox, answerList);
+        adapter = new TableQuizAdapter(rows, columns, description, isCheckbox, answerList);
         recyclerContainer.setLayoutManager(gridLayoutManager);
         recyclerContainer.setAdapter(adapter);
     }
@@ -83,17 +85,8 @@ public class TableStepFragment extends StepAttemptFragment {
 
     @Override
     protected Reply generateReply() {
-        //todo get from user answer (some list)
-
-        //stub:
-        List<TableChoiceAnswer> choiceAnswerList = new ArrayList<>();
-        List<TableChoiceAnswer.Companion.Cell> cellsInFirstRow = new ArrayList<>();
-        cellsInFirstRow.add(new TableChoiceAnswer.Companion.Cell("One", true));
-        TableChoiceAnswer tableChoiceAnswer = new TableChoiceAnswer("Name of row", cellsInFirstRow);
-        choiceAnswerList.add(tableChoiceAnswer);
-
         return new Reply.Builder()
-                .setChoices(choiceAnswerList)
+                .setChoices(answerList)
                 .build();
     }
 
@@ -104,7 +97,16 @@ public class TableStepFragment extends StepAttemptFragment {
 
     @Override
     protected void onRestoreSubmission() {
-        //todo notify quiz changed
+        Reply reply = submission.getReply();
+        if (reply == null) return;
+
+        List<TableChoiceAnswer> choices = reply.getTableChoices();
+        if (choices == null) return;
+
+        answerList.clear();
+        answerList.addAll(choices);
+
+        adapter.notifyDataSetChanged();
     }
 
     @Subscribe
