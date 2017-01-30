@@ -3,7 +3,7 @@ package org.stepic.droid.model;
 import java.util.List;
 
 public class Reply {
-    private final List<?> choices;
+    private final List<Boolean> choices;
     private final String text;
     private final List<Attachment> attachments;
     private final String formula;
@@ -13,8 +13,10 @@ public class Reply {
     private final String code;
     private final List<String> blanks;
 
+    private List<TableChoiceAnswer> tableChoices; //this is not serialize by default, because  field 'choices' is already created by different type
+
     public static class Builder {
-        private List<?> choices;
+        private List<Boolean> choices;
         private String text;
         private List<Attachment> attachments;
         private String formula;
@@ -24,10 +26,18 @@ public class Reply {
         private String code;
         private List<String> blanks;
 
+
+        public List<TableChoiceAnswer> tableChoices;
+
         public Builder() {
         }
 
-        public Builder setChoices(List<?> choices) {
+        public Builder setTableChoices(List<TableChoiceAnswer> tableChoices) {
+            this.tableChoices = tableChoices;
+            return this;
+        }
+
+        public Builder setChoices(List<Boolean> choices) {
             this.choices = choices;
             return this;
         }
@@ -88,6 +98,7 @@ public class Reply {
         language = builder.language;
         code = builder.code;
         blanks = builder.blanks;
+        tableChoices = builder.tableChoices;
     }
 
     public String getNumber() {
@@ -127,6 +138,10 @@ public class Reply {
     }
 
     public List<TableChoiceAnswer> getTableChoices() {
-        return (List<TableChoiceAnswer>) choices;
+        return tableChoices;
+    }
+
+    public void setTableChoices(List<TableChoiceAnswer> tableChoices) {
+        this.tableChoices = tableChoices;
     }
 }

@@ -31,18 +31,21 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.deserializers.DatasetDeserializer;
+import org.stepic.droid.deserializers.ReplyDeserializer;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.DatasetWrapper;
 import org.stepic.droid.model.EnrollmentWrapper;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.RegistrationUser;
 import org.stepic.droid.model.Reply;
+import org.stepic.droid.model.ReplyWrapper;
 import org.stepic.droid.model.comments.Comment;
 import org.stepic.droid.model.comments.Vote;
 import org.stepic.droid.model.comments.VoteValue;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.serializers.ReplySerializer;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
@@ -240,6 +243,8 @@ public class RetrofitRESTApi implements IApi {
     private Converter.Factory generateGsonFactory() {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(DatasetWrapper.class, new DatasetDeserializer())
+                .registerTypeAdapter(ReplyWrapper.class, new ReplyDeserializer())
+                .registerTypeAdapter(ReplyWrapper.class, new ReplySerializer())
                 .serializeNulls()
                 .create();
         return GsonConverterFactory.create(gson);

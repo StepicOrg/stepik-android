@@ -18,7 +18,7 @@ import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.Dataset;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.TableChoiceAnswer;
-import org.stepic.droid.ui.adapters.TableQuizAdapter;
+import org.stepic.droid.ui.adapters.TableChoiceAdapter;
 import org.stepic.droid.util.DpPixelsHelper;
 
 import java.util.ArrayList;
@@ -26,10 +26,10 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 
-public class TableStepFragment extends StepAttemptFragment {
+public class TableChoiceStepFragment extends StepAttemptFragment {
 
-    public static TableStepFragment newInstance() {
-        return new TableStepFragment();
+    public static TableChoiceStepFragment newInstance() {
+        return new TableChoiceStepFragment();
     }
 
     private RecyclerView recyclerContainer;
@@ -63,7 +63,7 @@ public class TableStepFragment extends StepAttemptFragment {
         answerList = initAnswerListFromAttempt(rows, columns);
 
         gridLayoutManager = new GridLayoutManager(getContext(), rows.size() + 1, GridLayoutManager.HORIZONTAL, false);
-        adapter = new TableQuizAdapter(rows, columns, description, isCheckbox, answerList);
+        adapter = new TableChoiceAdapter(rows, columns, description, isCheckbox, answerList);
         recyclerContainer.setLayoutManager(gridLayoutManager);
         recyclerContainer.setAdapter(adapter);
     }
@@ -86,7 +86,7 @@ public class TableStepFragment extends StepAttemptFragment {
     @Override
     protected Reply generateReply() {
         return new Reply.Builder()
-                .setChoices(answerList)
+                .setTableChoices(answerList)
                 .build();
     }
 
