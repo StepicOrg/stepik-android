@@ -1,17 +1,22 @@
 package org.stepic.droid.ui.adapters;
 
+import android.app.Activity;
+import android.graphics.Point;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.CompoundButton;
-import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.model.TableChoiceAnswer;
+import org.stepic.droid.ui.custom.ProgressLatexView;
 import org.stepic.droid.ui.listeners.CheckedChangeListenerWithPosition;
 
 import java.util.ArrayList;
@@ -34,6 +39,18 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
     private final String description;
     private final boolean isCheckbox;
     private final List<TableChoiceAnswer> answers;
+    private final int deviceHeightPx;
+    private final int doublePadding;
+    private final int minUXTouchableSize;
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        RecyclerView.RecycledViewPool recycledViewPool = recyclerView.getRecycledViewPool();
+//        recycledViewPool.setMaxRecycledViews(DESCRIPTION_TYPE, 100);
+//        recycledViewPool.setMaxRecycledViews(ROW_HEADER_TYPE, 100);
+//        recycledViewPool.setMaxRecycledViews(COLUMN_HEADER_TYPE, 100);
+    }
 
     @Override
     public int getItemViewType(int position) {
@@ -50,13 +67,22 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         }
     }
 
-    public TableChoiceAdapter(List<String> rows, List<String> columns, String description, boolean isCheckbox, List<TableChoiceAnswer> answers) {
+    public TableChoiceAdapter(Activity context, List<String> rows, List<String> columns, String description, boolean isCheckbox, List<TableChoiceAnswer> answers) {
         this.columns = columns;
         this.rows = rows;
         this.description = description;
         this.isCheckbox = isCheckbox;
         this.answers = answers;
         int i = 0;
+
+        Display display = context.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        deviceHeightPx = size.y;
+
+        doublePadding = (int) context.getResources().getDimension(R.dimen.half_padding) * 2;
+
+        minUXTouchableSize = (int) context.getResources().getDimension(R.dimen.min_ux_touchable_size);
     }
 
 
@@ -70,7 +96,41 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
             return new CheckboxCellViewHolder(v, this);
         } else if (viewType == DESCRIPTION_TYPE || viewType == ROW_HEADER_TYPE || viewType == COLUMN_HEADER_TYPE) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_table_quiz_text_cell, parent, false);
-            return new DescriptionViewHolder(v);
+            final DescriptionViewHolder optionViewHolder = new DescriptionViewHolder(v);
+
+
+            //for height:
+            optionViewHolder.container.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    int localHeight = optionViewHolder.textView.getMeasuredHeight() + doublePadding;
+//                    Timber.d("localHeight = %s, of view = %s", localHeight, optionViewHolder.container);
+//                    if (localHeight > doublePadding && localHeight < deviceHeightPx) {
+//                        optionViewHolder.container.getLayoutParams().height = Math.max(localHeight, minUXTouchableSize);
+//                        optionViewHolder.container.getViewTreeObserver().removeOnPreDrawListener(this);
+//                    }
+
+                    return true;
+                }
+            });
+//
+            //for width
+            optionViewHolder.container.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    int localWidth = optionViewHolder.textView.getMeasuredWidth() + doublePadding;
+//                    Timber.d("localWidth = %s, of view = %s", localWidth, optionViewHolder.container);
+//                    if (localWidth >= 394) {
+//                        optionViewHolder.container.getLayoutParams().width = Math.max(localWidth, minUXTouchableSize);
+//                        optionViewHolder.container.getViewTreeObserver().removeOnPreDrawListener(this);
+//                    }
+
+                    return true;
+                }
+            });
+
+
+            return optionViewHolder;
         } else {
             throw new IllegalStateException("viewType with index " + viewType + " is not supported in table quiz");
         }
@@ -164,8 +224,11 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
 
     static class DescriptionViewHolder extends GenericViewHolder {
 
+        @BindView(R.id.container)
+        View container;
+
         @BindView(R.id.cell_text)
-        TextView textView;
+        ProgressLatexView textView;
 
         public DescriptionViewHolder(View itemView) {
             super(itemView);
@@ -173,7 +236,7 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
 
         @Override
         public void setData(@NotNull String text) {
-            textView.setText(text);
+            textView.setAnyText(text);
         }
 
         @Override
@@ -185,6 +248,10 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
 
 
     static abstract class CompoundButtonViewHolder extends GenericViewHolder {
+
+        @BindView(R.id.container)
+        ViewGroup container;
+
         public CompoundButtonViewHolder(View itemView, final CheckedChangeListenerWithPosition checkedChangeListenerWithPosition) {
             super(itemView);
             getCheckableView().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -195,6 +262,15 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
                     }
                 }
             });
+
+            container.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return getCheckableView().dispatchTouchEvent(event);
+                }
+            });
+
+
         }
 
         @Override

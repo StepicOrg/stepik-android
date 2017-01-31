@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RadioButton
-    android:id="@+id/radio_button_cell"
+<FrameLayout
+    android:id="@+id/container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-</RadioButton>
+    android:layout_height="wrap_content"
+    android:background="@color/stepic_orange_carrot"
+    android:minHeight="@dimen/min_ux_touchable_size"
+    android:minWidth="@dimen/min_ux_touchable_size">
+    <RadioButton
+        android:id="@+id/radio_button_cell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+    </RadioButton>
+</FrameLayout>

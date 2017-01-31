@@ -49,6 +49,7 @@ public class TableChoiceStepFragment extends StepAttemptFragment {
         attemptContainer.setPadding(0, dp8inPx, 0, dp8inPx);
         recyclerContainer = ButterKnife.findById(tableQuizView, R.id.recycler);
         recyclerContainer.setNestedScrollingEnabled(false);
+//        recyclerContainer.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         attemptContainer.addView(tableQuizView);
     }
 
@@ -63,7 +64,7 @@ public class TableChoiceStepFragment extends StepAttemptFragment {
         answerList = initAnswerListFromAttempt(rows, columns);
 
         gridLayoutManager = new GridLayoutManager(getContext(), rows.size() + 1, GridLayoutManager.HORIZONTAL, false);
-        adapter = new TableChoiceAdapter(rows, columns, description, isCheckbox, answerList);
+        adapter = new TableChoiceAdapter(getActivity(), rows, columns, description, isCheckbox, answerList);
         recyclerContainer.setLayoutManager(gridLayoutManager);
         recyclerContainer.setAdapter(adapter);
     }

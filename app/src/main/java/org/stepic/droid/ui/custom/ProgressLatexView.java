@@ -122,6 +122,10 @@ public class ProgressLatexView extends FrameLayout {
     }
 
 
+    public int getMeasuredWidthOfInnerLayout() {
+        return optionText.getMeasuredWidth();
+    }
+
     public int getMeasuredHeightOfInnerLayout() {
         return optionText.getMeasuredHeight();
     }
