@@ -14,6 +14,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.model.TableChoiceAnswer;
 import org.stepic.droid.ui.listeners.CheckedChangeListenerWithPosition;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -115,10 +116,37 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
     public void onCheckedChanged(CompoundButton view, boolean isChecked, int position) {
         List<TableChoiceAnswer.Companion.Cell> oneRowAnswers = getOneRowAnswersFromPosition(position);
         int columnPosition = getColumnPosition(position);
+
+        int multiplier = rows.size() + 1;
+        int remainder = position % multiplier;
+
+
+        List<Integer> changed = new ArrayList<>();
+        if (!isCheckbox && isChecked) {
+            //radio button, check something -> uncheck others
+            int i = 1;
+            for (TableChoiceAnswer.Companion.Cell eachCellInRow : oneRowAnswers) {
+                if (eachCellInRow.getAnswer()) {
+                    //if something is checked
+                    int currentAdapterPosition = multiplier * i + remainder;
+                    eachCellInRow.setAnswer(false);
+                    if (currentAdapterPosition != position) {
+                        changed.add(currentAdapterPosition);
+                    }
+                }
+                i++;
+            }
+        }
+
+        // change checked state
         TableChoiceAnswer.Companion.Cell cell = oneRowAnswers.get(columnPosition);
         cell.setAnswer(isChecked);
 
-        // TODO: 30.01.17 add if radio button
+        if (!changed.isEmpty()) {
+            for (Integer changedPosition : changed) {
+                notifyItemChanged(changedPosition); // In the perfect world there is only one for radiobutton
+            }
+        }
     }
 
     static abstract class GenericViewHolder extends RecyclerView.ViewHolder {
@@ -162,7 +190,9 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
             getCheckableView().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    checkedChangeListenerWithPosition.onCheckedChanged(buttonView, isChecked, getAdapterPosition());
+                    if (buttonView.isPressed()) {
+                        checkedChangeListenerWithPosition.onCheckedChanged(buttonView, isChecked, getAdapterPosition());
+                    }
                 }
             });
         }
