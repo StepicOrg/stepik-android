@@ -24,6 +24,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.GenericViewHolder> implements CheckedChangeListenerWithPosition {
 
@@ -42,6 +43,7 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
     private final int deviceHeightPx;
     private final int doublePadding;
     private final int minUXTouchableSize;
+    private final int singlePadding;
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
@@ -82,6 +84,8 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
 
         doublePadding = (int) context.getResources().getDimension(R.dimen.half_padding) * 2;
 
+        singlePadding = (int) context.getResources().getDimension(R.dimen.half_padding);
+
         minUXTouchableSize = (int) context.getResources().getDimension(R.dimen.min_ux_touchable_size);
     }
 
@@ -99,36 +103,16 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
             final DescriptionViewHolder optionViewHolder = new DescriptionViewHolder(v);
 
 
-            //for height:
+//            for height:
             optionViewHolder.container.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
-                    int localHeight = optionViewHolder.textView.getMeasuredHeight() + doublePadding;
-//                    Timber.d("localHeight = %s, of view = %s", localHeight, optionViewHolder.container);
-//                    if (localHeight > doublePadding && localHeight < deviceHeightPx) {
-//                        optionViewHolder.container.getLayoutParams().height = Math.max(localHeight, minUXTouchableSize);
-//                        optionViewHolder.container.getViewTreeObserver().removeOnPreDrawListener(this);
-//                    }
-
+                    int localHeight = optionViewHolder.textView.getMeasuredHeightOfInnerLayout();
+                    int localWidth = optionViewHolder.textView.getMeasuredWidthOfInnerLayout();
+                    Timber.d("localHeight = %s, localWidth = %s, text on view = %s", localHeight, localWidth, optionViewHolder.textView.getBeforeText());
                     return true;
                 }
             });
-//
-            //for width
-            optionViewHolder.container.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                @Override
-                public boolean onPreDraw() {
-                    int localWidth = optionViewHolder.textView.getMeasuredWidth() + doublePadding;
-//                    Timber.d("localWidth = %s, of view = %s", localWidth, optionViewHolder.container);
-//                    if (localWidth >= 394) {
-//                        optionViewHolder.container.getLayoutParams().width = Math.max(localWidth, minUXTouchableSize);
-//                        optionViewHolder.container.getViewTreeObserver().removeOnPreDrawListener(this);
-//                    }
-
-                    return true;
-                }
-            });
-
 
             return optionViewHolder;
         } else {

@@ -130,4 +130,8 @@ public class ProgressLatexView extends FrameLayout {
         return optionText.getMeasuredHeight();
     }
 
+    public String getBeforeText() {
+        return beforeText;
+    }
+
 }
