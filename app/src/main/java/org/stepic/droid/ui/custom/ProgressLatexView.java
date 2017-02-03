@@ -13,6 +13,9 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import org.stepic.droid.R;
+import org.stepic.droid.util.ColorUtil;
+
+import timber.log.Timber;
 
 public class ProgressLatexView extends FrameLayout {
 
@@ -54,6 +57,8 @@ public class ProgressLatexView extends FrameLayout {
             }
         };
         optionText.getWebView().setWebViewClient(client);
+
+        optionText.setBackgroundColor(ColorUtil.INSTANCE.getColorArgb(R.color.stepic_blue_ribbon, context));
     }
 
     public void setPlainOrLaTeXText(String text) {
@@ -128,6 +133,12 @@ public class ProgressLatexView extends FrameLayout {
 
     public int getMeasuredHeightOfInnerLayout() {
         return optionText.getMeasuredHeight();
+    }
+
+    public int getHeightOfInnerLayout() {
+        int height = optionText.getHeight();
+        Timber.d("height of latexframe layout is %s", height);
+        return height;
     }
 
     public String getBeforeText() {

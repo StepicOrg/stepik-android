@@ -4,16 +4,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/stepic_orange_carrot"
-    android:minHeight="@dimen/min_ux_touchable_size">
+    android:background="@color/stepic_orange_carrot">
 
 
     <org.stepic.droid.ui.custom.ProgressLatexView
         android:id="@+id/cell_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:minHeight="@dimen/min_ux_touchable_size"
-        android:padding="8dp">
+        android:padding="@dimen/half_padding">
 
     </org.stepic.droid.ui.custom.ProgressLatexView>
 </FrameLayout>

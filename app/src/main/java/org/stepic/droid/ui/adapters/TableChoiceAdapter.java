@@ -105,11 +105,22 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
 
 //            for height:
             optionViewHolder.container.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                int useOnlyIt = 0;
                 @Override
                 public boolean onPreDraw() {
+//                    if (useOnlyIt>0){
+//                        optionViewHolder.container.getLayoutParams().height = useOnlyIt;
+//                        return true;
+//                    }
+
                     int localHeight = optionViewHolder.textView.getMeasuredHeightOfInnerLayout();
-                    int localWidth = optionViewHolder.textView.getMeasuredWidthOfInnerLayout();
-                    Timber.d("localHeight = %s, localWidth = %s, text on view = %s", localHeight, localWidth, optionViewHolder.textView.getBeforeText());
+//                    int localWidth = optionViewHolder.textView.getMeasuredWidthOfInnerLayout();
+                    Timber.d("localHeight = %s, localWidth = %s, text on view = %s", localHeight, 1, optionViewHolder.textView.getBeforeText());
+                    if (localHeight > 0 && localHeight < deviceHeightPx) {
+                        useOnlyIt = Math.max(localHeight, minUXTouchableSize);
+                        optionViewHolder.container.getLayoutParams().height = useOnlyIt;
+                        optionViewHolder.container.getViewTreeObserver().removeOnPreDrawListener(this);
+                    }
                     return true;
                 }
             });
