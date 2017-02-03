@@ -168,6 +168,7 @@ public interface Analytic {
         java.lang.String FAIL_REFRESH_TOKEN_ONLINE = "fail_refresh_token_online";
         String COOKIE_MANAGER_ERROR = "cookie_manager_error";
         String PENDING_INTENT_WAS_NULL = "pending_intent_null_streaks";
+        java.lang.String COOKIE_WAS_EMPTY = "cookie_was_empty";
     }
 
     interface Web {
