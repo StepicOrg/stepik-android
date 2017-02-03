@@ -39,20 +39,9 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
     private final String description;
     private final boolean isCheckbox;
     private final List<TableChoiceAnswer> answers;
-    //    private final int deviceHeightPx;
     private final int doublePadding;
     private final int minUXTouchableSize;
-    private final int singlePadding;
     private final int deviceWidthPx75Percent;
-
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        RecyclerView.RecycledViewPool recycledViewPool = recyclerView.getRecycledViewPool();
-//        recycledViewPool.setMaxRecycledViews(DESCRIPTION_TYPE, 100);
-//        recycledViewPool.setMaxRecycledViews(ROW_HEADER_TYPE, 100);
-//        recycledViewPool.setMaxRecycledViews(COLUMN_HEADER_TYPE, 100);
-    }
 
     @Override
     public int getItemViewType(int position) {
@@ -75,7 +64,6 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         this.description = description;
         this.isCheckbox = isCheckbox;
         this.answers = answers;
-        int i = 0;
 
         Display display = context.getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -83,8 +71,6 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         deviceWidthPx75Percent = (int) (size.x * 0.75);
 
         doublePadding = (int) context.getResources().getDimension(R.dimen.half_padding) * 2;
-
-        singlePadding = (int) context.getResources().getDimension(R.dimen.half_padding);
 
         minUXTouchableSize = (int) context.getResources().getDimension(R.dimen.min_ux_touchable_size);
     }
@@ -100,22 +86,21 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
             return new CheckboxCellViewHolder(v, this);
         } else if (viewType == DESCRIPTION_TYPE || viewType == ROW_HEADER_TYPE || viewType == COLUMN_HEADER_TYPE) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_table_quiz_text_cell, parent, false);
-            final DescriptionViewHolder optionViewHolder = new DescriptionViewHolder(v);
+            final DescriptionViewHolder descriptionViewHolder = new DescriptionViewHolder(v);
 
-
-            optionViewHolder.latexView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            descriptionViewHolder.latexView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
-                    int localWidth = optionViewHolder.latexView.getMeasuredWidthOfInnerLayout() + doublePadding;
+                    int localWidth = descriptionViewHolder.latexView.getMeasuredWidthOfInnerLayout() + doublePadding;
                     if (localWidth > deviceWidthPx75Percent) {
-                        optionViewHolder.latexView.getLayoutParams().width = Math.min(Math.max(localWidth, minUXTouchableSize), deviceWidthPx75Percent);
-                        optionViewHolder.latexView.getViewTreeObserver().removeOnPreDrawListener(this);
+                        descriptionViewHolder.latexView.getLayoutParams().width = Math.min(Math.max(localWidth, minUXTouchableSize), deviceWidthPx75Percent);
+                        descriptionViewHolder.latexView.getViewTreeObserver().removeOnPreDrawListener(this);
                     }
                     return true;
                 }
             });
 
-            return optionViewHolder;
+            return descriptionViewHolder;
         } else {
             throw new IllegalStateException("viewType with index " + viewType + " is not supported in table quiz");
         }
@@ -196,7 +181,7 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
 
     static abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 
-        public GenericViewHolder(View itemView) {
+        GenericViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
@@ -209,13 +194,10 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
 
     static class DescriptionViewHolder extends GenericViewHolder {
 
-//        @BindView(R.id.container)
-//        View container;
-
         @BindView(R.id.cell_text)
         ProgressLatexView latexView;
 
-        public DescriptionViewHolder(View itemView) {
+        DescriptionViewHolder(View itemView) {
             super(itemView);
         }
 
@@ -237,7 +219,7 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         @BindView(R.id.container)
         ViewGroup container;
 
-        public CompoundButtonViewHolder(View itemView, final CheckedChangeListenerWithPosition checkedChangeListenerWithPosition) {
+        CompoundButtonViewHolder(View itemView, final CheckedChangeListenerWithPosition checkedChangeListenerWithPosition) {
             super(itemView);
             getCheckableView().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -276,7 +258,7 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         @BindView(R.id.checkbox_cell)
         AppCompatCheckBox checkBox;
 
-        public CheckboxCellViewHolder(View itemView, CheckedChangeListenerWithPosition checkedChangeListenerWithPosition) {
+        CheckboxCellViewHolder(View itemView, CheckedChangeListenerWithPosition checkedChangeListenerWithPosition) {
             super(itemView, checkedChangeListenerWithPosition);
         }
 
@@ -291,7 +273,7 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         @BindView(R.id.radio_button_cell)
         AppCompatRadioButton radioButton;
 
-        public RadioButtonCellViewHolder(View itemView, final CheckedChangeListenerWithPosition checkedChangeListenerWithPosition) {
+        RadioButtonCellViewHolder(View itemView, final CheckedChangeListenerWithPosition checkedChangeListenerWithPosition) {
             super(itemView, checkedChangeListenerWithPosition);
         }
 
