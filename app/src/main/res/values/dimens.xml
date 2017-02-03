@@ -71,4 +71,6 @@
     <dimen name="fill_blanks_input_text_size">16sp</dimen>
     <dimen name="sort_image_view_height">24dp</dimen>
     <dimen name="padding_sort_controller">12dp</dimen>
+    <dimen name="table_cell_fixed_height">96dp</dimen>
+
 </resources>

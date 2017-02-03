@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    android:id="@+id/container"
+<org.stepic.droid.ui.custom.ProgressLatexView
+    android:id="@+id/cell_text"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@color/stepic_orange_carrot">
-
-
-    <org.stepic.droid.ui.custom.ProgressLatexView
-        android:id="@+id/cell_text"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/half_padding">
-
-    </org.stepic.droid.ui.custom.ProgressLatexView>
-</FrameLayout>
+    android:layout_height="@dimen/table_cell_fixed_height"
+    android:background="@color/stepic_orange_carrot"
+    android:padding="@dimen/half_padding">
+</org.stepic.droid.ui.custom.ProgressLatexView>

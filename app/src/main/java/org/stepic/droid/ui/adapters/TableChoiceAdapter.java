@@ -24,7 +24,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.GenericViewHolder> implements CheckedChangeListenerWithPosition {
 
@@ -40,10 +39,11 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
     private final String description;
     private final boolean isCheckbox;
     private final List<TableChoiceAnswer> answers;
-    private final int deviceHeightPx;
+    //    private final int deviceHeightPx;
     private final int doublePadding;
     private final int minUXTouchableSize;
     private final int singlePadding;
+    private final int deviceWidthPx75Percent;
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
@@ -80,7 +80,7 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         Display display = context.getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        deviceHeightPx = size.y;
+        deviceWidthPx75Percent = (int) (size.x * 0.75);
 
         doublePadding = (int) context.getResources().getDimension(R.dimen.half_padding) * 2;
 
@@ -103,23 +103,13 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
             final DescriptionViewHolder optionViewHolder = new DescriptionViewHolder(v);
 
 
-//            for height:
-            optionViewHolder.container.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                int useOnlyIt = 0;
+            optionViewHolder.latexView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
-//                    if (useOnlyIt>0){
-//                        optionViewHolder.container.getLayoutParams().height = useOnlyIt;
-//                        return true;
-//                    }
-
-                    int localHeight = optionViewHolder.textView.getMeasuredHeightOfInnerLayout();
-//                    int localWidth = optionViewHolder.textView.getMeasuredWidthOfInnerLayout();
-                    Timber.d("localHeight = %s, localWidth = %s, text on view = %s", localHeight, 1, optionViewHolder.textView.getBeforeText());
-                    if (localHeight > 0 && localHeight < deviceHeightPx) {
-                        useOnlyIt = Math.max(localHeight, minUXTouchableSize);
-                        optionViewHolder.container.getLayoutParams().height = useOnlyIt;
-                        optionViewHolder.container.getViewTreeObserver().removeOnPreDrawListener(this);
+                    int localWidth = optionViewHolder.latexView.getMeasuredWidthOfInnerLayout() + doublePadding;
+                    if (localWidth > deviceWidthPx75Percent) {
+                        optionViewHolder.latexView.getLayoutParams().width = Math.min(Math.max(localWidth, minUXTouchableSize), deviceWidthPx75Percent);
+                        optionViewHolder.latexView.getViewTreeObserver().removeOnPreDrawListener(this);
                     }
                     return true;
                 }
@@ -219,11 +209,11 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
 
     static class DescriptionViewHolder extends GenericViewHolder {
 
-        @BindView(R.id.container)
-        View container;
+//        @BindView(R.id.container)
+//        View container;
 
         @BindView(R.id.cell_text)
-        ProgressLatexView textView;
+        ProgressLatexView latexView;
 
         public DescriptionViewHolder(View itemView) {
             super(itemView);
@@ -231,7 +221,7 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
 
         @Override
         public void setData(@NotNull String text) {
-            textView.setAnyText(text);
+            latexView.setAnyText(text);
         }
 
         @Override
