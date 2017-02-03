@@ -317,18 +317,30 @@ public class RetrofitRESTApi implements IApi {
         return tempService.createAccount(new UserRegistrationRequest(new RegistrationUser(firstName, lastName, email, password)));
     }
 
+    @Nullable
+    private final String tryGetCsrfFromOnePair(String keyValueCookie) {
+        List<HttpCookie> cookieList = HttpCookie.parse(keyValueCookie);
+        for (HttpCookie item : cookieList) {
+            if (item.getName() != null && item.getName().equals("csrftoken")) {
+                return item.getValue();
+            }
+        }
+        return null;
+    }
+
     @NonNull
     private String getCsrfTokenFromCookies(String cookies) {
         String csrftoken = null;
-        List<HttpCookie> cookieList = HttpCookie.parse(cookies);
-        for (HttpCookie item : cookieList) {
-            if (item.getName() != null && item.getName().equals("csrftoken")) {
-                csrftoken = item.getValue();
+        String[] cookiePairs = cookies.split(";");
+        for (String cookieItem : cookiePairs) {
+            csrftoken = tryGetCsrfFromOnePair(cookieItem);
+            if (csrftoken != null) {
                 break;
             }
         }
         if (csrftoken == null) {
             csrftoken = "";
+            analytic.reportEvent(Analytic.Error.COOKIE_WAS_EMPTY);
         }
         return csrftoken;
     }
