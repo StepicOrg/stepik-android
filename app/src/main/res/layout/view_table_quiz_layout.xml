@@ -4,7 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/feedback_bad_color"
     android:clipToPadding="false"
     android:divider="@color/transparent"
     android:scrollbarStyle="outsideOverlay"/>

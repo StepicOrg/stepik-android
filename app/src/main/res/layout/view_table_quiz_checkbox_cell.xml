@@ -4,7 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="@dimen/table_cell_fixed_height"
-    android:background="@color/stepic_orange_carrot"
     android:minWidth="@dimen/min_ux_touchable_size">
     <CheckBox
         android:id="@+id/checkbox_cell"

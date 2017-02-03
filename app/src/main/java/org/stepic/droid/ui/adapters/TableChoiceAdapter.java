@@ -42,6 +42,7 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
     private final int doublePadding;
     private final int minUXTouchableSize;
     private final int deviceWidthPx75Percent;
+    private boolean isAllEnabled = true;
 
     @Override
     public int getItemViewType(int position) {
@@ -124,6 +125,7 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
             TableChoiceAnswer.Companion.Cell cell = oneRowAnswers.get(columnPosition);
             holder.setData(cell.getAnswer());
         }
+        holder.makeEnabled(isAllEnabled);
     }
 
     private int getColumnPosition(int position) {
@@ -179,6 +181,15 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         }
     }
 
+    public void setAllItemsEnabled(boolean isAllEnabled) {
+        this.isAllEnabled = isAllEnabled;
+        int i = rows.size() + 2; // the first option cell element
+        while (i < getItemCount()) {
+            notifyItemRangeChanged(i, i + rows.size() - 1);
+            i += rows.size() + 1;
+        }
+    }
+
     static abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 
         GenericViewHolder(View itemView) {
@@ -189,6 +200,8 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         public abstract void setData(@NotNull String text);
 
         public abstract void setData(@NotNull Boolean needCheckModel);
+
+        public abstract void makeEnabled(boolean isAllEnabled);
     }
 
 
@@ -209,6 +222,11 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         @Override
         public void setData(@NotNull Boolean needCheck) {
             throw new IllegalStateException("description view can't be without text, check position");
+        }
+
+        @Override
+        public void makeEnabled(boolean isAllEnabled) {
+            //do nothing, it is not interactable by user
         }
 
     }
@@ -248,6 +266,12 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         @Override
         public final void setData(@NotNull Boolean needCheckModel) {
             getCheckableView().setChecked(needCheckModel);
+        }
+
+        @Override
+        public void makeEnabled(boolean isEnabled) {
+            container.setClickable(isEnabled);
+            getCheckableView().setClickable(isEnabled);
         }
 
         abstract CompoundButton getCheckableView();

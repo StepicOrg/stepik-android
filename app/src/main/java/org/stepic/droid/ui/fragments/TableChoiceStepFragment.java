@@ -38,7 +38,7 @@ public class TableChoiceStepFragment extends StepAttemptFragment {
     @Nullable
     GridLayoutManager gridLayoutManager;
 
-    RecyclerView.Adapter adapter;
+    TableChoiceAdapter adapter;
 
 
     @Override
@@ -93,7 +93,9 @@ public class TableChoiceStepFragment extends StepAttemptFragment {
 
     @Override
     protected void blockUIBeforeSubmit(boolean needBlock) {
-        //todo block elements in list
+        if (adapter != null) {
+            adapter.setAllItemsEnabled(!needBlock);
+        }
     }
 
     @Override
