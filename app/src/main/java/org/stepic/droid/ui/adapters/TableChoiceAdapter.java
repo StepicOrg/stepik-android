@@ -185,7 +185,7 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         this.isAllEnabled = isAllEnabled;
         int i = rows.size() + 2; // the first option cell element
         while (i < getItemCount()) {
-            notifyItemRangeChanged(i, i + rows.size() - 1);
+            notifyItemRangeChanged(i, rows.size());
             i += rows.size() + 1;
         }
     }
