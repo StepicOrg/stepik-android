@@ -19,6 +19,7 @@ import org.stepic.droid.model.Dataset;
 import org.stepic.droid.model.Reply;
 import org.stepic.droid.model.TableChoiceAnswer;
 import org.stepic.droid.ui.adapters.TableChoiceAdapter;
+import org.stepic.droid.ui.util.SimpleDividerItemDecoration;
 import org.stepic.droid.util.DpPixelsHelper;
 
 import java.util.ArrayList;
@@ -40,7 +41,6 @@ public class TableChoiceStepFragment extends StepAttemptFragment {
 
     TableChoiceAdapter adapter;
 
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -49,7 +49,7 @@ public class TableChoiceStepFragment extends StepAttemptFragment {
         attemptContainer.setPadding(0, dp8inPx, 0, dp8inPx);
         recyclerContainer = ButterKnife.findById(tableQuizView, R.id.recycler);
         recyclerContainer.setNestedScrollingEnabled(false);
-//        recyclerContainer.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
+        recyclerContainer.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         attemptContainer.addView(tableQuizView);
     }
 
