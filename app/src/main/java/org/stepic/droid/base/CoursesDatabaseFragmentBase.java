@@ -70,6 +70,8 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         setHasOptionsMenu(true);
         setRetainInstance(true);
 
+        isScreenCreated = true;
+
         MainApplication.component()
                 .plus(new CourseListModule())
                 .inject(this);
@@ -104,7 +106,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         super.onViewCreated(view, savedInstanceState);
         bus.register(this);
         courseListPresenter.attachView(this);
-        isScreenCreated = savedInstanceState == null;
         courseListPresenter.restoreState();
     }
 
@@ -113,6 +114,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         super.onStart();
         if (isScreenCreated) {
             //reset all data
+            isScreenCreated = false;
             needFilter = false;
             courses.clear();
             courseListPresenter.refreshData(getCourseType(), needFilter, false);

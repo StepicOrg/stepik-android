@@ -162,20 +162,38 @@ public class RetrofitRESTApi implements IApi {
                                     .build();
                         }
                     } else if (isNeededUpdate(response)) {
+                        retrofit.Response<AuthenticationStepicResponse> authenticationStepicResponse;
                         try {
-                            response = oAuthService.updateToken(config.getRefreshGrantType(), response.getRefresh_token()).execute().body();
+                            authenticationStepicResponse = oAuthService.updateToken(config.getRefreshGrantType(), response.getRefresh_token()).execute();
+                            response = authenticationStepicResponse.body();
                         } catch (Exception e) {
                             analytic.reportError(Analytic.Error.CANT_UPDATE_TOKEN, e);
                             return chain.proceed(newRequest);
                         }
                         if (response == null || !response.isSuccess()) {
                             //it is worst case:
+
+
                             String message;
                             if (response == null) {
                                 message = "response was null";
                             } else {
                                 message = response.toString();
                             }
+
+                            String extendedMessage = "";
+                            if (authenticationStepicResponse == null) {
+                                extendedMessage = "rawResponse was null";
+                            } else if (authenticationStepicResponse.isSuccess()) {
+                                extendedMessage = "was success " + authenticationStepicResponse.code();
+                            } else {
+                                try {
+                                    extendedMessage = "failed " + authenticationStepicResponse.code() + " " + authenticationStepicResponse.errorBody().string();
+                                } catch (Exception ex) {
+                                    analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_INLINE_GETTING, ex);
+                                }
+                            }
+                            analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_ONLINE_EXTENDED, new FailRefreshException(extendedMessage));
                             analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_ONLINE, new FailRefreshException(message));
                             analytic.reportEvent(Analytic.Web.UPDATE_TOKEN_FAILED);
                             return chain.proceed(newRequest);

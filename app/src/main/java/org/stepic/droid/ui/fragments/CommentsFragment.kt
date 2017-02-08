@@ -35,6 +35,7 @@ import org.stepic.droid.ui.util.ContextMenuRecyclerView
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StringUtil
+import org.stepic.droid.util.getFirstAndLastName
 import org.stepic.droid.web.DiscussionProxyResponse
 import org.stepic.droid.web.VoteResponse
 import retrofit.Callback
@@ -187,7 +188,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
         val commentUser: User? = comment.user?.let { commentManager.getUserById(it) }
         if (commentUser?.first_name?.isNotBlank() ?: false || commentUser?.last_name?.isNotBlank() ?: false) {
-            val userNameText: String? = commentUser?.first_name + " " + commentUser?.last_name
+            val userNameText: String? = commentUser?.getFirstAndLastName()
             val spannableUserName = SpannableString(userNameText)
             spannableUserName.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.black)), 0, spannableUserName.length, 0)
 

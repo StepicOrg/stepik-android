@@ -10,7 +10,7 @@ data class Profile(
         val first_name: String? = null,
         val last_name: String? = null,
         val is_private: Boolean? = null,
-        val avatar: String? = null,
+        private val avatar: String? = null,
         val language: String? = null,
         val short_bio: String? = null,
         val details: String? = null,
@@ -26,4 +26,9 @@ data class Profile(
         val subscribed_for_news_ru: Boolean = false,
         @SerializedName("email_addresses")
         var emailAddresses: LongArray?
-) : Serializable
+) : Serializable {
+    fun getAvatarPath(): String? {
+        return avatar;
+    }
+
+}

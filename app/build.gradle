@@ -31,8 +31,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion minSdk
         targetSdkVersion 25
-        versionCode 119
-        versionName "1.26.4"
+        versionCode 120
+        versionName "1.27.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // Enabling multidex support.
         multiDexEnabled true
@@ -187,6 +187,8 @@ dependencies {
     compile('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.10.2@aar') {
         transitive = true
     }
+
+    compile 'com.caverock:androidsvg:1.2.1'
 }
 
 repositories {

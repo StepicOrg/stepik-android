@@ -283,6 +283,10 @@ public class ScreenManagerImpl implements ScreenManager {
             sourceActivity.startActivity(intent);
         } else {
             Uri videoUri = Uri.parse(videoPath);
+            String scheme = videoUri.getScheme();
+            if (scheme == null) {
+                videoUri = Uri.parse(AppConstants.FILE_SCHEME_PREFIX + videoPath);
+            }
             Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
             intent.setDataAndType(videoUri, "video/*");
             try {

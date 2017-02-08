@@ -5,6 +5,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class AppConstants {
 
+
+    public static final String FILE_SCHEME_PREFIX = "file://";
+    public static final String SVG_EXTENSION = ".svg";
+
     public static final String USER_LOG_IN = "user_login_clicked";
     public static final String KEY_COURSE_BUNDLE = "course";
     public static final String KEY_COURSE_LONG_ID = "course_id_key";
