@@ -29,6 +29,7 @@ import org.stepic.droid.events.audio.AudioFocusLossEvent
 import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.ui.custom.TouchDispatchableFrameLayout
 import org.stepic.droid.util.AndroidDevices
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.TimeUtil
 import org.videolan.libvlc.IVLCVout
 import org.videolan.libvlc.LibVLC
@@ -209,6 +210,9 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
                 uri = Uri.fromFile(file)
             } else {
                 uri = Uri.parse(filePath)
+                if (uri?.scheme == null) {
+                    uri = Uri.parse(AppConstants.FILE_SCHEME_PREFIX + filePath)
+                }
             }
 
             val media = Media(libvlc, uri)
