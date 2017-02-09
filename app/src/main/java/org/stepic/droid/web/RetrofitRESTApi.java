@@ -165,20 +165,38 @@ public class RetrofitRESTApi implements IApi {
                                     .build();
                         }
                     } else if (isNeededUpdate(response)) {
+                        retrofit.Response<AuthenticationStepicResponse> authenticationStepicResponse;
                         try {
-                            response = oAuthService.updateToken(config.getRefreshGrantType(), response.getRefresh_token()).execute().body();
+                            authenticationStepicResponse = oAuthService.updateToken(config.getRefreshGrantType(), response.getRefresh_token()).execute();
+                            response = authenticationStepicResponse.body();
                         } catch (Exception e) {
                             analytic.reportError(Analytic.Error.CANT_UPDATE_TOKEN, e);
                             return chain.proceed(newRequest);
                         }
                         if (response == null || !response.isSuccess()) {
                             //it is worst case:
+
+
                             String message;
                             if (response == null) {
                                 message = "response was null";
                             } else {
                                 message = response.toString();
                             }
+
+                            String extendedMessage = "";
+                            if (authenticationStepicResponse == null) {
+                                extendedMessage = "rawResponse was null";
+                            } else if (authenticationStepicResponse.isSuccess()) {
+                                extendedMessage = "was success " + authenticationStepicResponse.code();
+                            } else {
+                                try {
+                                    extendedMessage = "failed " + authenticationStepicResponse.code() + " " + authenticationStepicResponse.errorBody().string();
+                                } catch (Exception ex) {
+                                    analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_INLINE_GETTING, ex);
+                                }
+                            }
+                            analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_ONLINE_EXTENDED, new FailRefreshException(extendedMessage));
                             analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_ONLINE, new FailRefreshException(message));
                             analytic.reportEvent(Analytic.Web.UPDATE_TOKEN_FAILED);
                             return chain.proceed(newRequest);
@@ -322,18 +340,30 @@ public class RetrofitRESTApi implements IApi {
         return tempService.createAccount(new UserRegistrationRequest(new RegistrationUser(firstName, lastName, email, password)));
     }
 
+    @Nullable
+    private final String tryGetCsrfFromOnePair(String keyValueCookie) {
+        List<HttpCookie> cookieList = HttpCookie.parse(keyValueCookie);
+        for (HttpCookie item : cookieList) {
+            if (item.getName() != null && item.getName().equals("csrftoken")) {
+                return item.getValue();
+            }
+        }
+        return null;
+    }
+
     @NonNull
     private String getCsrfTokenFromCookies(String cookies) {
         String csrftoken = null;
-        List<HttpCookie> cookieList = HttpCookie.parse(cookies);
-        for (HttpCookie item : cookieList) {
-            if (item.getName() != null && item.getName().equals("csrftoken")) {
-                csrftoken = item.getValue();
+        String[] cookiePairs = cookies.split(";");
+        for (String cookieItem : cookiePairs) {
+            csrftoken = tryGetCsrfFromOnePair(cookieItem);
+            if (csrftoken != null) {
                 break;
             }
         }
         if (csrftoken == null) {
             csrftoken = "";
+            analytic.reportEvent(Analytic.Error.COOKIE_WAS_EMPTY);
         }
         return csrftoken;
     }

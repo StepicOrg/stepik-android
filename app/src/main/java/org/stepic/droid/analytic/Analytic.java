@@ -166,8 +166,11 @@ public interface Analytic {
         java.lang.String GOOGLE_SERVICES_TOO_OLD = "google_services_too_old";
         String VIDEO_PATH_WAS_NULL_WITH_INTERNET = "video_path_was_null_internet_enabled";
         java.lang.String FAIL_REFRESH_TOKEN_ONLINE = "fail_refresh_token_online";
+        java.lang.String FAIL_REFRESH_TOKEN_ONLINE_EXTENDED = "fail_refresh_token_online_extended";
         String COOKIE_MANAGER_ERROR = "cookie_manager_error";
         String PENDING_INTENT_WAS_NULL = "pending_intent_null_streaks";
+        String FAIL_REFRESH_TOKEN_INLINE_GETTING = "fail_refresh_token_online_get";
+        java.lang.String COOKIE_WAS_EMPTY = "cookie_was_empty";
     }
 
     interface Web {
