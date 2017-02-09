@@ -297,10 +297,9 @@ public class UserPreferences {
 
     public boolean isNotificationEnabled(NotificationType type) {
         return !sharedPreferenceHelper.isNotificationDisabled(type);
-//        return false; // FIXME: 01.11.16
     }
 
-    public void setNotificationEnabled(NotificationType type, boolean isChecked) {
-        sharedPreferenceHelper.setNotificationDisabled(type, isChecked);
+    public void setNotificationEnabled(NotificationType type, boolean isEnabled) {
+        sharedPreferenceHelper.setNotificationDisabled(type, !isEnabled);
     }
 }
