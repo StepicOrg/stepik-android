@@ -2,6 +2,7 @@ package org.stepic.droid.ui.adapters;
 
 import android.app.Activity;
 import android.graphics.Point;
+import android.support.annotation.ColorInt;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import org.stepic.droid.ui.listeners.CheckedChangeListenerWithPosition;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -112,18 +114,22 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         int itemViewType = getItemViewType(position);
         if (itemViewType == DESCRIPTION_TYPE) {
             holder.setData(description);
+            // Description is always default (not even or odd)
         } else if (itemViewType == ROW_HEADER_TYPE) {
             String headerText = rows.get(position - 1);
             holder.setData(headerText);
+            holder.fillAsEven(isPositionEven(position));
         } else if (itemViewType == COLUMN_HEADER_TYPE) {
             int columnPosition = getColumnPosition(position); // -1 is description cell at top left cell
             String headerText = columns.get(columnPosition);
             holder.setData(headerText);
+            //Column header is always default. (not even or odd)
         } else {
             List<TableChoiceAnswer.Companion.Cell> oneRowAnswers = getOneRowAnswersFromPosition(position);
             int columnPosition = getColumnPosition(position);
             TableChoiceAnswer.Companion.Cell cell = oneRowAnswers.get(columnPosition);
             holder.setData(cell.getAnswer());
+            holder.fillAsEven(isPositionEven(position));
         }
         holder.makeEnabled(isAllEnabled);
     }
@@ -142,7 +148,6 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
     public int getItemCount() {
         return rows.size() + columns.size() + 1 + rows.size() * columns.size(); //1 – description top left cell.
     }
-
 
     @Override
     public void onCheckedChanged(CompoundButton view, boolean isChecked, int position) {
@@ -190,7 +195,29 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         }
     }
 
+    /**
+     * 0 is header row (even)
+     * 1 is the next row (odd)
+     * 2 is the next (even)
+     * etc
+     *
+     * @param position of the element
+     * @return true if position exists in even row, false otherwise
+     */
+    private boolean isPositionEven(int position) {
+        int rowPosition = position % (rows.size() + 1);
+        return rowPosition % 2 == 0;
+    }
+
     static abstract class GenericViewHolder extends RecyclerView.ViewHolder {
+
+        @ColorInt
+        @BindColor(R.color.table_even_row)
+        protected int backgroundColorForEven;
+
+        @ColorInt
+        @BindColor(R.color.white)
+        protected int backgroundColorForNotEven;
 
         GenericViewHolder(View itemView) {
             super(itemView);
@@ -202,6 +229,8 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         public abstract void setData(@NotNull Boolean needCheckModel);
 
         public abstract void makeEnabled(boolean isAllEnabled);
+
+        public abstract void fillAsEven(boolean positionEven);
     }
 
 
@@ -229,6 +258,11 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
             //do nothing, it is not interactable by user
         }
 
+        @Override
+        public void fillAsEven(boolean positionEven) {
+            latexView.setBackgroundColor(positionEven ? backgroundColorForEven : backgroundColorForNotEven);
+        }
+
     }
 
 
@@ -254,8 +288,6 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
                     return getCheckableView().dispatchTouchEvent(event);
                 }
             });
-
-
         }
 
         @Override
@@ -272,6 +304,11 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         public void makeEnabled(boolean isEnabled) {
             container.setClickable(isEnabled);
             getCheckableView().setClickable(isEnabled);
+        }
+
+        @Override
+        public void fillAsEven(boolean positionEven) {
+            container.setBackgroundColor(positionEven ? backgroundColorForEven : backgroundColorForNotEven);
         }
 
         abstract CompoundButton getCheckableView();
@@ -307,4 +344,3 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         }
     }
 }
-
