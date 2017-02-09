@@ -39,13 +39,13 @@ public class Submission {
     private String score;
     private String hint;
     private String time;
-    private Reply reply;
+    private ReplyWrapper reply;
     private long attempt;
     private String session;
     private String eta;
 
     public Submission(Reply reply, long attempt) {
-        this.reply = reply;
+        this.reply = new ReplyWrapper(reply);
         this.attempt = attempt;
     }
 
@@ -76,7 +76,7 @@ public class Submission {
     }
 
     public Reply getReply() {
-        return reply;
+        return reply.getReply();
     }
 
     public long getAttempt() {

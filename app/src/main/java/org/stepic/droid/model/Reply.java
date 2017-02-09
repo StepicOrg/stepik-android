@@ -13,8 +13,9 @@ public class Reply {
     private final String code;
     private final List<String> blanks;
 
-    public static class Builder {
+    private List<TableChoiceAnswer> tableChoices; //this is not serialize by default, because  field 'choices' is already created by different type
 
+    public static class Builder {
         private List<Boolean> choices;
         private String text;
         private List<Attachment> attachments;
@@ -25,7 +26,15 @@ public class Reply {
         private String code;
         private List<String> blanks;
 
+
+        public List<TableChoiceAnswer> tableChoices;
+
         public Builder() {
+        }
+
+        public Builder setTableChoices(List<TableChoiceAnswer> tableChoices) {
+            this.tableChoices = tableChoices;
+            return this;
         }
 
         public Builder setChoices(List<Boolean> choices) {
@@ -89,6 +98,7 @@ public class Reply {
         language = builder.language;
         code = builder.code;
         blanks = builder.blanks;
+        tableChoices = builder.tableChoices;
     }
 
     public String getNumber() {
@@ -100,7 +110,7 @@ public class Reply {
     }
 
     public List<Boolean> getChoices() {
-        return choices;
+        return (List<Boolean>) choices;
     }
 
     public String getFormula() {
@@ -125,5 +135,13 @@ public class Reply {
 
     public List<String> getBlanks() {
         return blanks;
+    }
+
+    public List<TableChoiceAnswer> getTableChoices() {
+        return tableChoices;
+    }
+
+    public void setTableChoices(List<TableChoiceAnswer> tableChoices) {
+        this.tableChoices = tableChoices;
     }
 }

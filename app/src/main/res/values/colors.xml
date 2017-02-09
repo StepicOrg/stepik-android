@@ -15,6 +15,8 @@
     <color name="drawer_background">@color/white</color>
     <color name="drawer_item_highlighting">#eeeeee</color>
     <color name="drawer_item_highlighting_pressed">#EDEDED</color>
+    <color name="table_header">#F0F0F0</color>
+    <color name="table_even_row">#F6F9FC</color>
 
     <!-- stepic brand book-->
     <color name="stepic_brand_primary">#66CC66</color>
