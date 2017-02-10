@@ -749,6 +749,7 @@ public class RetrofitRESTApi implements IApi {
 
     private boolean isNeededUpdate(AuthenticationStepicResponse response) {
         if (response == null) return false;
+//        return true;
 
         long timestampStored = sharedPreference.getAccessTokenTimestamp();
         if (timestampStored == -1) return true;
