@@ -108,10 +108,10 @@ public class ScreenManagerImpl implements ScreenManager {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
         Intent launchIntent = new Intent(activity, LaunchActivity.class);
         if (fromMainFeed) {
-            launchIntent.putExtra(LaunchActivity.FROM_MAIN_FEED_FLAG, true);
+            launchIntent.putExtra(AppConstants.FROM_MAIN_FEED_FLAG, true);
             launchIntent.putExtra(MainFeedActivity.KEY_CURRENT_INDEX, index);
         }
-        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivity(launchIntent);
     }
 
