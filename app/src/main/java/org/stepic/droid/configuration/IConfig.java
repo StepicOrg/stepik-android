@@ -27,4 +27,8 @@ public interface IConfig {
     String getTermsOfServiceUrl();
 
     String getMixpanelToken();
+
+    String getCsrfTokenCookieName ();
+
+    String getSessionCookieName();
 }

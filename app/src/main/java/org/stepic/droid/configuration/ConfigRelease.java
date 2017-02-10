@@ -42,6 +42,8 @@ public class ConfigRelease implements IConfig {
     private static final java.lang.String TERMS_OF_SERVICE = "TERMS_OF_SERVICE";
     private static final java.lang.String PRIVACY_POLICY = "PRIVACY_POLICY";
     private static final java.lang.String MIXPANEL_TOKEN = "MIXPANEL_TOKEN";
+    private static final java.lang.String CSRF_COOKIE_NAME = "CSRF_COOKIE_NAME";
+    private static final java.lang.String SESSION_COOKIE_NAME = "SESSION_COOKIE_NAME";
 
 
     @Inject
@@ -166,6 +168,16 @@ public class ConfigRelease implements IConfig {
     @Override
     public String getMixpanelToken() {
         return getString(MIXPANEL_TOKEN, null);
+    }
+
+    @Override
+    public String getCsrfTokenCookieName() {
+        return getString(CSRF_COOKIE_NAME, null);
+    }
+
+    @Override
+    public String getSessionCookieName() {
+        return getString(SESSION_COOKIE_NAME, null);
     }
 
     private String getString(String key) {
