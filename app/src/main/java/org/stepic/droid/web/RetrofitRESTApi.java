@@ -327,7 +327,7 @@ public class RetrofitRESTApi implements IApi {
     private final String tryGetCsrfFromOnePair(String keyValueCookie) {
         List<HttpCookie> cookieList = HttpCookie.parse(keyValueCookie);
         for (HttpCookie item : cookieList) {
-            if (item.getName() != null && item.getName().equals("csrftoken")) {
+            if (item.getName() != null && item.getName().equals(config.getCsrfTokenCookieName())) {
                 return item.getValue();
             }
         }
@@ -499,16 +499,16 @@ public class RetrofitRESTApi implements IApi {
                 String csrftoken = null;
                 String sessionId = null;
                 for (HttpCookie item : cookies) {
-                    if (item.getName() != null && item.getName().equals("csrftoken")) {
+                    if (item.getName() != null && item.getName().equals(config.getCsrfTokenCookieName())) {
                         csrftoken = item.getValue();
                         continue;
                     }
-                    if (item.getName() != null && item.getName().equals("sessionid")) {
+                    if (item.getName() != null && item.getName().equals(config.getSessionCookieName())) {
                         sessionId = item.getValue();
                     }
                 }
 
-                String cookieResult = "csrftoken=" + csrftoken + "; " + "sessionid=" + sessionId;
+                String cookieResult = config.getCsrfTokenCookieName() + "=" + csrftoken + "; " + config.getSessionCookieName() + "=" + sessionId;
                 if (csrftoken == null) return chain.proceed(newRequest);
                 HttpUrl url = newRequest
                         .httpUrl()
