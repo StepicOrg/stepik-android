@@ -62,6 +62,9 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 @Module(includes = {StorageModule.class})
@@ -294,5 +297,18 @@ public class AppCoreModule {
     @Singleton
     RecyclerView.RecycledViewPool provideRecycledViewPool() {
         return new RecyclerView.RecycledViewPool();
+    }
+
+    /**
+     * this retrofit is only for parsing error body
+     */
+    @Provides
+    @Singleton
+    Retrofit provideRetrofit(IConfig config) {
+        return new Retrofit.Builder()
+                .baseUrl(config.getBaseUrl())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(new OkHttpClient())
+                .build();
     }
 }

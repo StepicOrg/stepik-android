@@ -9,9 +9,9 @@ import org.stepic.droid.model.Progress
 import org.stepic.droid.model.Section
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.transformers.transformToViewModel
+import org.stepic.droid.viewmodel.ProgressViewModel
 import org.stepic.droid.web.IApi
 import timber.log.Timber
-import org.stepic.droid.viewmodel.ProgressViewModel
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
@@ -79,7 +79,7 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                     //get from Internet
                     try {
                         val response = api.getSections(sectionIds).execute()
-                        if (response.isSuccess || response.body()?.sections?.isNotEmpty() ?: false) {
+                        if (response.isSuccessful || response.body()?.sections?.isNotEmpty() ?: false) {
                             val sections = response.body().sections
                             val cachedSections: Map<Long, Section> = databaseFacade
                                     .getAllSectionsOfCourse(course)

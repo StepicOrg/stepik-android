@@ -9,9 +9,9 @@ import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.store.operations.Table
 import org.stepic.droid.web.CoursesStepicResponse
 import org.stepic.droid.web.IApi
-import retrofit.Callback
-import retrofit.Response
-import retrofit.Retrofit
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.concurrent.ThreadPoolExecutor
 
 class CourseFinderPresenter(
@@ -34,8 +34,9 @@ class CourseFinderPresenter(
                 }
             } else {
                 api.getCourse(courseId).enqueue(object : Callback<CoursesStepicResponse> {
-                    override fun onResponse(response: Response<CoursesStepicResponse>, retrofit: Retrofit) {
-                        if (response.isSuccess && !response.body().courses.isEmpty()) {
+
+                    override fun onResponse(call: Call<CoursesStepicResponse>?, response: Response<CoursesStepicResponse>?) {
+                        if (response != null && response.isSuccessful && !response.body().courses.isEmpty()) {
                             view?.onCourseFound(CourseFoundEvent(response.body().courses[0]))
                         } else {
                             view?.onCourseUnavailable(CourseUnavailableForUserEvent(courseId))
@@ -43,7 +44,7 @@ class CourseFinderPresenter(
                         }
                     }
 
-                    override fun onFailure(t: Throwable) {
+                    override fun onFailure(call: Call<CoursesStepicResponse>?, t: Throwable?) {
                         view!!.onInternetFailWhenCourseIsTriedToLoad(CourseCantLoadEvent())
                     }
                 })

@@ -46,7 +46,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import retrofit.Response;
+import retrofit2.Response;
 
 
 public class LoadService extends IntentService {
@@ -250,7 +250,7 @@ public class LoadService extends IntentService {
                     databaseFacade.addProgress(item);
                 }
                 Response<StepResponse> response = api.getSteps(lesson.getSteps()).execute();
-                if (response.isSuccess()) {
+                if (response.isSuccessful()) {
                     List<Step> steps = response.body().getSteps();
                     if (steps != null && !steps.isEmpty()) {
 
@@ -313,7 +313,7 @@ public class LoadService extends IntentService {
                     int lastExclusive = Math.min(unitIds.length, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
                     long[] subArrayForLoading = Arrays.copyOfRange(unitIds, pointer, lastExclusive);
                     Response<UnitStepicResponse> unitResponse = api.getUnits(subArrayForLoading).execute();
-                    if (!unitResponse.isSuccess()) {
+                    if (!unitResponse.isSuccessful()) {
                         responseIsSuccess = false;
                     } else {
                         units.addAll(unitResponse.body().getUnits());
@@ -340,7 +340,7 @@ public class LoadService extends IntentService {
                         int lastExclusive = Math.min(lessonsIds.length, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
                         long[] subArrayForLoading = Arrays.copyOfRange(lessonsIds, pointer, lastExclusive);
                         Response<LessonStepicResponse> lessonResponse = api.getLessons(subArrayForLoading).execute();
-                        if (!lessonResponse.isSuccess()) {
+                        if (!lessonResponse.isSuccessful()) {
                             responseIsSuccess = false;
                         } else {
                             lessons.addAll(lessonResponse.body().getLessons());
@@ -444,7 +444,7 @@ public class LoadService extends IntentService {
             int lastExclusive = Math.min(ids.length, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
             String[] subArrayForLoading = Arrays.copyOfRange(ids, pointer, lastExclusive);
             Response<ProgressesResponse> progressesResponse = api.getProgresses(subArrayForLoading).execute();
-            if (!progressesResponse.isSuccess()) {
+            if (!progressesResponse.isSuccessful()) {
                 responseIsSuccess = false;
             } else {
                 progresses.addAll(progressesResponse.body().getProgresses());

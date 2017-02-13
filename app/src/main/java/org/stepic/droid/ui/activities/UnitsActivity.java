@@ -55,7 +55,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import kotlin.jvm.functions.Function0;
-import retrofit.Response;
+import retrofit2.Response;
 
 public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -155,7 +155,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
                             int lastExclusive = Math.min(unitIds.length, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
                             long[] subArrayForLoading = Arrays.copyOfRange(unitIds, pointer, lastExclusive);
                             Response<UnitStepicResponse> unitResponse = shell.getApi().getUnits(subArrayForLoading).execute();
-                            if (!unitResponse.isSuccess()) {
+                            if (!unitResponse.isSuccessful()) {
                                 responseIsSuccess = false;
                             } else {
                                 backgroundUnits.addAll(unitResponse.body().getUnits());
@@ -231,7 +231,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
                         int lastExclusive = Math.min(lessonsIds.length, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
                         long[] subArrayForLoading = Arrays.copyOfRange(lessonsIds, pointer, lastExclusive);
                         Response<LessonStepicResponse> lessonsResponse = shell.getApi().getLessons(subArrayForLoading).execute();
-                        if (!lessonsResponse.isSuccess()) {
+                        if (!lessonsResponse.isSuccessful()) {
                             responseIsSuccess = false;
                         } else {
                             backgroundLessons.addAll(lessonsResponse.body().getLessons());
@@ -294,7 +294,7 @@ public class UnitsActivity extends FragmentActivityBase implements SwipeRefreshL
                         int lastExclusive = Math.min(progressIds.length, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
                         String[] subArrayForLoading = Arrays.copyOfRange(progressIds, pointer, lastExclusive);
                         Response<ProgressesResponse> progressesResponse = shell.getApi().getProgresses(subArrayForLoading).execute();
-                        if (!progressesResponse.isSuccess()) {
+                        if (!progressesResponse.isSuccessful()) {
                             responseIsSuccess = false;
                         } else {
                             backgroundProgress.addAll(progressesResponse.body().getProgresses());

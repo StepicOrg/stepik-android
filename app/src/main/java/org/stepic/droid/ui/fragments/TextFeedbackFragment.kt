@@ -20,9 +20,9 @@ import org.stepic.droid.events.feedback.FeedbackSentEvent
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ValidatorUtil
-import retrofit.Callback
-import retrofit.Response
-import retrofit.Retrofit
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class TextFeedbackFragment : FragmentBase() {
 
@@ -150,9 +150,9 @@ class TextFeedbackFragment : FragmentBase() {
         ProgressHelper.activate(progressDialog)
         shell.api.sendFeedback(email, description).enqueue(object : Callback<Void> {
 
-            override fun onResponse(response: Response<Void>?, retrofit: Retrofit?) {
+            override fun onResponse(call: Call<Void>?, response: Response<Void>?) {
                 ProgressHelper.dismiss(progressDialog)
-                if (response?.isSuccess ?: false) {
+                if (response?.isSuccessful ?: false) {
                     bus.post(FeedbackSentEvent())
 
                 } else {
@@ -160,7 +160,7 @@ class TextFeedbackFragment : FragmentBase() {
                 }
             }
 
-            override fun onFailure(throwable: Throwable?) {
+            override fun onFailure(call: Call<Void>?, t: Throwable?) {
                 ProgressHelper.dismiss(progressDialog)
                 bus.post(FeedbackInternetProblemsEvent())
             }

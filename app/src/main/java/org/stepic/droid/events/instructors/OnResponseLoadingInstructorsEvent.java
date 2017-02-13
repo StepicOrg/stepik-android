@@ -3,24 +3,18 @@ package org.stepic.droid.events.instructors;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.web.UserStepicResponse;
 
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Response;
 
 public class OnResponseLoadingInstructorsEvent extends InstructorsBaseEvent {
     private final Response<UserStepicResponse> response;
-    private final Retrofit retrofit;
 
-    public OnResponseLoadingInstructorsEvent(Course mCourse, Response<UserStepicResponse> response, Retrofit retrofit) {
-        super(mCourse);
+    public OnResponseLoadingInstructorsEvent(Course course, Response<UserStepicResponse> response) {
+        super(course);
         this.response = response;
-        this.retrofit = retrofit;
     }
 
     public Response<UserStepicResponse> getResponse() {
         return response;
     }
 
-    public Retrofit getRetrofit() {
-        return retrofit;
-    }
 }

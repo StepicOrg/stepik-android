@@ -38,9 +38,10 @@ import org.stepic.droid.util.StringUtil
 import org.stepic.droid.util.getFirstAndLastName
 import org.stepic.droid.web.DiscussionProxyResponse
 import org.stepic.droid.web.VoteResponse
-import retrofit.Callback
-import retrofit.Response
-import retrofit.Retrofit
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 import java.util.*
 import javax.inject.Inject
 
@@ -339,16 +340,16 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
         voteId?.let {
             val voteObject = Vote(voteId, voteValue)
             shell.api.makeVote(it, voteValue).enqueue(object : Callback<VoteResponse> {
-                override fun onResponse(response: Response<VoteResponse>?, retrofit: Retrofit?) {
+                override fun onResponse(call: Call<VoteResponse>?, response: Response<VoteResponse>?) {
                     //todo event for update
-                    if (response?.isSuccess ?: false) {
+                    if (response?.isSuccessful ?: false) {
                         bus.post(LikeCommentSuccessEvent(commentId, voteObject))
                     } else {
                         bus.post(LikeCommentFailEvent())
                     }
                 }
 
-                override fun onFailure(t: Throwable?) {
+                override fun onFailure(call: Call<VoteResponse>?, t: Throwable?) {
                     //todo event for fail
                     bus.post(LikeCommentFailEvent())
                 }
@@ -413,8 +414,8 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun loadDiscussionProxyById(id: String = discussionId) {
         shell.api.getDiscussionProxies(id).enqueue(object : Callback<DiscussionProxyResponse> {
-            override fun onResponse(response: Response<DiscussionProxyResponse>?, retrofit: Retrofit?) {
-                if (response != null && response.isSuccess) {
+            override fun onResponse(call: Call<DiscussionProxyResponse>?, response: Response<DiscussionProxyResponse>?) {
+                if (response != null && response.isSuccessful) {
                     val discussionProxy = response.body().discussionProxies.firstOrNull()
                     if (discussionProxy != null && discussionProxy.discussions.isNotEmpty()) {
                         bus.post(DiscussionProxyLoadedSuccessfullyEvent(discussionProxy))
@@ -426,7 +427,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
                 }
             }
 
-            override fun onFailure(t: Throwable?) {
+            override fun onFailure(call: Call<DiscussionProxyResponse>?, t: Throwable?) {
                 bus.post(InternetConnectionProblemInCommentsEvent(discussionId))
             }
 

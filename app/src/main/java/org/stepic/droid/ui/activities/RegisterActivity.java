@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.squareup.okhttp.ResponseBody;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
@@ -28,14 +27,15 @@ import org.stepic.droid.web.RegistrationResponse;
 
 import java.lang.annotation.Annotation;
 
-import butterknife.BindView;
 import butterknife.BindString;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnFocusChange;
-import retrofit.Callback;
-import retrofit.Converter;
-import retrofit.Response;
-import retrofit.Retrofit;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Converter;
+import retrofit2.Response;
 
 
 public class RegisterActivity extends FragmentActivityBase {
@@ -178,9 +178,9 @@ public class RegisterActivity extends FragmentActivityBase {
 
             shell.getApi().signUp(firstName, lastName, email, password).enqueue(new Callback<RegistrationResponse>() {
                 @Override
-                public void onResponse(Response<RegistrationResponse> response, Retrofit retrofit) {
+                public void onResponse(Call<RegistrationResponse> call, Response<RegistrationResponse> response) {
                     ProgressHelper.dismiss(progress);
-                    if (response.isSuccess()) {
+                    if (response.isSuccessful()) {
                         analytic.reportEvent(FirebaseAnalytics.Event.SIGN_UP);
                         loginManager.login(email, password, new ProgressHandler() {
                             @Override
@@ -200,8 +200,9 @@ public class RegisterActivity extends FragmentActivityBase {
                             }
                         }, getCourseFromExtra());
                     } else {
+                        response.errorBody();
                         Converter<ResponseBody, RegistrationResponse> errorConverter =
-                                retrofit.responseConverter(RegistrationResponse.class, new Annotation[0]);
+                                retrofit.responseBodyConverter(RegistrationResponse.class, new Annotation[0]);
                         RegistrationResponse error = null;
                         try {
                             error = errorConverter.convert(response.errorBody());
@@ -214,7 +215,7 @@ public class RegisterActivity extends FragmentActivityBase {
                 }
 
                 @Override
-                public void onFailure(Throwable t) {
+                public void onFailure(Call<RegistrationResponse> call, Throwable t) {
                     ProgressHelper.dismiss(progress);
                     Toast.makeText(RegisterActivity.this, R.string.connectionProblems, Toast.LENGTH_SHORT).show();
                 }
