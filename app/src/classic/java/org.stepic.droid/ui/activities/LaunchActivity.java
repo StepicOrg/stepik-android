@@ -53,8 +53,6 @@ import butterknife.ButterKnife;
 
 public class LaunchActivity extends BackToExitActivityBase {
 
-    public final static String FROM_MAIN_FEED_FLAG = "from_main_feed";
-
     @BindView(R.id.sign_up_btn_activity_launch)
     View signUpButton;
 
@@ -328,7 +326,7 @@ public class LaunchActivity extends BackToExitActivityBase {
         boolean fromMainFeed;
         int index = 0;
         try {
-            fromMainFeed = getIntent().getExtras().getBoolean(FROM_MAIN_FEED_FLAG);
+            fromMainFeed = getIntent().getExtras().getBoolean(AppConstants.FROM_MAIN_FEED_FLAG);
             index = getIntent().getExtras().getInt(MainFeedActivity.KEY_CURRENT_INDEX);
         } catch (Exception ex) {
             fromMainFeed = false;
