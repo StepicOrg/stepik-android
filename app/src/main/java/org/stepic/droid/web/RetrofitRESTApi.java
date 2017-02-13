@@ -16,8 +16,6 @@ import com.google.gson.GsonBuilder;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
@@ -124,7 +122,7 @@ public class RetrofitRESTApi implements IApi {
             public Response intercept(Chain chain) throws IOException {
                 Request newRequest = chain.request();
                 try {
-                    RWLocks.AuthLock.writeLock().lock();
+                    RWLocks.AuthLock.readLock().lock();
                     AuthenticationStepicResponse response = sharedPreference.getAuthResponseFromStore();
                     String urlForCookies = newRequest.url().toString();
                     if (response == null) {
@@ -151,45 +149,52 @@ public class RetrofitRESTApi implements IApi {
                                     .build();
                         }
                     } else if (isNeededUpdate(response)) {
-                        retrofit2.Response<AuthenticationStepicResponse> authenticationStepicResponse;
+                        RWLocks.AuthLock.readLock().unlock();
                         try {
-                            authenticationStepicResponse = oAuthService.updateToken(config.getRefreshGrantType(), response.getRefresh_token()).execute();
-                            response = authenticationStepicResponse.body();
-                        } catch (Exception e) {
-                            analytic.reportError(Analytic.Error.CANT_UPDATE_TOKEN, e);
-                            return chain.proceed(newRequest);
-                        }
-                        if (response == null || !response.isSuccess()) {
-                            //it is worst case:
-
-
-                            String message;
-                            if (response == null) {
-                                message = "response was null";
-                            } else {
-                                message = response.toString();
+                            RWLocks.AuthLock.writeLock().lock();
+                            retrofit2.Response<AuthenticationStepicResponse> authenticationStepicResponse;
+                            try {
+                                authenticationStepicResponse = oAuthService.updateToken(config.getRefreshGrantType(), response.getRefresh_token()).execute();
+                                response = authenticationStepicResponse.body();
+                            } catch (Exception e) {
+                                analytic.reportError(Analytic.Error.CANT_UPDATE_TOKEN, e);
+                                return chain.proceed(newRequest);
                             }
+                            if (response == null || !response.isSuccess()) {
+                                //it is worst case:
 
-                            String extendedMessage = "";
-                            if (authenticationStepicResponse == null) {
-                                extendedMessage = "rawResponse was null";
-                            } else if (authenticationStepicResponse.isSuccessful()) {
-                                extendedMessage = "was success " + authenticationStepicResponse.code();
-                            } else {
-                                try {
-                                    extendedMessage = "failed " + authenticationStepicResponse.code() + " " + authenticationStepicResponse.errorBody().string();
-                                } catch (Exception ex) {
-                                    analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_INLINE_GETTING, ex);
+
+                                String message;
+                                if (response == null) {
+                                    message = "response was null";
+                                } else {
+                                    message = response.toString();
                                 }
-                            }
-                            analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_ONLINE_EXTENDED, new FailRefreshException(extendedMessage));
-                            analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_ONLINE, new FailRefreshException(message));
-                            analytic.reportEvent(Analytic.Web.UPDATE_TOKEN_FAILED);
-                            return chain.proceed(newRequest);
-                        }
 
-                        //Update is success:
-                        sharedPreference.storeAuthInfo(response);
+                                String extendedMessage = "";
+                                if (authenticationStepicResponse == null) {
+                                    extendedMessage = "rawResponse was null";
+                                } else if (authenticationStepicResponse.isSuccessful()) {
+                                    extendedMessage = "was success " + authenticationStepicResponse.code();
+                                } else {
+                                    try {
+                                        extendedMessage = "failed " + authenticationStepicResponse.code() + " " + authenticationStepicResponse.errorBody().string();
+                                    } catch (Exception ex) {
+                                        analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_INLINE_GETTING, ex);
+                                    }
+                                }
+                                analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_ONLINE_EXTENDED, new FailRefreshException(extendedMessage));
+                                analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_ONLINE, new FailRefreshException(message));
+                                analytic.reportEvent(Analytic.Web.UPDATE_TOKEN_FAILED);
+                                return chain.proceed(newRequest);
+                            }
+
+                            //Update is success:
+                            sharedPreference.storeAuthInfo(response);
+                            RWLocks.AuthLock.readLock().lock();
+                        } finally {
+                            RWLocks.AuthLock.writeLock().unlock();
+                        }
                     }
                     if (response != null) {
                         //it is good way
@@ -207,7 +212,7 @@ public class RetrofitRESTApi implements IApi {
                     }
                     return originalResponse;
                 } finally {
-                    RWLocks.AuthLock.writeLock().unlock();
+                    RWLocks.AuthLock.readLock().unlock();
                 }
 
             }
@@ -741,14 +746,14 @@ public class RetrofitRESTApi implements IApi {
 
     private boolean isNeededUpdate(AuthenticationStepicResponse response) {
         if (response == null) return false;
-//        return true;
+        return true;
 
-        long timestampStored = sharedPreference.getAccessTokenTimestamp();
-        if (timestampStored == -1) return true;
-
-        long nowTemp = DateTime.now(DateTimeZone.UTC).getMillis();
-        long delta = nowTemp - timestampStored;
-        long expiresMillis = (response.getExpires_in() - 50) * 1000;
-        return delta > expiresMillis;//token expired --> need update
+//        long timestampStored = sharedPreference.getAccessTokenTimestamp();
+//        if (timestampStored == -1) return true;
+//
+//        long nowTemp = DateTime.now(DateTimeZone.UTC).getMillis();
+//        long delta = nowTemp - timestampStored;
+//        long expiresMillis = (response.getExpires_in() - 50) * 1000;
+//        return delta > expiresMillis;//token expired --> need update
     }
 }
