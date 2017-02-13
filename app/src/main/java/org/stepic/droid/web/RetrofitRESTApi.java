@@ -29,7 +29,6 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
-import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.deserializers.DatasetDeserializer;
 import org.stepic.droid.deserializers.ReplyDeserializer;
 import org.stepic.droid.model.Course;
@@ -48,12 +47,10 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.serializers.ReplySerializer;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
-import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.ui.NotificationCategory;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.RWLocks;
-import org.stepic.droid.util.resolvers.text.TextResolver;
 import org.stepic.droid.web.util.StringConverterFactory;
 
 import java.io.IOException;
@@ -85,12 +82,6 @@ public class RetrofitRESTApi implements IApi {
     SharedPreferenceHelper sharedPreference;
 
     @Inject
-    ScreenManager screenManager;
-
-    @Inject
-    DatabaseFacade databaseFacade;
-
-    @Inject
     IConfig config;
 
     @Inject
@@ -98,9 +89,6 @@ public class RetrofitRESTApi implements IApi {
 
     @Inject
     Analytic analytic;
-
-    @Inject
-    TextResolver textResolver;
 
     private StepicRestLoggedService loggedService;
     private StepicRestOAuthService oAuthService;
@@ -344,7 +332,7 @@ public class RetrofitRESTApi implements IApi {
     private final String tryGetCsrfFromOnePair(String keyValueCookie) {
         List<HttpCookie> cookieList = HttpCookie.parse(keyValueCookie);
         for (HttpCookie item : cookieList) {
-            if (item.getName() != null && item.getName().equals("csrftoken")) {
+            if (item.getName() != null && item.getName().equals(config.getCsrfTokenCookieName())) {
                 return item.getValue();
             }
         }
@@ -516,16 +504,16 @@ public class RetrofitRESTApi implements IApi {
                 String csrftoken = null;
                 String sessionId = null;
                 for (HttpCookie item : cookies) {
-                    if (item.getName() != null && item.getName().equals("csrftoken")) {
+                    if (item.getName() != null && item.getName().equals(config.getCsrfTokenCookieName())) {
                         csrftoken = item.getValue();
                         continue;
                     }
-                    if (item.getName() != null && item.getName().equals("sessionid")) {
+                    if (item.getName() != null && item.getName().equals(config.getSessionCookieName())) {
                         sessionId = item.getValue();
                     }
                 }
 
-                String cookieResult = "csrftoken=" + csrftoken + "; " + "sessionid=" + sessionId;
+                String cookieResult = config.getCsrfTokenCookieName() + "=" + csrftoken + "; " + config.getSessionCookieName() + "=" + sessionId;
                 if (csrftoken == null) return chain.proceed(newRequest);
                 HttpUrl url = newRequest
                         .httpUrl()
@@ -568,8 +556,8 @@ public class RetrofitRESTApi implements IApi {
                 .build();
         StepikDeskEmptyAuthService tempService = notLogged.create(StepikDeskEmptyAuthService.class);
 
-        String subject = MainApplication.getAppContext().getString(R.string.feedback_subject);
-        String aboutSystem = DeviceInfoUtil.getInfosAboutDevice(MainApplication.getAppContext());
+        String subject = context.getString(R.string.feedback_subject);
+        String aboutSystem = DeviceInfoUtil.getInfosAboutDevice(context);
         rawDescription = rawDescription + "\n\n" + aboutSystem;
         return tempService.sendFeedback(subject, email, aboutSystem, rawDescription);
     }
@@ -586,7 +574,7 @@ public class RetrofitRESTApi implements IApi {
 
     @Override
     public Call<DeviceResponse> registerDevice(String token) {
-        String description = DeviceInfoUtil.getShortInfo(MainApplication.getAppContext());
+        String description = DeviceInfoUtil.getShortInfo(context);
         DeviceRequest deviceRequest = new DeviceRequest(token, description);
         return loggedService.registerDevice(deviceRequest);
     }
