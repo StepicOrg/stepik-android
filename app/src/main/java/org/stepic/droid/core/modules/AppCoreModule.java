@@ -286,8 +286,8 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    TextResolver provideTextResolver() {
-        return new TextResolverImpl();
+    TextResolver provideTextResolver(IConfig config) {
+        return new TextResolverImpl(config);
     }
 
 
