@@ -783,7 +783,7 @@ public class RetrofitRESTApi implements IApi {
             return type + " " + access_token;
         } catch (Exception ex) {
             analytic.reportError(Analytic.Error.AUTH_ERROR, ex);
-            //it is unreacheable from app version 1.2
+            //it is unreachable from app version 1.2
             return "";
         }
     }
