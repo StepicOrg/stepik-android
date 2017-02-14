@@ -20,6 +20,8 @@ import com.vk.sdk.VKSdk;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
@@ -791,14 +793,13 @@ public class RetrofitRESTApi implements IApi {
             Timber.d("Token is null");
             return false;
         }
-        return true;
 
-//        long timestampStored = sharedPreference.getAccessTokenTimestamp();
-//        if (timestampStored == -1) return true;
-//
-//        long nowTemp = DateTime.now(DateTimeZone.UTC).getMillis();
-//        long delta = nowTemp - timestampStored;
-//        long expiresMillis = (response.getExpires_in() - 50) * 1000;
-//        return delta > expiresMillis;//token expired --> need update
+        long timestampStored = sharedPreference.getAccessTokenTimestamp();
+        if (timestampStored == -1) return true;
+
+        long nowTemp = DateTime.now(DateTimeZone.UTC).getMillis();
+        long delta = nowTemp - timestampStored;
+        long expiresMillis = (response.getExpires_in() - 50) * 1000;
+        return delta > expiresMillis;//token expired --> need update
     }
 }
