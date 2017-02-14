@@ -341,4 +341,5 @@
     <string name="fill_blanks_select_value"><![CDATA[<Select value>]]></string>
     <string name="fill_blanks_type_text">Type text</string>
     <string name="table_quiz_beta">Table problem β</string>
+    <string name="logout_user_error">Access was revoked. Login again</string>
 </resources>

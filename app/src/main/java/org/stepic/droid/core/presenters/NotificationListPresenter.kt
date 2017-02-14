@@ -165,7 +165,7 @@ class NotificationListPresenter(
     fun markAsRead(id: Long) {
         threadPoolExecutor.execute {
             try {
-                val isSuccess = api.setReadStatusForNotification(id, true).execute().isSuccess
+                val isSuccess = api.setReadStatusForNotification(id, true).execute().isSuccessful
                 if (isSuccess) {
                     mainHandler.post {
                         bus.post(NotificationCheckedSuccessfullyEvent(id))
@@ -218,7 +218,7 @@ class NotificationListPresenter(
             threadPoolExecutor.execute {
                 try {
                     val response = api.markAsReadAllType(notificationCategoryLocal).execute()
-                    if (response.isSuccess) {
+                    if (response.isSuccessful) {
                         notificationList.forEach {
                             it.is_unread = false
                         }

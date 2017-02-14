@@ -19,9 +19,9 @@ import java.net.ProtocolException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 @Singleton
 public class LoginManagerImpl implements LoginManager {
@@ -47,9 +47,9 @@ public class LoginManagerImpl implements LoginManager {
         IApi api = shell.getApi();
         api.authWithLoginPassword(login, rawPassword).enqueue(new Callback<AuthenticationStepicResponse>() {
             @Override
-            public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
+            public void onResponse(Call<AuthenticationStepicResponse> call, Response<AuthenticationStepicResponse> response) {
                 progressHandler.dismiss();
-                if (response.isSuccess()) {
+                if (response.isSuccessful()) {
                     successLogin(response, finisher, null, course);
                 } else {
                     if (response.code() == 429) {
@@ -61,7 +61,7 @@ public class LoginManagerImpl implements LoginManager {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<AuthenticationStepicResponse> call, Throwable t) {
                 progressHandler.dismiss();
                 failLogin(t, null);
             }
@@ -74,12 +74,12 @@ public class LoginManagerImpl implements LoginManager {
         progressHandler.activate();
         shell.getApi().authWithCode(code).enqueue(new Callback<AuthenticationStepicResponse>() {
             @Override
-            public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
+            public void onResponse(Call<AuthenticationStepicResponse> call, Response<AuthenticationStepicResponse> response) {
                 handleSuccess(progressHandler, response, finisher, null, course);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<AuthenticationStepicResponse> call, Throwable t) {
                 progressHandler.dismiss();
                 failLogin(t, null);
             }
@@ -88,7 +88,7 @@ public class LoginManagerImpl implements LoginManager {
 
     private void handleSuccess(ProgressHandler progressHandler, Response<AuthenticationStepicResponse> response, ActivityFinisher finisher, FailLoginSupplementaryHandler failLoginSupplementaryHandler, @Nullable Course course) {
         progressHandler.dismiss();
-        if (response.isSuccess()) {
+        if (response.isSuccessful()) {
             successLogin(response, finisher, failLoginSupplementaryHandler, course);
         } else {
             if (response.code() == 401) {
@@ -104,13 +104,14 @@ public class LoginManagerImpl implements LoginManager {
         String code = nativeCode.trim();
         progressHandler.activate();
         shell.getApi().authWithNativeCode(code, type).enqueue(new Callback<AuthenticationStepicResponse>() {
+
             @Override
-            public void onResponse(Response<AuthenticationStepicResponse> response, Retrofit retrofit) {
+            public void onResponse(Call<AuthenticationStepicResponse> call, Response<AuthenticationStepicResponse> response) {
                 handleSuccess(progressHandler, response, finisher, failLoginSupplementaryHandler, course);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<AuthenticationStepicResponse> call, Throwable t) {
                 progressHandler.dismiss();
                 failLogin(t, failLoginSupplementaryHandler);
             }

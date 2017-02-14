@@ -6,6 +6,7 @@ import android.support.multidex.MultiDexApplication;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.stetho.Stetho;
 import com.vk.sdk.VKSdk;
 import com.yandex.metrica.YandexMetrica;
 
@@ -39,6 +40,7 @@ public class MainApplication extends MultiDexApplication {
     private void init() {
 //        refWatcher = LeakCanary.install(this);
         application = this;
+        Stetho.initializeWithDefaults(this);
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());

@@ -19,9 +19,10 @@ import org.stepic.droid.store.operations.Table;
 import org.stepic.droid.web.ViewAssignment;
 
 public interface ScreenManager {
-    void showLaunchScreen(Activity activity);
 
-    void showLaunchScreen(Activity activity, boolean fromMainFeed, int indexInMenu);
+    void showLaunchScreen(Context context);
+
+    void showLaunchScreen(Context context, boolean fromMainFeed, int indexInMenu);
 
     void showRegistration(Activity sourceActivity, @Nullable Course course);
 

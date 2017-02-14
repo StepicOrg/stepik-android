@@ -1,11 +1,11 @@
 package org.stepic.droid.web.util;
 
-import com.squareup.okhttp.RequestBody;
+import okhttp3.RequestBody;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
-import retrofit.Converter;
+import retrofit2.Converter;
 
 public class StringConverterFactory extends Converter.Factory {
     public static StringConverterFactory create() {

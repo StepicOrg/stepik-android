@@ -27,9 +27,9 @@ import javax.inject.Inject;
 
 import butterknife.BindString;
 import butterknife.ButterKnife;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RemindPasswordDialogFragment extends DialogFragment {
 
@@ -139,9 +139,9 @@ public class RemindPasswordDialogFragment extends DialogFragment {
         if (!email.isEmpty()) {
             api.remindPassword(email).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Response<Void> response, Retrofit retrofit) {
+                public void onResponse(Call<Void> call, Response<Void> response) {
                     ProgressHelper.dismiss(progressLogin);
-                    com.squareup.okhttp.Response rawResponse = response.raw();
+                    okhttp3.Response rawResponse = response.raw();
                     if (rawResponse.priorResponse() != null && rawResponse.priorResponse().code() == 302) {
                         alertDialog.dismiss();
                         Toast.makeText(getContext(), R.string.email_sent, Toast.LENGTH_SHORT).show();
@@ -159,7 +159,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
                 }
 
                 @Override
-                public void onFailure(Throwable t) {
+                public void onFailure(Call<Void> call, Throwable t) {
                     ProgressHelper.dismiss(progressLogin);
 
                     final Context context = getContext();

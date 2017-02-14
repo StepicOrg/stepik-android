@@ -43,9 +43,9 @@ import org.stepic.droid.web.StepResponse;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public abstract class StepBaseFragment extends FragmentBase implements RouteStepView, AnonymousView {
 
@@ -236,9 +236,10 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
             long[] arr = new long[]{step.getId()};
 
             shell.getApi().getSteps(arr).enqueue(new Callback<StepResponse>() {
+
                 @Override
-                public void onResponse(Response<StepResponse> response, Retrofit retrofit) {
-                    if (response.isSuccess()) {
+                public void onResponse(Call<StepResponse> call, Response<StepResponse> response) {
+                    if (response.isSuccessful()) {
                         StepResponse stepResponse = response.body();
                         if (stepResponse != null && stepResponse.getSteps() != null && !stepResponse.getSteps().isEmpty()) {
                             final Step stepFromInternet = stepResponse.getSteps().get(0);
@@ -258,7 +259,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
                 }
 
                 @Override
-                public void onFailure(Throwable t) {
+                public void onFailure(Call<StepResponse> call, Throwable t) {
 
                 }
             });

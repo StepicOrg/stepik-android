@@ -14,10 +14,10 @@ import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.web.CertificateResponse
 import org.stepic.droid.web.CoursesStepicResponse
 import org.stepic.droid.web.IApi
-import retrofit.Call
-import retrofit.Callback
-import retrofit.Response
-import retrofit.Retrofit
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 
@@ -72,9 +72,8 @@ class CertificatePresenter(val api: IApi,
     private fun loadCertificatesSilent() {
         certificatesCall = api.certificates
         certificatesCall?.enqueue(object : Callback<CertificateResponse> {
-
-            override fun onResponse(response: Response<CertificateResponse>?, retrofit: Retrofit?) {
-                if (response?.isSuccess ?: false) {
+            override fun onResponse(call: Call<CertificateResponse>?, response: Response<CertificateResponse>?) {
+                if (response?.isSuccessful ?: false) {
                     if (certificateViewItemList == null) {
                         certificateViewItemList = ArrayList()
                     }
@@ -100,12 +99,13 @@ class CertificatePresenter(val api: IApi,
                         val baseUrl = config.baseUrl
                         coursesCall = api.getCourses(1, courseIds)
                         coursesCall?.enqueue(object : Callback<CoursesStepicResponse> {
-                            override fun onFailure(t: Throwable?) {
+
+                            override fun onFailure(call: Call<CoursesStepicResponse>?, t: Throwable?) {
                                 view?.onInternetProblem()
                             }
 
-                            override fun onResponse(response: Response<CoursesStepicResponse>?, retrofit: Retrofit?) {
-                                if (response?.isSuccess ?: false) {
+                            override fun onResponse(call: Call<CoursesStepicResponse>?, response: Response<CoursesStepicResponse>?) {
+                                if (response?.isSuccessful ?: false) {
                                     val localCertificateViewItems: List<CertificateViewItem> = response
                                             ?.body()
                                             ?.courses
@@ -146,7 +146,7 @@ class CertificatePresenter(val api: IApi,
                 }
             }
 
-            override fun onFailure(t: Throwable?) {
+            override fun onFailure(call: Call<CertificateResponse>?, t: Throwable?) {
                 view?.onInternetProblem()
             }
 
