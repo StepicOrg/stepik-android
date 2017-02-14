@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
@@ -71,6 +72,7 @@ public class LaunchActivity extends BackToExitActivityBase {
     @BindString(R.string.terms_message_launch)
     String termsMessageHtml;
 
+    @Nullable
     private GoogleApiClient googleApiClient;
     private ProgressDialog progressLogin;
     private ProgressHandler progressHandler;
@@ -116,15 +118,17 @@ public class LaunchActivity extends BackToExitActivityBase {
                 .requestScopes(new Scope(Scopes.EMAIL), new Scope(Scopes.PROFILE))
                 .requestServerAuthCode(serverClientId)
                 .build();
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Toast.makeText(LaunchActivity.this, R.string.connectionProblems, Toast.LENGTH_SHORT).show();
-                    }
-                } /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .addApi(AppIndex.API).build();
+        if (checkPlayServices()) {
+            googleApiClient = new GoogleApiClient.Builder(this)
+                    .enableAutoManage(this /* FragmentActivity */, new GoogleApiClient.OnConnectionFailedListener() {
+                        @Override
+                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                            Toast.makeText(LaunchActivity.this, R.string.connectionProblems, Toast.LENGTH_SHORT).show();
+                        }
+                    } /* OnConnectionFailedListener */)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                    .addApi(AppIndex.API).build();
+        }
 
         initSocialRecycler(googleApiClient);
 
@@ -187,7 +191,7 @@ public class LaunchActivity extends BackToExitActivityBase {
 
     }
 
-    private void initSocialRecycler(GoogleApiClient googleApiClient) {
+    private void initSocialRecycler(@Nullable GoogleApiClient googleApiClient) {
         float pixelForPadding = DpPixelsHelper.convertDpToPixel(4f, this);//pixelForPadding * (count+1)
         float widthOfItem = getResources().getDimension(R.dimen.height_of_social);//width == height
         int count = SocialManager.SocialType.values().length;
@@ -208,18 +212,6 @@ public class LaunchActivity extends BackToExitActivityBase {
 
         socialRecyclerView.setLayoutManager(layoutManager);
         socialRecyclerView.setAdapter(new SocialAuthAdapter(this, googleApiClient));
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        googleApiClient.connect();
-    }
-
-    @Override
-    protected void onStop() {
-        googleApiClient.disconnect();
-        super.onStop();
     }
 
     @Override
@@ -308,7 +300,9 @@ public class LaunchActivity extends BackToExitActivityBase {
                         new FailLoginSupplementaryHandler() {
                             @Override
                             public void onFailLogin(Throwable t) {
-                                Auth.GoogleSignInApi.signOut(googleApiClient);
+                                if (googleApiClient != null) {
+                                    Auth.GoogleSignInApi.signOut(googleApiClient);
+                                }
                             }
                         }, getCourseFromExtra());
             } else {

@@ -81,7 +81,6 @@ public class SplashActivity extends BackToExitActivityBase {
 
 
         if (checkPlayServices() && !sharedPreferenceHelper.isGcmTokenOk()) {
-
             threadPoolExecutor.execute(new Runnable() {
                 @Override
                 public void run() {

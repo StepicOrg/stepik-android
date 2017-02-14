@@ -77,6 +77,7 @@ public interface Analytic {
         java.lang.String CLICK_FIND_COURSE_LAUNCH = "click_find_courses_launch";
         java.lang.String USER_OPEN_IMAGE = "user_open_image";
         java.lang.String SCREENSHOT = "screenshot";
+        java.lang.String GOOGLE_SOCIAL_IS_NOT_ENABLED = "google_social_is_not_enabled";
     }
 
     interface Screens {
