@@ -31,6 +31,7 @@ import org.stepic.droid.core.ScreenManagerImpl;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.core.ShareHelperImpl;
 import org.stepic.droid.core.Shell;
+import org.stepic.droid.core.StepikLogoutManager;
 import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.notifications.LocalReminder;
 import org.stepic.droid.notifications.LocalReminderImpl;
@@ -310,5 +311,11 @@ public class AppCoreModule {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(new OkHttpClient())
                 .build();
+    }
+
+    @Provides
+    @Singleton
+    StepikLogoutManager provideStepikLogoutManager(ThreadPoolExecutor threadPoolExecutor, IMainHandler mainHandler, UserPreferences userPreferences, SharedPreferenceHelper sharedPreferenceHelper, DownloadManager downloadManager, DatabaseFacade dbFacade) {
+        return new StepikLogoutManager(threadPoolExecutor, mainHandler, userPreferences, downloadManager, sharedPreferenceHelper, dbFacade);
     }
 }

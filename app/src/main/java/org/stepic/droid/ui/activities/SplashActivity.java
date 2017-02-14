@@ -15,6 +15,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.notifications.StepicInstanceIdService;
 import org.stepic.droid.util.AppConstants;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 import kotlin.Unit;
@@ -35,6 +36,19 @@ public class SplashActivity extends BackToExitActivityBase {
             finish();
             return;
         }
+
+        threadPoolExecutor.execute(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            shell.getApi().getUserProfile().execute(); // make this "ping" request for updating refresh tokens and log out user, if it is revoked.
+                        } catch (IOException e) {
+                            //ignore
+                        }
+                    }
+                }
+        );
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
             ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);

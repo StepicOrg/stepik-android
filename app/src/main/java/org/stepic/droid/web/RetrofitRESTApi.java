@@ -9,11 +9,14 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.vk.sdk.VKSdk;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,6 +24,8 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.core.ScreenManager;
+import org.stepic.droid.core.StepikLogoutManager;
 import org.stepic.droid.deserializers.DatasetDeserializer;
 import org.stepic.droid.deserializers.ReplyDeserializer;
 import org.stepic.droid.model.Course;
@@ -56,6 +61,8 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 import okhttp3.Credentials;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
@@ -88,6 +95,12 @@ public class RetrofitRESTApi implements IApi {
 
     @Inject
     Analytic analytic;
+
+    @Inject
+    StepikLogoutManager stepikLogoutManager;
+
+    @Inject
+    ScreenManager screenManager;
 
     private StepicRestLoggedService loggedService;
     private StepicRestOAuthService oAuthService;
@@ -167,8 +180,6 @@ public class RetrofitRESTApi implements IApi {
                                 }
                                 if (response == null || !response.isSuccess()) {
                                     //it is worst case:
-
-
                                     String message;
                                     if (response == null) {
                                         message = "response was null";
@@ -184,6 +195,26 @@ public class RetrofitRESTApi implements IApi {
                                     } else {
                                         try {
                                             extendedMessage = "failed " + authenticationStepicResponse.code() + " " + authenticationStepicResponse.errorBody().string();
+                                            if (authenticationStepicResponse.code() == 401) {
+                                                // logout user
+                                                stepikLogoutManager.logout(
+                                                        new Function0<Unit>() {
+                                                            @Override
+                                                            public Unit invoke() {
+                                                                try {
+                                                                    LoginManager.getInstance().logOut();
+                                                                    VKSdk.logout();
+                                                                } catch (Exception e) {
+                                                                    analytic.reportError(Analytic.Error.FAIL_LOGOUT_WHEN_REFRESH, e);
+                                                                }
+                                                                screenManager.showLaunchScreen(context);
+                                                                Toast.makeText(context, R.string.logout_user_error, Toast.LENGTH_SHORT).show();
+                                                                return Unit.INSTANCE;
+                                                            }
+                                                        }
+                                                );
+                                            }
+
                                         } catch (Exception ex) {
                                             analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_INLINE_GETTING, ex);
                                         }
