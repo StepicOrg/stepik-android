@@ -151,10 +151,11 @@ public class RetrofitRESTApi implements IApi {
                                     .build();
                         }
                     } else if (isNeededUpdate(response)) {
-                        RWLocks.AuthLock.readLock().unlock();
                         try {
+                            RWLocks.AuthLock.readLock().unlock();
                             RWLocks.AuthLock.writeLock().lock();
                             Timber.d("writer 1");
+                            response = sharedPreference.getAuthResponseFromStore();
                             if (isNeededUpdate(response)) {
                                 retrofit2.Response<AuthenticationStepicResponse> authenticationStepicResponse;
                                 try {
@@ -755,7 +756,10 @@ public class RetrofitRESTApi implements IApi {
     }
 
     private boolean isNeededUpdate(AuthenticationStepicResponse response) {
-        if (response == null) return false;
+        if (response == null) {
+            Timber.d("Token is null");
+            return false;
+        }
         return true;
 
 //        long timestampStored = sharedPreference.getAccessTokenTimestamp();
