@@ -12,5 +12,7 @@
         <attr name="contourColorInner" format="color"/>
         <attr name="contourColorOuter" format="color"/>
         <attr name="contourSize" format="dimension"/>
+        <attr name="squareSize" format="dimension"/>
+        <attr name="squareColor" format="color"/>
     </declare-styleable>
 </resources>

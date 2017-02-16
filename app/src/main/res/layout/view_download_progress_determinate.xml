@@ -15,6 +15,9 @@
         app:contourColorOuter="@color/stepic_blue_ribbon"
         app:contourSize="@dimen/progress_contour_size"
         app:rimColor="@color/transparent"
-        app:rimWidth="@dimen/progress_rim_size"/>
+        app:rimWidth="@dimen/progress_rim_size"
+        app:squareColor="@color/stepic_blue_ribbon"
+        app:squareSize="@dimen/progress_square_size"
+    />
 
 </FrameLayout>
