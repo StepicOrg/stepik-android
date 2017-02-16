@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/load_button"
-    android:layout_width="56dp"
-    android:layout_height="56dp"
-    android:layout_gravity="center"
-    android:layout_centerVertical="true"
-    android:layout_alignParentRight="true"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="@drawable/circle_foreground">
+<FrameLayout android:id="@+id/load_button"
+             xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="56dp"
+             android:layout_height="56dp"
+             android:layout_alignParentRight="true"
+             android:layout_centerVertical="true"
+             android:layout_gravity="center"
+             android:clickable="true"
+             android:focusable="true"
+             android:foreground="@drawable/circle_foreground">
 
     <ImageView
         android:id="@+id/pre_load_iv"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="@dimen/loading_size"
+        android:layout_height="@dimen/loading_size"
         android:layout_gravity="center"
-        android:src="@drawable/ic_cloud_download_grey600_24dp" />
+        android:src="@drawable/ic_cloud_download_grey600_24dp"/>
 
 
     <me.zhanghai.android.materialprogressbar.MaterialProgressBar
         android:id="@+id/when_load_view"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_gravity="center"
         style="@style/Widget.MaterialProgressBar.ProgressBar.Small.NoPadding"
-        android:indeterminate="true" />
+        android:layout_width="@dimen/loading_size"
+        android:layout_height="@dimen/loading_size"
+        android:layout_gravity="center"
+        android:indeterminate="true"/>
 
 
     <ImageView
         android:id="@+id/after_load_iv"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="@dimen/loading_size"
+        android:layout_height="@dimen/loading_size"
         android:layout_gravity="center"
         android:src="@drawable/ic_delete"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 </FrameLayout>

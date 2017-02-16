@@ -1,4 +1,4 @@
-package org.stepic.droid.ui.custom;
+package org.stepic.droid.ui.custom.progressbutton;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.os.Handler;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -23,31 +22,29 @@ public class ProgressWheel extends View {
     private int barLength = 60;
     private int barWidth = 20;
     private int rimWidth = 20;
-    private int textSize = 20;
     private float contourSize = 0;
 
     //Padding (with defaults)
-    private int paddingTop = 5;
-    private int paddingBottom = 5;
-    private int paddingLeft = 5;
-    private int paddingRight = 5;
+    private int paddingTop = 0;
+    private int paddingBottom = 0;
+    private int paddingLeft = 0;
+    private int paddingRight = 0;
 
     //Colors (with defaults)
     private int barColor = 0xAA000000;
-    private int contourColor = 0xAA000000;
+    private int contourColorInner = 0xAA000000;
+    private int contourColorOuter = 0xAA000000;
     private int circleColor = 0x00000000;
     private int rimColor = 0xAADDDDDD;
-    private int textColor = 0xFF000000;
 
     //Paints
     private Paint barPaint = new Paint();
     private Paint circlePaint = new Paint();
     private Paint rimPaint = new Paint();
-    private Paint textPaint = new Paint();
-    private Paint contourPaint = new Paint();
+    private Paint contourPaintInner = new Paint();
+    private Paint contourPaintOuter = new Paint();
 
     //Rectangles
-    private RectF rectBounds = new RectF();
     private RectF circleBounds = new RectF();
     private RectF circleOuterContour = new RectF();
     private RectF circleInnerContour = new RectF();
@@ -55,38 +52,14 @@ public class ProgressWheel extends View {
     //Animation
     //The amount of pixels to move the bar by on each draw
     private int spinSpeed = 2;
-    //The number of milliseconds to wait inbetween each draw
+    //The number of milliseconds to wait between each draw
     private int delayMillis = 0;
-    private Handler spinHandler = new Handler() {
-        /**
-         * This is the code that will increment the progress variable
-         * and so spin the wheel
-         */
-        @Override
-        public void handleMessage(Message msg) {
-            invalidate();
-            if (isSpinning) {
-                progress += spinSpeed;
-                if (progress > 360) {
-                    progress = 0;
-                }
-                spinHandler.sendEmptyMessageDelayed(0, delayMillis);
-            }
-            //super.handleMessage(msg);
-        }
-    };
-    int progress = 0;
+    private Handler spinHandler = new SpinHandler(this);
+    private int progress = 70;
     boolean isSpinning = false;
-
-    //Other
-    private String text = "";
-    private String[] splitText = {};
 
     /**
      * The constructor for the ProgressWheel
-     *
-     * @param context
-     * @param attrs
      */
     public ProgressWheel(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -98,6 +71,7 @@ public class ProgressWheel extends View {
     //----------------------------------
     //Setting up stuff
     //----------------------------------
+
 
     /*
      * When this is called, make the view square.
@@ -116,11 +90,11 @@ public class ProgressWheel extends View {
         // pass the view has not gotten its final size yet (this happens first
         // at the start of the layout pass) so we have to use getMeasuredWidth()
         // and getMeasuredHeight().
-        int size = 0;
+        int size;
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
         int widthWithoutPadding = width - getPaddingLeft() - getPaddingRight();
-        int heigthWithoutPadding = height - getPaddingTop() - getPaddingBottom();
+        int heightWithoutPadding = height - getPaddingTop() - getPaddingBottom();
 
         // Finally we have some simple logic that calculates the size of the view
         // and calls setMeasuredDimension() to set that size.
@@ -128,8 +102,8 @@ public class ProgressWheel extends View {
         // and when we set the dimension we add it back again. Now the actual content
         // of the view will be square, but, depending on the padding, the total dimensions
         // of the view might not be.
-        if (widthWithoutPadding > heigthWithoutPadding) {
-            size = heigthWithoutPadding;
+        if (widthWithoutPadding > heightWithoutPadding) {
+            size = heightWithoutPadding;
         } else {
             size = widthWithoutPadding;
         }
@@ -183,15 +157,15 @@ public class ProgressWheel extends View {
         circlePaint.setAntiAlias(true);
         circlePaint.setStyle(Paint.Style.FILL);
 
-        textPaint.setColor(textColor);
-        textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setAntiAlias(true);
-        textPaint.setTextSize(textSize);
+        contourPaintInner.setColor(contourColorInner);
+        contourPaintInner.setAntiAlias(true);
+        contourPaintInner.setStyle(Paint.Style.STROKE);
+        contourPaintInner.setStrokeWidth(contourSize);
 
-        contourPaint.setColor(contourColor);
-        contourPaint.setAntiAlias(true);
-        contourPaint.setStyle(Paint.Style.STROKE);
-        contourPaint.setStrokeWidth(contourSize);
+        contourPaintOuter.setColor(contourColorOuter);
+        contourPaintOuter.setAntiAlias(true);
+        contourPaintOuter.setStyle(Paint.Style.STROKE);
+        contourPaintOuter.setStrokeWidth(contourSize);
     }
 
     /**
@@ -213,11 +187,6 @@ public class ProgressWheel extends View {
 
         int width = getWidth(); //this.getLayoutParams().width;
         int height = getHeight(); //this.getLayoutParams().height;
-
-        rectBounds = new RectF(paddingLeft,
-                paddingTop,
-                width - paddingRight,
-                height - paddingBottom);
 
         circleBounds = new RectF(paddingLeft + barWidth,
                 paddingTop + barWidth,
@@ -256,24 +225,14 @@ public class ProgressWheel extends View {
         barLength = (int) a.getDimension(R.styleable.ProgressWheel_progressBarLength,
                 barLength);
 
-        textSize = (int) a.getDimension(R.styleable.ProgressWheel_textSize,
-                textSize);
-
-        textColor = (int) a.getColor(R.styleable.ProgressWheel_textColor,
-                textColor);
-
-        //if the text is empty , so ignore it
-        if (a.hasValue(R.styleable.ProgressWheel_text)) {
-            setText(a.getString(R.styleable.ProgressWheel_text));
-        }
-
-        rimColor = (int) a.getColor(R.styleable.ProgressWheel_rimColor,
+        rimColor = a.getColor(R.styleable.ProgressWheel_rimColor,
                 rimColor);
 
-        circleColor = (int) a.getColor(R.styleable.ProgressWheel_circleColor,
+        circleColor = a.getColor(R.styleable.ProgressWheel_circleColor,
                 circleColor);
 
-        contourColor = a.getColor(R.styleable.ProgressWheel_contourColor, contourColor);
+        contourColorInner = a.getColor(R.styleable.ProgressWheel_contourColorInner, contourColorInner);
+        contourColorOuter = a.getColor(R.styleable.ProgressWheel_contourColorOuter, contourColorOuter);
         contourSize = a.getDimension(R.styleable.ProgressWheel_contourSize, contourSize);
 
 
@@ -291,8 +250,8 @@ public class ProgressWheel extends View {
         canvas.drawArc(circleBounds, 360, 360, false, circlePaint);
         //Draw the rim
         canvas.drawArc(circleBounds, 360, 360, false, rimPaint);
-        canvas.drawArc(circleOuterContour, 360, 360, false, contourPaint);
-        canvas.drawArc(circleInnerContour, 360, 360, false, contourPaint);
+        canvas.drawArc(circleOuterContour, 360, 360, false, contourPaintOuter);
+        canvas.drawArc(circleInnerContour, 360, 360, false, contourPaintInner);
         //Draw the bar
         if (isSpinning) {
             canvas.drawArc(circleBounds, progress - 90, barLength, false,
@@ -300,27 +259,13 @@ public class ProgressWheel extends View {
         } else {
             canvas.drawArc(circleBounds, -90, progress, false, barPaint);
         }
-        //Draw the text (attempts to center it horizontally and vertically)
-        float textHeight = textPaint.descent() - textPaint.ascent();
-        float verticalTextOffset = (textHeight / 2) - textPaint.descent();
-
-        for (String s : splitText) {
-            float horizontalTextOffset = textPaint.measureText(s) / 2;
-            canvas.drawText(s, this.getWidth() / 2 - horizontalTextOffset,
-                    this.getHeight() / 2 + verticalTextOffset, textPaint);
-        }
     }
 
     /**
-     *   Check if the wheel is currently spinning
+     * Check if the wheel is currently spinning
      */
-
     public boolean isSpinning() {
-        if(isSpinning){
-            return true;
-        } else {
-            return false;
-        }
+        return isSpinning;
     }
 
     /**
@@ -328,7 +273,6 @@ public class ProgressWheel extends View {
      */
     public void resetCount() {
         progress = 0;
-        setText("0%");
         invalidate();
     }
 
@@ -358,7 +302,6 @@ public class ProgressWheel extends View {
         progress++;
         if (progress > 360)
             progress = 0;
-//        setText(Math.round(((float) progress / 360) * 100) + "%");
         spinHandler.sendEmptyMessage(0);
     }
 
@@ -366,7 +309,7 @@ public class ProgressWheel extends View {
     /**
      * Set the progress to a specific value
      */
-    public void setProgress(int i) {
+    void setProgressInternal(int i) {
         isSpinning = false;
         progress = i;
         spinHandler.sendEmptyMessage(0);
@@ -374,11 +317,12 @@ public class ProgressWheel extends View {
 
     /**
      * Sets progress percentage to given percent value.
+     *
      * @param percent
      */
     public void setProgressPercent(int percent) {
         int p = 360 * percent / 100;
-        setProgress(p);
+        setProgressInternal(p);
     }
 
     /**
@@ -390,29 +334,13 @@ public class ProgressWheel extends View {
         return progress;
     }
 
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
     //----------------------------------
     //Getters + setters
     //----------------------------------
-
-    /**
-     * Get the text in the progress bar.
-     *
-     * @return The text
-     */
-    public String getText() {
-        return text;
-    }
-
-    /**
-     * Set the text in the progress bar.
-     * Doesn't invalidate the view.
-     *
-     * @param text the text to show ('\n' constitutes a new line)
-     */
-    public void setText(String text) {
-        this.text = text;
-        splitText = this.text.split("\n");
-    }
 
     public int getCircleRadius() {
         return circleRadius;
@@ -436,14 +364,6 @@ public class ProgressWheel extends View {
 
     public void setBarWidth(int barWidth) {
         this.barWidth = barWidth;
-    }
-
-    public int getTextSize() {
-        return textSize;
-    }
-
-    public void setTextSize(int textSize) {
-        this.textSize = textSize;
     }
 
     public int getPaddingTop() {
@@ -502,21 +422,12 @@ public class ProgressWheel extends View {
         this.rimColor = rimColor;
     }
 
-
     public Shader getRimShader() {
         return rimPaint.getShader();
     }
 
     public void setRimShader(Shader shader) {
         this.rimPaint.setShader(shader);
-    }
-
-    public int getTextColor() {
-        return textColor;
-    }
-
-    public void setTextColor(int textColor) {
-        this.textColor = textColor;
     }
 
     public int getSpinSpeed() {
