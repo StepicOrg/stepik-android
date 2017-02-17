@@ -20,6 +20,7 @@ import org.stepic.droid.core.modules.NotificationModule;
 import org.stepic.droid.core.modules.ProfileModule;
 import org.stepic.droid.core.modules.SectionModule;
 import org.stepic.droid.core.modules.StepModule;
+import org.stepic.droid.core.modules.UnitsModule;
 import org.stepic.droid.core.modules.VideoModule;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
@@ -93,6 +94,8 @@ public interface AppCoreComponent {
     FilterComponent plus(FilterModule module);
 
     CourseListComponent plus(CourseListModule module);
+
+    UnitsComponent plus(UnitsModule module);
 
     NotificationComponent plus(NotificationModule module);
 

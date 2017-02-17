@@ -25,7 +25,6 @@ import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.core.IShell;
-import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.LoginManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.model.Course;
@@ -78,9 +77,6 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     @Inject
     protected SharedPreferenceHelper sharedPreferenceHelper;
-
-    @Inject
-    protected LessonSessionManager lessonManager;
 
     @Inject
     protected CoursePropertyResolver coursePropertyResolver;
