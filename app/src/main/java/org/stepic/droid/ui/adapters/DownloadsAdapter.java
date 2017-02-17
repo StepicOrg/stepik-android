@@ -58,9 +58,6 @@ import javax.inject.Inject;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import me.zhanghai.android.materialprogressbar.HorizontalProgressDrawable;
-import me.zhanghai.android.materialprogressbar.IndeterminateHorizontalProgressDrawable;
-import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.GenericViewHolder> implements StepicOnClickItemListener, OnClickLoadListener, OnClickCancelListener {
 
@@ -232,9 +229,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         @BindView(R.id.video_icon)
         ImageView mVideoIcon;
 
-        @BindView(R.id.video_downloading_progress_bar)
-        MaterialProgressBar downloadingProgressBar;
-
         @BindView(R.id.progress_text)
         TextView progressTextView;
 
@@ -253,10 +247,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         @BindString(R.string.download_pending)
         String downloadPending;
 
-        Drawable indeterminateDrawable;
-
-        Drawable finiteDrawable;
-
         private long oldVideoId = -1L;
 
         public DownloadingViewHolder(View itemView, final OnClickCancelListener cancelListener) {
@@ -268,9 +258,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
                     cancelListener.onClickCancel(getAdapterPosition() - getTitleCount(downloadingVideoList));
                 }
             });
-
-            indeterminateDrawable = new IndeterminateHorizontalProgressDrawable(sourceActivity);
-            finiteDrawable = new HorizontalProgressDrawable(sourceActivity);
         }
 
         @Override
@@ -313,7 +300,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             StringBuilder loadProgressStringBuilder = new StringBuilder();
             if (bytesTotal <= 0) {
                 loadProgressStringBuilder.append(downloadPending);
-                downloadingProgressBar.setIndeterminateDrawable(indeterminateDrawable);
                 progressPercent.setVisibility(View.INVISIBLE);
             } else {
                 int totalSizeForView = bytesTotal / 1024;
@@ -322,10 +308,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
                 appendToSbSize(downloadedSieForView, loadProgressStringBuilder);
                 loadProgressStringBuilder.append(downloadDelimiter);
                 appendToSbSize(totalSizeForView, loadProgressStringBuilder);
-
-                downloadingProgressBar.setMax(bytesTotal);
-                downloadingProgressBar.setProgress(bytesDownloaded);
-                downloadingProgressBar.setIndeterminateDrawable(finiteDrawable);
 
                 progressWheel.setProgressPortion(bytesDownloaded / (float) bytesTotal, needAnimation);
 
