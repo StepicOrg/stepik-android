@@ -44,7 +44,7 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.RWLocks;
-import org.stepic.droid.util.StepicLogicHelper;
+import org.stepic.droid.util.StepikLogicHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -362,7 +362,7 @@ public class DownloadsFragment extends FragmentBase {
                         filteredVideos.add(video);
                     }
                 }
-                long[] stepIds = StepicLogicHelper.fromVideosToStepIds(filteredVideos);
+                long[] stepIds = StepikLogicHelper.fromVideosToStepIds(filteredVideos);
 
                 Map<Long, Lesson> map = databaseFacade.getMapFromStepIdToTheirLesson(stepIds);
 

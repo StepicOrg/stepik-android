@@ -27,7 +27,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ProgressUtil;
 import org.stepic.droid.util.RWLocks;
-import org.stepic.droid.util.StepicLogicHelper;
+import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.LessonStepicResponse;
@@ -323,7 +323,7 @@ public class LoadService extends IntentService {
 
 
                 if (responseIsSuccess) {
-                    long[] lessonsIds = StepicLogicHelper.fromUnitsToLessonIds(units);
+                    long[] lessonsIds = StepikLogicHelper.fromUnitsToLessonIds(units);
                     List<Progress> progresses = fetchProgresses(ProgressUtil.getAllProgresses(units));
                     for (Progress item : progresses) {
                         databaseFacade.addProgress(item);

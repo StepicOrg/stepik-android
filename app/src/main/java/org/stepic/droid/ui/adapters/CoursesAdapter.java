@@ -26,7 +26,7 @@ import org.stepic.droid.core.IShell;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.Table;
-import org.stepic.droid.util.StepicLogicHelper;
+import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 
 import java.util.List;
@@ -184,7 +184,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
             courseSummary.setText(textResolver.fromHtml(course.getSummary()).toString());
             Glide
                     .with(contextActivity)
-                    .load(StepicLogicHelper.getPathForCourseOrEmpty(course, config))
+                    .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
                     .placeholder(coursePlaceholder)
                     .centerCrop()
                     .into(imageViewTarget);

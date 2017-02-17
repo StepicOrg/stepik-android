@@ -173,6 +173,7 @@ public interface Analytic {
         String FAIL_REFRESH_TOKEN_INLINE_GETTING = "fail_refresh_token_online_get";
         java.lang.String COOKIE_WAS_EMPTY = "cookie_was_empty";
         String FAIL_LOGOUT_WHEN_REFRESH = "refresh_fail_logout_social";
+        String UNITS_LOADING_FAIL = "units_loading_fail";
     }
 
     interface Web {

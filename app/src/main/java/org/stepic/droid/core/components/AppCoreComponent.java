@@ -5,8 +5,6 @@ import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.concurrency.DownloadPoster;
-import org.stepic.droid.concurrency.tasks.FromDbUnitLessonTask;
-import org.stepic.droid.concurrency.tasks.ToDbUnitLessonTask;
 import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.core.MyPhoneStateListener;
 import org.stepic.droid.core.Shell;
@@ -40,7 +38,6 @@ import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.ui.activities.MainFeedActivity;
-import org.stepic.droid.ui.activities.SectionActivity;
 import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.adapters.DownloadsAdapter;
@@ -103,8 +100,6 @@ public interface AppCoreComponent {
 
     void inject(MainFeedActivity someActivity);
 
-    void inject(SectionActivity someActivity);
-
     void inject(Shell injectAllToShell);
 
     void inject(CoursesAdapter adapter);
@@ -125,15 +120,7 @@ public interface AppCoreComponent {
 
     void inject(VideoQualityDialog dialogFragment);
 
-
-    //All Tasks:
-
-    void inject(FromDbUnitLessonTask stepicTask);
-
-    void inject(ToDbUnitLessonTask stepicTask);
-
     void inject(ChooseCalendarDialog calendarDialog);
-
 
     void inject(AllowMobileDataDialogFragment allowMobileDataDialogFragment);
 

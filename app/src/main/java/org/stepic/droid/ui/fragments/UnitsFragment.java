@@ -21,24 +21,17 @@ import android.widget.ProgressBar;
 
 import com.squareup.otto.Subscribe;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.concurrency.tasks.FromDbUnitLessonTask;
-import org.stepic.droid.concurrency.tasks.ToDbUnitLessonTask;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.modules.UnitsModule;
 import org.stepic.droid.core.presenters.UnitsPresenter;
 import org.stepic.droid.core.presenters.contracts.UnitsView;
-import org.stepic.droid.events.lessons.SuccessLoadLessonsEvent;
-import org.stepic.droid.events.notify_ui.NotifyUIUnitLessonEvent;
-import org.stepic.droid.events.units.FailureLoadEvent;
-import org.stepic.droid.events.units.LoadedFromDbUnitsLessonsEvent;
 import org.stepic.droid.events.units.NotCachedUnitEvent;
-import org.stepic.droid.events.units.SuccessLoadUnitsEvent;
 import org.stepic.droid.events.units.UnitCachedEvent;
-import org.stepic.droid.events.units.UnitLessonSavedEvent;
 import org.stepic.droid.events.units.UnitProgressUpdateEvent;
 import org.stepic.droid.events.units.UnitScoreUpdateEvent;
 import org.stepic.droid.model.Lesson;
@@ -48,14 +41,8 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.ui.adapters.UnitAdapter;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.util.ProgressUtil;
-import org.stepic.droid.util.StepicLogicHelper;
-import org.stepic.droid.web.LessonStepicResponse;
-import org.stepic.droid.web.ProgressesResponse;
-import org.stepic.droid.web.UnitStepicResponse;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,15 +50,12 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import kotlin.jvm.functions.Function0;
-import retrofit2.Response;
 
 public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView {
 
     private final static String SECTION_KEY = "section_key";
 
     public static UnitsFragment newInstance(Section section) {
-
         Bundle args = new Bundle();
         args.putParcelable(SECTION_KEY, section);
         UnitsFragment fragment = new UnitsFragment();
@@ -108,17 +92,9 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
 
     UnitAdapter adapter;
 
-
-    boolean isScreenEmpty;
-    boolean firstLoad;
-
     private List<Unit> unitList;
     private List<Lesson> lessonList;
     private Map<Long, Progress> progressMap;
-
-    private FromDbUnitLessonTask fromDbUnitLessonTask;
-    private ToDbUnitLessonTask toDbUnitLessonTask;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -129,6 +105,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
                 .inject(this);
 
         setRetainInstance(true);
+        setHasOptionsMenu(true);
         section = getArguments().getParcelable(SECTION_KEY);
     }
 
@@ -154,10 +131,6 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
                 R.color.stepic_orange_carrot,
                 R.color.stepic_blue_ribbon);
 
-        isScreenEmpty = true;
-        firstLoad = true;
-
-
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -172,9 +145,8 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         ProgressHelper.activate(progressBar);
 
         bus.register(this);
-        getAndShowUnitsFromCache();
-
         unitsPresenter.attachView(this);
+        unitsPresenter.showUnits(section, false);
     }
 
     @Override
@@ -196,8 +168,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @Override
     public void onRefresh() {
         analytic.reportEvent(Analytic.Interaction.REFRESH_UNIT);
-        ProgressHelper.activate(swipeRefreshLayout);
-        updateUnits();
+        unitsPresenter.showUnits(section, true);
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -219,7 +190,6 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     }
 
     private void updateState(long unitId, boolean isCached, boolean isLoading) {
-
         int position = -1;
         Unit unit = null;
         for (int i = 0; i < unitList.size(); i++) {
@@ -263,7 +233,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
 
         Pair<Unit, Integer> unitPairPosition = getUnitOnScreenAndPositionById(unitId);
         if (unitPairPosition == null) return;
-        Unit unit = unitPairPosition.first;
+
         int position = unitPairPosition.second;
 
         Progress progress = progressMap.get(unitId);
@@ -272,12 +242,6 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         }
 
         adapter.notifyItemChanged(position);
-    }
-
-    @Subscribe
-    public void onNotifyUI(NotifyUIUnitLessonEvent event) {
-        dismissReport();
-        adapter.notifyDataSetChanged();
     }
 
     @Subscribe
@@ -308,34 +272,6 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         adapter.notifyItemChanged(position);
     }
 
-    @Subscribe
-    public void onSuccessLoadFromDb(LoadedFromDbUnitsLessonsEvent e) {
-        if (section != e.getSection()) return;
-        if (e.getUnits() != null && e.getLessons() != null && e.getUnits().size() != 0 && e.getLessons().size() != 0) {
-            showUnitsLessons(e.getUnits(), e.getLessons(), e.getProgressMap());
-            if (firstLoad) {
-                firstLoad = false;
-                updateUnits();
-            }
-        } else {
-            //db doesn't have it, load from web with empty screen
-            updateUnits();
-        }
-    }
-
-    @Subscribe
-    public void onFinishSaveToDb(UnitLessonSavedEvent e) {
-        if (e.getSection() == section) {
-            getAndShowUnitsFromCache();
-        }
-    }
-
-    private void dismissReport() {
-        if (lessonList != null && unitList != null && lessonList.size() != 0 && unitList.size() != 0) {
-            reportConnectionProblem.setVisibility(View.GONE);
-        }
-    }
-
     private void shareSection() {
         if (section != null) {
             Intent intent = shareHelper.getIntentForSectionSharing(section);
@@ -343,255 +279,9 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         }
     }
 
-
-    private void getAndShowUnitsFromCache() {
-        fromDbUnitLessonTask = new FromDbUnitLessonTask(section);
-        fromDbUnitLessonTask.executeOnExecutor(threadPoolExecutor);
-    }
-
-    private void updateUnits() {
-        long[] units = section.getUnits();
-        if (units == null || units.length == 0) {
-            ProgressHelper.dismiss(progressBar);
-            ProgressHelper.dismiss(swipeRefreshLayout);
-            reportEmpty.setVisibility(View.VISIBLE);
-        } else {
-            reportEmpty.setVisibility(View.GONE);
-
-            //todo make it in presenter
-
-            threadPoolExecutor.execute(new Runnable() {
-                final long[] unitIds = section.getUnits();
-
-                @Override
-                public void run() {
-                    try {
-                        final List<Unit> backgroundUnits = new ArrayList<>();
-                        boolean responseIsSuccess = true;
-                        if (unitIds == null) {
-                            responseIsSuccess = false;
-                        }
-                        int pointer = 0;
-                        while (responseIsSuccess && pointer < unitIds.length) {
-                            int lastExclusive = Math.min(unitIds.length, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
-                            long[] subArrayForLoading = Arrays.copyOfRange(unitIds, pointer, lastExclusive);
-                            Response<UnitStepicResponse> unitResponse = shell.getApi().getUnits(subArrayForLoading).execute();
-                            if (!unitResponse.isSuccessful()) {
-                                responseIsSuccess = false;
-                            } else {
-                                backgroundUnits.addAll(unitResponse.body().getUnits());
-                                pointer = lastExclusive;
-                            }
-                        }
-
-                        if (responseIsSuccess) {
-                            mainHandler.post(new Function0<kotlin.Unit>() {
-                                @Override
-                                public kotlin.Unit invoke() {
-                                    bus.post(new SuccessLoadUnitsEvent(section, backgroundUnits)); // we do not use this unit in background threads => send to main without extra copy
-                                    return kotlin.Unit.INSTANCE;
-                                }
-                            });
-
-
-                        } else {
-                            mainHandler.post(new Function0<kotlin.Unit>() {
-                                @Override
-                                public kotlin.Unit invoke() {
-                                    bus.post(new FailureLoadEvent(section));
-                                    return kotlin.Unit.INSTANCE;
-                                }
-                            });
-                        }
-
-                    } catch (Exception exception) {
-                        mainHandler.post(new Function0<kotlin.Unit>() {
-                            @Override
-                            public kotlin.Unit invoke() {
-                                bus.post(new FailureLoadEvent(section));
-                                return kotlin.Unit.INSTANCE;
-                            }
-                        });
-                    }
-                }
-            });
-        }
-
-    }
-
-    @Subscribe
-    public void onSuccessLoadUnits(SuccessLoadUnitsEvent e) {
-        if (section == null || e.getSection() == null
-                || e.getSection().getId() != section.getId())
-            return;
-
-        final List<Unit> units = e.getUnitList();
-
-        final long[] lessonsIds = StepicLogicHelper.fromUnitsToLessonIds(units);
-
-        //todo make it in presenter
-
-        threadPoolExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final List<Lesson> backgroundLessons = new ArrayList<>();
-                    boolean responseIsSuccess = true;
-                    if (lessonsIds == null) {
-                        responseIsSuccess = false;
-                    }
-                    int pointer = 0;
-                    while (responseIsSuccess && pointer < lessonsIds.length) {
-                        int lastExclusive = Math.min(lessonsIds.length, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
-                        long[] subArrayForLoading = Arrays.copyOfRange(lessonsIds, pointer, lastExclusive);
-                        Response<LessonStepicResponse> lessonsResponse = shell.getApi().getLessons(subArrayForLoading).execute();
-                        if (!lessonsResponse.isSuccessful()) {
-                            responseIsSuccess = false;
-                        } else {
-                            backgroundLessons.addAll(lessonsResponse.body().getLessons());
-                            pointer = lastExclusive;
-                        }
-                    }
-
-                    if (responseIsSuccess) {
-                        mainHandler.post(new Function0<kotlin.Unit>() {
-                            @Override
-                            public kotlin.Unit invoke() {
-                                bus.post(new SuccessLoadLessonsEvent(section, backgroundLessons, units)); // we do not use this unit in background threads => send to main without extra copy
-                                return kotlin.Unit.INSTANCE;
-                            }
-                        });
-
-
-                    } else {
-                        mainHandler.post(new Function0<kotlin.Unit>() {
-                            @Override
-                            public kotlin.Unit invoke() {
-                                bus.post(new FailureLoadEvent(section));
-                                return kotlin.Unit.INSTANCE;
-                            }
-                        });
-                    }
-
-                } catch (Exception exception) {
-                    mainHandler.post(new Function0<kotlin.Unit>() {
-                        @Override
-                        public kotlin.Unit invoke() {
-                            bus.post(new FailureLoadEvent(section));
-                            return kotlin.Unit.INSTANCE;
-                        }
-                    });
-                }
-            }
-        });
-    }
-
-    @Subscribe
-    public void onFinalSuccessDownloadFromWeb(final SuccessLoadLessonsEvent e) {
-        if (section == null || e.getSection() == null
-                || e.getSection().getId() != section.getId())
-            return;
-
-        final String[] progressIds = ProgressUtil.getAllProgresses(e.getUnits());
-
-        threadPoolExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final List<Progress> backgroundProgress = new ArrayList<>();
-                    boolean responseIsSuccess = true;
-                    if (progressIds == null) {
-                        responseIsSuccess = false;
-                    }
-                    int pointer = 0;
-                    while (responseIsSuccess && pointer < progressIds.length) {
-                        int lastExclusive = Math.min(progressIds.length, pointer + AppConstants.DEFAULT_NUMBER_IDS_IN_QUERY);
-                        String[] subArrayForLoading = Arrays.copyOfRange(progressIds, pointer, lastExclusive);
-                        Response<ProgressesResponse> progressesResponse = shell.getApi().getProgresses(subArrayForLoading).execute();
-                        if (!progressesResponse.isSuccessful()) {
-                            responseIsSuccess = false;
-                        } else {
-                            backgroundProgress.addAll(progressesResponse.body().getProgresses());
-                            pointer = lastExclusive;
-                        }
-                    }
-
-                    if (responseIsSuccess) {
-
-                        mainHandler.post(new Function0<kotlin.Unit>() {
-                            @Override
-                            public kotlin.Unit invoke() {
-                                saveToDb(e.getUnits(), e.getLessons(), backgroundProgress);
-                                return kotlin.Unit.INSTANCE;
-                            }
-                        });
-
-
-                    } else {
-                        mainHandler.post(new Function0<kotlin.Unit>() {
-                            @Override
-                            public kotlin.Unit invoke() {
-                                bus.post(new FailureLoadEvent(section));
-                                return kotlin.Unit.INSTANCE;
-                            }
-                        });
-                    }
-
-                } catch (Exception exception) {
-                    mainHandler.post(new Function0<kotlin.Unit>() {
-                        @Override
-                        public kotlin.Unit invoke() {
-                            bus.post(new FailureLoadEvent(section));
-                            return kotlin.Unit.INSTANCE;
-                        }
-                    });
-                }
-            }
-        });
-    }
-
-    private void saveToDb(List<Unit> unitList, List<Lesson> lessonList, List<Progress> progresses) {
-        toDbUnitLessonTask = new ToDbUnitLessonTask(section, unitList, lessonList, progresses);
-        toDbUnitLessonTask.executeOnExecutor(threadPoolExecutor);
-    }
-
-    private void showUnitsLessons(List<Unit> units, List<Lesson> lessons, Map<Long, Progress> longProgressMap) {
-
-        lessonList.clear();
-        lessonList.addAll(lessons);
-
-        unitList.clear();
-        unitList.addAll(units);
-
-        progressMap.clear();
-        progressMap.putAll(longProgressMap);
-
-        dismissReport();
-        adapter.notifyDataSetChanged();
-
-        dismiss();
-    }
-
-
-    @Subscribe
-    public void onFailLoad(FailureLoadEvent e) {
-        if (section == null || e.getSection() == null
-                || e.getSection().getId() != section.getId())
-            return;
-
-        if (unitList != null && unitList.size() == 0) {
-            reportConnectionProblem.setVisibility(View.VISIBLE);
-        }
-        dismiss();
-    }
-
     private void dismiss() {
-        if (isScreenEmpty) {
-            ProgressHelper.dismiss(progressBar);
-            isScreenEmpty = false;
-        } else {
-            ProgressHelper.dismiss(swipeRefreshLayout);
-        }
+        ProgressHelper.dismiss(progressBar);
+        ProgressHelper.dismiss(swipeRefreshLayout);
     }
 
     @Override
@@ -603,4 +293,47 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         }
         return false;
     }
+
+    @Override
+    public void onEmptyUnits() {
+        reportConnectionProblem.setVisibility(View.GONE);
+        reportEmpty.setVisibility(View.VISIBLE);
+    }
+
+    public void onNeedShowUnits(@NotNull List<Unit> unitList, @NotNull List<Lesson> lessonList, @NotNull Map<Long, Progress> progressMap) {
+        reportEmpty.setVisibility(View.GONE);
+        reportConnectionProblem.setVisibility(View.GONE);
+
+        this.lessonList.clear();
+        this.lessonList.addAll(lessonList);
+
+        this.unitList.clear();
+        this.unitList.addAll(unitList);
+
+        this.progressMap.clear();
+        this.progressMap.putAll(progressMap);
+
+        adapter.notifyDataSetChanged();
+
+        dismiss();
+    }
+
+    @Override
+    public void onLoading() {
+        reportEmpty.setVisibility(View.GONE);
+        reportConnectionProblem.setVisibility(View.GONE);
+        if (unitList.isEmpty()) {
+            ProgressHelper.activate(progressBar);
+        }
+    }
+
+    @Override
+    public void onConnectionProblem() {
+        if (unitList.isEmpty()) {
+            dismiss();
+            reportEmpty.setVisibility(View.GONE);
+            reportConnectionProblem.setVisibility(View.VISIBLE);
+        }
+    }
+
 }

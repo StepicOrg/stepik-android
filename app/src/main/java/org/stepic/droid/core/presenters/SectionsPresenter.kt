@@ -21,7 +21,7 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                         val api: IApi,
                         val databaseFacade: DatabaseFacade) : PresenterBase<SectionsView>() {
 
-    val sectionList: MutableList<Section> = ArrayList<Section>()
+    val sectionList: MutableList<Section> = ArrayList()
     val isLoading: AtomicBoolean = AtomicBoolean(false)
     val progressMap: HashMap<String, ProgressViewModel> = HashMap()
 
@@ -41,7 +41,7 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
             try {
                 if (!isRefreshing) {
                     val sectionsFromCache = databaseFacade.getAllSectionsOfCourse(course).filterNotNull()
-                    Collections.sort(sectionsFromCache, Comparator<org.stepic.droid.model.Section> { lhs, rhs ->
+                    Collections.sort(sectionsFromCache, Comparator { lhs, rhs ->
                         if (lhs == null || rhs == null) return@Comparator 0
 
                         val lhsPos = lhs.position

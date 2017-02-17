@@ -68,7 +68,7 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.util.StepicLogicHelper;
+import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.util.ThumbnailParser;
 import org.stepic.droid.web.UserStepicResponse;
@@ -343,7 +343,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         setUpIntroVideo();
 
         Glide.with(MainApplication.getAppContext())
-                .load(StepicLogicHelper.getPathForCourseOrEmpty(course, config))
+                .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
                 .placeholder(coursePlaceholder)
                 .into(courseTargetFigSupported);
 

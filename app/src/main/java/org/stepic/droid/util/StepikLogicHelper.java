@@ -8,7 +8,7 @@ import org.stepic.droid.model.Unit;
 
 import java.util.List;
 
-public class StepicLogicHelper {
+public class StepikLogicHelper {
     public static long[] fromUnitsToLessonIds(List<Unit> units) {
         long[] lessonsIds = new long[units.size()];
         for (int i = 0; i < units.size(); i++) {

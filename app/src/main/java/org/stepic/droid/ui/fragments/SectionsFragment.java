@@ -87,7 +87,7 @@ import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.SnackbarExtensionKt;
-import org.stepic.droid.util.StepicLogicHelper;
+import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.StringUtil;
 
 import java.net.HttpURLConnection;
@@ -312,7 +312,7 @@ public class SectionsFragment
             });
             courseName.setText(course.getTitle());
             Glide.with(this)
-                    .load(StepicLogicHelper.getPathForCourseOrEmpty(course, config))
+                    .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
                     .placeholder(R.drawable.ic_course_placeholder)
                     .into(imageViewTarget);
         } else {
