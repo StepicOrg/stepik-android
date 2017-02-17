@@ -1,25 +1,25 @@
 package org.stepic.droid.ui.custom.progressbutton;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.Shader;
-import android.os.Handler;
 import android.util.AttributeSet;
-import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Interpolator;
+import android.widget.ProgressBar;
 
 import org.stepic.droid.R;
 
-public class ProgressWheel extends View {
+import timber.log.Timber;
+
+public class ProgressWheel extends ProgressBar {
 
     //Sizes (with defaults)
     private int layout_height = 0;
     private int layout_width = 0;
-    private int fullRadius = 100;
-    private int circleRadius = 80;
-    private int barLength = 60;
     private int barWidth = 20;
     private int rimWidth = 20;
     private float contourSize = 0;
@@ -33,7 +33,6 @@ public class ProgressWheel extends View {
 
     //Colors (with defaults)
     private int barColor = 0xAA000000;
-    private int contourColorInner = 0xAA000000;
     private int contourColorOuter = 0xAA000000;
     private int circleColor = 0x00000000;
     private int rimColor = 0xAADDDDDD;
@@ -43,24 +42,19 @@ public class ProgressWheel extends View {
     private Paint barPaint = new Paint();
     private Paint circlePaint = new Paint();
     private Paint rimPaint = new Paint();
-    private Paint contourPaintInner = new Paint();
     private Paint contourPaintOuter = new Paint();
     private Paint centerSquarePaint = new Paint();
 
     //Rectangles
     private RectF circleBounds = new RectF();
     private RectF circleOuterContour = new RectF();
-    private RectF circleInnerContour = new RectF();
     private RectF centerSquareRect = new RectF();
 
     //Animation
-    //The amount of pixels to move the bar by on each draw
-    private int spinSpeed = 2;
-    //The number of milliseconds to wait between each draw
-    private int delayMillis = 0;
-    private Handler spinHandler = new SpinHandler(this);
-    private int progress = 0;
-    boolean isSpinning = false;
+    private final int MAX_DEGREES = 360;
+    private ValueAnimator animator;
+    private static final Interpolator DEFAULT_INTERPOLATER = new AccelerateDecelerateInterpolator();
+
 
     /**
      * The constructor for the ProgressWheel
@@ -70,6 +64,9 @@ public class ProgressWheel extends View {
 
         parseAttributes(context.obtainStyledAttributes(attrs,
                 R.styleable.ProgressWheel));
+
+        setMax(360);
+        setIndeterminate(false);
     }
 
     //----------------------------------
@@ -161,11 +158,6 @@ public class ProgressWheel extends View {
         circlePaint.setAntiAlias(true);
         circlePaint.setStyle(Paint.Style.FILL);
 
-        contourPaintInner.setColor(contourColorInner);
-        contourPaintInner.setAntiAlias(true);
-        contourPaintInner.setStyle(Paint.Style.STROKE);
-        contourPaintInner.setStrokeWidth(contourSize);
-
         contourPaintOuter.setColor(contourColorOuter);
         contourPaintOuter.setAntiAlias(true);
         contourPaintOuter.setStyle(Paint.Style.STROKE);
@@ -200,11 +192,7 @@ public class ProgressWheel extends View {
                 paddingTop + barWidth,
                 width - paddingRight - barWidth,
                 height - paddingBottom - barWidth);
-        circleInnerContour.set(circleBounds.left + (rimWidth / 2.0f) + (contourSize / 2.0f), circleBounds.top + (rimWidth / 2.0f) + (contourSize / 2.0f), circleBounds.right - (rimWidth / 2.0f) - (contourSize / 2.0f), circleBounds.bottom - (rimWidth / 2.0f) - (contourSize / 2.0f));
         circleOuterContour.set(circleBounds.left - (rimWidth / 2.0f) - (contourSize / 2.0f), circleBounds.top - (rimWidth / 2.0f) - (contourSize / 2.0f), circleBounds.right + (rimWidth / 2.0f) + (contourSize / 2.0f), circleBounds.bottom + (rimWidth / 2.0f) + (contourSize / 2.0f));
-
-        fullRadius = (width - paddingRight - barWidth) / 2;
-        circleRadius = (fullRadius - barWidth) + 1;
 
         float halfWidth = width / 2f;
         float halfHeight = height / 2f;
@@ -224,24 +212,11 @@ public class ProgressWheel extends View {
         rimWidth = (int) a.getDimension(R.styleable.ProgressWheel_rimWidth,
                 rimWidth);
 
-        spinSpeed = (int) a.getDimension(R.styleable.ProgressWheel_spinSpeed,
-                spinSpeed);
-
-        delayMillis = a.getInteger(R.styleable.ProgressWheel_delayMillis,
-                delayMillis);
-        if (delayMillis < 0) {
-            delayMillis = 0;
-        }
-
         barColor = a.getColor(R.styleable.ProgressWheel_barColor, barColor);
-
-        barLength = (int) a.getDimension(R.styleable.ProgressWheel_progressBarLength, barLength);
 
         rimColor = a.getColor(R.styleable.ProgressWheel_rimColor, rimColor);
 
         circleColor = a.getColor(R.styleable.ProgressWheel_circleColor, circleColor);
-
-        contourColorInner = a.getColor(R.styleable.ProgressWheel_contourColorInner, contourColorInner);
 
         contourColorOuter = a.getColor(R.styleable.ProgressWheel_contourColorOuter, contourColorOuter);
 
@@ -259,215 +234,52 @@ public class ProgressWheel extends View {
     //Animation stuff
     //----------------------------------
 
+    @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
         //Draw the inner circle
-        canvas.drawArc(circleBounds, 360, 360, false, circlePaint);
+        canvas.drawArc(circleBounds, MAX_DEGREES, MAX_DEGREES, false, circlePaint);
         //Draw the rim
-        canvas.drawArc(circleBounds, 360, 360, false, rimPaint);
-        canvas.drawArc(circleOuterContour, 360, 360, false, contourPaintOuter);
-        canvas.drawArc(circleInnerContour, 360, 360, false, contourPaintInner);
+        canvas.drawArc(circleBounds, MAX_DEGREES, MAX_DEGREES, false, rimPaint);
+        canvas.drawArc(circleOuterContour, MAX_DEGREES, MAX_DEGREES, false, contourPaintOuter);
         //Draw square in center
         canvas.drawRect(centerSquareRect, centerSquarePaint);
         //Draw the bar
-        if (isSpinning) {
-            canvas.drawArc(circleBounds, progress - 90, barLength, false,
-                    barPaint);
-        } else {
-            canvas.drawArc(circleBounds, -90, progress, false, barPaint);
-        }
-    }
-
-    /**
-     * Check if the wheel is currently spinning
-     */
-    public boolean isSpinning() {
-        return isSpinning;
-    }
-
-    /**
-     * Reset the count (in increment mode)
-     */
-    public void resetCount() {
-        progress = 0;
-        invalidate();
-    }
-
-    /**
-     * Turn off spin mode
-     */
-    public void stopSpinning() {
-        isSpinning = false;
-        progress = 0;
-        spinHandler.removeMessages(0);
-    }
-
-
-    /**
-     * Puts the view on spin mode
-     */
-    public void spin() {
-        isSpinning = true;
-        spinHandler.sendEmptyMessage(0);
-    }
-
-    /**
-     * Increment the progress by 1 (of 360)
-     */
-    public void incrementProgress() {
-        isSpinning = false;
-        progress++;
-        if (progress > 360)
-            progress = 0;
-        spinHandler.sendEmptyMessage(0);
-    }
-
-
-    /**
-     * Set the progress to a specific value
-     */
-    void setProgressInternal(int i) {
-        isSpinning = false;
-        progress = i;
-        spinHandler.sendEmptyMessage(0);
+        int progress = getProgress();
+        canvas.drawArc(circleBounds, -90, progress, false, barPaint);
     }
 
     /**
      * Sets progress percentage to given percent value.
      *
-     * @param percent
+     * @param portion should be >=0 and <=1
      */
-    public void setProgressPercent(int percent) {
-        int p = 360 * percent / 100;
-        setProgressInternal(p);
+    public void setProgressPortion(float portion, boolean needAnimation) {
+        float newProgress = MAX_DEGREES * portion;
+        if (!needAnimation) {
+            super.setProgress((int) newProgress);
+            return;
+        }
+
+        if (animator != null) {
+            animator.cancel();
+        }
+        int currentProgress = getProgress();
+        Timber.d("currentProgress = %s of view = %s", currentProgress, this);
+        if (animator == null) {
+            animator = ValueAnimator.ofInt(currentProgress, (int) newProgress);
+            animator.setInterpolator(DEFAULT_INTERPOLATER);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int animatedValue = (int) animation.getAnimatedValue();
+                    Timber.d("animatedValue = %s of view = %s", animatedValue, this);
+                    ProgressWheel.super.setProgress(animatedValue);
+                }
+            });
+        } else {
+            animator.setIntValues(currentProgress, (int) newProgress);
+        }
+        animator.start();
     }
 
-    /**
-     * Get the current progress.
-     *
-     * @return The current progress.
-     */
-    public int getProgress() {
-        return progress;
-    }
-
-    public void setProgress(int progress) {
-        this.progress = progress;
-    }
-
-    //----------------------------------
-    //Getters + setters
-    //----------------------------------
-
-    public int getCircleRadius() {
-        return circleRadius;
-    }
-
-    public void setCircleRadius(int circleRadius) {
-        this.circleRadius = circleRadius;
-    }
-
-    public int getBarLength() {
-        return barLength;
-    }
-
-    public void setBarLength(int barLength) {
-        this.barLength = barLength;
-    }
-
-    public int getBarWidth() {
-        return barWidth;
-    }
-
-    public void setBarWidth(int barWidth) {
-        this.barWidth = barWidth;
-    }
-
-    public int getPaddingTop() {
-        return paddingTop;
-    }
-
-    public void setPaddingTop(int paddingTop) {
-        this.paddingTop = paddingTop;
-    }
-
-    public int getPaddingBottom() {
-        return paddingBottom;
-    }
-
-    public void setPaddingBottom(int paddingBottom) {
-        this.paddingBottom = paddingBottom;
-    }
-
-    public int getPaddingLeft() {
-        return paddingLeft;
-    }
-
-    public void setPaddingLeft(int paddingLeft) {
-        this.paddingLeft = paddingLeft;
-    }
-
-    public int getPaddingRight() {
-        return paddingRight;
-    }
-
-    public void setPaddingRight(int paddingRight) {
-        this.paddingRight = paddingRight;
-    }
-
-    public int getBarColor() {
-        return barColor;
-    }
-
-    public void setBarColor(int barColor) {
-        this.barColor = barColor;
-    }
-
-    public int getCircleColor() {
-        return circleColor;
-    }
-
-    public void setCircleColor(int circleColor) {
-        this.circleColor = circleColor;
-    }
-
-    public int getRimColor() {
-        return rimColor;
-    }
-
-    public void setRimColor(int rimColor) {
-        this.rimColor = rimColor;
-    }
-
-    public Shader getRimShader() {
-        return rimPaint.getShader();
-    }
-
-    public void setRimShader(Shader shader) {
-        this.rimPaint.setShader(shader);
-    }
-
-    public int getSpinSpeed() {
-        return spinSpeed;
-    }
-
-    public void setSpinSpeed(int spinSpeed) {
-        this.spinSpeed = spinSpeed;
-    }
-
-    public int getRimWidth() {
-        return rimWidth;
-    }
-
-    public void setRimWidth(int rimWidth) {
-        this.rimWidth = rimWidth;
-    }
-
-    public int getDelayMillis() {
-        return delayMillis;
-    }
-
-    public void setDelayMillis(int delayMillis) {
-        this.delayMillis = delayMillis;
-    }
 }

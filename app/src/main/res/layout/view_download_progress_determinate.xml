@@ -4,14 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <org.stepic.droid.ui.custom.progressbutton.ProgressWheel
-        android:layout_gravity="center"
         android:id="@+id/when_load_view"
         android:layout_width="@dimen/loading_size"
         android:layout_height="@dimen/loading_size"
+        android:layout_gravity="center"
+        android:indeterminate="false"
+        android:indeterminateOnly="false"
         app:barColor="@color/stepic_blue_ribbon"
         app:barWidth="@dimen/progress_bar_size"
         app:circleColor="@color/transparent"
-        app:contourColorInner="@color/transparent"
         app:contourColorOuter="@color/stepic_blue_ribbon"
         app:contourSize="@dimen/progress_contour_size"
         app:rimColor="@color/transparent"

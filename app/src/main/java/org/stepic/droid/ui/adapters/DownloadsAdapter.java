@@ -36,6 +36,7 @@ import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
 import org.stepic.droid.ui.dialogs.ClearVideosDialog;
 import org.stepic.droid.ui.fragments.DownloadsFragment;
 import org.stepic.droid.ui.listeners.OnClickCancelListener;
@@ -151,7 +152,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         if (position >= 0 && position < cachedVideoList.size()) {
             final CachedVideo video = cachedVideoList.get(position);
             File file = new File(video.getUrl());
-            if (video.getUrl()!= null && file.exists()) {
+            if (video.getUrl() != null && file.exists()) {
                 screenManager.showVideo(sourceActivity, video.getUrl(), video.getVideoId());
             } else {
                 Toast.makeText(MainApplication.getAppContext(), R.string.sorry_moved, Toast.LENGTH_SHORT).show();
@@ -219,6 +220,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     public class DownloadingViewHolder extends GenericViewHolder {
 
+        @BindView(R.id.when_load_view)
+        ProgressWheel progressWheel;
+
         @BindView(R.id.cancel_load)
         View cancelLoad;
 
@@ -253,6 +257,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         Drawable finiteDrawable;
 
+        private long oldVideoId = -1L;
+
         public DownloadingViewHolder(View itemView, final OnClickCancelListener cancelListener) {
             super(itemView);
 
@@ -270,6 +276,13 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         @Override
         public void setDataOnView(int position) {
             DownloadingVideoItem downloadingVideoItem = downloadingVideoList.get(position - 1);//here downloading oldList shoudn't be empty!
+            long videoId = downloadingVideoItem.getDownloadEntity().getVideoId();
+            boolean needAnimation = true;
+            if (oldVideoId != videoId) {
+                //if rebinding than animation is not needed
+                oldVideoId = videoId;
+                needAnimation = false;
+            }
 
             String thumbnail = downloadingVideoItem.getDownloadEntity().getThumbnail();
             if (thumbnail != null) {
@@ -313,6 +326,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
                 downloadingProgressBar.setMax(bytesTotal);
                 downloadingProgressBar.setProgress(bytesDownloaded);
                 downloadingProgressBar.setIndeterminateDrawable(finiteDrawable);
+
+                progressWheel.setProgressPortion(bytesDownloaded / (float) bytesTotal, needAnimation);
 
                 int percentValue = (int) (((double) bytesDownloaded / (double) bytesTotal) * 100);
                 progressPercent.setText(sourceActivity.getResources().getString(R.string.percent_symbol, percentValue));
@@ -441,7 +456,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         }
 
     }
-
 
     public class TitleViewHolder extends GenericViewHolder implements OnClickCancelListener {
 
