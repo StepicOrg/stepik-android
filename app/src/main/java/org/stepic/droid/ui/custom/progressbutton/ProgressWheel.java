@@ -13,8 +13,6 @@ import android.widget.ProgressBar;
 
 import org.stepic.droid.R;
 
-import timber.log.Timber;
-
 public class ProgressWheel extends ProgressBar {
 
     //Sizes (with defaults)
@@ -34,13 +32,11 @@ public class ProgressWheel extends ProgressBar {
     //Colors (with defaults)
     private int barColor = 0xAA000000;
     private int contourColorOuter = 0xAA000000;
-    private int circleColor = 0x00000000;
     private int rimColor = 0xAADDDDDD;
     private int centerSquareColor = 0xAADDDDDD;
 
     //Paints
     private Paint barPaint = new Paint();
-    private Paint circlePaint = new Paint();
     private Paint rimPaint = new Paint();
     private Paint contourPaintOuter = new Paint();
     private Paint centerSquarePaint = new Paint();
@@ -65,14 +61,13 @@ public class ProgressWheel extends ProgressBar {
         parseAttributes(context.obtainStyledAttributes(attrs,
                 R.styleable.ProgressWheel));
 
-        setMax(360);
+        setMax(MAX_DEGREES);
         setIndeterminate(false);
     }
 
     //----------------------------------
     //Setting up stuff
     //----------------------------------
-
 
     /*
      * When this is called, make the view square.
@@ -154,10 +149,6 @@ public class ProgressWheel extends ProgressBar {
         rimPaint.setStyle(Paint.Style.STROKE);
         rimPaint.setStrokeWidth(rimWidth);
 
-        circlePaint.setColor(circleColor);
-        circlePaint.setAntiAlias(true);
-        circlePaint.setStyle(Paint.Style.FILL);
-
         contourPaintOuter.setColor(contourColorOuter);
         contourPaintOuter.setAntiAlias(true);
         contourPaintOuter.setStyle(Paint.Style.STROKE);
@@ -185,8 +176,8 @@ public class ProgressWheel extends ProgressBar {
         paddingLeft = this.getPaddingLeft() + (xOffset / 2);
         paddingRight = this.getPaddingRight() + (xOffset / 2);
 
-        int width = getWidth(); //this.getLayoutParams().width;
-        int height = getHeight(); //this.getLayoutParams().height;
+        int width = getWidth();
+        int height = getHeight();
 
         circleBounds.set(paddingLeft + barWidth,
                 paddingTop + barWidth,
@@ -206,28 +197,26 @@ public class ProgressWheel extends ProgressBar {
      * @param a the attributes to parse
      */
     private void parseAttributes(TypedArray a) {
-        barWidth = (int) a.getDimension(R.styleable.ProgressWheel_barWidth,
-                barWidth);
+        try {
+            barWidth = (int) a.getDimension(R.styleable.ProgressWheel_barWidth, barWidth);
 
-        rimWidth = (int) a.getDimension(R.styleable.ProgressWheel_rimWidth,
-                rimWidth);
+            rimWidth = (int) a.getDimension(R.styleable.ProgressWheel_rimWidth, rimWidth);
 
-        barColor = a.getColor(R.styleable.ProgressWheel_barColor, barColor);
+            barColor = a.getColor(R.styleable.ProgressWheel_barColor, barColor);
 
-        rimColor = a.getColor(R.styleable.ProgressWheel_rimColor, rimColor);
+            rimColor = a.getColor(R.styleable.ProgressWheel_rimColor, rimColor);
 
-        circleColor = a.getColor(R.styleable.ProgressWheel_circleColor, circleColor);
+            contourColorOuter = a.getColor(R.styleable.ProgressWheel_contourColorOuter, contourColorOuter);
 
-        contourColorOuter = a.getColor(R.styleable.ProgressWheel_contourColorOuter, contourColorOuter);
+            contourSize = a.getDimension(R.styleable.ProgressWheel_contourSize, contourSize);
 
-        contourSize = a.getDimension(R.styleable.ProgressWheel_contourSize, contourSize);
+            centerSquareColor = a.getColor(R.styleable.ProgressWheel_squareColor, centerSquareColor);
 
-        centerSquareColor = a.getColor(R.styleable.ProgressWheel_squareColor, centerSquareColor);
+            centerSquareSize = a.getDimension(R.styleable.ProgressWheel_squareSize, centerSquareSize);
 
-        centerSquareSize = a.getDimension(R.styleable.ProgressWheel_squareSize, centerSquareSize);
-
-        // Recycle
-        a.recycle();
+        } finally {
+            a.recycle();
+        }
     }
 
     //----------------------------------
@@ -236,9 +225,6 @@ public class ProgressWheel extends ProgressBar {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        //Draw the inner circle
-        canvas.drawArc(circleBounds, MAX_DEGREES, MAX_DEGREES, false, circlePaint);
-        //Draw the rim
         canvas.drawArc(circleBounds, MAX_DEGREES, MAX_DEGREES, false, rimPaint);
         canvas.drawArc(circleOuterContour, MAX_DEGREES, MAX_DEGREES, false, contourPaintOuter);
         //Draw square in center
@@ -264,7 +250,6 @@ public class ProgressWheel extends ProgressBar {
             animator.cancel();
         }
         int currentProgress = getProgress();
-        Timber.d("currentProgress = %s of view = %s", currentProgress, this);
         if (animator == null) {
             animator = ValueAnimator.ofInt(currentProgress, (int) newProgress);
             animator.setInterpolator(DEFAULT_INTERPOLATER);
@@ -272,7 +257,6 @@ public class ProgressWheel extends ProgressBar {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     int animatedValue = (int) animation.getAnimatedValue();
-                    Timber.d("animatedValue = %s of view = %s", animatedValue, this);
                     ProgressWheel.super.setProgress(animatedValue);
                 }
             });

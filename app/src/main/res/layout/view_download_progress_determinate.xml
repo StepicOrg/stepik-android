@@ -12,7 +12,6 @@
         android:indeterminateOnly="false"
         app:barColor="@color/stepic_blue_ribbon"
         app:barWidth="@dimen/progress_bar_size"
-        app:circleColor="@color/transparent"
         app:contourColorOuter="@color/stepic_blue_ribbon"
         app:contourSize="@dimen/progress_contour_size"
         app:rimColor="@color/transparent"
