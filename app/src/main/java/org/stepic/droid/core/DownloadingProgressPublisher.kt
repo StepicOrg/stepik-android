@@ -129,9 +129,10 @@ class DownloadingProgressPublisher(private val databaseFacade: DatabaseFacade,
 
                 partialProgress /= stepIdToProgress.size
 
+                val partialProgressValue = partialProgress
 
                 mainHandler.post {
-                    downloadingProgressCallback?.onProgressChanged(lessonId, partialProgress)
+                    downloadingProgressCallback?.onProgressChanged(lessonId, partialProgressValue)
                 }
 
             }

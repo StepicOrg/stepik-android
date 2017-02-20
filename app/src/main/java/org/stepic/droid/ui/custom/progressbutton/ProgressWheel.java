@@ -240,9 +240,14 @@ public class ProgressWheel extends ProgressBar {
      * @param portion should be >=0 and <=1
      */
     public void setProgressPortion(float portion, boolean needAnimation) {
-        float newProgress = MAX_DEGREES * portion;
+        int newProgress = (int) (MAX_DEGREES * portion);
+        int oldProgress = getProgress();
+        if (oldProgress >= newProgress && needAnimation) {
+            //our progress can't go back, when updating
+            return;
+        }
         if (!needAnimation) {
-            super.setProgress((int) newProgress);
+            super.setProgress(newProgress);
             return;
         }
 
@@ -251,7 +256,7 @@ public class ProgressWheel extends ProgressBar {
         }
         int currentProgress = getProgress();
         if (animator == null) {
-            animator = ValueAnimator.ofInt(currentProgress, (int) newProgress);
+            animator = ValueAnimator.ofInt(currentProgress, newProgress);
             animator.setInterpolator(DEFAULT_INTERPOLATER);
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
@@ -261,7 +266,7 @@ public class ProgressWheel extends ProgressBar {
                 }
             });
         } else {
-            animator.setIntValues(currentProgress, (int) newProgress);
+            animator.setIntValues(currentProgress, newProgress);
         }
         animator.start();
     }

@@ -143,6 +143,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         unitsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        unitsRecyclerView.getItemAnimator().setChangeDuration(0);
         unitList = new ArrayList<>();
         lessonList = new ArrayList<>();
         progressMap = new HashMap<>();
