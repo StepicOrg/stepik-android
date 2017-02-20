@@ -2,6 +2,7 @@ package org.stepic.droid.core.modules;
 
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.core.DownloadingProgressPublisher;
 import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.presenters.DownloadingProgressUnitsPresenter;
 import org.stepic.droid.core.presenters.UnitsPresenter;
@@ -29,7 +30,10 @@ public class UnitsModule {
 
     @PerFragment
     @Provides
-    public DownloadingProgressUnitsPresenter provideDownloadingProgressUnitsPresenter() {
-        return new DownloadingProgressUnitsPresenter();
+    public DownloadingProgressUnitsPresenter provideDownloadingProgressUnitsPresenter(DownloadingProgressPublisher downloadingProgressPublisher,
+                                                                                      DatabaseFacade databaseFacade,
+                                                                                      ThreadPoolExecutor threadPoolExecutor,
+                                                                                      IMainHandler mainHandler) {
+        return new DownloadingProgressUnitsPresenter(downloadingProgressPublisher, databaseFacade, threadPoolExecutor, mainHandler);
     }
 }

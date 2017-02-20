@@ -118,6 +118,6 @@ class RouteStepPresenter(
     }
 
     inner class IllegalStateRouteLessonException : IllegalStateException {
-        constructor(unitId: Long) : super("Next or previous lesson is shouldn't be shown, unitId = " + unitId.toString())
+        constructor(unitId: Long) : super("Next or previous lesson is shouldn't be shown, lessonId = " + unitId.toString())
     }
 }

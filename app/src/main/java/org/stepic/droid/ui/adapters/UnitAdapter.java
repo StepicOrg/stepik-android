@@ -27,7 +27,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.model.UnitLoadingState;
+import org.stepic.droid.model.LessonLoadingState;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
@@ -84,15 +84,15 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     private final List<Unit> unitList;
     private RecyclerView recyclerView;
     private final Map<Long, Progress> unitProgressMap;
-    private final Map<Long, UnitLoadingState> unitIdToUnitLoadingStateMap;
+    private final Map<Long, LessonLoadingState> lessonIdToUnitLoadingStateMap;
 
-    public UnitAdapter(Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, AppCompatActivity activity, Map<Long, UnitLoadingState> unitIdToUnitLoadingStateMap) {
+    public UnitAdapter(Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, AppCompatActivity activity, Map<Long, LessonLoadingState> lessonIdToUnitLoadingStateMap) {
         this.activity = activity;
         this.parentSection = parentSection;
         this.unitList = unitList;
         this.lessonList = lessonList;
         this.unitProgressMap = unitProgressMap;
-        this.unitIdToUnitLoadingStateMap = unitIdToUnitLoadingStateMap;
+        this.lessonIdToUnitLoadingStateMap = lessonIdToUnitLoadingStateMap;
         MainApplication.component().inject(this);
     }
 
@@ -119,11 +119,11 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         Unit unit = unitList.get(position);
         Lesson lesson = lessonList.get(position);
 
-        long unitId = unit.getId();
+        long lessonId = lesson.getId();
         boolean needAnimation = true;
-        if (holder.oldUnitId != unitId) {
+        if (holder.oldLessonId != lessonId) {
             //if rebinding than animation is not needed
-            holder.oldUnitId = unitId;
+            holder.oldLessonId = lessonId;
             needAnimation = false;
         }
 
@@ -180,9 +180,9 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 holder.whenLoad.setVisibility(View.VISIBLE);
                 holder.afterLoad.setVisibility(View.GONE);
 
-                UnitLoadingState unitLoadingState = unitIdToUnitLoadingStateMap.get(unit.getId());
-                if (unitLoadingState != null) {
-                    holder.whenLoad.setProgressPortion(unitLoadingState.getPortion(), needAnimation);
+                LessonLoadingState lessonLoadingState = lessonIdToUnitLoadingStateMap.get(lesson.getId());
+                if (lessonLoadingState != null) {
+                    holder.whenLoad.setProgressPortion(lessonLoadingState.getPortion(), needAnimation);
                 }
 
                 //todo: add cancel of downloading
@@ -351,7 +351,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         @BindDrawable(R.drawable.ic_lesson_cover)
         Drawable lessonPlaceholderDrawable;
 
-        long oldUnitId = -1;
+        long oldLessonId = -1;
 
         public UnitViewHolder(View itemView, final StepicOnClickItemListener listener, final OnClickLoadListener loadListener) {
             super(itemView);

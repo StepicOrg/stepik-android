@@ -17,6 +17,7 @@ import org.stepic.droid.core.AudioFocusHelper;
 import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.core.DefaultFilterImpl;
+import org.stepic.droid.core.DownloadingProgressPublisher;
 import org.stepic.droid.core.FilterApplicator;
 import org.stepic.droid.core.FilterApplicatorImpl;
 import org.stepic.droid.core.IShell;
@@ -317,5 +318,10 @@ public class AppCoreModule {
     @Singleton
     StepikLogoutManager provideStepikLogoutManager(ThreadPoolExecutor threadPoolExecutor, IMainHandler mainHandler, UserPreferences userPreferences, SharedPreferenceHelper sharedPreferenceHelper, DownloadManager downloadManager, DatabaseFacade dbFacade) {
         return new StepikLogoutManager(threadPoolExecutor, mainHandler, userPreferences, downloadManager, sharedPreferenceHelper, dbFacade);
+    }
+
+    @Provides
+    DownloadingProgressPublisher progressPublisher(DatabaseFacade databaseFacade, DownloadManager downloadManager, ICancelSniffer cancelSniffer, IMainHandler mainHandler) {
+        return new DownloadingProgressPublisher(databaseFacade, downloadManager, cancelSniffer, mainHandler);
     }
 }

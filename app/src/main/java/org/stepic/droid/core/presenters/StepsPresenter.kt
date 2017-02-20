@@ -288,7 +288,7 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
 
         if (unit == null) {
             if (simpleUnitId >= 0) {
-                //get by unitId
+                //get by lessonId
                 try {
                     unit = api.getUnits(longArrayOf(simpleUnitId)).execute()?.body()?.units?.firstOrNull()
                 } catch (ignored: Exception) {
