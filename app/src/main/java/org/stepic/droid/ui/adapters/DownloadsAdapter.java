@@ -588,7 +588,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         DownloadingVideoItem item = downloadingVideoList.get(position);
         if (item != null) {
             if (item.getDownloadEntity().getStepId() == stepId) {
-                notifyItemChanged(position);
+                notifyItemChanged(position + 1);
             } else {
                 notifyDataSetChanged();
             }
