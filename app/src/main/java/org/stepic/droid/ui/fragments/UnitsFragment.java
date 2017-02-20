@@ -301,6 +301,10 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
             case R.id.menu_item_share:
                 shareSection();
                 return true;
+            case android.R.id.home:
+                // Respond to the action bar's Up/Home button
+                getActivity().finish();
+                return true;
         }
         return false;
     }
