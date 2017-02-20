@@ -1,3 +1,7 @@
 package org.stepic.droid.core.presenters.contracts
 
-interface DownloadingProgressUnitsView
+import org.stepic.droid.model.UnitLoadingState
+
+interface DownloadingProgressUnitsView {
+    fun onNewProgressValue(unitLoadingState: UnitLoadingState)
+}

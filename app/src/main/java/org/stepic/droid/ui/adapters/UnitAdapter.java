@@ -27,16 +27,19 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.model.UnitLoadingState;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.transformers.ProgressTransformerKt;
+import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
 import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
 import org.stepic.droid.ui.dialogs.OnLoadPositionListener;
 import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.viewmodel.ProgressViewModel;
 
 import java.util.List;
 import java.util.Map;
@@ -47,7 +50,6 @@ import javax.inject.Inject;
 import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import org.stepic.droid.viewmodel.ProgressViewModel;
 
 public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements StepicOnClickItemListener, OnClickLoadListener, OnLoadPositionListener {
 
@@ -82,13 +84,15 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     private final List<Unit> unitList;
     private RecyclerView recyclerView;
     private final Map<Long, Progress> unitProgressMap;
+    private final Map<Long, UnitLoadingState> unitIdToUnitLoadingStateMap;
 
-    public UnitAdapter(Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, AppCompatActivity activity) {
+    public UnitAdapter(Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, AppCompatActivity activity, Map<Long, UnitLoadingState> unitIdToUnitLoadingStateMap) {
         this.activity = activity;
         this.parentSection = parentSection;
         this.unitList = unitList;
         this.lessonList = lessonList;
         this.unitProgressMap = unitProgressMap;
+        this.unitIdToUnitLoadingStateMap = unitIdToUnitLoadingStateMap;
         MainApplication.component().inject(this);
     }
 
@@ -114,6 +118,14 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     public void onBindViewHolder(UnitViewHolder holder, int position) {
         Unit unit = unitList.get(position);
         Lesson lesson = lessonList.get(position);
+
+        long unitId = unit.getId();
+        boolean needAnimation = true;
+        if (holder.oldUnitId != unitId) {
+            //if rebinding than animation is not needed
+            holder.oldUnitId = unitId;
+            needAnimation = false;
+        }
 
         StringBuilder titleBuilder = new StringBuilder();
         titleBuilder.append(parentSection.getPosition());
@@ -167,6 +179,11 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 holder.preLoadIV.setVisibility(View.GONE);
                 holder.whenLoad.setVisibility(View.VISIBLE);
                 holder.afterLoad.setVisibility(View.GONE);
+
+                UnitLoadingState unitLoadingState = unitIdToUnitLoadingStateMap.get(unit.getId());
+                if (unitLoadingState != null) {
+                    holder.whenLoad.setProgressPortion(unitLoadingState.getPortion(), needAnimation);
+                }
 
                 //todo: add cancel of downloading
             } else {
@@ -311,7 +328,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         View preLoadIV;
 
         @BindView(R.id.when_load_view)
-        View whenLoad;
+        ProgressWheel whenLoad;
 
         @BindView(R.id.after_load_iv)
         View afterLoad;
@@ -333,6 +350,8 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         @BindDrawable(R.drawable.ic_lesson_cover)
         Drawable lessonPlaceholderDrawable;
+
+        long oldUnitId = -1;
 
         public UnitViewHolder(View itemView, final StepicOnClickItemListener listener, final OnClickLoadListener loadListener) {
             super(itemView);

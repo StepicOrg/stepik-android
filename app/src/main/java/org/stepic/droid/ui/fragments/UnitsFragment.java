@@ -29,6 +29,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.modules.UnitsModule;
 import org.stepic.droid.core.presenters.UnitsPresenter;
+import org.stepic.droid.core.presenters.contracts.DownloadingProgressUnitsView;
 import org.stepic.droid.core.presenters.contracts.UnitsView;
 import org.stepic.droid.events.units.NotCachedUnitEvent;
 import org.stepic.droid.events.units.UnitCachedEvent;
@@ -38,6 +39,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
+import org.stepic.droid.model.UnitLoadingState;
 import org.stepic.droid.ui.adapters.UnitAdapter;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
@@ -51,7 +53,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
-public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView {
+public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView, DownloadingProgressUnitsView {
 
     private final static String SECTION_KEY = "section_key";
 
@@ -95,6 +97,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     private List<Unit> unitList;
     private List<Lesson> lessonList;
     private Map<Long, Progress> progressMap;
+    private Map<Long, UnitLoadingState> unitIdToUnitLoadingStateMap;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,6 +110,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         setRetainInstance(true);
         setHasOptionsMenu(true);
         section = getArguments().getParcelable(SECTION_KEY);
+        unitIdToUnitLoadingStateMap = new HashMap<>();
     }
 
     @Nullable
@@ -138,7 +142,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         unitList = new ArrayList<>();
         lessonList = new ArrayList<>();
         progressMap = new HashMap<>();
-        adapter = new UnitAdapter(section, unitList, lessonList, progressMap, (AppCompatActivity) getActivity());
+        adapter = new UnitAdapter(section, unitList, lessonList, progressMap, (AppCompatActivity) getActivity(), unitIdToUnitLoadingStateMap);
         unitsRecyclerView.setAdapter(adapter);
 
 
@@ -336,4 +340,17 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         }
     }
 
+    @Override
+    public void onNewProgressValue(@NonNull UnitLoadingState unitLoadingState) {
+
+        Pair<Unit, Integer> unitPairPosition = getUnitOnScreenAndPositionById(unitLoadingState.getUnitId());
+        if (unitPairPosition == null) return;
+        Unit unit = unitPairPosition.first;
+        int position = unitPairPosition.second;
+
+        //change state for updating in adapter
+        unitIdToUnitLoadingStateMap.put(unitLoadingState.getUnitId(), unitLoadingState);
+
+        adapter.notifyItemChanged(position);
+    }
 }
