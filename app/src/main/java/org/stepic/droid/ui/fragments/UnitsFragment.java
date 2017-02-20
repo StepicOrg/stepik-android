@@ -53,8 +53,12 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
+import timber.log.Timber;
 
 public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView, DownloadingProgressUnitsView {
+
+    private static final int ANIMATION_DURATION = 0;
 
     private final static String SECTION_KEY = "section_key";
 
@@ -143,12 +147,15 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         unitsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        unitsRecyclerView.getItemAnimator().setChangeDuration(0);
         unitList = new ArrayList<>();
         lessonList = new ArrayList<>();
         progressMap = new HashMap<>();
         adapter = new UnitAdapter(section, unitList, lessonList, progressMap, (AppCompatActivity) getActivity(), lessonIdToUnitLoadingStateMap);
         unitsRecyclerView.setAdapter(adapter);
+        unitsRecyclerView.setItemAnimator(new SlideInRightAnimator());
+        unitsRecyclerView.getItemAnimator().setRemoveDuration(ANIMATION_DURATION);
+        unitsRecyclerView.getItemAnimator().setAddDuration(ANIMATION_DURATION);
+        unitsRecyclerView.getItemAnimator().setMoveDuration(ANIMATION_DURATION);
 
 
         ProgressHelper.activate(progressBar);
@@ -371,6 +378,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         //change state for updating in adapter
         lessonIdToUnitLoadingStateMap.put(lessonLoadingState.getLessonId(), lessonLoadingState);
 
+        Timber.d("notify position = %s", position);
         adapter.notifyItemChanged(position);
     }
 }

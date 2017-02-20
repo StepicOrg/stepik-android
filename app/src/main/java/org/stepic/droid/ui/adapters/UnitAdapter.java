@@ -50,6 +50,7 @@ import javax.inject.Inject;
 import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements StepicOnClickItemListener, OnClickLoadListener, OnLoadPositionListener {
 
@@ -82,7 +83,6 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     private final List<Lesson> lessonList;
     private AppCompatActivity activity;
     private final List<Unit> unitList;
-    private RecyclerView recyclerView;
     private final Map<Long, Progress> unitProgressMap;
     private final Map<Long, LessonLoadingState> lessonIdToUnitLoadingStateMap;
 
@@ -96,28 +96,19 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         MainApplication.component().inject(this);
     }
 
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        this.recyclerView = recyclerView;
-    }
-
-    @Override
-    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-        this.recyclerView = null;
-    }
 
     @Override
     public UnitViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(activity).inflate(R.layout.unit_item, parent, false);
-        return new UnitViewHolder(v, this, this);
+        View v = LayoutInflater.from(activity).inflate(R.layout.unit_item, null);
+        UnitViewHolder unitViewHolder = new UnitViewHolder(v, this, this);
+        return unitViewHolder;
     }
 
     @Override
     public void onBindViewHolder(UnitViewHolder holder, int position) {
         Unit unit = unitList.get(position);
         Lesson lesson = lessonList.get(position);
+        Timber.d("onBind Holder = %s, and when_load = %s", holder, holder.whenLoad);
 
         long lessonId = lesson.getId();
         boolean needAnimation = true;
@@ -173,6 +164,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             holder.whenLoad.setVisibility(View.INVISIBLE);
             holder.afterLoad.setVisibility(View.VISIBLE); //can
 
+            holder.whenLoad.setProgressPortion(0, false);
         } else {
             if (unit.is_loading()) {
 
@@ -184,6 +176,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 if (lessonLoadingState != null) {
                     holder.whenLoad.setProgressPortion(lessonLoadingState.getPortion(), needAnimation);
                 }
+                Timber.d("adapterPos = %s", holder.getAdapterPosition());
 
                 //todo: add cancel of downloading
             } else {
@@ -191,6 +184,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 holder.preLoadIV.setVisibility(View.VISIBLE);
                 holder.whenLoad.setVisibility(View.INVISIBLE);
                 holder.afterLoad.setVisibility(View.GONE);
+                holder.whenLoad.setProgressPortion(0, false);
             }
 
         }

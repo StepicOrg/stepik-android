@@ -8,6 +8,7 @@ import org.stepic.droid.model.DownloadEntity
 import org.stepic.droid.store.ICancelSniffer
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
+import timber.log.Timber
 import java.util.*
 
 class DownloadingProgressPublisher(private val databaseFacade: DatabaseFacade,
@@ -19,7 +20,7 @@ class DownloadingProgressPublisher(private val databaseFacade: DatabaseFacade,
         fun onProgressChanged(lessonId: Long, newPortion: Float)
     }
 
-    private val UPDATE_DELAY = 300
+    private val UPDATE_DELAY = 3000
 
     private var thread: Thread? = null
     private var downloadingProgressCallback: DownloadingProgressCallback? = null
@@ -89,7 +90,7 @@ class DownloadingProgressPublisher(private val databaseFacade: DatabaseFacade,
 
                         val relatedDownloadEntity = entitiesMap[downloadId]
 
-                        if (columnStatus != DownloadManager.STATUS_SUCCESSFUL && relatedDownloadEntity != null && !cancelSniffer.isStepIdCanceled(relatedDownloadEntity.stepId)) {
+                        if (relatedDownloadEntity != null && !cancelSniffer.isStepIdCanceled(relatedDownloadEntity.stepId)) {
                             if (columnStatus == DownloadManager.STATUS_SUCCESSFUL) {
                                 stepIdToProgress[relatedDownloadEntity.stepId] = 1f
                             } else {
@@ -132,6 +133,7 @@ class DownloadingProgressPublisher(private val databaseFacade: DatabaseFacade,
                 val partialProgressValue = partialProgress
 
                 mainHandler.post {
+                    Timber.d("lessonId = %s, progress = %f", lessonId, partialProgressValue)
                     downloadingProgressCallback?.onProgressChanged(lessonId, partialProgressValue)
                 }
 

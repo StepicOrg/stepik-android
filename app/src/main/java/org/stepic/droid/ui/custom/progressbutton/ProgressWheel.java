@@ -13,6 +13,8 @@ import android.widget.ProgressBar;
 
 import org.stepic.droid.R;
 
+import timber.log.Timber;
+
 public class ProgressWheel extends ProgressBar {
 
     //Sizes (with defaults)
@@ -241,8 +243,9 @@ public class ProgressWheel extends ProgressBar {
      */
     public void setProgressPortion(float portion, boolean needAnimation) {
         int newProgress = (int) (MAX_DEGREES * portion);
-        int oldProgress = getProgress();
-        if (oldProgress >= newProgress && needAnimation) {
+        int currentProgress = getProgress();
+        Timber.d("oldProgress = %s, NewProgress = %s, portion = %f, view = %s", currentProgress, newProgress, portion, this);
+        if (currentProgress >= newProgress && needAnimation) {
             //our progress can't go back, when updating
             return;
         }
@@ -254,7 +257,7 @@ public class ProgressWheel extends ProgressBar {
         if (animator != null) {
             animator.cancel();
         }
-        int currentProgress = getProgress();
+
         if (animator == null) {
             animator = ValueAnimator.ofInt(currentProgress, newProgress);
             animator.setInterpolator(DEFAULT_INTERPOLATER);
