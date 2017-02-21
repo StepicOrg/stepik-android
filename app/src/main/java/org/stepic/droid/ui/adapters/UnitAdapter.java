@@ -257,7 +257,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 if (unit.is_loading()) {
                     //cancel loading
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_UNIT, unit.getId() + "");
-//                    cleanManager.removeUnitLesson(unit, lesson); //// FIXME: 21.02.17 is it needed?
+                    cleanManager.removeUnitLesson(unit, lesson); //// FIXME: 21.02.17 is it needed?
                     unit.set_loading(false);
                     unit.set_cached(false);
                     lesson.set_loading(false);
@@ -268,6 +268,12 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                             databaseFacade.updateOnlyCachedLoadingLesson(lesson);
                             databaseFacade.updateOnlyCachedLoadingUnit(unit);
                             cancelSniffer.addUnitIdCancel(unit.getId());
+                            long[] stepIds = lesson.getSteps();
+                            if (stepIds != null) {
+                                for (long stepId : stepIds) {
+                                    downloadManager.cancelStep(stepId);
+                                }
+                            }
                         }
                     });
 
