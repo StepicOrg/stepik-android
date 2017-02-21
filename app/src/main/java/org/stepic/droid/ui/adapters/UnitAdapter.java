@@ -29,6 +29,7 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.LessonLoadingState;
 import org.stepic.droid.store.CleanManager;
+import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.transformers.ProgressTransformerKt;
@@ -75,6 +76,9 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
     @Inject
     ThreadPoolExecutor threadPoolExecutor;
+
+    @Inject
+    ICancelSniffer cancelSniffer;
 
 
     private final static String DELIMITER = ".";
@@ -259,7 +263,27 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 if (unit.is_loading()) {
                     //cancel loading
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_UNIT, unit.getId() + "");
-                    screenManager.showDownload(activity);
+                    cleanManager.removeUnitLesson(unit, lesson);
+                    unit.set_loading(false);
+                    unit.set_cached(false);
+                    lesson.set_loading(false);
+                    lesson.set_cached(false);
+                    threadPoolExecutor.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            databaseFacade.updateOnlyCachedLoadingLesson(lesson);
+                            databaseFacade.updateOnlyCachedLoadingUnit(unit);
+                            cancelSniffer.removeUnitIdCancel(unit.getId());
+                            long[] stepIds = lesson.getSteps();
+                            if (stepIds != null) {
+                                for (long stepId : stepIds) {
+                                    cancelSniffer.addStepIdCancel(stepId);
+                                }
+                            }
+                        }
+                    });
+
+                    notifyItemChanged(position);
                 } else {
                     if (shell.getSharedPreferenceHelper().isNeedToShowVideoQualityExplanation()) {
                         VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(position);
