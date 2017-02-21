@@ -1,6 +1,7 @@
 package org.stepic.droid.core.modules;
 
 
+import android.app.DownloadManager;
 import android.content.Context;
 
 import com.squareup.otto.Bus;
@@ -8,15 +9,18 @@ import com.squareup.otto.Bus;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.core.DownloadingProgressSectionPublisher;
 import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.presenters.CalendarPresenter;
+import org.stepic.droid.core.presenters.CourseFinderPresenter;
+import org.stepic.droid.core.presenters.CourseJoinerPresenter;
+import org.stepic.droid.core.presenters.DownloadingProgressSectionsPresenter;
 import org.stepic.droid.core.presenters.InvitationPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.core.presenters.CourseFinderPresenter;
-import org.stepic.droid.core.presenters.CourseJoinerPresenter;
 import org.stepic.droid.web.IApi;
 
 import java.util.concurrent.ThreadPoolExecutor;
@@ -82,4 +86,18 @@ public class SectionModule {
                                                    Analytic analytic) {
         return new InvitationPresenter(threadPoolExecutor, mainHandler, sharedPreferenceHelper, analytic);
     }
+
+    @PerFragment
+    @Provides
+    DownloadingProgressSectionsPresenter provideDownloadingProgressPresenter(DownloadingProgressSectionPublisher downloadingProgressSectionPublisher) {
+        return new DownloadingProgressSectionsPresenter(downloadingProgressSectionPublisher);
+    }
+
+
+    @Provides
+    @PerFragment
+    DownloadingProgressSectionPublisher progressPublisher(DatabaseFacade databaseFacade, DownloadManager downloadManager, ICancelSniffer cancelSniffer, IMainHandler mainHandler) {
+        return new DownloadingProgressSectionPublisher(databaseFacade, downloadManager, cancelSniffer, mainHandler);
+    }
+
 }

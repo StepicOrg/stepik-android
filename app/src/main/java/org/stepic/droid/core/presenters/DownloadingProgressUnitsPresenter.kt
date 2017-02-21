@@ -1,15 +1,15 @@
 package org.stepic.droid.core.presenters
 
-import org.stepic.droid.core.DownloadingProgressPublisher
+import org.stepic.droid.core.DownloadingProgressUnitPublisher
 import org.stepic.droid.core.presenters.contracts.DownloadingProgressUnitsView
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.LessonLoadingState
 import java.util.*
 
 class DownloadingProgressUnitsPresenter(
-        private val downloadingProgressPublisher: DownloadingProgressPublisher) : PresenterBase<DownloadingProgressUnitsView>() {
+        private val downloadingProgressUnitPublisher: DownloadingProgressUnitPublisher) : PresenterBase<DownloadingProgressUnitsView>() {
 
-    private val downloadCallback = object : DownloadingProgressPublisher.DownloadingProgressCallback {
+    private val downloadCallback = object : DownloadingProgressUnitPublisher.DownloadingProgressCallback {
         override fun onProgressChanged(lessonId: Long, newPortion: Float) {
             view?.onNewProgressValue(LessonLoadingState(lessonId, newPortion))
         }
@@ -24,11 +24,11 @@ class DownloadingProgressUnitsPresenter(
                 lessonStepsMap[it.id] = steps.toSet()
             }
         }
-        downloadingProgressPublisher.subscribe(lessonStepsMap, downloadCallback)
+        downloadingProgressUnitPublisher.subscribe(lessonStepsMap, downloadCallback)
     }
 
     override fun detachView(view: DownloadingProgressUnitsView) {
         super.detachView(view)
-        downloadingProgressPublisher.unsubscribe()
+        downloadingProgressUnitPublisher.unsubscribe()
     }
 }

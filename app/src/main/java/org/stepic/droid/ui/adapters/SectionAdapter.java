@@ -26,9 +26,12 @@ import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.model.SectionLoadingState;
 import org.stepic.droid.store.CleanManager;
+import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
 import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
 import org.stepic.droid.ui.dialogs.OnLoadPositionListener;
 import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
@@ -47,6 +50,7 @@ import javax.inject.Inject;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder> implements OnClickLoadListener, OnLoadPositionListener {
     private final static String SECTION_TITLE_DELIMETER = ". ";
@@ -79,6 +83,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     @Inject
     ThreadPoolExecutor threadPoolExecutor;
 
+    @Inject
+    ICancelSniffer cancelSniffer;
+
     private List<Section> sections;
     private AppCompatActivity activity;
     private CalendarPresenter calendarPresenter;
@@ -88,19 +95,21 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     @ColorInt
     private int defaultColor;
     private Map<String, ProgressViewModel> progressMap;
+    private Map<Long, SectionLoadingState> sectionIdToLoadingStateMap;
     private final int durationMillis = 3000;
 
     public void setDefaultHighlightPosition(int defaultHighlightPosition) {
         this.defaultHighlightPosition = defaultHighlightPosition;
     }
 
-    public SectionAdapter(List<Section> sections, AppCompatActivity activity, CalendarPresenter calendarPresenter, Map<String, ProgressViewModel> progressMap) {
+    public SectionAdapter(List<Section> sections, AppCompatActivity activity, CalendarPresenter calendarPresenter, Map<String, ProgressViewModel> progressMap, Map<Long, SectionLoadingState> sectionIdToLoadingStateMap) {
         this.sections = sections;
         this.activity = activity;
         this.calendarPresenter = calendarPresenter;
         highlightDrawable = ContextCompat.getDrawable(activity, R.drawable.section_background);
         defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.white, activity);
         this.progressMap = progressMap;
+        this.sectionIdToLoadingStateMap = sectionIdToLoadingStateMap;
         MainApplication.component().inject(this);
     }
 
@@ -196,8 +205,19 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 notifyItemChanged(adapterPosition);
             } else {
                 if (section.is_loading()) {
+                    //cancel loading
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_SECTION, section.getId() + "");
-                    screenManager.showDownload(activity);
+                    section.set_loading(false);
+                    section.set_cached(false);
+                    threadPoolExecutor.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            databaseFacade.updateOnlyCachedLoadingSection(section);
+                            cancelSniffer.addSectionIdCancel(section.getId());
+                        }
+                    });
+
+                    notifyItemChanged(adapterPosition);
                 } else {
                     if (shell.getSharedPreferenceHelper().isNeedToShowVideoQualityExplanation()) {
                         VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(adapterPosition);
@@ -280,7 +300,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         View preLoadIV;
 
         @BindView(R.id.when_load_view)
-        View whenLoad;
+        ProgressWheel whenLoad;
 
         @BindView(R.id.after_load_iv)
         View afterLoad;
@@ -300,6 +320,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
         @BindView(R.id.section_student_progress_score_bar)
         ProgressBar progressScore;
+
+        private long oldSectionId = -1;
 
 
         public SectionViewHolder(View itemView) {
@@ -342,6 +364,16 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             // the 0 index always for calendar, we make its GONE, if calendar is not needed.
             int position = positionInAdapter - PRE_SECTION_LIST_DELTA;
             Section section = sections.get(position);
+
+            Timber.d("onBind Holder = %s", this);
+            long sectionId = section.getId();
+            boolean needAnimation = true;
+            if (oldSectionId != sectionId) {
+                //if rebinding than animation is not needed
+                oldSectionId = sectionId;
+                needAnimation = false;
+            }
+
 
             String title = section.getTitle();
             int positionOfSection = section.getPosition();
@@ -387,14 +419,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
                 loadButton.setVisibility(View.VISIBLE);
                 if (section.is_cached()) {
-
-                    // FIXME: 05.11.15 Delete course from cache. Set CLICK LISTENER.
                     //cached
-
                     preLoadIV.setVisibility(View.GONE);
                     whenLoad.setVisibility(View.INVISIBLE);
                     afterLoad.setVisibility(View.VISIBLE); //can
 
+                    whenLoad.setProgressPortion(0, false);
                 } else {
                     if (section.is_loading()) {
 
@@ -402,12 +432,18 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                         whenLoad.setVisibility(View.VISIBLE);
                         afterLoad.setVisibility(View.GONE);
 
-                        //todo: add cancel of downloading
+                        SectionLoadingState sectionLoadingState = sectionIdToLoadingStateMap.get(section.getId());
+                        if (sectionLoadingState != null) {
+                            whenLoad.setProgressPortion(sectionLoadingState.getPortion(), needAnimation);
+                        }
+
                     } else {
                         //not cached not loading
                         preLoadIV.setVisibility(View.VISIBLE);
                         whenLoad.setVisibility(View.INVISIBLE);
                         afterLoad.setVisibility(View.GONE);
+
+                        whenLoad.setProgressPortion(0, false);
                     }
 
                 }

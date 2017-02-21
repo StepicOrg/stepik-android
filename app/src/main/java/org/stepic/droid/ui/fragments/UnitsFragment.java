@@ -105,7 +105,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     private List<Unit> unitList;
     private List<Lesson> lessonList;
     private Map<Long, Progress> progressMap;
-    private Map<Long, LessonLoadingState> lessonIdToUnitLoadingStateMap;
+    private Map<Long, LessonLoadingState> lessonIdToLoadingStateMap;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,7 +118,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         setRetainInstance(true);
         setHasOptionsMenu(true);
         section = getArguments().getParcelable(SECTION_KEY);
-        lessonIdToUnitLoadingStateMap = new HashMap<>();
+        lessonIdToLoadingStateMap = new HashMap<>();
     }
 
     @Nullable
@@ -150,7 +150,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         unitList = new ArrayList<>();
         lessonList = new ArrayList<>();
         progressMap = new HashMap<>();
-        adapter = new UnitAdapter(section, unitList, lessonList, progressMap, (AppCompatActivity) getActivity(), lessonIdToUnitLoadingStateMap);
+        adapter = new UnitAdapter(section, unitList, lessonList, progressMap, (AppCompatActivity) getActivity(), lessonIdToLoadingStateMap);
         unitsRecyclerView.setAdapter(adapter);
         unitsRecyclerView.setItemAnimator(new SlideInRightAnimator());
         unitsRecyclerView.getItemAnimator().setRemoveDuration(ANIMATION_DURATION);
@@ -376,7 +376,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         }
 
         //change state for updating in adapter
-        lessonIdToUnitLoadingStateMap.put(lessonLoadingState.getLessonId(), lessonLoadingState);
+        lessonIdToLoadingStateMap.put(lessonLoadingState.getLessonId(), lessonLoadingState);
 
         Timber.d("notify position = %s", position);
         adapter.notifyItemChanged(position);

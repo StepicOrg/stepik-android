@@ -132,6 +132,16 @@ class DatabaseFacade {
 
     fun getStepById(stepId: Long) = stepDao.get(DbStructureStep.Column.STEP_ID, stepId.toString())
 
+    fun getStepsById(stepIds: List<Long>): List<Step> {
+        val stringIds = DbParseHelper.parseLongArrayToString(stepIds.toLongArray(), AppConstants.COMMA)
+        if (stringIds != null) {
+            return stepDao
+                    .getAllInRange(DbStructureStep.Column.STEP_ID, stringIds)
+        } else {
+            return ArrayList<Step>()
+        }
+    }
+
     fun getLessonById(lessonId: Long) = lessonDao.get(DbStructureLesson.Column.LESSON_ID, lessonId.toString())
 
     fun getSectionById(sectionId: Long) = sectionDao.get(DbStructureSections.Column.SECTION_ID, sectionId.toString())

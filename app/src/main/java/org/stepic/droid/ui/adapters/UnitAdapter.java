@@ -160,10 +160,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         }
 
         if (unit.is_cached()) {
-
-            // FIXME: 05.11.15 Delete course from cache. Set CLICK LISTENER.
             //cached
-
             holder.preLoadIV.setVisibility(View.GONE);
             holder.whenLoad.setVisibility(View.INVISIBLE);
             holder.afterLoad.setVisibility(View.VISIBLE); //can
@@ -180,9 +177,6 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 if (lessonLoadingState != null) {
                     holder.whenLoad.setProgressPortion(lessonLoadingState.getPortion(), needAnimation);
                 }
-                Timber.d("adapterPos = %s", holder.getAdapterPosition());
-
-                //todo: add cancel of downloading
             } else {
                 //not cached not loading
                 holder.preLoadIV.setVisibility(View.VISIBLE);
@@ -263,7 +257,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 if (unit.is_loading()) {
                     //cancel loading
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_UNIT, unit.getId() + "");
-                    cleanManager.removeUnitLesson(unit, lesson);
+//                    cleanManager.removeUnitLesson(unit, lesson); //// FIXME: 21.02.17 is it needed?
                     unit.set_loading(false);
                     unit.set_cached(false);
                     lesson.set_loading(false);
@@ -273,13 +267,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                         public void run() {
                             databaseFacade.updateOnlyCachedLoadingLesson(lesson);
                             databaseFacade.updateOnlyCachedLoadingUnit(unit);
-                            cancelSniffer.removeUnitIdCancel(unit.getId());
-                            long[] stepIds = lesson.getSteps();
-                            if (stepIds != null) {
-                                for (long stepId : stepIds) {
-                                    cancelSniffer.addStepIdCancel(stepId);
-                                }
-                            }
+                            cancelSniffer.addUnitIdCancel(unit.getId());
                         }
                     });
 

@@ -13,7 +13,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -55,10 +54,12 @@ import org.stepic.droid.core.modules.SectionModule;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
+import org.stepic.droid.core.presenters.DownloadingProgressSectionsPresenter;
 import org.stepic.droid.core.presenters.InvitationPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.core.presenters.contracts.CalendarExportableView;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
+import org.stepic.droid.core.presenters.contracts.DownloadingProgressSectionsView;
 import org.stepic.droid.core.presenters.contracts.InvitationView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
@@ -75,6 +76,7 @@ import org.stepic.droid.events.sections.SectionCachedEvent;
 import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.model.SectionLoadingState;
 import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.ui.adapters.SectionAdapter;
@@ -92,11 +94,14 @@ import org.stepic.droid.util.StringUtil;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 import uk.co.chrisjenx.calligraphy.TypefaceUtils;
@@ -108,10 +113,11 @@ public class SectionsFragment
         LoadCourseView, CourseJoinView,
         CalendarExportableView,
         SectionsView,
-        InvitationView {
+        InvitationView, DownloadingProgressSectionsView {
 
     public static String joinFlag = "joinFlag";
     private static int INVITE_REQUEST_CODE = 324;
+    private static final int ANIMATION_DURATION = 0;
 
     public static SectionsFragment newInstance() {
         SectionsFragment fragment = new SectionsFragment();
@@ -189,11 +195,15 @@ public class SectionsFragment
     @Inject
     InvitationPresenter invitationPresenter;
 
+    @Inject
+    DownloadingProgressSectionsPresenter downloadingProgressSectionsPresenter;
+
     private boolean wasIndexed;
     private Uri urlInApp;
     private Uri urlInWeb;
     private String title;
     private String description;
+    private Map<Long, SectionLoadingState> sectionIdToLoadingStateMap = new HashMap<>();
 
     LinearLayoutManager linearLayoutManager;
 
@@ -236,10 +246,15 @@ public class SectionsFragment
         linearLayoutManager = new LinearLayoutManager(getActivity());
         sectionsRecyclerView.setLayoutManager(linearLayoutManager);
         sectionList = new ArrayList<>();
-        adapter = new SectionAdapter(sectionList, ((AppCompatActivity) getActivity()), calendarPresenter, sectionsPresenter.getProgressMap());
+        adapter = new SectionAdapter(sectionList, ((AppCompatActivity) getActivity()), calendarPresenter, sectionsPresenter.getProgressMap(), sectionIdToLoadingStateMap);
         sectionsRecyclerView.setAdapter(adapter);
 
-        sectionsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        sectionsRecyclerView.setItemAnimator(new SlideInRightAnimator());
+        sectionsRecyclerView.getItemAnimator().setRemoveDuration(ANIMATION_DURATION);
+        sectionsRecyclerView.getItemAnimator().setAddDuration(ANIMATION_DURATION);
+        sectionsRecyclerView.getItemAnimator().setMoveDuration(ANIMATION_DURATION);
+        sectionsRecyclerView.getItemAnimator().setChangeDuration(0);
+
 
         joinCourseProgressDialog = new LoadingProgressDialog(getContext());
         ProgressHelper.activate(loadOnCenterProgressBar);
@@ -249,6 +264,7 @@ public class SectionsFragment
         courseJoinerPresenter.attachView(this);
         sectionsPresenter.attachView(this);
         invitationPresenter.attachView(this);
+        downloadingProgressSectionsPresenter.attachView(this);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         onNewIntent(((AppCompatActivity) getActivity()).getIntent());
@@ -403,6 +419,8 @@ public class SectionsFragment
             linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
             afterUpdateModulePosition = -1;
         }
+
+        downloadingProgressSectionsPresenter.subscribeToProgressUpdates(sectionList);
     }
 
     @Override
@@ -888,5 +906,28 @@ public class SectionsFragment
                 })
                 .build();
         dialog.show();
+    }
+
+    @Override
+    public void onNewProgressValue(@NotNull SectionLoadingState state) {
+        // FIXME: 21.02.17
+        int position = -1;
+        for (int i = 0; i < sectionList.size(); i++) {
+            Section section = sectionList.get(i);
+            if (section.getId() == state.getSectionId()) {
+                position = i;
+            }
+        }
+
+        if (position < 0) {
+            return;
+        }
+
+        position += SectionAdapter.PRE_SECTION_LIST_DELTA;
+
+        //change state for updating in adapter
+        sectionIdToLoadingStateMap.put(state.getSectionId(), state);
+        adapter.notifyItemChanged(position);
+
     }
 }

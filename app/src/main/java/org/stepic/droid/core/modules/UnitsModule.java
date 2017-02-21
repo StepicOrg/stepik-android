@@ -1,12 +1,15 @@
 package org.stepic.droid.core.modules;
 
+import android.app.DownloadManager;
+
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.IMainHandler;
-import org.stepic.droid.core.DownloadingProgressPublisher;
+import org.stepic.droid.core.DownloadingProgressUnitPublisher;
 import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.presenters.DownloadingProgressUnitsPresenter;
 import org.stepic.droid.core.presenters.UnitsPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
+import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.web.IApi;
 
@@ -28,9 +31,16 @@ public class UnitsModule {
         return new UnitsPresenter(analytic, threadPoolExecutor, mainHandler, sharedPreferenceHelper, databaseFacade, api);
     }
 
+    @Provides
+    @PerFragment
+    DownloadingProgressUnitPublisher progressPublisher(DatabaseFacade databaseFacade, DownloadManager downloadManager, ICancelSniffer cancelSniffer, IMainHandler mainHandler) {
+        return new DownloadingProgressUnitPublisher(databaseFacade, downloadManager, cancelSniffer, mainHandler);
+    }
+
+
     @PerFragment
     @Provides
-    public DownloadingProgressUnitsPresenter provideDownloadingProgressUnitsPresenter(DownloadingProgressPublisher downloadingProgressPublisher) {
-        return new DownloadingProgressUnitsPresenter(downloadingProgressPublisher);
+    public DownloadingProgressUnitsPresenter provideDownloadingProgressUnitsPresenter(DownloadingProgressUnitPublisher downloadingProgressUnitPublisher) {
+        return new DownloadingProgressUnitsPresenter(downloadingProgressUnitPublisher);
     }
 }

@@ -11,16 +11,17 @@ import org.stepic.droid.util.AppConstants
 import timber.log.Timber
 import java.util.*
 
-class DownloadingProgressPublisher(private val databaseFacade: DatabaseFacade,
-                                   private val systemDownloadManager: DownloadManager,
-                                   private val cancelSniffer: ICancelSniffer,
-                                   private val mainHandler: IMainHandler) {
+//fixme: refactor it, merge with DownloadingProgressSectionPublisher
+class DownloadingProgressUnitPublisher(private val databaseFacade: DatabaseFacade,
+                                       private val systemDownloadManager: DownloadManager,
+                                       private val cancelSniffer: ICancelSniffer,
+                                       private val mainHandler: IMainHandler) {
 
     interface DownloadingProgressCallback {
         fun onProgressChanged(lessonId: Long, newPortion: Float)
     }
 
-    private val UPDATE_DELAY = 3000
+    private val UPDATE_DELAY = 300
 
     private var thread: Thread? = null
     private var downloadingProgressCallback: DownloadingProgressCallback? = null
@@ -74,7 +75,7 @@ class DownloadingProgressPublisher(private val databaseFacade: DatabaseFacade,
             }
 
             private fun processOneLesson(lessonId: Long, stepIds: Set<Long>) {
-                val pairCursorAndDownloading = getCursorForLesson(lessonId, stepIds) ?: return
+                val pairCursorAndDownloading = getCursorForSteps(stepIds) ?: return
 
                 val cursor = pairCursorAndDownloading.first
                 val entitiesMap: Map<Int, DownloadEntity> = pairCursorAndDownloading.second.associate { kotlin.Pair(it.downloadId.toInt(), it) }
@@ -139,7 +140,7 @@ class DownloadingProgressPublisher(private val databaseFacade: DatabaseFacade,
 
             }
 
-            private fun getCursorForLesson(lessonId: Long, stepIds: Set<Long>): Pair<Cursor, List<DownloadEntity>>? {
+            private fun getCursorForSteps(stepIds: Iterable<Long>): Pair<Cursor, List<DownloadEntity>>? {
 
                 val nowDownloadingListOfSpecificSteps = databaseFacade
                         .getAllDownloadEntities()
