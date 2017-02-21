@@ -30,10 +30,7 @@ public class UnitsModule {
 
     @PerFragment
     @Provides
-    public DownloadingProgressUnitsPresenter provideDownloadingProgressUnitsPresenter(DownloadingProgressPublisher downloadingProgressPublisher,
-                                                                                      DatabaseFacade databaseFacade,
-                                                                                      ThreadPoolExecutor threadPoolExecutor,
-                                                                                      IMainHandler mainHandler) {
-        return new DownloadingProgressUnitsPresenter(downloadingProgressPublisher, databaseFacade, threadPoolExecutor, mainHandler);
+    public DownloadingProgressUnitsPresenter provideDownloadingProgressUnitsPresenter(DownloadingProgressPublisher downloadingProgressPublisher) {
+        return new DownloadingProgressUnitsPresenter(downloadingProgressPublisher);
     }
 }
