@@ -17,7 +17,7 @@ import org.stepic.droid.R;
 public class ProgressLatexView extends FrameLayout {
 
     private LatexSupportableEnhancedFrameLayout optionText;
-    public String beforeText = null;
+    private String beforeText = null;
     private ProgressBar progressBar;
 
     public ProgressLatexView(Context context) {
