@@ -71,7 +71,7 @@ class PersistentCourseListPresenter(
                 while (hasNextPage.get()) {
                     val response: Response<CoursesStepicResponse>? = try {
                         if (courseType == Table.featured) {
-                            api.getFeaturedCourses(currentPage.get()).execute()
+                            api.getPopularCourses(currentPage.get()).execute()
                         } else {
                             api.getEnrolledCourses(currentPage.get()).execute()
                         }

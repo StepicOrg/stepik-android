@@ -32,7 +32,7 @@ public interface IApi {
 
     Call<CoursesStepicResponse> getEnrolledCourses(int page);
 
-    Call<CoursesStepicResponse> getFeaturedCourses(int page);
+    Call<CoursesStepicResponse> getPopularCourses(int page);
 
     Call<StepicProfileResponse> getUserProfile();
 
