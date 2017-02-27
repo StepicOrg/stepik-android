@@ -86,6 +86,9 @@ class PersistentCourseListPresenter(
                             //this lock need for not saving enrolled courses to database after user click logout
                             RWLocks.ClearEnrollmentsLock.writeLock().lock()
                             if (sharedPreferenceHelper.authResponseFromStore != null || courseType == Table.featured) {
+                                if (courseType == Table.featured && isRefreshing && currentPage.get() == 1) {
+                                    databaseFacade.dropFeaturedCourses()
+                                }
                                 coursesFromInternet.filterNotNull().forEach {
                                     databaseFacade.addCourse(it, courseType)
                                 }
@@ -108,7 +111,7 @@ class PersistentCourseListPresenter(
                         } else {
                             filteredCourseList = filterApplicator.getFilteredFromSharedPrefs(allCourses, courseType)
                         }
-                        if ((filteredCourseList.size < MIN_COURSES_ON_SCREEN || isRefreshing) && hasNextPage.get()) {
+                        if ((filteredCourseList.size < MIN_COURSES_ON_SCREEN) && hasNextPage.get()) {
                             //try to load next in loop
                         } else {
                             val coursesForShow = if (courseType == Table.enrolled) {
