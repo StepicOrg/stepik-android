@@ -1,12 +1,14 @@
 package org.stepic.droid.ui.adapters;
 
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
@@ -45,9 +47,10 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
 
     private List<? extends ISocialType> socialList;
     private FragmentActivity activity;
+    @Nullable
     private GoogleApiClient client;
 
-    public SocialAuthAdapter(FragmentActivity activity, GoogleApiClient client) {
+    public SocialAuthAdapter(FragmentActivity activity, @Nullable GoogleApiClient client) {
         this.client = client;
         MainApplication.component().inject(this);
         this.activity = activity;
@@ -64,7 +67,6 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
     @Override
     public void onBindViewHolder(SocialViewHolder holder, int position) {
         ISocialType socialType = socialList.get(position);
-
         holder.imageView.setImageDrawable(socialType.getIcon());
     }
 
@@ -78,8 +80,13 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
         ISocialType type = socialList.get(position);
         analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_SOCIAL, type.getIdentifier());
         if (type == SocialManager.SocialType.google) {
-            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(client);
-            activity.startActivityForResult(signInIntent, AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN);
+            if (client == null) {
+                analytic.reportEvent(Analytic.Interaction.GOOGLE_SOCIAL_IS_NOT_ENABLED);
+                Toast.makeText(MainApplication.getAppContext(), R.string.google_services_late, Toast.LENGTH_SHORT).show();
+            } else {
+                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(client);
+                activity.startActivityForResult(signInIntent, AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN);
+            }
         } else if (type == SocialManager.SocialType.facebook) {
             List<String> permissions = new ArrayList<>();
             permissions.add("email");

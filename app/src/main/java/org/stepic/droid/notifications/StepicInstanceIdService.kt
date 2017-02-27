@@ -24,7 +24,7 @@ class StepicInstanceIdService : FirebaseInstanceIdService() {
                 val authTokenStepik : AuthenticationStepicResponse = sharedPreferences.authResponseFromStore!! //for logged user only work
                 val token = tokenNullable!!
                 val response = api.registerDevice(token).execute()
-                if (!response.isSuccess && response.code() != 400) { //400 -- device already registered
+                if (!response.isSuccessful && response.code() != 400) { //400 -- device already registered
                     throw Exception("response was failed. it is ok. code: " + response.code())
                 }
                 sharedPreferences.setIsGcmTokenOk(true)

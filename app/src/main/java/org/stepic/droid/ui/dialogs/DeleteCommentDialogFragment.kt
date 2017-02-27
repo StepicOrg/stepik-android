@@ -12,12 +12,11 @@ import org.stepic.droid.events.comments.FailDeleteCommentEvent
 import org.stepic.droid.events.comments.InternetConnectionProblemInCommentsEvent
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.web.CommentsResponse
 import org.stepic.droid.web.IApi
-import retrofit.Callback
-import retrofit.Response
-import retrofit.Retrofit
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import javax.inject.Inject
 
 class DeleteCommentDialogFragment : DialogFragment() {
@@ -29,7 +28,7 @@ class DeleteCommentDialogFragment : DialogFragment() {
     lateinit var bus: Bus;
 
     @Inject
-    lateinit var analytic : Analytic
+    lateinit var analytic: Analytic
 
     companion object {
         private val COMMENT_ID_KEY = "comment_id_key"
@@ -55,9 +54,10 @@ class DeleteCommentDialogFragment : DialogFragment() {
                     ProgressHelper.activate(loadingProgressDialog)
                     analytic.reportEvent(Analytic.Comments.DELETE_COMMENT_CONFIRMATION)
                     api.deleteComment(commentId).enqueue(object : Callback<CommentsResponse> {
-                        override fun onResponse(response: Response<CommentsResponse>?, retrofit: Retrofit?) {
+
+                        override fun onResponse(call: Call<CommentsResponse>?, response: Response<CommentsResponse>?) {
                             ProgressHelper.dismiss(loadingProgressDialog)
-                            if (response?.isSuccess ?: false) {
+                            if (response?.isSuccessful ?: false) {
                                 val comment = response?.body()?.comments?.firstOrNull()
                                 comment?.let {
                                     bus.post(NewCommentWasAddedOrUpdateEvent(it.target!!, it))
@@ -67,7 +67,7 @@ class DeleteCommentDialogFragment : DialogFragment() {
                             }
                         }
 
-                        override fun onFailure(t: Throwable?) {
+                        override fun onFailure(call: Call<CommentsResponse>?, t: Throwable?) {
                             ProgressHelper.dismiss(loadingProgressDialog)
                             bus.post(InternetConnectionProblemInCommentsEvent(null))
                         }

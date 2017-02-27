@@ -13,7 +13,7 @@ import org.stepic.droid.ui.NotificationCategory;
 
 import java.io.IOException;
 
-import retrofit.Call;
+import retrofit2.Call;
 
 
 public interface IApi {

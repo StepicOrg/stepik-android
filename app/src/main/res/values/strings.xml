@@ -340,4 +340,7 @@
     <string name="accessibility_drag_and_drop">drag and drop</string>
     <string name="fill_blanks_select_value"><![CDATA[<Select value>]]></string>
     <string name="fill_blanks_type_text">Type text</string>
+    <string name="table_quiz_beta">Table problem β</string>
+    <string name="logout_user_error">Access was revoked. Login again</string>
+    <string name="google_services_late">Update Google Play Services for signing in with it</string>
 </resources>

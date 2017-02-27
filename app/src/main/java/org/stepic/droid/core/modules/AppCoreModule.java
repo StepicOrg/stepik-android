@@ -31,6 +31,7 @@ import org.stepic.droid.core.ScreenManagerImpl;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.core.ShareHelperImpl;
 import org.stepic.droid.core.Shell;
+import org.stepic.droid.core.StepikLogoutManager;
 import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.notifications.LocalReminder;
 import org.stepic.droid.notifications.LocalReminderImpl;
@@ -62,6 +63,9 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 @Module(includes = {StorageModule.class})
@@ -282,8 +286,8 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    TextResolver provideTextResolver() {
-        return new TextResolverImpl();
+    TextResolver provideTextResolver(IConfig config) {
+        return new TextResolverImpl(config);
     }
 
 
@@ -294,5 +298,24 @@ public class AppCoreModule {
     @Singleton
     RecyclerView.RecycledViewPool provideRecycledViewPool() {
         return new RecyclerView.RecycledViewPool();
+    }
+
+    /**
+     * this retrofit is only for parsing error body
+     */
+    @Provides
+    @Singleton
+    Retrofit provideRetrofit(IConfig config) {
+        return new Retrofit.Builder()
+                .baseUrl(config.getBaseUrl())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(new OkHttpClient())
+                .build();
+    }
+
+    @Provides
+    @Singleton
+    StepikLogoutManager provideStepikLogoutManager(ThreadPoolExecutor threadPoolExecutor, IMainHandler mainHandler, UserPreferences userPreferences, SharedPreferenceHelper sharedPreferenceHelper, DownloadManager downloadManager, DatabaseFacade dbFacade) {
+        return new StepikLogoutManager(threadPoolExecutor, mainHandler, userPreferences, downloadManager, sharedPreferenceHelper, dbFacade);
     }
 }

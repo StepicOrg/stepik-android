@@ -123,7 +123,7 @@ class StepAttemptPresenter(val mainHandler: IMainHandler,
                     Runnable {
                         try {
                             val submissionsResponse = api.getSubmissions(attemptId).execute()
-                            if (submissionsResponse.isSuccess) {
+                            if (submissionsResponse.isSuccessful) {
                                 val submission = submissionsResponse.body().submissions.firstOrNull()
                                 // if null ->  we do not have submissions for THIS ATTEMPT
 
@@ -209,7 +209,7 @@ class StepAttemptPresenter(val mainHandler: IMainHandler,
     private fun getExistingAttempts(stepId: Long) {
         try {
             val existingAttemptsResponse = api.getExistingAttempts(stepId).execute()
-            if (existingAttemptsResponse.isSuccess) {
+            if (existingAttemptsResponse.isSuccessful) {
                 val body = existingAttemptsResponse.body()
                 if (body == null) {
                     createNewAttempt(stepId)

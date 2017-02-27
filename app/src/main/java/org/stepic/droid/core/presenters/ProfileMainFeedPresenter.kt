@@ -1,15 +1,11 @@
 package org.stepic.droid.core.presenters
 
-import android.app.DownloadManager
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.core.StepikLogoutManager
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.model.Profile
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.preferences.UserPreferences
-import org.stepic.droid.store.operations.DatabaseFacade
-import org.stepic.droid.util.FileUtil
-import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.IApi
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
@@ -19,9 +15,7 @@ class ProfileMainFeedPresenter(private val sharedPreferenceHelper: SharedPrefere
                                private val api: IApi,
                                private val threadPoolExecutor: ThreadPoolExecutor,
                                private val analytic: Analytic,
-                               private val databaseFacade: DatabaseFacade,
-                               private val userPreferences: UserPreferences,
-                               private val systemDownloadManager: DownloadManager) : PresenterBase<ProfileMainFeedView>() {
+                               private val stepikLogoutManager: StepikLogoutManager) : PresenterBase<ProfileMainFeedView>() {
 
     val isProfileFetching = AtomicBoolean(false)
     var profile: Profile? = null
@@ -88,28 +82,9 @@ class ProfileMainFeedPresenter(private val sharedPreferenceHelper: SharedPrefere
         profile = null
         view?.showAnonymous()
         analytic.reportEvent(org.stepic.droid.analytic.Analytic.Interaction.CLICK_YES_LOGOUT)
-        threadPoolExecutor.execute {
-            val directoryForClean = userPreferences.userDownloadFolder
-            val downloadEntities = databaseFacade.getAllDownloadEntities()
-            downloadEntities.forEach {
-                it?.downloadId?.let {
-                    downloadId ->
-                    systemDownloadManager.remove(downloadId)
-                }
-            }
-            FileUtil.cleanDirectory(directoryForClean)
-            try {
-                RWLocks.ClearEnrollmentsLock.writeLock().lock()
-                sharedPreferenceHelper.deleteAuthInfo()
-                databaseFacade.dropDatabase()
-            } finally {
-                RWLocks.ClearEnrollmentsLock.writeLock().unlock()
-            }
-            mainHandler.post {
-                view?.onLogoutSuccess()
-            }
+        stepikLogoutManager.logout {
+            view?.onLogoutSuccess()
         }
-
     }
 
 }

@@ -14,7 +14,7 @@ import org.stepic.droid.store.operations.Table
 import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.CoursesStepicResponse
 import org.stepic.droid.web.IApi
-import retrofit.Response
+import retrofit2.Response
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
@@ -79,7 +79,7 @@ class PersistentCourseListPresenter(
                         null
                     }
 
-                    if (response != null && response.isSuccess) {
+                    if (response != null && response.isSuccessful) {
                         val coursesFromInternet = response.body().courses
 
                         try {

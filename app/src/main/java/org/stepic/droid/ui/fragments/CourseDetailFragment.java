@@ -83,9 +83,9 @@ import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CourseDetailFragment extends FragmentBase implements LoadCourseView, CourseJoinView {
 
@@ -417,12 +417,12 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             bus.post(new StartLoadingInstructorsEvent(course));
             shell.getApi().getUsers(course.getInstructors()).enqueue(new Callback<UserStepicResponse>() {
                 @Override
-                public void onResponse(Response<UserStepicResponse> response, Retrofit retrofit) {
-                    if (response.isSuccess()) {
+                public void onResponse(Call<UserStepicResponse> call, Response<UserStepicResponse> response) {
+                    if (response.isSuccessful()) {
                         if (response.body() == null) {
                             bus.post(new FailureLoadInstructorsEvent(course, null));
                         } else {
-                            bus.post(new OnResponseLoadingInstructorsEvent(course, response, retrofit));
+                            bus.post(new OnResponseLoadingInstructorsEvent(course, response));
                         }
                     } else {
                         bus.post(new FailureLoadInstructorsEvent(course, null));
@@ -430,7 +430,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
                 }
 
                 @Override
-                public void onFailure(Throwable t) {
+                public void onFailure(Call<UserStepicResponse> call, Throwable t) {
                     bus.post(new FailureLoadInstructorsEvent(course, t));
                 }
             });

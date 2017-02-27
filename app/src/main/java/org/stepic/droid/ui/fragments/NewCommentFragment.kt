@@ -23,9 +23,10 @@ import org.stepic.droid.ui.util.BackButtonHandler
 import org.stepic.droid.ui.util.OnBackClickListener
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.web.CommentsResponse
-import retrofit.Callback
-import retrofit.Response
-import retrofit.Retrofit
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 
 class NewCommentFragment : FragmentBase(), OnBackClickListener {
 
@@ -167,8 +168,8 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
 
                 shell.api.postComment(text, target!!, parent).enqueue(object : Callback<CommentsResponse> {
 
-                    override fun onResponse(response: Response<CommentsResponse>?, retrofit: Retrofit?) {
-                        if (response?.isSuccess ?: false && response?.body()?.comments != null) {
+                    override fun onResponse(call: Call<CommentsResponse>?, response: Response<CommentsResponse>?) {
+                        if (response?.isSuccessful ?: false && response?.body()?.comments != null) {
                             analytic.reportEvent(Analytic.Comments.COMMENTS_SENT_SUCCESSFULLY)
                             val newComment = response?.body()?.comments?.firstOrNull()
                             bus.post(NewCommentWasAddedOrUpdateEvent(targetId = target!!, newCommentInsertOrUpdate = newComment))
@@ -181,7 +182,7 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
                         }
                     }
 
-                    override fun onFailure(t: Throwable?) {
+                    override fun onFailure(call: Call<CommentsResponse>?, t: Throwable?) {
                         Toast.makeText(MainApplication.getAppContext(), R.string.connectionProblems, Toast.LENGTH_LONG).show()
                         onFinishTryingSending()
                     }

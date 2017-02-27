@@ -45,6 +45,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import javax.inject.Inject;
 
 import butterknife.Unbinder;
+import retrofit2.Retrofit;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class FragmentActivityBase extends AppCompatActivity {
@@ -53,6 +54,9 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     private static final String screenshotServiceName = "com.android.systemui:screenshot";
 
     protected Unbinder unbinder;
+
+    @Inject
+    protected Retrofit retrofit;
 
     @Inject
     protected TextResolver textResolver;

@@ -12,9 +12,9 @@ import org.stepic.droid.model.comments.Vote
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.web.CommentsResponse
 import org.stepic.droid.web.IApi
-import retrofit.Callback
-import retrofit.Response
-import retrofit.Retrofit
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 import javax.inject.Inject
 
@@ -27,10 +27,10 @@ class CommentManager {
     lateinit var api: IApi
 
     @Inject
-    lateinit var sharedPrefs : SharedPreferenceHelper
+    lateinit var sharedPrefs: SharedPreferenceHelper
 
-    private var discussionProxy : DiscussionProxy? = null
-    private val discussionOrderList : MutableList<Long> = ArrayList()
+    private var discussionProxy: DiscussionProxy? = null
+    private val discussionOrderList: MutableList<Long> = ArrayList()
 
     private val maxOfParentInQuery = 10 // server supports 20, but we can change it
     private val maxOfRepliesInQuery = 20 // we can't change it
@@ -149,7 +149,7 @@ class CommentManager {
                     } else {
                         //reply childIndex not found
                         parentCommentToSumOfCachedReplies[parentCommentId] = childIndex
-                        for (indexForDelete in childIndex..parentComment.replies.size-1) {
+                        for (indexForDelete in childIndex..parentComment.replies.size - 1) {
                             cachedCommentsSetMap.remove(parentComment.replies[indexForDelete])
                         }
                         break
@@ -162,9 +162,10 @@ class CommentManager {
 
     fun loadCommentsByIds(idsForLoading: LongArray, fromReply: Boolean = false) {
         api.getCommentsByIds(idsForLoading).enqueue(object : Callback<CommentsResponse> {
-            override fun onResponse(response: Response<CommentsResponse>?, retrofit: Retrofit?) {
 
-                if (response != null && response.isSuccess) {
+            override fun onResponse(call: Call<CommentsResponse>?, response: Response<CommentsResponse>?) {
+
+                if (response != null && response.isSuccessful) {
                     val stepicResponse = response.body()
                     if (stepicResponse != null) {
                         addComments(stepicResponse, fromReply)
@@ -176,7 +177,7 @@ class CommentManager {
                 }
             }
 
-            override fun onFailure(t: Throwable?) {
+            override fun onFailure(call: Call<CommentsResponse>?, t: Throwable?) {
                 bus.post(InternetConnectionProblemInCommentsEvent(discussionProxyId))
             }
         })
@@ -280,10 +281,9 @@ class CommentManager {
 
     fun resetAll(dP: DiscussionProxy? = null) {
         parentIdToPositionInDiscussionMap.clear()
-        if (dP!=null) {
+        if (dP != null) {
             setDiscussionProxy(dP)
-        }
-        else{
+        } else {
             setDiscussionProxy(discussionProxy!!)
         }
         sumOfCachedParent = 0
@@ -301,7 +301,7 @@ class CommentManager {
         return cachedCommentsSetMap[commentId]
     }
 
-    fun clearAllLoadings(){
+    fun clearAllLoadings() {
         commentIdIsLoading.clear()
         repliesIdIsLoading.clear()
     }

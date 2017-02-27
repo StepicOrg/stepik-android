@@ -82,8 +82,8 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showLaunchScreen(Activity activity) {
-        showLaunchScreen(activity, false, 0);
+    public void showLaunchScreen(Context context) {
+        showLaunchScreen(context, false, 0);
     }
 
     @Override
@@ -104,15 +104,15 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showLaunchScreen(Activity activity, boolean fromMainFeed, int index) {
+    public void showLaunchScreen(Context context, boolean fromMainFeed, int index) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
-        Intent launchIntent = new Intent(activity, LaunchActivity.class);
+        Intent launchIntent = new Intent(context, LaunchActivity.class);
         if (fromMainFeed) {
-            launchIntent.putExtra(LaunchActivity.FROM_MAIN_FEED_FLAG, true);
+            launchIntent.putExtra(AppConstants.FROM_MAIN_FEED_FLAG, true);
             launchIntent.putExtra(MainFeedActivity.KEY_CURRENT_INDEX, index);
         }
-        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        activity.startActivity(launchIntent);
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //app context -- new task
+        context.startActivity(launchIntent);
     }
 
 

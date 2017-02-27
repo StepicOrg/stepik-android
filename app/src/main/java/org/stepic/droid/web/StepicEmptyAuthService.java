@@ -2,12 +2,12 @@ package org.stepic.droid.web;
 
 import org.stepic.droid.util.AppConstants;
 
-import retrofit.Call;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.GET;
-import retrofit.http.Header;
-import retrofit.http.POST;
+import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.POST;
 
 public interface StepicEmptyAuthService {
 

@@ -82,8 +82,8 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
                 List<ViewAssignment> list = databaseFacade.getAllInQueue();
                 for (ViewAssignment item : list) {
                     try {
-                        retrofit.Response<Void> response = api.postViewed(item).execute();
-                        if (response.isSuccess()) {
+                        retrofit2.Response<Void> response = api.postViewed(item).execute();
+                        if (response.isSuccessful()) {
                             databaseFacade.removeFromQueue(item);
                             Step step = databaseFacade.getStepById(item.getStep());
                             if (step != null) {

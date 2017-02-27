@@ -1,0 +1,42 @@
+package org.stepic.droid.core
+
+import android.app.DownloadManager
+import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.preferences.UserPreferences
+import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.util.FileUtil
+import org.stepic.droid.util.RWLocks
+import java.util.concurrent.ThreadPoolExecutor
+
+class StepikLogoutManager(private val threadPoolExecutor: ThreadPoolExecutor,
+                          private val mainHandler: IMainHandler,
+                          private val userPreferences: UserPreferences,
+                          private val systemDownloadManager: DownloadManager,
+                          private val sharedPreferenceHelper: SharedPreferenceHelper,
+                          private val databaseFacade: DatabaseFacade) {
+
+    fun logout(afterClearData: () -> Unit) {
+        threadPoolExecutor.execute {
+            val directoryForClean = userPreferences.userDownloadFolder
+            val downloadEntities = databaseFacade.getAllDownloadEntities()
+            downloadEntities.forEach {
+                it?.downloadId?.let {
+                    downloadId ->
+                    systemDownloadManager.remove(downloadId)
+                }
+            }
+            FileUtil.cleanDirectory(directoryForClean)
+            try {
+                RWLocks.ClearEnrollmentsLock.writeLock().lock()
+                sharedPreferenceHelper.deleteAuthInfo()
+                databaseFacade.dropDatabase()
+            } finally {
+                RWLocks.ClearEnrollmentsLock.writeLock().unlock()
+            }
+            mainHandler.post {
+                afterClearData.invoke()
+            }
+        }
+    }
+}

@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -113,6 +114,7 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     private int currentIndex;
 
+    @Nullable
     GoogleApiClient googleApiClient;
 
     @Inject
@@ -170,7 +172,9 @@ public class MainFeedActivity extends BackToExitActivityBase
         setContentView(R.layout.activity_main_feed);
         unbinder = ButterKnife.bind(this);
         notificationClickedCheck(getIntent());
-        initGoogleApiClient();
+        if (checkPlayServices()) {
+            initGoogleApiClient();
+        }
         initDrawerHeader();
         setUpToolbar();
         setUpDrawerLayout();
@@ -643,7 +647,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         ProgressHelper.dismiss(getSupportFragmentManager(), PROGRESS_LOGOUT_TAG);
         LoginManager.getInstance().logOut();
         VKSdk.logout();
-        if (googleApiClient.isConnected()) {
+        if (googleApiClient != null && googleApiClient.isConnected()) {
             Auth.GoogleSignInApi.signOut(googleApiClient);
         }
         shell.getScreenProvider().showLaunchScreen(this, true, currentIndex);

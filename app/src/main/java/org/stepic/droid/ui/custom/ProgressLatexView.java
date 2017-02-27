@@ -18,6 +18,7 @@ public class ProgressLatexView extends FrameLayout {
 
     private LatexSupportableEnhancedFrameLayout optionText;
     private String beforeText = null;
+    private ProgressBar progressBar;
 
     public ProgressLatexView(Context context) {
         this(context, null);
@@ -36,7 +37,7 @@ public class ProgressLatexView extends FrameLayout {
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.progressable_latex_supportable_frame_layout, this, true);
         optionText = (LatexSupportableEnhancedFrameLayout) findViewById(R.id.latex_text);
-        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.load_progressbar);
+        progressBar = (ProgressBar) findViewById(R.id.load_progressbar);
 
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -45,12 +46,14 @@ public class ProgressLatexView extends FrameLayout {
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
                 progressBar.setVisibility(VISIBLE);
+                optionText.setVisibility(INVISIBLE);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                progressBar.setVisibility(GONE);
+                progressBar.setVisibility(INVISIBLE); // warning: use INVISIBLE instead of GONE for right LaTeX rendering
+                optionText.setVisibility(VISIBLE);
             }
         };
         optionText.getWebView().setWebViewClient(client);
@@ -121,6 +124,10 @@ public class ProgressLatexView extends FrameLayout {
         }
     }
 
+
+    public int getMeasuredWidthOfInnerLayout() {
+        return optionText.getMeasuredWidth();
+    }
 
     public int getMeasuredHeightOfInnerLayout() {
         return optionText.getMeasuredHeight();

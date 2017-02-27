@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.view.ContextMenu;
@@ -37,10 +36,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase implements FilterForCoursesView, OnBackClickListener {
     private static final int FILTER_REQUEST_CODE = 776;
@@ -182,9 +180,8 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                 Course localRef = course;
 
                 @Override
-                public void onResponse(Response<Void> response, Retrofit retrofit) {
-
-                    new Handler().post(new Runnable() {
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    threadPoolExecutor.execute(new Runnable() {
                         @Override
                         public void run() {
                             databaseFacade.deleteCourse(localRef, Table.enrolled);
@@ -201,7 +198,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
                 }
 
                 @Override
-                public void onFailure(Throwable t) {
+                public void onFailure(Call<Void> call, Throwable t) {
                     bus.post(new FailDropCourseEvent(getCourseType(), localRef));
                 }
             });

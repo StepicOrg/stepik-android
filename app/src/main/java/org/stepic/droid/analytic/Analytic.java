@@ -77,6 +77,7 @@ public interface Analytic {
         java.lang.String CLICK_FIND_COURSE_LAUNCH = "click_find_courses_launch";
         java.lang.String USER_OPEN_IMAGE = "user_open_image";
         java.lang.String SCREENSHOT = "screenshot";
+        java.lang.String GOOGLE_SOCIAL_IS_NOT_ENABLED = "google_social_is_not_enabled";
     }
 
     interface Screens {
@@ -171,6 +172,7 @@ public interface Analytic {
         String PENDING_INTENT_WAS_NULL = "pending_intent_null_streaks";
         String FAIL_REFRESH_TOKEN_INLINE_GETTING = "fail_refresh_token_online_get";
         java.lang.String COOKIE_WAS_EMPTY = "cookie_was_empty";
+        String FAIL_LOGOUT_WHEN_REFRESH = "refresh_fail_logout_social";
     }
 
     interface Web {

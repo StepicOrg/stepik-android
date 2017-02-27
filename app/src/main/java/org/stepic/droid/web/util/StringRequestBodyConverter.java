@@ -1,11 +1,11 @@
 package org.stepic.droid.web.util;
 
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.RequestBody;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 import java.io.IOException;
 
-import retrofit.Converter;
+import retrofit2.Converter;
 
 
 public class StringRequestBodyConverter<T> implements Converter<T, RequestBody> {

@@ -15,7 +15,7 @@ import java.io.InputStream;
 
 public class GlideSvgRequestFactory {
     public static GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> create(Context context, Drawable placeholder) {
-        return Glide.with(context)
+        return Glide.with(context.getApplicationContext())
                 .using(Glide.buildStreamModelLoader(Uri.class, context), InputStream.class)
                 .from(Uri.class)
                 .as(SVG.class)

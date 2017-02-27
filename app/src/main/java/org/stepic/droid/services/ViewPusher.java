@@ -26,7 +26,7 @@ import javax.inject.Inject;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
-import retrofit.Response;
+import retrofit2.Response;
 
 public class ViewPusher extends IntentService {
 
@@ -80,7 +80,7 @@ public class ViewPusher extends IntentService {
 
         try {
             Response<Void> response = api.postViewed(new ViewAssignment(assignmentId, stepId)).execute();
-            if (!response.isSuccess()) {
+            if (!response.isSuccessful()) {
                 throw new IOException("response is not success");
             }
         } catch (IOException e) {

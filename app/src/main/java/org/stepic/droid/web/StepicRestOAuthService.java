@@ -1,37 +1,41 @@
 package org.stepic.droid.web;
 
-import com.squareup.okhttp.ResponseBody;
-
-import retrofit.Call;
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.Path;
-import retrofit.http.Query;
-import retrofit.http.Streaming;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Streaming;
 
 public interface StepicRestOAuthService {
+    @FormUrlEncoded
     @POST("/oauth2/token/")
-    Call<AuthenticationStepicResponse> updateToken(@Query("grant_type") String grant_type,
-                                                   @Query("refresh_token") String refresh_token);
+    Call<AuthenticationStepicResponse> updateToken(@Field("grant_type") String grant_type,
+                                                   @Field("refresh_token") String refresh_token);
 
+    @FormUrlEncoded
     @POST("/oauth2/token/")
-    Call<AuthenticationStepicResponse> authWithLoginPassword(@Query("grant_type") String grant_type,
-                                                             @Query(value = "username", encoded = true) String username,
-                                                             @Query(value = "password", encoded = true) String password);
+    Call<AuthenticationStepicResponse> authWithLoginPassword(@Field("grant_type") String grant_type,
+                                                             @Field(value = "username", encoded = true) String username,
+                                                             @Field(value = "password", encoded = true) String password);
 
 
+    @FormUrlEncoded
     @POST("/oauth2/token/")
-    Call<AuthenticationStepicResponse> getTokenByCode(@Query("grant_type") String grant_type,
-                                                      @Query("code") String code,
-                                                      @Query("redirect_uri") String redirect_uri);
+    Call<AuthenticationStepicResponse> getTokenByCode(@Field("grant_type") String grant_type,
+                                                      @Field("code") String code,
+                                                      @Field("redirect_uri") String redirect_uri);
 
+    @FormUrlEncoded
     @POST("/oauth2/social-token/")
-    Call<AuthenticationStepicResponse> getTokenByNativeCode(@Query("provider") String providerName,
-                                                            @Query("code") String providerCode,
-                                                            @Query("grant_type") String grant_type,
-                                                            @Query("redirect_uri") String redirect_uri,
-                                                            @Query("code_type") String accessToken);
+    Call<AuthenticationStepicResponse> getTokenByNativeCode(@Field("provider") String providerName,
+                                                            @Field("code") String providerCode,
+                                                            @Field("grant_type") String grant_type,
+                                                            @Field("redirect_uri") String redirect_uri,
+                                                            @Field("code_type") String accessToken);
 
 
     @POST("/api/users")

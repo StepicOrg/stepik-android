@@ -12,9 +12,9 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.store.operations.Table
 import org.stepic.droid.web.IApi
-import retrofit.Callback
-import retrofit.Response
-import retrofit.Retrofit
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.net.HttpURLConnection
 import java.util.concurrent.ThreadPoolExecutor
 
@@ -34,11 +34,11 @@ class CourseJoinerPresenter(
             view?.setEnabledJoinButton(false)
 
             api.tryJoinCourse(course).enqueue(object : Callback<Void> {
+
                 private val localCourseCopy = course
 
-                override fun onResponse(response: Response<Void>, retrofit: Retrofit) {
-                    if (response.isSuccess) {
-
+                override fun onResponse(call: Call<Void>?, response: Response<Void>?) {
+                    if (response?.isSuccessful ?: false) {
                         localCourseCopy.enrollment = localCourseCopy.courseId.toInt()
 
                         threadPoolExecutor.execute {
@@ -61,11 +61,11 @@ class CourseJoinerPresenter(
                         bus.post(SuccessJoinEvent(localCourseCopy)) //todo remake without bus
                         view?.onSuccessJoin(SuccessJoinEvent(localCourseCopy))
                     } else {
-                        view?.onFailJoin(FailJoinEvent(response.code()))
+                        view?.onFailJoin(FailJoinEvent(response?.code() ?: 0))
                     }
                 }
 
-                override fun onFailure(t: Throwable) {
+                override fun onFailure(call: Call<Void>?, t: Throwable?) {
                     view?.onFailJoin(FailJoinEvent())
                 }
             })

@@ -12,7 +12,7 @@ import org.stepic.droid.util.ProgressUtil
 import org.stepic.droid.web.IApi
 import org.stepic.droid.web.LessonStepicResponse
 import org.stepic.droid.web.StepResponse
-import retrofit.Response
+import retrofit2.Response
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
