@@ -406,11 +406,11 @@ public class RetrofitRESTApi implements IApi {
     }
 
     public Call<CoursesStepicResponse> getEnrolledCourses(int page) {
-        return loggedService.getEnrolledCourses(true, page);
+        return loggedService.getEnrolledCourses(page);
     }
 
-    public Call<CoursesStepicResponse> getFeaturedCourses(int page) {
-        return loggedService.getFeaturedCourses(true, page);
+    public Call<CoursesStepicResponse> getPopularCourses(int page) {
+        return loggedService.getPopularCourses(page);
     }
 
     @Override

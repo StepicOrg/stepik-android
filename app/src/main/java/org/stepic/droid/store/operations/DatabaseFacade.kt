@@ -382,6 +382,10 @@ class DatabaseFacade {
         coursesFeaturedDao.removeAll()
     }
 
+    fun dropFeaturedCourses() {
+        coursesFeaturedDao.removeAll()
+    }
+
     fun getCalendarSectionsByIds(ids: LongArray): Map<Long, CalendarSection> {
         val stringIds = DbParseHelper.parseLongArrayToString(ids, AppConstants.COMMA)
         if (stringIds != null) {
