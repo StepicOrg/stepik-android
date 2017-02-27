@@ -356,6 +356,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
                 }
 
                 Step step = stepsPresenter.getStepList().get(position);
+                analytic.reportEvent(Analytic.Comments.OPEN_FROM_OPTION_MENU);
                 shell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
                 break;
             default:

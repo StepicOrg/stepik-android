@@ -234,6 +234,8 @@ public interface Analytic {
         String ORDER_TREND = "order_trend";
         String SHOW_CONFIRM_DISCARD_TEXT_DIALOG = "comment_discard_dialog_show";
         String SHOW_CONFIRM_DISCARD_TEXT_DIALOG_SUCCESS = "comment_discard_ok";
+        String OPEN_FROM_OPTION_MENU = "comment_open_from_option_menu";
+        String OPEN_FROM_STEP_UI = "comment_open_from_step_ui";
     }
 
     interface Steps {
