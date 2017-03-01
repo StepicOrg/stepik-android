@@ -160,6 +160,7 @@ public class CertificateFragment extends FragmentBase implements CertificateView
         reportEmpty.setVisibility(View.GONE);
         reportInternetProblem.setVisibility(View.GONE);
         needAuthRootView.setVisibility(View.GONE);
+        swipeRefreshLayout.setVisibility(View.VISIBLE);
         certificateRecyclerView.setVisibility(View.VISIBLE);
         adapter.updateCertificates(certificateViewItems);
     }
@@ -182,6 +183,8 @@ public class CertificateFragment extends FragmentBase implements CertificateView
         ProgressHelper.dismiss(progressBarOnCenter);
         reportEmpty.setVisibility(View.GONE);
         reportInternetProblem.setVisibility(View.GONE);
+        certificateRecyclerView.setVisibility(View.GONE);
+        swipeRefreshLayout.setVisibility(View.GONE);
         needAuthRootView.setVisibility(View.VISIBLE);
     }
 

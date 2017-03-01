@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.CompoundButton;
 
 import org.jetbrains.annotations.NotNull;
@@ -41,9 +40,6 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
     private final String description;
     private final boolean isCheckbox;
     private final List<TableChoiceAnswer> answers;
-    private final int doublePadding;
-    private final int minUXTouchableSize;
-    private final int deviceWidthPx75Percent;
     private boolean isAllEnabled = true;
 
     @Override
@@ -71,11 +67,6 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
         Display display = context.getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        deviceWidthPx75Percent = (int) (size.x * 0.75);
-
-        doublePadding = (int) context.getResources().getDimension(R.dimen.half_padding) * 2;
-
-        minUXTouchableSize = (int) context.getResources().getDimension(R.dimen.min_ux_touchable_size);
     }
 
 
@@ -89,21 +80,7 @@ public class TableChoiceAdapter extends RecyclerView.Adapter<TableChoiceAdapter.
             return new CheckboxCellViewHolder(v, this);
         } else if (viewType == DESCRIPTION_TYPE || viewType == ROW_HEADER_TYPE || viewType == COLUMN_HEADER_TYPE) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_table_quiz_text_cell, parent, false);
-            final DescriptionViewHolder descriptionViewHolder = new DescriptionViewHolder(v);
-
-            descriptionViewHolder.latexView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                @Override
-                public boolean onPreDraw() {
-                    int localWidth = descriptionViewHolder.latexView.getMeasuredWidthOfInnerLayout() + doublePadding;
-                    if (localWidth > deviceWidthPx75Percent) {
-                        descriptionViewHolder.latexView.getLayoutParams().width = Math.min(Math.max(localWidth, minUXTouchableSize), deviceWidthPx75Percent);
-                        descriptionViewHolder.latexView.getViewTreeObserver().removeOnPreDrawListener(this);
-                    }
-                    return true;
-                }
-            });
-
-            return descriptionViewHolder;
+            return new DescriptionViewHolder(v);
         } else {
             throw new IllegalStateException("viewType with index " + viewType + " is not supported in table quiz");
         }

@@ -182,6 +182,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
             @Override
             public void onClick(View v) {
                 int discussionCount = step.getDiscussions_count();
+                analytic.reportEvent(Analytic.Comments.OPEN_FROM_STEP_UI);
                 shell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
                 if (discussionCount == 0) {
                     shell.getScreenProvider().openNewCommentForm(getActivity(), step.getId(), null); //show new form, but in back stack comment oldList is exist.
