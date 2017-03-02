@@ -29,7 +29,10 @@ class LessonDownloaderImpl(private val context: Context,
     }
 
     override fun downloadLesson(lessonId: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        singleThreadExecutor.execute {
+            val lesson = databaseFacade.getLessonById(lessonId) ?: throw Exception("lesson was null, when downloadLesson of LessonDownloader is executed") // FIXME: IT CAN BE BY THE NORMAL EXECUTION, CHANGE IT, THIS LESSON MAY BE NEEDED, WHEN SECTION IS LOADED
+
+        }
     }
 
     override fun cancelLessonLoading(lessonId: Long) {

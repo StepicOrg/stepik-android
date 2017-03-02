@@ -60,14 +60,13 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
         builder
                 .setTitle(R.string.video_quality)
                 .setView(explanationView)
-                .setNegativeButton(R.string.cancel) {
-                    dialog, which ->
+                .setNegativeButton(R.string.cancel) { _, _ ->
                     analytic.reportEvent(Analytic.Interaction.CANCEL_VIDEO_QUALITY_DETAILED)
                 }
                 .setSingleChoiceItems(R.array.video_quality,
                         qualityToPositionMap[userPreferences.qualityVideo]!!,
-                        { dialog, which -> chosenOptionPosition = which })
-                .setPositiveButton(R.string.ok, { dialog, which ->
+                        { _, which -> chosenOptionPosition = which })
+                .setPositiveButton(R.string.ok, { _, which ->
                     val qualityString = positionToQualityMap[chosenOptionPosition]
                     analytic.reportEventWithIdName(Analytic.Preferences.VIDEO_QUALITY, which.toString(), qualityString)
 

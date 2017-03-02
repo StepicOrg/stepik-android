@@ -50,6 +50,7 @@ import retrofit2.Response;
 
 
 public class LoadService extends IntentService {
+
     @Inject
     DownloadManager systemDownloadManager;
     @Inject
@@ -110,8 +111,6 @@ public class LoadService extends IntentService {
                     break;
             }
         } catch (NullPointerException ex) {
-            //possibly user click clear cache;
-//            throw ex;
             analytic.reportError(Analytic.Error.LOAD_SERVICE, ex);
             databaseFacade.dropDatabase();
         }
