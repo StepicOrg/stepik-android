@@ -11,6 +11,7 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.concurrency.SingleThreadExecutor;
 import org.stepic.droid.events.video.VideoCachedOnDiskEvent;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
@@ -26,7 +27,6 @@ import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.StorageUtil;
 
 import java.io.File;
-import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
@@ -45,7 +45,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     ICancelSniffer cancelSniffer;
 
     @Inject
-    ExecutorService threadSingleThreadExecutor;
+    SingleThreadExecutor threadSingleThreadExecutor;
 
     @Inject
     DownloadManager downloadManager;

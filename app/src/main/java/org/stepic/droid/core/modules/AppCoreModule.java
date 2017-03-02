@@ -11,6 +11,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.analytic.AnalyticImpl;
 import org.stepic.droid.concurrency.IMainHandler;
 import org.stepic.droid.concurrency.MainHandlerImpl;
+import org.stepic.droid.concurrency.SingleThreadExecutor;
 import org.stepic.droid.configuration.ConfigRelease;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.AudioFocusHelper;
@@ -55,7 +56,6 @@ import org.stepic.droid.util.resolvers.text.TextResolverImpl;
 import org.stepic.droid.web.IApi;
 import org.stepic.droid.web.RetrofitRESTApi;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -200,8 +200,8 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    ExecutorService provideSingle() {
-        return Executors.newSingleThreadExecutor();
+    SingleThreadExecutor provideSingle() {
+        return new SingleThreadExecutor(Executors.newSingleThreadExecutor());
     }
 
 
