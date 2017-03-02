@@ -1,6 +1,6 @@
 package org.stepic.droid.store;
 
-public interface ICancelSniffer {
+public interface CancelSniffer {
     void addStepIdCancel(long stepId);
 
     void removeStepIdCancel(long stepId);
@@ -13,9 +13,9 @@ public interface ICancelSniffer {
 
     boolean isSectionIdIsCanceled(long sectionId);
 
-    void addUnitIdCancel(long unitId);
+    void addUnitIdToCancel(long unitId);
 
-    void removeUnitIdCancel(long unitId);
+    void removeUnitIdToCancel(long unitId);
 
     boolean isUnitIdIsCanceled(long unitId);
 }

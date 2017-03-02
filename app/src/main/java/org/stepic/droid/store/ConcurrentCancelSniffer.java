@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 
-public class ConcurrentCancelSniffer implements ICancelSniffer {
+public class ConcurrentCancelSniffer implements CancelSniffer {
 
     private final Set<Long> canceledStepIdsSet;
     private final Set<Long> canceledSectionIdsSet;
@@ -50,12 +50,12 @@ public class ConcurrentCancelSniffer implements ICancelSniffer {
     }
 
     @Override
-    public void addUnitIdCancel(long unitId) {
+    public void addUnitIdToCancel(long unitId) {
         canceledUnitIdsSet.add(unitId);
     }
 
     @Override
-    public void removeUnitIdCancel(long unitId) {
+    public void removeUnitIdToCancel(long unitId) {
         canceledUnitIdsSet.remove(unitId);
     }
 

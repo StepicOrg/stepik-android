@@ -33,7 +33,7 @@ import org.stepic.droid.model.DownloadingVideoItem;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.store.CleanManager;
-import org.stepic.droid.store.ICancelSniffer;
+import org.stepic.droid.store.CancelSniffer;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
@@ -83,7 +83,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     ThreadPoolExecutor threadPoolExecutor;
 
     @Inject
-    ICancelSniffer cancelSniffer;
+    CancelSniffer cancelSniffer;
 
     @Inject
     IDownloadManager downloadManager;

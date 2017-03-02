@@ -9,7 +9,7 @@ import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.presenters.DownloadingProgressUnitsPresenter;
 import org.stepic.droid.core.presenters.UnitsPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
-import org.stepic.droid.store.ICancelSniffer;
+import org.stepic.droid.store.CancelSniffer;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.web.IApi;
 
@@ -33,7 +33,7 @@ public class UnitsModule {
 
     @Provides
     @PerFragment
-    DownloadingProgressUnitPublisher progressPublisher(DatabaseFacade databaseFacade, DownloadManager downloadManager, ICancelSniffer cancelSniffer, IMainHandler mainHandler) {
+    DownloadingProgressUnitPublisher progressPublisher(DatabaseFacade databaseFacade, DownloadManager downloadManager, CancelSniffer cancelSniffer, IMainHandler mainHandler) {
         return new DownloadingProgressUnitPublisher(databaseFacade, downloadManager, cancelSniffer, mainHandler);
     }
 

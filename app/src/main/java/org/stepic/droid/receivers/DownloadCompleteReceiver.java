@@ -19,7 +19,7 @@ import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.ICancelSniffer;
+import org.stepic.droid.store.CancelSniffer;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
@@ -42,7 +42,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     Bus bus;
 
     @Inject
-    ICancelSniffer cancelSniffer;
+    CancelSniffer cancelSniffer;
 
     @Inject
     SingleThreadExecutor threadSingleThreadExecutor;
@@ -90,7 +90,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                             Unit unit = databaseFacade.getUnitByLessonId(lesson.getId());
                             if (unit != null && cancelSniffer.isUnitIdIsCanceled(unit.getId())) {
                                 storeStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
-                                cancelSniffer.removeUnitIdCancel(unit.getId());
+                                cancelSniffer.removeUnitIdToCancel(unit.getId());
                                 if (cancelSniffer.isSectionIdIsCanceled(unit.getSection())) {
                                     cancelSniffer.removeSectionIdCancel(unit.getSection());
                                 }

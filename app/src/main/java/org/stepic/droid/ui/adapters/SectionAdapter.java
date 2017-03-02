@@ -28,7 +28,7 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.SectionLoadingState;
 import org.stepic.droid.store.CleanManager;
-import org.stepic.droid.store.ICancelSniffer;
+import org.stepic.droid.store.CancelSniffer;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
@@ -84,7 +84,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     ThreadPoolExecutor threadPoolExecutor;
 
     @Inject
-    ICancelSniffer cancelSniffer;
+    CancelSniffer cancelSniffer;
 
     private List<Section> sections;
     private AppCompatActivity activity;

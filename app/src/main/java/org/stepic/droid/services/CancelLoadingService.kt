@@ -5,7 +5,7 @@ import android.app.IntentService
 import android.app.Service
 import android.content.Intent
 import org.stepic.droid.base.MainApplication
-import org.stepic.droid.store.ICancelSniffer
+import org.stepic.droid.store.CancelSniffer
 import org.stepic.droid.store.IStoreStateManager
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
@@ -21,7 +21,7 @@ class CancelLoadingService : IntentService("cancel_loading") {
     @Inject
     lateinit var storeStateManager: IStoreStateManager
     @Inject
-    lateinit var cancelSniffer: ICancelSniffer
+    lateinit var cancelSniffer: CancelSniffer
 
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -36,7 +36,7 @@ class CancelLoadingService : IntentService("cancel_loading") {
             LoadService.LoadTypeKey.Section -> {
                 return
             }
-            LoadService.LoadTypeKey.UnitLesson -> {
+            LoadService.LoadTypeKey.Lesson -> {
                 return
             }
             LoadService.LoadTypeKey.Step -> {
@@ -51,7 +51,7 @@ class CancelLoadingService : IntentService("cancel_loading") {
     private fun cancelStepVideo(stepId: Long) {
         try {
             RWLocks.DownloadLock.writeLock().lock()
-            var downloadEntity = databaseFacade.getDownloadEntityByStepId(stepId)
+            val downloadEntity = databaseFacade.getDownloadEntityByStepId(stepId)
             downloadEntity?.let {
                 val numberOfRemoved = systemDownloadManager.remove(downloadEntity.downloadId)
                 if (numberOfRemoved > 0) {
@@ -71,7 +71,7 @@ class CancelLoadingService : IntentService("cancel_loading") {
                             val unit = databaseFacade.getUnitByLessonId(lesson.id)
                             unit?.let {
                                 if (cancelSniffer.isUnitIdIsCanceled(unit.id)) {
-                                    cancelSniffer.removeUnitIdCancel(unit.id)
+                                    cancelSniffer.removeUnitIdToCancel(unit.id)
 
                                     if (cancelSniffer.isSectionIdIsCanceled(unit.section)) {
                                         cancelSniffer.removeSectionIdCancel(unit.section)

@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class SynchronizedCancelSniffer implements ICancelSniffer {
+public class SynchronizedCancelSniffer implements CancelSniffer {
 
     private final Set<Long> canceledStepIdsSet;
     private final Set<Long> canceledSectionIdsSet;
@@ -63,14 +63,14 @@ public class SynchronizedCancelSniffer implements ICancelSniffer {
     }
 
     @Override
-    public void addUnitIdCancel(long unitId) {
+    public void addUnitIdToCancel(long unitId) {
         synchronized (canceledUnitIdsSet) {
             canceledUnitIdsSet.add(unitId);
         }
     }
 
     @Override
-    public void removeUnitIdCancel(long unitId) {
+    public void removeUnitIdToCancel(long unitId) {
         synchronized (canceledUnitIdsSet) {
             canceledUnitIdsSet.remove(unitId);
         }

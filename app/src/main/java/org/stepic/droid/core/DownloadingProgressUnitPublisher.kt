@@ -5,16 +5,15 @@ import android.database.Cursor
 import android.support.annotation.MainThread
 import org.stepic.droid.concurrency.IMainHandler
 import org.stepic.droid.model.DownloadEntity
-import org.stepic.droid.store.ICancelSniffer
+import org.stepic.droid.store.CancelSniffer
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
-import timber.log.Timber
 import java.util.*
 
 //fixme: refactor it, merge with DownloadingProgressSectionPublisher
 class DownloadingProgressUnitPublisher(private val databaseFacade: DatabaseFacade,
                                        private val systemDownloadManager: DownloadManager,
-                                       private val cancelSniffer: ICancelSniffer,
+                                       private val cancelSniffer: CancelSniffer,
                                        private val mainHandler: IMainHandler) {
 
     interface DownloadingProgressCallback {
@@ -134,7 +133,6 @@ class DownloadingProgressUnitPublisher(private val databaseFacade: DatabaseFacad
                 val partialProgressValue = partialProgress
 
                 mainHandler.post {
-                    Timber.d("lessonId = %s, progress = %f", lessonId, partialProgressValue)
                     downloadingProgressCallback?.onProgressChanged(lessonId, partialProgressValue)
                 }
 

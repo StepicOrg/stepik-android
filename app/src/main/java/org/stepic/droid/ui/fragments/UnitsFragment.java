@@ -37,10 +37,10 @@ import org.stepic.droid.events.units.UnitCachedEvent;
 import org.stepic.droid.events.units.UnitProgressUpdateEvent;
 import org.stepic.droid.events.units.UnitScoreUpdateEvent;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.LessonLoadingState;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.model.LessonLoadingState;
 import org.stepic.droid.ui.adapters.UnitAdapter;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
@@ -54,7 +54,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
-import timber.log.Timber;
 
 public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView, DownloadingProgressUnitsView {
 
@@ -378,7 +377,6 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         //change state for updating in adapter
         lessonIdToLoadingStateMap.put(lessonLoadingState.getLessonId(), lessonLoadingState);
 
-        Timber.d("notify position = %s", position);
         adapter.notifyItemChanged(position);
     }
 }

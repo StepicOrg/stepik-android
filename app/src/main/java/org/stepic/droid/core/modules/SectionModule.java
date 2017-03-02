@@ -19,7 +19,7 @@ import org.stepic.droid.core.presenters.InvitationPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.ICancelSniffer;
+import org.stepic.droid.store.CancelSniffer;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.web.IApi;
 
@@ -96,7 +96,7 @@ public class SectionModule {
 
     @Provides
     @PerFragment
-    DownloadingProgressSectionPublisher progressPublisher(DatabaseFacade databaseFacade, DownloadManager downloadManager, ICancelSniffer cancelSniffer, IMainHandler mainHandler) {
+    DownloadingProgressSectionPublisher progressPublisher(DatabaseFacade databaseFacade, DownloadManager downloadManager, CancelSniffer cancelSniffer, IMainHandler mainHandler) {
         return new DownloadingProgressSectionPublisher(databaseFacade, downloadManager, cancelSniffer, mainHandler);
     }
 

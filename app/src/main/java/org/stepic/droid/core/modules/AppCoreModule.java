@@ -43,9 +43,13 @@ import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.ConcurrentCancelSniffer;
 import org.stepic.droid.store.DownloadManagerImpl;
-import org.stepic.droid.store.ICancelSniffer;
+import org.stepic.droid.store.CancelSniffer;
+import org.stepic.droid.store.DownloadFinishedCallback;
+import org.stepic.droid.store.InitialDownloadUpdater;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.IStoreStateManager;
+import org.stepic.droid.store.LessonDownloader;
+import org.stepic.droid.store.LessonDownloaderImpl;
 import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
@@ -194,7 +198,7 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    ICancelSniffer provideCancelSniffer() {
+    CancelSniffer provideCancelSniffer() {
         return new ConcurrentCancelSniffer();
     }
 
@@ -317,5 +321,35 @@ public class AppCoreModule {
     @Singleton
     StepikLogoutManager provideStepikLogoutManager(ThreadPoolExecutor threadPoolExecutor, IMainHandler mainHandler, UserPreferences userPreferences, SharedPreferenceHelper sharedPreferenceHelper, DownloadManager downloadManager, DatabaseFacade dbFacade) {
         return new StepikLogoutManager(threadPoolExecutor, mainHandler, userPreferences, downloadManager, sharedPreferenceHelper, dbFacade);
+    }
+
+    @Provides
+    @Singleton
+    InitialDownloadUpdater provideDownloadUpdaterAfterRestart(ThreadPoolExecutor threadPoolExecutor,
+                                                              IMainHandler mainHandler,
+                                                              DownloadManager systemDownloadManager,
+                                                              DownloadFinishedCallback callback,
+                                                              DatabaseFacade databaseFacade) {
+        return new InitialDownloadUpdater(threadPoolExecutor, systemDownloadManager, callback, mainHandler, databaseFacade);
+    }
+
+    @Provides
+    @Singleton
+    LessonDownloader provideLessonDownloader(Context context,
+                                             ThreadPoolExecutor threadPoolExecutor,
+                                             DatabaseFacade databaseFacade,
+                                             IApi api,
+                                             IDownloadManager downloadManager,
+                                             CancelSniffer cancelSniffer,
+                                             CleanManager cleanManager,
+                                             StoreStateManager storeStateManager
+    ) {
+        return new LessonDownloaderImpl(context, databaseFacade, api, downloadManager, threadPoolExecutor, cleanManager, storeStateManager, cancelSniffer);
+    }
+
+    @Provides
+    @Singleton
+    DownloadFinishedCallback provideDownloadFinished(LessonDownloader lessonDownloader) {
+        return (LessonDownloaderImpl) lessonDownloader; //fixme do not this, decouple callback with downloader
     }
 }

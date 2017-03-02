@@ -18,6 +18,9 @@ import org.stepic.droid.core.components.DaggerStorageComponent;
 import org.stepic.droid.core.components.StorageComponent;
 import org.stepic.droid.core.modules.AppCoreModule;
 import org.stepic.droid.core.modules.StorageModule;
+import org.stepic.droid.store.InitialDownloadUpdater;
+
+import javax.inject.Inject;
 
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -29,6 +32,9 @@ public class MainApplication extends MultiDexApplication {
     private StorageComponent storageComponent;
 
     //    private RefWatcher refWatcher;
+
+    @Inject
+    InitialDownloadUpdater downloadUpdater;
 
     @Override
     public void onCreate() {
@@ -65,6 +71,8 @@ public class MainApplication extends MultiDexApplication {
                 .build();
 
         component.inject(this);
+
+        downloadUpdater.onCreateApp();
 
         // Инициализация AppMetrica SDK
         YandexMetrica.activate(getApplicationContext(), "fd479031-bdf4-419e-8d8f-6895aab23502");

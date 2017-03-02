@@ -1,92 +1,70 @@
 package org.stepic.droid.store
 
-import android.app.DownloadManager
 import android.content.Context
-import android.support.annotation.WorkerThread
-import org.stepic.droid.concurrency.SingleThreadExecutor
+import android.support.annotation.MainThread
 import org.stepic.droid.model.DownloadEntity
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.web.IApi
+import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Singleton
 
 @Singleton
 class LessonDownloaderImpl(private val context: Context,
                            private val databaseFacade: DatabaseFacade,
                            private val api: IApi,
-                           private val systemDownloadManager: DownloadManager,
-                           private val singleThreadExecutor: SingleThreadExecutor) : LessonDownloader {
-
-    private val currentDownloadingEntitiesMap = HashMap<Long, DownloadEntity>()
-
-    init {
-        singleThreadExecutor.execute {
-            currentDownloadingEntitiesMap.putAll(databaseFacade
-                    .getAllDownloadEntities()
-                    .filterNotNull()
-                    .associateBy(DownloadEntity::downloadId))
-            checkDownloadEntitiesOnAppStarted()
-        }
-    }
+                           private val downloadManager: IDownloadManager,
+                           private val threadPoolExecutor: ThreadPoolExecutor,
+                           private val cleanManager: CleanManager,
+                           private val storeStateManager: StoreStateManager,
+                           private val cancelSniffer: CancelSniffer) : LessonDownloader, DownloadFinishedCallback {
 
     override fun downloadLesson(lessonId: Long) {
-        singleThreadExecutor.execute {
+        threadPoolExecutor.execute {
             val lesson = databaseFacade.getLessonById(lessonId) ?: throw Exception("lesson was null, when downloadLesson of LessonDownloader is executed") // FIXME: IT CAN BE BY THE NORMAL EXECUTION, CHANGE IT, THIS LESSON MAY BE NEEDED, WHEN SECTION IS LOADED
-
+            val unitId = databaseFacade.getUnitByLessonId(lessonId)!!.id
+            cancelSniffer.removeUnitIdToCancel(unitId)
+            lesson.steps?.forEach {
+                cancelSniffer.removeStepIdCancel(it)
+            }
+            downloadManager.addLesson(lesson)
         }
     }
 
     override fun cancelLessonLoading(lessonId: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun deleteWholeLesson(lessonId: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    /**
-     * Check if download entities are loaded -> update states of lesson entities and after that remove download entities,
-     * Events about completing of downloading should be received from DownloadCompleteReceiver, but sometimes app have been killed by
-     * system and events is not received -> download entities are not removed and app load lesson infinitely.
-     *
-     * should be executed on singleThreadExecutor
-     */
-    private fun checkDownloadEntitiesOnAppStarted() {
-        val query = DownloadManager.Query()
-        query.setFilterById(*currentDownloadingEntitiesMap.keys.toLongArray())
-        val cursor = systemDownloadManager.query(query)
-        cursor.use { cursor ->
-            cursor.moveToFirst()
-            while (!cursor.isAfterLast) {
-                val columnStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
-                val downloadId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID))
-
-                val relatedDownloadEntity = currentDownloadingEntitiesMap.get(downloadId.toLong())
-                relatedDownloadEntity?.let {
-                    if (columnStatus == DownloadManager.STATUS_SUCCESSFUL) {
-                        onDownloadEntityFinished(it, STATUS.COMPLETE)
-                    } else if (columnStatus == DownloadManager.STATUS_FAILED) {
-                        onDownloadEntityFinished(it, STATUS.FAIL)
-                    }
-                }
-
-                if (relatedDownloadEntity != null && (columnStatus == DownloadManager.STATUS_SUCCESSFUL)) {
-
-                }
-
-                cursor.moveToNext()
+        threadPoolExecutor.execute {
+            val lesson = databaseFacade.getLessonById(lessonId)
+            val unitId = databaseFacade.getUnitByLessonId(lessonId)!!.id
+            cancelSniffer.addUnitIdToCancel(unitId)
+            lesson!!.steps!!.forEach {
+                cancelSniffer.addStepIdCancel(it)
+            }
+            lesson.steps!!.forEach {
+                downloadManager.cancelStep(it)
             }
         }
     }
 
-    @WorkerThread
-    private fun onDownloadEntityFinished(downloadEntityCompleted: DownloadEntity, status: STATUS) {
-        //todo remove download entity from the local list, after that update states of related lesson/section?, after that remove from database
+    override fun deleteWholeLesson(lessonId: Long) {
+        threadPoolExecutor.execute {
+            val lesson = databaseFacade.getLessonById(lessonId)
+            cleanManager.removeLesson(lesson)
+        }
     }
 
+    @MainThread
+    override fun onDownloadCompleted(downloadEntity: DownloadEntity, isSuccess: Boolean) {
+        //todo remove download entity from the local list, after that update states of related lesson/section?, after that remove from database
+        threadPoolExecutor.execute {
+            val step = databaseFacade.getStepById(downloadEntity.stepId)!!
+            val lessonId = databaseFacade.getLessonById(step.lesson)!!.id
 
-    private enum class STATUS {
-        COMPLETE,
-        FAIL
+            if (isSuccess) {
+                storeStateManager.updateUnitLessonState(lessonId)
+            } else {
+                storeStateManager.updateUnitLessonAfterDeleting(lessonId)
+            }
+            databaseFacade.deleteDownloadEntityByDownloadId(downloadEntity.downloadId)
+        }
     }
 
 }

@@ -20,7 +20,7 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.model.VideoUrl;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.ICancelSniffer;
+import org.stepic.droid.store.CancelSniffer;
 import org.stepic.droid.store.IStoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
@@ -64,12 +64,12 @@ public class LoadService extends IntentService {
     @Inject
     IStoreStateManager storeStateManager;
     @Inject
-    ICancelSniffer cancelSniffer;
+    CancelSniffer cancelSniffer;
     @Inject
     Analytic analytic;
 
     public enum LoadTypeKey {
-        Section, UnitLesson, Step
+        Section, Lesson, Step
     }
 
 
@@ -99,10 +99,9 @@ public class LoadService extends IntentService {
                     Section section = (Section) intent.getSerializableExtra(AppConstants.KEY_SECTION_BUNDLE);
                     addSection(section);
                     break;
-                case UnitLesson:
-                    Unit unit = (Unit) intent.getSerializableExtra(AppConstants.KEY_UNIT_BUNDLE);
-                    Lesson lesson = (Lesson) intent.getSerializableExtra(AppConstants.KEY_LESSON_BUNDLE);
-                    addUnitLesson(unit, lesson);
+                case Lesson:
+                    Lesson lesson = intent.getParcelableExtra(AppConstants.KEY_LESSON_BUNDLE);
+                    addUnitLesson(lesson);
                     break;
                 case Step:
                     Step step = (Step) intent.getSerializableExtra(AppConstants.KEY_STEP_BUNDLE);
@@ -197,7 +196,7 @@ public class LoadService extends IntentService {
                     Unit unit = databaseFacade.getUnitByLessonId(lesson.getId());
                     if (unit != null && cancelSniffer.isUnitIdIsCanceled(unit.getId())) {
                         storeStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
-                        cancelSniffer.removeUnitIdCancel(unit.getId());
+                        cancelSniffer.removeUnitIdToCancel(unit.getId());
 
                         if (cancelSniffer.isSectionIdIsCanceled(unit.getSection())) {
                             cancelSniffer.removeSectionIdCancel(unit.getSection());
@@ -230,8 +229,8 @@ public class LoadService extends IntentService {
         }
     }
 
-    private void addUnitLesson(Unit unitOut, Lesson lessonOut) {
-        //if user click addUnitLesson, it is in db already.
+    private void addUnitLesson(Lesson lessonOut) {
+        //if user click addLesson, it is in db already.
         //make copies of objects.
         Unit unit = databaseFacade.getUnitByLessonId(lessonOut.getId());
         Lesson lesson = databaseFacade.getLessonById(lessonOut.getId());
@@ -376,12 +375,12 @@ public class LoadService extends IntentService {
                         }
                         if (cancelSniffer.isSectionIdIsCanceled(section.getId())) {
                             for (Unit unit : units) {
-                                cancelSniffer.addUnitIdCancel(unit.getId());
+                                cancelSniffer.addUnitIdToCancel(unit.getId());
                             }
                         }
                         for (Unit unit : units) {
                             Lesson lesson = idToLessonMap.get(unit.getLesson());
-                            addUnitLesson(unit, lesson);
+                            addUnitLesson(lesson);
                         }
                         storeStateManager.updateSectionState(section.getId()); // FIXME DOUBLE CHECK, if all units were cached
                     } else {
@@ -399,13 +398,10 @@ public class LoadService extends IntentService {
                 analytic.reportError(Analytic.Error.LOAD_SERVICE, e);
                 storeStateManager.updateSectionAfterDeleting(section.getId());
             }
-        } else
-
-        {
-            if (sectionOut != null) {
-                storeStateManager.updateSectionAfterDeleting(sectionOut.getId());
-            }
+        } else if (sectionOut != null) {
+            storeStateManager.updateSectionAfterDeleting(sectionOut.getId());
         }
+
 
     }
 
@@ -458,6 +454,5 @@ public class LoadService extends IntentService {
 
         return progresses;
     }
-
 
 }

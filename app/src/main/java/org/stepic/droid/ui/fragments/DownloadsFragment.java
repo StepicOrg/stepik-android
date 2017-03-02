@@ -527,14 +527,14 @@ public class DownloadsFragment extends FragmentBase {
                         List<org.stepic.droid.model.Unit> units = databaseFacade.getAllUnitsOfSection(sectionIdsLoading[i]);
                         if (!units.isEmpty()) {
                             for (org.stepic.droid.model.Unit unitItem : units) {
-                                cancelSniffer.addUnitIdCancel(unitItem.getId());
+                                cancelSniffer.addUnitIdToCancel(unitItem.getId());
                             }
                         }
                     }
 
                     long[] unitIdsLoading = databaseFacade.getAllDownloadingUnits();
                     for (int i = 0; i < unitIdsLoading.length; i++) {
-                        cancelSniffer.addUnitIdCancel(unitIdsLoading[i]);
+                        cancelSniffer.addUnitIdToCancel(unitIdsLoading[i]);
 
                         org.stepic.droid.model.Unit unit = databaseFacade.getUnitById(unitIdsLoading[i]);
                         Lesson lesson = databaseFacade.getLessonById(unit.getLesson());

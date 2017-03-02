@@ -17,11 +17,10 @@ import org.stepic.droid.core.AudioFocusHelper;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.ShareHelper;
-import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.notifications.LocalReminder;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.ICancelSniffer;
+import org.stepic.droid.store.CancelSniffer;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
@@ -94,7 +93,7 @@ public class FragmentBase extends Fragment {
     public DownloadManager systemDownloadManager;
 
     @Inject
-    public ICancelSniffer cancelSniffer;
+    public CancelSniffer cancelSniffer;
 
     public FragmentBase() {
         injectComponent();

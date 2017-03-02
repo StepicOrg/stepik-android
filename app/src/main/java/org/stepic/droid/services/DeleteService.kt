@@ -9,8 +9,10 @@ import com.squareup.otto.Bus
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.events.steps.StepRemovedEvent
-import org.stepic.droid.model.*
-import org.stepic.droid.model.Unit
+import org.stepic.droid.model.Course
+import org.stepic.droid.model.Lesson
+import org.stepic.droid.model.Section
+import org.stepic.droid.model.Step
 import org.stepic.droid.store.IStoreStateManager
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
@@ -45,9 +47,8 @@ class DeleteService : IntentService("delete_service") {
                     val section = intent.getSerializableExtra(AppConstants.KEY_SECTION_BUNDLE) as? Section
                     removeFromDisk(section)
                 }
-                LoadService.LoadTypeKey.UnitLesson -> {
-                    val unit = intent.getSerializableExtra(AppConstants.KEY_UNIT_BUNDLE) as? Unit
-                    val lesson = intent.getSerializableExtra(AppConstants.KEY_LESSON_BUNDLE) as? Lesson
+                LoadService.LoadTypeKey.Lesson -> {
+                    val lesson = intent.getParcelableExtra<Lesson>(AppConstants.KEY_LESSON_BUNDLE)
                     removeFromDisk(lesson)
                 }
                 LoadService.LoadTypeKey.Step -> {

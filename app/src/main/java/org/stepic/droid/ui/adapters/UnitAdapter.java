@@ -24,13 +24,11 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.IShell;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.LessonLoadingState;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.model.LessonLoadingState;
-import org.stepic.droid.store.CleanManager;
-import org.stepic.droid.store.ICancelSniffer;
-import org.stepic.droid.store.IDownloadManager;
+import org.stepic.droid.store.LessonDownloader;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.transformers.ProgressTransformerKt;
 import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
@@ -51,7 +49,6 @@ import javax.inject.Inject;
 import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements StepicOnClickItemListener, OnClickLoadListener, OnLoadPositionListener {
 
@@ -60,16 +57,10 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     ScreenManager screenManager;
 
     @Inject
-    IDownloadManager downloadManager;
-
-    @Inject
     DatabaseFacade databaseFacade;
 
     @Inject
     IShell shell;
-
-    @Inject
-    CleanManager cleanManager;
 
     @Inject
     Analytic analytic;
@@ -78,7 +69,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     ThreadPoolExecutor threadPoolExecutor;
 
     @Inject
-    ICancelSniffer cancelSniffer;
+    LessonDownloader lessonDownloader;
 
 
     private final static String DELIMITER = ".";
@@ -112,7 +103,6 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     public void onBindViewHolder(UnitViewHolder holder, int position) {
         Unit unit = unitList.get(position);
         Lesson lesson = lessonList.get(position);
-        Timber.d("onBind Holder = %s, and when_load = %s", holder, holder.whenLoad);
 
         long lessonId = lesson.getId();
         boolean needAnimation = true;
@@ -240,7 +230,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             if (unit.is_cached()) {
                 //delete
                 analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_UNIT, unit.getId() + "");
-                cleanManager.removeUnitLesson(unit, lesson);
+//                cleanManager.removeLesson(unit, lesson);
                 unit.set_loading(false);
                 unit.set_cached(false);
                 lesson.set_loading(false);
@@ -250,6 +240,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                     public void run() {
                         databaseFacade.updateOnlyCachedLoadingLesson(lesson);
                         databaseFacade.updateOnlyCachedLoadingUnit(unit);
+                        lessonDownloader.deleteWholeLesson(lesson.getId());
                     }
                 });
                 notifyItemChanged(position);
@@ -257,7 +248,6 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 if (unit.is_loading()) {
                     //cancel loading
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_UNIT, unit.getId() + "");
-                    cleanManager.removeUnitLesson(unit, lesson); //// FIXME: 21.02.17 is it needed?
                     unit.set_loading(false);
                     unit.set_cached(false);
                     lesson.set_loading(false);
@@ -267,13 +257,8 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                         public void run() {
                             databaseFacade.updateOnlyCachedLoadingLesson(lesson);
                             databaseFacade.updateOnlyCachedLoadingUnit(unit);
-                            cancelSniffer.addUnitIdCancel(unit.getId());
-                            long[] stepIds = lesson.getSteps();
-                            if (stepIds != null) {
-                                for (long stepId : stepIds) {
-                                    downloadManager.cancelStep(stepId);
-                                }
-                            }
+
+                            lessonDownloader.cancelLessonLoading(lesson.getId());
                         }
                     });
 
@@ -309,7 +294,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
                 public void run() {
                     databaseFacade.updateOnlyCachedLoadingLesson(lesson);
                     databaseFacade.updateOnlyCachedLoadingUnit(unit);
-                    downloadManager.addUnitLesson(unit, lesson);
+                    lessonDownloader.downloadLesson(lesson.getId());
                 }
             });
             notifyItemChanged(position);
