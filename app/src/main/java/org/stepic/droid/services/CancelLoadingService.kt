@@ -66,7 +66,7 @@ class CancelLoadingService : IntentService("cancel_loading") {
                         databaseFacade.updateOnlyCachedLoadingStep(step)
                         storeStateManager.updateStepAfterDeleting(step)
 
-                        val lesson = databaseFacade.getLessonById(step.id)
+                        val lesson = databaseFacade.getLessonById(step.lesson)
                         lesson?.let {
                             val unit = databaseFacade.getUnitByLessonId(lesson.id)
                             unit?.let {
