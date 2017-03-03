@@ -3,7 +3,7 @@ package org.stepic.droid.core.modules;
 import android.app.DownloadManager;
 
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.DownloadingProgressUnitPublisher;
 import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.presenters.DownloadingProgressUnitsPresenter;
@@ -25,7 +25,7 @@ public class UnitsModule {
     @Provides
     public UnitsPresenter provideUnitsPresenter(Analytic analytic,
                                                 ThreadPoolExecutor threadPoolExecutor,
-                                                IMainHandler mainHandler,
+                                                MainHandler mainHandler,
                                                 SharedPreferenceHelper sharedPreferenceHelper,
                                                 DatabaseFacade databaseFacade, IApi api) {
         return new UnitsPresenter(analytic, threadPoolExecutor, mainHandler, sharedPreferenceHelper, databaseFacade, api);
@@ -33,7 +33,7 @@ public class UnitsModule {
 
     @Provides
     @PerFragment
-    DownloadingProgressUnitPublisher progressPublisher(DatabaseFacade databaseFacade, DownloadManager downloadManager, CancelSniffer cancelSniffer, IMainHandler mainHandler) {
+    DownloadingProgressUnitPublisher progressPublisher(DatabaseFacade databaseFacade, DownloadManager downloadManager, CancelSniffer cancelSniffer, MainHandler mainHandler) {
         return new DownloadingProgressUnitPublisher(databaseFacade, downloadManager, cancelSniffer, mainHandler);
     }
 

@@ -7,7 +7,7 @@ import android.content.Context;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.DownloadingProgressSectionPublisher;
 import org.stepic.droid.core.PerFragment;
@@ -48,7 +48,7 @@ public class SectionModule {
             ThreadPoolExecutor threadPoolExecutor,
             DatabaseFacade databaseFacade,
             IApi api,
-            IMainHandler mainHandler) {
+            MainHandler mainHandler) {
         return new CourseFinderPresenter(threadPoolExecutor, databaseFacade, api, mainHandler);
     }
 
@@ -56,7 +56,7 @@ public class SectionModule {
     @Provides
     CalendarPresenter provideCalendarPresenter(
             IConfig config,
-            IMainHandler mainHandler,
+            MainHandler mainHandler,
             Context context,
             ThreadPoolExecutor threadPoolExecutor,
             DatabaseFacade databaseFacade,
@@ -68,7 +68,7 @@ public class SectionModule {
     @PerFragment
     @Provides
     SectionsPresenter provideSectionsPresenter(ThreadPoolExecutor threadPoolExecutor,
-                                               IMainHandler mainHandler,
+                                               MainHandler mainHandler,
                                                IApi api,
                                                DatabaseFacade databaseFacade) {
         return new SectionsPresenter(
@@ -81,7 +81,7 @@ public class SectionModule {
     @PerFragment
     @Provides
     InvitationPresenter provideInvitationPresenter(ThreadPoolExecutor threadPoolExecutor,
-                                                   IMainHandler mainHandler,
+                                                   MainHandler mainHandler,
                                                    SharedPreferenceHelper sharedPreferenceHelper,
                                                    Analytic analytic) {
         return new InvitationPresenter(threadPoolExecutor, mainHandler, sharedPreferenceHelper, analytic);
@@ -96,7 +96,7 @@ public class SectionModule {
 
     @Provides
     @PerFragment
-    DownloadingProgressSectionPublisher progressPublisher(DatabaseFacade databaseFacade, DownloadManager downloadManager, CancelSniffer cancelSniffer, IMainHandler mainHandler) {
+    DownloadingProgressSectionPublisher progressPublisher(DatabaseFacade databaseFacade, DownloadManager downloadManager, CancelSniffer cancelSniffer, MainHandler mainHandler) {
         return new DownloadingProgressSectionPublisher(databaseFacade, downloadManager, cancelSniffer, mainHandler);
     }
 

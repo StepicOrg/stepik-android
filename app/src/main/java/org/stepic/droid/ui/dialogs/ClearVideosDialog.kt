@@ -9,7 +9,7 @@ import com.squareup.otto.Bus
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.events.loading.FinishLoadEvent
 import org.stepic.droid.events.loading.StartLoadEvent
 import org.stepic.droid.events.steps.ClearAllDownloadWithoutAnimationEvent
@@ -40,7 +40,7 @@ class ClearVideosDialog : DialogFragment() {
     @Inject
     lateinit var threadPoolExecutor: ThreadPoolExecutor
     @Inject
-    lateinit var mainHandler: IMainHandler
+    lateinit var mainHandler: MainHandler
 
     @Inject
     lateinit var userPreferences: UserPreferences

@@ -7,7 +7,7 @@ import android.content.Intent;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.model.Step;
@@ -49,7 +49,7 @@ public class ViewPusher extends IntentService {
     LocalProgressManager unitProgressManager;
 
     @Inject
-    IMainHandler mainHandler;
+    MainHandler mainHandler;
 
 
     /**

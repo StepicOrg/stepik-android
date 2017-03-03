@@ -9,7 +9,7 @@ import android.widget.CheckBox
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import timber.log.Timber
@@ -40,7 +40,7 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
     lateinit var threadPoolExecutor: ThreadPoolExecutor
 
     @Inject
-    lateinit var mainHandler: IMainHandler
+    lateinit var mainHandler: MainHandler
 
     @Inject
     lateinit var sharedPreferencesHelper: SharedPreferenceHelper

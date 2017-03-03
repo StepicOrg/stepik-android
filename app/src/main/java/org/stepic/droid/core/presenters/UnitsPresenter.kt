@@ -1,7 +1,7 @@
 package org.stepic.droid.core.presenters
 
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.UnitsView
 import org.stepic.droid.exceptions.UnitStoredButLessonNotException
 import org.stepic.droid.model.Lesson
@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class UnitsPresenter(
         private val analytic: Analytic,
         private val threadPoolExecutor: ThreadPoolExecutor,
-        private val mainHandler: IMainHandler,
+        private val mainHandler: MainHandler,
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val databaseFacade: DatabaseFacade,
         private val api: IApi) : PresenterBase<UnitsView>() {

@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters
 
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.StepsView
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Section
@@ -18,7 +18,7 @@ import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 
 class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
-                     val mainHandler: IMainHandler,
+                     val mainHandler: MainHandler,
                      val databaseFacade: DatabaseFacade,
                      val api: IApi,
                      val sharedPreferenceHelper: SharedPreferenceHelper) : PresenterBase<StepsView>() {

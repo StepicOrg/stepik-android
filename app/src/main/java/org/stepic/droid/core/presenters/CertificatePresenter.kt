@@ -3,7 +3,7 @@ package org.stepic.droid.core.presenters
 import android.app.Activity
 import android.support.annotation.MainThread
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.contracts.CertificateView
@@ -26,7 +26,7 @@ class CertificatePresenter(val api: IApi,
                            val screenManager: ScreenManager,
                            val database: DatabaseFacade,
                            val threadPoolExecutor: ThreadPoolExecutor,
-                           val mainHandler: IMainHandler,
+                           val mainHandler: MainHandler,
                            val sharedPreferenceHelper: SharedPreferenceHelper,
                            val analytic: Analytic) : PresenterBase<CertificateView>() {
 

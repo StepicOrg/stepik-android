@@ -3,7 +3,7 @@ package org.stepic.droid.core.presenters
 import android.os.Bundle
 import android.support.annotation.WorkerThread
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.FilterApplicator
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.model.Course
@@ -25,7 +25,7 @@ class PersistentCourseListPresenter(
         val analytic: Analytic,
         val databaseFacade: DatabaseFacade,
         val threadPoolExecutor: ThreadPoolExecutor,
-        val mainHandler: IMainHandler,
+        val mainHandler: MainHandler,
         val api: IApi,
         val filterApplicator: FilterApplicator,
         val sharedPreferenceHelper: SharedPreferenceHelper

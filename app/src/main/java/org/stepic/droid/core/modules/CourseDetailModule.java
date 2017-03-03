@@ -4,7 +4,7 @@ package org.stepic.droid.core.modules;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.store.operations.DatabaseFacade;
@@ -38,7 +38,7 @@ public class CourseDetailModule {
             ThreadPoolExecutor threadPoolExecutor,
             DatabaseFacade databaseFacade,
             IApi api,
-            IMainHandler mainHandler) {
+            MainHandler mainHandler) {
         return new CourseFinderPresenter(threadPoolExecutor, databaseFacade, api, mainHandler);
     }
 }

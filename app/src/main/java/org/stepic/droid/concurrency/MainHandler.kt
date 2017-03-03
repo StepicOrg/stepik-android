@@ -1,3 +1,3 @@
 package org.stepic.droid.concurrency
 
-interface IMainHandler : IHandler
+interface MainHandler : IHandler

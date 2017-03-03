@@ -6,7 +6,7 @@ import android.content.Intent
 import com.squareup.otto.Bus
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.events.updating.NeedUpdateEvent
 import org.stepic.droid.model.AppInfo
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class UpdateAppService : IntentService("update_stepic") {
 
     @Inject
-    lateinit var mainHandler: IMainHandler;
+    lateinit var mainHandler: MainHandler;
 
     @Inject
     lateinit var configs: IConfig;

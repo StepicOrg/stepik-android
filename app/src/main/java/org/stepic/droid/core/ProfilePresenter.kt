@@ -2,7 +2,7 @@ package org.stepic.droid.core
 
 import android.support.annotation.WorkerThread
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.PresenterBase
 import org.stepic.droid.core.presenters.contracts.ProfileView
 import org.stepic.droid.model.Profile
@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadPoolExecutor
 
 class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
                        val analytic: Analytic,
-                       val mainHandler: IMainHandler,
+                       val mainHandler: MainHandler,
                        val api: IApi,
                        val sharedPreferences: SharedPreferenceHelper) : PresenterBase<ProfileView>() {
 

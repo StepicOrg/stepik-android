@@ -1,7 +1,7 @@
 package org.stepic.droid.core.modules;
 
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -22,7 +22,7 @@ public class CertificateModule {
                                           ScreenManager screenManager,
                                           DatabaseFacade databaseFacade,
                                           ThreadPoolExecutor threadPoolExecutor,
-                                          IMainHandler mainHandler,
+                                          MainHandler mainHandler,
                                           SharedPreferenceHelper sharedPreferenceHelper,
                                           Analytic analytic) {
         return new CertificatePresenter(api, config, screenManager, databaseFacade, threadPoolExecutor, mainHandler, sharedPreferenceHelper, analytic);

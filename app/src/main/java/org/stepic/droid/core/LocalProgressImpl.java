@@ -2,7 +2,7 @@ package org.stepic.droid.core;
 
 import com.squareup.otto.Bus;
 
-import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.events.UpdateSectionProgressEvent;
 import org.stepic.droid.events.units.UnitProgressUpdateEvent;
 import org.stepic.droid.events.units.UnitScoreUpdateEvent;
@@ -25,10 +25,10 @@ public class LocalProgressImpl implements LocalProgressManager {
     private DatabaseFacade databaseFacade;
     private Bus bus;
     private IApi api;
-    private IMainHandler mainHandler;
+    private MainHandler mainHandler;
 
     @Inject
-    public LocalProgressImpl(DatabaseFacade databaseFacade, Bus bus, IApi api, IMainHandler mainHandler) {
+    public LocalProgressImpl(DatabaseFacade databaseFacade, Bus bus, IApi api, MainHandler mainHandler) {
         this.databaseFacade = databaseFacade;
         this.bus = bus;
         this.api = api;

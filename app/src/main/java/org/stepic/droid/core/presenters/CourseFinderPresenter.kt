@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters
 
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.LoadCourseView
 import org.stepic.droid.events.courses.CourseCantLoadEvent
 import org.stepic.droid.events.courses.CourseFoundEvent
@@ -18,7 +18,7 @@ class CourseFinderPresenter(
         val threadPoolExecutor: ThreadPoolExecutor,
         val databaseFacade: DatabaseFacade,
         var api: IApi,
-        val mainHandler: IMainHandler) : PresenterBase<LoadCourseView>() {
+        val mainHandler: MainHandler) : PresenterBase<LoadCourseView>() {
 
     fun findCourseById(courseId: Long) {
         threadPoolExecutor.execute {

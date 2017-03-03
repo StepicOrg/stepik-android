@@ -3,7 +3,7 @@ package org.stepic.droid.core
 import android.app.DownloadManager
 import android.database.Cursor
 import android.support.annotation.MainThread
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.model.DownloadEntity
 import org.stepic.droid.store.CancelSniffer
 import org.stepic.droid.store.operations.DatabaseFacade
@@ -14,7 +14,7 @@ import java.util.*
 class DownloadingProgressUnitPublisher(private val databaseFacade: DatabaseFacade,
                                        private val systemDownloadManager: DownloadManager,
                                        private val cancelSniffer: CancelSniffer,
-                                       private val mainHandler: IMainHandler) {
+                                       private val mainHandler: MainHandler) {
 
     interface DownloadingProgressCallback {
         fun onProgressChanged(lessonId: Long, newPortion: Float)

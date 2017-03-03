@@ -1,7 +1,7 @@
 package org.stepic.droid.core.presenters
 
 import org.joda.time.DateTime
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Section
@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class ContinueCoursePresenter(val databaseFacade: DatabaseFacade,
                               val api: IApi,
                               val threadPoolExecutor: ThreadPoolExecutor,
-                              val mainHandler: IMainHandler) : PresenterBase<ContinueCourseView>() {
+                              val mainHandler: MainHandler) : PresenterBase<ContinueCourseView>() {
 
     val isHandling = AtomicBoolean(false)
 

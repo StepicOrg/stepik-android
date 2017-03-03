@@ -5,7 +5,7 @@ import android.support.annotation.WorkerThread
 import com.squareup.otto.Bus
 import com.squareup.otto.Subscribe
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.core.presenters.contracts.NotificationListView
 import org.stepic.droid.events.InternetIsEnabledEvent
@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class NotificationListPresenter(
         val threadPoolExecutor: ThreadPoolExecutor,
-        val mainHandler: IMainHandler,
+        val mainHandler: MainHandler,
         val api: IApi,
         val config: IConfig,
         val bus: Bus,

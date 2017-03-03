@@ -3,7 +3,7 @@ package org.stepic.droid.core.presenters
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.LessonSessionManager
 import org.stepic.droid.core.presenters.contracts.StepAttemptView
 import org.stepic.droid.model.*
@@ -16,7 +16,7 @@ import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
-class StepAttemptPresenter(val mainHandler: IMainHandler,
+class StepAttemptPresenter(val mainHandler: MainHandler,
                            val threadPoolExecutor: ThreadPoolExecutor,
                            val lessonManager: LessonSessionManager,
                            val api: IApi,

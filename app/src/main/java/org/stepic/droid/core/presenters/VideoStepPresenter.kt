@@ -3,7 +3,7 @@ package org.stepic.droid.core.presenters
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.VideoStepView
 import org.stepic.droid.model.Step
 import org.stepic.droid.model.Video
@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class VideoStepPresenter(
         private val threadPoolExecutor: ThreadPoolExecutor,
-        private val mainHandler: IMainHandler,
+        private val mainHandler: MainHandler,
         private val api: IApi,
         private val databaseFacade: DatabaseFacade,
         private val videoResolver: VideoResolver,

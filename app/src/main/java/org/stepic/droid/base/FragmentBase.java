@@ -11,7 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.AudioFocusHelper;
 import org.stepic.droid.core.IShell;
@@ -84,7 +84,7 @@ public class FragmentBase extends Fragment {
     public CoursePropertyResolver coursePropertyResolver;
 
     @Inject
-    public IMainHandler mainHandler;
+    public MainHandler mainHandler;
 
     @Inject
     public AudioFocusHelper audioFocusHelper;

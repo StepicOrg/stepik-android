@@ -2,7 +2,7 @@ package org.stepic.droid.core.presenters
 
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.SectionsView
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Progress
@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 
 class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
-                        val mainHandler: IMainHandler,
+                        val mainHandler: MainHandler,
                         val api: IApi,
                         val databaseFacade: DatabaseFacade) : PresenterBase<SectionsView>() {
 

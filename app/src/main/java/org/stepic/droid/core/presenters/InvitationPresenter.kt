@@ -1,14 +1,14 @@
 package org.stepic.droid.core.presenters
 
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.InvitationView
 import org.stepic.droid.model.Course
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import java.util.concurrent.ThreadPoolExecutor
 
 class InvitationPresenter(private val threadPoolExecutor: ThreadPoolExecutor,
-                          private val mainHandler: IMainHandler,
+                          private val mainHandler: MainHandler,
                           private val sharedPreferenceHelper: SharedPreferenceHelper,
                           private val analytic: Analytic) : PresenterBase<InvitationView>() {
 

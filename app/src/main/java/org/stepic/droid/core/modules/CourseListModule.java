@@ -1,7 +1,7 @@
 package org.stepic.droid.core.modules;
 
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.FilterApplicator;
 import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
@@ -32,7 +32,7 @@ public class CourseListModule {
     PersistentCourseListPresenter providePersistentCourseListPresenter(Analytic analytic,
                                                                        DatabaseFacade databaseFacade,
                                                                        ThreadPoolExecutor threadPoolExecutor,
-                                                                       IMainHandler mainHandler,
+                                                                       MainHandler mainHandler,
                                                                        IApi api,
                                                                        FilterApplicator filterApplicator,
                                                                        SharedPreferenceHelper sharedPreferenceHelper) {
@@ -51,7 +51,7 @@ public class CourseListModule {
     @Provides
     SearchCoursesPresenter provideSearchCoursePresenter(IApi api,
                                                         ThreadPoolExecutor threadPoolExecutor,
-                                                        IMainHandler mainHandler,
+                                                        MainHandler mainHandler,
                                                         SearchResolver searchResolver) {
         return new SearchCoursesPresenter(api,
                 threadPoolExecutor,
@@ -64,7 +64,7 @@ public class CourseListModule {
     @PerFragment
     ContinueCoursePresenter provideContinueCoursePresenter(DatabaseFacade databaseFacade,
                                                            ThreadPoolExecutor threadPoolExecutor,
-                                                           IMainHandler mainHandler,
+                                                           MainHandler mainHandler,
                                                            IApi api) {
         return new ContinueCoursePresenter(databaseFacade, api, threadPoolExecutor, mainHandler);
     }

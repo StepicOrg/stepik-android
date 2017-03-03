@@ -21,7 +21,7 @@ import com.squareup.otto.Bus;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.configuration.IConfig;
 import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.core.IShell;
@@ -85,7 +85,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected DatabaseFacade databaseFacade;
 
     @Inject
-    public IMainHandler mainHandler;
+    public MainHandler mainHandler;
 
     @Inject
     protected IShell shell;

@@ -3,7 +3,7 @@ package org.stepic.droid.core.modules;
 import android.content.Context;
 
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.presenters.AnonymousPresenter;
@@ -31,7 +31,7 @@ public class StepModule {
     @Provides
     @PerFragment
     VideoStepPresenter provideVideoStepPresenter(ThreadPoolExecutor threadPoolExecutor,
-                                                 IMainHandler mainHandler,
+                                                 MainHandler mainHandler,
                                                  IApi api,
                                                  DatabaseFacade databaseFacade,
                                                  VideoResolver videoResolver,
@@ -41,14 +41,14 @@ public class StepModule {
 
     @Provides
     @PerFragment
-    AnonymousPresenter anonymousPresenter(SharedPreferenceHelper sharedPreferenceHelper, ThreadPoolExecutor threadPoolExecutor, IMainHandler mainHandler) {
+    AnonymousPresenter anonymousPresenter(SharedPreferenceHelper sharedPreferenceHelper, ThreadPoolExecutor threadPoolExecutor, MainHandler mainHandler) {
         return new AnonymousPresenter(sharedPreferenceHelper, threadPoolExecutor, mainHandler);
     }
 
     @Provides
     RouteStepPresenter provideNextStepPresenter(
             ThreadPoolExecutor threadPoolExecutor,
-            IMainHandler mainHandler,
+            MainHandler mainHandler,
             DatabaseFacade databaseFacade,
             Analytic analytic) {
         return new RouteStepPresenter(threadPoolExecutor, mainHandler, databaseFacade, analytic);
@@ -57,7 +57,7 @@ public class StepModule {
     @Provides
     @PerFragment
     StepsPresenter provideStepPresenter(ThreadPoolExecutor threadPoolExecutor,
-                                        IMainHandler mainHandler,
+                                        MainHandler mainHandler,
                                         DatabaseFacade databaseFacade,
                                         IApi api,
                                         SharedPreferenceHelper sharedPreferenceHelper) {
@@ -72,7 +72,7 @@ public class StepModule {
     @Provides
     @PerFragment
     StepQualityPresenter provideStepQualityPresenter(ThreadPoolExecutor executor,
-                                                     IMainHandler mainHandler,
+                                                     MainHandler mainHandler,
                                                      DatabaseFacade databaseFacade,
                                                      UserPreferences userPreferences,
                                                      Analytic analytic) {
@@ -91,7 +91,7 @@ public class StepModule {
 
     @Provides
     @PerFragment
-    StepAttemptPresenter provideStepAttemptProvider(IMainHandler mainHandler,
+    StepAttemptPresenter provideStepAttemptProvider(MainHandler mainHandler,
                                                     ThreadPoolExecutor threadPoolExecutor,
                                                     LessonSessionManager lessonSessionManager,
                                                     IApi api,

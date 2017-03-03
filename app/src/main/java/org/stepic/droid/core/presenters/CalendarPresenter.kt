@@ -11,7 +11,7 @@ import android.support.v4.content.ContextCompat
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.core.DeadlineType
 import org.stepic.droid.core.presenters.contracts.CalendarExportableView
@@ -26,7 +26,7 @@ import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 
 class CalendarPresenter(val config: IConfig,
-                        val mainHandler: IMainHandler,
+                        val mainHandler: MainHandler,
                         val context: Context,
                         val threadPool: ThreadPoolExecutor,
                         val database: DatabaseFacade,

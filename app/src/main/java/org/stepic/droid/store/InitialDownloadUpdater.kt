@@ -2,7 +2,7 @@ package org.stepic.droid.store
 
 import android.app.DownloadManager
 import android.support.annotation.WorkerThread
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.model.DownloadEntity
 import org.stepic.droid.store.operations.DatabaseFacade
 import java.util.concurrent.ThreadPoolExecutor
@@ -12,7 +12,7 @@ import javax.inject.Singleton
 class InitialDownloadUpdater(private val threadPoolExecutor: ThreadPoolExecutor,
                              private val systemDownloadManager: DownloadManager,
                              private val downloadFinishedCallback: DownloadFinishedCallback,
-                             private val mainHandler: IMainHandler,
+                             private val mainHandler: MainHandler,
                              private val databaseFacade: DatabaseFacade) {
 
 

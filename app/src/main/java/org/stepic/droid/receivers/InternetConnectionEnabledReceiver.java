@@ -10,7 +10,7 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.steps.UpdateStepEvent;
@@ -54,7 +54,7 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
     LocalProgressManager unitProgressManager;
 
     @Inject
-    IMainHandler mainHandler;
+    MainHandler mainHandler;
 
     private AtomicBoolean inWork = new AtomicBoolean(false);
 

@@ -9,7 +9,7 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.analytic.AnalyticImpl;
-import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.concurrency.MainHandlerImpl;
 import org.stepic.droid.concurrency.SingleThreadExecutor;
 import org.stepic.droid.configuration.ConfigRelease;
@@ -186,7 +186,7 @@ public class AppCoreModule {
 
     @Singleton
     @Provides
-    LocalProgressManager provideProgressManager(DatabaseFacade databaseFacade, Bus bus, IApi api, IMainHandler mainHandler) {
+    LocalProgressManager provideProgressManager(DatabaseFacade databaseFacade, Bus bus, IApi api, MainHandler mainHandler) {
         return new LocalProgressImpl(databaseFacade, bus, api, mainHandler);
     }
 
@@ -218,13 +218,13 @@ public class AppCoreModule {
 
     @Singleton
     @Provides
-    IMainHandler provideHandlerForUIThread() {
+    MainHandler provideHandlerForUIThread() {
         return new MainHandlerImpl();
     }
 
     @Singleton
     @Provides
-    AudioFocusHelper provideAudioFocusHelper(Context context, IMainHandler mainHandler, Bus bus) {
+    AudioFocusHelper provideAudioFocusHelper(Context context, MainHandler mainHandler, Bus bus) {
         return new AudioFocusHelper(context, bus, mainHandler);
     }
 
@@ -319,14 +319,14 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    StepikLogoutManager provideStepikLogoutManager(ThreadPoolExecutor threadPoolExecutor, IMainHandler mainHandler, UserPreferences userPreferences, SharedPreferenceHelper sharedPreferenceHelper, DownloadManager downloadManager, DatabaseFacade dbFacade) {
+    StepikLogoutManager provideStepikLogoutManager(ThreadPoolExecutor threadPoolExecutor, MainHandler mainHandler, UserPreferences userPreferences, SharedPreferenceHelper sharedPreferenceHelper, DownloadManager downloadManager, DatabaseFacade dbFacade) {
         return new StepikLogoutManager(threadPoolExecutor, mainHandler, userPreferences, downloadManager, sharedPreferenceHelper, dbFacade);
     }
 
     @Provides
     @Singleton
     InitialDownloadUpdater provideDownloadUpdaterAfterRestart(ThreadPoolExecutor threadPoolExecutor,
-                                                              IMainHandler mainHandler,
+                                                              MainHandler mainHandler,
                                                               DownloadManager systemDownloadManager,
                                                               DownloadFinishedCallback callback,
                                                               DatabaseFacade databaseFacade) {

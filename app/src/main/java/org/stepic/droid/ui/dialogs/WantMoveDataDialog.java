@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.events.loading.FinishLoadEvent;
 import org.stepic.droid.events.loading.StartLoadEvent;
 import org.stepic.droid.events.video.FailToMoveFilesEvent;
@@ -48,7 +48,7 @@ public class WantMoveDataDialog extends DialogFragment {
     ThreadPoolExecutor threadPoolExecutor;
 
     @Inject
-    IMainHandler mainHandler;
+    MainHandler mainHandler;
 
     @Inject
     Analytic analytic;
