@@ -7,7 +7,7 @@ import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.concurrency.DownloadPoster;
 import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.core.MyPhoneStateListener;
-import org.stepic.droid.core.Shell;
+import org.stepic.droid.core.ShellImpl;
 import org.stepic.droid.core.modules.AppCoreModule;
 import org.stepic.droid.core.modules.CertificateModule;
 import org.stepic.droid.core.modules.CourseDetailModule;
@@ -66,7 +66,7 @@ import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepic.droid.ui.dialogs.VideoQualityDialog;
 import org.stepic.droid.ui.dialogs.WantMoveDataDialog;
 import org.stepic.droid.ui.fragments.CommentsFragment;
-import org.stepic.droid.web.RetrofitRESTApi;
+import org.stepic.droid.web.ApiImpl;
 
 import javax.inject.Singleton;
 
@@ -100,7 +100,7 @@ public interface AppCoreComponent {
 
     void inject(MainFeedActivity someActivity);
 
-    void inject(Shell injectAllToShell);
+    void inject(ShellImpl injectAllToShell);
 
     void inject(CoursesAdapter adapter);
 
@@ -108,7 +108,7 @@ public interface AppCoreComponent {
 
     void inject(FragmentBase baseFragment);
 
-    void inject(RetrofitRESTApi api);
+    void inject(ApiImpl api);
 
     void inject(DiscountingPolicyDialogFragment dialogFragment);
 

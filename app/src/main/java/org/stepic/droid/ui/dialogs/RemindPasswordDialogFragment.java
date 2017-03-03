@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.web.IApi;
+import org.stepic.droid.web.Api;
 
 import javax.inject.Inject;
 
@@ -36,7 +36,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
     private static final String ERROR_TEXT_KEY = "Error_Text_Key";
 
     @Inject
-    IApi api;
+    Api api;
 
     public static RemindPasswordDialogFragment newInstance() {
         return new RemindPasswordDialogFragment();

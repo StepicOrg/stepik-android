@@ -18,7 +18,7 @@ import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.util.resolvers.StepTypeResolverImpl;
 import org.stepic.droid.util.resolvers.VideoResolver;
-import org.stepic.droid.web.IApi;
+import org.stepic.droid.web.Api;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -32,7 +32,7 @@ public class StepModule {
     @PerFragment
     VideoStepPresenter provideVideoStepPresenter(ThreadPoolExecutor threadPoolExecutor,
                                                  MainHandler mainHandler,
-                                                 IApi api,
+                                                 Api api,
                                                  DatabaseFacade databaseFacade,
                                                  VideoResolver videoResolver,
                                                  Analytic analytic) {
@@ -59,7 +59,7 @@ public class StepModule {
     StepsPresenter provideStepPresenter(ThreadPoolExecutor threadPoolExecutor,
                                         MainHandler mainHandler,
                                         DatabaseFacade databaseFacade,
-                                        IApi api,
+                                        Api api,
                                         SharedPreferenceHelper sharedPreferenceHelper) {
         return new StepsPresenter
                 (threadPoolExecutor,
@@ -94,7 +94,7 @@ public class StepModule {
     StepAttemptPresenter provideStepAttemptProvider(MainHandler mainHandler,
                                                     ThreadPoolExecutor threadPoolExecutor,
                                                     LessonSessionManager lessonSessionManager,
-                                                    IApi api,
+                                                    Api api,
                                                     Analytic analytic,
                                                     SharedPreferenceHelper sharedPreferenceHelper) {
         return new StepAttemptPresenter(mainHandler,

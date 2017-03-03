@@ -15,10 +15,10 @@ import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.model.Step;
-import org.stepic.droid.store.IStoreStateManager;
+import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.StepHelper;
-import org.stepic.droid.web.IApi;
+import org.stepic.droid.web.Api;
 import org.stepic.droid.web.ViewAssignment;
 
 import java.io.IOException;
@@ -35,11 +35,11 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
 
     @Inject
-    IApi api;
+    Api api;
     @Inject
     DatabaseFacade databaseFacade;
     @Inject
-    IStoreStateManager storeStateManager;
+    StoreStateManager storeStateManager;
 
     @Inject
     Bus bus;

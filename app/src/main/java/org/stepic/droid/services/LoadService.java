@@ -21,7 +21,7 @@ import org.stepic.droid.model.Video;
 import org.stepic.droid.model.VideoUrl;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.CancelSniffer;
-import org.stepic.droid.store.IStoreStateManager;
+import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.FileUtil;
@@ -29,7 +29,7 @@ import org.stepic.droid.util.ProgressUtil;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.resolvers.VideoResolver;
-import org.stepic.droid.web.IApi;
+import org.stepic.droid.web.Api;
 import org.stepic.droid.web.LessonStepicResponse;
 import org.stepic.droid.web.ProgressesResponse;
 import org.stepic.droid.web.StepResponse;
@@ -58,11 +58,11 @@ public class LoadService extends IntentService {
     @Inject
     VideoResolver resolver;
     @Inject
-    IApi api;
+    Api api;
     @Inject
     DatabaseFacade databaseFacade;
     @Inject
-    IStoreStateManager storeStateManager;
+    StoreStateManager storeStateManager;
     @Inject
     CancelSniffer cancelSniffer;
     @Inject
@@ -194,9 +194,9 @@ public class LoadService extends IntentService {
                 Lesson lesson = databaseFacade.getLessonById(step.getLesson());
                 if (lesson != null) {
                     Unit unit = databaseFacade.getUnitByLessonId(lesson.getId());
-                    if (unit != null && cancelSniffer.isUnitIdIsCanceled(unit.getId())) {
+                    if (unit != null && cancelSniffer.isLessonIdIsCanceled(unit.getId())) {
                         storeStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
-                        cancelSniffer.removeUnitIdToCancel(unit.getId());
+                        cancelSniffer.removeLessonIdToCancel(unit.getId());
 
                         if (cancelSniffer.isSectionIdIsCanceled(unit.getSection())) {
                             cancelSniffer.removeSectionIdCancel(unit.getSection());
@@ -232,28 +232,28 @@ public class LoadService extends IntentService {
     private void addUnitLesson(Lesson lessonOut) {
         //if user click addLesson, it is in db already.
         //make copies of objects.
-        Unit unit = databaseFacade.getUnitByLessonId(lessonOut.getId());
         Lesson lesson = databaseFacade.getLessonById(lessonOut.getId());
-        if (unit != null && lesson != null && !unit.is_cached() && !lesson.is_cached() && unit.is_loading() && lesson.is_loading()) {
 
+        if (lesson != null && !lesson.is_cached() && lesson.is_loading()) {
             try {
-                List<Assignment> assignments = api.getAssignments(unit.getAssignments()).execute().body().getAssignments();
-                for (Assignment item : assignments) {
-                    databaseFacade.addAssignment(item);
+                Unit unit = databaseFacade.getUnitByLessonId(lesson.getId());
+                if (unit != null) {
+                    List<Assignment> assignments = api.getAssignments(unit.getAssignments()).execute().body().getAssignments();
+                    for (Assignment item : assignments) {
+                        databaseFacade.addAssignment(item);
+                    }
 
+                    String[] ids = ProgressUtil.getAllProgresses(assignments);
+                    List<Progress> progresses = fetchProgresses(ids);
+                    for (Progress item : progresses) {
+                        databaseFacade.addProgress(item);
+                    }
                 }
 
-                String[] ids = ProgressUtil.getAllProgresses(assignments);
-                List<Progress> progresses = fetchProgresses(ids);
-                for (Progress item : progresses) {
-                    databaseFacade.addProgress(item);
-                }
                 Response<StepResponse> response = api.getSteps(lesson.getSteps()).execute();
                 if (response.isSuccessful()) {
                     List<Step> steps = response.body().getSteps();
                     if (steps != null && !steps.isEmpty()) {
-
-
                         for (Step step : steps) {
                             databaseFacade.addStep(step);
                             boolean cached = databaseFacade.isStepCached(step);
@@ -266,7 +266,7 @@ public class LoadService extends IntentService {
                                 databaseFacade.updateOnlyCachedLoadingStep(step);
                             }
                         }
-                        if (cancelSniffer.isUnitIdIsCanceled(unit.getId())) {
+                        if (cancelSniffer.isLessonIdIsCanceled(lesson.getId())) {
                             for (Step step : steps) {
                                 cancelSniffer.addStepIdCancel(step.getId());
                             }
@@ -361,21 +361,17 @@ public class LoadService extends IntentService {
                             databaseFacade.addUnit(unit);
                             databaseFacade.addLesson(lesson);
 
-                            if (!databaseFacade.isUnitCached(unit) && !databaseFacade.isLessonCached(lesson)) {
+                            if (!databaseFacade.isLessonCached(lesson)) {
                                 //need to be load
-
-                                unit.set_loading(true);
-                                unit.set_cached(false);
                                 lesson.set_loading(true);
                                 lesson.set_cached(false);
 
                                 databaseFacade.updateOnlyCachedLoadingLesson(lesson);
-                                databaseFacade.updateOnlyCachedLoadingUnit(unit);
                             }
                         }
                         if (cancelSniffer.isSectionIdIsCanceled(section.getId())) {
                             for (Unit unit : units) {
-                                cancelSniffer.addUnitIdToCancel(unit.getId());
+                                cancelSniffer.addLessonToCancel(unit.getId());
                             }
                         }
                         for (Unit unit : units) {

@@ -7,13 +7,13 @@ import com.squareup.otto.Bus
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.concurrency.MainHandler
-import org.stepic.droid.configuration.IConfig
+import org.stepic.droid.configuration.Config
 import org.stepic.droid.events.updating.NeedUpdateEvent
 import org.stepic.droid.model.AppInfo
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.DeviceInfoUtil
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import javax.inject.Inject
 
 class UpdateAppService : IntentService("update_stepic") {
@@ -22,10 +22,10 @@ class UpdateAppService : IntentService("update_stepic") {
     lateinit var mainHandler: MainHandler;
 
     @Inject
-    lateinit var configs: IConfig;
+    lateinit var configs: Config;
 
     @Inject
-    lateinit var api: IApi;
+    lateinit var api: Api;
 
     @Inject
     lateinit var bus: Bus;

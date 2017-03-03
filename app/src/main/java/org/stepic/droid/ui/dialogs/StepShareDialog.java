@@ -14,7 +14,7 @@ import android.widget.Toast;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.model.Lesson;
@@ -45,7 +45,7 @@ public class StepShareDialog extends BottomSheetDialog {
     ScreenManager screenManager;
 
     @Inject
-    IConfig config;
+    Config config;
 
     public StepShareDialog(@NonNull Context context, Step step, Lesson lesson, Unit unit) {
         super(context);

@@ -21,8 +21,8 @@ public interface Analytic {
         String CLICK_SIGN_IN_ON_SIGN_IN_SCREEN = "click sign in on sign in on sign-in screen";
         String CLICK_DELETE_SECTION = "Click delete section from cache";
         String CLICK_CACHE_SECTION = "Click cache section";
-        String CLICK_CACHE_UNIT = "Click cache unit";
-        String CLICK_DELETE_UNIT = "Click delete unit from cache";
+        String CLICK_CACHE_LESSON = "Click cache unit";
+        String CLICK_DELETE_LESSON = "Click delete unit from cache";
         String CLICK_LOGOUT = "Click logout";
         String CLICK_CLEAR_CACHE = "Click clear cache button";
         String CLICK_YES_LOGOUT = "Click accept logout";
@@ -38,7 +38,7 @@ public interface Analytic {
         String AUTH_FROM_DIALOG_FOR_UNAUTHORIZED_USER = "Auth: yes from auth dialog";
         String TRANSFER_DATA_YES = "storage: transfer data";
         String CLICK_CANCEL_SECTION = "click cancel section";
-        String CLICK_CANCEL_UNIT = "click cancel unit";
+        String CLICK_CANCEL_LESSON = "click cancel unit";
         String UPDATING_MESSAGE_IS_SHOWN = "updating shown";
         String REFRESH_UNIT = "Pull from top to refreshWhenOnConnectionProblem section unit";
         String REFRESH_SECTION = "Pull from top to refreshWhenOnConnectionProblem section";

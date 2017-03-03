@@ -11,7 +11,7 @@ import org.stepic.droid.core.presenters.UnitsPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.store.CancelSniffer;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.web.IApi;
+import org.stepic.droid.web.Api;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -27,7 +27,7 @@ public class UnitsModule {
                                                 ThreadPoolExecutor threadPoolExecutor,
                                                 MainHandler mainHandler,
                                                 SharedPreferenceHelper sharedPreferenceHelper,
-                                                DatabaseFacade databaseFacade, IApi api) {
+                                                DatabaseFacade databaseFacade, Api api) {
         return new UnitsPresenter(analytic, threadPoolExecutor, mainHandler, sharedPreferenceHelper, databaseFacade, api);
     }
 

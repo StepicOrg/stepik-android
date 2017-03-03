@@ -1,7 +1,7 @@
 package org.stepic.droid.util;
 
 import org.jetbrains.annotations.NotNull;
-import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.configuration.Config;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Unit;
@@ -32,7 +32,7 @@ public class StepikLogicHelper {
     }
 
     @NotNull
-    public static String getPathForCourseOrEmpty(Course course, IConfig config) {
+    public static String getPathForCourseOrEmpty(Course course, Config config) {
         return course.getCover() == null ? "" : config.getBaseUrl() + course.getCover();
     }
 }

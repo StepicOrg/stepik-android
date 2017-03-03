@@ -11,7 +11,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.configuration.Config;
 import org.stepic.droid.util.HtmlHelper;
 
 import java.util.Calendar;
@@ -25,7 +25,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
     OnWebViewImageClicked listener;
 
     @Inject
-    IConfig config;
+    Config config;
 
     private final static String assetUrl = "file:///android_asset/";
 

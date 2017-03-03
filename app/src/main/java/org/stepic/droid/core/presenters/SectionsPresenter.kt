@@ -10,7 +10,7 @@ import org.stepic.droid.model.Section
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.transformers.transformToViewModel
 import org.stepic.droid.viewmodel.ProgressViewModel
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                         val mainHandler: MainHandler,
-                        val api: IApi,
+                        val api: Api,
                         val databaseFacade: DatabaseFacade) : PresenterBase<SectionsView>() {
 
     val sectionList: MutableList<Section> = ArrayList()

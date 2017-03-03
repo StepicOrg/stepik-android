@@ -25,7 +25,7 @@ class ChooseCalendarDialog : DialogFragment() {
         val builder = AlertDialog.Builder(activity)
         builder.setTitle(R.string.choose_calendar_title)
                 .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.ok, { dialogInterface, i ->
+                .setPositiveButton(R.string.ok, { _, _ ->
                     dialog.dismiss()
                     val selectedPosition = (dialog as AlertDialog).listView.checkedItemPosition
                     bus.post(CalendarChosenEvent(calendarItems[selectedPosition]))

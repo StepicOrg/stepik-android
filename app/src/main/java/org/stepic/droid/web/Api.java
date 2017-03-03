@@ -16,7 +16,7 @@ import java.io.IOException;
 import retrofit2.Call;
 
 
-public interface IApi {
+public interface Api {
 
     enum TokenType {
         social, loginPassword

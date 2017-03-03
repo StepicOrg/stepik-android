@@ -9,7 +9,7 @@ import org.stepic.droid.model.Unit
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.ProgressUtil
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import org.stepic.droid.web.LessonStepicResponse
 import org.stepic.droid.web.StepResponse
 import retrofit2.Response
@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                      val mainHandler: MainHandler,
                      val databaseFacade: DatabaseFacade,
-                     val api: IApi,
+                     val api: Api,
                      val sharedPreferenceHelper: SharedPreferenceHelper) : PresenterBase<StepsView>() {
 
     var lesson: Lesson? = null

@@ -21,8 +21,8 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.configuration.IConfig;
-import org.stepic.droid.core.IShell;
+import org.stepic.droid.configuration.Config;
+import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.Table;
@@ -40,13 +40,13 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
 
 
     @Inject
-    IConfig config;
+    Config config;
 
     @Inject
     TextResolver textResolver;
 
     @Inject
-    IShell shell;
+    Shell shell;
 
     @Inject
     Analytic analytic;

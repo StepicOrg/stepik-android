@@ -29,7 +29,7 @@ class RouteStepPresenter(
         checkStepBase(stepId,
                 lesson,
                 unit,
-                indexCalculation = { something -> 0 },
+                indexCalculation = { _ -> 0 },
                 resultForView = { view?.showPreviousLessonView() }) //need only the first element
     }
 

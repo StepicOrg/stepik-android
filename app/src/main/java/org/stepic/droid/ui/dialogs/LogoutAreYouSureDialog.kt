@@ -26,7 +26,7 @@ class LogoutAreYouSureDialog : DialogFragment() {
         val builder = AlertDialog.Builder(activity)
         builder.setTitle(R.string.title_confirmation)
                 .setMessage(R.string.are_you_sure_logout)
-                .setPositiveButton(R.string.yes) { dialog, which ->
+                .setPositiveButton(R.string.yes) { _, _ ->
                     listener?.onLogout()
                 }
                 .setNegativeButton(R.string.no, null)

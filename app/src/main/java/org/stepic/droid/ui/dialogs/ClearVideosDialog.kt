@@ -55,7 +55,7 @@ class ClearVideosDialog : DialogFragment() {
 
 
         val builder = AlertDialog.Builder(activity)
-        builder.setTitle(R.string.title_confirmation).setMessage(R.string.clear_videos).setPositiveButton(R.string.yes) { dialog, which ->
+        builder.setTitle(R.string.title_confirmation).setMessage(R.string.clear_videos).setPositiveButton(R.string.yes) { _, _ ->
             analytic.reportEvent(Analytic.Interaction.YES_CLEAR_VIDEOS)
 
             val task = object : AsyncTask<Void, Void, Void>() {

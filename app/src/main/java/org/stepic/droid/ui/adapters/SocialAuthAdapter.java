@@ -23,7 +23,7 @@ import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.web.IApi;
+import org.stepic.droid.web.Api;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
     SocialManager socialManager;
 
     @Inject
-    IApi api;
+    Api api;
 
     @Inject
     Analytic analytic;

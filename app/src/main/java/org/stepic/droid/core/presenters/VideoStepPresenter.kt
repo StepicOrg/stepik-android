@@ -9,7 +9,7 @@ import org.stepic.droid.model.Step
 import org.stepic.droid.model.Video
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.resolvers.VideoResolver
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import java.util.concurrent.Semaphore
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class VideoStepPresenter(
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
-        private val api: IApi,
+        private val api: Api,
         private val databaseFacade: DatabaseFacade,
         private val videoResolver: VideoResolver,
         private val analytic: Analytic) : PresenterBase<VideoStepView>() {

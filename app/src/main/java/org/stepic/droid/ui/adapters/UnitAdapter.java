@@ -21,7 +21,7 @@ import com.bumptech.glide.Glide;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.IShell;
+import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.LessonLoadingState;
@@ -60,7 +60,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     DatabaseFacade databaseFacade;
 
     @Inject
-    IShell shell;
+    Shell shell;
 
     @Inject
     Analytic analytic;
@@ -149,7 +149,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             holder.viewedItem.setVisibility(View.INVISIBLE);
         }
 
-        if (unit.is_cached()) {
+        if (lesson.is_cached()) {
             //cached
             holder.preLoadIV.setVisibility(View.GONE);
             holder.whenLoad.setVisibility(View.INVISIBLE);
@@ -157,7 +157,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
             holder.whenLoad.setProgressPortion(0, false);
         } else {
-            if (unit.is_loading()) {
+            if (lesson.is_loading()) {
 
                 holder.preLoadIV.setVisibility(View.GONE);
                 holder.whenLoad.setVisibility(View.VISIBLE);
@@ -227,37 +227,29 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             }
 
 
-            if (unit.is_cached()) {
+            if (lesson.is_cached()) {
                 //delete
-                analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_UNIT, unit.getId() + "");
-//                cleanManager.removeLesson(unit, lesson);
-                unit.set_loading(false);
-                unit.set_cached(false);
+                analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_LESSON, unit.getId() + "");
                 lesson.set_loading(false);
                 lesson.set_cached(false);
                 threadPoolExecutor.execute(new Runnable() {
                     @Override
                     public void run() {
                         databaseFacade.updateOnlyCachedLoadingLesson(lesson);
-                        databaseFacade.updateOnlyCachedLoadingUnit(unit);
                         lessonDownloader.deleteWholeLesson(lesson.getId());
                     }
                 });
                 notifyItemChanged(position);
             } else {
-                if (unit.is_loading()) {
+                if (lesson.is_loading()) {
                     //cancel loading
-                    analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_UNIT, unit.getId() + "");
-                    unit.set_loading(false);
-                    unit.set_cached(false);
+                    analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_LESSON, unit.getId() + "");
                     lesson.set_loading(false);
                     lesson.set_cached(false);
                     threadPoolExecutor.execute(new Runnable() {
                         @Override
                         public void run() {
                             databaseFacade.updateOnlyCachedLoadingLesson(lesson);
-                            databaseFacade.updateOnlyCachedLoadingUnit(unit);
-
                             lessonDownloader.cancelLessonLoading(lesson.getId());
                         }
                     });
@@ -284,16 +276,13 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         if (position >= 0 && position < unitList.size()) {
             final Unit unit = unitList.get(position);
             final Lesson lesson = lessonList.get(position);
-            analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_UNIT, unit.getId() + "");
-            unit.set_cached(false);
+            analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_LESSON, unit.getId() + "");
             lesson.set_cached(false);
-            unit.set_loading(true);
             lesson.set_loading(true);
             threadPoolExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
                     databaseFacade.updateOnlyCachedLoadingLesson(lesson);
-                    databaseFacade.updateOnlyCachedLoadingUnit(unit);
                     lessonDownloader.downloadLesson(lesson.getId());
                 }
             });

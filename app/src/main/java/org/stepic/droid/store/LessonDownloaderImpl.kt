@@ -4,14 +4,14 @@ import android.content.Context
 import android.support.annotation.MainThread
 import org.stepic.droid.model.DownloadEntity
 import org.stepic.droid.store.operations.DatabaseFacade
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Singleton
 
 @Singleton
 class LessonDownloaderImpl(private val context: Context,
                            private val databaseFacade: DatabaseFacade,
-                           private val api: IApi,
+                           private val api: Api,
                            private val downloadManager: IDownloadManager,
                            private val threadPoolExecutor: ThreadPoolExecutor,
                            private val cleanManager: CleanManager,
@@ -22,7 +22,7 @@ class LessonDownloaderImpl(private val context: Context,
         threadPoolExecutor.execute {
             val lesson = databaseFacade.getLessonById(lessonId) ?: throw Exception("lesson was null, when downloadLesson of LessonDownloader is executed") // FIXME: IT CAN BE BY THE NORMAL EXECUTION, CHANGE IT, THIS LESSON MAY BE NEEDED, WHEN SECTION IS LOADED
             val unitId = databaseFacade.getUnitByLessonId(lessonId)!!.id
-            cancelSniffer.removeUnitIdToCancel(unitId)
+            cancelSniffer.removeLessonIdToCancel(unitId)
             lesson.steps?.forEach {
                 cancelSniffer.removeStepIdCancel(it)
             }
@@ -33,8 +33,7 @@ class LessonDownloaderImpl(private val context: Context,
     override fun cancelLessonLoading(lessonId: Long) {
         threadPoolExecutor.execute {
             val lesson = databaseFacade.getLessonById(lessonId)
-            val unitId = databaseFacade.getUnitByLessonId(lessonId)!!.id
-            cancelSniffer.addUnitIdToCancel(unitId)
+            cancelSniffer.addLessonToCancel(lessonId)
             lesson!!.steps!!.forEach {
                 cancelSniffer.addStepIdCancel(it)
             }

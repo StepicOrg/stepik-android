@@ -152,7 +152,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
 
         surfaceFrame = fragmentContainer?.findViewById(R.id.player_surface_frame) as FrameLayout
         videoView = fragmentContainer?.findViewById(R.id.texture_video_view) as SurfaceView
-        fragmentContainer?.setOnTouchListener { view, motionEvent ->
+        fragmentContainer?.setOnTouchListener { _, _ ->
             if (true || !isLoading) {
                 showController(!isControllerVisible)
             }
@@ -435,7 +435,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
             }
 
             if (controller == null) throw RuntimeException()
-            controller?.setOnTouchListener { view, motionEvent ->
+            controller?.setOnTouchListener { _, _ ->
                 true
             }
 

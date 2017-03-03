@@ -7,7 +7,7 @@ import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import org.stepic.droid.base.MainApplication
-import org.stepic.droid.configuration.IConfig
+import org.stepic.droid.configuration.Config
 import org.stepic.droid.util.DateTimeHelper
 import java.io.Serializable
 import java.util.*
@@ -17,7 +17,7 @@ class Section : Serializable, Parcelable {
 
     @Inject
     @Deprecated("create helper or extension, not use config in model class")
-    lateinit var config: IConfig
+    lateinit var config: Config
 
     private val formatterForView: DateTimeFormatter by lazy {
         DateTimeFormat.forPattern(config.datePattern).withZone(DateTimeZone.getDefault()).withLocale(Locale.getDefault())

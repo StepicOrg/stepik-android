@@ -12,8 +12,8 @@ import org.stepic.droid.events.comments.FailDeleteCommentEvent
 import org.stepic.droid.events.comments.InternetConnectionProblemInCommentsEvent
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.web.Api
 import org.stepic.droid.web.CommentsResponse
-import org.stepic.droid.web.IApi
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,7 +22,7 @@ import javax.inject.Inject
 class DeleteCommentDialogFragment : DialogFragment() {
 
     @Inject
-    lateinit var api: IApi;
+    lateinit var api: Api;
 
     @Inject
     lateinit var bus: Bus;
@@ -50,7 +50,7 @@ class DeleteCommentDialogFragment : DialogFragment() {
         builder
                 .setTitle(R.string.title_confirmation)
                 .setMessage(R.string.delete_comment_detail)
-                .setPositiveButton(R.string.delete_label) { dialog, which ->
+                .setPositiveButton(R.string.delete_label) { _, _ ->
                     ProgressHelper.activate(loadingProgressDialog)
                     analytic.reportEvent(Analytic.Comments.DELETE_COMMENT_CONFIRMATION)
                     api.deleteComment(commentId).enqueue(object : Callback<CommentsResponse> {

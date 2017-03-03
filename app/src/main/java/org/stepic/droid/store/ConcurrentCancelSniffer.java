@@ -50,17 +50,17 @@ public class ConcurrentCancelSniffer implements CancelSniffer {
     }
 
     @Override
-    public void addUnitIdToCancel(long unitId) {
-        canceledUnitIdsSet.add(unitId);
+    public void addLessonToCancel(long lessonId) {
+        canceledUnitIdsSet.add(lessonId);
     }
 
     @Override
-    public void removeUnitIdToCancel(long unitId) {
-        canceledUnitIdsSet.remove(unitId);
+    public void removeLessonIdToCancel(long lessonId) {
+        canceledUnitIdsSet.remove(lessonId);
     }
 
     @Override
-    public boolean isUnitIdIsCanceled(long unitId) {
-        return canceledUnitIdsSet.contains(unitId);
+    public boolean isLessonIdIsCanceled(long lessonId) {
+        return canceledUnitIdsSet.contains(lessonId);
     }
 }

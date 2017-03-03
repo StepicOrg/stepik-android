@@ -79,7 +79,7 @@ class TextFeedbackFragment : FragmentBase() {
 
     fun initScrollView(v: View) {
         rootScrollView = v.findViewById(R.id.root_view) as ViewGroup
-        rootScrollView.setOnTouchListener { v, event ->
+        rootScrollView.setOnTouchListener { _, _ ->
             if (!descriptionEditText.isFocused)
                 descriptionEditText.requestFocus()
             false

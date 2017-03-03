@@ -13,7 +13,7 @@ import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressUtil
 import org.stepic.droid.util.StepikLogicHelper
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
@@ -24,7 +24,7 @@ class UnitsPresenter(
         private val mainHandler: MainHandler,
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val databaseFacade: DatabaseFacade,
-        private val api: IApi) : PresenterBase<UnitsView>() {
+        private val api: Api) : PresenterBase<UnitsView>() {
 
     private val unitList: MutableList<Unit> = ArrayList()
     private val lessonList: MutableList<Lesson> = ArrayList()
@@ -170,14 +170,11 @@ class UnitsPresenter(
                         for (unitItem in backgroundUnits) {
                             unitItem.is_viewed_custom = progressMap[unitItem.id]?.is_passed ?: false
                             databaseFacade.addUnit(unitItem)
-                            val cachedUnit = cacheUnitMap[unitItem.id]
-                            unitItem.is_loading = cachedUnit?.is_loading ?: false
-                            unitItem.is_cached = cachedUnit?.is_cached ?: false
                         }
 
                         for (lessonItem in backgroundLessons) {
                             databaseFacade.addLesson(lessonItem)
-                            val cachedLesson = cacheUnitMap[lessonItem.id]
+                            val cachedLesson = cacheLessonMap[lessonItem.id]
                             lessonItem.is_loading = cachedLesson?.is_loading ?: false
                             lessonItem.is_cached = cachedLesson?.is_cached ?: false
                         }

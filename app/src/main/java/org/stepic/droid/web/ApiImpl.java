@@ -25,7 +25,7 @@ import org.joda.time.DateTimeZone;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.StepikLogoutManager;
 import org.stepic.droid.deserializers.DatasetDeserializer;
@@ -79,7 +79,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
 @Singleton
-public class RetrofitRESTApi implements IApi {
+public class ApiImpl implements Api {
     private final int TIMEOUT_IN_SECONDS = 10;
     private final StethoInterceptor stethoInterceptor = new StethoInterceptor();
 
@@ -90,7 +90,7 @@ public class RetrofitRESTApi implements IApi {
     SharedPreferenceHelper sharedPreference;
 
     @Inject
-    IConfig config;
+    Config config;
 
     @Inject
     UserPreferences userPreferences;
@@ -109,7 +109,7 @@ public class RetrofitRESTApi implements IApi {
     private StepicEmptyAuthService stepikEmptyAuthService;
 
 
-    public RetrofitRESTApi() {
+    public ApiImpl() {
         MainApplication.component().inject(this);
 
         makeOauthServiceWithNewAuthHeader(sharedPreference.isLastTokenSocial() ? TokenType.social : TokenType.loginPassword);

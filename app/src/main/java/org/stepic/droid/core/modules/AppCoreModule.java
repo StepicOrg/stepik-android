@@ -12,15 +12,15 @@ import org.stepic.droid.analytic.AnalyticImpl;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.concurrency.MainHandlerImpl;
 import org.stepic.droid.concurrency.SingleThreadExecutor;
-import org.stepic.droid.configuration.ConfigRelease;
-import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.configuration.Config;
+import org.stepic.droid.configuration.ConfigReleaseImpl;
 import org.stepic.droid.core.AudioFocusHelper;
 import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.core.DefaultFilterImpl;
 import org.stepic.droid.core.FilterApplicator;
 import org.stepic.droid.core.FilterApplicatorImpl;
-import org.stepic.droid.core.IShell;
+import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.LocalLessonSessionManagerImpl;
 import org.stepic.droid.core.LocalProgressImpl;
@@ -31,7 +31,7 @@ import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ScreenManagerImpl;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.core.ShareHelperImpl;
-import org.stepic.droid.core.Shell;
+import org.stepic.droid.core.ShellImpl;
 import org.stepic.droid.core.StepikLogoutManager;
 import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.notifications.LocalReminder;
@@ -47,18 +47,18 @@ import org.stepic.droid.store.CancelSniffer;
 import org.stepic.droid.store.DownloadFinishedCallback;
 import org.stepic.droid.store.InitialDownloadUpdater;
 import org.stepic.droid.store.IDownloadManager;
-import org.stepic.droid.store.IStoreStateManager;
+import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.LessonDownloader;
 import org.stepic.droid.store.LessonDownloaderImpl;
-import org.stepic.droid.store.StoreStateManager;
+import org.stepic.droid.store.StoreStateManagerImpl;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.util.resolvers.VideoResolverImpl;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 import org.stepic.droid.util.resolvers.text.TextResolverImpl;
-import org.stepic.droid.web.IApi;
-import org.stepic.droid.web.RetrofitRESTApi;
+import org.stepic.droid.web.Api;
+import org.stepic.droid.web.ApiImpl;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -83,26 +83,26 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    ScreenManager provideIScreenManager(IConfig config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferenceHelper) {
+    ScreenManager provideIScreenManager(Config config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferenceHelper) {
         return new ScreenManagerImpl(config, userPreferences, analytic, sharedPreferenceHelper);
     }
 
     @Provides
     @Singleton
-    IShell provideIShell(Context context) {
-        return new Shell(context);
+    Shell provideIShell(Context context) {
+        return new ShellImpl(context);
     }
 
     @Provides
     @Singleton
-    IConfig provideIConfig(Context context, Analytic analytic) {
-        return new ConfigRelease(context, analytic);
+    Config provideIConfig(Context context, Analytic analytic) {
+        return new ConfigReleaseImpl(context, analytic);
     }
 
     @Provides
     @Singleton
-    IApi provideIApi() {
-        return new RetrofitRESTApi();
+    Api provideIApi() {
+        return new ApiImpl();
     }
 
     @Provides
@@ -156,8 +156,8 @@ public class AppCoreModule {
 
     @Singleton
     @Provides
-    IStoreStateManager provideStoreManager(DatabaseFacade dbManager, Bus bus, Analytic analytic) {
-        return new StoreStateManager(dbManager, bus, analytic);
+    StoreStateManager provideStoreManager(DatabaseFacade databaseFacade, Bus bus, Analytic analytic, MainHandler mainHandler) {
+        return new StoreStateManagerImpl(databaseFacade, bus, analytic, mainHandler);
     }
 
     @Singleton
@@ -186,13 +186,13 @@ public class AppCoreModule {
 
     @Singleton
     @Provides
-    LocalProgressManager provideProgressManager(DatabaseFacade databaseFacade, Bus bus, IApi api, MainHandler mainHandler) {
+    LocalProgressManager provideProgressManager(DatabaseFacade databaseFacade, Bus bus, Api api, MainHandler mainHandler) {
         return new LocalProgressImpl(databaseFacade, bus, api, mainHandler);
     }
 
     @Singleton
     @Provides
-    LoginManager provideLoginManager(IShell shell, Context context, Analytic analytic) {
+    LoginManager provideLoginManager(Shell shell, Context context, Analytic analytic) {
         return new LoginManagerImpl(shell, context, analytic);
     }
 
@@ -247,8 +247,8 @@ public class AppCoreModule {
     @Singleton
     @Provides
     INotificationManager provideNotificationManager(SharedPreferenceHelper sp,
-                                                    IApi api,
-                                                    IConfig config,
+                                                    Api api,
+                                                    Config config,
                                                     UserPreferences userPreferences,
                                                     DatabaseFacade db, Analytic analytic,
                                                     TextResolver textResolver,
@@ -272,7 +272,7 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    ShareHelper provideShareHelper(IConfig config, Context context, TextResolver textResolver) {
+    ShareHelper provideShareHelper(Config config, Context context, TextResolver textResolver) {
         return new ShareHelperImpl(config, context, textResolver);
     }
 
@@ -290,7 +290,7 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    TextResolver provideTextResolver(IConfig config) {
+    TextResolver provideTextResolver(Config config) {
         return new TextResolverImpl(config);
     }
 
@@ -309,7 +309,7 @@ public class AppCoreModule {
      */
     @Provides
     @Singleton
-    Retrofit provideRetrofit(IConfig config) {
+    Retrofit provideRetrofit(Config config) {
         return new Retrofit.Builder()
                 .baseUrl(config.getBaseUrl())
                 .addConverterFactory(GsonConverterFactory.create())
@@ -338,11 +338,11 @@ public class AppCoreModule {
     LessonDownloader provideLessonDownloader(Context context,
                                              ThreadPoolExecutor threadPoolExecutor,
                                              DatabaseFacade databaseFacade,
-                                             IApi api,
+                                             Api api,
                                              IDownloadManager downloadManager,
                                              CancelSniffer cancelSniffer,
                                              CleanManager cleanManager,
-                                             StoreStateManager storeStateManager
+                                             StoreStateManagerImpl storeStateManager
     ) {
         return new LessonDownloaderImpl(context, databaseFacade, api, downloadManager, threadPoolExecutor, cleanManager, storeStateManager, cancelSniffer);
     }

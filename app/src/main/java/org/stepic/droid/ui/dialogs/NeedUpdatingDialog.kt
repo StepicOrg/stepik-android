@@ -12,7 +12,7 @@ import android.support.v7.app.AlertDialog
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.MainApplication
-import org.stepic.droid.core.IShell
+import org.stepic.droid.core.Shell
 import org.stepic.droid.services.UpdateWithApkService
 import org.stepic.droid.util.AppConstants
 import javax.inject.Inject
@@ -36,7 +36,7 @@ class NeedUpdatingDialog : DialogFragment() {
     }
 
     @Inject
-    lateinit var shell: IShell
+    lateinit var shell: Shell
 
     @Inject
     lateinit var analytic : Analytic
@@ -49,7 +49,7 @@ class NeedUpdatingDialog : DialogFragment() {
         val isInGP = arguments.getBoolean(IS_IN_GP_KEY)
 
         val builder = AlertDialog.Builder(activity)
-        builder.setTitle(R.string.update_available_title).setPositiveButton(R.string.update_now) { dialog, which ->
+        builder.setTitle(R.string.update_available_title).setPositiveButton(R.string.update_now) { _, _ ->
             analytic.reportEvent(Analytic.Interaction.UPDATING_MESSAGE_IS_APPROVED)
             if (isInGP) {
                 shell.screenProvider.showStoreWithApp(activity)

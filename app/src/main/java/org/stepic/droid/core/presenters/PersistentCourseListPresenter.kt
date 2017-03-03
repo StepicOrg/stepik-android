@@ -13,7 +13,7 @@ import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.store.operations.Table
 import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.CoursesStepicResponse
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import retrofit2.Response
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
@@ -26,7 +26,7 @@ class PersistentCourseListPresenter(
         val databaseFacade: DatabaseFacade,
         val threadPoolExecutor: ThreadPoolExecutor,
         val mainHandler: MainHandler,
-        val api: IApi,
+        val api: Api,
         val filterApplicator: FilterApplicator,
         val sharedPreferenceHelper: SharedPreferenceHelper
 ) : PresenterBase<CoursesView>() {

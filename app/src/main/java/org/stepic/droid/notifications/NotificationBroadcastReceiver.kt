@@ -32,7 +32,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         val action = intent?.action
         if (action == AppConstants.NOTIFICATION_CANCELED) {
             analytic.reportEvent(Analytic.Notification.DISCARD)
-            val courseId = intent?.extras?.getLong(AppConstants.COURSE_ID_KEY)
+            val courseId = intent.extras?.getLong(AppConstants.COURSE_ID_KEY)
             courseId?.let {
                 threadPool.execute {
                     notificationManager.discardAllNotifications(it)

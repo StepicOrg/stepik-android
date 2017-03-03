@@ -13,9 +13,9 @@ public interface CancelSniffer {
 
     boolean isSectionIdIsCanceled(long sectionId);
 
-    void addUnitIdToCancel(long unitId);
+    void addLessonToCancel(long lessonId);
 
-    void removeUnitIdToCancel(long unitId);
+    void removeLessonIdToCancel(long lessonId);
 
-    boolean isUnitIdIsCanceled(long unitId);
+    boolean isLessonIdIsCanceled(long lessonId);
 }

@@ -5,7 +5,7 @@ import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.StepikLogoutManager;
 import org.stepic.droid.core.presenters.ProfileMainFeedPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
-import org.stepic.droid.web.IApi;
+import org.stepic.droid.web.Api;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -20,7 +20,7 @@ public class MainFeedModule {
                                                              ThreadPoolExecutor threadPoolExecutor,
                                                              Analytic analytic,
                                                              SharedPreferenceHelper sharedPreferenceHelper,
-                                                             IApi api,
+                                                             Api api,
                                                              StepikLogoutManager stepikLogoutManager) {
         return new ProfileMainFeedPresenter(sharedPreferenceHelper, mainHandler, api, threadPoolExecutor, analytic, stepikLogoutManager);
     }

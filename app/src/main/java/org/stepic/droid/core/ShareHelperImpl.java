@@ -7,7 +7,7 @@ import android.net.Uri;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
-import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.configuration.Config;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
@@ -23,14 +23,14 @@ import javax.inject.Singleton;
 @Singleton
 public class ShareHelperImpl implements ShareHelper {
 
-    IConfig config;
+    Config config;
 
     Context context;
 
     private TextResolver textResolver;
 
     @Inject
-    public ShareHelperImpl(IConfig config, Context context, TextResolver textResolver) {
+    public ShareHelperImpl(Config config, Context context, TextResolver textResolver) {
         this.config = config;
         this.context = context;
         this.textResolver = textResolver;

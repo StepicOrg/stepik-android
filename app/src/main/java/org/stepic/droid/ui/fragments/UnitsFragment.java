@@ -32,8 +32,8 @@ import org.stepic.droid.core.presenters.DownloadingProgressUnitsPresenter;
 import org.stepic.droid.core.presenters.UnitsPresenter;
 import org.stepic.droid.core.presenters.contracts.DownloadingProgressUnitsView;
 import org.stepic.droid.core.presenters.contracts.UnitsView;
-import org.stepic.droid.events.units.NotCachedUnitEvent;
-import org.stepic.droid.events.units.UnitCachedEvent;
+import org.stepic.droid.events.units.NotCachedLessonEvent;
+import org.stepic.droid.events.units.LessonCachedEvent;
 import org.stepic.droid.events.units.UnitProgressUpdateEvent;
 import org.stepic.droid.events.units.UnitScoreUpdateEvent;
 import org.stepic.droid.model.Lesson;
@@ -206,26 +206,26 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         }
     }
 
-    private void updateState(long unitId, boolean isCached, boolean isLoading) {
+    private void updateState(long lessonId, boolean isCached, boolean isLoading) {
         int position = -1;
-        Unit unit = null;
-        for (int i = 0; i < unitList.size(); i++) {
-            if (unitList.get(i).getId() == unitId) {
+        Lesson lesson = null;
+        for (int i = 0; i < lessonList.size(); i++) {
+            if (lessonList.get(i).getId() == lessonId) {
                 position = i;
-                unit = unitList.get(i);
+                lesson = lessonList.get(i);
                 break;
             }
         }
-        if (unit == null || position == -1 || position >= unitList.size()) return;
+        if (lesson == null || position == -1 || position >= lessonList.size()) return;
 
-        unit.set_cached(isCached);
-        unit.set_loading(isLoading);
+        lesson.set_cached(isCached);
+        lesson.set_loading(isLoading);
         adapter.notifyItemChanged(position);
     }
 
     @Subscribe
-    public void onNotCachedSection(NotCachedUnitEvent e) {
-        long unitId = e.getUnitId();
+    public void onNotCachedSection(NotCachedLessonEvent e) {
+        long unitId = e.getLessonId();
         updateState(unitId, false, false);
     }
 
@@ -262,18 +262,8 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     }
 
     @Subscribe
-    public void onUnitCachedEvent(UnitCachedEvent e) {
-        long unitId = e.getUnitId();
-
-        Pair<Unit, Integer> unitPairPosition = getUnitOnScreenAndPositionById(unitId);
-        if (unitPairPosition == null) return;
-        Unit unit = unitPairPosition.first;
-        int position = unitPairPosition.second;
-
-        //now we have not null unit and correct position at oldList
-        unit.set_cached(true);
-        unit.set_loading(false);
-        adapter.notifyItemChanged(position);
+    public void onLessonCachedEvent(LessonCachedEvent e) {
+        updateState(e.getLessonId(), true, false);
     }
 
     @Subscribe

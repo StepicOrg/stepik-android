@@ -20,7 +20,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.CancelSniffer;
-import org.stepic.droid.store.IStoreStateManager;
+import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.RWLocks;
@@ -37,7 +37,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     @Inject
     DatabaseFacade databaseFacade;
     @Inject
-    IStoreStateManager storeStateManager;
+    StoreStateManager storeStateManager;
     @Inject
     Bus bus;
 
@@ -88,9 +88,9 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                         Lesson lesson = databaseFacade.getLessonById(step.getLesson());
                         if (lesson != null) {
                             Unit unit = databaseFacade.getUnitByLessonId(lesson.getId());
-                            if (unit != null && cancelSniffer.isUnitIdIsCanceled(unit.getId())) {
+                            if (unit != null && cancelSniffer.isLessonIdIsCanceled(unit.getId())) {
                                 storeStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
-                                cancelSniffer.removeUnitIdToCancel(unit.getId());
+                                cancelSniffer.removeLessonIdToCancel(unit.getId());
                                 if (cancelSniffer.isSectionIdIsCanceled(unit.getSection())) {
                                     cancelSniffer.removeSectionIdCancel(unit.getSection());
                                 }

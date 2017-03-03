@@ -64,7 +64,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
                 .customView(picker!!, false)
                 .positiveText(R.string.ok)
                 .negativeText(R.string.cancel)
-                .onPositive { dialog, which ->
+                .onPositive { _, _ ->
                     //todo set result to Ok with position
                     val data = Intent()
                     data.putExtra(resultIntervalCodeKey, picker?.value)

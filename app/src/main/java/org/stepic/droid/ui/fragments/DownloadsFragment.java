@@ -55,7 +55,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
-import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
 //// TODO: 26.12.16 rewrite this class to MVP
@@ -211,11 +210,11 @@ public class DownloadsFragment extends FragmentBase {
                             int columnReason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
 
                             if (columnStatus == DownloadManager.STATUS_SUCCESSFUL) {
-                                mainHandler.post(new Function0<Unit>() {
+                                mainHandler.post(new Function0<kotlin.Unit>() {
                                     @Override
-                                    public Unit invoke() {
+                                    public kotlin.Unit invoke() {
                                         bus.post(new DownloadingIsLoadedSuccessfullyEvent(downloadId));
-                                        return Unit.INSTANCE;
+                                        return kotlin.Unit.INSTANCE;
                                     }
                                 });
                                 cursor.moveToNext();
@@ -527,17 +526,16 @@ public class DownloadsFragment extends FragmentBase {
                         List<org.stepic.droid.model.Unit> units = databaseFacade.getAllUnitsOfSection(sectionIdsLoading[i]);
                         if (!units.isEmpty()) {
                             for (org.stepic.droid.model.Unit unitItem : units) {
-                                cancelSniffer.addUnitIdToCancel(unitItem.getId());
+                                cancelSniffer.addLessonToCancel(unitItem.getId());
                             }
                         }
                     }
 
-                    long[] unitIdsLoading = databaseFacade.getAllDownloadingUnits();
-                    for (int i = 0; i < unitIdsLoading.length; i++) {
-                        cancelSniffer.addUnitIdToCancel(unitIdsLoading[i]);
+                    long[] lessonIds = databaseFacade.getAllDownloadingLessons();
+                    for (int i = 0; i < lessonIds.length; i++) {
+                        cancelSniffer.addLessonToCancel(lessonIds[i]);
 
-                        org.stepic.droid.model.Unit unit = databaseFacade.getUnitById(unitIdsLoading[i]);
-                        Lesson lesson = databaseFacade.getLessonById(unit.getLesson());
+                        Lesson lesson = databaseFacade.getLessonById(lessonIds[i]);
                         if (lesson != null) {
                             List<Step> steps = databaseFacade.getStepsOfLesson(lesson.getId());
                             if (!steps.isEmpty()) {

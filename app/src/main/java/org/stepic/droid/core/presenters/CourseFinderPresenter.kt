@@ -8,7 +8,7 @@ import org.stepic.droid.events.courses.CourseUnavailableForUserEvent
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.store.operations.Table
 import org.stepic.droid.web.CoursesStepicResponse
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadPoolExecutor
 class CourseFinderPresenter(
         val threadPoolExecutor: ThreadPoolExecutor,
         val databaseFacade: DatabaseFacade,
-        var api: IApi,
+        var api: Api,
         val mainHandler: MainHandler) : PresenterBase<LoadCourseView>() {
 
     fun findCourseById(courseId: Long) {

@@ -9,7 +9,7 @@ import org.stepic.droid.core.presenters.contracts.StepAttemptView
 import org.stepic.droid.model.*
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.StepikUtil
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
 class StepAttemptPresenter(val mainHandler: MainHandler,
                            val threadPoolExecutor: ThreadPoolExecutor,
                            val lessonManager: LessonSessionManager,
-                           val api: IApi,
+                           val api: Api,
                            val analytic: Analytic,
                            val sharedPreferenceHelper: SharedPreferenceHelper) : PresenterBase<StepAttemptView>() {
 
@@ -51,12 +51,12 @@ class StepAttemptPresenter(val mainHandler: MainHandler,
 
     @MainThread
     fun handleDiscountingPolicy(numberOfSubmission: Int, section: Section?, step: Step) {
-        if (section?.discountingPolicy == null || section?.discountingPolicy == DiscountingPolicyType.noDiscount || numberOfSubmission < 0 || step.is_custom_passed) {
+        if (section?.discountingPolicy == null || section.discountingPolicy == DiscountingPolicyType.noDiscount || numberOfSubmission < 0 || step.is_custom_passed) {
             view?.onResultHandlingDiscountPolicy(needShow = false)
             return
         }
 
-        section?.discountingPolicy?.let {
+        section.discountingPolicy?.let {
             when (section.discountingPolicy) {
                 DiscountingPolicyType.inverse -> view?.onResultHandlingDiscountPolicy(
                         needShow = true,

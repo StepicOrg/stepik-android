@@ -26,8 +26,7 @@ class VideoQualityDialog : VideoQualityDialogBase() {
         val builder = AlertDialog.Builder(activity)
         builder
                 .setTitle(R.string.video_quality)
-                .setNegativeButton(R.string.cancel) {
-                    dialog, which ->
+                .setNegativeButton(R.string.cancel) { _, _ ->
                     analytic.reportEvent(Analytic.Interaction.CANCEL_VIDEO_QUALITY)
                 }
                 .setSingleChoiceItems(R.array.video_quality,

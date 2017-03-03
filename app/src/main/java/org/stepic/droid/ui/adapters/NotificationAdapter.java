@@ -14,7 +14,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.stepic.droid.R;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.presenters.NotificationListPresenter;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.ui.NotificationCategory;
@@ -187,7 +187,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         TextResolver textResolver;
 
         @Inject
-        IConfig config;
+        Config config;
 
         @BindView(R.id.notification_body)
         TextView notificationBody;

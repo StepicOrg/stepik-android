@@ -5,7 +5,7 @@ import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.ProfilePresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
-import org.stepic.droid.web.IApi;
+import org.stepic.droid.web.Api;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -20,7 +20,7 @@ public class ProfileModule {
     public ProfilePresenter provideProfilePresenter(ThreadPoolExecutor threadPoolExecutor,
                                                     Analytic analytic,
                                                     MainHandler mainHandler,
-                                                    IApi api,
+                                                    Api api,
                                                     SharedPreferenceHelper sharedPreferenceHelper) {
         return new ProfilePresenter(threadPoolExecutor, analytic, mainHandler, api, sharedPreferenceHelper);
     }

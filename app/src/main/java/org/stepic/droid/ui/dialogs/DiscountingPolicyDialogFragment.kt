@@ -46,10 +46,10 @@ class DiscountingPolicyDialogFragment : DialogFragment() {
                 .setView(explanationView)
                 .setMessage(R.string.discounting_policy_message)
                 .setNegativeButton(R.string.no) {
-                    dialog, which ->
+                    _, _ ->
                     analytic.reportEvent(Analytic.Interaction.NO_DISCOUNTING_DIALOG)
                 }
-                .setPositiveButton(R.string.yes, { dialog, which ->
+                .setPositiveButton(R.string.yes, { _, _ ->
                     analytic.reportEvent(Analytic.Interaction.YES_DISCOUNTING_DIALOG)
                     targetFragment.onActivityResult(targetRequestCode, Activity.RESULT_OK, null)
                     val isNeedExplanation = !checkbox.isChecked

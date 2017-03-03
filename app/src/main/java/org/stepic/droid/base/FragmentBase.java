@@ -12,9 +12,9 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
-import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.AudioFocusHelper;
-import org.stepic.droid.core.IShell;
+import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.notifications.LocalReminder;
@@ -63,10 +63,10 @@ public class FragmentBase extends Fragment {
     public Bus bus;
 
     @Inject
-    public IConfig config;
+    public Config config;
 
     @Inject
-    public IShell shell;
+    public Shell shell;
 
     @Inject
     public LocalProgressManager localProgressManager;

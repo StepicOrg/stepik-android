@@ -6,7 +6,7 @@ import android.app.Service
 import android.content.Intent
 import org.stepic.droid.base.MainApplication
 import org.stepic.droid.store.CancelSniffer
-import org.stepic.droid.store.IStoreStateManager
+import org.stepic.droid.store.StoreStateManager
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.RWLocks
@@ -19,7 +19,7 @@ class CancelLoadingService : IntentService("cancel_loading") {
     @Inject
     lateinit var databaseFacade: DatabaseFacade
     @Inject
-    lateinit var storeStateManager: IStoreStateManager
+    lateinit var storeStateManager: StoreStateManager
     @Inject
     lateinit var cancelSniffer: CancelSniffer
 
@@ -70,8 +70,8 @@ class CancelLoadingService : IntentService("cancel_loading") {
                         lesson?.let {
                             val unit = databaseFacade.getUnitByLessonId(lesson.id)
                             unit?.let {
-                                if (cancelSniffer.isUnitIdIsCanceled(unit.id)) {
-                                    cancelSniffer.removeUnitIdToCancel(unit.id)
+                                if (cancelSniffer.isLessonIdIsCanceled(lesson.id)) {
+                                    cancelSniffer.removeLessonIdToCancel(lesson.id)
 
                                     if (cancelSniffer.isSectionIdIsCanceled(unit.section)) {
                                         cancelSniffer.removeSectionIdCancel(unit.section)

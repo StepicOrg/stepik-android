@@ -6,7 +6,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.configuration.Config;
 import org.stepic.droid.notifications.model.Notification;
 
 import timber.log.Timber;
@@ -208,7 +208,7 @@ public class HtmlHelper {
                     " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS_HTML\">\n" +
                     "</script>\n";
 
-    public static String getUserPath(IConfig config, int userId) {
+    public static String getUserPath(Config config, int userId) {
         return new StringBuilder()
                 .append(config.getBaseUrl())
                 .append(AppConstants.WEB_URI_SEPARATOR)

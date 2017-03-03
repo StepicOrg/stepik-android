@@ -22,7 +22,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.configuration.Config;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
@@ -69,12 +69,12 @@ import javax.inject.Singleton;
 @Singleton
 public class ScreenManagerImpl implements ScreenManager {
     private final SharedPreferenceHelper sharedPreferences;
-    private final IConfig config;
+    private final Config config;
     private final UserPreferences userPreferences;
     private final Analytic analytic;
 
     @Inject
-    public ScreenManagerImpl(IConfig config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferences) {
+    public ScreenManagerImpl(Config config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferences) {
         this.config = config;
         this.userPreferences = userPreferences;
         this.analytic = analytic;

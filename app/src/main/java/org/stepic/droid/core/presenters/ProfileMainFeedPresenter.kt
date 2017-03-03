@@ -6,13 +6,13 @@ import org.stepic.droid.core.StepikLogoutManager
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.model.Profile
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 
 class ProfileMainFeedPresenter(private val sharedPreferenceHelper: SharedPreferenceHelper,
                                private val mainHandler: MainHandler,
-                               private val api: IApi,
+                               private val api: Api,
                                private val threadPoolExecutor: ThreadPoolExecutor,
                                private val analytic: Analytic,
                                private val stepikLogoutManager: StepikLogoutManager) : PresenterBase<ProfileMainFeedView>() {

@@ -63,23 +63,23 @@ public class SynchronizedCancelSniffer implements CancelSniffer {
     }
 
     @Override
-    public void addUnitIdToCancel(long unitId) {
+    public void addLessonToCancel(long lessonId) {
         synchronized (canceledUnitIdsSet) {
-            canceledUnitIdsSet.add(unitId);
+            canceledUnitIdsSet.add(lessonId);
         }
     }
 
     @Override
-    public void removeUnitIdToCancel(long unitId) {
+    public void removeLessonIdToCancel(long lessonId) {
         synchronized (canceledUnitIdsSet) {
-            canceledUnitIdsSet.remove(unitId);
+            canceledUnitIdsSet.remove(lessonId);
         }
     }
 
     @Override
-    public boolean isUnitIdIsCanceled(long unitId) {
+    public boolean isLessonIdIsCanceled(long lessonId) {
         synchronized (canceledUnitIdsSet) {
-            return canceledUnitIdsSet.contains(unitId);
+            return canceledUnitIdsSet.contains(lessonId);
         }
     }
 

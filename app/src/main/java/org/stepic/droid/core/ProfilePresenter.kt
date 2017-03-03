@@ -10,14 +10,14 @@ import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.getFirstAndLastName
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 
 class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
                        val analytic: Analytic,
                        val mainHandler: MainHandler,
-                       val api: IApi,
+                       val api: Api,
                        val sharedPreferences: SharedPreferenceHelper) : PresenterBase<ProfileView>() {
 
     var isLoading: Boolean = false //main thread only

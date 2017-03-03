@@ -4,11 +4,11 @@ import com.squareup.otto.Bus;
 
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
-import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.presenters.NotificationListPresenter;
 import org.stepic.droid.notifications.INotificationManager;
-import org.stepic.droid.web.IApi;
+import org.stepic.droid.web.Api;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -22,8 +22,8 @@ public class NotificationModule {
     @Provides
     NotificationListPresenter provideNotificationListPresenter(ThreadPoolExecutor threadPoolExecutor,
                                                                MainHandler mainHandler,
-                                                               IApi api,
-                                                               IConfig config,
+                                                               Api api,
+                                                               Config config,
                                                                Bus bus,
                                                                Analytic analytic,
                                                                INotificationManager notificationManager) {

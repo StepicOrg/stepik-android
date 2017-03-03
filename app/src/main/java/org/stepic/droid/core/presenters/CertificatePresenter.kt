@@ -4,7 +4,7 @@ import android.app.Activity
 import android.support.annotation.MainThread
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
-import org.stepic.droid.configuration.IConfig
+import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.contracts.CertificateView
 import org.stepic.droid.model.Certificate
@@ -13,7 +13,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.web.CertificateResponse
 import org.stepic.droid.web.CoursesStepicResponse
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,8 +21,8 @@ import retrofit2.Retrofit
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 
-class CertificatePresenter(val api: IApi,
-                           val config: IConfig,
+class CertificatePresenter(val api: Api,
+                           val config: Config,
                            val screenManager: ScreenManager,
                            val database: DatabaseFacade,
                            val threadPoolExecutor: ThreadPoolExecutor,

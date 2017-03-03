@@ -12,7 +12,7 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.StringUtil;
-import org.stepic.droid.web.IApi;
+import org.stepic.droid.web.Api;
 
 import java.util.List;
 
@@ -24,11 +24,11 @@ import timber.log.Timber;
 public class LocalProgressImpl implements LocalProgressManager {
     private DatabaseFacade databaseFacade;
     private Bus bus;
-    private IApi api;
+    private Api api;
     private MainHandler mainHandler;
 
     @Inject
-    public LocalProgressImpl(DatabaseFacade databaseFacade, Bus bus, IApi api, MainHandler mainHandler) {
+    public LocalProgressImpl(DatabaseFacade databaseFacade, Bus bus, Api api, MainHandler mainHandler) {
         this.databaseFacade = databaseFacade;
         this.bus = bus;
         this.api = api;

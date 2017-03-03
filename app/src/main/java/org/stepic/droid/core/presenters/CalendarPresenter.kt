@@ -12,7 +12,7 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
-import org.stepic.droid.configuration.IConfig
+import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.DeadlineType
 import org.stepic.droid.core.presenters.contracts.CalendarExportableView
 import org.stepic.droid.model.CalendarItem
@@ -25,7 +25,7 @@ import org.stepic.droid.util.StringUtil
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 
-class CalendarPresenter(val config: IConfig,
+class CalendarPresenter(val config: Config,
                         val mainHandler: MainHandler,
                         val context: Context,
                         val threadPool: ThreadPoolExecutor,
@@ -267,20 +267,20 @@ class CalendarPresenter(val config: IConfig,
 
         if (eventIdInDb != null && isEventInAnyCal(eventIdInDb)) {
             val uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventIdInDb)
-            val rowsUpdated = context.contentResolver.update(uri, contentValues, null, null)
-            addToDatabase(section, deadlineType, deadline, eventIdInDb)
+            context.contentResolver.update(uri, contentValues, null, null)
+            addToDatabase(section, deadlineType, eventIdInDb)
         } else {
             val uri = context.contentResolver.insert(CalendarContract.Events.CONTENT_URI, contentValues)
 
             val eventId: Long = (uri.lastPathSegment).toLong()
 
-            addToDatabase(section, deadlineType, deadline, eventId)
+            addToDatabase(section, deadlineType, eventId)
 
             val reminderValues = ContentValues()
             reminderValues.put(CalendarContract.Reminders.EVENT_ID, eventId)
             reminderValues.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_DEFAULT)
             reminderValues.put(CalendarContract.Reminders.MINUTES, AppConstants.TWO_DAY_IN_MINUTES)
-            val uriReminder = context.contentResolver.insert(CalendarContract.Reminders.CONTENT_URI, reminderValues)
+            context.contentResolver.insert(CalendarContract.Reminders.CONTENT_URI, reminderValues)
         }
     }
 
@@ -298,7 +298,7 @@ class CalendarPresenter(val config: IConfig,
     }
 
 
-    fun addToDatabase(section: Section, deadlineType: DeadlineType, deadline: String, eventId: Long) {
+    fun addToDatabase(section: Section, deadlineType: DeadlineType, eventId: Long) {
         val infoFromDb = database.getCalendarEvent(section.id)
         if (deadlineType == DeadlineType.softDeadline) {
             database.addCalendarEvent(CalendarSection(section.id, infoFromDb?.eventIdHardDeadline, eventId, infoFromDb?.hardDeadline, section.soft_deadline))

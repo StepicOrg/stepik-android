@@ -10,21 +10,21 @@ import org.stepic.droid.model.comments.Comment
 import org.stepic.droid.model.comments.DiscussionProxy
 import org.stepic.droid.model.comments.Vote
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.web.Api
 import org.stepic.droid.web.CommentsResponse
-import org.stepic.droid.web.IApi
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 import javax.inject.Inject
 
-class CommentManager {
+class CommentManager @Inject constructor() {
 
     @Inject
     lateinit var bus: Bus
 
     @Inject
-    lateinit var api: IApi
+    lateinit var api: Api
 
     @Inject
     lateinit var sharedPrefs: SharedPreferenceHelper
@@ -46,15 +46,9 @@ class CommentManager {
     private val commentIdIsLoading: MutableSet<Long> = HashSet() //can be reply or comment (with 0 replies) for load more comments).
     private val voteMap: MutableMap<String, Vote> = HashMap()
 
-    @Inject
-    constructor() {
-        MainApplication.component().inject(this)
-    }
-
     fun loadComments() {
-        val discussionProxyOrder = sharedPrefs.discussionOrder
         val orderOfComments = discussionOrderList
-        orderOfComments?.let {
+        orderOfComments.let {
             val sizeNeedLoad = Math.min((sumOfCachedParent + maxOfParentInQuery), orderOfComments.size)
             if (sizeNeedLoad == sumOfCachedParent || sizeNeedLoad == 0) {
                 // we don't need to load comments
@@ -133,7 +127,7 @@ class CommentManager {
             val parentComment = cachedCommentsSetMap[parentCommentId] ?: break
             cachedCommentsList.add(parentComment)
             i++
-            if (parentCommentId != null && parentComment.replies != null && !parentComment.replies.isEmpty()) {
+            if (parentComment.replies != null && !parentComment.replies.isEmpty()) {
                 var childIndex = 0
                 if (parentCommentToSumOfCachedReplies[parentComment.id] ?: 0 > parentComment.reply_count ?: 0) {
                     parentCommentToSumOfCachedReplies.put(parentComment.id!!, parentComment.reply_count!!) //if we remove some reply
@@ -222,7 +216,6 @@ class CommentManager {
     fun getUserById(userId: Int) = userSetMap[userId]
 
     fun isNeedUpdateParentInReply(commentReply: Comment): Boolean {
-        val positionInParent = replyToPositionInParentMap[commentReply.id]
         if (discussionOrderList.size > sumOfCachedParent) {
             //need update parent:
             //and it is last cached reply?
@@ -307,5 +300,9 @@ class CommentManager {
     }
 
     fun isDiscussionProxyNull() = (discussionProxyId == null)
+
+    init {
+        MainApplication.component().inject(this)
+    }
 
 }

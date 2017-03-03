@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.web.IApi;
+import org.stepic.droid.web.Api;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class ConfigRelease implements IConfig {
+public class ConfigReleaseImpl implements Config {
 
     private JsonObject properties;
 
@@ -47,7 +47,7 @@ public class ConfigRelease implements IConfig {
 
 
     @Inject
-    public ConfigRelease(Context context, Analytic analytic) {
+    public ConfigReleaseImpl(Context context, Analytic analytic) {
         try {
             InputStream in = context.getAssets().open("configs/config.json");
             JsonParser parser = new JsonParser();
@@ -60,7 +60,7 @@ public class ConfigRelease implements IConfig {
     }
 
     @Override
-    public String getOAuthClientId(IApi.TokenType type) {
+    public String getOAuthClientId(Api.TokenType type) {
         switch (type) {
             case social:
                 return getString(OAUTH_CLIENT_ID_SOCIAL);
@@ -77,7 +77,7 @@ public class ConfigRelease implements IConfig {
     }
 
     @Override
-    public String getOAuthClientSecret(IApi.TokenType type) {
+    public String getOAuthClientSecret(Api.TokenType type) {
         switch (type) {
             case social:
                 return getString(OAUTH_CLIENT_SECRET_SOCIAL);
@@ -89,7 +89,7 @@ public class ConfigRelease implements IConfig {
     }
 
     @Override
-    public String getGrantType(IApi.TokenType type) {
+    public String getGrantType(Api.TokenType type) {
         switch (type) {
             case social:
                 return getString(GRANT_TYPE_SOCIAL);

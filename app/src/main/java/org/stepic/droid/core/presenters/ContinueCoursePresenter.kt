@@ -6,12 +6,12 @@ import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Section
 import org.stepic.droid.store.operations.DatabaseFacade
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 
 class ContinueCoursePresenter(val databaseFacade: DatabaseFacade,
-                              val api: IApi,
+                              val api: Api,
                               val threadPoolExecutor: ThreadPoolExecutor,
                               val mainHandler: MainHandler) : PresenterBase<ContinueCourseView>() {
 

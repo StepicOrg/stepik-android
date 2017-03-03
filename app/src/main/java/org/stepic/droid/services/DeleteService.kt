@@ -13,7 +13,7 @@ import org.stepic.droid.model.Course
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Section
 import org.stepic.droid.model.Step
-import org.stepic.droid.store.IStoreStateManager
+import org.stepic.droid.store.StoreStateManager
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import java.io.File
@@ -28,7 +28,7 @@ class DeleteService : IntentService("delete_service") {
     @Inject
     lateinit var databaseFacade: DatabaseFacade
     @Inject
-    lateinit var storeStateManager: IStoreStateManager
+    lateinit var storeStateManager: StoreStateManager
     @Inject
     lateinit var analytic: Analytic
 
