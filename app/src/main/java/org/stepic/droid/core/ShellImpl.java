@@ -2,7 +2,7 @@ package org.stepic.droid.core;
 
 import android.content.Context;
 
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.web.Api;
 
@@ -18,7 +18,7 @@ public class ShellImpl implements Shell {
     @Inject
     public ShellImpl(Context context) {
         this.context = context;
-        MainApplication.component(this.context).inject(this);
+        App.component(this.context).inject(this);
     }
 
     @Inject

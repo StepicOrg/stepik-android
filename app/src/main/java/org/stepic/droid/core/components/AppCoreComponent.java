@@ -1,9 +1,9 @@
 package org.stepic.droid.core.components;
 
 import org.jetbrains.annotations.NotNull;
+import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.concurrency.DownloadPoster;
 import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.core.MyPhoneStateListener;
@@ -194,7 +194,7 @@ public interface AppCoreComponent {
 
     void inject(NotificationAdapter.NotificationViewHolder notificationViewHolder);
 
-    void inject(MainApplication mainApplication);
+    void inject(App app);
 
     void inject(InstructorAdapter instructorAdapter);
 

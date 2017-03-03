@@ -10,7 +10,7 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.util.HtmlHelper;
 
@@ -43,7 +43,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
     }
 
     private void init() {
-        MainApplication.component().inject(this);
+        App.component().inject(this);
         setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {

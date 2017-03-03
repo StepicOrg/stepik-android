@@ -31,7 +31,7 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.videolan.libvlc.util.AndroidUtil;
 
 import java.io.BufferedInputStream;
@@ -163,7 +163,7 @@ public class FileUtils {
         path = Uri.decode(Strings.removeFileProtocol(path));
         //Delete from Android Medialib, for consistency with device MTP storing and other apps listing content:// media
         if (AndroidUtil.isHoneycombOrLater()){
-            ContentResolver cr = MainApplication.getAppContext().getContentResolver();
+            ContentResolver cr = App.getAppContext().getContentResolver();
             String[] selectionArgs = { path };
             deleted = cr.delete(MediaStore.Files.getContentUri("external"),
                     MediaStore.Files.FileColumns.DATA + "=?", selectionArgs) > 0;

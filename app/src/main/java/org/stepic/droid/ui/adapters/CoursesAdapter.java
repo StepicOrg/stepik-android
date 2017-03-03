@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
@@ -68,7 +68,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         this.courses = courses;
         this.continueCoursePresenter = continueCoursePresenter;
         inflater = (LayoutInflater) contextActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        MainApplication.component().inject(this);
+        App.component().inject(this);
         coursePlaceholder = ContextCompat.getDrawable(fragment.getContext(), R.drawable.ic_course_placeholder);
     }
 

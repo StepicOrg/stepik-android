@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
@@ -53,7 +53,7 @@ public class StepShareDialog extends BottomSheetDialog {
         this.step = step;
         this.lesson = lesson;
         this.unit = unit;
-        MainApplication.component().inject(this);
+        App.component().inject(this);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class StepShareDialog extends BottomSheetDialog {
             public void onClick(View view) {
                 dismiss();
                 analytic.reportEvent(Analytic.Steps.COPY_LINK);
-                ClipData clipData = ClipData.newPlainText(MainApplication.getAppContext().getString(R.string.copy_link_title), StringUtil.getUriForStep(config.getBaseUrl(), lesson, unit, step));
+                ClipData clipData = ClipData.newPlainText(App.getAppContext().getString(R.string.copy_link_title), StringUtil.getUriForStep(config.getBaseUrl(), lesson, unit, step));
                 ClipboardManager clipboardManager = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                 clipboardManager.setPrimaryClip(clipData);
                 Toast.makeText(getContext(), R.string.link_copied_title, Toast.LENGTH_SHORT).show();

@@ -105,7 +105,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainApplication.component(this).inject(this);
+        App.component(this).inject(this);
     }
 
     @Override

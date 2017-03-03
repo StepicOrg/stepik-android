@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.model.CourseProperty;
 import org.stepic.droid.ui.custom.LatexSupportableWebView;
 import org.stepic.droid.util.resolvers.text.TextResolver;
@@ -31,7 +31,7 @@ public class CoursePropertyAdapter extends ArrayAdapter<CourseProperty> {
 
     public CoursePropertyAdapter(Context context, List<CourseProperty> coursePropertyList) {
         super(context, 0, coursePropertyList);
-        MainApplication.component().inject(this);
+        App.component().inject(this);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 

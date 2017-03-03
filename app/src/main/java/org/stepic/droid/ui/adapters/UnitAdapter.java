@@ -20,7 +20,7 @@ import com.bumptech.glide.Glide;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.model.Lesson;
@@ -88,7 +88,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         this.lessonList = lessonList;
         this.unitProgressMap = unitProgressMap;
         this.lessonIdToUnitLoadingStateMap = lessonIdToUnitLoadingStateMap;
-        MainApplication.component().inject(this);
+        App.component().inject(this);
     }
 
 
@@ -121,7 +121,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         holder.unitTitle.setText(titleBuilder.toString());
 
-        Glide.with(MainApplication.getAppContext())
+        Glide.with(App.getAppContext())
                 .load(lesson.getCover_url())
                 .placeholder(holder.lessonPlaceholderDrawable)
                 .into(holder.lessonIcon);
@@ -197,7 +197,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             final Unit unit = unitList.get(position);
             final Lesson lesson = lessonList.get(position);
 
-            int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
+            int permissionCheck = ContextCompat.checkSelfPermission(App.getAppContext(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {

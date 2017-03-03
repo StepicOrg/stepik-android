@@ -21,7 +21,7 @@ import com.squareup.otto.Subscribe
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.events.comments.*
 import org.stepic.droid.model.User
@@ -96,7 +96,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-        MainApplication.component().inject(this)
+        App.component().inject(this)
         commentAdapter = CommentsAdapter(commentManager, context)
     }
 

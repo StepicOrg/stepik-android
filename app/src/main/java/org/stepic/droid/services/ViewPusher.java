@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import com.squareup.otto.Bus;
 
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.events.steps.UpdateStepEvent;
@@ -63,7 +63,7 @@ public class ViewPusher extends IntentService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        MainApplication.component().inject(this);
+        App.component().inject(this);
         super.onStartCommand(intent, flags, startId);
         return START_REDELIVER_INTENT;
     }

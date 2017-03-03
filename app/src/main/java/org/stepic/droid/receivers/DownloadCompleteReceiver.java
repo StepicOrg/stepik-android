@@ -10,7 +10,7 @@ import android.os.Handler;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.SingleThreadExecutor;
 import org.stepic.droid.events.video.VideoCachedOnDiskEvent;
 import org.stepic.droid.model.CachedVideo;
@@ -54,7 +54,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     Analytic analytic;
 
     public DownloadCompleteReceiver() {
-        MainApplication.component().inject(this);
+        App.component().inject(this);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     databaseFacade.updateOnlyCachedLoadingStep(step);
                     storeStateManager.updateUnitLessonState(step.getLesson());
                     final Lesson lesson = databaseFacade.getLessonById(step.getLesson());
-                    Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
+                    Handler mainHandler = new Handler(App.getAppContext().getMainLooper());
                     //Say to ui that ui is cached now
                     Runnable myRunnable = new Runnable() {
                         @Override

@@ -8,7 +8,7 @@ import android.support.v7.app.AlertDialog
 import com.squareup.otto.Bus
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.events.loading.FinishLoadEvent
 import org.stepic.droid.events.loading.StartLoadEvent
@@ -50,7 +50,7 @@ class ClearVideosDialog : DialogFragment() {
     lateinit var analytic: Analytic
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        MainApplication.component().inject(this)
+        App.component().inject(this)
         val bundle = arguments
         val stringIds = bundle?.getString(KEY_STRING_IDS)
 

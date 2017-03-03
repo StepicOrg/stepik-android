@@ -20,8 +20,8 @@ import android.widget.Button;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
+import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.ui.NotificationCategory;
 import org.stepic.droid.ui.activities.HasDrawer;
 
@@ -179,7 +179,7 @@ public class NotificationsFragment extends FragmentBase {
         public CharSequence getPageTitle(int position) {
             Timber.d("getPageTitle %d", position);
             int resString = NotificationCategory.values()[position].getTitle();
-            return MainApplication.getAppContext().getString(resString);
+            return App.getAppContext().getString(resString);
         }
     }
 

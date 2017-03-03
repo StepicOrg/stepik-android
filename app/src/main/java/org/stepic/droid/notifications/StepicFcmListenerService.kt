@@ -4,7 +4,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.core.Shell
 import org.stepic.droid.notifications.model.Notification
 import javax.inject.Inject
@@ -45,6 +45,6 @@ class HackFcmListener() {
     lateinit var analytic : Analytic
 
     init {
-        MainApplication.component().inject(this)
+        App.component().inject(this)
     }
 }

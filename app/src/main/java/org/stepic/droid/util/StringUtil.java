@@ -6,7 +6,7 @@ import android.net.Uri;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
@@ -56,7 +56,7 @@ public class StringUtil {
         stringBuilder.append(firebaseDomain);
         stringBuilder.append("?amv=650");
         stringBuilder.append("&apn=");
-        String packageName = MainApplication.getAppContext().getPackageName();
+        String packageName = App.getAppContext().getPackageName();
         if (packageName == null) {
             return getUriForCourse(config.getBaseUrl(), slug);
         }

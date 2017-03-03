@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.util.DateTimeHelper
 import java.io.Serializable
@@ -57,7 +57,7 @@ class Section : Serializable, Parcelable {
     private var formatted_hard_deadline: String? = null
 
     constructor() {
-        MainApplication.component(MainApplication.getAppContext()).inject(this)
+        App.component(App.getAppContext()).inject(this)
     }
 
     val formattedBeginDate: String by lazy {

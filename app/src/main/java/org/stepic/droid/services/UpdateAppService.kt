@@ -5,7 +5,7 @@ import android.app.Service
 import android.content.Intent
 import com.squareup.otto.Bus
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.events.updating.NeedUpdateEvent
@@ -49,7 +49,7 @@ class UpdateAppService : IntentService("update_stepic") {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        MainApplication.component().inject(this)
+        App.component().inject(this)
         super.onStartCommand(intent, flags, startId)
         return Service.START_REDELIVER_INTENT
     }
@@ -57,7 +57,7 @@ class UpdateAppService : IntentService("update_stepic") {
     private fun checkUpdateAndPushMessageOnMainFeed() {
         if (configs.isCustomUpdateEnable) {
             val appInfo = api.infoForUpdating?.app_info
-            val currentVersion = DeviceInfoUtil.getBuildVersion(MainApplication.getAppContext());
+            val currentVersion = DeviceInfoUtil.getBuildVersion(App.getAppContext());
 
             if (appInfo?.custom_version ?: 0 > currentVersion) {
                 //need update

@@ -7,7 +7,7 @@ import android.content.Intent
 import android.os.Handler
 import com.squareup.otto.Bus
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.events.steps.StepRemovedEvent
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Lesson
@@ -34,7 +34,7 @@ class DeleteService : IntentService("delete_service") {
 
     override fun onCreate() {
         super.onCreate()
-        MainApplication.component().inject(this)
+        App.component().inject(this)
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -91,7 +91,7 @@ class DeleteService : IntentService("delete_service") {
             databaseFacade.updateOnlyCachedLoadingStep(step)
 //            database.deleteStep(step) // remove steps FIXME: MAYBE NOT DELETE STEP?
             storeStateManager.updateStepAfterDeleting(step)
-            val mainHandler = Handler(MainApplication.getAppContext().mainLooper)
+            val mainHandler = Handler(App.getAppContext().mainLooper)
             mainHandler.post { bus.post(StepRemovedEvent(step.id)) }
         }
     }

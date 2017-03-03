@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.model.CommentAdapterItem;
 import org.stepic.droid.model.User;
@@ -63,7 +63,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         this.context = context;
         zone = DateTimeZone.getDefault();
         locale = Locale.getDefault();
-        placeholderUserIcon = ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.placeholder_icon);
+        placeholderUserIcon = ContextCompat.getDrawable(App.getAppContext(), R.drawable.placeholder_icon);
     }
 
     @Override
@@ -358,7 +358,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                         .load(uri)
                         .into(userIcon);
             } else {
-                Glide.with(MainApplication.getAppContext())
+                Glide.with(App.getAppContext())
                         .load(userAvatar)
                         .asBitmap()
                         .placeholder(placeholderUserIcon)

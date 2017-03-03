@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.modules.NotificationModule;
 import org.stepic.droid.core.presenters.NotificationListPresenter;
 import org.stepic.droid.core.presenters.contracts.NotificationListView;
@@ -84,7 +84,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 
     @Override
     protected void injectComponent() {
-        MainApplication
+        App
                 .component()
                 .plus(new NotificationModule())
                 .inject(this);

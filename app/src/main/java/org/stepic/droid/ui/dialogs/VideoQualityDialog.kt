@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.preferences.UserPreferences
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
@@ -45,6 +45,6 @@ class VideoQualityDialog : VideoQualityDialogBase() {
     }
 
     override fun injectDependencies() {
-        MainApplication.component().inject(this)
+        App.component().inject(this)
     }
 }

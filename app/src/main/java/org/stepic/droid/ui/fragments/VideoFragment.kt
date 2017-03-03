@@ -19,7 +19,7 @@ import com.squareup.otto.Subscribe
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.core.MyPhoneStateListener
 import org.stepic.droid.core.modules.VideoModule
 import org.stepic.droid.core.presenters.VideoWIthTimestampPresenter
@@ -63,7 +63,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
     }
 
     val myStatePhoneListener = MyPhoneStateListener()
-    val tmgr = MainApplication.getAppContext().getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
+    val tmgr = App.getAppContext().getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
     var surfaceFrame: FrameLayout? = null
     var fragmentContainer: ViewGroup? = null
     var videoView: SurfaceView? = null;
@@ -117,7 +117,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-        MainApplication.component().plus(VideoModule()).inject(this)
+        App.component().plus(VideoModule()).inject(this)
         filePath = arguments.getString(VIDEO_PATH_KEY)
         videoId = arguments.getLong(VIDEO_ID_KEY)
         if (videoId != null && videoId!! <= 0L) { // if equal zero -> it is default, it is not our video
@@ -257,7 +257,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
 
     fun recreateAndPreloadPlayer(isNeedPlayAfterRecreating: Boolean = true) {
         needPlay = isNeedPlayAfterRecreating
-        val km = MainApplication.getAppContext().getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+        val km = App.getAppContext().getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
         createPlayer()
         bindViewWithPlayer()
 
@@ -524,7 +524,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
 
     private fun showChooseRateMenu(view: View) {
         analytic.reportEvent(Analytic.Video.SHOW_CHOOSE_RATE)
-        val popupMenu = PopupMenu(MainApplication.getAppContext(), view)
+        val popupMenu = PopupMenu(App.getAppContext(), view)
         popupMenu.inflate(R.menu.video_rate_menu)
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {

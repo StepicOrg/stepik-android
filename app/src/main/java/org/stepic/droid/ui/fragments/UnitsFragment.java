@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.modules.UnitsModule;
 import org.stepic.droid.core.presenters.DownloadingProgressUnitsPresenter;
@@ -109,7 +109,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainApplication
+        App
                 .component()
                 .plus(new UnitsModule())
                 .inject(this);

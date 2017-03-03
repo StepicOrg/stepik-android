@@ -25,9 +25,9 @@ import javax.inject.Inject;
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
-public class MainApplication extends MultiDexApplication {
+public class App extends MultiDexApplication {
 
-    protected static MainApplication application;
+    protected static App application;
     private AppCoreComponent component;
     private StorageComponent storageComponent;
 
@@ -80,12 +80,12 @@ public class MainApplication extends MultiDexApplication {
         YandexMetrica.enableActivityAutoTracking(this);
     }
 //    public static RefWatcher getRefWatcher(Context context) {
-//        MainApplication application = (MainApplication) context.getApplicationContext();
+//        App application = (App) context.getApplicationContext();
 //        return application.refWatcher;
 //    }
 
     public static AppCoreComponent component(Context context) {
-        return ((MainApplication) context.getApplicationContext()).component;
+        return ((App) context.getApplicationContext()).component;
     }
 
     public static AppCoreComponent component() {

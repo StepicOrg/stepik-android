@@ -1,7 +1,7 @@
 package org.stepic.droid.core
 
 import com.squareup.otto.Bus
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.events.comments.CommentsLoadedSuccessfullyEvent
 import org.stepic.droid.events.comments.InternetConnectionProblemInCommentsEvent
 import org.stepic.droid.model.CommentAdapterItem
@@ -302,7 +302,7 @@ class CommentManager @Inject constructor() {
     fun isDiscussionProxyNull() = (discussionProxyId == null)
 
     init {
-        MainApplication.component().inject(this)
+        App.component().inject(this)
     }
 
 }

@@ -3,7 +3,7 @@ package org.stepic.droid.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class Video implements Parcelable, Serializable {
         this.id = in.readLong();
         this.thumbnail = in.readString();
         this.urls = new ArrayList<>();
-        in.readList(this.urls, MainApplication.getAppContext().getClassLoader());
+        in.readList(this.urls, App.getAppContext().getClassLoader());
         this.status = in.readString();
         this.upload_date = in.readString();
     }

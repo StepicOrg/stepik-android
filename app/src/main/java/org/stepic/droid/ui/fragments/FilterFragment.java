@@ -17,7 +17,7 @@ import android.widget.Checkable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.modules.FilterModule;
 import org.stepic.droid.core.presenters.FilterPresenter;
 import org.stepic.droid.core.presenters.contracts.FilterView;
@@ -88,7 +88,7 @@ public class FilterFragment extends FragmentBase implements FilterView {
             courseType = Table.featured;
         }
 
-        MainApplication
+        App
                 .component()
                 .plus(new FilterModule())
                 .inject(this);

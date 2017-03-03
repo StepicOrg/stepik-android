@@ -9,7 +9,7 @@ import android.net.NetworkInfo;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.events.InternetIsEnabledEvent;
@@ -60,12 +60,12 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
 
     public InternetConnectionEnabledReceiver() {
-        MainApplication.component().inject(this);
+        App.component().inject(this);
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (!isOnline(MainApplication.getAppContext()) || inWork.get()) return;
+        if (!isOnline(App.getAppContext()) || inWork.get()) return;
         inWork.set(true);
         mainHandler.post(new Function0<Unit>() {
             @Override

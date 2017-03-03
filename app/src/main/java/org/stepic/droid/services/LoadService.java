@@ -9,7 +9,7 @@ import android.support.annotation.WorkerThread;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
@@ -84,7 +84,7 @@ public class LoadService extends IntentService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        MainApplication.component().inject(this);
+        App.component().inject(this);
         super.onStartCommand(intent, flags, startId);
         return START_REDELIVER_INTENT;
     }
@@ -144,7 +144,7 @@ public class LoadService extends IntentService {
             request.setDestinationUri(target);
 //            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
             request.setVisibleInDownloadsUi(false);
-            request.setTitle(title + "-" + fileId).setDescription(MainApplication.getAppContext().getString(R.string.description_download));
+            request.setTitle(title + "-" + fileId).setDescription(App.getAppContext().getString(R.string.description_download));
 
             if (userPrefs.isNetworkMobileAllowed()) {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
@@ -402,13 +402,13 @@ public class LoadService extends IntentService {
     }
 
     public boolean isDownloadManagerEnabled() {
-        if (MainApplication.getAppContext() == null) {
+        if (App.getAppContext() == null) {
             analytic.reportEvent(Analytic.DownloadManager.DOWNLOAD_MANAGER_IS_NOT_ENABLED);
             return false;
         }
         int state;
         try {
-            state = MainApplication.getAppContext().getPackageManager()
+            state = App.getAppContext().getPackageManager()
                     .getApplicationEnabledSetting("com.android.providers.downloads");
         } catch (Exception ex) {
             analytic.reportError(Analytic.DownloadManager.DOWNLOAD_MANAGER_IS_NOT_ENABLED, ex);

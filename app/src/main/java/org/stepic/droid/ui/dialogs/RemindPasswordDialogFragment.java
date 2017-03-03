@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.web.Api;
 
@@ -53,7 +53,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        MainApplication.component().inject(this);
+        App.component().inject(this);
 
 
         View v = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_remind_password, null, false);
@@ -204,7 +204,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
 
     private void safetyHideKeypad(TextView view) {
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager) MainApplication.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) App.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }

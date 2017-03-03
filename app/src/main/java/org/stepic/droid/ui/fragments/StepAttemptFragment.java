@@ -30,7 +30,7 @@ import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.modules.StepModule;
@@ -129,7 +129,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
 
     @Override
     protected void injectComponent() {
-        MainApplication.component().plus(new StepModule()).inject(this);
+        App.component().plus(new StepModule()).inject(this);
     }
 
     @Nullable

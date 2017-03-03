@@ -25,7 +25,7 @@ import com.squareup.otto.Bus;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.events.CancelAllVideosEvent;
 import org.stepic.droid.model.CachedVideo;
@@ -96,13 +96,13 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Activity context, DownloadsFragment downloadsFragment, List<DownloadingVideoItem> downloadingList, Set<Long> cachedStepsSet) {
         this.downloadsFragment = downloadsFragment;
-        MainApplication.component().inject(this);
+        App.component().inject(this);
         cachedVideoList = cachedVideos;
         sourceActivity = context;
         stepIdToLessonMap = videoIdToStepMap;
         downloadingVideoList = downloadingList;
         this.cachedStepsSet = cachedStepsSet;
-        placeholder = ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.video_placeholder);
+        placeholder = ContextCompat.getDrawable(App.getAppContext(), R.drawable.video_placeholder);
     }
 
     @Override
@@ -152,7 +152,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             if (video.getUrl() != null && file.exists()) {
                 screenManager.showVideo(sourceActivity, video.getUrl(), video.getVideoId());
             } else {
-                Toast.makeText(MainApplication.getAppContext(), R.string.sorry_moved, Toast.LENGTH_SHORT).show();
+                Toast.makeText(App.getAppContext(), R.string.sorry_moved, Toast.LENGTH_SHORT).show();
                 threadPoolExecutor.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -274,12 +274,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             String thumbnail = downloadingVideoItem.getDownloadEntity().getThumbnail();
             if (thumbnail != null) {
                 Uri uriForThumbnail = ThumbnailParser.getUriForThumbnail(thumbnail);
-                Glide.with(MainApplication.getAppContext())
+                Glide.with(App.getAppContext())
                         .load(uriForThumbnail)
                         .placeholder(placeholder)
                         .into(mVideoIcon);
             } else {
-                Glide.with(MainApplication.getAppContext())
+                Glide.with(App.getAppContext())
                         .load("")
                         .placeholder(placeholder)
                         .into(mVideoIcon);
@@ -399,12 +399,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             String thumbnail = cachedVideo.getThumbnail();
             if (thumbnail != null) {
                 Uri uriForThumbnail = ThumbnailParser.getUriForThumbnail(thumbnail);
-                Glide.with(MainApplication.getAppContext())
+                Glide.with(App.getAppContext())
                         .load(uriForThumbnail)
                         .placeholder(placeholder)
                         .into(videoIcon);
             } else {
-                Glide.with(MainApplication.getAppContext())
+                Glide.with(App.getAppContext())
                         .load("")
                         .placeholder(placeholder)
                         .into(videoIcon);
@@ -454,10 +454,10 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         public TitleViewHolder(View itemView) {
             super(itemView);
-            titleDownloading = MainApplication.getAppContext().getString(R.string.downloading_title);
-            titleForDownloadingButton = MainApplication.getAppContext().getString(R.string.downloading_cancel_all);
-            titleCached = MainApplication.getAppContext().getString(R.string.cached_title);
-            titleForCachedButton = MainApplication.getAppContext().getString(R.string.remove_all);
+            titleDownloading = App.getAppContext().getString(R.string.downloading_title);
+            titleForDownloadingButton = App.getAppContext().getString(R.string.downloading_cancel_all);
+            titleCached = App.getAppContext().getString(R.string.cached_title);
+            titleForCachedButton = App.getAppContext().getString(R.string.remove_all);
             headerButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -510,7 +510,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         Bus bus;
 
         public CancelVideoDialog() {
-            MainApplication.component().inject(this);
+            App.component().inject(this);
         }
 
         @NonNull

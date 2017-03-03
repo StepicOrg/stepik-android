@@ -3,7 +3,7 @@ package org.stepic.droid.notifications
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.FirebaseInstanceIdService
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.web.Api
 import javax.inject.Inject
@@ -50,6 +50,6 @@ class HackerFcmInstanceId() {
 
 
     init {
-        MainApplication.component().inject(this)
+        App.component().inject(this)
     }
 }

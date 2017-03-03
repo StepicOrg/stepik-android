@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.widget.CheckBox
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
@@ -95,7 +95,7 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
     }
 
     override fun injectDependencies() {
-        MainApplication.component().inject(this)
+        App.component().inject(this)
     }
 
     fun setOnLoadPositionListener(onLoadPositionListener: OnLoadPositionListener) {

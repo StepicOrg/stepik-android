@@ -11,7 +11,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.core.Shell
 import org.stepic.droid.services.UpdateWithApkService
 import org.stepic.droid.util.AppConstants
@@ -43,7 +43,7 @@ class NeedUpdatingDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        MainApplication.component().inject(this)
+        App.component().inject(this)
 
         val link = arguments.getString(LINK_KEY)
         val isInGP = arguments.getBoolean(IS_IN_GP_KEY)
@@ -55,7 +55,7 @@ class NeedUpdatingDialog : DialogFragment() {
                 shell.screenProvider.showStoreWithApp(activity)
             } else {
 
-                val permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
+                val permissionCheck = ContextCompat.checkSelfPermission(App.getAppContext(),
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                     shell.sharedPreferenceHelper.storeTempLink(link)

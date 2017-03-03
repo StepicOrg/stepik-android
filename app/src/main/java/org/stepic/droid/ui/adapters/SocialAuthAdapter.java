@@ -18,7 +18,7 @@ import com.vk.sdk.VKSdk;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
@@ -52,7 +52,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
 
     public SocialAuthAdapter(FragmentActivity activity, @Nullable GoogleApiClient client) {
         this.client = client;
-        MainApplication.component().inject(this);
+        App.component().inject(this);
         this.activity = activity;
         socialList = socialManager.getAllSocial();
     }
@@ -82,7 +82,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
         if (type == SocialManager.SocialType.google) {
             if (client == null) {
                 analytic.reportEvent(Analytic.Interaction.GOOGLE_SOCIAL_IS_NOT_ENABLED);
-                Toast.makeText(MainApplication.getAppContext(), R.string.google_services_late, Toast.LENGTH_SHORT).show();
+                Toast.makeText(App.getAppContext(), R.string.google_services_late, Toast.LENGTH_SHORT).show();
             } else {
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(client);
                 activity.startActivityForResult(signInIntent, AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN);

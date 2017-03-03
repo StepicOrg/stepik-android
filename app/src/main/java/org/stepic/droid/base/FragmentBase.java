@@ -100,7 +100,7 @@ public class FragmentBase extends Fragment {
     }
 
     protected void injectComponent() {
-        MainApplication.component(MainApplication.getAppContext()).inject(this);
+        App.component(App.getAppContext()).inject(this);
     }
 
     protected void hideSoftKeypad() {
@@ -166,7 +166,7 @@ public class FragmentBase extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        RefWatcher refWatcher = MainApplication.getRefWatcher(getActivity());
+//        RefWatcher refWatcher = App.getRefWatcher(getActivity());
 //        refWatcher.watch(this);
     }
 

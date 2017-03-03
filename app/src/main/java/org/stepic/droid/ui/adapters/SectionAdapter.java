@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.presenters.CalendarPresenter;
@@ -110,7 +110,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.white, activity);
         this.progressMap = progressMap;
         this.sectionIdToLoadingStateMap = sectionIdToLoadingStateMap;
-        MainApplication.component().inject(this);
+        App.component().inject(this);
     }
 
 
@@ -163,7 +163,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
             final Section section = sections.get(sectionPosition);
 
-            int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
+            int permissionCheck = ContextCompat.checkSelfPermission(App.getAppContext(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
@@ -410,7 +410,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
             if ((section.is_active() || (section.getActions() != null && section.getActions().getTest_section() != null)) && course.getEnrollment() > 0 && !section.isExam()) {
 
-                int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, MainApplication.getAppContext());
+                int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, App.getAppContext());
 
                 sectionTitle.setTextColor(strong_text_color);
                 cv.setFocusable(false);
@@ -455,7 +455,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 whenLoad.setVisibility(View.INVISIBLE);
                 afterLoad.setVisibility(View.GONE);
 
-                int weak_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_weak_text, MainApplication.getAppContext());
+                int weak_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_weak_text, App.getAppContext());
                 sectionTitle.setTextColor(weak_text_color);
                 cv.setFocusable(false);
                 cv.setClickable(false);

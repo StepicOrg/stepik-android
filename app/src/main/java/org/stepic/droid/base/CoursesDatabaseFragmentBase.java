@@ -70,7 +70,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
         isScreenCreated = true;
 
-        MainApplication.component()
+        App.component()
                 .plus(new CourseListModule())
                 .inject(this);
     }

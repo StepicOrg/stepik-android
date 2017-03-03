@@ -1,7 +1,7 @@
 package org.stepic.droid.store.operations
 
 import android.content.ContentValues
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
 import org.stepic.droid.notifications.model.Notification
@@ -69,7 +69,7 @@ class DatabaseFacade {
     lateinit var lastInteractions: IDao<CourseLastInteraction>
 
     init {
-        MainApplication.storageComponent().inject(this)
+        App.storageComponent().inject(this)
         coursesEnrolledDao.setTableName(Table.enrolled.storeName)
         coursesFeaturedDao.setTableName(Table.featured.storeName)
     }
