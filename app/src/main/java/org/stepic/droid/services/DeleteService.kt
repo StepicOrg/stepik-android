@@ -32,8 +32,12 @@ class DeleteService : IntentService("delete_service") {
     @Inject
     lateinit var analytic: Analytic
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onCreate() {
+        super.onCreate()
         MainApplication.component().inject(this)
+    }
+
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         return Service.START_REDELIVER_INTENT
     }

@@ -21,14 +21,14 @@ import android.widget.TextView;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.ScreenManager;
+import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.SectionLoadingState;
-import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.CancelSniffer;
+import org.stepic.droid.store.CleanManager;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
@@ -75,7 +75,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     Shell shell;
 
     @Inject
-    CleanManager cleaner;
+    CleanManager cleanManager;
 
     @Inject
     Analytic analytic;
@@ -193,7 +193,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
             if (section.is_cached()) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_SECTION, section.getId() + "");
-                cleaner.removeSection(section);
+                cleanManager.removeSection(section);
                 section.set_loading(false);
                 section.set_cached(false);
                 threadPoolExecutor.execute(new Runnable() {

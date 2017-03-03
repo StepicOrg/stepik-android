@@ -20,7 +20,6 @@ import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.core.DefaultFilterImpl;
 import org.stepic.droid.core.FilterApplicator;
 import org.stepic.droid.core.FilterApplicatorImpl;
-import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.LocalLessonSessionManagerImpl;
 import org.stepic.droid.core.LocalProgressImpl;
@@ -31,6 +30,7 @@ import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ScreenManagerImpl;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.core.ShareHelperImpl;
+import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.ShellImpl;
 import org.stepic.droid.core.StepikLogoutManager;
 import org.stepic.droid.notifications.INotificationManager;
@@ -40,16 +40,17 @@ import org.stepic.droid.notifications.NotificationManagerImpl;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialManager;
-import org.stepic.droid.store.CleanManager;
-import org.stepic.droid.store.ConcurrentCancelSniffer;
-import org.stepic.droid.store.DownloadManagerImpl;
 import org.stepic.droid.store.CancelSniffer;
+import org.stepic.droid.store.CleanManager;
+import org.stepic.droid.store.CleanManagerImpl;
+import org.stepic.droid.store.ConcurrentCancelSniffer;
 import org.stepic.droid.store.DownloadFinishedCallback;
-import org.stepic.droid.store.InitialDownloadUpdater;
+import org.stepic.droid.store.DownloadManagerImpl;
 import org.stepic.droid.store.IDownloadManager;
-import org.stepic.droid.store.StoreStateManager;
+import org.stepic.droid.store.InitialDownloadUpdater;
 import org.stepic.droid.store.LessonDownloader;
 import org.stepic.droid.store.LessonDownloaderImpl;
+import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.StoreStateManagerImpl;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
@@ -162,8 +163,8 @@ public class AppCoreModule {
 
     @Singleton
     @Provides
-    CleanManager provideCleanManager() {
-        return new CleanManager();
+    CleanManager provideCleanManager(Context context) {
+        return new CleanManagerImpl(context);
     }
 
     @Singleton
