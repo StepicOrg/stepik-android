@@ -9,9 +9,7 @@ import com.squareup.otto.Bus
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.events.steps.StepRemovedEvent
-import org.stepic.droid.model.Course
 import org.stepic.droid.model.Lesson
-import org.stepic.droid.model.Section
 import org.stepic.droid.model.Step
 import org.stepic.droid.store.StoreStateManager
 import org.stepic.droid.store.operations.DatabaseFacade
@@ -48,8 +46,8 @@ class DeleteService : IntentService("delete_service") {
         try {
             when (type) {
                 LoadService.LoadTypeKey.Section -> {
-                    val section = intent.getSerializableExtra(AppConstants.KEY_SECTION_BUNDLE) as? Section
-                    removeFromDisk(section)
+                    val sectionId = intent.getLongExtra(AppConstants.KEY_SECTION_BUNDLE, -1).takeIf { it >= 0 } ?: return
+                    removeFromDisk(sectionId)
                 }
                 LoadService.LoadTypeKey.Lesson -> {
                     val lesson = intent.getParcelableExtra<Lesson>(AppConstants.KEY_LESSON_BUNDLE)
@@ -105,29 +103,18 @@ class DeleteService : IntentService("delete_service") {
         }
     }
 
-    private fun removeFromDisk(section: Section?) {
-        section?.let {
-            val units = databaseFacade.getAllUnitsOfSection(section.id)
-            val lessons = ArrayList<Lesson>()
-            for (unit in units) {
-                val lesson = databaseFacade.getLessonOfUnit(unit)
-                if (lesson != null) {
-                    lessons.add(lesson)
-                }
-            }
-
-            for (lesson in lessons) {
-                removeFromDisk(lesson)
+    private fun removeFromDisk(sectionId: Long) {
+        val units = databaseFacade.getAllUnitsOfSection(sectionId)
+        val lessons = ArrayList<Lesson>()
+        for (unit in units) {
+            val lesson = databaseFacade.getLessonOfUnit(unit)
+            if (lesson != null) {
+                lessons.add(lesson)
             }
         }
-    }
 
-    private fun removeFromDisk(course: Course?) {
-        course?.let {
-            val sections = databaseFacade.getAllSectionsOfCourse(course)
-            for (section in sections) {
-                removeFromDisk(section)
-            }
+        for (lesson in lessons) {
+            removeFromDisk(lesson)
         }
     }
 }

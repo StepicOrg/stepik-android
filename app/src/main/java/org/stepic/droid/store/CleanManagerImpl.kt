@@ -3,27 +3,20 @@ package org.stepic.droid.store
 import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
-
 import org.stepic.droid.model.Lesson
-import org.stepic.droid.model.Section
 import org.stepic.droid.model.Step
 import org.stepic.droid.services.DeleteService
 import org.stepic.droid.services.LoadService
 import org.stepic.droid.util.AppConstants
-
 import java.io.Serializable
 
 class CleanManagerImpl(private val context: Context) : CleanManager {
 
-    override fun removeSection(section: Section?) {
-        if (section == null) {
-            return
-        }
-
+    override fun removeSection(sectionId: Long) {
         val loadIntent = Intent(context, DeleteService::class.java)
 
         loadIntent.putExtra(AppConstants.KEY_LOAD_TYPE, LoadService.LoadTypeKey.Section)
-        loadIntent.putExtra(AppConstants.KEY_SECTION_BUNDLE, section as Serializable)
+        loadIntent.putExtra(AppConstants.KEY_SECTION_BUNDLE, sectionId)
 
         context.startService(loadIntent)
     }

@@ -95,8 +95,6 @@ public class StoreStateManagerImpl implements StoreStateManager {
 
     @Override
     public void updateStepAfterDeleting(Step step) {
-        //// TODO: 17.12.15 transfer to this method all update state? it is not good for UI
-
         long lessonId = step.getLesson();
         updateUnitLessonAfterDeleting(lessonId);
     }

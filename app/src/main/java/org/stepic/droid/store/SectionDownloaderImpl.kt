@@ -25,39 +25,36 @@ class SectionDownloaderImpl(private val databaseFacade: DatabaseFacade,
                 cancelSniffer.addSectionIdCancel(sectionId)
 
                 val units = databaseFacade.getAllUnitsOfSection(sectionId).filterNotNull()
-                if (units.isEmpty()) {
-                    //units can be null if they are not loaded from internet -> steps are not loaded too and will be cancelled, when step downloading will executed
-                    return@execute
-                }
-                val lessonIds = LongArray(units.size)
-                for (i in units.indices) {
-                    lessonIds[i] = units[i].lesson
-                }
-                val lessons = databaseFacade.getLessonsByIds(lessonIds).filterNotNull()
-                if (lessons.isEmpty()) {
-                    //same with steps
-                    return@execute
-                }
 
-                lessons.forEach { lesson ->
-                    lesson.steps!!.forEach {
-                        cancelSniffer.addStepIdCancel(it)
+                //units can be null if they are not loaded from internet -> steps are not loaded too and will be cancelled, when step downloading will executed
+                if (units.isNotEmpty()) {
+                    val lessonIds = LongArray(units.size)
+                    for (i in units.indices) {
+                        lessonIds[i] = units[i].lesson
                     }
-                    lesson.steps!!.forEach {
-                        downloadManager.cancelStep(it)
+                    val lessons = databaseFacade.getLessonsByIds(lessonIds).filterNotNull()
+                    if (lessons.isNotEmpty()) {
+                        lessons.forEach { lesson ->
+                            lesson.steps?.forEach {
+                                cancelSniffer.addStepIdCancel(it)
+                            }
+                            lesson.steps?.forEach {
+                                downloadManager.cancelStep(it)
+                            }
+                        }
                     }
                 }
             } finally {
                 RWLocks.SectionCancelLock.writeLock().unlock()
             }
 
+            cleanManager.removeSection(sectionId)
         }
     }
 
     override fun deleteWholeSection(sectionId: Long) {
         threadPoolExecutor.execute {
-            val section = databaseFacade.getSectionById(sectionId)
-            cleanManager.removeSection(section)
+            cleanManager.removeSection(sectionId)
         }
     }
 
