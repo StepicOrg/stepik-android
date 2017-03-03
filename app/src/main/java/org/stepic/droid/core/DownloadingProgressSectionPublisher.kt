@@ -11,6 +11,7 @@ import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import timber.log.Timber
 import java.util.*
+import kotlin.collections.HashMap
 
 //fixme: refactor it, merge with DownloadingProgressUnitPublisher
 class DownloadingProgressSectionPublisher(private val databaseFacade: DatabaseFacade,
@@ -57,14 +58,13 @@ class DownloadingProgressSectionPublisher(private val databaseFacade: DatabaseFa
             private val sectionIdToLessonIdsMap = HashMap<Long, LongArray>()
             private val lessonIdToStepsMap = HashMap<Long, LongArray>()
             private var isSectionToUnitOk = false
-            private var isSectionToLessonsAndStepOk = false
 
             init {
                 sectionIdListLocal.addAll(sectionIdList)
             }
 
             override fun run() {
-                while (!Thread.currentThread().isInterrupted) {
+                while (!Thread.currentThread().isInterrupted) lqoop@ {
                     try {
                         if (!isSectionToUnitOk) {
                             for (sectionId in sectionIdListLocal) {
@@ -76,37 +76,29 @@ class DownloadingProgressSectionPublisher(private val databaseFacade: DatabaseFa
                         if (isSectionToUnitOk || checkAllElementsInListIsExistedInMap(sectionIdListLocal, sectionIdToUnitIdsMap)) {
                             isSectionToUnitOk = true
                         } else {
+                            Thread.sleep(UPDATE_DELAY.toLong())
                             continue
                         }
 
                         //here sectionIdToUnitIdsMap is filled
-                        if (!isSectionToLessonsAndStepOk) {
-                            sectionIdToUnitIdsMap.forEach { mapPair ->
-                                val units: Map<Long, Unit> = databaseFacade.getAllUnitsOfSection(mapPair.key).filterNotNull().associateBy(Unit::id)
+                        sectionIdToUnitIdsMap.forEach { mapPair ->
+                            val units: Map<Long, Unit> = databaseFacade.getAllUnitsOfSection(mapPair.key).filterNotNull().associateBy(Unit::id)
 
-                                val lessonIdsOfThisSection = ArrayList<Long>()
-                                for (unitId in mapPair.value) {
-                                    val unit = units[unitId] ?: return@forEach //if unit is not in database -> skip all iteration of publisher
-                                    val lesson = databaseFacade.getLessonById(unit.lesson) ?: return@forEach
-                                    val stepIds = lesson.steps ?: return@forEach
-                                    lessonIdToStepsMap[lesson.id] = stepIds
-                                    lessonIdsOfThisSection.add(lesson.id)
-                                }
-                                sectionIdToLessonIdsMap [mapPair.key] = lessonIdsOfThisSection.toLongArray()
+                            val lessonIdsOfThisSection = ArrayList<Long>()
+                            for (unitId in mapPair.value) {
+                                val unit = units[unitId] ?: return@forEach //if unit is not in database -> try to get next (not all unit can be in database because of user access)
+                                val lesson = databaseFacade.getLessonById(unit.lesson) ?: return@forEach
+                                val stepIds = lesson.steps ?: return@forEach
+                                lessonIdToStepsMap[lesson.id] = stepIds
+                                lessonIdsOfThisSection.add(lesson.id)
                             }
-                        }
-
-                        if (isSectionToLessonsAndStepOk || (checkAllElementsInListIsExistedInMap(sectionIdListLocal, sectionIdToLessonIdsMap))) {
-                            // if all lessons is exist -> all stepIds is exist too
-                            isSectionToLessonsAndStepOk = true
-                        } else {
-                            continue
+                            sectionIdToLessonIdsMap [mapPair.key] = lessonIdsOfThisSection.toLongArray()
                         }
 
                         //pre calc is finished, lets publish progress
 
                         for (sectionId in sectionIdListLocal) {
-                            val lessonIds = sectionIdToLessonIdsMap[sectionId] ?: throw IllegalStateException("lessonIds was null, but should be initialized")
+                            val lessonIds = sectionIdToLessonIdsMap[sectionId] ?: continue // if user has not access to the section -> lesson will be null
                             val stepIdsOfSection = ArrayList<Long>()
                             for (lessonId in lessonIds) {
                                 val stepsIdOfLesson = lessonIdToStepsMap[lessonId] ?: throw IllegalStateException("stepIds was null, but should be initialized")
@@ -118,13 +110,6 @@ class DownloadingProgressSectionPublisher(private val databaseFacade: DatabaseFa
                             processOneSection(sectionId, stepIdsOfSection)
                         }
 
-
-//                        for (lessonId in sectionIdListLocal.keys) {
-//                            val stepIds = sectionIdListLocal[lessonId]
-//                            if (stepIds != null) {
-//                                processOneLesson(lessonId, stepIds)
-//                            }
-//                        }
                         Thread.sleep(UPDATE_DELAY.toLong())
                     } catch (e: InterruptedException) {
                         return

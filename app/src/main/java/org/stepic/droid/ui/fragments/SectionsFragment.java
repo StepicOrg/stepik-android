@@ -88,6 +88,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.SectionUtilKt;
 import org.stepic.droid.util.SnackbarExtensionKt;
 import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.StringUtil;
@@ -401,7 +402,7 @@ public class SectionsFragment
             if (modulePosition > 0 && modulePosition <= sections.size()) {
                 Section section = sections.get(modulePosition - 1);
 
-                boolean userHasAccess = (section.is_active() || (section.getActions() != null && section.getActions().getTest_section() != null)) && course != null && course.getEnrollment() > 0 && !section.isExam();
+                boolean userHasAccess = SectionUtilKt.hasUserAccess(section, course);
                 if (userHasAccess) {
                     shell.getScreenProvider().showUnitsForSection(SectionsFragment.this.getActivity(), sections.get(modulePosition - 1));
                 } else {

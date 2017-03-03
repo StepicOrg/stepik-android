@@ -37,6 +37,7 @@ import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
+import org.stepic.droid.util.SectionUtilKt;
 import org.stepic.droid.viewmodel.ProgressViewModel;
 
 import java.util.List;
@@ -400,7 +401,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 hardDeadline.setVisibility(View.VISIBLE);
             }
 
-            if ((section.is_active() || (section.getActions() != null && section.getActions().getTest_section() != null)) && course.getEnrollment() > 0 && !section.isExam()) {
+            if (SectionUtilKt.hasUserAccess(section, course)) {
 
                 int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, App.getAppContext());
 
