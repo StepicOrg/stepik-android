@@ -49,6 +49,8 @@ import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.InitialDownloadUpdater;
 import org.stepic.droid.store.LessonDownloader;
 import org.stepic.droid.store.LessonDownloaderImpl;
+import org.stepic.droid.store.SectionDownloader;
+import org.stepic.droid.store.SectionDownloaderImpl;
 import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.StoreStateManagerImpl;
 import org.stepic.droid.store.operations.DatabaseFacade;
@@ -340,8 +342,22 @@ public class AppCoreModule {
             IDownloadManager downloadManager,
             CancelSniffer cancelSniffer,
             CleanManager cleanManager
-            ) {
+    ) {
         return new LessonDownloaderImpl(databaseFacade, downloadManager, threadPoolExecutor, cleanManager, cancelSniffer);
     }
+
+
+    @Provides
+    @Singleton
+    SectionDownloader provideSectionDownloader(
+            ThreadPoolExecutor threadPoolExecutor,
+            DatabaseFacade databaseFacade,
+            IDownloadManager downloadManager,
+            CancelSniffer cancelSniffer,
+            CleanManager cleanManager
+    ) {
+        return new SectionDownloaderImpl(databaseFacade, downloadManager, threadPoolExecutor, cleanManager, cancelSniffer);
+    }
+
 
 }

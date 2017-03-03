@@ -1,11 +1,8 @@
 package org.stepic.droid.store;
 
-import android.os.Handler;
-
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.events.sections.NotCachedSectionEvent;
 import org.stepic.droid.events.sections.SectionCachedEvent;
@@ -115,18 +112,16 @@ public class StoreStateManagerImpl implements StoreStateManager {
             section.set_cached(false);
             section.set_loading(false);
             databaseFacade.updateOnlyCachedLoadingSection(section);
-            Handler mainHandler = new Handler(App.getAppContext().getMainLooper());
-            //Say to ui that ui is cached now
-            Runnable myRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    bus.post(new NotCachedSectionEvent(section.getId()));
-                }
-            };
-            mainHandler.post(myRunnable);
+            mainHandler.post(
+                    new Function0<kotlin.Unit>() {
+                        @Override
+                        public kotlin.Unit invoke() {
+                            bus.post(new NotCachedSectionEvent(section.getId()));
+                            return kotlin.Unit.INSTANCE;
+                        }
+                    }
+            );
         }
-//Don't need support course state
-//        updateCourseAfterDeleting(section.getCourse());
     }
 
     @Override

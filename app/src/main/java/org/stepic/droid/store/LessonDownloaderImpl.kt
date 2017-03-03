@@ -14,8 +14,6 @@ class LessonDownloaderImpl(private val databaseFacade: DatabaseFacade,
     override fun downloadLesson(lessonId: Long) {
         threadPoolExecutor.execute {
             val lesson = databaseFacade.getLessonById(lessonId) ?: throw Exception("lesson was null, when downloadLesson of LessonDownloader is executed") // FIXME: IT CAN BE BY THE NORMAL EXECUTION, CHANGE IT, THIS LESSON MAY BE NEEDED, WHEN SECTION IS LOADED
-            val unitId = databaseFacade.getUnitByLessonId(lessonId)!!.id
-            cancelSniffer.removeLessonIdToCancel(unitId)
             lesson.steps?.forEach {
                 cancelSniffer.removeStepIdCancel(it)
             }
@@ -26,7 +24,6 @@ class LessonDownloaderImpl(private val databaseFacade: DatabaseFacade,
     override fun cancelLessonLoading(lessonId: Long) {
         threadPoolExecutor.execute {
             val lesson = databaseFacade.getLessonById(lessonId)
-            cancelSniffer.addLessonToCancel(lessonId)
             lesson!!.steps!!.forEach {
                 cancelSniffer.addStepIdCancel(it)
             }

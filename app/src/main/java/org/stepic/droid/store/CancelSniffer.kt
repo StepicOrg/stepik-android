@@ -1,7 +1,6 @@
 package org.stepic.droid.store
 
 interface CancelSniffer {
-
     fun addStepIdCancel(stepId: Long)
 
     fun removeStepIdCancel(stepId: Long)
@@ -12,11 +11,5 @@ interface CancelSniffer {
 
     fun removeSectionIdCancel(sectionId: Long)
 
-    fun isSectionIdIsCanceled(sectionId: Long): Boolean
-
-    fun addLessonToCancel(lessonId: Long)
-
-    fun removeLessonIdToCancel(lessonId: Long)
-
-    fun isLessonIdIsCanceled(lessonId: Long): Boolean
+    fun isSectionIdCanceled(sectionId: Long): Boolean
 }

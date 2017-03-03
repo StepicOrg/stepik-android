@@ -28,17 +28,6 @@ class ConcurrentCancelSniffer : CancelSniffer {
         canceledSectionIdsSet.remove(sectionId)
     }
 
-    override fun isSectionIdIsCanceled(sectionId: Long)
+    override fun isSectionIdCanceled(sectionId: Long)
             = canceledSectionIdsSet.contains(sectionId)
-
-    override fun addLessonToCancel(lessonId: Long) {
-        canceledUnitIdsSet.add(lessonId)
-    }
-
-    override fun removeLessonIdToCancel(lessonId: Long) {
-        canceledUnitIdsSet.remove(lessonId)
-    }
-
-    override fun isLessonIdIsCanceled(lessonId: Long)
-            = canceledUnitIdsSet.contains(lessonId)
 }

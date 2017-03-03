@@ -520,21 +520,9 @@ public class DownloadsFragment extends FragmentBase {
             protected Object doInBackground(Object[] params) {
                 try {
                     RWLocks.CancelLock.writeLock().lock();
-                    long[] sectionIdsLoading = databaseFacade.getAllDownloadingSections();//need lock here and in loading service.
-                    for (int i = 0; i < sectionIdsLoading.length; i++) {
-                        cancelSniffer.addSectionIdCancel(sectionIdsLoading[i]);
-                        List<org.stepic.droid.model.Unit> units = databaseFacade.getAllUnitsOfSection(sectionIdsLoading[i]);
-                        if (!units.isEmpty()) {
-                            for (org.stepic.droid.model.Unit unitItem : units) {
-                                cancelSniffer.addLessonToCancel(unitItem.getId());
-                            }
-                        }
-                    }
 
                     long[] lessonIds = databaseFacade.getAllDownloadingLessons();
                     for (int i = 0; i < lessonIds.length; i++) {
-                        cancelSniffer.addLessonToCancel(lessonIds[i]);
-
                         Lesson lesson = databaseFacade.getLessonById(lessonIds[i]);
                         if (lesson != null) {
                             List<Step> steps = databaseFacade.getStepsOfLesson(lesson.getId());

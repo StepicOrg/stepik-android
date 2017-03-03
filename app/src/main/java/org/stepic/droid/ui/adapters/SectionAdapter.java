@@ -27,9 +27,7 @@ import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.SectionLoadingState;
-import org.stepic.droid.store.CancelSniffer;
-import org.stepic.droid.store.CleanManager;
-import org.stepic.droid.store.IDownloadManager;
+import org.stepic.droid.store.SectionDownloader;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
 import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
@@ -66,16 +64,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     ScreenManager screenManager;
 
     @Inject
-    IDownloadManager downloadManager;
-
-    @Inject
     DatabaseFacade databaseFacade;
 
     @Inject
     Shell shell;
-
-    @Inject
-    CleanManager cleanManager;
 
     @Inject
     Analytic analytic;
@@ -84,7 +76,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     ThreadPoolExecutor threadPoolExecutor;
 
     @Inject
-    CancelSniffer cancelSniffer;
+    SectionDownloader sectionDownloader;
+
 
     private List<Section> sections;
     private AppCompatActivity activity;
@@ -193,13 +186,13 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
             if (section.is_cached()) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_SECTION, section.getId() + "");
-                cleanManager.removeSection(section);
                 section.set_loading(false);
                 section.set_cached(false);
                 threadPoolExecutor.execute(new Runnable() {
                     @Override
                     public void run() {
                         databaseFacade.updateOnlyCachedLoadingSection(section);
+                        sectionDownloader.deleteWholeSection(section.getId());
                     }
                 });
                 notifyItemChanged(adapterPosition);
@@ -213,7 +206,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                         @Override
                         public void run() {
                             databaseFacade.updateOnlyCachedLoadingSection(section);
-                            cancelSniffer.addSectionIdCancel(section.getId());
+                            sectionDownloader.cancelSectionLoading(section.getId());
                         }
                     });
 
@@ -239,7 +232,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         int sectionPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
             final Section section = sections.get(sectionPosition);
-
             analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
             section.set_cached(false);
             section.set_loading(true);
@@ -247,7 +239,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 @Override
                 public void run() {
                     databaseFacade.updateOnlyCachedLoadingSection(section);
-                    downloadManager.addSection(section);
+                    sectionDownloader.downloadSection(section.getId());
                 }
             });
             notifyItemChanged(adapterPosition);

@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import org.stepic.droid.base.App;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
-import org.stepic.droid.model.Step;
 import org.stepic.droid.services.CancelLoadingService;
 import org.stepic.droid.services.LoadService;
 import org.stepic.droid.util.AppConstants;
@@ -17,17 +16,6 @@ import javax.inject.Singleton;
 
 @Singleton
 public class DownloadManagerImpl implements IDownloadManager {
-
-    @Deprecated
-    private void addStep(Step step, Lesson lesson) {
-        Intent loadIntent = new Intent(App.getAppContext(), LoadService.class);
-
-        loadIntent.putExtra(AppConstants.KEY_LOAD_TYPE, LoadService.LoadTypeKey.Step);
-        loadIntent.putExtra(AppConstants.KEY_LESSON_BUNDLE, (Serializable) lesson);
-        loadIntent.putExtra(AppConstants.KEY_STEP_BUNDLE, (Serializable) step);
-
-        App.getAppContext().startService(loadIntent);
-    }
 
     @Override
     public void addSection(Section section) {

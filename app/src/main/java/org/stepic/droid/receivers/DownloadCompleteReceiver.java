@@ -17,7 +17,6 @@ import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
-import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.CancelSniffer;
 import org.stepic.droid.store.StoreStateManager;
@@ -83,23 +82,8 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                 if (cancelSniffer.isStepIdCanceled(step_id)) {
                     downloadManager.remove(referenceId);//remove notification (is it really work and need?)
                     cancelSniffer.removeStepIdCancel(step_id);
-                    Step step = databaseFacade.getStepById(step_id);
-                    if (step != null) {
-                        Lesson lesson = databaseFacade.getLessonById(step.getLesson());
-                        if (lesson != null) {
-                            Unit unit = databaseFacade.getUnitByLessonId(lesson.getId());
-                            if (unit != null && cancelSniffer.isLessonIdIsCanceled(unit.getId())) {
-                                storeStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
-                                cancelSniffer.removeLessonIdToCancel(unit.getId());
-                                if (cancelSniffer.isSectionIdIsCanceled(unit.getSection())) {
-                                    cancelSniffer.removeSectionIdCancel(unit.getSection());
-                                }
-                            }
-                        }
-                    }
                 } else {
                     //is not canceled
-
                     File userDownloadFolder = userPreferences.getUserDownloadFolder();
                     File downloadFolderAndFile = new File(userDownloadFolder, video_id + "");
                     String path = Uri.fromFile(downloadFolderAndFile).getPath();

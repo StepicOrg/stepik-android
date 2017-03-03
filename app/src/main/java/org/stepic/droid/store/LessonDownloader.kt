@@ -1,6 +1,6 @@
 package org.stepic.droid.store
 
-interface LessonDownloader {
+interface LessonDownloader  {
 
     fun downloadLesson(lessonId: Long)
 
