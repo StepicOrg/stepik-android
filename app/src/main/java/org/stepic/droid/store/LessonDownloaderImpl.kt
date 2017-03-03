@@ -1,22 +1,15 @@
 package org.stepic.droid.store
 
-import android.content.Context
-import android.support.annotation.MainThread
-import org.stepic.droid.model.DownloadEntity
 import org.stepic.droid.store.operations.DatabaseFacade
-import org.stepic.droid.web.Api
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Singleton
 
 @Singleton
-class LessonDownloaderImpl(private val context: Context,
-                           private val databaseFacade: DatabaseFacade,
-                           private val api: Api,
+class LessonDownloaderImpl(private val databaseFacade: DatabaseFacade,
                            private val downloadManager: IDownloadManager,
                            private val threadPoolExecutor: ThreadPoolExecutor,
                            private val cleanManager: CleanManager,
-                           private val storeStateManager: StoreStateManager,
-                           private val cancelSniffer: CancelSniffer) : LessonDownloader, DownloadFinishedCallback {
+                           private val cancelSniffer: CancelSniffer) : LessonDownloader {
 
     override fun downloadLesson(lessonId: Long) {
         threadPoolExecutor.execute {
@@ -49,21 +42,4 @@ class LessonDownloaderImpl(private val context: Context,
             cleanManager.removeLesson(lesson)
         }
     }
-
-    @MainThread
-    override fun onDownloadCompleted(downloadEntity: DownloadEntity, isSuccess: Boolean) {
-        //todo remove download entity from the local list, after that update states of related lesson/section?, after that remove from database
-        threadPoolExecutor.execute {
-            val step = databaseFacade.getStepById(downloadEntity.stepId)!!
-            val lessonId = databaseFacade.getLessonById(step.lesson)!!.id
-
-            if (isSuccess) {
-                storeStateManager.updateUnitLessonState(lessonId)
-            } else {
-                storeStateManager.updateUnitLessonAfterDeleting(lessonId)
-            }
-            databaseFacade.deleteDownloadEntityByDownloadId(downloadEntity.downloadId)
-        }
-    }
-
 }
