@@ -62,22 +62,22 @@ public interface Analytic {
         String CLICK_SETTINGS_FROM_NOTIFICATION = "click_settings_from_notification";
         String START_SPLASH = "user_start_splash_new";
         String START_SPLASH_EXPERT = "user_start_splash_expert";
-        java.lang.String CLICK_CHOOSE_NOTIFICATION_INTERVAL = "click_choose_notification_interval";
-        java.lang.String CLICK_PRIVACY_POLICY = "click_privacy_policy";
-        java.lang.String CLICK_TERMS_OF_SERVICE = "click_terms_of_service";
-        java.lang.String POSITIVE_MATERIAL_DIALOG_INVITATION = "material_dialog_invite_positive";
-        java.lang.String NEGATIVE_MATERIAL_DIALOG_INVITATION = "material_dialog_invite_negative";
-        java.lang.String SHOW_MATERIAL_DIALOG_INVITATION = "materdial_dialog_invite_shown";
-        java.lang.String INVITATION_PREVENTED = "invite_prevented";
+        String CLICK_CHOOSE_NOTIFICATION_INTERVAL = "click_choose_notification_interval";
+        String CLICK_PRIVACY_POLICY = "click_privacy_policy";
+        String CLICK_TERMS_OF_SERVICE = "click_terms_of_service";
+        String POSITIVE_MATERIAL_DIALOG_INVITATION = "material_dialog_invite_positive";
+        String NEGATIVE_MATERIAL_DIALOG_INVITATION = "material_dialog_invite_negative";
+        String SHOW_MATERIAL_DIALOG_INVITATION = "materdial_dialog_invite_shown";
+        String INVITATION_PREVENTED = "invite_prevented";
         String CLICK_CONTINUE_COURSE = "click_continue_course";
-        java.lang.String CLICK_COURSE = "click_course";
+        String CLICK_COURSE = "click_course";
         String CLICK_PROFILE_BEFORE_LOADING = "click_profile_before_loading";
         String JOIN_COURSE = "click_join_course";
 
-        java.lang.String CLICK_FIND_COURSE_LAUNCH = "click_find_courses_launch";
-        java.lang.String USER_OPEN_IMAGE = "user_open_image";
-        java.lang.String SCREENSHOT = "screenshot";
-        java.lang.String GOOGLE_SOCIAL_IS_NOT_ENABLED = "google_social_is_not_enabled";
+        String CLICK_FIND_COURSE_LAUNCH = "click_find_courses_launch";
+        String USER_OPEN_IMAGE = "user_open_image";
+        String SCREENSHOT = "screenshot";
+        String GOOGLE_SOCIAL_IS_NOT_ENABLED = "google_social_is_not_enabled";
     }
 
     interface Screens {
@@ -109,7 +109,7 @@ public interface Analytic {
         String USER_OPEN_NOTIFICATIONS = "main_choice_notifications";
         String USER_OPEN_SETTINGS = "main_choice_settings";
         String USER_LOGOUT = "main_choice_logout";
-        java.lang.String USER_OPEN_ABOUT_APP = "main_choice_about";
+        String USER_OPEN_ABOUT_APP = "main_choice_about";
         String SHOW_SECTIONS_JOINED = "show_sections_joined";
     }
 
@@ -161,17 +161,17 @@ public interface Analytic {
         String ILLEGAL_STATE_NEXT_LESSON = "cant_show_next_lesson";
         String ILLEGAL_STATE_PREVIOUS_LESSON = "cant_show_previous_lesson";
         String FAIL_PUSH_STEP_VIEW = "fail_push_step_view";
-        java.lang.String NO_INTERNET_EXISTING_ATTEMPTS = "no_internet_existing_attempts";
+        String NO_INTERNET_EXISTING_ATTEMPTS = "no_internet_existing_attempts";
         String DOWNLOAD_ID_NEGATIVE = "download_id_negative";
         String STREAK_ON_STEP_SOLVED = "streak_on_step_solved";
-        java.lang.String GOOGLE_SERVICES_TOO_OLD = "google_services_too_old";
+        String GOOGLE_SERVICES_TOO_OLD = "google_services_too_old";
         String VIDEO_PATH_WAS_NULL_WITH_INTERNET = "video_path_was_null_internet_enabled";
-        java.lang.String FAIL_REFRESH_TOKEN_ONLINE = "fail_refresh_token_online";
-        java.lang.String FAIL_REFRESH_TOKEN_ONLINE_EXTENDED = "fail_refresh_token_online_extended";
+        String FAIL_REFRESH_TOKEN_ONLINE = "fail_refresh_token_online";
+        String FAIL_REFRESH_TOKEN_ONLINE_EXTENDED = "fail_refresh_token_online_extended";
         String COOKIE_MANAGER_ERROR = "cookie_manager_error";
         String PENDING_INTENT_WAS_NULL = "pending_intent_null_streaks";
         String FAIL_REFRESH_TOKEN_INLINE_GETTING = "fail_refresh_token_online_get";
-        java.lang.String COOKIE_WAS_EMPTY = "cookie_was_empty";
+        String COOKIE_WAS_EMPTY = "cookie_was_empty";
         String FAIL_LOGOUT_WHEN_REFRESH = "refresh_fail_logout_social";
         String UNITS_LOADING_FAIL = "units_loading_fail";
     }
@@ -242,11 +242,11 @@ public interface Analytic {
     interface Steps {
         String CORRECT_SUBMISSION_FILL = "submission_correct_fill"; // it can be existing submission, use in chain.
         String WRONG_SUBMISSION_FILL = "submission_wrong_fill";
-        java.lang.String SHARE_OPEN_IN_BROWSER = "step_share_open_in_browser";
-        java.lang.String COPY_LINK = "step_share_copy";
-        java.lang.String SHARE_ALL = "steps_share_all";
-        java.lang.String SHOW_KEEP_ON_SCREEN = "steps_show_keep_on_screen";
-        java.lang.String SHOW_KEEP_OFF_SCREEN = "steps_show_keep_off_screen";
+        String SHARE_OPEN_IN_BROWSER = "step_share_open_in_browser";
+        String COPY_LINK = "step_share_copy";
+        String SHARE_ALL = "steps_share_all";
+        String SHOW_KEEP_ON_SCREEN = "steps_show_keep_on_screen";
+        String SHOW_KEEP_OFF_SCREEN = "steps_show_keep_off_screen";
     }
 
     interface Calendar {
@@ -257,7 +257,7 @@ public interface Analytic {
         String SHOW_CALENDAR_AS_WIDGET = "calendar_shown_as_widget";
         String SHOW_CALENDAR = "calendar_shown"; // course with deadlines in future //// FIXME: 13.01.17 this metric has doubled number of events
         String HIDE_WIDGET_FROM_PREFS = "widget_hidden_from_prefs"; //// FIXME: 13.01.17 this metric has doubled number of events
-        java.lang.String USER_CLICK_NOT_NOW = "calendar_click_not_now";
+        String USER_CLICK_NOT_NOW = "calendar_click_not_now";
     }
 
     interface DeepLink {
@@ -296,25 +296,25 @@ public interface Analytic {
         String OPEN_NO_INTERNET = "profile_no_internet";
         String STREAK_NO_INTERNET = "profile_no_internet_streak";
         String OPEN_BY_LINK = "profile_open_by_link";
-        java.lang.String CLICK_IMAGE = "profile_click_avatar";
-        java.lang.String CLICK_STREAK_VALUE = "profile_click_streak";
-        java.lang.String CLICK_FULL_NAME = "profile_click_full_name";
-        java.lang.String OPEN_SCREEN_OVERALL = "profile_open_screen_overall";
+        String CLICK_IMAGE = "profile_click_avatar";
+        String CLICK_STREAK_VALUE = "profile_click_streak";
+        String CLICK_FULL_NAME = "profile_click_full_name";
+        String OPEN_SCREEN_OVERALL = "profile_open_screen_overall";
     }
 
     interface Streak {
         String SWITCH_NOTIFICATION_IN_MENU = "streak_switch_notification_state";
-        java.lang.String CHOOSE_INTERVAL_PROFILE = "streak_choose_interval_profile";
-        java.lang.String CHOOSE_INTERVAL_CANCELED_PROFILE = "streak_choose_interval_canceled_profile";
-        java.lang.String CHOOSE_INTERVAL_CANCELED = "streak_choose_interval_canceled";
-        java.lang.String CHOOSE_INTERVAL = "streak_choose_interval";
-        java.lang.String CAN_SHOW_DIALOG = "streak_can_show_dialog";
-        java.lang.String SHOW_DIALOG_UNDEFINED_STREAKS = "streak_show_dialog_undefined";
-        java.lang.String SHOW_DIALOG_POSITIVE_STREAKS = "streak_show_dialog_positive";
-        java.lang.String STREAK_NOTIFICATION_OPENED = "streak_notification_opened";
-        java.lang.String NEGATIVE_MATERIAL_DIALOG = "streak_material_dialog_negative";
-        java.lang.String POSITIVE_MATERIAL_DIALOG = "streak_material_dialog_positive";
-        java.lang.String SHOWN_MATERIAL_DIALOG = "streak_material_dialog_shown";
+        String CHOOSE_INTERVAL_PROFILE = "streak_choose_interval_profile";
+        String CHOOSE_INTERVAL_CANCELED_PROFILE = "streak_choose_interval_canceled_profile";
+        String CHOOSE_INTERVAL_CANCELED = "streak_choose_interval_canceled";
+        String CHOOSE_INTERVAL = "streak_choose_interval";
+        String CAN_SHOW_DIALOG = "streak_can_show_dialog";
+        String SHOW_DIALOG_UNDEFINED_STREAKS = "streak_show_dialog_undefined";
+        String SHOW_DIALOG_POSITIVE_STREAKS = "streak_show_dialog_positive";
+        String STREAK_NOTIFICATION_OPENED = "streak_notification_opened";
+        String NEGATIVE_MATERIAL_DIALOG = "streak_material_dialog_negative";
+        String POSITIVE_MATERIAL_DIALOG = "streak_material_dialog_positive";
+        String SHOWN_MATERIAL_DIALOG = "streak_material_dialog_shown";
         String GET_NON_ZERO_STREAK_NOTIFICATION = "streak_get_non_zero_notification";
         String GET_ZERO_STREAK_NOTIFICATION = "streak_get_zero_notification";
         String GET_NO_INTERNET_NOTIFICATION = " streak_get_no_internet_notification";
