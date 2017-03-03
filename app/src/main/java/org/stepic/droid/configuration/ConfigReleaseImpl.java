@@ -36,14 +36,13 @@ public class ConfigReleaseImpl implements Config {
     private static final String COURSE_CLOSEABLE = "COURSE_CLOSEABLE";
     private static final String CUSTOM_UPDATE = "CUSTOM_UPDATE";
     private static final String UPDATE_ENDPOINT = "UPDATE_ENDPOINT";
-    private static final String CUSTOM_UPDATING_VERSION = "CUSTOM_UPDATING_VERSION";
     private static final String FIREBASE_DOMAIN = "FIREBASE_DOMAIN";
     private static final String GOOGLE_SERVER_CLIENT_ID = "GOOGLE_SERVER_CLIENT_ID";
-    private static final java.lang.String TERMS_OF_SERVICE = "TERMS_OF_SERVICE";
-    private static final java.lang.String PRIVACY_POLICY = "PRIVACY_POLICY";
-    private static final java.lang.String MIXPANEL_TOKEN = "MIXPANEL_TOKEN";
-    private static final java.lang.String CSRF_COOKIE_NAME = "CSRF_COOKIE_NAME";
-    private static final java.lang.String SESSION_COOKIE_NAME = "SESSION_COOKIE_NAME";
+    private static final String TERMS_OF_SERVICE = "TERMS_OF_SERVICE";
+    private static final String PRIVACY_POLICY = "PRIVACY_POLICY";
+    private static final String MIXPANEL_TOKEN = "MIXPANEL_TOKEN";
+    private static final String CSRF_COOKIE_NAME = "CSRF_COOKIE_NAME";
+    private static final String SESSION_COOKIE_NAME = "SESSION_COOKIE_NAME";
 
 
     @Inject
@@ -197,15 +196,6 @@ public class ConfigReleaseImpl implements Config {
         JsonElement element = getObject(key);
         if (element != null) {
             return element.getAsBoolean();
-        } else {
-            return defaultValue;
-        }
-    }
-
-    private int getInt(String key, int defaultValue) {
-        JsonElement element = getObject(key);
-        if (element != null) {
-            return element.getAsInt();
         } else {
             return defaultValue;
         }

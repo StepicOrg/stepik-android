@@ -4,18 +4,29 @@ import org.stepic.droid.web.Api;
 
 public interface Config {
     String getOAuthClientId(Api.TokenType type);
+
     String getBaseUrl();
+
     String getOAuthClientSecret(Api.TokenType type);
+
     String getGrantType(Api.TokenType type);
+
     String getRefreshGrantType();
+
     String getDatePattern();
+
     String getDatePatternForView();
+
     String getIDSParam();
 
     String getRedirectUri();
+
     String getZendeskHost();
+
     boolean isUserCanDropCourse();
+
     boolean isCustomUpdateEnable();
+
     String getUpdateEndpoint();
 
     String getFirebaseDomain();
@@ -28,7 +39,7 @@ public interface Config {
 
     String getMixpanelToken();
 
-    String getCsrfTokenCookieName ();
+    String getCsrfTokenCookieName();
 
     String getSessionCookieName();
 }
