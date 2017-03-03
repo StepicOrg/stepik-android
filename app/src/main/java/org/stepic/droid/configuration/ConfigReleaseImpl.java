@@ -28,7 +28,6 @@ public class ConfigReleaseImpl implements Config {
     private static final String OAUTH_CLIENT_SECRET_SOCIAL = "OAUTH_CLIENT_SECRET_SOCIAL";
     private static final String GRANT_TYPE_SOCIAL = "GRANT_TYPE_SOCIAL";
     private static final String REFRESH_GRANT_TYPE = "REFRESH_GRANT_TYPE";
-    private static final String DATE_PATTERN = "DATE_PATTERN";
     private static final String DATE_PATTERN_FOR_VIEW = "DATE_PATTERN_FOR_VIEW";
     private static final String ARRAY_IDS_PARAM = "ARRAY_IDS_PARAM";
     private static final String REDIRECT_URI = "REDIRECT_URI";
@@ -102,11 +101,6 @@ public class ConfigReleaseImpl implements Config {
     @Override
     public String getRefreshGrantType() {
         return getString(REFRESH_GRANT_TYPE);
-    }
-
-    @Override
-    public String getDatePattern() {
-        return getString(DATE_PATTERN);
     }
 
     @Override

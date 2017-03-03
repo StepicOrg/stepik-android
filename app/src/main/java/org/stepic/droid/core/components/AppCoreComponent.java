@@ -21,7 +21,6 @@ import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.modules.UnitsModule;
 import org.stepic.droid.core.modules.VideoModule;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.model.Section;
 import org.stepic.droid.notifications.HackFcmListener;
 import org.stepic.droid.notifications.HackerFcmInstanceId;
 import org.stepic.droid.notifications.NotificationBroadcastReceiver;
@@ -111,8 +110,6 @@ public interface AppCoreComponent {
     void inject(ApiImpl api);
 
     void inject(DiscountingPolicyDialogFragment dialogFragment);
-
-    void inject(Section section);
 
     void inject(UnitAdapter adapter);
 

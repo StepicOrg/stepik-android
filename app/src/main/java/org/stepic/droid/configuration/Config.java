@@ -13,8 +13,6 @@ public interface Config {
 
     String getRefreshGrantType();
 
-    String getDatePattern();
-
     String getDatePatternForView();
 
     String getIDSParam();
