@@ -253,10 +253,10 @@
         календаря
     </string>
     <string name="certificates_title">Сертификаты</string>
-    <string name="certificate_regular_with_substitution">Сертификат за курс %textPlainType</string>
-    <string name="certificate_distinction_with_substitution">Сертификат с отличием за курс %textPlainType
+    <string name="certificate_regular_with_substitution">Сертификат за курс %s</string>
+    <string name="certificate_distinction_with_substitution">Сертификат с отличием за курс %s
     </string>
-    <string name="certificate_result_with_substitution">Результат: %textPlainType%%</string>
+    <string name="certificate_result_with_substitution">Результат: %s%%</string>
     <string name="copy_link_title">Копировать ссылку</string>
     <string name="link_copied_title">Ссылка скопирована</string>
     <string name="certificate_share_share_link">Поделиться…</string>
@@ -413,7 +413,7 @@
     <string name="streak_notification_not_working">Похоже напоминания не действуют. Мы больше не
         будем их посылать. Нажмите, чтобы включить снова
     </string>
-    <string name="streak_updated_timezone">Рекорды обновляются в %textPlainType</string>
+    <string name="streak_updated_timezone">Рекорды обновляются в %s</string>
     <string name="about_app">О приложении</string>
     <string name="terms_of_service_title">Условия использования</string>
     <string name="privacy_policy_title">Политика конфиденциальности</string>
