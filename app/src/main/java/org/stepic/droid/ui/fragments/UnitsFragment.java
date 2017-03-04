@@ -160,7 +160,6 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         ProgressHelper.activate(progressBar);
 
         bus.register(this);
-        downloadingProgressUnitsPresenter.attachView(this);
         unitsPresenter.attachView(this);
         unitsPresenter.showUnits(section, false);
     }
@@ -168,7 +167,6 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @Override
     public void onDestroyView() {
         unitsPresenter.detachView(this);
-        downloadingProgressUnitsPresenter.detachView(this);
         bus.unregister(this);
 
         lessonManager.reset();
@@ -177,7 +175,15 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        downloadingProgressUnitsPresenter.attachView(this);
+        downloadingProgressUnitsPresenter.subscribeToProgressUpdates(lessonList);
+    }
+
+    @Override
     public void onStop() {
+        downloadingProgressUnitsPresenter.detachView(this);
         super.onStop();
         ProgressHelper.dismiss(swipeRefreshLayout);
     }

@@ -14,14 +14,20 @@ class DownloadingProgressSectionsPresenter(
         }
     }
 
+    private var isSubscribed = false
+
     fun subscribeToProgressUpdates(sections: List<Section>) {
-        val sectionIds = sections.map(Section::id)
-        downloadingProgressSectionPublisher.subscribe(sectionIds, downloadCallback)
+        if (!isSubscribed && sections.isNotEmpty()) {
+            val sectionIds = sections.map(Section::id)
+            downloadingProgressSectionPublisher.subscribe(sectionIds, downloadCallback)
+            isSubscribed = true
+        }
     }
 
     override fun detachView(view: DownloadingProgressSectionsView) {
         super.detachView(view)
         downloadingProgressSectionPublisher.unsubscribe()
+        isSubscribed = false
     }
 
 }

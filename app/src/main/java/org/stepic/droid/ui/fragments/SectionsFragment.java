@@ -121,8 +121,7 @@ public class SectionsFragment
     private static final int ANIMATION_DURATION = 0;
 
     public static SectionsFragment newInstance() {
-        SectionsFragment fragment = new SectionsFragment();
-        return fragment;
+        return new SectionsFragment();
     }
 
 
@@ -200,10 +199,8 @@ public class SectionsFragment
     DownloadingProgressSectionsPresenter downloadingProgressSectionsPresenter;
 
     private boolean wasIndexed;
-    private Uri urlInApp;
     private Uri urlInWeb;
     private String title;
-    private String description;
     private Map<Long, SectionLoadingState> sectionIdToLoadingStateMap = new HashMap<>();
 
     LinearLayoutManager linearLayoutManager;
@@ -265,7 +262,6 @@ public class SectionsFragment
         courseJoinerPresenter.attachView(this);
         sectionsPresenter.attachView(this);
         invitationPresenter.attachView(this);
-        downloadingProgressSectionsPresenter.attachView(this);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         onNewIntent(((AppCompatActivity) getActivity()).getIntent());
@@ -287,9 +283,7 @@ public class SectionsFragment
 
         if (course != null && course.getSlug() != null && !wasIndexed) {
             title = getString(R.string.syllabus_title) + ": " + course.getTitle();
-            description = course.getSummary();
             urlInWeb = Uri.parse(StringUtil.getUriForSyllabus(config.getBaseUrl(), course.getSlug()));
-            urlInApp = StringUtil.getAppUriForCourseSyllabus(config.getBaseUrl(), course.getSlug());
             reportIndexToGoogle();
         }
 
@@ -458,10 +452,13 @@ public class SectionsFragment
     public void onStart() {
         super.onStart();
         reportIndexToGoogle();
+        downloadingProgressSectionsPresenter.attachView(this);
+        downloadingProgressSectionsPresenter.subscribeToProgressUpdates(sectionList);
     }
 
     @Override
     public void onStop() {
+        downloadingProgressSectionsPresenter.detachView(this);
         super.onStop();
         if (wasIndexed) {
             FirebaseUserActions.getInstance().end(getAction());
@@ -472,17 +469,6 @@ public class SectionsFragment
 
     public Action getAction() {
         return Actions.newView(title, urlInWeb.toString());
-//        Thing object = new Thing.Builder()
-//                .setId(urlInWeb.toString())
-//                .setName(title)
-//                .setDescription(description)
-//                .setUrl(urlInApp)
-//                .build();
-//
-//        return new Action.Builder(Action.TYPE_VIEW)
-//                .setObject(object)
-//                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-//                .build();
     }
 
     @Override

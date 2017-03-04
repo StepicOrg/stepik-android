@@ -15,20 +15,26 @@ class DownloadingProgressUnitsPresenter(
         }
     }
 
+    private var isSubscribed = false
+
 
     fun subscribeToProgressUpdates(lessonList: List<Lesson>) {
-        val lessonStepsMap = HashMap<Long, Set<Long>>()
-        lessonList.forEach {
-            val steps = it.steps
-            if (steps != null) {
-                lessonStepsMap[it.id] = steps.toSet()
+        if (!isSubscribed && lessonList.isNotEmpty()) {
+            val lessonStepsMap = HashMap<Long, Set<Long>>()
+            lessonList.forEach {
+                val steps = it.steps
+                if (steps != null) {
+                    lessonStepsMap[it.id] = steps.toSet()
+                }
             }
+            downloadingProgressUnitPublisher.subscribe(lessonStepsMap, downloadCallback)
+            isSubscribed = true
         }
-        downloadingProgressUnitPublisher.subscribe(lessonStepsMap, downloadCallback)
     }
 
     override fun detachView(view: DownloadingProgressUnitsView) {
         super.detachView(view)
         downloadingProgressUnitPublisher.unsubscribe()
+        isSubscribed = false
     }
 }
