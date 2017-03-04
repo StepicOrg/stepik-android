@@ -377,6 +377,10 @@ class DatabaseFacade {
         coursesFeaturedDao.removeAll()
     }
 
+    fun dropEnrolledCourses () {
+        coursesEnrolledDao.removeAll()
+    }
+
     fun dropFeaturedCourses() {
         coursesFeaturedDao.removeAll()
     }
