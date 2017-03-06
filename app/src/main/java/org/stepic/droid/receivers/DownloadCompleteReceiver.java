@@ -29,6 +29,8 @@ import java.io.File;
 
 import javax.inject.Inject;
 
+import timber.log.Timber;
+
 public class DownloadCompleteReceiver extends BroadcastReceiver {
 
     @Inject
@@ -59,6 +61,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         final long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+        Timber.d("referenceId = %d", referenceId);
 
         threadSingleThreadExecutor.execute(new Runnable() {
             @Override

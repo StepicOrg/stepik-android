@@ -74,31 +74,33 @@ class DownloadingProgressUnitPublisher(private val databaseFacade: DatabaseFacad
             }
 
             private fun processOneLesson(lessonId: Long, stepIds: Set<Long>) {
-                val pairCursorAndDownloading = getCursorForSteps(stepIds) ?: return
+                val pairCursorAndDownloading = getCursorForSteps(stepIds)
 
-                val cursor = pairCursorAndDownloading.first
-                val entitiesMap: Map<Int, DownloadEntity> = pairCursorAndDownloading.second.associate { kotlin.Pair(it.downloadId.toInt(), it) }
+                val cursor = pairCursorAndDownloading?.first
+                val entitiesMap: Map<Int, DownloadEntity>? = pairCursorAndDownloading?.second?.associate { kotlin.Pair(it.downloadId.toInt(), it) }
 
                 val stepIdToProgress = HashMap<Long, Float>()
-                cursor.use { cursor ->
-                    cursor.moveToFirst()
-                    while (!cursor.isAfterLast) {
-                        val bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
-                        val bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
-                        val columnStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
-                        val downloadId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID))
+                if (entitiesMap != null) {
+                    cursor?.use { cursor ->
+                        cursor.moveToFirst()
+                        while (!cursor.isAfterLast) {
+                            val bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
+                            val bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
+                            val columnStatus = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
+                            val downloadId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID))
 
-                        val relatedDownloadEntity = entitiesMap[downloadId]
+                            val relatedDownloadEntity = entitiesMap[downloadId]
 
-                        if (relatedDownloadEntity != null && !cancelSniffer.isStepIdCanceled(relatedDownloadEntity.stepId)) {
-                            if (columnStatus == DownloadManager.STATUS_SUCCESSFUL) {
-                                stepIdToProgress[relatedDownloadEntity.stepId] = 1f
-                            } else {
-                                stepIdToProgress[relatedDownloadEntity.stepId] = bytes_downloaded.toFloat() / bytes_total
+                            if (relatedDownloadEntity != null && !cancelSniffer.isStepIdCanceled(relatedDownloadEntity.stepId)) {
+                                if (columnStatus == DownloadManager.STATUS_SUCCESSFUL) {
+                                    stepIdToProgress[relatedDownloadEntity.stepId] = 1f
+                                } else {
+                                    stepIdToProgress[relatedDownloadEntity.stepId] = bytes_downloaded.toFloat() / bytes_total
+                                }
                             }
-                        }
 
-                        cursor.moveToNext()
+                            cursor.moveToNext()
+                        }
                     }
                 }
 
