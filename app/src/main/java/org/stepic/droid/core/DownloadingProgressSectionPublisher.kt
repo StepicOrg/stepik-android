@@ -9,7 +9,6 @@ import org.stepic.droid.model.Unit
 import org.stepic.droid.store.CancelSniffer
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
-import timber.log.Timber
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -176,8 +175,11 @@ class DownloadingProgressSectionPublisher(private val databaseFacade: DatabaseFa
 
                 val partialProgressValue = partialProgress
 
-                mainHandler.post {
-                    downloadingProgressCallback?.onProgressChanged(sectionId, partialProgressValue)
+                val isAnyStepLoading = dbVideoSteps.find { it.is_loading } != null
+                if (partialProgressValue >= 0 && isAnyStepLoading) {
+                    mainHandler.post {
+                        downloadingProgressCallback?.onProgressChanged(sectionId, partialProgressValue)
+                    }
                 }
             }
 

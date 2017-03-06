@@ -133,9 +133,12 @@ class DownloadingProgressUnitPublisher(private val databaseFacade: DatabaseFacad
                 partialProgress /= stepIdToProgress.size
 
                 val partialProgressValue = partialProgress
+                val isAnyStepLoading: Boolean = dbVideoSteps.find { it.is_loading } != null
 
-                mainHandler.post {
-                    downloadingProgressCallback?.onProgressChanged(lessonId, partialProgressValue)
+                if (isAnyStepLoading && partialProgressValue > 0f) {
+                    mainHandler.post {
+                        downloadingProgressCallback?.onProgressChanged(lessonId, partialProgressValue)
+                    }
                 }
 
             }
