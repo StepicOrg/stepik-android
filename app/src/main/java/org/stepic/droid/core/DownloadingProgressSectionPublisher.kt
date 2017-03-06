@@ -177,7 +177,6 @@ class DownloadingProgressSectionPublisher(private val databaseFacade: DatabaseFa
                 val partialProgressValue = partialProgress
 
                 mainHandler.post {
-                    Timber.d("sectionId = %s, progress = %f", sectionId, partialProgressValue)
                     downloadingProgressCallback?.onProgressChanged(sectionId, partialProgressValue)
                 }
             }
