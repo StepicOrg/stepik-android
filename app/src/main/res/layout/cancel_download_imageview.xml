@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
     android:id="@+id/cancel_load"
-    android:layout_width="56dp"
-    android:layout_height="56dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/progress_clickable_size"
+    android:layout_height="@dimen/progress_clickable_size"
     android:layout_gravity="center"
     android:clickable="true"
     android:focusable="true"
     android:foreground="@drawable/circle_foreground">
 
-    <ImageView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_cancel_white_24px" />
+    <include layout="@layout/view_download_progress_determinate"/>
 
 </FrameLayout>

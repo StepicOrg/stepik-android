@@ -1,7 +1,7 @@
 package org.stepic.droid.core.presenters
 
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView
 import org.stepic.droid.notifications.LocalReminder
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadPoolExecutor
 
 class NotificationTimePresenter(val analytic: Analytic,
                                 val threadPoolExecutor: ThreadPoolExecutor,
-                                val mainHandler: IMainHandler,
+                                val mainHandler: MainHandler,
                                 val sharedPreferenceHelper: SharedPreferenceHelper,
                                 val localReminder: LocalReminder) : PresenterBase<NotificationTimeView>() {
     fun tryShowNotificationSetting() {

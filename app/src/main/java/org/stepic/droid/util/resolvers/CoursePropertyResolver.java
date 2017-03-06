@@ -4,7 +4,7 @@ import android.support.annotation.StringRes;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CourseProperty;
 
@@ -56,7 +56,7 @@ public class CoursePropertyResolver {
     private void addIfNotEmpty(ArrayList<CourseProperty> result, String propertyValue, Type type) {
         if (propertyValue != null && !propertyValue.equals("")) {
             int titleRes = type.getTitleRes();
-            String title = MainApplication.getAppContext().getResources().getString(titleRes);
+            String title = App.getAppContext().getResources().getString(titleRes);
             CourseProperty aboutCourseProperty = new CourseProperty(title, propertyValue, type);
             result.add(aboutCourseProperty);
         }

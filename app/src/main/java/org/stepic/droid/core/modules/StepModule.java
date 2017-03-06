@@ -3,7 +3,7 @@ package org.stepic.droid.core.modules;
 import android.content.Context;
 
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.presenters.AnonymousPresenter;
@@ -18,7 +18,7 @@ import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.util.resolvers.StepTypeResolverImpl;
 import org.stepic.droid.util.resolvers.VideoResolver;
-import org.stepic.droid.web.IApi;
+import org.stepic.droid.web.Api;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -31,8 +31,8 @@ public class StepModule {
     @Provides
     @PerFragment
     VideoStepPresenter provideVideoStepPresenter(ThreadPoolExecutor threadPoolExecutor,
-                                                 IMainHandler mainHandler,
-                                                 IApi api,
+                                                 MainHandler mainHandler,
+                                                 Api api,
                                                  DatabaseFacade databaseFacade,
                                                  VideoResolver videoResolver,
                                                  Analytic analytic) {
@@ -41,14 +41,14 @@ public class StepModule {
 
     @Provides
     @PerFragment
-    AnonymousPresenter anonymousPresenter(SharedPreferenceHelper sharedPreferenceHelper, ThreadPoolExecutor threadPoolExecutor, IMainHandler mainHandler) {
+    AnonymousPresenter anonymousPresenter(SharedPreferenceHelper sharedPreferenceHelper, ThreadPoolExecutor threadPoolExecutor, MainHandler mainHandler) {
         return new AnonymousPresenter(sharedPreferenceHelper, threadPoolExecutor, mainHandler);
     }
 
     @Provides
     RouteStepPresenter provideNextStepPresenter(
             ThreadPoolExecutor threadPoolExecutor,
-            IMainHandler mainHandler,
+            MainHandler mainHandler,
             DatabaseFacade databaseFacade,
             Analytic analytic) {
         return new RouteStepPresenter(threadPoolExecutor, mainHandler, databaseFacade, analytic);
@@ -57,9 +57,9 @@ public class StepModule {
     @Provides
     @PerFragment
     StepsPresenter provideStepPresenter(ThreadPoolExecutor threadPoolExecutor,
-                                        IMainHandler mainHandler,
+                                        MainHandler mainHandler,
                                         DatabaseFacade databaseFacade,
-                                        IApi api,
+                                        Api api,
                                         SharedPreferenceHelper sharedPreferenceHelper) {
         return new StepsPresenter
                 (threadPoolExecutor,
@@ -72,7 +72,7 @@ public class StepModule {
     @Provides
     @PerFragment
     StepQualityPresenter provideStepQualityPresenter(ThreadPoolExecutor executor,
-                                                     IMainHandler mainHandler,
+                                                     MainHandler mainHandler,
                                                      DatabaseFacade databaseFacade,
                                                      UserPreferences userPreferences,
                                                      Analytic analytic) {
@@ -91,10 +91,10 @@ public class StepModule {
 
     @Provides
     @PerFragment
-    StepAttemptPresenter provideStepAttemptProvider(IMainHandler mainHandler,
+    StepAttemptPresenter provideStepAttemptProvider(MainHandler mainHandler,
                                                     ThreadPoolExecutor threadPoolExecutor,
                                                     LessonSessionManager lessonSessionManager,
-                                                    IApi api,
+                                                    Api api,
                                                     Analytic analytic,
                                                     SharedPreferenceHelper sharedPreferenceHelper) {
         return new StepAttemptPresenter(mainHandler,

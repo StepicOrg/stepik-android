@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 
 public class DpPixelsHelper {
     /**
@@ -22,7 +22,7 @@ public class DpPixelsHelper {
     }
 
     public static float convertDpToPixel(float dp) {
-        return convertDpToPixel(dp, MainApplication.getAppContext());
+        return convertDpToPixel(dp, App.getAppContext());
     }
 
 

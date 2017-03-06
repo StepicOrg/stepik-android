@@ -11,7 +11,7 @@ import biz.kasual.materialnumberpicker.MaterialNumberPicker
 import com.afollestad.materialdialogs.MaterialDialog
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.util.TimeIntervalUtil
 import timber.log.Timber
@@ -37,7 +37,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
     var picker: MaterialNumberPicker? = null
 
     init {
-        MainApplication.component().inject(this)
+        App.component().inject(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -64,7 +64,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
                 .customView(picker!!, false)
                 .positiveText(R.string.ok)
                 .negativeText(R.string.cancel)
-                .onPositive { dialog, which ->
+                .onPositive { _, _ ->
                     //todo set result to Ok with position
                     val data = Intent()
                     data.putExtra(resultIntervalCodeKey, picker?.value)

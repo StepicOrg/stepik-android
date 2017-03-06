@@ -20,13 +20,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.configuration.IConfig;
-import org.stepic.droid.core.IShell;
+import org.stepic.droid.base.App;
+import org.stepic.droid.configuration.Config;
+import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.store.operations.Table;
-import org.stepic.droid.util.StepicLogicHelper;
+import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 
 import java.util.List;
@@ -40,13 +40,13 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
 
 
     @Inject
-    IConfig config;
+    Config config;
 
     @Inject
     TextResolver textResolver;
 
     @Inject
-    IShell shell;
+    Shell shell;
 
     @Inject
     Analytic analytic;
@@ -68,7 +68,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         this.courses = courses;
         this.continueCoursePresenter = continueCoursePresenter;
         inflater = (LayoutInflater) contextActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        MainApplication.component().inject(this);
+        App.component().inject(this);
         coursePlaceholder = ContextCompat.getDrawable(fragment.getContext(), R.drawable.ic_course_placeholder);
     }
 
@@ -184,7 +184,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
             courseSummary.setText(textResolver.fromHtml(course.getSummary()).toString());
             Glide
                     .with(contextActivity)
-                    .load(StepicLogicHelper.getPathForCourseOrEmpty(course, config))
+                    .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
                     .placeholder(coursePlaceholder)
                     .centerCrop()
                     .into(imageViewTarget);

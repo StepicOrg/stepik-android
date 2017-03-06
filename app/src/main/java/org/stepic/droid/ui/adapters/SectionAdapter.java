@@ -20,15 +20,16 @@ import android.widget.TextView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.IShell;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
+import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
-import org.stepic.droid.store.CleanManager;
-import org.stepic.droid.store.IDownloadManager;
+import org.stepic.droid.model.SectionLoadingState;
+import org.stepic.droid.store.SectionDownloader;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
 import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
 import org.stepic.droid.ui.dialogs.OnLoadPositionListener;
 import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
@@ -36,6 +37,7 @@ import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
+import org.stepic.droid.util.SectionUtilKt;
 import org.stepic.droid.viewmodel.ProgressViewModel;
 
 import java.util.List;
@@ -47,6 +49,7 @@ import javax.inject.Inject;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericViewHolder> implements OnClickLoadListener, OnLoadPositionListener {
     private final static String SECTION_TITLE_DELIMETER = ". ";
@@ -62,22 +65,20 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     ScreenManager screenManager;
 
     @Inject
-    IDownloadManager downloadManager;
-
-    @Inject
     DatabaseFacade databaseFacade;
 
     @Inject
-    IShell shell;
-
-    @Inject
-    CleanManager cleaner;
+    Shell shell;
 
     @Inject
     Analytic analytic;
 
     @Inject
     ThreadPoolExecutor threadPoolExecutor;
+
+    @Inject
+    SectionDownloader sectionDownloader;
+
 
     private List<Section> sections;
     private AppCompatActivity activity;
@@ -88,20 +89,22 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     @ColorInt
     private int defaultColor;
     private Map<String, ProgressViewModel> progressMap;
+    private Map<Long, SectionLoadingState> sectionIdToLoadingStateMap;
     private final int durationMillis = 3000;
 
     public void setDefaultHighlightPosition(int defaultHighlightPosition) {
         this.defaultHighlightPosition = defaultHighlightPosition;
     }
 
-    public SectionAdapter(List<Section> sections, AppCompatActivity activity, CalendarPresenter calendarPresenter, Map<String, ProgressViewModel> progressMap) {
+    public SectionAdapter(List<Section> sections, AppCompatActivity activity, CalendarPresenter calendarPresenter, Map<String, ProgressViewModel> progressMap, Map<Long, SectionLoadingState> sectionIdToLoadingStateMap) {
         this.sections = sections;
         this.activity = activity;
         this.calendarPresenter = calendarPresenter;
         highlightDrawable = ContextCompat.getDrawable(activity, R.drawable.section_background);
         defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.white, activity);
         this.progressMap = progressMap;
-        MainApplication.component().inject(this);
+        this.sectionIdToLoadingStateMap = sectionIdToLoadingStateMap;
+        App.component().inject(this);
     }
 
 
@@ -154,7 +157,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
             final Section section = sections.get(sectionPosition);
 
-            int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
+            int permissionCheck = ContextCompat.checkSelfPermission(App.getAppContext(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
@@ -184,20 +187,31 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
             if (section.is_cached()) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_SECTION, section.getId() + "");
-                cleaner.removeSection(section);
                 section.set_loading(false);
                 section.set_cached(false);
                 threadPoolExecutor.execute(new Runnable() {
                     @Override
                     public void run() {
                         databaseFacade.updateOnlyCachedLoadingSection(section);
+                        sectionDownloader.deleteWholeSection(section.getId());
                     }
                 });
                 notifyItemChanged(adapterPosition);
             } else {
                 if (section.is_loading()) {
+                    //cancel loading
                     analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_SECTION, section.getId() + "");
-                    screenManager.showDownload(activity);
+                    section.set_loading(false);
+                    section.set_cached(false);
+                    threadPoolExecutor.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            databaseFacade.updateOnlyCachedLoadingSection(section);
+                            sectionDownloader.cancelSectionLoading(section.getId());
+                        }
+                    });
+
+                    notifyItemChanged(adapterPosition);
                 } else {
                     if (shell.getSharedPreferenceHelper().isNeedToShowVideoQualityExplanation()) {
                         VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(adapterPosition);
@@ -219,7 +233,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         int sectionPosition = adapterPosition - PRE_SECTION_LIST_DELTA;
         if (sectionPosition >= 0 && sectionPosition < sections.size()) {
             final Section section = sections.get(sectionPosition);
-
             analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_SECTION, section.getId() + "");
             section.set_cached(false);
             section.set_loading(true);
@@ -227,7 +240,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 @Override
                 public void run() {
                     databaseFacade.updateOnlyCachedLoadingSection(section);
-                    downloadManager.addSection(section);
+                    sectionDownloader.downloadSection(section.getId());
                 }
             });
             notifyItemChanged(adapterPosition);
@@ -280,7 +293,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         View preLoadIV;
 
         @BindView(R.id.when_load_view)
-        View whenLoad;
+        ProgressWheel whenLoad;
 
         @BindView(R.id.after_load_iv)
         View afterLoad;
@@ -300,6 +313,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
         @BindView(R.id.section_student_progress_score_bar)
         ProgressBar progressScore;
+
+        private long oldSectionId = -1;
 
 
         public SectionViewHolder(View itemView) {
@@ -343,6 +358,16 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             int position = positionInAdapter - PRE_SECTION_LIST_DELTA;
             Section section = sections.get(position);
 
+            Timber.d("onBind Holder = %s", this);
+            long sectionId = section.getId();
+            boolean needAnimation = true;
+            if (oldSectionId != sectionId) {
+                //if rebinding than animation is not needed
+                oldSectionId = sectionId;
+                needAnimation = false;
+            }
+
+
             String title = section.getTitle();
             int positionOfSection = section.getPosition();
             title = positionOfSection + SECTION_TITLE_DELIMETER + title;
@@ -376,9 +401,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 hardDeadline.setVisibility(View.VISIBLE);
             }
 
-            if ((section.is_active() || (section.getActions() != null && section.getActions().getTest_section() != null)) && course.getEnrollment() > 0 && !section.isExam()) {
+            if (SectionUtilKt.hasUserAccess(section, course)) {
 
-                int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, MainApplication.getAppContext());
+                int strong_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_regular_text, App.getAppContext());
 
                 sectionTitle.setTextColor(strong_text_color);
                 cv.setFocusable(false);
@@ -387,14 +412,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
                 loadButton.setVisibility(View.VISIBLE);
                 if (section.is_cached()) {
-
-                    // FIXME: 05.11.15 Delete course from cache. Set CLICK LISTENER.
                     //cached
-
                     preLoadIV.setVisibility(View.GONE);
                     whenLoad.setVisibility(View.INVISIBLE);
                     afterLoad.setVisibility(View.VISIBLE); //can
 
+                    whenLoad.setProgressPortion(0, false);
                 } else {
                     if (section.is_loading()) {
 
@@ -402,12 +425,18 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                         whenLoad.setVisibility(View.VISIBLE);
                         afterLoad.setVisibility(View.GONE);
 
-                        //todo: add cancel of downloading
+                        SectionLoadingState sectionLoadingState = sectionIdToLoadingStateMap.get(section.getId());
+                        if (sectionLoadingState != null) {
+                            whenLoad.setProgressPortion(sectionLoadingState.getPortion(), needAnimation);
+                        }
+
                     } else {
                         //not cached not loading
                         preLoadIV.setVisibility(View.VISIBLE);
                         whenLoad.setVisibility(View.INVISIBLE);
                         afterLoad.setVisibility(View.GONE);
+
+                        whenLoad.setProgressPortion(0, false);
                     }
 
                 }
@@ -419,7 +448,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
                 whenLoad.setVisibility(View.INVISIBLE);
                 afterLoad.setVisibility(View.GONE);
 
-                int weak_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_weak_text, MainApplication.getAppContext());
+                int weak_text_color = ColorUtil.INSTANCE.getColorArgb(R.color.stepic_weak_text, App.getAppContext());
                 sectionTitle.setTextColor(weak_text_color);
                 cv.setFocusable(false);
                 cv.setClickable(false);

@@ -20,7 +20,7 @@ import com.caverock.androidsvg.SVG;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.model.User;
 import org.stepic.droid.util.UserExtensionKt;
@@ -47,7 +47,7 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.In
     public ScreenManager screenManager;
 
     public InstructorAdapter(List<User> instructors, Activity activity) {
-        MainApplication.component().inject(this);
+        App.component().inject(this);
         this.instructors = instructors;
         this.activity = activity;
         placeholder = ContextCompat.getDrawable(activity, R.drawable.placeholder_icon_trnsp);

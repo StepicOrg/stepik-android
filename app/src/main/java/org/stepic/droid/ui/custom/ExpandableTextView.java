@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 
 import javax.inject.Inject;
@@ -32,14 +32,14 @@ public class ExpandableTextView extends TextView {
     public ExpandableTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        MainApplication.component().inject(this);
+        App.component().inject(this);
 
         if (isInEditMode()) {
             ELLIPSIS = "<font color=" + "#CCCCCC" + ">"
                     + "more..." + "</font>";
         } else {
-            ELLIPSIS = "<font color=" + MainApplication.getAppContext().getResources().getColor(R.color.default_color_of_link) + ">"
-                    + MainApplication.getAppContext().getString(R.string.tap_to_see_more) + "</font>";
+            ELLIPSIS = "<font color=" + App.getAppContext().getResources().getColor(R.color.default_color_of_link) + ">"
+                    + App.getAppContext().getString(R.string.tap_to_see_more) + "</font>";
         }
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ExpandableTextView);

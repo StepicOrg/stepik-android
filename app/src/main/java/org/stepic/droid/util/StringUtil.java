@@ -6,8 +6,8 @@ import android.net.Uri;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.base.App;
+import org.stepic.droid.configuration.Config;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Step;
@@ -46,7 +46,7 @@ public class StringUtil {
         return stringBuilder.toString();
     }
 
-    public static String getDynamicLinkForCourse(IConfig config, String slug) {
+    public static String getDynamicLinkForCourse(Config config, String slug) {
         String firebaseDomain = config.getFirebaseDomain();
         if (firebaseDomain == null) {
             return getUriForCourse(config.getBaseUrl(), slug);
@@ -56,7 +56,7 @@ public class StringUtil {
         stringBuilder.append(firebaseDomain);
         stringBuilder.append("?amv=650");
         stringBuilder.append("&apn=");
-        String packageName = MainApplication.getAppContext().getPackageName();
+        String packageName = App.getAppContext().getPackageName();
         if (packageName == null) {
             return getUriForCourse(config.getBaseUrl(), slug);
         }
@@ -129,7 +129,7 @@ public class StringUtil {
         return stringBuilder;
     }
 
-    public static String getAbsoluteUriForSection(IConfig config, @NotNull Section section) {
+    public static String getAbsoluteUriForSection(Config config, @NotNull Section section) {
         StringBuilder sb;
         sb = new StringBuilder();
         sb.append(config.getBaseUrl());

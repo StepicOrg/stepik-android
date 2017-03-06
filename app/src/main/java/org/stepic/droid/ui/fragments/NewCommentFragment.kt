@@ -15,7 +15,7 @@ import android.widget.Toast
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent
 import org.stepic.droid.ui.dialogs.DiscardTextDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
@@ -173,17 +173,17 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
                             analytic.reportEvent(Analytic.Comments.COMMENTS_SENT_SUCCESSFULLY)
                             val newComment = response?.body()?.comments?.firstOrNull()
                             bus.post(NewCommentWasAddedOrUpdateEvent(targetId = target!!, newCommentInsertOrUpdate = newComment))
-                            Toast.makeText(MainApplication.getAppContext(), R.string.comment_sent, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(App.getAppContext(), R.string.comment_sent, Toast.LENGTH_SHORT).show()
                             onFinishTryingSending()
                             activity?.finish()
                         } else {
-                            Toast.makeText(MainApplication.getAppContext(), R.string.comment_denied, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(App.getAppContext(), R.string.comment_denied, Toast.LENGTH_SHORT).show()
                             onFinishTryingSending()
                         }
                     }
 
                     override fun onFailure(call: Call<CommentsResponse>?, t: Throwable?) {
-                        Toast.makeText(MainApplication.getAppContext(), R.string.connectionProblems, Toast.LENGTH_LONG).show()
+                        Toast.makeText(App.getAppContext(), R.string.connectionProblems, Toast.LENGTH_LONG).show()
                         onFinishTryingSending()
                     }
 

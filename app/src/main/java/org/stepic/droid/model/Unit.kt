@@ -25,8 +25,6 @@ class Unit : Serializable, Parcelable, IProgressable {
     var is_active: Boolean = false
     var create_date: String? = null
     var update_date: String? = null
-    var is_cached: Boolean = false
-    var is_loading: Boolean = false
 
     @Deprecated("")
     var is_viewed_custom: Boolean = false
@@ -60,8 +58,6 @@ class Unit : Serializable, Parcelable, IProgressable {
         dest.writeByte(if (is_active) 1.toByte() else 0.toByte())
         dest.writeString(this.create_date)
         dest.writeString(this.update_date)
-        dest.writeByte(if (is_cached) 1.toByte() else 0.toByte())
-        dest.writeByte(if (is_loading) 1.toByte() else 0.toByte())
         dest.writeByte(if (is_viewed_custom) 1.toByte() else 0.toByte())
     }
 
@@ -85,8 +81,6 @@ class Unit : Serializable, Parcelable, IProgressable {
         this.is_active = input.readByte().toInt() != 0
         this.create_date = input.readString()
         this.update_date = input.readString()
-        this.is_cached = input.readByte().toInt() != 0
-        this.is_loading = input.readByte().toInt() != 0
         this.is_viewed_custom = input.readByte().toInt() != 0
     }
 

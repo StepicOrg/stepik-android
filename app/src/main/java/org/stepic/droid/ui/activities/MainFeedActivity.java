@@ -45,7 +45,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.presenters.ProfileMainFeedPresenter;
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView;
 import org.stepic.droid.events.updating.NeedUpdateEvent;
@@ -168,7 +168,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainApplication.component().inject(this);
+        App.component().inject(this);
         setContentView(R.layout.activity_main_feed);
         unbinder = ButterKnife.bind(this);
         notificationClickedCheck(getIntent());
@@ -232,7 +232,7 @@ public class MainFeedActivity extends BackToExitActivityBase
                 .enableAutoManage(this /* FragmentActivity */, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Toast.makeText(MainApplication.getAppContext(), R.string.connectionProblems, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(App.getAppContext(), R.string.connectionProblems, Toast.LENGTH_SHORT).show();
                     }
                 } /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)

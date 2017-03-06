@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.modules.CourseListModule;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
@@ -93,7 +93,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        MainApplication.component()
+        App.component()
                 .plus(new CourseListModule())
                 .inject(this);
     }

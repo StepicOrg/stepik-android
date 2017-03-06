@@ -9,16 +9,16 @@ import android.net.NetworkInfo;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.base.App;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.model.Step;
-import org.stepic.droid.store.IStoreStateManager;
+import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.StepHelper;
-import org.stepic.droid.web.IApi;
+import org.stepic.droid.web.Api;
 import org.stepic.droid.web.ViewAssignment;
 
 import java.io.IOException;
@@ -35,11 +35,11 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
 
     @Inject
-    IApi api;
+    Api api;
     @Inject
     DatabaseFacade databaseFacade;
     @Inject
-    IStoreStateManager storeStateManager;
+    StoreStateManager storeStateManager;
 
     @Inject
     Bus bus;
@@ -54,18 +54,18 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
     LocalProgressManager unitProgressManager;
 
     @Inject
-    IMainHandler mainHandler;
+    MainHandler mainHandler;
 
     private AtomicBoolean inWork = new AtomicBoolean(false);
 
 
     public InternetConnectionEnabledReceiver() {
-        MainApplication.component().inject(this);
+        App.component().inject(this);
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (!isOnline(MainApplication.getAppContext()) || inWork.get()) return;
+        if (!isOnline(App.getAppContext()) || inWork.get()) return;
         inWork.set(true);
         mainHandler.post(new Function0<Unit>() {
             @Override

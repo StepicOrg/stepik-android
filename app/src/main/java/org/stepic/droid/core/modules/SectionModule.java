@@ -1,23 +1,27 @@
 package org.stepic.droid.core.modules;
 
 
+import android.app.DownloadManager;
 import android.content.Context;
 
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.concurrency.IMainHandler;
-import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.concurrency.MainHandler;
+import org.stepic.droid.configuration.Config;
+import org.stepic.droid.core.DownloadingProgressSectionPublisher;
 import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.presenters.CalendarPresenter;
+import org.stepic.droid.core.presenters.CourseFinderPresenter;
+import org.stepic.droid.core.presenters.CourseJoinerPresenter;
+import org.stepic.droid.core.presenters.DownloadingProgressSectionsPresenter;
 import org.stepic.droid.core.presenters.InvitationPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.store.CancelSniffer;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.core.presenters.CourseFinderPresenter;
-import org.stepic.droid.core.presenters.CourseJoinerPresenter;
-import org.stepic.droid.web.IApi;
+import org.stepic.droid.web.Api;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -31,7 +35,7 @@ public class SectionModule {
     @Provides
     CourseJoinerPresenter provideCourseJoiner(
             SharedPreferenceHelper sharedPreferenceHelper,
-            IApi api,
+            Api api,
             ThreadPoolExecutor threadPoolExecutor,
             Bus bus,
             DatabaseFacade databaseFacade, Analytic analytic) {
@@ -43,16 +47,16 @@ public class SectionModule {
     CourseFinderPresenter provideCourseFinderPresenter(
             ThreadPoolExecutor threadPoolExecutor,
             DatabaseFacade databaseFacade,
-            IApi api,
-            IMainHandler mainHandler) {
+            Api api,
+            MainHandler mainHandler) {
         return new CourseFinderPresenter(threadPoolExecutor, databaseFacade, api, mainHandler);
     }
 
     @PerFragment
     @Provides
     CalendarPresenter provideCalendarPresenter(
-            IConfig config,
-            IMainHandler mainHandler,
+            Config config,
+            MainHandler mainHandler,
             Context context,
             ThreadPoolExecutor threadPoolExecutor,
             DatabaseFacade databaseFacade,
@@ -64,8 +68,8 @@ public class SectionModule {
     @PerFragment
     @Provides
     SectionsPresenter provideSectionsPresenter(ThreadPoolExecutor threadPoolExecutor,
-                                               IMainHandler mainHandler,
-                                               IApi api,
+                                               MainHandler mainHandler,
+                                               Api api,
                                                DatabaseFacade databaseFacade) {
         return new SectionsPresenter(
                 threadPoolExecutor,
@@ -77,9 +81,23 @@ public class SectionModule {
     @PerFragment
     @Provides
     InvitationPresenter provideInvitationPresenter(ThreadPoolExecutor threadPoolExecutor,
-                                                   IMainHandler mainHandler,
+                                                   MainHandler mainHandler,
                                                    SharedPreferenceHelper sharedPreferenceHelper,
                                                    Analytic analytic) {
         return new InvitationPresenter(threadPoolExecutor, mainHandler, sharedPreferenceHelper, analytic);
     }
+
+    @PerFragment
+    @Provides
+    DownloadingProgressSectionsPresenter provideDownloadingProgressPresenter(DownloadingProgressSectionPublisher downloadingProgressSectionPublisher) {
+        return new DownloadingProgressSectionsPresenter(downloadingProgressSectionPublisher);
+    }
+
+
+    @Provides
+    @PerFragment
+    DownloadingProgressSectionPublisher progressPublisher(DatabaseFacade databaseFacade, DownloadManager downloadManager, CancelSniffer cancelSniffer, MainHandler mainHandler) {
+        return new DownloadingProgressSectionPublisher(databaseFacade, downloadManager, cancelSniffer, mainHandler);
+    }
+
 }

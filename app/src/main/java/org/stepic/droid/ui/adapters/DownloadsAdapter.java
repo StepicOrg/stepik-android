@@ -25,17 +25,18 @@ import com.squareup.otto.Bus;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.events.CancelAllVideosEvent;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadingVideoItem;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
+import org.stepic.droid.store.CancelSniffer;
 import org.stepic.droid.store.CleanManager;
-import org.stepic.droid.store.ICancelSniffer;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
 import org.stepic.droid.ui.dialogs.ClearVideosDialog;
 import org.stepic.droid.ui.fragments.DownloadsFragment;
 import org.stepic.droid.ui.listeners.OnClickCancelListener;
@@ -57,9 +58,6 @@ import javax.inject.Inject;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import me.zhanghai.android.materialprogressbar.HorizontalProgressDrawable;
-import me.zhanghai.android.materialprogressbar.IndeterminateHorizontalProgressDrawable;
-import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.GenericViewHolder> implements StepicOnClickItemListener, OnClickLoadListener, OnClickCancelListener {
 
@@ -85,7 +83,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
     ThreadPoolExecutor threadPoolExecutor;
 
     @Inject
-    ICancelSniffer cancelSniffer;
+    CancelSniffer cancelSniffer;
 
     @Inject
     IDownloadManager downloadManager;
@@ -98,13 +96,13 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     public DownloadsAdapter(List<CachedVideo> cachedVideos, Map<Long, Lesson> videoIdToStepMap, Activity context, DownloadsFragment downloadsFragment, List<DownloadingVideoItem> downloadingList, Set<Long> cachedStepsSet) {
         this.downloadsFragment = downloadsFragment;
-        MainApplication.component().inject(this);
+        App.component().inject(this);
         cachedVideoList = cachedVideos;
         sourceActivity = context;
         stepIdToLessonMap = videoIdToStepMap;
         downloadingVideoList = downloadingList;
         this.cachedStepsSet = cachedStepsSet;
-        placeholder = ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.video_placeholder);
+        placeholder = ContextCompat.getDrawable(App.getAppContext(), R.drawable.video_placeholder);
     }
 
     @Override
@@ -151,10 +149,10 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         if (position >= 0 && position < cachedVideoList.size()) {
             final CachedVideo video = cachedVideoList.get(position);
             File file = new File(video.getUrl());
-            if (video.getUrl()!= null && file.exists()) {
+            if (video.getUrl() != null && file.exists()) {
                 screenManager.showVideo(sourceActivity, video.getUrl(), video.getVideoId());
             } else {
-                Toast.makeText(MainApplication.getAppContext(), R.string.sorry_moved, Toast.LENGTH_SHORT).show();
+                Toast.makeText(App.getAppContext(), R.string.sorry_moved, Toast.LENGTH_SHORT).show();
                 threadPoolExecutor.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -219,6 +217,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     public class DownloadingViewHolder extends GenericViewHolder {
 
+        @BindView(R.id.when_load_view)
+        ProgressWheel progressWheel;
+
         @BindView(R.id.cancel_load)
         View cancelLoad;
 
@@ -227,9 +228,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         @BindView(R.id.video_icon)
         ImageView mVideoIcon;
-
-        @BindView(R.id.video_downloading_progress_bar)
-        MaterialProgressBar downloadingProgressBar;
 
         @BindView(R.id.progress_text)
         TextView progressTextView;
@@ -249,9 +247,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         @BindString(R.string.download_pending)
         String downloadPending;
 
-        Drawable indeterminateDrawable;
-
-        Drawable finiteDrawable;
+        private long oldVideoId = -1L;
 
         public DownloadingViewHolder(View itemView, final OnClickCancelListener cancelListener) {
             super(itemView);
@@ -262,24 +258,28 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
                     cancelListener.onClickCancel(getAdapterPosition() - getTitleCount(downloadingVideoList));
                 }
             });
-
-            indeterminateDrawable = new IndeterminateHorizontalProgressDrawable(sourceActivity);
-            finiteDrawable = new HorizontalProgressDrawable(sourceActivity);
         }
 
         @Override
         public void setDataOnView(int position) {
             DownloadingVideoItem downloadingVideoItem = downloadingVideoList.get(position - 1);//here downloading oldList shoudn't be empty!
+            long videoId = downloadingVideoItem.getDownloadEntity().getVideoId();
+            boolean needAnimation = true;
+            if (oldVideoId != videoId) {
+                //if rebinding than animation is not needed
+                oldVideoId = videoId;
+                needAnimation = false;
+            }
 
             String thumbnail = downloadingVideoItem.getDownloadEntity().getThumbnail();
             if (thumbnail != null) {
                 Uri uriForThumbnail = ThumbnailParser.getUriForThumbnail(thumbnail);
-                Glide.with(MainApplication.getAppContext())
+                Glide.with(App.getAppContext())
                         .load(uriForThumbnail)
                         .placeholder(placeholder)
                         .into(mVideoIcon);
             } else {
-                Glide.with(MainApplication.getAppContext())
+                Glide.with(App.getAppContext())
                         .load("")
                         .placeholder(placeholder)
                         .into(mVideoIcon);
@@ -300,7 +300,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             StringBuilder loadProgressStringBuilder = new StringBuilder();
             if (bytesTotal <= 0) {
                 loadProgressStringBuilder.append(downloadPending);
-                downloadingProgressBar.setIndeterminateDrawable(indeterminateDrawable);
                 progressPercent.setVisibility(View.INVISIBLE);
             } else {
                 int totalSizeForView = bytesTotal / 1024;
@@ -310,9 +309,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
                 loadProgressStringBuilder.append(downloadDelimiter);
                 appendToSbSize(totalSizeForView, loadProgressStringBuilder);
 
-                downloadingProgressBar.setMax(bytesTotal);
-                downloadingProgressBar.setProgress(bytesDownloaded);
-                downloadingProgressBar.setIndeterminateDrawable(finiteDrawable);
+                progressWheel.setProgressPortion(bytesDownloaded / (float) bytesTotal, needAnimation);
 
                 int percentValue = (int) (((double) bytesDownloaded / (double) bytesTotal) * 100);
                 progressPercent.setText(sourceActivity.getResources().getString(R.string.percent_symbol, percentValue));
@@ -402,12 +399,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
             String thumbnail = cachedVideo.getThumbnail();
             if (thumbnail != null) {
                 Uri uriForThumbnail = ThumbnailParser.getUriForThumbnail(thumbnail);
-                Glide.with(MainApplication.getAppContext())
+                Glide.with(App.getAppContext())
                         .load(uriForThumbnail)
                         .placeholder(placeholder)
                         .into(videoIcon);
             } else {
-                Glide.with(MainApplication.getAppContext())
+                Glide.with(App.getAppContext())
                         .load("")
                         .placeholder(placeholder)
                         .into(videoIcon);
@@ -442,7 +439,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
     }
 
-
     public class TitleViewHolder extends GenericViewHolder implements OnClickCancelListener {
 
         @BindView(R.id.button_header_download_item)
@@ -458,10 +454,10 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
 
         public TitleViewHolder(View itemView) {
             super(itemView);
-            titleDownloading = MainApplication.getAppContext().getString(R.string.downloading_title);
-            titleForDownloadingButton = MainApplication.getAppContext().getString(R.string.downloading_cancel_all);
-            titleCached = MainApplication.getAppContext().getString(R.string.cached_title);
-            titleForCachedButton = MainApplication.getAppContext().getString(R.string.remove_all);
+            titleDownloading = App.getAppContext().getString(R.string.downloading_title);
+            titleForDownloadingButton = App.getAppContext().getString(R.string.downloading_cancel_all);
+            titleCached = App.getAppContext().getString(R.string.cached_title);
+            titleForCachedButton = App.getAppContext().getString(R.string.remove_all);
             headerButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -514,7 +510,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         Bus bus;
 
         public CancelVideoDialog() {
-            MainApplication.component().inject(this);
+            App.component().inject(this);
         }
 
         @NonNull
@@ -592,7 +588,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         DownloadingVideoItem item = downloadingVideoList.get(position);
         if (item != null) {
             if (item.getDownloadEntity().getStepId() == stepId) {
-                notifyItemChanged(position);
+                notifyItemChanged(position + 1);
             } else {
                 notifyDataSetChanged();
             }

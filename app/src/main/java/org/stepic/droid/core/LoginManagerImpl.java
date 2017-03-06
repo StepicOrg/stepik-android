@@ -11,8 +11,8 @@ import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.ui.util.FailLoginSupplementaryHandler;
 import org.stepic.droid.util.JsonHelper;
+import org.stepic.droid.web.Api;
 import org.stepic.droid.web.AuthenticationStepicResponse;
-import org.stepic.droid.web.IApi;
 
 import java.net.ProtocolException;
 
@@ -26,12 +26,12 @@ import retrofit2.Response;
 @Singleton
 public class LoginManagerImpl implements LoginManager {
 
-    private final IShell shell;
+    private final Shell shell;
     private final Context context;
     private final Analytic analytic;
 
     @Inject
-    public LoginManagerImpl(IShell shell, Context appContext, Analytic analytic) {
+    public LoginManagerImpl(Shell shell, Context appContext, Analytic analytic) {
         this.shell = shell;
         context = appContext;
         this.analytic = analytic;
@@ -44,7 +44,7 @@ public class LoginManagerImpl implements LoginManager {
 
         String login = rawLogin.trim();
 
-        IApi api = shell.getApi();
+        Api api = shell.getApi();
         api.authWithLoginPassword(login, rawPassword).enqueue(new Callback<AuthenticationStepicResponse>() {
             @Override
             public void onResponse(Call<AuthenticationStepicResponse> call, Response<AuthenticationStepicResponse> response) {

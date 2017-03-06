@@ -3,7 +3,7 @@ package org.stepic.droid.core.presenters
 import android.os.Bundle
 import android.support.annotation.WorkerThread
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.FilterApplicator
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.model.Course
@@ -12,21 +12,20 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.store.operations.Table
 import org.stepic.droid.util.RWLocks
+import org.stepic.droid.web.Api
 import org.stepic.droid.web.CoursesStepicResponse
-import org.stepic.droid.web.IApi
 import retrofit2.Response
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
-import kotlin.comparisons.compareBy
 
 class PersistentCourseListPresenter(
         val analytic: Analytic,
         val databaseFacade: DatabaseFacade,
         val threadPoolExecutor: ThreadPoolExecutor,
-        val mainHandler: IMainHandler,
-        val api: IApi,
+        val mainHandler: MainHandler,
+        val api: Api,
         val filterApplicator: FilterApplicator,
         val sharedPreferenceHelper: SharedPreferenceHelper
 ) : PresenterBase<CoursesView>() {
@@ -86,9 +85,15 @@ class PersistentCourseListPresenter(
                             //this lock need for not saving enrolled courses to database after user click logout
                             RWLocks.ClearEnrollmentsLock.writeLock().lock()
                             if (sharedPreferenceHelper.authResponseFromStore != null || courseType == Table.featured) {
-                                if (courseType == Table.featured && isRefreshing && currentPage.get() == 1) {
-                                    databaseFacade.dropFeaturedCourses()
+
+                                if (isRefreshing && currentPage.get() == 1) {
+                                    if (courseType == Table.featured) {
+                                        databaseFacade.dropFeaturedCourses()
+                                    } else if (courseType == Table.enrolled) {
+                                        databaseFacade.dropEnrolledCourses()
+                                    }
                                 }
+
                                 coursesFromInternet.filterNotNull().forEach {
                                     databaseFacade.addCourse(it, courseType)
                                 }

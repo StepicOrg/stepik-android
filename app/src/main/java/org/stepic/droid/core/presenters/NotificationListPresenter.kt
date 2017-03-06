@@ -5,8 +5,8 @@ import android.support.annotation.WorkerThread
 import com.squareup.otto.Bus
 import com.squareup.otto.Subscribe
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.concurrency.IMainHandler
-import org.stepic.droid.configuration.IConfig
+import org.stepic.droid.concurrency.MainHandler
+import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.presenters.contracts.NotificationListView
 import org.stepic.droid.events.InternetIsEnabledEvent
 import org.stepic.droid.events.notify_ui.NotificationCheckedSuccessfullyEvent
@@ -16,7 +16,7 @@ import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
 import org.stepic.droid.ui.NotificationCategory
 import org.stepic.droid.util.not
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
@@ -25,9 +25,9 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class NotificationListPresenter(
         val threadPoolExecutor: ThreadPoolExecutor,
-        val mainHandler: IMainHandler,
-        val api: IApi,
-        val config: IConfig,
+        val mainHandler: MainHandler,
+        val api: Api,
+        val config: Config,
         val bus: Bus,
         val analytic: Analytic,
         val notificationManager: INotificationManager
@@ -49,10 +49,6 @@ class NotificationListPresenter(
     override fun detachView(view: NotificationListView) {
         bus.unregister(this)
         super.detachView(view)
-    }
-
-    fun refresh(notificationCategory: NotificationCategory) {
-
     }
 
     /**

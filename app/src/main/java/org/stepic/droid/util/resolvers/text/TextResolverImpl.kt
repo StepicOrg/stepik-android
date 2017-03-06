@@ -4,11 +4,11 @@ import android.content.Context
 import android.os.Build
 import android.text.Html
 import android.text.Spanned
-import org.stepic.droid.configuration.IConfig
+import org.stepic.droid.configuration.Config
 import org.stepic.droid.util.HtmlHelper
 import org.stepic.droid.util.resolvers.CoursePropertyResolver
 
-class TextResolverImpl(config: IConfig) : TextResolver {
+class TextResolverImpl(config: Config) : TextResolver {
 
     private val baseUrl: String
 

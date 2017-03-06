@@ -1,47 +1,12 @@
 package org.stepic.droid.core;
 
-import android.content.Context;
 
-import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
-import org.stepic.droid.web.IApi;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import org.stepic.droid.web.Api;
 
 @Deprecated
-@Singleton
-public class Shell implements IShell {
-
-    Context context;
-
-    @Inject
-    public Shell(Context context) {
-        this.context = context;
-        MainApplication.component(this.context).inject(this);
-    }
-
-    @Inject
-    ScreenManager screenProvider;
-
-    @Inject
-    IApi api;
-
-    @Inject
-    SharedPreferenceHelper sharedPreferenceHelper;
-
-    @Override
-    public ScreenManager getScreenProvider() {
-        return screenProvider;
-    }
-
-    @Override
-    public IApi getApi() {
-        return api;
-    }
-
-    @Override
-    public SharedPreferenceHelper getSharedPreferenceHelper() {
-        return sharedPreferenceHelper;
-    }
+public interface Shell {
+    ScreenManager getScreenProvider();
+    Api getApi();
+    SharedPreferenceHelper getSharedPreferenceHelper();
 }

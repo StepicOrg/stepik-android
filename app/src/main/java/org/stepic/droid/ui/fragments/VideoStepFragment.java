@@ -19,7 +19,7 @@ import com.squareup.otto.Subscribe;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.presenters.StepQualityPresenter;
@@ -63,7 +63,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
 
     @Override
     protected void injectComponent() {
-        MainApplication.component().plus(new StepModule()).inject(this);
+        App.component().plus(new StepModule()).inject(this);
     }
 
     @Nullable

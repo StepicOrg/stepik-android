@@ -9,7 +9,7 @@ import android.support.v7.app.AlertDialog;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.model.StorageOption;
 import org.stepic.droid.preferences.UserPreferences;
 
@@ -32,7 +32,7 @@ public class ChooseStorageDialog extends DialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        MainApplication.component().inject(this);
+        App.component().inject(this);
 
         //fixme get From User Prefs
         final List<StorageOption> storageOptions = userPreferences.getStorageOptionList();

@@ -1,7 +1,7 @@
 package org.stepic.droid.core
 
 import android.app.DownloadManager
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.operations.DatabaseFacade
@@ -10,7 +10,7 @@ import org.stepic.droid.util.RWLocks
 import java.util.concurrent.ThreadPoolExecutor
 
 class StepikLogoutManager(private val threadPoolExecutor: ThreadPoolExecutor,
-                          private val mainHandler: IMainHandler,
+                          private val mainHandler: MainHandler,
                           private val userPreferences: UserPreferences,
                           private val systemDownloadManager: DownloadManager,
                           private val sharedPreferenceHelper: SharedPreferenceHelper,

@@ -20,7 +20,7 @@ class DiscardTextDialogFragment : DialogFragment() {
         val builder = AlertDialog.Builder(activity)
         builder.setTitle(R.string.title_confirmation)
                 .setMessage(R.string.are_you_sure_remove_comment_text)
-                .setPositiveButton(R.string.delete_label) { dialog, which ->
+                .setPositiveButton(R.string.delete_label) { _, _ ->
                     targetFragment.onActivityResult(targetRequestCode, Activity.RESULT_OK, null)
                 }
                 .setNegativeButton(R.string.cancel, null)

@@ -5,7 +5,7 @@ import android.app.Service
 import android.content.Intent
 import android.net.Uri
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.FileUtil
 import java.io.File
@@ -34,7 +34,7 @@ class UpdateWithApkService : IntentService("update_with_apk") {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        MainApplication.component().inject(this)
+        App.component().inject(this)
         return Service.START_REDELIVER_INTENT
     }
 
@@ -46,6 +46,6 @@ class UpdateWithApkService : IntentService("update_with_apk") {
         val result = userPrefs.userDownloadFolder.path + "/" + filename
         intent.setDataAndType(Uri.fromFile(File(result)), "application/vnd.android.package-archive")
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK // without this flag android returned a intent error!
-        MainApplication.getAppContext().startActivity(intent)
+        App.getAppContext().startActivity(intent)
     }
 }

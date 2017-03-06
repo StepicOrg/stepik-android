@@ -5,7 +5,7 @@ import android.os.StatFs;
 import android.support.v4.content.ContextCompat;
 
 import org.jetbrains.annotations.Nullable;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,7 +44,7 @@ public class StorageUtil {
     }
 
     public static File[] getRawAppDirs() {
-        return ContextCompat.getExternalFilesDirs(MainApplication.getAppContext(), null);
+        return ContextCompat.getExternalFilesDirs(App.getAppContext(), null);
     }
 
     public static long getAvailableMemorySize(File path) {

@@ -397,8 +397,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureUnit.Column.GRADING_POLICY_SOURCE + " TEXT, "
                 + DbStructureUnit.Column.IS_ACTIVE + " BOOLEAN, "
                 + DbStructureUnit.Column.CREATE_DATE + " TEXT, "
-                + DbStructureUnit.Column.IS_CACHED + " BOOLEAN, "
-                + DbStructureUnit.Column.IS_LOADING + " BOOLEAN, "
+//                + DbStructureUnit.Column.IS_CACHED + " BOOLEAN, "  // It is saved for history, it can help for debugging on old versions of app 03.03.17
+//                + DbStructureUnit.Column.IS_LOADING + " BOOLEAN, "
                 + DbStructureUnit.Column.UPDATE_DATE + " TEXT "
 
                 + ")";

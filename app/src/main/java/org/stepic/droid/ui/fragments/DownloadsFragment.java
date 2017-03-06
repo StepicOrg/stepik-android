@@ -44,7 +44,7 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.RWLocks;
-import org.stepic.droid.util.StepicLogicHelper;
+import org.stepic.droid.util.StepikLogicHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -55,7 +55,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
-import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
 //// TODO: 26.12.16 rewrite this class to MVP
@@ -211,11 +210,11 @@ public class DownloadsFragment extends FragmentBase {
                             int columnReason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
 
                             if (columnStatus == DownloadManager.STATUS_SUCCESSFUL) {
-                                mainHandler.post(new Function0<Unit>() {
+                                mainHandler.post(new Function0<kotlin.Unit>() {
                                     @Override
-                                    public Unit invoke() {
+                                    public kotlin.Unit invoke() {
                                         bus.post(new DownloadingIsLoadedSuccessfullyEvent(downloadId));
-                                        return Unit.INSTANCE;
+                                        return kotlin.Unit.INSTANCE;
                                     }
                                 });
                                 cursor.moveToNext();
@@ -362,7 +361,7 @@ public class DownloadsFragment extends FragmentBase {
                         filteredVideos.add(video);
                     }
                 }
-                long[] stepIds = StepicLogicHelper.fromVideosToStepIds(filteredVideos);
+                long[] stepIds = StepikLogicHelper.fromVideosToStepIds(filteredVideos);
 
                 Map<Long, Lesson> map = databaseFacade.getMapFromStepIdToTheirLesson(stepIds);
 
@@ -521,23 +520,10 @@ public class DownloadsFragment extends FragmentBase {
             protected Object doInBackground(Object[] params) {
                 try {
                     RWLocks.CancelLock.writeLock().lock();
-                    long[] sectionIdsLoading = databaseFacade.getAllDownloadingSections();//need lock here and in loading service.
-                    for (int i = 0; i < sectionIdsLoading.length; i++) {
-                        cancelSniffer.addSectionIdCancel(sectionIdsLoading[i]);
-                        List<org.stepic.droid.model.Unit> units = databaseFacade.getAllUnitsOfSection(sectionIdsLoading[i]);
-                        if (!units.isEmpty()) {
-                            for (org.stepic.droid.model.Unit unitItem : units) {
-                                cancelSniffer.addUnitIdCancel(unitItem.getId());
-                            }
-                        }
-                    }
 
-                    long[] unitIdsLoading = databaseFacade.getAllDownloadingUnits();
-                    for (int i = 0; i < unitIdsLoading.length; i++) {
-                        cancelSniffer.addUnitIdCancel(unitIdsLoading[i]);
-
-                        org.stepic.droid.model.Unit unit = databaseFacade.getUnitById(unitIdsLoading[i]);
-                        Lesson lesson = databaseFacade.getLessonById(unit.getLesson());
+                    long[] lessonIds = databaseFacade.getAllDownloadingLessons();
+                    for (int i = 0; i < lessonIds.length; i++) {
+                        Lesson lesson = databaseFacade.getLessonById(lessonIds[i]);
                         if (lesson != null) {
                             List<Step> steps = databaseFacade.getStepsOfLesson(lesson.getId());
                             if (!steps.isEmpty()) {

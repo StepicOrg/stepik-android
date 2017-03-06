@@ -9,7 +9,7 @@ import android.support.annotation.WorkerThread;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.model.Assignment;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
@@ -20,16 +20,16 @@ import org.stepic.droid.model.Unit;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.model.VideoUrl;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.ICancelSniffer;
-import org.stepic.droid.store.IStoreStateManager;
+import org.stepic.droid.store.CancelSniffer;
+import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.FileUtil;
 import org.stepic.droid.util.ProgressUtil;
 import org.stepic.droid.util.RWLocks;
-import org.stepic.droid.util.StepicLogicHelper;
+import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.resolvers.VideoResolver;
-import org.stepic.droid.web.IApi;
+import org.stepic.droid.web.Api;
 import org.stepic.droid.web.LessonStepicResponse;
 import org.stepic.droid.web.ProgressesResponse;
 import org.stepic.droid.web.StepResponse;
@@ -50,6 +50,7 @@ import retrofit2.Response;
 
 
 public class LoadService extends IntentService {
+
     @Inject
     DownloadManager systemDownloadManager;
     @Inject
@@ -57,39 +58,35 @@ public class LoadService extends IntentService {
     @Inject
     VideoResolver resolver;
     @Inject
-    IApi api;
+    Api api;
     @Inject
     DatabaseFacade databaseFacade;
     @Inject
-    IStoreStateManager storeStateManager;
+    StoreStateManager storeStateManager;
     @Inject
-    ICancelSniffer cancelSniffer;
+    CancelSniffer cancelSniffer;
     @Inject
     Analytic analytic;
 
     public enum LoadTypeKey {
-        Section, UnitLesson, Step
+        Section, Lesson, Step
     }
 
 
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     * <p/>
-     * name Used to name the worker thread, important only for debugging.
-     */
     public LoadService() {
         super("Loading_video_service");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        MainApplication.component().inject(this);
+        App.component().inject(this);
         super.onStartCommand(intent, flags, startId);
         return START_REDELIVER_INTENT;
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
+
         LoadTypeKey type = (LoadTypeKey) intent.getSerializableExtra(AppConstants.KEY_LOAD_TYPE);
         try {
             switch (type) {
@@ -97,26 +94,18 @@ public class LoadService extends IntentService {
                     Section section = (Section) intent.getSerializableExtra(AppConstants.KEY_SECTION_BUNDLE);
                     addSection(section);
                     break;
-                case UnitLesson:
-                    Unit unit = (Unit) intent.getSerializableExtra(AppConstants.KEY_UNIT_BUNDLE);
-                    Lesson lesson = (Lesson) intent.getSerializableExtra(AppConstants.KEY_LESSON_BUNDLE);
-                    addUnitLesson(unit, lesson);
-                    break;
-                case Step:
-                    Step step = (Step) intent.getSerializableExtra(AppConstants.KEY_STEP_BUNDLE);
-                    Lesson lessonForStep = (Lesson) intent.getSerializableExtra(AppConstants.KEY_LESSON_BUNDLE);
-                    addStep(step, lessonForStep);
+                case Lesson:
+                    Lesson lesson = intent.getParcelableExtra(AppConstants.KEY_LESSON_BUNDLE);
+                    addLesson(lesson);
                     break;
             }
         } catch (NullPointerException ex) {
-            //possibly user click clear cache;
-//            throw ex;
             analytic.reportError(Analytic.Error.LOAD_SERVICE, ex);
             databaseFacade.dropDatabase();
         }
     }
 
-    private void addDownload(String url, long fileId, String title, Step step) {
+    private void addDownload(String url, long fileId, String title, Step step, long sectionId) {
         if (!isDownloadManagerEnabled() || url == null) {
             storeStateManager.updateStepAfterDeleting(step);
             return;
@@ -143,21 +132,14 @@ public class LoadService extends IntentService {
 
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
             request.setDestinationUri(target);
-//            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
             request.setVisibleInDownloadsUi(false);
-            request.setTitle(title + "-" + fileId).setDescription(MainApplication.getAppContext().getString(R.string.description_download));
+            request.setTitle(title + "-" + fileId).setDescription(App.getAppContext().getString(R.string.description_download));
 
             if (userPrefs.isNetworkMobileAllowed()) {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
             } else {
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
             }
-            if (isNeedCancel(step)) {
-//                storeStateManager.updateStepAfterDeleting(step);
-                // we check it in need cancel
-                return;
-            }
-
             if (!databaseFacade.isExistDownloadEntityByVideoId(fileId) && !downloadFolderAndFile.exists()) {
 
                 String videoQuality = null;
@@ -171,7 +153,17 @@ public class LoadService extends IntentService {
                 } catch (NullPointerException npe) {
                     videoQuality = userPrefs.getQualityVideo();
                 }
-                long downloadId = systemDownloadManager.enqueue(request);
+                long downloadId;
+                try {
+                    RWLocks.SectionCancelLock.writeLock().lock();
+                    if (isNeedCancel(step, sectionId)) {
+                        // we check it in need cancel
+                        return;
+                    }
+                    downloadId = systemDownloadManager.enqueue(request);
+                } finally {
+                    RWLocks.SectionCancelLock.writeLock().unlock();
+                }
                 String local_thumbnail = fileId + AppConstants.THUMBNAIL_POSTFIX_EXTENSION;
                 String thumbnailsPath = FileUtil.saveFileToDisk(local_thumbnail, step.getBlock().getVideo().getThumbnail(), userPrefs.getUserDownloadFolder());
                 final DownloadEntity newEntity = new DownloadEntity(downloadId, step.getId(), fileId, thumbnailsPath, videoQuality);
@@ -187,25 +179,14 @@ public class LoadService extends IntentService {
 
     }
 
-    private boolean isNeedCancel(Step step) {
+    private boolean isNeedCancel(Step step, long sectionId) {
         try {
             RWLocks.CancelLock.writeLock().lock();
             if (cancelSniffer.isStepIdCanceled(step.getId())) {
                 cancelSniffer.removeStepIdCancel(step.getId());
-                Lesson lesson = databaseFacade.getLessonById(step.getLesson());
-                if (lesson != null) {
-                    Unit unit = databaseFacade.getUnitByLessonId(lesson.getId());
-                    if (unit != null && cancelSniffer.isUnitIdIsCanceled(unit.getId())) {
-                        storeStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
-                        cancelSniffer.removeUnitIdCancel(unit.getId());
-
-                        if (cancelSniffer.isSectionIdIsCanceled(unit.getSection())) {
-                            cancelSniffer.removeSectionIdCancel(unit.getSection());
-                        }
-                    }
-
-                }
-
+                return true;
+            }
+            if (sectionId > 0 && cancelSniffer.isSectionIdCanceled(sectionId)) {
                 return true;
             }
         } finally {
@@ -214,47 +195,50 @@ public class LoadService extends IntentService {
         return false;
     }
 
-    private void addStep(Step step, Lesson lesson) {
 
+    private void addStep(Step step, Lesson lesson, long sectionId) {
         if (step.getBlock().getVideo() != null) {
             Video video = step.getBlock().getVideo();
             String uri = resolver.resolveVideoUrl(video, step);
             long fileId = video.getId();
-            addDownload(uri, fileId, lesson.getTitle(), step);
+            addDownload(uri, fileId, lesson.getTitle(), step, sectionId);
         } else {
             step.set_loading(false);
             step.set_cached(true);
             databaseFacade.updateOnlyCachedLoadingStep(step);
             storeStateManager.updateUnitLessonState(step.getLesson());
-            isNeedCancel(step);
         }
     }
 
-    private void addUnitLesson(Unit unitOut, Lesson lessonOut) {
-        //if user click addUnitLesson, it is in db already.
+    private void addLesson(Lesson lessonOut) {
+        addLesson(lessonOut, -1);
+    }
+
+    private void addLesson(Lesson lessonOut, long sectionId) {
+        //if user click addLesson, it is in db already.
         //make copies of objects.
-        Unit unit = databaseFacade.getUnitByLessonId(lessonOut.getId());
         Lesson lesson = databaseFacade.getLessonById(lessonOut.getId());
-        if (unit != null && lesson != null && !unit.is_cached() && !lesson.is_cached() && unit.is_loading() && lesson.is_loading()) {
 
+        if (lesson != null && !lesson.is_cached() && lesson.is_loading()) {
             try {
-                List<Assignment> assignments = api.getAssignments(unit.getAssignments()).execute().body().getAssignments();
-                for (Assignment item : assignments) {
-                    databaseFacade.addAssignment(item);
+                Unit unit = databaseFacade.getUnitByLessonId(lesson.getId());
+                if (unit != null) {
+                    List<Assignment> assignments = api.getAssignments(unit.getAssignments()).execute().body().getAssignments();
+                    for (Assignment item : assignments) {
+                        databaseFacade.addAssignment(item);
+                    }
 
+                    String[] ids = ProgressUtil.getAllProgresses(assignments);
+                    List<Progress> progresses = fetchProgresses(ids);
+                    for (Progress item : progresses) {
+                        databaseFacade.addProgress(item);
+                    }
                 }
 
-                String[] ids = ProgressUtil.getAllProgresses(assignments);
-                List<Progress> progresses = fetchProgresses(ids);
-                for (Progress item : progresses) {
-                    databaseFacade.addProgress(item);
-                }
                 Response<StepResponse> response = api.getSteps(lesson.getSteps()).execute();
                 if (response.isSuccessful()) {
                     List<Step> steps = response.body().getSteps();
                     if (steps != null && !steps.isEmpty()) {
-
-
                         for (Step step : steps) {
                             databaseFacade.addStep(step);
                             boolean cached = databaseFacade.isStepCached(step);
@@ -267,15 +251,10 @@ public class LoadService extends IntentService {
                                 databaseFacade.updateOnlyCachedLoadingStep(step);
                             }
                         }
-                        if (cancelSniffer.isUnitIdIsCanceled(unit.getId())) {
-                            for (Step step : steps) {
-                                cancelSniffer.addStepIdCancel(step.getId());
-                            }
-                        }
 
                         for (Step step : steps) {
                             if (!step.is_cached()) {
-                                addStep(step, lesson);
+                                addStep(step, lesson, sectionId);
                             }
                         }
                         storeStateManager.updateUnitLessonState(lesson.getId()); //fixme DOUBLE CHECK, IF Unit state is loading, but steps are not cached.
@@ -293,7 +272,7 @@ public class LoadService extends IntentService {
                 storeStateManager.updateUnitLessonAfterDeleting(lesson.getId());
             }
         } else {
-            storeStateManager.updateUnitLessonAfterDeleting(lessonOut.getId());
+            storeStateManager.updateUnitLessonState(lessonOut.getId());
         }
     }
 
@@ -323,7 +302,7 @@ public class LoadService extends IntentService {
 
 
                 if (responseIsSuccess) {
-                    long[] lessonsIds = StepicLogicHelper.fromUnitsToLessonIds(units);
+                    long[] lessonsIds = StepikLogicHelper.fromUnitsToLessonIds(units);
                     List<Progress> progresses = fetchProgresses(ProgressUtil.getAllProgresses(units));
                     for (Progress item : progresses) {
                         databaseFacade.addProgress(item);
@@ -362,33 +341,24 @@ public class LoadService extends IntentService {
                             databaseFacade.addUnit(unit);
                             databaseFacade.addLesson(lesson);
 
-                            if (!databaseFacade.isUnitCached(unit) && !databaseFacade.isLessonCached(lesson)) {
+                            if (!databaseFacade.isLessonCached(lesson)) {
                                 //need to be load
-
-                                unit.set_loading(true);
-                                unit.set_cached(false);
                                 lesson.set_loading(true);
                                 lesson.set_cached(false);
 
                                 databaseFacade.updateOnlyCachedLoadingLesson(lesson);
-                                databaseFacade.updateOnlyCachedLoadingUnit(unit);
-                            }
-                        }
-                        if (cancelSniffer.isSectionIdIsCanceled(section.getId())) {
-                            for (Unit unit : units) {
-                                cancelSniffer.addUnitIdCancel(unit.getId());
                             }
                         }
                         for (Unit unit : units) {
                             Lesson lesson = idToLessonMap.get(unit.getLesson());
-                            addUnitLesson(unit, lesson);
+                            addLesson(lesson, section.getId());
                         }
                         storeStateManager.updateSectionState(section.getId()); // FIXME DOUBLE CHECK, if all units were cached
                     } else {
                         throw new IOException("response is not success adding lessons");
                     }
                 } else {
-                    // if response is not succes --> throw
+                    // if response is not success --> throw
                     throw new IOException("response is not success adding units");
                 }
             } catch (UnknownHostException e) {
@@ -399,24 +369,21 @@ public class LoadService extends IntentService {
                 analytic.reportError(Analytic.Error.LOAD_SERVICE, e);
                 storeStateManager.updateSectionAfterDeleting(section.getId());
             }
-        } else
-
-        {
-            if (sectionOut != null) {
-                storeStateManager.updateSectionAfterDeleting(sectionOut.getId());
-            }
+        } else if (sectionOut != null) {
+            storeStateManager.updateSectionAfterDeleting(sectionOut.getId());
         }
+
 
     }
 
     public boolean isDownloadManagerEnabled() {
-        if (MainApplication.getAppContext() == null) {
+        if (App.getAppContext() == null) {
             analytic.reportEvent(Analytic.DownloadManager.DOWNLOAD_MANAGER_IS_NOT_ENABLED);
             return false;
         }
         int state;
         try {
-            state = MainApplication.getAppContext().getPackageManager()
+            state = App.getAppContext().getPackageManager()
                     .getApplicationEnabledSetting("com.android.providers.downloads");
         } catch (Exception ex) {
             analytic.reportError(Analytic.DownloadManager.DOWNLOAD_MANAGER_IS_NOT_ENABLED, ex);
@@ -458,6 +425,5 @@ public class LoadService extends IntentService {
 
         return progresses;
     }
-
 
 }
