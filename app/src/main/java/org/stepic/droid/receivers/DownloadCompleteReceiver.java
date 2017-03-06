@@ -55,20 +55,24 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     Analytic analytic;
 
     public DownloadCompleteReceiver() {
+        Timber.d("create DownloadCompleteReceiver");
         App.component().inject(this);
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Timber.d("onReceive");
         final long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
         Timber.d("referenceId = %d", referenceId);
 
-        threadSingleThreadExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                blockForInBackground(referenceId);
-            }
-        });
+        if (referenceId >= 0) {
+            threadSingleThreadExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    blockForInBackground(referenceId);
+                }
+            });
+        }
     }
 
     private void blockForInBackground(final long referenceId) {
