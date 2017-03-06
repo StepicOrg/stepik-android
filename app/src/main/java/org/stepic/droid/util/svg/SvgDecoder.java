@@ -22,7 +22,7 @@ public class SvgDecoder implements ResourceDecoder<InputStream, SVG> {
             svg.setDocumentHeight(height);
             svg.setDocumentWidth(width);
             svg.setDocumentPreserveAspectRatio(PreserveAspectRatio.LETTERBOX);
-            return new SimpleResource<SVG>(svg);
+            return new SimpleResource<>(svg);
         } catch (SVGParseException ex) {
             throw new IOException("Cannot load SVG from stream", ex);
         }
