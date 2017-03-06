@@ -20,7 +20,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.caverock.androidsvg.SVG;
 
-import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.stepic.droid.R;
@@ -345,10 +344,12 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
 
 
             User user = getUser(comment);
-            @NotNull
             String userAvatar = "";
             if (user != null) {
-                userAvatar = user.getAvatarPath() == null ? "" : user.getAvatarPath();
+                userAvatar = user.getAvatarPath();
+                if (userAvatar == null) {
+                    userAvatar = "";
+                }
             }
 
             if (userAvatar.endsWith(AppConstants.SVG_EXTENSION)) {
