@@ -48,7 +48,6 @@ class SectionDownloaderImpl(private val databaseFacade: DatabaseFacade,
                 RWLocks.SectionCancelLock.writeLock().unlock()
             }
 
-            cleanManager.removeSection(sectionId)
         }
     }
 
