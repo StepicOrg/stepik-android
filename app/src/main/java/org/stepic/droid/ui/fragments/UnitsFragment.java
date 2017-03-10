@@ -314,6 +314,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @Override
     public void onEmptyUnits() {
         reportConnectionProblem.setVisibility(View.GONE);
+        dismiss();
         reportEmpty.setVisibility(View.VISIBLE);
     }
 
