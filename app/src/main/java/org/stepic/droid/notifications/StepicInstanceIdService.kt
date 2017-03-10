@@ -3,10 +3,9 @@ package org.stepic.droid.notifications
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.FirebaseInstanceIdService
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.web.AuthenticationStepicResponse
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import javax.inject.Inject
 
 class StepicInstanceIdService : FirebaseInstanceIdService() {
@@ -18,10 +17,10 @@ class StepicInstanceIdService : FirebaseInstanceIdService() {
     }
 
     companion object {
-        fun updateAnywhere(api: IApi, sharedPreferences: SharedPreferenceHelper, analytic: Analytic) {
+        fun updateAnywhere(api: Api, sharedPreferences: SharedPreferenceHelper, analytic: Analytic) {
             val tokenNullable : String? = FirebaseInstanceId.getInstance().token
             try {
-                val authTokenStepik : AuthenticationStepicResponse = sharedPreferences.authResponseFromStore!! //for logged user only work
+                sharedPreferences.authResponseFromStore!! //for logged user only work
                 val token = tokenNullable!!
                 val response = api.registerDevice(token).execute()
                 if (!response.isSuccessful && response.code() != 400) { //400 -- device already registered
@@ -44,13 +43,13 @@ class HackerFcmInstanceId() {
     lateinit var sharedPreferences: SharedPreferenceHelper
 
     @Inject
-    lateinit var api: IApi
+    lateinit var api: Api
 
     @Inject
     lateinit var analytic : Analytic
 
 
     init {
-        MainApplication.component().inject(this)
+        App.component().inject(this)
     }
 }

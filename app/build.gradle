@@ -31,8 +31,8 @@ android {
         applicationId "org.stepic.droid"
         minSdkVersion minSdk
         targetSdkVersion 25
-        versionCode 123
-        versionName "1.28.1"
+        versionCode 126
+        versionName "1.29.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // Enabling multidex support.
         multiDexEnabled true
@@ -118,6 +118,8 @@ android {
 
 dependencies {
 
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
     //<DI>
     apt 'com.google.dagger:dagger-compiler:2.5'
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -155,22 +157,16 @@ dependencies {
 
     compile 'me.zhanghai.android.materialprogressbar:library:1.1.6'
 
-    // Required -- JUnit 4 framework
-    testCompile 'junit:junit:4.12'
-    // Optional -- Mockito framework
-    testCompile 'org.mockito:mockito-core:1.10.19'
-
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     compile 'de.mrmaffen:vlc-android-sdk:1.9.8'
 
     compile 'org.jsoup:jsoup:1.8.3'
 
-    compile 'com.google.firebase:firebase-messaging:10.0.1'
-    compile "com.google.firebase:firebase-appindexing:10.0.1"
-    compile 'com.google.android.gms:play-services-auth:10.0.1'
-    compile 'com.google.firebase:firebase-core:10.0.1'
-    compile 'com.google.firebase:firebase-crash:10.0.1'
+    compile 'com.google.firebase:firebase-messaging:10.2.0'
+    compile "com.google.firebase:firebase-appindexing:10.2.0"
+    compile 'com.google.android.gms:play-services-auth:10.2.0'
+    compile 'com.google.firebase:firebase-core:10.2.0'
+    compile 'com.google.firebase:firebase-crash:10.2.0'
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.facebook.android:facebook-android-sdk:4.17.0'
@@ -188,10 +184,15 @@ dependencies {
         transitive = true
     }
 
-    compile 'com.caverock:androidsvg:1.2.1'
+    compile project(':androidsvg')
 
     compile 'com.facebook.stetho:stetho:1.4.2'
     compile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
+
+    // Required -- JUnit 4 framework
+    testCompile 'junit:junit:4.12'
+    // Optional -- Mockito framework
+    testCompile 'org.mockito:mockito-core:1.10.19'
 }
 
 repositories {
@@ -200,15 +201,5 @@ repositories {
         url "https://jitpack.io"
     }
     mavenCentral()
-}
-buildscript {
-    ext.kotlin_version = '1.0.5-2'
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-
 }
 apply plugin: 'com.google.gms.google-services'

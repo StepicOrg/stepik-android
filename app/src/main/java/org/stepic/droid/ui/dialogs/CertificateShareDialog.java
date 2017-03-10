@@ -14,7 +14,7 @@ import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.model.CertificateViewItem;
@@ -41,7 +41,7 @@ public class CertificateShareDialog extends BottomSheetDialog {
     public CertificateShareDialog(@NonNull Context context, @NotNull CertificateViewItem certificateViewItem) {
         super(context);
         this.certificateViewItem = certificateViewItem;
-        MainApplication.component().inject(this);
+        App.component().inject(this);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class CertificateShareDialog extends BottomSheetDialog {
             public void onClick(View view) {
                 dismiss();
                 analytic.reportEvent(Analytic.Certificate.COPY_LINK_CERTIFICATE);
-                ClipData clipData = ClipData.newPlainText(MainApplication.getAppContext().getString(R.string.copy_link_title), certificateViewItem.getFullPath());
+                ClipData clipData = ClipData.newPlainText(App.getAppContext().getString(R.string.copy_link_title), certificateViewItem.getFullPath());
                 ClipboardManager clipboardManager = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                 clipboardManager.setPrimaryClip(clipData);
                 Toast.makeText(getContext(), R.string.link_copied_title, Toast.LENGTH_SHORT).show();

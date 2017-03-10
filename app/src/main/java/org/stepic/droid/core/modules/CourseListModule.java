@@ -1,7 +1,7 @@
 package org.stepic.droid.core.modules;
 
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.concurrency.IMainHandler;
+import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.FilterApplicator;
 import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
@@ -11,7 +11,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.SearchResolver;
 import org.stepic.droid.util.resolvers.SearchResolverImpl;
-import org.stepic.droid.web.IApi;
+import org.stepic.droid.web.Api;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -32,8 +32,8 @@ public class CourseListModule {
     PersistentCourseListPresenter providePersistentCourseListPresenter(Analytic analytic,
                                                                        DatabaseFacade databaseFacade,
                                                                        ThreadPoolExecutor threadPoolExecutor,
-                                                                       IMainHandler mainHandler,
-                                                                       IApi api,
+                                                                       MainHandler mainHandler,
+                                                                       Api api,
                                                                        FilterApplicator filterApplicator,
                                                                        SharedPreferenceHelper sharedPreferenceHelper) {
         return new PersistentCourseListPresenter(
@@ -49,9 +49,9 @@ public class CourseListModule {
 
     @PerFragment
     @Provides
-    SearchCoursesPresenter provideSearchCoursePresenter(IApi api,
+    SearchCoursesPresenter provideSearchCoursePresenter(Api api,
                                                         ThreadPoolExecutor threadPoolExecutor,
-                                                        IMainHandler mainHandler,
+                                                        MainHandler mainHandler,
                                                         SearchResolver searchResolver) {
         return new SearchCoursesPresenter(api,
                 threadPoolExecutor,
@@ -64,8 +64,8 @@ public class CourseListModule {
     @PerFragment
     ContinueCoursePresenter provideContinueCoursePresenter(DatabaseFacade databaseFacade,
                                                            ThreadPoolExecutor threadPoolExecutor,
-                                                           IMainHandler mainHandler,
-                                                           IApi api) {
+                                                           MainHandler mainHandler,
+                                                           Api api) {
         return new ContinueCoursePresenter(databaseFacade, api, threadPoolExecutor, mainHandler);
     }
 }

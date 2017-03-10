@@ -1,7 +1,7 @@
 package org.stepic.droid.store.operations
 
 import android.content.ContentValues
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
 import org.stepic.droid.notifications.model.Notification
@@ -69,7 +69,7 @@ class DatabaseFacade {
     lateinit var lastInteractions: IDao<CourseLastInteraction>
 
     init {
-        MainApplication.storageComponent().inject(this)
+        App.storageComponent().inject(this)
         coursesEnrolledDao.setTableName(Table.enrolled.storeName)
         coursesFeaturedDao.setTableName(Table.featured.storeName)
     }
@@ -132,6 +132,16 @@ class DatabaseFacade {
 
     fun getStepById(stepId: Long) = stepDao.get(DbStructureStep.Column.STEP_ID, stepId.toString())
 
+    fun getStepsById(stepIds: List<Long>): List<Step> {
+        val stringIds = DbParseHelper.parseLongArrayToString(stepIds.toLongArray(), AppConstants.COMMA)
+        if (stringIds != null) {
+            return stepDao
+                    .getAllInRange(DbStructureStep.Column.STEP_ID, stringIds)
+        } else {
+            return ArrayList<Step>()
+        }
+    }
+
     fun getLessonById(lessonId: Long) = lessonDao.get(DbStructureLesson.Column.LESSON_ID, lessonId.toString())
 
     fun getSectionById(sectionId: Long) = sectionDao.get(DbStructureSections.Column.SECTION_ID, sectionId.toString())
@@ -146,12 +156,6 @@ class DatabaseFacade {
     fun getUnitById(unitId: Long) = unitDao.get(DbStructureUnit.Column.UNIT_ID, unitId.toString())
 
     fun getAllDownloadEntities() = downloadEntityDao.getAll()
-
-    fun isUnitCached(unit: Unit?): Boolean {
-        val id = unit?.id ?: return false
-        val dbUnit = unitDao.get(DbStructureUnit.Column.UNIT_ID, id.toString())
-        return dbUnit != null && dbUnit.is_cached
-    }
 
     fun isLessonCached(lesson: Lesson?): Boolean {
         val id = lesson?.id ?: return false
@@ -175,15 +179,6 @@ class DatabaseFacade {
             cv.put(DbStructureStep.Column.IS_LOADING, step.is_loading)
             cv.put(DbStructureStep.Column.IS_CACHED, step.is_cached)
             stepDao.update(DbStructureStep.Column.STEP_ID, step.id.toString(), cv)
-        }
-    }
-
-    fun updateOnlyCachedLoadingUnit(unit: Unit?) {
-        unit?.let {
-            val cv = ContentValues()
-            cv.put(DbStructureUnit.Column.IS_LOADING, unit.is_loading)
-            cv.put(DbStructureUnit.Column.IS_CACHED, unit.is_cached)
-            unitDao.update(DbStructureUnit.Column.UNIT_ID, unit.id.toString(), cv)
         }
     }
 
@@ -365,10 +360,10 @@ class DatabaseFacade {
 
     fun getDownloadEntityByStepId(stepId: Long) = downloadEntityDao.get(DbStructureSharedDownloads.Column.STEP_ID, stepId.toString())
 
-    fun getAllDownloadingUnits(): LongArray {
-        val units = unitDao.getAll(DbStructureUnit.Column.IS_LOADING, 1.toString())
-        val unitIds = units.map { it?.id }.filterNotNull()
-        return unitIds.toLongArray()
+    fun getAllDownloadingLessons(): LongArray {
+        val lessons = lessonDao.getAll(DbStructureLesson.Column.IS_LOADING, 1.toString())
+        val lessonIds = lessons.map { it?.id }.filterNotNull()
+        return lessonIds.toLongArray()
     }
 
     fun getAllDownloadingSections(): LongArray {
@@ -380,6 +375,24 @@ class DatabaseFacade {
     fun dropOnlyCourseTable() {
         coursesEnrolledDao.removeAll()
         coursesFeaturedDao.removeAll()
+    }
+
+    fun dropEnrolledCourses () {
+        coursesEnrolledDao.removeAll()
+    }
+
+    fun dropFeaturedCourses() {
+        coursesFeaturedDao.removeAll()
+    }
+
+    fun getLessonsByIds(lessonIds: LongArray): List<Lesson> {
+        val stringIds = DbParseHelper.parseLongArrayToString(lessonIds, AppConstants.COMMA)
+        if (stringIds != null) {
+            return lessonDao
+                    .getAllInRange(DbStructureLesson.Column.LESSON_ID, stringIds)
+        } else {
+            return ArrayList<Lesson>()
+        }
     }
 
     fun getCalendarSectionsByIds(ids: LongArray): Map<Long, CalendarSection> {

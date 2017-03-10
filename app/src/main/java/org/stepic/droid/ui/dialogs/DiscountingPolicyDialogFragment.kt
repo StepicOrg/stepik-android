@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.widget.CheckBox
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.preferences.UserPreferences
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
@@ -35,7 +35,7 @@ class DiscountingPolicyDialogFragment : DialogFragment() {
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        MainApplication.component().inject(this)
+        App.component().inject(this)
         val layoutInflater = LayoutInflater.from(context)
         val explanationView = layoutInflater.inflate(R.layout.not_ask_again_view, null)
         val checkbox = explanationView.findViewById(R.id.do_not_ask_checkbox) as CheckBox
@@ -46,10 +46,10 @@ class DiscountingPolicyDialogFragment : DialogFragment() {
                 .setView(explanationView)
                 .setMessage(R.string.discounting_policy_message)
                 .setNegativeButton(R.string.no) {
-                    dialog, which ->
+                    _, _ ->
                     analytic.reportEvent(Analytic.Interaction.NO_DISCOUNTING_DIALOG)
                 }
-                .setPositiveButton(R.string.yes, { dialog, which ->
+                .setPositiveButton(R.string.yes, { _, _ ->
                     analytic.reportEvent(Analytic.Interaction.YES_DISCOUNTING_DIALOG)
                     targetFragment.onActivityResult(targetRequestCode, Activity.RESULT_OK, null)
                     val isNeedExplanation = !checkbox.isChecked

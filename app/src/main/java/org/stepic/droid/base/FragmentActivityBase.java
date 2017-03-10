@@ -21,11 +21,10 @@ import com.squareup.otto.Bus;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.concurrency.IMainHandler;
-import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.concurrency.MainHandler;
+import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.DefaultFilter;
-import org.stepic.droid.core.IShell;
-import org.stepic.droid.core.LessonSessionManager;
+import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.LoginManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.model.Course;
@@ -68,7 +67,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected DefaultFilter defaultFilter;
 
     @Inject
-    protected IConfig config;
+    protected Config config;
 
     @Inject
     protected Analytic analytic;
@@ -80,19 +79,16 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected SharedPreferenceHelper sharedPreferenceHelper;
 
     @Inject
-    protected LessonSessionManager lessonManager;
-
-    @Inject
     protected CoursePropertyResolver coursePropertyResolver;
 
     @Inject
     protected DatabaseFacade databaseFacade;
 
     @Inject
-    public IMainHandler mainHandler;
+    public MainHandler mainHandler;
 
     @Inject
-    protected IShell shell;
+    protected Shell shell;
 
     @Inject
     protected Bus bus;
@@ -109,7 +105,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainApplication.component(this).inject(this);
+        App.component(this).inject(this);
     }
 
     @Override

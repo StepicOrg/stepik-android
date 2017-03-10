@@ -20,11 +20,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.caverock.androidsvg.SVG;
 
-import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.model.CommentAdapterItem;
 import org.stepic.droid.model.User;
@@ -63,7 +62,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         this.context = context;
         zone = DateTimeZone.getDefault();
         locale = Locale.getDefault();
-        placeholderUserIcon = ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.placeholder_icon);
+        placeholderUserIcon = ContextCompat.getDrawable(App.getAppContext(), R.drawable.placeholder_icon);
     }
 
     @Override
@@ -345,10 +344,12 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
 
 
             User user = getUser(comment);
-            @NotNull
             String userAvatar = "";
             if (user != null) {
-                userAvatar = user.getAvatarPath() == null ? "" : user.getAvatarPath();
+                userAvatar = user.getAvatarPath();
+                if (userAvatar == null) {
+                    userAvatar = "";
+                }
             }
 
             if (userAvatar.endsWith(AppConstants.SVG_EXTENSION)) {
@@ -358,7 +359,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
                         .load(uri)
                         .into(userIcon);
             } else {
-                Glide.with(MainApplication.getAppContext())
+                Glide.with(App.getAppContext())
                         .load(userAvatar)
                         .asBitmap()
                         .placeholder(placeholderUserIcon)

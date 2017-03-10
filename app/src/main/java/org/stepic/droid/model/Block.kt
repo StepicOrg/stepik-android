@@ -3,7 +3,7 @@ package org.stepic.droid.model
 import android.os.Parcel
 import android.os.Parcelable
 
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 
 import java.io.Serializable
 
@@ -30,7 +30,7 @@ class Block : Parcelable, Serializable {
     protected constructor(input: Parcel) {
         this.name = input.readString()
         this.text = input.readString()
-        this.video = input.readParcelable<Video>(MainApplication.getAppContext().classLoader)
+        this.video = input.readParcelable<Video>(App.getAppContext().classLoader)
     }
 
     companion object {

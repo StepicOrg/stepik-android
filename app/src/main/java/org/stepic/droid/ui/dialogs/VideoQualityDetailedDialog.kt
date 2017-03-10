@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import android.widget.CheckBox
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.base.MainApplication
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.base.App
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import timber.log.Timber
@@ -40,7 +40,7 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
     lateinit var threadPoolExecutor: ThreadPoolExecutor
 
     @Inject
-    lateinit var mainHandler: IMainHandler
+    lateinit var mainHandler: MainHandler
 
     @Inject
     lateinit var sharedPreferencesHelper: SharedPreferenceHelper
@@ -60,14 +60,13 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
         builder
                 .setTitle(R.string.video_quality)
                 .setView(explanationView)
-                .setNegativeButton(R.string.cancel) {
-                    dialog, which ->
+                .setNegativeButton(R.string.cancel) { _, _ ->
                     analytic.reportEvent(Analytic.Interaction.CANCEL_VIDEO_QUALITY_DETAILED)
                 }
                 .setSingleChoiceItems(R.array.video_quality,
                         qualityToPositionMap[userPreferences.qualityVideo]!!,
-                        { dialog, which -> chosenOptionPosition = which })
-                .setPositiveButton(R.string.ok, { dialog, which ->
+                        { _, which -> chosenOptionPosition = which })
+                .setPositiveButton(R.string.ok, { _, which ->
                     val qualityString = positionToQualityMap[chosenOptionPosition]
                     analytic.reportEventWithIdName(Analytic.Preferences.VIDEO_QUALITY, which.toString(), qualityString)
 
@@ -96,7 +95,7 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
     }
 
     override fun injectDependencies() {
-        MainApplication.component().inject(this)
+        App.component().inject(this)
     }
 
     fun setOnLoadPositionListener(onLoadPositionListener: OnLoadPositionListener) {

@@ -10,7 +10,7 @@ import com.squareup.otto.Bus;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.events.wifi_settings.WifiLoadIsChangedEvent;
 
 import javax.inject.Inject;
@@ -22,7 +22,7 @@ public class AllowMobileDataDialogFragment extends DialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        MainApplication.component().inject(this);
+        App.component().inject(this);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.allow_mobile_download_title)

@@ -20,23 +20,25 @@ import com.bumptech.glide.Glide;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.core.IShell;
+import org.stepic.droid.base.App;
+import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.model.Lesson;
+import org.stepic.droid.model.LessonLoadingState;
 import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
-import org.stepic.droid.store.CleanManager;
-import org.stepic.droid.store.IDownloadManager;
+import org.stepic.droid.store.LessonDownloader;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.transformers.ProgressTransformerKt;
+import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
 import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
 import org.stepic.droid.ui.dialogs.OnLoadPositionListener;
 import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.viewmodel.ProgressViewModel;
 
 import java.util.List;
 import java.util.Map;
@@ -47,7 +49,6 @@ import javax.inject.Inject;
 import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import org.stepic.droid.viewmodel.ProgressViewModel;
 
 public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder> implements StepicOnClickItemListener, OnClickLoadListener, OnLoadPositionListener {
 
@@ -56,22 +57,19 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     ScreenManager screenManager;
 
     @Inject
-    IDownloadManager downloadManager;
-
-    @Inject
     DatabaseFacade databaseFacade;
 
     @Inject
-    IShell shell;
-
-    @Inject
-    CleanManager cleanManager;
+    Shell shell;
 
     @Inject
     Analytic analytic;
 
     @Inject
     ThreadPoolExecutor threadPoolExecutor;
+
+    @Inject
+    LessonDownloader lessonDownloader;
 
 
     private final static String DELIMITER = ".";
@@ -80,40 +78,39 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     private final List<Lesson> lessonList;
     private AppCompatActivity activity;
     private final List<Unit> unitList;
-    private RecyclerView recyclerView;
     private final Map<Long, Progress> unitProgressMap;
+    private final Map<Long, LessonLoadingState> lessonIdToUnitLoadingStateMap;
 
-    public UnitAdapter(Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, AppCompatActivity activity) {
+    public UnitAdapter(Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, AppCompatActivity activity, Map<Long, LessonLoadingState> lessonIdToUnitLoadingStateMap) {
         this.activity = activity;
         this.parentSection = parentSection;
         this.unitList = unitList;
         this.lessonList = lessonList;
         this.unitProgressMap = unitProgressMap;
-        MainApplication.component().inject(this);
+        this.lessonIdToUnitLoadingStateMap = lessonIdToUnitLoadingStateMap;
+        App.component().inject(this);
     }
 
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        this.recyclerView = recyclerView;
-    }
-
-    @Override
-    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-        this.recyclerView = null;
-    }
 
     @Override
     public UnitViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(activity).inflate(R.layout.unit_item, parent, false);
-        return new UnitViewHolder(v, this, this);
+        View v = LayoutInflater.from(activity).inflate(R.layout.unit_item, null);
+        UnitViewHolder unitViewHolder = new UnitViewHolder(v, this, this);
+        return unitViewHolder;
     }
 
     @Override
     public void onBindViewHolder(UnitViewHolder holder, int position) {
         Unit unit = unitList.get(position);
         Lesson lesson = lessonList.get(position);
+
+        long lessonId = lesson.getId();
+        boolean needAnimation = true;
+        if (holder.oldLessonId != lessonId) {
+            //if rebinding than animation is not needed
+            holder.oldLessonId = lessonId;
+            needAnimation = false;
+        }
 
         StringBuilder titleBuilder = new StringBuilder();
         titleBuilder.append(parentSection.getPosition());
@@ -124,7 +121,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         holder.unitTitle.setText(titleBuilder.toString());
 
-        Glide.with(MainApplication.getAppContext())
+        Glide.with(App.getAppContext())
                 .load(lesson.getCover_url())
                 .placeholder(holder.lessonPlaceholderDrawable)
                 .into(holder.lessonIcon);
@@ -152,28 +149,30 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             holder.viewedItem.setVisibility(View.INVISIBLE);
         }
 
-        if (unit.is_cached()) {
-
-            // FIXME: 05.11.15 Delete course from cache. Set CLICK LISTENER.
+        if (lesson.is_cached()) {
             //cached
-
             holder.preLoadIV.setVisibility(View.GONE);
             holder.whenLoad.setVisibility(View.INVISIBLE);
             holder.afterLoad.setVisibility(View.VISIBLE); //can
 
+            holder.whenLoad.setProgressPortion(0, false);
         } else {
-            if (unit.is_loading()) {
+            if (lesson.is_loading()) {
 
                 holder.preLoadIV.setVisibility(View.GONE);
                 holder.whenLoad.setVisibility(View.VISIBLE);
                 holder.afterLoad.setVisibility(View.GONE);
 
-                //todo: add cancel of downloading
+                LessonLoadingState lessonLoadingState = lessonIdToUnitLoadingStateMap.get(lesson.getId());
+                if (lessonLoadingState != null) {
+                    holder.whenLoad.setProgressPortion(lessonLoadingState.getPortion(), needAnimation);
+                }
             } else {
                 //not cached not loading
                 holder.preLoadIV.setVisibility(View.VISIBLE);
                 holder.whenLoad.setVisibility(View.INVISIBLE);
                 holder.afterLoad.setVisibility(View.GONE);
+                holder.whenLoad.setProgressPortion(0, false);
             }
 
         }
@@ -198,7 +197,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             final Unit unit = unitList.get(position);
             final Lesson lesson = lessonList.get(position);
 
-            int permissionCheck = ContextCompat.checkSelfPermission(MainApplication.getAppContext(),
+            int permissionCheck = ContextCompat.checkSelfPermission(App.getAppContext(),
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
@@ -228,27 +227,34 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             }
 
 
-            if (unit.is_cached()) {
+            if (lesson.is_cached()) {
                 //delete
-                analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_UNIT, unit.getId() + "");
-                cleanManager.removeUnitLesson(unit, lesson);
-                unit.set_loading(false);
-                unit.set_cached(false);
+                analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_LESSON, unit.getId() + "");
                 lesson.set_loading(false);
                 lesson.set_cached(false);
                 threadPoolExecutor.execute(new Runnable() {
                     @Override
                     public void run() {
                         databaseFacade.updateOnlyCachedLoadingLesson(lesson);
-                        databaseFacade.updateOnlyCachedLoadingUnit(unit);
+                        lessonDownloader.deleteWholeLesson(lesson.getId());
                     }
                 });
                 notifyItemChanged(position);
             } else {
-                if (unit.is_loading()) {
+                if (lesson.is_loading()) {
                     //cancel loading
-                    analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_UNIT, unit.getId() + "");
-                    screenManager.showDownload(activity);
+                    analytic.reportEvent(Analytic.Interaction.CLICK_CANCEL_LESSON, unit.getId() + "");
+                    lesson.set_loading(false);
+                    lesson.set_cached(false);
+                    threadPoolExecutor.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            databaseFacade.updateOnlyCachedLoadingLesson(lesson);
+                            lessonDownloader.cancelLessonLoading(lesson.getId());
+                        }
+                    });
+
+                    notifyItemChanged(position);
                 } else {
                     if (shell.getSharedPreferenceHelper().isNeedToShowVideoQualityExplanation()) {
                         VideoQualityDetailedDialog dialogFragment = VideoQualityDetailedDialog.Companion.newInstance(position);
@@ -270,17 +276,14 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         if (position >= 0 && position < unitList.size()) {
             final Unit unit = unitList.get(position);
             final Lesson lesson = lessonList.get(position);
-            analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_UNIT, unit.getId() + "");
-            unit.set_cached(false);
+            analytic.reportEvent(Analytic.Interaction.CLICK_CACHE_LESSON, unit.getId() + "");
             lesson.set_cached(false);
-            unit.set_loading(true);
             lesson.set_loading(true);
             threadPoolExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
                     databaseFacade.updateOnlyCachedLoadingLesson(lesson);
-                    databaseFacade.updateOnlyCachedLoadingUnit(unit);
-                    downloadManager.addUnitLesson(unit, lesson);
+                    lessonDownloader.downloadLesson(lesson.getId());
                 }
             });
             notifyItemChanged(position);
@@ -311,7 +314,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         View preLoadIV;
 
         @BindView(R.id.when_load_view)
-        View whenLoad;
+        ProgressWheel whenLoad;
 
         @BindView(R.id.after_load_iv)
         View afterLoad;
@@ -333,6 +336,8 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         @BindDrawable(R.drawable.ic_lesson_cover)
         Drawable lessonPlaceholderDrawable;
+
+        long oldLessonId = -1;
 
         public UnitViewHolder(View itemView, final StepicOnClickItemListener listener, final OnClickLoadListener loadListener) {
             super(itemView);

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.notifications.LocalReminder;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 
@@ -24,7 +24,7 @@ public class BootCompletedReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        MainApplication.component().inject(this);
+        App.component().inject(this);
         analytic.reportEvent(Analytic.System.BOOT_COMPLETED);
         long timestamp = sharedPreferences.getNewUserRemindTimestamp();
         if (timestamp > 0L) {

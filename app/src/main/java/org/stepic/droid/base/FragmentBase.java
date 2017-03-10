@@ -11,17 +11,16 @@ import android.view.inputmethod.InputMethodManager;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.concurrency.IMainHandler;
-import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.concurrency.MainHandler;
+import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.AudioFocusHelper;
-import org.stepic.droid.core.IShell;
+import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.ShareHelper;
-import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.notifications.LocalReminder;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.ICancelSniffer;
+import org.stepic.droid.store.CancelSniffer;
 import org.stepic.droid.store.IDownloadManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
@@ -64,10 +63,10 @@ public class FragmentBase extends Fragment {
     public Bus bus;
 
     @Inject
-    public IConfig config;
+    public Config config;
 
     @Inject
-    public IShell shell;
+    public Shell shell;
 
     @Inject
     public LocalProgressManager localProgressManager;
@@ -85,7 +84,7 @@ public class FragmentBase extends Fragment {
     public CoursePropertyResolver coursePropertyResolver;
 
     @Inject
-    public IMainHandler mainHandler;
+    public MainHandler mainHandler;
 
     @Inject
     public AudioFocusHelper audioFocusHelper;
@@ -94,14 +93,14 @@ public class FragmentBase extends Fragment {
     public DownloadManager systemDownloadManager;
 
     @Inject
-    public ICancelSniffer cancelSniffer;
+    public CancelSniffer cancelSniffer;
 
     public FragmentBase() {
         injectComponent();
     }
 
     protected void injectComponent() {
-        MainApplication.component(MainApplication.getAppContext()).inject(this);
+        App.component(App.getAppContext()).inject(this);
     }
 
     protected void hideSoftKeypad() {
@@ -167,7 +166,7 @@ public class FragmentBase extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        RefWatcher refWatcher = MainApplication.getRefWatcher(getActivity());
+//        RefWatcher refWatcher = App.getRefWatcher(getActivity());
 //        refWatcher.watch(this);
     }
 

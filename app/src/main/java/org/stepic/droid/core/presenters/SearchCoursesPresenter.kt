@@ -1,18 +1,18 @@
 package org.stepic.droid.core.presenters
 
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.model.Course
 import org.stepic.droid.util.resolvers.SearchResolver
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-class SearchCoursesPresenter(val api: IApi,
+class SearchCoursesPresenter(val api: Api,
                              val threadPoolExecutor: ThreadPoolExecutor,
-                             val mainHandler: IMainHandler,
+                             val mainHandler: MainHandler,
                              val searchResolver: SearchResolver) : PresenterBase<CoursesView>() {
 
     private var isLoading = AtomicBoolean(false)

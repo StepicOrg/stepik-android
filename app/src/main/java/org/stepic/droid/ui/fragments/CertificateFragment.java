@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.modules.CertificateModule;
 import org.stepic.droid.core.presenters.CertificatePresenter;
 import org.stepic.droid.core.presenters.contracts.CertificateView;
@@ -68,7 +68,7 @@ public class CertificateFragment extends FragmentBase implements CertificateView
 
     @Override
     protected void injectComponent() {
-        MainApplication.component().plus(new CertificateModule()).inject(this);
+        App.component().plus(new CertificateModule()).inject(this);
     }
 
     @Override
@@ -160,6 +160,7 @@ public class CertificateFragment extends FragmentBase implements CertificateView
         reportEmpty.setVisibility(View.GONE);
         reportInternetProblem.setVisibility(View.GONE);
         needAuthRootView.setVisibility(View.GONE);
+        swipeRefreshLayout.setVisibility(View.VISIBLE);
         certificateRecyclerView.setVisibility(View.VISIBLE);
         adapter.updateCertificates(certificateViewItems);
     }
@@ -182,6 +183,8 @@ public class CertificateFragment extends FragmentBase implements CertificateView
         ProgressHelper.dismiss(progressBarOnCenter);
         reportEmpty.setVisibility(View.GONE);
         reportInternetProblem.setVisibility(View.GONE);
+        certificateRecyclerView.setVisibility(View.GONE);
+        swipeRefreshLayout.setVisibility(View.GONE);
         needAuthRootView.setVisibility(View.VISIBLE);
     }
 

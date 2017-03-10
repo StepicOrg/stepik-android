@@ -1,7 +1,7 @@
 package org.stepic.droid.core.presenters
 
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.RouteStepView
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Unit
@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadPoolExecutor
 
 class RouteStepPresenter(
         val threadPoolExecutor: ThreadPoolExecutor,
-        val mainHandler: IMainHandler,
+        val mainHandler: MainHandler,
         val databaseFacade: DatabaseFacade,
         val analytic: Analytic) : PresenterBase<RouteStepView>() {
 
@@ -29,7 +29,7 @@ class RouteStepPresenter(
         checkStepBase(stepId,
                 lesson,
                 unit,
-                indexCalculation = { something -> 0 },
+                indexCalculation = { _ -> 0 },
                 resultForView = { view?.showPreviousLessonView() }) //need only the first element
     }
 
@@ -118,6 +118,6 @@ class RouteStepPresenter(
     }
 
     inner class IllegalStateRouteLessonException : IllegalStateException {
-        constructor(unitId: Long) : super("Next or previous lesson is shouldn't be shown, unitId = " + unitId.toString())
+        constructor(unitId: Long) : super("Next or previous lesson is shouldn't be shown, lessonId = " + unitId.toString())
     }
 }

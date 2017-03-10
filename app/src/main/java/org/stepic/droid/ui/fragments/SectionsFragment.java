@@ -13,7 +13,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -48,17 +47,19 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
+import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.core.modules.SectionModule;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
+import org.stepic.droid.core.presenters.DownloadingProgressSectionsPresenter;
 import org.stepic.droid.core.presenters.InvitationPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.core.presenters.contracts.CalendarExportableView;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
+import org.stepic.droid.core.presenters.contracts.DownloadingProgressSectionsView;
 import org.stepic.droid.core.presenters.contracts.InvitationView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.core.presenters.contracts.SectionsView;
@@ -75,6 +76,7 @@ import org.stepic.droid.events.sections.SectionCachedEvent;
 import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
+import org.stepic.droid.model.SectionLoadingState;
 import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.ui.adapters.SectionAdapter;
@@ -86,17 +88,21 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.HtmlHelper;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepic.droid.util.SectionUtilKt;
 import org.stepic.droid.util.SnackbarExtensionKt;
-import org.stepic.droid.util.StepicLogicHelper;
+import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.StringUtil;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 import uk.co.chrisjenx.calligraphy.TypefaceUtils;
@@ -108,14 +114,14 @@ public class SectionsFragment
         LoadCourseView, CourseJoinView,
         CalendarExportableView,
         SectionsView,
-        InvitationView {
+        InvitationView, DownloadingProgressSectionsView {
 
     public static String joinFlag = "joinFlag";
     private static int INVITE_REQUEST_CODE = 324;
+    private static final int ANIMATION_DURATION = 0;
 
     public static SectionsFragment newInstance() {
-        SectionsFragment fragment = new SectionsFragment();
-        return fragment;
+        return new SectionsFragment();
     }
 
 
@@ -189,11 +195,13 @@ public class SectionsFragment
     @Inject
     InvitationPresenter invitationPresenter;
 
+    @Inject
+    DownloadingProgressSectionsPresenter downloadingProgressSectionsPresenter;
+
     private boolean wasIndexed;
-    private Uri urlInApp;
     private Uri urlInWeb;
     private String title;
-    private String description;
+    private Map<Long, SectionLoadingState> sectionIdToLoadingStateMap = new HashMap<>();
 
     LinearLayoutManager linearLayoutManager;
 
@@ -203,7 +211,7 @@ public class SectionsFragment
 
     @Override
     protected void injectComponent() {
-        MainApplication.component().plus(new SectionModule()).inject(this);
+        App.component().plus(new SectionModule()).inject(this);
     }
 
     @Override
@@ -236,10 +244,15 @@ public class SectionsFragment
         linearLayoutManager = new LinearLayoutManager(getActivity());
         sectionsRecyclerView.setLayoutManager(linearLayoutManager);
         sectionList = new ArrayList<>();
-        adapter = new SectionAdapter(sectionList, ((AppCompatActivity) getActivity()), calendarPresenter, sectionsPresenter.getProgressMap());
+        adapter = new SectionAdapter(sectionList, ((AppCompatActivity) getActivity()), calendarPresenter, sectionsPresenter.getProgressMap(), sectionIdToLoadingStateMap);
         sectionsRecyclerView.setAdapter(adapter);
 
-        sectionsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        sectionsRecyclerView.setItemAnimator(new SlideInRightAnimator());
+        sectionsRecyclerView.getItemAnimator().setRemoveDuration(ANIMATION_DURATION);
+        sectionsRecyclerView.getItemAnimator().setAddDuration(ANIMATION_DURATION);
+        sectionsRecyclerView.getItemAnimator().setMoveDuration(ANIMATION_DURATION);
+        sectionsRecyclerView.getItemAnimator().setChangeDuration(0);
+
 
         joinCourseProgressDialog = new LoadingProgressDialog(getContext());
         ProgressHelper.activate(loadOnCenterProgressBar);
@@ -270,9 +283,7 @@ public class SectionsFragment
 
         if (course != null && course.getSlug() != null && !wasIndexed) {
             title = getString(R.string.syllabus_title) + ": " + course.getTitle();
-            description = course.getSummary();
             urlInWeb = Uri.parse(StringUtil.getUriForSyllabus(config.getBaseUrl(), course.getSlug()));
-            urlInApp = StringUtil.getAppUriForCourseSyllabus(config.getBaseUrl(), course.getSlug());
             reportIndexToGoogle();
         }
 
@@ -312,7 +323,7 @@ public class SectionsFragment
             });
             courseName.setText(course.getTitle());
             Glide.with(this)
-                    .load(StepicLogicHelper.getPathForCourseOrEmpty(course, config))
+                    .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
                     .placeholder(R.drawable.ic_course_placeholder)
                     .into(imageViewTarget);
         } else {
@@ -385,7 +396,7 @@ public class SectionsFragment
             if (modulePosition > 0 && modulePosition <= sections.size()) {
                 Section section = sections.get(modulePosition - 1);
 
-                boolean userHasAccess = (section.is_active() || (section.getActions() != null && section.getActions().getTest_section() != null)) && course != null && course.getEnrollment() > 0 && !section.isExam();
+                boolean userHasAccess = SectionUtilKt.hasUserAccess(section, course);
                 if (userHasAccess) {
                     shell.getScreenProvider().showUnitsForSection(SectionsFragment.this.getActivity(), sections.get(modulePosition - 1));
                 } else {
@@ -403,6 +414,8 @@ public class SectionsFragment
             linearLayoutManager.scrollToPositionWithOffset(scrollTo, 0);
             afterUpdateModulePosition = -1;
         }
+
+        downloadingProgressSectionsPresenter.subscribeToProgressUpdates(sectionList);
     }
 
     @Override
@@ -439,10 +452,13 @@ public class SectionsFragment
     public void onStart() {
         super.onStart();
         reportIndexToGoogle();
+        downloadingProgressSectionsPresenter.attachView(this);
+        downloadingProgressSectionsPresenter.subscribeToProgressUpdates(sectionList);
     }
 
     @Override
     public void onStop() {
+        downloadingProgressSectionsPresenter.detachView(this);
         super.onStop();
         if (wasIndexed) {
             FirebaseUserActions.getInstance().end(getAction());
@@ -453,17 +469,6 @@ public class SectionsFragment
 
     public Action getAction() {
         return Actions.newView(title, urlInWeb.toString());
-//        Thing object = new Thing.Builder()
-//                .setId(urlInWeb.toString())
-//                .setName(title)
-//                .setDescription(description)
-//                .setUrl(urlInApp)
-//                .build();
-//
-//        return new Action.Builder(Action.TYPE_VIEW)
-//                .setObject(object)
-//                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-//                .build();
     }
 
     @Override
@@ -888,5 +893,28 @@ public class SectionsFragment
                 })
                 .build();
         dialog.show();
+    }
+
+    @Override
+    public void onNewProgressValue(@NotNull SectionLoadingState state) {
+        // FIXME: 21.02.17
+        int position = -1;
+        for (int i = 0; i < sectionList.size(); i++) {
+            Section section = sectionList.get(i);
+            if (section.getId() == state.getSectionId()) {
+                position = i;
+            }
+        }
+
+        if (position < 0) {
+            return;
+        }
+
+        position += SectionAdapter.PRE_SECTION_LIST_DELTA;
+
+        //change state for updating in adapter
+        sectionIdToLoadingStateMap.put(state.getSectionId(), state);
+        adapter.notifyItemChanged(position);
+
     }
 }

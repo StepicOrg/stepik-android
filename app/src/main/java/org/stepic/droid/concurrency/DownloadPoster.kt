@@ -2,7 +2,7 @@ package org.stepic.droid.concurrency
 
 import com.squareup.otto.Bus
 
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.events.video.DownloadReportEvent
 import org.stepic.droid.model.DownloadingVideoItem
 
@@ -14,7 +14,7 @@ class DownloadPoster(private val downloadingVideoItem: DownloadingVideoItem) : F
     lateinit var bus: Bus
 
     init {
-        MainApplication.component().inject(this)
+        App.component().inject(this)
     }
 
     override fun invoke(): Unit {

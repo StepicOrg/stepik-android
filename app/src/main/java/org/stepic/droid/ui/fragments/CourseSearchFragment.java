@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.squareup.otto.Subscribe;
 
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.modules.CourseListModule;
 import org.stepic.droid.core.presenters.SearchCoursesPresenter;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
@@ -35,7 +35,7 @@ public class CourseSearchFragment extends CourseListFragmentBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        MainApplication.component().plus(new CourseListModule()).inject(this);
+        App.component().plus(new CourseListModule()).inject(this);
     }
 
     @Override

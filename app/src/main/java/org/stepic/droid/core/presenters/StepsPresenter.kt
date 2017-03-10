@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters
 
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.StepsView
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Section
@@ -9,7 +9,7 @@ import org.stepic.droid.model.Unit
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.ProgressUtil
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import org.stepic.droid.web.LessonStepicResponse
 import org.stepic.droid.web.StepResponse
 import retrofit2.Response
@@ -18,9 +18,9 @@ import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 
 class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
-                     val mainHandler: IMainHandler,
+                     val mainHandler: MainHandler,
                      val databaseFacade: DatabaseFacade,
-                     val api: IApi,
+                     val api: Api,
                      val sharedPreferenceHelper: SharedPreferenceHelper) : PresenterBase<StepsView>() {
 
     var lesson: Lesson? = null
@@ -288,7 +288,7 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
 
         if (unit == null) {
             if (simpleUnitId >= 0) {
-                //get by unitId
+                //get by lessonId
                 try {
                     unit = api.getUnits(longArrayOf(simpleUnitId)).execute()?.body()?.units?.firstOrNull()
                 } catch (ignored: Exception) {

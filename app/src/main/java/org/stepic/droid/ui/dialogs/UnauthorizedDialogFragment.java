@@ -9,7 +9,7 @@ import android.support.v7.app.AlertDialog;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.model.Course;
 
@@ -41,7 +41,7 @@ public class UnauthorizedDialogFragment extends DialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        MainApplication.component().inject(this);
+        App.component().inject(this);
         Bundle args = getArguments();
         final Course nullableCourse;
         if (args != null) {

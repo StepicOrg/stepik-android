@@ -6,22 +6,12 @@ import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
-import org.stepic.droid.base.MainApplication
-import org.stepic.droid.configuration.IConfig
 import org.stepic.droid.util.DateTimeHelper
 import java.io.Serializable
 import java.util.*
-import javax.inject.Inject
 
-class Section : Serializable, Parcelable {
+class Section() : Serializable, Parcelable {
 
-    @Inject
-    @Deprecated("create helper or extension, not use config in model class")
-    lateinit var config: IConfig
-
-    private val formatterForView: DateTimeFormatter by lazy {
-        DateTimeFormat.forPattern(config.datePattern).withZone(DateTimeZone.getDefault()).withLocale(Locale.getDefault())
-    }
     var id: Long = 0
     var course: Long = 0 // course id
     var units: LongArray? = null
@@ -56,8 +46,8 @@ class Section : Serializable, Parcelable {
     private var formatted_soft_deadline: String? = null
     private var formatted_hard_deadline: String? = null
 
-    constructor() {
-        MainApplication.component(MainApplication.getAppContext()).inject(this)
+    private val formatterForView: DateTimeFormatter by lazy {
+        DateTimeFormat.forPattern(datePattern).withZone(DateTimeZone.getDefault()).withLocale(Locale.getDefault())
     }
 
     val formattedBeginDate: String by lazy {
@@ -136,6 +126,8 @@ class Section : Serializable, Parcelable {
     }
 
     companion object {
+        val datePattern = "dd MMMM yyyy HH:mm" //todo transfer to viewmodel/helper, keep section more plain
+
         @JvmField
         val CREATOR: Parcelable.Creator<Section> = object : Parcelable.Creator<Section> {
             override fun createFromParcel(source: Parcel): Section {

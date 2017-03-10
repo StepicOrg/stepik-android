@@ -11,7 +11,7 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.model.Option;
 import org.stepic.droid.ui.custom.ProgressLatexView;
 import org.stepic.droid.ui.util.ViewUtils;
@@ -37,8 +37,8 @@ public class SortingStepDraggableAdapter extends RecyclerView.Adapter<SortingSte
         this.data = data;
         setHasStableIds(true);
 
-        sortingImageViewHeight = (int) MainApplication.getAppContext().getResources().getDimension(R.dimen.sort_image_view_height);
-        sortingControllerPadding = (int) MainApplication.getAppContext().getResources().getDimension(R.dimen.padding_sort_controller);
+        sortingImageViewHeight = (int) App.getAppContext().getResources().getDimension(R.dimen.sort_image_view_height);
+        sortingControllerPadding = (int) App.getAppContext().getResources().getDimension(R.dimen.padding_sort_controller);
         minEnhancedTextHeight = sortingImageViewHeight + 2 * sortingControllerPadding;
     }
 

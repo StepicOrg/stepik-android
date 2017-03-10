@@ -15,11 +15,11 @@ import java.util.List;
 
 public class UnitDaoImpl extends DaoBase<Unit> {
 
-    IDao<Progress> mProgressDao;
+    private final IDao<Progress> progressDao;
 
     public UnitDaoImpl(SQLiteDatabase openHelper, IDao<Progress> progressDao) {
         super(openHelper);
-        mProgressDao = progressDao;
+        this.progressDao = progressDao;
     }
 
     @Override
@@ -36,22 +36,17 @@ public class UnitDaoImpl extends DaoBase<Unit> {
         int columnIndexSoftDeadline = cursor.getColumnIndex(DbStructureUnit.Column.SOFT_DEADLINE);
         int columnIndexHardDeadline = cursor.getColumnIndex(DbStructureUnit.Column.HARD_DEADLINE);
         int columnIndexIsActive = cursor.getColumnIndex(DbStructureUnit.Column.IS_ACTIVE);
-        int indexIsCached = cursor.getColumnIndex(DbStructureUnit.Column.IS_CACHED);
-        int indexIsLoading = cursor.getColumnIndex(DbStructureUnit.Column.IS_LOADING);
-
 
         unit.setId(cursor.getLong(columnIndexUnitId));
         unit.setSection(cursor.getLong(columnIndexSection));
         unit.setLesson(cursor.getLong(columnIndexLesson));
         unit.setProgress(cursor.getString(columnIndexProgress));
-        unit.setAssignments(DbParseHelper.INSTANCE.parseStringToLongArray(cursor.getString(columnIndexAssignments)));
+        unit.setAssignments(DbParseHelper.parseStringToLongArray(cursor.getString(columnIndexAssignments)));
         unit.setBegin_date(cursor.getString(columnIndexBeginDate));
         unit.setSoft_deadline(cursor.getString(columnIndexSoftDeadline));
         unit.setHard_deadline(cursor.getString(columnIndexHardDeadline));
         unit.setPosition(cursor.getInt(columnIndexPosition));
         unit.set_active(cursor.getInt(columnIndexIsActive) > 0);
-        unit.set_cached(cursor.getInt(indexIsCached) > 0);
-        unit.set_loading(cursor.getInt(indexIsLoading) > 0);
 
         return unit;
     }
@@ -120,7 +115,7 @@ public class UnitDaoImpl extends DaoBase<Unit> {
             String progressId = unit.getProgressId();
             Progress progress = null;
             if (progressId != null) {
-                progress = mProgressDao.get(DbStructureProgress.Column.ID, progressId);
+                progress = progressDao.get(DbStructureProgress.Column.ID, progressId);
             }
             if (progress != null)
                 isPassed = progress.is_passed();

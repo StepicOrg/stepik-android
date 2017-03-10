@@ -7,11 +7,11 @@ import android.content.Intent
 import android.os.Handler
 import com.squareup.otto.Bus
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.events.steps.StepRemovedEvent
-import org.stepic.droid.model.*
-import org.stepic.droid.model.Unit
-import org.stepic.droid.store.IStoreStateManager
+import org.stepic.droid.model.Lesson
+import org.stepic.droid.model.Step
+import org.stepic.droid.store.StoreStateManager
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import java.io.File
@@ -26,12 +26,16 @@ class DeleteService : IntentService("delete_service") {
     @Inject
     lateinit var databaseFacade: DatabaseFacade
     @Inject
-    lateinit var storeStateManager: IStoreStateManager
+    lateinit var storeStateManager: StoreStateManager
     @Inject
     lateinit var analytic: Analytic
 
+    override fun onCreate() {
+        super.onCreate()
+        App.component().inject(this)
+    }
+
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        MainApplication.component().inject(this)
         super.onStartCommand(intent, flags, startId)
         return Service.START_REDELIVER_INTENT
     }
@@ -42,12 +46,11 @@ class DeleteService : IntentService("delete_service") {
         try {
             when (type) {
                 LoadService.LoadTypeKey.Section -> {
-                    val section = intent.getSerializableExtra(AppConstants.KEY_SECTION_BUNDLE) as? Section
-                    removeFromDisk(section)
+                    val sectionId = intent.getLongExtra(AppConstants.KEY_SECTION_BUNDLE, -1).takeIf { it >= 0 } ?: return
+                    removeFromDisk(sectionId)
                 }
-                LoadService.LoadTypeKey.UnitLesson -> {
-                    val unit = intent.getSerializableExtra(AppConstants.KEY_UNIT_BUNDLE) as? Unit
-                    val lesson = intent.getSerializableExtra(AppConstants.KEY_LESSON_BUNDLE) as? Lesson
+                LoadService.LoadTypeKey.Lesson -> {
+                    val lesson = intent.getParcelableExtra<Lesson>(AppConstants.KEY_LESSON_BUNDLE)
                     removeFromDisk(lesson)
                 }
                 LoadService.LoadTypeKey.Step -> {
@@ -86,7 +89,7 @@ class DeleteService : IntentService("delete_service") {
             databaseFacade.updateOnlyCachedLoadingStep(step)
 //            database.deleteStep(step) // remove steps FIXME: MAYBE NOT DELETE STEP?
             storeStateManager.updateStepAfterDeleting(step)
-            val mainHandler = Handler(MainApplication.getAppContext().mainLooper)
+            val mainHandler = Handler(App.getAppContext().mainLooper)
             mainHandler.post { bus.post(StepRemovedEvent(step.id)) }
         }
     }
@@ -100,29 +103,18 @@ class DeleteService : IntentService("delete_service") {
         }
     }
 
-    private fun removeFromDisk(section: Section?) {
-        section?.let {
-            val units = databaseFacade.getAllUnitsOfSection(section.id)
-            val lessons = ArrayList<Lesson>()
-            for (unit in units) {
-                val lesson = databaseFacade.getLessonOfUnit(unit)
-                if (lesson != null) {
-                    lessons.add(lesson)
-                }
-            }
-
-            for (lesson in lessons) {
-                removeFromDisk(lesson)
+    private fun removeFromDisk(sectionId: Long) {
+        val units = databaseFacade.getAllUnitsOfSection(sectionId)
+        val lessons = ArrayList<Lesson>()
+        for (unit in units) {
+            val lesson = databaseFacade.getLessonOfUnit(unit)
+            if (lesson != null) {
+                lessons.add(lesson)
             }
         }
-    }
 
-    private fun removeFromDisk(course: Course?) {
-        course?.let {
-            val sections = databaseFacade.getAllSectionsOfCourse(course)
-            for (section in sections) {
-                removeFromDisk(section)
-            }
+        for (lesson in lessons) {
+            removeFromDisk(lesson)
         }
     }
 }

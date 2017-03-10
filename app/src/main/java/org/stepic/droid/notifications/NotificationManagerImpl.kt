@@ -16,7 +16,7 @@ import android.support.v4.app.TaskStackBuilder
 import com.bumptech.glide.Glide
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.configuration.IConfig
+import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.model.Course
 import org.stepic.droid.notifications.model.Notification
@@ -34,15 +34,15 @@ import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.HtmlHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.resolvers.text.TextResolver
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 
 
 class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper,
-                              val api: IApi,
-                              val configs: IConfig,
+                              val api: Api,
+                              val configs: Config,
                               val userPreferences: UserPreferences,
                               val databaseFacade: DatabaseFacade,
                               val analytic: Analytic,

@@ -31,7 +31,7 @@ import org.joda.time.format.DateTimeFormatterBuilder;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.ProfilePresenter;
 import org.stepic.droid.core.modules.ProfileModule;
 import org.stepic.droid.core.presenters.NotificationTimePresenter;
@@ -161,7 +161,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
 
     @Override
     protected void injectComponent() {
-        MainApplication
+        App
                 .component()
                 .plus(new ProfileModule()).inject(this);
     }

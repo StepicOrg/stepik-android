@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <include
+        android:id="@+id/appBarLayout"
+        layout="@layout/appbar_only_toolbar" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appBarLayout">
+
+        <include layout="@layout/report_problem_layout" />
+        <include layout="@layout/report_empty_layout" />
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout_units"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:splitMotionEvents="false"
+                android:id="@+id/units_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:scrollbarStyle="outsideOverlay" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <include layout="@layout/progress_bar_on_empty_screen" />
+    </FrameLayout>
+
+</RelativeLayout>

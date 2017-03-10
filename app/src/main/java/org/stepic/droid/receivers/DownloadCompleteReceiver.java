@@ -10,25 +10,26 @@ import android.os.Handler;
 import com.squareup.otto.Bus;
 
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
+import org.stepic.droid.concurrency.SingleThreadExecutor;
 import org.stepic.droid.events.video.VideoCachedOnDiskEvent;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.model.DownloadEntity;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.Step;
-import org.stepic.droid.model.Unit;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.ICancelSniffer;
-import org.stepic.droid.store.IStoreStateManager;
+import org.stepic.droid.store.CancelSniffer;
+import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.util.StorageUtil;
 
 import java.io.File;
-import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
+
+import timber.log.Timber;
 
 public class DownloadCompleteReceiver extends BroadcastReceiver {
 
@@ -37,15 +38,15 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     @Inject
     DatabaseFacade databaseFacade;
     @Inject
-    IStoreStateManager storeStateManager;
+    StoreStateManager storeStateManager;
     @Inject
     Bus bus;
 
     @Inject
-    ICancelSniffer cancelSniffer;
+    CancelSniffer cancelSniffer;
 
     @Inject
-    ExecutorService threadSingleThreadExecutor;
+    SingleThreadExecutor threadSingleThreadExecutor;
 
     @Inject
     DownloadManager downloadManager;
@@ -54,19 +55,24 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
     Analytic analytic;
 
     public DownloadCompleteReceiver() {
-        MainApplication.component().inject(this);
+        Timber.d("create DownloadCompleteReceiver");
+        App.component().inject(this);
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Timber.d("onReceive");
         final long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+        Timber.d("referenceId = %d", referenceId);
 
-        threadSingleThreadExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                blockForInBackground(referenceId);
-            }
-        });
+        if (referenceId >= 0) {
+            threadSingleThreadExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    blockForInBackground(referenceId);
+                }
+            });
+        }
     }
 
     private void blockForInBackground(final long referenceId) {
@@ -83,23 +89,8 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                 if (cancelSniffer.isStepIdCanceled(step_id)) {
                     downloadManager.remove(referenceId);//remove notification (is it really work and need?)
                     cancelSniffer.removeStepIdCancel(step_id);
-                    Step step = databaseFacade.getStepById(step_id);
-                    if (step != null) {
-                        Lesson lesson = databaseFacade.getLessonById(step.getLesson());
-                        if (lesson != null) {
-                            Unit unit = databaseFacade.getUnitByLessonId(lesson.getId());
-                            if (unit != null && cancelSniffer.isUnitIdIsCanceled(unit.getId())) {
-                                storeStateManager.updateUnitLessonAfterDeleting(lesson.getId());//automatically update section
-                                cancelSniffer.removeUnitIdCancel(unit.getId());
-                                if (cancelSniffer.isSectionIdIsCanceled(unit.getSection())) {
-                                    cancelSniffer.removeSectionIdCancel(unit.getSection());
-                                }
-                            }
-                        }
-                    }
                 } else {
                     //is not canceled
-
                     File userDownloadFolder = userPreferences.getUserDownloadFolder();
                     File downloadFolderAndFile = new File(userDownloadFolder, video_id + "");
                     String path = Uri.fromFile(downloadFolderAndFile).getPath();
@@ -130,7 +121,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     databaseFacade.updateOnlyCachedLoadingStep(step);
                     storeStateManager.updateUnitLessonState(step.getLesson());
                     final Lesson lesson = databaseFacade.getLessonById(step.getLesson());
-                    Handler mainHandler = new Handler(MainApplication.getAppContext().getMainLooper());
+                    Handler mainHandler = new Handler(App.getAppContext().getMainLooper());
                     //Say to ui that ui is cached now
                     Runnable myRunnable = new Runnable() {
                         @Override

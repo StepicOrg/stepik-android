@@ -1,15 +1,13 @@
 package org.stepic.droid.core.components;
 
 import org.jetbrains.annotations.NotNull;
+import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.concurrency.DownloadPoster;
-import org.stepic.droid.concurrency.tasks.FromDbUnitLessonTask;
-import org.stepic.droid.concurrency.tasks.ToDbUnitLessonTask;
 import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.core.MyPhoneStateListener;
-import org.stepic.droid.core.Shell;
+import org.stepic.droid.core.ShellImpl;
 import org.stepic.droid.core.modules.AppCoreModule;
 import org.stepic.droid.core.modules.CertificateModule;
 import org.stepic.droid.core.modules.CourseDetailModule;
@@ -20,9 +18,9 @@ import org.stepic.droid.core.modules.NotificationModule;
 import org.stepic.droid.core.modules.ProfileModule;
 import org.stepic.droid.core.modules.SectionModule;
 import org.stepic.droid.core.modules.StepModule;
+import org.stepic.droid.core.modules.UnitsModule;
 import org.stepic.droid.core.modules.VideoModule;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.model.Section;
 import org.stepic.droid.notifications.HackFcmListener;
 import org.stepic.droid.notifications.HackerFcmInstanceId;
 import org.stepic.droid.notifications.NotificationBroadcastReceiver;
@@ -39,7 +37,6 @@ import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.services.UpdateWithApkService;
 import org.stepic.droid.services.ViewPusher;
 import org.stepic.droid.ui.activities.MainFeedActivity;
-import org.stepic.droid.ui.activities.SectionActivity;
 import org.stepic.droid.ui.adapters.CoursePropertyAdapter;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.adapters.DownloadsAdapter;
@@ -68,7 +65,7 @@ import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepic.droid.ui.dialogs.VideoQualityDialog;
 import org.stepic.droid.ui.dialogs.WantMoveDataDialog;
 import org.stepic.droid.ui.fragments.CommentsFragment;
-import org.stepic.droid.web.RetrofitRESTApi;
+import org.stepic.droid.web.ApiImpl;
 
 import javax.inject.Singleton;
 
@@ -94,15 +91,15 @@ public interface AppCoreComponent {
 
     CourseListComponent plus(CourseListModule module);
 
+    UnitsComponent plus(UnitsModule module);
+
     NotificationComponent plus(NotificationModule module);
 
     void inject(FragmentActivityBase someActivity);
 
     void inject(MainFeedActivity someActivity);
 
-    void inject(SectionActivity someActivity);
-
-    void inject(Shell injectAllToShell);
+    void inject(ShellImpl injectAllToShell);
 
     void inject(CoursesAdapter adapter);
 
@@ -110,11 +107,9 @@ public interface AppCoreComponent {
 
     void inject(FragmentBase baseFragment);
 
-    void inject(RetrofitRESTApi api);
+    void inject(ApiImpl api);
 
     void inject(DiscountingPolicyDialogFragment dialogFragment);
-
-    void inject(Section section);
 
     void inject(UnitAdapter adapter);
 
@@ -122,15 +117,7 @@ public interface AppCoreComponent {
 
     void inject(VideoQualityDialog dialogFragment);
 
-
-    //All Tasks:
-
-    void inject(FromDbUnitLessonTask stepicTask);
-
-    void inject(ToDbUnitLessonTask stepicTask);
-
     void inject(ChooseCalendarDialog calendarDialog);
-
 
     void inject(AllowMobileDataDialogFragment allowMobileDataDialogFragment);
 
@@ -204,7 +191,7 @@ public interface AppCoreComponent {
 
     void inject(NotificationAdapter.NotificationViewHolder notificationViewHolder);
 
-    void inject(MainApplication mainApplication);
+    void inject(App app);
 
     void inject(InstructorAdapter instructorAdapter);
 

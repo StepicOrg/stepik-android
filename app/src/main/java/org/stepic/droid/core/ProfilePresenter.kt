@@ -2,7 +2,7 @@ package org.stepic.droid.core
 
 import android.support.annotation.WorkerThread
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.PresenterBase
 import org.stepic.droid.core.presenters.contracts.ProfileView
 import org.stepic.droid.model.Profile
@@ -10,14 +10,14 @@ import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.getFirstAndLastName
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 
 class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
                        val analytic: Analytic,
-                       val mainHandler: IMainHandler,
-                       val api: IApi,
+                       val mainHandler: MainHandler,
+                       val api: Api,
                        val sharedPreferences: SharedPreferenceHelper) : PresenterBase<ProfileView>() {
 
     var isLoading: Boolean = false //main thread only

@@ -99,7 +99,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
 
     @Override
     protected void injectComponent() {
-        MainApplication.component().plus(new StepModule()).inject(this);
+        App.component().plus(new StepModule()).inject(this);
     }
 
     @Override
@@ -182,6 +182,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
             @Override
             public void onClick(View v) {
                 int discussionCount = step.getDiscussions_count();
+                analytic.reportEvent(Analytic.Comments.OPEN_FROM_STEP_UI);
                 shell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
                 if (discussionCount == 0) {
                     shell.getScreenProvider().openNewCommentForm(getActivity(), step.getId(), null); //show new form, but in back stack comment oldList is exist.
@@ -191,9 +192,9 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
 
         int discussionCount = step.getDiscussions_count();
         if (discussionCount > 0) {
-            textForComment.setText(MainApplication.getAppContext().getResources().getQuantityString(R.plurals.open_comments, discussionCount, discussionCount));
+            textForComment.setText(App.getAppContext().getResources().getQuantityString(R.plurals.open_comments, discussionCount, discussionCount));
         } else {
-            textForComment.setText(MainApplication.getAppContext().getResources().getString(R.string.open_comments_zero));
+            textForComment.setText(App.getAppContext().getResources().getString(R.string.open_comments_zero));
         }
     }
 

@@ -15,7 +15,7 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.model.CertificateType;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.core.presenters.CertificatePresenter;
@@ -35,7 +35,7 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
     public CertificateAdapter(@NotNull CertificatePresenter certificatePresenter, @NotNull Activity activity) {
         this.certificatePresenter = certificatePresenter;
         this.activity = activity;
-        certificatePlaceholder = ContextCompat.getDrawable(MainApplication.getAppContext(), R.drawable.ic_course_placeholder);
+        certificatePlaceholder = ContextCompat.getDrawable(App.getAppContext(), R.drawable.ic_course_placeholder);
     }
 
     @Override
@@ -132,7 +132,7 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
 
             @NotNull
             final String coverFullPath = certificate.getCoverFullPath() == null ? "" : certificate.getCoverFullPath();
-            Glide.with(MainApplication.getAppContext())
+            Glide.with(App.getAppContext())
                     .load(coverFullPath)
                     .placeholder(certificatePlaceholder)
                     .into(imageViewTarget);

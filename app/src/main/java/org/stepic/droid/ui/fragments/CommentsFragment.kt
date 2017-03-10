@@ -21,7 +21,7 @@ import com.squareup.otto.Subscribe
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.base.MainApplication
+import org.stepic.droid.base.App
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.events.comments.*
 import org.stepic.droid.model.User
@@ -41,7 +41,6 @@ import org.stepic.droid.web.VoteResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
 import java.util.*
 import javax.inject.Inject
 
@@ -97,7 +96,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-        MainApplication.component().inject(this)
+        App.component().inject(this)
         commentAdapter = CommentsAdapter(commentManager, context)
     }
 
@@ -177,7 +176,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
             if (comment.user != null && comment.user.toLong() != userId && comment.vote != null) {
                 //it is not current user and vote is available
                 val vote = commentManager.getVoteByVoteId(comment.vote)
-                if (vote?.value != null && vote?.value == VoteValue.like) {
+                if (vote?.value != null && vote.value == VoteValue.like) {
                     //if we have like -> show suggest for unlike
                     menu?.add(Menu.NONE, unLikeMenuId, Menu.NONE, R.string.unlike_label)
                 } else {
@@ -563,7 +562,7 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        if (!commentManager?.isDiscussionProxyNull()) {
+        if (!commentManager.isDiscussionProxyNull()) {
             inflater?.inflate(R.menu.coment_list_menu, menu)
 
             val defaultItem = menu?.findItem(sharedPreferenceHelper.discussionOrder.menuId)

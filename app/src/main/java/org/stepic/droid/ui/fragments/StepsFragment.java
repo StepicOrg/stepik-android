@@ -24,7 +24,7 @@ import org.joda.time.DateTime;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.presenters.StepsPresenter;
 import org.stepic.droid.core.presenters.contracts.StepsView;
@@ -143,7 +143,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         fromPreviousLesson = getArguments().getBoolean(FROM_PREVIOUS_KEY);
         discussionId = getArguments().getLong(SIMPLE_DISCUSSION_ID_KEY);
 
-        MainApplication
+        App
                 .component()
                 .plus(new StepModule())
                 .inject(this);
@@ -356,6 +356,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
                 }
 
                 Step step = stepsPresenter.getStepList().get(position);
+                analytic.reportEvent(Analytic.Comments.OPEN_FROM_OPTION_MENU);
                 shell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
                 break;
             default:

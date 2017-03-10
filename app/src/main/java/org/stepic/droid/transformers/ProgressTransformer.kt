@@ -7,11 +7,11 @@ import org.stepic.droid.viewmodel.ProgressViewModel
 import java.util.*
 
 fun Progress?.transformToViewModel(): ProgressViewModel? {
-    if (this == null || this.id == null) return null
+    val idOfProgress = this?.id
+    if (this == null || idOfProgress == null) return null
 
-    val doubleScore: Double
     val scoreString: String
-    doubleScore = java.lang.Double.parseDouble(this.score)
+    val doubleScore: Double = java.lang.Double.parseDouble(this.score)
     if (doubleScore == Math.floor(doubleScore) && !java.lang.Double.isInfinite(doubleScore)) {
         scoreString = doubleScore.toInt().toString() + ""
     } else {
@@ -19,12 +19,16 @@ fun Progress?.transformToViewModel(): ProgressViewModel? {
     }
 
 
-    val sb = StringBuilder();
-    sb.append(scoreString);
-    sb.append(AppConstants.DELIMITER_TEXT_SCORE);
-    sb.append(cost);
-    val textForScoreAndCost = sb.toString()
+    val stringBuilder = StringBuilder()
+    with(stringBuilder) {
+        append(scoreString)
+        append(AppConstants.DELIMITER_TEXT_SCORE)
+        append(cost)
+    }
 
-    return ProgressViewModel(this.id!!, textForScoreAndCost, doubleScore.toInt(), this.cost)
+    val textForScoreAndCost = stringBuilder.toString()
+
+
+    return ProgressViewModel(idOfProgress, textForScoreAndCost, doubleScore.toInt(), this.cost)
 }
 

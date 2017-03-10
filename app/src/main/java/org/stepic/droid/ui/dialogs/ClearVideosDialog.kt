@@ -8,13 +8,14 @@ import android.support.v7.app.AlertDialog
 import com.squareup.otto.Bus
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.base.MainApplication
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.base.App
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.events.loading.FinishLoadEvent
 import org.stepic.droid.events.loading.StartLoadEvent
 import org.stepic.droid.events.steps.ClearAllDownloadWithoutAnimationEvent
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.store.CleanManager
+import org.stepic.droid.store.CleanManagerImpl
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.util.FileUtil
@@ -40,7 +41,7 @@ class ClearVideosDialog : DialogFragment() {
     @Inject
     lateinit var threadPoolExecutor: ThreadPoolExecutor
     @Inject
-    lateinit var mainHandler: IMainHandler
+    lateinit var mainHandler: MainHandler
 
     @Inject
     lateinit var userPreferences: UserPreferences
@@ -49,13 +50,13 @@ class ClearVideosDialog : DialogFragment() {
     lateinit var analytic: Analytic
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        MainApplication.component().inject(this)
+        App.component().inject(this)
         val bundle = arguments
         val stringIds = bundle?.getString(KEY_STRING_IDS)
 
 
         val builder = AlertDialog.Builder(activity)
-        builder.setTitle(R.string.title_confirmation).setMessage(R.string.clear_videos).setPositiveButton(R.string.yes) { dialog, which ->
+        builder.setTitle(R.string.title_confirmation).setMessage(R.string.clear_videos).setPositiveButton(R.string.yes) { _, _ ->
             analytic.reportEvent(Analytic.Interaction.YES_CLEAR_VIDEOS)
 
             val task = object : AsyncTask<Void, Void, Void>() {

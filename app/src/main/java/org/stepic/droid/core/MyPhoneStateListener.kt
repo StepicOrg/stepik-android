@@ -2,21 +2,21 @@ package org.stepic.droid.core
 
 import android.telephony.PhoneStateListener
 import com.squareup.otto.Bus
-import org.stepic.droid.base.MainApplication
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.base.App
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.events.IncomingCallEvent
 import javax.inject.Inject
 
 class MyPhoneStateListener : PhoneStateListener() {
     init {
-        MainApplication.component().inject(this)
+        App.component().inject(this)
     }
 
     @Inject
     lateinit var mBus: Bus
 
     @Inject
-    lateinit var mHandler: IMainHandler
+    lateinit var mHandler: MainHandler
 
     override fun onCallStateChanged(state: Int, incomingNumber: String?) {
         if (state == 1) {

@@ -11,7 +11,7 @@ import org.stepic.droid.model.Course
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.store.operations.Table
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,7 +20,7 @@ import java.util.concurrent.ThreadPoolExecutor
 
 class CourseJoinerPresenter(
         private val sharedPreferenceHelper: SharedPreferenceHelper,
-        private val api: IApi,
+        private val api: Api,
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val bus: Bus,
         private val database: DatabaseFacade,

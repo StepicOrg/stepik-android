@@ -42,8 +42,8 @@ import com.squareup.otto.Subscribe;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
+import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
-import org.stepic.droid.base.MainApplication;
 import org.stepic.droid.core.modules.CourseDetailModule;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
@@ -68,7 +68,7 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.util.StepicLogicHelper;
+import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.StringUtil;
 import org.stepic.droid.util.ThumbnailParser;
 import org.stepic.droid.web.UserStepicResponse;
@@ -199,7 +199,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
     @Override
     protected void injectComponent() {
-        MainApplication.component().plus(new CourseDetailModule()).inject(this);
+        App.component().plus(new CourseDetailModule()).inject(this);
     }
 
     @Override
@@ -342,8 +342,8 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         introView.getLayoutParams().height = (9 * width) / 16;
         setUpIntroVideo();
 
-        Glide.with(MainApplication.getAppContext())
-                .load(StepicLogicHelper.getPathForCourseOrEmpty(course, config))
+        Glide.with(App.getAppContext())
+                .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
                 .placeholder(coursePlaceholder)
                 .into(courseTargetFigSupported);
 

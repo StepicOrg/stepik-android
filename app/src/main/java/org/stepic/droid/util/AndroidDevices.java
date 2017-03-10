@@ -29,7 +29,7 @@ import android.telephony.TelephonyManager;
 import android.view.InputDevice;
 import android.view.MotionEvent;
 
-import org.stepic.droid.base.MainApplication;
+import org.stepic.droid.base.App;
 import org.videolan.libvlc.util.AndroidUtil;
 
 import java.io.BufferedReader;
@@ -57,8 +57,8 @@ public class AndroidDevices {
         devicesWithoutNavBar.add("HTC One XL");
         hasNavBar = AndroidUtil.isICSOrLater()
                 && !devicesWithoutNavBar.contains(android.os.Build.MODEL);
-        hasTsp = MainApplication.getAppContext().getPackageManager().hasSystemFeature("android.hardware.touchscreen");
-        isTv = MainApplication.getAppContext().getPackageManager().hasSystemFeature("android.software.leanback");
+        hasTsp = App.getAppContext().getPackageManager().hasSystemFeature("android.hardware.touchscreen");
+        isTv = App.getAppContext().getPackageManager().hasSystemFeature("android.software.leanback");
     }
 
     public static boolean hasExternalStorage() {
@@ -79,7 +79,7 @@ public class AndroidDevices {
     }
 
     public static boolean isPhone() {
-        TelephonyManager manager = (TelephonyManager) MainApplication.getAppContext().getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager manager = (TelephonyManager) App.getAppContext().getSystemService(Context.TELEPHONY_SERVICE);
         return manager.getPhoneType() != TelephonyManager.PHONE_TYPE_NONE;
     }
 

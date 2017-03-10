@@ -21,8 +21,8 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.MainApplication;
-import org.stepic.droid.configuration.IConfig;
+import org.stepic.droid.base.App;
+import org.stepic.droid.configuration.Config;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Lesson;
@@ -69,12 +69,12 @@ import javax.inject.Singleton;
 @Singleton
 public class ScreenManagerImpl implements ScreenManager {
     private final SharedPreferenceHelper sharedPreferences;
-    private final IConfig config;
+    private final Config config;
     private final UserPreferences userPreferences;
     private final Analytic analytic;
 
     @Inject
-    public ScreenManagerImpl(IConfig config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferences) {
+    public ScreenManagerImpl(Config config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferences) {
         this.config = config;
         this.userPreferences = userPreferences;
         this.analytic = analytic;
@@ -212,7 +212,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public Intent getCertificateIntent() {
-        Context context = MainApplication.getAppContext();
+        Context context = App.getAppContext();
         int index = MainFeedActivity.getCertificateFragmentIndex();
         Intent intent = new Intent(context, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -224,14 +224,14 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showCertificates() {
-        Context context = MainApplication.getAppContext();
+        Context context = App.getAppContext();
         int index = MainFeedActivity.getCertificateFragmentIndex();
         context.startActivity(getFromMainActivityIntent(context, index));
     }
 
     @Override
     public void showDownload() {
-        Context context = MainApplication.getAppContext();
+        Context context = App.getAppContext();
         showDownload(context);
     }
 
@@ -271,13 +271,13 @@ public class ScreenManagerImpl implements ScreenManager {
             analytic.reportEvent(Analytic.Video.OPEN_NATIVE);
         }
 
-        boolean isCompatible = VLCUtil.hasCompatibleCPU(MainApplication.getAppContext());
+        boolean isCompatible = VLCUtil.hasCompatibleCPU(App.getAppContext());
         if (!isCompatible) {
             analytic.reportEvent(Analytic.Video.NOT_COMPATIBLE);
         }
 
         if (isCompatible && !isOpenExternal) {
-            Intent intent = new Intent(MainApplication.getAppContext(), VideoActivity.class);
+            Intent intent = new Intent(App.getAppContext(), VideoActivity.class);
             intent.putExtra(VideoActivity.Companion.getVideoPathKey(), videoPath);
             intent.putExtra(VideoActivity.Companion.getVideoIdKey(), videoId);
             sourceActivity.startActivity(intent);
@@ -438,7 +438,7 @@ public class ScreenManagerImpl implements ScreenManager {
         final Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setData(Uri.parse(sb.toString()));
-        MainApplication.getAppContext().startActivity(intent);
+        App.getAppContext().startActivity(intent);
     }
 
     @Override
@@ -589,11 +589,11 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void pushToViewedQueue(ViewAssignment viewAssignmentWrapper) {
 
-        Intent loadIntent = new Intent(MainApplication.getAppContext(), ViewPusher.class);
+        Intent loadIntent = new Intent(App.getAppContext(), ViewPusher.class);
 
         loadIntent.putExtra(AppConstants.KEY_STEP_BUNDLE, viewAssignmentWrapper.getStep());
         loadIntent.putExtra(AppConstants.KEY_ASSIGNMENT_BUNDLE, viewAssignmentWrapper.getAssignment());
-        MainApplication.getAppContext().startService(loadIntent);
+        App.getAppContext().startService(loadIntent);
     }
 
 }

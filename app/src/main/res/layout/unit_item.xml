@@ -92,7 +92,7 @@
 
         </RelativeLayout>
 
-        <include layout="@layout/load_imageview"></include>
+        <include layout="@layout/load_imageview"/>
 
     </RelativeLayout>
 

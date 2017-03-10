@@ -1,13 +1,13 @@
 package org.stepic.droid.core.presenters
 
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
 import org.stepic.droid.model.VideoTimestamp
 import org.stepic.droid.store.operations.DatabaseFacade
 import java.util.concurrent.ThreadPoolExecutor
 
 class VideoWIthTimestampPresenter(val databaseFacade: DatabaseFacade,
-                                  val mainHandler: IMainHandler,
+                                  val mainHandler: MainHandler,
                                   val threadPoolExecutor: ThreadPoolExecutor) : PresenterBase<VideoWithTimestampView>() {
 
     var cachedTimestamp: Long? = null

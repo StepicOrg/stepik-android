@@ -2,7 +2,7 @@ package org.stepic.droid.core.presenters
 
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
-import org.stepic.droid.concurrency.IMainHandler
+import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.SectionsView
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Progress
@@ -10,18 +10,18 @@ import org.stepic.droid.model.Section
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.transformers.transformToViewModel
 import org.stepic.droid.viewmodel.ProgressViewModel
-import org.stepic.droid.web.IApi
+import org.stepic.droid.web.Api
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 
 class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
-                        val mainHandler: IMainHandler,
-                        val api: IApi,
+                        val mainHandler: MainHandler,
+                        val api: Api,
                         val databaseFacade: DatabaseFacade) : PresenterBase<SectionsView>() {
 
-    val sectionList: MutableList<Section> = ArrayList<Section>()
+    val sectionList: MutableList<Section> = ArrayList()
     val isLoading: AtomicBoolean = AtomicBoolean(false)
     val progressMap: HashMap<String, ProgressViewModel> = HashMap()
 
@@ -41,7 +41,7 @@ class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
             try {
                 if (!isRefreshing) {
                     val sectionsFromCache = databaseFacade.getAllSectionsOfCourse(course).filterNotNull()
-                    Collections.sort(sectionsFromCache, Comparator<org.stepic.droid.model.Section> { lhs, rhs ->
+                    Collections.sort(sectionsFromCache, Comparator { lhs, rhs ->
                         if (lhs == null || rhs == null) return@Comparator 0
 
                         val lhsPos = lhs.position
