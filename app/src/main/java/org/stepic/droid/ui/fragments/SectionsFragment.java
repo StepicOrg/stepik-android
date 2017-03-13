@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -81,6 +82,7 @@ import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.ui.adapters.SectionAdapter;
 import org.stepic.droid.ui.dialogs.ChooseCalendarDialog;
+import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.ui.dialogs.ExplainCalendarPermissionDialog;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment;
@@ -119,6 +121,7 @@ public class SectionsFragment
     public static String joinFlag = "joinFlag";
     private static int INVITE_REQUEST_CODE = 324;
     private static final int ANIMATION_DURATION = 0;
+    public static final int DELETE_POSITION_REQUEST_CODE = 177;
 
     public static SectionsFragment newInstance() {
         return new SectionsFragment();
@@ -244,7 +247,7 @@ public class SectionsFragment
         linearLayoutManager = new LinearLayoutManager(getActivity());
         sectionsRecyclerView.setLayoutManager(linearLayoutManager);
         sectionList = new ArrayList<>();
-        adapter = new SectionAdapter(sectionList, ((AppCompatActivity) getActivity()), calendarPresenter, sectionsPresenter.getProgressMap(), sectionIdToLoadingStateMap);
+        adapter = new SectionAdapter(sectionList, ((AppCompatActivity) getActivity()), calendarPresenter, sectionsPresenter.getProgressMap(), sectionIdToLoadingStateMap, this);
         sectionsRecyclerView.setAdapter(adapter);
 
         sectionsRecyclerView.setItemAnimator(new SlideInRightAnimator());
@@ -916,5 +919,15 @@ public class SectionsFragment
         sectionIdToLoadingStateMap.put(state.getSectionId(), state);
         adapter.notifyItemChanged(position);
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (adapter != null && requestCode == DELETE_POSITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            analytic.reportEvent(Analytic.Interaction.ACCEPT_DELETING_SECTION);
+            int position = data.getIntExtra(DeleteItemDialogFragment.deletePositionKey, -1);
+            adapter.requestClickDeleteSilence(position);
+        }
     }
 }
