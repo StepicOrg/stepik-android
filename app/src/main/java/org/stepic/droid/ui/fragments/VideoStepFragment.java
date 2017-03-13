@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -23,8 +24,10 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.presenters.StepQualityPresenter;
+import org.stepic.droid.core.presenters.VideoLengthPresenter;
 import org.stepic.droid.core.presenters.VideoStepPresenter;
 import org.stepic.droid.core.presenters.contracts.StepQualityView;
+import org.stepic.droid.core.presenters.contracts.VideoLengthView;
 import org.stepic.droid.core.presenters.contracts.VideoStepView;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
@@ -36,7 +39,7 @@ import javax.inject.Inject;
 import butterknife.BindDrawable;
 import butterknife.BindView;
 
-public class VideoStepFragment extends StepBaseFragment implements StepQualityView, VideoStepView {
+public class VideoStepFragment extends StepBaseFragment implements StepQualityView, VideoStepView, VideoLengthView {
     @BindView(R.id.player_thumbnail)
     ImageView thumbnailImageView;
 
@@ -46,6 +49,9 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
     @BindView(R.id.player_layout)
     View player;
 
+    @BindView(R.id.videoLengthTextView)
+    TextView videoLengthTextView;
+
     private String tempVideoQuality;
 
     @Inject
@@ -53,6 +59,9 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
 
     @Inject
     StepQualityPresenter stepQualityPresenter;
+
+    @Inject
+    VideoLengthPresenter videoLengthPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,6 +91,8 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
         videoStepPresenter.attachView(this);
         videoStepPresenter.initVideo(step);
 
+        videoLengthPresenter.attachView(this);
+
         player.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,6 +117,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
 
     @Override
     public void onDestroyView() {
+        videoLengthPresenter.detachView(this);
         videoStepPresenter.detachView(this);
         stepQualityPresenter.detachView(this);
         player.setOnClickListener(null);
@@ -142,6 +154,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
             setThumbnail(thumbnailPath);
         }
         stepQualityPresenter.determineQuality(video);
+        videoLengthPresenter.fetchLength(video, step);
     }
 
     @Subscribe
@@ -158,5 +171,10 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
     public void onInternetProblem() {
         player.setClickable(true);
         Toast.makeText(getContext(), R.string.sync_problem, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onVideoLengthDetermined(@NotNull String presentationTime) {
+        videoLengthTextView.setText(presentationTime);
     }
 }
