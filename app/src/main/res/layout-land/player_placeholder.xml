@@ -20,4 +20,12 @@
         android:layout_gravity="center"
         android:src="@drawable/ic_media_play_active"/>
 
+    <include
+        layout="@layout/view_length_video_thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="4dp"
+    />
+
 </FrameLayout>

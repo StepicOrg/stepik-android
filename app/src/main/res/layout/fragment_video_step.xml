@@ -24,12 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/videoLengthTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"/>
-
         <include
             layout="@layout/open_comment_view"
             android:layout_width="match_parent"

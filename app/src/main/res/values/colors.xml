@@ -53,4 +53,6 @@
     <color name="bg_item_normal_state">@color/transparent</color>
     <color name="bg_item_dragging_active_state">@color/transparent</color>
     <color name="sorting_chooser">#EEEEEE</color>
+    <color name="background_time_thumbnail">#B20F1015</color>
+    <color name="text_color_time_thumbnail">#C8C8C9</color>
 </resources>

@@ -196,4 +196,14 @@
     <style name="StepikSpinnerItem" parent="@style/Widget.AppCompat.TextView.SpinnerItem">
         <item name="android:gravity">center_horizontal</item>
     </style>
+
+    <style name="VideoTimeThumbnail" parent="AppTheme.Widget.TextView">
+        <item name="android:background">@color/background_time_thumbnail</item>
+        <item name="android:textColor">@color/text_color_time_thumbnail</item>
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+
+    </style>
 </resources>
