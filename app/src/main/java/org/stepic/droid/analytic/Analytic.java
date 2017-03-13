@@ -78,6 +78,7 @@ public interface Analytic {
         String USER_OPEN_IMAGE = "user_open_image";
         String SCREENSHOT = "screenshot";
         String GOOGLE_SOCIAL_IS_NOT_ENABLED = "google_social_is_not_enabled";
+        java.lang.String ACCEPT_DELETING_UNIT = "click_delete_unit_dialog";
     }
 
     interface Screens {
