@@ -650,7 +650,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         if (googleApiClient != null && googleApiClient.isConnected()) {
             Auth.GoogleSignInApi.signOut(googleApiClient);
         }
-        shell.getScreenProvider().showLaunchScreen(this, true, currentIndex);
+        shell.getScreenProvider().showLaunchScreen(this);
     }
 
     @Override
