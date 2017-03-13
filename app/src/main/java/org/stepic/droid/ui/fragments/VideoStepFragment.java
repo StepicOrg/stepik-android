@@ -175,6 +175,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
 
     @Override
     public void onVideoLengthDetermined(@NotNull String presentationTime) {
+        videoLengthTextView.setVisibility(View.VISIBLE);
         videoLengthTextView.setText(presentationTime);
     }
 }
