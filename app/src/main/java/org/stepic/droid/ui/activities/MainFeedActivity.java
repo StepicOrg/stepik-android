@@ -19,6 +19,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -99,6 +100,8 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     @BindView(R.id.drawer)
     DrawerLayout drawerLayout;
+
+    TextView solvingWithoutBreakTextView;
 
     ImageView profileImage;
 
@@ -244,12 +247,14 @@ public class MainFeedActivity extends BackToExitActivityBase
         profileImage = ButterKnife.findById(headerLayout, R.id.profile_image);
         userNameTextView = ButterKnife.findById(headerLayout, R.id.username);
         signInProfileView = ButterKnife.findById(headerLayout, R.id.sign_in_profile_view);
+        solvingWithoutBreakTextView = ButterKnife.findById(headerLayout, R.id.solving_without_break_text);
 
         signInProfileView.setOnClickListener(null);
         signInProfileView.setVisibility(View.INVISIBLE);
         profileImage.setVisibility(View.INVISIBLE);
-        userNameTextView.setVisibility(View.INVISIBLE);
+        userNameTextView.setVisibility(View.GONE);
         userNameTextView.setText("");
+        solvingWithoutBreakTextView.setText(Html.fromHtml("Решаю без перерыва <b>5 дней</b>"));
     }
 
     @Override
@@ -586,7 +591,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     public void showAnonymous() {
         signInProfileView.setVisibility(View.VISIBLE);
         profileImage.setVisibility(View.VISIBLE);
-        userNameTextView.setVisibility(View.INVISIBLE);
+        userNameTextView.setVisibility(View.GONE);
         profileImage.setImageDrawable(userPlaceholder);
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -621,7 +626,7 @@ public class MainFeedActivity extends BackToExitActivityBase
                     .placeholder(userPlaceholder)
                     .into(profileImage);
         }
-        userNameTextView.setText(ProfileExtensionKt.getFirstAndLastName(profile));
+        userNameTextView.setText(ProfileExtensionKt.getFirstAndLastNameTwoLines(profile));
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

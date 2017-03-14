@@ -374,6 +374,21 @@
         </item>
     </plurals>
 
+    <plurals name="streak_drawer">
+        <item quantity="one">Решаю без перерыва
+            <b>%d день</b>
+        </item>
+        <item quantity="few">Решаю без перерыва
+            <b>%d дней</b>
+        </item>
+        <item quantity="many">Решаю без перерыва
+            <b>%d дней</b>
+        </item>
+        <item quantity="other">Решаю без перерыва
+            <b>%d дней</b>
+        </item>
+    </plurals>
+
     <string name="empty_user_title">Пользователь не найден</string>
     <string name="streak_dialog_title">Поздравляем!</string>
     <string name="later_tatle">Позже</string>

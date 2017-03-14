@@ -1,66 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="170dp">
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/background_header"/>
+<RelativeLayout
+    android:id="@+id/drawer_header"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="170dp"
+    android:background="@color/stepik_dark_darcula"
+    tools:layout_width="280dp">
 
 
-    <RelativeLayout
-        android:id="@+id/drawer_header"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/sign_in_profile_view"
+    <LinearLayout
+        android:id="@+id/solving_without_break_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/profile_container"
+        android:layout_marginTop="16dp">
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/profile_image"
-            android:layout_alignLeft="@+id/profile_image"
-            android:layout_alignParentBottom="true"
-            android:layout_alignRight="@+id/profile_image"
-            android:layout_alignStart="@+id/profile_image"
-            android:gravity="center"
-            android:paddingBottom="4dp"
-            android:text="@string/auth_action_title"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/streak_white_24"/>
+
+        <TextView
+            android:id="@+id/solving_without_break_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8dp"
             android:textColor="#FFF"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:visibility="invisible"/>
+            android:textSize="12sp"
+            tools:text="Решаю без перерыва 5 дней"
+        />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/profile_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp">
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center_vertical"
+            app:border_color="#FF000000"
+            tools:src="@drawable/placeholder_icon"/>
 
         <TextView
             android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/profile_image"
-            android:layout_alignParentBottom="true"
-            android:layout_alignStart="@+id/profile_image"
-            android:gravity="start"
-            android:paddingBottom="4dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8dp"
             android:textColor="#FFF"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            tools:text="Kirill Makarov"/>
+            android:textSize="20sp"
+            tools:text="Kirill\nMakarov"/>
 
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_image"
-            android:layout_width="@dimen/profile_image_height_width"
-            android:layout_height="@dimen/profile_image_height_width"
-            android:layout_above="@id/username"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="16dp"
+        <TextView
+            android:id="@+id/sign_in_profile_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
-            app:border_color="#FF000000"
-            tools:src="@drawable/placeholder_icon"/>
-    </RelativeLayout>
-</FrameLayout>
+            android:text="@string/auth_action_title"
+            android:textColor="#FFF"
+            android:textSize="22sp"
+            android:visibility="invisible"/>
+
+    </LinearLayout>
+</RelativeLayout>
