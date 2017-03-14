@@ -63,6 +63,8 @@ import org.stepic.droid.util.resolvers.text.TextResolver;
 import org.stepic.droid.util.resolvers.text.TextResolverImpl;
 import org.stepic.droid.web.Api;
 import org.stepic.droid.web.ApiImpl;
+import org.stepic.droid.web.UserAgentProvider;
+import org.stepic.droid.web.UserAgentProviderImpl;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -365,6 +367,12 @@ public class AppCoreModule {
     @Singleton
     VideoLengthResolver provideVideoLengthResolver() {
         return new VideoLengthResolverImpl();
+    }
+
+    @Provides
+    @Singleton
+    UserAgentProvider provideUserAgent() {
+        return new UserAgentProviderImpl(context);
     }
 
 
