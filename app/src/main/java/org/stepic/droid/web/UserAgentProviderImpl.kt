@@ -6,8 +6,9 @@ class UserAgentProviderImpl(private val context: Context) : UserAgentProvider {
 
     val userAgent by lazy {
         val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+        val apiLevel = android.os.Build.VERSION.SDK_INT
         with(packageInfo) {
-            "client = android, versionName = $versionName, versionCode = $versionCode"
+            "StepikDroid/$versionName (Android $apiLevel) build/$versionCode package/$packageName"
         }
     }
 
