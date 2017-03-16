@@ -19,7 +19,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,11 +46,14 @@ import org.joda.time.DateTimeZone;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
+import org.stepic.droid.core.ProfilePresenter;
 import org.stepic.droid.core.presenters.ProfileMainFeedPresenter;
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView;
+import org.stepic.droid.core.presenters.contracts.ProfileView;
 import org.stepic.droid.events.updating.NeedUpdateEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Profile;
+import org.stepic.droid.model.UserViewModel;
 import org.stepic.droid.notifications.StepicInstanceIdService;
 import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.services.UpdateWithApkService;
@@ -86,7 +88,7 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class MainFeedActivity extends BackToExitActivityBase
-        implements NavigationView.OnNavigationItemSelectedListener, BackButtonHandler, HasDrawer, ProfileMainFeedView, LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener {
+        implements NavigationView.OnNavigationItemSelectedListener, BackButtonHandler, HasDrawer, ProfileMainFeedView, LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener, ProfileView {
     public static final String KEY_CURRENT_INDEX = "Current_index";
     public static final String REMINDER_KEY = "reminder_key";
     private final String PROGRESS_LOGOUT_TAG = "progress_logout";
@@ -122,6 +124,9 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     @Inject
     ProfileMainFeedPresenter profileMainFeedPresenter;
+
+    @Inject
+    ProfilePresenter profilePresenter;
 
     private List<WeakReference<OnBackClickListener>> onBackClickListenerList = new ArrayList<>(8);
     private ActionBarDrawerToggle actionBarDrawerToggle;
@@ -195,6 +200,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         bus.register(this);
 
         profileMainFeedPresenter.attachView(this);
+        profilePresenter.attachView(this);
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -254,7 +260,6 @@ public class MainFeedActivity extends BackToExitActivityBase
         profileImage.setVisibility(View.INVISIBLE);
         userNameTextView.setVisibility(View.GONE);
         userNameTextView.setText("");
-        solvingWithoutBreakTextView.setText(Html.fromHtml("Решаю без перерыва <b>5 дней</b>"));
     }
 
     @Override
@@ -489,6 +494,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     protected void onDestroy() {
         profileImage.setOnClickListener(null);
         profileMainFeedPresenter.detachView(this);
+        profilePresenter.detachView(this);
         bus.unregister(this);
         drawerLayout.removeDrawerListener(actionBarDrawerToggle);
         super.onDestroy();
@@ -634,6 +640,8 @@ public class MainFeedActivity extends BackToExitActivityBase
             }
         });
         showLogout(true);
+
+        profilePresenter.showStreakForStoredUser();
     }
 
     void showLogout(boolean needShow) {
@@ -661,5 +669,38 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     public void onLogout() {
         profileMainFeedPresenter.logout();
+    }
+
+    @Override
+    public void showLoadingAll() {
+        // do nothing
+    }
+
+    @Override
+    public void showNameImageShortBio(@NotNull UserViewModel userViewModel) {
+        //it is shown by main feed
+    }
+
+    @Override
+    public void streaksIsLoaded(int currentStreak, int maxStreak) {
+        if (currentStreak != 0) {
+            solvingWithoutBreakTextView.setVisibility(View.GONE);
+        } else {
+            solvingWithoutBreakTextView.setVisibility(View.VISIBLE);
+            solvingWithoutBreakTextView.setText(
+                    textResolver.fromHtml(getResources().getQuantityString(R.plurals.streak_drawer, currentStreak, currentStreak))
+            );
+        }
+    }
+
+    @Override
+    public void onInternetFailed() {
+        //it is handled by profile in MainFeed
+    }
+
+    @Override
+    public void onProfileNotFound() {
+        //it is handled by profile in MainFeed
+
     }
 }
