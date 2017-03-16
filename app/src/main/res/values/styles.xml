@@ -4,7 +4,7 @@
 
     <style name="AppTheme.15" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/stepic_brand_primary</item>
-        <item name="colorPrimaryDark">@color/stepik_dark_web</item>
+        <item name="colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/stepic_blue_ribbon</item>
         <item name="android:windowBackground">@color/stepic_cover</item>
         <item name="android:colorBackground">@color/stepic_cover</item>
