@@ -173,7 +173,6 @@ public interface Analytic {
         String FAIL_REFRESH_TOKEN_ONLINE = "fail_refresh_token_online";
         String FAIL_REFRESH_TOKEN_ONLINE_EXTENDED = "fail_refresh_token_online_extended";
         String COOKIE_MANAGER_ERROR = "cookie_manager_error";
-        String PENDING_INTENT_WAS_NULL = "pending_intent_null_streaks";
         String FAIL_REFRESH_TOKEN_INLINE_GETTING = "fail_refresh_token_online_get";
         String COOKIE_WAS_EMPTY = "cookie_was_empty";
         String FAIL_LOGOUT_WHEN_REFRESH = "refresh_fail_logout_social";
