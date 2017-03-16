@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="170dp"
-    android:background="@color/stepik_dark_darcula"
+    android:background="@color/stepik_dark_web"
     tools:layout_width="280dp">
 
 
@@ -15,10 +15,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/profile_container"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="24dp">
+
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/streak_white_24"/>
 
@@ -29,7 +30,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="8dp"
             android:textColor="#FFF"
-            android:textSize="12sp"
+            android:textSize="9sp"
             tools:text="Решаю без перерыва 5 дней"
         />
     </LinearLayout>
@@ -39,15 +40,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp">
 
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:layout_gravity="center_vertical"
             app:border_color="#FF000000"
             tools:src="@drawable/placeholder_icon"/>
@@ -57,9 +58,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="13dp"
             android:textColor="#FFF"
-            android:textSize="20sp"
+            android:textSize="14sp"
             tools:text="Kirill\nMakarov"/>
 
         <TextView
@@ -71,7 +72,7 @@
             android:layout_marginStart="16dp"
             android:text="@string/auth_action_title"
             android:textColor="#FFF"
-            android:textSize="22sp"
+            android:textSize="14sp"
             android:visibility="invisible"/>
 
     </LinearLayout>
