@@ -250,7 +250,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void streaksIsLoaded(int currentStreak, int maxStreak) {
+    public void streaksAreLoaded(int currentStreak, int maxStreak) {
         String suffixCurrent = getResources().getQuantityString(R.plurals.day_number, currentStreak);
         String suffixMax = getResources().getQuantityString(R.plurals.day_number, maxStreak);
 

@@ -11,6 +11,7 @@
 
 
     <TextView
+        android:layout_marginTop="24dp"
         android:id="@+id/solving_without_break_text"
         style="@style/StreakDrawerTextView"
         android:layout_width="wrap_content"

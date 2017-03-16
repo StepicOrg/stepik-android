@@ -186,15 +186,6 @@
         <item quantity="other">Open %d comments</item>
     </plurals>
 
-    <plurals name="streak_drawer">
-        <item quantity="one">Solving without break
-            <b>%d day</b>
-        </item>
-        <item quantity="other">Solving without break
-            <b>%d days</b>
-        </item>
-    </plurals>
-
     <string name="open_comments_zero">No comments. Add your comment</string>
     <string name="comment_sent">Comment is sent successfully</string>
     <string name="comment_denied">Comments are not available for this lesson</string>
@@ -343,6 +334,7 @@
     <string name="too_many_attempts">Too many attempts. Please try later</string>
     <string name="profile_title">Profile</string>
     <string name="current_streak">Current streak</string>
+    <string name="solving_without_break">Solving without break</string>
     <string name="max_streak">Max streak</string>
     <string name="about_me">About me</string>
     <string name="short_bio">Short biography</string>

@@ -36,7 +36,7 @@ class ProfilePresenter(private val threadPoolExecutor: ThreadPoolExecutor,
                 val currentStreakLocal = currentStreak
                 val maxStreakLocal = maxStreak
                 if (maxStreakLocal != null && currentStreakLocal != null) {
-                    view?.streaksIsLoaded(currentStreakLocal, maxStreakLocal)
+                    view?.streaksAreLoaded(currentStreakLocal, maxStreakLocal)
                     isLoading = false
                     return
                 } else {
@@ -122,12 +122,10 @@ class ProfilePresenter(private val threadPoolExecutor: ThreadPoolExecutor,
         val currentStreakLocal = StepikUtil.getCurrentStreak(pins)
         val maxStreakLocal = StepikUtil.getMaxStreak(pins)
         mainHandler.post {
-            if (currentStreak == null && maxStreak == null) {
-                currentStreak = currentStreakLocal
-                maxStreak = maxStreakLocal
-                view?.streaksIsLoaded(currentStreak = currentStreakLocal,
-                        maxStreak = maxStreakLocal)
-            }
+            currentStreak = currentStreakLocal
+            maxStreak = maxStreakLocal
+            view?.streaksAreLoaded(currentStreak = currentStreakLocal,
+                    maxStreak = maxStreakLocal)
         }
     }
 

@@ -19,6 +19,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -86,6 +88,8 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
+import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public class MainFeedActivity extends BackToExitActivityBase
         implements NavigationView.OnNavigationItemSelectedListener, BackButtonHandler, HasDrawer, ProfileMainFeedView, LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener, ProfileView {
@@ -176,7 +180,8 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.component().inject(this);
+        App.getComponentManager().getMainFeedComponent()
+                .inject(this);
         setContentView(R.layout.activity_main_feed);
         unbinder = ButterKnife.bind(this);
         notificationClickedCheck(getIntent());
@@ -208,6 +213,7 @@ public class MainFeedActivity extends BackToExitActivityBase
                 analytic.reportEvent(Analytic.Interaction.CLICK_PROFILE_BEFORE_LOADING);
             }
         });
+
         profileMainFeedPresenter.fetchProfile();
 
         if (checkPlayServices() && !sharedPreferenceHelper.isGcmTokenOk()) {
@@ -497,6 +503,9 @@ public class MainFeedActivity extends BackToExitActivityBase
         profilePresenter.detachView(this);
         bus.unregister(this);
         drawerLayout.removeDrawerListener(actionBarDrawerToggle);
+        if (isFinishing()) {
+            App.getComponentManager().removeMainFeedComponent();
+        }
         super.onDestroy();
     }
 
@@ -682,14 +691,20 @@ public class MainFeedActivity extends BackToExitActivityBase
     }
 
     @Override
-    public void streaksIsLoaded(int currentStreak, int maxStreak) {
-        if (currentStreak != 0) {
+    public void streaksAreLoaded(int currentStreak, int maxStreak) {
+        if (currentStreak <= 0) {
             solvingWithoutBreakTextView.setVisibility(View.GONE);
         } else {
             solvingWithoutBreakTextView.setVisibility(View.VISIBLE);
-            solvingWithoutBreakTextView.setText(
-                    textResolver.fromHtml(getResources().getQuantityString(R.plurals.streak_drawer, currentStreak, currentStreak))
-            );
+
+            String days = currentStreak  + " " + getResources().getQuantityString(R.plurals.day_number, currentStreak);
+            CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(this.getAssets(), "fonts/NotoSans-Bold.ttf"));
+            String prefix = getString(R.string.solving_without_break) + " ";
+
+            SpannableString result = new SpannableString(prefix + days);
+
+            result.setSpan(typefaceSpan, prefix.length(), prefix.length() + days.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            solvingWithoutBreakTextView.setText(result);
         }
     }
 
