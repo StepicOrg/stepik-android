@@ -327,7 +327,6 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void openProfile(Activity activity) {
-        analytic.reportEvent(Analytic.Profile.CLICK_OPEN_MY_PROFILE);
         final Intent intent = new Intent(activity, ProfileActivity.class);
         activity.startActivity(intent);
     }

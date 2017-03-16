@@ -8,7 +8,7 @@ interface ProfileView {
 
     fun showNameImageShortBio(userViewModel: UserViewModel)
 
-    fun streaksIsLoaded(currentStreak: Int, maxStreak: Int)
+    fun streaksAreLoaded(currentStreak: Int, maxStreak: Int)
 
     fun onInternetFailed()
 

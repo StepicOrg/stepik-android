@@ -36,8 +36,9 @@ class VideoStepPresenter(
         }
 
         if (videoInitiated.compareAndSet(false, true)) {
-            try {
-                threadPoolExecutor.execute {
+
+            threadPoolExecutor.execute {
+                try {
                     val videoFromInternet: Video? = getVideoFromWeb(step.id)
                     //if null do not show warning, while user do not click
                     if (videoFromInternet != null) {
@@ -46,9 +47,9 @@ class VideoStepPresenter(
                             view?.onVideoLoaded(videoFromInternet.thumbnail, videoFromInternet)
                         }
                     }
+                } finally {
+                    videoInitiated.set(false)
                 }
-            } finally {
-                videoInitiated.set(false)
             }
         }
     }

@@ -22,9 +22,8 @@
             >
 
             <Button
-
                 android:padding="@dimen/button_padding"
-                android:id="@+id/feedback_bad_btn"
+                android:id="@+id/feedbackBadButton"
                 android:background="@color/feedback_bad_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -55,7 +54,7 @@
 
             <Button
                 android:padding="@dimen/button_padding"
-                android:id="@+id/feedback_good_btn"
+                android:id="@+id/feedbackGoodButton"
                 android:background="@color/feedback_good_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

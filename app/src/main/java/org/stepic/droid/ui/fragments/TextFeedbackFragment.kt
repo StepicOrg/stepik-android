@@ -8,9 +8,10 @@ import android.support.v7.widget.Toolbar
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.Toast
 import com.squareup.otto.Subscribe
+import kotlinx.android.synthetic.main.appbar_only_toolbar.*
+import kotlinx.android.synthetic.main.fragment_text_feedback.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
@@ -27,24 +28,10 @@ import retrofit2.Response
 class TextFeedbackFragment : FragmentBase() {
 
     companion object {
-        fun newInstance(): TextFeedbackFragment {
-            val args = Bundle()
-
-            val fragment = TextFeedbackFragment()
-            fragment.arguments = args
-            return fragment
-        }
+        fun newInstance(): TextFeedbackFragment = TextFeedbackFragment()
     }
 
-    lateinit var toolbar: Toolbar
-    lateinit var emailEditText: EditText
-    lateinit var descriptionEditText: EditText
-    lateinit var rootScrollView: ViewGroup
     var progressDialog: ProgressDialog? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?)
             = inflater?.inflate(R.layout.fragment_text_feedback, container, false)
@@ -53,14 +40,14 @@ class TextFeedbackFragment : FragmentBase() {
         super.onViewCreated(v, savedInstanceState)
         setHasOptionsMenu(true)
         v?.let {
-            initToolbar(v)
-            initTextFields(v)
+            initToolbar()
+            initTextFields()
             initScrollView(v)
 
-            if (emailEditText.text.isEmpty()) {
-                emailEditText.requestFocus()
+            if (feedbackContactsEditText.text.isEmpty()) {
+                feedbackContactsEditText.requestFocus()
             } else {
-                descriptionEditText.requestFocus()
+                feedbackFormEditText.requestFocus()
             }
             progressDialog = LoadingProgressDialog(context)
         }
@@ -78,23 +65,20 @@ class TextFeedbackFragment : FragmentBase() {
     }
 
     fun initScrollView(v: View) {
-        rootScrollView = v.findViewById(R.id.root_view) as ViewGroup
-        rootScrollView.setOnTouchListener { _, _ ->
-            if (!descriptionEditText.isFocused)
-                descriptionEditText.requestFocus()
+        textFeedbackRootScrollView.setOnTouchListener { _, _ ->
+            if (!feedbackFormEditText.isFocused)
+                feedbackFormEditText.requestFocus()
             false
         }
     }
 
-    fun initToolbar(v: View) {
-        toolbar = v.findViewById(R.id.toolbar) as Toolbar
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
+    fun initToolbar() {
+        (activity as AppCompatActivity).setSupportActionBar(toolbar as Toolbar)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    fun initTextFields(v: View) {
-        emailEditText = v.findViewById(R.id.feedback_contacts) as EditText
-        emailEditText.setOnEditorActionListener { textView, i, keyEvent ->
+    fun initTextFields() {
+        feedbackContactsEditText.setOnEditorActionListener { _, i, _ ->
             if (i == EditorInfo.IME_ACTION_SEND) {
                 sendFeedback()
                 true
@@ -103,10 +87,9 @@ class TextFeedbackFragment : FragmentBase() {
             }
         }
         val primaryEmail = userPreferences.primaryEmail?.email
-        primaryEmail?.let { emailEditText.setText(primaryEmail) }
+        primaryEmail?.let { feedbackContactsEditText.setText(primaryEmail) }
 
-        descriptionEditText = v.findViewById(R.id.feedback_form) as EditText
-        descriptionEditText.setOnFocusChangeListener { view, hasFocus ->
+        feedbackFormEditText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) {
                 showSoftKeypad(view)
             }
@@ -116,7 +99,6 @@ class TextFeedbackFragment : FragmentBase() {
     private fun showSoftKeypad(editTextView: View) {
         val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(editTextView, InputMethodManager.SHOW_IMPLICIT)
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -136,8 +118,8 @@ class TextFeedbackFragment : FragmentBase() {
 
     fun sendFeedback() {
         hideSoftKeypad()
-        val email = emailEditText.text.toString()
-        val description = descriptionEditText.text.toString()
+        val email = feedbackContactsEditText.text.toString()
+        val description = feedbackFormEditText.text.toString()
         if (email.isEmpty() || description.isEmpty()) {
             Toast.makeText(context, R.string.feedback_fill_fields, Toast.LENGTH_SHORT).show()
             return
@@ -149,7 +131,6 @@ class TextFeedbackFragment : FragmentBase() {
 
         ProgressHelper.activate(progressDialog)
         shell.api.sendFeedback(email, description).enqueue(object : Callback<Void> {
-
             override fun onResponse(call: Call<Void>?, response: Response<Void>?) {
                 ProgressHelper.dismiss(progressDialog)
                 if (response?.isSuccessful ?: false) {
@@ -186,9 +167,9 @@ class TextFeedbackFragment : FragmentBase() {
     }
 
     override fun onDestroyView() {
-        emailEditText.setOnEditorActionListener(null)
-        rootScrollView.setOnClickListener(null)
-        descriptionEditText.onFocusChangeListener = null
+        feedbackContactsEditText.setOnEditorActionListener(null)
+        textFeedbackRootScrollView.setOnClickListener(null)
+        feedbackFormEditText.onFocusChangeListener = null
         super.onDestroyView()
     }
 

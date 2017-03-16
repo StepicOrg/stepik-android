@@ -78,6 +78,9 @@ public interface Analytic {
         String USER_OPEN_IMAGE = "user_open_image";
         String SCREENSHOT = "screenshot";
         String GOOGLE_SOCIAL_IS_NOT_ENABLED = "google_social_is_not_enabled";
+        String ACCEPT_DELETING_UNIT = "click_delete_unit_dialog";
+        String ACCEPT_DELETING_SECTION = "click_delete_section_dialog";
+        java.lang.String CLICK_STREAK_DRAWER = "click_streak_drawer";
     }
 
     interface Screens {
@@ -111,6 +114,7 @@ public interface Analytic {
         String USER_LOGOUT = "main_choice_logout";
         String USER_OPEN_ABOUT_APP = "main_choice_about";
         String SHOW_SECTIONS_JOINED = "show_sections_joined";
+        String USER_OPEN_PROFILE = "main_choice_profile";
     }
 
     interface Video {
@@ -291,7 +295,7 @@ public interface Analytic {
     interface Profile {
         String CLICK_INSTRUCTOR = "profile_click_instructor";
         String CLICK_USER_IN_COMMENT = "profile_click_in_comment";
-        String CLICK_OPEN_MY_PROFILE = "profile_click_open_my";
+        String CLICK_OPEN_MY_PROFILE_IMAGE = "profile_click_open_my"; //click on image
         String SHOW_LOCAL = "profile_show_my";
         String OPEN_NO_INTERNET = "profile_no_internet";
         String STREAK_NO_INTERNET = "profile_no_internet_streak";
@@ -300,6 +304,7 @@ public interface Analytic {
         String CLICK_STREAK_VALUE = "profile_click_streak";
         String CLICK_FULL_NAME = "profile_click_full_name";
         String OPEN_SCREEN_OVERALL = "profile_open_screen_overall";
+        String CLICK_FULL_NAME_DRAWER = "profile_click_fill_name_drawer";
     }
 
     interface Streak {

@@ -12,6 +12,8 @@ import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.BuildConfig;
 import org.stepic.droid.R;
+import org.stepic.droid.core.ComponentManager;
+import org.stepic.droid.core.ComponentManagerImpl;
 import org.stepic.droid.core.components.AppCoreComponent;
 import org.stepic.droid.core.components.DaggerAppCoreComponent;
 import org.stepic.droid.core.components.DaggerStorageComponent;
@@ -30,6 +32,7 @@ public class App extends MultiDexApplication {
     protected static App application;
     private AppCoreComponent component;
     private StorageComponent storageComponent;
+    private ComponentManager componentManager;
 
     //    private RefWatcher refWatcher;
 
@@ -72,6 +75,8 @@ public class App extends MultiDexApplication {
 
         component.inject(this);
 
+        componentManager = new ComponentManagerImpl(component);
+
         downloadUpdater.onCreateApp();
 
         // Инициализация AppMetrica SDK
@@ -106,5 +111,8 @@ public class App extends MultiDexApplication {
         return application.getApplicationContext();
     }
 
+    public static ComponentManager getComponentManager() {
+        return application.componentManager;
+    }
 
 }

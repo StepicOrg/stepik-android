@@ -33,6 +33,8 @@ import org.stepic.droid.core.ShareHelperImpl;
 import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.ShellImpl;
 import org.stepic.droid.core.StepikLogoutManager;
+import org.stepic.droid.core.VideoLengthResolver;
+import org.stepic.droid.core.VideoLengthResolverImpl;
 import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.notifications.LocalReminder;
 import org.stepic.droid.notifications.LocalReminderImpl;
@@ -61,6 +63,8 @@ import org.stepic.droid.util.resolvers.text.TextResolver;
 import org.stepic.droid.util.resolvers.text.TextResolverImpl;
 import org.stepic.droid.web.Api;
 import org.stepic.droid.web.ApiImpl;
+import org.stepic.droid.web.UserAgentProvider;
+import org.stepic.droid.web.UserAgentProviderImpl;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -357,6 +361,18 @@ public class AppCoreModule {
             CleanManager cleanManager
     ) {
         return new SectionDownloaderImpl(databaseFacade, downloadManager, threadPoolExecutor, cleanManager, cancelSniffer);
+    }
+
+    @Provides
+    @Singleton
+    VideoLengthResolver provideVideoLengthResolver() {
+        return new VideoLengthResolverImpl();
+    }
+
+    @Provides
+    @Singleton
+    UserAgentProvider provideUserAgent() {
+        return new UserAgentProviderImpl(context);
     }
 
 

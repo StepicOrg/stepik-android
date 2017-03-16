@@ -14,16 +14,16 @@ import org.stepic.droid.web.Api
 import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 
-class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
-                       val analytic: Analytic,
-                       val mainHandler: MainHandler,
-                       val api: Api,
-                       val sharedPreferences: SharedPreferenceHelper) : PresenterBase<ProfileView>() {
+class ProfilePresenter(private val threadPoolExecutor: ThreadPoolExecutor,
+                       private val analytic: Analytic,
+                       private val mainHandler: MainHandler,
+                       private val api: Api,
+                       private val sharedPreferences: SharedPreferenceHelper) : PresenterBase<ProfileView>() {
 
-    var isLoading: Boolean = false //main thread only
-    var userViewModel: UserViewModel? = null //both threads, but access only when isLoading = false, write isLoading = true.
-    var currentStreak: Int? = null
-    var maxStreak: Int? = null
+    private var isLoading: Boolean = false //main thread only
+    private var userViewModel: UserViewModel? = null //both threads, but access only when isLoading = false, write isLoading = true.
+    private var currentStreak: Int? = null
+    private var maxStreak: Int? = null
 
     @JvmOverloads
     fun initProfile(profileId: Long = 0L) {
@@ -36,7 +36,7 @@ class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
                 val currentStreakLocal = currentStreak
                 val maxStreakLocal = maxStreak
                 if (maxStreakLocal != null && currentStreakLocal != null) {
-                    view?.streaksIsLoaded(currentStreakLocal, maxStreakLocal)
+                    view?.streaksAreLoaded(currentStreakLocal, maxStreakLocal)
                     isLoading = false
                     return
                 } else {
@@ -101,6 +101,14 @@ class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
 
     }
 
+    fun showStreakForStoredUser() {
+        threadPoolExecutor.execute {
+            sharedPreferences.profile?.id?.let {
+                showStreaks(it)
+            }
+        }
+    }
+
     @WorkerThread
     private fun showStreaks(userId: Long) {
         val pins = try {
@@ -114,12 +122,10 @@ class ProfilePresenter(val threadPoolExecutor: ThreadPoolExecutor,
         val currentStreakLocal = StepikUtil.getCurrentStreak(pins)
         val maxStreakLocal = StepikUtil.getMaxStreak(pins)
         mainHandler.post {
-            if (currentStreak == null && maxStreak == null) {
-                currentStreak = currentStreakLocal
-                maxStreak = maxStreakLocal
-                view?.streaksIsLoaded(currentStreak = currentStreakLocal,
-                        maxStreak = maxStreakLocal)
-            }
+            currentStreak = currentStreakLocal
+            maxStreak = maxStreakLocal
+            view?.streaksAreLoaded(currentStreak = currentStreakLocal,
+                    maxStreak = maxStreakLocal)
         }
     }
 
