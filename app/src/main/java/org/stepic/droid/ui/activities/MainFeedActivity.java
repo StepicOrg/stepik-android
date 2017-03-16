@@ -651,7 +651,14 @@ public class MainFeedActivity extends BackToExitActivityBase
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                analytic.reportEvent(Analytic.Profile.CLICK_OPEN_MY_PROFILE_IMAGE);
                 shell.getScreenProvider().openProfile(MainFeedActivity.this);
+            }
+        });
+        userNameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analytic.reportEvent(Analytic.Profile.CLICK_FULL_NAME_DRAWER);
             }
         });
         showLogout(true);
