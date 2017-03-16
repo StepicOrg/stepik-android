@@ -118,7 +118,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     @BindString(R.string.my_courses_title)
     String coursesTitle;
 
-    @BindDrawable(R.drawable.placeholder_icon)
+    @BindDrawable(R.drawable.general_placeholder)
     Drawable userPlaceholder;
 
     private int currentIndex;

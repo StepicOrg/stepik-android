@@ -327,7 +327,7 @@ public class SectionsFragment
             courseName.setText(course.getTitle());
             Glide.with(this)
                     .load(StepikLogicHelper.getPathForCourseOrEmpty(course, config))
-                    .placeholder(R.drawable.ic_course_placeholder)
+                    .placeholder(R.drawable.general_placeholder)
                     .into(imageViewTarget);
         } else {
             joinCourseRoot.setVisibility(View.GONE);

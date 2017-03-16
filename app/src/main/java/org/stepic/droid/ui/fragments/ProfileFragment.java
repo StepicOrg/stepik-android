@@ -77,7 +77,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
     @BindView(R.id.profileImage)
     ImageView profileImage;
 
-    @BindDrawable(R.drawable.placeholder_icon)
+    @BindDrawable(R.drawable.general_placeholder)
     Drawable userPlaceholder;
 
     @BindView(R.id.shortBioValue)

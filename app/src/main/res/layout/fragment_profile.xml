@@ -57,7 +57,7 @@
                             android:layout_height="@dimen/profile_image_height_width"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/guideline_standard_padding"
-                            tools:src="@drawable/placeholder_icon"/>
+                            tools:src="@drawable/general_placeholder"/>
 
                         <TextView
                             android:id="@+id/profileName"

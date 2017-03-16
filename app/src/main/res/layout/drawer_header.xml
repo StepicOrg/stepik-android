@@ -41,7 +41,7 @@
             android:layout_height="56dp"
             android:layout_gravity="center_vertical"
             app:border_color="#FF000000"
-            tools:src="@drawable/ic_course_placeholder"/>
+            tools:src="@drawable/general_placeholder"/>
 
         <TextView
             android:id="@+id/username"

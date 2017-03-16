@@ -126,7 +126,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @BindView(R.id.course_not_found)
     View courseNotFoundView;
 
-    @BindDrawable(R.drawable.ic_course_placeholder)
+    @BindDrawable(R.drawable.general_placeholder)
     Drawable coursePlaceholder;
 
     private WebView introView;
