@@ -54,6 +54,7 @@
 
         <TextView
             android:id="@+id/sign_in_profile_view"
+            style="@style/MainDrawerTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/guideline_standard_padding"
