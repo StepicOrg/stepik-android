@@ -80,6 +80,7 @@ public interface Analytic {
         String GOOGLE_SOCIAL_IS_NOT_ENABLED = "google_social_is_not_enabled";
         String ACCEPT_DELETING_UNIT = "click_delete_unit_dialog";
         String ACCEPT_DELETING_SECTION = "click_delete_section_dialog";
+        java.lang.String CLICK_STREAK_DRAWER = "click_streak_drawer";
     }
 
     interface Screens {
