@@ -96,6 +96,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     public static final String KEY_CURRENT_INDEX = "Current_index";
     public static final String REMINDER_KEY = "reminder_key";
     private final String PROGRESS_LOGOUT_TAG = "progress_logout";
+    private static final int DEFAULT_START_INDEX = 1;
 
 
     @BindView(R.id.toolbar)
@@ -271,7 +272,6 @@ public class MainFeedActivity extends BackToExitActivityBase
         signInProfileView.setVisibility(View.INVISIBLE);
         profileImage.setVisibility(View.INVISIBLE);
         userNameTextView.setVisibility(View.GONE);
-        userNameTextView.setText("");
     }
 
     @Override
@@ -279,7 +279,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            if (currentIndex == 0) {
+            if (currentIndex == DEFAULT_START_INDEX) {
                 finish();
                 return;
             }
@@ -289,12 +289,9 @@ public class MainFeedActivity extends BackToExitActivityBase
             fragmentManager.popBackStackImmediate();
             fragmentManager.beginTransaction().remove(fragment).commit();
             if (fragmentManager.getBackStackEntryCount() <= 0) {
-                showCurrentFragment(0);
-
-//                super.onBackPressed();
-//                finish();
+                showCurrentFragment(DEFAULT_START_INDEX);
             } else {
-                currentIndex = 0;
+                currentIndex = DEFAULT_START_INDEX;
                 navigationView.setCheckedItem(R.id.my_courses);
                 setTitle(R.string.my_courses_title);
             }
@@ -310,7 +307,7 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     private void initFragments(Bundle bundle) {
         if (bundle == null) {
-            currentIndex = 0;
+            currentIndex = DEFAULT_START_INDEX;
         } else {
             currentIndex = bundle.getInt(KEY_CURRENT_INDEX);
         }
@@ -337,7 +334,6 @@ public class MainFeedActivity extends BackToExitActivityBase
         switch (menuItem.getItemId()) {
             case R.id.logout_item:
                 analytic.reportEvent(Analytic.Interaction.CLICK_LOGOUT);
-
                 LogoutAreYouSureDialog dialog = LogoutAreYouSureDialog.Companion.newInstance();
                 if (!dialog.isAdded()) {
                     dialog.show(getSupportFragmentManager(), null);
@@ -358,6 +354,10 @@ public class MainFeedActivity extends BackToExitActivityBase
                     }
                 }, 0);
                 shell.getScreenProvider().showSettings(this);
+                return true;
+            case R.id.profile:
+                // do not close drawer for profile
+                shell.getScreenProvider().openProfile(this);
                 return true;
             case R.id.feedback:
                 new Handler().postDelayed(new Runnable() {
@@ -449,32 +449,32 @@ public class MainFeedActivity extends BackToExitActivityBase
         }
         switch (menuItem.getItemId()) {
             case R.id.my_courses:
-                currentIndex = 1;
+                currentIndex = 2;
                 if (tag == null || !tag.equals(MyCoursesFragment.class.toString())) {
                     shortLifetimeRef = MyCoursesFragment.newInstance();
                 }
                 break;
             case R.id.find_lessons:
-                currentIndex = 2;
+                currentIndex = 3;
                 if (tag == null || !tag.equals(FindCoursesFragment.class.toString())) {
                     shortLifetimeRef = FindCoursesFragment.newInstance();
                 }
                 break;
             case R.id.cached_videos:
-                currentIndex = 3;
+                currentIndex = 4;
                 if (tag == null || !tag.equals(DownloadsFragment.class.toString())) {
                     shortLifetimeRef = DownloadsFragment.newInstance();
                 }
                 break;
 
             case R.id.certificates:
-                currentIndex = 4;
+                currentIndex = 5;
                 if (tag == null || !tag.equals(CertificateFragment.class.toString())) {
                     shortLifetimeRef = CertificateFragment.newInstance();
                 }
                 break;
             case R.id.notifications:
-                currentIndex = 5;
+                currentIndex = 6;
                 if (tag == null || !tag.equals(NotificationsFragment.class.toString())) {
                     shortLifetimeRef = NotificationsFragment.newInstance();
                 }
@@ -516,7 +516,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     }
 
     public void showFindLesson() {
-        currentIndex = 1;
+        currentIndex = 2;
         showCurrentFragment(currentIndex);
     }
 
@@ -562,15 +562,15 @@ public class MainFeedActivity extends BackToExitActivityBase
     }
 
     public static int getCertificateFragmentIndex() {
-        return 3;
+        return 4;
     }
 
     public static int getDownloadFragmentIndex() {
-        return 2;
+        return 3;
     }
 
     public static int getMyCoursesIndex() {
-        return 0;
+        return 1;
     }
 
     private boolean fragmentBackKeyIntercept() {
@@ -734,6 +734,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onStart() {
         super.onStart();
+        //// TODO: 16.03.17 rewrite from pull way to push
         profilePresenter.showStreakForStoredUser();
     }
 }
