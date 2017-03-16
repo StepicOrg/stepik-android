@@ -261,12 +261,12 @@ public class MainFeedActivity extends BackToExitActivityBase
         signInProfileView = ButterKnife.findById(headerLayout, R.id.sign_in_profile_view);
         solvingWithoutBreakTextView = ButterKnife.findById(headerLayout, R.id.solving_without_break_text);
 
-solvingWithoutBreakTextView.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        analytic.reportEvent(Analytic.Interaction.CLICK_STREAK_DRAWER);
-    }
-});
+        solvingWithoutBreakTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analytic.reportEvent(Analytic.Interaction.CLICK_STREAK_DRAWER);
+            }
+        });
         signInProfileView.setOnClickListener(null);
         signInProfileView.setVisibility(View.INVISIBLE);
         profileImage.setVisibility(View.INVISIBLE);
@@ -703,7 +703,7 @@ solvingWithoutBreakTextView.setOnClickListener(new View.OnClickListener() {
         } else {
             solvingWithoutBreakTextView.setVisibility(View.VISIBLE);
 
-            String days = currentStreak  + " " + getResources().getQuantityString(R.plurals.day_number, currentStreak);
+            String days = currentStreak + " " + getResources().getQuantityString(R.plurals.day_number, currentStreak);
             CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(this.getAssets(), "fonts/NotoSans-Bold.ttf"));
             String prefix = getString(R.string.solving_without_break) + " ";
 
