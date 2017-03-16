@@ -716,6 +716,11 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     public void onProfileNotFound() {
         //it is handled by profile in MainFeed
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        profilePresenter.showStreakForStoredUser();
     }
 }
