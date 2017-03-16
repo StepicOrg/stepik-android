@@ -35,7 +35,7 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
     public CertificateAdapter(@NotNull CertificatePresenter certificatePresenter, @NotNull Activity activity) {
         this.certificatePresenter = certificatePresenter;
         this.activity = activity;
-        certificatePlaceholder = ContextCompat.getDrawable(App.getAppContext(), R.drawable.ic_course_placeholder);
+        certificatePlaceholder = ContextCompat.getDrawable(App.getAppContext(), R.drawable.general_placeholder);
     }
 
     @Override

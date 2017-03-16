@@ -19,6 +19,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,11 +48,14 @@ import org.joda.time.DateTimeZone;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
+import org.stepic.droid.core.ProfilePresenter;
 import org.stepic.droid.core.presenters.ProfileMainFeedPresenter;
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView;
+import org.stepic.droid.core.presenters.contracts.ProfileView;
 import org.stepic.droid.events.updating.NeedUpdateEvent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Profile;
+import org.stepic.droid.model.UserViewModel;
 import org.stepic.droid.notifications.StepicInstanceIdService;
 import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.services.UpdateWithApkService;
@@ -83,9 +88,11 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
+import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public class MainFeedActivity extends BackToExitActivityBase
-        implements NavigationView.OnNavigationItemSelectedListener, BackButtonHandler, HasDrawer, ProfileMainFeedView, LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener {
+        implements NavigationView.OnNavigationItemSelectedListener, BackButtonHandler, HasDrawer, ProfileMainFeedView, LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener, ProfileView {
     public static final String KEY_CURRENT_INDEX = "Current_index";
     public static final String REMINDER_KEY = "reminder_key";
     private final String PROGRESS_LOGOUT_TAG = "progress_logout";
@@ -100,6 +107,8 @@ public class MainFeedActivity extends BackToExitActivityBase
     @BindView(R.id.drawer)
     DrawerLayout drawerLayout;
 
+    TextView solvingWithoutBreakTextView;
+
     ImageView profileImage;
 
     TextView userNameTextView;
@@ -109,7 +118,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     @BindString(R.string.my_courses_title)
     String coursesTitle;
 
-    @BindDrawable(R.drawable.placeholder_icon)
+    @BindDrawable(R.drawable.general_placeholder)
     Drawable userPlaceholder;
 
     private int currentIndex;
@@ -119,6 +128,9 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     @Inject
     ProfileMainFeedPresenter profileMainFeedPresenter;
+
+    @Inject
+    ProfilePresenter profilePresenter;
 
     private List<WeakReference<OnBackClickListener>> onBackClickListenerList = new ArrayList<>(8);
     private ActionBarDrawerToggle actionBarDrawerToggle;
@@ -168,7 +180,8 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.component().inject(this);
+        App.getComponentManager().getMainFeedComponent()
+                .inject(this);
         setContentView(R.layout.activity_main_feed);
         unbinder = ButterKnife.bind(this);
         notificationClickedCheck(getIntent());
@@ -192,6 +205,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         bus.register(this);
 
         profileMainFeedPresenter.attachView(this);
+        profilePresenter.attachView(this);
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,6 +213,7 @@ public class MainFeedActivity extends BackToExitActivityBase
                 analytic.reportEvent(Analytic.Interaction.CLICK_PROFILE_BEFORE_LOADING);
             }
         });
+
         profileMainFeedPresenter.fetchProfile();
 
         if (checkPlayServices() && !sharedPreferenceHelper.isGcmTokenOk()) {
@@ -244,11 +259,18 @@ public class MainFeedActivity extends BackToExitActivityBase
         profileImage = ButterKnife.findById(headerLayout, R.id.profile_image);
         userNameTextView = ButterKnife.findById(headerLayout, R.id.username);
         signInProfileView = ButterKnife.findById(headerLayout, R.id.sign_in_profile_view);
+        solvingWithoutBreakTextView = ButterKnife.findById(headerLayout, R.id.solving_without_break_text);
 
+        solvingWithoutBreakTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analytic.reportEvent(Analytic.Interaction.CLICK_STREAK_DRAWER);
+            }
+        });
         signInProfileView.setOnClickListener(null);
         signInProfileView.setVisibility(View.INVISIBLE);
         profileImage.setVisibility(View.INVISIBLE);
-        userNameTextView.setVisibility(View.INVISIBLE);
+        userNameTextView.setVisibility(View.GONE);
         userNameTextView.setText("");
     }
 
@@ -484,8 +506,12 @@ public class MainFeedActivity extends BackToExitActivityBase
     protected void onDestroy() {
         profileImage.setOnClickListener(null);
         profileMainFeedPresenter.detachView(this);
+        profilePresenter.detachView(this);
         bus.unregister(this);
         drawerLayout.removeDrawerListener(actionBarDrawerToggle);
+        if (isFinishing()) {
+            App.getComponentManager().removeMainFeedComponent();
+        }
         super.onDestroy();
     }
 
@@ -586,7 +612,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     public void showAnonymous() {
         signInProfileView.setVisibility(View.VISIBLE);
         profileImage.setVisibility(View.VISIBLE);
-        userNameTextView.setVisibility(View.INVISIBLE);
+        userNameTextView.setVisibility(View.GONE);
         profileImage.setImageDrawable(userPlaceholder);
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -621,7 +647,7 @@ public class MainFeedActivity extends BackToExitActivityBase
                     .placeholder(userPlaceholder)
                     .into(profileImage);
         }
-        userNameTextView.setText(ProfileExtensionKt.getFirstAndLastName(profile));
+        userNameTextView.setText(ProfileExtensionKt.getFirstAndLastNameTwoLines(profile));
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -629,6 +655,8 @@ public class MainFeedActivity extends BackToExitActivityBase
             }
         });
         showLogout(true);
+
+        profilePresenter.showStreakForStoredUser();
     }
 
     void showLogout(boolean needShow) {
@@ -656,5 +684,49 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     public void onLogout() {
         profileMainFeedPresenter.logout();
+    }
+
+    @Override
+    public void showLoadingAll() {
+        // do nothing
+    }
+
+    @Override
+    public void showNameImageShortBio(@NotNull UserViewModel userViewModel) {
+        //it is shown by main feed
+    }
+
+    @Override
+    public void streaksAreLoaded(int currentStreak, int maxStreak) {
+        if (currentStreak <= 0) {
+            solvingWithoutBreakTextView.setVisibility(View.GONE);
+        } else {
+            solvingWithoutBreakTextView.setVisibility(View.VISIBLE);
+
+            String days = currentStreak + " " + getResources().getQuantityString(R.plurals.day_number, currentStreak);
+            CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(this.getAssets(), "fonts/NotoSans-Bold.ttf"));
+            String prefix = getString(R.string.solving_without_break) + " ";
+
+            SpannableString result = new SpannableString(prefix + days);
+
+            result.setSpan(typefaceSpan, prefix.length(), prefix.length() + days.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            solvingWithoutBreakTextView.setText(result);
+        }
+    }
+
+    @Override
+    public void onInternetFailed() {
+        //it is handled by profile in MainFeed
+    }
+
+    @Override
+    public void onProfileNotFound() {
+        //it is handled by profile in MainFeed
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        profilePresenter.showStreakForStoredUser();
     }
 }

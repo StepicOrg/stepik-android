@@ -58,7 +58,7 @@
                 android:layout_height="@dimen/certificate_image_size"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                tools:src="@drawable/ic_course_placeholder"/>
+                tools:src="@drawable/general_placeholder"/>
         </RelativeLayout>
 
         <Button

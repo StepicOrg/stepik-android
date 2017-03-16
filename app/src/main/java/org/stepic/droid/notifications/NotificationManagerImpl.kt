@@ -482,9 +482,9 @@ class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper
 
     private fun getPictureByCourse(course: Course?): Bitmap {
         val cover = course?.cover
-        @DrawableRes val notificationPlaceholder = R.drawable.ic_course_placeholder
+        @DrawableRes val notificationPlaceholder = R.drawable.general_placeholder
         if (cover == null) {
-            return getBitmap(R.drawable.ic_course_placeholder)
+            return getBitmap(R.drawable.general_placeholder)
         } else {
             return Glide.with(context)
                     .load(configs.baseUrl + cover)
