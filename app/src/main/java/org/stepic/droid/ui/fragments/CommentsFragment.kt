@@ -3,6 +3,7 @@ package org.stepic.droid.ui.fragments
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
@@ -20,8 +21,8 @@ import android.widget.Toast
 import com.squareup.otto.Subscribe
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.App
+import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.events.comments.*
 import org.stepic.droid.model.User
@@ -282,7 +283,14 @@ class CommentsFragment : FragmentBase(), SwipeRefreshLayout.OnRefreshListener {
     private fun copyTextToClipBoard(position: Int) {
         val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
         comment?.text?.let {
-            val clipData = ClipData.newHtmlText(getString(R.string.copy_text_label), textResolver.fromHtml(it), it)
+
+            val label = getString(R.string.copy_text_label)
+            val plainText = textResolver.fromHtml(it)
+            val clipData = if (Build.VERSION.SDK_INT > 16) {
+                ClipData.newHtmlText(label, plainText, it)
+            } else {
+                ClipData.newPlainText(label, plainText);
+            }
 
             val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             clipboardManager.primaryClip = clipData
