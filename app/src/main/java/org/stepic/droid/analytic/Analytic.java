@@ -114,6 +114,7 @@ public interface Analytic {
         String USER_LOGOUT = "main_choice_logout";
         String USER_OPEN_ABOUT_APP = "main_choice_about";
         String SHOW_SECTIONS_JOINED = "show_sections_joined";
+        String USER_OPEN_PROFILE = "main_choice_profile";
     }
 
     interface Video {

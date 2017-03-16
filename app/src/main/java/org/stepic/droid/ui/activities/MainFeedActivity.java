@@ -419,6 +419,9 @@ public class MainFeedActivity extends BackToExitActivityBase
             case R.id.notifications:
                 analytic.reportEvent(Analytic.Screens.USER_OPEN_NOTIFICATIONS);
                 break;
+            case R.id.profile:
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_PROFILE);
+                break;
         }
     }
 
