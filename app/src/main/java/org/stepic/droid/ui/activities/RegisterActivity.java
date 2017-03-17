@@ -48,7 +48,7 @@ public class RegisterActivity extends FragmentActivityBase {
     @BindView(R.id.sign_up_btn)
     Button createAccountButton;
 
-    @BindView(R.id.actionbar_close_btn_layout)
+    @BindView(R.id.actionbarCloseButtonLayout)
     View closeButton;
 
     @BindView(R.id.first_name_reg)

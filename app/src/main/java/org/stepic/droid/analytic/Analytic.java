@@ -19,6 +19,7 @@ public interface Analytic {
         String CLICK_SIGN_IN = "click sign in on launch screen";
         String CLICK_SIGN_UP = "click sign up";
         String CLICK_SIGN_IN_ON_SIGN_IN_SCREEN = "click sign in on sign in on sign-in screen";
+        String CLICK_SIGN_IN_NEXT_ON_SIGN_IN_SCREEN = "click_sign_in_next_sign_in_screen";
         String CLICK_DELETE_SECTION = "Click delete section from cache";
         String CLICK_CACHE_SECTION = "Click cache section";
         String CLICK_CACHE_LESSON = "Click cache unit";

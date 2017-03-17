@@ -257,59 +257,38 @@ public class LaunchActivity extends BackToExitActivityBase {
     protected void onResume() {
         super.onResume();
         if (checkPlayServices()) {
-            final CredentialRequest mCredentialRequest = new CredentialRequest.Builder()
-                    .setPasswordLoginSupported(true)
-                    .setAccountTypes(IdentityProviders.GOOGLE, IdentityProviders.TWITTER, IdentityProviders.FACEBOOK, SocialManager.SocialType.github.getIdentifier(), SocialManager.SocialType.vk.getIdentifier())
-                    .build();
-            final Credential credential = new Credential.Builder("user@mail.com")
-                    .setPassword("password")
-                    .build();
-
             googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                 @Override
                 public void onConnected(@Nullable Bundle bundle) {
-                    Auth.CredentialsApi.save(googleApiClient, credential).setResultCallback(new ResultCallback<Status>() {
-                        @Override
-                        public void onResult(@NonNull Status status) {
-                            if (status.isSuccess()) {
-                                Timber.d("SAVE: OK");
-                                Toast.makeText(LaunchActivity.this, "Credentials saved", Toast.LENGTH_SHORT).show();
-                            } else {
-                                if (status.hasResolution()) {
-                                    // Try to resolve the save request. This will prompt the user if
-                                    // the credential is new.
-                                    try {
-                                        status.startResolutionForResult(LaunchActivity.this, RC_SAVE);
-                                    } catch (IntentSender.SendIntentException e) {
-                                        // Could not resolve the request
-                                        Toast.makeText(LaunchActivity.this, "Save failed", Toast.LENGTH_SHORT).show();
-                                    }
-                                } else {
-                                    // Request has no resolution
-                                    Toast.makeText(LaunchActivity.this, "Save failed", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
-                    });
+//                    Auth.CredentialsApi.save(googleApiClient, credential).setResultCallback(new ResultCallback<Status>() {
+//                        @Override
+//                        public void onResult(@NonNull Status status) {
+//                            if (status.isSuccess()) {
+//                                Timber.d("SAVE: OK");
+//                                Toast.makeText(LaunchActivity.this, "Credentials saved", Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                if (status.hasResolution()) {
+//                                    // Try to resolve the save request. This will prompt the user if
+//                                    // the credential is new.
+//                                    try {
+//                                        status.startResolutionForResult(LaunchActivity.this, RC_SAVE);
+//                                    } catch (IntentSender.SendIntentException e) {
+//                                        // Could not resolve the request
+//                                        Toast.makeText(LaunchActivity.this, "Save failed", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                } else {
+//                                    // Request has no resolution
+//                                    Toast.makeText(LaunchActivity.this, "Save failed", Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
+//                        }
+//                    });
 
-                    Auth.CredentialsApi.request(googleApiClient, mCredentialRequest).setResultCallback(
-                            new ResultCallback<CredentialRequestResult>() {
-
-                                @Override
-                                public void onResult(CredentialRequestResult credentialRequestResult) {
-                                    if (credentialRequestResult.getStatus().isSuccess()) {
-                                        // See "Handle successful credential requests"
-                                        onCredentialRetrieved(credentialRequestResult.getCredential());
-                                    } else {
-                                        // See "Handle unsuccessful and incomplete credential requests"
-                                        resolveResult(credentialRequestResult.getStatus());
-                                    }
-                                }
-                            });
+//                    requestCredentials();
                 }
 
                 @Override
-                public void onConnectionSuspended(int i) {
+                public void onConnectionSuspended(int cause) {
 
                 }
             });
@@ -317,8 +296,35 @@ public class LaunchActivity extends BackToExitActivityBase {
         }
     }
 
-    int RC_READ = 314;
-    int RC_SAVE = 316;
+    private void requestCredentials() {
+        final CredentialRequest credentialRequest = new CredentialRequest.Builder()
+                .setPasswordLoginSupported(true)
+                .setAccountTypes(
+                        //// TODO: 16.03.17 pass just a list
+                        SocialManager.SocialType.google.getIdentifier(),
+                        SocialManager.SocialType.facebook.getIdentifier(),
+                        SocialManager.SocialType.twitter.getIdentifier(),
+                        SocialManager.SocialType.github.getIdentifier(),
+                        SocialManager.SocialType.vk.getIdentifier())
+                .build();
+
+        Auth.CredentialsApi.request(googleApiClient, credentialRequest).setResultCallback(
+                new ResultCallback<CredentialRequestResult>() {
+                    @Override
+                    public void onResult(@NonNull CredentialRequestResult credentialRequestResult) {
+                        if (credentialRequestResult.getStatus().isSuccess()) {
+                            // See "Handle successful credential requests"
+                            onCredentialRetrieved(credentialRequestResult.getCredential());
+                        } else {
+                            // See "Handle unsuccessful and incomplete credential requests"
+                            resolveResult(credentialRequestResult.getStatus());
+                        }
+                    }
+                });
+    }
+
+    private final int RC_READ = 314;
+    private final int RC_SAVE = 316;
 
     private void resolveResult(Status status) {
         Timber.d(status.toString());

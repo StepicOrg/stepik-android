@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/root_view"
+              android:id="@+id/loginRootView"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:focusableInTouchMode="true"
@@ -53,7 +53,7 @@
                 android:paddingTop="@dimen/half_padding">
 
                 <EditText
-                    android:id="@+id/email_et"
+                    android:id="@+id/loginText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/email"
@@ -78,7 +78,7 @@
                 app:passwordToggleEnabled="true">
 
                 <EditText
-                    android:id="@+id/password_et"
+                    android:id="@+id/passwordEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
@@ -90,7 +90,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <TextView
-                android:id="@+id/forgot_password_tv"
+                android:id="@+id/forgotPasswordView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/email_text_input"
@@ -105,24 +105,24 @@
                 android:textSize="@dimen/launch_not_button_text_size"/>
 
             <Button
-                android:id="@+id/login_button_layout"
+                android:id="@+id/loginButton"
                 style="@style/LoginButtons"
                 android:layout_alignEnd="@+id/email_text_input"
                 android:layout_alignLeft="@+id/email_text_input"
                 android:layout_alignRight="@+id/email_text_input"
                 android:layout_alignStart="@+id/email_text_input"
-                android:layout_below="@id/forgot_password_tv"
+                android:layout_below="@id/forgotPasswordView"
                 android:layout_marginBottom="25dp"
                 android:layout_marginTop="15dp"
                 android:contentDescription="@string/sign_in"
                 android:text="@string/sign_in"/>
 
             <TextView
-                android:id="@+id/terms_privacy_login"
+                android:id="@+id/termsPrivacyLogin"
                 style="@style/PrivacyPolicyTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/login_button_layout"
+                android:layout_below="@+id/loginButton"
                 android:layout_centerHorizontal="true"
                 android:clickable="true"
                 android:gravity="center|bottom"
