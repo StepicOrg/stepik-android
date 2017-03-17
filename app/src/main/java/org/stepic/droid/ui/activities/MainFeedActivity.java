@@ -181,7 +181,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.getComponentManager().getMainFeedComponent()
+        App.getComponentManager().mainFeedComponent()
                 .inject(this);
         setContentView(R.layout.activity_main_feed);
         unbinder = ButterKnife.bind(this);
@@ -513,7 +513,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         bus.unregister(this);
         drawerLayout.removeDrawerListener(actionBarDrawerToggle);
         if (isFinishing()) {
-            App.getComponentManager().removeMainFeedComponent();
+            App.getComponentManager().releaseMainFeedComponent();
         }
         super.onDestroy();
     }

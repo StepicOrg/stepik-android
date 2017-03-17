@@ -7,6 +7,11 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
+    interface Login {
+        String FAIL_LOGIN = "fail_login";
+        String CLICK_REGISTRATION_SEND_IME = "click_registration_send_ime";
+    }
+
     interface System {
         String BOOT_COMPLETED = "boot_completed";
     }
@@ -161,7 +166,6 @@ public interface Analytic {
         String LOAD_SERVICE = "Load Service";
         String PUSH_STATE_EXCEPTION = "Push state exception";
         String CANT_CREATE_NOMEDIA = "can't create .nomedia";
-        String FAIL_LOGIN = "fail login";
         String CONFIG_NOT_PARSED = "configRelease, config.json problem";
         String ILLEGAL_STATE_NEXT_LESSON = "cant_show_next_lesson";
         String ILLEGAL_STATE_PREVIOUS_LESSON = "cant_show_previous_lesson";
@@ -178,6 +182,7 @@ public interface Analytic {
         String COOKIE_WAS_EMPTY = "cookie_was_empty";
         String FAIL_LOGOUT_WHEN_REFRESH = "refresh_fail_logout_social";
         String UNITS_LOADING_FAIL = "units_loading_fail";
+        String UNPREDICTABLE_LOGIN_RESULT = "login_successful_was_not_correct";
     }
 
     interface Web {
@@ -191,8 +196,7 @@ public interface Analytic {
         String DROP_COURSE_FAIL = "drop course fail";
     }
 
-    interface
-    Notification {
+    interface Notification {
         String DISABLED_BY_USER = "Notification is disabled by user in app";
         String ACTION_NOT_SUPPORT = "notification action is not support";
         String HTML_WAS_NULL = "notification_html_was_null";
@@ -329,7 +333,6 @@ public interface Analytic {
         String OPEN_PROFILE = "shortcut_open_profile";
         String FIND_COURSES = "shortcut_find_courses";
     }
-
 
     interface Anonymous {
         String JOIN_COURSE = "click_join_course_anonymous";

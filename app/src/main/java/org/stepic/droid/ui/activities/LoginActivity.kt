@@ -6,43 +6,57 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.view.inputmethod.EditorInfo
-import butterknife.ButterKnife
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.panel_custom_action_bar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
-import org.stepic.droid.core.ActivityFinisher
+import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.core.ProgressHandler
+import org.stepic.droid.core.presenters.LoginPresenter
+import org.stepic.droid.core.presenters.contracts.LoginView
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.getMessageFor
+import javax.inject.Inject
 
 @SuppressLint("GoogleAppIndexingApiWarning")
-class LoginActivity : FragmentActivityBase() {
+class LoginActivity : FragmentActivityBase(), LoginView {
+    companion object {
+        private val TAG = "LoginActivity"
+    }
 
-    private lateinit var termsMessageHtml: String
+    private val termsMessageHtml by lazy {
+        resources.getString(R.string.terms_message_login)
+    }
 
     private var progressLogin: ProgressDialog? = null
 
-    private val progressHandler = object : ProgressHandler {
-        override fun activate() {
-            hideSoftKeypad()
-            ProgressHelper.activate(progressLogin)
-        }
+    private lateinit var progressHandler: ProgressHandler
 
-        override fun dismiss() {
-            ProgressHelper.dismiss(progressLogin)
-        }
-    }
+    @Inject
+    lateinit var loginPresenter: LoginPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setBackgroundDrawable(null)
         setContentView(R.layout.activity_login)
-        unbinder = ButterKnife.bind(this)
         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition)
         hideSoftKeypad()
+        App.getComponentManager().loginComponent(TAG).inject(this)
 
-        termsMessageHtml = resources.getString(R.string.terms_message_login)
+        progressHandler = object : ProgressHandler {
+            override fun activate() {
+                hideSoftKeypad()
+                ProgressHelper.activate(progressLogin)
+            }
+
+            override fun dismiss() {
+                ProgressHelper.dismiss(progressLogin)
+            }
+        }
+
         termsPrivacyLogin.movementMethod = LinkMovementMethod.getInstance()
         termsPrivacyLogin.text = textResolver.fromHtml(termsMessageHtml)
         forgotPasswordView.setOnClickListener {
@@ -80,16 +94,14 @@ class LoginActivity : FragmentActivityBase() {
         intent?.data?.let {
             redirectFromSocial(intent)
         }
+
+        loginPresenter.attachView(this)
     }
 
     private fun redirectFromSocial(intent: Intent) {
         try {
             val code = intent.data.getQueryParameter("code")
-            loginManager.loginWithCode(code, progressHandler, object : ActivityFinisher {
-                override fun onFinish() {
-                    finish()
-                }
-            }, courseFromExtra)
+            loginPresenter.loginWithCode(code)
         } catch (throwable: Throwable) {
             analytic.reportError(Analytic.Error.CALLBACK_SOCIAL, throwable)
         }
@@ -104,19 +116,31 @@ class LoginActivity : FragmentActivityBase() {
         val login = loginText.text.toString()
         val password = passwordEditText.text.toString()
 
-        loginManager.login(login, password,
-                progressHandler,
-                object : ActivityFinisher {
-                    override fun onFinish() {
-                        finish()
-                    }
-                }, courseFromExtra)
+        loginPresenter.login(login, password)
     }
 
     override fun onDestroy() {
         actionbarCloseButtonLayout.setOnClickListener(null)
         loginButton.setOnClickListener(null)
+        if (isFinishing) {
+            App.getComponentManager().releaseLoginComponent(TAG)
+        }
         super.onDestroy()
     }
+
+    override fun onFailLogin(type: LoginFailType) {
+        Toast.makeText(this, getMessageFor(type), Toast.LENGTH_SHORT).show()
+        progressHandler.dismiss()
+    }
+
+    override fun onSuccessLogin() {
+        progressHandler.dismiss()
+        shell.screenProvider.showMainFeed(this, courseFromExtra)
+    }
+
+    override fun onLoadingWhileLogin() {
+        progressHandler.activate()
+    }
+
 
 }

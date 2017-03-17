@@ -13,6 +13,7 @@ import org.stepic.droid.core.modules.CertificateModule;
 import org.stepic.droid.core.modules.CourseDetailModule;
 import org.stepic.droid.core.modules.CourseListModule;
 import org.stepic.droid.core.modules.FilterModule;
+import org.stepic.droid.core.modules.LoginModule;
 import org.stepic.droid.core.modules.MainFeedModule;
 import org.stepic.droid.core.modules.NotificationModule;
 import org.stepic.droid.core.modules.ProfileModule;
@@ -73,6 +74,8 @@ import dagger.Component;
 @Singleton
 @Component(modules = {AppCoreModule.class})
 public interface AppCoreComponent {
+
+    LoginComponent plus(LoginModule loginModule);
 
     ProfileComponent plus(ProfileModule profileModule);
 
