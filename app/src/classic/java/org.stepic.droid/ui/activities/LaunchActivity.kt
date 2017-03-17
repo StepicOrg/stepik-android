@@ -17,7 +17,6 @@ import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.credentials.Credential
 import com.google.android.gms.auth.api.credentials.CredentialRequest
-import com.google.android.gms.auth.api.credentials.IdentityProviders
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.CommonStatusCodes
@@ -55,8 +54,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         private val resolvingAccountKey = "resolvingAccountKey"
     }
 
-    private val RC_READ = 314
-    private val RC_SAVE = 316
+    private val requestFromSmartLockCode = 314
 
     val termsMessageHtml: String by lazy {
         resources.getString(R.string.terms_message_launch)
@@ -249,13 +247,6 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
     private fun requestCredentials() {
         val credentialRequest = CredentialRequest.Builder()
                 .setPasswordLoginSupported(true)
-                .setAccountTypes(
-                        //// TODO: 16.03.17 pass just a list
-                        SocialManager.SocialType.google.identifier,
-                        SocialManager.SocialType.facebook.identifier,
-                        SocialManager.SocialType.twitter.identifier,
-                        SocialManager.SocialType.github.identifier,
-                        SocialManager.SocialType.vk.identifier)
                 .build()
 
         Auth.CredentialsApi.request(googleApiClient, credentialRequest).setResultCallback { credentialRequestResult ->
@@ -271,7 +262,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
                     try {
                         if (!resolvingWasShown) {
                             resolvingWasShown = true
-                            credentialRequestResult.status.startResolutionForResult(this, RC_READ)
+                            credentialRequestResult.status.startResolutionForResult(this, requestFromSmartLockCode)
                         }
                     } catch (e: IntentSender.SendIntentException) {
                         Timber.e(e, "STATUS: Failed to send resolution.")
@@ -290,16 +281,11 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         if (accountType == null) {
             // Sign the user in with information from the Credential.
             loginPresenter.login(credential.id, credential.password ?: "")
-        } else if (accountType == IdentityProviders.GOOGLE) {
-            // The user has previously signed in with Google Sign-In. Silently
-            // sign in the user with the same ID.
-            // See https://developers.google.com/identity/sign-in/android/
-            Timber.d(credential.accountType)
         }
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        if (requestCode == RC_READ) {
+        if (requestCode == requestFromSmartLockCode) {
             if (resultCode == Activity.RESULT_OK) {
                 val credential = data.getParcelableExtra<Credential>(Credential.EXTRA_KEY)
                 Toast.makeText(this, "onCredentialRetrieved", Toast.LENGTH_SHORT).show()
@@ -345,7 +331,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
                 }
 
                 loginPresenter.loginWithNativeProviderCode(authCode,
-                        SocialManager.SocialType.google)
+                        SocialManager.SocialType.google, account.email)
             } else {
                 onInternetProblems()
             }
@@ -386,9 +372,14 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
 
     override fun onSuccessLogin(authData: AuthData?) {
         progressHandler.dismiss()
+        openMainFeed()
+    }
+
+    private fun openMainFeed() {
         shell.screenProvider.showMainFeed(this, courseFromExtra)
         finish()
     }
+
 
     override fun onSaveInstanceState(outState: Bundle?) {
         outState?.putBoolean(resolvingAccountKey, resolvingWasShown)

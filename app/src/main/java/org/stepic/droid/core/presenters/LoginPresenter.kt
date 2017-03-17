@@ -30,8 +30,10 @@ class LoginPresenter(private val api: Api,
     }
 
     fun loginWithNativeProviderCode(nativeCode: String, type: SocialManager.SocialType) {
-        val login = nativeCode.trim()
-        doRequest(api.authWithNativeCode(login, type), null, Type.social)
+        val code = nativeCode.trim()
+        doRequest(api.authWithNativeCode(code, type),
+                null,
+                Type.social)
     }
 
     @MainThread

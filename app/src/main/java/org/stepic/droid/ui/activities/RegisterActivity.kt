@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.activities
 
 import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TextInputLayout
 import android.text.Editable
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.credentials.Credential
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.activity_register.*
@@ -29,6 +31,7 @@ import org.stepic.droid.web.RegistrationResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -36,6 +39,7 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
     companion object {
         val ERROR_DELIMITER = " "
         val TAG = "RegisterActivity"
+        private val RC_SAVE = 356
     }
 
     private val passwordTooShortMessage by lazy {
@@ -236,6 +240,44 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
 
     override fun onSuccessLogin(authData: AuthData?) {
         ProgressHelper.dismiss(progressBar)
+        if (authData == null || !checkPlayServices() || !(googleApiClient?.isConnected ?: false)) {
+            openMainFeed()
+        } else {
+            //only if we have not null data (we can apply smart lock && google api client is connected and available
+            requestToSaveCredentials(authData)
+        }
+    }
+
+    private fun requestToSaveCredentials(authData: AuthData) {
+        val credential = Credential
+                .Builder(authData.login)
+                .setPassword(authData.password)
+                .build()
+
+        Auth.CredentialsApi.save(googleApiClient, credential)
+                .setResultCallback { status ->
+                    if (!status.isSuccess && status.hasResolution()) {
+                        status.startResolutionForResult(this, RegisterActivity.RC_SAVE)
+                    } else {
+                        openMainFeed()
+                    }
+                }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RegisterActivity.RC_SAVE) {
+            if (resultCode == RESULT_OK) {
+                Timber.d("Credential Save: OK");
+            } else {
+                Timber.e("Credential Save Failed");
+            }
+            openMainFeed();
+        }
+
+    }
+
+    private fun openMainFeed() {
         shell.screenProvider.showMainFeed(this, courseFromExtra)
         finish()
     }
