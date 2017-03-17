@@ -87,6 +87,15 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void showLaunchScreenAfterLogout(Context context) {
+        analytic.reportEvent(Analytic.Interaction.SHOW_LAUNCH_SCREEN_AFTER_LOGOUT);
+        Intent launchIntent = new Intent(context, LaunchActivity.class);
+        launchIntent.putExtra(LaunchActivity.Companion.getWasLogoutKey(), true);
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //app context -- new task
+        context.startActivity(launchIntent);
+    }
+
+    @Override
     public void showLaunchScreen(FragmentActivity activity, @NotNull Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
         Intent launchIntent = new Intent(activity, LaunchActivity.class);

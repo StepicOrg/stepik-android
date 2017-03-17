@@ -213,7 +213,7 @@ public class ApiImpl implements Api {
                                                                 } catch (Exception e) {
                                                                     analytic.reportError(Analytic.Error.FAIL_LOGOUT_WHEN_REFRESH, e);
                                                                 }
-                                                                screenManager.showLaunchScreen(context);
+                                                                screenManager.showLaunchScreenAfterLogout(context);
                                                                 Toast.makeText(context, R.string.logout_user_error, Toast.LENGTH_SHORT).show();
                                                                 return Unit.INSTANCE;
                                                             }

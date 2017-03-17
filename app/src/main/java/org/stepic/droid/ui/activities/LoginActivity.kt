@@ -1,12 +1,14 @@
 package org.stepic.droid.ui.activities
 
-import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.credentials.Credential
+import com.google.android.gms.common.api.GoogleApiClient
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.panel_custom_action_bar.*
 import org.stepic.droid.R
@@ -17,14 +19,17 @@ import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.core.ProgressHandler
 import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
+import org.stepic.droid.model.AuthData
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
+import timber.log.Timber
 import javax.inject.Inject
 
-@SuppressLint("GoogleAppIndexingApiWarning")
 class LoginActivity : FragmentActivityBase(), LoginView {
+
     companion object {
         private val TAG = "LoginActivity"
+        private val RC_SAVE = 356
     }
 
     private val termsMessageHtml by lazy {
@@ -37,6 +42,8 @@ class LoginActivity : FragmentActivityBase(), LoginView {
 
     @Inject
     lateinit var loginPresenter: LoginPresenter
+
+    private var googleApiClient: GoogleApiClient? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,6 +102,15 @@ class LoginActivity : FragmentActivityBase(), LoginView {
             redirectFromSocial(intent)
         }
 
+        if (checkPlayServices()) {
+            googleApiClient = GoogleApiClient.Builder(this)
+                    .enableAutoManage(this) {
+                        Toast.makeText(this, R.string.connectionProblems, Toast.LENGTH_SHORT).show()
+                    }
+                    .addApi(Auth.CREDENTIALS_API)
+                    .build()
+        }
+
         loginPresenter.attachView(this)
     }
 
@@ -120,6 +136,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
     }
 
     override fun onDestroy() {
+        loginPresenter.detachView(this)
         actionbarCloseButtonLayout.setOnClickListener(null)
         loginButton.setOnClickListener(null)
         if (isFinishing) {
@@ -133,14 +150,52 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         progressHandler.dismiss()
     }
 
-    override fun onSuccessLogin() {
+    override fun onSuccessLogin(authData: AuthData?) {
         progressHandler.dismiss()
+        if (authData == null || !checkPlayServices() || !(googleApiClient?.isConnected ?: false)) {
+            openMainFeed()
+        } else {
+            //only if we have not null data (we can apply smart lock && google api client is connected and available
+            requestToSaveCredentials(authData)
+        }
+    }
+
+    private fun requestToSaveCredentials(authData: AuthData) {
+        val credential = Credential
+                .Builder(authData.login)
+                .setPassword(authData.password)
+                .build()
+
+        Auth.CredentialsApi.save(googleApiClient, credential)
+                .setResultCallback { status ->
+                    if (!status.isSuccess && status.hasResolution()) {
+                        status.startResolutionForResult(this, RC_SAVE)
+                    } else {
+                        openMainFeed()
+                    }
+                }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_SAVE) {
+            if (resultCode == RESULT_OK) {
+                Timber.d("Credential Save: OK");
+            } else {
+                Timber.e("Credential Save Failed");
+            }
+            openMainFeed();
+        }
+
+    }
+
+    private fun openMainFeed() {
         shell.screenProvider.showMainFeed(this, courseFromExtra)
+        finish()
     }
 
     override fun onLoadingWhileLogin() {
         progressHandler.activate()
     }
-
 
 }

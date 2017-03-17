@@ -22,6 +22,8 @@ public interface ScreenManager {
 
     void showLaunchScreen(Context context);
 
+    void showLaunchScreenAfterLogout(Context context);
+
     void showLaunchScreen(Context context, boolean fromMainFeed, int indexInMenu);
 
     void showRegistration(Activity sourceActivity, @Nullable Course course);

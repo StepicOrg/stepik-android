@@ -19,6 +19,7 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
+import org.stepic.droid.model.AuthData
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ValidatorUtil
 import org.stepic.droid.util.getMessageFor
@@ -222,9 +223,10 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
         Toast.makeText(this, getMessageFor(type), Toast.LENGTH_SHORT).show()
     }
 
-    override fun onSuccessLogin() {
+    override fun onSuccessLogin(authData: AuthData?) {
         ProgressHelper.dismiss(progressBar)
         shell.screenProvider.showMainFeed(this, courseFromExtra)
+        finish()
     }
 
     override fun onLoadingWhileLogin() {

@@ -14,7 +14,6 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
-import com.google.android.gms.appindexing.AppIndex
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.credentials.Credential
 import com.google.android.gms.auth.api.credentials.CredentialRequest
@@ -24,7 +23,6 @@ import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Scope
-import com.google.android.gms.common.api.Status
 import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKCallback
 import com.vk.sdk.VKSdk
@@ -37,6 +35,7 @@ import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.core.ProgressHandler
 import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
+import org.stepic.droid.model.AuthData
 import org.stepic.droid.social.SocialManager
 import org.stepic.droid.ui.adapters.SocialAuthAdapter
 import org.stepic.droid.ui.decorators.SpacesItemDecorationHorizontal
@@ -52,6 +51,8 @@ import javax.inject.Inject
 class LaunchActivity : BackToExitActivityBase(), LoginView {
     companion object {
         private val TAG = "LaunchActivity"
+        val wasLogoutKey = "wasLogoutKey"
+        private val resolvingAccountKey = "resolvingAccountKey"
     }
 
     private val RC_READ = 314
@@ -65,6 +66,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
     private var progressLogin: ProgressDialog? = null
     private lateinit var progressHandler: ProgressHandler
     private lateinit var callbackManager: CallbackManager
+    private var resolvingWasShown = false
 
     @Inject
     lateinit var loginPresenter: LoginPresenter
@@ -75,6 +77,8 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         window.setBackgroundDrawable(null)
         App.getComponentManager().loginComponent(TAG).inject(this)
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
+
+        resolvingWasShown = savedInstanceState?.getBoolean(resolvingAccountKey) ?: false
 
         findCoursesButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_FIND_COURSE_LAUNCH)
@@ -92,19 +96,20 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
             shell.screenProvider.showLogin(this@LaunchActivity, courseFromExtra)
         }
 
-        val serverClientId = config.googleServerClientId
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestScopes(Scope(Scopes.EMAIL), Scope(Scopes.PROFILE))
-                .requestServerAuthCode(serverClientId)
-                .build()
+
         if (checkPlayServices()) {
+            val serverClientId = config.googleServerClientId
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestScopes(Scope(Scopes.EMAIL), Scope(Scopes.PROFILE))
+                    .requestServerAuthCode(serverClientId)
+                    .build()
             googleApiClient = GoogleApiClient.Builder(this)
                     .enableAutoManage(this) {
                         Toast.makeText(this@LaunchActivity, R.string.connectionProblems, Toast.LENGTH_SHORT).show()
                     }
                     .addApi(Auth.CREDENTIALS_API)
                     .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                    .addApi(AppIndex.API).build()
+                    .build()
         }
 
         initSocialRecycler(googleApiClient)
@@ -151,7 +156,12 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         if (checkPlayServices()) {
             googleApiClient?.registerConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
                 override fun onConnected(bundle: Bundle?) {
-//                    requestCredentials()
+                    val wasLogout = intent?.getBooleanExtra(wasLogoutKey, false) ?: false
+                    if (wasLogout) {
+                        Auth.CredentialsApi.disableAutoSignIn(googleApiClient)
+                    }
+
+                    requestCredentials()
                 }
 
                 override fun onConnectionSuspended(cause: Int) {
@@ -250,29 +260,28 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
 
         Auth.CredentialsApi.request(googleApiClient, credentialRequest).setResultCallback { credentialRequestResult ->
             if (credentialRequestResult.status.isSuccess) {
-                // See "Handle successful credential requests"
+                // Successfully read the credential without any user interaction, this
+                // means there was only a single credential and the user has auto
+                // sign-in enabled.
                 onCredentialRetrieved(credentialRequestResult.credential)
             } else {
-                // See "Handle unsuccessful and incomplete credential requests"
-                resolveResult(credentialRequestResult.status)
-            }
-        }
-    }
+                if (credentialRequestResult.status.statusCode == CommonStatusCodes.RESOLUTION_REQUIRED) {
+                    // Prompt the user to choose a saved credential; do not show the hint
+                    // selector.
+                    try {
+                        if (!resolvingWasShown) {
+                            resolvingWasShown = true
+                            credentialRequestResult.status.startResolutionForResult(this, RC_READ)
+                        }
+                    } catch (e: IntentSender.SendIntentException) {
+                        Timber.e(e, "STATUS: Failed to send resolution.")
+                    }
 
-    private fun resolveResult(status: Status) {
-        Timber.d(status.toString())
-        if (status.statusCode == CommonStatusCodes.RESOLUTION_REQUIRED) {
-            // Prompt the user to choose a saved credential; do not show the hint
-            // selector.
-            try {
-                status.startResolutionForResult(this, RC_READ)
-            } catch (e: IntentSender.SendIntentException) {
-                Timber.e(e, "STATUS: Failed to send resolution.")
+                } else {
+                    Timber.d("STATUS: Failed to send resolution.")
+                    // The user must create an account or sign in manually.
+                }
             }
-
-        } else {
-            Timber.d("STATUS: Failed to send resolution.")
-            // The user must create an account or sign in manually.
         }
     }
 
@@ -290,18 +299,10 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        if (requestCode == RC_SAVE) {
-            if (resultCode == Activity.RESULT_OK) {
-                Timber.d("SAVE: OK")
-                Toast.makeText(this, "Credentials saved", Toast.LENGTH_SHORT).show()
-            } else {
-                Timber.d("SAVE: Canceled by user")
-            }
-        }
-
         if (requestCode == RC_READ) {
             if (resultCode == Activity.RESULT_OK) {
                 val credential = data.getParcelableExtra<Credential>(Credential.EXTRA_KEY)
+                Toast.makeText(this, "onCredentialRetrieved", Toast.LENGTH_SHORT).show()
                 onCredentialRetrieved(credential)
             } else {
                 Timber.d("Credential Read: NOT OK")
@@ -383,9 +384,15 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         LoginManager.getInstance().logOut()
     }
 
-    override fun onSuccessLogin() {
+    override fun onSuccessLogin(authData: AuthData?) {
         progressHandler.dismiss()
         shell.screenProvider.showMainFeed(this, courseFromExtra)
+        finish()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.putBoolean(resolvingAccountKey, resolvingWasShown)
+        super.onSaveInstanceState(outState)
     }
 
 }

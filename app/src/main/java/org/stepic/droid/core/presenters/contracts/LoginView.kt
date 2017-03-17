@@ -1,6 +1,7 @@
 package org.stepic.droid.core.presenters.contracts
 
 import org.stepic.droid.core.LoginFailType
+import org.stepic.droid.model.AuthData
 
 interface LoginView {
 
@@ -8,5 +9,5 @@ interface LoginView {
 
     fun onFailLogin(type: LoginFailType)
 
-    fun onSuccessLogin()
+    fun onSuccessLogin(authData : AuthData?)
 }
