@@ -9,6 +9,8 @@ import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.panel_custom_action_bar.*
@@ -48,6 +50,8 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
 
     @Inject
     lateinit var loginPresenter: LoginPresenter
+
+    private var googleApiClient: GoogleApiClient? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,6 +104,14 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
 
         registerRootView.requestFocus()
 
+        if (checkPlayServices()) {
+            googleApiClient = GoogleApiClient.Builder(this)
+                    .enableAutoManage(this)
+                    {}
+                    .addApi(Auth.CREDENTIALS_API)
+                    .build()
+        }
+
         loginPresenter.attachView(this)
     }
 
@@ -127,7 +139,6 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
             onLoadingWhileLogin()
             shell.api.signUp(firstName, lastName, email, password).enqueue(object : Callback<RegistrationResponse> {
                 override fun onResponse(call: Call<RegistrationResponse>, response: Response<RegistrationResponse>) {
-                    ProgressHelper.dismiss(progressBar)
                     if (response.isSuccessful) {
                         analytic.reportEvent(FirebaseAnalytics.Event.SIGN_UP)
                         loginPresenter.login(email, password)

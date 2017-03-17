@@ -104,9 +104,8 @@ class LoginActivity : FragmentActivityBase(), LoginView {
 
         if (checkPlayServices()) {
             googleApiClient = GoogleApiClient.Builder(this)
-                    .enableAutoManage(this) {
-                        Toast.makeText(this, R.string.connectionProblems, Toast.LENGTH_SHORT).show()
-                    }
+                    .enableAutoManage(this)
+                    {}
                     .addApi(Auth.CREDENTIALS_API)
                     .build()
         }
