@@ -331,7 +331,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
                 }
 
                 loginPresenter.loginWithNativeProviderCode(authCode,
-                        SocialManager.SocialType.google, account.email)
+                        SocialManager.SocialType.google)
             } else {
                 onInternetProblems()
             }
