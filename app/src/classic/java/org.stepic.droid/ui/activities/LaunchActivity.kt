@@ -344,7 +344,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
 
     override fun onBackPressed() {
         val fromMainFeed = intent?.extras?.getBoolean(AppConstants.FROM_MAIN_FEED_FLAG) ?: false
-        val index = intent?.extras?.getInt(MainFeedActivity.KEY_CURRENT_INDEX) ?: 0
+        val index = intent?.extras?.getInt(MainFeedActivity.KEY_CURRENT_INDEX) ?: MainFeedActivity.DEFAULT_START_INDEX
 
         if (fromMainFeed) {
             shell.screenProvider.showMainFeed(this, index)

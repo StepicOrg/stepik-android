@@ -83,7 +83,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showLaunchScreen(Context context) {
-        showLaunchScreen(context, false, 0);
+        showLaunchScreen(context, false, MainFeedActivity.DEFAULT_START_INDEX);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class ScreenManagerImpl implements ScreenManager {
         if (course != null) {
             intent.putExtra(AppConstants.KEY_COURSE_BUNDLE, (Parcelable) course);
         }
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         sourceActivity.startActivity(intent);
     }
 

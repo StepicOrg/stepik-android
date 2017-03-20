@@ -96,7 +96,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     public static final String KEY_CURRENT_INDEX = "Current_index";
     public static final String REMINDER_KEY = "reminder_key";
     private final String PROGRESS_LOGOUT_TAG = "progress_logout";
-    private static final int DEFAULT_START_INDEX = 1;
+    public static final int DEFAULT_START_INDEX = 1;
 
 
     @BindView(R.id.toolbar)
