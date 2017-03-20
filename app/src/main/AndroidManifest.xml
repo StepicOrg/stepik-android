@@ -34,6 +34,8 @@
         tools:replace="allowBackup, supportsRtl"
     >
 
+        <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
