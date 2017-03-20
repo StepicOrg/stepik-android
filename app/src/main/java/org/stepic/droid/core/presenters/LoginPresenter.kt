@@ -1,6 +1,7 @@
 package org.stepic.droid.core.presenters
 
 import android.support.annotation.MainThread
+import com.google.android.gms.auth.api.credentials.Credential
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.LoginFailType
@@ -19,9 +20,9 @@ class LoginPresenter(private val api: Api,
                      private val threadPoolExecutor: ThreadPoolExecutor,
                      private val mainHandler: MainHandler) : PresenterBase<LoginView>() {
 
-    fun login(rawLogin: String, rawPassword: String) {
+    fun login(rawLogin: String, rawPassword: String, credential: Credential? = null) {
         val login = rawLogin.trim()
-        doRequest(api.authWithLoginPassword(login, rawPassword), AuthData(login, rawPassword), Type.loginPassword)
+        doRequest(api.authWithLoginPassword(login, rawPassword), AuthData(login, rawPassword), Type.loginPassword, credential)
     }
 
     fun loginWithCode(rawCode: String) {
@@ -37,11 +38,11 @@ class LoginPresenter(private val api: Api,
     }
 
     @MainThread
-    private fun doRequest(callToServer: Call<AuthenticationStepicResponse>, authData: AuthData?, type: Type) {
-        fun onFail(type: LoginFailType) {
+    private fun doRequest(callToServer: Call<AuthenticationStepicResponse>, authData: AuthData?, type: Type, credential: Credential? = null) {
+        fun onFail(type: LoginFailType, credential: Credential? = null) {
             analytic.reportEventWithName(Analytic.Login.FAIL_LOGIN, type.toString())
             mainHandler.post {
-                view?.onFailLogin(type)
+                view?.onFailLogin(type, credential)
             }
         }
 
@@ -66,7 +67,7 @@ class LoginPresenter(private val api: Api,
                 } else if (response.code() == 401 && type == Type.social) {
                     onFail(LoginFailType.emailAlreadyUsed)
                 } else {
-                    onFail(LoginFailType.emailPasswordInvalid)
+                    onFail(LoginFailType.emailPasswordInvalid, credential)
                 }
             } catch (ex: Exception) {
                 onFail(LoginFailType.connectionProblem)

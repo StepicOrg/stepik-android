@@ -348,6 +348,26 @@ public interface Analytic {
         String DOWNLOAD_MANAGER_IS_NOT_ENABLED = "download_manager_is_not_enabled";
     }
 
+    interface SmartLock {
+        String READ_CREDENTIAL_WITHOUT_INTERACTION = "smartlock_read_without_interaction";
+        String DISABLED_LOGIN = "smartlock_disabled_login";
+        String DISABLED_REGISTRATION = "smartlock_disabled_registration";
+
+        String SHOW_SAVE_LOGIN = "smartlock_show_save_login";
+        String LOGIN_SAVED = "smartlock_login_saved";
+        String LOGIN_NOT_SAVED = "smartlock_login_not_saved";
+
+        String SHOW_SAVE_REGISTRATION = "smartlock_show_save_registration";
+        String REGISTRATION_SAVED = "smartlock_registration_saved";
+        String REGISTRATION_NOT_SAVED = "smartlock_registration_not_saved";
+
+        String PROMPT_TO_CHOOSE_CREDENTIALS = "smartlock_prompt_to_choose_credentials";
+        String LAUNCH_CREDENTIAL_RETRIEVED_PROMPT = "smartlock_launch_credential_retrieved_prompt";
+        String LAUNCH_CREDENTIAL_CANCELED_PROMPT = "smartlock_launch_credential_canceled_prompt";
+        String CREDENTIAL_DELETED_FAIL = "smartlock_credential_deleted_fail";
+        String CREDENTIAL_DELETED_SUCCESSFUL = "smartlock_credential_deleted_successful";
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);
@@ -363,4 +383,5 @@ public interface Analytic {
     void setUserId(@NotNull String userId);
 
     void reportEventValue(String eventName, long value);
+
 }

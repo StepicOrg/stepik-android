@@ -169,32 +169,6 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
 
     }
 
-    private fun saveCredentials() {
-        //                    Auth.CredentialsApi.save(googleApiClient, credential).setResultCallback(new ResultCallback<Status>() {
-        //                        @Override
-        //                        public void onResult(@NonNull Status status) {
-        //                            if (status.isSuccess()) {
-        //                                Timber.d("SAVE: OK");
-        //                                Toast.makeText(LaunchActivity.this, "Credentials saved", Toast.LENGTH_SHORT).show();
-        //                            } else {
-        //                                if (status.hasResolution()) {
-        //                                    // Try to resolve the save request. This will prompt the user if
-        //                                    // the credential is new.
-        //                                    try {
-        //                                        status.startResolutionForResult(LaunchActivity.this, RC_SAVE);
-        //                                    } catch (IntentSender.SendIntentException e) {
-        //                                        // Could not resolve the request
-        //                                        Toast.makeText(LaunchActivity.this, "Save failed", Toast.LENGTH_SHORT).show();
-        //                                    }
-        //                                } else {
-        //                                    // Request has no resolution
-        //                                    Toast.makeText(LaunchActivity.this, "Save failed", Toast.LENGTH_SHORT).show();
-        //                                }
-        //                            }
-        //                        }
-        //                    });
-    }
-
     private fun initSocialRecycler(googleApiClient: GoogleApiClient?) {
         val pixelForPadding = DpPixelsHelper.convertDpToPixel(4f, this)//pixelForPadding * (count+1)
         val widthOfItem = resources.getDimension(R.dimen.height_of_social)//width == height
@@ -254,6 +228,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
                 // Successfully read the credential without any user interaction, this
                 // means there was only a single credential and the user has auto
                 // sign-in enabled.
+                analytic.reportEvent(Analytic.SmartLock.READ_CREDENTIAL_WITHOUT_INTERACTION)
                 onCredentialRetrieved(credentialRequestResult.credential)
             } else {
                 if (credentialRequestResult.status.statusCode == CommonStatusCodes.RESOLUTION_REQUIRED) {
@@ -261,6 +236,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
                     // selector.
                     try {
                         if (!resolvingWasShown) {
+                            analytic.reportEvent(Analytic.SmartLock.PROMPT_TO_CHOOSE_CREDENTIALS)
                             resolvingWasShown = true
                             credentialRequestResult.status.startResolutionForResult(this, requestFromSmartLockCode)
                         }
@@ -280,19 +256,19 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         val accountType = credential.accountType
         if (accountType == null) {
             // Sign the user in with information from the Credential.
-            loginPresenter.login(credential.id, credential.password ?: "")
+            loginPresenter.login(credential.id, credential.password ?: "", credential)
         }
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (requestCode == requestFromSmartLockCode) {
             if (resultCode == Activity.RESULT_OK) {
+                analytic.reportEvent(Analytic.SmartLock.LAUNCH_CREDENTIAL_RETRIEVED_PROMPT)
                 val credential = data.getParcelableExtra<Credential>(Credential.EXTRA_KEY)
-                Toast.makeText(this, "onCredentialRetrieved", Toast.LENGTH_SHORT).show()
                 onCredentialRetrieved(credential)
             } else {
+                analytic.reportEvent(Analytic.SmartLock.LAUNCH_CREDENTIAL_CANCELED_PROMPT)
                 Timber.d("Credential Read: NOT OK")
-                Toast.makeText(this, "Credential Read Failed", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -357,7 +333,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         progressHandler.activate()
     }
 
-    override fun onFailLogin(type: LoginFailType) {
+    override fun onFailLogin(type: LoginFailType, credential: Credential?) {
         progressHandler.dismiss()
         Toast.makeText(this, getMessageFor(type), Toast.LENGTH_SHORT).show()
 
@@ -368,6 +344,22 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         }
         //fb:
         LoginManager.getInstance().logOut()
+
+        if (credential != null) {
+            deleteCredential(credential)
+        }
+    }
+
+    private fun deleteCredential(credential: Credential) {
+        Auth.CredentialsApi.delete(googleApiClient,
+                credential).setResultCallback { status ->
+            if (status.isSuccess) {
+                analytic.reportEvent(Analytic.SmartLock.CREDENTIAL_DELETED_SUCCESSFUL)
+                //do not show some message because E-mail is not correct was already shown
+            } else {
+                analytic.reportEventWithName(Analytic.SmartLock.CREDENTIAL_DELETED_FAIL, status.statusMessage)
+            }
+        }
     }
 
     override fun onSuccessLogin(authData: AuthData?) {
@@ -377,9 +369,7 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
 
     private fun openMainFeed() {
         shell.screenProvider.showMainFeed(this, courseFromExtra)
-        finish()
     }
-
 
     override fun onSaveInstanceState(outState: Bundle?) {
         outState?.putBoolean(resolvingAccountKey, resolvingWasShown)

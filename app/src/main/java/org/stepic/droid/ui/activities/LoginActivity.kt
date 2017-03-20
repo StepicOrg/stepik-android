@@ -20,9 +20,9 @@ import org.stepic.droid.core.ProgressHandler
 import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
 import org.stepic.droid.model.AuthData
+import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
-import timber.log.Timber
 import javax.inject.Inject
 
 class LoginActivity : FragmentActivityBase(), LoginView {
@@ -53,6 +53,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         hideSoftKeypad()
         App.getComponentManager().loginComponent(TAG).inject(this)
 
+        progressLogin = LoadingProgressDialog(this)
         progressHandler = object : ProgressHandler {
             override fun activate() {
                 hideSoftKeypad()
@@ -144,7 +145,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         super.onDestroy()
     }
 
-    override fun onFailLogin(type: LoginFailType) {
+    override fun onFailLogin(type: LoginFailType, credential: Credential?) {
         Toast.makeText(this, getMessageFor(type), Toast.LENGTH_SHORT).show()
         progressHandler.dismiss()
     }
@@ -168,8 +169,10 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         Auth.CredentialsApi.save(googleApiClient, credential)
                 .setResultCallback { status ->
                     if (!status.isSuccess && status.hasResolution()) {
+                        analytic.reportEvent(Analytic.SmartLock.SHOW_SAVE_LOGIN)
                         status.startResolutionForResult(this, RC_SAVE)
                     } else {
+                        analytic.reportEventWithName(Analytic.SmartLock.DISABLED_LOGIN, status.statusMessage)
                         openMainFeed()
                     }
                 }
@@ -179,9 +182,10 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_SAVE) {
             if (resultCode == RESULT_OK) {
-                Timber.d("Credential Save: OK");
+                analytic.reportEvent(Analytic.SmartLock.
+                        LOGIN_SAVED)
             } else {
-                Timber.e("Credential Save Failed");
+                analytic.reportEvent(Analytic.SmartLock.LOGIN_NOT_SAVED)
             }
             openMainFeed();
         }
@@ -190,7 +194,6 @@ class LoginActivity : FragmentActivityBase(), LoginView {
 
     private fun openMainFeed() {
         shell.screenProvider.showMainFeed(this, courseFromExtra)
-        finish()
     }
 
     override fun onLoadingWhileLogin() {

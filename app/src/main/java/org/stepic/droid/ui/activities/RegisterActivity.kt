@@ -31,7 +31,6 @@ import org.stepic.droid.web.RegistrationResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -233,7 +232,7 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
     }
 
 
-    override fun onFailLogin(type: LoginFailType) {
+    override fun onFailLogin(type: LoginFailType, credential: Credential?) {
         ProgressHelper.dismiss(progressBar)
         Toast.makeText(this, getMessageFor(type), Toast.LENGTH_SHORT).show()
     }
@@ -257,8 +256,10 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
         Auth.CredentialsApi.save(googleApiClient, credential)
                 .setResultCallback { status ->
                     if (!status.isSuccess && status.hasResolution()) {
+                        analytic.reportEvent(Analytic.SmartLock.SHOW_SAVE_REGISTRATION)
                         status.startResolutionForResult(this, RegisterActivity.RC_SAVE)
                     } else {
+                        analytic.reportEventWithName(Analytic.SmartLock.DISABLED_REGISTRATION, status.statusMessage)
                         openMainFeed()
                     }
                 }
@@ -268,9 +269,9 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RegisterActivity.RC_SAVE) {
             if (resultCode == RESULT_OK) {
-                Timber.d("Credential Save: OK");
+                analytic.reportEvent(Analytic.SmartLock.REGISTRATION_SAVED)
             } else {
-                Timber.e("Credential Save Failed");
+                analytic.reportEvent(Analytic.SmartLock.REGISTRATION_NOT_SAVED)
             }
             openMainFeed();
         }
@@ -279,7 +280,6 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
 
     private fun openMainFeed() {
         shell.screenProvider.showMainFeed(this, courseFromExtra)
-        finish()
     }
 
     override fun onLoadingWhileLogin() {
