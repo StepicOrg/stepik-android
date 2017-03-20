@@ -96,7 +96,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     public static final String KEY_CURRENT_INDEX = "Current_index";
     public static final String REMINDER_KEY = "reminder_key";
     private final String PROGRESS_LOGOUT_TAG = "progress_logout";
-    private static final int DEFAULT_START_INDEX = 1;
+    public static final int DEFAULT_START_INDEX = 1;
 
 
     @BindView(R.id.toolbar)
@@ -181,7 +181,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.getComponentManager().getMainFeedComponent()
+        App.getComponentManager().mainFeedComponent()
                 .inject(this);
         setContentView(R.layout.activity_main_feed);
         unbinder = ButterKnife.bind(this);
@@ -513,7 +513,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         bus.unregister(this);
         drawerLayout.removeDrawerListener(actionBarDrawerToggle);
         if (isFinishing()) {
-            App.getComponentManager().removeMainFeedComponent();
+            App.getComponentManager().releaseMainFeedComponent();
         }
         super.onDestroy();
     }

@@ -57,7 +57,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
 
 
         View v = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_remind_password, null, false);
-        emailTextWrapper = ButterKnife.findById(v, R.id.email_reg_wrapper);
+        emailTextWrapper = ButterKnife.findById(v, R.id.emailViewWrapper);
         rootView = ButterKnife.findById(v, R.id.root_view_dialog);
         rootView.requestFocus();
 

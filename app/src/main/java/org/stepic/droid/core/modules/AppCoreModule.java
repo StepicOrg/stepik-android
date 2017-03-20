@@ -24,8 +24,6 @@ import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.LocalLessonSessionManagerImpl;
 import org.stepic.droid.core.LocalProgressImpl;
 import org.stepic.droid.core.LocalProgressManager;
-import org.stepic.droid.core.LoginManager;
-import org.stepic.droid.core.LoginManagerImpl;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ScreenManagerImpl;
 import org.stepic.droid.core.ShareHelper;
@@ -194,12 +192,6 @@ public class AppCoreModule {
     @Provides
     LocalProgressManager provideProgressManager(DatabaseFacade databaseFacade, Bus bus, Api api, MainHandler mainHandler) {
         return new LocalProgressImpl(databaseFacade, bus, api, mainHandler);
-    }
-
-    @Singleton
-    @Provides
-    LoginManager provideLoginManager(Shell shell, Context context, Analytic analytic) {
-        return new LoginManagerImpl(shell, context, analytic);
     }
 
     @Provides

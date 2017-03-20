@@ -1,5 +1,10 @@
 <resources>
     <string name="stepik_free_courses_title">Stepik.org: free courses</string>
+    <string name="asset_statements" translatable="false">
+    [{
+    \"include\": \"https://stepik.org/.well-known/assetlinks.json\"
+    }]
+    </string>
     <string name="local_remind_message">We noticed that you still have not selected any course of
         study. Don\'t delay, enroll for a free course right now!
     </string>
@@ -422,4 +427,5 @@
     <string name="logout_user_error">Access was revoked. Login again</string>
     <string name="google_services_late">Update Google Play Services for signing in with it</string>
     <string name="accessibility_video_cover">Video cover</string>
+    <string name="close_screen">close screen</string>
 </resources>

@@ -7,6 +7,11 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
+    interface Login {
+        String FAIL_LOGIN = "fail_login";
+        String CLICK_REGISTRATION_SEND_IME = "click_registration_send_ime";
+    }
+
     interface System {
         String BOOT_COMPLETED = "boot_completed";
     }
@@ -19,6 +24,7 @@ public interface Analytic {
         String CLICK_SIGN_IN = "click sign in on launch screen";
         String CLICK_SIGN_UP = "click sign up";
         String CLICK_SIGN_IN_ON_SIGN_IN_SCREEN = "click sign in on sign in on sign-in screen";
+        String CLICK_SIGN_IN_NEXT_ON_SIGN_IN_SCREEN = "click_sign_in_next_sign_in_screen";
         String CLICK_DELETE_SECTION = "Click delete section from cache";
         String CLICK_CACHE_SECTION = "Click cache section";
         String CLICK_CACHE_LESSON = "Click cache unit";
@@ -80,7 +86,8 @@ public interface Analytic {
         String GOOGLE_SOCIAL_IS_NOT_ENABLED = "google_social_is_not_enabled";
         String ACCEPT_DELETING_UNIT = "click_delete_unit_dialog";
         String ACCEPT_DELETING_SECTION = "click_delete_section_dialog";
-        java.lang.String CLICK_STREAK_DRAWER = "click_streak_drawer";
+        String CLICK_STREAK_DRAWER = "click_streak_drawer";
+        String SHOW_LAUNCH_SCREEN_AFTER_LOGOUT = "show_launch_screen_after_logout";
     }
 
     interface Screens {
@@ -160,7 +167,6 @@ public interface Analytic {
         String LOAD_SERVICE = "Load Service";
         String PUSH_STATE_EXCEPTION = "Push state exception";
         String CANT_CREATE_NOMEDIA = "can't create .nomedia";
-        String FAIL_LOGIN = "fail login";
         String CONFIG_NOT_PARSED = "configRelease, config.json problem";
         String ILLEGAL_STATE_NEXT_LESSON = "cant_show_next_lesson";
         String ILLEGAL_STATE_PREVIOUS_LESSON = "cant_show_previous_lesson";
@@ -177,6 +183,7 @@ public interface Analytic {
         String COOKIE_WAS_EMPTY = "cookie_was_empty";
         String FAIL_LOGOUT_WHEN_REFRESH = "refresh_fail_logout_social";
         String UNITS_LOADING_FAIL = "units_loading_fail";
+        String UNPREDICTABLE_LOGIN_RESULT = "login_successful_was_not_correct";
     }
 
     interface Web {
@@ -190,8 +197,7 @@ public interface Analytic {
         String DROP_COURSE_FAIL = "drop course fail";
     }
 
-    interface
-    Notification {
+    interface Notification {
         String DISABLED_BY_USER = "Notification is disabled by user in app";
         String ACTION_NOT_SUPPORT = "notification action is not support";
         String HTML_WAS_NULL = "notification_html_was_null";
@@ -329,7 +335,6 @@ public interface Analytic {
         String FIND_COURSES = "shortcut_find_courses";
     }
 
-
     interface Anonymous {
         String JOIN_COURSE = "click_join_course_anonymous";
         String BROWSE_COURSES_CENTER = "click_anonymous_browse_courses_center";
@@ -341,6 +346,26 @@ public interface Analytic {
 
     interface DownloadManager {
         String DOWNLOAD_MANAGER_IS_NOT_ENABLED = "download_manager_is_not_enabled";
+    }
+
+    interface SmartLock {
+        String READ_CREDENTIAL_WITHOUT_INTERACTION = "smartlock_read_without_interaction";
+        String DISABLED_LOGIN = "smartlock_disabled_login";
+        String DISABLED_REGISTRATION = "smartlock_disabled_registration";
+
+        String SHOW_SAVE_LOGIN = "smartlock_show_save_login";
+        String LOGIN_SAVED = "smartlock_login_saved";
+        String LOGIN_NOT_SAVED = "smartlock_login_not_saved";
+
+        String SHOW_SAVE_REGISTRATION = "smartlock_show_save_registration";
+        String REGISTRATION_SAVED = "smartlock_registration_saved";
+        String REGISTRATION_NOT_SAVED = "smartlock_registration_not_saved";
+
+        String PROMPT_TO_CHOOSE_CREDENTIALS = "smartlock_prompt_to_choose_credentials";
+        String LAUNCH_CREDENTIAL_RETRIEVED_PROMPT = "smartlock_launch_credential_retrieved_prompt";
+        String LAUNCH_CREDENTIAL_CANCELED_PROMPT = "smartlock_launch_credential_canceled_prompt";
+        String CREDENTIAL_DELETED_FAIL = "smartlock_credential_deleted_fail";
+        String CREDENTIAL_DELETED_SUCCESSFUL = "smartlock_credential_deleted_successful";
     }
 
     void reportEvent(String eventName, Bundle bundle);
@@ -358,4 +383,5 @@ public interface Analytic {
     void setUserId(@NotNull String userId);
 
     void reportEventValue(String eventName, long value);
+
 }

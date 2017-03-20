@@ -34,6 +34,8 @@
         tools:replace="allowBackup, supportsRtl"
     >
 
+        <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
@@ -81,7 +83,7 @@
         <activity
             android:name="org.stepic.droid.ui.activities.MainFeedActivity"
             android:label="@string/my_courses_title"
-            android:launchMode="singleTop">
+            android:launchMode="singleTask">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ui.activities.CourseSearchResultActivity"/>

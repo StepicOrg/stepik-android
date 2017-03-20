@@ -31,8 +31,9 @@ public class ProgressHelper {
     }
 
     public static void activate(ProgressDialog progressDialog) {
-        if (progressDialog != null)
+        if (progressDialog != null && !progressDialog.isShowing()) {
             progressDialog.show();
+        }
     }
 
     public static void dismiss(ProgressDialog progressDialog) {
@@ -52,7 +53,7 @@ public class ProgressHelper {
     public static void dismiss(FragmentManager fragmentManager, String tag) {
         if (fragmentManager != null) {
             try {
-                DialogFragment fragment = (DialogFragment)  fragmentManager.findFragmentByTag(tag);
+                DialogFragment fragment = (DialogFragment) fragmentManager.findFragmentByTag(tag);
                 fragment.dismiss();
             } catch (Exception ignored) {
             }
