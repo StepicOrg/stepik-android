@@ -70,6 +70,14 @@ class FilterApplicatorImpl(
         }
 
         //logic
+
+        val possibleFilterSize = StepikFilter.values().size
+        if (possibleFilterSize == filters.size
+                || possibleFilterSize - 1 == filters.size && !filters.contains(StepikFilter.PERSISTENT)) {
+            // if all filters are chosen or all except persistent is chosen -> do not filter
+            return sourceCourses
+        }
+
         val now: Long = DateTime.now(DateTimeZone.getDefault()).millis
         val filteredList = sourceCourses.filterNotNull().filter { course ->
             resolveFilters(course, now, ::applyFiltersForSet, filters)
