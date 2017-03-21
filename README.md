@@ -9,10 +9,7 @@ New version of Stepic App is now available on Google Play
 
 
 ## Screenshots
-<img src="/screenshots/1-eng.png?raw=true" width="256">
-<img src="/screenshots/2-eng.png?raw=true" width="256">
-<img src="/screenshots/3-eng.png?raw=true" width="256">
-<img src="/screenshots/4-eng.png?raw=true" width="256">
+<img src="/screenshots/1-eng.png?raw=true" width="256"><img src="/screenshots/2-eng.png?raw=true" width="256"><img src="/screenshots/3-eng.png?raw=true" width="256"><img src="/screenshots/4-eng.png?raw=true" width="256">
 
 ## License
 
