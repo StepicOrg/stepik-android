@@ -57,11 +57,15 @@ class FilterApplicatorImpl(
         }
 
         fun applyFiltersForSet(course: Course, endDate: Long?, isAfterBeginOrNotStartable: Boolean, isBeginDateInFuture: Boolean, isEndDateInFuture: Boolean, isEnded: Boolean, filters: Set<StepikFilter>): Boolean {
-            return (filters.contains(StepikFilter.RUSSIAN) && course.language?.equals("ru") ?: false
-                    || filters.contains(StepikFilter.ENGLISH) && course.language?.equals("en") ?: false) || (filters.contains(StepikFilter.ENGLISH) && (filters.contains((StepikFilter.ENGLISH))))
+            return (
+                    filters.contains(StepikFilter.RUSSIAN) && course.language?.equals("ru") ?: false
+                            || filters.contains(StepikFilter.ENGLISH) && course.language?.equals("en") ?: false
+                            || (filters.contains(StepikFilter.RUSSIAN) && filters.contains(StepikFilter.ENGLISH))
+                    )
+
                     &&
                     (filters.contains(StepikFilter.UPCOMING) && isBeginDateInFuture
-                            || filters.contains(StepikFilter.ACTIVE) && !isEnded && isAfterBeginOrNotStartable
+                            || filters.contains(StepikFilter.ACTIVE) && (!isEnded && isAfterBeginOrNotStartable || endDate != null && isEndDateInFuture && !isBeginDateInFuture)
                             || filters.contains(StepikFilter.PAST) && (endDate == null && isEnded || endDate != null && !isEndDateInFuture))
         }
 
