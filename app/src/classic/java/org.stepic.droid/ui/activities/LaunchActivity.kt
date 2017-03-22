@@ -260,9 +260,9 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         }
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == requestFromSmartLockCode) {
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
                 analytic.reportEvent(Analytic.SmartLock.LAUNCH_CREDENTIAL_RETRIEVED_PROMPT)
                 val credential = data.getParcelableExtra<Credential>(Credential.EXTRA_KEY)
                 onCredentialRetrieved(credential)
