@@ -16,9 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.squareup.otto.Subscribe;
 
-import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.StepBaseFragment;
@@ -124,20 +126,42 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
         super.onDestroyView();
     }
 
-    private void setThumbnail(String thumbnail) {
-        Uri uri = ThumbnailParser.getUriForThumbnail(thumbnail);
-        Glide.with(getContext())
-                .load(uri)
-                .placeholder(videoPlaceholder)
-                .into(this.thumbnailImageView);
+    private void setThumbnail(@Nullable String thumbnail, @Nullable final String timeString) {
+        if (thumbnail != null) {
+            Uri uri = ThumbnailParser.getUriForThumbnail(thumbnail);
+            Glide.with(getContext())
+                    .load(uri)
+                    .listener(new RequestListener<Uri, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            showTime(timeString);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            showTime(timeString);
+                            return false;
+                        }
+                    })
+                    .placeholder(videoPlaceholder)
+                    .into(this.thumbnailImageView);
+        }
+    }
+
+    private void showTime(@Nullable String timeString) {
+        if (timeString != null) {
+            videoLengthTextView.setVisibility(View.VISIBLE);
+            videoLengthTextView.setText(timeString);
+        }
     }
 
     @Override
-    public void showQuality(@NotNull String qualityForView) {
+    public void showQuality(@NonNull String qualityForView) {
         updateQualityMenu(qualityForView);
     }
 
-    private void updateQualityMenu(@NotNull String quality) {
+    private void updateQualityMenu(@NonNull String quality) {
         tempVideoQuality = quality;
         getActivity().supportInvalidateOptionsMenu();
     }
@@ -149,12 +173,10 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
     }
 
     @Override
-    public void onVideoLoaded(@org.jetbrains.annotations.Nullable String thumbnailPath, @NotNull Video video) {
-        if (thumbnailPath != null) {
-            setThumbnail(thumbnailPath);
-        }
+    public void onVideoLoaded(@Nullable String thumbnailPath, @NonNull Video video) {
+        //show thumbnail and show length should be synchronized event, because we do not show thumbnail now, only after fetching length
         stepQualityPresenter.determineQuality(video);
-        videoLengthPresenter.fetchLength(video, step);
+        videoLengthPresenter.fetchLength(video, step, thumbnailPath);
     }
 
     @Subscribe
@@ -174,8 +196,12 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
     }
 
     @Override
-    public void onVideoLengthDetermined(@NotNull String presentationTime) {
-        videoLengthTextView.setVisibility(View.VISIBLE);
-        videoLengthTextView.setText(presentationTime);
+    public void onVideoLengthDetermined(@NonNull String presentationString, @Nullable String thumbnailPath) {
+        setThumbnail(thumbnailPath, presentationString);
+    }
+
+    @Override
+    public void onVideoLengthFailed(@Nullable String thumbnailPath) {
+        setThumbnail(thumbnailPath, null);
     }
 }

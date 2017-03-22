@@ -34,7 +34,7 @@
         tools:replace="allowBackup, supportsRtl"
     >
 
-        <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
+        <meta-data android:name="asset_statements" android:resource="@string/asset_statements"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -56,6 +56,7 @@
 
         <activity
             android:name="org.stepic.droid.ui.activities.LaunchActivity"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.LoginLaunchRegistration">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -77,6 +78,7 @@
 
         <activity
             android:name="org.stepic.droid.ui.activities.LoginActivity"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.LoginLaunchRegistration">
         </activity>
 

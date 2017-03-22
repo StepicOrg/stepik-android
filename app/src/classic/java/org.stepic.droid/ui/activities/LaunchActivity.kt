@@ -147,10 +147,6 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
 
         loginPresenter.attachView(this)
 
-        val intent = intent
-        if (intent.data != null) {
-            redirectFromSocial(intent)
-        }
         if (checkPlayServices()) {
             googleApiClient?.registerConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
                 override fun onConnected(bundle: Bundle?) {
@@ -167,6 +163,14 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
             })
         }
 
+        onNewIntent(intent)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent?.data != null) {
+            redirectFromSocial(intent)
+        }
     }
 
     private fun initSocialRecycler(googleApiClient: GoogleApiClient?) {
@@ -260,9 +264,9 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
         }
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == requestFromSmartLockCode) {
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
                 analytic.reportEvent(Analytic.SmartLock.LAUNCH_CREDENTIAL_RETRIEVED_PROMPT)
                 val credential = data.getParcelableExtra<Credential>(Credential.EXTRA_KEY)
                 onCredentialRetrieved(credential)

@@ -5,4 +5,6 @@ app/src/releasedev/assets/configs/config.json filter=git-crypt diff=git-crypt
 app/src/sb/** filter=git-crypt diff=git-crypt
 buildsystem/cert/** filter=git-crypt diff=git-crypt
 buildsystem/secret.gradle filter=git-crypt diff=git-crypt
+fastlane/Fastfile filter=git-crypt diff=git-crypt
+googleplayprovider.json filter=git-crypt diff=git-crypt
 .gitattributes !filter !diff

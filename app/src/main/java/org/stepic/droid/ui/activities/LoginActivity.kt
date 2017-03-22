@@ -98,10 +98,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
 
         loginRootView.requestFocus()
 
-        //if we redirect from social:
-        intent?.data?.let {
-            redirectFromSocial(intent)
-        }
+
 
         if (checkPlayServices()) {
             googleApiClient = GoogleApiClient.Builder(this)
@@ -112,6 +109,15 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         }
 
         loginPresenter.attachView(this)
+        onNewIntent(intent)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        //if we redirect from social:
+        intent?.data?.let {
+            redirectFromSocial(intent)
+        }
     }
 
     private fun redirectFromSocial(intent: Intent) {

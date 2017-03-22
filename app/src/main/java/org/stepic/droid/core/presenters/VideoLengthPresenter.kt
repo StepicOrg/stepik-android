@@ -15,20 +15,25 @@ class VideoLengthPresenter(private val threadPoolExecutor: ThreadPoolExecutor,
                            private val videoLengthResolver: VideoLengthResolver) : PresenterBase<VideoLengthView>() {
     var cachedFormat: String? = null
 
-    fun fetchLength(video: Video, step: Step) {
+    fun fetchLength(video: Video, step: Step, thumbnailPath: String?) {
         cachedFormat?.let {
-            view?.onVideoLengthDetermined(it)
+            view?.onVideoLengthDetermined(it, thumbnailPath)
             return
         }
         threadPoolExecutor.execute {
             val path = videoResolver.resolveVideoUrl(video, step)
-            val millis = videoLengthResolver.determineLengthInMillis(path) ?: return@execute
+            val millis = videoLengthResolver.determineLengthInMillis(path)
             // if not determine millis -> do not form printable string
-
-            val printable = TimeUtil.getFormattedVideoTime(millis)
-            mainHandler.post {
-                cachedFormat = printable
-                view?.onVideoLengthDetermined(printable)
+            if (millis != null) {
+                val printable = TimeUtil.getFormattedVideoTime(millis)
+                mainHandler.post {
+                    cachedFormat = printable
+                    view?.onVideoLengthDetermined(printable, thumbnailPath)
+                }
+            } else {
+                mainHandler.post {
+                    view?.onVideoLengthFailed(thumbnailPath)
+                }
             }
         }
     }
