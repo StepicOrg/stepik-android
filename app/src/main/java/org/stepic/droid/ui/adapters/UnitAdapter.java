@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -32,9 +33,11 @@ import org.stepic.droid.store.LessonDownloader;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.transformers.ProgressTransformerKt;
 import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
+import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
 import org.stepic.droid.ui.dialogs.OnLoadPositionListener;
 import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
+import org.stepic.droid.ui.fragments.UnitsFragment;
 import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
@@ -80,14 +83,16 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     private final List<Unit> unitList;
     private final Map<Long, Progress> unitProgressMap;
     private final Map<Long, LessonLoadingState> lessonIdToUnitLoadingStateMap;
+    private Fragment fragment;
 
-    public UnitAdapter(Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, AppCompatActivity activity, Map<Long, LessonLoadingState> lessonIdToUnitLoadingStateMap) {
+    public UnitAdapter(Section parentSection, List<Unit> unitList, List<Lesson> lessonList, Map<Long, Progress> unitProgressMap, AppCompatActivity activity, Map<Long, LessonLoadingState> lessonIdToUnitLoadingStateMap, Fragment fragment) {
         this.activity = activity;
         this.parentSection = parentSection;
         this.unitList = unitList;
         this.lessonList = lessonList;
         this.unitProgressMap = unitProgressMap;
         this.lessonIdToUnitLoadingStateMap = lessonIdToUnitLoadingStateMap;
+        this.fragment = fragment;
         App.component().inject(this);
     }
 
@@ -95,8 +100,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
     @Override
     public UnitViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(activity).inflate(R.layout.unit_item, null);
-        UnitViewHolder unitViewHolder = new UnitViewHolder(v, this, this);
-        return unitViewHolder;
+        return new UnitViewHolder(v, this, this);
     }
 
     @Override
@@ -230,16 +234,13 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
             if (lesson.is_cached()) {
                 //delete
                 analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_LESSON, unit.getId() + "");
-                lesson.set_loading(false);
-                lesson.set_cached(false);
-                threadPoolExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        databaseFacade.updateOnlyCachedLoadingLesson(lesson);
-                        lessonDownloader.deleteWholeLesson(lesson.getId());
-                    }
-                });
-                notifyItemChanged(position);
+                DeleteItemDialogFragment dialogFragment = DeleteItemDialogFragment.newInstance(position);
+                dialogFragment.setTargetFragment(fragment, UnitsFragment.DELETE_POSITION_REQUEST_CODE);
+                if (!dialogFragment.isAdded()) {
+                    FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+                    ft.add(dialogFragment, null);
+                    ft.commitAllowingStateLoss();
+                }
             } else {
                 if (lesson.is_loading()) {
                     //cancel loading
@@ -295,13 +296,33 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
         onClickLoad(position);
     }
 
+    public void requestClickDeleteSilence(int position) {
+        if (position < lessonList.size() && position >= 0) {
+            final Lesson lesson = lessonList.get(position);
+            onClickDelete(lesson, position);
+        }
+    }
+
+    private void onClickDelete(final Lesson lesson, int position) {
+        lesson.set_loading(false);
+        lesson.set_cached(false);
+        threadPoolExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                databaseFacade.updateOnlyCachedLoadingLesson(lesson);
+                lessonDownloader.deleteWholeLesson(lesson.getId());
+            }
+        });
+        notifyItemChanged(position);
+    }
+
     @Override
     public void onNeedLoadPosition(int adapterPosition) {
         load(adapterPosition);
     }
 
 
-    public static class UnitViewHolder extends RecyclerView.ViewHolder {
+    static class UnitViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.cv)
         View cv;
@@ -339,7 +360,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
         long oldLessonId = -1;
 
-        public UnitViewHolder(View itemView, final StepicOnClickItemListener listener, final OnClickLoadListener loadListener) {
+        UnitViewHolder(View itemView, final StepicOnClickItemListener listener, final OnClickLoadListener loadListener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(new View.OnClickListener() {

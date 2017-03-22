@@ -62,7 +62,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Generi
         this.context = context;
         zone = DateTimeZone.getDefault();
         locale = Locale.getDefault();
-        placeholderUserIcon = ContextCompat.getDrawable(App.getAppContext(), R.drawable.placeholder_icon);
+        placeholderUserIcon = ContextCompat.getDrawable(App.getAppContext(), R.drawable.general_placeholder);
     }
 
     @Override

@@ -1,66 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="170dp">
+<RelativeLayout
+    android:id="@+id/drawer_header"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="170dp"
+    android:background="@color/stepik_dark_web"
+    tools:layout_width="280dp">
 
-    <ImageView
+
+    <TextView
+        android:layout_marginTop="24dp"
+        android:id="@+id/solving_without_break_text"
+        style="@style/StreakDrawerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/profile_container"
+        android:layout_alignStart="@+id/profile_container"
+        android:drawableLeft="@drawable/ic_streak_icon_white_16"
+        android:drawableStart="@drawable/ic_streak_icon_white_16"
+        tools:text="Решаю без перерыва 5 дней"
+        android:visibility="gone"
+        tools:visibility="visible"
+    />
+
+    <LinearLayout
+        android:id="@+id/profile_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/background_header"/>
-
-
-    <RelativeLayout
-        android:id="@+id/drawer_header"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/sign_in_profile_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/profile_image"
-            android:layout_alignLeft="@+id/profile_image"
-            android:layout_alignParentBottom="true"
-            android:layout_alignRight="@+id/profile_image"
-            android:layout_alignStart="@+id/profile_image"
-            android:gravity="center"
-            android:paddingBottom="4dp"
-            android:text="@string/auth_action_title"
-            android:textColor="#FFF"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:visibility="invisible"/>
-
-        <TextView
-            android:id="@+id/username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/profile_image"
-            android:layout_alignParentBottom="true"
-            android:layout_alignStart="@+id/profile_image"
-            android:gravity="start"
-            android:paddingBottom="4dp"
-            android:textColor="#FFF"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            tools:text="Kirill Makarov"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="24dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp">
 
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
-            android:layout_width="@dimen/profile_image_height_width"
-            android:layout_height="@dimen/profile_image_height_width"
-            android:layout_above="@id/username"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_vertical"
             app:border_color="#FF000000"
-            tools:src="@drawable/placeholder_icon"/>
-    </RelativeLayout>
-</FrameLayout>
+            tools:src="@drawable/general_placeholder"/>
+
+        <TextView
+            android:id="@+id/username"
+            style="@style/MainDrawerTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/guideline_standard_padding"
+            android:layout_marginStart="@dimen/guideline_standard_padding"
+            tools:text="Kirill\nMakarov"/>
+
+        <TextView
+            android:id="@+id/sign_in_profile_view"
+            style="@style/MainDrawerTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/guideline_standard_padding"
+            android:layout_marginStart="@dimen/guideline_standard_padding"
+            android:text="@string/auth_action_title"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+</RelativeLayout>

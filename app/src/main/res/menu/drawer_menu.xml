@@ -4,6 +4,13 @@
     <group
         android:id="@+id/main_drawer_menu"
         android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/profile"
+            android:checkable="false"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:title="@string/profile_title"/>
+
         <item
             android:id="@+id/my_courses"
             android:icon="@drawable/ic_my_courses"
@@ -17,7 +24,7 @@
             android:id="@+id/cached_videos"
             android:icon="@drawable/ic_local_movies_black_24dp"
             android:title="@string/downloads"
-            />
+        />
 
         <item
             android:id="@+id/certificates"

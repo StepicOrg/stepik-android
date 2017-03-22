@@ -28,7 +28,7 @@
             android:layout_marginStart="@dimen/guideline_left_right_padding_list_item"
             android:layout_marginTop="@dimen/guideline_left_right_padding_list_item"
             android:contentDescription="@string/content_course_logo"
-            tools:src="@drawable/ic_course_placeholder"/>
+            tools:src="@drawable/general_placeholder"/>
 
         <TextView
             android:id="@+id/course_name"

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
+    package="org.stepic.droid"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.stepic.droid"
     android:installLocation="auto">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -32,7 +32,9 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:replace="allowBackup, supportsRtl"
-        >
+    >
+
+        <meta-data android:name="asset_statements" android:resource="@string/asset_statements"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -54,6 +56,7 @@
 
         <activity
             android:name="org.stepic.droid.ui.activities.LaunchActivity"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.LoginLaunchRegistration">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -75,13 +78,14 @@
 
         <activity
             android:name="org.stepic.droid.ui.activities.LoginActivity"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.LoginLaunchRegistration">
         </activity>
 
         <activity
             android:name="org.stepic.droid.ui.activities.MainFeedActivity"
             android:label="@string/my_courses_title"
-            android:launchMode="singleTop">
+            android:launchMode="singleTask">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".ui.activities.CourseSearchResultActivity"/>
@@ -383,14 +387,8 @@
         <activity
             android:name=".ui.activities.ProfileActivity"
             android:label="@string/profile_title"
-            android:parentActivityName=".ui.activities.MainFeedActivity"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainFeedActivity"/>
-
-
             <intent-filter
                 android:autoVerify="true"
                 tools:ignore="UnusedAttribute">

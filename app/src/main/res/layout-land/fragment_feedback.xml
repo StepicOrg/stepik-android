@@ -22,7 +22,7 @@
             >
 
             <Button
-                android:id="@+id/feedback_bad_btn"
+                android:id="@+id/feedbackBadButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/feedback_bad_color"
@@ -54,7 +54,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/feedback_good_btn"
+                android:id="@+id/feedbackGoodButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/feedback_good_color"

@@ -6,11 +6,13 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.PerFragment;
+import org.stepic.droid.core.VideoLengthResolver;
 import org.stepic.droid.core.presenters.AnonymousPresenter;
 import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.StepQualityPresenter;
 import org.stepic.droid.core.presenters.StepsPresenter;
+import org.stepic.droid.core.presenters.VideoLengthPresenter;
 import org.stepic.droid.core.presenters.VideoStepPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
@@ -104,4 +106,14 @@ public class StepModule {
                 analytic,
                 sharedPreferenceHelper);
     }
+
+    @Provides
+    @PerFragment
+    VideoLengthPresenter provideVideoLenthPresenter(MainHandler mainHandler,
+                                                    ThreadPoolExecutor threadPoolExecutor,
+                                                    VideoResolver videoResolver,
+                                                    VideoLengthResolver videoLengthResolver) {
+        return new VideoLengthPresenter(threadPoolExecutor, mainHandler, videoResolver, videoLengthResolver);
+    }
+
 }

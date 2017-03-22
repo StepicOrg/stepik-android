@@ -3,6 +3,7 @@ package org.stepic.droid.ui.activities
 import android.content.pm.ShortcutManager
 import android.net.Uri
 import android.support.v4.app.Fragment
+import android.view.MenuItem
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.ProfileFragment
@@ -53,6 +54,16 @@ class ProfileActivity : SingleFragmentActivity() {
     override fun finish() {
         super.finish()
         overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> {
+                finish();
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 }

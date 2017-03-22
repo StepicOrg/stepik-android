@@ -36,7 +36,7 @@
                 android:src="@drawable/ic_stepik_logotype_square_green"/>
 
             <Button
-                android:id="@+id/find_courses_button"
+                android:id="@+id/findCoursesButton"
                 style="@style/LoginButtons"
                 android:layout_below="@+id/stepik_logo"
                 android:layout_centerHorizontal="true"
@@ -48,22 +48,22 @@
                 android:text="@string/find_courses_title"/>
 
             <Button
-                android:id="@+id/sign_in_with_email"
+                android:id="@+id/signInWithEmail"
                 style="@style/LoginButtons"
-                android:layout_alignLeft="@id/find_courses_button"
-                android:layout_alignRight="@id/find_courses_button"
-                android:layout_below="@+id/find_courses_button"
+                android:layout_alignLeft="@id/findCoursesButton"
+                android:layout_alignRight="@id/findCoursesButton"
+                android:layout_below="@+id/findCoursesButton"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="15dp"
                 android:contentDescription="@string/sign_in_with_password"
                 android:text="@string/sign_in_with_password"/>
 
             <Button
-                android:id="@+id/sign_up_btn_activity_launch"
+                android:id="@+id/launchSignUpButton"
                 style="@style/LoginButtons"
-                android:layout_alignLeft="@id/find_courses_button"
-                android:layout_alignRight="@id/find_courses_button"
-                android:layout_below="@id/sign_in_with_email"
+                android:layout_alignLeft="@id/findCoursesButton"
+                android:layout_alignRight="@id/findCoursesButton"
+                android:layout_below="@id/signInWithEmail"
                 android:layout_centerHorizontal="true"
                 android:text="@string/yet_have_not_account"/>
 
@@ -72,7 +72,7 @@
                 android:id="@+id/sign_in_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/sign_up_btn_activity_launch"
+                android:layout_below="@+id/launchSignUpButton"
                 android:layout_centerHorizontal="true"
                 android:layout_marginEnd="@dimen/space_for_text"
                 android:layout_marginLeft="@dimen/space_for_text"
@@ -85,7 +85,7 @@
 
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/social_list"
+                android:id="@+id/socialListRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_of_social"
                 android:layout_below="@+id/sign_in_text"
@@ -100,7 +100,7 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/terms_privacy_launch"
+            android:id="@+id/termsPrivacyLaunchTextView"
             style="@style/PrivacyPolicyTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

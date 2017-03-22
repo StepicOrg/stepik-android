@@ -24,8 +24,6 @@ import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.LocalLessonSessionManagerImpl;
 import org.stepic.droid.core.LocalProgressImpl;
 import org.stepic.droid.core.LocalProgressManager;
-import org.stepic.droid.core.LoginManager;
-import org.stepic.droid.core.LoginManagerImpl;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ScreenManagerImpl;
 import org.stepic.droid.core.ShareHelper;
@@ -33,6 +31,8 @@ import org.stepic.droid.core.ShareHelperImpl;
 import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.ShellImpl;
 import org.stepic.droid.core.StepikLogoutManager;
+import org.stepic.droid.core.VideoLengthResolver;
+import org.stepic.droid.core.VideoLengthResolverImpl;
 import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.notifications.LocalReminder;
 import org.stepic.droid.notifications.LocalReminderImpl;
@@ -61,6 +61,8 @@ import org.stepic.droid.util.resolvers.text.TextResolver;
 import org.stepic.droid.util.resolvers.text.TextResolverImpl;
 import org.stepic.droid.web.Api;
 import org.stepic.droid.web.ApiImpl;
+import org.stepic.droid.web.UserAgentProvider;
+import org.stepic.droid.web.UserAgentProviderImpl;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -190,12 +192,6 @@ public class AppCoreModule {
     @Provides
     LocalProgressManager provideProgressManager(DatabaseFacade databaseFacade, Bus bus, Api api, MainHandler mainHandler) {
         return new LocalProgressImpl(databaseFacade, bus, api, mainHandler);
-    }
-
-    @Singleton
-    @Provides
-    LoginManager provideLoginManager(Shell shell, Context context, Analytic analytic) {
-        return new LoginManagerImpl(shell, context, analytic);
     }
 
     @Provides
@@ -357,6 +353,18 @@ public class AppCoreModule {
             CleanManager cleanManager
     ) {
         return new SectionDownloaderImpl(databaseFacade, downloadManager, threadPoolExecutor, cleanManager, cancelSniffer);
+    }
+
+    @Provides
+    @Singleton
+    VideoLengthResolver provideVideoLengthResolver() {
+        return new VideoLengthResolverImpl();
+    }
+
+    @Provides
+    @Singleton
+    UserAgentProvider provideUserAgent() {
+        return new UserAgentProviderImpl(context);
     }
 
 
