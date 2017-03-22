@@ -147,10 +147,6 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
 
         loginPresenter.attachView(this)
 
-        val intent = intent
-        if (intent.data != null) {
-            redirectFromSocial(intent)
-        }
         if (checkPlayServices()) {
             googleApiClient?.registerConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
                 override fun onConnected(bundle: Bundle?) {
@@ -167,6 +163,14 @@ class LaunchActivity : BackToExitActivityBase(), LoginView {
             })
         }
 
+        onNewIntent(intent)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent?.data != null) {
+            redirectFromSocial(intent)
+        }
     }
 
     private fun initSocialRecycler(googleApiClient: GoogleApiClient?) {
