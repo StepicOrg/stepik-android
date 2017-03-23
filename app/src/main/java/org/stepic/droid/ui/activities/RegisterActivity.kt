@@ -146,6 +146,7 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
                         analytic.reportEvent(FirebaseAnalytics.Event.SIGN_UP)
                         loginPresenter.login(email, password)
                     } else {
+                        ProgressHelper.dismiss(progressBar)
                         response.errorBody()
                         val errorConverter = retrofit.responseBodyConverter<RegistrationResponse>(RegistrationResponse::class.java, arrayOfNulls<Annotation>(0))
                         var error: RegistrationResponse? = null
