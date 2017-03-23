@@ -306,7 +306,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     }
 
     private void initFragments(Bundle bundle) {
-        if (bundle == null) {
+        if (bundle == null || !bundle.containsKey(KEY_CURRENT_INDEX)) {
             currentIndex = DEFAULT_START_INDEX;
         } else {
             currentIndex = bundle.getInt(KEY_CURRENT_INDEX);
