@@ -368,6 +368,11 @@ public interface Analytic {
         String CREDENTIAL_DELETED_SUCCESSFUL = "smartlock_credential_deleted_successful";
     }
 
+    public interface RemoteConfig {
+        String FETCHED_SUCCESSFUL = "remote_fetched_successful";
+        String FETCHED_UNSUCCESSFUL = "remote_fetched_unsuccessful";
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);
