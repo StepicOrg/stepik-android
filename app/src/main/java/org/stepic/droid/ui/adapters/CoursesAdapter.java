@@ -10,17 +10,20 @@ import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
+import org.stepic.droid.config.RemoteConfig;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
@@ -51,6 +54,9 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
     @Inject
     Analytic analytic;
 
+    @Inject
+    FirebaseRemoteConfig firebaseRemoteConfig;
+
     private Drawable coursePlaceholder;
 
     private LayoutInflater inflater;
@@ -62,6 +68,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
     private int itemViewType = 2;
     private int NUMBER_OF_EXTRA_ITEMS = 1;
     private boolean isNeedShowFooter;
+    private final String continueTitle;
 
     public CoursesAdapter(Fragment fragment, List<Course> courses, @Nullable Table type, @NotNull ContinueCoursePresenter continueCoursePresenter) {
         contextActivity = fragment.getActivity();
@@ -70,6 +77,11 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         inflater = (LayoutInflater) contextActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         App.component().inject(this);
         coursePlaceholder = ContextCompat.getDrawable(fragment.getContext(), R.drawable.general_placeholder);
+        if (firebaseRemoteConfig.getBoolean(RemoteConfig.INSTANCE.getContinueCourseExperimentEnabledKey())) {
+            continueTitle = contextActivity.getString(R.string.continue_course_title_experimental);
+        } else {
+            continueTitle = contextActivity.getString(R.string.continue_course_title);
+        }
     }
 
     @Override
@@ -147,7 +159,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         ImageView courseIcon;
 
         @BindView(R.id.continue_button)
-        View continueButton;
+        Button continueButton;
 
         GlideDrawableImageViewTarget imageViewTarget;
 
@@ -174,6 +186,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                     return true;
                 }
             });
+            continueButton.setText(continueTitle);
         }
 
         @Override
