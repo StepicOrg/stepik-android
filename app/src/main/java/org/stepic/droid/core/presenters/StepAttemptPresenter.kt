@@ -145,6 +145,7 @@ class StepAttemptPresenter(val mainHandler: MainHandler,
                                                 && !step.is_custom_passed
                                                 && (sharedPreferenceHelper.isStreakNotificationEnabledNullable == null) // default value, user not change in profile
                                                 && sharedPreferenceHelper.canShowStreakDialog()
+                                                && (sharedPreferenceHelper.authResponseFromStore != null)
 
 
                                 val streakDayNumber: Int =
