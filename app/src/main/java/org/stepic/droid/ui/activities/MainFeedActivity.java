@@ -523,10 +523,6 @@ public class MainFeedActivity extends BackToExitActivityBase
         showCurrentFragment(currentIndex);
     }
 
-    public static int getFindCoursesIndex() {
-        return 1;
-    }
-
 
     @Subscribe
     public void needUpdateCallback(NeedUpdateEvent event) {
@@ -574,6 +570,10 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     public static int getMyCoursesIndex() {
         return 1;
+    }
+
+    public static int getFindCoursesIndex() {
+        return 2;
     }
 
     private boolean fragmentBackKeyIntercept() {
