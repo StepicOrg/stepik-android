@@ -167,6 +167,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:10.2.0'
     compile 'com.google.firebase:firebase-core:10.2.0'
     compile 'com.google.firebase:firebase-crash:10.2.0'
+    compile 'com.google.firebase:firebase-config:10.2.0'
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.facebook.android:facebook-android-sdk:4.17.0'
