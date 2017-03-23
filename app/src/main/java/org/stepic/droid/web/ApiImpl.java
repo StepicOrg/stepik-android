@@ -347,7 +347,7 @@ public class ApiImpl implements Api {
             public Response intercept(Chain chain) throws IOException {
                 Request newRequest = addUserAgentTo(chain);
 
-                String cookies = android.webkit.CookieManager.getInstance().getCookie(config.getBaseUrl()); //if token is expired or doesn't exist -> manager return null
+                String cookies = CookieManager.getInstance().getCookie(config.getBaseUrl()); //if token is expired or doesn't exist -> manager return null
                 if (cookies == null) {
                     updateCookieForBaseUrl();
                     cookies = android.webkit.CookieManager.getInstance().getCookie(config.getBaseUrl());

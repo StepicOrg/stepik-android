@@ -5,8 +5,12 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.squareup.otto.Bus;
 
+import org.stepic.droid.BuildConfig;
+import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.analytic.AnalyticImpl;
 import org.stepic.droid.concurrency.MainHandler;
@@ -365,6 +369,19 @@ public class AppCoreModule {
     @Singleton
     UserAgentProvider provideUserAgent() {
         return new UserAgentProviderImpl(context);
+    }
+
+
+    @Provides
+    @Singleton
+    FirebaseRemoteConfig provideFirebaseRemoteConfig() {
+        final FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                .build();
+        firebaseRemoteConfig.setConfigSettings(configSettings);
+        firebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+        return firebaseRemoteConfig;
     }
 
 

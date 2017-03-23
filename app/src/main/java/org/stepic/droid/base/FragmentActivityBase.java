@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.squareup.otto.Bus;
 
 import org.jetbrains.annotations.Nullable;
@@ -97,6 +98,9 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     @Inject
     protected ThreadPoolExecutor threadPoolExecutor;
+
+    @Inject
+    protected FirebaseRemoteConfig firebaseRemoteConfig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

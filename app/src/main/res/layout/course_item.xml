@@ -70,8 +70,7 @@
             android:layout_below="@+id/course_info"
             android:layout_marginBottom="@dimen/guideline_left_right_padding_list_item"
             android:layout_marginEnd="@dimen/guideline_left_right_padding_list_item"
-            android:layout_marginRight="@dimen/guideline_left_right_padding_list_item"
-            android:text="@string/continue_course_title"/>
+            android:layout_marginRight="@dimen/guideline_left_right_padding_list_item"/>
 
         <View
             android:id="@+id/grey_bar"

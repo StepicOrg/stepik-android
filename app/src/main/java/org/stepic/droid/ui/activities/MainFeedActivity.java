@@ -306,7 +306,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     }
 
     private void initFragments(Bundle bundle) {
-        if (bundle == null) {
+        if (bundle == null || !bundle.containsKey(KEY_CURRENT_INDEX)) {
             currentIndex = DEFAULT_START_INDEX;
         } else {
             currentIndex = bundle.getInt(KEY_CURRENT_INDEX);
@@ -523,10 +523,6 @@ public class MainFeedActivity extends BackToExitActivityBase
         showCurrentFragment(currentIndex);
     }
 
-    public static int getFindCoursesIndex() {
-        return 1;
-    }
-
 
     @Subscribe
     public void needUpdateCallback(NeedUpdateEvent event) {
@@ -574,6 +570,10 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     public static int getMyCoursesIndex() {
         return 1;
+    }
+
+    public static int getFindCoursesIndex() {
+        return 2;
     }
 
     private boolean fragmentBackKeyIntercept() {
