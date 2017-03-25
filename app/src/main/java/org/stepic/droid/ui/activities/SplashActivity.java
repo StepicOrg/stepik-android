@@ -158,7 +158,7 @@ public class SplashActivity extends BackToExitActivityBase {
             MixpanelAPI mixpanelAPI = MixpanelAPI.getInstance(getApplicationContext(), config.getMixpanelToken());
             mixpanelAPI.track("app_opened");
             if (checkPlayServices()) {
-                firebaseRemoteConfig.fetch().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                firebaseRemoteConfig.fetch().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
@@ -167,9 +167,10 @@ public class SplashActivity extends BackToExitActivityBase {
                         } else {
                             analytic.reportEvent(Analytic.RemoteConfig.FETCHED_UNSUCCESSFUL);
                         }
-                        showNextScreen();
                     }
                 });
+                //do not wait fetch, because fail of it may be about 3 mins. User can't wait for it!
+                showNextScreen();
             } else {
                 showNextScreen();
             }
