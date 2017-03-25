@@ -74,6 +74,7 @@ import org.stepic.droid.events.joining_course.FailJoinEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.events.sections.NotCachedSectionEvent;
 import org.stepic.droid.events.sections.SectionCachedEvent;
+import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
@@ -868,7 +869,7 @@ public class SectionsFragment
     public void onShowInvitationDialog(@NotNull final Course courseForSharing) {
         SpannableString inviteTitle = new SpannableString(getString(R.string.take_course_with_fiends));
         inviteTitle.setSpan(new ForegroundColorSpan(Color.BLACK), 0, inviteTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), "fonts/NotoSans-Bold.ttf"));
+        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), fontsProvider.provideFontPath(FontType.bold)));
         inviteTitle.setSpan(typefaceSpan, 0, inviteTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 

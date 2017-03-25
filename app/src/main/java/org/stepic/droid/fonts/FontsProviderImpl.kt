@@ -1,11 +1,12 @@
 package org.stepic.droid.fonts
 
 class FontsProviderImpl : FontsProvider {
-    override fun provideFontName(type: FontType) =
+
+    override fun provideFontPath(type: FontType) =
             when (type) {
-                FontType.regular -> "Roboto-Regular"
-                FontType.italic -> "Roboto-Italic"
-                FontType.bold -> "Roboto-Bold"
-                FontType.boldItalic -> "Roboto-BoldItalic"
+                FontType.regular -> "fonts/Roboto-Regular.ttf"
+                FontType.italic -> "fonts/Roboto-Italic.ttf"
+                FontType.bold -> "fonts/Roboto-Bold.ttf"
+                FontType.boldItalic -> "fonts/Roboto-BoldItalic.ttf"
             }
 }
