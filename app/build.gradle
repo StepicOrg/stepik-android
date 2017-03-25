@@ -121,9 +121,9 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     //<DI>
-    apt 'com.google.dagger:dagger-compiler:2.5'
+    apt 'com.google.dagger:dagger-compiler:2.10'
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.google.dagger:dagger:2.5'
+    compile 'com.google.dagger:dagger:2.10'
     provided 'javax.annotation:jsr250-api:1.0'
     //needed to resolve compilation errors, thanks to tutplus.org for finding the dependency
     compile 'com.jakewharton:butterknife:8.2.1'
