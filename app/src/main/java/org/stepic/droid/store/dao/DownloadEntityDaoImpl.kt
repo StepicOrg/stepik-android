@@ -6,8 +6,9 @@ import android.database.sqlite.SQLiteDatabase
 
 import org.stepic.droid.model.DownloadEntity
 import org.stepic.droid.store.structure.DbStructureSharedDownloads
+import javax.inject.Inject
 
-class DownloadEntityDaoImpl(openHelper: SQLiteDatabase) : DaoBase<DownloadEntity>(openHelper) {
+class DownloadEntityDaoImpl @Inject constructor(openHelper: SQLiteDatabase) : DaoBase<DownloadEntity>(openHelper) {
 
     public override fun parsePersistentObject(cursor: Cursor): DownloadEntity {
         val indexDownloadId = cursor.getColumnIndex(DbStructureSharedDownloads.Column.DOWNLOAD_ID)

@@ -18,6 +18,8 @@ import org.stepic.droid.util.DbParseHelper;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class StepDaoImpl extends DaoBase<Step> {
 
 
@@ -25,6 +27,7 @@ public class StepDaoImpl extends DaoBase<Step> {
     private final IDao<Assignment> assignmentDao;
     private final IDao<Progress> progressDao;
 
+    @Inject
     public StepDaoImpl(SQLiteDatabase openHelper,
                        IDao<BlockPersistentWrapper> blockWrapperDao,
                        IDao<Assignment> assignmentDao,

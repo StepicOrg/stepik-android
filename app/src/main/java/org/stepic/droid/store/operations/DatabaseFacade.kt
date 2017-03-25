@@ -15,7 +15,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DatabaseFacade {
+class DatabaseFacade @Inject constructor() {
 
     @Inject
     lateinit var sectionDao: IDao<Section>
@@ -377,7 +377,7 @@ class DatabaseFacade {
         coursesFeaturedDao.removeAll()
     }
 
-    fun dropEnrolledCourses () {
+    fun dropEnrolledCourses() {
         coursesEnrolledDao.removeAll()
     }
 

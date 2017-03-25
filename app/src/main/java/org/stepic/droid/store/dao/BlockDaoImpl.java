@@ -16,9 +16,12 @@ import org.stepic.droid.store.structure.DbStructureCachedVideo;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class BlockDaoImpl extends DaoBase<BlockPersistentWrapper> {
     private final IDao<CachedVideo> videoDao;
 
+    @Inject
     public BlockDaoImpl(SQLiteDatabase openHelper, IDao<CachedVideo> videoDao) {
         super(openHelper);
         this.videoDao = videoDao;

@@ -5,8 +5,9 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import org.stepic.droid.model.CourseLastInteraction
 import org.stepic.droid.store.structure.DbStructureCourseLastInteraction
+import javax.inject.Inject
 
-class CourseLastInteractionDaoImpl(writableDatabase: SQLiteDatabase) : DaoBase<CourseLastInteraction>(writableDatabase) {
+class CourseLastInteractionDaoImpl @Inject constructor(writableDatabase: SQLiteDatabase) : DaoBase<CourseLastInteraction>(writableDatabase) {
     override fun getDefaultPrimaryColumn()
             = DbStructureCourseLastInteraction.Column.COURSE_ID
 

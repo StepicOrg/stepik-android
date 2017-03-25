@@ -6,8 +6,9 @@ import android.database.sqlite.SQLiteDatabase
 
 import org.stepic.droid.model.CalendarSection
 import org.stepic.droid.store.structure.DbStructureCalendarSection
+import javax.inject.Inject
 
-class CalendarSectionDaoImpl(writableDatabase: SQLiteDatabase) : DaoBase<CalendarSection>(writableDatabase) {
+class CalendarSectionDaoImpl @Inject constructor(writableDatabase: SQLiteDatabase) : DaoBase<CalendarSection>(writableDatabase) {
 
     public override fun getDbName(): String {
         return DbStructureCalendarSection.CALENDAR_SECTION

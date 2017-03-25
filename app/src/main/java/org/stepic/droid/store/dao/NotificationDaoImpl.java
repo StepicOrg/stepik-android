@@ -8,7 +8,11 @@ import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.notifications.model.NotificationType;
 import org.stepic.droid.store.structure.DbStructureNotification;
 
+import javax.inject.Inject;
+
 public class NotificationDaoImpl extends DaoBase<Notification> {
+
+    @Inject
     public NotificationDaoImpl(SQLiteDatabase openHelper) {
         super(openHelper);
     }

@@ -1,6 +1,5 @@
 package org.stepic.droid.core.modules;
 
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -39,133 +38,88 @@ import org.stepic.droid.store.dao.StepDaoImpl;
 import org.stepic.droid.store.dao.UnitDaoImpl;
 import org.stepic.droid.store.dao.VideoTimestampDaoImpl;
 import org.stepic.droid.store.dao.ViewAssignmentDaoImpl;
-import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.web.ViewAssignment;
 
 import javax.inject.Singleton;
 
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class StorageModule {
+public abstract class StorageModule {
+
+    @Singleton
+    @Binds
+    abstract SQLiteOpenHelper provideSqlOpenHelper(DatabaseHelper databaseHelper);
 
     @Singleton
     @Provides
-    DatabaseFacade provideDatabaseFacade() {
-        return new DatabaseFacade();
-    }
-
-    @Singleton
-    @Provides
-    SQLiteOpenHelper provideSqlOpenHelper(Context context) {
-        return new DatabaseHelper(context);
-    }
-
-    @Singleton
-    @Provides
-    SQLiteDatabase provideWritableDatabase(SQLiteOpenHelper helper) {
+    static SQLiteDatabase provideWritableDatabase(SQLiteOpenHelper helper) {
         return helper.getWritableDatabase();
     }
 
     @Singleton
-    @Provides
-    IDao<Section> provideSectionDao(SQLiteDatabase openHelper) {
-        return new SectionDaoImpl(openHelper);
-    }
+    @Binds
+    abstract IDao<Section> provideSectionDao(SectionDaoImpl sectionDao);
 
     @Singleton
-    @Provides
-    IDao<Unit> provideUnitDao(SQLiteDatabase openHelper, IDao<Progress> progressDao) {
-        return new UnitDaoImpl(openHelper, progressDao);
-    }
+    @Binds
+    abstract IDao<Unit> provideUnitDao(UnitDaoImpl unitDao);
 
     @Singleton
-    @Provides
-    IDao<Progress> provideProgressDao(SQLiteDatabase openHelper) {
-        return new ProgressDaoImpl(openHelper);
-    }
+    @Binds
+    abstract IDao<Progress> provideProgressDao(ProgressDaoImpl progressDao);
 
-    @Provides
-    IDao<Assignment> provideAssignmentDao(SQLiteDatabase openHelper) {
-        return new AssignmentDaoImpl(openHelper);
-    }
+    @Binds
+    abstract IDao<Assignment> provideAssignmentDao(AssignmentDaoImpl assignmentDao);
 
-    @Provides
-    IDao<CertificateViewItem> provideCertificateDao(SQLiteDatabase openHelper) {
-        return new CertificateViewItemDaoImpl(openHelper);
-    }
+    @Binds
+    abstract IDao<CertificateViewItem> provideCertificateDao(CertificateViewItemDaoImpl certificateViewItemDao);
 
-    @Provides
-    IDao<Lesson> provideLessonDao(SQLiteDatabase openHelper) {
-        return new LessonDaoImpl(openHelper);
-    }
+    @Binds
+    abstract IDao<Lesson> provideLessonDao(LessonDaoImpl lessonDao);
 
     @Singleton
-    @Provides
-    IDao<ViewAssignment> provideViewAssignment(SQLiteDatabase openHelper) {
-        return new ViewAssignmentDaoImpl(openHelper);
-    }
+    @Binds
+    abstract IDao<ViewAssignment> provideViewAssignment(ViewAssignmentDaoImpl viewAssignmentDao);
 
     @Singleton
-    @Provides
-    IDao<DownloadEntity> provideDownloadEntity(SQLiteDatabase openHelper) {
-        return new DownloadEntityDaoImpl(openHelper);
-    }
+    @Binds
+    abstract IDao<DownloadEntity> provideDownloadEntity(DownloadEntityDaoImpl downloadEntityDao);
 
     @Singleton
-    @Provides
-    IDao<CalendarSection> provideCalendarSection(SQLiteDatabase database) {
-        return new CalendarSectionDaoImpl(database);
-    }
+    @Binds
+    abstract IDao<CalendarSection> provideCalendarSection(CalendarSectionDaoImpl calendarSectionDao);
 
     @Singleton
-    @Provides
-    IDao<CachedVideo> provideCachedVideo(SQLiteDatabase openHelper) {
-        return new PersistentVideoDaoImpl(openHelper);
-    }
+    @Binds
+    abstract IDao<CachedVideo> provideCachedVideo(PersistentVideoDaoImpl persistentVideoDao);
 
     @Singleton
-    @Provides
-    IDao<BlockPersistentWrapper> provideBlockWrapper(SQLiteDatabase openHelper, IDao<CachedVideo> daoCached) {
-        return new BlockDaoImpl(openHelper, daoCached);
-    }
+    @Binds
+    abstract IDao<BlockPersistentWrapper> provideBlockWrapper(BlockDaoImpl blockDao);
 
     @Singleton
-    @Provides
-    IDao<Step> provideStep(SQLiteDatabase openHelper,
-                           IDao<BlockPersistentWrapper> blockDao,
-                           IDao<Assignment> assignmentDao,
-                           IDao<Progress> progressDao) {
-        return new StepDaoImpl(openHelper, blockDao, assignmentDao, progressDao);
-    }
+    @Binds
+    abstract IDao<Step> provideStep(StepDaoImpl stepDao);
 
-    @Provides
-    IDao<Course> provideCourse(SQLiteDatabase openHelper, IDao<CachedVideo> daoCached) {
-        return new CourseDaoImpl(openHelper, daoCached);
-    }
+    @Binds
+    abstract IDao<Course> provideCourse(CourseDaoImpl courseDao);
 
     @Singleton
-    @Provides
-    IDao<Notification> provideNotification(SQLiteDatabase openHelper) {
-        return new NotificationDaoImpl(openHelper);
-    }
+    @Binds
+    abstract IDao<Notification> provideNotification(NotificationDaoImpl notificationDao);
 
-    @Provides
+    @Binds
     @Singleton
-    IDao<VideoTimestamp> provideVideoTimeStamp(SQLiteDatabase SQLiteDatabase) {
-        return new VideoTimestampDaoImpl(SQLiteDatabase);
-    }
+    abstract IDao<VideoTimestamp> provideVideoTimeStamp(VideoTimestampDaoImpl videoTimestampDao);
 
-    @Provides
+    @Binds
     @Singleton
-    IDao<PersistentLastStep> provideLastStepDao(SQLiteDatabase sqLiteDatabase) {
-        return new PersistentLastStepDaoImpl(sqLiteDatabase);
-    }
+    abstract IDao<PersistentLastStep> provideLastStepDao(PersistentLastStepDaoImpl persistentLastStepDao);
 
-    @Provides
+    @Binds
     @Singleton
-    IDao<CourseLastInteraction> provideCourseInteractionDao(SQLiteDatabase sqLiteDatabase) {
-        return new CourseLastInteractionDaoImpl(sqLiteDatabase);
-    }
+    abstract IDao<CourseLastInteraction> provideCourseInteractionDao(CourseLastInteractionDaoImpl courseLastInteractionDao);
 }

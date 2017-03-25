@@ -7,7 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import org.stepic.droid.model.Assignment;
 import org.stepic.droid.store.structure.DbStructureAssignment;
 
+import javax.inject.Inject;
+
 public class AssignmentDaoImpl extends DaoBase<Assignment> {
+
+    @Inject
     public AssignmentDaoImpl(SQLiteDatabase openHelper) {
         super(openHelper);
     }

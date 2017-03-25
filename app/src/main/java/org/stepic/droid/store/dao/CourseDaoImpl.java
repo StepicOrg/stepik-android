@@ -16,10 +16,13 @@ import org.stepic.droid.util.DbParseHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class CourseDaoImpl extends DaoBase<Course> {
     private final IDao<CachedVideo> cachedVideoDao;
     private String tableName;
 
+    @Inject
     public CourseDaoImpl(SQLiteDatabase openHelper, IDao<CachedVideo> cachedVideoDao) {
         super(openHelper);
         this.cachedVideoDao = cachedVideoDao;

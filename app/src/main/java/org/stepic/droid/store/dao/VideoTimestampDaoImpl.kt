@@ -5,8 +5,9 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import org.stepic.droid.model.VideoTimestamp
 import org.stepic.droid.store.structure.DbStructureVideoTimestamp
+import javax.inject.Inject
 
-class VideoTimestampDaoImpl(writeableDatabase: SQLiteDatabase) : DaoBase<VideoTimestamp>(writeableDatabase) {
+class VideoTimestampDaoImpl @Inject constructor(writeableDatabase: SQLiteDatabase) : DaoBase<VideoTimestamp>(writeableDatabase) {
 
     public override fun getDbName() =
             DbStructureVideoTimestamp.VIDEO_TIMESTAMP

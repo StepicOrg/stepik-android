@@ -13,10 +13,13 @@ import org.stepic.droid.util.DbParseHelper;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class UnitDaoImpl extends DaoBase<Unit> {
 
     private final IDao<Progress> progressDao;
 
+    @Inject
     public UnitDaoImpl(SQLiteDatabase openHelper, IDao<Progress> progressDao) {
         super(openHelper);
         this.progressDao = progressDao;

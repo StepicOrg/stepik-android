@@ -7,7 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import org.stepic.droid.model.CachedVideo;
 import org.stepic.droid.store.structure.DbStructureCachedVideo;
 
+import javax.inject.Inject;
+
 public class PersistentVideoDaoImpl extends DaoBase<CachedVideo> {
+
+    @Inject
     public PersistentVideoDaoImpl(SQLiteDatabase openHelper) {
         super(openHelper);
     }

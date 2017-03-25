@@ -6,8 +6,9 @@ import android.database.sqlite.SQLiteDatabase
 import org.stepic.droid.model.CertificateType
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.store.structure.DbStructureCertificateViewItem
+import javax.inject.Inject
 
-class CertificateViewItemDaoImpl(writeableDatabase: SQLiteDatabase) : DaoBase<CertificateViewItem>(writeableDatabase) {
+class CertificateViewItemDaoImpl @Inject constructor(writeableDatabase: SQLiteDatabase) : DaoBase<CertificateViewItem>(writeableDatabase) {
 
     override fun getDbName() = DbStructureCertificateViewItem.CERTIFICATE_VIEW_ITEM
 

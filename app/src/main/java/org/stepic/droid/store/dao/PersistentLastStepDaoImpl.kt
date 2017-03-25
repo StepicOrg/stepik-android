@@ -5,8 +5,9 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import org.stepic.droid.model.PersistentLastStep
 import org.stepic.droid.store.structure.DbStructureLastStep
+import javax.inject.Inject
 
-class PersistentLastStepDaoImpl(writableDatabase: SQLiteDatabase) : DaoBase<PersistentLastStep>(writableDatabase) {
+class PersistentLastStepDaoImpl @Inject constructor(writableDatabase: SQLiteDatabase) : DaoBase<PersistentLastStep>(writableDatabase) {
     override fun getDefaultPrimaryColumn()
             = DbStructureLastStep.Column.COURSE_ID;
 

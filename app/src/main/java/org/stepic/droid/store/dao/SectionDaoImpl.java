@@ -10,8 +10,11 @@ import org.stepic.droid.model.Section;
 import org.stepic.droid.store.structure.DbStructureSections;
 import org.stepic.droid.util.DbParseHelper;
 
+import javax.inject.Inject;
+
 public class SectionDaoImpl extends DaoBase<Section> {
 
+    @Inject
     public SectionDaoImpl(SQLiteDatabase openHelper) {
         super(openHelper);
     }
