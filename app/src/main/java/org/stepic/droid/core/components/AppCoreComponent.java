@@ -2,14 +2,12 @@ package org.stepic.droid.core.components;
 
 import android.content.Context;
 
-import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.concurrency.DownloadPoster;
 import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.core.MyPhoneStateListener;
-import org.stepic.droid.core.ShellImpl;
 import org.stepic.droid.core.modules.AppCoreModule;
 import org.stepic.droid.core.modules.CertificateModule;
 import org.stepic.droid.core.modules.CourseDetailModule;
@@ -67,7 +65,6 @@ import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
 import org.stepic.droid.ui.dialogs.VideoQualityDialog;
 import org.stepic.droid.ui.dialogs.WantMoveDataDialog;
 import org.stepic.droid.ui.fragments.CommentsFragment;
-import org.stepic.droid.web.ApiImpl;
 
 import javax.inject.Singleton;
 
@@ -112,15 +109,11 @@ public interface AppCoreComponent {
 
     void inject(FragmentActivityBase someActivity);
 
-    void inject(ShellImpl injectAllToShell);
-
     void inject(CoursesAdapter adapter);
 
     void inject(Course adapter);
 
     void inject(FragmentBase baseFragment);
-
-    void inject(ApiImpl api);
 
     void inject(DiscountingPolicyDialogFragment dialogFragment);
 
@@ -208,11 +201,11 @@ public interface AppCoreComponent {
 
     void inject(InstructorAdapter instructorAdapter);
 
-    void inject(@NotNull NewUserAlarmService newUserAlarmService);
+    void inject(NewUserAlarmService newUserAlarmService);
 
     void inject(BootCompletedReceiver bootCompletedReceiver);
 
-    void inject(@NotNull TimeIntervalPickerDialogFragment timeIntervalPickerDialogFragment);
+    void inject(TimeIntervalPickerDialogFragment timeIntervalPickerDialogFragment);
 
-    void inject(@NotNull StreakAlarmService streakAlarmService);
+    void inject(StreakAlarmService streakAlarmService);
 }

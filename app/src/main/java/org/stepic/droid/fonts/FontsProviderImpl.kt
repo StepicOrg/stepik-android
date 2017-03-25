@@ -1,6 +1,8 @@
 package org.stepic.droid.fonts
 
-class FontsProviderImpl : FontsProvider {
+import javax.inject.Inject
+
+class FontsProviderImpl @Inject constructor() : FontsProvider {
 
     override fun provideFontPath(type: FontType) =
             when (type) {

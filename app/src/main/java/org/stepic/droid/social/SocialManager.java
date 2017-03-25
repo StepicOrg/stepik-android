@@ -9,7 +9,12 @@ import org.stepic.droid.base.App;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class SocialManager {
+
+    @Inject
+    public SocialManager (){}
 
     private static final String GOOGLE_SOCIAL_IDENTIFIER = "google";
     private static final String FACEBOOK_SOCIAL_IDENTIFIER = "facebook";

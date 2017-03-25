@@ -5,8 +5,10 @@ import android.os.Build
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import java.util.*
+import javax.inject.Inject
 
-class DefaultFilterImpl(private val context: Context) : DefaultFilter {
+class DefaultFilterImpl
+@Inject constructor(private val context: Context) : DefaultFilter {
 
     private var isNeedRussian: Boolean? = null
     private val SHOW_FILTER_FEATURE_WITH_LANGUAGE_RESOLVING = "before116"

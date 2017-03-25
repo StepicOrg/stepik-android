@@ -2,14 +2,16 @@ package org.stepic.droid.store
 
 import org.stepic.droid.store.operations.DatabaseFacade
 import java.util.concurrent.ThreadPoolExecutor
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LessonDownloaderImpl(private val databaseFacade: DatabaseFacade,
-                           private val downloadManager: IDownloadManager,
-                           private val threadPoolExecutor: ThreadPoolExecutor,
-                           private val cleanManager: CleanManager,
-                           private val cancelSniffer: CancelSniffer) : LessonDownloader {
+class LessonDownloaderImpl
+@Inject constructor(private val databaseFacade: DatabaseFacade,
+                    private val downloadManager: IDownloadManager,
+                    private val threadPoolExecutor: ThreadPoolExecutor,
+                    private val cleanManager: CleanManager,
+                    private val cancelSniffer: CancelSniffer) : LessonDownloader {
 
     override fun downloadLesson(lessonId: Long) {
         threadPoolExecutor.execute {

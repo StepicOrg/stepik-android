@@ -6,10 +6,13 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crash.FirebaseCrash
 import com.yandex.metrica.YandexMetrica
 import java.util.*
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AnalyticImpl(context: Context) : Analytic {
+class AnalyticImpl
+@Inject constructor(context: Context) : Analytic {
+
     override fun reportEventValue(eventName: String, value: Long) {
         val bundle = Bundle()
         bundle.putLong(FirebaseAnalytics.Param.VALUE, value)

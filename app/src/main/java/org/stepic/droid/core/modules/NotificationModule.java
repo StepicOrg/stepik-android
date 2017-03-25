@@ -7,7 +7,7 @@ import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.presenters.NotificationListPresenter;
-import org.stepic.droid.notifications.INotificationManager;
+import org.stepic.droid.notifications.NotificationManager;
 import org.stepic.droid.web.Api;
 
 import java.util.concurrent.ThreadPoolExecutor;
@@ -26,7 +26,7 @@ public class NotificationModule {
                                                                Config config,
                                                                Bus bus,
                                                                Analytic analytic,
-                                                               INotificationManager notificationManager) {
+                                                               NotificationManager notificationManager) {
         return new NotificationListPresenter(threadPoolExecutor, mainHandler, api, config, bus, analytic, notificationManager);
     }
 }

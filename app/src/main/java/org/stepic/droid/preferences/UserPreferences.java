@@ -25,9 +25,9 @@ import javax.inject.Singleton;
 @Singleton
 public class UserPreferences {
 
-    Context context;
-    SharedPreferenceHelper sharedPreferenceHelper;
-    private Analytic analytic;
+    private final Context context;
+    private final SharedPreferenceHelper sharedPreferenceHelper;
+    private final Analytic analytic;
 
     private String kb;
     private String mb;
@@ -40,7 +40,7 @@ public class UserPreferences {
     @Inject
     public UserPreferences(Context context, SharedPreferenceHelper helper, Analytic analytic) {
         this.context = context;
-        sharedPreferenceHelper = helper;
+        this.sharedPreferenceHelper = helper;
         this.analytic = analytic;
         kb = context.getString(R.string.kb);
         mb = context.getString(R.string.mb);
@@ -48,8 +48,6 @@ public class UserPreferences {
         defaultStorage = context.getString(R.string.default_storage);
         secondary = context.getString(R.string.secondary_storage);
         free_title = context.getString(R.string.free_title);
-
-
     }
 
     /**

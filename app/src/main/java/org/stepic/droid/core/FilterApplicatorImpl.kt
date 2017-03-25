@@ -6,10 +6,11 @@ import org.stepic.droid.model.Course
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.store.operations.Table
+import javax.inject.Inject
 
-class FilterApplicatorImpl(
-        val defaultFilter: DefaultFilter,
-        val sharedPreferenceHelper: SharedPreferenceHelper) : FilterApplicator {
+class FilterApplicatorImpl
+@Inject constructor(private val defaultFilter: DefaultFilter,
+                    private val sharedPreferenceHelper: SharedPreferenceHelper) : FilterApplicator {
 
     override fun getFilteredFromSharedPrefs(sourceCourses: List<Course>, courseType: Table): List<Course> {
         val filters = sharedPreferenceHelper.getFilter(courseType)

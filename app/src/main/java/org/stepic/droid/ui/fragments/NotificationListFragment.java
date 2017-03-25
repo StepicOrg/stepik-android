@@ -47,9 +47,6 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         return fragment;
     }
 
-//    @Inject
-//    RecyclerView.RecycledViewPool sharedRecyclerViewPool;
-
     @Inject
     NotificationListPresenter notificationListPresenter;
 

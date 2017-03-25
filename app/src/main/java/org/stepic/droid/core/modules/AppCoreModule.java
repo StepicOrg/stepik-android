@@ -3,7 +3,6 @@ package org.stepic.droid.core.modules;
 import android.app.AlarmManager;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
@@ -39,9 +38,9 @@ import org.stepic.droid.core.VideoLengthResolver;
 import org.stepic.droid.core.VideoLengthResolverImpl;
 import org.stepic.droid.fonts.FontsProvider;
 import org.stepic.droid.fonts.FontsProviderImpl;
-import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.notifications.LocalReminder;
 import org.stepic.droid.notifications.LocalReminderImpl;
+import org.stepic.droid.notifications.NotificationManager;
 import org.stepic.droid.notifications.NotificationManagerImpl;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
@@ -75,6 +74,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Singleton;
 
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
@@ -83,225 +83,154 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 @Module(includes = {StorageModule.class})
-public class AppCoreModule {
+public abstract class AppCoreModule {
+
+    @Binds
+    @Singleton
+    abstract ScreenManager provideScreenManager(ScreenManagerImpl screenManager);
+
+    @Binds
+    @Singleton
+    abstract Shell provideIShell(ShellImpl shell);
+
+    @Binds
+    @Singleton
+    abstract Config provideIConfig(ConfigReleaseImpl configRelease);
+
+    @Binds
+    @Singleton
+    abstract Api provideIApi(ApiImpl api);
 
     @Provides
     @Singleton
-    ScreenManager provideIScreenManager(Config config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferenceHelper) {
-        return new ScreenManagerImpl(config, userPreferences, analytic, sharedPreferenceHelper);
-    }
-
-    @Provides
-    @Singleton
-    Shell provideIShell(Context context) {
-        return new ShellImpl(context);
-    }
-
-    @Provides
-    @Singleton
-    Config provideIConfig(Context context, Analytic analytic) {
-        return new ConfigReleaseImpl(context, analytic);
-    }
-
-    @Provides
-    @Singleton
-    Api provideIApi() {
-        return new ApiImpl();
-    }
-
-    @Provides
-    @Singleton
-    SharedPreferenceHelper provideSharedPreferencesHelper(Analytic analytic, DefaultFilter defaultFilter, Context context) {
+    static SharedPreferenceHelper provideSharedPreferencesHelper(Analytic analytic, DefaultFilter defaultFilter, Context context) {
         return new SharedPreferenceHelper(analytic, defaultFilter, context);
     }
 
     @Provides
     @Singleton
-    Bus provideBus() {
+    static Bus provideBus() {
         return new Bus();
     }
 
-    @Provides
+    @Binds
     @Singleton
-    VideoResolver provideVideoResolver(Analytic analytic,
-                                       DatabaseFacade dbOperationsCachedVideo,
-                                       UserPreferences userPreferences,
-                                       CleanManager cleanManager) {
-        return new VideoResolverImpl(dbOperationsCachedVideo, userPreferences, cleanManager, analytic);
-    }
+    abstract VideoResolver provideVideoResolver(VideoResolverImpl videoResolver);
 
     @Provides
     @Singleton
-    UserPreferences provideUserPrefs(Context context, SharedPreferenceHelper helper, Analytic analytic) {
+    static UserPreferences provideUserPrefs(Context context, SharedPreferenceHelper helper, Analytic analytic) {
         return new UserPreferences(context, helper, analytic);
     }
 
-    @Provides
+    @Binds
     @Singleton
-    IDownloadManager provideDownloadManger() {
-        return new DownloadManagerImpl();
-    }
+    abstract IDownloadManager provideDownloadManger(DownloadManagerImpl downloadManager);
 
     @Provides
-    DownloadManager provideSystemDownloadManager(Context context) {
+    static DownloadManager provideSystemDownloadManager(Context context) {
         return (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
     }
 
     @Provides
-    AlarmManager provideSystemAlarmManager(Context context) {
+    static AlarmManager provideSystemAlarmManager(Context context) {
         return (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     }
 
     @Singleton
-    @Provides
-    StoreStateManager provideStoreManager(DatabaseFacade databaseFacade, Bus bus, Analytic analytic, MainHandler mainHandler) {
-        return new StoreStateManagerImpl(databaseFacade, bus, analytic, mainHandler);
-    }
+    @Binds
+    abstract StoreStateManager provideStoreManager(StoreStateManagerImpl storeStateManager);
+
+    @Singleton
+    @Binds
+    abstract CleanManager provideCleanManager(CleanManagerImpl cleanManager);
 
     @Singleton
     @Provides
-    CleanManager provideCleanManager(Context context) {
-        return new CleanManagerImpl(context);
-    }
-
-    @Singleton
-    @Provides
-    SocialManager provideSocialManager() {
+    static SocialManager provideSocialManager() {
         return new SocialManager();
     }
 
     @Singleton
     @Provides
-    CoursePropertyResolver provideCoursePropertyResolver() {
+    static CoursePropertyResolver provideCoursePropertyResolver() {
         return new CoursePropertyResolver();
     }
 
     @Singleton
-    @Provides
-    LessonSessionManager provideLessonSessionManager() {
-        return new LocalLessonSessionManagerImpl();
-    }
+    @Binds
+    abstract LessonSessionManager provideLessonSessionManager(LocalLessonSessionManagerImpl localLessonSessionManager);
 
     @Singleton
-    @Provides
-    LocalProgressManager provideProgressManager(DatabaseFacade databaseFacade, Bus bus, Api api, MainHandler mainHandler) {
-        return new LocalProgressImpl(databaseFacade, bus, api, mainHandler);
-    }
+    @Binds
+    abstract LocalProgressManager provideProgressManager(LocalProgressImpl localProgress);
 
-    @Provides
+    @Binds
     @Singleton
-    CancelSniffer provideCancelSniffer() {
-        return new ConcurrentCancelSniffer();
-    }
+    abstract CancelSniffer provideCancelSniffer(ConcurrentCancelSniffer cancelSniffer);
 
     @Provides
     @Singleton
-    SingleThreadExecutor provideSingle() {
+    static SingleThreadExecutor provideSingle() {
         return new SingleThreadExecutor(Executors.newSingleThreadExecutor());
     }
-
 
     //it is good for many short lived, which should do async
     @Provides
     @Singleton
-    ThreadPoolExecutor provideThreadPool() {
+    static ThreadPoolExecutor provideThreadPool() {
         return (ThreadPoolExecutor) Executors.newCachedThreadPool();
     }
 
     @Singleton
-    @Provides
-    MainHandler provideHandlerForUIThread() {
-        return new MainHandlerImpl();
-    }
+    @Binds
+    abstract MainHandler provideHandlerForUIThread(MainHandlerImpl mainHandler);
 
     @Singleton
     @Provides
-    AudioFocusHelper provideAudioFocusHelper(Context context, MainHandler mainHandler, Bus bus) {
+    static AudioFocusHelper provideAudioFocusHelper(Context context, MainHandler mainHandler, Bus bus) {
         return new AudioFocusHelper(context, bus, mainHandler);
     }
 
     @Singleton
-    @Provides
-    LocalReminder provideLocalReminder(SharedPreferenceHelper sp,
-                                       DatabaseFacade db,
-                                       Analytic analytic,
-                                       ThreadPoolExecutor threadPoolExecutor,
-                                       Context context,
-                                       AlarmManager alarmManager) {
-        return new LocalReminderImpl(threadPoolExecutor,
-                sp,
-                db,
-                context,
-                alarmManager,
-                analytic);
-    }
+    @Binds
+    abstract LocalReminder provideLocalReminder(LocalReminderImpl localReminder);
 
     @Singleton
-    @Provides
-    INotificationManager provideNotificationManager(SharedPreferenceHelper sp,
-                                                    Api api,
-                                                    Config config,
-                                                    UserPreferences userPreferences,
-                                                    DatabaseFacade db, Analytic analytic,
-                                                    TextResolver textResolver,
-                                                    ScreenManagerImpl screenManager,
-                                                    ThreadPoolExecutor threadPoolExecutor,
-                                                    Context context,
-                                                    LocalReminder localReminder) {
-        return new NotificationManagerImpl(sp, api, config, userPreferences, db, analytic, textResolver, screenManager, threadPoolExecutor, context, localReminder);
-    }
+    @Binds
+    abstract NotificationManager provideNotificationManager(NotificationManagerImpl notificationManager);
 
     @Provides
-    CommentManager provideCommentsManager() {
+    static CommentManager provideCommentsManager() {
         return new CommentManager();
     }
 
-    @Provides
+    @Binds
     @Singleton
-    Analytic provideAnalytic(Context context) {
-        return new AnalyticImpl(context);
-    }
+    abstract Analytic provideAnalytic(AnalyticImpl analytic);
 
-    @Provides
+    @Binds
     @Singleton
-    ShareHelper provideShareHelper(Config config, Context context, TextResolver textResolver) {
-        return new ShareHelperImpl(config, context, textResolver);
-    }
+    abstract ShareHelper provideShareHelper(ShareHelperImpl shareHelper);
 
-    @Provides
+    @Binds
     @Singleton
-    DefaultFilter provideDefaultFilter(Context context) {
-        return new DefaultFilterImpl(context);
-    }
+    abstract DefaultFilter provideDefaultFilter(DefaultFilterImpl defaultFilter);
 
-    @Provides
+    @Binds
     @Singleton
-    FilterApplicator provideFilterApplicator(DefaultFilter defaultFilter, SharedPreferenceHelper sharedPreferenceHelper) {
-        return new FilterApplicatorImpl(defaultFilter, sharedPreferenceHelper);
-    }
+    abstract FilterApplicator provideFilterApplicator(FilterApplicatorImpl filterApplicator);
 
-    @Provides
+    @Binds
     @Singleton
-    TextResolver provideTextResolver(Config config) {
-        return new TextResolverImpl(config);
-    }
-
-
-    /**
-     * it is workaround for provide view Single pool to notification
-     */
-    @Provides
-    @Singleton
-    RecyclerView.RecycledViewPool provideRecycledViewPool() {
-        return new RecyclerView.RecycledViewPool();
-    }
+    abstract TextResolver provideTextResolver(TextResolverImpl textResolver);
 
     /**
      * this retrofit is only for parsing error body
      */
     @Provides
     @Singleton
-    Retrofit provideRetrofit(Config config) {
+    static Retrofit provideRetrofit(Config config) {
         return new Retrofit.Builder()
                 .baseUrl(config.getBaseUrl())
                 .addConverterFactory(GsonConverterFactory.create())
@@ -311,60 +240,38 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    StepikLogoutManager provideStepikLogoutManager(ThreadPoolExecutor threadPoolExecutor, MainHandler mainHandler, UserPreferences userPreferences, SharedPreferenceHelper sharedPreferenceHelper, DownloadManager downloadManager, DatabaseFacade dbFacade) {
+    static StepikLogoutManager provideStepikLogoutManager(ThreadPoolExecutor threadPoolExecutor, MainHandler mainHandler, UserPreferences userPreferences, SharedPreferenceHelper sharedPreferenceHelper, DownloadManager downloadManager, DatabaseFacade dbFacade) {
         return new StepikLogoutManager(threadPoolExecutor, mainHandler, userPreferences, downloadManager, sharedPreferenceHelper, dbFacade);
     }
 
     @Provides
     @Singleton
-    InitialDownloadUpdater provideDownloadUpdaterAfterRestart(ThreadPoolExecutor threadPoolExecutor,
+    static InitialDownloadUpdater provideDownloadUpdaterAfterRestart(ThreadPoolExecutor threadPoolExecutor,
                                                               DownloadManager systemDownloadManager,
                                                               StoreStateManager storeStateManager,
                                                               DatabaseFacade databaseFacade) {
         return new InitialDownloadUpdater(threadPoolExecutor, systemDownloadManager, storeStateManager, databaseFacade);
     }
 
-    @Provides
+    @Binds
     @Singleton
-    LessonDownloader provideLessonDownloader(
-            ThreadPoolExecutor threadPoolExecutor,
-            DatabaseFacade databaseFacade,
-            IDownloadManager downloadManager,
-            CancelSniffer cancelSniffer,
-            CleanManager cleanManager
-    ) {
-        return new LessonDownloaderImpl(databaseFacade, downloadManager, threadPoolExecutor, cleanManager, cancelSniffer);
-    }
+    abstract LessonDownloader provideLessonDownloader(LessonDownloaderImpl lessonDownloader);
 
-
-    @Provides
+    @Binds
     @Singleton
-    SectionDownloader provideSectionDownloader(
-            ThreadPoolExecutor threadPoolExecutor,
-            DatabaseFacade databaseFacade,
-            IDownloadManager downloadManager,
-            CancelSniffer cancelSniffer,
-            CleanManager cleanManager
-    ) {
-        return new SectionDownloaderImpl(databaseFacade, downloadManager, threadPoolExecutor, cleanManager, cancelSniffer);
-    }
+    abstract SectionDownloader provideSectionDownloader(SectionDownloaderImpl sectionDownloader);
+
+    @Binds
+    @Singleton
+    abstract VideoLengthResolver provideVideoLengthResolver(VideoLengthResolverImpl videoLengthResolver);
+
+    @Binds
+    @Singleton
+    abstract UserAgentProvider provideUserAgent(UserAgentProviderImpl userAgentProvider);
 
     @Provides
     @Singleton
-    VideoLengthResolver provideVideoLengthResolver() {
-        return new VideoLengthResolverImpl();
-    }
-
-    @Provides
-    @Singleton
-    UserAgentProvider provideUserAgent(Context context) {
-        return new UserAgentProviderImpl(context);
-    }
-
-
-    @Provides
-    @Singleton
-    FirebaseRemoteConfig provideFirebaseRemoteConfig() {
+    static FirebaseRemoteConfig provideFirebaseRemoteConfig() {
         final FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
                 .setDeveloperModeEnabled(BuildConfig.DEBUG)
@@ -374,10 +281,8 @@ public class AppCoreModule {
         return firebaseRemoteConfig;
     }
 
-    @Provides
+    @Binds
     @Singleton
-    FontsProvider provideFontProvider() {
-        return new FontsProviderImpl();
-    }
+    abstract FontsProvider provideFontProvider(FontsProviderImpl fontsProvider);
 
 }

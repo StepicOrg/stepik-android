@@ -38,19 +38,21 @@ import org.stepic.droid.web.Api
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
+import javax.inject.Inject
 
 
-class NotificationManagerImpl(val sharedPreferenceHelper: SharedPreferenceHelper,
-                              val api: Api,
-                              val configs: Config,
-                              val userPreferences: UserPreferences,
-                              val databaseFacade: DatabaseFacade,
-                              val analytic: Analytic,
-                              val textResolver: TextResolver,
-                              val screenManager: ScreenManager,
-                              val threadPoolExecutor: ThreadPoolExecutor,
-                              val context: Context,
-                              val localReminder: LocalReminder) : INotificationManager {
+class NotificationManagerImpl
+@Inject constructor(private val sharedPreferenceHelper: SharedPreferenceHelper,
+                    private val api: Api,
+                    private val configs: Config,
+                    private val userPreferences: UserPreferences,
+                    private val databaseFacade: DatabaseFacade,
+                    private val analytic: Analytic,
+                    private val textResolver: TextResolver,
+                    private val screenManager: ScreenManager,
+                    private val threadPoolExecutor: ThreadPoolExecutor,
+                    private val context: Context,
+                    private val localReminder: LocalReminder) : org.stepic.droid.notifications.NotificationManager {
     val notificationStreakId: Long = 3214L
 
     @WorkerThread

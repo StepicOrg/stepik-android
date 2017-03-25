@@ -29,7 +29,7 @@ import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.core.Shell;
 import org.stepic.droid.fonts.FontsProvider;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.notifications.INotificationManager;
+import org.stepic.droid.notifications.NotificationManager;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.store.operations.DatabaseFacade;
@@ -74,7 +74,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected Analytic analytic;
 
     @Inject
-    protected INotificationManager notificationManager;
+    protected NotificationManager notificationManager;
 
     @Inject
     protected SharedPreferenceHelper sharedPreferenceHelper;
@@ -109,7 +109,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.component(this).inject(this);
+        App.component().inject(this);
     }
 
     @Override

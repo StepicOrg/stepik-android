@@ -34,7 +34,6 @@ public interface ScreenManager {
 
     void showMainFeed(Context sourceActivity);
 
-
     void showMainFeed(Context sourceActivity, int indexOfMenu);
 
     void showCourseDescription(Fragment sourceActivity, @NotNull Course course);

@@ -12,6 +12,8 @@ import org.stepic.droid.store.operations.DatabaseFacade;
 import java.io.File;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class VideoResolverImpl implements VideoResolver {
 
 
@@ -20,6 +22,7 @@ public class VideoResolverImpl implements VideoResolver {
     private CleanManager cleanManager;
     private Analytic analytic;
 
+    @Inject
     public VideoResolverImpl(DatabaseFacade databaseFacade, UserPreferences userPreferences, CleanManager cleanManager, Analytic analytic) {
         this.databaseFacade = databaseFacade;
         this.userPreferences = userPreferences;

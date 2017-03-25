@@ -11,7 +11,7 @@ import org.stepic.droid.core.presenters.contracts.NotificationListView
 import org.stepic.droid.events.InternetIsEnabledEvent
 import org.stepic.droid.events.notify_ui.NotificationCheckedSuccessfullyEvent
 import org.stepic.droid.events.notify_ui.NotificationMarkCategoryAsReadEvent
-import org.stepic.droid.notifications.INotificationManager
+import org.stepic.droid.notifications.NotificationManager
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
 import org.stepic.droid.ui.NotificationCategory
@@ -30,7 +30,7 @@ class NotificationListPresenter(
         val config: Config,
         val bus: Bus,
         val analytic: Analytic,
-        val notificationManager: INotificationManager
+        val notificationManager: NotificationManager
 ) : PresenterBase<NotificationListView>() {
 
     private var notificationCategory: NotificationCategory? = null

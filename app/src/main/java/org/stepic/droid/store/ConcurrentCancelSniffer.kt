@@ -2,8 +2,9 @@ package org.stepic.droid.store
 
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import javax.inject.Inject
 
-class ConcurrentCancelSniffer : CancelSniffer {
+class ConcurrentCancelSniffer @Inject constructor() : CancelSniffer {
 
     private val canceledStepIdsSet: MutableSet<Long> = Collections.newSetFromMap(ConcurrentHashMap<Long, Boolean>())
     private val canceledSectionIdsSet: MutableSet<Long> = Collections.newSetFromMap(ConcurrentHashMap<Long, Boolean>())

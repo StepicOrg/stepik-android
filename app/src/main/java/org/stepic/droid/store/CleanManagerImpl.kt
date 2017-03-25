@@ -9,8 +9,9 @@ import org.stepic.droid.services.DeleteService
 import org.stepic.droid.services.LoadService
 import org.stepic.droid.util.AppConstants
 import java.io.Serializable
+import javax.inject.Inject
 
-class CleanManagerImpl(private val context: Context) : CleanManager {
+class CleanManagerImpl @Inject constructor(private val context: Context) : CleanManager {
 
     override fun removeSection(sectionId: Long) {
         val loadIntent = Intent(context, DeleteService::class.java)

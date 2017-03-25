@@ -91,6 +91,16 @@ public class SharedPreferenceHelper {
     private Analytic analytic;
     private DefaultFilter defaultFilter;
 
+    @Inject
+    public SharedPreferenceHelper(Analytic analytic, DefaultFilter defaultFilter, Context context) {
+        this.analytic = analytic;
+        this.defaultFilter = defaultFilter;
+        this.context = context;
+
+        resetFilters(Table.enrolled); //reset on app recreating and on destroy course's Fragments
+        resetFilters(Table.featured);
+    }
+
     public boolean isInvitationWasDeclined() {
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, INVITATION_WAS_DECLINED_DEVICE_SPECIFIC, false);
     }
@@ -229,15 +239,6 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, day.getInternalNotificationKey(), true);
     }
 
-    @Inject
-    public SharedPreferenceHelper(Analytic analytic, DefaultFilter defaultFilter, Context context) {
-        this.analytic = analytic;
-        this.defaultFilter = defaultFilter;
-        this.context = context;
-
-        resetFilters(Table.enrolled); //reset on app recreating and on destroy course's Fragments
-        resetFilters(Table.featured);
-    }
 
     public void onTryDiscardFilters(Table type) {
         resetFilters(type);

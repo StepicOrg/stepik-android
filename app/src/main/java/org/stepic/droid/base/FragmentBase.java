@@ -104,7 +104,7 @@ public class FragmentBase extends Fragment {
     }
 
     protected void injectComponent() {
-        App.component(App.getAppContext()).inject(this);
+        App.component().inject(this);
     }
 
     protected void hideSoftKeypad() {

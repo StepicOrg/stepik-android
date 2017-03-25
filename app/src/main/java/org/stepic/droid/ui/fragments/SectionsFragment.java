@@ -79,7 +79,7 @@ import org.stepic.droid.model.CalendarItem;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.SectionLoadingState;
-import org.stepic.droid.notifications.INotificationManager;
+import org.stepic.droid.notifications.NotificationManager;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.ui.adapters.SectionAdapter;
 import org.stepic.droid.ui.dialogs.ChooseCalendarDialog;
@@ -194,7 +194,7 @@ public class SectionsFragment
     SectionsPresenter sectionsPresenter;
 
     @Inject
-    INotificationManager notificationManager;
+    NotificationManager notificationManager;
 
     @Inject
     InvitationPresenter invitationPresenter;

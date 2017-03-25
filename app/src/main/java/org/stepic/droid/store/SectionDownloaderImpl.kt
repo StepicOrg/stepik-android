@@ -3,12 +3,14 @@ package org.stepic.droid.store
 import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.util.RWLocks
 import java.util.concurrent.ThreadPoolExecutor
+import javax.inject.Inject
 
-class SectionDownloaderImpl(private val databaseFacade: DatabaseFacade,
-                            private val downloadManager: IDownloadManager,
-                            private val threadPoolExecutor: ThreadPoolExecutor,
-                            private val cleanManager: CleanManager,
-                            private val cancelSniffer: CancelSniffer) : SectionDownloader {
+class SectionDownloaderImpl
+@Inject constructor(private val databaseFacade: DatabaseFacade,
+                    private val downloadManager: IDownloadManager,
+                    private val threadPoolExecutor: ThreadPoolExecutor,
+                    private val cleanManager: CleanManager,
+                    private val cancelSniffer: CancelSniffer) : SectionDownloader {
 
     override fun downloadSection(sectionId: Long) {
         threadPoolExecutor.execute {

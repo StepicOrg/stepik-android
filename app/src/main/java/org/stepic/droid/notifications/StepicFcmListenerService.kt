@@ -36,7 +36,7 @@ class StepicFcmListenerService : FirebaseMessagingService() {
 
 class HackFcmListener() {
     @Inject
-    lateinit var notificationManager: INotificationManager
+    lateinit var notificationManager: NotificationManager
 
     @Inject
     lateinit var shell: Shell

@@ -4,7 +4,7 @@ import android.app.IntentService
 import android.app.Service
 import android.content.Intent
 import org.stepic.droid.base.App
-import org.stepic.droid.notifications.INotificationManager
+import org.stepic.droid.notifications.NotificationManager
 import javax.inject.Inject
 
 class StreakAlarmService : IntentService("StreakAlarm") {
@@ -14,7 +14,7 @@ class StreakAlarmService : IntentService("StreakAlarm") {
     }
 
     @Inject
-    lateinit var notificationManager: INotificationManager
+    lateinit var notificationManager: NotificationManager
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         App.component().inject(this)

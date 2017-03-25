@@ -12,10 +12,15 @@ import org.stepic.droid.util.AppConstants;
 
 import java.io.Serializable;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class DownloadManagerImpl implements IDownloadManager {
+
+    @Inject
+    DownloadManagerImpl() {
+    }
 
     @Override
     public void addSection(Section section) {

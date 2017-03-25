@@ -92,10 +92,6 @@ public class App extends MultiDexApplication {
 //        return application.refWatcher;
 //    }
 
-    public static AppCoreComponent component(Context context) {
-        return ((App) context.getApplicationContext()).component;
-    }
-
     public static AppCoreComponent component() {
         return application.component;
     }

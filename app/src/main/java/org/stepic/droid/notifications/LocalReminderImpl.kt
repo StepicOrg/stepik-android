@@ -16,13 +16,16 @@ import org.stepic.droid.store.operations.DatabaseFacade
 import org.stepic.droid.store.operations.Table
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
+import javax.inject.Inject
 
-class LocalReminderImpl(val threadPoolExecutor: ThreadPoolExecutor,
-                        val sharedPreferenceHelper: SharedPreferenceHelper,
-                        val databaseFacade: DatabaseFacade,
-                        val context: Context,
-                        val alarmManager: AlarmManager,
-                        val analytic: Analytic) : LocalReminder {
+class LocalReminderImpl
+@Inject constructor(
+        private val threadPoolExecutor: ThreadPoolExecutor,
+        private val sharedPreferenceHelper: SharedPreferenceHelper,
+        private val databaseFacade: DatabaseFacade,
+        private val context: Context,
+        private val alarmManager: AlarmManager,
+        private val analytic: Analytic) : LocalReminder {
 
     val isHandling = AtomicBoolean(false)
 
