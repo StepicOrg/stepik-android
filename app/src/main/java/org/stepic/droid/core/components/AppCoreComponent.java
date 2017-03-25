@@ -1,5 +1,7 @@
 package org.stepic.droid.core.components;
 
+import android.content.Context;
+
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentActivityBase;
@@ -69,11 +71,20 @@ import org.stepic.droid.web.ApiImpl;
 
 import javax.inject.Singleton;
 
+import dagger.BindsInstance;
 import dagger.Component;
 
 @Singleton
 @Component(modules = {AppCoreModule.class})
 public interface AppCoreComponent {
+
+    @Component.Builder
+    interface Builder {
+        AppCoreComponent build();
+
+        @BindsInstance
+        Builder context(Context context);
+    }
 
     LoginComponent plus(LoginModule loginModule);
 

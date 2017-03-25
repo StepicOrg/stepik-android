@@ -49,12 +49,6 @@ import dagger.Provides;
 
 @Module
 public class StorageModule {
-    Context context;
-
-    public StorageModule(Context context) {
-        this.context = context;
-    }
-
 
     @Singleton
     @Provides
@@ -64,7 +58,7 @@ public class StorageModule {
 
     @Singleton
     @Provides
-    SQLiteOpenHelper provideSqlOpenHelper() {
+    SQLiteOpenHelper provideSqlOpenHelper(Context context) {
         return new DatabaseHelper(context);
     }
 

@@ -18,8 +18,6 @@ import org.stepic.droid.core.components.AppCoreComponent;
 import org.stepic.droid.core.components.DaggerAppCoreComponent;
 import org.stepic.droid.core.components.DaggerStorageComponent;
 import org.stepic.droid.core.components.StorageComponent;
-import org.stepic.droid.core.modules.AppCoreModule;
-import org.stepic.droid.core.modules.StorageModule;
 import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.fonts.FontsProvider;
 import org.stepic.droid.store.InitialDownloadUpdater;
@@ -64,13 +62,12 @@ public class App extends MultiDexApplication {
         AppEventsLogger.activateApp(this);
         VKSdk.initialize(this);
 
-        StorageModule storageModule = new StorageModule(this);
-        storageComponent = DaggerStorageComponent.builder().
-                storageModule(storageModule).build();
+        storageComponent = DaggerStorageComponent.builder()
+                .context(application)
+                .build();
 
         component = DaggerAppCoreComponent.builder()
-                .appCoreModule(new AppCoreModule(application))
-                .storageModule(storageModule)
+                .context(application)
                 .build();
 
         component.inject(this);

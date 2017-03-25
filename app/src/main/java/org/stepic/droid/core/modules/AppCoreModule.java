@@ -85,12 +85,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module(includes = {StorageModule.class})
 public class AppCoreModule {
 
-    private final Context context;
-
-    public AppCoreModule(Context context) {
-        this.context = context;
-    }
-
     @Provides
     @Singleton
     ScreenManager provideIScreenManager(Config config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferenceHelper) {
@@ -119,12 +113,6 @@ public class AppCoreModule {
     @Singleton
     SharedPreferenceHelper provideSharedPreferencesHelper(Analytic analytic, DefaultFilter defaultFilter, Context context) {
         return new SharedPreferenceHelper(analytic, defaultFilter, context);
-    }
-
-    @Provides
-    @Singleton
-    Context provideApplicationContext() {
-        return context;
     }
 
     @Provides
@@ -369,7 +357,7 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    UserAgentProvider provideUserAgent() {
+    UserAgentProvider provideUserAgent(Context context) {
         return new UserAgentProviderImpl(context);
     }
 
