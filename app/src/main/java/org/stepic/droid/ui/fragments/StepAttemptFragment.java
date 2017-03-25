@@ -41,6 +41,7 @@ import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.events.steps.UpdateStepEvent;
+import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.DiscountingPolicyType;
 import org.stepic.droid.model.LessonSession;
@@ -241,7 +242,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     private void showStreakDialog(int daysOfCurrentStreakIncludeToday) {
         SpannableString streakTitle = new SpannableString(getString(R.string.streak_dialog_title));
         streakTitle.setSpan(new ForegroundColorSpan(Color.BLACK), 0, streakTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), "fonts/NotoSans-Bold.ttf"));
+        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), fontsProvider.provideFontPath(FontType.bold)));
         streakTitle.setSpan(typefaceSpan, 0, streakTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         String description;
