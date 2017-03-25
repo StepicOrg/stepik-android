@@ -1,7 +1,6 @@
 package org.stepic.droid.store.operations
 
 import android.content.ContentValues
-import org.stepic.droid.base.App
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
 import org.stepic.droid.notifications.model.Notification
@@ -15,61 +14,27 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DatabaseFacade @Inject constructor() {
-
-    @Inject
-    lateinit var sectionDao: IDao<Section>
-
-    @Inject
-    lateinit var unitDao: IDao<Unit>
-
-    @Inject
-    lateinit var progressDao: IDao<Progress>
-
-    @Inject
-    lateinit var assignmentDao: IDao<Assignment>
-
-    @Inject
-    lateinit var lessonDao: IDao<Lesson>
-
-    @Inject
-    lateinit var viewAssignmentDao: IDao<ViewAssignment>
-
-    @Inject
-    lateinit var downloadEntityDao: IDao<DownloadEntity>
-
-    @Inject
-    lateinit var cachedVideoDao: IDao<CachedVideo>
-
-    @Inject
-    lateinit var stepDao: IDao<Step>
-
-    @Inject
-    lateinit var coursesEnrolledDao: IDao<Course>
-
-    @Inject
-    lateinit var coursesFeaturedDao: IDao<Course>
-
-    @Inject
-    lateinit var notificationDao: IDao<Notification>
-
-    @Inject
-    lateinit var calendarSectionDao: IDao<CalendarSection>
-
-    @Inject
-    lateinit var certificateViewItemDao: IDao<CertificateViewItem>
-
-    @Inject
-    lateinit var videoTimestampDao: IDao<VideoTimestamp>
-
-    @Inject
-    lateinit var lastStepDao: IDao<PersistentLastStep>
-
-    @Inject
-    lateinit var lastInteractions: IDao<CourseLastInteraction>
+class DatabaseFacade
+@Inject constructor(
+        private val sectionDao: IDao<Section>,
+        private val unitDao: IDao<Unit>,
+        private val progressDao: IDao<Progress>,
+        private val assignmentDao: IDao<Assignment>,
+        private val lessonDao: IDao<Lesson>,
+        private val viewAssignmentDao: IDao<ViewAssignment>,
+        private val downloadEntityDao: IDao<DownloadEntity>,
+        private val cachedVideoDao: IDao<CachedVideo>,
+        private val stepDao: IDao<Step>,
+        private val coursesEnrolledDao: IDao<Course>,
+        private val coursesFeaturedDao: IDao<Course>,
+        private val notificationDao: IDao<Notification>,
+        private val calendarSectionDao: IDao<CalendarSection>,
+        private val certificateViewItemDao: IDao<CertificateViewItem>,
+        private val videoTimestampDao: IDao<VideoTimestamp>,
+        private val lastStepDao: IDao<PersistentLastStep>,
+        private val lastInteractions: IDao<CourseLastInteraction>) {
 
     init {
-        App.storageComponent().inject(this)
         coursesEnrolledDao.setTableName(Table.enrolled.storeName)
         coursesFeaturedDao.setTableName(Table.featured.storeName)
     }

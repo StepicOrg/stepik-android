@@ -10,10 +10,15 @@ import org.stepic.droid.model.CourseProperty;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class CoursePropertyResolver {
+
+    @Inject
+    public CoursePropertyResolver() {
+    }
 
     public enum Type {
         summary(R.string.about_course),

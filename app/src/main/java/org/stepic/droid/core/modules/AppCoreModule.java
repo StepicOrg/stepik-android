@@ -59,7 +59,6 @@ import org.stepic.droid.store.SectionDownloaderImpl;
 import org.stepic.droid.store.StoreStateManager;
 import org.stepic.droid.store.StoreStateManagerImpl;
 import org.stepic.droid.store.operations.DatabaseFacade;
-import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.VideoResolver;
 import org.stepic.droid.util.resolvers.VideoResolverImpl;
 import org.stepic.droid.util.resolvers.text.TextResolver;
@@ -149,12 +148,6 @@ public abstract class AppCoreModule {
     @Provides
     static SocialManager provideSocialManager() {
         return new SocialManager();
-    }
-
-    @Singleton
-    @Provides
-    static CoursePropertyResolver provideCoursePropertyResolver() {
-        return new CoursePropertyResolver();
     }
 
     @Singleton
