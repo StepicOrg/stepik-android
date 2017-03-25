@@ -37,6 +37,8 @@ import org.stepic.droid.core.ShellImpl;
 import org.stepic.droid.core.StepikLogoutManager;
 import org.stepic.droid.core.VideoLengthResolver;
 import org.stepic.droid.core.VideoLengthResolverImpl;
+import org.stepic.droid.fonts.FontsProvider;
+import org.stepic.droid.fonts.FontsProviderImpl;
 import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.notifications.LocalReminder;
 import org.stepic.droid.notifications.LocalReminderImpl;
@@ -384,5 +386,10 @@ public class AppCoreModule {
         return firebaseRemoteConfig;
     }
 
+    @Provides
+    @Singleton
+    FontsProvider provideFontProvider() {
+        return new FontsProviderImpl();
+    }
 
 }
