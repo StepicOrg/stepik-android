@@ -2,20 +2,20 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="bold_text">
-        <item name="fontPath">fonts/NotoSans-Bold.ttf</item>
+        <item name="fontPath">fonts/Roboto-Bold.ttf</item>
     </style>
 
 
     <style name="regular_text">
-        <item name="fontPath">fonts/NotoSans-Regular.ttf</item>
+        <item name="fontPath">fonts/Roboto-Regular.ttf</item>
     </style>
 
     <style name="italic_text">
-        <item name="fontPath">fonts/NotoSans-Italic.ttf</item>
+        <item name="fontPath">fonts/Roboto-Italic.ttf</item>
     </style>
 
     <style name="bolditalic_text">
-        <item name="fontPath">fonts/NotoSans-BoldItalic.ttf</item>
+        <item name="fontPath">fonts/Roboto-BoldItalic.ttf</item>
     </style>
 
 

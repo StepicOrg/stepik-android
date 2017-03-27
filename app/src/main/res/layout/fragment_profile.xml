@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -21,12 +20,12 @@
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <FrameLayout
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -35,10 +34,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingBottom="40dp"
                 android:visibility="gone"
                 tools:visibility="visible"
-                >
+            >
 
                 <android.support.v7.widget.CardView
                     android:id="@+id/mainInfoRoot"
@@ -59,7 +57,7 @@
                             android:layout_height="@dimen/profile_image_height_width"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/guideline_standard_padding"
-                            tools:src="@drawable/placeholder_icon"/>
+                            tools:src="@drawable/general_placeholder"/>
 
                         <TextView
                             android:id="@+id/profileName"
@@ -200,18 +198,18 @@
 
                         <TextView
                             android:id="@+id/notificationTimeZoneInfo"
-                            fontPath="fonts/NotoSans-Italic.ttf"
+                            fontPath="fonts/Roboto-Italic.ttf"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_below="@+id/notificationIntervalTitle"
+                            android:gravity="end"
                             android:paddingBottom="@dimen/guideline_standard_padding"
                             android:paddingLeft="@dimen/guideline_standard_padding"
                             android:paddingRight="@dimen/guideline_standard_padding"
                             android:textSize="@dimen/text_height"
                             android:visibility="gone"
                             tools:ignore="MissingPrefix"
-                            android:gravity="end"
                             tools:text="Рекорды обновляются в 19:00 (Восточная Америка, стандартное время)"
                             tools:visibility="visible"/>
 
@@ -231,8 +229,7 @@
                     app:contentPaddingLeft="@dimen/padding_text_in_cv"
                     app:contentPaddingRight="@dimen/padding_text_in_cv"
                     app:contentPaddingTop="@dimen/padding_bot_top_cv"
-                    tools:visibility="visible"
-                    >
+                    tools:visibility="visible">
 
                     <LinearLayout
                         android:id="@+id/shortBioRoot"
@@ -253,7 +250,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/padding_bot_top_cv"
-                            tools:text="Android expert"/>
+                            tools:text="Android expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expertAndroid expert"/>
 
                         <TextView
                             android:id="@+id/infoTitle"
@@ -273,19 +270,20 @@
                 </android.support.v7.widget.CardView>
             </LinearLayout>
 
-            <include
-                layout="@layout/progress_bar_on_empty_screen"
-                tools:visibility="gone"/>
+        </android.support.v4.widget.NestedScrollView>
 
-            <include
-                layout="@layout/empty_users"
-                tools:visibility="gone"/>
+        <include
+            layout="@layout/progress_bar_on_empty_screen"
+            tools:visibility="gone"/>
 
-            <include
-                layout="@layout/report_problem_layout"
-                tools:visibility="gone"/>
+        <include
+            layout="@layout/empty_users"
+            tools:visibility="gone"/>
 
-        </FrameLayout>
-    </android.support.v4.widget.NestedScrollView>
+        <include
+            layout="@layout/report_problem_layout"
+            tools:visibility="gone"/>
+
+    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -5,8 +5,12 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.squareup.otto.Bus;
 
+import org.stepic.droid.BuildConfig;
+import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.analytic.AnalyticImpl;
 import org.stepic.droid.concurrency.MainHandler;
@@ -24,8 +28,6 @@ import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.LocalLessonSessionManagerImpl;
 import org.stepic.droid.core.LocalProgressImpl;
 import org.stepic.droid.core.LocalProgressManager;
-import org.stepic.droid.core.LoginManager;
-import org.stepic.droid.core.LoginManagerImpl;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ScreenManagerImpl;
 import org.stepic.droid.core.ShareHelper;
@@ -33,6 +35,10 @@ import org.stepic.droid.core.ShareHelperImpl;
 import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.ShellImpl;
 import org.stepic.droid.core.StepikLogoutManager;
+import org.stepic.droid.core.VideoLengthResolver;
+import org.stepic.droid.core.VideoLengthResolverImpl;
+import org.stepic.droid.fonts.FontsProvider;
+import org.stepic.droid.fonts.FontsProviderImpl;
 import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.notifications.LocalReminder;
 import org.stepic.droid.notifications.LocalReminderImpl;
@@ -61,6 +67,8 @@ import org.stepic.droid.util.resolvers.text.TextResolver;
 import org.stepic.droid.util.resolvers.text.TextResolverImpl;
 import org.stepic.droid.web.Api;
 import org.stepic.droid.web.ApiImpl;
+import org.stepic.droid.web.UserAgentProvider;
+import org.stepic.droid.web.UserAgentProviderImpl;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -190,12 +198,6 @@ public class AppCoreModule {
     @Provides
     LocalProgressManager provideProgressManager(DatabaseFacade databaseFacade, Bus bus, Api api, MainHandler mainHandler) {
         return new LocalProgressImpl(databaseFacade, bus, api, mainHandler);
-    }
-
-    @Singleton
-    @Provides
-    LoginManager provideLoginManager(Shell shell, Context context, Analytic analytic) {
-        return new LoginManagerImpl(shell, context, analytic);
     }
 
     @Provides
@@ -359,5 +361,35 @@ public class AppCoreModule {
         return new SectionDownloaderImpl(databaseFacade, downloadManager, threadPoolExecutor, cleanManager, cancelSniffer);
     }
 
+    @Provides
+    @Singleton
+    VideoLengthResolver provideVideoLengthResolver() {
+        return new VideoLengthResolverImpl();
+    }
+
+    @Provides
+    @Singleton
+    UserAgentProvider provideUserAgent() {
+        return new UserAgentProviderImpl(context);
+    }
+
+
+    @Provides
+    @Singleton
+    FirebaseRemoteConfig provideFirebaseRemoteConfig() {
+        final FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                .build();
+        firebaseRemoteConfig.setConfigSettings(configSettings);
+        firebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+        return firebaseRemoteConfig;
+    }
+
+    @Provides
+    @Singleton
+    FontsProvider provideFontProvider() {
+        return new FontsProviderImpl();
+    }
 
 }

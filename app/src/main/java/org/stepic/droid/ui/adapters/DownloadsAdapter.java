@@ -518,7 +518,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Gene
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.title_confirmation)
-                    .setMessage(R.string.cancel_videos_explanation)
+                    .setMessage(R.string.are_you_sure)
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

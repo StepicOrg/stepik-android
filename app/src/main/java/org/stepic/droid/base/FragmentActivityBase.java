@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.squareup.otto.Bus;
 
 import org.jetbrains.annotations.Nullable;
@@ -24,9 +25,9 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.DefaultFilter;
-import org.stepic.droid.core.Shell;
-import org.stepic.droid.core.LoginManager;
 import org.stepic.droid.core.ShareHelper;
+import org.stepic.droid.core.Shell;
+import org.stepic.droid.fonts.FontsProvider;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -97,10 +98,13 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected UserPreferences userPreferences;
 
     @Inject
-    protected LoginManager loginManager;
+    protected ThreadPoolExecutor threadPoolExecutor;
 
     @Inject
-    protected ThreadPoolExecutor threadPoolExecutor;
+    protected FirebaseRemoteConfig firebaseRemoteConfig;
+
+    @Inject
+    protected FontsProvider fontsProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

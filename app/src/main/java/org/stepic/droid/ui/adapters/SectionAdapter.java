@@ -8,6 +8,7 @@ import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -30,9 +31,11 @@ import org.stepic.droid.model.SectionLoadingState;
 import org.stepic.droid.store.SectionDownloader;
 import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.ui.custom.progressbutton.ProgressWheel;
+import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.ui.dialogs.ExplainExternalStoragePermissionDialog;
 import org.stepic.droid.ui.dialogs.OnLoadPositionListener;
 import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog;
+import org.stepic.droid.ui.fragments.SectionsFragment;
 import org.stepic.droid.ui.listeners.OnClickLoadListener;
 import org.stepic.droid.ui.listeners.StepicOnClickItemListener;
 import org.stepic.droid.util.AppConstants;
@@ -90,13 +93,19 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
     private int defaultColor;
     private Map<String, ProgressViewModel> progressMap;
     private Map<Long, SectionLoadingState> sectionIdToLoadingStateMap;
+    private Fragment fragment;
     private final int durationMillis = 3000;
 
     public void setDefaultHighlightPosition(int defaultHighlightPosition) {
         this.defaultHighlightPosition = defaultHighlightPosition;
     }
 
-    public SectionAdapter(List<Section> sections, AppCompatActivity activity, CalendarPresenter calendarPresenter, Map<String, ProgressViewModel> progressMap, Map<Long, SectionLoadingState> sectionIdToLoadingStateMap) {
+    public SectionAdapter(List<Section> sections,
+                          AppCompatActivity activity,
+                          CalendarPresenter calendarPresenter,
+                          Map<String, ProgressViewModel> progressMap,
+                          Map<Long, SectionLoadingState> sectionIdToLoadingStateMap,
+                          Fragment fragment) {
         this.sections = sections;
         this.activity = activity;
         this.calendarPresenter = calendarPresenter;
@@ -104,6 +113,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
         defaultColor = ColorUtil.INSTANCE.getColorArgb(R.color.white, activity);
         this.progressMap = progressMap;
         this.sectionIdToLoadingStateMap = sectionIdToLoadingStateMap;
+        this.fragment = fragment;
         App.component().inject(this);
     }
 
@@ -187,16 +197,13 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
 
             if (section.is_cached()) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_DELETE_SECTION, section.getId() + "");
-                section.set_loading(false);
-                section.set_cached(false);
-                threadPoolExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        databaseFacade.updateOnlyCachedLoadingSection(section);
-                        sectionDownloader.deleteWholeSection(section.getId());
-                    }
-                });
-                notifyItemChanged(adapterPosition);
+                DeleteItemDialogFragment dialogFragment = DeleteItemDialogFragment.newInstance(sectionPosition);
+                dialogFragment.setTargetFragment(fragment, SectionsFragment.DELETE_POSITION_REQUEST_CODE);
+                if (!dialogFragment.isAdded()) {
+                    FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+                    ft.add(dialogFragment, null);
+                    ft.commitAllowingStateLoss();
+                }
             } else {
                 if (section.is_loading()) {
                     //cancel loading
@@ -262,6 +269,23 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.GenericV
             analytic.reportEvent(Analytic.Exam.SHOW_EXAM);
             Section section = sections.get(position);
             screenManager.openSyllabusInWeb(activity, section.getCourse());
+        }
+    }
+
+    public void requestClickDeleteSilence(int position) {
+        if (position >= 0 && position < sections.size()) {
+            final Section section = sections.get(position);
+            section.set_loading(false);
+            section.set_cached(false);
+            threadPoolExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    databaseFacade.updateOnlyCachedLoadingSection(section);
+                    sectionDownloader.deleteWholeSection(section.getId());
+                }
+            });
+            int adapterPosition = position + PRE_SECTION_LIST_DELTA;
+            notifyItemChanged(adapterPosition);
         }
     }
 

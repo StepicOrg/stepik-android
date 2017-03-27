@@ -7,7 +7,10 @@ import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.stepic.droid.R;
@@ -25,7 +28,7 @@ import kotlin.jvm.functions.Function0;
 public class SplashActivity extends BackToExitActivityBase {
 
     // Splash screen wait time
-    private static final int SPLASH_TIME_OUT = 1000;
+    private static final int SPLASH_TIME_OUT = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,34 +53,7 @@ public class SplashActivity extends BackToExitActivityBase {
                 }
         );
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
-            ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
-
-            String findCoursesLabel = getString(R.string.find_courses_title);
-            Intent findCoursesIntent = shell.getScreenProvider().getShowFindCoursesIntent(getApplicationContext());
-            findCoursesIntent.setAction(AppConstants.OPEN_SHORTCUT_FIND_COURSES);
-            ShortcutInfo findCoursesShortcut = new ShortcutInfo.Builder(this, AppConstants.FIND_COURSES_SHORTCUT_ID)
-                    .setShortLabel(findCoursesLabel)
-                    .setLongLabel(findCoursesLabel)
-                    .setIcon(Icon.createWithResource(this, R.mipmap.ic_search_icon_shortcut))
-                    .setIntent(findCoursesIntent)
-                    .build();
-
-            String profileLabel = getString(R.string.profile_title);
-            Intent mainFeedActivityIntent = shell.getScreenProvider().getMyCoursesIntent(getApplicationContext());
-            mainFeedActivityIntent.setAction(AppConstants.OPEN_SHORTCUT_PROFILE);
-            Intent profileIntent = shell.getScreenProvider().getProfileIntent(getApplicationContext());
-            profileIntent.setAction(AppConstants.OPEN_SHORTCUT_PROFILE);
-            ShortcutInfo profileShortcut = new ShortcutInfo.Builder(this, AppConstants.PROFILE_SHORTCUT_ID)
-                    .setShortLabel(profileLabel)
-                    .setLongLabel(profileLabel)
-                    .setIcon(Icon.createWithResource(this, R.mipmap.ic_profile_shortcut))
-                    .setIntents(new Intent[]{mainFeedActivityIntent, profileIntent})
-                    .build();
-
-
-            shortcutManager.setDynamicShortcuts(Arrays.asList(findCoursesShortcut, profileShortcut));
-        }
+        defineShortcuts();
 
 
         if (checkPlayServices() && !sharedPreferenceHelper.isGcmTokenOk()) {
@@ -127,7 +103,7 @@ public class SplashActivity extends BackToExitActivityBase {
                     mainHandler.post(new Function0<Unit>() {
                         @Override
                         public Unit invoke() {
-                            showNextScreen();
+                            checkRemoteConfigs();
                             return Unit.INSTANCE;
                         }
                     });
@@ -139,18 +115,71 @@ public class SplashActivity extends BackToExitActivityBase {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    showNextScreen();
+                    checkRemoteConfigs();
                 }
             }, SPLASH_TIME_OUT);
         }
 
+    }
 
+    private void defineShortcuts() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
+            ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
+
+            String findCoursesLabel = getString(R.string.find_courses_title);
+            Intent findCoursesIntent = shell.getScreenProvider().getShowFindCoursesIntent(getApplicationContext());
+            findCoursesIntent.setAction(AppConstants.OPEN_SHORTCUT_FIND_COURSES);
+            ShortcutInfo findCoursesShortcut = new ShortcutInfo.Builder(this, AppConstants.FIND_COURSES_SHORTCUT_ID)
+                    .setShortLabel(findCoursesLabel)
+                    .setLongLabel(findCoursesLabel)
+                    .setIcon(Icon.createWithResource(this, R.mipmap.ic_search_icon_shortcut))
+                    .setIntent(findCoursesIntent)
+                    .build();
+
+            String profileLabel = getString(R.string.profile_title);
+            Intent mainFeedActivityIntent = shell.getScreenProvider().getMyCoursesIntent(getApplicationContext());
+            mainFeedActivityIntent.setAction(AppConstants.OPEN_SHORTCUT_PROFILE);
+            Intent profileIntent = shell.getScreenProvider().getProfileIntent(getApplicationContext());
+            profileIntent.setAction(AppConstants.OPEN_SHORTCUT_PROFILE);
+            ShortcutInfo profileShortcut = new ShortcutInfo.Builder(this, AppConstants.PROFILE_SHORTCUT_ID)
+                    .setShortLabel(profileLabel)
+                    .setLongLabel(profileLabel)
+                    .setIcon(Icon.createWithResource(this, R.mipmap.ic_profile_shortcut))
+                    .setIntents(new Intent[]{mainFeedActivityIntent, profileIntent})
+                    .build();
+
+
+            shortcutManager.setDynamicShortcuts(Arrays.asList(findCoursesShortcut, profileShortcut));
+        }
+    }
+
+    private void checkRemoteConfigs() {
+        if (!isFinishing()) {
+            MixpanelAPI mixpanelAPI = MixpanelAPI.getInstance(getApplicationContext(), config.getMixpanelToken());
+            mixpanelAPI.track("app_opened");
+            if (checkPlayServices()) {
+                firebaseRemoteConfig.fetch().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            analytic.reportEvent(Analytic.RemoteConfig.FETCHED_SUCCESSFUL);
+                            firebaseRemoteConfig.activateFetched();
+                        } else {
+                            analytic.reportEvent(Analytic.RemoteConfig.FETCHED_UNSUCCESSFUL);
+                        }
+                    }
+                });
+                //do not wait fetch, because fail of it may be about 3 mins. User can't wait for it!
+                showNextScreen();
+            } else {
+                showNextScreen();
+            }
+
+        }
     }
 
     private void showNextScreen() {
         if (!isFinishing()) {
-            MixpanelAPI mixpanelAPI = MixpanelAPI.getInstance(getApplicationContext(), config.getMixpanelToken());
-            mixpanelAPI.track("app_opened");
             if (sharedPreferenceHelper.getAuthResponseFromStore() != null) {
                 shell.getScreenProvider().showMainFeed(SplashActivity.this);
             } else {

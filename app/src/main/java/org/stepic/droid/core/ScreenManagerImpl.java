@@ -83,7 +83,16 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showLaunchScreen(Context context) {
-        showLaunchScreen(context, false, 0);
+        showLaunchScreen(context, false, MainFeedActivity.DEFAULT_START_INDEX);
+    }
+
+    @Override
+    public void showLaunchScreenAfterLogout(Context context) {
+        analytic.reportEvent(Analytic.Interaction.SHOW_LAUNCH_SCREEN_AFTER_LOGOUT);
+        Intent launchIntent = new Intent(context, LaunchActivity.class);
+        launchIntent.putExtra(LaunchActivity.Companion.getWasLogoutKey(), true);
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //app context -- new task
+        context.startActivity(launchIntent);
     }
 
     @Override
@@ -148,7 +157,7 @@ public class ScreenManagerImpl implements ScreenManager {
         if (course != null) {
             intent.putExtra(AppConstants.KEY_COURSE_BUNDLE, (Parcelable) course);
         }
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         sourceActivity.startActivity(intent);
     }
 
@@ -327,7 +336,6 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void openProfile(Activity activity) {
-        analytic.reportEvent(Analytic.Profile.CLICK_OPEN_MY_PROFILE);
         final Intent intent = new Intent(activity, ProfileActivity.class);
         activity.startActivity(intent);
     }

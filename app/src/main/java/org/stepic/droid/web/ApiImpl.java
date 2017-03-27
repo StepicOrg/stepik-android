@@ -82,6 +82,7 @@ import timber.log.Timber;
 public class ApiImpl implements Api {
     private final int TIMEOUT_IN_SECONDS = 10;
     private final StethoInterceptor stethoInterceptor = new StethoInterceptor();
+    private final String userAgentName = "User-Agent";
 
     @Inject
     Context context;
@@ -103,6 +104,9 @@ public class ApiImpl implements Api {
 
     @Inject
     ScreenManager screenManager;
+
+    @Inject
+    UserAgentProvider userAgentProvider;
 
     private StepicRestLoggedService loggedService;
     private StepicRestOAuthService oAuthService;
@@ -137,7 +141,7 @@ public class ApiImpl implements Api {
         Interceptor interceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request();
+                Request newRequest = addUserAgentTo(chain);
                 try {
                     RWLocks.AuthLock.readLock().lock();
                     AuthenticationStepicResponse response = sharedPreference.getAuthResponseFromStore();
@@ -158,7 +162,7 @@ public class ApiImpl implements Api {
                                 Profile profile = stepikEmptyAuthService.getUserProfileWithCookie(config.getBaseUrl(), cookies, csrfTokenFromCookies).execute().body().getProfile();
                                 sharedPreference.storeProfile(profile);
                             }
-                            newRequest = chain.request()
+                            newRequest = newRequest
                                     .newBuilder()
                                     .addHeader(AppConstants.cookieHeaderName, cookies)
                                     .addHeader(AppConstants.refererHeaderName, config.getBaseUrl())
@@ -209,7 +213,7 @@ public class ApiImpl implements Api {
                                                                 } catch (Exception e) {
                                                                     analytic.reportError(Analytic.Error.FAIL_LOGOUT_WHEN_REFRESH, e);
                                                                 }
-                                                                screenManager.showLaunchScreen(context);
+                                                                screenManager.showLaunchScreenAfterLogout(context);
                                                                 Toast.makeText(context, R.string.logout_user_error, Toast.LENGTH_SHORT).show();
                                                                 return Unit.INSTANCE;
                                                             }
@@ -238,7 +242,7 @@ public class ApiImpl implements Api {
                     }
                     if (response != null) {
                         //it is good way
-                        newRequest = chain.request().newBuilder().addHeader(AppConstants.authorizationHeaderName, getAuthHeaderValueForLogged()).build();
+                        newRequest = newRequest.newBuilder().addHeader(AppConstants.authorizationHeaderName, getAuthHeaderValueForLogged()).build();
                     }
                     Response originalResponse = chain.proceed(newRequest);
                     List<String> setCookieHeaders = originalResponse.headers(AppConstants.setCookieHeaderName);
@@ -274,7 +278,7 @@ public class ApiImpl implements Api {
         Interceptor interceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request();
+                Request newRequest = addUserAgentTo(chain);
                 String credential = Credentials.basic(config.getOAuthClientId(type), config.getOAuthClientSecret(type));
                 newRequest = newRequest.newBuilder().addHeader(AppConstants.authorizationHeaderName, credential).build();
                 return chain.proceed(newRequest);
@@ -338,13 +342,12 @@ public class ApiImpl implements Api {
     public Call<RegistrationResponse> signUp(String firstName, String lastName, String email, String password) {
         analytic.reportEvent(Analytic.Web.TRY_REGISTER);
 
-
         Interceptor interceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request();
+                Request newRequest = addUserAgentTo(chain);
 
-                String cookies = android.webkit.CookieManager.getInstance().getCookie(config.getBaseUrl()); //if token is expired or doesn't exist -> manager return null
+                String cookies = CookieManager.getInstance().getCookie(config.getBaseUrl()); //if token is expired or doesn't exist -> manager return null
                 if (cookies == null) {
                     updateCookieForBaseUrl();
                     cookies = android.webkit.CookieManager.getInstance().getCookie(config.getBaseUrl());
@@ -354,8 +357,7 @@ public class ApiImpl implements Api {
 
 
                 String csrftoken = getCsrfTokenFromCookies(cookies);
-                Request.Builder requestBuilder = chain
-                        .request()
+                Request.Builder requestBuilder = newRequest
                         .newBuilder()
                         .addHeader(AppConstants.refererHeaderName, config.getBaseUrl())
                         .addHeader(AppConstants.csrfTokenHeaderName, csrftoken)
@@ -541,11 +543,10 @@ public class ApiImpl implements Api {
     public Call<Void> remindPassword(String email) {
         String encodedEmail = URLEncoder.encode(email);
 
-
         Interceptor interceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request();
+                Request newRequest = addUserAgentTo(chain);
 
                 List<HttpCookie> cookies = getCookiesForBaseUrl();
                 if (cookies == null)
@@ -801,5 +802,13 @@ public class ApiImpl implements Api {
         long delta = nowTemp - timestampStored;
         long expiresMillis = (response.getExpires_in() - 50) * 1000;
         return delta > expiresMillis;//token expired --> need update
+    }
+
+    private Request addUserAgentTo(Interceptor.Chain chain) {
+        return chain
+                .request()
+                .newBuilder()
+                .header(userAgentName, userAgentProvider.provideUserAgent())
+                .build();
     }
 }

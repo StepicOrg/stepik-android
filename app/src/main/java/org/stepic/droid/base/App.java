@@ -12,12 +12,16 @@ import com.yandex.metrica.YandexMetrica;
 
 import org.stepic.droid.BuildConfig;
 import org.stepic.droid.R;
+import org.stepic.droid.core.ComponentManager;
+import org.stepic.droid.core.ComponentManagerImpl;
 import org.stepic.droid.core.components.AppCoreComponent;
 import org.stepic.droid.core.components.DaggerAppCoreComponent;
 import org.stepic.droid.core.components.DaggerStorageComponent;
 import org.stepic.droid.core.components.StorageComponent;
 import org.stepic.droid.core.modules.AppCoreModule;
 import org.stepic.droid.core.modules.StorageModule;
+import org.stepic.droid.fonts.FontType;
+import org.stepic.droid.fonts.FontsProvider;
 import org.stepic.droid.store.InitialDownloadUpdater;
 
 import javax.inject.Inject;
@@ -30,11 +34,15 @@ public class App extends MultiDexApplication {
     protected static App application;
     private AppCoreComponent component;
     private StorageComponent storageComponent;
+    private ComponentManager componentManager;
 
     //    private RefWatcher refWatcher;
 
     @Inject
     InitialDownloadUpdater downloadUpdater;
+
+    @Inject
+    FontsProvider fontsProvider;
 
     @Override
     public void onCreate() {
@@ -52,11 +60,6 @@ public class App extends MultiDexApplication {
             Timber.plant(new Timber.DebugTree());
         }
 
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/NotoSans-Regular.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build()
-        );
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         VKSdk.initialize(this);
@@ -72,11 +75,19 @@ public class App extends MultiDexApplication {
 
         component.inject(this);
 
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath(fontsProvider.provideFontPath(FontType.regular))
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
+
+        componentManager = new ComponentManagerImpl(component);
+
         downloadUpdater.onCreateApp();
 
-        // Инициализация AppMetrica SDK
+        // init AppMetrica SDK
         YandexMetrica.activate(getApplicationContext(), "fd479031-bdf4-419e-8d8f-6895aab23502");
-        // Отслеживание активности пользователей
         YandexMetrica.enableActivityAutoTracking(this);
     }
 //    public static RefWatcher getRefWatcher(Context context) {
@@ -106,5 +117,8 @@ public class App extends MultiDexApplication {
         return application.getApplicationContext();
     }
 
+    public static ComponentManager getComponentManager() {
+        return application.componentManager;
+    }
 
 }

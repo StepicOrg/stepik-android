@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -24,16 +25,16 @@ import com.squareup.otto.Subscribe;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.App;
+import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.LessonSessionManager;
 import org.stepic.droid.core.modules.UnitsModule;
 import org.stepic.droid.core.presenters.DownloadingProgressUnitsPresenter;
 import org.stepic.droid.core.presenters.UnitsPresenter;
 import org.stepic.droid.core.presenters.contracts.DownloadingProgressUnitsView;
 import org.stepic.droid.core.presenters.contracts.UnitsView;
-import org.stepic.droid.events.units.NotCachedLessonEvent;
 import org.stepic.droid.events.units.LessonCachedEvent;
+import org.stepic.droid.events.units.NotCachedLessonEvent;
 import org.stepic.droid.events.units.UnitProgressUpdateEvent;
 import org.stepic.droid.events.units.UnitScoreUpdateEvent;
 import org.stepic.droid.model.Lesson;
@@ -42,6 +43,7 @@ import org.stepic.droid.model.Progress;
 import org.stepic.droid.model.Section;
 import org.stepic.droid.model.Unit;
 import org.stepic.droid.ui.adapters.UnitAdapter;
+import org.stepic.droid.ui.dialogs.DeleteItemDialogFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ProgressHelper;
 
@@ -58,6 +60,7 @@ import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.OnRefreshListener, UnitsView, DownloadingProgressUnitsView {
 
     private static final int ANIMATION_DURATION = 0;
+    public static final int DELETE_POSITION_REQUEST_CODE = 165;
 
     private final static String SECTION_KEY = "section_key";
 
@@ -149,7 +152,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         unitList = new ArrayList<>();
         lessonList = new ArrayList<>();
         progressMap = new HashMap<>();
-        adapter = new UnitAdapter(section, unitList, lessonList, progressMap, (AppCompatActivity) getActivity(), lessonIdToLoadingStateMap);
+        adapter = new UnitAdapter(section, unitList, lessonList, progressMap, (AppCompatActivity) getActivity(), lessonIdToLoadingStateMap, this);
         unitsRecyclerView.setAdapter(adapter);
         unitsRecyclerView.setItemAnimator(new SlideInRightAnimator());
         unitsRecyclerView.getItemAnimator().setRemoveDuration(ANIMATION_DURATION);
@@ -314,6 +317,7 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
     @Override
     public void onEmptyUnits() {
         reportConnectionProblem.setVisibility(View.GONE);
+        dismiss();
         reportEmpty.setVisibility(View.VISIBLE);
     }
 
@@ -374,5 +378,15 @@ public class UnitsFragment extends FragmentBase implements SwipeRefreshLayout.On
         lessonIdToLoadingStateMap.put(lessonLoadingState.getLessonId(), lessonLoadingState);
 
         adapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (adapter != null && requestCode == DELETE_POSITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            analytic.reportEvent(Analytic.Interaction.ACCEPT_DELETING_UNIT);
+            int position = data.getIntExtra(DeleteItemDialogFragment.deletePositionKey, -1);
+            adapter.requestClickDeleteSilence(position);
+        }
     }
 }

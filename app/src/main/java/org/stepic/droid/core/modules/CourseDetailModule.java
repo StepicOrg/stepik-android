@@ -6,10 +6,11 @@ import com.squareup.otto.Bus;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.PerFragment;
-import org.stepic.droid.preferences.SharedPreferenceHelper;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.core.presenters.CourseDetailAnalyticPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
+import org.stepic.droid.store.operations.DatabaseFacade;
 import org.stepic.droid.web.Api;
 
 import java.util.concurrent.ThreadPoolExecutor;
@@ -40,5 +41,11 @@ public class CourseDetailModule {
             Api api,
             MainHandler mainHandler) {
         return new CourseFinderPresenter(threadPoolExecutor, databaseFacade, api, mainHandler);
+    }
+
+    @PerFragment
+    @Provides
+    CourseDetailAnalyticPresenter provide(ThreadPoolExecutor threadPoolExecutor, Analytic analytic, SharedPreferenceHelper sharedPreferenceHelper) {
+        return new CourseDetailAnalyticPresenter(threadPoolExecutor, analytic, sharedPreferenceHelper);
     }
 }

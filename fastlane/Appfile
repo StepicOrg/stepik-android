@@ -1,0 +1,2 @@
+json_key_file "/Users/kirillmakarov/Dropbox/makarovAndroid/stepik/stepik-android/googleplayprovider.json" # Path to the json secret file - Follow https://github.com/fastlane/supply#setup to get one
+package_name "org.stepic.droid" # e.g. com.krausefx.app

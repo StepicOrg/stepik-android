@@ -12,4 +12,6 @@ interface ShareHelper {
     fun getIntentForStepSharing(step: Step, lesson: Lesson, unit: Unit?): Intent
 
     fun getIntentForSectionSharing(section: Section): Intent
+
+    fun getIntentForProfileSharing (userViewModel: UserViewModel) : Intent
 }

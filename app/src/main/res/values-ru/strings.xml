@@ -345,6 +345,7 @@
     <string name="too_many_attempts">Слишком много неверных попыток. Попробуйте позже</string>
     <string name="profile_title">Профиль</string>
     <string name="current_streak">Решаю без перерыва</string>
+    <string name="solving_without_break">@string/current_streak</string>
     <string name="max_streak">Мой рекорд</string>
     <string name="about_me">Обо мне</string>
     <string name="short_bio">Краткая биография</string>
@@ -429,6 +430,7 @@
     <string name="or_continue_social">Или продолжить с</string>
     <string name="content_course_logo">Логотип курса</string>
     <string name="continue_course_title">Учиться</string>
+    <string name="continue_course_title_experimental">К шагам</string>
     <string name="auth_inline_message">Войдите, чтобы мы запомнили Ваши успехи</string>
     <string name="step_with_position">– Шаг %d</string>
     <string name="anonymous_write_comment">Чтобы присоединиться к этому обсуждению Вам нужно Войти
@@ -441,4 +443,5 @@
     <string name="table_quiz_beta">Табличная задача β</string>
     <string name="logout_user_error">Доступ был отозван. Залогиньтесь снова</string>
     <string name="accessibility_video_cover">Обложка видео</string>
+    <string name="close_screen">Закрыть экран</string>
 </resources>

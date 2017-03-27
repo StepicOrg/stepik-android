@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="56dp"
-    android:layout_alignParentTop="true">
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_alignParentTop="true">
 
-    <RelativeLayout
-        android:id="@+id/actionbar_close_btn_layout"
+    <FrameLayout
+        android:id="@+id/actionbarCloseButtonLayout"
         android:layout_width="@dimen/min_ux_touchable_size"
         android:layout_height="@dimen/min_ux_touchable_size"
         android:layout_alignParentLeft="true"
@@ -17,10 +17,10 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_centerInParent="true"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_close" />
-    </RelativeLayout>
+            android:layout_gravity="center"
+            android:contentDescription="@string/close_screen"
+            android:src="@drawable/ic_close"/>
+    </FrameLayout>
 
     <View
         android:id="@+id/grey_bar"
@@ -29,6 +29,6 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="@color/grey_act_background" />
+        android:background="@color/grey_act_background"/>
 
 </RelativeLayout>

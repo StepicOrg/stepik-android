@@ -17,6 +17,7 @@ import org.stepic.droid.core.AudioFocusHelper;
 import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.ShareHelper;
+import org.stepic.droid.fonts.FontsProvider;
 import org.stepic.droid.notifications.LocalReminder;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
@@ -54,6 +55,9 @@ public class FragmentBase extends Fragment {
 
     @Inject
     public DatabaseFacade databaseFacade;
+
+    @Inject
+    protected FontsProvider fontsProvider;
 
     /**
      * Do not use bus, try to use presenters, after deleting most part of bus related code project will use RxJava

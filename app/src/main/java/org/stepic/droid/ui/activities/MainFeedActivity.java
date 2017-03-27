@@ -19,6 +19,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,11 +48,15 @@ import org.joda.time.DateTimeZone;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
+import org.stepic.droid.core.ProfilePresenter;
 import org.stepic.droid.core.presenters.ProfileMainFeedPresenter;
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView;
+import org.stepic.droid.core.presenters.contracts.ProfileView;
 import org.stepic.droid.events.updating.NeedUpdateEvent;
+import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Profile;
+import org.stepic.droid.model.UserViewModel;
 import org.stepic.droid.notifications.StepicInstanceIdService;
 import org.stepic.droid.services.UpdateAppService;
 import org.stepic.droid.services.UpdateWithApkService;
@@ -83,12 +89,15 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
+import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public class MainFeedActivity extends BackToExitActivityBase
-        implements NavigationView.OnNavigationItemSelectedListener, BackButtonHandler, HasDrawer, ProfileMainFeedView, LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener {
+        implements NavigationView.OnNavigationItemSelectedListener, BackButtonHandler, HasDrawer, ProfileMainFeedView, LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener, ProfileView {
     public static final String KEY_CURRENT_INDEX = "Current_index";
     public static final String REMINDER_KEY = "reminder_key";
     private final String PROGRESS_LOGOUT_TAG = "progress_logout";
+    public static final int DEFAULT_START_INDEX = 1;
 
 
     @BindView(R.id.toolbar)
@@ -100,6 +109,8 @@ public class MainFeedActivity extends BackToExitActivityBase
     @BindView(R.id.drawer)
     DrawerLayout drawerLayout;
 
+    TextView solvingWithoutBreakTextView;
+
     ImageView profileImage;
 
     TextView userNameTextView;
@@ -109,7 +120,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     @BindString(R.string.my_courses_title)
     String coursesTitle;
 
-    @BindDrawable(R.drawable.placeholder_icon)
+    @BindDrawable(R.drawable.general_placeholder)
     Drawable userPlaceholder;
 
     private int currentIndex;
@@ -119,6 +130,9 @@ public class MainFeedActivity extends BackToExitActivityBase
 
     @Inject
     ProfileMainFeedPresenter profileMainFeedPresenter;
+
+    @Inject
+    ProfilePresenter profilePresenter;
 
     private List<WeakReference<OnBackClickListener>> onBackClickListenerList = new ArrayList<>(8);
     private ActionBarDrawerToggle actionBarDrawerToggle;
@@ -168,7 +182,8 @@ public class MainFeedActivity extends BackToExitActivityBase
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.component().inject(this);
+        App.getComponentManager().mainFeedComponent()
+                .inject(this);
         setContentView(R.layout.activity_main_feed);
         unbinder = ButterKnife.bind(this);
         notificationClickedCheck(getIntent());
@@ -192,6 +207,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         bus.register(this);
 
         profileMainFeedPresenter.attachView(this);
+        profilePresenter.attachView(this);
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,6 +215,7 @@ public class MainFeedActivity extends BackToExitActivityBase
                 analytic.reportEvent(Analytic.Interaction.CLICK_PROFILE_BEFORE_LOADING);
             }
         });
+
         profileMainFeedPresenter.fetchProfile();
 
         if (checkPlayServices() && !sharedPreferenceHelper.isGcmTokenOk()) {
@@ -244,12 +261,18 @@ public class MainFeedActivity extends BackToExitActivityBase
         profileImage = ButterKnife.findById(headerLayout, R.id.profile_image);
         userNameTextView = ButterKnife.findById(headerLayout, R.id.username);
         signInProfileView = ButterKnife.findById(headerLayout, R.id.sign_in_profile_view);
+        solvingWithoutBreakTextView = ButterKnife.findById(headerLayout, R.id.solving_without_break_text);
 
+        solvingWithoutBreakTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analytic.reportEvent(Analytic.Interaction.CLICK_STREAK_DRAWER);
+            }
+        });
         signInProfileView.setOnClickListener(null);
         signInProfileView.setVisibility(View.INVISIBLE);
         profileImage.setVisibility(View.INVISIBLE);
-        userNameTextView.setVisibility(View.INVISIBLE);
-        userNameTextView.setText("");
+        userNameTextView.setVisibility(View.GONE);
     }
 
     @Override
@@ -257,7 +280,7 @@ public class MainFeedActivity extends BackToExitActivityBase
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            if (currentIndex == 0) {
+            if (currentIndex == DEFAULT_START_INDEX) {
                 finish();
                 return;
             }
@@ -267,12 +290,9 @@ public class MainFeedActivity extends BackToExitActivityBase
             fragmentManager.popBackStackImmediate();
             fragmentManager.beginTransaction().remove(fragment).commit();
             if (fragmentManager.getBackStackEntryCount() <= 0) {
-                showCurrentFragment(0);
-
-//                super.onBackPressed();
-//                finish();
+                showCurrentFragment(DEFAULT_START_INDEX);
             } else {
-                currentIndex = 0;
+                currentIndex = DEFAULT_START_INDEX;
                 navigationView.setCheckedItem(R.id.my_courses);
                 setTitle(R.string.my_courses_title);
             }
@@ -287,8 +307,8 @@ public class MainFeedActivity extends BackToExitActivityBase
     }
 
     private void initFragments(Bundle bundle) {
-        if (bundle == null) {
-            currentIndex = 0;
+        if (bundle == null || !bundle.containsKey(KEY_CURRENT_INDEX)) {
+            currentIndex = DEFAULT_START_INDEX;
         } else {
             currentIndex = bundle.getInt(KEY_CURRENT_INDEX);
         }
@@ -315,7 +335,6 @@ public class MainFeedActivity extends BackToExitActivityBase
         switch (menuItem.getItemId()) {
             case R.id.logout_item:
                 analytic.reportEvent(Analytic.Interaction.CLICK_LOGOUT);
-
                 LogoutAreYouSureDialog dialog = LogoutAreYouSureDialog.Companion.newInstance();
                 if (!dialog.isAdded()) {
                     dialog.show(getSupportFragmentManager(), null);
@@ -336,6 +355,10 @@ public class MainFeedActivity extends BackToExitActivityBase
                     }
                 }, 0);
                 shell.getScreenProvider().showSettings(this);
+                return true;
+            case R.id.profile:
+                // do not close drawer for profile
+                shell.getScreenProvider().openProfile(this);
                 return true;
             case R.id.feedback:
                 new Handler().postDelayed(new Runnable() {
@@ -397,6 +420,9 @@ public class MainFeedActivity extends BackToExitActivityBase
             case R.id.notifications:
                 analytic.reportEvent(Analytic.Screens.USER_OPEN_NOTIFICATIONS);
                 break;
+            case R.id.profile:
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_PROFILE);
+                break;
         }
     }
 
@@ -427,32 +453,32 @@ public class MainFeedActivity extends BackToExitActivityBase
         }
         switch (menuItem.getItemId()) {
             case R.id.my_courses:
-                currentIndex = 1;
+                currentIndex = 2;
                 if (tag == null || !tag.equals(MyCoursesFragment.class.toString())) {
                     shortLifetimeRef = MyCoursesFragment.newInstance();
                 }
                 break;
             case R.id.find_lessons:
-                currentIndex = 2;
+                currentIndex = 3;
                 if (tag == null || !tag.equals(FindCoursesFragment.class.toString())) {
                     shortLifetimeRef = FindCoursesFragment.newInstance();
                 }
                 break;
             case R.id.cached_videos:
-                currentIndex = 3;
+                currentIndex = 4;
                 if (tag == null || !tag.equals(DownloadsFragment.class.toString())) {
                     shortLifetimeRef = DownloadsFragment.newInstance();
                 }
                 break;
 
             case R.id.certificates:
-                currentIndex = 4;
+                currentIndex = 5;
                 if (tag == null || !tag.equals(CertificateFragment.class.toString())) {
                     shortLifetimeRef = CertificateFragment.newInstance();
                 }
                 break;
             case R.id.notifications:
-                currentIndex = 5;
+                currentIndex = 6;
                 if (tag == null || !tag.equals(NotificationsFragment.class.toString())) {
                     shortLifetimeRef = NotificationsFragment.newInstance();
                 }
@@ -484,18 +510,18 @@ public class MainFeedActivity extends BackToExitActivityBase
     protected void onDestroy() {
         profileImage.setOnClickListener(null);
         profileMainFeedPresenter.detachView(this);
+        profilePresenter.detachView(this);
         bus.unregister(this);
         drawerLayout.removeDrawerListener(actionBarDrawerToggle);
+        if (isFinishing()) {
+            App.getComponentManager().releaseMainFeedComponent();
+        }
         super.onDestroy();
     }
 
     public void showFindLesson() {
-        currentIndex = 1;
+        currentIndex = 2;
         showCurrentFragment(currentIndex);
-    }
-
-    public static int getFindCoursesIndex() {
-        return 1;
     }
 
 
@@ -536,15 +562,19 @@ public class MainFeedActivity extends BackToExitActivityBase
     }
 
     public static int getCertificateFragmentIndex() {
-        return 3;
+        return 4;
     }
 
     public static int getDownloadFragmentIndex() {
-        return 2;
+        return 3;
     }
 
     public static int getMyCoursesIndex() {
-        return 0;
+        return 1;
+    }
+
+    public static int getFindCoursesIndex() {
+        return 2;
     }
 
     private boolean fragmentBackKeyIntercept() {
@@ -586,7 +616,7 @@ public class MainFeedActivity extends BackToExitActivityBase
     public void showAnonymous() {
         signInProfileView.setVisibility(View.VISIBLE);
         profileImage.setVisibility(View.VISIBLE);
-        userNameTextView.setVisibility(View.INVISIBLE);
+        userNameTextView.setVisibility(View.GONE);
         profileImage.setImageDrawable(userPlaceholder);
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -621,14 +651,23 @@ public class MainFeedActivity extends BackToExitActivityBase
                     .placeholder(userPlaceholder)
                     .into(profileImage);
         }
-        userNameTextView.setText(ProfileExtensionKt.getFirstAndLastName(profile));
+        userNameTextView.setText(ProfileExtensionKt.getFirstAndLastNameTwoLines(profile));
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                analytic.reportEvent(Analytic.Profile.CLICK_OPEN_MY_PROFILE_IMAGE);
                 shell.getScreenProvider().openProfile(MainFeedActivity.this);
             }
         });
+        userNameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                analytic.reportEvent(Analytic.Profile.CLICK_FULL_NAME_DRAWER);
+            }
+        });
         showLogout(true);
+
+        profilePresenter.showStreakForStoredUser();
     }
 
     void showLogout(boolean needShow) {
@@ -650,11 +689,56 @@ public class MainFeedActivity extends BackToExitActivityBase
         if (googleApiClient != null && googleApiClient.isConnected()) {
             Auth.GoogleSignInApi.signOut(googleApiClient);
         }
-        shell.getScreenProvider().showLaunchScreen(this, true, currentIndex);
+        shell.getScreenProvider().showLaunchScreen(this);
     }
 
     @Override
     public void onLogout() {
         profileMainFeedPresenter.logout();
+    }
+
+    @Override
+    public void showLoadingAll() {
+        // do nothing
+    }
+
+    @Override
+    public void showNameImageShortBio(@NotNull UserViewModel userViewModel) {
+        //it is shown by main feed
+    }
+
+    @Override
+    public void streaksAreLoaded(int currentStreak, int maxStreak) {
+        if (currentStreak <= 0) {
+            solvingWithoutBreakTextView.setVisibility(View.GONE);
+        } else {
+            solvingWithoutBreakTextView.setVisibility(View.VISIBLE);
+
+            String days = currentStreak + " " + getResources().getQuantityString(R.plurals.day_number, currentStreak);
+            CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(this.getAssets(), fontsProvider.provideFontPath(FontType.bold)));
+            String prefix = getString(R.string.solving_without_break) + " ";
+
+            SpannableString result = new SpannableString(prefix + days);
+
+            result.setSpan(typefaceSpan, prefix.length(), prefix.length() + days.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            solvingWithoutBreakTextView.setText(result);
+        }
+    }
+
+    @Override
+    public void onInternetFailed() {
+        //it is handled by profile in MainFeed
+    }
+
+    @Override
+    public void onProfileNotFound() {
+        //it is handled by profile in MainFeed
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //// TODO: 16.03.17 rewrite from pull way to push
+        profilePresenter.showStreakForStoredUser();
     }
 }

@@ -12,6 +12,9 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -77,7 +80,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
     @BindView(R.id.profileImage)
     ImageView profileImage;
 
-    @BindDrawable(R.drawable.placeholder_icon)
+    @BindDrawable(R.drawable.general_placeholder)
     Drawable userPlaceholder;
 
     @BindView(R.id.shortBioValue)
@@ -150,6 +153,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
     TextView notificationTimeZoneInfo;
 
     long userId;
+    private UserViewModel localUserViewModel = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -157,6 +161,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
         setRetainInstance(true);
         userId = getArguments().getLong(USER_ID_KEY);
         analytic.reportEvent(Analytic.Profile.OPEN_SCREEN_OVERALL);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -250,7 +255,7 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void streaksIsLoaded(int currentStreak, int maxStreak) {
+    public void streaksAreLoaded(int currentStreak, int maxStreak) {
         String suffixCurrent = getResources().getQuantityString(R.plurals.day_number, currentStreak);
         String suffixMax = getResources().getQuantityString(R.plurals.day_number, maxStreak);
 
@@ -289,6 +294,9 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
         reportProblemRoot.setVisibility(View.GONE);
         loadingView.setVisibility(View.GONE);
         contentRoot.setVisibility(View.VISIBLE);
+
+        localUserViewModel = userViewModel;
+        getActivity().supportInvalidateOptionsMenu();
 
         if (userViewModel.isMyProfile()) {
             shortBioTitle.setText(aboutMeTitle);
@@ -400,4 +408,38 @@ public class ProfileFragment extends FragmentBase implements ProfileView, Notifi
             }
         }
     }
+
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (localUserViewModel != null) {
+            inflater.inflate(R.menu.share_menu, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_share:
+                shareProfile();
+                return true;
+        }
+        return false;
+    }
+
+    private void shareProfile() {
+        if (localUserViewModel != null) {
+            Intent intent = shareHelper.getIntentForProfileSharing(localUserViewModel);
+            startActivity(intent);
+        }
+    }
+
+
 }

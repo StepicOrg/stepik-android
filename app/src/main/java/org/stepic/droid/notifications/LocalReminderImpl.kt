@@ -139,7 +139,6 @@ class LocalReminderImpl(val threadPoolExecutor: ThreadPoolExecutor,
         val intent = Intent(context, StreakAlarmService::class.java)
         val pendingIntent: PendingIntent? = PendingIntent.getService(context, StreakAlarmService.requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         pendingIntent?.let {
-            analytic.reportEvent(Analytic.Error.PENDING_INTENT_WAS_NULL)
             pendingIntent.cancel()
             alarmManager.cancel(pendingIntent)//timer should not be triggered
         }

@@ -1,0 +1,4 @@
+Zooming of images in steps is available now! Just click on image and it will open in full screen
+
+Yours,
+Stepik.org Team.

@@ -34,8 +34,7 @@
                     android:layout_height="@dimen/avatar_size_depend_on_reply_margin"
                     android:layout_marginLeft="@dimen/margin_leftRight_comment_depend_on_reply_margin"
                     android:layout_marginRight="@dimen/margin_leftRight_comment_depend_on_reply_margin"
-                    android:padding="@dimen/padding_for_circle_image"
-                    tools:src="@drawable/placeholder_icon"/>
+                    android:padding="@dimen/padding_for_circle_image"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
