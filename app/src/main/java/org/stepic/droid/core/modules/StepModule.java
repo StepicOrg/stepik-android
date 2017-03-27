@@ -12,6 +12,7 @@ import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.StepAttemptPresenter;
 import org.stepic.droid.core.presenters.StepQualityPresenter;
 import org.stepic.droid.core.presenters.StepsPresenter;
+import org.stepic.droid.core.presenters.StepsTrackingPresenter;
 import org.stepic.droid.core.presenters.VideoLengthPresenter;
 import org.stepic.droid.core.presenters.VideoStepPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -109,11 +110,17 @@ public class StepModule {
 
     @Provides
     @PerFragment
-    VideoLengthPresenter provideVideoLenthPresenter(MainHandler mainHandler,
+    VideoLengthPresenter provideVideoLengthPresenter(MainHandler mainHandler,
                                                     ThreadPoolExecutor threadPoolExecutor,
                                                     VideoResolver videoResolver,
                                                     VideoLengthResolver videoLengthResolver) {
         return new VideoLengthPresenter(threadPoolExecutor, mainHandler, videoResolver, videoLengthResolver);
+    }
+
+    @Provides
+    @PerFragment
+    StepsTrackingPresenter provideStepTrackingPresenter(Analytic analytic) {
+        return new StepsTrackingPresenter(analytic);
     }
 
 }

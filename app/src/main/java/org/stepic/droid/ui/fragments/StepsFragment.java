@@ -27,6 +27,8 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.presenters.StepsPresenter;
+import org.stepic.droid.core.presenters.StepsTrackingPresenter;
+import org.stepic.droid.core.presenters.contracts.StepsTrackingView;
 import org.stepic.droid.core.presenters.contracts.StepsView;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.model.Lesson;
@@ -46,7 +48,7 @@ import javax.inject.Inject;
 import butterknife.BindString;
 import butterknife.BindView;
 
-public class StepsFragment extends FragmentBase implements StepsView {
+public class StepsFragment extends FragmentBase implements StepsView, StepsTrackingView {
     private static final String FROM_PREVIOUS_KEY = "fromPrevKey";
     private static final String SIMPLE_UNIT_ID_KEY = "simpleUnitId";
     private static final String SIMPLE_LESSON_ID_KEY = "simpleLessonId";
@@ -136,6 +138,9 @@ public class StepsFragment extends FragmentBase implements StepsView {
     @Inject
     StepTypeResolver stepTypeResolver;
 
+    @Inject
+    StepsTrackingPresenter stepTrackingPresenter;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -173,6 +178,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
         stepAdapter = new StepFragmentAdapter(getChildFragmentManager(), stepsPresenter.getStepList(), stepTypeResolver);
         viewPager.setAdapter(stepAdapter);
         stepsPresenter.attachView(this);
+        stepTrackingPresenter.attachView(this);
         if (lesson == null) {
             Section section = getArguments().getParcelable(AppConstants.KEY_SECTION_BUNDLE);
             Lesson lesson = getArguments().getParcelable(AppConstants.KEY_LESSON_BUNDLE);
@@ -226,6 +232,7 @@ public class StepsFragment extends FragmentBase implements StepsView {
     public void onDestroyView() {
         bus.unregister(this);
         stepsPresenter.detachView(this);
+        stepTrackingPresenter.detachView(this);
         if (pageChangeListener != null) {
             viewPager.removeOnPageChangeListener(pageChangeListener);
         }
@@ -254,6 +261,9 @@ public class StepsFragment extends FragmentBase implements StepsView {
 
         //try to push viewed state to the server
         if (step != null) {
+            //track analytic for step opening
+            trackStepOpening(step);
+
             //always push view to server
             AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
                 long stepId = step.getId();
@@ -479,5 +489,10 @@ public class StepsFragment extends FragmentBase implements StepsView {
 //            getActivity().getWindow().setBackgroundDrawableResource(R.color.windowBackground); //it may produce some bugs
             viewPager.setVisibility(View.INVISIBLE);
         }
+    }
+
+
+    private void trackStepOpening(@NonNull Step step) {
+        stepTrackingPresenter.trackStepType(step);
     }
 }
