@@ -256,6 +256,8 @@ public interface Analytic {
         String SHARE_ALL = "steps_share_all";
         String SHOW_KEEP_ON_SCREEN = "steps_show_keep_on_screen";
         String SHOW_KEEP_OFF_SCREEN = "steps_show_keep_off_screen";
+        String STEP_OPENED = "step_opened";
+        String CLICK_SEND_SUBMISSION_STEP_TYPE = "step_click_send";
     }
 
     interface Calendar {
