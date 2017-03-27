@@ -40,19 +40,19 @@ public class LoginActivityTest {
     @Test
     public void loginActivityTest() {
 
-        onView(withId(R.id.sign_in_with_email))
+        onView(withId(R.id.signInWithEmail))
                 .perform(scrollTo(), click());
 
-        onView(withId(R.id.email_et))
+        onView(withId(R.id.loginText))
                 .perform(scrollTo(), replaceText("test@stepik.org"), closeSoftKeyboard());
 
-        onView(allOf(withId(R.id.email_et), withText("test@stepik.org")))
+        onView(allOf(withId(R.id.loginText), withText("test@stepik.org")))
                 .perform(pressImeActionButton());
 
-        onView(withId(R.id.password_et))
+        onView(withId(R.id.passwordEditText))
                 .perform(scrollTo(), replaceText("qwerty123"), closeSoftKeyboard());
 
-        onView(withId(R.id.login_button_layout))
+        onView(withId(R.id.loginButton))
                 .perform(scrollTo(), click());
 
         onView(withId(R.id.drawer))
