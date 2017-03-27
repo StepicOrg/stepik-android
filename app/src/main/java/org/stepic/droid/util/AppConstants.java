@@ -44,6 +44,8 @@ public class AppConstants {
     public static final String TYPE_ADMIN = "admin";
     public static final String TYPE_SQL = "sql";
 
+    public static final String TYPE_NULL = "null_type";
+
     public static final int REQUEST_EXTERNAL_STORAGE = 13;
     public static final String KEY_ASSIGNMENT_BUNDLE = "key_assignment";
     public static final String COURSE_ID_KEY = "course_id";
