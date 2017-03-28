@@ -25,7 +25,7 @@ data class Profile(
         val subscribed_for_news_en: Boolean = false,
         val subscribed_for_news_ru: Boolean = false,
         @SerializedName("email_addresses")
-        var emailAddresses: LongArray?
+        var emailAddresses: LongArray? = null
 ) : Serializable {
     fun getAvatarPath(): String? {
         return avatar;
