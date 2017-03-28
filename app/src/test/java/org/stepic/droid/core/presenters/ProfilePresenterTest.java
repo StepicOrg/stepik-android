@@ -197,5 +197,25 @@ public class ProfilePresenterTest {
 
     }
 
+    @Test
+    public void initProfile_stored_successCachingInLocal() {
+        profilePresenter.attachView(profileView);
+
+        when(sharedPreferenceHelper.getProfile())
+                .thenReturn(preferencesProfileModel);
+
+        int n = 10;
+        for (int i = 0; i < n; i++) {
+            profilePresenter.initProfile();
+        }
+
+        verify(sharedPreferenceHelper, times(1)).getProfile();
+
+        //verify calls of view methods
+        InOrder inOrder = inOrder(profileView);
+        inOrder.verify(profileView).showLoadingAll();
+        inOrder.verify(profileView, times(n)).showNameImageShortBio(fromPreferencesUserViewModel);
+    }
+
 
 }

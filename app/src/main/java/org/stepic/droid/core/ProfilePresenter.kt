@@ -11,7 +11,6 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.getFirstAndLastName
 import org.stepic.droid.web.Api
-import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 
 class ProfilePresenter(private val threadPoolExecutor: ThreadPoolExecutor,
@@ -28,7 +27,6 @@ class ProfilePresenter(private val threadPoolExecutor: ThreadPoolExecutor,
     @JvmOverloads
     fun initProfile(profileId: Long = 0L) {
         if (isLoading) return
-        Timber.d("initProfile")
         isLoading = true
         userViewModel?.let {
             view?.showNameImageShortBio(it)
@@ -43,6 +41,8 @@ class ProfilePresenter(private val threadPoolExecutor: ThreadPoolExecutor,
                     threadPoolExecutor.execute {
                         showStreaks(it.id)
                     }
+                    isLoading =false
+                    return
                 }
             } else {
                 isLoading = false
