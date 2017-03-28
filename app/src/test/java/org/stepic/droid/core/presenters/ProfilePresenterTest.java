@@ -175,7 +175,7 @@ public class ProfilePresenterTest {
     }
 
     @Test
-    public void initProfile_stored_nullNoInternet() throws IOException {
+    public void initProfile_notStoredNoInternet_internetFailed() throws IOException {
         profilePresenter.attachView(profileView);
 
         when(sharedPreferenceHelper.getProfile())
@@ -198,7 +198,7 @@ public class ProfilePresenterTest {
     }
 
     @Test
-    public void initProfile_stored_successCachingInLocal() {
+    public void initProfile_storedCachingLocally_successNotRepeat() {
         profilePresenter.attachView(profileView);
 
         when(sharedPreferenceHelper.getProfile())
