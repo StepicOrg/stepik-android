@@ -11,23 +11,29 @@ import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.ProfilePresenter;
 import org.stepic.droid.core.presenters.contracts.ProfileView;
 import org.stepic.droid.model.Profile;
+import org.stepic.droid.model.User;
 import org.stepic.droid.model.UserViewModel;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.test_utils.ConcurrencyUtilForTest;
 import org.stepic.droid.test_utils.FakeProfileGenerator;
 import org.stepic.droid.util.ProfileExtensionKt;
+import org.stepic.droid.util.UserExtensionKt;
 import org.stepic.droid.web.Api;
+import org.stepic.droid.web.UserStepicResponse;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import okhttp3.mockwebserver.MockWebServer;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import retrofit2.Call;
+import retrofit2.Response;
 
 
 public class ProfilePresenterTest {
@@ -56,10 +62,8 @@ public class ProfilePresenterTest {
     private Profile preferencesProfileModel;
     private UserViewModel fromPreferencesUserViewModel;
 
-    private String responseBodySuccess; //it should be refined
+    private User fakeUserFromApi; //it should be refined
     private UserViewModel fromApiUserViewModel;
-
-    MockWebServer mockWebServer;
 
     @Before
     public void beforeEachTest() throws IOException {
@@ -78,14 +82,10 @@ public class ProfilePresenterTest {
                 api,
                 sharedPreferenceHelper
         );
-
-        mockWebServer = new MockWebServer();
-        mockWebServer.start();
     }
 
     @After
     public void afterEachTEst() throws Exception {
-        mockWebServer.shutdown();
     }
 
     private void generateInstructorApiModels() {
@@ -97,43 +97,8 @@ public class ProfilePresenterTest {
         String shortBio = "My short bio";
         String details = " DetailedInfo";
 
-        fromApiUserViewModel = new UserViewModel(ProfileExtensionKt.getFirstAndLastName(preferencesProfileModel), shortBio, details, imageLink, isMyProfile, profileId);
-        responseBodySuccess = "{\n" +
-                "meta: {\n" +
-                "page: 1,\n" +
-                "has_next: false,\n" +
-                "has_previous: false\n" +
-                "},\n" +
-                "users: [\n" +
-                "{\n" +
-                "id: " + profileId + ",\n" +
-                "profile: " + profileId + ",\n" +
-                "is_private: false,\n" +
-                "is_active: true,\n" +
-                "is_guest: true,\n" +
-                "is_organization: false,\n" +
-                "short_bio: \"" + shortBio + "\",\n" +
-                "details: \"" + details + "\",\n" +
-                "first_name: \"" + name + "\",\n" +
-                "last_name: \"" + lastName + "\",\n" +
-                "alias: null,\n" +
-                "avatar: \"" + imageLink + "\",\n" +
-                "cover: null,\n" +
-                "level: 0,\n" +
-                "level_title: \"guest\",\n" +
-                "tag_progresses: [ ],\n" +
-                "knowledge: 0,\n" +
-                "knowledge_rank: null,\n" +
-                "reputation: 0,\n" +
-                "reputation_rank: null,\n" +
-                "join_date: null,\n" +
-                "social_profiles: [ ],\n" +
-                "created_courses_count: 0,\n" +
-                "created_lessons_count: 0,\n" +
-                "issued_certificates_count: 0\n" +
-                "}\n" +
-                "]\n" +
-                "}";
+        fakeUserFromApi = FakeProfileGenerator.INSTANCE.generateFakeUser(profileId, name, lastName, imageLink, shortBio, details);
+        fromApiUserViewModel = new UserViewModel(UserExtensionKt.getFirstAndLastName(fakeUserFromApi), shortBio, details, imageLink, isMyProfile, profileId);
     }
 
     private void generateLocalModels() {
@@ -215,6 +180,38 @@ public class ProfilePresenterTest {
         InOrder inOrder = inOrder(profileView);
         inOrder.verify(profileView).showLoadingAll();
         inOrder.verify(profileView, times(n)).showNameImageShortBio(fromPreferencesUserViewModel);
+    }
+
+    @Test
+    public void initProfile_notMy_success() throws IOException {
+        profilePresenter.attachView(profileView);
+
+        Call<UserStepicResponse> userStepicResponseCall = (Call<UserStepicResponse>) mock(Call.class);
+        Response<UserStepicResponse> userResponse = (Response<UserStepicResponse>) mock(Response.class);
+        UserStepicResponse responseMock = mock(UserStepicResponse.class);
+        List<User> userListMock = (List<User>) mock(List.class);
+
+        when(api.getUsers(any(long[].class))).thenReturn(userStepicResponseCall);
+        when(userStepicResponseCall.execute()).thenReturn(userResponse);
+        when(userResponse.body()).thenReturn(responseMock);
+        when(responseMock.getUsers()).thenReturn(userListMock);
+        when(userListMock.get(0)).thenReturn(fakeUserFromApi);
+
+        when(sharedPreferenceHelper.getProfile()).thenReturn(preferencesProfileModel);
+
+
+        profilePresenter.initProfile(fromApiUserViewModel.getId());
+        profilePresenter.detachView(profileView);
+
+        verify(api, times(1)).getUsers(any(long[].class));
+
+        InOrder inOrder = inOrder(profileView);
+        inOrder.verify(profileView).showLoadingAll();
+        inOrder.verify(profileView).showNameImageShortBio(fromApiUserViewModel);
+
+        verify(profileView, never()).onInternetFailed();
+        verify(profileView, never()).onProfileNotFound();
+
     }
 
 
