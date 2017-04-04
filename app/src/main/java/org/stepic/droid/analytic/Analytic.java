@@ -14,6 +14,7 @@ public interface Analytic {
 
     interface System {
         String BOOT_COMPLETED = "boot_completed";
+        java.lang.String FIRST_LAUNCH_AFTER_INSTALL = "first_launch_after_install";
     }
 
     interface Preferences {
@@ -167,7 +168,6 @@ public interface Analytic {
         String LOAD_SERVICE = "Load Service";
         String PUSH_STATE_EXCEPTION = "Push state exception";
         String CANT_CREATE_NOMEDIA = "can't create .nomedia";
-        String CONFIG_NOT_PARSED = "configRelease, config.json problem";
         String ILLEGAL_STATE_NEXT_LESSON = "cant_show_next_lesson";
         String ILLEGAL_STATE_PREVIOUS_LESSON = "cant_show_previous_lesson";
         String FAIL_PUSH_STEP_VIEW = "fail_push_step_view";
