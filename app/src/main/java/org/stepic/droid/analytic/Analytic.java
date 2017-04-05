@@ -10,6 +10,11 @@ public interface Analytic {
     interface Login {
         String FAIL_LOGIN = "fail_login";
         String CLICK_REGISTRATION_SEND_IME = "click_registration_send_ime";
+
+        String REQUEST_LOGIN_WITH_INTERACTION_TYPE = "click_sign_in_with_interaction_type";
+
+        String TAP_ON_FIELDS_LOGIN = "tap_on_fields_login";
+        String TYPING_TEXT_FIELDS_LOGIN = "typing_text_fields_login";
     }
 
     interface System {
