@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
@@ -33,6 +34,10 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
 
     @Inject
     ScreenManager screenManager;
+
+    public LatexSupportableEnhancedFrameLayout(Context context) {
+        this(context, null);
+    }
 
     public LatexSupportableEnhancedFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -129,6 +134,8 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         } else {
             textView.setTextColor(colorArgb);
             setPlainText(text);
+            Linkify.addLinks(textView, Linkify.ALL);
+            textView.setLinksClickable(true);
         }
     }
 }
