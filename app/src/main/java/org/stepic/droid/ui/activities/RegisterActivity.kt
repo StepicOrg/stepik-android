@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.panel_custom_action_bar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.LoginInteractionType
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.core.LoginFailType
@@ -27,6 +28,7 @@ import org.stepic.droid.model.AuthData
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ValidatorUtil
 import org.stepic.droid.util.getMessageFor
+import org.stepic.droid.util.toBundle
 import org.stepic.droid.web.RegistrationResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -67,7 +69,7 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
         termsPrivacyRegisterTextView.movementMethod = LinkMovementMethod.getInstance()
         termsPrivacyRegisterTextView.text = textResolver.fromHtml(termsMessageHtml)
 
-        signUpButton.setOnClickListener { createAccount() }
+        signUpButton.setOnClickListener { createAccount(LoginInteractionType.button) }
         actionbarCloseButtonLayout.setOnClickListener { finish() }
 
         progressBar = ProgressDialog(this)
@@ -78,12 +80,30 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
         passwordTextView.setOnEditorActionListener { _, actionId, _ ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEND) {
-                analytic.reportEvent(Analytic.Login.CLICK_REGISTRATION_SEND_IME)
-                createAccount()
+                analytic.reportEvent(Analytic.Registration.CLICK_SEND_IME)
+                createAccount(LoginInteractionType.ime)
                 handled = true
             }
             handled
         }
+        val reportAnalyticWhenTextBecomeNotBlank = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                if (s.isNullOrBlank()) {
+                    analytic.reportEvent(Analytic.Registration.TYPING_TEXT_FIELDS)
+                }
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        }
+
+        emailView.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        registrationFirstName.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        registrationSecondName.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        passwordTextView.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
 
         passwordWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -100,10 +120,19 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
         }
         passwordTextView.addTextChangedListener(passwordWatcher)
 
-        val onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus -> setClearErrorOnFocus(v, hasFocus) }
+        val onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
+            setClearErrorOnFocus(v, hasFocus)
+            reportTap(hasFocus)
+        }
         emailView.onFocusChangeListener = onFocusChangeListener
         registrationFirstName.onFocusChangeListener = onFocusChangeListener
         registrationSecondName.onFocusChangeListener = onFocusChangeListener
+
+        passwordTextView.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            reportTap(hasFocus)
+        }
+
+
 
         registerRootView.requestFocus()
 
@@ -118,8 +147,16 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
         loginPresenter.attachView(this)
     }
 
+    private fun reportTap(hasFocus: Boolean) {
+        if (hasFocus) {
+            analytic.reportEvent(Analytic.Registration.TAP_ON_FIELDS)
+        }
+    }
 
-    private fun createAccount() {
+
+    private fun createAccount(interactionType: LoginInteractionType) {
+        analytic.reportEvent(Analytic.Registration.CLICK_WITH_INTERACTION_TYPE, interactionType.toBundle())
+
         val firstName = registrationFirstName.text.toString().trim()
         val lastName = registrationSecondName.text.toString().trim()
         val email = emailView.text.toString().trim()
@@ -193,6 +230,7 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
 
     private fun showError(textInputLayout: TextInputLayout?, errorText: String?) {
         if (textInputLayout != null && errorText != null) {
+            analytic.reportEventWithName(Analytic.Registration.ERROR, errorText)
             textInputLayout.isErrorEnabled = true
             textInputLayout.error = errorText
         }
@@ -219,16 +257,12 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
     }
 
     fun setClearErrorOnFocus(view: View?, hasFocus: Boolean) {
-        if (hasFocus) {
-            if (view?.id == R.id.emailView) {
-                hideError(emailViewWrapper)
-            }
-            if (view?.id == R.id.registrationFirstName) {
-                hideError(registrationFirstNameWrapper)
-            }
-            if (view?.id == R.id.registrationSecondName) {
-                hideError(registrationSecondNameWrapper)
-            }
+        if (!hasFocus) return
+
+        when (view?.id) {
+            R.id.emailView -> hideError(emailViewWrapper)
+            R.id.registrationFirstName -> hideError(registrationFirstNameWrapper)
+            R.id.registrationSecondName -> hideError(registrationSecondNameWrapper)
         }
     }
 
@@ -274,7 +308,7 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
             } else {
                 analytic.reportEvent(Analytic.SmartLock.REGISTRATION_NOT_SAVED)
             }
-            openMainFeed();
+            openMainFeed()
         }
 
     }

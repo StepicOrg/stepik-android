@@ -105,8 +105,8 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    Config provideIConfig(Context context, Analytic analytic) {
-        return new ConfigReleaseImpl(context, analytic);
+    Config provideConfig(Context context) {
+        return new ConfigReleaseImpl(context);
     }
 
     @Provides
@@ -270,8 +270,8 @@ public class AppCoreModule {
 
     @Provides
     @Singleton
-    Analytic provideAnalytic(Context context) {
-        return new AnalyticImpl(context);
+    Analytic provideAnalytic(Context context, Config config) {
+        return new AnalyticImpl(context, config);
     }
 
     @Provides
