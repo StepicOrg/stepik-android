@@ -7,14 +7,22 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
+    interface Registration {
+        String ERROR = "registration_error";
+        String TAP_ON_FIELDS = "tap_on_fields_registration";
+        String TYPING_TEXT_FIELDS = "typing_text_fields_registration";
+        String CLICK_WITH_INTERACTION_TYPE = "click_registration_with_interaction_type";
+        String CLICK_SEND_IME = "click_registration_send_ime";
+
+    }
+
     interface Login {
         String FAIL_LOGIN = "fail_login";
-        String CLICK_REGISTRATION_SEND_IME = "click_registration_send_ime";
 
         String REQUEST_LOGIN_WITH_INTERACTION_TYPE = "click_sign_in_with_interaction_type";
 
-        String TAP_ON_FIELDS_LOGIN = "tap_on_fields_login";
-        String TYPING_TEXT_FIELDS_LOGIN = "typing_text_fields_login";
+        String TAP_ON_FIELDS = "tap_on_fields_login";
+        String TYPING_TEXT_FIELDS = "typing_text_fields_login";
     }
 
     interface System {

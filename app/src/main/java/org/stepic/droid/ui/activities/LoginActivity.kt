@@ -98,7 +98,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
 
         val onFocusField = { _: View, hasFocus: Boolean ->
             if (hasFocus) {
-                analytic.reportEvent(Analytic.Login.TAP_ON_FIELDS_LOGIN)
+                analytic.reportEvent(Analytic.Login.TAP_ON_FIELDS)
             }
         }
         loginText.setOnFocusChangeListener(onFocusField)
@@ -107,7 +107,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         val reportAnalyticWhenTextBecomeNotBlank = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 if (s.isNullOrBlank()) {
-                    analytic.reportEvent(Analytic.Login.TYPING_TEXT_FIELDS_LOGIN)
+                    analytic.reportEvent(Analytic.Login.TYPING_TEXT_FIELDS)
                 }
             }
 
