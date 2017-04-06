@@ -2,8 +2,8 @@ package org.stepic.droid.notifications;
 
 
 import org.junit.Test;
-import static junit.framework.Assert.*;
 
+import static junit.framework.Assert.assertFalse;
 public class NotificationHelperTest {
 
     @Test

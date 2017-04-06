@@ -2,18 +2,18 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
        xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_gravity="center_vertical"
-              android:id="@+id/textView"
-              android:textSize="16sp"
-              android:textColor="@color/black"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:textColor="@color/black"
+        android:textSize="16sp"/>
 
     <org.stepic.droid.ui.custom.LatexSupportableWebView
-        android:layout_gravity="center_vertical"
         android:id="@+id/webView"
-        android:overScrollMode="never"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:overScrollMode="never"/>
 </merge>

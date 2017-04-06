@@ -16,7 +16,6 @@ class ShareHelperImpl(private val config: Config,
                       private val context: Context,
                       private val textResolver: TextResolver) : ShareHelper {
 
-
     private val textPlainType = "text/plain"
 
     override fun getIntentForCourseSharing(course: Course): Intent {
@@ -34,10 +33,9 @@ class ShareHelperImpl(private val config: Config,
                 append("\r\n")
             }
 
-            val uriForSharing = Uri.parse(StringUtil.getUriForCourse(config.baseUrl, course.slug)).toString()
-            append(uriForSharing)
         }
-        val textForSharing = textResolver.fromHtml(stringBuilder.toString()).toString()
+        val uriForSharing = Uri.parse(StringUtil.getUriForCourse(config.baseUrl, course.slug)).toString()
+        val textForSharing = textResolver.fromHtml(stringBuilder.toString()).toString() + "\r\n\r\n" + uriForSharing
         return getShareIntentBase(textForSharing)
     }
 
@@ -54,6 +52,23 @@ class ShareHelperImpl(private val config: Config,
         val textForSharing = Uri.parse(StringUtil.getAbsoluteUriForSection(config, section)).toString()
         return getShareIntentBase(textForSharing)
     }
+
+    override fun getIntentForProfileSharing(userViewModel: UserViewModel): Intent {
+        val stringBuilder = StringBuilder()
+        with(stringBuilder) {
+            if (userViewModel.fullName.isNotBlank()) {
+                append(userViewModel.fullName)
+                append("\r\n")
+                append("\r\n")
+            }
+
+            val uriForSharing = Uri.parse(StringUtil.getUriForProfile(config.baseUrl, userViewModel.id)).toString()
+            append(uriForSharing)
+        }
+        val textForSharing = stringBuilder.toString()
+        return getShareIntentBase(textForSharing)
+    }
+
 
     private fun getShareIntentBase(textForSharing: String): Intent {
         val shareIntent = Intent()

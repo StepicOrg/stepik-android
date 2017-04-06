@@ -7,13 +7,27 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Analytic {
 
+    interface Registration {
+        String ERROR = "registration_error";
+        String TAP_ON_FIELDS = "tap_on_fields_registration";
+        String TYPING_TEXT_FIELDS = "typing_text_fields_registration";
+        String CLICK_WITH_INTERACTION_TYPE = "click_registration_with_interaction_type";
+        String CLICK_SEND_IME = "click_registration_send_ime";
+
+    }
+
     interface Login {
         String FAIL_LOGIN = "fail_login";
-        String CLICK_REGISTRATION_SEND_IME = "click_registration_send_ime";
+
+        String REQUEST_LOGIN_WITH_INTERACTION_TYPE = "click_sign_in_with_interaction_type";
+
+        String TAP_ON_FIELDS = "tap_on_fields_login";
+        String TYPING_TEXT_FIELDS = "typing_text_fields_login";
     }
 
     interface System {
         String BOOT_COMPLETED = "boot_completed";
+        java.lang.String FIRST_LAUNCH_AFTER_INSTALL = "first_launch_after_install";
     }
 
     interface Preferences {
@@ -167,7 +181,6 @@ public interface Analytic {
         String LOAD_SERVICE = "Load Service";
         String PUSH_STATE_EXCEPTION = "Push state exception";
         String CANT_CREATE_NOMEDIA = "can't create .nomedia";
-        String CONFIG_NOT_PARSED = "configRelease, config.json problem";
         String ILLEGAL_STATE_NEXT_LESSON = "cant_show_next_lesson";
         String ILLEGAL_STATE_PREVIOUS_LESSON = "cant_show_previous_lesson";
         String FAIL_PUSH_STEP_VIEW = "fail_push_step_view";
@@ -256,6 +269,8 @@ public interface Analytic {
         String SHARE_ALL = "steps_share_all";
         String SHOW_KEEP_ON_SCREEN = "steps_show_keep_on_screen";
         String SHOW_KEEP_OFF_SCREEN = "steps_show_keep_off_screen";
+        String STEP_OPENED = "step_opened";
+        String CLICK_SEND_SUBMISSION_STEP_TYPE = "step_click_send";
     }
 
     interface Calendar {
@@ -378,7 +393,12 @@ public interface Analytic {
         String CONTINUE_NEW = "experiment_continue_new";
         String COURSE_OLD = "experiment_continue_course_old";// click whole course (only for enrolled)
         String COURSE_NEW = "experiment_continue_course_new";// click whole course (only for enrolled)
+    }
 
+    interface CourseDetailScreen {
+        String ANONYMOUS = "course_detail_anonymous";
+        String ENROLLED = "course_detail_enrolled";
+        String NOT_ENROLLED = "course_detail_not_enrolled";
     }
 
     void reportEvent(String eventName, Bundle bundle);

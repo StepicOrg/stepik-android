@@ -17,8 +17,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.net.HttpURLConnection
 import java.util.concurrent.ThreadPoolExecutor
+import javax.inject.Inject
 
-class CourseJoinerPresenter(
+class CourseJoinerPresenter
+@Inject constructor(
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val api: Api,
         private val threadPoolExecutor: ThreadPoolExecutor,

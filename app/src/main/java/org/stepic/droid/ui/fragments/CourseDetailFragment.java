@@ -45,8 +45,10 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.modules.CourseDetailModule;
+import org.stepic.droid.core.presenters.CourseDetailAnalyticPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
+import org.stepic.droid.core.presenters.contracts.CourseDetailAnalyticView;
 import org.stepic.droid.core.presenters.contracts.CourseJoinView;
 import org.stepic.droid.core.presenters.contracts.LoadCourseView;
 import org.stepic.droid.events.courses.CourseCantLoadEvent;
@@ -87,7 +89,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CourseDetailFragment extends FragmentBase implements LoadCourseView, CourseJoinView {
+public class CourseDetailFragment extends FragmentBase implements LoadCourseView, CourseJoinView, CourseDetailAnalyticView {
 
     private static String instaEnrollKey = "instaEnrollKey";
     private View.OnClickListener onClickReportListener;
@@ -197,6 +199,9 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     @Inject
     CourseJoinerPresenter courseJoinerPresenter;
 
+    @Inject
+    CourseDetailAnalyticPresenter courseDetailAnalyticPresenter;
+
     @Override
     protected void injectComponent() {
         App.component().plus(new CourseDetailModule()).inject(this);
@@ -278,9 +283,11 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
 
         courseFinderPresenter.attachView(this);
         courseJoinerPresenter.attachView(this);
+        courseDetailAnalyticPresenter.attachView(this);
         bus.register(this);
         //COURSE RELATED IN ON START
     }
+
 
     private void tryToShowCourse() {
         reportInternetProblem.setVisibility(View.GONE); // now we try show -> it is not visible
@@ -296,7 +303,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             }
 
         } else {
-            initScreenByCourse();//ok if mCourse is not null;
+            initScreenByCourse();//ok if course is not null;
         }
     }
 
@@ -316,6 +323,10 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         courseNotFoundView.setVisibility(View.GONE);
         //
         header.setVisibility(View.VISIBLE);
+
+        if (course != null) {
+            courseDetailAnalyticPresenter.onCourseDetailOpened(course);
+        }
 
         titleString = course.getTitle();
         descriptionString = course.getSummary();
@@ -597,6 +608,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
         bus.unregister(this);
         courseJoinerPresenter.detachView(this);
         courseFinderPresenter.detachView(this);
+        courseDetailAnalyticPresenter.detachView(this);
         reportInternetProblem.setOnClickListener(null);
         courseNotFoundView.setOnClickListener(null);
         introView.destroy();

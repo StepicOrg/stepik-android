@@ -16,6 +16,8 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.presenters.NotificationListPresenter;
+import org.stepic.droid.fonts.FontType;
+import org.stepic.droid.fonts.FontsProvider;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.ui.NotificationCategory;
 import org.stepic.droid.util.AppConstants;
@@ -59,14 +61,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     };
     private boolean isNeedEnableMarkButton = true;
 
-    public NotificationAdapter(Context context, NotificationListPresenter notificationListPresenter, NotificationCategory notificationCategory) {
+    public NotificationAdapter(Context context, NotificationListPresenter notificationListPresenter, NotificationCategory notificationCategory, FontsProvider fontsProvider) {
         this.context = context;
         this.notificationListPresenter = notificationListPresenter;
         this.notificationCategory = notificationCategory;
         zone = DateTimeZone.getDefault();
         locale = Locale.getDefault();
-        boldTypeface = TypefaceUtils.load(context.getAssets(), "fonts/NotoSans-Bold.ttf");
-        regularTypeface = TypefaceUtils.load(context.getAssets(), "fonts/NotoSans-Regular.ttf");
+        boldTypeface = TypefaceUtils.load(context.getAssets(),  fontsProvider.provideFontPath(FontType.bold));
+        regularTypeface = TypefaceUtils.load(context.getAssets(), fontsProvider.provideFontPath(FontType.regular));
         if (this.notificationCategory != NotificationCategory.all) {
             countOfHeads = 0;
         }

@@ -2,13 +2,20 @@ package org.stepic.droid.util
 
 
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
-import org.junit.Assert.*
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.util.*
 
 class KotlinUtilTest {
 
-    companion object {
-        val delimiter = ","
+    private var delimiter: Char = ' '
+
+    @Before
+    fun beforeEachTest() {
+        val numberFormat = NumberFormat.getNumberInstance(Locale.getDefault()) as DecimalFormat
+        delimiter = numberFormat.decimalFormatSymbols.decimalSeparator
     }
 
     @Test

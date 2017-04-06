@@ -53,6 +53,7 @@ import org.stepic.droid.core.presenters.ProfileMainFeedPresenter;
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView;
 import org.stepic.droid.core.presenters.contracts.ProfileView;
 import org.stepic.droid.events.updating.NeedUpdateEvent;
+import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.UserViewModel;
@@ -714,7 +715,7 @@ public class MainFeedActivity extends BackToExitActivityBase
             solvingWithoutBreakTextView.setVisibility(View.VISIBLE);
 
             String days = currentStreak + " " + getResources().getQuantityString(R.plurals.day_number, currentStreak);
-            CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(this.getAssets(), "fonts/NotoSans-Bold.ttf"));
+            CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(this.getAssets(), fontsProvider.provideFontPath(FontType.bold)));
             String prefix = getString(R.string.solving_without_break) + " ";
 
             SpannableString result = new SpannableString(prefix + days);

@@ -194,4 +194,16 @@ public class StringUtil {
         stringBuilder.append(context.getString(R.string.step_with_position, position));
         return stringBuilder.toString();
     }
+
+    public static String getUriForProfile(@Nullable String baseUrl, long id) {
+        StringBuilder sb;
+        sb = new StringBuilder();
+        sb.append(baseUrl);
+        sb.append(AppConstants.WEB_URI_SEPARATOR);
+        sb.append("users");
+        sb.append(AppConstants.WEB_URI_SEPARATOR);
+        sb.append(id);
+        sb.append(AppConstants.WEB_URI_SEPARATOR);
+        return sb.toString();
+    }
 }

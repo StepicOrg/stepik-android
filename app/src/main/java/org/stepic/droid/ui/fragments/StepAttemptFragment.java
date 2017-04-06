@@ -41,6 +41,7 @@ import org.stepic.droid.events.InternetIsEnabledEvent;
 import org.stepic.droid.events.comments.NewCommentWasAddedOrUpdateEvent;
 import org.stepic.droid.events.steps.StepWasUpdatedEvent;
 import org.stepic.droid.events.steps.UpdateStepEvent;
+import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.Attempt;
 import org.stepic.droid.model.DiscountingPolicyType;
 import org.stepic.droid.model.LessonSession;
@@ -50,6 +51,7 @@ import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
+import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.SnackbarExtensionKt;
@@ -149,6 +151,15 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
                     bundle.putLong(FirebaseAnalytics.Param.VALUE, 1L);
                     bundle.putString(FirebaseAnalytics.Param.ITEM_ID, step.getId() + "");
                     analytic.reportEvent(Analytic.Interaction.CLICK_SEND_SUBMISSION, bundle);//value
+
+                    final String stepTypeName;
+                    if (step != null && step.getBlock() != null && step.getBlock().getName() != null) {
+                        stepTypeName = step.getBlock().getName();
+                    } else {
+                        stepTypeName = AppConstants.TYPE_NULL;
+                    }
+                    analytic.reportEventWithName(Analytic.Steps.CLICK_SEND_SUBMISSION_STEP_TYPE, stepTypeName);
+
                     makeSubmission();
                 } else {
                     analytic.reportEvent(Analytic.Interaction.CLICK_TRY_STEP_AGAIN);
@@ -241,7 +252,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
     private void showStreakDialog(int daysOfCurrentStreakIncludeToday) {
         SpannableString streakTitle = new SpannableString(getString(R.string.streak_dialog_title));
         streakTitle.setSpan(new ForegroundColorSpan(Color.BLACK), 0, streakTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), "fonts/NotoSans-Bold.ttf"));
+        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(getContext().getAssets(), fontsProvider.provideFontPath(FontType.bold)));
         streakTitle.setSpan(typefaceSpan, 0, streakTitle.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         String description;

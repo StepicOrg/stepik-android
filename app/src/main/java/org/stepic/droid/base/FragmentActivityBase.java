@@ -27,6 +27,7 @@ import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.core.Shell;
+import org.stepic.droid.fonts.FontsProvider;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.notifications.INotificationManager;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
@@ -101,6 +102,9 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     @Inject
     protected FirebaseRemoteConfig firebaseRemoteConfig;
+
+    @Inject
+    protected FontsProvider fontsProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
