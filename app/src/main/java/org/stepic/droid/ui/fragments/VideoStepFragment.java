@@ -89,11 +89,11 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
         headerWvEnhanced.setVisibility(View.GONE);
 
         stepQualityPresenter.attachView(this);
-
         videoStepPresenter.attachView(this);
+        videoLengthPresenter.attachView(this);
+
         videoStepPresenter.initVideo(step);
 
-        videoLengthPresenter.attachView(this);
 
         player.setOnClickListener(new View.OnClickListener() {
             @Override
