@@ -63,13 +63,15 @@ public class StepModule {
                                         MainHandler mainHandler,
                                         DatabaseFacade databaseFacade,
                                         Api api,
-                                        SharedPreferenceHelper sharedPreferenceHelper) {
+                                        SharedPreferenceHelper sharedPreferenceHelper,
+                                        Analytic analytic) {
         return new StepsPresenter
                 (threadPoolExecutor,
                         mainHandler,
                         databaseFacade,
                         api,
-                        sharedPreferenceHelper);
+                        sharedPreferenceHelper,
+                        analytic);
     }
 
     @Provides

@@ -1,5 +1,6 @@
 package org.stepic.droid.core.presenters
 
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.StepsView
 import org.stepic.droid.model.Lesson
@@ -17,11 +18,13 @@ import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 
-class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
-                     val mainHandler: MainHandler,
-                     val databaseFacade: DatabaseFacade,
-                     val api: Api,
-                     val sharedPreferenceHelper: SharedPreferenceHelper) : PresenterBase<StepsView>() {
+class StepsPresenter(
+        private val threadPoolExecutor: ThreadPoolExecutor,
+        private val mainHandler: MainHandler,
+        private val databaseFacade: DatabaseFacade,
+        private val api: Api,
+        private val sharedPreferenceHelper: SharedPreferenceHelper,
+        private val analytic: Analytic) : PresenterBase<StepsView>() {
 
     var lesson: Lesson? = null
         private set
@@ -113,7 +116,7 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
             val stepList: MutableList<Step> = databaseFacade.getStepsOfLesson(it.id).filterNotNull().toMutableList()
             stepList.sortWith(Comparator { lhs, rhs ->
                 if (lhs == null || rhs == null) {
-                    0.toInt()
+                    0
                 } else {
                     val lhsPos = lhs.position
                     val rhsPos = rhs.position
@@ -155,14 +158,19 @@ class StepsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
                 }
                 return
             } else {
-                val stepListFromInternet = response.body().steps
-                if (stepListFromInternet.isEmpty()) {
+                val stepListFromInternet = response.body()?.steps
+                if (stepListFromInternet == null || stepListFromInternet.isEmpty()) {
                     if (!isStepsShown) {
                         if (it.steps?.isEmpty() ?: true) {
+                            //lesson does not have steps
                             mainHandler.post {
                                 view?.onEmptySteps()
                             }
                         } else {
+                            //access is denied
+                            val code = response.code().toString()
+                            analytic.reportEventWithIdName(Analytic.Error.LESSON_ACCESS_DENIED, code, response.errorBody()?.string() ?: "error body was null")
+                            analytic.reportEventWithIdName(Analytic.Error.LESSON_ACCESS_DENIED, code, response.message()?.toString() ?: "message  was null")
                             mainHandler.post {
                                 view?.onLessonCorrupted()
                             }

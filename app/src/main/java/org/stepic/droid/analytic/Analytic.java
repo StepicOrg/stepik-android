@@ -197,6 +197,7 @@ public interface Analytic {
         String FAIL_LOGOUT_WHEN_REFRESH = "refresh_fail_logout_social";
         String UNITS_LOADING_FAIL = "units_loading_fail";
         String UNPREDICTABLE_LOGIN_RESULT = "login_successful_was_not_correct";
+        String LESSON_ACCESS_DENIED = "lesson_access_denied";
     }
 
     interface Web {
