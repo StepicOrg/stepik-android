@@ -1,5 +1,6 @@
 package org.stepic.droid.core.presenters
 
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.StepsView
 import org.stepic.droid.model.Lesson
@@ -22,7 +23,8 @@ class StepsPresenter(
         private val mainHandler: MainHandler,
         private val databaseFacade: DatabaseFacade,
         private val api: Api,
-        private val sharedPreferenceHelper: SharedPreferenceHelper) : PresenterBase<StepsView>() {
+        private val sharedPreferenceHelper: SharedPreferenceHelper,
+        private val analytic: Analytic) : PresenterBase<StepsView>() {
 
     var lesson: Lesson? = null
         private set
@@ -166,6 +168,9 @@ class StepsPresenter(
                             }
                         } else {
                             //access is denied
+                            val code = response.code().toString()
+                            analytic.reportEventWithIdName(Analytic.Error.LESSON_ACCESS_DENIED, code, response.errorBody()?.string() ?: "error body was null")
+                            analytic.reportEventWithIdName(Analytic.Error.LESSON_ACCESS_DENIED, code, response.message()?.toString() ?: "message  was null")
                             mainHandler.post {
                                 view?.onLessonCorrupted()
                             }
