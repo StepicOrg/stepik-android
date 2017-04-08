@@ -20,7 +20,7 @@ import org.stepic.droid.core.modules.LoginModule;
 import org.stepic.droid.core.modules.MainFeedModule;
 import org.stepic.droid.core.modules.NotificationModule;
 import org.stepic.droid.core.modules.VideoModule;
-import org.stepic.droid.di.certificate.CertificateComponent;
+import org.stepic.droid.di.certificates.CertificateComponent;
 import org.stepic.droid.di.course.CourseComponent;
 import org.stepic.droid.di.lesson.LessonComponent;
 import org.stepic.droid.di.profile.ProfileComponent;

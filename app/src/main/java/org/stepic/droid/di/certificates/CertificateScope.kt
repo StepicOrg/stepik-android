@@ -1,4 +1,4 @@
-package org.stepic.droid.di.certificate
+package org.stepic.droid.di.certificates
 
 import javax.inject.Scope
 
