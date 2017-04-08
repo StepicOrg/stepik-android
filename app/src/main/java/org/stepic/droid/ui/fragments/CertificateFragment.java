@@ -15,9 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.App;
-import org.stepic.droid.core.modules.CertificateModule;
+import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.presenters.CertificatePresenter;
 import org.stepic.droid.core.presenters.contracts.CertificateView;
 import org.stepic.droid.model.CertificateViewItem;
@@ -68,7 +67,11 @@ public class CertificateFragment extends FragmentBase implements CertificateView
 
     @Override
     protected void injectComponent() {
-        App.component().plus(new CertificateModule()).inject(this);
+        App
+                .component()
+                .certificateComponentBuilder()
+                .build()
+                .inject(this);
     }
 
     @Override

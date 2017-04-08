@@ -8,7 +8,6 @@ import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.concurrency.DownloadPoster;
 import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.core.MyPhoneStateListener;
-import org.stepic.droid.core.components.CertificateComponent;
 import org.stepic.droid.core.components.CourseDetailComponent;
 import org.stepic.droid.core.components.CourseListComponent;
 import org.stepic.droid.core.components.FilterComponent;
@@ -20,7 +19,6 @@ import org.stepic.droid.core.components.SectionComponent;
 import org.stepic.droid.core.components.StepComponent;
 import org.stepic.droid.core.components.UnitsComponent;
 import org.stepic.droid.core.components.VideoComponent;
-import org.stepic.droid.core.modules.CertificateModule;
 import org.stepic.droid.core.modules.CourseDetailModule;
 import org.stepic.droid.core.modules.CourseListModule;
 import org.stepic.droid.core.modules.FilterModule;
@@ -32,6 +30,7 @@ import org.stepic.droid.core.modules.SectionModule;
 import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.modules.UnitsModule;
 import org.stepic.droid.core.modules.VideoModule;
+import org.stepic.droid.di.certificate.CertificateComponent;
 import org.stepic.droid.di.storage.StorageComponent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.notifications.HackFcmListener;
@@ -103,7 +102,7 @@ public interface AppCoreComponent {
 
     CourseDetailComponent plus(CourseDetailModule module);
 
-    CertificateComponent plus(CertificateModule module);
+    CertificateComponent.Builder certificateComponentBuilder();
 
     StepComponent plus(StepModule module);
 

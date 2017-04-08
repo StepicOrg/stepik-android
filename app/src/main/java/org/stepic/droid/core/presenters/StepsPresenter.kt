@@ -17,8 +17,10 @@ import retrofit2.Response
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
+import javax.inject.Inject
 
-class StepsPresenter(
+class StepsPresenter
+@Inject constructor(
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
         private val databaseFacade: DatabaseFacade,
