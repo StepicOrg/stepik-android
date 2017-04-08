@@ -94,7 +94,7 @@ class VideoStepPresenter(
     @WorkerThread
     private fun getVideoFromWeb(stepId: Long): Video? {
         try {
-            return api.getSteps(longArrayOf(stepId)).execute().body().steps.firstOrNull()?.block?.video
+            return api.getSteps(longArrayOf(stepId)).execute().body()?.steps?.firstOrNull()?.block?.video
         } catch (e: Exception) {
             return null // Internet is not available or video is not uploaded in web
         }

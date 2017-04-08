@@ -605,9 +605,10 @@ public class ApiImpl implements Api {
                 .build();
         StepikDeskEmptyAuthService tempService = notLogged.create(StepikDeskEmptyAuthService.class);
 
+        rawDescription = rawDescription.replace("\n", "<br>");
         String subject = context.getString(R.string.feedback_subject);
-        String aboutSystem = DeviceInfoUtil.getInfosAboutDevice(context);
-        rawDescription = rawDescription + "\n\n" + aboutSystem;
+        String aboutSystem = DeviceInfoUtil.getInfosAboutDevice(context, "<br>");
+        rawDescription = rawDescription + "<br><br>" + aboutSystem;
         return tempService.sendFeedback(subject, email, aboutSystem, rawDescription);
     }
 

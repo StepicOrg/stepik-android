@@ -63,7 +63,7 @@ class ContinueCoursePresenter(
                     val section = fetchSection(sectionId)
                     val lessonId = unit.lesson
 
-                    val step = fetchStep(stepId)
+                    val step = fetchStep(stepId)!!
 
                     val stepPosition = step.position.toInt()
 
@@ -102,12 +102,12 @@ class ContinueCoursePresenter(
         return section!!
     }
 
-    private fun fetchStep(stepId: Long): Step {
+    private fun fetchStep(stepId: Long): Step? {
         var step = databaseFacade.getStepById(stepId)
         if (step == null) {
-            step = api.getSteps(longArrayOf(stepId)).execute().body().steps.first()
+            step = api.getSteps(longArrayOf(stepId)).execute().body()?.steps?.first()
         }
-        return step!!
+        return step
     }
 
 }

@@ -29,8 +29,8 @@ object NotificationHelper {
         validActions.add("queued_long_task_execution")
     }
 
-    fun isNotificationValidByAction(notification: Notification): Boolean {
-        val action = notification.action;
+    fun isNotificationValidByAction(notification: Notification?): Boolean {
+        val action = notification?.action;
         return action != null && validActions.contains(action)
     }
 }

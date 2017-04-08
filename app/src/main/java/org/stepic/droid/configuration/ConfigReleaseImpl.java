@@ -6,7 +6,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.web.Api;
 
 import java.io.InputStream;
@@ -45,14 +44,13 @@ public class ConfigReleaseImpl implements Config {
 
 
     @Inject
-    public ConfigReleaseImpl(Context context, Analytic analytic) {
+    public ConfigReleaseImpl(Context context) {
         try {
             InputStream in = context.getAssets().open("configs/config.json");
             JsonParser parser = new JsonParser();
             JsonElement config = parser.parse(new InputStreamReader(in));
             properties = config.getAsJsonObject();
         } catch (Exception e) {
-            analytic.reportError(Analytic.Error.CONFIG_NOT_PARSED, e);
             properties = new JsonObject();
         }
     }
