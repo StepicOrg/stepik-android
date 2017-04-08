@@ -216,7 +216,7 @@ public class SectionsFragment
     protected void injectComponent() {
         App
                 .component()
-                .sectionComponentBuilder()
+                .courseComponentBuilder()
                 .build()
                 .inject(this);
     }

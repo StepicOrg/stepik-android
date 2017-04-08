@@ -2,16 +2,19 @@ package org.stepic.droid.di.course
 
 import dagger.Subcomponent
 import org.stepic.droid.ui.fragments.CourseDetailFragment
+import org.stepic.droid.ui.fragments.SectionsFragment
 
 
 @CourseAndSectionsScope
 @Subcomponent
-interface CourseDetailComponent {
+interface CourseComponent {
 
     @Subcomponent.Builder
     interface Builder {
-        fun build(): CourseDetailComponent
+        fun build(): CourseComponent
     }
 
     fun inject(courseDetailFragment: CourseDetailFragment)
+
+    fun inject(sectionsFragment: SectionsFragment)
 }

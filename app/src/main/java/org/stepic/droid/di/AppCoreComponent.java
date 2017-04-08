@@ -13,20 +13,18 @@ import org.stepic.droid.core.components.FilterComponent;
 import org.stepic.droid.core.components.LoginComponent;
 import org.stepic.droid.core.components.MainFeedComponent;
 import org.stepic.droid.core.components.NotificationComponent;
-import org.stepic.droid.core.components.UnitsComponent;
 import org.stepic.droid.core.components.VideoComponent;
 import org.stepic.droid.core.modules.CourseListModule;
 import org.stepic.droid.core.modules.FilterModule;
 import org.stepic.droid.core.modules.LoginModule;
 import org.stepic.droid.core.modules.MainFeedModule;
 import org.stepic.droid.core.modules.NotificationModule;
-import org.stepic.droid.core.modules.UnitsModule;
 import org.stepic.droid.core.modules.VideoModule;
 import org.stepic.droid.di.certificate.CertificateComponent;
-import org.stepic.droid.di.course.CourseDetailComponent;
-import org.stepic.droid.di.course.SectionComponent;
+import org.stepic.droid.di.course.CourseComponent;
 import org.stepic.droid.di.lesson.LessonComponent;
 import org.stepic.droid.di.profile.ProfileComponent;
+import org.stepic.droid.di.section.SectionComponent;
 import org.stepic.droid.di.step.StepComponent;
 import org.stepic.droid.di.storage.StorageComponent;
 import org.stepic.droid.model.Course;
@@ -97,7 +95,7 @@ public interface AppCoreComponent {
 
     CertificateComponent.Builder certificateComponentBuilder();
 
-    CourseDetailComponent.Builder courseDetailComponentBuilder();
+    CourseComponent.Builder courseComponentBuilder();
 
     SectionComponent.Builder sectionComponentBuilder();
 
@@ -112,8 +110,6 @@ public interface AppCoreComponent {
     CourseListComponent plus(CourseListModule module);
 
     MainFeedComponent plus(MainFeedModule module);
-
-    UnitsComponent plus(UnitsModule module);
 
     NotificationComponent plus(NotificationModule module);
 

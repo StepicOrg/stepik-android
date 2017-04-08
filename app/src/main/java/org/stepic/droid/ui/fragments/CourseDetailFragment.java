@@ -205,7 +205,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     protected void injectComponent() {
         App
                 .component()
-                .courseDetailComponentBuilder()
+                .courseComponentBuilder()
                 .build()
                 .inject(this);
     }

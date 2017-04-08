@@ -14,7 +14,7 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.collections.HashMap
 
-//fixme: refactor it, merge with DownloadingProgressUnitPublisher
+//fixme: refactor it, merge with DownloadingProgressUnitsPublisher
 @CourseAndSectionsScope
 class DownloadingProgressSectionPublisher
 @Inject constructor(
