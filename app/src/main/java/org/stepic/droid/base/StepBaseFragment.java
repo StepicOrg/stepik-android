@@ -21,7 +21,6 @@ import com.squareup.otto.Subscribe;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.presenters.AnonymousPresenter;
 import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.contracts.AnonymousView;
@@ -99,7 +98,11 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
 
     @Override
     protected void injectComponent() {
-        App.component().plus(new StepModule()).inject(this);
+        App
+                .component()
+                .stepComponentBuilder()
+                .build()
+                .inject(this);
     }
 
     @Override

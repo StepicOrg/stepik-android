@@ -25,11 +25,10 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.base.App;
-import org.stepic.droid.core.modules.StepModule;
-import org.stepic.droid.core.presenters.StepsPresenter;
+import org.stepic.droid.core.presenters.LessonPresenter;
 import org.stepic.droid.core.presenters.StepsTrackingPresenter;
-import org.stepic.droid.core.presenters.contracts.StepsTrackingView;
-import org.stepic.droid.core.presenters.contracts.StepsView;
+import org.stepic.droid.core.presenters.contracts.LessonTrackingView;
+import org.stepic.droid.core.presenters.contracts.LessonView;
 import org.stepic.droid.events.steps.UpdateStepEvent;
 import org.stepic.droid.model.Lesson;
 import org.stepic.droid.model.PersistentLastStep;
@@ -48,7 +47,7 @@ import javax.inject.Inject;
 import butterknife.BindString;
 import butterknife.BindView;
 
-public class StepsFragment extends FragmentBase implements StepsView, StepsTrackingView {
+public class LessonFragment extends FragmentBase implements LessonView, LessonTrackingView {
     private static final String FROM_PREVIOUS_KEY = "fromPrevKey";
     private static final String SIMPLE_UNIT_ID_KEY = "simpleUnitId";
     private static final String SIMPLE_LESSON_ID_KEY = "simpleLessonId";
@@ -78,24 +77,24 @@ public class StepsFragment extends FragmentBase implements StepsView, StepsTrack
         }
     };
 
-    public static StepsFragment newInstance(@org.jetbrains.annotations.Nullable Unit unit, Lesson lesson, boolean fromPreviousLesson, Section section) {
+    public static LessonFragment newInstance(@org.jetbrains.annotations.Nullable Unit unit, Lesson lesson, boolean fromPreviousLesson, Section section) {
         Bundle args = new Bundle();
         args.putParcelable(AppConstants.KEY_UNIT_BUNDLE, unit);
         args.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lesson);
         args.putParcelable(AppConstants.KEY_SECTION_BUNDLE, section);
         args.putBoolean(FROM_PREVIOUS_KEY, fromPreviousLesson);
-        StepsFragment fragment = new StepsFragment();
+        LessonFragment fragment = new LessonFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public static StepsFragment newInstance(long simpleUnitId, long simpleLessonId, long simpleStepPosition, long discussionSampleId) {
+    public static LessonFragment newInstance(long simpleUnitId, long simpleLessonId, long simpleStepPosition, long discussionSampleId) {
         Bundle args = new Bundle();
         args.putLong(SIMPLE_UNIT_ID_KEY, simpleUnitId);
         args.putLong(SIMPLE_LESSON_ID_KEY, simpleLessonId);
         args.putLong(SIMPLE_STEP_POSITION_KEY, simpleStepPosition);
         args.putLong(SIMPLE_DISCUSSION_ID_KEY, discussionSampleId);
-        StepsFragment fragment = new StepsFragment();
+        LessonFragment fragment = new LessonFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -133,7 +132,7 @@ public class StepsFragment extends FragmentBase implements StepsView, StepsTrack
     StepFragmentAdapter stepAdapter;
 
     @Inject
-    StepsPresenter stepsPresenter;
+    LessonPresenter stepsPresenter;
 
     @Inject
     StepTypeResolver stepTypeResolver;
@@ -150,7 +149,8 @@ public class StepsFragment extends FragmentBase implements StepsView, StepsTrack
 
         App
                 .component()
-                .plus(new StepModule())
+                .lessonComponentBuilder()
+                .build()
                 .inject(this);
     }
 

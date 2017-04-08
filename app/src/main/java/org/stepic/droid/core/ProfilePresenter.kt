@@ -5,6 +5,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.PresenterBase
 import org.stepic.droid.core.presenters.contracts.ProfileView
+import org.stepic.droid.di.profile.ProfileScope
 import org.stepic.droid.model.Profile
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -12,12 +13,16 @@ import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.getFirstAndLastName
 import org.stepic.droid.web.Api
 import java.util.concurrent.ThreadPoolExecutor
+import javax.inject.Inject
 
-class ProfilePresenter(private val threadPoolExecutor: ThreadPoolExecutor,
-                       private val analytic: Analytic,
-                       private val mainHandler: MainHandler,
-                       private val api: Api,
-                       private val sharedPreferences: SharedPreferenceHelper) : PresenterBase<ProfileView>() {
+@ProfileScope
+class ProfilePresenter
+@Inject constructor(
+        private val threadPoolExecutor: ThreadPoolExecutor,
+        private val analytic: Analytic,
+        private val mainHandler: MainHandler,
+        private val api: Api,
+        private val sharedPreferences: SharedPreferenceHelper) : PresenterBase<ProfileView>() {
 
     private var isLoading: Boolean = false //main thread only
     private var userViewModel: UserViewModel? = null //both threads, but access only when isLoading = false, write isLoading = true.
@@ -41,7 +46,7 @@ class ProfilePresenter(private val threadPoolExecutor: ThreadPoolExecutor,
                     threadPoolExecutor.execute {
                         showStreaks(it.id)
                     }
-                    isLoading =false
+                    isLoading = false
                     return
                 }
             } else {

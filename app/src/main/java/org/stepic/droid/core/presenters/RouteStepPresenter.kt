@@ -3,16 +3,20 @@ package org.stepic.droid.core.presenters
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.RouteStepView
+import org.stepic.droid.di.step.StepScope
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Unit
 import org.stepic.droid.storage.operations.DatabaseFacade
 import java.util.concurrent.ThreadPoolExecutor
+import javax.inject.Inject
 
-class RouteStepPresenter(
-        val threadPoolExecutor: ThreadPoolExecutor,
-        val mainHandler: MainHandler,
-        val databaseFacade: DatabaseFacade,
-        val analytic: Analytic) : PresenterBase<RouteStepView>() {
+@StepScope
+class RouteStepPresenter
+@Inject constructor(
+        private val threadPoolExecutor: ThreadPoolExecutor,
+        private val mainHandler: MainHandler,
+        private val databaseFacade: DatabaseFacade,
+        private val analytic: Analytic) : PresenterBase<RouteStepView>() {
 
     /**
      * Last step in lesson can be shown differently

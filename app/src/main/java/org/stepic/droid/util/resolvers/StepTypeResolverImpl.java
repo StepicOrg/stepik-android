@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepBaseFragment;
-import org.stepic.droid.di.AppSingleton;
+import org.stepic.droid.di.lesson.LessonScope;
 import org.stepic.droid.model.Step;
 import org.stepic.droid.ui.fragments.ChoiceStepFragment;
 import org.stepic.droid.ui.fragments.FillBlanksFragment;
@@ -30,9 +30,11 @@ import org.stepic.droid.util.AppConstants;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
-@AppSingleton
+@LessonScope
 public class StepTypeResolverImpl implements StepTypeResolver {
 
     private Map<String, Drawable> mapFromTypeToDrawable;
@@ -41,8 +43,8 @@ public class StepTypeResolverImpl implements StepTypeResolver {
     private Drawable peerReviewDrawable;
     private Drawable peerReviewDrawableNotViewed;
 
-
-    public StepTypeResolverImpl(Context context) {
+    @Inject
+    StepTypeResolverImpl(Context context) {
 
         Timber.d("create step type resolver: %s", toString());
 

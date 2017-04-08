@@ -1,18 +1,18 @@
 package org.stepic.droid.core.presenters
 
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView
 import org.stepic.droid.notifications.LocalReminder
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.util.TimeIntervalUtil
-import java.util.concurrent.ThreadPoolExecutor
+import javax.inject.Inject
 
-class NotificationTimePresenter(val analytic: Analytic,
-                                val threadPoolExecutor: ThreadPoolExecutor,
-                                val mainHandler: MainHandler,
-                                val sharedPreferenceHelper: SharedPreferenceHelper,
-                                val localReminder: LocalReminder) : PresenterBase<NotificationTimeView>() {
+class StreakPresenter
+@Inject constructor(
+        private val analytic: Analytic,
+        private val sharedPreferenceHelper: SharedPreferenceHelper,
+        private val localReminder: LocalReminder) : PresenterBase<NotificationTimeView>() {
+
     fun tryShowNotificationSetting() {
         val isEnabled = sharedPreferenceHelper.isStreakNotificationEnabled
         val code = sharedPreferenceHelper.timeNotificationCode

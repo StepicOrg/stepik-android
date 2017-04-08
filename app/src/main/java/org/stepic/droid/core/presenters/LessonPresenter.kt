@@ -2,7 +2,9 @@ package org.stepic.droid.core.presenters
 
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
-import org.stepic.droid.core.presenters.contracts.StepsView
+import org.stepic.droid.core.presenters.contracts.LessonView
+import org.stepic.droid.di.step.StepScope
+import org.stepic.droid.di.lesson.LessonScope
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Section
 import org.stepic.droid.model.Step
@@ -19,14 +21,15 @@ import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
-class StepsPresenter
+@LessonScope
+class LessonPresenter
 @Inject constructor(
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val mainHandler: MainHandler,
         private val databaseFacade: DatabaseFacade,
         private val api: Api,
         private val sharedPreferenceHelper: SharedPreferenceHelper,
-        private val analytic: Analytic) : PresenterBase<StepsView>() {
+        private val analytic: Analytic) : PresenterBase<LessonView>() {
 
     var lesson: Lesson? = null
         private set
@@ -235,7 +238,7 @@ class StepsPresenter
                 databaseFacade.addProgress(progress = it)
             }
 
-            //FIXME: Warning, it is mutable objects, which we show on StepsFragment and change here or not show, if we shown from database
+            //FIXME: Warning, it is mutable objects, which we show on LessonFragment and change here or not show, if we shown from database
             stepListFromInternet.forEach {
                 it.is_custom_passed = databaseFacade.isStepPassed(it)
                 databaseFacade.addStep(it) // update step in db

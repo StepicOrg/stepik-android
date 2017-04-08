@@ -13,8 +13,6 @@ import org.stepic.droid.core.components.FilterComponent;
 import org.stepic.droid.core.components.LoginComponent;
 import org.stepic.droid.core.components.MainFeedComponent;
 import org.stepic.droid.core.components.NotificationComponent;
-import org.stepic.droid.core.components.ProfileComponent;
-import org.stepic.droid.core.components.StepComponent;
 import org.stepic.droid.core.components.UnitsComponent;
 import org.stepic.droid.core.components.VideoComponent;
 import org.stepic.droid.core.modules.CourseListModule;
@@ -22,13 +20,14 @@ import org.stepic.droid.core.modules.FilterModule;
 import org.stepic.droid.core.modules.LoginModule;
 import org.stepic.droid.core.modules.MainFeedModule;
 import org.stepic.droid.core.modules.NotificationModule;
-import org.stepic.droid.core.modules.ProfileModule;
-import org.stepic.droid.core.modules.StepModule;
 import org.stepic.droid.core.modules.UnitsModule;
 import org.stepic.droid.core.modules.VideoModule;
 import org.stepic.droid.di.certificate.CertificateComponent;
 import org.stepic.droid.di.course.CourseDetailComponent;
 import org.stepic.droid.di.course.SectionComponent;
+import org.stepic.droid.di.lesson.LessonComponent;
+import org.stepic.droid.di.profile.ProfileComponent;
+import org.stepic.droid.di.step.StepComponent;
 import org.stepic.droid.di.storage.StorageComponent;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.notifications.HackFcmListener;
@@ -94,7 +93,7 @@ public interface AppCoreComponent {
 
     LoginComponent plus(LoginModule loginModule);
 
-    ProfileComponent plus(ProfileModule profileModule);
+    ProfileComponent.Builder profileComponentBuilder();
 
     CertificateComponent.Builder certificateComponentBuilder();
 
@@ -102,7 +101,9 @@ public interface AppCoreComponent {
 
     SectionComponent.Builder sectionComponentBuilder();
 
-    StepComponent plus(StepModule module);
+    StepComponent.Builder stepComponentBuilder();
+
+    LessonComponent.Builder lessonComponentBuilder();
 
     VideoComponent plus(VideoModule module);
 
