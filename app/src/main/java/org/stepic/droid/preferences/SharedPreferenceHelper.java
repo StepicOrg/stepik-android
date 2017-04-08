@@ -14,12 +14,13 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.DefaultFilter;
+import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.EmailAddress;
 import org.stepic.droid.model.Profile;
 import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.model.comments.DiscussionOrder;
 import org.stepic.droid.notifications.model.NotificationType;
-import org.stepic.droid.store.operations.Table;
+import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.RWLocks;
@@ -29,9 +30,8 @@ import java.util.EnumSet;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-@Singleton
+@AppSingleton
 public class SharedPreferenceHelper {
     private static final String NOTIFICATION_SOUND_DISABLED = "notification_sound";
     private static final String TEMP_UPDATE_LINK = "temp_update_link";

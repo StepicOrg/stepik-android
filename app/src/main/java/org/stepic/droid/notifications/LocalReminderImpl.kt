@@ -12,8 +12,8 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.services.NewUserAlarmService
 import org.stepic.droid.services.StreakAlarmService
-import org.stepic.droid.store.operations.DatabaseFacade
-import org.stepic.droid.store.operations.Table
+import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.Table
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject

@@ -10,7 +10,7 @@ import org.stepic.droid.core.presenters.CourseDetailAnalyticPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.web.Api;
 
 import java.util.concurrent.ThreadPoolExecutor;

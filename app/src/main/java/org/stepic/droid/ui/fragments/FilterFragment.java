@@ -22,7 +22,7 @@ import org.stepic.droid.core.modules.FilterModule;
 import org.stepic.droid.core.presenters.FilterPresenter;
 import org.stepic.droid.core.presenters.contracts.FilterView;
 import org.stepic.droid.model.StepikFilter;
-import org.stepic.droid.store.operations.Table;
+import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.util.AppConstants;
 
 import java.util.EnumSet;

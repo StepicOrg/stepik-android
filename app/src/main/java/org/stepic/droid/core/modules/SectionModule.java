@@ -19,8 +19,8 @@ import org.stepic.droid.core.presenters.InvitationPresenter;
 import org.stepic.droid.core.presenters.SectionsPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.CancelSniffer;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.storage.CancelSniffer;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.web.Api;
 
 import java.util.concurrent.ThreadPoolExecutor;

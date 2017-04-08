@@ -32,7 +32,7 @@ import org.stepic.droid.model.Course;
 import org.stepic.droid.notifications.NotificationManager;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.ui.fragments.MyCoursesFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;

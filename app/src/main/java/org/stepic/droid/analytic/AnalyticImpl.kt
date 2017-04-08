@@ -8,11 +8,11 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI
 import com.yandex.metrica.YandexMetrica
 import org.json.JSONObject
 import org.stepic.droid.configuration.Config
+import org.stepic.droid.di.AppSingleton
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@AppSingleton
 class AnalyticImpl
 @Inject constructor(context: Context, config: Config) : Analytic {
     override fun reportEventValue(eventName: String, value: Long) {

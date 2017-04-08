@@ -6,7 +6,7 @@ import android.webkit.CookieManager
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
-import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.FileUtil
 import org.stepic.droid.util.RWLocks
 import java.util.concurrent.ThreadPoolExecutor

@@ -9,7 +9,7 @@ import org.stepic.droid.model.Progress
 import org.stepic.droid.model.Section
 import org.stepic.droid.model.Unit
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressUtil
 import org.stepic.droid.util.StepikLogicHelper

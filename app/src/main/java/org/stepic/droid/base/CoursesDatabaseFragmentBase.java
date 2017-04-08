@@ -25,7 +25,7 @@ import org.stepic.droid.events.courses.FailDropCourseEvent;
 import org.stepic.droid.events.courses.SuccessDropCourseEvent;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.store.operations.Table;
+import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.ui.fragments.CourseListFragmentBase;
 import org.stepic.droid.ui.util.BackButtonHandler;
 import org.stepic.droid.ui.util.ContextMenuRecyclerView;

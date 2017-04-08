@@ -116,18 +116,23 @@ android {
     }
 }
 
+kapt {
+    generateStubs = true
+}
+
 dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     //<DI>
     apt 'com.google.dagger:dagger-compiler:2.10'
+    kapt 'com.google.dagger:dagger-compiler:2.10'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.dagger:dagger:2.10'
     provided 'javax.annotation:jsr250-api:1.0'
     //needed to resolve compilation errors, thanks to tutplus.org for finding the dependency
-    compile 'com.jakewharton:butterknife:8.2.1'
-    apt 'com.jakewharton:butterknife-compiler:8.2.1'
+    compile 'com.jakewharton:butterknife:8.5.1'
+    kapt 'com.jakewharton:butterknife-compiler:8.5.1'
     //</DI>
 
     compile 'com.android.support:multidex:1.0.1'
@@ -197,21 +202,21 @@ dependencies {
 
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
 
-    androidTestCompile 'com.android.support:support-annotations:25.0.1'
+    androidTestCompile 'com.android.support:support-annotations:25.1.0'
 
-    androidTestCompile ('com.android.support.test:runner:0.5') {
+    androidTestCompile('com.android.support.test:runner:0.5') {
         exclude group: 'com.android.support'
     }
-    androidTestCompile ('com.android.support.test:rules:0.5') {
+    androidTestCompile('com.android.support.test:rules:0.5') {
         exclude group: 'com.android.support'
     }
-    androidTestCompile ('com.android.support.test.espresso:espresso-core:2.2.2') {
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2') {
         exclude group: 'com.android.support'
     }
-    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.2') {
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.2') {
         exclude group: 'com.android.support'
     }
-    androidTestCompile ('com.android.support.test.espresso:espresso-intents:2.2.2') {
+    androidTestCompile('com.android.support.test.espresso:espresso-intents:2.2.2') {
         exclude group: 'com.android.support'
     }
 

@@ -21,9 +21,9 @@ import org.stepic.droid.fonts.FontsProvider;
 import org.stepic.droid.notifications.LocalReminder;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.CancelSniffer;
-import org.stepic.droid.store.IDownloadManager;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.storage.CancelSniffer;
+import org.stepic.droid.storage.IDownloadManager;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.CoursePropertyResolver;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 

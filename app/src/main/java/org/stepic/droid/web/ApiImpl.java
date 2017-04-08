@@ -29,6 +29,7 @@ import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.StepikLogoutManager;
 import org.stepic.droid.deserializers.DatasetDeserializer;
 import org.stepic.droid.deserializers.ReplyDeserializer;
+import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.DatasetWrapper;
 import org.stepic.droid.model.EnrollmentWrapper;
@@ -60,7 +61,6 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -77,7 +77,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
-@Singleton
+@AppSingleton
 public class ApiImpl implements Api {
     private final int TIMEOUT_IN_SECONDS = 10;
     private final StethoInterceptor stethoInterceptor = new StethoInterceptor();

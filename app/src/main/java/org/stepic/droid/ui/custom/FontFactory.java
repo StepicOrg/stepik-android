@@ -5,7 +5,7 @@ import android.graphics.Typeface;
 
 import java.util.HashMap;
 
-//todo: this class has a bad implementation, best practice use @Singleton
+//todo: this class has a bad implementation, best practice use @AppSingleton
 public class FontFactory {
     private static FontFactory instance;
     private HashMap<String, Typeface> fontMap;

@@ -6,15 +6,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.web.Api;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-@Singleton
+@AppSingleton
 public class ConfigReleaseImpl implements Config {
 
     private JsonObject properties;

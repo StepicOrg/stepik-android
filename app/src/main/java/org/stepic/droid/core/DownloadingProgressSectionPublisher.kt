@@ -6,8 +6,8 @@ import android.support.annotation.MainThread
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.model.DownloadEntity
 import org.stepic.droid.model.Unit
-import org.stepic.droid.store.CancelSniffer
-import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.storage.CancelSniffer
+import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import java.util.*
 import kotlin.collections.HashMap

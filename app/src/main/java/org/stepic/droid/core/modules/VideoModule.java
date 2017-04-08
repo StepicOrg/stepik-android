@@ -3,7 +3,7 @@ package org.stepic.droid.core.modules;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.presenters.VideoWIthTimestampPresenter;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 
 import java.util.concurrent.ThreadPoolExecutor;
 

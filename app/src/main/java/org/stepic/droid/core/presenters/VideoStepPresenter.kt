@@ -7,7 +7,7 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.VideoStepView
 import org.stepic.droid.model.Step
 import org.stepic.droid.model.Video
-import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.resolvers.VideoResolver
 import org.stepic.droid.web.Api
 import java.util.concurrent.Semaphore

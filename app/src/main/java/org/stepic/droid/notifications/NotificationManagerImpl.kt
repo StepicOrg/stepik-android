@@ -23,8 +23,8 @@ import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
-import org.stepic.droid.store.operations.DatabaseFacade
-import org.stepic.droid.store.operations.Table
+import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.ProfileActivity
 import org.stepic.droid.ui.activities.SectionActivity

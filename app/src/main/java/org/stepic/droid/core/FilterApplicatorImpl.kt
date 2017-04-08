@@ -5,7 +5,7 @@ import org.joda.time.DateTimeZone
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.store.operations.Table
+import org.stepic.droid.storage.operations.Table
 import javax.inject.Inject
 
 class FilterApplicatorImpl

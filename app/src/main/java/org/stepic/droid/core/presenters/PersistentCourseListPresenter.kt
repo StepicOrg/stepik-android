@@ -9,8 +9,8 @@ import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.store.operations.DatabaseFacade
-import org.stepic.droid.store.operations.Table
+import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.CoursesStepicResponse

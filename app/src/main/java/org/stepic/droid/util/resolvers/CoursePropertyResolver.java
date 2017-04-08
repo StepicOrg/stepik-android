@@ -5,15 +5,15 @@ import android.support.annotation.StringRes;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
+import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.Course;
 import org.stepic.droid.model.CourseProperty;
 
 import java.util.ArrayList;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-@Singleton
+@AppSingleton
 public class CoursePropertyResolver {
 
     @Inject

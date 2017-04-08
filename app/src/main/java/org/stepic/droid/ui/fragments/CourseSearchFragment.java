@@ -11,7 +11,7 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.core.modules.CourseListModule;
 import org.stepic.droid.core.presenters.SearchCoursesPresenter;
 import org.stepic.droid.events.joining_course.SuccessJoinEvent;
-import org.stepic.droid.store.operations.Table;
+import org.stepic.droid.storage.operations.Table;
 
 import javax.inject.Inject;
 

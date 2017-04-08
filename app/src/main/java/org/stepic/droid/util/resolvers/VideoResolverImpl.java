@@ -6,8 +6,8 @@ import org.stepic.droid.model.Step;
 import org.stepic.droid.model.Video;
 import org.stepic.droid.model.VideoUrl;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.CleanManager;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.storage.CleanManager;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 
 import java.io.File;
 import java.util.List;

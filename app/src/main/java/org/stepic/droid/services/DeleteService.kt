@@ -11,8 +11,8 @@ import org.stepic.droid.base.App
 import org.stepic.droid.events.steps.StepRemovedEvent
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Step
-import org.stepic.droid.store.StoreStateManager
-import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.storage.StoreStateManager
+import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import java.io.File
 import java.util.*

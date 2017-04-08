@@ -10,7 +10,7 @@ import org.stepic.droid.core.presenters.contracts.CertificateView
 import org.stepic.droid.model.Certificate
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.web.CertificateResponse
 import org.stepic.droid.web.CoursesStepicResponse
 import org.stepic.droid.web.Api

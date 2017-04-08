@@ -28,7 +28,7 @@ import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.model.Course;
-import org.stepic.droid.store.operations.Table;
+import org.stepic.droid.storage.operations.Table;
 import org.stepic.droid.util.StepikLogicHelper;
 import org.stepic.droid.util.resolvers.text.TextResolver;
 

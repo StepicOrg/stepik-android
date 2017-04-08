@@ -5,7 +5,7 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.RouteStepView
 import org.stepic.droid.model.Lesson
 import org.stepic.droid.model.Unit
-import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.DatabaseFacade
 import java.util.concurrent.ThreadPoolExecutor
 
 class RouteStepPresenter(

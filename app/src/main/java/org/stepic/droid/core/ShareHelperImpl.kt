@@ -5,14 +5,14 @@ import android.content.Intent
 import android.net.Uri
 import org.stepic.droid.R
 import org.stepic.droid.configuration.Config
+import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.model.*
 import org.stepic.droid.model.Unit
 import org.stepic.droid.util.StringUtil
 import org.stepic.droid.util.resolvers.text.TextResolver
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@AppSingleton
 class ShareHelperImpl
 @Inject constructor(private val config: Config,
                     private val context: Context,

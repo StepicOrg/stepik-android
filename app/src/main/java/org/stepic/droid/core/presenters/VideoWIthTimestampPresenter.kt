@@ -3,7 +3,7 @@ package org.stepic.droid.core.presenters
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
 import org.stepic.droid.model.VideoTimestamp
-import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.DatabaseFacade
 import java.util.concurrent.ThreadPoolExecutor
 
 class VideoWIthTimestampPresenter(val databaseFacade: DatabaseFacade,

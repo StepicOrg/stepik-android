@@ -9,8 +9,8 @@ import org.stepic.droid.events.joining_course.FailJoinEvent
 import org.stepic.droid.events.joining_course.SuccessJoinEvent
 import org.stepic.droid.model.Course
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.store.operations.DatabaseFacade
-import org.stepic.droid.store.operations.Table
+import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.Table
 import org.stepic.droid.web.Api
 import retrofit2.Call
 import retrofit2.Callback

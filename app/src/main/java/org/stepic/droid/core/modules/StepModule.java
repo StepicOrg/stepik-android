@@ -17,7 +17,7 @@ import org.stepic.droid.core.presenters.VideoLengthPresenter;
 import org.stepic.droid.core.presenters.VideoStepPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.util.resolvers.StepTypeResolver;
 import org.stepic.droid.util.resolvers.StepTypeResolverImpl;
 import org.stepic.droid.util.resolvers.VideoResolver;

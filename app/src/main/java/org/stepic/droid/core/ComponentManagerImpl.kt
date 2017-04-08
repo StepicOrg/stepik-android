@@ -1,6 +1,6 @@
 package org.stepic.droid.core
 
-import org.stepic.droid.core.components.AppCoreComponent
+import org.stepic.droid.di.AppCoreComponent
 import org.stepic.droid.core.components.LoginComponent
 import org.stepic.droid.core.components.MainFeedComponent
 import org.stepic.droid.core.modules.LoginModule

@@ -10,11 +10,10 @@ import android.support.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepBaseFragment;
+import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.Step;
-import org.stepic.droid.ui.fragments.FillBlanksFragment;
-import org.stepic.droid.ui.fragments.TableChoiceStepFragment;
-import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.ui.fragments.ChoiceStepFragment;
+import org.stepic.droid.ui.fragments.FillBlanksFragment;
 import org.stepic.droid.ui.fragments.FreeResponseStepFragment;
 import org.stepic.droid.ui.fragments.MatchingStepFragment;
 import org.stepic.droid.ui.fragments.MathStepFragment;
@@ -23,17 +22,17 @@ import org.stepic.droid.ui.fragments.NumberStepFragment;
 import org.stepic.droid.ui.fragments.PyCharmStepFragment;
 import org.stepic.droid.ui.fragments.SortingStepFragment;
 import org.stepic.droid.ui.fragments.StringStepFragment;
+import org.stepic.droid.ui.fragments.TableChoiceStepFragment;
 import org.stepic.droid.ui.fragments.TextStepFragment;
 import org.stepic.droid.ui.fragments.VideoStepFragment;
+import org.stepic.droid.util.AppConstants;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Singleton;
-
 import timber.log.Timber;
 
-@Singleton
+@AppSingleton
 public class StepTypeResolverImpl implements StepTypeResolver {
 
     private Map<String, Drawable> mapFromTypeToDrawable;

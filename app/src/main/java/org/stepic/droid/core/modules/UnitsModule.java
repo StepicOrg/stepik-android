@@ -9,8 +9,8 @@ import org.stepic.droid.core.PerFragment;
 import org.stepic.droid.core.presenters.DownloadingProgressUnitsPresenter;
 import org.stepic.droid.core.presenters.UnitsPresenter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
-import org.stepic.droid.store.CancelSniffer;
-import org.stepic.droid.store.operations.DatabaseFacade;
+import org.stepic.droid.storage.CancelSniffer;
+import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.web.Api;
 
 import java.util.concurrent.ThreadPoolExecutor;

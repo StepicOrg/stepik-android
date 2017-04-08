@@ -5,9 +5,9 @@ import android.app.IntentService
 import android.app.Service
 import android.content.Intent
 import org.stepic.droid.base.App
-import org.stepic.droid.store.CancelSniffer
-import org.stepic.droid.store.StoreStateManager
-import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.storage.CancelSniffer
+import org.stepic.droid.storage.StoreStateManager
+import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.RWLocks
 import javax.inject.Inject

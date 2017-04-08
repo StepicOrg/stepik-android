@@ -14,11 +14,12 @@ import org.stepic.droid.BuildConfig;
 import org.stepic.droid.R;
 import org.stepic.droid.core.ComponentManager;
 import org.stepic.droid.core.ComponentManagerImpl;
-import org.stepic.droid.core.components.AppCoreComponent;
-import org.stepic.droid.core.components.DaggerAppCoreComponent;
+import org.stepic.droid.di.AppCoreComponent;
+import org.stepic.droid.di.DaggerAppCoreComponent;
+import org.stepic.droid.di.storage.DaggerStorageComponent;
 import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.fonts.FontsProvider;
-import org.stepic.droid.store.InitialDownloadUpdater;
+import org.stepic.droid.storage.InitialDownloadUpdater;
 
 import javax.inject.Inject;
 
@@ -61,6 +62,10 @@ public class App extends MultiDexApplication {
 
         component = DaggerAppCoreComponent.builder()
                 .context(application)
+                .setStorageComponent(DaggerStorageComponent
+                        .builder()
+                        .context(application)
+                        .build())
                 .build();
 
         component.inject(this);

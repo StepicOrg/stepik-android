@@ -1,12 +1,12 @@
 package org.stepic.droid.core
 
+import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.web.Api
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @Deprecated("")
-@Singleton
+@AppSingleton
 class ShellImpl
 @Inject constructor(override val screenProvider: ScreenManager,
                     override val api: Api,

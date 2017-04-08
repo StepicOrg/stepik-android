@@ -6,7 +6,7 @@ import org.stepic.droid.core.presenters.contracts.StepQualityView
 import org.stepic.droid.model.Step
 import org.stepic.droid.model.Video
 import org.stepic.droid.preferences.UserPreferences
-import org.stepic.droid.store.operations.DatabaseFacade
+import org.stepic.droid.storage.operations.DatabaseFacade
 import java.util.concurrent.ThreadPoolExecutor
 
 class StepQualityPresenter(val threadPoolExecutor: ThreadPoolExecutor,
