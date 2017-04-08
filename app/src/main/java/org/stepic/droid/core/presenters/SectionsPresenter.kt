@@ -4,6 +4,7 @@ import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.SectionsView
+import org.stepic.droid.di.course.CourseAndSectionsScope
 import org.stepic.droid.model.Course
 import org.stepic.droid.model.Progress
 import org.stepic.droid.model.Section
@@ -15,11 +16,15 @@ import timber.log.Timber
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
+import javax.inject.Inject
 
-class SectionsPresenter(val threadPoolExecutor: ThreadPoolExecutor,
-                        val mainHandler: MainHandler,
-                        val api: Api,
-                        val databaseFacade: DatabaseFacade) : PresenterBase<SectionsView>() {
+@CourseAndSectionsScope
+class SectionsPresenter
+@Inject constructor(
+        private val threadPoolExecutor: ThreadPoolExecutor,
+        private val mainHandler: MainHandler,
+        private val api: Api,
+        private val databaseFacade: DatabaseFacade) : PresenterBase<SectionsView>() {
 
     val sectionList: MutableList<Section> = ArrayList()
     val isLoading: AtomicBoolean = AtomicBoolean(false)

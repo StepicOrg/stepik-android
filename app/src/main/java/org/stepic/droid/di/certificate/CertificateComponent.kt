@@ -4,7 +4,7 @@ import dagger.Subcomponent
 import org.stepic.droid.ui.fragments.CertificateFragment
 
 @CertificateScope
-@Subcomponent()
+@Subcomponent
 interface CertificateComponent {
 
     @Subcomponent.Builder

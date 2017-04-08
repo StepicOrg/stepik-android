@@ -22,7 +22,7 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.base.App
 import org.stepic.droid.core.MyPhoneStateListener
 import org.stepic.droid.core.modules.VideoModule
-import org.stepic.droid.core.presenters.VideoWIthTimestampPresenter
+import org.stepic.droid.core.presenters.VideoWithTimestampPresenter
 import org.stepic.droid.core.presenters.contracts.VideoWithTimestampView
 import org.stepic.droid.events.IncomingCallEvent
 import org.stepic.droid.events.audio.AudioFocusLossEvent
@@ -112,7 +112,7 @@ class VideoFragment : FragmentBase(), IVLCVout.Callback, VideoWithTimestampView 
     private val receiver: BroadcastReceiver = MyBroadcastReceiver(this)
 
     @Inject
-    lateinit var videoTimestampPresenter: VideoWIthTimestampPresenter
+    lateinit var videoTimestampPresenter: VideoWithTimestampPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

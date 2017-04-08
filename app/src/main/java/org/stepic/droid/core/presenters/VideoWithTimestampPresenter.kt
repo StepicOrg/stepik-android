@@ -6,7 +6,7 @@ import org.stepic.droid.model.VideoTimestamp
 import org.stepic.droid.storage.operations.DatabaseFacade
 import java.util.concurrent.ThreadPoolExecutor
 
-class VideoWIthTimestampPresenter(val databaseFacade: DatabaseFacade,
+class VideoWithTimestampPresenter(val databaseFacade: DatabaseFacade,
                                   val mainHandler: MainHandler,
                                   val threadPoolExecutor: ThreadPoolExecutor) : PresenterBase<VideoWithTimestampView>() {
 

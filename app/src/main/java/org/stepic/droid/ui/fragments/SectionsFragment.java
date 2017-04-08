@@ -51,7 +51,6 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.ShareHelper;
-import org.stepic.droid.core.modules.SectionModule;
 import org.stepic.droid.core.presenters.CalendarPresenter;
 import org.stepic.droid.core.presenters.CourseFinderPresenter;
 import org.stepic.droid.core.presenters.CourseJoinerPresenter;
@@ -215,7 +214,11 @@ public class SectionsFragment
 
     @Override
     protected void injectComponent() {
-        App.component().plus(new SectionModule()).inject(this);
+        App
+                .component()
+                .sectionComponentBuilder()
+                .build()
+                .inject(this);
     }
 
     @Override

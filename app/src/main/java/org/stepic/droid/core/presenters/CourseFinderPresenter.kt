@@ -2,6 +2,7 @@ package org.stepic.droid.core.presenters
 
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.LoadCourseView
+import org.stepic.droid.di.course.CourseAndSectionsScope
 import org.stepic.droid.events.courses.CourseCantLoadEvent
 import org.stepic.droid.events.courses.CourseFoundEvent
 import org.stepic.droid.events.courses.CourseUnavailableForUserEvent
@@ -13,8 +14,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.concurrent.ThreadPoolExecutor
+import javax.inject.Inject
 
-class CourseFinderPresenter(
+@CourseAndSectionsScope
+class CourseFinderPresenter
+@Inject constructor(
         private val threadPoolExecutor: ThreadPoolExecutor,
         private val databaseFacade: DatabaseFacade,
         private var api: Api,

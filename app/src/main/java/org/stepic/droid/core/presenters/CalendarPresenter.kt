@@ -15,6 +15,7 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.DeadlineType
 import org.stepic.droid.core.presenters.contracts.CalendarExportableView
+import org.stepic.droid.di.course.CourseAndSectionsScope
 import org.stepic.droid.model.CalendarItem
 import org.stepic.droid.model.CalendarSection
 import org.stepic.droid.model.Section
@@ -24,14 +25,18 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.StringUtil
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
+import javax.inject.Inject
 
-class CalendarPresenter(val config: Config,
-                        val mainHandler: MainHandler,
-                        val context: Context,
-                        val threadPool: ThreadPoolExecutor,
-                        val database: DatabaseFacade,
-                        val userPrefs: UserPreferences,
-                        val analytic: Analytic) : PresenterBase<CalendarExportableView>() {
+@CourseAndSectionsScope
+class CalendarPresenter
+@Inject constructor(
+        private val config: Config,
+        private val mainHandler: MainHandler,
+        private val context: Context,
+        private val threadPool: ThreadPoolExecutor,
+        private val database: DatabaseFacade,
+        private val userPrefs: UserPreferences,
+        private val analytic: Analytic) : PresenterBase<CalendarExportableView>() {
 
     /**
      * true, if any section in oldList have deadline (soft or hard) and the deadline is not happened
