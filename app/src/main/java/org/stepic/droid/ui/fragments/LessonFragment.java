@@ -216,7 +216,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
             @Override
             public void onClick(View v) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_AUTH_FROM_STEPS);
-                shell.getScreenProvider().showLaunchScreen(getActivity());
+                screenManager.showLaunchScreen(getActivity());
                 getActivity().finish();
             }
         });
@@ -271,7 +271,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
                 protected Void doInBackground(Void... params) {
                     try {
                         long assignmentID = databaseFacade.getAssignmentIdByStepId(stepId);
-                        shell.getScreenProvider().pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
+                        screenManager.pushToViewedQueue(new ViewAssignment(assignmentID, stepId));
                         if (unit != null && unit.getSection() > 0) {
                             Section section = databaseFacade.getSectionById(unit.getSection());
                             if (section != null && section.getCourse() > 0) {
@@ -367,7 +367,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
                 Step step = stepsPresenter.getStepList().get(position);
                 analytic.reportEvent(Analytic.Comments.OPEN_FROM_OPTION_MENU);
-                shell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+                screenManager.openComments(getContext(), step.getDiscussion_proxy(), step.getId());
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -444,7 +444,7 @@ public class LessonFragment extends FragmentBase implements LessonView, LessonTr
 
         if (discussionId > 0 && position >= 0 && position < stepsPresenter.getStepList().size()) {
             Step step = stepsPresenter.getStepList().get(position);
-            shell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+            screenManager.openComments(getContext(), step.getDiscussion_proxy(), step.getId());
             discussionId = -1;
         }
     }

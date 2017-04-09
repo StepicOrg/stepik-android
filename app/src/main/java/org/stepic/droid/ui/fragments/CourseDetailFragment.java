@@ -255,7 +255,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             @Override
             public void onClick(View v) {
                 if (sharedPreferenceHelper.getAuthResponseFromStore() != null) {
-                    shell.getScreenProvider().showFindCourses(getContext());
+                    screenManager.showFindCourses(getContext());
                     finish();
                 } else {
                     unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);
@@ -400,7 +400,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             continueCourseView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    shell.getScreenProvider().showSections(getActivity(), course);
+                    screenManager.showSections(getActivity(), course);
                 }
             });
         } else {
@@ -479,7 +479,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
             player.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    shell.getScreenProvider().showVideo(getActivity(), urlToVideo, videoId);
+                    screenManager.showVideo(getActivity(), urlToVideo, videoId);
                 }
             });
         }
@@ -645,7 +645,7 @@ public class CourseDetailFragment extends FragmentBase implements LoadCourseView
     public void onSuccessJoin(SuccessJoinEvent e) {
         if (course != null && e.getCourse() != null && e.getCourse().getCourseId() == course.getCourseId()) {
             e.getCourse().setEnrollment((int) e.getCourse().getCourseId());
-            shell.getScreenProvider().showSections(getActivity(), course, true);
+            screenManager.showSections(getActivity(), course, true);
             finish();
         }
         ProgressHelper.dismiss(joinCourseSpinner);

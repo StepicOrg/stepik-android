@@ -166,7 +166,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
         authLineText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shell.getScreenProvider().showLaunchScreen(getActivity());
+                screenManager.showLaunchScreen(getActivity());
             }
         });
     }
@@ -186,9 +186,9 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
             public void onClick(View v) {
                 int discussionCount = step.getDiscussions_count();
                 analytic.reportEvent(Analytic.Comments.OPEN_FROM_STEP_UI);
-                shell.getScreenProvider().openComments(getContext(), step.getDiscussion_proxy(), step.getId());
+                screenManager.openComments(getContext(), step.getDiscussion_proxy(), step.getId());
                 if (discussionCount == 0) {
-                    shell.getScreenProvider().openNewCommentForm(getActivity(), step.getId(), null); //show new form, but in back stack comment oldList is exist.
+                   screenManager.openNewCommentForm(getActivity(), step.getId(), null); //show new form, but in back stack comment oldList is exist.
                 }
             }
         });
@@ -290,7 +290,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     @Override
     public final void openNextLesson(Unit nextUnit, Lesson nextLesson) {
         ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
-        shell.getScreenProvider().showSteps(getActivity(), nextUnit, nextLesson, section);
+        screenManager.showSteps(getActivity(), nextUnit, nextLesson, section);
         getActivity().finish();
     }
 
@@ -317,7 +317,7 @@ public abstract class StepBaseFragment extends FragmentBase implements RouteStep
     @Override
     public void openPreviousLesson(Unit previousUnit, Lesson previousLesson) {
         ProgressHelper.dismiss(getFragmentManager(), LOAD_DIALOG_TAG);
-        shell.getScreenProvider().showSteps(getActivity(), previousUnit, previousLesson, true, section);
+        screenManager.showSteps(getActivity(), previousUnit, previousLesson, true, section);
         getActivity().finish();
     }
 

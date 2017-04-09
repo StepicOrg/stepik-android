@@ -97,7 +97,7 @@ public class CertificateFragment extends FragmentBase implements CertificateView
         authUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shell.getScreenProvider().showLaunchScreen(getActivity());
+                screenManager.showLaunchScreen(getActivity());
             }
         });
 

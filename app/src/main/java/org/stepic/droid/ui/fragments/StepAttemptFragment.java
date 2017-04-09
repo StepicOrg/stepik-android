@@ -532,7 +532,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements St
         peerReviewIndicator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shell.getScreenProvider().openStepInWeb(getContext(), step);
+                screenManager.openStepInWeb(getContext(), step);
             }
         });
     }

@@ -14,6 +14,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.AudioFocusHelper;
+import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.Shell;
 import org.stepic.droid.core.LocalProgressManager;
 import org.stepic.droid.core.ShareHelper;
@@ -71,6 +72,9 @@ public class FragmentBase extends Fragment {
 
     @Inject
     public Shell shell;
+
+    @Inject
+    public ScreenManager screenManager;
 
     @Inject
     public LocalProgressManager localProgressManager;

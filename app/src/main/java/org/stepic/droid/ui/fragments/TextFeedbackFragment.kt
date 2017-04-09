@@ -151,7 +151,7 @@ class TextFeedbackFragment : FragmentBase() {
     @Subscribe
     fun onFeedbackSent(event: FeedbackSentEvent) {
         Toast.makeText(context, R.string.feedback_sent, Toast.LENGTH_SHORT).show()
-        shell.screenProvider.showMainFeed(activity)
+        screenManager.showMainFeed(activity)
     }
 
     @Subscribe

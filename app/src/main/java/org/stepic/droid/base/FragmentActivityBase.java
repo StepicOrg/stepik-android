@@ -25,6 +25,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.DefaultFilter;
+import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.core.Shell;
 import org.stepic.droid.fonts.FontsProvider;
@@ -90,6 +91,9 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     @Inject
     protected Shell shell;
+
+    @Inject
+    protected ScreenManager screenManager;
 
     @Inject
     protected Bus bus;

@@ -168,7 +168,7 @@ public class SettingsFragment extends FragmentBase {
         storageManagementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shell.getScreenProvider().showStorageManagement(getActivity());
+                screenManager.showStorageManagement(getActivity());
             }
         });
 

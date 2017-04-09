@@ -87,7 +87,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_filter_menu:
-                shell.getScreenProvider().showFilterScreen(this, FILTER_REQUEST_CODE, getCourseType());
+                screenManager.showFilterScreen(this, FILTER_REQUEST_CODE, getCourseType());
                 return true;
         }
 
@@ -255,7 +255,7 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
     private void showInfo(int position) {
         analytic.reportEvent(Analytic.Interaction.SHOW_DETAILED_INFO_CLICK);
         Course course = courses.get(position);
-        shell.getScreenProvider().showCourseDescription(this, course);
+        screenManager.showCourseDescription(this, course);
     }
 
     @Override

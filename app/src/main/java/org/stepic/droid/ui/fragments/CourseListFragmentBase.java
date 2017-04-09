@@ -152,7 +152,7 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
             @Override
             public void onClick(View v) {
                 analytic.reportEvent(Analytic.Anonymous.AUTH_CENTER);
-                shell.getScreenProvider().showLaunchScreen(getActivity());
+                screenManager.showLaunchScreen(getActivity());
             }
         });
 
@@ -281,13 +281,13 @@ public abstract class CourseListFragmentBase extends FragmentBase implements Swi
     @Override
     public void onOpenStep(long courseId, @NotNull Section section, long lessonId, long unitId, int stepPosition) {
         ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
-        shell.getScreenProvider().continueCourse(getActivity(), courseId, section, lessonId, unitId, stepPosition);
+        screenManager.continueCourse(getActivity(), courseId, section, lessonId, unitId, stepPosition);
     }
 
     @Override
     public void onAnyProblemWhileContinue(@NotNull Course course) {
         ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
-        shell.getScreenProvider().showSections(getActivity(), course);
+        screenManager.showSections(getActivity(), course);
     }
 
     @Override

@@ -8,8 +8,7 @@ import javax.inject.Inject
 @Deprecated("")
 @AppSingleton
 class ShellImpl
-@Inject constructor(override val screenProvider: ScreenManager,
-                    override val api: Api,
+@Inject constructor(override val api: Api,
                     override val sharedPreferenceHelper: SharedPreferenceHelper) : Shell {
 
 }

@@ -314,7 +314,7 @@ class RegisterActivity : FragmentActivityBase(), LoginView {
     }
 
     private fun openMainFeed() {
-        shell.screenProvider.showMainFeed(this, courseFromExtra)
+        screenManager.showMainFeed(this, courseFromExtra)
     }
 
     override fun onLoadingWhileLogin() {

@@ -73,7 +73,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
         termsPrivacyLogin.movementMethod = LinkMovementMethod.getInstance()
         termsPrivacyLogin.text = textResolver.fromHtml(termsMessageHtml)
         forgotPasswordView.setOnClickListener {
-            shell.screenProvider.openRemindPassword(this@LoginActivity)
+            screenManager.openRemindPassword(this@LoginActivity)
         }
 
         loginText.setOnEditorActionListener { _, actionId, _ ->
@@ -229,7 +229,7 @@ class LoginActivity : FragmentActivityBase(), LoginView {
     }
 
     private fun openMainFeed() {
-        shell.screenProvider.showMainFeed(this, courseFromExtra)
+        screenManager.showMainFeed(this, courseFromExtra)
     }
 
     override fun onLoadingWhileLogin() {

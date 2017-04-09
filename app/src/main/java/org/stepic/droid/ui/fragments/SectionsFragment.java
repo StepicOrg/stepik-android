@@ -344,7 +344,7 @@ public class SectionsFragment
         switch (item.getItemId()) {
             case R.id.action_info:
                 if (course != null) {
-                    shell.getScreenProvider().showCourseDescription(this, course);
+                    screenManager.showCourseDescription(this, course);
                 }
                 return true;
 
@@ -405,7 +405,7 @@ public class SectionsFragment
 
                 boolean userHasAccess = SectionUtilKt.hasUserAccess(section, course);
                 if (userHasAccess) {
-                    shell.getScreenProvider().showUnitsForSection(SectionsFragment.this.getActivity(), sections.get(modulePosition - 1));
+                    screenManager.showUnitsForSection(SectionsFragment.this.getActivity(), sections.get(modulePosition - 1));
                 } else {
                     adapter.setDefaultHighlightPosition(modulePosition - 1);
                     int scrollTo = modulePosition + SectionAdapter.PRE_SECTION_LIST_DELTA - 1;
@@ -592,7 +592,7 @@ public class SectionsFragment
                 @Override
                 public void onClick(View v) {
                     if (sharedPreferenceHelper.getAuthResponseFromStore() != null) {
-                        shell.getScreenProvider().showFindCourses(getActivity());
+                        screenManager.showFindCourses(getActivity());
                         getActivity().finish();
                     } else {
                         unauthorizedDialog = UnauthorizedDialogFragment.newInstance(course);

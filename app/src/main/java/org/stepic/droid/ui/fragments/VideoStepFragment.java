@@ -172,7 +172,7 @@ public class VideoStepFragment extends StepBaseFragment implements StepQualityVi
     @Override
     public void onNeedOpenVideo(@NonNull String pathToVideo, long videoId) {
         player.setClickable(true);
-        shell.getScreenProvider().showVideo(getActivity(), pathToVideo, videoId);
+        screenManager.showVideo(getActivity(), pathToVideo, videoId);
     }
 
     @Override
