@@ -40,7 +40,7 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
 
     @Override
     public CertificateViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(activity).inflate(R.layout.certificate_item, null);
+        View v = LayoutInflater.from(activity).inflate(R.layout.certificate_item, parent, false);
         return new CertificateViewHolder(v);
     }
 

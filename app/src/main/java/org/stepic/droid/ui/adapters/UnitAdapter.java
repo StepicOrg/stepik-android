@@ -99,7 +99,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.UnitViewHolder
 
     @Override
     public UnitViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(activity).inflate(R.layout.unit_item, null);
+        View v = LayoutInflater.from(activity).inflate(R.layout.unit_item, parent, false);
         return new UnitViewHolder(v, this, this);
     }
 

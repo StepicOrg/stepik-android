@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
               android:layout_gravity="center"
               android:baselineAligned="false"
               android:gravity="center"
@@ -38,6 +38,6 @@
         android:minLines="3"
         android:textColor="@color/stepic_weak_text"
         android:textSize="@dimen/text_height"
-        tools:text="sshort_bioshort_bioshort_bioshort_biohort_bio short_bioshort_bioshort_bio short_bio short_bio short_bioshort_bioshort_bioshort_bio"/>
+        tools:text="one two three four five _biohort_bio short_bioshort_bioshort_bio short_bio short_bio short_bioshort_bioshort_bioshort_bio"/>
 
 </LinearLayout>

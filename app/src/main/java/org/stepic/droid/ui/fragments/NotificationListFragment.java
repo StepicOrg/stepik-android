@@ -90,7 +90,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_notification_list, null);
+        return inflater.inflate(R.layout.fragment_notification_list, container, false);
     }
 
     @Override

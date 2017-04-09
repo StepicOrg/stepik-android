@@ -43,7 +43,7 @@ public class CoursePropertyAdapter extends ArrayAdapter<CourseProperty> {
         View view = convertView;
         ViewHolderItem viewHolderItem;
         if (view == null) {
-            view = inflater.inflate(R.layout.course_property_item, null);
+            view = inflater.inflate(R.layout.course_property_item, parent, false);
             viewHolderItem = new ViewHolderItem(view);
             view.setTag(viewHolderItem);
         } else {
